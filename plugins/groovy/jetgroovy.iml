@@ -9,16 +9,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="openapi" />
-    <orderEntry type="module" module-name="debugger-openapi" />
     <orderEntry type="module" module-name="groovy_rt" />
     <orderEntry type="module" module-name="compiler-impl" />
-    <orderEntry type="module" module-name="debugger-impl" />
     <orderEntry type="module" module-name="lang-api" />
     <orderEntry type="module" module-name="properties" />
-    <orderEntry type="module" module-name="execution-impl" />
     <orderEntry type="module" module-name="compiler-openapi" />
-    <orderEntry type="module" module-name="execution-openapi" />
     <orderEntry type="module" module-name="idea-ui" />
     <orderEntry type="library" exported="" name="Groovy" level="project" />
     <orderEntry type="module" module-name="java-impl" />
@@ -33,7 +28,6 @@
     <orderEntry type="module" module-name="spellchecker" />
     <orderEntry type="module" module-name="InspectionGadgetsPlugin" scope="TEST" />
     <orderEntry type="module" module-name="junit" scope="TEST" />
-    <orderEntry type="module" module-name="java-indexing-api2" />
     <orderEntry type="module" module-name="groovy-jps-plugin" />
   </component>
 </module>

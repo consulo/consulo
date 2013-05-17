@@ -12,12 +12,8 @@
     <orderEntry type="module" module-name="commander" />
     <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="compiler-openapi" />
-    <orderEntry type="module" module-name="debugger-impl" />
-    <orderEntry type="module" module-name="debugger-openapi" />
     <orderEntry type="module" module-name="dom-impl" />
     <orderEntry type="module" module-name="dom-openapi" />
-    <orderEntry type="module" module-name="execution-impl" />
-    <orderEntry type="module" module-name="execution-openapi" />
     <orderEntry type="module" module-name="extensions" />
     <orderEntry type="module" module-name="forms_rt" />
     <orderEntry type="module" module-name="icons" />
@@ -32,7 +28,6 @@
     <orderEntry type="module" module-name="lvcs-api" />
     <orderEntry type="module" module-name="lvcs-impl" />
     <orderEntry type="module" module-name="instrumentation-util" />
-    <orderEntry type="module" module-name="openapi" />
     <orderEntry type="module" module-name="platform-api" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="platform-main" />

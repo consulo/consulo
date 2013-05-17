@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="openapi" exported="" />
     <orderEntry type="module" module-name="util" exported="" />
     <orderEntry type="library" name="JUnit4" level="project" />
     <orderEntry type="library" name="JDOM" level="project" />
@@ -16,7 +15,6 @@
     <orderEntry type="module" module-name="lang-impl" exported="" />
     <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="java-impl" exported="" />
-    <orderEntry type="module" module-name="execution-impl" exported="" scope="RUNTIME" />
     <orderEntry type="library" name="Groovy" level="project" />
     <orderEntry type="module" module-name="testFramework" exported="" />
     <orderEntry type="module" module-name="relaxng" exported="" scope="TEST" />

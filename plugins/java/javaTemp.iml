@@ -9,6 +9,12 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="java-platform" />
     <orderEntry type="module" module-name="java-analysis-api" />
+    <orderEntry type="module" module-name="lang-api" />
+    <orderEntry type="module" module-name="dom-impl" />
+    <orderEntry type="module" module-name="xml-openapi" />
+    <orderEntry type="module" module-name="vcs-api" />
+    <orderEntry type="module" module-name="platform-impl" />
+    <orderEntry type="library" name="XmlRPC" level="project" />
   </component>
 </module>
 

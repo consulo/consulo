@@ -11,7 +11,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="maven-server-api" exported="" />
-    <orderEntry type="module" module-name="openapi" exported="" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="java-impl" />
     <orderEntry type="module" module-name="xml" exported="" />
@@ -21,8 +20,6 @@
     <orderEntry type="module" module-name="properties" />
     <orderEntry type="module" module-name="compiler-openapi" exported="" />
     <orderEntry type="module" module-name="compiler-impl" exported="" />
-    <orderEntry type="module" module-name="execution-openapi" exported="" />
-    <orderEntry type="module" module-name="execution-impl" exported="" />
     <orderEntry type="module" module-name="idea-ui" exported="" />
     <orderEntry type="module" module-name="forms_rt" exported="" />
     <orderEntry type="library" name="jgoodies-forms" level="project" />

@@ -7,9 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="execution-openapi" />
-    <orderEntry type="module" module-name="openapi" />
-    <orderEntry type="module" module-name="execution-impl" />
     <orderEntry type="module" module-name="java-runtime" />
     <orderEntry type="module" module-name="testRunner" />
     <orderEntry type="library" name="JUnit3" level="project" />
@@ -17,7 +14,6 @@
     <orderEntry type="module" module-name="junit_rt" />
     <orderEntry type="module" module-name="compiler-openapi" />
     <orderEntry type="module" module-name="java-impl" />
-    <orderEntry type="module" module-name="java-indexing-api2" />
     <orderEntry type="module" module-name="smRunner" />
   </component>
   <component name="copyright">

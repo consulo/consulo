@@ -7,12 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="openapi" />
     <orderEntry type="module" module-name="util" />
     <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="compiler-openapi" />
-    <orderEntry type="module" module-name="execution-impl" />
-    <orderEntry type="module" module-name="execution-openapi" />
     <orderEntry type="module" module-name="icons" />
     <orderEntry type="module" module-name="idea-ui" />
     <orderEntry type="module" module-name="java-impl" />
@@ -25,7 +22,6 @@
     <orderEntry type="module" module-name="dom-openapi" />
     <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="images" />
-    <orderEntry type="module" module-name="java-indexing-api2" />
   </component>
 </module>
 
