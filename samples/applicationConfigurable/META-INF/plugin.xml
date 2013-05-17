@@ -3,7 +3,6 @@
   <description></description>
   <version>1.0</version>
   <vendor>YourCompany</vendor>
-  <idea-version since-build="8000"/>
 
   <application-components>
     <!-- Add your application components here -->

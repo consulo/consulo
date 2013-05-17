@@ -8,7 +8,6 @@
 
   <version>1.4</version>
   <vendor email="sascha.weinreuter@cit.de">Sascha Weinreuter</vendor>
-  <idea-version since-build="96.1"/>
 
   <depends>XPathView</depends>
   <depends>com.intellij.modules.xml</depends>
