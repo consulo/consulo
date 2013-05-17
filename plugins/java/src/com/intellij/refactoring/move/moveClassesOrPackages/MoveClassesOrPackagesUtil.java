@@ -231,7 +231,7 @@ public class MoveClassesOrPackagesUtil {
     if (!moveDestination.equals(file.getContainingDirectory())) {
       LOG.assertTrue(file.getVirtualFile() != null, aClass);
       MoveFilesOrDirectoriesUtil.doMoveFile(file, moveDestination);
-      if (file instanceof PsiClassOwner && newPackage != null && !JspPsiUtil.isInJspFile(file)) {
+      if (file instanceof PsiClassOwner && newPackage != null /*&& !JspPsiUtil.isInJspFile(file)*/) {
         // Do not rely on class instance identity retention after setPackageName (Scala)
         String aClassName = aClass.getName();
         ((PsiClassOwner)file).setPackageName(newPackage.getQualifiedName());

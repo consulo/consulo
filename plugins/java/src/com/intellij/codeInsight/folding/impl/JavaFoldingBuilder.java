@@ -25,7 +25,6 @@ import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
 import org.jetbrains.annotations.Nullable;
 
 public class JavaFoldingBuilder extends JavaFoldingBuilderBase {
@@ -49,8 +48,8 @@ public class JavaFoldingBuilder extends JavaFoldingBuilderBase {
   @Nullable
   @Override
   public TextRange getRangeToFold(PsiElement element) {
-    if (element instanceof JspHolderMethod)
-      return null;
+   /* if (element instanceof JspHolderMethod)
+      return null;  */
     return super.getRangeToFold(element);    //To change body of overridden methods use File | Settings | File Templates.
   }
 }

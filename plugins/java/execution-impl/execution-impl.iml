@@ -10,6 +10,10 @@
     <orderEntry type="module" module-name="execution-api" />
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="lang-impl" />
+    <orderEntry type="module" module-name="testRunner" />
+    <orderEntry type="module" module-name="debugger-impl" />
+    <orderEntry type="module" module-name="java-runtime" />
+    <orderEntry type="module" module-name="compiler-api" />
   </component>
 </module>
 

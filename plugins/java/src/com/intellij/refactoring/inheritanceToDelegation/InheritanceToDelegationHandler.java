@@ -31,13 +31,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.refactoring.HelpID;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.refactoring.util.RefactoringHierarchyUtil;
-import com.intellij.refactoring.util.RefactoringMessageUtil;
 import com.intellij.refactoring.util.classMembers.MemberInfo;
 import com.intellij.refactoring.util.classMembers.MemberInfoStorage;
 import com.intellij.util.containers.HashMap;
@@ -98,10 +96,10 @@ public class InheritanceToDelegationHandler implements RefactoringActionHandler 
       return;
     }
 
-    if (aClass instanceof JspClass) {
+ /*   if (aClass instanceof JspClass) {
       RefactoringMessageUtil.showNotSupportedForJspClassesError(project, editor, REFACTORING_NAME, HelpID.INHERITANCE_TO_DELEGATION);
       return;
-    }
+    }    */
 
     if (!CommonRefactoringUtil.checkReadOnlyStatus(project, aClass)) return;
 

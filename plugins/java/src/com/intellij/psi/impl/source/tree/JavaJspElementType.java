@@ -16,13 +16,12 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.psi.TokenType;
-import com.intellij.psi.jsp.JspElementType;
 import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author yole
  */
 public interface JavaJspElementType {
-  TokenSet WHITE_SPACE_BIT_SET = TokenSet.create(TokenType.WHITE_SPACE,
-                                                 JspElementType.JSP_TEMPLATE_EXPRESSION);
+  TokenSet WHITE_SPACE_BIT_SET = TokenSet.create(TokenType.WHITE_SPACE/*,
+                                                 JspElementType.JSP_TEMPLATE_EXPRESSION*/);
 }

@@ -77,16 +77,16 @@ public class JavaMoveDirectoryWithClassesHelper extends MoveDirectoryWithClasses
       return false;
     }
     
-    if (!JspPsiUtil.isInJspFile(file)) {
+    //if (!JspPsiUtil.isInJspFile(file)) {
       return false;
-    }
+  /*  }
 
     for (PsiClass psiClass : ((PsiClassOwner)file).getClasses()) {
       final PsiClass newClass = MoveClassesOrPackagesUtil.doMoveClass(psiClass, moveDestination);
       oldToNewElementsMapping.put(psiClass, newClass);
       listener.elementMoved(newClass);
     }
-    return true;
+    return true; */
   }
 
   @Override

@@ -17,7 +17,6 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.psi.*;
 import com.intellij.psi.filters.FilterPositionUtil;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClassLevelDeclarationStatement;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
@@ -120,9 +119,9 @@ public class ModifierChooser {
                               parent instanceof PsiDocComment ||
                               element.getText().equals(parent.getText()))) {
       parent = parent.getParent();
-      if (parent instanceof JspClassLevelDeclarationStatement) {
+     /* if (parent instanceof JspClassLevelDeclarationStatement) {
         parent = parent.getContext();
-      }
+      }  */
     }
 
     if (parent == null) return false;

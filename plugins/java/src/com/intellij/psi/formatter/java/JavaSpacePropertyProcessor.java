@@ -33,9 +33,6 @@ import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.codeStyle.ImportHelper;
 import com.intellij.psi.impl.source.javadoc.PsiDocMethodOrFieldRef;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClassLevelDeclarationStatement;
-import com.intellij.psi.impl.source.jsp.jspJava.JspCodeBlock;
-import com.intellij.psi.impl.source.jsp.jspJava.JspJavaComment;
 import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.tree.ChildRoleBase;
@@ -285,10 +282,10 @@ public class JavaSpacePropertyProcessor extends JavaElementVisitor {
   }
 
   private void processClassBody() {
-    if (myChild1 instanceof JspJavaComment || myChild2 instanceof JspJavaComment) {
+   /* if (myChild1 instanceof JspJavaComment || myChild2 instanceof JspJavaComment) {
       myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, 0);
     }
-    else if (processMethod()) {
+    else */if (processMethod()) {
     }
     else if (myRole2 == ChildRole.CLASS_INITIALIZER) {
       if (myRole1 == ChildRole.LBRACE) {
@@ -721,11 +718,11 @@ public class JavaSpacePropertyProcessor extends JavaElementVisitor {
     final boolean lhsStatement = myChild1.getPsi() instanceof PsiStatement;
     final boolean rhsStatement = myChild2.getPsi() instanceof PsiStatement;
 
-    if (myParent instanceof JspCodeBlock) {
+ /*   if (myParent instanceof JspCodeBlock) {
       myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
     }
 
-    else if (myRole1 == ChildRoleBase.NONE && !lhsStatement || myRole2 == ChildRoleBase.NONE && !rhsStatement) {
+    else*/ if (myRole1 == ChildRoleBase.NONE && !lhsStatement || myRole2 == ChildRoleBase.NONE && !rhsStatement) {
       final IElementType firstElementType = myChild1.getElementType();
       if (
         firstElementType == JavaTokenType.END_OF_LINE_COMMENT
@@ -1380,9 +1377,9 @@ public class JavaSpacePropertyProcessor extends JavaElementVisitor {
       createSpaceInCode(false);
     }
 
-    if (statement instanceof JspClassLevelDeclarationStatement) {
+  /*  if (statement instanceof JspClassLevelDeclarationStatement) {
       processClassBody();
-    }
+    }  */
   }
 
   @Override public void visitReturnStatement(PsiReturnStatement statement) {

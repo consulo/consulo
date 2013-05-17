@@ -35,7 +35,7 @@ class JavaWithIfExpressionSurrounder extends JavaExpressionSurrounder{
     PsiElement parent = expr.getParent();
     if (!(parent instanceof PsiExpressionStatement)) return false;
     final PsiElement element = parent.getParent();
-    if (!(element instanceof PsiCodeBlock) && !(JspPsiUtil.isInJspFile(element)  && element instanceof PsiFile)) return false;
+    if (!(element instanceof PsiCodeBlock) /*&& !(JspPsiUtil.isInJspFile(element)  */&& element instanceof PsiFile/*)*/) return false;
     return true;
   }
 

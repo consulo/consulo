@@ -146,7 +146,7 @@ public class DeploymentUtilImpl extends DeploymentUtil {
       }
     }
     else {
-      DeploymentUtil.getInstance().reportDeploymentDescriptorDoesNotExists(descriptor, compileContext, module);
+      reportDeploymentDescriptorDoesNotExists(descriptor, compileContext, module);
     }
   }
 

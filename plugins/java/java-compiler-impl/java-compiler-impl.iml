@@ -7,11 +7,16 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="debugger-api" exported="" />
-    <orderEntry type="module" module-name="platform-impl" />
-    <orderEntry type="module" module-name="xdebugger-impl" />
-    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="resources-en" />
+    <orderEntry type="module" module-name="platform-impl" />
+    <orderEntry type="module" module-name="jps-builders" />
+    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="jps-model-serialization" />
+    <orderEntry type="module" module-name="lang-impl" />
+    <orderEntry type="library" name="Netty" level="project" />
+    <orderEntry type="library" name="Eclipse" level="project" />
+    <orderEntry type="module" module-name="xml" />
   </component>
 </module>
 

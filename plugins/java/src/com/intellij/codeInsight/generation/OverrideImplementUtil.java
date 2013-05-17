@@ -50,13 +50,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.psi.infos.CandidateInfo;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -698,7 +696,7 @@ public class OverrideImplementUtil extends OverrideImplementExploreUtil {
     while (element instanceof PsiTypeParameter);
 
     final PsiClass aClass = (PsiClass)element;
-    if (aClass instanceof JspClass) return null;
+    //if (aClass instanceof JspClass) return null;
     return aClass == null || !allowInterface && aClass.isInterface() ? null : aClass;
   }
 

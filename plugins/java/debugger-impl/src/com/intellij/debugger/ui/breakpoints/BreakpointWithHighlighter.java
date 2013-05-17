@@ -45,7 +45,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.ui.classFilter.ClassFilter;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.xdebugger.impl.DebuggerSupport;
@@ -104,9 +103,9 @@ public abstract class BreakpointWithHighlighter extends Breakpoint {
   public String getShortClassName() {
     final SourcePosition pos = getSourcePosition();
     if (pos != null) {
-      if (pos.getFile() instanceof JspFile) {
+     /* if (pos.getFile() instanceof JspFile) {
         return getClassName();
-      }
+      }  */
     }
     return super.getShortClassName();
   }

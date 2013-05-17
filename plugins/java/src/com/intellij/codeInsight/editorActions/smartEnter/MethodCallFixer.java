@@ -17,7 +17,6 @@ package com.intellij.codeInsight.editorActions.smartEnter;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspMethodCall;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 
@@ -32,7 +31,7 @@ public class MethodCallFixer implements Fixer {
   @Override
   public void apply(Editor editor, JavaSmartEnterProcessor processor, PsiElement psiElement) throws IncorrectOperationException {
     PsiExpressionList args = null;
-    if (psiElement instanceof PsiMethodCallExpression && !(psiElement instanceof JspMethodCall)) {
+    if (psiElement instanceof PsiMethodCallExpression/* && !(psiElement instanceof JspMethodCall)*/) {
       args = ((PsiMethodCallExpression) psiElement).getArgumentList();
     } else if (psiElement instanceof PsiNewExpression) {
       args = ((PsiNewExpression) psiElement).getArgumentList();

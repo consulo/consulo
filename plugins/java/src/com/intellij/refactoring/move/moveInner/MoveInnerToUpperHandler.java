@@ -23,12 +23,9 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
-import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.move.MoveCallback;
 import com.intellij.refactoring.move.MoveHandlerDelegate;
 import com.intellij.refactoring.move.moveClassesOrPackages.JavaMoveClassesOrPackagesHandler;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class MoveInnerToUpperHandler extends MoveHandlerDelegate {
@@ -55,11 +52,11 @@ public class MoveInnerToUpperHandler extends MoveHandlerDelegate {
       PsiClass aClass = (PsiClass) element;
       FeatureUsageTracker.getInstance().triggerFeatureUsed("refactoring.move.moveInner");
       final PsiClass containingClass = aClass.getContainingClass();
-      if (containingClass instanceof JspClass) {
+     /* if (containingClass instanceof JspClass) {
         CommonRefactoringUtil.showErrorHint(project, editor, RefactoringBundle.message("move.nonstatic.class.from.jsp.not.supported"),
                                             RefactoringBundle.message("move.title"), null);
         return true;
-      }
+      }  */
       MoveInnerImpl.doMove(project, new PsiElement[]{aClass}, null);
       return true;
     }

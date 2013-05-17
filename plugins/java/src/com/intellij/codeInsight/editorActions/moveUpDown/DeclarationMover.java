@@ -23,7 +23,6 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClassLevelDeclarationStatement;
 import com.intellij.psi.impl.source.tree.Factory;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -219,10 +218,10 @@ class DeclarationMover extends LineMover {
         return new LineRange(rBrace, rBrace, editor.getDocument());
       }
     }
-    if (sibling instanceof JspClassLevelDeclarationStatement) {
+    /*if (sibling instanceof JspClassLevelDeclarationStatement) {
       // there should be another scriptlet/decl to move
       if (firstNonWhiteElement(isDown ? sibling.getNextSibling() : sibling.getPrevSibling(), isDown) == null) throw new IllegalMoveException();
-    }
+    }  */
     return null;
   }
 

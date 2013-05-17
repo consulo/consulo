@@ -39,7 +39,7 @@ public class WrongPackageStatementInspection extends BaseJavaLocalInspectionTool
     // does not work in tests since CodeInsightTestCase copies file into temporary location
     if (ApplicationManager.getApplication().isUnitTestMode()) return null;
     if (file instanceof PsiJavaFile) {
-      if (JspPsiUtil.isInJspFile(file)) return null;
+      //if (JspPsiUtil.isInJspFile(file)) return null;
       PsiJavaFile javaFile = (PsiJavaFile)file;
 
       PsiDirectory directory = javaFile.getContainingDirectory();

@@ -32,7 +32,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiSubstitutor;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.psi.util.MethodSignature;
 import com.intellij.util.IncorrectOperationException;
 
@@ -151,7 +150,7 @@ abstract class OverrideImplementMethodAction extends AnAction {
 
   private static boolean canImplementOverride(final MethodHierarchyNodeDescriptor descriptor, final MethodHierarchyBrowser methodHierarchyBrowser, final boolean toImplement) {
     final PsiClass psiClass = descriptor.getPsiClass();
-    if (psiClass == null || psiClass instanceof JspClass) return false;
+    if (psiClass == null /*|| psiClass instanceof JspClass*/) return false;
     final PsiMethod baseMethod = methodHierarchyBrowser.getBaseMethod();
     if (baseMethod == null) return false;
     final MethodSignature signature = baseMethod.getSignature(PsiSubstitutor.EMPTY);

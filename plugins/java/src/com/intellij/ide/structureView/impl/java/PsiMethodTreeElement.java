@@ -24,7 +24,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
 import com.intellij.psi.search.searches.SuperMethodsSearch;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
 import com.intellij.psi.util.PsiFormatUtil;
@@ -49,7 +48,7 @@ public class PsiMethodTreeElement extends JavaClassTreeElementBase<PsiMethod> im
   public Collection<StructureViewTreeElement> getChildrenBase() {
     final ArrayList<StructureViewTreeElement> result = new ArrayList<StructureViewTreeElement>();
     final PsiMethod element = getElement();
-    if (element == null || element instanceof JspHolderMethod) return result;
+    if (element == null /*|| element instanceof JspHolderMethod*/) return result;
 
     final TextRange range = element.getTextRange();
     if (range == null) return result;

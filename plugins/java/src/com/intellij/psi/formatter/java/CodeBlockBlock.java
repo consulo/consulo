@@ -24,7 +24,6 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.formatter.common.AbstractBlock;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.psi.impl.source.tree.JavaDocElementType;
 import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.impl.source.tree.StdTokenSets;
@@ -108,9 +107,9 @@ public class CodeBlockBlock extends AbstractJavaBlock {
 
     int state = BEFORE_FIRST;
 
-    if (myNode.getPsi() instanceof JspClass) {
+   /* if (myNode.getPsi() instanceof JspClass) {
       state = INSIDE_BODY;
-    }
+    }     */
 
     while (child != null) {
       if (!FormatterUtil.containsWhiteSpacesOnly(child) && child.getTextLength() > 0) {

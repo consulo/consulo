@@ -19,7 +19,6 @@ import com.intellij.codeInsight.ExceptionUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
 import com.intellij.util.IncorrectOperationException;
@@ -425,16 +424,16 @@ public class RefMethodImpl extends RefJavaElementImpl implements RefMethod {
         @Override
         public void run() {
           PsiMethod psiMethod = (PsiMethod) getElement();
-          if (psiMethod instanceof JspHolderMethod) {
+          /*if (psiMethod instanceof JspHolderMethod) {
             result[0] = psiMethod.getName();
           }
-          else {
+          else { */
             result[0] = PsiFormatUtil.formatMethod(psiMethod,
                                                    PsiSubstitutor.EMPTY,
                                                    PsiFormatUtilBase.SHOW_NAME | PsiFormatUtilBase.SHOW_PARAMETERS,
                                                    PsiFormatUtilBase.SHOW_TYPE
             );
-          }
+        //  }
         }
       };
 

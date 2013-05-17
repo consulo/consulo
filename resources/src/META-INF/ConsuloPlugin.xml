@@ -1206,7 +1206,7 @@
                         serviceImplementation="com.intellij.codeEditor.printing.MethodSeparatorProvider"/>
 
     <indexPatternBuilder implementation="com.intellij.psi.impl.search.JavaIndexPatternBuilder"/>
-    <indexPatternBuilder implementation="com.intellij.psi.impl.search.JspIndexPatternBuilder"/>
+
     <applicationService serviceInterface="com.intellij.codeInsight.TargetElementUtilBase"
                         serviceImplementation="com.intellij.codeInsight.TargetElementUtil"/>
     <gotoClassContributor implementation="com.intellij.ide.util.gotoByName.DefaultClassNavigationContributor"/>

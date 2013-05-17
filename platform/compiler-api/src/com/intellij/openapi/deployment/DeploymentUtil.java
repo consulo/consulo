@@ -18,10 +18,8 @@ package com.intellij.openapi.deployment;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.make.BuildRecipe;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.StringBuilderSpinAllocator;
-import com.sun.security.auth.login.ConfigFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,8 +48,6 @@ public abstract class DeploymentUtil {
     }
     return path;
   }
-
-  public abstract void reportDeploymentDescriptorDoesNotExists(ConfigFile descriptor, CompileContext context, Module module);
 
   public static String concatPaths(String... paths) {
     final StringBuilder builder = new StringBuilder();
@@ -83,11 +79,6 @@ public abstract class DeploymentUtil {
     return basePath + tail;
   }
 
-  @Deprecated
-  public abstract BuildRecipe createBuildRecipe();
-
-  @Nullable
-  public abstract String getConfigFileErrorMessage(ConfigFile configFile);
 
   /**
    * @deprecated use {@link com.intellij.openapi.util.io.FileUtil#getRelativePath}
@@ -125,7 +116,4 @@ public abstract class DeploymentUtil {
       StringBuilderSpinAllocator.dispose(relativePath);
     }
   }
-
-  public abstract void checkConfigFile(final ConfigFile descriptor, final CompileContext compileContext, final Module module);
-
 }

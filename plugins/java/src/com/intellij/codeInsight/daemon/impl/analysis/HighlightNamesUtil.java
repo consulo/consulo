@@ -32,7 +32,6 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
 import com.intellij.psi.impl.source.tree.ElementType;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
@@ -251,7 +250,7 @@ public class HighlightNamesUtil {
   }
 
   public static TextRange getMethodDeclarationTextRange(@NotNull PsiMethod method) {
-    if (method instanceof JspHolderMethod) return TextRange.EMPTY_RANGE;
+   // if (method instanceof JspHolderMethod) return TextRange.EMPTY_RANGE;
     int start = stripAnnotationsFromModifierList(method.getModifierList());
     final TextRange throwsRange = method.getThrowsList().getTextRange();
     LOG.assertTrue(throwsRange != null, method);

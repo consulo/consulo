@@ -157,7 +157,7 @@ public abstract class BaseExpressionToFieldHandler extends IntroduceHandlerBase 
                                            PsiFile file,
                                            final Project project,
                                            PsiType tempType) {
-    if (myParentClass == null) {
+    /*if (myParentClass == null) {
       if (JspPsiUtil.isInJspFile(file)) {
         CommonRefactoringUtil.showErrorHint(project, editor, RefactoringBundle.message("error.not.supported.for.jsp", getRefactoringName()),
                                             getRefactoringName(), getHelpID());
@@ -167,7 +167,7 @@ public abstract class BaseExpressionToFieldHandler extends IntroduceHandlerBase 
         LOG.assertTrue(false);
         return true;
       }
-    }
+    }  */
 
     if (!validClass(myParentClass, editor)) {
       return true;

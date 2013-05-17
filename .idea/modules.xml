@@ -74,6 +74,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java.iml" filepath="$PROJECT_DIR$/plugins/java/java.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" filepath="$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" />

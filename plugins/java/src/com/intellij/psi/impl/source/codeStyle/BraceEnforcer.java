@@ -25,15 +25,13 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.jsp.JavaJspRecursiveElementVisitor;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author max
  */
-public class BraceEnforcer extends JavaJspRecursiveElementVisitor {
+public class BraceEnforcer extends JavaRecursiveElementVisitor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.codeStyle.BraceEnforcer");
 
   private final PostFormatProcessorHelper myPostProcessor;
@@ -90,12 +88,12 @@ public class BraceEnforcer extends JavaJspRecursiveElementVisitor {
     }
   }
 
-  @Override public void visitJspFile(JspFile file) {
+  /*@Override public void visitJspFile(JspFile file) {
     final PsiClass javaRoot = file.getJavaClass();
     if (javaRoot != null) {
       javaRoot.accept(this);
     }
-  }
+  }      */
   
   private void processStatement(PsiStatement statement, PsiStatement blockCandidate, int options) {
     if (blockCandidate instanceof PsiBlockStatement || blockCandidate == null) return;

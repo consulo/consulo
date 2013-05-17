@@ -29,13 +29,10 @@ import com.intellij.psi.codeStyle.PackageEntry;
 import com.intellij.psi.codeStyle.PackageEntryTable;
 import com.intellij.psi.impl.source.PsiJavaCodeReferenceElementImpl;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.impl.source.jsp.jspJava.JspxImportStatement;
 import com.intellij.psi.impl.source.resolve.ResolveClassUtil;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReference;
 import com.intellij.psi.impl.source.tree.ElementType;
 import com.intellij.psi.impl.source.tree.JavaJspElementType;
-import com.intellij.psi.jsp.JspFile;
-import com.intellij.psi.jsp.JspSpiUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
@@ -689,9 +686,9 @@ public class ImportHelper{
   private static Collection<Pair<String,Boolean>> collectNamesToImport(@NotNull PsiJavaFile file, List<PsiElement> comments){
     Set<Pair<String,Boolean>> names = new THashSet<Pair<String,Boolean>>();
 
-    final JspFile jspFile = JspPsiUtil.getJspFile(file);
-    collectNamesToImport(names, comments, file, jspFile);
-    if (jspFile != null) {
+    //final JspFile jspFile = JspPsiUtil.getJspFile(file);
+    //collectNamesToImport(names, comments, file, jspFile);
+   /* if (jspFile != null) {
       PsiFile[] files = ArrayUtil.mergeArrays(JspSpiUtil.getIncludingFiles(jspFile), JspSpiUtil.getIncludedFiles(jspFile));
       for (PsiFile includingFile : files) {
         final PsiFile javaRoot = includingFile.getViewProvider().getPsi(JavaLanguage.INSTANCE);
@@ -699,7 +696,7 @@ public class ImportHelper{
           collectNamesToImport(names, comments, (PsiJavaFile)javaRoot, jspFile);
         }
       }
-    }
+    }   */
 
     addUnresolvedImportNames(names, file);
 
@@ -776,9 +773,9 @@ public class ImportHelper{
         PsiElement currentFileResolveScope = resolveResult.getCurrentFileResolveScope();
         if (!(currentFileResolveScope instanceof PsiImportStatementBase)) continue;
         if (context != null &&
-            (!currentFileResolveScope.isValid() ||
+            (!currentFileResolveScope.isValid() /*||
              currentFileResolveScope instanceof JspxImportStatement &&
-             context != ((JspxImportStatement)currentFileResolveScope).getDeclarationFile())) {
+             context != ((JspxImportStatement)currentFileResolveScope).getDeclarationFile()*/)) {
           continue;
         }
 

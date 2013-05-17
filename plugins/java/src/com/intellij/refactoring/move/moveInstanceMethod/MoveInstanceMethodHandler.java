@@ -29,7 +29,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.codeStyle.SuggestedNameInfo;
 import com.intellij.psi.codeStyle.VariableKind;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.psi.search.searches.OverridingMethodsSearch;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.refactoring.HelpID;
@@ -95,12 +94,12 @@ public class MoveInstanceMethodHandler implements RefactoringActionHandler {
       else {
         final Set<PsiClass> classes = MoveInstanceMembersUtil.getThisClassesToMembers(method).keySet();
         for (PsiClass aClass : classes) {
-          if (aClass instanceof JspClass) {
+         /* if (aClass instanceof JspClass) {
             message = RefactoringBundle.message("synthetic.jsp.class.is.referenced.in.the.method");
             Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
             CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, HelpID.MOVE_INSTANCE_METHOD);
             break;
-          }
+          }  */
         }
       }
     }

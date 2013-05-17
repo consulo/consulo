@@ -44,7 +44,6 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.classFilter.ClassFilter;
@@ -328,9 +327,9 @@ public class LineBreakpoint extends BreakpointWithHighlighter {
   }
 
   private static @Nullable String findMethodName(final PsiFile file, final int offset) {
-    if (file instanceof JspFile) {
+   /* if (file instanceof JspFile) {
       return null;
-    }
+    }   */
     if (file instanceof PsiClassOwner) {
       return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
         public String compute() {

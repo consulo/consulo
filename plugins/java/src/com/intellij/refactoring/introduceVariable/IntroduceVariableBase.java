@@ -50,8 +50,6 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.codeStyle.SuggestedNameInfo;
 import com.intellij.psi.codeStyle.VariableKind;
 import com.intellij.psi.impl.PsiDiamondTypeUtil;
-import com.intellij.psi.impl.source.jsp.jspJava.JspCodeBlock;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
 import com.intellij.psi.impl.source.resolve.DefaultParameterTypeInferencePolicy;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.impl.source.tree.java.ReplaceExpressionUtil;
@@ -687,14 +685,14 @@ public abstract class IntroduceVariableBase extends IntroduceHandlerBase {
   }
 
   private static boolean isInJspHolderMethod(PsiExpression expr) {
-    final PsiElement parent1 = expr.getParent();
-    if (parent1 == null) {
+    /*final PsiElement parent1 = expr.getParent();
+    if (parent1 == null) {  */
       return false;
-    }
+   /* }
     final PsiElement parent2 = parent1.getParent();
     if (!(parent2 instanceof JspCodeBlock)) return false;
     final PsiElement parent3 = parent2.getParent();
-    return parent3 instanceof JspHolderMethod;
+    return parent3 instanceof JspHolderMethod;  */
   }
 
   /**

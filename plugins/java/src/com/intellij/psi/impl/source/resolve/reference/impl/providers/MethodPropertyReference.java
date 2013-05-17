@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.psi.*;
-import com.intellij.psi.jsp.JspImplicitVariable;
-import com.intellij.psi.jsp.JspSpiUtil;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
@@ -62,12 +62,12 @@ public class MethodPropertyReference extends BasicAttributeValueReference {
           }
         } else if (psiElement instanceof PsiClass) {
           return (PsiClass)psiElement;
-        } else if (psiElement instanceof JspImplicitVariable) {
+        }/* else if (psiElement instanceof JspImplicitVariable) {
           final PsiType type=((JspImplicitVariable)psiElement).getType();
           if (type instanceof PsiClassType) {
             return ((PsiClassType)type).resolve();
           }
-        }
+        }  */
       }
     }
 
@@ -84,7 +84,7 @@ public class MethodPropertyReference extends BasicAttributeValueReference {
   @Override
   @Nullable
   public PsiElement resolve() {
-    return JspSpiUtil.resolveMethodPropertyReference(this, resolveClass(), myReadable);
+    return/* JspSpiUtil.resolveMethodPropertyReference(this, */resolveClass()/*, myReadable)*/;
   }
 
 
@@ -99,7 +99,7 @@ public class MethodPropertyReference extends BasicAttributeValueReference {
   @Override
   @NotNull
   public Object[] getVariants() {
-    return JspSpiUtil.getMethodPropertyReferenceVariants(this, resolveClass(), myReadable);
+    return /*JspSpiUtil.getMethodPropertyReferenceVariants(this, resolveClass(), myReadable)*/PsiElement.EMPTY_ARRAY;
   }
 
   @Override

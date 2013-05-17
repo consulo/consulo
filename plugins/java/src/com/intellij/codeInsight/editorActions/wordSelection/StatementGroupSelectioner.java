@@ -15,15 +15,14 @@
  */
 package com.intellij.codeInsight.editorActions.wordSelection;
 
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspCodeBlock;
-import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.LineTokenizer;
-import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StatementGroupSelectioner extends BasicSelectioner {
   @Override
@@ -37,7 +36,7 @@ public class StatementGroupSelectioner extends BasicSelectioner {
 
     PsiElement parent = e.getParent();
 
-    if (!(parent instanceof PsiCodeBlock) && !(parent instanceof PsiBlockStatement) || parent instanceof JspCodeBlock) {
+    if (!(parent instanceof PsiCodeBlock) && !(parent instanceof PsiBlockStatement)/* || parent instanceof JspCodeBlock*/) {
       return result;
     }
 

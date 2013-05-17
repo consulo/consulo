@@ -56,7 +56,7 @@ public class JavaAnalysisScope extends AnalysisScope {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(defaultProject).getFileIndex();
     final HashSet<Module> modules = new HashSet<Module>();
     if (myType == FILE) {
-      if (myElement instanceof PsiJavaFile && !JspPsiUtil.isInJspFile(myElement)) {
+      if (myElement instanceof PsiJavaFile/* && !JspPsiUtil.isInJspFile(myElement)*/) {
         PsiJavaFile psiJavaFile = (PsiJavaFile)myElement;
         final PsiClass[] classes = psiJavaFile.getClasses();
         boolean onlyPackLocalClasses = true;

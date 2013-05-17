@@ -23,8 +23,6 @@ package com.intellij.codeInspection.reference;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Stack;
 import gnu.trove.THashSet;
@@ -67,10 +65,10 @@ public abstract class RefJavaElementImpl extends RefElementImpl implements RefJa
     super(getName(elem), elem, manager);
 
     setAccessModifier(RefJavaUtil.getInstance().getAccessModifier(elem));
-    final boolean isSynth = elem instanceof JspHolderMethod || elem instanceof JspClass;
+   /* final boolean isSynth = elem instanceof JspHolderMethod || elem instanceof JspClass;
     if (isSynth) {
       setSyntheticJSP(true);
-    }
+    }  */
 
     setIsStatic(elem.hasModifierProperty(PsiModifier.STATIC));
     setIsFinal(elem.hasModifierProperty(PsiModifier.FINAL));
@@ -99,7 +97,7 @@ public abstract class RefJavaElementImpl extends RefElementImpl implements RefJa
      return InspectionsBundle.message("inspection.reference.anonymous.name", psiBaseClass == null ? "" : psiBaseClass.getQualifiedName());
    }
 
-   if (element instanceof JspClass) {
+  /* if (element instanceof JspClass) {
      final JspClass jspClass = (JspClass)element;
      final PsiFile jspxFile = jspClass.getContainingFile();
      return "<" + jspxFile.getName() + ">";
@@ -107,7 +105,7 @@ public abstract class RefJavaElementImpl extends RefElementImpl implements RefJa
 
    if (element instanceof JspHolderMethod) {
      return InspectionsBundle.message("inspection.reference.jsp.holder.method.anonymous.name");
-   }
+   }    */
 
    String name = null;
    if (element instanceof PsiNamedElement) {

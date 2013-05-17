@@ -66,9 +66,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.source.PsiClassImpl;
-import com.intellij.psi.impl.source.jsp.jspJava.JspxImportStatement;
-import com.intellij.psi.jsp.JspFile;
-import com.intellij.psi.jsp.JspSpiUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.SearchScope;
@@ -241,12 +238,12 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
 
     myUnusedParametersInspection = (UnusedParametersInspection)profile.getUnwrappedTool(UnusedParametersInspection.SHORT_NAME, myFile);
     LOG.assertTrue(ApplicationManager.getApplication().isUnitTestMode() || myUnusedParametersInspection != null);
-    if (unusedImportEnabled && JspPsiUtil.isInJspFile(myFile)) {
+   /* if (unusedImportEnabled && JspPsiUtil.isInJspFile(myFile)) {
       final JspFile jspFile = JspPsiUtil.getJspFile(myFile);
       if (jspFile != null) {
         unusedImportEnabled = !JspSpiUtil.isIncludedOrIncludesSomething(jspFile);
       }
-    }
+    } */
 
     myDeadCodeInfoType = myDeadCodeKey == null
                          ? null
@@ -740,7 +737,7 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
   @Nullable
   private HighlightInfo processImport(@NotNull PsiImportStatementBase importStatement, @NotNull HighlightDisplayKey unusedImportKey) {
     // jsp include directive hack
-    if (importStatement instanceof JspxImportStatement && ((JspxImportStatement)importStatement).isForeignFileImport()) return null;
+    //if (importStatement instanceof JspxImportStatement && ((JspxImportStatement)importStatement).isForeignFileImport()) return null;
 
     if (PsiUtilCore.hasErrorElementChild(importStatement)) return null;
 
@@ -793,7 +790,7 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
     DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(myProject);
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     // dont optimize out imports in JSP since it can be included in other JSP
-    if (file == null || !codeAnalyzer.isHighlightingAvailable(file) || !(file instanceof PsiJavaFile) || file instanceof JspFile) return false;
+    if (file == null || !codeAnalyzer.isHighlightingAvailable(file) || !(file instanceof PsiJavaFile) /*|| file instanceof JspFile*/) return false;
 
     if (!codeAnalyzer.isErrorAnalyzingFinished(file)) return false;
     boolean errors = containsErrorsPreventingOptimize(file);

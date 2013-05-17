@@ -26,7 +26,6 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.*;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.util.TypeConversionUtil;
@@ -330,9 +329,9 @@ public class JVMNameUtil {
       return null;
     }
     final PsiFile positionFile = position.getFile();
-    if (positionFile instanceof JspFile) {
+   /* if (positionFile instanceof JspFile) {
       return positionFile.getName();
-    }
+    }       */
 
     final PsiClass psiClass = getClassAt(position);
 
@@ -396,10 +395,10 @@ public class JVMNameUtil {
       return null;
     }
     final PsiFile positionFile = position.getFile();
-    if (positionFile instanceof JspFile) {
+   /* if (positionFile instanceof JspFile) {
       final PsiDirectory dir = positionFile.getContainingDirectory();
       return dir != null? dir.getVirtualFile().getPresentableUrl() : null;
-    }
+    }   */
 
     final PsiClass psiClass = getClassAt(position);
 

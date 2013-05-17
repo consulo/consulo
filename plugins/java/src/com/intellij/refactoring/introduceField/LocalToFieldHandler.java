@@ -30,10 +30,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.HelpID;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.introduce.inplace.AbstractInplaceIntroducer;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.refactoring.util.EnumConstantsUtil;
 import com.intellij.refactoring.util.RefactoringUtil;
 import com.intellij.util.IncorrectOperationException;
@@ -69,11 +67,11 @@ public abstract class LocalToFieldHandler {
       if (parent instanceof PsiClass && !(myIsConstant && parent instanceof PsiAnonymousClass)) {
         classes.add((PsiClass)parent);
       }
-      if (parent instanceof PsiFile && JspPsiUtil.isInJspFile(parent)) {
+      /*if (parent instanceof PsiFile && JspPsiUtil.isInJspFile(parent)) {
         String message = RefactoringBundle.message("error.not.supported.for.jsp", REFACTORING_NAME);
         CommonRefactoringUtil.showErrorHint(myProject, editor, message, REFACTORING_NAME, HelpID.LOCAL_TO_FIELD);
         return false;
-      }
+      }   */
       if (parent instanceof PsiModifierListOwner &&((PsiModifierListOwner)parent).hasModifierProperty(PsiModifier.STATIC)) {
         tempIsStatic = true;
       }

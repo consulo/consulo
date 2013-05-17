@@ -18,7 +18,6 @@ package com.intellij.execution.junit;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.execution.*;
 import com.intellij.execution.junit2.info.MethodLocation;
-import com.intellij.execution.testframework.SourceScope;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -170,10 +169,10 @@ public class JUnitUtil {
     return getTestCaseClass(scope, module.getProject());
   }
 
-  public static PsiClass getTestCaseClass(final SourceScope scope) throws NoJUnitException {
+ /* public static PsiClass getTestCaseClass(final SourceScope scope) throws NoJUnitException {
     if (scope == null) throw new NoJUnitException();
     return getTestCaseClass(scope.getLibrariesScope(), scope.getProject());
-  }
+  }   */
 
   private static PsiClass getTestCaseClass(final GlobalSearchScope scope, final Project project) throws NoJUnitException {
     PsiClass testCaseClass = getTestCaseClassOrNull(scope, project);

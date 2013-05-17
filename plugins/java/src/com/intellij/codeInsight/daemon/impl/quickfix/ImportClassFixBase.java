@@ -209,8 +209,8 @@ public abstract class ImportClassFixBase<T extends PsiElement, R extends PsiRefe
 
     if (classes.length == 1
         && (canImportHere = canImportHere(allowCaretNearRef, editor, psiFile, classes[0].getName()))
-        && (JspPsiUtil.isInJspFile(psiFile) ?
-            CodeInsightSettings.getInstance().JSP_ADD_UNAMBIGIOUS_IMPORTS_ON_THE_FLY :
+        && (/*JspPsiUtil.isInJspFile(psiFile) ?
+            CodeInsightSettings.getInstance().JSP_ADD_UNAMBIGIOUS_IMPORTS_ON_THE_FLY : */
             CodeInsightSettings.getInstance().ADD_UNAMBIGIOUS_IMPORTS_ON_THE_FLY)
         && (ApplicationManager.getApplication().isUnitTestMode() || codeAnalyzer.canChangeFileSilently(psiFile))
         && !autoImportWillInsertUnexpectedCharacters(classes[0])

@@ -29,8 +29,6 @@ import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.Factory;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
-import com.intellij.psi.jsp.JspElementType;
-import com.intellij.psi.jsp.JspTokenType;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.xml.XmlTokenType;
@@ -92,7 +90,7 @@ public class ShiftIndentInsideHelper {
           ASTNode next = element.findLeafElementAt(offset1);
           if ((next.getElementType() == JavaTokenType.END_OF_LINE_COMMENT
                || next.getElementType() == JavaTokenType.C_STYLE_COMMENT
-               || next.getElementType() == JspTokenType.JSP_COMMENT
+               //|| next.getElementType() == JspTokenType.JSP_COMMENT
           ) &&
               next != element) {
             if (mySettings.KEEP_FIRST_COLUMN_COMMENT) {
@@ -154,8 +152,8 @@ public class ShiftIndentInsideHelper {
     return (isComment(leaf) && !checkJspTexts(leaf))
            || leaf.getElementType() == TokenType.WHITE_SPACE
            || leaf.getElementType() == XmlTokenType.XML_DATA_CHARACTERS
-           || leaf.getElementType() == JspTokenType.JAVA_CODE
-           || leaf.getElementType() == JspElementType.JSP_SCRIPTLET
+           //|| leaf.getElementType() == JspTokenType.JAVA_CODE
+         //  || leaf.getElementType() == JspElementType.JSP_SCRIPTLET
            || leaf.getElementType() == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN;
   }
 

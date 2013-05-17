@@ -32,7 +32,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.javadoc.PsiDocComment;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -97,13 +96,13 @@ public class JavaTypedHandler extends TypedHandlerDelegate {
     //important to calculate before inserting charTyped
     myJavaLTTyped = '<' == c &&
                     file instanceof PsiJavaFile &&
-                    !(file instanceof JspFile) &&
+                   // !(file instanceof JspFile) &&
                     CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET &&
                     PsiUtil.isLanguageLevel5OrHigher(file) &&
                     isAfterClassLikeIdentifierOrDot(offsetBefore, editor);
 
     if ('>' == c) {
-      if (file instanceof PsiJavaFile && !(file instanceof JspFile) &&
+      if (file instanceof PsiJavaFile/* && !(file instanceof JspFile)*/ &&
           CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET &&
                PsiUtil.isLanguageLevel5OrHigher(file)) {
         if (handleJavaGT(editor, JavaTokenType.LT, JavaTokenType.GT, INVALID_INSIDE_REFERENCE)) return Result.STOP;

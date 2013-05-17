@@ -22,7 +22,6 @@ import com.intellij.openapi.util.NullableComputable;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.codeStyle.VariableKind;
-import com.intellij.psi.impl.source.jsp.jspJava.JspMethodCall;
 import com.intellij.psi.impl.source.resolve.CompletionParameterTypeInferencePolicy;
 import com.intellij.psi.impl.source.resolve.DefaultParameterTypeInferencePolicy;
 import com.intellij.psi.impl.source.resolve.ParameterTypeInferencePolicy;
@@ -1004,7 +1003,7 @@ public class ExpectedTypesProvider {
       }
       if (index == params.length - 1) {
         final PsiElement call = argument.getParent().getParent();
-        if (call instanceof JspMethodCall) return TailType.NONE;
+       // if (call instanceof JspMethodCall) return TailType.NONE;
 
         PsiType returnType = method.getReturnType();
         if (returnType != null) returnType = substitutor.substitute(returnType);

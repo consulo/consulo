@@ -43,11 +43,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
 import com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl;
 import com.intellij.psi.javadoc.PsiDocComment;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.scope.processor.VariablesNotProcessor;
 import com.intellij.psi.scope.util.PsiScopesUtil;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -480,7 +477,7 @@ public class HighlightUtil extends HighlightUtilBase {
     if (method == null && lambda != null) {
       //todo check return statements type inside lambda
     }
-    else if (method == null && !(parent instanceof JspFile)) {
+    else if (method == null /*&& !(parent instanceof JspFile)*/) {
       description = JavaErrorMessages.message("return.outside.method");
       errorResult = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(statement).descriptionAndTooltip(description).create();
     }
@@ -691,13 +688,13 @@ public class HighlightUtil extends HighlightUtilBase {
 
   @Nullable
   private static HighlightInfoType getUnhandledExceptionHighlightType(final PsiElement element) {
-    if (!JspPsiUtil.isInJspFile(element)) {
+   /// if (!JspPsiUtil.isInJspFile(element)) {
       return HighlightInfoType.UNHANDLED_EXCEPTION;
-    }
-    PsiMethod targetMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
-    if (!(targetMethod instanceof JspHolderMethod)) return HighlightInfoType.UNHANDLED_EXCEPTION;
+   // }
+   // PsiMethod targetMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
+  //  if (!(targetMethod instanceof JspHolderMethod)) return HighlightInfoType.UNHANDLED_EXCEPTION;
     // ignore JSP top level errors - it handled by UnhandledExceptionInJSP inspection
-    return null;
+   // return null;
   }
 
 
@@ -800,7 +797,7 @@ public class HighlightUtil extends HighlightUtilBase {
         if (PsiModifier.PUBLIC.equals(modifier)) {
           isAllowed = modifierOwnerParent instanceof PsiJavaFile ||
                       modifierOwnerParent instanceof PsiClass &&
-                      (modifierOwnerParent instanceof JspClass || ((PsiClass)modifierOwnerParent).getQualifiedName() != null);
+                      (/*modifierOwnerParent instanceof JspClass ||*/ ((PsiClass)modifierOwnerParent).getQualifiedName() != null);
         }
         else if (PsiModifier.STATIC.equals(modifier) || PsiModifier.PRIVATE.equals(modifier) || PsiModifier.PROTECTED.equals(modifier) ||
                  PsiModifier.PACKAGE_LOCAL.equals(modifier)) {

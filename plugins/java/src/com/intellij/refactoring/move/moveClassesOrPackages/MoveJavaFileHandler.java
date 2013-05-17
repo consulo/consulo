@@ -41,7 +41,7 @@ public class MoveJavaFileHandler extends MoveFileHandler {
   @Override
   public boolean canProcessElement(PsiFile element) {
     return element instanceof PsiJavaFile &&
-           !JspPsiUtil.isInJspFile(element) &&
+          // !JspPsiUtil.isInJspFile(element) &&
            !ProjectRootsUtil.isOutsideSourceRoot(element) &&
            !(element instanceof PsiCompiledElement);
   }

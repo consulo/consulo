@@ -19,7 +19,6 @@ import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
-import com.intellij.ide.hierarchy.JavaHierarchyUtil;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -33,8 +32,6 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspHolderMethod;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.presentation.java.ClassPresentationUtil;
 import com.intellij.psi.util.PsiFormatUtil;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -124,11 +121,11 @@ public final class CallHierarchyNodeDescriptor extends HierarchyNodeDescriptor i
       mainTextAttributes = new TextAttributes(myColor, null, null, null, Font.PLAIN);
     }
     if (enclosingElement instanceof PsiMethod) {
-      if (enclosingElement instanceof JspHolderMethod) {
+      /*if (enclosingElement instanceof JspHolderMethod) {
         PsiFile file = enclosingElement.getContainingFile();
         myHighlightedText.getEnding().addText(file != null ? file.getName() : IdeBundle.message("node.call.hierarchy.unknown.jsp"), mainTextAttributes);
       }
-      else {
+      else*/ {
         final PsiMethod method = (PsiMethod)enclosingElement;
         final StringBuilder buffer = new StringBuilder(128);
         final PsiClass containingClass = method.getContainingClass();
@@ -146,17 +143,17 @@ public final class CallHierarchyNodeDescriptor extends HierarchyNodeDescriptor i
         myHighlightedText.getEnding().addText(buffer.toString(), mainTextAttributes);
       }
     }
-    else if (JspPsiUtil.isInJspFile(enclosingElement) && enclosingElement instanceof PsiFile) {
+    /*else if (JspPsiUtil.isInJspFile(enclosingElement) && enclosingElement instanceof PsiFile) {
       final JspFile file = JspPsiUtil.getJspFile(enclosingElement);
       myHighlightedText.getEnding().addText(file.getName(), mainTextAttributes);
-    }
+    }   */
     else {
       myHighlightedText.getEnding().addText(ClassPresentationUtil.getNameForClass((PsiClass)enclosingElement, false), mainTextAttributes);
     }
     if (myUsageCount > 1) {
       myHighlightedText.getEnding().addText(IdeBundle.message("node.call.hierarchy.N.usages", myUsageCount), HierarchyNodeDescriptor.getUsageCountPrefixAttributes());
     }
-    if (!(JspPsiUtil.isInJspFile(enclosingElement) && enclosingElement instanceof PsiFile)) {
+   /* if (!(JspPsiUtil.isInJspFile(enclosingElement) && enclosingElement instanceof PsiFile)) {
       final PsiClass containingClass = enclosingElement instanceof PsiMethod
                                        ? ((PsiMethod)enclosingElement).getContainingClass()
                                        : (PsiClass)enclosingElement;
@@ -164,7 +161,7 @@ public final class CallHierarchyNodeDescriptor extends HierarchyNodeDescriptor i
         final String packageName = JavaHierarchyUtil.getPackageName(containingClass);
         myHighlightedText.getEnding().addText("  (" + packageName + ")", HierarchyNodeDescriptor.getPackageNameAttributes());
       }
-    }
+    }   */
     myName = myHighlightedText.getText();
 
     if (

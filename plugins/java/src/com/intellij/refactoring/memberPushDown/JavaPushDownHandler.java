@@ -20,14 +20,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.refactoring.HelpID;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.classMembers.MemberInfoBase;
 import com.intellij.refactoring.lang.ElementsHandler;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import com.intellij.refactoring.util.RefactoringMessageUtil;
 import com.intellij.refactoring.util.classMembers.MemberInfo;
 import com.intellij.refactoring.util.classMembers.MemberInfoStorage;
 import org.jetbrains.annotations.NotNull;
@@ -54,10 +52,10 @@ public class JavaPushDownHandler implements RefactoringActionHandler, ElementsHa
       }
 
       if (element instanceof PsiClass || element instanceof PsiField || element instanceof PsiMethod) {
-        if (element instanceof JspClass) {
+        /*if (element instanceof JspClass) {
           RefactoringMessageUtil.showNotSupportedForJspClassesError(project, editor, REFACTORING_NAME, HelpID.MEMBERS_PUSH_DOWN);
           return;
-        }
+        }   */
         invoke(project, new PsiElement[]{element}, dataContext);
         return;
       }

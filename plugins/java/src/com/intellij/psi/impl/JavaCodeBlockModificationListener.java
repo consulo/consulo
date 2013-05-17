@@ -17,7 +17,6 @@ package com.intellij.psi.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspXml.JspDirective;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.xml.XmlFile;
 import org.jetbrains.annotations.NotNull;
@@ -94,7 +93,7 @@ public class JavaCodeBlockModificationListener implements PsiTreeChangePreproces
   }
 
   private static boolean isClassOwner(final PsiElement element) {
-    return element instanceof PsiClassOwner && !(element instanceof XmlFile) || element instanceof JspDirective;
+    return element instanceof PsiClassOwner && !(element instanceof XmlFile) /*|| element instanceof JspDirective*/;
   }
 
   private static boolean containsClassesInside(final PsiElement element) {

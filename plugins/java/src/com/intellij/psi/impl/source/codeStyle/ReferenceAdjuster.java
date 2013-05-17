@@ -23,9 +23,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.source.PsiJavaCodeReferenceElementImpl;
 import com.intellij.psi.impl.source.SourceJavaCodeReference;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.psi.impl.source.tree.*;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -177,12 +175,12 @@ public class ReferenceAdjuster {
     }
 
     if (parent.getPsi() instanceof PsiFile) {
-      JspFile jspFile = JspPsiUtil.getJspFile(parent.getPsi());
+     /* JspFile jspFile = JspPsiUtil.getJspFile(parent.getPsi());
       if (jspFile != null) {
         JspClass jspClass = (JspClass)jspFile.getJavaClass();
         addReferencesInRange(array, (TreeElement)jspClass.getNode(), startOffset, endOffset);
         return;
-      }
+      }  */
     }
 
     addReferencesInRangeForComposite(array, parent, startOffset, endOffset);

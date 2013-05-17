@@ -31,8 +31,6 @@ import com.intellij.psi.filters.classes.EnumOrAnnotationTypeFilter;
 import com.intellij.psi.filters.classes.InterfaceFilter;
 import com.intellij.psi.filters.getters.JavaMembersGetter;
 import com.intellij.psi.filters.position.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClassLevelDeclarationStatement;
-import com.intellij.psi.jsp.JspElementType;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
@@ -98,7 +96,7 @@ public class JavaCompletionData extends JavaAwareCompletionData {
                   )
               ),
               new TextFilter("*/"),
-              new TokenTypeFilter(JspElementType.HOLDER_TEMPLATE_DATA),
+              ///new TokenTypeFilter(JspElementType.HOLDER_TEMPLATE_DATA),
               new ClassFilter(OuterLanguageElement.class),
               new AndFilter(
                   new TextFilter(")"),
@@ -134,8 +132,8 @@ public class JavaCompletionData extends JavaAwareCompletionData {
   };
 
   private static final ElementFilter CLASS_BODY = new OrFilter(
-    new AfterElementFilter(new TextFilter("{")),
-    new ScopeFilter(new ClassFilter(JspClassLevelDeclarationStatement.class)));
+    new AfterElementFilter(new TextFilter("{"))/*,
+    new ScopeFilter(new ClassFilter(JspClassLevelDeclarationStatement.class))*/);
 
   public static final ElementPattern<PsiElement> START_FOR =
     psiElement().afterLeaf(psiElement().withText("(").afterLeaf("for")).withParents(PsiJavaCodeReferenceElement.class,
@@ -191,8 +189,8 @@ public class JavaCompletionData extends JavaAwareCompletionData {
     }
     {
       // Method body
-      final CompletionVariant variant = new CompletionVariant(new AndFilter(new InsideElementFilter(new ClassFilter(PsiCodeBlock.class)),
-                                                                            new NotFilter(new InsideElementFilter(new ClassFilter(JspClassLevelDeclarationStatement.class)))));
+      final CompletionVariant variant = new CompletionVariant(new AndFilter(new InsideElementFilter(new ClassFilter(PsiCodeBlock.class))/*,
+                                                                            new NotFilter(new InsideElementFilter(new ClassFilter(JspClassLevelDeclarationStatement.class)))*/));
       variant.includeScopeClass(PsiMethod.class, true);
       variant.includeScopeClass(PsiClassInitializer.class, true);
       registerVariant(variant);
