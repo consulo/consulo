@@ -180,14 +180,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
 
   @Override
   public BuildNumber getBuild() {
-    String prefix = null;
-    if (PlatformUtils.isCommunity()) {
-      prefix = "IC";
-    }
-    else if (PlatformUtils.isIdea()) {
-      prefix = "IU";
-    }
-    return BuildNumber.fromString(myBuildNumber, prefix);
+    return BuildNumber.fromString(myBuildNumber);
   }
 
   public String getMajorVersion() {

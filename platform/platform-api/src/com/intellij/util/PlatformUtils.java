@@ -22,8 +22,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public class PlatformUtils {
   public static final String PLATFORM_PREFIX_KEY = "idea.platform.prefix";
+
+  public static final String CONSULO_PREFIX = "Consulo";
 
   public static final String IDEA_PREFIX = "idea";
   public static final String COMMUNITY_PREFIX = "Idea";
@@ -46,11 +49,11 @@ public class PlatformUtils {
   }
 
   public static boolean isIdea() {
-    return IDEA_PREFIX.equals(getPlatformPrefix());
+    return true;
   }
 
   public static boolean isCommunity() {
-    return COMMUNITY_PREFIX.equals(getPlatformPrefix());
+    return true;
   }
 
   public static boolean isRubyMine() {
