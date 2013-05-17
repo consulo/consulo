@@ -38,7 +38,7 @@ String patchAppDescriptor(String targetDirectory) {
     }
   }
 
-  ant.replace(file: "$patchedDirectory/${appInfoFileName()}", token: "__BUILD_NUMBER__", value: "IC-$snapshot")
+  ant.replace(file: "$patchedDirectory/${appInfoFileName()}", token: "__BUILD_NUMBER__", value: "$snapshot")
   ant.replace(file: "$patchedDirectory/${appInfoFileName()}", token: "__BUILD_DATE__", value: new Date().format("yyyyMMddHHmm"))
 
   return patchedDirectory
@@ -190,24 +190,6 @@ def layoutFull(String home, String targetDirectory, String patchedDescriptorDir 
     }
 
     layoutCommunityPlugins(home)
-
-    dir("plugins") {
-      dir("javaFX") {
-        dir("lib") {
-          jar("javaFX.jar") {
-            noResources("javaFX")
-            noResources("javaFX-CE")
-          }
-          resources(["javaFX", "javaFX-CE"])
-          jar("javaFX-jps-plugin.jar") {
-            module("javaFX-jps-plugin")
-          }
-          jar("common-javaFX-plugin.jar") {
-            module("common-javaFX-plugin")
-          }
-        }
-      }
-    }
 
     dir("plugins") {
       dir("IntelliLang") {
