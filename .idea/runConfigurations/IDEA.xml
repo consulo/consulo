@@ -14,7 +14,7 @@
     <module name="community-main" />
     <envs />
     <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="60786" />
+      <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
