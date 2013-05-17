@@ -47,9 +47,9 @@ public class SingleClassImportInspection extends BaseInspection {
       if (!(aClass.getParent() instanceof PsiJavaFile)) {
         return;
       }
-      if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
+     /* if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
         return;
-      }
+      }     */
       final PsiJavaFile file = (PsiJavaFile)aClass.getParent();
       if (file == null) {
         return;

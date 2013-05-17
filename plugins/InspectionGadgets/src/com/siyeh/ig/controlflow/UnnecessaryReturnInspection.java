@@ -79,9 +79,9 @@ public class UnnecessaryReturnInspection extends BaseInspection {
     @Override
     public void visitReturnStatement(@NotNull PsiReturnStatement statement) {
       super.visitReturnStatement(statement);
-      if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
+    /*  if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
         return;
-      }
+      } */
       if (statement.getReturnValue() != null) {
         return;
       }

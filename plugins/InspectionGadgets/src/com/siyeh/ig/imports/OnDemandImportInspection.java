@@ -47,9 +47,9 @@ public class OnDemandImportInspection extends BaseInspection {
         return;
       }
       final PsiJavaFile file = (PsiJavaFile)parent;
-      if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
+     /* if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
         return;
-      }
+      }  */
       if (!file.getClasses()[0].equals(aClass)) {
         return;
       }

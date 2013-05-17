@@ -407,7 +407,7 @@ public class TooBroadScopeInspection extends BaseInspection {
           return;
         }
       }
-      if (insertionPoint != null && JspPsiUtil.isInJspFile(insertionPoint)) {
+     /* if (insertionPoint != null && JspPsiUtil.isInJspFile(insertionPoint)) {
         PsiElement elementBefore = insertionPoint.getPrevSibling();
         elementBefore = PsiTreeUtil.skipSiblingsBackward(elementBefore, PsiWhiteSpace.class);
         if (elementBefore instanceof PsiDeclarationStatement) {
@@ -416,7 +416,7 @@ public class TooBroadScopeInspection extends BaseInspection {
             return;
           }
         }
-      }
+      } */
       registerVariableError(variable, variable);
     }
   }

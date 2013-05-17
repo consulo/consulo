@@ -86,9 +86,9 @@ public class EmptyStatementBodyInspection extends BaseInspection {
     }
 
     private void checkLoopStatement(PsiLoopStatement statement) {
-      if (JspPsiUtil.isInJspFile(statement)) {
+     /* if (JspPsiUtil.isInJspFile(statement)) {
         return;
-      }
+      }  */
       final PsiStatement body = statement.getBody();
       if (body == null || !isEmpty(body)) {
         return;
@@ -99,9 +99,9 @@ public class EmptyStatementBodyInspection extends BaseInspection {
     @Override
     public void visitIfStatement(@NotNull PsiIfStatement statement) {
       super.visitIfStatement(statement);
-      if (JspPsiUtil.isInJspFile(statement)) {
+      /*if (JspPsiUtil.isInJspFile(statement)) {
         return;
-      }
+      } */
       final PsiStatement thenBranch = statement.getThenBranch();
       if (thenBranch != null && isEmpty(thenBranch)) {
         registerStatementError(statement);
@@ -120,9 +120,9 @@ public class EmptyStatementBodyInspection extends BaseInspection {
     @Override
     public void visitSwitchStatement(PsiSwitchStatement statement) {
       super.visitSwitchStatement(statement);
-      if (JspPsiUtil.isInJspFile(statement)) {
+     /* if (JspPsiUtil.isInJspFile(statement)) {
         return;
-      }
+      } */
       final PsiCodeBlock body = statement.getBody();
       if (body == null || !isEmpty(body)) {
         return;

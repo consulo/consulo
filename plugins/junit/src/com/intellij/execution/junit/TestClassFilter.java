@@ -27,7 +27,6 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +40,7 @@ public class TestClassFilter implements ClassFilter.ClassFilterWithScope {
   private final Project myProject;
   private final GlobalSearchScope myScope;
 
-  private TestClassFilter(@NotNull PsiClass base, final GlobalSearchScope scope) {
+  public TestClassFilter(@NotNull PsiClass base, final GlobalSearchScope scope) {
     myBase = base;
     myProject = base.getProject();
     myScope = scope;

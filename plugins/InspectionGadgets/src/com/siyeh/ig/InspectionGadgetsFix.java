@@ -17,19 +17,13 @@ package com.siyeh.ig;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.lang.StdLanguages;
-import com.intellij.lang.Language;
-import com.intellij.lang.jsp.JspxFileViewProvider;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -154,7 +148,7 @@ public abstract class InspectionGadgetsFix implements LocalQuickFix {
       CodeStyleManager.getInstance(project);
     final JavaCodeStyleManager javaStyleManager =
       JavaCodeStyleManager.getInstance(project);
-    if (JspPsiUtil.isInJspFile(statement)) {
+   /* if (JspPsiUtil.isInJspFile(statement)) {
       final PsiDocumentManager documentManager =
         PsiDocumentManager.getInstance(project);
       final JspFile file = JspPsiUtil.getJspFile(statement);
@@ -195,7 +189,7 @@ public abstract class InspectionGadgetsFix implements LocalQuickFix {
                                    newTextRange.getEndOffset());
       }
     }
-    else {
+    else */{
       final JavaPsiFacade facade = JavaPsiFacade.getInstance(project);
       final PsiElementFactory factory = facade.getElementFactory();
       PsiStatement newStatement = factory.createStatementFromText(

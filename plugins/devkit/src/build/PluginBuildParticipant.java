@@ -18,7 +18,7 @@ package org.jetbrains.idea.devkit.build;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.make.BuildParticipant;
-import com.intellij.openapi.deployment.DeploymentUtil;
+import com.intellij.openapi.deployment.DeploymentUtilImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -96,7 +96,7 @@ public class PluginBuildParticipant extends BuildParticipant {
 
     ConfigFile configFile = myPluginBuildConfiguration.getPluginXML();
     if (configFile != null) {
-      DeploymentUtil.getInstance().checkConfigFile(configFile, context, myModule);
+      DeploymentUtilImpl.getInstance().checkConfigFile(configFile, context, myModule);
       factory.addFileCopy(root, "META-INF/", VfsUtil.urlToPath(configFile.getUrl()));
 
       final XmlFile xmlFile = configFile.getXmlFile();

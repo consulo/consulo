@@ -54,7 +54,7 @@
       <module fileurl="file://$PROJECT_DIR$/platform/extensions/extensions.iml" filepath="$PROJECT_DIR$/platform/extensions/extensions.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/external-system-api/external-system-api.iml" filepath="$PROJECT_DIR$/platform/external-system-api/external-system-api.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/external-system-impl/external-system-impl.iml" filepath="$PROJECT_DIR$/platform/external-system-impl/external-system-impl.iml" group="platform" />
-      <module fileurl="file://$PROJECT_DIR$/java/compiler/forms-compiler/forms-compiler.iml" filepath="$PROJECT_DIR$/java/compiler/forms-compiler/forms-compiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform/tools/forms-compiler/forms-compiler.iml" filepath="$PROJECT_DIR$/platform/tools/forms-compiler/forms-compiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/platform/forms_rt/forms_rt.iml" filepath="$PROJECT_DIR$/platform/forms_rt/forms_rt.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/generate-tostring/generate-tostring.iml" filepath="$PROJECT_DIR$/plugins/generate-tostring/generate-tostring.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/git4idea/git4idea.iml" filepath="$PROJECT_DIR$/plugins/git4idea/git4idea.iml" group="plugins/VCS" />
@@ -69,7 +69,7 @@
       <module fileurl="file://$PROJECT_DIR$/images/images.iml" filepath="$PROJECT_DIR$/images/images.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/indexing-api/indexing-api.iml" filepath="$PROJECT_DIR$/platform/indexing-api/indexing-api.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/indexing-impl/indexing-impl.iml" filepath="$PROJECT_DIR$/platform/indexing-impl/indexing-impl.iml" group="platform" />
-      <module fileurl="file://$PROJECT_DIR$/java/compiler/instrumentation-util/instrumentation-util.iml" filepath="$PROJECT_DIR$/java/compiler/instrumentation-util/instrumentation-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform/tools/instrumentation-util/instrumentation-util.iml" filepath="$PROJECT_DIR$/platform/tools/instrumentation-util/instrumentation-util.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/IntelliLang/intellilang-jps-plugin/intellilang-jps-plugin.iml" filepath="$PROJECT_DIR$/plugins/IntelliLang/intellilang-jps-plugin/intellilang-jps-plugin.iml" group="jps" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java.iml" filepath="$PROJECT_DIR$/plugins/java/java.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" />
@@ -82,7 +82,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-psi-impl/java-psi-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-psi-impl/java-psi-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/java/java-runtime/java-runtime.iml" filepath="$PROJECT_DIR$/java/java-runtime/java-runtime.iml" />
-      <module fileurl="file://$PROJECT_DIR$/java/compiler/javac2/javac2.iml" filepath="$PROJECT_DIR$/java/compiler/javac2/javac2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform/tools/javac2/javac2.iml" filepath="$PROJECT_DIR$/platform/tools/javac2/javac2.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" filepath="$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" group="plugins/VCS/cvs" />
       <module fileurl="file://$PROJECT_DIR$/plugins/groovy/jetgroovy.iml" filepath="$PROJECT_DIR$/plugins/groovy/jetgroovy.iml" group="plugins/Groovy" />
       <module fileurl="file://$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" filepath="$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" group="plugins/tasks" />

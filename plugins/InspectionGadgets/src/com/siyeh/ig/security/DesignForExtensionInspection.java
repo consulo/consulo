@@ -43,10 +43,10 @@ public class DesignForExtensionInspection extends BaseInspection {
 
     @Override
     public void visitMethod(PsiMethod method) {
-      if (JspPsiUtil.isInJspFile(method)) {
+     /* if (JspPsiUtil.isInJspFile(method)) {
         // IDEADEV-25538
         return;
-      }
+      }   */
       super.visitMethod(method);
       if (method.isConstructor()) {
         return;

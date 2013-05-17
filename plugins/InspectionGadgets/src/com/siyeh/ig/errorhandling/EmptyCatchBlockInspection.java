@@ -129,9 +129,9 @@ public class EmptyCatchBlockInspection extends BaseInspection {
     @Override
     public void visitTryStatement(@NotNull PsiTryStatement statement) {
       super.visitTryStatement(statement);
-      if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
+    /*  if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
         return;
-      }
+      }     */
       if (m_ignoreTestCases && TestUtils.isInTestCode(statement)) {
         return;
       }

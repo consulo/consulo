@@ -20,6 +20,7 @@ import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.make.BuildRecipe;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
@@ -43,6 +44,10 @@ import java.util.Set;
  */
 public class DeploymentUtilImpl extends DeploymentUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.deployment.MakeUtilImpl");
+
+  public static DeploymentUtilImpl getInstance() {
+    return ServiceManager.getService(DeploymentUtilImpl.class);
+  }
 
   public void copyFile(@NotNull final File fromFile,
                        @NotNull final File toFile,

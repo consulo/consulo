@@ -15,7 +15,6 @@
  */
 package com.siyeh.ipp.braces;
 
-import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.siyeh.ipp.base.PsiElementPredicate;
@@ -40,7 +39,8 @@ public class RemoveBracesIntention extends BaseBracesIntention {
         final PsiFile file = statement.getContainingFile();
         //this intention doesn't work in JSP files, as it can't tell about tags
         // inside the braces
-        return !JspPsiUtil.isInJspFile(file);
+        return true;
+       // return !JspPsiUtil.isInJspFile(file);
       }
     };
   }

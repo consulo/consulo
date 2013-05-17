@@ -276,9 +276,9 @@ public class StaticImportInspection extends BaseInspection {
         return;
       }
       final PsiJavaFile file = (PsiJavaFile)parent;
-      if (JspPsiUtil.isInJspFile(file)) {
+  /*    if (JspPsiUtil.isInJspFile(file)) {
         return;
-      }
+      }   */
       if (!file.getClasses()[0].equals(aClass)) {
         return;
       }

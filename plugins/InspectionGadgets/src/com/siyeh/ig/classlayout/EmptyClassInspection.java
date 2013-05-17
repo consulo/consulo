@@ -125,9 +125,9 @@ public class EmptyClassInspection extends BaseInspection {
     @Override
     public void visitClass(@NotNull PsiClass aClass) {
       //don't call super, to prevent drilldown
-      if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
+    /*  if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
         return;
-      }
+      } */
       if (aClass.isInterface() || aClass.isEnum() || aClass.isAnnotationType()) {
         return;
       }

@@ -58,9 +58,9 @@ public class SamePackageImportInspection extends BaseInspection {
       if (!(parent instanceof PsiJavaFile)) {
         return;
       }
-      if (JspPsiUtil.isInJspFile(importList)) {
+     /* if (JspPsiUtil.isInJspFile(importList)) {
         return;
-      }
+      } */
       final PsiJavaFile javaFile = (PsiJavaFile)parent;
       final String packageName = javaFile.getPackageName();
       final PsiImportStatement[] importStatements =

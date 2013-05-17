@@ -59,9 +59,9 @@ public class JavaLangImportInspection extends BaseInspection {
       if (!(aClass.getParent() instanceof PsiJavaFile)) {
         return;
       }
-      if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
+     /* if (JspPsiUtil.isInJspFile(aClass.getContainingFile())) {
         return;
-      }
+      }   */
       final PsiJavaFile file = (PsiJavaFile)aClass.getContainingFile();
       if (!file.getClasses()[0].equals(aClass)) {
         return;

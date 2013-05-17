@@ -60,9 +60,9 @@ public class RedundantImportInspection extends BaseInspection {
         return;
       }
       final PsiJavaFile javaFile = (PsiJavaFile)file;
-      if (JspPsiUtil.isInJspFile(file)) {
+     /* if (JspPsiUtil.isInJspFile(file)) {
         return;
-      }
+      }*/
       final PsiImportList importList = javaFile.getImportList();
       if (importList == null) {
         return;

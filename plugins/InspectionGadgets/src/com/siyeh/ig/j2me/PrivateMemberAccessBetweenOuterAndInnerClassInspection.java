@@ -169,9 +169,9 @@ public class PrivateMemberAccessBetweenOuterAndInnerClassInspection
 
     @Override
     public void visitNewExpression(PsiNewExpression expression) {
-      if (JspPsiUtil.isInJspFile(expression)) {
+     /* if (JspPsiUtil.isInJspFile(expression)) {
         return;
-      }
+      }     */
       super.visitNewExpression(expression);
       final PsiClass containingClass =
         getContainingContextClass(expression);
@@ -213,10 +213,10 @@ public class PrivateMemberAccessBetweenOuterAndInnerClassInspection
     @Override
     public void visitReferenceExpression(
       @NotNull PsiReferenceExpression expression) {
-      if (JspPsiUtil.isInJspFile(expression)) {
+    /*  if (JspPsiUtil.isInJspFile(expression)) {
         // disable for jsp files IDEADEV-12957
         return;
-      }
+      }  */
       super.visitReferenceExpression(expression);
       if (expression.getQualifierExpression() == null) {
         return;

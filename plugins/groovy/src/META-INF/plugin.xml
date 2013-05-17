@@ -21,6 +21,7 @@
   <version>9.0</version>
   <vendor>JetBrains</vendor>
   <depends>com.intellij.properties</depends>
+  <depends>org.consulo.java</depends>
 
   <depends optional="true" config-file="groovy-copyright.xml">com.intellij.copyright</depends>
   <depends optional="true" config-file="intellilang-groovy-support.xml">org.intellij.intelliLang</depends>

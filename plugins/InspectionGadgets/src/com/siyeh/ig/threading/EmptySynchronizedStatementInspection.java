@@ -18,7 +18,6 @@ package com.siyeh.ig.threading;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiSynchronizedStatement;
-import com.intellij.psi.JspPsiUtil;
 import com.siyeh.InspectionGadgetsBundle;
 import com.siyeh.ig.BaseInspection;
 import com.siyeh.ig.BaseInspectionVisitor;
@@ -49,9 +48,9 @@ public class EmptySynchronizedStatementInspection extends BaseInspection {
     public void visitSynchronizedStatement(
       @NotNull PsiSynchronizedStatement statement) {
       super.visitSynchronizedStatement(statement);
-      if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
+     /* if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
         return;
-      }
+      }*/
       final PsiCodeBlock body = statement.getBody();
       if (body == null) {
         return;

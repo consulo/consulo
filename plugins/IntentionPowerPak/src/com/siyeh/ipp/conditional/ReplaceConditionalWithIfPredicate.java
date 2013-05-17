@@ -30,9 +30,9 @@ class ReplaceConditionalWithIfPredicate implements PsiElementPredicate {
     if (parent instanceof PsiExpressionStatement) {
       return false;
     }
-    if (JspPsiUtil.isInJspFile(element)) {
+    /*if (JspPsiUtil.isInJspFile(element)) {
       return false;
-    }
+    }    */
     final PsiMember member = PsiTreeUtil.getParentOfType(element, PsiMember.class);
     if (member instanceof PsiMethod) {
       final PsiMethod method = (PsiMethod)member;

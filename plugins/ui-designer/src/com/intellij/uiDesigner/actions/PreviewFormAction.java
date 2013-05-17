@@ -55,7 +55,6 @@ import com.intellij.uiDesigner.compiler.FormErrorInfo;
 import com.intellij.uiDesigner.compiler.Utils;
 import com.intellij.uiDesigner.designSurface.GuiEditor;
 import com.intellij.uiDesigner.lw.*;
-import org.jetbrains.jps.incremental.java.CopyResourcesUtil;
 import com.intellij.uiDesigner.make.Form2ByteCodeCompiler;
 import com.intellij.uiDesigner.make.PreviewNestedFormLoader;
 import com.intellij.util.PathsList;
@@ -63,6 +62,7 @@ import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.jps.incremental.java.CopyResourcesUtil;
 
 import javax.swing.*;
 import java.io.File;

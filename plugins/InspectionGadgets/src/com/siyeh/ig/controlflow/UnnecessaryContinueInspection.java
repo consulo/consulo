@@ -64,9 +64,9 @@ public class UnnecessaryContinueInspection extends BaseInspection {
 
     @Override
     public void visitContinueStatement(@NotNull PsiContinueStatement statement) {
-      if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
+      /*if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
         return;
-      }
+      }   */
       final PsiStatement continuedStatement = statement.findContinuedStatement();
       PsiStatement body = null;
       if (continuedStatement instanceof PsiForeachStatement) {

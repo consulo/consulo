@@ -57,9 +57,9 @@ public class UnusedImportInspection extends BaseInspection {
 
     @Override
     public void visitJavaFile(PsiJavaFile file) {
-      if (JspPsiUtil.isInJspFile(file)) {
+    /*  if (JspPsiUtil.isInJspFile(file)) {
         return;
-      }
+      }    */
       final PsiImportList importList = file.getImportList();
       if (importList == null) {
         return;

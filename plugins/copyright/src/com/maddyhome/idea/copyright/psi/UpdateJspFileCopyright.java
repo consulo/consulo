@@ -23,8 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.impl.source.jsp.jspXml.JspDirective;
-import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.xml.*;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.options.LanguageOptions;
@@ -39,7 +37,7 @@ public class UpdateJspFileCopyright extends UpdatePsiFileCopyright
 
     protected boolean accept()
     {
-        return getFile() instanceof JspFile;
+        return false;// getFile() instanceof JspFile;
     }
 
     protected void scanFile()
@@ -94,7 +92,7 @@ public class UpdateJspFileCopyright extends UpdatePsiFileCopyright
                     break;
                 }
             }
-            else if (elem instanceof XmlTag && !(elem instanceof JspDirective))
+            else if (elem instanceof XmlTag /*&& !(elem instanceof JspDirective)*/)
             {
                 firstTag = elem;
                 break;

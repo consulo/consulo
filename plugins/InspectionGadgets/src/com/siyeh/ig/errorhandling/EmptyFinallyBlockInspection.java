@@ -147,9 +147,9 @@ public class EmptyFinallyBlockInspection extends BaseInspection {
     public void visitTryStatement(
       @NotNull PsiTryStatement statement) {
       super.visitTryStatement(statement);
-      if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
+     /* if (JspPsiUtil.isInJspFile(statement.getContainingFile())) {
         return;
-      }
+      }   */
       final PsiCodeBlock finallyBlock = statement.getFinallyBlock();
       if (finallyBlock == null) {
         return;

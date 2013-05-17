@@ -30,7 +30,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspJava.JspClass;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -236,7 +235,7 @@ public class TestNGUtil
   private static boolean isBrokenPsiClass(PsiClass psiClass) {
     return (psiClass == null
         || psiClass instanceof PsiAnonymousClass
-        || psiClass instanceof JspClass);
+        /*|| psiClass instanceof JspClass*/);
   }
 
   /**
@@ -244,7 +243,7 @@ public class TestNGUtil
    * specified annotation parameter. For example, this method can be used to return all classes that contain all tesng
    * annotations that are in the groups 'foo' or 'bar'.
    */
-  public static Map<PsiClass, Collection<PsiMethod>> filterAnnotations(String parameter, Set<String> values, Collection<PsiClass> classes) {
+  public static Map<PsiClass, Collection<PsiMethod>> filterAnnotations(String parameter, Set <String> values, Collection<PsiClass> classes) {
     Map<PsiClass, Collection<PsiMethod>> results = new HashMap<PsiClass, Collection<PsiMethod>>();
     Set<String> test = new HashSet<String>(1);
     test.add(TEST_ANNOTATION_FQN);

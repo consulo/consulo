@@ -17,6 +17,8 @@
     <orderEntry type="library" name="Netty" level="project" />
     <orderEntry type="library" name="Eclipse" level="project" />
     <orderEntry type="module" module-name="xml" />
+    <orderEntry type="module" module-name="instrumentation-util" />
+    <orderEntry type="module" module-name="java-analysis-impl" />
   </component>
 </module>
 

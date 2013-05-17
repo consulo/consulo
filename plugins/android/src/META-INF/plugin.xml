@@ -6,6 +6,7 @@
   </description>
   <version>10.0</version>
   <vendor>JetBrains</vendor>
+  <depends>org.consulo.java</depends>
   <application-components>
     <component>
       <implementation-class>org.jetbrains.android.AndroidPlugin</implementation-class>
