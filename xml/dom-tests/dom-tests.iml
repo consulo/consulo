@@ -10,8 +10,8 @@
     <orderEntry type="module" module-name="dom-impl" />
     <orderEntry type="library" name="CGLIB" level="project" />
     <orderEntry type="module" module-name="xml" />
-    <orderEntry type="module" module-name="testFramework-java" />
-    <orderEntry type="module" module-name="java-impl" scope="TEST" />
+    <orderEntry type="module" module-name="testFramework" scope="TEST" />
+    <orderEntry type="module" module-name="testFrameworkJava" scope="TEST" />
   </component>
   <component name="copyright">
     <Base>

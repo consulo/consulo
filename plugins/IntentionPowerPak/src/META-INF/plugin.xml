@@ -5,6 +5,7 @@
 
   <vendor>JetBrains</vendor>
   <resource-bundle>com.siyeh.IntentionPowerPackBundle</resource-bundle>
+  <depends>org.consulo.java</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>

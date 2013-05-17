@@ -6,10 +6,10 @@
   <version>8.0</version>
 
   <depends optional="true" config-file="intellilang-xpath-support.xml">XPathView</depends>
-  <depends optional="true" config-file="intellilang-java-support.xml">com.intellij.modules.java</depends>
-  <depends optional="true" config-file="intellilang-javaee-support.xml">com.intellij.javaee</depends>
+  <depends optional="true" config-file="intellilang-java-support.xml">org.consulo.java</depends>
+
   <depends optional="true" config-file="intellilang-xml-support.xml">com.intellij.modules.xml</depends>
-  <depends optional="true" config-file="intellilang-js-support.xml">JavaScript</depends>
+
 
   <extensionPoints>
     <extensionPoint name="languageSupport" interface="org.intellij.plugins.intelliLang.inject.LanguageInjectionSupport"/>

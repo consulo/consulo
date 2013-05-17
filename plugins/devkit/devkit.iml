@@ -13,14 +13,9 @@
     <orderEntry type="library" scope="TEST" name="JUnit4" level="project" />
     <orderEntry type="library" name="JDOM" level="project" />
     <orderEntry type="library" name="Log4J" level="project" />
-    <orderEntry type="module" module-name="compiler-openapi" />
     <orderEntry type="module" module-name="dom-openapi" />
-    <orderEntry type="module" module-name="testFramework-java" scope="TEST" />
-    <orderEntry type="module" module-name="java-impl" />
     <orderEntry type="library" name="TestNG" level="project" />
-    <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="properties" />
-    <orderEntry type="module" module-name="idea-ui" scope="TEST" />
     <orderEntry type="module" module-name="xml" />
     <orderEntry type="library" scope="TEST" name="Groovy" level="project" />
     <orderEntry type="module" module-name="jps-builders" />
@@ -35,6 +30,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="java" />
   </component>
 </module>
 

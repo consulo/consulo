@@ -5,6 +5,7 @@
 
   <category>inspection</category>
   <version>1.0</version>
+  <depends>org.consulo.java</depends>
 
   <resource-bundle>com.siyeh.InspectionGadgetsBundle</resource-bundle>
 

@@ -13,6 +13,7 @@
     <orderEntry type="module" module-name="projectModel-api" exported="" />
     <orderEntry type="module" module-name="platform-api" exported="" />
     <orderEntry type="module" module-name="lang-api" exported="" />
+    <orderEntry type="module" module-name="compiler-api" exported="" />
   </component>
 </module>
 

@@ -19,6 +19,7 @@
   <description>Provides possibility to run JUnit 3.x and 4.x tests and view their results</description>
   <version>1.0</version>
   <vendor>JetBrains</vendor>
+  <depends>org.consulo.java</depends>
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <configurationProducer implementation="com.intellij.execution.junit.AllInDirectoryConfigurationProducer"/>

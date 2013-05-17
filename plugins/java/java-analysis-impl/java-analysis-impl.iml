@@ -13,6 +13,8 @@
     <orderEntry type="module" module-name="analysis-impl" />
     <orderEntry type="module" module-name="projectModel-api" />
     <orderEntry type="module" module-name="java-psi-impl" />
+    <orderEntry type="module" module-name="projectModel-impl" />
+    <orderEntry type="module" module-name="external-system-impl" />
   </component>
 </module>
 

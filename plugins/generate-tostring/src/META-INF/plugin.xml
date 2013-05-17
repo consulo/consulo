@@ -1,5 +1,6 @@
 <idea-plugin url="http://code.google.com/p/generate-tostring" version="3">
     <name>GenerateToString</name>
+  <depends>org.consulo.java</depends>
     <description>Adds a new action 'toString()' in the generate menu (alt + ins). The action generates a toString()
         method that dumps the classes fields. Java body code is generated using Velocity Macro and you can change this
         to fit your needs. Full documentation included (Click hyperlink from Settings).

@@ -13,9 +13,6 @@
     <orderEntry type="module" module-name="java-runtime" />
     <orderEntry type="module" module-name="testng_rt" />
     <orderEntry type="module" module-name="java-i18n" />
-    <orderEntry type="module" module-name="testFramework-java" scope="TEST" />
-    <orderEntry type="module" module-name="java-impl" />
-    <orderEntry type="module" module-name="jsp-openapi" />
     <orderEntry type="library" name="TestNG" level="project" />
     <orderEntry type="module" module-name="xml" scope="TEST" />
   </component>

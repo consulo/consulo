@@ -10,19 +10,12 @@
     <orderEntry type="module" module-name="boot" />
     <orderEntry type="module" module-name="bootstrap" />
     <orderEntry type="module" module-name="commander" />
-    <orderEntry type="module" module-name="compiler-impl" />
-    <orderEntry type="module" module-name="compiler-openapi" />
     <orderEntry type="module" module-name="dom-impl" />
     <orderEntry type="module" module-name="dom-openapi" />
     <orderEntry type="module" module-name="extensions" />
     <orderEntry type="module" module-name="forms_rt" />
     <orderEntry type="module" module-name="icons" />
-    <orderEntry type="module" module-name="idea-ui" />
-    <orderEntry type="module" module-name="java-impl" />
     <orderEntry type="module" module-name="java-runtime" />
-    <orderEntry type="module" module-name="jsp-base-openapi" />
-    <orderEntry type="module" module-name="jsp-openapi" />
-    <orderEntry type="module" module-name="jsp-spi" />
     <orderEntry type="module" module-name="lang-api" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="lvcs-api" />
@@ -38,7 +31,6 @@
     <orderEntry type="module" module-name="resources-en" />
     <orderEntry type="module" module-name="spellchecker" />
     <orderEntry type="module" module-name="testFramework" />
-    <orderEntry type="module" module-name="testFramework-java" />
     <orderEntry type="module" module-name="testRunner" />
     <orderEntry type="module" module-name="usageView" />
     <orderEntry type="module" module-name="util" />
@@ -49,7 +41,6 @@
     <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="xml-openapi" />
     <orderEntry type="module" module-name="community-resources" />
-    <orderEntry type="module" module-name="java-tests" />
     <orderEntry type="module" module-name="copyright" />
     <orderEntry type="module" module-name="cvs-plugin" />
     <orderEntry type="module" module-name="java-i18n" />
@@ -69,7 +60,6 @@
     <orderEntry type="module" module-name="svn4idea-tests" />
     <orderEntry type="module" module-name="testng" />
     <orderEntry type="module" module-name="IntelliLang-java" />
-    <orderEntry type="module" module-name="IntelliLang-javaee" />
     <orderEntry type="module" module-name="IntelliLang-xml" />
     <orderEntry type="module" module-name="xpath" />
     <orderEntry type="module" module-name="xslt-debugger" />
@@ -91,7 +81,7 @@
     <orderEntry type="module" module-name="colorSchemes" />
     <orderEntry type="module" module-name="community-tests" scope="TEST" />
     <orderEntry type="module" module-name="java-platform" />
-    <orderEntry type="module" module-name="javaTemp" />
+    <orderEntry type="module" module-name="java" />
   </component>
 </module>
 

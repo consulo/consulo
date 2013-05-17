@@ -12,13 +12,10 @@
     <orderEntry type="module" module-name="dom-openapi" />
     <orderEntry type="library" scope="TEST" name="JUnit3" level="project" />
     <orderEntry type="module" module-name="dom-impl" />
-    <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="xdebugger-impl" />
-    <orderEntry type="module" module-name="testFramework-java" scope="TEST" />
     <orderEntry type="module" module-name="smRunner" />
     <orderEntry type="module" module-name="junit" />
-    <orderEntry type="module" module-name="idea-ui" />
     <orderEntry type="module-library" exported="">
       <library name="android-sdk-tools">
         <CLASSES>
@@ -58,7 +55,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="maven" />
-    <orderEntry type="module" module-name="java-impl" />
     <orderEntry type="module" module-name="properties" />
     <orderEntry type="library" name="xpp3-1.1.4-min" level="project" />
     <orderEntry type="module" module-name="IntentionPowerPackPlugin" />

@@ -6,6 +6,7 @@
     This plugin provides code inspections and corresponding quick fixes for code internationalization.
   </description>
   <vendor>JetBrains</vendor>
+  <depends>org.consulo.java</depends>
   <resource-bundle>messages.PropertiesBundle</resource-bundle>
   <extensionPoints>
     <extensionPoint name="resourceBundleManager"

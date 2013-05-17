@@ -8,6 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="execution-api" />
+    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="lang-impl" />
   </component>
 </module>
 

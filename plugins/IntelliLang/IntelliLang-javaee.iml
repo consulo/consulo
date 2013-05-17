@@ -9,7 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="IntelliLang" />
     <orderEntry type="module" module-name="lang-api" />
-    <orderEntry type="module" module-name="jsp-spi" />
   </component>
   <component name="copyright">
     <Base>

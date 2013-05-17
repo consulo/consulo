@@ -19,7 +19,6 @@ import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInspection.i18n.JavaI18nUtil;
 import com.intellij.lang.properties.references.PropertyReference;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.jsp.jspXml.JspXmlTagBase;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
@@ -101,7 +100,7 @@ public class PropertiesReferenceProvider extends PsiReferenceProvider {
   }
 
   static boolean isNonDynamicAttribute(final PsiElement element) {
-    return PsiTreeUtil.getChildOfAnyType(element, OuterLanguageElement.class,JspXmlTagBase.class) == null;
+    return PsiTreeUtil.getChildOfAnyType(element, OuterLanguageElement.class) == null;
   }
 
 }

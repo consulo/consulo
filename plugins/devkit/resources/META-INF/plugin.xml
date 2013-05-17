@@ -2,7 +2,7 @@
   <name>Plugin DevKit</name>
   <id>DevKit</id>
   <version>1.0</version>
-
+  <depends>org.consulo.java</depends>
   <category>inspection</category>
   <vendor>JetBrains</vendor>
 

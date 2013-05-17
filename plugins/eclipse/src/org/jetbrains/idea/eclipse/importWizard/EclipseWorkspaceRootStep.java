@@ -23,7 +23,6 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.projectImport.ProjectFormatPanel;
-import com.intellij.projectImport.ProjectImportWizardStep;
 import org.jetbrains.idea.eclipse.EclipseBundle;
 
 import javax.swing.*;

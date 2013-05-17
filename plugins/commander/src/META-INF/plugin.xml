@@ -5,6 +5,7 @@
   <version>1.0.0</version>
   <vendor url="http://www.jetbrains.com" logo="/general/ijLogo.png">JetBrains</vendor>
   <resource-bundle>com.intellij.ide.commander.CommanderBundle</resource-bundle>
+  <depends>org.consulo.java</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>

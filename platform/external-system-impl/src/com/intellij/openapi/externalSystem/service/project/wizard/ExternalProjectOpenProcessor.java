@@ -1,12 +1,8 @@
 package com.intellij.openapi.externalSystem.service.project.wizard;
 
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.ide.wizard.Step;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessorBase;
-import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 
 /**
