@@ -25,7 +25,7 @@
     <orderEntry type="module" module-name="dom-openapi" />
     <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="images" />
-    <orderEntry type="module" module-name="java-indexing-api" />
+    <orderEntry type="module" module-name="java-indexing-api2" />
   </component>
 </module>
 

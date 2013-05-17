@@ -9,7 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="execution-openapi" />
     <orderEntry type="module" module-name="jsp-openapi" />
-    <orderEntry type="module" module-name="java-psi-api" />
+    <orderEntry type="module" module-name="java-psi-api2" />
     <orderEntry type="module" module-name="resources-en" />
   </component>
   <component name="copyright">

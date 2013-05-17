@@ -7,13 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="java-psi-api2" exported="" />
-    <orderEntry type="module" module-name="java-psi-impl" exported="" />
-    <orderEntry type="module" module-name="indexing-api" exported="" />
-    <orderEntry type="module" module-name="indexing-impl" exported="" />
+    <orderEntry type="module" module-name="analysis-api" />
+    <orderEntry type="module" module-name="java-psi-api2" />
     <orderEntry type="module" module-name="projectModel-api" />
-    <orderEntry type="module" module-name="projectModel-impl" />
-    <orderEntry type="module" module-name="java-indexing-api2" />
   </component>
 </module>
 

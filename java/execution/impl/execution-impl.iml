@@ -15,7 +15,7 @@
     <orderEntry type="module" module-name="testRunner" exported="" />
     <orderEntry type="module" module-name="compiler-openapi" />
     <orderEntry type="module" module-name="java-impl" />
-    <orderEntry type="module" module-name="java-indexing-api" />
+    <orderEntry type="module" module-name="java-indexing-api2" />
   </component>
   <component name="copyright">
     <Base>
