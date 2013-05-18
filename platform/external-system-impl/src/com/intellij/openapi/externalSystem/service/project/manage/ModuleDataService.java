@@ -101,7 +101,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
           private void importModule(@NotNull ModuleManager moduleManager, @NotNull DataNode<ModuleData> module) {
             ModuleData data = module.getData();
-            final Module created = moduleManager.newModule(data.getModuleFilePath(), data.getModuleTypeId());
+            final Module created = moduleManager.newModule(data.getModuleFilePath());
 
             // Ensure that the dependencies are clear (used to be not clear when manually removing the module and importing it via gradle)
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(created);

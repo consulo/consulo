@@ -45,11 +45,11 @@ public abstract class ModuleManager {
    * Creates a module of the specified type at the specified path and adds it to the project
    * to which the module manager is related.
    *
+   *
    * @param filePath the path at which the module is created.
-   * @param moduleTypeId the ID of the module type to create.
    * @return the module instance.
    */
-  @NotNull public abstract Module newModule(@NotNull @NonNls String filePath, final String moduleTypeId);
+  @NotNull public abstract Module newModule(@NotNull @NonNls String filePath);
 
   /**
    * Loads a module from an .iml file with the specified path and adds it to the project.

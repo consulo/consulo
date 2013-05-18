@@ -4362,9 +4362,6 @@
 
     <applicationService serviceInterface="com.intellij.util.descriptors.ConfigFileFactory"
                         serviceImplementation="com.intellij.util.descriptors.impl.ConfigFileFactoryImpl"/>
-
-    <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.DefaultModuleConfigurationEditorFactory"
-                        serviceImplementation="com.intellij.openapi.roots.ui.configuration.DefaultModuleConfigurationEditorFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ide.util.projectWizard.ProjectWizardStepFactory"
                         serviceImplementation="com.intellij.ide.util.projectWizard.ProjectWizardStepFactoryImpl"/>
 
@@ -5545,5 +5542,7 @@
     <bundledColorScheme path="/colorSchemes/twilight.xml"/>
     <bundledColorScheme path="/colorSchemes/vibrant_ink.xml"/>
     <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
+
+    <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider"/>
   </extensions>
 </idea-plugin>

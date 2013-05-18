@@ -16,8 +16,6 @@
 package com.intellij.testFramework.fixtures;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
@@ -30,11 +28,6 @@ import com.intellij.testFramework.LightProjectDescriptor;
 * @author peter
 */
 public class DefaultLightProjectDescriptor implements LightProjectDescriptor {
-  @Override
-  public ModuleType getModuleType() {
-    return StdModuleTypes.JAVA;
-  }
-
   @Override
   public Sdk getSdk() {
     return IdeaTestUtil.getMockJdk17();

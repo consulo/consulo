@@ -50,7 +50,7 @@ class CreateNewModuleTask extends ModuleProvidingTask {
       public Module compute() {
         final Module depModule =
           ModuleManager.getInstance(myProject)
-            .newModule(myContentRoot.getPath() + '/' + myContentRoot.getName() + ".iml", StdModuleTypes.JAVA.getId());
+            .newModule(myContentRoot.getPath() + '/' + myContentRoot.getName() + ".iml");
         final ModifiableRootModel model = ModuleRootManager.getInstance(depModule).getModifiableModel();
         model.addContentEntry(myContentRoot);
         model.commit();

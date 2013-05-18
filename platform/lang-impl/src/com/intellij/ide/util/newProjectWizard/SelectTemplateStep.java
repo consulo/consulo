@@ -131,7 +131,7 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
         boolean loading = template instanceof LoadingProjectTemplate;
         myModuleBuilder = template == null || loading ? null : template.createModuleBuilder();
         setupPanels(template);
-        mySequence.setType(myModuleBuilder == null ? null : myModuleBuilder.getBuilderId());
+
         myWizardContext.requestWizardButtonsUpdate();
       }
     });

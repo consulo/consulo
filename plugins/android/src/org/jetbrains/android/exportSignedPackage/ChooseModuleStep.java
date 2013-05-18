@@ -19,7 +19,6 @@ package org.jetbrains.android.exportSignedPackage;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.ListCellRendererWrapper;
 import org.jetbrains.android.facet.AndroidFacet;

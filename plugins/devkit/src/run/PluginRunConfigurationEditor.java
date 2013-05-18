@@ -145,7 +145,7 @@ public class PluginRunConfigurationEditor extends SettingsEditor<PluginRunConfig
 
   @NotNull
   public JComponent createEditor() {
-    myModules.fillModules(myPRC.getProject(), PluginModuleType.getInstance());
+    myModules.fillModules(myPRC.getProject());
     JPanel wholePanel = new JPanel(new GridBagLayout());
     myVMParameters.setText(DevKitBundle.message("vm.parameters"));
     myVMParameters.setComponent(new RawCommandLineEditor());

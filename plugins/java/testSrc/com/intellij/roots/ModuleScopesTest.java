@@ -2,7 +2,6 @@ package com.intellij.roots;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.ModuleTestCase;

@@ -16,12 +16,12 @@
 
 package com.intellij.ide.util;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.ModuleGroupUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -256,10 +256,10 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
       else if (value instanceof Module) {
         final Module module = (Module)value;
         append(module.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        setIcon(ModuleType.get(module).getIcon());
+        setIcon(AllIcons.Nodes.Module);
       } else if (value instanceof ModuleGroup) {
         append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        setIcon(PlatformIcons.CLOSED_MODULE_GROUP_ICON);
+        setIcon(AllIcons.Nodes.Module);
       }
     }
   }

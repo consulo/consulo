@@ -448,10 +448,10 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @Override
   @NotNull
-  public Module newModule(@NotNull String filePath, final String moduleTypeId) {
+  public Module newModule(@NotNull String filePath) {
     myModificationCount++;
     final ModifiableModuleModel modifiableModel = getModifiableModel();
-    final Module module = modifiableModel.newModule(filePath, moduleTypeId);
+    final Module module = modifiableModel.newModule(filePath);
     modifiableModel.commit();
     return module;
   }
@@ -673,22 +673,19 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
     @Override
     @NotNull
-    public Module newModule(@NotNull String filePath, final String moduleTypeId) {
-      return newModule(filePath, moduleTypeId, null);
+    public Module newModule(@NotNull String filePath) {
+      return newModule(filePath, null);
     }
 
     @Override
     @NotNull
-    public Module newModule(@NotNull String filePath,
-                            final String moduleTypeId,
-                            @Nullable Map<String, String> options) {
+    public Module newModule(@NotNull String filePath, @Nullable Map<String, String> options) {
       assertWritable();
       filePath = resolveShortWindowsName(filePath);
 
       ModuleEx module = getModuleByFilePath(filePath);
       if (module == null) {
         module = createModule(filePath);
-        module.setOption(Module.ELEMENT_TYPE, moduleTypeId);
         if (options != null) {
           for ( Map.Entry<String,String> option : options.entrySet()) {
             module.setOption(option.getKey(),option.getValue());

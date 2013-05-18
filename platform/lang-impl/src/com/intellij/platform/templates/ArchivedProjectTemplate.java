@@ -15,9 +15,9 @@
  */
 package com.intellij.platform.templates;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.WizardInputField;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.platform.ProjectTemplate;
 import org.jetbrains.annotations.NotNull;
@@ -47,15 +47,13 @@ public abstract class ArchivedProjectTemplate implements ProjectTemplate {
   }
 
   public Icon getIcon() {
-    return getModuleType().getIcon();
+    return AllIcons.Nodes.Module;
   }
-
-  protected abstract ModuleType getModuleType();
 
   @NotNull
   @Override
   public ModuleBuilder createModuleBuilder() {
-    return new TemplateModuleBuilder(this, getModuleType(), getInputFields());
+    return new TemplateModuleBuilder(this, getInputFields());
   }
 
   public abstract List<WizardInputField> getInputFields();

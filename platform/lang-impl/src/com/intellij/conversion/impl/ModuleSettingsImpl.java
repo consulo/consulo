@@ -19,21 +19,16 @@ package com.intellij.conversion.impl;
 import com.intellij.conversion.CannotConvertException;
 import com.intellij.conversion.ComponentManagerSettings;
 import com.intellij.conversion.ModuleSettings;
-import com.intellij.facet.FacetManagerImpl;
 import com.intellij.ide.highlighter.ModuleFileType;
-import com.intellij.openapi.module.impl.ModuleImpl;
 import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.JDomSerializationUtil;
-import org.jetbrains.jps.model.serialization.facet.JpsFacetSerializer;
 
 import java.io.File;
 import java.util.*;
@@ -60,49 +55,9 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
   }
 
   @Override
-  @Nullable
-  public String getModuleType() {
-    return getRootElement().getAttributeValue(ModuleImpl.ELEMENT_TYPE);
-  }
-
-  @Override
   @NotNull
   public File getModuleFile() {
     return mySettingsFile.getFile();
-  }
-
-  @Override
-  @NotNull
-  public Collection<? extends Element> getFacetElements(@NotNull String facetTypeId) {
-    final Element facetManager = getComponentElement(FacetManagerImpl.COMPONENT_NAME);
-    final ArrayList<Element> elements = new ArrayList<Element>();
-    for (Element child : JDOMUtil.getChildren(facetManager, JpsFacetSerializer.FACET_TAG)) {
-      if (facetTypeId.equals(child.getAttributeValue(JpsFacetSerializer.TYPE_ATTRIBUTE))) {
-        elements.add(child);
-      }
-    }
-    return elements;
-  }
-
-  @Override
-  public Element getFacetElement(@NotNull String facetTypeId) {
-    return ContainerUtil.getFirstItem(getFacetElements(facetTypeId), null);
-  }
-
-  @Override
-  public void addFacetElement(@NotNull String facetTypeId, @NotNull String facetName, Element configuration) {
-    Element componentElement = JDomSerializationUtil.findOrCreateComponentElement(getRootElement(), FacetManagerImpl.COMPONENT_NAME);
-    Element facetElement = new Element(JpsFacetSerializer.FACET_TAG);
-    facetElement.setAttribute(JpsFacetSerializer.TYPE_ATTRIBUTE, facetTypeId);
-    facetElement.setAttribute(JpsFacetSerializer.NAME_ATTRIBUTE, facetName);
-    configuration.setName(JpsFacetSerializer.CONFIGURATION_TAG);
-    facetElement.addContent(configuration);
-    componentElement.addContent(facetElement);
-  }
-
-  @Override
-  public void setModuleType(@NotNull String moduleType) {
-    getRootElement().setAttribute(ModuleImpl.ELEMENT_TYPE, moduleType);
   }
 
   @Override

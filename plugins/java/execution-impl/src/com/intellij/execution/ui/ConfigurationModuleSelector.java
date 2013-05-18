@@ -17,10 +17,9 @@ package com.intellij.execution.ui;
 
 import com.intellij.execution.configurations.JavaRunConfigurationModule;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.ModuleTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.ui.ComboboxSpeedSearch;
@@ -72,7 +71,7 @@ public class ConfigurationModuleSelector {
       public void customize(final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
         if (value instanceof Module) {
           final Module module = (Module)value;
-          setIcon(ModuleType.get(module).getIcon());
+          setIcon(AllIcons.Nodes.Module);
           setText(module.getName());
         }
         else if (value == null) {
@@ -97,7 +96,7 @@ public class ConfigurationModuleSelector {
   }
 
   public boolean isModuleAccepted(final Module module) {
-    return ModuleTypeManager.getInstance().isClasspathProvider(ModuleType.get(module));
+    return true;
   }
 
   public Project getProject() {

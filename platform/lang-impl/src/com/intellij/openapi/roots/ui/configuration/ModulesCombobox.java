@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ComboboxSpeedSearch;
@@ -58,7 +58,7 @@ public class ModulesCombobox extends ComboBox {
       public void customize(JList list, Module value, int index, boolean selected, boolean hasFocus) {
         if (value != null) {
           setText(value.getName());
-          setIcon(ModuleType.get(value).getIcon());
+          setIcon(AllIcons.Nodes.Module);
         }
         else {
           setText("[none]");
@@ -67,16 +67,11 @@ public class ModulesCombobox extends ComboBox {
     });
   }
 
-  public void fillModules(@NotNull Project project) {
-    fillModules(project, null);
-  }
 
-  public void fillModules(@NotNull Project project, final @Nullable ModuleType moduleType) {
+  public void fillModules(@NotNull Project project) {
     myModel.clear();
     for (Module module : ModuleManager.getInstance(project).getModules()) {
-      if (moduleType == null || moduleType.equals(ModuleType.get(module))) {
-        myModel.add(module);
-      }
+      myModel.add(module);
     }
   }
 

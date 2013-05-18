@@ -2,7 +2,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.JavaTestUtil;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.StdModuleTypes;
+
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.testFramework.fixtures.JavaCodeInsightFixtureTestCase
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
@@ -81,8 +81,8 @@ public class HeavySmartTypeCompletion15Test extends JavaCodeInsightFixtureTestCa
   }
 
   public void testInaccessibleClassAfterNew() {
-    Module moduleA = PsiTestUtil.addModule(project, StdModuleTypes.JAVA, 'A', myFixture.tempDirFixture.findOrCreateDir("a"))
-    Module moduleB = PsiTestUtil.addModule(project, StdModuleTypes.JAVA, 'B', myFixture.tempDirFixture.findOrCreateDir("b"))
+    Module moduleA = PsiTestUtil.addModule(project, 'A', myFixture.tempDirFixture.findOrCreateDir("a"))
+    Module moduleB = PsiTestUtil.addModule(project, 'B', myFixture.tempDirFixture.findOrCreateDir("b"))
 
     ModuleRootModificationUtil.addDependency(myModule, moduleB)
     ModuleRootModificationUtil.addDependency(moduleB, moduleA)

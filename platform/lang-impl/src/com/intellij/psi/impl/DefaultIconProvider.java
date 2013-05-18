@@ -15,17 +15,16 @@
  */
 package com.intellij.psi.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconProvider;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.IconSet;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.PlatformIcons;
@@ -37,7 +36,7 @@ import javax.swing.*;
 /**
  * @author yole
  */
-public class JavaDirectoryIconProvider extends IconProvider implements DumbAware {
+public class DefaultIconProvider extends IconProvider implements DumbAware {
   @Override
   @Nullable
   public Icon getIcon(@NotNull final PsiElement element, final int flags) {
@@ -56,7 +55,7 @@ public class JavaDirectoryIconProvider extends IconProvider implements DumbAware
       else if (isContentRoot) {
         Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vFile);
         if (module != null) {
-          symbolIcon = ModuleType.get(module).getIcon();
+          symbolIcon = AllIcons.Nodes.Module;
         }
         else {
           symbolIcon = PlatformIcons.CONTENT_ROOT_ICON_CLOSED;
@@ -64,9 +63,6 @@ public class JavaDirectoryIconProvider extends IconProvider implements DumbAware
       }
       else if (isSourceOrTestRoot) {
         symbolIcon = IconSet.getSourceRootIcon(inTestSource);
-      }
-      else if (JavaDirectoryService.getInstance().getPackage(psiDirectory) != null) {
-        symbolIcon = PlatformIcons.PACKAGE_ICON;
       }
       else {
         symbolIcon = PlatformIcons.DIRECTORY_CLOSED_ICON;

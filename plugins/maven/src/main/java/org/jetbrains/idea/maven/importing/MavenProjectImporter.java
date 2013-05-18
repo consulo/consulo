@@ -19,7 +19,6 @@ import com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -463,7 +462,7 @@ public class MavenProjectImporter {
     // have to remove it beforehand.
     deleteExistingImlFile(path);
 
-    final Module module = myModuleModel.newModule(path, project.getModuleType().getId());
+    final Module module = myModuleModel.newModule(path);
     myMavenProjectToModule.put(project, module);
     myCreatedModules.add(module);
     return true;

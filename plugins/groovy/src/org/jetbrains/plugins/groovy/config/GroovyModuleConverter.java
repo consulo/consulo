@@ -16,7 +16,6 @@
 package org.jetbrains.plugins.groovy.config;
 
 import com.intellij.conversion.CannotConvertException;
-import com.intellij.conversion.DetachFacetConversionProcessor;
 import com.intellij.conversion.ModuleSettings;
 import com.intellij.openapi.module.StdModuleTypes;
 

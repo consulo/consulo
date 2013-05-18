@@ -23,13 +23,10 @@ import com.intellij.openapi.compiler.make.BuildRecipe;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.xml.XmlDocument;
-import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.descriptors.ConfigFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -133,7 +130,7 @@ public class DeploymentUtilImpl extends DeploymentUtil {
   }
 
   public void reportDeploymentDescriptorDoesNotExists(ConfigFile descriptor, CompileContext context, Module module) {
-    final String description = ModuleType.get(module).getName() + " '" + module.getName() + '\'';
+    final String description = " '" + module.getName() + '\'';
     String descriptorPath = VfsUtil.urlToPath(descriptor.getUrl());
     final String message =
       CompilerBundle.message("message.text.compiling.item.deployment.descriptor.could.not.be.found", description, descriptorPath);
@@ -144,7 +141,7 @@ public class DeploymentUtilImpl extends DeploymentUtil {
     if (new File(VfsUtil.urlToPath(descriptor.getUrl())).exists()) {
       String message = getConfigFileErrorMessage(descriptor);
       if (message != null) {
-        final String moduleDescription = ModuleType.get(module).getName() + " '" + module.getName() + '\'';
+        final String moduleDescription = " '" + module.getName() + '\'';
         compileContext.addMessage(CompilerMessageCategory.ERROR,
                                 CompilerBundle.message("message.text.compiling.module.message", moduleDescription, message),
                                   descriptor.getUrl(), -1, -1);
@@ -170,12 +167,12 @@ public class DeploymentUtilImpl extends DeploymentUtil {
       return CompilerBundle.message("message.text.deployment.description.invalid.file");
     }
 
-    if (psiFile instanceof XmlFile) {
+    /*if (psiFile instanceof XmlFile) {
       XmlDocument document = ((XmlFile)psiFile).getDocument();
       if (document == null || document.getRootTag() == null) {
         return CompilerBundle.message("message.text.xml.file.invalid", FileUtil.toSystemDependentName(VfsUtil.urlToPath(configFile.getUrl())));
       }
-    }
+    }   */
     return null;
   }
 

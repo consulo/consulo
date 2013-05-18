@@ -18,7 +18,6 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -49,7 +48,7 @@ public class ElementLocationUtil {
 
       if (module != null) {
         label.setText(module.getName());
-        label.setIcon(ModuleType.get(module).getIcon());
+        label.setIcon(AllIcons.Nodes.Module);
       }
       else {
         final List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(vfile);

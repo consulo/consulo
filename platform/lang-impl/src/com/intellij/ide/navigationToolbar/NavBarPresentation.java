@@ -22,7 +22,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
@@ -44,12 +43,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -68,7 +65,7 @@ public class NavBarPresentation {
   public Icon getIcon(final Object object) {
     if (!NavBarModel.isValid(object)) return null;
     if (object instanceof Project) return AllIcons.Nodes.Project;
-    if (object instanceof Module) return ModuleType.get(((Module)object)).getIcon();
+    if (object instanceof Module) return AllIcons.Nodes.Module;
     try {
       if (object instanceof PsiElement) {
         Icon icon = ApplicationManager.getApplication().runReadAction(new Computable<Icon>() {
@@ -92,7 +89,7 @@ public class NavBarPresentation {
       return ((SdkType) sdkType).getIcon();
     }
     if (object instanceof LibraryOrderEntry) return AllIcons.Nodes.PpLibFolder;
-    if (object instanceof ModuleOrderEntry) return ModuleType.get(((ModuleOrderEntry)object).getModule()).getIcon();
+    if (object instanceof ModuleOrderEntry) return AllIcons.Nodes.Module;
     return null;
   }
 

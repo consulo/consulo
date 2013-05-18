@@ -9,7 +9,7 @@ import com.intellij.codeInsight.lookup.LookupManager
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.PathManagerEx
-import com.intellij.openapi.module.StdModuleTypes
+
 import com.intellij.openapi.roots.ContentEntry
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ModuleRootManager
@@ -96,7 +96,7 @@ public class HeavyNormalCompletionTest extends JavaCodeInsightFixtureTestCase {
   }
 
   public void testQualifyInaccessibleClassName() throws Exception {
-    PsiTestUtil.addModule(getProject(), StdModuleTypes.JAVA, "second", myFixture.getTempDirFixture().findOrCreateDir("second"));
+    PsiTestUtil.addModule(getProject(), "second", myFixture.getTempDirFixture().findOrCreateDir("second"));
     myFixture.addFileToProject("second/foo/bar/AxBxCxDxEx.java", "package foo.bar; class AxBxCxDxEx {}");
 
     myFixture.configureByText("a.java", "class Main { ABCDE<caret> }");

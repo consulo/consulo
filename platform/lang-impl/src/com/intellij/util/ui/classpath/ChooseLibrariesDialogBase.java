@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui.classpath;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.TreeExpander;
@@ -29,7 +30,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.LibraryOrderEntry;
@@ -302,7 +302,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     protected ModuleDescriptor(final Project project, final NodeDescriptor parentDescriptor, final Module element) {
       super(project, parentDescriptor, element);
       final PresentationData templatePresentation = getTemplatePresentation();
-      templatePresentation.setIcon(ModuleType.get(element).getIcon());
+      templatePresentation.setIcon(AllIcons.Nodes.Module);
       templatePresentation.addText(notEmpty(element.getName()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 

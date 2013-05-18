@@ -70,7 +70,7 @@ public class ModulePointerTest extends PlatformTestCase {
     final ModulePointer pointer = getPointerManager().create("xxx");
 
     final ModifiableModuleModel modifiableModel = getModuleManager().getModifiableModel();
-    final Module module = modifiableModel.newModule(myProject.getBaseDir().getPath() + "/xxx.iml", EmptyModuleType.getInstance().getId());
+    final Module module = modifiableModel.newModule(myProject.getBaseDir().getPath() + "/xxx.iml");
     assertSame(pointer, getPointerManager().create(module));
     assertSame(pointer, getPointerManager().create("xxx"));
 
@@ -89,7 +89,7 @@ public class ModulePointerTest extends PlatformTestCase {
 
   private Module addModule(final String name) {
     final ModifiableModuleModel model = getModuleManager().getModifiableModel();
-    final Module module = model.newModule(myProject.getBaseDir().getPath() + "/" + name + ".iml", EmptyModuleType.getInstance().getId());
+    final Module module = model.newModule(myProject.getBaseDir().getPath() + "/" + name + ".iml");
     commitModel(model);
     disposeOnTearDown(new Disposable() {
       @Override

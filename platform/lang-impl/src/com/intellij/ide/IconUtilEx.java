@@ -15,14 +15,13 @@
  */
 package com.intellij.ide;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IconUtil;
-import com.intellij.util.xml.ElementPresentationManager;
 
 import javax.swing.*;
 
@@ -33,12 +32,13 @@ public class IconUtilEx {
       return ((PsiElement)object).getIcon(flags);
     }
     if (object instanceof Module) {
-      return ModuleType.get((Module)object).getIcon();
+      return AllIcons.Nodes.Module;
     }
     if (object instanceof VirtualFile) {
       VirtualFile file = (VirtualFile)object;
       return IconUtil.getIcon(file, flags, project);
     }
-    return ElementPresentationManager.getIcon(object);
+    return null;
+    //TODO [VISTALL] return ElementPresentationManager.getIcon(object);
   }
 }

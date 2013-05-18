@@ -19,7 +19,6 @@ package com.intellij.platform;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -42,7 +41,7 @@ public class PlatformProjectConfigurator implements DirectoryProjectConfigurator
         public void run() {
           String moduleName = baseDir.getName().replace(":", "");     // correct module name when opening root of drive as project (RUBY-5181)
           String imlName = baseDir.getPath() + "/.idea/" + moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION;
-          final Module module = moduleManager.newModule(imlName, ModuleTypeManager.getInstance().getDefaultModuleType().getId());
+          final Module module = moduleManager.newModule(imlName);
           ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
           ModifiableRootModel rootModel = rootManager.getModifiableModel();
           if (rootModel.getContentRoots().length == 0) {

@@ -21,7 +21,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleTypeManager;
 import com.intellij.openapi.module.impl.ModuleImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -70,10 +69,6 @@ public class ModuleStoreImpl extends BaseFileConfigurableStoreImpl implements IM
   @Override
   public void load() throws IOException, StateStorageException {
     super.load();
-
-    final ModuleFileData storageData = getMainStorageData();
-    final String moduleTypeId = storageData.myOptions.get(Module.ELEMENT_TYPE);
-    myModule.setOption(Module.ELEMENT_TYPE, ModuleTypeManager.getInstance().findByID(moduleTypeId).getId());
 
     if (ApplicationManager.getApplication().isHeadlessEnvironment() || ApplicationManager.getApplication().isUnitTestMode()) return;
 

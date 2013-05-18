@@ -36,10 +36,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.module.EmptyModuleType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
@@ -302,10 +300,10 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   }
 
   protected Module doCreateRealModule(final String moduleName) {
-    return doCreateRealModuleIn(moduleName, myProject, getModuleType());
+    return doCreateRealModuleIn(moduleName, myProject);
   }
 
-  protected static Module doCreateRealModuleIn(String moduleName, final Project project, final ModuleType moduleType) {
+  protected static Module doCreateRealModuleIn(String moduleName, final Project project) {
     final VirtualFile baseDir = project.getBaseDir();
     assertNotNull(baseDir);
     final File moduleFile = new File(baseDir.getPath().replace('/', File.separatorChar),
@@ -316,15 +314,11 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       @Override
       protected void run(Result<Module> result) throws Throwable {
         final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(moduleFile);
-        Module module = ModuleManager.getInstance(project).newModule(virtualFile.getPath(), moduleType.getId());
+        Module module = ModuleManager.getInstance(project).newModule(virtualFile.getPath());
         module.getModuleFile();
         result.setResult(module);
       }
     }.execute().getResultObject();
-  }
-
-  protected ModuleType getModuleType() {
-    return EmptyModuleType.getInstance();
   }
 
   public static void cleanupApplicationCaches(Project project) {

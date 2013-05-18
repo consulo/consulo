@@ -15,9 +15,9 @@
  */
 package com.intellij.compiler.options;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.ui.ComboBox;
@@ -327,7 +327,7 @@ public class TargetOptionsComponent extends JPanel {
       finally {
         final Module module = (Module)value;
         setText(module.getName());
-        setIcon(ModuleType.get(module).getIcon());
+        setIcon(AllIcons.Nodes.Module);
       }
     }
   }

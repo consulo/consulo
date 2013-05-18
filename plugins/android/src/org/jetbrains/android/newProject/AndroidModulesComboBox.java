@@ -17,7 +17,6 @@ package org.jetbrains.android.newProject;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ListCellRendererWrapper;
 import org.jetbrains.android.facet.AndroidFacet;

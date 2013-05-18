@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -45,9 +44,9 @@ public class ExportingModulesTest extends IdeaTestCase {
       @Override
       public void run() {
         final ModifiableModuleModel moduleModel = ModuleManager.getInstance(myProject).getModifiableModel();
-        final Module moduleA = moduleModel.newModule("A.iml", StdModuleTypes.JAVA.getId());
-        final Module moduleB = moduleModel.newModule("B.iml", StdModuleTypes.JAVA.getId());
-        final Module moduleC = moduleModel.newModule("C.iml", StdModuleTypes.JAVA.getId());
+        final Module moduleA = moduleModel.newModule("A.iml");
+        final Module moduleB = moduleModel.newModule("B.iml");
+        final Module moduleC = moduleModel.newModule("C.iml");
         moduleModel.commit();
 
         configureModule(moduleA, testRoot, "A");

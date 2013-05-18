@@ -16,17 +16,12 @@
 package com.intellij.platform.templates;
 
 import com.intellij.ide.util.projectWizard.WizardInputField;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.ModuleTypeManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.StreamUtil;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -47,7 +42,6 @@ public class LocalArchivedTemplate extends ArchivedProjectTemplate {
   static final String IDEA_INPUT_FIELDS_XML = ".idea/project-template.xml";
 
   private final URL myArchivePath;
-  private final ModuleType myModuleType;
   private List<WizardInputField> myInputFields = Collections.emptyList();
   private Icon myIcon;
 
@@ -56,7 +50,7 @@ public class LocalArchivedTemplate extends ArchivedProjectTemplate {
     super(displayName);
 
     myArchivePath = archivePath;
-    myModuleType = computeModuleType(this);
+
     String s = readEntry(new Condition<ZipEntry>() {
       @Override
       public boolean value(ZipEntry entry) {
@@ -112,30 +106,6 @@ public class LocalArchivedTemplate extends ArchivedProjectTemplate {
       StreamUtil.closeStream(stream);
     }
     return null;
-  }
-
-  @NotNull
-  private static ModuleType computeModuleType(LocalArchivedTemplate template) {
-    String iml = template.readEntry(new Condition<ZipEntry>() {
-      @Override
-      public boolean value(ZipEntry entry) {
-        return entry.getName().endsWith(".iml");
-      }
-    });
-    if (iml == null) return ModuleType.EMPTY;
-    try {
-      Document document = JDOMUtil.loadDocument(iml);
-      String type = document.getRootElement().getAttributeValue(Module.ELEMENT_TYPE);
-      return ModuleTypeManager.getInstance().findByID(type);
-    }
-    catch (Exception e) {
-      return ModuleType.EMPTY;
-    }
-  }
-
-  @Override
-  protected ModuleType getModuleType() {
-    return myModuleType;
   }
 
   @Override

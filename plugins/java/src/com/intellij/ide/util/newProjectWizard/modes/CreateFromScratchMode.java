@@ -21,11 +21,9 @@
 package com.intellij.ide.util.newProjectWizard.modes;
 
 import com.intellij.ide.util.newProjectWizard.StepSequence;
-import com.intellij.ide.util.projectWizard.EmptyModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import org.jetbrains.annotations.NonNls;
@@ -33,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CreateFromScratchMode extends WizardMode {
@@ -52,16 +49,8 @@ public class CreateFromScratchMode extends WizardMode {
 
   @Nullable
   protected StepSequence createSteps(final WizardContext context, @NotNull final ModulesProvider modulesProvider) {
-    List<ModuleBuilder> builders = ModuleBuilder.getAllBuilders();
-    for (ModuleBuilder builder : builders) {
-      myBuildersMap.put(builder.getBuilderId(), builder);
-    }
-    myBuildersMap.put(ModuleType.EMPTY.getId(), new EmptyModuleBuilder());
-
     StepSequence sequence = new StepSequence();
-    for (ModuleBuilder builder : builders) {
-      sequence.addStepsForBuilder(builder, context, modulesProvider);
-    }
+
     return sequence;
   }
 

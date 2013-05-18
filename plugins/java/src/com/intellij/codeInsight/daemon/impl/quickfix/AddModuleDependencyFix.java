@@ -18,11 +18,11 @@ package com.intellij.codeInsight.daemon.impl.quickfix;
 import com.intellij.codeInsight.daemon.QuickFixBundle;
 import com.intellij.codeInsight.daemon.impl.actions.AddImportAction;
 import com.intellij.compiler.ModuleCompilerUtil;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -111,7 +111,7 @@ class AddModuleDependencyFix extends OrderEntryFix {
         @Override
         public void customize(JList list, Module module, int index, boolean selected, boolean hasFocus) {
           if (module != null) {
-            setIcon(ModuleType.get(module).getIcon());
+            setIcon(AllIcons.Nodes.Module);
             setText(module.getName());
           }
         }

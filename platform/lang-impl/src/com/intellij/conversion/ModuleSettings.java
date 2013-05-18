@@ -19,7 +19,6 @@ package com.intellij.conversion;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -35,19 +34,8 @@ public interface ModuleSettings extends ComponentManagerSettings {
   @NotNull
   String getModuleName();
 
-  @Nullable
-  String getModuleType();
-
   @NotNull
   File getModuleFile();
-
-  @NotNull
-  Collection<? extends Element> getFacetElements(@NotNull String facetTypeId);
-
-  @Nullable
-  Element getFacetElement(@NotNull String facetTypeId);
-
-  void setModuleType(@NotNull String moduleType);
 
   @NotNull
   String expandPath(@NotNull String path);
@@ -74,6 +62,4 @@ public interface ModuleSettings extends ComponentManagerSettings {
   boolean hasModuleLibrary(String libraryName);
 
   List<Element> getOrderEntries();
-
-  void addFacetElement(@NotNull String facetTypeId, @NotNull String facetName, Element configuration);
 }

@@ -15,8 +15,6 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
@@ -55,11 +53,6 @@ public abstract class IdeaTestCase extends PlatformTestCase {
   @Override
   protected Sdk getTestProjectJdk() {
     return IdeaTestUtil.getMockJdk17();
-  }
-
-  @Override
-  protected ModuleType getModuleType() {
-    return StdModuleTypes.JAVA;
   }
 
   public static void initPlatformPrefix() {

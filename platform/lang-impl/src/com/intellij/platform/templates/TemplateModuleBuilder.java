@@ -20,13 +20,17 @@ import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.ide.util.DefaultModuleBuilder;
 import com.intellij.ide.util.newProjectWizard.modes.ImportImlMode;
 import com.intellij.ide.util.projectWizard.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.*;
+import com.intellij.openapi.module.ModifiableModuleModel;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -66,14 +70,12 @@ public class TemplateModuleBuilder extends ModuleBuilder {
 
   public static final String UTF_8 = "UTF-8";
 
-  private final ModuleType myType;
   private List<WizardInputField> myAdditionalFields;
   private ArchivedProjectTemplate myTemplate;
   private boolean myProjectMode;
 
-  public TemplateModuleBuilder(ArchivedProjectTemplate template, ModuleType moduleType, List<WizardInputField> additionalFields) {
+  public TemplateModuleBuilder(ArchivedProjectTemplate template, List<WizardInputField> additionalFields) {
     myTemplate = template;
-    myType = moduleType;
     myAdditionalFields = additionalFields;
   }
 
@@ -84,7 +86,7 @@ public class TemplateModuleBuilder extends ModuleBuilder {
 
   @Override
   public ModuleWizardStep[] createWizardSteps(WizardContext wizardContext, ModulesProvider modulesProvider) {
-    ModuleBuilder builder = myType.createModuleBuilder();
+    ModuleBuilder builder = new DefaultModuleBuilder();
     builder.setAvailableFrameworks(Collections.<String, Boolean>emptyMap());
     return builder.createWizardSteps(wizardContext, modulesProvider);
   }
@@ -140,16 +142,6 @@ public class TemplateModuleBuilder extends ModuleBuilder {
     }
   }
 
-  @Nullable
-  @Override
-  public String getBuilderId() {
-    return myTemplate.getName();
-  }
-
-  @Override
-  public ModuleType getModuleType() {
-    return myType;
-  }
 
   @Override
   public Icon getNodeIcon() {

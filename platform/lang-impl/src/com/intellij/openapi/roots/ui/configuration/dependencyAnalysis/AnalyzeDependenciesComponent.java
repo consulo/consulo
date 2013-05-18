@@ -21,7 +21,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.ModuleRootAdapter;
@@ -609,7 +608,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
           return new CellAppearanceEx() {
             @Override
             public void customize(@NotNull SimpleColoredComponent component) {
-              component.setIcon(ModuleType.get(myModule).getIcon());
+              component.setIcon(AllIcons.Nodes.Module);
               component.append("<This Module>", SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
             }
 

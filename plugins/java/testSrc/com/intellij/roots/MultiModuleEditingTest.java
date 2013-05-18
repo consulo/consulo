@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
@@ -68,8 +67,8 @@ public class MultiModuleEditingTest extends ModuleTestCase {
 
     {
       final ModifiableModuleModel modifiableModel = moduleManager.getModifiableModel();
-      moduleA = modifiableModel.newModule("a.iml", StdModuleTypes.JAVA.getId());
-      moduleB = modifiableModel.newModule("b.iml", StdModuleTypes.JAVA.getId());
+      moduleA = modifiableModel.newModule("a.iml");
+      moduleB = modifiableModel.newModule("b.iml");
       assertEquals("Changes are not applied until commit", 0, moduleManager.getModules().length);
       //noinspection SSBasedInspection
       moduleListener.assertCorrectEvents(new String[0][]);
@@ -115,8 +114,8 @@ public class MultiModuleEditingTest extends ModuleTestCase {
     final Module moduleB;
     {
       final ModifiableModuleModel moduleModel = moduleManager.getModifiableModel();
-      moduleA = moduleModel.newModule("a.iml", StdModuleTypes.JAVA.getId());
-      moduleB = moduleModel.newModule("b.iml", StdModuleTypes.JAVA.getId());
+      moduleA = moduleModel.newModule("a.iml");
+      moduleB = moduleModel.newModule("b.iml");
       final ModifiableRootModel rootModelA = ModuleRootManager.getInstance(moduleA).getModifiableModel();
       final ModifiableRootModel rootModelB = ModuleRootManager.getInstance(moduleB).getModifiableModel();
       rootModelB.addModuleOrderEntry(moduleA);
@@ -157,9 +156,9 @@ public class MultiModuleEditingTest extends ModuleTestCase {
 
     {
       final ModifiableModuleModel moduleModel = moduleManager.getModifiableModel();
-      moduleA = moduleModel.newModule("a.iml", StdModuleTypes.JAVA.getId());
-      moduleB = moduleModel.newModule("b.iml", StdModuleTypes.JAVA.getId());
-      final Module moduleC = moduleModel.newModule("c.iml", StdModuleTypes.JAVA.getId());
+      moduleA = moduleModel.newModule("a.iml");
+      moduleB = moduleModel.newModule("b.iml");
+      final Module moduleC = moduleModel.newModule("c.iml");
       final ModifiableRootModel rootModelB = ModuleRootManager.getInstance(moduleB).getModifiableModel();
       rootModelB.addModuleOrderEntry(moduleC);
       moduleModel.disposeModule(moduleC);

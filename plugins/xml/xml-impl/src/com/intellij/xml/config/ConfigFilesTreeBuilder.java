@@ -15,10 +15,10 @@
  */
 package com.intellij.xml.config;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -174,8 +174,7 @@ public class ConfigFilesTreeBuilder {
     }
     else if (object instanceof Module) {
       final Module module = (Module)object;
-      final Icon icon = ModuleType.get(module).getIcon();
-      renderer.setIcon(icon);
+      renderer.setIcon(AllIcons.Nodes.Module);
       final String moduleName = module.getName();
       renderer.append(moduleName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }

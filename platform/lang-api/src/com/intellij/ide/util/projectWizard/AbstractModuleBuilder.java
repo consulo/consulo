@@ -27,9 +27,6 @@ import javax.swing.*;
 public abstract class AbstractModuleBuilder extends ProjectBuilder {
   public abstract Icon getNodeIcon();
 
-  @Nullable
-  public abstract String getBuilderId();
-
   public abstract ModuleWizardStep[] createWizardSteps(WizardContext wizardContext, ModulesProvider modulesProvider);
 
   @Nullable

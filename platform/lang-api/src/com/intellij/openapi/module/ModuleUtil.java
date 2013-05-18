@@ -19,33 +19,7 @@
  */
 package com.intellij.openapi.module;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class ModuleUtil extends ModuleUtilCore {
 
   private ModuleUtil() {}
-
-  @Nullable
-  public static Module getParentModuleOfType(ModuleType expectedModuleType, Module module) {
-    if (module == null) return null;
-    if (expectedModuleType.equals(ModuleType.get(module))) return module;
-    final List<Module> parents = getParentModulesOfType(expectedModuleType, module);
-    return parents.isEmpty() ? null : parents.get(0);
-  }
-
-  @NotNull
-  public static List<Module> getParentModulesOfType(ModuleType expectedModuleType, Module module) {
-    final List<Module> parents = ModuleManager.getInstance(module.getProject()).getModuleDependentModules(module);
-    ArrayList<Module> modules = new ArrayList<Module>();
-    for (Module parent : parents) {
-      if (expectedModuleType.equals(ModuleType.get(parent))) {
-        modules.add(parent);
-      }
-    }
-    return modules;
-  }
 }

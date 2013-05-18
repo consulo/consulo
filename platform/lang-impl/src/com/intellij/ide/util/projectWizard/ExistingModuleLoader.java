@@ -25,7 +25,6 @@ import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -65,10 +64,6 @@ public class ExistingModuleLoader extends ModuleBuilder {
 
   public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
     // empty
-  }
-
-  public ModuleType getModuleType() {
-    return null; // no matter
   }
 
   public boolean validate(final Project current, final Project dest) {

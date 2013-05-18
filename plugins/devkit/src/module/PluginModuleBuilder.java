@@ -18,7 +18,6 @@ package org.jetbrains.idea.devkit.module;
 import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ModifiableRootModel;

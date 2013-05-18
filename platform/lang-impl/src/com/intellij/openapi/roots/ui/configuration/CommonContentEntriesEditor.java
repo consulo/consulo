@@ -63,7 +63,7 @@ import java.util.Map;
  *         Time: 6:54:57 PM
  */
 public class CommonContentEntriesEditor extends ModuleElementsEditor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.configuration.ContentEntriesEditor");
+  private static final Logger LOG = Logger.getInstance(CommonContentEntriesEditor.class);
   public static final String NAME = ProjectBundle.message("module.paths.title");
   private static final Color BACKGROUND_COLOR = UIUtil.getListBackground();
 

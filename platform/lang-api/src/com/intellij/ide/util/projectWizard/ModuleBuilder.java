@@ -15,12 +15,17 @@
  */
 package com.intellij.ide.util.projectWizard;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ModuleFileType;
+import com.intellij.ide.util.DefaultModuleBuilder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.*;
+import com.intellij.openapi.module.ModifiableModuleModel;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -61,9 +66,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
 
   public static List<ModuleBuilder> getAllBuilders() {
     final ArrayList<ModuleBuilder> result = new ArrayList<ModuleBuilder>();
-    for (final ModuleType moduleType : ModuleTypeManager.getInstance().getRegisteredTypes()) {
-      result.add(moduleType.createModuleBuilder());
-    }
     for (ModuleBuilderFactory factory : EP_NAME.getExtensions()) {
       result.add(factory.createBuilder());
     }
@@ -80,16 +82,9 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   }
 
   @Override
-  @Nullable
-  public String getBuilderId() {
-    ModuleType moduleType = getModuleType();
-    return moduleType == null ? null : moduleType.getId();
-  }
-
-  @Override
   public ModuleWizardStep[] createWizardSteps(WizardContext wizardContext, ModulesProvider modulesProvider) {
-    ModuleType moduleType = getModuleType();
-    return moduleType == null ? ModuleWizardStep.EMPTY_ARRAY : moduleType.createWizardSteps(wizardContext, this, modulesProvider);
+    DefaultModuleBuilder builder = new DefaultModuleBuilder();
+    return builder.createWizardSteps(wizardContext, modulesProvider);
   }
 
   /**
@@ -103,11 +98,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   @Override
   @Nullable
   public ModuleWizardStep modifySettingsStep(SettingsStep settingsStep) {
-    ModuleType type = getModuleType();
-    if (type == null) {
-      return null;
-    }
-    else {
+/*
       final ModuleWizardStep step = type.modifySettingsStep(settingsStep, this);
       final List<WizardInputField> fields = getAdditionalFields();
       for (WizardInputField field : fields) {
@@ -135,8 +126,8 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
           }
           return step == null || step.validate();
         }
-      };
-    }
+      };*/
+    return null;
   }
 
   protected List<WizardInputField> getAdditionalFields() {
@@ -221,8 +212,8 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     LOG.assertTrue(myModuleFilePath != null);
 
     deleteModuleFile(myModuleFilePath);
-    final ModuleType moduleType = getModuleType();
-    final Module module = moduleModel.newModule(myModuleFilePath, moduleType.getId());
+
+    final Module module = moduleModel.newModule(myModuleFilePath);
     setupModule(module);
 
     return module;
@@ -242,8 +233,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   }
 
   public abstract void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException;
-
-  public abstract ModuleType getModuleType();
 
   @NotNull
   public Module createAndCommitIfNeeded(@NotNull Project project, @Nullable ModifiableModuleModel model, boolean runFromProjectWizard)
@@ -328,19 +317,19 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   }
 
   public Icon getBigIcon() {
-    return getModuleType().getBigIcon();
+    return AllIcons.Nodes.Module;
   }
 
   public Icon getNodeIcon() {
-    return getModuleType().getNodeIcon(false);
+    return  AllIcons.Nodes.Module;
   }
 
   public String getDescription() {
-    return getModuleType().getDescription();
+    return "Module";
   }
 
   public String getPresentableName() {
-    return getModuleType().getName();
+    return getDescription();
   }
 
   public String getGroupName() {

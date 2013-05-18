@@ -18,7 +18,6 @@ package com.intellij.ide.util.projectWizard;
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -58,8 +57,7 @@ public class SdkSettingsStep extends ModuleWizardStep {
     myJdkComboBox = new JdkComboBox(myModel, sdkFilter);
 
     final PropertiesComponent component = project == null ? PropertiesComponent.getInstance() : PropertiesComponent.getInstance(project);
-    ModuleType moduleType = moduleBuilder.getModuleType();
-    final String selectedJdkProperty = "jdk.selected." + (moduleType == null ? "" : moduleType.getId());
+    final String selectedJdkProperty = "jdk.selected";
     myJdkComboBox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {

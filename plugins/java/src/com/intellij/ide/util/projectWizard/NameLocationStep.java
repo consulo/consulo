@@ -20,7 +20,6 @@ import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.ui.Messages;
@@ -108,11 +107,6 @@ public class NameLocationStep extends ModuleWizardStep {
     });
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  private String suggestModuleName(ModuleType moduleType) {
-    return "untitled";
-  }
-
   public void updateStep() {
     super.updateStep();
 
@@ -125,7 +119,7 @@ public class NameLocationStep extends ModuleWizardStep {
         final VirtualFile baseDir = myWizardContext.getProject().getBaseDir();
         final String projectFileDirectory = baseDir != null ? VfsUtil.virtualToIoFile(baseDir).getPath() : null;
         if (projectFileDirectory != null) {
-          final String name = ProjectWizardUtil.findNonExistingFileName(projectFileDirectory, suggestModuleName(myBuilder.getModuleType()), "");
+          final String name = ProjectWizardUtil.findNonExistingFileName(projectFileDirectory, "", "");
           setModuleName(name);
           setContentEntryPath(projectFileDirectory + File.separatorChar + name);
         }

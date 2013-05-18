@@ -16,7 +16,6 @@
 package org.jetbrains.android.util;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.ui.ListCellRendererWrapper;
 
 import javax.swing.*;

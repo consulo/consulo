@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
@@ -125,7 +125,7 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     @Override
     public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
-      presentationData.setIcon(ModuleType.get(myModule).getIcon());
+      presentationData.setIcon(AllIcons.Nodes.Module);
       presentationData.addText(myModule.getName(), mainAttributes);
     }
 

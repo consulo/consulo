@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesAlphaComparator;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -166,12 +166,12 @@ public class JarArtifactFromModulesDialog extends DialogWrapper {
     @Override
     public void customize(JList list, Module value, int index, boolean selected, boolean hasFocus) {
       if (value != null) {
-        setIcon(ModuleType.get(value).getIcon());
+        setIcon(AllIcons.Nodes.Module);
         setText(value.getName());
       }
       else {
         setText("<All Modules>");
-        setIcon(null);
+        setIcon(AllIcons.Nodes.ModuleGroup);
       }
     }
   }

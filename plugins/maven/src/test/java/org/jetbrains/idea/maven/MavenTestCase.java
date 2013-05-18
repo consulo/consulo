@@ -21,7 +21,6 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -334,7 +333,7 @@ public abstract class MavenTestCase extends UsefulTestCase {
       @Override
       protected void run(Result<Module> moduleResult) throws Throwable {
         VirtualFile f = createProjectSubFile(name + "/" + name + ".iml");
-        Module module = ModuleManager.getInstance(myProject).newModule(f.getPath(), type.getId());
+        Module module = ModuleManager.getInstance(myProject).newModule(f.getPath());
         PsiTestUtil.addContentRoot(module, f.getParent());
         moduleResult.setResult(module);
       }

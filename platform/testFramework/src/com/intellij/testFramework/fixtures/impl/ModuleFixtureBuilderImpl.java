@@ -20,7 +20,6 @@ import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -32,7 +31,6 @@ import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.ModuleFixture;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +42,6 @@ import java.util.List;
 public abstract class ModuleFixtureBuilderImpl<T extends ModuleFixture> implements ModuleFixtureBuilder<T> {
   private static int ourIndex;
 
-  private final ModuleType myModuleType;
   protected final List<String> myContentRoots = new ArrayList<String>();
   protected final List<String> mySourceRoots = new ArrayList<String>();
   protected final TestFixtureBuilder<? extends IdeaProjectTestFixture> myFixtureBuilder;
@@ -52,8 +49,7 @@ public abstract class ModuleFixtureBuilderImpl<T extends ModuleFixture> implemen
   protected String myOutputPath;
   protected String myTestOutputPath;
 
-  public ModuleFixtureBuilderImpl(@NotNull final ModuleType moduleType, TestFixtureBuilder<? extends IdeaProjectTestFixture> fixtureBuilder) {
-    myModuleType = moduleType;
+  public ModuleFixtureBuilderImpl(TestFixtureBuilder<? extends IdeaProjectTestFixture> fixtureBuilder) {
     myFixtureBuilder = fixtureBuilder;
   }
 
@@ -84,7 +80,7 @@ public abstract class ModuleFixtureBuilderImpl<T extends ModuleFixture> implemen
     final Project project = myFixtureBuilder.getFixture().getProject();
     assert project != null;
     final String moduleFilePath = new File(project.getProjectFilePath()).getParent() + File.separator + getNextIndex() + ModuleFileType.DOT_DEFAULT_EXTENSION;
-    return ModuleManager.getInstance(project).newModule(moduleFilePath, myModuleType.getId());
+    return ModuleManager.getInstance(project).newModule(moduleFilePath);
   }
 
   private static int getNextIndex() {

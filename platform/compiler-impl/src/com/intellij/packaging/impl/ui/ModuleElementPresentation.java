@@ -15,12 +15,12 @@
  */
 package com.intellij.packaging.impl.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
@@ -71,7 +71,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
       presentationData.setIcon(PlatformIcons.TEST_SOURCE_FOLDER);
     }
     else if (module != null) {
-      presentationData.setIcon(ModuleType.get(module).getIcon());
+      presentationData.setIcon(AllIcons.Nodes.Module);
     }
     String moduleName;
     if (module != null) {

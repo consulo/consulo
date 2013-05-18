@@ -16,9 +16,6 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
@@ -27,12 +24,9 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.UnknownModuleType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
@@ -83,7 +77,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
   @Override
   protected void showUnknownModuleTypeNotification(List<Module> modulesWithUnknownTypes) {
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !modulesWithUnknownTypes.isEmpty()) {
+    /*if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !modulesWithUnknownTypes.isEmpty()) {
       String message;
       if (modulesWithUnknownTypes.size() == 1) {
         message = ProjectBundle.message("module.unknown.type.single.error", modulesWithUnknownTypes.get(0).getName(),
@@ -106,7 +100,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
         message,
         NotificationType.WARNING
       ), myProject);
-    }
+    }  */
   }
 
   @Override
@@ -119,11 +113,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     ModuleImpl module = new ModuleImpl(filePath, myProject);
     module.getStateStore().load();
     return module;
-  }
-
-  @Override
-  protected boolean isUnknownModuleType(Module module) {
-    return ModuleType.get(module) instanceof UnknownModuleType;
   }
 
   @Override

@@ -27,7 +27,6 @@ import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -85,7 +84,7 @@ public class EclipseImlTest extends IdeaTestCase {
       public Module compute() {
         return ModuleManager.getInstance(project)
           .newModule(new File(path) + File.separator + EclipseProjectFinder
-            .findProjectName(path) + IdeaXml.IML_EXT, StdModuleTypes.JAVA.getId());
+            .findProjectName(path) + IdeaXml.IML_EXT);
       }
     });
     final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();

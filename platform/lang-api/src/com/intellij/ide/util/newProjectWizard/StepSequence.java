@@ -23,7 +23,6 @@ package com.intellij.ide.util.newProjectWizard;
 import com.intellij.ide.util.projectWizard.AbstractModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
@@ -54,10 +53,10 @@ public class StepSequence {
   }
 
   public void addStepsForBuilder(AbstractModuleBuilder builder, WizardContext wizardContext, ModulesProvider modulesProvider) {
-    String id = builder.getBuilderId();
-    if (!mySpecificSteps.containsKey(id)) {
+
+    /*if (!mySpecificSteps.containsKey(id)) {
       mySpecificSteps.put(id, Arrays.asList(builder.createWizardSteps(wizardContext, modulesProvider)));
-    }
+    }   */
   }
 
   public void addSpecificStep(String type, ModuleWizardStep step) {
@@ -104,7 +103,7 @@ public class StepSequence {
   }
 
   public void setType(@Nullable @NonNls final String type) {
-    setTypes(Collections.singletonList(type == null ? ModuleType.EMPTY.getId() : type));
+    setTypes(Collections.singletonList(""));
   }
 
   public String getSelectedType() {

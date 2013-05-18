@@ -1,9 +1,9 @@
 package com.intellij.codeInspection.reference;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,7 +65,7 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
 
   @Override
   public Icon getIcon(final boolean expanded) {
-    return ModuleType.get(getModule()).getIcon();
+    return AllIcons.Nodes.Module;
   }
 
   @Nullable

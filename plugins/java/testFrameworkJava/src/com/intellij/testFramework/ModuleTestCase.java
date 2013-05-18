@@ -20,8 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.module.impl.ModuleImpl;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -72,21 +70,18 @@ public abstract class ModuleTestCase extends IdeaTestCase {
     }
   }
 
+
   protected Module createModule(final File moduleFile) {
-    return createModule(moduleFile, StdModuleTypes.JAVA);
-  }
-
-  protected Module createModule(final File moduleFile, final ModuleType moduleType) {
     final String path = moduleFile.getAbsolutePath();
-    return createModule(path, moduleType);
+    return createModule(path);
   }
 
-  protected Module createModule(final String path, final ModuleType moduleType) {
+  protected Module createModule(final String path) {
     Module module = ApplicationManager.getApplication().runWriteAction(
       new Computable<Module>() {
         @Override
         public Module compute() {
-          return ModuleManager.getInstance(myProject).newModule(path, moduleType.getId());
+          return ModuleManager.getInstance(myProject).newModule(path);
         }
       }
     );
@@ -151,14 +146,14 @@ public abstract class ModuleTestCase extends IdeaTestCase {
     });
   }
 
-  protected Module createModuleFromTestData(final String dirInTestData, final String newModuleFileName, final ModuleType moduleType,
+  protected Module createModuleFromTestData(final String dirInTestData, final String newModuleFileName,
                                             final boolean addSourceRoot)
     throws IOException {
     final File dirInTestDataFile = new File(dirInTestData);
     assertTrue(dirInTestDataFile.isDirectory());
     final File moduleDir = createTempDirectory();
     FileUtil.copyDir(dirInTestDataFile, moduleDir);
-    final Module module = createModule(moduleDir + "/" + newModuleFileName, moduleType);
+    final Module module = createModule(moduleDir + "/" + newModuleFileName);
     final VirtualFile root = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(moduleDir);
     new WriteCommandAction.Simple(module.getProject()) {
       @Override

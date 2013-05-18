@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.usageView.UsageViewBundle;
@@ -147,7 +146,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
 
     @Override
     public Icon getIcon(boolean isOpen) {
-      return myModule.isDisposed() ? null : ModuleType.get(myModule).getIcon();
+      return myModule.isDisposed() ? null : AllIcons.Nodes.Module;
     }
 
     @Override

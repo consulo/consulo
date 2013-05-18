@@ -357,7 +357,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
         @Override
         protected void run(Result<Module> result) throws Throwable {
           Module module = ModuleManager.getInstance(myProject)
-            .newModule(FileUtil.toSystemIndependentName(moduleFile.getAbsolutePath()), getModuleType().getId());
+            .newModule(FileUtil.toSystemIndependentName(moduleFile.getAbsolutePath()));
           module.getModuleFile();
           result.setResult(module);
         }

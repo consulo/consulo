@@ -22,7 +22,6 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.util.EmptyRunnable;
@@ -143,7 +142,7 @@ public class DirectoryIndexTest extends IdeaTestCase {
           // fill roots of module2
           {
             VirtualFile moduleFile = myModule2Dir.createChildData(DirectoryIndexTest.this, "module2.iml");
-            myModule2 = moduleManager.newModule(moduleFile.getPath(), StdModuleTypes.JAVA.getId());
+            myModule2 = moduleManager.newModule(moduleFile.getPath());
 
             PsiTestUtil.addContentRoot(myModule2, myModule2Dir);
             PsiTestUtil.addSourceRoot(myModule2, mySrcDir2);
@@ -155,7 +154,7 @@ public class DirectoryIndexTest extends IdeaTestCase {
           // fill roots of module3
           {
             VirtualFile moduleFile = myModule3Dir.createChildData(DirectoryIndexTest.this, "module3.iml");
-            myModule3 = moduleManager.newModule(moduleFile.getPath(), StdModuleTypes.JAVA.getId());
+            myModule3 = moduleManager.newModule(moduleFile.getPath());
 
             PsiTestUtil.addContentRoot(myModule3, myModule3Dir);
             ModuleRootModificationUtil.addDependency(myModule3, myModule2);
@@ -317,7 +316,7 @@ public class DirectoryIndexTest extends IdeaTestCase {
         VirtualFile newModuleContent = myRootVFile.createChildDirectory(DirectoryIndexTest.this, "newModule");
         newModuleContent.createChildDirectory(DirectoryIndexTest.this, "subDir");
         ModuleManager moduleManager = ModuleManager.getInstance(myProject);
-        Module module = moduleManager.newModule(myRootVFile.getPath() + "/newModule.iml", StdModuleTypes.JAVA.getId());
+        Module module = moduleManager.newModule(myRootVFile.getPath() + "/newModule.iml");
         PsiTestUtil.addContentRoot(module, newModuleContent);
       }
     }.execute().throwException();

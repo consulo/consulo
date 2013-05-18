@@ -16,8 +16,6 @@
 package com.intellij.ide.util.projectWizard;
 
 
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -73,19 +71,10 @@ public class JavaModuleBuilder extends ModuleBuilder implements SourcePathsBuild
     mySourcePaths.add(sourcePathInfo);
   }
 
-  public ModuleType getModuleType() {
-    return StdModuleTypes.JAVA;
-  }
 
   @Override
   public boolean isSuitableSdkType(SdkTypeId sdkType) {
     return sdkType instanceof JavaSdkType;
-  }
-
-  @Nullable
-  @Override
-  public ModuleWizardStep modifySettingsStep(SettingsStep settingsStep) {
-    return StdModuleTypes.JAVA.modifySettingsStep(settingsStep, this);
   }
 
   public void setupRootModel(ModifiableRootModel rootModel) throws ConfigurationException {

@@ -31,7 +31,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
@@ -132,7 +131,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
         final OrderEntry[] entries = rootManager.getOrderEntries();
         for (OrderEntry entry : entries) {
           if (entry instanceof JdkOrderEntry) {
-            if (!ModuleType.get(module).isValidSdk(module, null)) {
+            if (/*!ModuleType.get(module).isValidSdk(module, null)*/Boolean.FALSE) {
               System.err.println(InspectionsBundle.message("offline.inspections.module.jdk.not.found", ((JdkOrderEntry)entry).getJdkName(),
                                                            module.getName()));
               return false;
@@ -159,12 +158,12 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
     for (Module module : modules) {
       if (ModuleRootManager.getInstance(module).isSdkInherited()) {
         anyModuleUsesProjectSdk = true;
-        if (ModuleType.get(module).isValidSdk(module, projectSdk)) {
+        /*if (ModuleType.get(module).isValidSdk(module, projectSdk)) {
           anyModuleAcceptsSdk = true;
-        }
+        }    */
       }
     }
-    return anyModuleUsesProjectSdk && !anyModuleAcceptsSdk;
+    return false;
   }
 
   private static <T extends Processor> void enqueueRequestImpl(RefElement refElement, Map<SmartPsiElementPointer, List<T>> requestMap, T processor) {

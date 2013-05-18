@@ -18,7 +18,6 @@ package org.jetbrains.idea.devkit.build;
 
 import com.intellij.openapi.compiler.make.BuildParticipantProvider;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import org.jetbrains.idea.devkit.module.PluginModuleType;
 
 import java.util.Collection;

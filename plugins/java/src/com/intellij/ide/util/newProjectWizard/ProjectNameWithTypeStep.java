@@ -392,7 +392,7 @@ public class ProjectNameWithTypeStep extends ProjectNameStep {
   }
 
   protected String getSelectedBuilderId() {
-    return ((ModuleBuilder)myTypesList.getSelectedValue()).getBuilderId();
+    return "";
   }
 
   public boolean validate() throws ConfigurationException {

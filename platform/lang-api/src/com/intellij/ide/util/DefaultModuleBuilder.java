@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module;
+package com.intellij.ide.util;
 
-public class StdModuleTypes {
-  // predefined module types
-  public static ModuleType JAVA;
+import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.roots.ModifiableRootModel;
 
-  private StdModuleTypes() {
-  }
+/**
+ * @author VISTALL
+ * @since 20:38/18.05.13
+ */
+public class DefaultModuleBuilder extends ModuleBuilder {
+  @Override
+  public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
 
-  static {
-    JAVA = instantiate("com.intellij.openapi.module.JavaModuleType");
-  }
-
-  private static ModuleType instantiate(String className) {
-    try {
-      return (ModuleType)Class.forName(className).newInstance();
-    }
-    catch (Exception e) {
-      throw new IllegalArgumentException(e);
-    }
   }
 }

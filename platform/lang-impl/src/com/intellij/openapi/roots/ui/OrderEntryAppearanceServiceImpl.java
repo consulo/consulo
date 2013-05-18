@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -82,8 +82,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       return new SimpleTextCellAppearance(presentableName, icon, SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
     }
     else if (orderEntry instanceof ModuleOrderEntry) {
-      final Icon icon = ModuleType.get(((ModuleOrderEntry)orderEntry).getModule()).getIcon();
-      return SimpleTextCellAppearance.regular(orderEntry.getPresentableName(), icon);
+      return SimpleTextCellAppearance.regular(orderEntry.getPresentableName(), AllIcons.Nodes.Module);
     }
     else {
       return CompositeAppearance.single(orderEntry.getPresentableName());
@@ -170,7 +169,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @NotNull
   @Override
   public CellAppearanceEx forModule(@NotNull final Module module) {
-    return SimpleTextCellAppearance.regular(module.getName(), ModuleType.get(module).getIcon());
+    return SimpleTextCellAppearance.regular(module.getName(), AllIcons.Nodes.Module);
   }
 
   @NotNull

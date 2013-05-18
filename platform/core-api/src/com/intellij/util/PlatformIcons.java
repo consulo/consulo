@@ -23,6 +23,7 @@ import javax.swing.*;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public interface PlatformIcons {
   @NonNls String PUBLIC_ICON_PATH = "/nodes/c_public.png";
   Icon PUBLIC_ICON = AllIcons.Nodes.C_public;
@@ -96,6 +97,7 @@ public interface PlatformIcons {
   Icon TASK_ICON = AllIcons.Ant.Task;
   Icon CLASS_INITIALIZER = AllIcons.Nodes.ClassInitializer;
 
+  @Deprecated
   Icon CLOSED_MODULE_GROUP_ICON = AllIcons.Nodes.ModuleGroup;
   @Deprecated Icon OPENED_MODULE_GROUP_ICON = CLOSED_MODULE_GROUP_ICON;
 

@@ -18,8 +18,6 @@ package com.intellij.testFramework.fixtures.impl;
 
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.MockJdkWrapper;
@@ -55,11 +53,7 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
   private LanguageLevel myLanguageLevel = null;
 
   public JavaModuleFixtureBuilderImpl(final TestFixtureBuilder<? extends IdeaProjectTestFixture> fixtureBuilder) {
-    super(StdModuleTypes.JAVA, fixtureBuilder);
-  }
-
-  public JavaModuleFixtureBuilderImpl(final ModuleType moduleType, final TestFixtureBuilder<? extends IdeaProjectTestFixture> fixtureBuilder) {
-    super(moduleType, fixtureBuilder);
+    super( fixtureBuilder);
   }
 
   @Override

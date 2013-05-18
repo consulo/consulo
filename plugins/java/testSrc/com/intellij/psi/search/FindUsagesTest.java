@@ -23,8 +23,6 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.StdModuleTypes;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.search.searches.MethodReferencesSearch;
@@ -139,7 +137,7 @@ public class FindUsagesTest extends PsiTestCase{
         @Override
         protected void run(Result result) throws Throwable {
           final ModifiableModuleModel moduleModel = ModuleManager.getInstance(getProject()).getModifiableModel();
-          moduleModel.newModule("independent/independent.iml", StdModuleTypes.JAVA.getId());
+          moduleModel.newModule("independent/independent.iml");
           moduleModel.commit();
 
           tdf.createFile("plugin.xml", "<document>\n" +

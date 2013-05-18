@@ -15,8 +15,6 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.pom.java.LanguageLevel;
@@ -61,10 +59,5 @@ public abstract class LightCodeInsightTestCase extends LightPlatformCodeInsightT
   @Override
   protected Sdk getProjectJDK() {
     return IdeaTestUtil.getMockJdk17();
-  }
-
-  @Override
-  protected ModuleType getModuleType() {
-    return StdModuleTypes.JAVA;
   }
 }

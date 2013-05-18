@@ -21,7 +21,6 @@ import com.intellij.framework.addSupport.FrameworkSupportInModuleProvider;
 import com.intellij.ide.util.frameworkSupport.FrameworkSupportModel;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.util.GroovyUtils;

@@ -20,7 +20,6 @@ import com.intellij.ide.util.projectWizard.importSources.JavaModuleSourceRoot;
 import com.intellij.ide.util.projectWizard.importSources.JavaSourceRootDetectionUtil;
 import com.intellij.lexer.JavaLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.java.LanguageLevel;
@@ -167,7 +166,7 @@ public class JavaModuleInsight extends ModuleInsight {
   }
 
   protected ModuleDescriptor createModuleDescriptor(final File moduleContentRoot, final Collection<DetectedProjectRoot> sourceRoots) {
-    return new ModuleDescriptor(moduleContentRoot, StdModuleTypes.JAVA, sourceRoots);
+    return new ModuleDescriptor(moduleContentRoot, sourceRoots);
   }
 
   public boolean isApplicableRoot(final DetectedProjectRoot root) {

@@ -22,8 +22,6 @@ import com.intellij.ide.util.projectWizard.WizardInputField;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.ModuleTypeManager;
 import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.StreamUtil;
@@ -139,20 +137,12 @@ public class RemoteTemplatesFactory extends ProjectTemplatesFactory {
       public ArchivedProjectTemplate fun(final Element element) {
 
         if (!checkRequiredPlugins(element, ns)) return null;
-        String type = element.getChildText("moduleType");
-
-        final ModuleType moduleType = ModuleTypeManager.getInstance().findByID(type);
 
         final List<WizardInputField> inputFields = getFields(element, ns);
         final String path = element.getChildText("path", ns);
         final String description = element.getChildTextTrim("description", ns);
         String name = element.getChildTextTrim("name", ns);
         return new ArchivedProjectTemplate(name) {
-          @Override
-          protected ModuleType getModuleType() {
-            return moduleType;
-          }
-
           @Override
           public List<WizardInputField> getInputFields() {
             return inputFields;

@@ -404,7 +404,7 @@ public abstract class AndroidFacetImporterBase extends FacetImporter<AndroidFace
 
     if (apklibModule == null) {
       final String genModuleFilePath = genExternalApklibsDirPath + '/' + genModuleName + ModuleFileType.DOT_DEFAULT_EXTENSION;
-      apklibModule = moduleModel.newModule(genModuleFilePath, StdModuleTypes.JAVA.getId());
+      apklibModule = moduleModel.newModule(genModuleFilePath);
     }
 
     final ModifiableRootModel apklibModuleModel = modelsProvider.getRootModel(apklibModule);

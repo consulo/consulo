@@ -21,7 +21,6 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
@@ -346,12 +345,12 @@ public class PsiTestUtil {
     ModuleRootModificationUtil.addModuleLibrary(module, libName, classesUrls, sourceUrls);
   }
 
-  public static Module addModule(final Project project, final ModuleType type, final String name, final VirtualFile root) {
+  public static Module addModule(final Project project, final String name, final VirtualFile root) {
     return new WriteCommandAction<Module>(project) {
       @Override
       protected void run(Result<Module> result) throws Throwable {
         final ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
-        String moduleName = moduleModel.newModule(root.getPath() + "/" + name + ".iml", type.getId()).getName();
+        String moduleName = moduleModel.newModule(root.getPath() + "/" + name + ".iml").getName();
         moduleModel.commit();
 
         final Module dep = ModuleManager.getInstance(project).findModuleByName(moduleName);

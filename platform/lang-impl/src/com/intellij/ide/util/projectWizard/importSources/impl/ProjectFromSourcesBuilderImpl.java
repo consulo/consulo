@@ -32,7 +32,10 @@ import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.module.*;
+import com.intellij.openapi.module.ModifiableModuleModel;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -45,7 +48,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContaine
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainerFactory;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -53,7 +55,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.containers.MultiMap;
-import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -323,7 +324,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
     final String moduleFilePath = descriptor.computeModuleFilePath();
     ModuleBuilder.deleteModuleFile(moduleFilePath);
 
-    final Module module = moduleModel.newModule(moduleFilePath, descriptor.getModuleType().getId());
+    final Module module = moduleModel.newModule(moduleFilePath);
     final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
     setupRootModel(projectDescriptor, descriptor, modifiableModel, projectLibs);
     descriptor.updateModuleConfiguration(module, modifiableModel);
@@ -402,34 +403,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
 
   @Override
   public boolean isSuitableSdkType(final SdkTypeId sdkTypeId) {
-    for (ProjectDescriptor projectDescriptor : getSelectedDescriptors()) {
-      for (ModuleDescriptor moduleDescriptor : projectDescriptor.getModules()) {
-        try {
-          final ModuleType moduleType = getModuleType(moduleDescriptor);
-          if (moduleType != null && !moduleType.createModuleBuilder().isSuitableSdkType(sdkTypeId)) return false;
-        }
-        catch (Exception ignore) {
-        }
-      }
-    }
-    return true;
-  }
 
-  @Nullable
-  private static ModuleType getModuleType(ModuleDescriptor moduleDescriptor) throws InvalidDataException, JDOMException, IOException {
-    if (moduleDescriptor.isReuseExistingElement()) {
-      final File file = new File(moduleDescriptor.computeModuleFilePath());
-      if (file.exists()) {
-        final Element rootElement = JDOMUtil.loadDocument(file).getRootElement();
-        final String type = rootElement.getAttributeValue("type");
-        if (type != null) {
-          return ModuleTypeManager.getInstance().findByID(type);
-        }
-      }
-      return null;
-    }
-    else {
-      return moduleDescriptor.getModuleType();
-    }
+    return true;
   }
 }

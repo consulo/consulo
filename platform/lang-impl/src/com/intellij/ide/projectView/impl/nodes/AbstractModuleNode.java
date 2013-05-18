@@ -15,11 +15,11 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
@@ -49,13 +49,12 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
       presentation.addText(getValue().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
     }
 
-    presentation.setIcon(ModuleType.get(getValue()).getIcon());
+    presentation.setIcon(AllIcons.Nodes.Module);
   }
 
   protected boolean showModuleNameInBold() {
     return true;
   }
-
 
   @Override
   public String getTestPresentation() {
@@ -88,8 +87,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
 
   @Override
   public String getToolTip() {
-    final Module module = getValue();
-    return ModuleType.get(module).getName();
+    return "tooltip";
   }
 
   @Override

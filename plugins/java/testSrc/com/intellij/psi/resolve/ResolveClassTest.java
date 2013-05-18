@@ -19,7 +19,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -230,7 +229,7 @@ public class ResolveClassTest extends ResolveTestCase {
       @Override
       public void run() {
         ModifiableModuleModel modifiableModel = ModuleManager.getInstance(getProject()).getModifiableModel();
-        Module module = modifiableModel.newModule("a.iml", StdModuleTypes.JAVA.getId());
+        Module module = modifiableModel.newModule("a.iml");
         modifiableModel.commit();
 
         VirtualFile root = LocalFileSystem.getInstance().refreshAndFindFileByPath(getTestDataPath() + "/class/dependentModule");

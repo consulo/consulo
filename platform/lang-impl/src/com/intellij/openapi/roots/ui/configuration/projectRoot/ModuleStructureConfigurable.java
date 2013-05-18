@@ -901,11 +901,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
               }
               modifiableRootModel.addContentEntry(content);
             }
-
-            @Override
-            public ModuleType getModuleType() {
-              return ModuleType.get(rootModel.getModule());
-            }
           };
           builder.setName(component.getNameValue());
           builder.setModuleFilePath(path + "/" + builder.getName() + ModuleFileType.DOT_DEFAULT_EXTENSION);

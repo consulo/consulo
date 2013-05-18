@@ -25,11 +25,9 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.ui.DialogWrapperPeerFactory;
 import com.intellij.openapi.vcs.FileStatusFactory;
 import com.intellij.openapi.vcs.actions.VcsContextFactory;
@@ -78,6 +76,4 @@ public abstract class PeerFactory {
   public abstract EditorHighlighter createEditorHighlighter(SyntaxHighlighter syntaxHighlighter, EditorColorsScheme colors);
 
   public abstract Sdk createProjectJdk(String name, final String version, final String homePath, SdkType sdkType);
-
-  public abstract ModuleConfigurationEditor createModuleConfigurationEditor(String moduleName, ModuleConfigurationState state);
 }

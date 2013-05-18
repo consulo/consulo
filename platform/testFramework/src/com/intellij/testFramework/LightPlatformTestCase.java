@@ -47,10 +47,8 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.EmptyModuleType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -223,7 +221,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
           registerShutdownHook();
         }
         ourPsiManager = null;
-        ourModule = createMainModule(descriptor.getModuleType());
+        ourModule = createMainModule();
 
 
         //ourSourceRoot = DummyFileSystem.getInstance().createRoot("src");
@@ -304,11 +302,11 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     ((VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance()).storePointers();
   }
 
-  protected static Module createMainModule(final ModuleType moduleType) {
+  protected static Module createMainModule() {
     return ApplicationManager.getApplication().runWriteAction(new Computable<Module>() {
       @Override
       public Module compute() {
-        return ModuleManager.getInstance(ourProject).newModule("light_idea_test_case.iml", moduleType.getId());
+        return ModuleManager.getInstance(ourProject).newModule("light_idea_test_case.iml");
       }
     });
   }
@@ -325,7 +323,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     super.setUp();
     initApplication();
     ourApplication.setDataProvider(this);
-    doSetup(new SimpleLightProjectDescriptor(getModuleType(), getProjectJDK()), configureLocalInspectionTools(), myAvailableInspectionTools);
+    doSetup(new SimpleLightProjectDescriptor(getProjectJDK()), configureLocalInspectionTools(), myAvailableInspectionTools);
     InjectedLanguageManagerImpl.pushInjectors(getProject());
 
     storeSettings();
@@ -712,10 +710,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     return null;
   }
 
-  protected ModuleType getModuleType() {
-    return EmptyModuleType.getInstance();
-  }
-
   /**
    * Creates dummy source file. One is not placed under source root so some PSI functions like resolve to external classes
    * may not work. Though it works significantly faster and yet can be used if you need to create some PSI structures for
@@ -813,17 +807,10 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
   }
 
   private static class SimpleLightProjectDescriptor implements LightProjectDescriptor {
-    private final ModuleType myModuleType;
     private final Sdk mySdk;
 
-    SimpleLightProjectDescriptor(ModuleType moduleType, Sdk sdk) {
-      myModuleType = moduleType;
+    SimpleLightProjectDescriptor(Sdk sdk) {
       mySdk = sdk;
-    }
-
-    @Override
-    public ModuleType getModuleType() {
-      return myModuleType;
     }
 
     @Override
@@ -842,13 +829,12 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
       SimpleLightProjectDescriptor that = (SimpleLightProjectDescriptor)o;
 
-      if (myModuleType != null ? !myModuleType.equals(that.myModuleType) : that.myModuleType != null) return false;
       return areJdksEqual(that.getSdk());
     }
 
     @Override
     public int hashCode() {
-      return myModuleType != null ? myModuleType.hashCode() : 0;
+      return 0;
     }
 
     private boolean areJdksEqual(final Sdk newSdk) {
