@@ -1,6 +1,8 @@
 <idea-plugin version="2">
   <name>Android Support</name>
   <id>org.jetbrains.android</id>
+  <depends>com.intellij.xml</depends>
+  <depends>com.intellij.xml.dom</depends>
   <description>
     Supports development of Open Handset Alliance Android applications with IntelliJ IDEA.
   </description>

@@ -7,6 +7,8 @@
 
   <resource-bundle>com.intellij.lang.ant.resources.AntActionsBundle</resource-bundle>
   <depends>com.intellij.properties</depends>
+  <depends>com.intellij.xml</depends>
+  <depends>com.intellij.xml.dom</depends>
 
   <extensionPoints>
     <extensionPoint name="AntMessageCustomizer" interface="com.intellij.lang.ant.config.execution.AntMessageCustomizer"/>
@@ -44,9 +46,6 @@
                      groupKey="ant.inspections.display.name"
                      enabledByDefault="true" level="ERROR" implementationClass="com.intellij.lang.ant.dom.AntResolveInspection"/>
 
-    <dom.fileDescription implementation="com.intellij.lang.ant.dom.AntDomFileDescription"/>
-    <dom.fileDescription implementation="com.intellij.lang.ant.dom.AntlibDomFileDescription"/>
-    <dom.extender domClass="com.intellij.lang.ant.dom.AntDomElement" extenderClass="com.intellij.lang.ant.dom.AntDomExtender"/>
     <pom.declarationSearcher implementation="com.intellij.lang.ant.dom.AntDomDeclarationSearcher"/>
     
     <!--Type Presentation-->
@@ -69,6 +68,11 @@
                 factoryClass="com.intellij.lang.ant.config.impl.AntToolWindowFactory"/>
   </extensions>
 
+  <extensions defaultExtensionNs="com.intellij.xml.dom">
+    <fileDescription implementation="com.intellij.lang.ant.dom.AntDomFileDescription"/>
+    <fileDescription implementation="com.intellij.lang.ant.dom.AntlibDomFileDescription"/>
+    <extender domClass="com.intellij.lang.ant.dom.AntDomElement" extenderClass="com.intellij.lang.ant.dom.AntDomExtender"/>
+  </extensions>
   <application-components>
     <component>
       <interface-class>com.intellij.lang.ant.AntSupport</interface-class>

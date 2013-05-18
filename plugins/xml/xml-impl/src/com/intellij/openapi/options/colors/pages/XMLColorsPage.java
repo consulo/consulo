@@ -1,0 +1,86 @@
+/*
+ * Copyright 2000-2009 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.intellij.openapi.options.colors.pages;
+
+import com.intellij.ide.highlighter.XmlFileHighlighter;
+import com.intellij.openapi.editor.XmlHighlighterColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import com.intellij.openapi.options.OptionsBundle;
+import com.intellij.openapi.options.colors.AttributesDescriptor;
+import com.intellij.openapi.options.colors.ColorDescriptor;
+import com.intellij.openapi.options.colors.ColorSettingsPage;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import java.util.Map;
+
+public class XMLColorsPage implements ColorSettingsPage {
+  private static final AttributesDescriptor[] ATTRS = new AttributesDescriptor[] {
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.prologue"), XmlHighlighterColors.XML_PROLOGUE),
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.comment"), XmlHighlighterColors.XML_COMMENT),
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.tag"), XmlHighlighterColors.XML_TAG),
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.tag.name"), XmlHighlighterColors.XML_TAG_NAME),
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.attribute.name"), XmlHighlighterColors.XML_ATTRIBUTE_NAME),
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.attribute.value"), XmlHighlighterColors.XML_ATTRIBUTE_VALUE),
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.tag.data"), XmlHighlighterColors.XML_TAG_DATA),
+    new AttributesDescriptor(OptionsBundle.message("options.xml.attribute.descriptor.descriptor.entity,reference"), XmlHighlighterColors.XML_ENTITY_REFERENCE),
+  };
+
+  @NotNull
+  public String getDisplayName() {
+    return OptionsBundle.message("options.xml.display.name");
+  }
+
+  public Icon getIcon() {
+    return StdFileTypes.XML.getIcon();
+  }
+
+  @NotNull
+  public AttributesDescriptor[] getAttributeDescriptors() {
+    return ATTRS;
+  }
+
+  @NotNull
+  public ColorDescriptor[] getColorDescriptors() {
+    return ColorDescriptor.EMPTY_ARRAY;                       
+  }
+
+  @NotNull
+  public SyntaxHighlighter getHighlighter() {
+    return new XmlFileHighlighter();
+  }
+
+  @NotNull
+  public String getDemoText() {
+    return "<?xml version='1.0' encoding='ISO-8859-1'  ?>\n" +
+           "<!DOCTYPE index>\n" +
+           "<!-- Some xml example -->\n" +
+           "<index version=\"1.0\">\n" +
+           "   <name>Main Index</name>\n" +
+           "   <indexitem text=\"rename\" target=\"refactoring.rename\"/>\n" +
+           "   <indexitem text=\"move\" target=\"refactoring.move\"/>\n" +
+           "   <indexitem text=\"migrate\" target=\"refactoring.migrate\"/>\n" +
+           "   <indexitem text=\"usage search\" target=\"find.findUsages\"/>\n&amp; &#x00B7;" +
+           "   <indexitem text=\"project\" target=\"project.management\"/>\n" +
+           "</index>";
+  }
+
+  public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+    return null;
+  }
+}

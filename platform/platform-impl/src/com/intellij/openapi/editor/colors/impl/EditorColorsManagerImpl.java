@@ -102,16 +102,15 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Name
 
   private void loadSchemesFromBeans() {
     for (BundledColorSchemeEP schemeEP : Extensions.getExtensions(BundledColorSchemeEP.EP_NAME)) {
-      String fileName = schemeEP.path + ".xml";
-      InputStream stream = schemeEP.getLoaderForClass().getResourceAsStream(fileName);
+      InputStream stream = schemeEP.getLoaderForClass().getResourceAsStream(schemeEP.path);
       try {
-        EditorColorsSchemeImpl scheme = loadSchemeFromStream(fileName, stream);
+        EditorColorsSchemeImpl scheme = loadSchemeFromStream(schemeEP.path, stream);
         if (scheme != null) {
           mySchemesManager.addNewScheme(scheme, false);
         }
       }
       catch (final Exception e) {
-        LOG.error("Cannot read scheme from " + fileName + ": " + e.getLocalizedMessage(), e);
+        LOG.error("Cannot read scheme from " + schemeEP.path + ": " + e.getLocalizedMessage(), e);
       }
     }
   }

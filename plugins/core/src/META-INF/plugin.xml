@@ -5426,7 +5426,7 @@
     <filePasteProvider implementation="com.intellij.ide.FileListPasteProvider"/>
 
     <definitionsSearch implementation="com.intellij.pom.PomDefinitionSearch"/>
-    <definitionsSearch implementation="com.intellij.xml.impl.schema.SchemaDefinitionsSearch"/>
+
 
     <applicationService serviceInterface="com.intellij.ide.todo.TodoConfiguration"
                         serviceImplementation="com.intellij.ide.todo.TodoConfiguration"/>
@@ -5588,5 +5588,16 @@
     <xdebugger.debuggerSupport implementation="com.intellij.xdebugger.impl.XDebuggerSupport" order="first"/>
 
     <executor implementation="com.intellij.execution.executors.DefaultDebugExecutor" order="first,after run"/>
+
+    <bundledColorScheme path="/colorSchemes/Darcula.xml"/>
+    <bundledColorScheme path="/colorSchemes/all_hallows_eve.xml"/>
+    <bundledColorScheme path="/colorSchemes/blackboard.xml"/>
+    <bundledColorScheme path="/colorSchemes/cobalt.xml"/>
+    <bundledColorScheme path="/colorSchemes/github.xml"/>
+    <bundledColorScheme path="/colorSchemes/monokai.xml"/>
+    <bundledColorScheme path="/colorSchemes/rails_casts.xml"/>
+    <bundledColorScheme path="/colorSchemes/twilight.xml"/>
+    <bundledColorScheme path="/colorSchemes/vibrant_ink.xml"/>
+    <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
   </extensions>
 </idea-plugin>

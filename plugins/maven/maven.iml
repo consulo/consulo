@@ -11,10 +11,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="maven-server-api" exported="" />
     <orderEntry type="module" module-name="platform-impl" />
-    <orderEntry type="module" module-name="xml" exported="" />
     <orderEntry type="module" module-name="IntelliLang-xml" />
-    <orderEntry type="module" module-name="dom-openapi" exported="" />
-    <orderEntry type="module" module-name="dom-impl" exported="" />
     <orderEntry type="module" module-name="properties" />
     <orderEntry type="module" module-name="forms_rt" exported="" />
     <orderEntry type="library" name="jgoodies-forms" level="project" />
@@ -52,6 +49,8 @@
     <orderEntry type="module" module-name="maven-artifact-resolver-m3" />
     <orderEntry type="module" module-name="spellchecker" />
     <orderEntry type="module" module-name="compiler-api" />
+    <orderEntry type="module" module-name="xml-dom-impl" />
+    <orderEntry type="module" module-name="xml-impl" />
   </component>
   <component name="copyright">
     <Base>

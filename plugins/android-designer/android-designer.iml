@@ -14,9 +14,6 @@
     <orderEntry type="module" module-name="android" />
     <orderEntry type="module" module-name="android-common" />
     <orderEntry type="module" module-name="ui-designer-core" />
-    <orderEntry type="module" module-name="dom-impl" />
-    <orderEntry type="module" module-name="dom-openapi" />
-    <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="images" />
   </component>
 </module>

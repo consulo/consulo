@@ -8,6 +8,7 @@
   </description>
   <vendor>JetBrains</vendor>
   <depends>org.consulo.java</depends>
+  <depends>com.intellij.xml</depends>
   <resource-bundle>messages.PropertiesBundle</resource-bundle>
   <extensionPoints>
     <extensionPoint name="resourceBundleManager"

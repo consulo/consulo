@@ -25,9 +25,10 @@
     <orderEntry type="module" module-name="groovy-jps-plugin" />
     <orderEntry type="module" module-name="java" exported="" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="module" module-name="xml-openapi" />
     <orderEntry type="module" module-name="compiler-api" />
     <orderEntry type="module" module-name="vcs-impl" />
+    <orderEntry type="module" module-name="xml-impl" />
+    <orderEntry type="module" module-name="xml-dom-impl" />
   </component>
 </module>
 

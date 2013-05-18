@@ -15,7 +15,7 @@
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="module" module-name="xml" />
+    <orderEntry type="module" module-name="xml-impl" />
   </component>
 </module>
 

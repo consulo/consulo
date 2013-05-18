@@ -7,6 +7,8 @@
   <vendor>JetBrains</vendor>
 
   <depends>com.intellij.properties</depends>
+  <depends>com.intellij.xml</depends>
+  <depends>com.intellij.xml.dom</depends>
 
   <resource-bundle>org.jetbrains.idea.devkit.DevKitBundle</resource-bundle>
 
@@ -17,16 +19,6 @@
     <antBuildGen implementation="org.jetbrains.idea.devkit.build.ant.ChunkBuildPluginExtension"/>
     <compiler.buildParticipantProvider implementation="org.jetbrains.idea.devkit.build.PluginBuildParticipantProvider"/>
     <compiler.buildTargetScopeProvider implementation="org.jetbrains.idea.devkit.build.PluginModuleBuildScopeProvider"/>
-
-    <dom.fileDescription implementation="org.jetbrains.idea.devkit.dom.impl.PluginXmlDomFileDescription"/>
-    <dom.extender domClass="org.jetbrains.idea.devkit.dom.Extensions"
-                  extenderClass="org.jetbrains.idea.devkit.dom.impl.ExtensionDomExtender"/>
-    <dom.implementation interfaceClass="org.jetbrains.idea.devkit.dom.IdeaPlugin"
-                        implementationClass="org.jetbrains.idea.devkit.dom.impl.IdeaPluginImpl"/>
-    <dom.implementation interfaceClass="org.jetbrains.idea.devkit.dom.Extension"
-                        implementationClass="org.jetbrains.idea.devkit.dom.impl.ExtensionImpl"/>
-    <dom.implementation interfaceClass="org.jetbrains.idea.devkit.dom.Extensions"
-                        implementationClass="org.jetbrains.idea.devkit.dom.impl.ExtensionsImpl"/>
     <useScopeEnlarger implementation="org.jetbrains.idea.devkit.DevKitUseScopeEnlarger"/>
 
     <configurationType implementation="org.jetbrains.idea.devkit.run.PluginConfigurationType"/>
@@ -94,6 +86,19 @@
     <unusedDeclarationFixProvider implementation="org.jetbrains.idea.devkit.inspections.quickfix.RegisterExtensionFixProvider"/>
   </extensions>
 
+  <extensions defaultExtensionNs="com.intellij.xml.dom">
+
+    <fileDescription implementation="org.jetbrains.idea.devkit.dom.impl.PluginXmlDomFileDescription"/>
+    <extender domClass="org.jetbrains.idea.devkit.dom.Extensions"
+                  extenderClass="org.jetbrains.idea.devkit.dom.impl.ExtensionDomExtender"/>
+    <implementation interfaceClass="org.jetbrains.idea.devkit.dom.IdeaPlugin"
+                        implementationClass="org.jetbrains.idea.devkit.dom.impl.IdeaPluginImpl"/>
+    <implementation interfaceClass="org.jetbrains.idea.devkit.dom.Extension"
+                        implementationClass="org.jetbrains.idea.devkit.dom.impl.ExtensionImpl"/>
+    <implementation interfaceClass="org.jetbrains.idea.devkit.dom.Extensions"
+                        implementationClass="org.jetbrains.idea.devkit.dom.impl.ExtensionsImpl"/>
+
+  </extensions>
   <module-components>
     <component>
       <implementation-class>org.jetbrains.idea.devkit.build.PluginBuildConfiguration</implementation-class>

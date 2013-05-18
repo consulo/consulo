@@ -16,10 +16,9 @@
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="xdebugger-api" />
     <orderEntry type="module" module-name="xdebugger-impl" />
-    <orderEntry type="module" module-name="xml-openapi" />
-    <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="vcs-api" />
+    <orderEntry type="module" module-name="xml-impl" />
   </component>
 </module>
 

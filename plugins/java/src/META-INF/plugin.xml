@@ -1209,8 +1209,6 @@
 
     <liveTemplateMacro implementation="com.intellij.codeInsight.template.macro.GroovyScriptMacro"/>
 
-    <bundledColorScheme path="/colorSchemes/Darcula"/>
-
     <copyPastePreProcessor implementation="com.intellij.codeInsight.editorActions.StringLiteralCopyPasteProcessor"/>
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.JavaCopyPasteReferenceProcessor"/>
 
