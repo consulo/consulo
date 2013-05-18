@@ -60,6 +60,7 @@ public interface ModuleRootModel {
   * @see #isSdkInherited()
   */
  @Nullable
+ @Deprecated
  Sdk getSdk();
 
  /**
@@ -69,6 +70,7 @@ public interface ModuleRootModel {
   * @see ProjectRootManager#getProjectSdk()
   * @see ProjectRootManager#setProjectSdk(com.intellij.openapi.projectRoots.Sdk)
   */
+ @Deprecated
  boolean isSdkInherited();
 
 

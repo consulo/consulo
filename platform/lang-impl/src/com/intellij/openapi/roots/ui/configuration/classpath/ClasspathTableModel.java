@@ -18,7 +18,6 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.DependencyScope;
-import com.intellij.openapi.roots.JdkOrderEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
@@ -54,16 +53,8 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
   }
 
   public void init() {
-    final OrderEntry[] orderEntries = getModel().getOrderEntries();
-    boolean hasJdkOrderEntry = false;
-    for (final OrderEntry orderEntry : orderEntries) {
-      if (orderEntry instanceof JdkOrderEntry) {
-        hasJdkOrderEntry = true;
-      }
+    for (final OrderEntry orderEntry : getModel().getOrderEntries()) {
       addItem(ClasspathTableItem.createItem(orderEntry, myContext));
-    }
-    if (!hasJdkOrderEntry) {
-      addItemAt(new InvalidJdkItem(), 0);
     }
   }
 
