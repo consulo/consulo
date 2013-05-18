@@ -1,6 +1,5 @@
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.facet.impl.DefaultFacetsProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.ModuleConfigurationStateImpl;
@@ -62,11 +61,6 @@ public class PlatformContentEntriesConfigurable implements Configurable {
         @Override
         public ModifiableRootModel getRootModel() {
           return myModifiableModel;
-        }
-
-        @Override
-        public FacetsProvider getFacetsProvider() {
-          return DefaultFacetsProvider.INSTANCE;
         }
       };
     myEditor = new CommonContentEntriesEditor(myModule.getName(), moduleConfigurationState, myCanMarkSources, myCanMarkTestSources) {

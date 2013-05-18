@@ -40,7 +40,6 @@
     </orderEntry>
     <orderEntry type="library" name="gson" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="JUnit4" level="project" />
-    <orderEntry type="module" module-name="jetgroovy" />
     <orderEntry type="module" module-name="maven2-server-impl" scope="RUNTIME" />
     <orderEntry type="library" name="Guava" level="project" />
     <orderEntry type="module" module-name="lang-impl" />

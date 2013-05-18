@@ -31,7 +31,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class JavaModuleType extends ModuleType<JavaModuleBuilder> {
 
@@ -79,14 +78,8 @@ public class JavaModuleType extends ModuleType<JavaModuleBuilder> {
   @Override
   public ModuleWizardStep[] createWizardSteps(final WizardContext wizardContext, final JavaModuleBuilder moduleBuilder,
                                               final ModulesProvider modulesProvider) {
-    final ProjectWizardStepFactory wizardFactory = ProjectWizardStepFactory.getInstance();
-    ArrayList<ModuleWizardStep> steps = new ArrayList<ModuleWizardStep>();
-    final ModuleWizardStep supportForFrameworksStep = wizardFactory.createSupportForFrameworksStep(wizardContext, moduleBuilder, modulesProvider);
-    if (supportForFrameworksStep != null) {
-      steps.add(supportForFrameworksStep);
-    }
-    final ModuleWizardStep[] wizardSteps = steps.toArray(new ModuleWizardStep[steps.size()]);
-    return ArrayUtil.mergeArrays(wizardSteps, super.createWizardSteps(wizardContext, moduleBuilder, modulesProvider));
+
+    return ArrayUtil.mergeArrays(ModuleWizardStep.EMPTY_ARRAY, super.createWizardSteps(wizardContext, moduleBuilder, modulesProvider));
   }
 
   @Nullable

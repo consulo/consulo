@@ -15,16 +15,11 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.facet.Facet;
-import com.intellij.facet.FacetManager;
-import com.intellij.facet.FacetRootsProvider;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -114,16 +109,6 @@ public class ArtifactCompilerUtil {
         }
       };
       ArtifactUtil.processRecursivelySkippingIncludedArtifacts(artifact, processor, context);
-    }
-
-    final Module[] modules = ModuleManager.getInstance(project).getModules();
-    for (Module module : modules) {
-      final Facet[] facets = FacetManager.getInstance(module).getAllFacets();
-      for (Facet facet : facets) {
-        if (facet instanceof FacetRootsProvider) {
-          roots.addAll(((FacetRootsProvider)facet).getFacetRoots());
-        }
-      }
     }
 
     final Set<VirtualFile> affectedOutputPaths = new HashSet<VirtualFile>();

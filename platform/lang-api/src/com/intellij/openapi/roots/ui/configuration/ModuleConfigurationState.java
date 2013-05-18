@@ -21,7 +21,6 @@ import com.intellij.openapi.util.UserDataHolder;
 
 public interface ModuleConfigurationState extends UserDataHolder {
   ModulesProvider getModulesProvider();
-  FacetsProvider getFacetsProvider();
   ModifiableRootModel getRootModel();
   Project getProject();
 }

@@ -39,8 +39,6 @@ import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
-import com.intellij.facet.Facet;
-import com.intellij.facet.FacetManager;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesOptions;
@@ -1360,13 +1358,6 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
           }
           else {
             myEditor.getSelectionModel().setSelection(start, end);
-          }
-        }
-
-        Module module = getModule();
-        if (module != null) {
-          for (Facet facet : FacetManager.getInstance(module).getAllFacets()) {
-            module.getMessageBus().syncPublisher(FacetManager.FACETS_TOPIC).facetConfigurationChanged(facet);
           }
         }
       }

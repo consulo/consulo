@@ -27,16 +27,6 @@
         <element id="file-copy" path="$PROJECT_DIR$/bin/linux/fsnotifier" />
       </element>
       <element id="directory" name="plugins">
-        <element id="directory" name="ant">
-          <element id="directory" name="lib">
-            <element id="archive" name="ant-jps-plugin.jar">
-              <element id="module-output" name="ant-jps-plugin" />
-            </element>
-            <element id="archive" name="antIntegration.jar">
-              <element id="module-output" name="ant" />
-            </element>
-          </element>
-        </element>
         <element id="directory" name="core">
           <element id="directory" name="lib">
             <element id="archive" name="core.jar">

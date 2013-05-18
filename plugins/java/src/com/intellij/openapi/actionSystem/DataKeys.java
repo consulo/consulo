@@ -25,7 +25,7 @@ package com.intellij.openapi.actionSystem;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 
-@SuppressWarnings({"deprecation"})
+@Deprecated
 public final class DataKeys extends LangDataKeys {
   private DataKeys() {
   }

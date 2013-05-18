@@ -1,7 +1,6 @@
 package org.jetbrains.plugins.groovy.mvc;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ui.configuration.libraries.AddCustomLibraryDialog;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import org.jetbrains.annotations.NotNull;

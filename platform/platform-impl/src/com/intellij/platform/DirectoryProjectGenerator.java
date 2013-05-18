@@ -15,7 +15,6 @@
  */
 package com.intellij.platform;
 
-import com.intellij.facet.ui.ValidationResult;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -41,6 +40,6 @@ public interface DirectoryProjectGenerator<T> {
   void generateProject(@NotNull final Project project, @NotNull final VirtualFile baseDir,
                        @Nullable final T settings, @NotNull final Module module);
 
-  @NotNull
-  ValidationResult validate(@NotNull String baseDirPath);
+  @Nullable
+  String validate(@NotNull String baseDirPath);
 }

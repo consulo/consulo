@@ -15,7 +15,7 @@
  */
 package com.intellij.internal.statistic.connect;
 
-import com.intellij.facet.frameworks.SettingsConnectionService;
+import com.intellij.internal.statistic.SettingsConnectionService;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

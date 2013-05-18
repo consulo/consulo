@@ -65,14 +65,5 @@ public abstract class ProjectWizardStepFactory {
   @Nullable
   public abstract Sdk getNewProjectSdk(WizardContext wizardContext);
 
-  /**
-   * @deprecated use {@link #createSupportForFrameworksStep(WizardContext, ModuleBuilder, com.intellij.openapi.roots.ui.configuration.ModulesProvider)} instead
-   */
-  @Nullable
-  public abstract ModuleWizardStep createSupportForFrameworksStep(WizardContext context, ModuleBuilder builder);
-
-  @Nullable
-  public abstract ModuleWizardStep createSupportForFrameworksStep(WizardContext context, ModuleBuilder builder, ModulesProvider modulesProvider);
-
   public abstract ModuleWizardStep createJavaSettingsStep(SettingsStep settingsStep, ModuleBuilder moduleBuilder, @NotNull Condition<SdkTypeId> sdkFilter);
 }

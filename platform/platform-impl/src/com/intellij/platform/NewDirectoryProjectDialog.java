@@ -15,25 +15,18 @@
  */
 package com.intellij.platform;
 
-import com.intellij.facet.ui.FacetEditorValidator;
-import com.intellij.facet.ui.FacetValidatorsManager;
-import com.intellij.facet.ui.ValidationResult;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
@@ -107,14 +100,6 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
       myProjectTypeComboBox.setRenderer(createProjectTypeListCellRenderer(myProjectTypeComboBox.getRenderer()));
     }
 
-    registerValidators(new FacetValidatorsManager() {
-      public void registerValidator(FacetEditorValidator validator, JComponent... componentsToWatch) {
-      }
-
-      public void validate() {
-        checkValid();
-      }
-    });
   }
 
   @NotNull
@@ -180,10 +165,10 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
     DirectoryProjectGenerator generator = getProjectGenerator();
     if (generator != null) {
       String baseDirPath = myLocationField.getTextField().getText();
-      ValidationResult validationResult = generator.validate(baseDirPath);
-      if (!validationResult.isOk()) {
+      String validationResult = generator.validate(baseDirPath);
+      if (validationResult != null) {
         setOKActionEnabled(false);
-        setErrorText(validationResult.getErrorMessage());
+        setErrorText(validationResult);
         return;
       }
     }
@@ -191,28 +176,6 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
     setErrorText(null);
   }
 
-  private void registerValidators(final FacetValidatorsManager validatorsManager) {
-    validateOnTextChange(validatorsManager, myLocationField.getTextField());
-    validateOnSelectionChange(validatorsManager, myProjectTypeComboBox);
-  }
-
-  private static void validateOnSelectionChange(final FacetValidatorsManager validatorsManager, final JComboBox projectNameTextField) {
-    projectNameTextField.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        validatorsManager.validate();
-      }
-    });
-  }
-
-  private static void validateOnTextChange(final FacetValidatorsManager validatorsManager, final JTextField textField) {
-    textField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
-        validatorsManager.validate();
-      }
-    });
-  }
 
   protected JComponent createCenterPanel() {
     return myRootPane;

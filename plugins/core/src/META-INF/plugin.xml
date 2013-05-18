@@ -2533,9 +2533,6 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.framework.detection.impl.FrameworkDetectionManager</implementation-class>
-    </component>
-    <component>
       <interface-class>com.intellij.ide.impl.convert.ProjectFileVersion</interface-class>
       <implementation-class>com.intellij.ide.impl.convert.ProjectFileVersionImpl</implementation-class>
     </component>
@@ -2741,16 +2738,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.facet.pointers.FacetPointersManager</interface-class>
-      <implementation-class>com.intellij.facet.impl.pointers.FacetPointersManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>com.intellij.facet.impl.ui.FacetDependentToolWindowManager</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.openapi.vcs.impl.ModuleVcsDetector</implementation-class>
     </component>
 
@@ -2901,11 +2888,6 @@
 
     <component>
       <implementation-class>com.intellij.openapi.components.impl.ModuleServiceManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>com.intellij.facet.FacetManager</interface-class>
-      <implementation-class>com.intellij.facet.FacetManagerImpl</implementation-class>
     </component>
 
     <component>
@@ -3123,10 +3105,6 @@
       <with attribute="vcsClass" implements="com.intellij.openapi.vcs.AbstractVcs"/>
     </extensionPoint>
 
-    <extensionPoint name="checkinHandlerFactory"
-                    interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"
-                    area="IDEA_PROJECT"/>
-
     <extensionPoint name="vcsCheckinHandlerFactory"
                     interface="com.intellij.openapi.vcs.checkin.VcsCheckinHandlerFactory"/>
 
@@ -3191,10 +3169,6 @@
     <extensionPoint name="packaging.sourceItemProvider" interface="com.intellij.packaging.ui.PackagingSourceItemsProvider"/>
     <extensionPoint name="packaging.artifactType" interface="com.intellij.packaging.artifacts.ArtifactType"/>
 
-    <extensionPoint name="frameworkSupport" interface="com.intellij.ide.util.frameworkSupport.FrameworkSupportProvider"/>
-    <extensionPoint name="frameworkSupportCommunicator"
-                    interface="com.intellij.ide.util.newProjectWizard.impl.FrameworkSupportCommunicator"/>
-
     <!--new project wizard-->
     <extensionPoint name="wizardMode" interface="com.intellij.ide.util.newProjectWizard.modes.WizardMode"/>
     <extensionPoint name="projectImportProvider" interface="com.intellij.projectImport.ProjectImportProvider"/>
@@ -3237,11 +3211,6 @@
     </extensionPoint>
     <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
 
-    <extensionPoint name="moduleConfigurable"
-                    beanClass="com.intellij.openapi.options.ModuleConfigurableEP"
-                    area="IDEA_MODULE">
-      <with attribute="instance" implements="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleConfigurable"/>
-    </extensionPoint>
 
     <extensionPoint name="indexPatternProvider"
                     interface="com.intellij.psi.search.IndexPatternProvider"/>
@@ -3841,20 +3810,6 @@
     <extensionPoint name="projectTemplateFileProcessor"
                     interface="com.intellij.ide.util.projectWizard.ProjectTemplateFileProcessor"/>
 
-    <extensionPoint name="facetType"
-                    interface="com.intellij.facet.FacetType"/>
-
-    <extensionPoint name="facet.toolWindow"
-                    beanClass="com.intellij.facet.ui.FacetDependentToolWindow">
-      <with attribute="factoryClass" implements="com.intellij.openapi.wm.ToolWindowFactory"/>
-      <with attribute="conditionClass" implements="com.intellij.openapi.util.Condition"/>
-    </extensionPoint>
-
-    <extensionPoint name="framework.detector"
-                    interface="com.intellij.framework.detection.FrameworkDetector"/>
-    <extensionPoint name="framework.type"
-                    interface="com.intellij.framework.FrameworkTypeEx"/>
-
     <extensionPoint name="methodNavigationOffsetProvider"
                     interface="com.intellij.codeInsight.navigation.MethodNavigationOffsetProvider"/>
 
@@ -3875,10 +3830,6 @@
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor"/>
     </extensionPoint>
-
-    <extensionPoint name="moduleConfigurationEditorProvider"
-                    interface="com.intellij.openapi.roots.ui.configuration.ModuleConfigurationEditorProvider"
-                    area="IDEA_MODULE"/>
 
     <extensionPoint name="callHierarchyProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.ide.hierarchy.HierarchyProvider"/>
@@ -4543,9 +4494,6 @@
     <projectConfigurable instance="com.intellij.psi.templateLanguages.TemplateDataLanguageConfigurable" id="Template Data Languages"
                          key="template.data.language.configurable" bundle="messages.LangBundle"/>
 
-    <!-- Scopes -->
-    <projectConfigurable instance="com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable" id="project.scopes"
-                         key="scopes.display.name" bundle="messages.IdeBundle"/>
 
     <!-- Application Configurables -->
 
@@ -4592,8 +4540,6 @@
     <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>
 
 
-    <!--TODO [VISTALL] java <selectInTarget implementation="com.intellij.ide.impl.ProjectStructureSelectInTarget"/>   -->
-
     <OrderRootTypeUI key="JAVADOC"
                      implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.JavadocOrderRootTypeUIFactory"/>
     <OrderRootTypeUI key="ANNOTATIONS"
@@ -4604,9 +4550,6 @@
                      implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
     <OrderRootTypeUI key="DOCUMENTATION"
                      implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
-
-    <moduleConfigurationEditorProvider implementation="com.intellij.openapi.roots.ui.configuration.DefaultModuleEditorsProvider"
-                                       order="first"/>
 
     <!--TODO [VISTALL] java -->
     <!--<statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
@@ -4916,7 +4859,7 @@
 
     <applicationService serviceInterface="com.intellij.framework.detection.impl.FrameworkDetectorRegistry"
                         serviceImplementation="com.intellij.framework.detection.impl.FrameworkDetectorRegistryImpl"/>
-    <fileBasedIndex implementation="com.intellij.framework.detection.impl.FrameworkDetectionIndex"/>
+
     <projectService serviceInterface="com.intellij.framework.detection.DetectionExcludesConfiguration"
                     serviceImplementation="com.intellij.framework.detection.impl.exclude.DetectionExcludesConfigurationImpl"/>
     <projectService serviceImplementation="com.intellij.framework.detection.impl.exclude.old.OldFacetDetectionExcludesConfiguration"/>
@@ -5438,9 +5381,6 @@
     <hectorComponentProvider implementation="com.intellij.codeInsight.daemon.PowerSaveHectorProvider"/>
 
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.CopyPasteIndentProcessor"/>
-
-    <statistics.usagesCollector implementation="com.intellij.facet.impl.statistics.FrameworkUsagesCollector"/>
-    <statistics.usagesCollector implementation="com.intellij.facet.impl.statistics.ModuleTypeUsagesCollector"/>
     <statistics.usagesCollector implementation="com.intellij.execution.impl.statistics.RunConfigurationTypeUsagesCollector"/>
     <statistics.usagesCollector implementation="com.intellij.execution.impl.statistics.TemporaryRunConfigurationTypeUsagesCollector"/>
     <statistics.usagesCollector implementation="com.intellij.openapi.fileTypes.FileTypeUsagesCollector"/>
@@ -5526,7 +5466,7 @@
     <projectService serviceInterface="com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper"
                     serviceImplementation="com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"
-                    serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"/>
+                    serviceImplementation="com.intellij.openapi.roots.ui.configuration.IdeaProjectSettingsService"/>
     <projectService serviceInterface="com.intellij.usages.impl.rules.DirectoryGroupingRule"
                     serviceImplementation="com.intellij.usages.impl.rules.DirectoryGroupingRule"/>
     <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
@@ -5534,6 +5474,7 @@
 
     <projectService serviceInterface="com.intellij.platform.ProjectBaseDirectory"
                     serviceImplementation="com.intellij.platform.ProjectBaseDirectory"/>
+    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable"/>
 
     <moduleRendererFactory implementation="com.intellij.ide.util.PlatformModuleRendererFactory" order="last"/>
     <projectService serviceInterface="com.intellij.lang.injection.InjectedLanguageManager"

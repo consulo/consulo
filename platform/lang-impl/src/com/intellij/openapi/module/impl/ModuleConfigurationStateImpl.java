@@ -15,10 +15,8 @@
  */
 package com.intellij.openapi.module.impl;
 
-import com.intellij.facet.impl.DefaultFacetsProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -39,10 +37,6 @@ public class ModuleConfigurationStateImpl extends UserDataHolderBase implements 
     return myProvider;
   }
 
-  @Override
-  public FacetsProvider getFacetsProvider() {
-    return DefaultFacetsProvider.INSTANCE;
-  }
 
   @Override
   @Nullable

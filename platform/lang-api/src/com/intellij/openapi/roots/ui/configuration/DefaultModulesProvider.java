@@ -21,8 +21,6 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.facet.FacetModel;
-import com.intellij.facet.FacetManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,10 +53,5 @@ public class DefaultModulesProvider implements ModulesProvider {
   @Override
   public ModuleRootModel getRootModel(@NotNull Module module) {
     return ModuleRootManager.getInstance(module);
-  }
-
-  @Override
-  public FacetModel getFacetModel(@NotNull Module module) {
-    return FacetManager.getInstance(module);
   }
 }

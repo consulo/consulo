@@ -1,7 +1,5 @@
 package com.intellij.openapi.roots;
 
-import com.intellij.facet.FacetManager;
-import com.intellij.facet.ModifiableFacetModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.LibraryTable;
@@ -24,16 +22,6 @@ public class PlatformModifiableModelsProvider implements ModifiableModelsProvide
   @Override
   public void disposeModuleModifiableModel(final ModifiableRootModel model) {
     model.dispose();
-  }
-
-  @Override
-  public ModifiableFacetModel getFacetModifiableModel(Module module) {
-    return FacetManager.getInstance(module).createModifiableModel();
-  }
-
-  @Override
-  public void commitFacetModifiableModel(Module module, ModifiableFacetModel model) {
-    model.commit();
   }
 
   @Override

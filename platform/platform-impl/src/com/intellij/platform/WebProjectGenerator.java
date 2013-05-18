@@ -15,7 +15,6 @@
  */
 package com.intellij.platform;
 
-import com.intellij.facet.ui.ValidationResult;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -70,10 +69,9 @@ public abstract class WebProjectGenerator<T> implements DirectoryProjectGenerato
    * Always returns {@link ValidationResult#OK}.
    * Real validation should be done in {@link WebProjectGenerator.GeneratorPeer#validate()}.
    */
-  @NotNull
   @Override
-  public final ValidationResult validate(@NotNull String baseDirPath) {
-    return ValidationResult.OK;
+  public final String validate(@NotNull String baseDirPath) {
+    return null;
   }
 
   @NotNull

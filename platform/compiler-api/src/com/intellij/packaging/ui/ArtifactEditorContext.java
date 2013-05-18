@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.ui;
 
-import com.intellij.facet.Facet;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -62,8 +61,6 @@ public interface ArtifactEditorContext extends PackagingElementResolvingContext 
   ArtifactEditor getThisArtifactEditor();
 
   void selectArtifact(@NotNull Artifact artifact);
-
-  void selectFacet(@NotNull Facet<?> facet);
 
   void selectModule(@NotNull Module module);
 

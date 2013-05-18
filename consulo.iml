@@ -6,14 +6,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="annotations" />
-    <orderEntry type="module" module-name="ant" />
     <orderEntry type="module" module-name="boot" />
     <orderEntry type="module" module-name="bootstrap" />
-    <orderEntry type="module" module-name="commander" />
     <orderEntry type="module" module-name="extensions" />
     <orderEntry type="module" module-name="forms_rt" />
     <orderEntry type="module" module-name="icons" />
-    <orderEntry type="module" module-name="java-runtime" />
     <orderEntry type="module" module-name="lang-api" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="lvcs-api" />
@@ -24,10 +21,8 @@
     <orderEntry type="module" module-name="platform-main" />
     <orderEntry type="module" module-name="platform-resources" />
     <orderEntry type="module" module-name="platform-resources-en" />
-    <orderEntry type="module" module-name="properties" />
     <orderEntry type="module" module-name="resources" />
     <orderEntry type="module" module-name="resources-en" />
-    <orderEntry type="module" module-name="spellchecker" />
     <orderEntry type="module" module-name="testFramework" />
     <orderEntry type="module" module-name="testRunner" />
     <orderEntry type="module" module-name="usageView" />
@@ -36,45 +31,12 @@
     <orderEntry type="module" module-name="vcs-impl" />
     <orderEntry type="module" module-name="xdebugger-api" />
     <orderEntry type="module" module-name="xdebugger-impl" />
-    <orderEntry type="module" module-name="copyright" />
-    <orderEntry type="module" module-name="cvs-plugin" />
-    <orderEntry type="module" module-name="java-i18n" />
-    <orderEntry type="module" module-name="ui-designer" />
-    <orderEntry type="module" module-name="devkit" />
-    <orderEntry type="module" module-name="eclipse" />
-    <orderEntry type="module" module-name="generate-tostring" />
-    <orderEntry type="module" module-name="git4idea" />
-    <orderEntry type="module" module-name="images" />
-    <orderEntry type="module" module-name="InspectionGadgetsPlugin" />
-    <orderEntry type="module" module-name="IntentionPowerPackPlugin" />
-    <orderEntry type="module" module-name="jetgroovy" />
-    <orderEntry type="module" module-name="junit" />
-    <orderEntry type="module" module-name="maven" />
     <orderEntry type="module" module-name="regexp" />
-    <orderEntry type="module" module-name="svn4idea" />
-    <orderEntry type="module" module-name="svn4idea-tests" />
-    <orderEntry type="module" module-name="testng" />
-    <orderEntry type="module" module-name="IntelliLang-java" />
-    <orderEntry type="module" module-name="IntelliLang-xml" />
-    <orderEntry type="module" module-name="xpath" />
-    <orderEntry type="module" module-name="xslt-debugger" />
-    <orderEntry type="module" module-name="xslt-debugger-engine" />
-    <orderEntry type="module" module-name="tasks-core" />
-    <orderEntry type="module" module-name="jira-connector" />
-    <orderEntry type="module" module-name="tasks-api" />
-    <orderEntry type="module" module-name="tasks-java" />
-    <orderEntry type="module" module-name="tasks-tests" />
-    <orderEntry type="module" module-name="github" />
-    <orderEntry type="module" module-name="hg4idea" />
-    <orderEntry type="module" module-name="android" />
-    <orderEntry type="module" module-name="gradle" />
-    <orderEntry type="module" module-name="devkit-jps-plugin" scope="TEST" />
-    <orderEntry type="module" module-name="ui-designer-jps-plugin" scope="TEST" />
-    <orderEntry type="module" module-name="java-platform" />
-    <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="core" />
     <orderEntry type="module" module-name="xml-impl" />
     <orderEntry type="module" module-name="xml-dom-impl" />
+    <orderEntry type="module" module-name="images" />
+    <orderEntry type="module" module-name="spellchecker" />
   </component>
 </module>
 

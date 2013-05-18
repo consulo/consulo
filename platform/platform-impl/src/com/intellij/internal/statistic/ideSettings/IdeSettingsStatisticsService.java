@@ -15,7 +15,7 @@
  */
 package com.intellij.internal.statistic.ideSettings;
 
-import com.intellij.facet.frameworks.SettingsConnectionService;
+import com.intellij.internal.statistic.SettingsConnectionService;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.HttpConfigurable;
