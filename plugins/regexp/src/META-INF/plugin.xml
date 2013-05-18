@@ -1,8 +1,12 @@
 <idea-plugin>
+  <id>com.intellij.regexp</id>
+  <name>Regexp</name>
+
   <extensionPoints>
-    <extensionPoint name="regExpLanguageHost" beanClass="com.intellij.openapi.util.ClassExtensionPoint"/>
-    <extensionPoint name="regExpPropertiesProvider" beanClass="com.intellij.lang.LanguageExtensionPoint"/>
+    <extensionPoint name="languageHost" beanClass="com.intellij.openapi.util.ClassExtensionPoint"/>
+    <!--<extensionPoint name="propertiesProvider" beanClass="com.intellij.lang.LanguageExtensionPoint"/> -->
   </extensionPoints>
+
   <extensions defaultExtensionNs="com.intellij">
     <lang.documentationProvider language="RegExp" implementationClass="org.intellij.lang.regexp.RegExpDocumentationProvider"/>
     <completion.contributor language="RegExp" implementationClass="org.intellij.lang.regexp.RegExpCompletionContributor"/>

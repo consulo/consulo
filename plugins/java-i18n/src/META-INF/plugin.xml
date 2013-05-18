@@ -2,6 +2,7 @@
   <id>com.intellij.java-i18n</id>
   <name>I18n for Java</name>
   <depends>com.intellij.properties</depends>
+  <depends>com.intellij.spellchecker</depends>
   <description>
     This plugin provides code inspections and corresponding quick fixes for code internationalization.
   </description>
@@ -15,6 +16,10 @@
     <extensionPoint name="i18nizeHandlerProvider" interface="com.intellij.codeInspection.i18n.I18nizeHandlerProvider"/>
   </extensionPoints>
 
+  <extensions defaultExtensionNs="com.intellij.spellchecker">
+    <support language="JAVA" implementationClass="com.intellij.spellchecker.JavaSpellcheckingStrategy"/>
+  </extensions>
+
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <referenceProviderType key="Properties File Key Provider"
@@ -23,7 +28,6 @@
     <psi.referenceContributor implementation="com.intellij.lang.properties.PropertiesReferenceContributor"/>
     <lang.foldingBuilder language="JAVA" implementationClass="com.intellij.codeInspection.i18n.folding.PropertyFoldingBuilder" />
     <gotoDeclarationHandler implementation="com.intellij.codeInspection.i18n.folding.I18nMessageGotoDeclarationHandler" order="FIRST"/>
-    <spellchecker.support language="JAVA" implementationClass="com.intellij.spellchecker.JavaSpellcheckingStrategy"/>
 
     <localInspection shortName="HardCodedStringLiteral" bundle="messages.CodeInsightBundle" key="inspection.i18n.display.name"
                      groupBundle="messages.InspectionsBundle" groupKey="group.names.internationalization.issues" enabledByDefault="false" level="WARNING"

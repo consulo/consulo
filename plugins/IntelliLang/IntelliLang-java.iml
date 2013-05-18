@@ -10,7 +10,7 @@
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="library" name="asm4" level="project" />
-    <orderEntry type="module" module-name="RegExpSupport" />
+    <orderEntry type="module" module-name="regexp" />
     <orderEntry type="module" module-name="platform-api" />
     <orderEntry type="module" module-name="IntelliLang" />
     <orderEntry type="module" module-name="java" />

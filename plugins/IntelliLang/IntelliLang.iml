@@ -9,7 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="module" module-name="RegExpSupport" />
+    <orderEntry type="module" module-name="regexp" />
     <orderEntry type="module" module-name="platform-api" />
     <orderEntry type="library" name="Jaxen" level="project" />
   </component>

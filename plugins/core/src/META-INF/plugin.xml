@@ -1913,8 +1913,8 @@
 
       <separator/>
 
-      <action internal="true" id="CompilerTest" class="com.intellij.compiler.impl.javaCompiler.api.CompilerPerfTestAction"
-              text="Test Rebuild Performance"/>
+      <action internal="true" id="CompilerTest" class="com.intellij.openapi.actionSystem.EmptyAction"
+              text="Test Rebuild Performance"/> <!--com.intellij.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
 
       <add-to-group group-id="Internal" anchor="last"/>
     </group>
@@ -2178,8 +2178,8 @@
     </group>
 
     <group>
-      <action class="com.intellij.openapi.actionSystem.EmptyAction" text="Save Project as Template..."/> <!--com.intellij.platform.templates.SaveProjectAsTemplateAction-->
-      <action class="com.intellij.openapi.actionSystem.EmptyAction" text="Manage Project Templates..."/> <!--com.intellij.platform.templates.ManageProjectTemplatesAction-->
+      <action id="SaveProjectAsTemplateAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Save Project as Template..."/> <!--com.intellij.platform.templates.SaveProjectAsTemplateAction-->
+      <action id="ManageProjectTemplatesAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Manage Project Templates..."/> <!--com.intellij.platform.templates.ManageProjectTemplatesAction-->
       <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="SaveFileAsTemplate"/>
     </group>
 

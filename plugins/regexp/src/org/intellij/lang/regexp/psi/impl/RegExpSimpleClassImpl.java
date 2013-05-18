@@ -29,7 +29,7 @@ public class RegExpSimpleClassImpl extends RegExpElementImpl implements RegExpSi
     @NotNull
     public Kind getKind() {
         final String s = getUnescapedText();
-        if (s.equals(".")) {
+        if (s.equals("")) {
             return Kind.ANY;
         } else if (s.equals("\\d")) {
             return Kind.DIGIT;

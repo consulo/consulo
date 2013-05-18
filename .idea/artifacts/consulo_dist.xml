@@ -51,6 +51,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="regexp">
+          <element id="directory" name="lib">
+            <element id="archive" name="regexp.jar">
+              <element id="module-output" name="regexp" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

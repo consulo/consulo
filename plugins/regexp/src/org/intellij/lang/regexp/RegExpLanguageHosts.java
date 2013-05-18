@@ -39,7 +39,7 @@ public final class RegExpLanguageHosts extends ClassExtension<RegExpLanguageHost
   }
 
   private RegExpLanguageHosts() {
-    super("com.intellij.regExpLanguageHost");
+    super("com.intellij.regexp.languageHost");
     myDefaultProvider = DefaultRegExpPropertiesProvider.getInstance();
   }
 

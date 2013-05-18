@@ -83,8 +83,8 @@
 
   <property name="compiler.args.regexp-lang" value="${compiler.args}" />
 
-  <property name="regexp-lang.output.dir" value="${module.regexp-lang.basedir}/build/classes/production" />
-  <property name="regexp-lang.testoutput.dir" value="${module.regexp-lang.basedir}/build/classes/test" />
+  <property name="regexp-lang.output.dir" value="//build/classes/production" />
+  <property name="regexp-lang.testoutput.dir" value="//build/classes/test" />
 
   <path id="regexp-lang.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
@@ -105,13 +105,13 @@
   </patternset>
 
   <path id="regexp-lang.module.sourcepath">
-    <dirset dir="${module.regexp-lang.basedir}">
+    <dirset dir="/">
       <include name="src" />
     </dirset>
   </path>
 
   <path id="regexp-lang.module.test.sourcepath">
-    <dirset dir="${module.regexp-lang.basedir}">
+    <dirset dir="/">
       <include name="test" />
     </dirset>
   </path>
@@ -133,7 +133,7 @@
     </javac2>
 
     <copy todir="${regexp-lang.output.dir}">
-      <fileset dir="${module.regexp-lang.basedir}/src">
+      <fileset dir="//src">
         <patternset refid="compiler.resources" />
         <type type="file" />
         <patternset refid="excluded.from.compilation.regexp-lang" />
@@ -154,7 +154,7 @@
     </javac2>
 
     <copy todir="${regexp-lang.testoutput.dir}">
-      <fileset dir="${module.regexp-lang.basedir}/test">
+      <fileset dir="//test">
         <patternset refid="compiler.resources" />
         <type type="file" />
         <patternset refid="excluded.from.compilation.regexp-lang" />

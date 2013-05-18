@@ -42,7 +42,7 @@
         <include name="**/*.*" />
         <exclude name="${excluded-stuff}" />
       </fileset>
-      <fileset dir=".">
+      <fileset dir="">
         <include name="META-INF/plugin.xml" unless="regexp-lang.embedded"/>
       </fileset>
     </jar>
@@ -95,7 +95,7 @@
         <exclude name="psi/gen/**/*" />
         <include name="**/*.xml" />
       </zipfileset>
-      <zipfileset dir="." prefix="RegExpSupport">
+      <zipfileset dir="" prefix="RegExpSupport">
         <include name="build.xml" />
         <include name="log4j.dtd" />
         <include name="regexp-lang.xml" />

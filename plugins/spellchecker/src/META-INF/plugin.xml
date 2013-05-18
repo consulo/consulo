@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>org.intellij.spellchecker</id>
+  <id>com.intellij.spellchecker</id>
   <name>Spellchecker</name>
 
   <actions>
@@ -17,7 +17,7 @@
     <extensionPoint name="bundledDictionaryProvider" interface="com.intellij.spellchecker.BundledDictionaryProvider"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="org.intellij.spellchecker">
+  <extensions defaultExtensionNs="com.intellij.spellchecker">
     <support language="TEXT" implementationClass="com.intellij.spellchecker.tokenizer.SpellcheckingStrategy"/>
     <support language="HTML" implementationClass="com.intellij.spellchecker.tokenizer.HtmlSpellcheckingStrategy"/>
     <support language="XML" implementationClass="com.intellij.spellchecker.xml.XmlSpellcheckingStrategy"/>

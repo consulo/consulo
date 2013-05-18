@@ -19,6 +19,7 @@
   <version>1.0</version>
   <vendor>Consulo</vendor>
   <depends>org.consulo.java.platform</depends>
+  <depends>com.intellij.regexp</depends>
 
   <application-components>
     <component>
@@ -331,7 +332,8 @@
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <projectService serviceInterface="com.intellij.compiler.CompilerConfiguration" serviceImplementation="com.intellij.compiler.CompilerConfigurationImpl"/>
+    <projectService serviceInterface="com.intellij.compiler.CompilerConfiguration"
+                    serviceImplementation="com.intellij.compiler.CompilerConfigurationImpl"/>
     <lang.syntaxHighlighterFactory key="JAVA" implementationClass="com.intellij.lang.java.JavaSyntaxHighlighterFactory"/>
 
 
@@ -1445,8 +1447,6 @@
     <idIndexer filetype="JAVA" implementationClass="com.intellij.psi.impl.cache.impl.idCache.JavaIdIndexer"/>
     <todoIndexer filetype="JAVA" implementationClass="com.intellij.psi.impl.cache.impl.idCache.JavaTodoIndexer"/>
 
-    <bundledKeymapProvider implementation="com.intellij.openapi.keymap.JBuilderKeymapProvider"/>
-
     <problemFileHighlightFilter implementation="com.intellij.codeInsight.problems.DefaultProblemFileHighlightFilter"/>
 
     <problemHighlightFilter implementation="com.intellij.codeInsight.daemon.JavaProblemHighlightFilter"/>
@@ -1518,13 +1518,16 @@
 
     <applicationService serviceImplementation="com.intellij.execution.JavaRunConfigurationExtensionManager"/>
 
-    <regExpLanguageHost forClass="com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl"
-                        implementationClass="com.intellij.psi.impl.JavaRegExpHost"/>
 
     <psi.referenceContributor language="JAVA"
                               implementation="com.intellij.psi.impl.source.resolve.reference.impl.JavaReflectionReferenceContributor"/>
 
     <writingAccessProvider implementation="com.intellij.refactoring.util.ClsElementWritingAccessProvider"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="com.intellij.regexp">
+    <languageHost forClass="com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl"
+                  implementationClass="com.intellij.psi.impl.JavaRegExpHost"/>
   </extensions>
 
   <actions>
