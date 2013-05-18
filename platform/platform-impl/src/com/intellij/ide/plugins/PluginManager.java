@@ -270,7 +270,7 @@ public class PluginManager {
 
     int i = 0;
     for (final IdeaPluginDescriptorImpl pluginDescriptor : result) {
-      if (pluginDescriptor.getPluginId().getIdString().equals(CORE_PLUGIN_ID) || pluginDescriptor.isUseCoreClassLoader()) {
+      if (/*pluginDescriptor.getPluginId().getIdString().equals(CORE_PLUGIN_ID) || */pluginDescriptor.isUseCoreClassLoader()) {
         pluginDescriptor.setLoader(parentLoader, true);
       }
       else {
@@ -666,24 +666,24 @@ public class PluginManager {
           //if (!canonicalPath.startsWith(homePath) || canonicalPath.endsWith(".jar")) continue;
           //if (!canonicalPath.startsWith(homePath)) continue;
 
-          IdeaPluginDescriptorImpl platformPluginDescriptor = null;
+         /* IdeaPluginDescriptorImpl platformPluginDescriptor = null;
           if (platformPrefix != null) {
             platformPluginDescriptor = loadDescriptor(file, platformPrefix + "Plugin.xml");
             if (platformPluginDescriptor != null && !result.contains(platformPluginDescriptor)) {
               platformPluginDescriptor.setUseCoreClassLoader(true);
               result.add(platformPluginDescriptor);
             }
-          }
+          }    */
 
           IdeaPluginDescriptorImpl pluginDescriptor = loadDescriptor(file, PLUGIN_XML);
           if (platformPrefix != null && pluginDescriptor != null && pluginDescriptor.getName().equals(SPECIAL_IDEA_PLUGIN)) {
             continue;
           }
           if (pluginDescriptor != null && !result.contains(pluginDescriptor)) {
-            if (platformPluginDescriptor != null) {
+            /*if (platformPluginDescriptor != null) {
               // if we found a regular plugin.xml in the same .jar/root as a platform-prefixed descriptor, use the core loader for it too
               pluginDescriptor.setUseCoreClassLoader(true);
-            }
+            }  */
             result.add(pluginDescriptor);
             if (progress != null) {
               progress.showProgress("Plugin loaded: " + pluginDescriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float)i / urls.size()));

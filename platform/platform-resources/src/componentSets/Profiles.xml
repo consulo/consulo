@@ -1,8 +1,0 @@
-<components>
-  <project-components>
-    <component>
-      <implementation-class>com.intellij.profile.codeInspection.InspectionProjectProfileManager</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-  </project-components>
-</components>

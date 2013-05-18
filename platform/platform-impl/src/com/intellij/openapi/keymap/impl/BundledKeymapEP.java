@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.keymap;
+package com.intellij.openapi.keymap.impl;
 
-import com.intellij.openapi.keymap.impl.BundledKeymapProvider;
-
-import java.util.Arrays;
-import java.util.List;
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.util.xmlb.annotations.Attribute;
 
 /**
  * @author yole
  */
-public class JBuilderKeymapProvider implements BundledKeymapProvider {
-  @Override
-  public List<String> getKeymapFileNames() {
-    return Arrays.asList("JBuilderKeymap.xml");
-  }
+public class BundledKeymapEP extends AbstractExtensionPointBean {
+  public static final ExtensionPointName<BundledKeymapEP> EP_NAME = ExtensionPointName.create("com.intellij.bundledKeymap");
+
+  @Attribute("file")
+  public String file;
 }

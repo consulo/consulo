@@ -15,12 +15,12 @@
  */
 package com.intellij.codeInsight.navigation;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.codeInsight.navigation.actions.GotoSuperAction;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.util.MethodCellRenderer;
+import com.intellij.lang.LanguageCodeInsightActionHandler;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -33,7 +33,7 @@ import com.intellij.psi.util.PsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class JavaGotoSuperHandler implements CodeInsightActionHandler {
+public class JavaGotoSuperHandler implements LanguageCodeInsightActionHandler {
   @Override
   public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed(GotoSuperAction.FEATURE_ID);
@@ -78,5 +78,10 @@ public class JavaGotoSuperHandler implements CodeInsightActionHandler {
   @Override
   public boolean startInWriteAction() {
     return false;
+  }
+
+  @Override
+  public boolean isValidFor(Editor editor, PsiFile file) {
+    return true;
   }
 }

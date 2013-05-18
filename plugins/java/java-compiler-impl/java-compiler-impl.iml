@@ -19,6 +19,8 @@
     <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="instrumentation-util" />
     <orderEntry type="module" module-name="java-analysis-impl" />
+    <orderEntry type="library" name="OroMatcher" level="project" />
+    <orderEntry type="module" module-name="jps-model-impl" />
   </component>
 </module>
 

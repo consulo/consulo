@@ -341,6 +341,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     return myRegisteredCompilers;
   }
 
+  @Override
   public String[] getResourceFilePatterns() {
     return getWildcardPatterns();
   }
@@ -487,6 +488,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     }
   }
 
+  @Override
   public void removeResourceFilePatterns() {
     removeWildcardPatterns();
   }
@@ -870,6 +872,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     DEFAULT_COMPILER = defaultCompiler.getId();
   }
 
+  @Override
   public void convertPatterns() {
     if (!needPatternConversion()) {
       return;

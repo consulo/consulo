@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.debugger.actions;
+package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.keymap.KeyMapBundle;

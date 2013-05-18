@@ -1,0 +1,151 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="consulo-dist">
+    <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
+    <root id="root">
+      <element id="directory" name="bin">
+        <element id="file-copy" path="$PROJECT_DIR$/bin/appletviewer.policy" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/idea.properties" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/log.xml" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/IdeaWin64.dll" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/runnerw.exe" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/focuskiller64.dll" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/fsnotifier.exe" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/focuskiller.dll" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/vistalauncher.exe" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/breakgen64.dll" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/breakgen.dll" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/IdeaWin32.dll" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/restarter.exe" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/mac/fsnotifier" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/mac/libbreakgen64.jnilib" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/mac/restarter" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/mac/libbreakgen.jnilib" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/mac/inspect.sh" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/linux/libbreakgen64.so" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/linux/libbreakgen.so" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/linux/fsnotifier64" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/linux/fsnotifier" />
+      </element>
+      <element id="directory" name="plugins">
+        <element id="directory" name="ant">
+          <element id="directory" name="lib">
+            <element id="archive" name="ant-jps-plugin.jar">
+              <element id="module-output" name="ant-jps-plugin" />
+            </element>
+            <element id="archive" name="antIntegration.jar">
+              <element id="module-output" name="ant" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="core">
+          <element id="directory" name="lib">
+            <element id="archive" name="core.jar">
+              <element id="module-output" name="core" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="spellchecker">
+          <element id="directory" name="lib">
+            <element id="archive" name="spellchecker.jar">
+              <element id="module-output" name="spellchecker" />
+            </element>
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="lib">
+        <element id="dir-copy" path="$PROJECT_DIR$/lib" />
+        <element id="archive" name="idea.jar">
+          <element id="module-output" name="core-api" />
+          <element id="module-output" name="core-impl" />
+          <element id="module-output" name="lang-api" />
+          <element id="module-output" name="lang-impl" />
+          <element id="module-output" name="platform-api" />
+          <element id="module-output" name="platform-impl" />
+          <element id="module-output" name="lvcs-impl" />
+          <element id="module-output" name="lvcs-api" />
+          <element id="module-output" name="projectModel-api" />
+          <element id="module-output" name="projectModel-impl" />
+          <element id="module-output" name="platform-main" />
+          <element id="module-output" name="vcs-api" />
+          <element id="module-output" name="vcs-impl" />
+          <element id="module-output" name="xdebugger-api" />
+          <element id="module-output" name="xdebugger-impl" />
+          <element id="module-output" name="indexing-impl" />
+          <element id="module-output" name="indexing-api" />
+          <element id="module-output" name="external-system-impl" />
+          <element id="module-output" name="external-system-api" />
+          <element id="module-output" name="dvcs" />
+          <element id="module-output" name="analysis-api" />
+          <element id="module-output" name="analysis-impl" />
+          <element id="module-output" name="compiler-api" />
+          <element id="module-output" name="compiler-impl" />
+        </element>
+        <element id="archive" name="idea_rt.jar">
+          <element id="module-output" name="execution-api" />
+          <element id="module-output" name="execution-impl" />
+        </element>
+        <element id="archive" name="boot.jar">
+          <element id="module-output" name="boot" />
+        </element>
+        <element id="archive" name="bootstrap.jar">
+          <element id="module-output" name="bootstrap" />
+        </element>
+        <element id="archive" name="util.jar">
+          <element id="module-output" name="util" />
+          <element id="module-output" name="util-rt" />
+        </element>
+        <element id="archive" name="extensions.jar">
+          <element id="module-output" name="extensions" />
+        </element>
+        <element id="archive" name="resources.jar">
+          <element id="directory" name="idea">
+            <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea/ConsuloApplicationInfo.xml" />
+          </element>
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/add_plugin_modulewizard.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/addmodulewizard.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/community_progress_tail.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/CommunityFileTypes.xml" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/developSlogan_community.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/icon-robots.txt" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_about.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_about@2x.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_logo.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_logo@2x.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/newprojectwizard.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/welcomeCaption_community.png" />
+          <element id="module-output" name="platform-resources" />
+          <element id="module-output" name="resources" />
+          <element id="directory" name="META-INF">
+            <element id="directory" name="jb">
+              <element id="file-copy" path="$PROJECT_DIR$/resources/$$size$$" />
+            </element>
+          </element>
+        </element>
+        <element id="archive" name="resources-en.jar">
+          <element id="module-output" name="platform-resources-en" />
+          <element id="module-output" name="resources-en" />
+          <element id="directory" name="META-INF">
+            <element id="directory" name="jb">
+              <element id="file-copy" path="$PROJECT_DIR$/resources/$$size$$" />
+            </element>
+          </element>
+        </element>
+        <element id="archive" name="form_rt.jar">
+          <element id="module-output" name="forms_rt" />
+        </element>
+        <element id="archive" name="jps-server.jar">
+          <element id="module-output" name="jps-model-api" />
+          <element id="module-output" name="jps-standalone-builder" />
+          <element id="module-output" name="jps-model-serialization" />
+          <element id="module-output" name="jps-model-impl" />
+        </element>
+        <element id="archive" name="annotations.jar">
+          <element id="module-output" name="annotations" />
+        </element>
+        <element id="archive" name="icons.jar">
+          <element id="module-output" name="icons" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

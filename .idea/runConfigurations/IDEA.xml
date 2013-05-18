@@ -3,9 +3,9 @@
     <log_file path="$PROJECT_DIR$/system/log/idea.log" checked="true" skipped="true" show_all="false" alias="idea.log" />
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="com.intellij.idea.Main" />
-    <option name="VM_PARAMETERS" value="-ea -Xbootclasspath/p:../out/classes/production/boot -Xmx192m -Didea.is.internal=true -XX:MaxPermSize=150m" />
+    <option name="VM_PARAMETERS" value="-ea -Xbootclasspath/p:$MODULE_DIR$/out/artifacts/dist/lib/boot.jar -Xmx192m -Didea.is.internal=true -Didea.home.path=$MODULE_DIR$/out/artifacts/dist -XX:MaxPermSize=150m -classpath $MODULE_DIR$/out/artifacts/dist/lib/*;I:/Programs/jdk6/lib/tools.jar;" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/bin" />
+    <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$/out/artifacts/dist/bin" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
     <option name="ENABLE_SWING_INSPECTOR" value="false" />
@@ -30,6 +30,10 @@
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
-    <method />
+    <method>
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="consulo-dist" />
+      </option>
+    </method>
   </configuration>
 </component>

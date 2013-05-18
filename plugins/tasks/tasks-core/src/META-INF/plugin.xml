@@ -7,7 +7,7 @@
 
   <!--fake dependency for Web IDE-->
   <depends>com.intellij.modules.xml</depends>
-  <depends optional="true" config-file="java-contexts.xml">com.intellij.modules.java</depends>
+  <depends optional="true" config-file="java-contexts.xml">org.consulo.java</depends>
 
   <project-components>
     <component>

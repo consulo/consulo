@@ -1,4 +1,6 @@
 <idea-plugin>
+  <id>org.intellij.spellchecker</id>
+  <name>Spellchecker</name>
 
   <actions>
     <group id="com.intellij.spellchecker.actions.SpellingPopupActionGroup"
@@ -9,11 +11,18 @@
   </actions>
 
   <extensionPoints>
-    <extensionPoint name="spellchecker.support" beanClass="com.intellij.lang.LanguageExtensionPoint">
+    <extensionPoint name="support" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.spellchecker.tokenizer.SpellcheckingStrategy"/>
     </extensionPoint>
-    <extensionPoint name="spellchecker.bundledDictionaryProvider" interface="com.intellij.spellchecker.BundledDictionaryProvider"/>
+    <extensionPoint name="bundledDictionaryProvider" interface="com.intellij.spellchecker.BundledDictionaryProvider"/>
   </extensionPoints>
+
+  <extensions defaultExtensionNs="org.intellij.spellchecker">
+    <support language="TEXT" implementationClass="com.intellij.spellchecker.tokenizer.SpellcheckingStrategy"/>
+    <support language="HTML" implementationClass="com.intellij.spellchecker.tokenizer.HtmlSpellcheckingStrategy"/>
+    <support language="XML" implementationClass="com.intellij.spellchecker.xml.XmlSpellcheckingStrategy"/>
+    <bundledDictionaryProvider implementation="com.intellij.spellchecker.DefaultBundledDictionariesProvider"/>
+  </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
@@ -32,11 +41,6 @@
 
     <nameSuggestionProvider id="DictionarySuggestionProvider" implementation="com.intellij.spellchecker.quickfixes.DictionarySuggestionProvider" order="first"/>
     <severitiesProvider implementation="com.intellij.spellchecker.SpellCheckerSeveritiesProvider"/>
-    
-    <spellchecker.support language="TEXT" implementationClass="com.intellij.spellchecker.tokenizer.SpellcheckingStrategy"/>
-    <spellchecker.support language="HTML" implementationClass="com.intellij.spellchecker.tokenizer.HtmlSpellcheckingStrategy"/>
-    <spellchecker.support language="XML" implementationClass="com.intellij.spellchecker.xml.XmlSpellcheckingStrategy"/>
-    <spellchecker.bundledDictionaryProvider implementation="com.intellij.spellchecker.DefaultBundledDictionariesProvider"/>
 
     <projectService serviceImplementation="com.intellij.spellchecker.state.ProjectDictionaryState"/>
     <projectService serviceImplementation="com.intellij.spellchecker.state.AggregatedDictionaryState"/>

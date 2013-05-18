@@ -17,6 +17,7 @@
 package com.intellij.compiler;
 
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -45,7 +46,7 @@ public abstract class CompilerConfiguration {
   public abstract boolean isAnnotationProcessorsEnabled();
 
   public static CompilerConfiguration getInstance(Project project) {
-    return project.getComponent(CompilerConfiguration.class);
+    return ServiceManager.getService(project, CompilerConfiguration.class);
   }
 
   public abstract boolean isExcludedFromCompilation(VirtualFile virtualFile);
@@ -55,6 +56,12 @@ public abstract class CompilerConfiguration {
   public abstract boolean isResourceFile(String path);
 
   public abstract void addResourceFilePattern(String namePattern) throws MalformedPatternException;
+
+  public abstract String[] getResourceFilePatterns();
+
+  public abstract void removeResourceFilePatterns();
+
+  public abstract void convertPatterns();
 
   public abstract boolean isAddNotNullAssertions();
 

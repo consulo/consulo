@@ -17,7 +17,6 @@ package com.intellij.openapi.keymap.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.util.InvalidDataException;
@@ -27,7 +26,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,23 +48,23 @@ public class DefaultKeymap {
   }
 
   public DefaultKeymap() {
-    for(BundledKeymapProvider provider: getProviders()) {
-      final List<String> fileNames = provider.getKeymapFileNames();
-      for (String fileName : fileNames) {
+    for(BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensions()) {
         try {
-          final Document document = JDOMUtil.loadResourceDocument(new URL("file:///idea/" + fileName));
+          InputStream inputStream = bundledKeymapEP.getLoaderForClass().getResourceAsStream(bundledKeymapEP.file);
+          if(inputStream == null) {
+            LOG.warn("Keymap: " + bundledKeymapEP.file + " not found in " + bundledKeymapEP.getPluginDescriptor().getPluginId().getIdString());
+            continue;
+          }
+          Document document = JDOMUtil.loadDocument(inputStream);
+
           loadKeymapsFromElement(document.getRootElement());
         }
         catch (Exception e) {
           LOG.error(e);
         }
-      }
     }
   }
 
-  protected BundledKeymapProvider[] getProviders() {
-    return Extensions.getExtensions(BundledKeymapProvider.EP_NAME);
-  }
 
   private void loadKeymapsFromElement(final Element element) throws InvalidDataException {
     @SuppressWarnings("unchecked") final List<Element> children = (List<Element>)element.getChildren();
