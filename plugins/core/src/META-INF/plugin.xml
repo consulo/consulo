@@ -2178,8 +2178,8 @@
     </group>
 
     <group>
-      <action class="com.intellij.platform.templates.SaveProjectAsTemplateAction" text="Save Project as Template..."/>
-      <action class="com.intellij.platform.templates.ManageProjectTemplatesAction" text="Manage Project Templates..."/>
+      <action class="com.intellij.openapi.actionSystem.EmptyAction" text="Save Project as Template..."/> <!--com.intellij.platform.templates.SaveProjectAsTemplateAction-->
+      <action class="com.intellij.openapi.actionSystem.EmptyAction" text="Manage Project Templates..."/> <!--com.intellij.platform.templates.ManageProjectTemplatesAction-->
       <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="SaveFileAsTemplate"/>
     </group>
 
