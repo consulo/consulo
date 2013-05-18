@@ -113,37 +113,12 @@
           <element id="module-output" name="extensions" />
         </element>
         <element id="archive" name="resources.jar">
-          <element id="directory" name="idea">
-            <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea/ConsuloApplicationInfo.xml" />
-          </element>
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/add_plugin_modulewizard.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/addmodulewizard.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/community_progress_tail.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/CommunityFileTypes.xml" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/developSlogan_community.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/icon-robots.txt" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_about.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_about@2x.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_logo.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/idea_community_logo@2x.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/newprojectwizard.png" />
-          <element id="file-copy" path="$PROJECT_DIR$/community-resources/src/welcomeCaption_community.png" />
           <element id="module-output" name="platform-resources" />
           <element id="module-output" name="resources" />
-          <element id="directory" name="META-INF">
-            <element id="directory" name="jb">
-              <element id="file-copy" path="$PROJECT_DIR$/resources/$$size$$" />
-            </element>
-          </element>
         </element>
         <element id="archive" name="resources-en.jar">
           <element id="module-output" name="platform-resources-en" />
           <element id="module-output" name="resources-en" />
-          <element id="directory" name="META-INF">
-            <element id="directory" name="jb">
-              <element id="file-copy" path="$PROJECT_DIR$/resources/$$size$$" />
-            </element>
-          </element>
         </element>
         <element id="archive" name="form_rt.jar">
           <element id="module-output" name="forms_rt" />

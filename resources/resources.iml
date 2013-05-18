@@ -9,7 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="platform-resources" />
     <orderEntry type="module" module-name="regexp" exported="" scope="RUNTIME" />
-    <orderEntry type="module" module-name="community-resources" exported="" />
     <orderEntry type="module" module-name="util" />
   </component>
   <component name="copyright">
