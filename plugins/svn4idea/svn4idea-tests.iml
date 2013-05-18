@@ -26,7 +26,6 @@
     <orderEntry type="module" module-name="testFramework" scope="TEST" />
     <orderEntry type="module" module-name="lang-api" />
     <orderEntry type="module" module-name="platform-resources" scope="TEST" />
-    <orderEntry type="module" module-name="dom-impl" scope="TEST" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>

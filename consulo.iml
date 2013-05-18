@@ -10,8 +10,6 @@
     <orderEntry type="module" module-name="boot" />
     <orderEntry type="module" module-name="bootstrap" />
     <orderEntry type="module" module-name="commander" />
-    <orderEntry type="module" module-name="dom-impl" />
-    <orderEntry type="module" module-name="dom-openapi" />
     <orderEntry type="module" module-name="extensions" />
     <orderEntry type="module" module-name="forms_rt" />
     <orderEntry type="module" module-name="icons" />
@@ -38,8 +36,6 @@
     <orderEntry type="module" module-name="vcs-impl" />
     <orderEntry type="module" module-name="xdebugger-api" />
     <orderEntry type="module" module-name="xdebugger-impl" />
-    <orderEntry type="module" module-name="xml" />
-    <orderEntry type="module" module-name="xml-openapi" />
     <orderEntry type="module" module-name="copyright" />
     <orderEntry type="module" module-name="cvs-plugin" />
     <orderEntry type="module" module-name="java-i18n" />
@@ -71,16 +67,15 @@
     <orderEntry type="module" module-name="github" />
     <orderEntry type="module" module-name="hg4idea" />
     <orderEntry type="module" module-name="android" />
-    <orderEntry type="module" module-name="relaxng" />
     <orderEntry type="module" module-name="gradle" />
-    <orderEntry type="module" module-name="xml-tests" scope="TEST" />
-    <orderEntry type="module" module-name="dom-tests" />
     <orderEntry type="module" module-name="devkit-jps-plugin" scope="TEST" />
     <orderEntry type="module" module-name="ui-designer-jps-plugin" scope="TEST" />
     <orderEntry type="module" module-name="colorSchemes" />
     <orderEntry type="module" module-name="java-platform" />
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="core" />
+    <orderEntry type="module" module-name="xml-impl" />
+    <orderEntry type="module" module-name="xml-dom-impl" />
   </component>
 </module>
 

@@ -9,10 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="dom-openapi" />
     <orderEntry type="library" scope="TEST" name="JUnit3" level="project" />
-    <orderEntry type="module" module-name="dom-impl" />
-    <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="xdebugger-impl" />
     <orderEntry type="module" module-name="smRunner" />
     <orderEntry type="module" module-name="junit" />
@@ -66,6 +63,8 @@
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="compiler-api" />
+    <orderEntry type="module" module-name="xml-impl" />
+    <orderEntry type="module" module-name="xml-dom-impl" />
   </component>
 </module>
 

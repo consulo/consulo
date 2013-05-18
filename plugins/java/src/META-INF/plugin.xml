@@ -20,6 +20,8 @@
   <vendor>Consulo</vendor>
   <depends>org.consulo.java.platform</depends>
   <depends>com.intellij.regexp</depends>
+  <depends>com.intellij.xml</depends>
+  <depends>com.intellij.xml.dom</depends>
 
   <application-components>
     <component>
@@ -1418,9 +1420,6 @@
 
     <stubElementTypeHolder class="com.intellij.psi.impl.java.stubs.JavaStubElementTypes"/>
 
-
-    <dom.customAnnotationChecker implementation="com.intellij.util.xml.impl.ExtendsClassChecker"/>
-
     <methodNavigationOffsetProvider implementation="com.intellij.codeInsight.navigation.JavaMethodNavigationOffsetProvider"/>
 
     <editorNavigation implementation="com.intellij.javadoc.JavadocNavigationDelegate"/>
@@ -1475,8 +1474,6 @@
 
     <xdebugger.debuggerSupport implementation="com.intellij.debugger.ui.JavaDebuggerSupport"/>
 
-    <dom.uiControlsProvider implementation="com.intellij.util.xml.impl.JavaDomApplicationComponent"/>
-
     <programRunner id="defaultDebugRunner" implementation="com.intellij.debugger.impl.GenericDebuggerRunner" order="last"/>
 
 
@@ -1530,6 +1527,11 @@
                   implementationClass="com.intellij.psi.impl.JavaRegExpHost"/>
   </extensions>
 
+  <extensions defaultExtensionNs="com.intellij.xml.dom">
+    <uiControlsProvider implementation="com.intellij.util.xml.impl.JavaDomApplicationComponent"/>
+
+    <customAnnotationChecker implementation="com.intellij.util.xml.impl.ExtendsClassChecker"/>
+  </extensions>
   <actions>
     <action id="ShowProjectStructureSettings" class="com.intellij.ide.actions.ShowStructureSettingsAction"
             icon="AllIcons.General.ProjectStructure">

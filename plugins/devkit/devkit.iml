@@ -12,10 +12,8 @@
     <orderEntry type="library" scope="TEST" name="JUnit4" level="project" />
     <orderEntry type="library" name="JDOM" level="project" />
     <orderEntry type="library" name="Log4J" level="project" />
-    <orderEntry type="module" module-name="dom-openapi" />
     <orderEntry type="library" name="TestNG" level="project" />
     <orderEntry type="module" module-name="properties" />
-    <orderEntry type="module" module-name="xml" />
     <orderEntry type="library" scope="TEST" name="Groovy" level="project" />
     <orderEntry type="module" module-name="jps-builders" />
     <orderEntry type="library" name="Guava" level="project" />
@@ -33,6 +31,8 @@
     <orderEntry type="module" module-name="usageView" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="compiler-api" />
+    <orderEntry type="module" module-name="xml-impl" />
+    <orderEntry type="module" module-name="xml-dom-impl" />
   </component>
 </module>
 

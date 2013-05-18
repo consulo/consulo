@@ -65,6 +65,22 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="xml">
+          <element id="directory" name="lib">
+            <element id="archive" name="xml.jar">
+              <element id="module-output" name="xml-api" />
+              <element id="module-output" name="xml-impl" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="xml-dom">
+          <element id="directory" name="lib">
+            <element id="archive" name="xml-dom.jar">
+              <element id="module-output" name="xml-dom-impl" />
+              <element id="module-output" name="xml-dom-api" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

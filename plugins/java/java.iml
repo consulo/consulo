@@ -10,8 +10,6 @@
     <orderEntry type="module" module-name="java-platform" exported="" />
     <orderEntry type="module" module-name="java-analysis-api" exported="" />
     <orderEntry type="module" module-name="lang-api" />
-    <orderEntry type="module" module-name="dom-impl" />
-    <orderEntry type="module" module-name="xml-openapi" />
     <orderEntry type="module" module-name="vcs-api" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="library" name="XmlRPC" level="project" />
@@ -24,7 +22,6 @@
     <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="java-compiler-impl" exported="" />
     <orderEntry type="module" module-name="java-indexing-impl" exported="" />
-    <orderEntry type="module" module-name="xml" />
     <orderEntry type="library" name="jcip" level="project" />
     <orderEntry type="library" name="OroMatcher" level="project" />
     <orderEntry type="module" module-name="vcs-impl" />
@@ -33,6 +30,8 @@
     <orderEntry type="module" module-name="debugger-api" exported="" />
     <orderEntry type="module" module-name="debugger-impl" exported="" />
     <orderEntry type="module" module-name="java-analysis-impl" exported="" />
+    <orderEntry type="module" module-name="xml-impl" />
+    <orderEntry type="module" module-name="xml-dom-impl" />
   </component>
 </module>
 

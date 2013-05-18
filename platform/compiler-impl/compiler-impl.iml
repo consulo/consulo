@@ -11,7 +11,6 @@
     <orderEntry type="module" module-name="resources-en" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="module" module-name="xml-openapi" />
     <orderEntry type="module" module-name="jps-builders" />
     <orderEntry type="library" name="Eclipse" level="project" />
     <orderEntry type="library" name="Netty" level="project" />

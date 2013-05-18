@@ -9,11 +9,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="xml-openapi" />
     <orderEntry type="module" module-name="lang-api" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="module" module-name="xml" />
     <orderEntry type="module" module-name="xslt-rt" />
     <orderEntry type="module" module-name="lvcs-impl" />
     <orderEntry type="module" module-name="annotations" />
@@ -21,8 +19,8 @@
     <orderEntry type="module" module-name="resources-en" />
     <orderEntry type="library" scope="TEST" name="JUnit4" level="project" />
     <orderEntry type="module" module-name="testFramework" scope="TEST" />
-    <orderEntry type="module" module-name="dom-impl" scope="RUNTIME" />
     <orderEntry type="library" scope="TEST" name="Groovy" level="project" />
+    <orderEntry type="module" module-name="xml-impl" />
   </component>
 </module>
 
