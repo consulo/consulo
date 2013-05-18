@@ -40,6 +40,7 @@ public abstract class ActionManager implements ApplicationComponent {
   /**
    * Fetches the instance of ActionManager implementation.
    */
+  @NotNull
   public static ActionManager getInstance(){
     return ApplicationManager.getApplication().getComponent(ActionManager.class);
   }

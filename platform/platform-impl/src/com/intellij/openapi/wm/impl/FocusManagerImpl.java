@@ -410,6 +410,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     return myModalityStateForLastForcedRequest != getCurrentModalityCount();
   }
 
+  @NotNull
   public static FocusManagerImpl getInstance() {
     return (FocusManagerImpl)ApplicationManager.getApplication().getComponent(IdeFocusManager.class);
   }

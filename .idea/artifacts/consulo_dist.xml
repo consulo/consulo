@@ -79,6 +79,7 @@
           <element id="module-output" name="analysis-impl" />
           <element id="module-output" name="compiler-api" />
           <element id="module-output" name="compiler-impl" />
+          <element id="module-output" name="usageView" />
         </element>
         <element id="archive" name="idea_rt.jar">
           <element id="module-output" name="execution-api" />
@@ -146,6 +147,7 @@
           <element id="module-output" name="icons" />
         </element>
       </element>
+      <element id="file-copy" path="$PROJECT_DIR$/build.txt" />
     </root>
   </artifact>
 </component>

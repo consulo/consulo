@@ -15,18 +15,20 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 /**
  * @author Dmitry Avdeev
  *         Date: 11/6/12
+ * TODO [VISTALL] java depend
  */
-public class ImportProjectAction extends ImportModuleAction {
+public class ImportProjectAction extends AnAction /*ImportModuleAction*/ {
 
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    doImport(null);
+    //ImportModuleAction.doImport(null);
   }
 
   @Override
