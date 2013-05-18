@@ -58,6 +58,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="images">
+          <element id="directory" name="lib">
+            <element id="archive" name="images.jar">
+              <element id="module-output" name="images" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
