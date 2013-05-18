@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
@@ -374,7 +373,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements ProjectCompo
     }
     updateWatchedRoots();
     if (hasChanges) {
-      BuildManager.getInstance().clearState(myProject);
+      //TODO [VISTALL] compiler BuildManager.getInstance().clearState(myProject);
     }
   }
 

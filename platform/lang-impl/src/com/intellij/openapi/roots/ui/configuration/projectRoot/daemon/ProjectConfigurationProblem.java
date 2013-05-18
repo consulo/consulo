@@ -24,20 +24,22 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 class ProjectConfigurationProblem extends ConfigurationError {
   private final ProjectStructureProblemDescription myDescription;
   private final Project myProject;
 
-  public ProjectConfigurationProblem(ProjectStructureProblemDescription description, Project project) {
+  public ProjectConfigurationProblem(@NotNull ProjectStructureProblemDescription description, @NotNull Project project) {
     super(StringUtil.unescapeXml(description.getMessage(true)), computeDescription(description),
           getSettings(project, description.getProblemLevel()).isIgnored(description));
     myDescription = description;
     myProject = project;
   }
 
-  private static ProjectStructureProblemsSettings getSettings(Project project, ProjectStructureProblemDescription.ProblemLevel problemLevel) {
+  @NotNull
+  private static ProjectStructureProblemsSettings getSettings(Project project,
+                                                              ProjectStructureProblemDescription.ProblemLevel problemLevel) {
     if (problemLevel == ProjectStructureProblemDescription.ProblemLevel.PROJECT) {
       return ProjectStructureProblemsSettings.getProjectInstance(project);
     }
@@ -46,6 +48,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
     }
   }
 
+  @NotNull
   private static String computeDescription(ProjectStructureProblemDescription description) {
     final String descriptionString = description.getDescription();
     return descriptionString != null ? descriptionString : description.getMessage(true);

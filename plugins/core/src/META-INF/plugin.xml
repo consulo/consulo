@@ -2878,6 +2878,11 @@
       <interface-class>com.intellij.xdebugger.XDebuggerManager</interface-class>
       <implementation-class>com.intellij.xdebugger.impl.XDebuggerManagerImpl</implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.packaging.artifacts.ArtifactManager</interface-class>
+      <implementation-class>com.intellij.packaging.impl.artifacts.ArtifactManagerImpl</implementation-class>
+    </component>
   </project-components>
 
   <module-components>
@@ -4602,11 +4607,11 @@
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
     <!--TODO [VISTALL] JAVA <projectExtension implementation="com.intellij.openapi.roots.impl.CompilerProjectExtensionImpl$MyProjectExtension"/>
-    <<roots.watchedRootsProvider implementation="com.intellij.openapi.roots.impl.CompilerProjectExtensionImpl$MyWatchedRootsProvider"/>
+    <<roots.watchedRootsProvider implementation="com.intellij.openapi.roots.impl.CompilerProjectExtensionImpl$MyWatchedRootsProvider"/> -->
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
-                        serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>   -->
+                        serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
     <moduleRendererFactory implementation="com.intellij.ide.util.DefaultModuleRendererFactory" order="last"/>
 
     <!--Lang-->

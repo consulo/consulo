@@ -62,10 +62,7 @@
       <implementation-class>com.intellij.codeInsight.daemon.impl.PostHighlightingPassFactory</implementation-class>
     </component>
 
-    <component>
-      <interface-class>com.intellij.packaging.artifacts.ArtifactManager</interface-class>
-      <implementation-class>com.intellij.packaging.impl.artifacts.ArtifactManagerImpl</implementation-class>
-    </component>
+
     <component>
       <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
     </component>
