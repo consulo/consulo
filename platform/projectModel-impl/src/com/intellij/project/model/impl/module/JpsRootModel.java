@@ -74,16 +74,6 @@ public class JpsRootModel extends RootModelBase implements ModuleRootModel {
     return myOrderEntries.toArray(new OrderEntry[myOrderEntries.size()]);
   }
 
-  @Override
-  public VirtualFile getExplodedDirectory() {
-    throw new UnsupportedOperationException("'getExplodedDirectory' not implemented in " + getClass().getName());
-  }
-
-  @Override
-  public String getExplodedDirectoryUrl() {
-    throw new UnsupportedOperationException("'getExplodedDirectoryUrl' not implemented in " + getClass().getName());
-  }
-
   @NotNull
   @Override
   public VirtualFile[] getRootPaths(OrderRootType rootType) {

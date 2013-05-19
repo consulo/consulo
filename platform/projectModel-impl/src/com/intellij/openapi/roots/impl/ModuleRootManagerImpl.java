@@ -110,17 +110,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
 
-
-  @Override
-  public VirtualFile getExplodedDirectory() {
-    return null;
-  }
-
-  @Override
-  public String getExplodedDirectoryUrl() {
-    return null;
-  }
-
   @Override
   @NotNull
   public ModifiableRootModel getModifiableModel() {

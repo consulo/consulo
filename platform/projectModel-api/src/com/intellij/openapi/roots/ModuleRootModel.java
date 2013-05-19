@@ -149,20 +149,6 @@ public interface ModuleRootModel {
   @NotNull String[] getSourceRootUrls(boolean includingTests);
 
   /**
-   * @deprecated moved to J2ME plugin
-   */
-  @Deprecated
-  @Nullable
-  VirtualFile getExplodedDirectory();
-
-  /**
-   * @deprecated moved to J2ME plugin
-   */
-  @Deprecated
-  @Nullable
-  String getExplodedDirectoryUrl();
-
-  /**
    * Passes all order entries in the module to the specified visitor.
    *
    * @param policy       the visitor to accept.
