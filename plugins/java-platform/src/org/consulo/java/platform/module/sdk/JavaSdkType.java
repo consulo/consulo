@@ -17,6 +17,7 @@ package org.consulo.java.platform.module.sdk;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.projectRoots.*;
+import org.consulo.java.platform.JavaPlatformIcons;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +36,12 @@ public class JavaSdkType extends SdkType {
   @Nullable
   @Override
   public Icon getIcon() {
+    return JavaPlatformIcons.Java;
+  }
+
+  @Nullable
+  @Override
+  public Icon getGroupIcon() {
     return AllIcons.Nodes.PpJdk;
   }
 
@@ -46,18 +53,18 @@ public class JavaSdkType extends SdkType {
 
   @Override
   public boolean isValidSdkHome(String path) {
-    return false;
+    return true;
   }
 
   @Nullable
   @Override
   public String getVersionString(String sdkHome) {
-    return null;
+    return "1.0";
   }
 
   @Override
   public String suggestSdkName(String currentSdkName, String sdkHome) {
-    return null;
+    return sdkHome;
   }
 
   @Nullable

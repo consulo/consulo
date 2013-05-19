@@ -16,9 +16,12 @@
 package org.consulo.module.extension.ui;
 
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.SdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
+import com.intellij.openapi.util.Condition;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 
 import javax.swing.*;
@@ -41,8 +44,14 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
   private void createUIComponents() {
     myRoot = this;
 
+    final SdkType sdkType = myExtensionWithSdk.getSdkType();
     final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject()).getProjectJdksModel();
-    mySdkComboBox = new SdkComboBox(projectJdksModel);
+    mySdkComboBox = new SdkComboBox(projectJdksModel, new Condition<SdkTypeId>() {
+      @Override
+      public boolean value(SdkTypeId sdkTypeId) {
+        return sdkTypeId == sdkType;
+      }
+    });
 
     final Sdk sdk = myExtensionWithSdk.getSdk();
     if(sdk == null) {

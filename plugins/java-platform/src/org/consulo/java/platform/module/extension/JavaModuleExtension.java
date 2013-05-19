@@ -17,6 +17,7 @@ package org.consulo.java.platform.module.extension;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
+import org.consulo.java.platform.module.sdk.JavaSdkType;
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,6 @@ public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleEx
 
   @Override
   protected Class<? extends SdkType> getSdkTypeClass() {
-    return null;
+    return JavaSdkType.class;
   }
 }
