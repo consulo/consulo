@@ -1077,7 +1077,7 @@ public class FoldersImportingTest extends MavenImportingTestCase {
   }
 
   private CompilerModuleExtension getCompilerExtension(String moduleName) {
-    return ModuleRootManager.getInstance(getModule(moduleName)).getModuleExtension(CompilerModuleExtension.class);
+    return ModuleRootManager.getInstance(getModule(moduleName)).getModuleExtensionOld(CompilerModuleExtension.class);
   }
 
   private void createProjectSubDirsWithFile(String ... dirs) throws IOException {

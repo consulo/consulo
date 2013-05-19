@@ -12,7 +12,6 @@
     <orderEntry type="library" scope="TEST" name="JUnit4" level="project" />
     <orderEntry type="library" name="Log4J" level="project" />
     <orderEntry type="module" module-name="util" />
-    <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="xml-impl" />

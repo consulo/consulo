@@ -9,7 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="tasks-api" />
     <orderEntry type="module" module-name="platform-api" />
-    <orderEntry type="module" module-name="debugger-impl" />
   </component>
 </module>
 

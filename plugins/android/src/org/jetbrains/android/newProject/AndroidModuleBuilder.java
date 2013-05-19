@@ -111,7 +111,7 @@ public class AndroidModuleBuilder extends JavaModuleBuilder {
   public void setupRootModel(final ModifiableRootModel rootModel) throws ConfigurationException {
     super.setupRootModel(rootModel);
 
-    final LanguageLevelModuleExtension moduleExt = rootModel.getModuleExtension(LanguageLevelModuleExtension.class);
+    final LanguageLevelModuleExtension moduleExt = rootModel.getModuleExtensionOld(LanguageLevelModuleExtension.class);
 
     if (moduleExt != null) {
       LanguageLevel languageLevel = moduleExt.getLanguageLevel();

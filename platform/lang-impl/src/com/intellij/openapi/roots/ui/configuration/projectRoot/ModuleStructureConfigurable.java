@@ -875,14 +875,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
           final ModuleBuilder builder = new ModuleBuilder() {
             @Override
             public void setupRootModel(final ModifiableRootModel modifiableRootModel) throws ConfigurationException {
-              if (rootModel.isSdkInherited()) {
-                modifiableRootModel.inheritSdk();
-              }
-              else {
-                modifiableRootModel.setSdk(rootModel.getSdk());
-              }
 
-              modifiableRootModel.getModuleExtension(CompilerModuleExtension.class).inheritCompilerOutputPath(true);
+              modifiableRootModel.getModuleExtensionOld(CompilerModuleExtension.class).inheritCompilerOutputPath(true);
 
               for (OrderEntry entry : rootModel.getOrderEntries()) {
                 if (entry instanceof JdkOrderEntry) continue;

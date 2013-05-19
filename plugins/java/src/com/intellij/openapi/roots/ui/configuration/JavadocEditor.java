@@ -70,7 +70,7 @@ public class JavadocEditor extends ModuleElementsEditor {
       final TableItem item = ((MyTableModel)myTable.getModel()).getTableItemAt(row);
       urls[row] = item.getUrl();
     }
-    getModel().getModuleExtension(JavaModuleExternalPaths.class).setJavadocUrls(urls);
+    getModel().getModuleExtensionOld(JavaModuleExternalPaths.class).setJavadocUrls(urls);
   }
 
   @Override
@@ -143,7 +143,7 @@ public class JavadocEditor extends ModuleElementsEditor {
 
   protected DefaultTableModel createModel() {
     final MyTableModel tableModel = new MyTableModel();
-    final String[] javadocUrls = getModel().getModuleExtension(JavaModuleExternalPaths.class).getJavadocUrls();
+    final String[] javadocUrls = getModel().getModuleExtensionOld(JavaModuleExternalPaths.class).getJavadocUrls();
     for (String javadocUrl : javadocUrls) {
       tableModel.addTableItem(new TableItem(javadocUrl));
     }

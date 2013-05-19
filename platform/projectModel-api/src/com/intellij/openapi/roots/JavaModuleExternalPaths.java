@@ -22,10 +22,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author nik
  */
-public abstract class JavaModuleExternalPaths extends ModuleExtension<JavaModuleExternalPaths> {
+public abstract class JavaModuleExternalPaths extends ModuleExtension0<JavaModuleExternalPaths> {
 
   public static JavaModuleExternalPaths getInstance(Module module) {
-    return ModuleRootManager.getInstance(module).getModuleExtension(JavaModuleExternalPaths.class);
+    return ModuleRootManager.getInstance(module).getModuleExtensionOld(JavaModuleExternalPaths.class);
   }
 
   @NotNull

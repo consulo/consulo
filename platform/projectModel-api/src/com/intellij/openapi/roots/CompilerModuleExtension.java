@@ -26,12 +26,12 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CompilerModuleExtension extends ModuleExtension {
+public abstract class CompilerModuleExtension extends ModuleExtension0 {
   @NonNls public static final String PRODUCTION = "production";
   @NonNls public static final String TEST = "test";
 
   public static @Nullable CompilerModuleExtension getInstance(final Module module) {
-    return ModuleRootManager.getInstance(module).getModuleExtension(CompilerModuleExtension.class);
+    return ModuleRootManager.getInstance(module).getModuleExtensionOld(CompilerModuleExtension.class);
   }
 
   /**

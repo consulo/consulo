@@ -25,6 +25,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.NotNullFunction;
+import org.consulo.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,7 +96,9 @@ public class JavaParameters extends SimpleJavaParameters {
   }
 
   public static Sdk getModuleJdk(final Module module) throws CantRunException {
-    final Sdk jdk = ModuleRootManager.getInstance(module).getSdk();
+    final JavaModuleExtension extension = ModuleRootManager.getInstance(module).getExtension(JavaModuleExtension.class);
+
+    final Sdk jdk = extension == null ? null : extension.getSdk();
     if (jdk == null) {
       throw CantRunException.noJdkForModule(module);
     }

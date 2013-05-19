@@ -75,5 +75,4 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    * @return true if <code>module</code> is contained in the list of dependencies for the current module, false otherwise.
    */
   public abstract boolean isDependsOn(Module module);
-
 }

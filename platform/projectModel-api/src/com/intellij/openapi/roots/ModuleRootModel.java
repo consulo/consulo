@@ -16,10 +16,9 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.module.extension.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface providing root information model for a given module.
@@ -52,29 +51,6 @@ public interface ModuleRootModel {
    */
   @NotNull
   OrderEntry[] getOrderEntries();
-
- /*
-  * Returns the JDK used by the module.
-  *
-  * @return either module-specific or inherited JDK
-  * @see #isSdkInherited()
-  */
- @Nullable
- @Deprecated
- Sdk getSdk();
-
- /**
-  * Returns <code>true</code> if JDK for this module is inherited from a project.
-  *
-  * @return true if the JDK is inherited, false otherwise
-  * @see ProjectRootManager#getProjectSdk()
-  * @see ProjectRootManager#setProjectSdk(com.intellij.openapi.projectRoots.Sdk)
-  */
- @Deprecated
- boolean isSdkInherited();
-
-
- /**
 
   /**
    * Returns an array of content roots from all content entries. A helper method.
@@ -187,7 +163,10 @@ public interface ModuleRootModel {
   @Deprecated
   @NotNull String[] getRootUrls(OrderRootType rootType);
 
-  <T> T getModuleExtension(Class<T> klass);
+  @Deprecated
+  <T> T getModuleExtensionOld(Class<T> klass);
+
+  <T extends ModuleExtension> T getExtension(Class<T> clazz);
 
   @NotNull
   Module[] getModuleDependencies();

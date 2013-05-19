@@ -147,10 +147,10 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
     }
 
     if (myLanguageLevel != null) {
-      model.getModuleExtension(LanguageLevelModuleExtension.class).setLanguageLevel(myLanguageLevel);
+      model.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(myLanguageLevel);
     }
     else if (myMockJdkLevel == MockJdkLevel.jdk15) {
-      model.getModuleExtension(LanguageLevelModuleExtension.class).setLanguageLevel(LanguageLevel.JDK_1_5);
+      model.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(LanguageLevel.JDK_1_5);
     }
 
     model.commit();
@@ -172,17 +172,17 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
       }
       final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(myOutputPath);
       assert virtualFile != null : "cannot find output path: " + myOutputPath;
-      rootModel.getModuleExtension(CompilerModuleExtension.class).setCompilerOutputPath(virtualFile);
-      rootModel.getModuleExtension(CompilerModuleExtension.class).inheritCompilerOutputPath(false);
-      rootModel.getModuleExtension(CompilerModuleExtension.class).setExcludeOutput(false);
+      rootModel.getModuleExtensionOld(CompilerModuleExtension.class).setCompilerOutputPath(virtualFile);
+      rootModel.getModuleExtensionOld(CompilerModuleExtension.class).inheritCompilerOutputPath(false);
+      rootModel.getModuleExtensionOld(CompilerModuleExtension.class).setExcludeOutput(false);
     }
     if (myTestOutputPath != null) {
       assert new File(myTestOutputPath).mkdirs() : myTestOutputPath;
       final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(myTestOutputPath);
       assert virtualFile != null : "cannot find test output path: " + myTestOutputPath;
-      rootModel.getModuleExtension(CompilerModuleExtension.class).setCompilerOutputPathForTests(virtualFile);
-      rootModel.getModuleExtension(CompilerModuleExtension.class).inheritCompilerOutputPath(false);
-      rootModel.getModuleExtension(CompilerModuleExtension.class).setExcludeOutput(false);
+      rootModel.getModuleExtensionOld(CompilerModuleExtension.class).setCompilerOutputPathForTests(virtualFile);
+      rootModel.getModuleExtensionOld(CompilerModuleExtension.class).inheritCompilerOutputPath(false);
+      rootModel.getModuleExtensionOld(CompilerModuleExtension.class).setExcludeOutput(false);
     }
   }
 

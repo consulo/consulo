@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
@@ -86,7 +85,7 @@ public class IncreaseLanguageLevelFix implements IntentionAction {
     final LanguageLevel moduleLevel = module == null ? null : LanguageLevelModuleExtension.getInstance(module).getLanguageLevel();
     if (moduleLevel != null && isLanguageLevelAcceptable(project, module, myLevel)) {
       final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
-      rootModel.getModuleExtension(LanguageLevelModuleExtension.class).setLanguageLevel(myLevel);
+      rootModel.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(myLevel);
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {

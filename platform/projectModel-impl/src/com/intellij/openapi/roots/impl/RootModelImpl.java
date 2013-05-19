@@ -21,8 +21,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.extension.ModuleExtension;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
@@ -57,7 +57,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private boolean myWritable;
   private final VirtualFilePointerManager myFilePointerManager;
   private boolean myDisposed = false;
-  private final Set<ModuleExtension> myExtensions = new TreeSet<ModuleExtension>();
+  private final Set<ModuleExtension0> myExtensions = new TreeSet<ModuleExtension0>();
 
   private final RootConfigurationAccessor myConfigurationAccessor;
 
@@ -77,8 +77,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     addSourceOrderEntries();
     myModuleLibraryTable = new ModuleLibraryTable(this, myProjectRootManager);
 
-    for (ModuleExtension extension : Extensions.getExtensions(ModuleExtension.EP_NAME, moduleRootManager.getModule())) {
-      ModuleExtension model = extension.getModifiableModel(false);
+    for (ModuleExtension0 extension : Extensions.getExtensions(ModuleExtension0.EP_NAME, moduleRootManager.getModule())) {
+      ModuleExtension0 model = extension.getModifiableModel(false);
       registerOnDispose(model);
       myExtensions.add(model);
     }
@@ -126,8 +126,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myWritable = true;
 
     RootModelImpl originalRootModel = moduleRootManager.getRootModel();
-    for (ModuleExtension extension : originalRootModel.myExtensions) {
-      ModuleExtension model = extension.getModifiableModel(false);
+    for (ModuleExtension0 extension : originalRootModel.myExtensions) {
+      ModuleExtension0 model = extension.getModifiableModel(false);
       model.readExternal(element);
       registerOnDispose(model);
       myExtensions.add(model);
@@ -170,8 +170,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     setOrderEntriesFrom(rootModel);
 
-    for (ModuleExtension extension : rootModel.myExtensions) {
-      ModuleExtension model = extension.getModifiableModel(writable);
+    for (ModuleExtension0 extension : rootModel.myExtensions) {
+      ModuleExtension0 model = extension.getModifiableModel(writable);
       registerOnDispose(model);
       myExtensions.add(model);
     }
@@ -321,10 +321,9 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   @Override
   public void clear() {
-    final Sdk jdk = getSdk();
     removeAllContentEntries();
     removeAllOrderEntries();
-    setSdk(jdk);
+
     addSourceOrderEntries();
   }
 
@@ -358,7 +357,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
-    for (ModuleExtension extension : myExtensions) {
+    for (ModuleExtension0 extension : myExtensions) {
       if (extension.isChanged()) {
         extension.commit();
       }
@@ -405,7 +404,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   public void writeExternal(@NotNull Element element) throws WriteExternalException {
-    for (ModuleExtension extension : myExtensions) {
+    for (ModuleExtension0 extension : myExtensions) {
       extension.writeExternal(element);
     }
 
@@ -423,32 +422,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
   }
-
-  @Override
-  public void setSdk(@Nullable Sdk jdk) {
-    assertWritable();
-    final JdkOrderEntry jdkLibraryEntry;
-    if (jdk != null) {
-      jdkLibraryEntry = new ModuleJdkOrderEntryImpl(jdk, this, myProjectRootManager);
-    }
-    else {
-      jdkLibraryEntry = null;
-    }
-    replaceEntryOfType(JdkOrderEntry.class, jdkLibraryEntry);
-  }
-
-  @Override
-  public void setInvalidSdk(@NotNull String jdkName, String jdkType) {
-    assertWritable();
-    replaceEntryOfType(JdkOrderEntry.class, new ModuleJdkOrderEntryImpl(jdkName, jdkType, this, myProjectRootManager));
-  }
-
-  @Override
-  public void inheritSdk() {
-    assertWritable();
-    replaceEntryOfType(JdkOrderEntry.class, new InheritedJdkOrderEntryImpl(this, myProjectRootManager));
-  }
-
 
   @Override
   public <T extends OrderEntry> void replaceEntryOfType(@NotNull Class<T> entryClass, @Nullable final T entry) {
@@ -526,7 +499,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public boolean isChanged() {
     if (!myWritable) return false;
 
-    for (ModuleExtension moduleExtension : myExtensions) {
+    for (ModuleExtension0 moduleExtension : myExtensions) {
       if (moduleExtension.isChanged()) return true;
     }
 
@@ -721,7 +694,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   @NotNull
   public VirtualFile[] getRootPaths(final OrderRootType rootType) {
-    for (ModuleExtension extension : myExtensions) {
+    for (ModuleExtension0 extension : myExtensions) {
       final VirtualFile[] files = extension.getRootPaths(rootType);
       if (files != null) return files;
     }
@@ -731,7 +704,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   @NotNull
   public String[] getRootUrls(final OrderRootType rootType) {
-    for (ModuleExtension extension : myExtensions) {
+    for (ModuleExtension0 extension : myExtensions) {
       final String[] urls = extension.getRootUrls(rootType);
       if (urls != null) return urls;
     }
@@ -743,19 +716,20 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return myModuleRootManager.getRootModel();
   }
 
-  @Override
-  public void setRootUrls(final OrderRootType orderRootType, @NotNull final String[] urls) {
-  }
-
   @Nullable
   @Override
-  public <T> T getModuleExtension(@NotNull final Class<T> klass) {
-    for (ModuleExtension extension : myExtensions) {
+  public <T> T getModuleExtensionOld(@NotNull final Class<T> klass) {
+    for (ModuleExtension0 extension : myExtensions) {
       if (klass.isAssignableFrom(extension.getClass())) {
         //noinspection unchecked
         return (T)extension;
       }
     }
+    return null;
+  }
+
+  @Override
+  public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
     return null;
   }
 

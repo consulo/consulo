@@ -154,7 +154,7 @@ public class MavenFoldersImporterTest extends MavenImportingTestCase {
     MavenFoldersImporter.updateProjectFolders(myProject, true);
 
     ModuleRootManager rootManager = ModuleRootManager.getInstance(getModule("project"));
-    CompilerModuleExtension compiler = rootManager.getModuleExtension(CompilerModuleExtension.class);
+    CompilerModuleExtension compiler = rootManager.getModuleExtensionOld(CompilerModuleExtension.class);
     assertTrue(compiler.getCompilerOutputUrl(), compiler.getCompilerOutputUrl().endsWith("my-classes"));
     assertTrue(compiler.getCompilerOutputUrlForTests(), compiler.getCompilerOutputUrlForTests().endsWith("my-test-classes"));
   }

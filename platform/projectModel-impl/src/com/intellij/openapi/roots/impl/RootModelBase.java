@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -139,26 +138,6 @@ public abstract class RootModelBase implements ModuleRootModel {
   }
 
   protected abstract Collection<ContentEntry> getContent();
-
-  @Override
-  public Sdk getSdk() {
-    for (OrderEntry orderEntry : getOrderEntries()) {
-      if (orderEntry instanceof JdkOrderEntry) {
-        return ((JdkOrderEntry)orderEntry).getJdk();
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public boolean isSdkInherited() {
-    for (OrderEntry orderEntry : getOrderEntries()) {
-      if (orderEntry instanceof InheritedJdkOrderEntry) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   @NotNull
   @Override

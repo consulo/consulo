@@ -334,9 +334,9 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
 
   private static void setupRootModel(ProjectDescriptor projectDescriptor, final ModuleDescriptor descriptor,
                                      final ModifiableRootModel rootModel, final Map<LibraryDescriptor, Library> projectLibs) {
-    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
     compilerModuleExtension.setExcludeOutput(true);
-    rootModel.inheritSdk();
+    //rootModel.inheritSdk();
 
     final Set<File> contentRoots = descriptor.getContentRoots();
     for (File contentRoot : contentRoots) {

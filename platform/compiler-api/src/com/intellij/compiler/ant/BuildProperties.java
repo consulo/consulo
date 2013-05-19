@@ -21,10 +21,8 @@
 package com.intellij.compiler.ant;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
@@ -63,13 +61,14 @@ public abstract class BuildProperties extends CompositeGenerator {
 
   public static Sdk[] getUsedJdks(Project project) {
     final Set<Sdk> jdks = new HashSet<Sdk>();
+    /** TODO [VISTALL] new api
     Module[] modules = ModuleManager.getInstance(project).getModules();
     for (Module module : modules) {
       Sdk jdk = ModuleRootManager.getInstance(module).getSdk();
       if (jdk != null) {
         jdks.add(jdk);
       }
-    }
+    } */
     return jdks.toArray(new Sdk[jdks.size()]);
   }
 

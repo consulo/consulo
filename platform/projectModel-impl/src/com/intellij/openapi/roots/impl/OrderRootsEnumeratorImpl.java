@@ -228,7 +228,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
     }
     else if (type.equals(OrderRootType.CLASSES)) {
-      final CompilerModuleExtension extension = rootModel.getModuleExtension(CompilerModuleExtension.class);
+      final CompilerModuleExtension extension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
       if (extension != null) {
         if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
           if (includeTests && includeProduction) {
@@ -265,7 +265,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
     }
     else if (type.equals(OrderRootType.CLASSES)) {
-      final CompilerModuleExtension extension = rootModel.getModuleExtension(CompilerModuleExtension.class);
+      final CompilerModuleExtension extension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
       if (extension != null) {
         if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
           if (includeTests && includeProduction) {

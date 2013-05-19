@@ -63,7 +63,7 @@ public class AnnotationOrderRootType extends PersistentOrderRootType {
       @Override
       public List<VirtualFile> visitModuleSourceOrderEntry(final ModuleSourceOrderEntry orderEntry,
                                                            final List<VirtualFile> value) {
-        Collections.addAll(value, orderEntry.getRootModel().getModuleExtension(JavaModuleExternalPaths.class).getExternalAnnotationsRoots());
+        Collections.addAll(value, orderEntry.getRootModel().getModuleExtensionOld(JavaModuleExternalPaths.class).getExternalAnnotationsRoots());
         return value;
       }
     };
@@ -90,7 +90,7 @@ public class AnnotationOrderRootType extends PersistentOrderRootType {
       @Override
       public List<String> visitModuleSourceOrderEntry(final ModuleSourceOrderEntry orderEntry,
                                                            final List<String> value) {
-        Collections.addAll(value, orderEntry.getRootModel().getModuleExtension(JavaModuleExternalPaths.class).getExternalAnnotationsUrls());
+        Collections.addAll(value, orderEntry.getRootModel().getModuleExtensionOld(JavaModuleExternalPaths.class).getExternalAnnotationsUrls());
         return value;
       }
     };

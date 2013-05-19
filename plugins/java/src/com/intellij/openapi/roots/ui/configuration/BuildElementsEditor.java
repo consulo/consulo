@@ -271,7 +271,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
   }
 
   public CompilerModuleExtension getCompilerExtension() {
-    return getModel().getModuleExtension(CompilerModuleExtension.class);
+    return getModel().getModuleExtensionOld(CompilerModuleExtension.class);
   }
 
   private interface CommitPathRunnable {

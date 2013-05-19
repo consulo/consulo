@@ -130,7 +130,7 @@ public class PsiTestUtil {
         final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
         rootModel.clear();
-        rootModel.setSdk(jdk);
+
         rootModel.commit();
       }
     }.execute().throwException();
@@ -366,7 +366,7 @@ public class PsiTestUtil {
 
   public static void setCompilerOutputPath(Module module, String url, boolean forTests) {
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    final CompilerModuleExtension extension = model.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension extension = model.getModuleExtensionOld(CompilerModuleExtension.class);
     extension.inheritCompilerOutputPath(false);
     if (forTests) {
       extension.setCompilerOutputPathForTests(url);
@@ -379,7 +379,7 @@ public class PsiTestUtil {
 
   public static void setExcludeCompileOutput(Module module, boolean exclude) {
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    final CompilerModuleExtension extension = model.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension extension = model.getModuleExtensionOld(CompilerModuleExtension.class);
     extension.setExcludeOutput(exclude);
     commitModel(model);
   }

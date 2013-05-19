@@ -27,10 +27,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ModuleExtension<T extends ModuleExtension> implements JDOMExternalizable, Disposable, Comparable<ModuleExtension> {
-  public static final ExtensionPointName<ModuleExtension> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtension");
+public abstract class ModuleExtension0<T extends ModuleExtension0> implements JDOMExternalizable, Disposable, Comparable<ModuleExtension0> {
+  public static final ExtensionPointName<ModuleExtension0> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtension");
 
-  public abstract ModuleExtension getModifiableModel(final boolean writable);
+  public abstract ModuleExtension0 getModifiableModel(final boolean writable);
 
   public abstract void commit();
 
@@ -49,7 +49,7 @@ public abstract class ModuleExtension<T extends ModuleExtension> implements JDOM
   }
 
   @Override
-  public int compareTo(@NotNull final ModuleExtension o) {
+  public int compareTo(@NotNull final ModuleExtension0 o) {
     return getClass().getName().compareTo(o.getClass().getName());
   }
 }

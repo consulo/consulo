@@ -18,7 +18,6 @@ package com.intellij.ide.macro;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +44,7 @@ public class ModuleSdkPathMacro extends Macro {
     if (module == null) {
       return null;
     }
-    return JdkPathMacro.sdkPath(ModuleRootManager.getInstance(module).getSdk());
+    return null;
+    //TODO [VISTALL] new api return JdkPathMacro.sdkPath(ModuleRootManager.getInstance(module).getSdk());
   }
 }

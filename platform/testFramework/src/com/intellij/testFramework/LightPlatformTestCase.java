@@ -264,10 +264,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
 
 
-        if (descriptor.getSdk() != null) {
-          rootModel.setSdk(descriptor.getSdk());
-        }
-
         final ContentEntry contentEntry = rootModel.addContentEntry(ourSourceRoot);
         contentEntry.addSourceFolder(ourSourceRoot, false);
 

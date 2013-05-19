@@ -500,7 +500,7 @@ public class ExternalAnnotationsManagerImpl extends ReadableExternalAnnotationsM
     }
     else if (entry instanceof ModuleSourceOrderEntry) {
       final ModifiableRootModel model = ModuleRootManager.getInstance(entry.getOwnerModule()).getModifiableModel();
-      final JavaModuleExternalPaths extension = model.getModuleExtension(JavaModuleExternalPaths.class);
+      final JavaModuleExternalPaths extension = model.getModuleExtensionOld(JavaModuleExternalPaths.class);
       extension.setExternalAnnotationUrls(ArrayUtil.mergeArrays(extension.getExternalAnnotationsUrls(), vFile.getUrl()));
       model.commit();
     }

@@ -65,14 +65,14 @@ public class EclipseClasspathWriter {
     }
 
     @NonNls String outputPath = "bin";
-    final String compilerOutputUrl = myModel.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputUrl();
+    final String compilerOutputUrl = myModel.getModuleExtensionOld(CompilerModuleExtension.class).getCompilerOutputUrl();
     final EclipseModuleManager eclipseModuleManager = EclipseModuleManagerImpl.getInstance(myModel.getModule());
     final String linkedPath = eclipseModuleManager.getEclipseLinkedVarPath(compilerOutputUrl);
     if (linkedPath != null) {
       outputPath = linkedPath;
     } else {
       final VirtualFile contentRoot = EPathUtil.getContentRoot(myModel);
-      final VirtualFile output = myModel.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputPath();
+      final VirtualFile output = myModel.getModuleExtensionOld(CompilerModuleExtension.class).getCompilerOutputPath();
       if (contentRoot != null && output != null && VfsUtil.isAncestor(contentRoot, output, false)) {
         outputPath = EPathUtil.collapse2EclipsePath(output.getUrl(), myModel);
       }

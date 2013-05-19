@@ -21,7 +21,6 @@ import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
@@ -120,7 +119,7 @@ public class CompilerTester {
   @Nullable
   public VirtualFile findClassFile(String className, Module module) {
     //noinspection ConstantConditions
-    VirtualFile path = ModuleRootManager.getInstance(module).getModuleExtension(CompilerModuleExtension.class).getCompilerOutputPath();
+    VirtualFile path = ModuleRootManager.getInstance(module).getModuleExtensionOld(CompilerModuleExtension.class).getCompilerOutputPath();
     path.getChildren();
     assert path != null;
     path.refresh(false, true);

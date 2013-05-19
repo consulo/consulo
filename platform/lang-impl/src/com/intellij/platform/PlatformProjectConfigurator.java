@@ -47,7 +47,7 @@ public class PlatformProjectConfigurator implements DirectoryProjectConfigurator
           if (rootModel.getContentRoots().length == 0) {
             rootModel.addContentEntry(baseDir);
           }
-          rootModel.inheritSdk();
+          //rootModel.inheritSdk();
           rootModel.commit();
           moduleRef.set(module);
         }

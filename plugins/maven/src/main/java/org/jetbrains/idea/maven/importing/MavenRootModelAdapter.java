@@ -241,7 +241,7 @@ public class MavenRootModelAdapter {
   }
 
   private CompilerModuleExtension getCompilerExtension() {
-    return myRootModel.getModuleExtension(CompilerModuleExtension.class);
+    return myRootModel.getModuleExtensionOld(CompilerModuleExtension.class);
   }
 
   private Url toUrl(String path) {
@@ -443,7 +443,7 @@ public class MavenRootModelAdapter {
 
   public void setLanguageLevel(LanguageLevel level) {
     try {
-      myRootModel.getModuleExtension(LanguageLevelModuleExtension.class).setLanguageLevel(level);
+      myRootModel.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(level);
     }
     catch (IllegalArgumentException e) {
       //bad value was stored

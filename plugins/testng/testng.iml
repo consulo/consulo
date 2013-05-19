@@ -9,11 +9,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="JUnit3" level="project" />
     <orderEntry type="module" module-name="testRunner" />
-    <orderEntry type="module" module-name="java-runtime" />
     <orderEntry type="module" module-name="testng_rt" />
     <orderEntry type="module" module-name="java-i18n" />
     <orderEntry type="library" name="TestNG" level="project" />
-    <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="xml-impl" />
   </component>

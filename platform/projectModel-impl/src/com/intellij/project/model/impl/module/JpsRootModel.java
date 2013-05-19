@@ -16,6 +16,7 @@
 package com.intellij.project.model.impl.module;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.extension.ModuleExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.RootModelBase;
@@ -87,8 +88,13 @@ public class JpsRootModel extends RootModelBase implements ModuleRootModel {
   }
 
   @Override
-  public <T> T getModuleExtension(Class<T> klass) {
+  public <T> T getModuleExtensionOld(Class<T> klass) {
     throw new UnsupportedOperationException("'getModuleExtension' not implemented in " + getClass().getName());
+  }
+
+  @Override
+  public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+    return null;
   }
 
   public Project getProject() {

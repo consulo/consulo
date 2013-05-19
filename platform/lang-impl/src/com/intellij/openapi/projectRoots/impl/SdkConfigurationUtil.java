@@ -20,8 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ProjectManager;
@@ -29,7 +27,6 @@ import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
@@ -168,7 +165,8 @@ public class SdkConfigurationUtil {
   }
 
   public static void setDirectoryProjectSdk(@NotNull final Project project, @Nullable final Sdk sdk) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    /*TODO [VISTALL] new api
+      ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
         ProjectRootManager.getInstance(project).setProjectSdk(sdk);
@@ -177,7 +175,7 @@ public class SdkConfigurationUtil {
           ModuleRootModificationUtil.setSdkInherited(modules[0]);
         }
       }
-    });
+    }); */
   }
 
   public static void configureDirectoryProjectSdk(final Project project,

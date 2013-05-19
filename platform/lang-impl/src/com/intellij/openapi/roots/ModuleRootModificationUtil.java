@@ -18,9 +18,7 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -67,18 +65,6 @@ public class ModuleRootModificationUtil {
     final LibraryOrderEntry entry = model.addLibraryEntry(library);
     entry.setExported(exported);
     entry.setScope(scope);
-    doCommit(model);
-  }
-
-  public static void setModuleSdk(Module module, @Nullable Sdk sdk) {
-    final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    model.setSdk(sdk);
-    doCommit(model);
-  }
-
-  public static void setSdkInherited(Module module) {
-    final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    model.inheritSdk();
     doCommit(model);
   }
 

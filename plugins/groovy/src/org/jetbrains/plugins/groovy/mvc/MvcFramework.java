@@ -310,7 +310,7 @@ public abstract class MvcFramework {
   }
 
   private static void removeModuleOutput(Module module, List<VirtualFile> from) {
-    final CompilerModuleExtension extension = ModuleRootManager.getInstance(module).getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension extension = ModuleRootManager.getInstance(module).getModuleExtensionOld(CompilerModuleExtension.class);
     from.remove(extension.getCompilerOutputPath());
     from.remove(extension.getCompilerOutputPathForTests());
   }

@@ -19,8 +19,6 @@ import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
@@ -147,21 +145,6 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
     }
   }
 
-  public void setSdk(final Sdk newJDK) {
-    final ModifiableRootModel model = getModel();
-    if (newJDK != null) {
-      model.setSdk(newJDK);
-    }
-    else {
-      model.inheritSdk();
-    }
-
-    if (myPanel != null) {
-      myPanel.forceInitFromModel();
-    }
-
-    flushChangesToModel();
-  }
 
   private class ClasspathFormatPanel extends JPanel {
 

@@ -22,8 +22,8 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.extension.ModuleExtension;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.util.Disposer;
@@ -159,16 +159,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getOrderEntries();
   }
 
-  @Override
-  public Sdk getSdk() {
-    return myRootModel.getSdk();
-  }
-
-  @Override
-  public boolean isSdkInherited() {
-    return myRootModel.isSdkInherited();
-  }
-
   void commitModel(RootModelImpl rootModel) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     LOG.assertTrue(rootModel.myModuleRootManager == this);
@@ -232,8 +222,13 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  public <T> T getModuleExtension(final Class<T> klass) {
-    return myRootModel.getModuleExtension(klass);
+  public <T> T getModuleExtensionOld(final Class<T> klass) {
+    return myRootModel.getModuleExtensionOld(klass);
+  }
+
+  @Override
+  public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+    return myRootModel.getExtension(clazz);
   }
 
   @Override

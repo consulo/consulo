@@ -139,7 +139,7 @@ public class IdeaSpecificSettings extends AbstractIdeaSpecificSettings<Modifiabl
 
   @Override
   protected void setupCompilerOutputs(Element root, ModifiableRootModel model) {
-    final CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension compilerModuleExtension = model.getModuleExtensionOld(CompilerModuleExtension.class);
     final Element testOutputElement = root.getChild(IdeaXml.OUTPUT_TEST_TAG);
     if (testOutputElement != null) {
       compilerModuleExtension.setCompilerOutputPathForTests(testOutputElement.getAttributeValue(IdeaXml.URL_ATTR));
@@ -155,7 +155,7 @@ public class IdeaSpecificSettings extends AbstractIdeaSpecificSettings<Modifiabl
 
   @Override
   protected void readLanguageLevel(Element root, ModifiableRootModel model) throws InvalidDataException {
-    model.getModuleExtension(LanguageLevelModuleExtension.class).readExternal(root);
+    model.getModuleExtensionOld(LanguageLevelModuleExtension.class).readExternal(root);
   }
 
   @Override
@@ -263,7 +263,7 @@ public class IdeaSpecificSettings extends AbstractIdeaSpecificSettings<Modifiabl
 
     boolean isModified = false;
 
-    final CompilerModuleExtension compilerModuleExtension = model.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension compilerModuleExtension = model.getModuleExtensionOld(CompilerModuleExtension.class);
 
     if (compilerModuleExtension.getCompilerOutputUrlForTests() != null) {
       final Element pathElement = new Element(IdeaXml.OUTPUT_TEST_TAG);
@@ -280,7 +280,7 @@ public class IdeaSpecificSettings extends AbstractIdeaSpecificSettings<Modifiabl
       isModified = true;
     }
 
-    final LanguageLevelModuleExtension languageLevelModuleExtension = model.getModuleExtension(LanguageLevelModuleExtension.class);
+    final LanguageLevelModuleExtension languageLevelModuleExtension = model.getModuleExtensionOld(LanguageLevelModuleExtension.class);
     final LanguageLevel languageLevel = languageLevelModuleExtension.getLanguageLevel();
     if (languageLevel != null) {
       languageLevelModuleExtension.writeExternal(root);

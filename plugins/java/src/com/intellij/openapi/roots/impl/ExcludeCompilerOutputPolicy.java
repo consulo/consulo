@@ -73,7 +73,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
   @Override
   public VirtualFilePointer[] getExcludeRootsForModule(@NotNull final ModuleRootModel rootModel) {
     ArrayList<VirtualFilePointer> result = new ArrayList<VirtualFilePointer>();
-    final CompilerModuleExtension extension = rootModel.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension extension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
     if (extension == null) {
       return VirtualFilePointer.EMPTY_ARRAY;
     }

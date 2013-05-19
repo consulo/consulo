@@ -26,6 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.containers.Convertor;
+import org.consulo.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -45,7 +46,8 @@ public class PathUtilEx {
   private static final Function<Module, Sdk> MODULE_JDK = new Function<Module, Sdk>() {
     @Override
     public Sdk fun(Module module) {
-      return ModuleRootManager.getInstance(module).getSdk();
+      final JavaModuleExtension extension = ModuleRootManager.getInstance(module).getExtension(JavaModuleExtension.class);
+      return extension == null ? null : extension.getSdk();
     }
   };
   private static final Convertor<Sdk, String> JDK_VERSION = new Convertor<Sdk, String>() {

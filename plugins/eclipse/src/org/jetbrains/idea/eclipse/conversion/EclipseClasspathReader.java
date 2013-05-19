@@ -220,7 +220,7 @@ public class EclipseClasspathReader extends AbstractEclipseClasspathReader<Modif
   }
 
   public static void setOutputUrl(ModifiableRootModel rootModel, String path) {
-    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
     compilerModuleExtension.setCompilerOutputPath(pathToUrl(path));
     compilerModuleExtension.inheritCompilerOutputPath(false);
   }

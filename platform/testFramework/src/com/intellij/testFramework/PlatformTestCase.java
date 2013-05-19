@@ -44,7 +44,6 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.project.impl.TooManyProjectLeakedException;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryIndexImpl;
 import com.intellij.openapi.startup.StartupManager;
@@ -568,10 +567,10 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     //final ProjectJdkEx jdk = ProjectJdkUtil.getDefaultJdk("java 1.4");
     final Sdk jdk = getTestProjectJdk();
 //    ProjectJdkImpl jdk = ProjectJdkTable.getInstance().addJdk(defaultJdk);
-    Module[] modules = ModuleManager.getInstance(myProject).getModules();
+    /*Module[] modules = ModuleManager.getInstance(myProject).getModules();
     for (Module module : modules) {
       ModuleRootModificationUtil.setModuleSdk(module, jdk);
-    }
+    }      */
   }
 
   @Nullable

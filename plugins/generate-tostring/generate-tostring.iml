@@ -14,7 +14,6 @@
     <orderEntry type="library" name="Velocity" level="project" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="regexp" />
-    <orderEntry type="module" module-name="java" />
   </component>
 </module>
 

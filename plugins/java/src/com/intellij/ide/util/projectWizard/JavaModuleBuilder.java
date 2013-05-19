@@ -78,7 +78,7 @@ public class JavaModuleBuilder extends ModuleBuilder implements SourcePathsBuild
   }
 
   public void setupRootModel(ModifiableRootModel rootModel) throws ConfigurationException {
-    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtension(CompilerModuleExtension.class);
+    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
     compilerModuleExtension.setExcludeOutput(true);
     if (myJdk != null){
       rootModel.setSdk(myJdk);

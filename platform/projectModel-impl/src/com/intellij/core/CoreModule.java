@@ -28,7 +28,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.impl.ModuleEx;
 import com.intellij.openapi.module.impl.ModuleScopeProvider;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleExtension;
+import com.intellij.openapi.roots.ModuleExtension0;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
@@ -57,7 +57,7 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
     myPath = moduleFilePath;
 
     Extensions.instantiateArea(ExtensionAreas.IDEA_MODULE, this, null);
-    CoreApplicationEnvironment.registerExtensionPoint(Extensions.getArea(this), ModuleExtension.EP_NAME, ModuleExtension.class);
+    CoreApplicationEnvironment.registerExtensionPoint(Extensions.getArea(this), ModuleExtension0.EP_NAME, ModuleExtension0.class);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
       public void dispose() {

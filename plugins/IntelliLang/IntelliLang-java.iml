@@ -13,7 +13,6 @@
     <orderEntry type="module" module-name="regexp" />
     <orderEntry type="module" module-name="platform-api" />
     <orderEntry type="module" module-name="IntelliLang" />
-    <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="compiler-api" />
   </component>
   <component name="copyright">

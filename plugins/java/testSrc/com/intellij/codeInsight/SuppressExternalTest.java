@@ -62,7 +62,7 @@ public class SuppressExternalTest extends UsefulTestCase {
         final Module module = myFixture.getModule();
         final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
         final String url = VfsUtilCore.pathToUrl(myFixture.getTempDirPath() + "/content/anno");
-        model.getModuleExtension(JavaModuleExternalPaths.class).setExternalAnnotationUrls(new String[]{url});
+        model.getModuleExtensionOld(JavaModuleExternalPaths.class).setExternalAnnotationUrls(new String[]{url});
         model.commit();
       }
     });

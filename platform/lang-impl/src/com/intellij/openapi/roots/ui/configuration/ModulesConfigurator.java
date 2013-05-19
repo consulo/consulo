@@ -276,7 +276,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     for (final ModuleEditor moduleEditor : myModuleEditors) {
       final ModifiableRootModel model = moduleEditor.apply();
       if (model != null) {
-        if (!model.isSdkInherited()) {
+        /*if (!model.isSdkInherited()) {
           // make sure the sdk is set to original SDK stored in the JDK Table
           final Sdk modelSdk = model.getSdk();
           if (modelSdk != null) {
@@ -285,7 +285,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
               model.setSdk(original);
             }
           }
-        }
+        } */
         models.add(model);
       }
     }

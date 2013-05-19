@@ -92,7 +92,7 @@ public class EclipseClasspathStorageProvider implements ClasspathStorageProvider
     if (model.getContentRoots().length == 0) {
       throw new ConfigurationException("Module \'" + moduleName + "\' has no content roots thus is not compatible with eclipse format");
     }
-    final String output = model.getModuleExtension(CompilerModuleExtension.class).getCompilerOutputUrl();
+    final String output = model.getModuleExtensionOld(CompilerModuleExtension.class).getCompilerOutputUrl();
     final String contentRoot = getContentRoot(model);
     if (output == null ||
         !StringUtil.startsWith(VfsUtilCore.urlToPath(output), contentRoot) &&
@@ -218,7 +218,7 @@ public class EclipseClasspathStorageProvider implements ClasspathStorageProvider
           IdeaSpecificSettings.readIDEASpecific(model, documentSet, eml);
         }
         else {
-          model.getModuleExtension(CompilerModuleExtension.class).setExcludeOutput(false);
+          model.getModuleExtensionOld(CompilerModuleExtension.class).setExcludeOutput(false);
         }
 
         ((RootModelImpl)model).writeExternal(element);

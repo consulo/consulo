@@ -22,7 +22,6 @@ import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
 import com.intellij.openapi.roots.libraries.Library;
@@ -189,7 +188,7 @@ public class ModuleRootsExternalizationTest extends ModuleTestCase {
     final ModuleRootManagerImpl moduleRootManager =
       (ModuleRootManagerImpl)ModuleRootManager.getInstance(module);
     final ModifiableRootModel rootModel = moduleRootManager.getModifiableModel();
-    rootModel.getModuleExtension(CompilerModuleExtension.class).inheritCompilerOutputPath(true);
+    rootModel.getModuleExtensionOld(CompilerModuleExtension.class).inheritCompilerOutputPath(true);
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {

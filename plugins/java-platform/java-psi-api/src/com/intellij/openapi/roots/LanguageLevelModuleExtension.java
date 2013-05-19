@@ -29,14 +29,14 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
-public class LanguageLevelModuleExtension extends ModuleExtension<LanguageLevelModuleExtension> {
+public class LanguageLevelModuleExtension extends ModuleExtension0<LanguageLevelModuleExtension> {
   @NonNls private static final String LANGUAGE_LEVEL_ELEMENT_NAME = "LANGUAGE_LEVEL";
   private Module myModule;
   private final boolean myWritable;
   private static final Logger LOG = Logger.getInstance("#" + LanguageLevelModuleExtension.class.getName());
 
   public static LanguageLevelModuleExtension getInstance(final Module module) {
-    return ModuleRootManager.getInstance(module).getModuleExtension(LanguageLevelModuleExtension.class);
+    return ModuleRootManager.getInstance(module).getModuleExtensionOld(LanguageLevelModuleExtension.class);
   }
 
   private LanguageLevel myLanguageLevel;
@@ -86,7 +86,7 @@ public class LanguageLevelModuleExtension extends ModuleExtension<LanguageLevelM
   }
 
   @Override
-  public ModuleExtension getModifiableModel(final boolean writable) {
+  public ModuleExtension0 getModifiableModel(final boolean writable) {
     return new LanguageLevelModuleExtension(this, writable);
   }
 

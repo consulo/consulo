@@ -106,7 +106,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
             // Ensure that the dependencies are clear (used to be not clear when manually removing the module and importing it via gradle)
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(created);
             final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
-            moduleRootModel.inheritSdk();
+            //moduleRootModel.inheritSdk();
             created.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY, data.getOwner().toString());
             ProjectData projectData = module.getData(ProjectKeys.PROJECT);
             if (projectData != null) {

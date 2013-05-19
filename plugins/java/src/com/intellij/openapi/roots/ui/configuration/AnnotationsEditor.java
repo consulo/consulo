@@ -67,7 +67,7 @@ public class AnnotationsEditor extends ModuleElementsEditor {
       final TableItem item = ((MyTableModel)myTable.getModel()).getTableItemAt(row);
       urls[row] = item.getUrl();
     }
-    getModel().getModuleExtension(JavaModuleExternalPaths.class).setExternalAnnotationUrls(urls);
+    getModel().getModuleExtensionOld(JavaModuleExternalPaths.class).setExternalAnnotationUrls(urls);
   }
 
   @Override
@@ -124,7 +124,7 @@ public class AnnotationsEditor extends ModuleElementsEditor {
 
   protected DefaultTableModel createModel() {
     final MyTableModel tableModel = new MyTableModel();
-    final String[] urls = getModel().getModuleExtension(JavaModuleExternalPaths.class).getExternalAnnotationsUrls();
+    final String[] urls = getModel().getModuleExtensionOld(JavaModuleExternalPaths.class).getExternalAnnotationsUrls();
     for (String javadocUrl : urls) {
       tableModel.addTableItem(new TableItem(javadocUrl));
     }
