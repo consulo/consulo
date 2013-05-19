@@ -17,6 +17,7 @@ package org.consulo.java.ant.sdk;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.projectRoots.*;
+import org.consulo.java.ant.util.AntVersionUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,9 +52,15 @@ public class AntSdkType extends SdkType {
 
   @Override
   public boolean isValidSdkHome(String path) {
-    File file = new File(path, "lib/ant.jar");
+    return AntVersionUtil.getVersion(path) != null;
+  }
 
-    return file.exists();
+  @Nullable
+  @Override
+  public String getVersionString(String sdkHome) {
+    final String version = AntVersionUtil.getVersion(sdkHome);
+
+    return version == null ? "0.0" : version;
   }
 
   @Override

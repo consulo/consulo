@@ -139,7 +139,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
       final SdkType key = entry.getKey();
       final List<Sdk> value = entry.getValue();
 
-      final MyNode groupNode = new MyNode(new TextConfigurable<SdkType>(key, key.getName(), "", "", AllIcons.Nodes.KeymapAnt));
+      final MyNode groupNode = createSdkGroupNode(key);
       groupNode.setAllowsChildren(true);
       addNode(groupNode, myRoot);
 
@@ -153,6 +153,11 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
   }
 
   @NotNull
+  private static MyNode createSdkGroupNode(SdkType key) {
+    return new MyNode(new TextConfigurable<SdkType>(key, key.getName(), "", "", AllIcons.Nodes.KeymapAnt));
+  }
+
+  @NotNull
   @Override
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     final List<ProjectStructureElement> result = new ArrayList<ProjectStructureElement>();
@@ -162,12 +167,25 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
     return result;
   }
 
-  public boolean addJdkNode(final Sdk jdk, final boolean selectInTree) {
+  public boolean addSdkNode(final Sdk sdk, final boolean selectInTree) {
     if (!myUiDisposed) {
-      myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(myContext, jdk));
-      addNode(new MyNode(new JdkConfigurable((ProjectJdkImpl)jdk, myJdksTreeModel, TREE_UPDATER, myHistory, myProject)), myRoot);
+      myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(myContext, sdk));
+
+      MyNode newSdkNode = new MyNode(new JdkConfigurable((ProjectJdkImpl)sdk, myJdksTreeModel, TREE_UPDATER, myHistory, myProject));
+ 
+      final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
+      if(groupNode != null) {
+        addNode(newSdkNode, groupNode);
+      }
+      else {
+        final MyNode sdkGroupNode = createSdkGroupNode((SdkType)sdk.getSdkType());
+
+        addNode(sdkGroupNode, myRoot);
+        addNode(newSdkNode, sdkGroupNode);
+      }
+
       if (selectInTree) {
-        selectNodeInTree(MasterDetailsComponent.findNodeByObject(myRoot, jdk));
+        selectNodeInTree(newSdkNode);
       }
       return true;
     }
@@ -224,7 +242,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
         myJdksTreeModel.createAddActions(group, myTree, new Consumer<Sdk>() {
           @Override
           public void consume(final Sdk projectJdk) {
-            addJdkNode(projectJdk, true);
+            addSdkNode(projectJdk, true);
           }
         });
         return group.getChildren(null);

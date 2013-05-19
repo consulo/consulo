@@ -148,7 +148,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
           public void consume(final Sdk jdk) {
             if (project != null) {
               final JdkListConfigurable configurable = JdkListConfigurable.getInstance(project);
-              configurable.addJdkNode(jdk, false);
+              configurable.addSdkNode(jdk, false);
             }
             reloadModel(new SdkComboBoxItem(jdk), project);
             setSelectedJdk(jdk); //restore selection

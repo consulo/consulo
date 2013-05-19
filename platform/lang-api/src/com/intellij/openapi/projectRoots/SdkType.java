@@ -73,9 +73,7 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   @Nullable
-  public String getVersionString(String sdkHome){
-    return null;
-  }
+  public abstract String getVersionString(String sdkHome);
 
   public abstract String suggestSdkName(String currentSdkName, String sdkHome);
 

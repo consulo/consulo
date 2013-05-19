@@ -91,7 +91,7 @@ public class ProjectJdkForModuleStep extends ModuleWizardStep {
         final boolean[] successfullyAdded = new boolean[1];
         projectJdksModel.doAdd(myPanel, type, new Consumer<Sdk>() {
           public void consume(final Sdk jdk) {
-            successfullyAdded[0] = jdkConfig.addJdkNode(jdk, false);
+            successfullyAdded[0] = jdkConfig.addSdkNode(jdk, false);
             myJdkChooser.updateList(jdk, type, projectJdksModel.getSdks());
 
             if (!successfullyAdded[0]) {
