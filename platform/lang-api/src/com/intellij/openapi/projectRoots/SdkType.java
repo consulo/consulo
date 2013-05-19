@@ -117,7 +117,13 @@ public abstract class SdkType implements SdkTypeId {
 
   public abstract String getPresentableName();
 
+  @Nullable
   public Icon getIcon() {
+    return null;
+  }
+
+  @Nullable
+  public Icon getGroupIcon() {
     return null;
   }
 
@@ -181,13 +187,6 @@ public abstract class SdkType implements SdkTypeId {
   @Nullable
   public String getDefaultDocumentationUrl(final @NotNull Sdk sdk) {
     return null;
-  }
-
-  public static SdkType[] getAllTypes() {
-    List<SdkType> allTypes = new ArrayList<SdkType>();
-    Collections.addAll(allTypes, ApplicationManager.getApplication().getComponents(SdkType.class));
-    Collections.addAll(allTypes, Extensions.getExtensions(EP_NAME));
-    return allTypes.toArray(new SdkType[allTypes.size()]);
   }
 
   public static <T extends SdkType> T findInstance(final Class<T> sdkTypeClass) {

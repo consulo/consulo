@@ -37,6 +37,7 @@
     <orderEntry type="module" module-name="xml-dom-impl" />
     <orderEntry type="module" module-name="images" />
     <orderEntry type="module" module-name="spellchecker" />
+    <orderEntry type="module" module-name="ant-new" />
   </component>
 </module>
 

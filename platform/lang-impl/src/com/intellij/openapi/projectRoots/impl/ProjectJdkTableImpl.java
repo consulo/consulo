@@ -133,7 +133,7 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
     final String jdkPath = System.getProperty(jdkPrefix + name);
     if (jdkPath == null) return null;
 
-    final SdkType[] sdkTypes = SdkType.getAllTypes();
+    final SdkType[] sdkTypes = SdkType.EP_NAME.getExtensions();
     for (SdkType sdkType : sdkTypes) {
       if (Comparing.strEqual(sdkTypeName, sdkType.getName())){
         if (sdkType.isValidSdkHome(jdkPath)) {
@@ -218,7 +218,7 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
   }
 
   public static SdkTypeId findSdkTypeByName(String sdkTypeName) {
-    final SdkType[] allSdkTypes = SdkType.getAllTypes();
+    final SdkType[] allSdkTypes = SdkType.EP_NAME.getExtensions();
     for (final SdkType type : allSdkTypes) {
       if (type.getName().equals(sdkTypeName)) {
         return type;

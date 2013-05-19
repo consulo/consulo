@@ -240,7 +240,7 @@ public class ProjectSdksModel implements SdkModel {
                                final JComponent parent,
                                final Consumer<Sdk> updateTree,
                                @Nullable Condition<SdkTypeId> filter) {
-    final SdkType[] types = SdkType.getAllTypes();
+    final SdkType[] types = SdkType.EP_NAME.getExtensions();
     for (final SdkType type : types) {
       if (filter != null && !filter.value(type)) continue;
       final AnAction addAction = new DumbAwareAction(type.getPresentableName(),

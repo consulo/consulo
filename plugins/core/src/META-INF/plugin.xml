@@ -4549,8 +4549,8 @@
 
     <OrderRootTypeUI key="JAVADOC"
                      implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.JavadocOrderRootTypeUIFactory"/>
-    <OrderRootTypeUI key="ANNOTATIONS"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.AnnotationsOrderRootTypeUIFactory"/>
+    <!--<OrderRootTypeUI key="ANNOTATIONS"
+                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.AnnotationsOrderRootTypeUIFactory"/>  -->
     <OrderRootTypeUI key="CLASSES"
                      implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
     <OrderRootTypeUI key="SOURCES"
@@ -4569,7 +4569,7 @@
     <!--TODO [VISTALL] Java <moduleExtension implementation="com.intellij.openapi.roots.LanguageLevelModuleExtension"/> -->
     <!--TODO [VISTALL] Java <moduleExtension implementation="com.intellij.openapi.roots.impl.JavaModuleExternalPathsImpl"/> -->
 
-    <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/>
+   <!-- <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/> -->
     <orderRootType implementation="com.intellij.openapi.roots.JavadocOrderRootType"/>
 
 

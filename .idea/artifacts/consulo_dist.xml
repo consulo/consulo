@@ -78,6 +78,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="ant">
+          <element id="directory" name="lib">
+            <element id="archive" name="ant.jar">
+              <element id="module-output" name="ant-new" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
