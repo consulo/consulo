@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -24,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
@@ -38,10 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JdkListConfigurable extends BaseStructureConfigurable {
   private final ProjectSdksModel myJdksTreeModel;
@@ -98,7 +97,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
   @Override
   @Nls
   public String getDisplayName() {
-    return "SDKs";
+    return ProjectBundle.message("jdks.node.display.name");
   }
 
   @Override
@@ -123,11 +122,33 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   protected void loadTree() {
-    final Map<Sdk,Sdk> sdks = myJdksTreeModel.getProjectSdks();
-    for (Sdk sdk : sdks.keySet()) {
-      final JdkConfigurable configurable = new JdkConfigurable((ProjectJdkImpl)sdks.get(sdk), myJdksTreeModel, TREE_UPDATER, myHistory,
-                                                               myProject);
-      addNode(new MyNode(configurable), myRoot);
+    final Map<SdkType, List<Sdk>> map = new HashMap<SdkType, List<Sdk>>();
+
+    for(Sdk sdk : myJdksTreeModel.getProjectSdks().values()) {
+      final SdkType sdkType = (SdkType)sdk.getSdkType();
+
+      List<Sdk> list = map.get(sdkType);
+      if(list == null) {
+        map.put(sdkType, list = new ArrayList<Sdk>());
+      }
+
+      list.add(sdk);
+    }
+
+    for (Map.Entry<SdkType, List<Sdk>> entry : map.entrySet()) {
+      final SdkType key = entry.getKey();
+      final List<Sdk> value = entry.getValue();
+
+      final MyNode groupNode = new MyNode(new TextConfigurable<SdkType>(key, key.getName(), "", "", AllIcons.Nodes.KeymapAnt));
+      groupNode.setAllowsChildren(true);
+      addNode(groupNode, myRoot);
+
+      for(Sdk sdk : value) {
+        final JdkConfigurable configurable = new JdkConfigurable((ProjectJdkImpl)sdk, myJdksTreeModel, TREE_UPDATER, myHistory,
+                                                                 myProject);
+
+        addNode(new MyNode(configurable), groupNode);
+      }
     }
   }
 
