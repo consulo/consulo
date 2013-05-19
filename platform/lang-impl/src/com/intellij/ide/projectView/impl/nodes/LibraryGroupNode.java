@@ -75,11 +75,11 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
           children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(module, libraryOrderEntry), getSettings()));
         }
       }
-      else if (orderEntry instanceof JdkOrderEntry) {
-        final JdkOrderEntry jdkOrderEntry = (JdkOrderEntry)orderEntry;
-        final Sdk jdk = jdkOrderEntry.getJdk();
+      else if (orderEntry instanceof SdkOrderEntry) {
+        final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
+        final Sdk jdk = sdkOrderEntry.getSdk();
         if (jdk != null) {
-          children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(module, jdkOrderEntry), getSettings()));
+          children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(module, sdkOrderEntry), getSettings()));
         }
       }
     }

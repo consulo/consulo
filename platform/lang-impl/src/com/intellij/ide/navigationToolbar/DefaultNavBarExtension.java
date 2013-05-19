@@ -23,7 +23,7 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -51,8 +51,8 @@ public class DefaultNavBarExtension implements NavBarModelExtension{
     else if (object instanceof PsiDirectory) {
       return ((PsiDirectory)object).getVirtualFile().getName();
     }
-    else if (object instanceof JdkOrderEntry) {
-      return ((JdkOrderEntry)object).getJdkName();
+    else if (object instanceof SdkOrderEntry) {
+      return ((SdkOrderEntry)object).getSdkName();
     }
     else if (object instanceof LibraryOrderEntry) {
       final String libraryName = ((LibraryOrderEntry)object).getLibraryName();

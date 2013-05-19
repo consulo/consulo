@@ -89,4 +89,24 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   protected void loadStateImpl(@NotNull Element element) {
 
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    ModuleExtensionImpl that = (ModuleExtensionImpl)o;
+
+    if (!myId.equals(that.myId)) return false;
+    if (!myModule.equals(that.myModule)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myId.hashCode();
+    result = 31 * result + myModule.hashCode();
+    return result;
+  }
 }

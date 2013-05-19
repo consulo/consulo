@@ -40,11 +40,11 @@ public class OrderEntryFactory {
     if (ModuleSourceOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new ModuleSourceOrderEntryImpl(element, rootModel);
     }
-    else if (ModuleJdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
-      return new ModuleJdkOrderEntryImpl(element, rootModel, projectRootManager);
+    else if (ModuleExtensionWithSdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
+      return new ModuleExtensionWithSdkOrderEntryImpl(element, rootModel, projectRootManager);
     }
-    else if (InheritedJdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
-      return new InheritedJdkOrderEntryImpl(element, rootModel, projectRootManager);
+    else if (InheritedSdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
+      return new InheritedSdkOrderEntryImpl(element, rootModel, projectRootManager);
     }
     else if (LibraryOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new LibraryOrderEntryImpl(element, rootModel, projectRootManager);

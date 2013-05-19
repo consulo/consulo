@@ -55,8 +55,10 @@ public class JpsModuleRootModelSerializer {
   public static final String TYPE_ATTRIBUTE = "type";
   public static final String SOURCE_FOLDER_TYPE = "sourceFolder";
   public static final String JDK_TYPE = "jdk";
+  public static final String MODULE_EXTENSION_SDK = "module-extension-sdk";
   public static final String JDK_NAME_ATTRIBUTE = "jdkName";
   public static final String JDK_TYPE_ATTRIBUTE = "jdkType";
+  public static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
   public static final String INHERITED_JDK_TYPE = "inheritedJdk";
   public static final String LIBRARY_TYPE = "library";
   public static final String NAME_ATTRIBUTE = "name";

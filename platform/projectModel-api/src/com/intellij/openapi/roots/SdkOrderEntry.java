@@ -16,9 +16,8 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.vfs.VirtualFile;
 
-public interface JdkOrderEntry extends LibraryOrSdkOrderEntry {
-  Sdk getJdk();
-  String getJdkName();
+public interface SdkOrderEntry extends LibraryOrSdkOrderEntry {
+  Sdk getSdk();
+  String getSdkName();
 }

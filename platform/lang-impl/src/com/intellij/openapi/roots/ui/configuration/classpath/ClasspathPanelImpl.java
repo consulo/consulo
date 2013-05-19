@@ -30,7 +30,6 @@ import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
@@ -271,8 +270,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         myEditButton.actionPerformed(null);
       }
     }
-    else if (entry instanceof JdkOrderEntry) {
-      Sdk jdk = ((JdkOrderEntry)entry).getJdk();
+    else if (entry instanceof SdkOrderEntry) {
+      Sdk jdk = ((SdkOrderEntry)entry).getSdk();
       if (jdk != null) {
         rootConfigurable.select(jdk, true);
       }
@@ -707,8 +706,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
           return new ModuleProjectStructureElement(getContext(), module);
         }
       }
-      else if (entry instanceof JdkOrderEntry) {
-        final Sdk jdk = ((JdkOrderEntry)entry).getJdk();
+      else if (entry instanceof SdkOrderEntry) {
+        final Sdk jdk = ((SdkOrderEntry)entry).getSdk();
         if (jdk != null) {
           return new SdkProjectStructureElement(getContext(), jdk);
         }

@@ -15,7 +15,7 @@
  */
 package com.intellij.project.model.impl.module.dependencies;
 
-import com.intellij.openapi.roots.InheritedJdkOrderEntry;
+import com.intellij.openapi.roots.InheritedSdkOrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.project.model.impl.module.JpsRootModel;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +24,7 @@ import org.jetbrains.jps.model.module.JpsSdkDependency;
 /**
  * @author nik
  */
-public class JpsInheritedSdkOrderEntry extends JpsSdkOrderEntryBase implements InheritedJdkOrderEntry {
+public class JpsInheritedSdkOrderEntry extends JpsSdkOrderEntryBase implements InheritedSdkOrderEntry {
   public JpsInheritedSdkOrderEntry(JpsRootModel rootModel, JpsSdkDependency dependencyElement) {
     super(rootModel, dependencyElement);
   }

@@ -321,7 +321,7 @@ public class TreeModelBuilder {
     if (virtualFile == null) return null;
     List<OrderEntry> orders = myFileIndex.getOrderEntriesForFile(virtualFile);
     for (OrderEntry order : orders) {
-      if (order instanceof LibraryOrderEntry || order instanceof JdkOrderEntry) return order;
+      if (order instanceof LibraryOrderEntry || order instanceof SdkOrderEntry) return order;
     }
     return null;
   }

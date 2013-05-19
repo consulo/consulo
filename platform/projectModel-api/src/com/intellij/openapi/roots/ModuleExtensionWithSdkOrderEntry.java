@@ -15,8 +15,17 @@
  */
 package com.intellij.openapi.roots;
 
+import org.consulo.module.extension.ModuleExtension;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author dsl
  */
-public interface InheritedJdkOrderEntry extends JdkOrderEntry {
+public interface ModuleExtensionWithSdkOrderEntry extends SdkOrderEntry {
+  @NotNull
+  String getModuleExtensionId();
+
+  @Nullable
+  ModuleExtension<?> getModuleExtension();
 }

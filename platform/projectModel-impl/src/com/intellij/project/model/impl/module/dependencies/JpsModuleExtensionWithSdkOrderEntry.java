@@ -15,22 +15,36 @@
  */
 package com.intellij.project.model.impl.module.dependencies;
 
-import com.intellij.openapi.roots.ModuleJdkOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.project.model.impl.module.JpsRootModel;
+import org.consulo.module.extension.ModuleExtension;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.module.JpsSdkDependency;
 
 /**
  * @author nik
  */
-public class JpsModuleSdkOrderEntry extends JpsSdkOrderEntryBase implements ModuleJdkOrderEntry {
-  public JpsModuleSdkOrderEntry(JpsRootModel rootModel, JpsSdkDependency dependencyElement) {
+public class JpsModuleExtensionWithSdkOrderEntry extends JpsSdkOrderEntryBase implements ModuleExtensionWithSdkOrderEntry {
+  public JpsModuleExtensionWithSdkOrderEntry(JpsRootModel rootModel, JpsSdkDependency dependencyElement) {
     super(rootModel, dependencyElement);
   }
 
   @Override
   public <R> R accept(RootPolicy<R> policy, @Nullable R initialValue) {
     return policy.visitModuleJdkOrderEntry(this, initialValue);
+  }
+
+  @NotNull
+  @Override
+  public String getModuleExtensionId() {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public ModuleExtension<?> getModuleExtension() {
+    return null;
   }
 }

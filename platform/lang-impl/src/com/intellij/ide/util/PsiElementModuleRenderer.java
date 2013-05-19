@@ -111,7 +111,7 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer{
   private void showLibraryLocation(ProjectFileIndex fileIndex, VirtualFile vFile) {
     setIcon(AllIcons.Nodes.PpLibFolder);
     for (OrderEntry order : fileIndex.getOrderEntriesForFile(vFile)) {
-      if (order instanceof LibraryOrderEntry || order instanceof JdkOrderEntry) {
+      if (order instanceof LibraryOrderEntry || order instanceof SdkOrderEntry) {
         myText = getPresentableName(order, vFile);
         break;
       }

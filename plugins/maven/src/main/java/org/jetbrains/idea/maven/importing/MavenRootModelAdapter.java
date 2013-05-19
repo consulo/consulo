@@ -83,7 +83,7 @@ public class MavenRootModelAdapter {
 
   private void initOrderEntries() {
     for (OrderEntry e : myRootModel.getOrderEntries()) {
-      if (e instanceof ModuleSourceOrderEntry || e instanceof JdkOrderEntry) continue;
+      if (e instanceof ModuleSourceOrderEntry || e instanceof SdkOrderEntry) continue;
       if (e instanceof LibraryOrderEntry) {
         if (!isMavenLibrary(((LibraryOrderEntry)e).getLibrary())) continue;
       }

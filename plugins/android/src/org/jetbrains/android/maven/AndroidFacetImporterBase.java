@@ -701,7 +701,7 @@ public abstract class AndroidFacetImporterBase extends FacetImporter<AndroidFace
 
     for (Iterator<OrderEntry> it = entryList.iterator(); it.hasNext(); ) {
       final OrderEntry entry = it.next();
-      if (entry instanceof JdkOrderEntry) {
+      if (entry instanceof SdkOrderEntry) {
         jdkOrderEntry = entry;
         it.remove();
         break;

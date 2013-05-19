@@ -17,8 +17,10 @@ package org.consulo.java.platform.module.extension;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.pom.java.LanguageLevel;
 import org.consulo.java.platform.module.sdk.JavaSdkType;
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,12 +28,43 @@ import org.jetbrains.annotations.NotNull;
  * @since 10:02/19.05.13
  */
 public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleExtension> {
+  protected LanguageLevel myLanguageLevel = LanguageLevel.HIGHEST;
+
   public JavaModuleExtension(@NotNull String id, @NotNull Module module) {
     super(id, module);
   }
 
   @Override
+  public void commit(@NotNull JavaModuleExtension mutableModuleExtension) {
+    super.commit(mutableModuleExtension);
+
+    myLanguageLevel = mutableModuleExtension.getLanguageLevel();
+  }
+
+  @NotNull
+  public LanguageLevel getLanguageLevel() {
+    return myLanguageLevel;
+  }
+
+  @Override
   protected Class<? extends SdkType> getSdkTypeClass() {
     return JavaSdkType.class;
+  }
+
+  @Override
+  protected void getStateImpl(@NotNull Element element) {
+    super.getStateImpl(element);
+
+    element.setAttribute("language-level", myLanguageLevel.name());
+  }
+
+  @Override
+  protected void loadStateImpl(@NotNull Element element) {
+    super.loadStateImpl(element);
+
+    final String languageLevelValue = element.getAttributeValue("language-level");
+    if (languageLevelValue != null) {
+      myLanguageLevel = LanguageLevel.valueOf(languageLevelValue);
+    }
   }
 }

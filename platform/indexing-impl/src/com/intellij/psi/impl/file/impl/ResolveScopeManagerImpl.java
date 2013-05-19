@@ -96,8 +96,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
 
       LibraryOrderEntry lib = null;
       for (OrderEntry entry : orderEntries) {
-        if (entry instanceof JdkOrderEntry) {
-          return LibraryScopeCache.getInstance(myProject).getScopeForSdk((JdkOrderEntry)entry);
+        if (entry instanceof SdkOrderEntry) {
+          return LibraryScopeCache.getInstance(myProject).getScopeForSdk((SdkOrderEntry)entry);
         }
 
         if (entry instanceof LibraryOrderEntry) {

@@ -209,7 +209,7 @@ public class PackageUtil {
     @Override
     public boolean contains(VirtualFile file) {
       final OrderEntry orderEntry = ModuleRootManager.getInstance(myModule).getFileIndex().getOrderEntryForFile(file);
-      return orderEntry instanceof JdkOrderEntry || orderEntry instanceof LibraryOrderEntry;
+      return orderEntry instanceof SdkOrderEntry || orderEntry instanceof LibraryOrderEntry;
     }
 
     @Override

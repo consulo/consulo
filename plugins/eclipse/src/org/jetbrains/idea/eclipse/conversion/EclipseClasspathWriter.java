@@ -205,14 +205,14 @@ public class EclipseClasspathWriter {
         setExported(orderEntry, libraryOrderEntry);
       }
     }
-    else if (entry instanceof JdkOrderEntry) {
-      if (entry instanceof InheritedJdkOrderEntry) {
+    else if (entry instanceof SdkOrderEntry) {
+      if (entry instanceof InheritedSdkOrderEntry) {
         if (!EclipseModuleManagerImpl.getInstance(entry.getOwnerModule()).isForceConfigureJDK()) {
           addOrderEntry(EclipseXml.CON_KIND, EclipseXml.JRE_CONTAINER, classpathRoot);
         }
       }
       else {
-        final Sdk jdk = ((JdkOrderEntry)entry).getJdk();
+        final Sdk jdk = ((SdkOrderEntry)entry).getSdk();
         String jdkLink;
         if (jdk == null) {
           jdkLink = EclipseXml.JRE_CONTAINER;

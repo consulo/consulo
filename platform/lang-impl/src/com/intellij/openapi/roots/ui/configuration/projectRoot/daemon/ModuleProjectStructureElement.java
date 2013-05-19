@@ -58,7 +58,7 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
     final OrderEntry[] entries = rootModel.getOrderEntries();
     for (OrderEntry entry : entries) {
       if (!entry.isValid()){
-        if (entry instanceof JdkOrderEntry && ((JdkOrderEntry)entry).getJdkName() == null) {
+        if (entry instanceof SdkOrderEntry && ((SdkOrderEntry)entry).getSdkName() == null) {
           problemsHolder.registerProblem(ProjectBundle.message("project.roots.module.jdk.problem.message"), null, ProjectStructureProblemType.error("module-sdk-not-defined"), createPlace(entry),
                                          null);
         }
@@ -113,8 +113,8 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
                                                   libraryOrderEntry.getScope()));
           }
         }
-        else if (entry instanceof JdkOrderEntry) {
-          final Sdk jdk = ((JdkOrderEntry)entry).getJdk();
+        else if (entry instanceof SdkOrderEntry) {
+          final Sdk jdk = ((SdkOrderEntry)entry).getSdk();
           if (jdk != null) {
             usages.add(new UsageInModuleClasspath(myContext, this, new SdkProjectStructureElement(myContext, jdk), null));
           }

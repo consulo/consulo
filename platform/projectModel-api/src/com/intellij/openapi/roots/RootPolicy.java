@@ -36,15 +36,15 @@ public class RootPolicy<R> {
     return visitOrderEntry(moduleOrderEntry, value);
   }
 
-  public R visitJdkOrderEntry(JdkOrderEntry jdkOrderEntry, R value) {
-    return visitOrderEntry(jdkOrderEntry, value);
+  public R visitJdkOrderEntry(SdkOrderEntry sdkOrderEntry, R value) {
+    return visitOrderEntry(sdkOrderEntry, value);
   }
 
-  public R visitModuleJdkOrderEntry(ModuleJdkOrderEntry jdkOrderEntry, R value) {
+  public R visitModuleJdkOrderEntry(ModuleExtensionWithSdkOrderEntry jdkOrderEntry, R value) {
     return visitJdkOrderEntry(jdkOrderEntry, value);
   }
 
-  public R visitInheritedJdkOrderEntry(InheritedJdkOrderEntry inheritedJdkOrderEntry, R initialValue) {
+  public R visitInheritedJdkOrderEntry(InheritedSdkOrderEntry inheritedJdkOrderEntry, R initialValue) {
     return visitJdkOrderEntry(inheritedJdkOrderEntry, initialValue);
   }
 }

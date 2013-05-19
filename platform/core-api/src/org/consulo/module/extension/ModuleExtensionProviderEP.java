@@ -29,7 +29,8 @@ import java.util.List;
  * @since 11:45/19.05.13
  */
 public class ModuleExtensionProviderEP extends KeyedLazyInstanceEP<ModuleExtensionProvider> {
-  public static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtensionProvider");
+  public static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME =
+    ExtensionPointName.create("com.intellij.moduleExtensionProvider");
 
   @Attribute("parent-key")
   public String parentKey;
@@ -37,14 +38,24 @@ public class ModuleExtensionProviderEP extends KeyedLazyInstanceEP<ModuleExtensi
   @NotNull
   public static List<ModuleExtensionProvider> getProviders() {
     final ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();
-    if(extensions.length == 0) {
+    if (extensions.length == 0) {
       return Collections.emptyList();
     }
 
     List<ModuleExtensionProvider> list = new ArrayList<ModuleExtensionProvider>(extensions.length);
-    for(ModuleExtensionProviderEP ep : extensions) {
+    for (ModuleExtensionProviderEP ep : extensions) {
       list.add(ep.getInstance());
     }
     return list;
+  }
+
+  public static ModuleExtensionProvider findProvider(@NotNull String id) {
+    final ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();
+    for (ModuleExtensionProviderEP ep : extensions) {
+      if (ep.getKey().equals(id)) {
+        return ep.getInstance();
+      }
+    }
+    return null;
   }
 }

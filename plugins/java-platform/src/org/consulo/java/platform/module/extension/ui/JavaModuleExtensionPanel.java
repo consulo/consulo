@@ -15,10 +15,15 @@
  */
 package org.consulo.java.platform.module.extension.ui;
 
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.pom.java.LanguageLevel;
+import com.intellij.ui.ListCellRendererWrapper;
 import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * @author VISTALL
@@ -26,16 +31,41 @@ import javax.swing.*;
  */
 public class JavaModuleExtensionPanel extends JPanel {
   private final JavaMutableModuleExtension myMutableModuleExtension;
-  private JComboBox myLanguageLevelComboBox;
+  private final Runnable myClasspathStateUpdater;
+  private ComboBox myLanguageLevelComboBox;
   private ModuleExtensionWithSdkPanel myModuleExtensionWithSdkPanel;
   private JPanel myRoot;
 
-  public JavaModuleExtensionPanel(JavaMutableModuleExtension mutableModuleExtension) {
+  public JavaModuleExtensionPanel(JavaMutableModuleExtension mutableModuleExtension, Runnable classpathStateUpdater) {
     myMutableModuleExtension = mutableModuleExtension;
+    myClasspathStateUpdater = classpathStateUpdater;
   }
 
   private void createUIComponents() {
     myRoot = this;
-    myModuleExtensionWithSdkPanel = new ModuleExtensionWithSdkPanel(myMutableModuleExtension);
+    myModuleExtensionWithSdkPanel = new ModuleExtensionWithSdkPanel(myMutableModuleExtension, myClasspathStateUpdater);
+    myLanguageLevelComboBox = new ComboBox();
+    myLanguageLevelComboBox.setRenderer(new ListCellRendererWrapper() {
+      @Override
+      public void customize(final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
+        if (value instanceof LanguageLevel) {
+          setText(((LanguageLevel)value).getPresentableText());
+        }
+        else if (value instanceof String) {
+          setText((String)value);
+        }
+      }
+    });
+
+    for(LanguageLevel languageLevel : LanguageLevel.values()) {
+      myLanguageLevelComboBox.addItem(languageLevel);
+    }
+    myLanguageLevelComboBox.setSelectedItem(myMutableModuleExtension.getLanguageLevel());
+    myLanguageLevelComboBox.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        myMutableModuleExtension.setLanguageLevel((LanguageLevel)myLanguageLevelComboBox.getSelectedItem());
+      }
+    });
   }
 }

@@ -23,7 +23,7 @@ import com.intellij.openapi.module.LanguageLevelUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderEnumerator;
@@ -321,7 +321,7 @@ public class ModuleChunk extends Chunk<Module> {
 
     @Override
     public boolean value(OrderEntry orderEntry) {
-      if (orderEntry instanceof JdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
+      if (orderEntry instanceof SdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
         myJdkFound = true;
       }
       return !myJdkFound;
@@ -333,7 +333,7 @@ public class ModuleChunk extends Chunk<Module> {
 
     @Override
     public boolean value(OrderEntry orderEntry) {
-      if (orderEntry instanceof JdkOrderEntry) {
+      if (orderEntry instanceof SdkOrderEntry) {
         myJdkFound = true;
         return false;
       }

@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
@@ -166,8 +166,8 @@ public class MagicConstantInspection extends BaseJavaLocalInspectionTool {
     final List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(virtualFile);
     Sdk jdk = null;
     for (OrderEntry orderEntry : entries) {
-      if (orderEntry instanceof JdkOrderEntry) {
-        jdk = ((JdkOrderEntry)orderEntry).getJdk();
+      if (orderEntry instanceof SdkOrderEntry) {
+        jdk = ((SdkOrderEntry)orderEntry).getSdk();
         if (jdk != null) break;
       }
     }

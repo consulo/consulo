@@ -15,12 +15,15 @@
  */
 package com.intellij.openapi.roots.ui.configuration.extension;
 
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
+import com.intellij.openapi.roots.ui.configuration.ClasspathEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckedTreeNode;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionProviderEP;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,19 +36,25 @@ import java.util.Vector;
  */
 public class ExtensionCheckedTreeNode extends CheckedTreeNode {
   private final ModuleExtensionProviderEP myProviderEP;
+  @NotNull private final ModuleConfigurationState myState;
+  private final ClasspathEditor myClasspathEditor;
   private MutableModuleExtension<?> myExtension;
 
-  public ExtensionCheckedTreeNode(@Nullable ModuleExtensionProviderEP providerEP, @NotNull ModuleConfigurationState state) {
+  public ExtensionCheckedTreeNode(@Nullable ModuleExtensionProviderEP providerEP,
+                                  @NotNull ModuleConfigurationState state,
+                                  ClasspathEditor classpathEditor) {
     super(null);
     myProviderEP = providerEP;
+    myState = state;
+    myClasspathEditor = classpathEditor;
 
     String parentKey = null;
-    if(providerEP != null) {
+    if (providerEP != null) {
       parentKey = providerEP.key;
 
       final ModifiableRootModel model = state.getRootModel();
-      if(model != null) {
-        myExtension = (MutableModuleExtension) model.getExtensionWithoutCheck(providerEP.getInstance().getImmutableClass());
+      if (model != null) {
+        myExtension = (MutableModuleExtension)model.getExtensionWithoutCheck(providerEP.getInstance().getImmutableClass());
       }
     }
 
@@ -53,7 +62,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     Vector<ExtensionCheckedTreeNode> child = new Vector<ExtensionCheckedTreeNode>();
     for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       if (Comparing.equal(ep.parentKey, parentKey)) {
-        final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state);
+        final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myClasspathEditor);
         e.setParent(this);
 
         child.add(e);
@@ -66,10 +75,25 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
   @Override
   public void setChecked(boolean enabled) {
-    if(myExtension == null) {
+    if (myExtension == null) {
       return;
     }
     myExtension.setEnabled(enabled);
+    if (myExtension instanceof ModuleExtensionWithSdk) {
+      final ModifiableRootModel rootModel = myState.getRootModel();
+      if (rootModel == null) {
+        return;
+      }
+
+      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = rootModel.findModuleExtensionSdkEntry(myExtension);
+      if (sdkOrderEntry != null) {
+        rootModel.removeOrderEntry(sdkOrderEntry);
+      }
+      if (enabled) {
+        rootModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk)myExtension);
+      }
+      myClasspathEditor.moduleStateChanged();
+    }
   }
 
   @Override

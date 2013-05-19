@@ -72,23 +72,23 @@ public class OrderEntryUtil {
   }
 
   @Nullable
-  public static JdkOrderEntry findJdkOrderEntry(@NotNull ModuleRootModel model, @Nullable Sdk sdk) {
+  public static SdkOrderEntry findJdkOrderEntry(@NotNull ModuleRootModel model, @Nullable Sdk sdk) {
     if (sdk == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {
-      if (orderEntry instanceof JdkOrderEntry && sdk.equals(((JdkOrderEntry)orderEntry).getJdk())) {
-        return (JdkOrderEntry)orderEntry;
+      if (orderEntry instanceof SdkOrderEntry && sdk.equals(((SdkOrderEntry)orderEntry).getSdk())) {
+        return (SdkOrderEntry)orderEntry;
       }
     }
     return null;
   }
 
   public static boolean equals(OrderEntry orderEntry1, OrderEntry orderEntry2) {
-    if (orderEntry1 instanceof JdkOrderEntry && orderEntry2 instanceof JdkOrderEntry) {
-      final JdkOrderEntry jdkOrderEntry1 = (JdkOrderEntry)orderEntry1;
-      final JdkOrderEntry jdkOrderEntry2 = (JdkOrderEntry)orderEntry2;
-      return Comparing.equal(jdkOrderEntry1.getJdk(), jdkOrderEntry2.getJdk()) &&
-             Comparing.strEqual(jdkOrderEntry1.getJdkName(), jdkOrderEntry2.getJdkName());
+    if (orderEntry1 instanceof SdkOrderEntry && orderEntry2 instanceof SdkOrderEntry) {
+      final SdkOrderEntry sdkOrderEntry1 = (SdkOrderEntry)orderEntry1;
+      final SdkOrderEntry sdkOrderEntry2 = (SdkOrderEntry)orderEntry2;
+      return Comparing.equal(sdkOrderEntry1.getSdk(), sdkOrderEntry2.getSdk()) &&
+             Comparing.strEqual(sdkOrderEntry1.getSdkName(), sdkOrderEntry2.getSdkName());
     }
     if (orderEntry1 instanceof LibraryOrderEntry && orderEntry2 instanceof LibraryOrderEntry) {
       final LibraryOrderEntry jdkOrderEntry1 = (LibraryOrderEntry)orderEntry1;

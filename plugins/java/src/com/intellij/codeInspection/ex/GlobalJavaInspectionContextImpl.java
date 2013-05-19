@@ -130,9 +130,9 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
         final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         final OrderEntry[] entries = rootManager.getOrderEntries();
         for (OrderEntry entry : entries) {
-          if (entry instanceof JdkOrderEntry) {
+          if (entry instanceof SdkOrderEntry) {
             if (/*!ModuleType.get(module).isValidSdk(module, null)*/Boolean.FALSE) {
-              System.err.println(InspectionsBundle.message("offline.inspections.module.jdk.not.found", ((JdkOrderEntry)entry).getJdkName(),
+              System.err.println(InspectionsBundle.message("offline.inspections.module.jdk.not.found", ((SdkOrderEntry)entry).getSdkName(),
                                                            module.getName()));
               return false;
             }

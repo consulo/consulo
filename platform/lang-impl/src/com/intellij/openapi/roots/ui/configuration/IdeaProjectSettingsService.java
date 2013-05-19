@@ -21,7 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
@@ -129,8 +129,8 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
     ShowSettingsUtil.getInstance().editConfigurable(myProject, config, new Runnable() {
       @Override
       public void run() {
-        if (orderEntry instanceof JdkOrderEntry) {
-          config.select(((JdkOrderEntry)orderEntry).getJdk(), true);
+        if (orderEntry instanceof SdkOrderEntry) {
+          config.select(((SdkOrderEntry)orderEntry).getSdk(), true);
         } else {
           config.select((LibraryOrderEntry)orderEntry, true);
         }

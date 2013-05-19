@@ -18,6 +18,7 @@ package org.consulo.java.platform.module.extension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.pom.java.LanguageLevel;
 import org.consulo.java.platform.module.extension.ui.JavaModuleExtensionPanel;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
@@ -42,13 +43,17 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
 
   @Nullable
   @Override
-  public JComponent createConfigurablePanel() {
-    return new JavaModuleExtensionPanel(this);
+  public JComponent createConfigurablePanel(@Nullable Runnable classpathStateUpdater) {
+    return new JavaModuleExtensionPanel(this, classpathStateUpdater);
   }
 
   @Override
   public void setEnabled(boolean val) {
     myIsEnabled = val;
+  }
+
+  public void setLanguageLevel(@NotNull LanguageLevel languageLevel) {
+    myLanguageLevel = languageLevel;
   }
 
   @Override
@@ -57,6 +62,9 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
       return true;
     }
     if(!Comparing.equal(mySdkName, myModuleExtension.getSdkName())) {
+      return true;
+    }
+    if(!myLanguageLevel.equals(myModuleExtension.getLanguageLevel())) {
       return true;
     }
     return false;

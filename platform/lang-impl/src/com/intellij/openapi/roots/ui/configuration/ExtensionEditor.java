@@ -40,12 +40,14 @@ import java.util.List;
  */
 public class ExtensionEditor extends ModuleElementsEditor {
   private final ModuleConfigurationState myState;
+  private final ClasspathEditor myClasspathEditor;
   private JPanel myRootPane;
   private CheckboxTree myTree;
 
-  public ExtensionEditor(ModuleConfigurationState state) {
+  public ExtensionEditor(ModuleConfigurationState state, ClasspathEditor e) {
     super(state);
     myState = state;
+    myClasspathEditor = e;
   }
 
   @NotNull
@@ -53,7 +55,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   protected JComponent createComponentImpl() {
     myRootPane = new JPanel(new BorderLayout());
 
-    myTree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState),
+    myTree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, myClasspathEditor),
                                                new CheckboxTreeBase.CheckPolicy(true, true, false, true));
     myTree.setRootVisible(false);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -82,7 +84,12 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   private JComponent createPanel(MutableModuleExtension<?> extension) {
-    final JComponent configurablePanel = extension == null ? null : extension.createConfigurablePanel();
+    final JComponent configurablePanel = extension == null ? null : extension.createConfigurablePanel(new Runnable() {
+      @Override
+      public void run() {
+        myClasspathEditor.moduleStateChanged();
+      }
+    });
     if (configurablePanel == null) {
       return myTree;
     }

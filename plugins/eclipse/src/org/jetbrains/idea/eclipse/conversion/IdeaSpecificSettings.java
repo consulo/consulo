@@ -341,13 +341,13 @@ public class IdeaSpecificSettings extends AbstractIdeaSpecificSettings<Modifiabl
           isModified = true;
         }
       }
-      if (entry instanceof JdkOrderEntry) {
-        final Sdk jdk = ((JdkOrderEntry)entry).getJdk();
+      if (entry instanceof SdkOrderEntry) {
+        final Sdk jdk = ((SdkOrderEntry)entry).getSdk();
         if (EclipseModuleManagerImpl.getInstance(entry.getOwnerModule()).getInvalidJdk() != null || jdk != null) {
-          if (entry instanceof InheritedJdkOrderEntry) {
+          if (entry instanceof InheritedSdkOrderEntry) {
             root.setAttribute(INHERIT_JDK, "true");
           } else {
-            root.setAttribute("jdk", ((JdkOrderEntry)entry).getJdkName());
+            root.setAttribute("jdk", ((SdkOrderEntry)entry).getSdkName());
             if (jdk != null) {
               root.setAttribute("jdk_type", jdk.getSdkType().getName());
             }

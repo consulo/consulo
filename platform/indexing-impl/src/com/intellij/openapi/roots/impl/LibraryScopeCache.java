@@ -20,7 +20,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.scopes.JdkScope;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
@@ -62,12 +62,12 @@ public class LibraryScopeCache {
     return ConcurrencyUtil.cacheOrGet(myLibraryScopes, modulesLibraryIsUsedIn, newScope);
   }
 
-  public GlobalSearchScope getScopeForSdk(final JdkOrderEntry jdkOrderEntry) {
-    final String jdk = jdkOrderEntry.getJdkName();
+  public GlobalSearchScope getScopeForSdk(final SdkOrderEntry sdkOrderEntry) {
+    final String jdk = sdkOrderEntry.getSdkName();
     if (jdk == null) return GlobalSearchScope.allScope(myProject);
     GlobalSearchScope scope = mySdkScopes.get(jdk);
     if (scope == null) {
-      return ConcurrencyUtil.cacheOrGet(mySdkScopes, jdk, new JdkScope(myProject, jdkOrderEntry));
+      return ConcurrencyUtil.cacheOrGet(mySdkScopes, jdk, new JdkScope(myProject, sdkOrderEntry));
     }
     return scope;
   }

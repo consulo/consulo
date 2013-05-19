@@ -39,7 +39,7 @@ public class NamedLibraryUrl extends AbstractUrl {
     final Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
     if (module == null) return null;
     for (OrderEntry orderEntry : ModuleRootManager.getInstance(module).getOrderEntries()) {
-      if (orderEntry instanceof LibraryOrderEntry || orderEntry instanceof JdkOrderEntry && orderEntry.getPresentableName().equals(url)) {
+      if (orderEntry instanceof LibraryOrderEntry || orderEntry instanceof SdkOrderEntry && orderEntry.getPresentableName().equals(url)) {
         return new Object[]{new NamedLibraryElement(module, (LibraryOrSdkOrderEntry)orderEntry)};
       }
     }

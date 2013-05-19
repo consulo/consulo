@@ -55,7 +55,7 @@ public class AnnotationOrderRootType extends PersistentOrderRootType {
       }
 
       @Override
-      public List<VirtualFile> visitJdkOrderEntry(final JdkOrderEntry orderEntry, final List<VirtualFile> value) {
+      public List<VirtualFile> visitJdkOrderEntry(final SdkOrderEntry orderEntry, final List<VirtualFile> value) {
         Collections.addAll(value, orderEntry.getRootFiles(getInstance()));
         return value;
       }
@@ -82,7 +82,7 @@ public class AnnotationOrderRootType extends PersistentOrderRootType {
       }
 
       @Override
-      public List<String> visitJdkOrderEntry(final JdkOrderEntry orderEntry, final List<String> value) {
+      public List<String> visitJdkOrderEntry(final SdkOrderEntry orderEntry, final List<String> value) {
         Collections.addAll(value, orderEntry.getRootUrls(getInstance()));
         return value;
       }

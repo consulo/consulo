@@ -76,7 +76,7 @@ public class JavaParameters extends SimpleJavaParameters {
       @NotNull
       @Override
       public VirtualFile[] fun(OrderEntry orderEntry) {
-          if (orderEntry instanceof JdkOrderEntry) {
+          if (orderEntry instanceof SdkOrderEntry) {
             return jdk.getRootProvider().getFiles(OrderRootType.CLASSES);
           }
           return orderEntry.getFiles(OrderRootType.CLASSES);

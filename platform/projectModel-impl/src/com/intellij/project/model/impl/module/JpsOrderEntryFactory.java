@@ -38,7 +38,7 @@ public class JpsOrderEntryFactory {
         return new JpsInheritedSdkOrderEntry(model, sdkDependency);
       }
       else {
-        return new JpsModuleSdkOrderEntry(model, sdkDependency);
+        return new JpsModuleExtensionWithSdkOrderEntry(model, sdkDependency);
       }
     }
     throw new UnsupportedOperationException();

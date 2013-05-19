@@ -17,7 +17,7 @@ package com.intellij.packageDependencies.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.psi.PsiFile;
 
@@ -69,6 +69,6 @@ public class LibraryNode extends PackageDependenciesNode {
   }
 
   public Icon getIcon() {
-    return myLibraryOrJdk instanceof JdkOrderEntry ? AllIcons.Nodes.PpJdk : AllIcons.Nodes.PpLibFolder;
+    return myLibraryOrJdk instanceof SdkOrderEntry ? AllIcons.Nodes.PpJdk : AllIcons.Nodes.PpLibFolder;
   }
 }

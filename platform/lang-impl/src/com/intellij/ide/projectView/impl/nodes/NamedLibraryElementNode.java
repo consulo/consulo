@@ -57,8 +57,8 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     return "Library: " + getValue().getName();
   }
 
-  private static Icon getJdkIcon(JdkOrderEntry entry) {
-    final Sdk sdk = entry.getJdk();
+  private static Icon getJdkIcon(SdkOrderEntry entry) {
+    final Sdk sdk = entry.getSdk();
     if (sdk == null) {
       return AllIcons.General.Jdk;
     }
@@ -97,11 +97,11 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   public void update(PresentationData presentation) {
     presentation.setPresentableText(getValue().getName());
     final OrderEntry orderEntry = getValue().getOrderEntry();
-    Icon closedIcon = orderEntry instanceof JdkOrderEntry ? getJdkIcon((JdkOrderEntry)orderEntry) : AllIcons.Nodes.PpLibFolder;
+    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? getJdkIcon((SdkOrderEntry)orderEntry) : AllIcons.Nodes.PpLibFolder;
     presentation.setIcon(closedIcon);
-    if (orderEntry instanceof JdkOrderEntry) {
-      final JdkOrderEntry jdkOrderEntry = (JdkOrderEntry)orderEntry;
-      final Sdk projectJdk = jdkOrderEntry.getJdk();
+    if (orderEntry instanceof SdkOrderEntry) {
+      final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
+      final Sdk projectJdk = sdkOrderEntry.getSdk();
       if (projectJdk != null) { //jdk not specified
         final String path = projectJdk.getHomePath();
         if (path != null) {

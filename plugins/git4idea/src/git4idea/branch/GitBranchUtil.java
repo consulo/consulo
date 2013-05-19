@@ -460,7 +460,7 @@ public class GitBranchUtil {
     List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
     Set<VirtualFile> libraryRoots = new HashSet<VirtualFile>();
     for (OrderEntry entry : entries) {
-      if (entry instanceof LibraryOrderEntry || entry instanceof JdkOrderEntry) {
+      if (entry instanceof LibraryOrderEntry || entry instanceof SdkOrderEntry) {
         VirtualFile moduleRoot = vcsManager.getVcsRootFor(entry.getOwnerModule().getModuleFile());
         if (moduleRoot != null) {
           libraryRoots.add(moduleRoot);

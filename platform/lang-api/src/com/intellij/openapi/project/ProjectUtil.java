@@ -23,7 +23,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.InternalFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.SystemInfo;
@@ -95,8 +95,8 @@ public class ProjectUtil {
         if (fileForJar != null) {
           final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
           if (libraryEntry != null) {
-            if (libraryEntry instanceof JdkOrderEntry) {
-              url = url + " - [" + ((JdkOrderEntry)libraryEntry).getJdkName() + "]";
+            if (libraryEntry instanceof SdkOrderEntry) {
+              url = url + " - [" + ((SdkOrderEntry)libraryEntry).getSdkName() + "]";
             } else {
               url = url + " - [" + libraryEntry.getPresentableName() + "]";
             }

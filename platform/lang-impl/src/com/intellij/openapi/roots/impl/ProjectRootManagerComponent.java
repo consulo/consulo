@@ -265,9 +265,9 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
             }
           }
         }
-        else if (entry instanceof JdkOrderEntry) {
+        else if (entry instanceof SdkOrderEntry) {
           for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-            addRootsToTrack(((JdkOrderEntry)entry).getRootUrls(orderRootType), recursive, flat);
+            addRootsToTrack(((SdkOrderEntry)entry).getRootUrls(orderRootType), recursive, flat);
           }
         }
       }

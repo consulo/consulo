@@ -55,11 +55,11 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @NotNull
   @Override
   public CellAppearanceEx forOrderEntry(Project project, @NotNull final OrderEntry orderEntry, final boolean selected) {
-    if (orderEntry instanceof JdkOrderEntry) {
-      JdkOrderEntry jdkLibraryEntry = (JdkOrderEntry)orderEntry;
-      Sdk jdk = jdkLibraryEntry.getJdk();
+    if (orderEntry instanceof SdkOrderEntry) {
+      SdkOrderEntry jdkLibraryEntry = (SdkOrderEntry)orderEntry;
+      Sdk jdk = jdkLibraryEntry.getSdk();
       if (!orderEntry.isValid()) {
-        final String oldJdkName = jdkLibraryEntry.getJdkName();
+        final String oldJdkName = jdkLibraryEntry.getSdkName();
         return FileAppearanceService.getInstance().forInvalidUrl(oldJdkName != null ? oldJdkName : NO_JDK);
       }
       return forJdk(jdk, false, selected, true);

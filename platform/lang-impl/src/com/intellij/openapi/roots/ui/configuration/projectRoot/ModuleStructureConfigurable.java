@@ -879,7 +879,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
               modifiableRootModel.getModuleExtensionOld(CompilerModuleExtension.class).inheritCompilerOutputPath(true);
 
               for (OrderEntry entry : rootModel.getOrderEntries()) {
-                if (entry instanceof JdkOrderEntry) continue;
+                if (entry instanceof SdkOrderEntry) continue;
                 if (entry instanceof ModuleSourceOrderEntry) continue;
                 if (entry instanceof ClonableOrderEntry) {
                   modifiableRootModel.addOrderEntry(((ClonableOrderEntry)entry).cloneEntry((RootModelImpl)modifiableRootModel,

@@ -177,11 +177,11 @@ public class ProjectRootsTraversing {
     }
 
     @Override
-    public TraverseState visitJdkOrderEntry(JdkOrderEntry jdkOrderEntry, TraverseState state) {
+    public TraverseState visitJdkOrderEntry(SdkOrderEntry sdkOrderEntry, TraverseState state) {
       Boolean jdkProcessed = state.getUserData(JDK_PROCESSED);
       if (jdkProcessed != null && jdkProcessed.booleanValue()) return state;
       state.putUserData(JDK_PROCESSED, Boolean.TRUE);
-      if (myVisitJdk != null) myVisitJdk.visit(jdkOrderEntry, state, this);
+      if (myVisitJdk != null) myVisitJdk.visit(sdkOrderEntry, state, this);
       return state;
     }
 

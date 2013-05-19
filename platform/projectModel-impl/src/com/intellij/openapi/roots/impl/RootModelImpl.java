@@ -20,10 +20,6 @@ import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionProvider;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
-import org.consulo.module.extension.MutableModuleExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
@@ -36,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.module.extension.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -97,32 +94,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     myModuleLibraryTable = new ModuleLibraryTable(this, myProjectRootManager);
 
-    final List contentChildren = element.getChildren(ContentEntryImpl.ELEMENT_NAME);
-    for (Object aContentChildren : contentChildren) {
-      Element child = (Element)aContentChildren;
-      ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
-      myContent.add(contentEntry);
-    }
-
-    final List orderElements = element.getChildren(OrderEntryFactory.ORDER_ENTRY_ELEMENT_NAME);
-    boolean moduleSourceAdded = false;
-    for (Object orderElement : orderElements) {
-      Element child = (Element)orderElement;
-      final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this, myProjectRootManager);
-      if (orderEntry instanceof ModuleSourceOrderEntry) {
-        if (moduleSourceAdded) continue;
-        moduleSourceAdded = true;
-      }
-      myOrderEntries.add(orderEntry);
-    }
-
-    if (!moduleSourceAdded) {
-      myOrderEntries.add(new ModuleSourceOrderEntryImpl(this));
-    }
-
-
-    myWritable = true;
-
     RootModelImpl originalRootModel = moduleRootManager.getRootModel();
 
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
@@ -136,6 +107,33 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
       myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
     }
+
+    final List<Element> contentChildren = element.getChildren(ContentEntryImpl.ELEMENT_NAME);
+    for (Element child : contentChildren) {
+      ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
+      myContent.add(contentEntry);
+    }
+
+    final List<Element> orderElements = element.getChildren(OrderEntryFactory.ORDER_ENTRY_ELEMENT_NAME);
+    boolean moduleSourceAdded = false;
+    for (Element child : orderElements) {
+      final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this, myProjectRootManager);
+      if (orderEntry instanceof ModuleSourceOrderEntry) {
+        if (moduleSourceAdded) {
+          continue;
+        }
+        moduleSourceAdded = true;
+      }
+      myOrderEntries.add(orderEntry);
+    }
+
+    if (!moduleSourceAdded) {
+      myOrderEntries.add(new ModuleSourceOrderEntryImpl(this));
+    }
+
+
+    myWritable = true;
+
     myConfigurationAccessor = new RootConfigurationAccessor();
   }
 
@@ -247,6 +245,17 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   @NotNull
   @Override
+  public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@NotNull ModuleExtensionWithSdk<?> moduleExtension) {
+    assertWritable();
+    final ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry =
+      new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension, this, myProjectRootManager);
+    assert moduleSdkOrderEntry.isValid();
+    myOrderEntries.add(moduleSdkOrderEntry);
+    return moduleSdkOrderEntry;
+  }
+
+  @NotNull
+  @Override
   public LibraryOrderEntry addInvalidLibrary(@NotNull String name, @NotNull String level) {
     assertWritable();
     final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this, myProjectRootManager);
@@ -281,6 +290,17 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (OrderEntry orderEntry : getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry && library.equals(((LibraryOrderEntry)orderEntry).getLibrary())) {
         return (LibraryOrderEntry)orderEntry;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@NotNull ModuleExtension extension) {
+    for (OrderEntry orderEntry : getOrderEntries()) {
+      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry &&
+          extension.getId().equals(((ModuleExtensionWithSdkOrderEntry)orderEntry).getModuleExtensionId())) {
+        return (ModuleExtensionWithSdkOrderEntry)orderEntry;
       }
     }
     return null;
@@ -369,7 +389,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
 
     for (ModuleExtension<?> extension : myExtensions) {
-      MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
+      MutableModuleExtension<?> mutableExtension = (MutableModuleExtension)extension;
       if (mutableExtension.isModified()) {
         mutableExtension.commit();
       }
@@ -457,8 +477,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   public String getSdkName() {
     for (OrderEntry orderEntry : getOrderEntries()) {
-      if (orderEntry instanceof JdkOrderEntry) {
-        return ((JdkOrderEntry)orderEntry).getJdkName();
+      if (orderEntry instanceof SdkOrderEntry) {
+        return ((SdkOrderEntry)orderEntry).getSdkName();
       }
     }
     return null;
@@ -542,17 +562,17 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   private static boolean orderEntriesEquals(@NotNull OrderEntry orderEntry1, @NotNull OrderEntry orderEntry2) {
     if (!((OrderEntryBaseImpl)orderEntry1).sameType(orderEntry2)) return false;
-    if (orderEntry1 instanceof JdkOrderEntry) {
-      if (!(orderEntry2 instanceof JdkOrderEntry)) return false;
-      if (orderEntry1 instanceof InheritedJdkOrderEntry && orderEntry2 instanceof ModuleJdkOrderEntry) {
+    if (orderEntry1 instanceof SdkOrderEntry) {
+      if (!(orderEntry2 instanceof SdkOrderEntry)) return false;
+      if (orderEntry1 instanceof InheritedSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
         return false;
       }
-      if (orderEntry2 instanceof InheritedJdkOrderEntry && orderEntry1 instanceof ModuleJdkOrderEntry) {
+      if (orderEntry2 instanceof InheritedSdkOrderEntry && orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry) {
         return false;
       }
-      if (orderEntry1 instanceof ModuleJdkOrderEntry && orderEntry2 instanceof ModuleJdkOrderEntry) {
-        String name1 = ((ModuleJdkOrderEntry)orderEntry1).getJdkName();
-        String name2 = ((ModuleJdkOrderEntry)orderEntry2).getJdkName();
+      if (orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
+        String name1 = ((ModuleExtensionWithSdkOrderEntry)orderEntry1).getSdkName();
+        String name2 = ((ModuleExtensionWithSdkOrderEntry)orderEntry2).getSdkName();
         if (!Comparing.strEqual(name1, name2)) {
           return false;
         }
@@ -722,7 +742,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
     final T extensionWithoutCheck = getExtensionWithoutCheck(clazz);
-    if(extensionWithoutCheck != null && extensionWithoutCheck.isEnabled()) {
+    if (extensionWithoutCheck != null && extensionWithoutCheck.isEnabled()) {
       return extensionWithoutCheck;
     }
     return null;

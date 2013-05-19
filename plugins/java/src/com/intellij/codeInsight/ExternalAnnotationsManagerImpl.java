@@ -504,8 +504,8 @@ public class ExternalAnnotationsManagerImpl extends ReadableExternalAnnotationsM
       extension.setExternalAnnotationUrls(ArrayUtil.mergeArrays(extension.getExternalAnnotationsUrls(), vFile.getUrl()));
       model.commit();
     }
-    else if (entry instanceof JdkOrderEntry) {
-      final SdkModificator sdkModificator = ((JdkOrderEntry)entry).getJdk().getSdkModificator();
+    else if (entry instanceof SdkOrderEntry) {
+      final SdkModificator sdkModificator = ((SdkOrderEntry)entry).getSdk().getSdkModificator();
       sdkModificator.addRoot(vFile, AnnotationOrderRootType.getInstance());
       sdkModificator.commitChanges();
     }

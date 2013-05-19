@@ -123,8 +123,8 @@ public class LibraryUtil {
             }
             ContainerUtil.addAll(roots, files);
           }
-        } else if (includeJdk && entry instanceof JdkOrderEntry) {
-          JdkOrderEntry jdkEntry = (JdkOrderEntry)entry;
+        } else if (includeJdk && entry instanceof SdkOrderEntry) {
+          SdkOrderEntry jdkEntry = (SdkOrderEntry)entry;
           VirtualFile[] files = includeSourceFiles ? jdkEntry.getRootFiles(OrderRootType.SOURCES) : null;
           if (files == null || files.length == 0) {
             files = jdkEntry.getRootFiles(OrderRootType.CLASSES);
@@ -156,7 +156,7 @@ public class LibraryUtil {
   public static OrderEntry findLibraryEntry(VirtualFile file, final Project project) {
     List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
     for (OrderEntry entry : entries) {
-      if (entry instanceof LibraryOrderEntry || entry instanceof JdkOrderEntry) {
+      if (entry instanceof LibraryOrderEntry || entry instanceof SdkOrderEntry) {
         return entry;
       }
     }

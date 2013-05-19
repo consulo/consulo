@@ -12,6 +12,7 @@
     <orderEntry type="module" module-name="jps-model-api" />
     <orderEntry type="module" module-name="jps-model-impl" />
     <orderEntry type="module" module-name="jps-model-serialization" exported="" />
+    <orderEntry type="module" module-name="lang-impl" />
   </component>
 </module>
 

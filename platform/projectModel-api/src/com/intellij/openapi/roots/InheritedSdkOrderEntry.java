@@ -18,5 +18,5 @@ package com.intellij.openapi.roots;
 /**
  * @author dsl
  */
-public interface ModuleJdkOrderEntry extends JdkOrderEntry {
+public interface InheritedSdkOrderEntry extends SdkOrderEntry {
 }

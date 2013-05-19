@@ -16,7 +16,7 @@
 package com.intellij.psi.util.proximity;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -42,7 +42,7 @@ public class SdkOrLibraryWeigher extends ProximityWeigher {
     final VirtualFile file = PsiUtilCore.getVirtualFile(element);
     if (file != null) {
       List<OrderEntry> orderEntries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
-      if (!orderEntries.isEmpty() && orderEntries.get(0) instanceof JdkOrderEntry) {
+      if (!orderEntries.isEmpty() && orderEntries.get(0) instanceof SdkOrderEntry) {
         return true;
       }
     }

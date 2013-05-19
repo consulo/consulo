@@ -191,7 +191,7 @@ public class EclipseClasspathReader extends AbstractEclipseClasspathReader<Modif
         unknownJdks.add(jdkName);
       }
     }
-    rearrangeOrderEntryOfType(rootModel, JdkOrderEntry.class);
+    rearrangeOrderEntryOfType(rootModel, SdkOrderEntry.class);
   }
 
   @Override

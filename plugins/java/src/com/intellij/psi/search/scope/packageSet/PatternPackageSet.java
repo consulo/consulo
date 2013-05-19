@@ -169,8 +169,8 @@ public class PatternPackageSet extends PatternBasedPackageSet {
             final String fileName = new File(presentableName).getName();
             if (libPattern.matcher(fileName).matches()) return true;
           }
-        } else if (orderEntry instanceof JdkOrderEntry) {
-          final String jdkName = ((JdkOrderEntry)orderEntry).getJdkName();
+        } else if (orderEntry instanceof SdkOrderEntry) {
+          final String jdkName = ((SdkOrderEntry)orderEntry).getSdkName();
           if (jdkName != null && libPattern.matcher(jdkName).matches()) return true;
         }
       }

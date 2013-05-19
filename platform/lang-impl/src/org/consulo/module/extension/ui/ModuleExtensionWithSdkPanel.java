@@ -34,18 +34,21 @@ import java.awt.event.ItemListener;
  */
 public class ModuleExtensionWithSdkPanel extends JPanel {
   private final MutableModuleExtensionWithSdk<?> myExtensionWithSdk;
+  private final Runnable myClasspathStateUpdater;
   private JPanel myRoot;
   private SdkComboBox mySdkComboBox;
 
-  public ModuleExtensionWithSdkPanel(MutableModuleExtensionWithSdk<?> extensionWithSdk) {
+  public ModuleExtensionWithSdkPanel(MutableModuleExtensionWithSdk<?> extensionWithSdk, Runnable classpathStateUpdater) {
     myExtensionWithSdk = extensionWithSdk;
+    myClasspathStateUpdater = classpathStateUpdater;
   }
 
   private void createUIComponents() {
     myRoot = this;
 
     final SdkType sdkType = myExtensionWithSdk.getSdkType();
-    final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject()).getProjectJdksModel();
+    final ProjectSdksModel projectJdksModel =
+      ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject()).getProjectJdksModel();
     mySdkComboBox = new SdkComboBox(projectJdksModel, new Condition<SdkTypeId>() {
       @Override
       public boolean value(SdkTypeId sdkTypeId) {
@@ -54,7 +57,7 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
     });
 
     final Sdk sdk = myExtensionWithSdk.getSdk();
-    if(sdk == null) {
+    if (sdk == null) {
       mySdkComboBox.setInvalidJdk(myExtensionWithSdk.getSdkName());
     }
     else {
@@ -64,7 +67,10 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
     mySdkComboBox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
-       myExtensionWithSdk.setSdk(mySdkComboBox.getSelectedJdk());
+        myExtensionWithSdk.setSdk(mySdkComboBox.getSelectedJdk());
+        if(myClasspathStateUpdater != null) {
+          SwingUtilities.invokeLater(myClasspathStateUpdater);
+        }
       }
     });
   }

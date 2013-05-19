@@ -43,7 +43,7 @@ public class JavadocOrderRootType extends PersistentOrderRootType {
       }
 
       @Override
-      public List<String> visitJdkOrderEntry(final JdkOrderEntry orderEntry, final List<String> value) {
+      public List<String> visitJdkOrderEntry(final SdkOrderEntry orderEntry, final List<String> value) {
         Collections.addAll(value, orderEntry.getRootUrls(getInstance()));
         return value;
       }

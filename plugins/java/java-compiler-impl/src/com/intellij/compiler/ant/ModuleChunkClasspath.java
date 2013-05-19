@@ -118,7 +118,7 @@ public class ModuleChunkClasspath extends Path {
                 }
               }
 
-              if (orderEntry instanceof JdkOrderEntry) {
+              if (orderEntry instanceof SdkOrderEntry) {
                 if (genOptions.forceTargetJdk && !generateRuntimeClasspath) {
                   pathItems
                     .add(new PathRefItem(BuildProperties.propertyRef(BuildProperties.getModuleChunkJdkClasspathProperty(chunk.getName()))));

@@ -26,7 +26,7 @@ import javax.swing.*;
  * @since 10:32/19.05.13
  */
 public interface ModuleExtensionProvider<ImmutableModel extends ModuleExtension, MutableModel extends MutableModuleExtension> {
-   @Nullable
+  @Nullable
   Icon getIcon();
 
   @NotNull

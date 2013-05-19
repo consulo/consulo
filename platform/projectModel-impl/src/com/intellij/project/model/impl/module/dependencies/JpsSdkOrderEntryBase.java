@@ -16,7 +16,7 @@
 package com.intellij.project.model.impl.module.dependencies;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.project.model.JpsSdkManager;
@@ -30,13 +30,13 @@ import org.jetbrains.jps.model.module.JpsSdkDependency;
 /**
  * @author nik
  */
-public abstract class JpsSdkOrderEntryBase extends JpsOrderEntry<JpsSdkDependency> implements JdkOrderEntry {
+public abstract class JpsSdkOrderEntryBase extends JpsOrderEntry<JpsSdkDependency> implements SdkOrderEntry {
   public JpsSdkOrderEntryBase(JpsRootModel rootModel, JpsSdkDependency dependencyElement) {
     super(rootModel, dependencyElement);
   }
 
   @Override
-  public String getJdkName() {
+  public String getSdkName() {
     final JpsSdkReference<?> reference = myDependencyElement.getSdkReference();
     return reference != null ? reference.getSdkName() : null;
   }
@@ -54,7 +54,7 @@ public abstract class JpsSdkOrderEntryBase extends JpsOrderEntry<JpsSdkDependenc
   }
 
   @Override
-  public Sdk getJdk() {
+  public Sdk getSdk() {
     final JpsLibrary library = myDependencyElement.resolveSdk();
     if (library == null) return null;
     return JpsSdkManager.getInstance().getSdk(library);
@@ -63,19 +63,19 @@ public abstract class JpsSdkOrderEntryBase extends JpsOrderEntry<JpsSdkDependenc
   @NotNull
   @Override
   public String getPresentableName() {
-    return "< " + getJdkName() + " >";
+    return "< " + getSdkName() + " >";
   }
 
   @Override
   public VirtualFile[] getRootFiles(OrderRootType type) {
-    final Sdk sdk = getJdk();
+    final Sdk sdk = getSdk();
     if (sdk == null) return VirtualFile.EMPTY_ARRAY;
     return sdk.getRootProvider().getFiles(type);
   }
 
   @Override
   public String[] getRootUrls(OrderRootType type) {
-    final Sdk jdk = getJdk();
+    final Sdk jdk = getSdk();
     if (jdk == null) return ArrayUtil.EMPTY_STRING_ARRAY;
     return jdk.getRootProvider().getUrls(type);
   }

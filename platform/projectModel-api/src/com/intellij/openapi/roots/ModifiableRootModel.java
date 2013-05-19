@@ -20,6 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,6 +77,9 @@ public interface ModifiableRootModel extends ModuleRootModel {
   @NotNull
   LibraryOrderEntry addLibraryEntry(@NotNull Library library);
 
+  @NotNull
+  ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@NotNull ModuleExtensionWithSdk<?> moduleExtension);
+
   /**
    * Adds an entry for invalid library.
    *
@@ -93,6 +98,9 @@ public interface ModifiableRootModel extends ModuleRootModel {
 
   @Nullable
   LibraryOrderEntry findLibraryOrderEntry(@NotNull Library library);
+
+  @Nullable
+  ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@NotNull ModuleExtension extension);
 
   /**
    * Removes order entry from an order.

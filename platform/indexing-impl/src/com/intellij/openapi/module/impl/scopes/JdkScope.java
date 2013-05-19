@@ -17,7 +17,7 @@
 package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.JdkOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 
 /**
@@ -26,9 +26,9 @@ import com.intellij.openapi.roots.OrderRootType;
 public class JdkScope extends LibraryScopeBase {
   private final String myJdkName;
 
-  public JdkScope(Project project, JdkOrderEntry jdk) {
+  public JdkScope(Project project, SdkOrderEntry jdk) {
     super(project, jdk.getRootFiles(OrderRootType.CLASSES), jdk.getRootFiles(OrderRootType.SOURCES));
-    myJdkName = jdk.getJdkName();
+    myJdkName = jdk.getSdkName();
   }
 
   public int hashCode() {

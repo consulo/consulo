@@ -35,26 +35,8 @@ public enum LanguageLevel {
 
   private final String myPresentableText;
 
-  private LanguageLevel(final String presentableText) {
+  LanguageLevel(final String presentableText) {
     myPresentableText = presentableText;
-  }
-
-  /** @deprecated (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public int getIndex() {
-    return ordinal() + 3;  // solely for backward compatibility
-  }
-
-  /** @deprecated (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public boolean hasAssertKeyword() {
-    return isAtLeast(JDK_1_4);
-  }
-
-  /** @deprecated use {@linkplain com.intellij.psi.util.PsiUtil#isLanguageLevel5OrHigher(com.intellij.psi.PsiElement)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public boolean hasEnumKeywordAndAutoboxing() {
-    return isAtLeast(JDK_1_5);
   }
 
   public String getPresentableText() {
