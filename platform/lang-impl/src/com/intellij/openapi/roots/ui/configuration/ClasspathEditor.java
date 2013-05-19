@@ -94,6 +94,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
     }
   }
 
+  @NotNull
   @Override
   public JComponent createComponentImpl() {
     myPanel = new ClasspathPanelImpl(getState());
