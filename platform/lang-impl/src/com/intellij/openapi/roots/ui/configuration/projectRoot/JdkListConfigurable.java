@@ -227,10 +227,15 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
   public void apply() throws ConfigurationException {
     boolean modifiedJdks = false;
     for (int i = 0; i < myRoot.getChildCount(); i++) {
-      final NamedConfigurable configurable = ((MyNode)myRoot.getChildAt(i)).getConfigurable();
-      if (configurable.isModified()) {
-        configurable.apply();
-        modifiedJdks = true;
+      final TreeNode groupNode = myRoot.getChildAt(i);
+
+      for(int k = 0; k < groupNode.getChildCount(); k ++) {
+        final MyNode sdkNode = (MyNode) groupNode.getChildAt(k);
+        final NamedConfigurable configurable = sdkNode.getConfigurable();
+        if (configurable.isModified()) {
+          configurable.apply();
+          modifiedJdks = true;
+        }
       }
     }
 
