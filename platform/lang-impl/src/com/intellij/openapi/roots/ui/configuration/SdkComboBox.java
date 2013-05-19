@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.util.projectWizard.ProjectJdkListRenderer;
+import com.intellij.ide.util.projectWizard.ProjectSdkListRenderer;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -49,7 +49,7 @@ import java.util.List;
  * @author Eugene Zhuravlev
  * @since May 18, 2005
  */
-public class JdkComboBox extends ComboBoxWithWidePopup {
+public class SdkComboBox extends ComboBoxWithWidePopup {
 
   private static final Icon EMPTY_ICON = EmptyIcon.create(1, 16);
 
@@ -58,31 +58,30 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
   @Nullable
   private final Condition<SdkTypeId> myCreationFilter;
 
-  public JdkComboBox(@NotNull final ProjectSdksModel jdkModel) {
+  public SdkComboBox(@NotNull final ProjectSdksModel jdkModel) {
     this(jdkModel, null);
   }
 
-  public JdkComboBox(@NotNull final ProjectSdksModel jdkModel,
-                     @Nullable Condition<SdkTypeId> filter) {
+  public SdkComboBox(@NotNull final ProjectSdksModel jdkModel, @Nullable Condition<SdkTypeId> filter) {
     this(jdkModel, filter, filter);
   }
 
-  public JdkComboBox(@NotNull final ProjectSdksModel jdkModel,
+  public SdkComboBox(@NotNull final ProjectSdksModel jdkModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter) {
     super(new JdkComboBoxModel(jdkModel, getSdkFilter(filter)));
     myFilter = filter;
     myCreationFilter = creationFilter;
-    setRenderer(new ProjectJdkListRenderer() {
+    setRenderer(new ProjectSdkListRenderer() {
       @Override
       public void doCustomize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        if (JdkComboBox.this.isEnabled()) {
+        if (SdkComboBox.this.isEnabled()) {
           setIcon(EMPTY_ICON);    // to fix vertical size
-          if (value instanceof InvalidJdkComboBoxItem) {
+          if (value instanceof InvalidSdkComboBoxItem) {
             final String str = value.toString();
             append(str, SimpleTextAttributes.ERROR_ATTRIBUTES);
           }
-          else if (value instanceof ProjectJdkComboBoxItem) {
+          else if (value instanceof ProjectSdkComboBoxItem) {
             final Sdk jdk = jdkModel.getProjectSdk();
             if (jdk != null) {
               setIcon(((SdkType) jdk.getSdkType()).getIcon());
@@ -95,8 +94,8 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
             }
           }
           else {
-            super.doCustomize(list, value != null ? ((JdkComboBoxItem)value).getJdk()
-                                                  : new NoneJdkComboBoxItem(), index, selected, hasFocus);
+            super.doCustomize(list, value != null ? ((SdkComboBoxItem)value).getSdk() : new NoneSdkComboBoxItem(), index, selected,
+                              hasFocus);
           }
         }
       }
@@ -127,7 +126,7 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
   public void setSetupButton(final JButton setUpButton,
                                 @Nullable final Project project,
                                 final ProjectSdksModel jdksModel,
-                                final JdkComboBoxItem firstItem,
+                                final SdkComboBoxItem firstItem,
                                 @Nullable final Condition<Sdk> additionalSetup,
                                 final boolean moduleJdkSetup) {
     setSetupButton(setUpButton, project, jdksModel, firstItem, additionalSetup,
@@ -137,30 +136,30 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
   public void setSetupButton(final JButton setUpButton,
                                 @Nullable final Project project,
                                 final ProjectSdksModel jdksModel,
-                                final JdkComboBoxItem firstItem,
+                                final SdkComboBoxItem firstItem,
                                 @Nullable final Condition<Sdk> additionalSetup,
                                 final String actionGroupTitle) {
     setUpButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup();
-        jdksModel.createAddActions(group, JdkComboBox.this, new Consumer<Sdk>() {
+        jdksModel.createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {
           @Override
           public void consume(final Sdk jdk) {
             if (project != null) {
               final JdkListConfigurable configurable = JdkListConfigurable.getInstance(project);
               configurable.addJdkNode(jdk, false);
             }
-            reloadModel(new JdkComboBoxItem(jdk), project);
+            reloadModel(new SdkComboBoxItem(jdk), project);
             setSelectedJdk(jdk); //restore selection
             if (additionalSetup != null) {
               if (additionalSetup.value(jdk)) { //leave old selection
-                setSelectedJdk(firstItem.getJdk());
+                setSelectedJdk(firstItem.getSdk());
               }
             }
           }
         }, myCreationFilter);
-        final DataContext dataContext = DataManager.getInstance().getDataContext(JdkComboBox.this);
+        final DataContext dataContext = DataManager.getInstance().getDataContext(SdkComboBox.this);
         if (group.getChildrenCount() > 1) {
           JBPopupFactory.getInstance()
             .createActionGroupPopup(actionGroupTitle, group, dataContext, JBPopupFactory.ActionSelectionAid.MNEMONICS, false)
@@ -188,26 +187,26 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
     addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final JdkComboBoxItem selectedItem = getSelectedItem();
-        if (selectedItem instanceof ProjectJdkComboBoxItem) {
+        final SdkComboBoxItem selectedItem = getSelectedItem();
+        if (selectedItem instanceof ProjectSdkComboBoxItem) {
           editButton.setEnabled(ProjectStructureConfigurable.getInstance(project).getProjectJdksModel().getProjectSdk() != null);
         }
         else {
-          editButton.setEnabled(!(selectedItem instanceof InvalidJdkComboBoxItem) && selectedItem != null && selectedItem.getJdk() != null);
+          editButton.setEnabled(!(selectedItem instanceof InvalidSdkComboBoxItem) && selectedItem != null && selectedItem.getSdk() != null);
         }
       }
     });
   }
 
   @Override
-  public JdkComboBoxItem getSelectedItem() {
-    return (JdkComboBoxItem)super.getSelectedItem();
+  public SdkComboBoxItem getSelectedItem() {
+    return (SdkComboBoxItem)super.getSelectedItem();
   }
 
   @Nullable
   public Sdk getSelectedJdk() {
-    final JdkComboBoxItem selectedItem = (JdkComboBoxItem)super.getSelectedItem();
-    return selectedItem != null? selectedItem.getJdk() : null;
+    final SdkComboBoxItem selectedItem = (SdkComboBoxItem)super.getSelectedItem();
+    return selectedItem != null? selectedItem.getSdk() : null;
   }
 
   public void setSelectedJdk(Sdk jdk) {
@@ -219,7 +218,7 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
 
   public void setInvalidJdk(String name) {
     removeInvalidElement();
-    addItem(new InvalidJdkComboBoxItem(name));
+    addItem(new InvalidSdkComboBoxItem(name));
     setSelectedIndex(getModel().getSize() - 1);
   }
   
@@ -227,14 +226,14 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
     final JdkComboBoxModel model = (JdkComboBoxModel)getModel();
     final int count = model.getSize();
     for (int idx = 0; idx < count; idx++) {
-      final JdkComboBoxItem elementAt = model.getElementAt(idx);
+      final SdkComboBoxItem elementAt = model.getElementAt(idx);
       if (jdk == null) {
-        if (elementAt instanceof NoneJdkComboBoxItem || elementAt instanceof ProjectJdkComboBoxItem) {
+        if (elementAt instanceof NoneSdkComboBoxItem || elementAt instanceof ProjectSdkComboBoxItem) {
           return idx;
         }
       }
       else {
-        Sdk elementAtJdk = elementAt.getJdk();
+        Sdk elementAtJdk = elementAt.getSdk();
         if (elementAtJdk != null && jdk.getName().equals(elementAtJdk.getName())) {
           return idx;
         }
@@ -247,15 +246,15 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
     final JdkComboBoxModel model = (JdkComboBoxModel)getModel();
     final int count = model.getSize();
     for (int idx = 0; idx < count; idx++) {
-      final JdkComboBoxItem elementAt = model.getElementAt(idx);
-      if (elementAt instanceof InvalidJdkComboBoxItem) {
+      final SdkComboBoxItem elementAt = model.getElementAt(idx);
+      if (elementAt instanceof InvalidSdkComboBoxItem) {
         removeItemAt(idx);
         break;
       }
     }
   }
 
-  public void reloadModel(JdkComboBoxItem firstItem, @Nullable Project project) {
+  public void reloadModel(SdkComboBoxItem firstItem, @Nullable Project project) {
     final DefaultComboBoxModel model = ((DefaultComboBoxModel)getModel());
     if (project == null) {
       model.addElement(firstItem);
@@ -275,7 +274,7 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
       }
     });
     for (Sdk projectJdk : projectJdks) {
-      model.addElement(new JdkComboBox.JdkComboBoxItem(projectJdk));
+      model.addElement(new SdkComboBoxItem(projectJdk));
     }
   }
 
@@ -293,14 +292,14 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
         }
       });
       for (Sdk jdk : jdks) {
-        addElement(new JdkComboBoxItem(jdk));
+        addElement(new SdkComboBoxItem(jdk));
       }
     }
 
     // implements javax.swing.ListModel
     @Override
-    public JdkComboBoxItem getElementAt(int index) {
-      return (JdkComboBoxItem)super.getElementAt(index);
+    public SdkComboBoxItem getElementAt(int index) {
+      return (SdkComboBoxItem)super.getElementAt(index);
     }
   }
 
@@ -313,29 +312,29 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
     };
   }
 
-  public static class JdkComboBoxItem {
-    private final Sdk myJdk;
+  public static class SdkComboBoxItem {
+    private final Sdk mySdk;
 
-    public JdkComboBoxItem(@Nullable Sdk jdk) {
-      myJdk = jdk;
+    public SdkComboBoxItem(@Nullable Sdk sdk) {
+      mySdk = sdk;
     }
 
-    public Sdk getJdk() {
-      return myJdk;
+    public Sdk getSdk() {
+      return mySdk;
     }
 
     @Nullable
     public String getSdkName() {
-      return myJdk != null ? myJdk.getName() : null;
+      return mySdk != null ? mySdk.getName() : null;
     }
     
     public String toString() {
-      return myJdk.getName();
+      return mySdk.getName();
     }
   }
 
-  public static class ProjectJdkComboBoxItem extends JdkComboBoxItem {
-    public ProjectJdkComboBoxItem() {
+  public static class ProjectSdkComboBoxItem extends SdkComboBoxItem {
+    public ProjectSdkComboBoxItem() {
       super(null);
     }
 
@@ -344,8 +343,8 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
     }
   }
 
-  public static class NoneJdkComboBoxItem extends JdkComboBoxItem {
-    public NoneJdkComboBoxItem() {
+  public static class NoneSdkComboBoxItem extends SdkComboBoxItem {
+    public NoneSdkComboBoxItem() {
       super(null);
     }
 
@@ -354,10 +353,10 @@ public class JdkComboBox extends ComboBoxWithWidePopup {
     }
   }
 
-  private static class InvalidJdkComboBoxItem extends JdkComboBoxItem {
+  private static class InvalidSdkComboBoxItem extends SdkComboBoxItem {
     private final String mySdkName;
 
-    public InvalidJdkComboBoxItem(String name) {
+    public InvalidSdkComboBoxItem(String name) {
       super(null);
       mySdkName = name;
     }

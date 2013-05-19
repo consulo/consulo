@@ -60,6 +60,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       }
     }
 
+    setUserObject(myExtension);
     children = child.isEmpty() ? null : child;
   }
 

@@ -44,7 +44,7 @@ import java.awt.event.ActionListener;
  * Date: 05-Jun-2006
  */
 public abstract class ModuleJdkConfigurable implements Disposable {
-  private JdkComboBox myCbModuleJdk;
+  private SdkComboBox myCbModuleJdk;
   private Sdk mySelectedModuleJdk = null;
   private JPanel myJdkPanel;
   private ClasspathEditor myModuleEditor;
@@ -88,7 +88,7 @@ public abstract class ModuleJdkConfigurable implements Disposable {
   }
 
   public boolean isInheritJdk() {
-    return myCbModuleJdk.getSelectedItem()instanceof JdkComboBox.ProjectJdkComboBoxItem;
+    return myCbModuleJdk.getSelectedItem()instanceof SdkComboBox.ProjectSdkComboBoxItem;
   }
 
   public JComponent createComponent() {
@@ -97,7 +97,7 @@ public abstract class ModuleJdkConfigurable implements Disposable {
 
   private void reloadModel() {
     myFreeze = true;
-    myCbModuleJdk.reloadModel(new JdkComboBox.ProjectJdkComboBoxItem(), getRootModel().getModule().getProject());
+    myCbModuleJdk.reloadModel(new SdkComboBox.ProjectSdkComboBoxItem(), getRootModel().getModule().getProject());
     reset();
     myFreeze = false;
   }
@@ -106,8 +106,8 @@ public abstract class ModuleJdkConfigurable implements Disposable {
 
   private void init() {
     myJdkPanel = new JPanel(new GridBagLayout());
-    myCbModuleJdk = new JdkComboBox(myJdksModel);
-    myCbModuleJdk.insertItemAt(new JdkComboBox.ProjectJdkComboBoxItem(), 0);
+    myCbModuleJdk = new SdkComboBox(myJdksModel);
+    myCbModuleJdk.insertItemAt(new SdkComboBox.ProjectSdkComboBoxItem(), 0);
     myCbModuleJdk.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -127,7 +127,7 @@ public abstract class ModuleJdkConfigurable implements Disposable {
     final Project project = getRootModel().getModule().getProject();
     final JButton setUpButton = new JButton(ApplicationBundle.message("button.new"));
     myCbModuleJdk
-      .setSetupButton(setUpButton, project, myJdksModel, new JdkComboBox.ProjectJdkComboBoxItem(), new Condition<Sdk>() {
+      .setSetupButton(setUpButton, project, myJdksModel, new SdkComboBox.ProjectSdkComboBoxItem(), new Condition<Sdk>() {
         @Override
         public boolean value(Sdk jdk) {
           final Sdk projectJdk = myJdksModel.getProjectSdk();

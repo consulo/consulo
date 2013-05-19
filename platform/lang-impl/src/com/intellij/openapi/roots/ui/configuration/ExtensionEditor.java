@@ -20,12 +20,19 @@ import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRe
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckboxTreeBase;
 import com.intellij.ui.JBSplitter;
+import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.tree.TreeUtil;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -33,6 +40,8 @@ import java.awt.*;
  */
 public class ExtensionEditor extends ModuleElementsEditor {
   private final ModuleConfigurationState myState;
+  private JPanel myRootPane;
+  private CheckboxTree myTree;
 
   public ExtensionEditor(ModuleConfigurationState state) {
     super(state);
@@ -42,23 +51,48 @@ public class ExtensionEditor extends ModuleElementsEditor {
   @NotNull
   @Override
   protected JComponent createComponentImpl() {
-    JPanel rootPane = new JPanel(new BorderLayout());
+    myRootPane = new JPanel(new BorderLayout());
 
-    JBSplitter splitter = new JBSplitter();
-    splitter.setSplitterProportionKey(getClass().getName());
+    myTree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState),
+                                               new CheckboxTreeBase.CheckPolicy(true, true, false, true));
+    myTree.setRootVisible(false);
+    myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    myTree.addTreeSelectionListener(new TreeSelectionListener() {
+      @Override
+      public void valueChanged(final TreeSelectionEvent e) {
+        final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
+        if (selected.isEmpty()) {
+          return;
+        }
 
-    CheckboxTree tree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState),
-                                         new CheckboxTreeBase.CheckPolicy(true, true, false, true));
-    tree.setRootVisible(false);
+        UIUtil.invokeLaterIfNeeded(new Runnable() {
+          @Override
+          public void run() {
+            myRootPane.removeAll();
+            myRootPane.add(createPanel(selected.get(0)));
+          }
+        });
+      }
+    });
 
-    splitter.setFirstComponent(tree);
 
-    JPanel configPanel = new JPanel(new BorderLayout());
+    myRootPane.add(createPanel(null), BorderLayout.CENTER);
 
-    splitter.setSecondComponent(configPanel);
+    return myRootPane;
+  }
 
-    rootPane.add(splitter, BorderLayout.CENTER);
-    return rootPane;
+  private JComponent createPanel(MutableModuleExtension<?> extension) {
+    final JComponent configurablePanel = extension == null ? null : extension.createConfigurablePanel();
+    if (configurablePanel == null) {
+      return myTree;
+    }
+    else {
+      final JBSplitter splitter = new JBSplitter();
+      splitter.setSplitterProportionKey(getClass().getName());
+      splitter.setFirstComponent(myTree);
+      splitter.setSecondComponent(configurablePanel);
+      return splitter;
+    }
   }
 
   @Override

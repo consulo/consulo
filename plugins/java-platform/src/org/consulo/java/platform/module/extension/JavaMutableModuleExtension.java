@@ -18,9 +18,12 @@ package org.consulo.java.platform.module.extension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Comparing;
+import org.consulo.java.platform.module.extension.ui.JavaModuleExtensionPanel;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -35,6 +38,12 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
     myModuleExtension = moduleExtension;
 
     commit(myModuleExtension);
+  }
+
+  @Nullable
+  @Override
+  public JComponent createConfigurablePanel() {
+    return new JavaModuleExtensionPanel(this);
   }
 
   @Override

@@ -15,11 +15,18 @@
  */
 package org.consulo.module.extension;
 
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+
 /**
  * @author VISTALL
  * @since 10:58/19.05.13
  */
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
+  @Nullable
+  JComponent createConfigurablePanel();
+
   void setEnabled(boolean val);
 
   boolean isModified();
