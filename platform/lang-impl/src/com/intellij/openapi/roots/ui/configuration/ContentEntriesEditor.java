@@ -62,8 +62,8 @@ import java.util.Map;
  *         Date: Oct 4, 2003
  *         Time: 6:54:57 PM
  */
-public class CommonContentEntriesEditor extends ModuleElementsEditor {
-  private static final Logger LOG = Logger.getInstance(CommonContentEntriesEditor.class);
+public class ContentEntriesEditor extends ModuleElementsEditor {
+  private static final Logger LOG = Logger.getInstance(ContentEntriesEditor.class);
   public static final String NAME = ProjectBundle.message("module.paths.title");
   private static final Color BACKGROUND_COLOR = UIUtil.getListBackground();
 
@@ -80,7 +80,7 @@ public class CommonContentEntriesEditor extends ModuleElementsEditor {
   private final boolean myCanMarkSources;
   private final boolean myCanMarkTestSources;
 
-  public CommonContentEntriesEditor(String moduleName, final ModuleConfigurationState state, boolean canMarkSources, boolean canMarkTestSources) {
+  public ContentEntriesEditor(String moduleName, final ModuleConfigurationState state, boolean canMarkSources, boolean canMarkTestSources) {
     super(state);
     myState = state;
     myModuleName = moduleName;
@@ -232,7 +232,7 @@ public class CommonContentEntriesEditor extends ModuleElementsEditor {
     return new ContentEntryEditor(contentEntryUrl, myCanMarkSources, myCanMarkTestSources) {
       @Override
       protected ModifiableRootModel getModel() {
-        return CommonContentEntriesEditor.this.getModel();
+        return ContentEntriesEditor.this.getModel();
       }
     };
   }

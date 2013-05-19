@@ -18,12 +18,9 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.module.impl.ModuleConfigurationStateImpl;
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -38,7 +35,6 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -182,7 +178,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
 
   private void createEditors(Module module) {
     ModuleConfigurationState state = createModuleConfigurationState();
-    myEditors.add(new CommonContentEntriesEditor(myName, state, true, true));
+    myEditors.add(new ContentEntriesEditor(myName, state, true, true));
     //TODO [VISTALL] myEditors.add(new OutputEditor(state));
     myEditors.add(new ClasspathEditor(state));
   }

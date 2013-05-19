@@ -28,7 +28,7 @@ import com.intellij.openapi.roots.ModulePackageIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.ui.configuration.CommonContentEntriesEditor;
+import com.intellij.openapi.roots.ui.configuration.ContentEntriesEditor;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
@@ -370,7 +370,7 @@ public class PackageUtil {
                                ProjectBundle.message("module.source.roots.not.configured.error", module.getName()),
                                ProjectBundle.message("module.source.roots.not.configured.title"));
 
-      ProjectSettingsService.getInstance(project).showModuleConfigurationDialog(module.getName(), CommonContentEntriesEditor.NAME);
+      ProjectSettingsService.getInstance(project).showModuleConfigurationDialog(module.getName(), ContentEntriesEditor.NAME);
 
       sourceRoots = ModuleRootManager.getInstance(module).getSourceRoots();
       if (sourceRoots.length == 0) {
