@@ -39,6 +39,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 
@@ -190,6 +193,19 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
       return true;
     }
     return false;
+  }
+
+  @Override
+  protected void onItemDeleted(Object item) {
+    for(int i = 0; i < myRoot.getChildCount(); i++) {
+      final TreeNode childAt = myRoot.getChildAt(i);
+      if(childAt instanceof MyNode) {
+        if(childAt.getChildCount() == 0) {
+          myRoot.remove((MutableTreeNode)childAt);
+          ((DefaultTreeModel)myTree.getModel()).reload(myRoot);
+        }
+      }
+    }
   }
 
   @Override
