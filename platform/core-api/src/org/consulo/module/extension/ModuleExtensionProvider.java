@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module.extension;
+package org.consulo.module.extension;
 
+import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,16 +25,16 @@ import javax.swing.*;
  * @author VISTALL
  * @since 10:32/19.05.13
  */
-public interface ModuleExtensionProvider<T extends ModuleExtension> {
-  @NotNull
-  String getId();
-
-  @Nullable
-  String getParentId();
-
-  @Nullable
+public interface ModuleExtensionProvider<ImmutableModel extends ModuleExtension, MutableModel extends MutableModuleExtension> {
+   @Nullable
   Icon getIcon();
 
   @NotNull
   String getName();
+
+  Class<ImmutableModel> getImmutableClass();
+
+  ImmutableModel createImmutable(@NotNull String id, @NotNull Module module);
+
+  MutableModel createMutable(@NotNull String id, @NotNull Module module, @NotNull ImmutableModel immutableModel);
 }

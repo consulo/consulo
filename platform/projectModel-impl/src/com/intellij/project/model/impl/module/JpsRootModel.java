@@ -16,14 +16,16 @@
 package com.intellij.project.model.impl.module;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtension;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ModuleRootModel;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.RootModelBase;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.project.model.impl.module.content.JpsContentEntry;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.module.JpsDependencyElement;
 import org.jetbrains.jps.model.module.JpsModule;
 
@@ -75,18 +77,6 @@ public class JpsRootModel extends RootModelBase implements ModuleRootModel {
     return myOrderEntries.toArray(new OrderEntry[myOrderEntries.size()]);
   }
 
-  @NotNull
-  @Override
-  public VirtualFile[] getRootPaths(OrderRootType rootType) {
-    throw new UnsupportedOperationException("'getRootPaths' not implemented in " + getClass().getName());
-  }
-
-  @NotNull
-  @Override
-  public String[] getRootUrls(OrderRootType rootType) {
-    throw new UnsupportedOperationException("'getRootUrls' not implemented in " + getClass().getName());
-  }
-
   @Override
   public <T> T getModuleExtensionOld(Class<T> klass) {
     throw new UnsupportedOperationException("'getModuleExtension' not implemented in " + getClass().getName());
@@ -94,7 +84,13 @@ public class JpsRootModel extends RootModelBase implements ModuleRootModel {
 
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
-    return null;
+    throw new UnsupportedOperationException("'getExtension' not implemented in " + getClass().getName());
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+    throw new UnsupportedOperationException("'getExtension' not implemented in " + getClass().getName());
   }
 
   public Project getProject() {

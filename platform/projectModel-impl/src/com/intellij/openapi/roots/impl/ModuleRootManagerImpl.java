@@ -22,7 +22,7 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -35,6 +35,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -119,7 +120,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @NotNull
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    final RootModelImpl model = new RootModelImpl(myRootModel, this, true, accessor, myFilePointerManager, myProjectRootManager) {
+    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor, myFilePointerManager, myProjectRootManager) {
       @Override
       public void dispose() {
         super.dispose();
@@ -209,19 +210,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getDependencyModuleNames();
   }
 
-  @Override
-  @NotNull
-  public VirtualFile[] getRootPaths(final OrderRootType rootType) {
-    return myRootModel.getRootPaths(rootType);
-  }
-
-  @Override
-  @NotNull
-  public String[] getRootUrls(final OrderRootType rootType) {
-    return myRootModel.getRootUrls(rootType);
-  }
-
-  @Override
+   @Override
   public <T> T getModuleExtensionOld(final Class<T> klass) {
     return myRootModel.getModuleExtensionOld(klass);
   }
@@ -229,6 +218,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
     return myRootModel.getExtension(clazz);
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+    return myRootModel.getExtensionWithoutCheck(clazz);
   }
 
   @Override

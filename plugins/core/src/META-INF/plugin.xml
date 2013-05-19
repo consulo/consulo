@@ -3447,7 +3447,12 @@
 
     <extensionPoint name="projectExtension" interface="com.intellij.openapi.roots.ProjectExtension" area="IDEA_PROJECT"/>
     <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="IDEA_PROJECT"/>
-    <extensionPoint name="moduleExtension" interface="com.intellij.openapi.roots.ModuleExtension0" area="IDEA_MODULE"/>
+
+    <extensionPoint name="moduleExtension" interface="com.intellij.openapi.roots.ModuleExtension0" area="IDEA_MODULE"/> <!--TODO [VISTALL] remove-->
+    <extensionPoint name="moduleExtensionProvider" beanClass="org.consulo.module.extension.ModuleExtensionProviderEP" >
+      <with attribute="implementationClass" implements="org.consulo.module.extension.ModuleExtensionProvider"/>
+    </extensionPoint>
+
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy"
@@ -4562,7 +4567,7 @@
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
 
     <!--TODO [VISTALL] Java <moduleExtension implementation="com.intellij.openapi.roots.LanguageLevelModuleExtension"/> -->
-    <moduleExtension implementation="com.intellij.openapi.roots.impl.JavaModuleExternalPathsImpl"/>
+    <!--TODO [VISTALL] Java <moduleExtension implementation="com.intellij.openapi.roots.impl.JavaModuleExternalPathsImpl"/> -->
 
     <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/>
     <orderRootType implementation="com.intellij.openapi.roots.JavadocOrderRootType"/>

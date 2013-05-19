@@ -19,9 +19,11 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionProvider;
+import org.consulo.module.extension.ModuleExtensionProviderEP;
+import org.consulo.module.extension.MutableModuleExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
@@ -57,7 +59,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private boolean myWritable;
   private final VirtualFilePointerManager myFilePointerManager;
   private boolean myDisposed = false;
-  private final Set<ModuleExtension0> myExtensions = new TreeSet<ModuleExtension0>();
+  private final Set<ModuleExtension<?>> myExtensions = new LinkedHashSet<ModuleExtension<?>>();
 
   private final RootConfigurationAccessor myConfigurationAccessor;
 
@@ -77,16 +79,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     addSourceOrderEntries();
     myModuleLibraryTable = new ModuleLibraryTable(this, myProjectRootManager);
 
-    for (ModuleExtension0 extension : Extensions.getExtensions(ModuleExtension0.EP_NAME, moduleRootManager.getModule())) {
-      ModuleExtension0 model = extension.getModifiableModel(false);
-      registerOnDispose(model);
-      myExtensions.add(model);
+    for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+      final ModuleExtensionProvider provider = providerEP.getInstance();
+
+      myExtensions.add(provider.createImmutable(providerEP.getKey(), moduleRootManager.getModule()));
     }
     myConfigurationAccessor = new RootConfigurationAccessor();
-  }
-
-  private void addSourceOrderEntries() {
-    myOrderEntries.add(new ModuleSourceOrderEntryImpl(this));
   }
 
   RootModelImpl(@NotNull Element element,
@@ -125,29 +123,20 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     myWritable = true;
 
-    RootModelImpl originalRootModel = moduleRootManager.getRootModel();
-    for (ModuleExtension0 extension : originalRootModel.myExtensions) {
-      ModuleExtension0 model = extension.getModifiableModel(false);
-      model.readExternal(element);
-      registerOnDispose(model);
-      myExtensions.add(model);
+    for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+      final ModuleExtensionProvider provider = providerEP.getInstance();
+
+      final ModuleExtension<?> originalExtension = provider.createImmutable(providerEP.getKey(), moduleRootManager.getModule());
+      originalExtension.loadState(element);
+
+      myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
     }
     myConfigurationAccessor = new RootConfigurationAccessor();
-  }
-
-  @Override
-  public boolean isWritable() {
-    return myWritable;
-  }
-
-  public RootConfigurationAccessor getConfigurationAccessor() {
-    return myConfigurationAccessor;
   }
 
   //creates modifiable model
   RootModelImpl(@NotNull RootModelImpl rootModel,
                 ModuleRootManagerImpl moduleRootManager,
-                final boolean writable,
                 final RootConfigurationAccessor rootConfigurationAccessor,
                 @NotNull VirtualFilePointerManager filePointerManager,
                 ProjectRootManagerImpl projectRootManager) {
@@ -157,7 +146,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     myModuleLibraryTable = new ModuleLibraryTable(this, myProjectRootManager);
 
-    myWritable = writable;
+    myWritable = true;
     myConfigurationAccessor = rootConfigurationAccessor;
 
     final Set<ContentEntry> thatContent = rootModel.myContent;
@@ -170,11 +159,26 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     setOrderEntriesFrom(rootModel);
 
-    for (ModuleExtension0 extension : rootModel.myExtensions) {
-      ModuleExtension0 model = extension.getModifiableModel(writable);
-      registerOnDispose(model);
-      myExtensions.add(model);
+    for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+      final ModuleExtensionProvider provider = providerEP.getInstance();
+
+      final ModuleExtension<?> originalExtension = moduleRootManager.getExtensionWithoutCheck(provider.getImmutableClass());
+
+      myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
     }
+  }
+
+  private void addSourceOrderEntries() {
+    myOrderEntries.add(new ModuleSourceOrderEntryImpl(this));
+  }
+
+  @Override
+  public boolean isWritable() {
+    return myWritable;
+  }
+
+  public RootConfigurationAccessor getConfigurationAccessor() {
+    return myConfigurationAccessor;
   }
 
   private void setOrderEntriesFrom(@NotNull RootModelImpl rootModel) {
@@ -357,9 +361,10 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
-    for (ModuleExtension0 extension : myExtensions) {
-      if (extension.isChanged()) {
-        extension.commit();
+    for (ModuleExtension<?> extension : myExtensions) {
+      MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
+      if (mutableExtension.isModified()) {
+        mutableExtension.commit();
       }
     }
   }
@@ -404,8 +409,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   public void writeExternal(@NotNull Element element) throws WriteExternalException {
-    for (ModuleExtension0 extension : myExtensions) {
-      extension.writeExternal(element);
+    for (ModuleExtension<?> extension : myExtensions) {
+      element.addContent(extension.getState());
     }
 
     for (ContentEntry contentEntry : getContent()) {
@@ -499,8 +504,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public boolean isChanged() {
     if (!myWritable) return false;
 
-    for (ModuleExtension0 moduleExtension : myExtensions) {
-      if (moduleExtension.isChanged()) return true;
+    for (ModuleExtension<?> extension : myExtensions) {
+      MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
+
+      if (mutableExtension.isModified()) {
+        return true;
+      }
     }
 
     return areOrderEntriesChanged() || areContentEntriesChanged();
@@ -554,16 +563,16 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       LOG.assertTrue(orderEntry2 instanceof ModuleOrderEntry);
       ModuleOrderEntryImpl entry1 = (ModuleOrderEntryImpl)orderEntry1;
       ModuleOrderEntryImpl entry2 = (ModuleOrderEntryImpl)orderEntry2;
-      return entry1.isProductionOnTestDependency() == entry2.isProductionOnTestDependency()
-             && Comparing.equal(entry1.getModuleName(), entry2.getModuleName());
+      return entry1.isProductionOnTestDependency() == entry2.isProductionOnTestDependency() &&
+             Comparing.equal(entry1.getModuleName(), entry2.getModuleName());
     }
 
     if (orderEntry1 instanceof LibraryOrderEntry) {
       LOG.assertTrue(orderEntry2 instanceof LibraryOrderEntry);
       LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry)orderEntry1;
       LibraryOrderEntry libraryOrderEntry2 = (LibraryOrderEntry)orderEntry2;
-      boolean equal = Comparing.equal(libraryOrderEntry1.getLibraryName(), libraryOrderEntry2.getLibraryName())
-                      && Comparing.equal(libraryOrderEntry1.getLibraryLevel(), libraryOrderEntry2.getLibraryLevel());
+      boolean equal = Comparing.equal(libraryOrderEntry1.getLibraryName(), libraryOrderEntry2.getLibraryName()) &&
+                      Comparing.equal(libraryOrderEntry1.getLibraryLevel(), libraryOrderEntry2.getLibraryLevel());
       if (!equal) return false;
     }
 
@@ -691,26 +700,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
   }
 
-  @Override
-  @NotNull
-  public VirtualFile[] getRootPaths(final OrderRootType rootType) {
-    for (ModuleExtension0 extension : myExtensions) {
-      final VirtualFile[] files = extension.getRootPaths(rootType);
-      if (files != null) return files;
-    }
-    return VirtualFile.EMPTY_ARRAY;
-  }
-
-  @Override
-  @NotNull
-  public String[] getRootUrls(final OrderRootType rootType) {
-    for (ModuleExtension0 extension : myExtensions) {
-      final String[] urls = extension.getRootUrls(rootType);
-      if (urls != null) return urls;
-    }
-    return ArrayUtil.EMPTY_STRING_ARRAY;
-  }
-
   private RootModelImpl getSourceModel() {
     assertWritable();
     return myModuleRootManager.getRootModel();
@@ -719,17 +708,28 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Nullable
   @Override
   public <T> T getModuleExtensionOld(@NotNull final Class<T> klass) {
-    for (ModuleExtension0 extension : myExtensions) {
-      if (klass.isAssignableFrom(extension.getClass())) {
-        //noinspection unchecked
-        return (T)extension;
-      }
-    }
+
     return null;
   }
 
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+    final T extensionWithoutCheck = getExtensionWithoutCheck(clazz);
+    if(extensionWithoutCheck != null && extensionWithoutCheck.isEnabled()) {
+      return extensionWithoutCheck;
+    }
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+    for (ModuleExtension<?> extension : myExtensions) {
+      if (clazz.isAssignableFrom(extension.getClass())) {
+        //noinspection unchecked
+        return (T)extension;
+      }
+    }
     return null;
   }
 

@@ -18,4 +18,8 @@
   <name>Java Platform</name>
   <version>1.0</version>
   <vendor>Consulo</vendor>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <moduleExtensionProvider id="java" key="java" implementationClass="org.consulo.java.platform.module.extension.JavaModuleExtensionProvider" />
+  </extensions>
 </idea-plugin>

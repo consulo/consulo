@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.module.extension;
+package org.consulo.java.platform;
 
-import com.intellij.module.extension.ModuleExtensionWithSdk;
-import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.util.IconLoader;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 10:02/19.05.13
+ * @since 13:59/19.05.13
  */
-public class JavaModuleExtension implements ModuleExtensionWithSdk {
-  @Override
-  public Sdk getSdk() {
-    return null;
-  }
+public interface JavaPlatformIcons {
+  Icon Java = IconLoader.findIcon("/org/consulo/java/platform/icons/java.png");
 }

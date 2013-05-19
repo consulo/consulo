@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.module.extension;
+package org.consulo.module.extension;
 
-import com.intellij.openapi.module.extension.ModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 23:26/18.05.13
  */
-public interface ModuleExtensionWithSdk extends ModuleExtension {
+public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtension<T> {
+  @Nullable
   Sdk getSdk();
+
+  @Nullable
+  String getSdkName();
 }

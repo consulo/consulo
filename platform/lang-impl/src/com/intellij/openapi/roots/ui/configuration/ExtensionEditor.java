@@ -15,25 +15,50 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
+import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
+import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import com.intellij.ui.CheckboxTree;
+import com.intellij.ui.CheckboxTreeBase;
+import com.intellij.ui.JBSplitter;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 10:33/19.05.13
  */
 public class ExtensionEditor extends ModuleElementsEditor {
+  private final ModuleConfigurationState myState;
+
   public ExtensionEditor(ModuleConfigurationState state) {
     super(state);
+    myState = state;
   }
 
   @NotNull
   @Override
   protected JComponent createComponentImpl() {
-    return new JLabel("test");
+    JPanel rootPane = new JPanel(new BorderLayout());
+
+    JBSplitter splitter = new JBSplitter();
+    splitter.setSplitterProportionKey(getClass().getName());
+
+    CheckboxTree tree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState),
+                                         new CheckboxTreeBase.CheckPolicy(true, true, false, true));
+    tree.setRootVisible(false);
+
+    splitter.setFirstComponent(tree);
+
+    JPanel configPanel = new JPanel(new BorderLayout());
+
+    splitter.setSecondComponent(configPanel);
+
+    rootPane.add(splitter, BorderLayout.CENTER);
+    return rootPane;
   }
 
   @Override

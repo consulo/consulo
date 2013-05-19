@@ -71,6 +71,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="java-platform">
+          <element id="directory" name="lib">
+            <element id="archive" name="java-platform.jar">
+              <element id="module-output" name="java-platform" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module.extension;
+package org.consulo.module.extension;
 
 /**
  * @author VISTALL
- * @since 22:39/18.05.13
+ * @since 10:58/19.05.13
  */
-public interface ModuleExtension {
+public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
+  void setEnabled(boolean val);
+
+  boolean isModified();
+
+  void commit();
 }

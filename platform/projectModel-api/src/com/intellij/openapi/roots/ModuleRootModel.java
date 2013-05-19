@@ -16,9 +16,10 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.extension.*;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface providing root information model for a given module.
@@ -151,22 +152,14 @@ public interface ModuleRootModel {
    */
   @NotNull String[] getDependencyModuleNames();
 
-  /**
-   * @deprecated use {@code JavaModuleExternalPaths} instead
-   */
-  @Deprecated
-  @NotNull VirtualFile[] getRootPaths(OrderRootType rootType);
-
-  /**
-   * @deprecated use {@code JavaModuleExternalPaths} instead
-   */
-  @Deprecated
-  @NotNull String[] getRootUrls(OrderRootType rootType);
-
   @Deprecated
   <T> T getModuleExtensionOld(Class<T> klass);
 
+  @Nullable
   <T extends ModuleExtension> T getExtension(Class<T> clazz);
+
+  @Nullable
+  <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz);
 
   @NotNull
   Module[] getModuleDependencies();
