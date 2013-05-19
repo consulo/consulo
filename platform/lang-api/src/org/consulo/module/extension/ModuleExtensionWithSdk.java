@@ -16,6 +16,8 @@
 package org.consulo.module.extension;
 
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,4 +30,7 @@ public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> ext
 
   @Nullable
   String getSdkName();
+
+  @NotNull
+  SdkType getSdkType();
 }

@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
 import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -89,6 +90,7 @@ public class UnknownSdkType extends SdkType{
   public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
   }
 
+  @NotNull
   @Override
   public String getPresentableName() {
     return ProjectBundle.message("sdk.unknown.name");

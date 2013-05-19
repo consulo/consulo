@@ -245,7 +245,7 @@ public class ProjectSdksModel implements SdkModel {
       if (filter != null && !filter.value(type)) continue;
       final AnAction addAction = new DumbAwareAction(type.getPresentableName(),
                                               null,
-                                              type.getIconForAddAction()) {
+                                              type.getIcon()) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             doAdd(parent, type, updateTree);

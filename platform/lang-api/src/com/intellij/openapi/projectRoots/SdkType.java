@@ -113,6 +113,7 @@ public abstract class SdkType implements SdkTypeId {
     return myName;
   }
 
+  @NotNull
   public abstract String getPresentableName();
 
   @Nullable
@@ -129,10 +130,6 @@ public abstract class SdkType implements SdkTypeId {
   @NonNls
   public String getHelpTopic() {
     return "preferences.jdks";
-  }
-
-  public Icon getIconForAddAction() {
-    return IconUtil.getAddIcon();
   }
 
   public boolean equals(Object o) {

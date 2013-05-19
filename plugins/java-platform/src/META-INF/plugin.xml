@@ -21,5 +21,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <moduleExtensionProvider id="java" key="java" implementationClass="org.consulo.java.platform.module.extension.JavaModuleExtensionProvider" />
+
+    <sdkType implementation="org.consulo.java.platform.module.sdk.JavaSdkType" />
   </extensions>
 </idea-plugin>

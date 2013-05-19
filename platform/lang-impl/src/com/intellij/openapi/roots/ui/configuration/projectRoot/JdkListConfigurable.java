@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -157,7 +156,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
 
   @NotNull
   private static MyNode createSdkGroupNode(SdkType key) {
-    return new MyNode(new TextConfigurable<SdkType>(key, key.getName(), "", "", AllIcons.Nodes.KeymapAnt));
+    return new MyNode(new TextConfigurable<SdkType>(key, key.getName(), "", "", key.getGroupIcon()));
   }
 
   @NotNull

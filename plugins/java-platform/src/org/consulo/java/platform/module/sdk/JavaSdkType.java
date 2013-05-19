@@ -13,36 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.java.ant.sdk;
+package org.consulo.java.platform.module.sdk;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.projectRoots.*;
-import org.consulo.java.ant.util.AntVersionUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.File;
 
 /**
  * @author VISTALL
- * @since 15:52/19.05.13
+ * @since 21:13/19.05.13
  */
-public class AntSdkType extends SdkType {
-  public AntSdkType() {
-    super("Apache Ant");
-  }
-
-  @Override
-  public Icon getIcon() {
-    return AllIcons.Ant.Build;
+public class JavaSdkType extends SdkType {
+  public JavaSdkType() {
+    super("JRE/JDK");
   }
 
   @Nullable
   @Override
-  public Icon getGroupIcon() {
-    return AllIcons.Nodes.KeymapAnt;
+  public Icon getIcon() {
+    return AllIcons.Nodes.PpJdk;
   }
 
   @Nullable
@@ -53,21 +46,18 @@ public class AntSdkType extends SdkType {
 
   @Override
   public boolean isValidSdkHome(String path) {
-    return AntVersionUtil.getVersion(path) != null;
+    return false;
   }
 
   @Nullable
   @Override
   public String getVersionString(String sdkHome) {
-    final String version = AntVersionUtil.getVersion(sdkHome);
-
-    return version == null ? "0.0" : version;
+    return null;
   }
 
   @Override
   public String suggestSdkName(String currentSdkName, String sdkHome) {
-    File file = new File(sdkHome);
-    return file.getName();
+    return null;
   }
 
   @Nullable

@@ -20,6 +20,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -45,6 +46,7 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
     return jdk;
   }
 
+  @NotNull
   @Override
   public String getPresentableName() {
     return ProjectBundle.message("sdk.java.name");

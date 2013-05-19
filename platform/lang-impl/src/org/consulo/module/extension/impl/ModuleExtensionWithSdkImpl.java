@@ -17,6 +17,7 @@ package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.text.StringUtil;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 12:42/19.05.13
  */
-public class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T>
+public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T>
   implements ModuleExtensionWithSdk<T> {
   protected String mySdkName;
 
@@ -51,7 +52,11 @@ public class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> ext
       return null;
     }
     final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(getModule().getProject()).getProjectJdksModel();
-    return projectJdksModel.findSdk(mySdkName);
+    final Sdk sdk = projectJdksModel.findSdk(mySdkName);
+    if(sdk == null || sdk.getSdkType() != getSdkType()) {
+      return null;
+    }
+    return sdk;
   }
 
   @Nullable
@@ -59,6 +64,14 @@ public class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> ext
   public String getSdkName() {
     return mySdkName;
   }
+
+  @NotNull
+  @Override
+  public SdkType getSdkType() {
+    return SdkType.findInstance(getSdkTypeClass());
+  }
+
+  protected abstract Class<? extends SdkType> getSdkTypeClass();
 
   @Override
   protected void getStateImpl(@NotNull Element element) {
