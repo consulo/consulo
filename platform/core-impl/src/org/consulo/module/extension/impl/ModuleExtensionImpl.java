@@ -53,7 +53,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   }
 
   @Override
-  public void commit(@NotNull ModuleExtension mutableModuleExtension) {
+  public void commit(@NotNull T mutableModuleExtension) {
     myIsEnabled = mutableModuleExtension.isEnabled();
   }
 

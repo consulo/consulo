@@ -123,10 +123,15 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     myWritable = true;
 
+    RootModelImpl originalRootModel = moduleRootManager.getRootModel();
+
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       final ModuleExtensionProvider provider = providerEP.getInstance();
 
-      final ModuleExtension<?> originalExtension = provider.createImmutable(providerEP.getKey(), moduleRootManager.getModule());
+      final ModuleExtension<?> originalExtension = originalRootModel.getExtensionWithoutCheck(provider.getImmutableClass());
+
+      assert originalExtension != null;
+
       originalExtension.loadState(element);
 
       myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
@@ -163,6 +168,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       final ModuleExtensionProvider provider = providerEP.getInstance();
 
       final ModuleExtension<?> originalExtension = moduleRootManager.getExtensionWithoutCheck(provider.getImmutableClass());
+
+      assert originalExtension != null;
 
       myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
     }

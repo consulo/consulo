@@ -15,12 +15,15 @@
  */
 package org.consulo.module.extension.ui;
 
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.SdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * @author VISTALL
@@ -40,5 +43,20 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
 
     final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject()).getProjectJdksModel();
     mySdkComboBox = new SdkComboBox(projectJdksModel);
+
+    final Sdk sdk = myExtensionWithSdk.getSdk();
+    if(sdk == null) {
+      mySdkComboBox.setInvalidJdk(myExtensionWithSdk.getSdkName());
+    }
+    else {
+      mySdkComboBox.setSelectedJdk(sdk);
+    }
+
+    mySdkComboBox.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+       myExtensionWithSdk.setSdk(mySdkComboBox.getSelectedJdk());
+      }
+    });
   }
 }

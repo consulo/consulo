@@ -19,7 +19,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
+import com.intellij.openapi.util.text.StringUtil;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +29,8 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 12:42/19.05.13
  */
-public class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T> implements ModuleExtensionWithSdk<T> {
+public class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T>
+  implements ModuleExtensionWithSdk<T> {
   protected String mySdkName;
 
   public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull Module module) {
@@ -44,16 +47,26 @@ public class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> ext
   @Nullable
   @Override
   public Sdk getSdk() {
-    if(mySdkName == null) {
+    if (mySdkName == null) {
       return null;
     }
     final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(getModule().getProject()).getProjectJdksModel();
-    return projectJdksModel.findSdk(mySdkName) ;
+    return projectJdksModel.findSdk(mySdkName);
   }
 
   @Nullable
   @Override
   public String getSdkName() {
     return mySdkName;
+  }
+
+  @Override
+  protected void getStateImpl(@NotNull Element element) {
+    element.setAttribute("sdk-name", StringUtil.notNullize(mySdkName));
+  }
+
+  @Override
+  protected void loadStateImpl(@NotNull Element element) {
+    mySdkName = StringUtil.nullize(element.getAttributeValue("sdk-name"));
   }
 }
