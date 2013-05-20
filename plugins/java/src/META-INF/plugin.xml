@@ -533,10 +533,6 @@
     <projectService serviceInterface="com.intellij.psi.impl.file.PsiDirectoryFactory"
                     serviceImplementation="com.intellij.psi.impl.file.PsiJavaDirectoryFactory"/>
 
-    <projectService serviceInterface="com.intellij.openapi.roots.PackageIndex"
-                    serviceImplementation="com.intellij.openapi.roots.impl.ProjectPackageIndexImpl"/>
-    <moduleService serviceInterface="com.intellij.openapi.roots.ModulePackageIndex"
-                   serviceImplementation="com.intellij.openapi.roots.impl.ModulePackageIndexImpl"/>
 
     <projectService serviceInterface="com.intellij.usages.impl.rules.DirectoryGroupingRule"
                     serviceImplementation="com.intellij.usages.impl.rules.PackageGroupingRule"/>

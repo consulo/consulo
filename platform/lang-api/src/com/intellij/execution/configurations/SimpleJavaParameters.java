@@ -32,6 +32,7 @@ import java.nio.charset.Charset;
 /**
  * @author Gregory.Shrago
  */
+//TODO [VISTALL] move to java-platform
 public class SimpleJavaParameters extends SimpleProgramParameters {
   private Sdk myJdk;
   private String myMainClass;
