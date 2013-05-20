@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.consulo.psi.impl;
 
-/*
- * @author max
- */
-package com.intellij.psi.impl.file.impl;
-
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPackage;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.PsiDirectory;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-
-public interface JavaFileManager {
+/**
+ * @author VISTALL
+ * @since 8:28/20.05.13
+ */
+public class DummyPsiPackageManagerImpl extends PsiPackageManager {
   @Nullable
-  PsiPackage findPackage(@NotNull String packageName);
+  @Override
+  public PsiPackage findPackage(@NotNull String qualifiedName) {
+    return null;
+  }
 
   @Nullable
-  PsiClass findClass(@NotNull String qName, @NotNull GlobalSearchScope scope);
-
-  PsiClass[] findClasses(@NotNull String qName, @NotNull GlobalSearchScope scope);
-
-  Collection<String> getNonTrivialPackagePrefixes();
-
-  void initialize();
+  @Override
+  public PsiPackage findPackage(@NotNull PsiDirectory directory) {
+    return null;
+  }
 }

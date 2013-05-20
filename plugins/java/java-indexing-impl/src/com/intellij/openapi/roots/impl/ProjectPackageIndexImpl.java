@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.roots.PackageIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
 import org.jetbrains.annotations.NotNull;

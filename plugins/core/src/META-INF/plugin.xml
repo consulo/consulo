@@ -1791,7 +1791,8 @@
     <group id="NewGroup1">
       <!--TODO [VISTALL] java-->
       <action id="NewModuleInGroup" class="com.intellij.openapi.actionSystem.EmptyAction"
-              icon="AllIcons.Nodes.Module"/>  <!--com.intellij.openapi.roots.ui.configuration.actions.NewModuleInGroupAction-->
+              icon="AllIcons.Nodes.Module"/>
+      <!--com.intellij.openapi.roots.ui.configuration.actions.NewModuleInGroupAction-->
 
       <add-to-group group-id="NewGroup" anchor="first"/>
     </group>
@@ -1799,9 +1800,11 @@
     <!-- File -->
     <group id="OpenProjectGroup">
       <action id="NewProject" class="com.intellij.ide.actions.NewProjectAction"/>
-      <action id="NewModule" class="com.intellij.openapi.actionSystem.EmptyAction"/>  <!--com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction-->
+      <action id="NewModule" class="com.intellij.openapi.actionSystem.EmptyAction"/>
+      <!--com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction-->
       <action id="ImportProject" class="com.intellij.ide.actions.ImportProjectAction" text="Import Project..."/>
-      <action id="ImportModule" class="com.intellij.openapi.actionSystem.EmptyAction" text="Import Module..."/>    <!--com.intellij.ide.actions.ImportModuleAction-->
+      <action id="ImportModule" class="com.intellij.openapi.actionSystem.EmptyAction" text="Import Module..."/>
+      <!--com.intellij.ide.actions.ImportModuleAction-->
       <action id="OpenProject" class="com.intellij.ide.actions.OpenProjectAction"/>
 
       <add-to-group group-id="FileOpenGroup" anchor="first"/>
@@ -1914,7 +1917,8 @@
       <separator/>
 
       <action internal="true" id="CompilerTest" class="com.intellij.openapi.actionSystem.EmptyAction"
-              text="Test Rebuild Performance"/> <!--com.intellij.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
+              text="Test Rebuild Performance"/>
+      <!--com.intellij.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
 
       <add-to-group group-id="Internal" anchor="last"/>
     </group>
@@ -2151,10 +2155,10 @@
       <add-to-group group-id="WelcomeScreen.Configure" anchor="last"/>
     </group>
 
-   <!-- <action id="AddFrameworkSupport" class="com.intellij.ide.util.frameworkSupport.AddFrameworkSupportAction">
-      <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
-      <add-to-group group-id="NavbarPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
-    </action>  -->
+    <!-- <action id="AddFrameworkSupport" class="com.intellij.ide.util.frameworkSupport.AddFrameworkSupportAction">
+       <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+       <add-to-group group-id="NavbarPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+     </action>  -->
 
 
     <group id="DiffPanel.Toolbar.IDEA">
@@ -2172,14 +2176,17 @@
     </group>
 
     <group>
-      <action id="CreateLibraryFromFile" class="com.intellij.openapi.actionSystem.EmptyAction"/>  <!--com.intellij.ide.projectView.actions.MarkLibraryRootAction-->
+      <action id="CreateLibraryFromFile" class="com.intellij.openapi.actionSystem.EmptyAction"/>
+      <!--com.intellij.ide.projectView.actions.MarkLibraryRootAction-->
       <action id="ImportModuleFromImlFile" class="com.intellij.ide.projectView.actions.ImportModuleFromImlFileAction"/>
       <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" relative-to-action="MarkRootGroup" anchor="after"/>
     </group>
 
     <group>
-      <action id="SaveProjectAsTemplateAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Save Project as Template..."/> <!--com.intellij.platform.templates.SaveProjectAsTemplateAction-->
-      <action id="ManageProjectTemplatesAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Manage Project Templates..."/> <!--com.intellij.platform.templates.ManageProjectTemplatesAction-->
+      <action id="SaveProjectAsTemplateAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Save Project as Template..."/>
+      <!--com.intellij.platform.templates.SaveProjectAsTemplateAction-->
+      <action id="ManageProjectTemplatesAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Manage Project Templates..."/>
+      <!--com.intellij.platform.templates.ManageProjectTemplatesAction-->
       <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="SaveFileAsTemplate"/>
     </group>
 
@@ -3448,8 +3455,9 @@
     <extensionPoint name="projectExtension" interface="com.intellij.openapi.roots.ProjectExtension" area="IDEA_PROJECT"/>
     <extensionPoint name="roots.watchedRootsProvider" interface="com.intellij.openapi.roots.WatchedRootsProvider" area="IDEA_PROJECT"/>
 
-    <extensionPoint name="moduleExtension" interface="com.intellij.openapi.roots.ModuleExtension0" area="IDEA_MODULE"/> <!--TODO [VISTALL] remove-->
-    <extensionPoint name="moduleExtensionProvider" beanClass="org.consulo.module.extension.ModuleExtensionProviderEP" >
+    <extensionPoint name="moduleExtension" interface="com.intellij.openapi.roots.ModuleExtension0" area="IDEA_MODULE"/>
+    <!--TODO [VISTALL] remove-->
+    <extensionPoint name="moduleExtensionProvider" beanClass="org.consulo.module.extension.ModuleExtensionProviderEP">
       <with attribute="implementationClass" implements="org.consulo.module.extension.ModuleExtensionProvider"/>
     </extensionPoint>
 
@@ -3630,6 +3638,7 @@
     </extensionPoint>
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
+    <extensionPoint name="psi.packageSupportProvider" interface="org.consulo.psi.PsiPackageSupportProvider" />
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
     <extensionPoint name="pom.declarationSearcher" interface="com.intellij.pom.PomDeclarationSearcher"/>
@@ -4220,6 +4229,9 @@
     <applicationService serviceInterface="com.intellij.openapi.ui.popup.StackingPopupDispatcher"
                         serviceImplementation="com.intellij.ui.popup.StackingPopupDispatcherImpl"/>
 
+    <applicationService serviceInterface="org.consulo.psi.PsiPackageManager"
+                        serviceImplementation="org.consulo.psi.impl.DummyPsiPackageManagerImpl"/>
+    <moduleService serviceInterface="org.consulo.psi.PsiPackageManager" serviceImplementation="org.consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
     <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
@@ -4463,7 +4475,7 @@
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.dependencyAnalysis.AnalyzeDependenciesSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.dependencyAnalysis.AnalyzeDependenciesSettings"/>
 
-  <!-- TODO [VISTALL]  <daemon.highlightInfoFilter implementation="com.intellij.debugger.engine.evaluation.DebuggerHighlightFilter"/>   -->
+    <!-- TODO [VISTALL]  <daemon.highlightInfoFilter implementation="com.intellij.debugger.engine.evaluation.DebuggerHighlightFilter"/>   -->
     <daemon.highlightInfoFilter implementation="com.intellij.codeInsight.daemon.impl.HighlightInfoFilterImpl"/>
 
 
@@ -4569,7 +4581,7 @@
     <!--TODO [VISTALL] Java <moduleExtension implementation="com.intellij.openapi.roots.LanguageLevelModuleExtension"/> -->
     <!--TODO [VISTALL] Java <moduleExtension implementation="com.intellij.openapi.roots.impl.JavaModuleExternalPathsImpl"/> -->
 
-   <!-- <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/> -->
+    <!-- <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/> -->
     <orderRootType implementation="com.intellij.openapi.roots.JavadocOrderRootType"/>
 
 
@@ -4581,14 +4593,14 @@
     <stepsBeforeRunProvider implementation="com.intellij.execution.impl.RunConfigurationBeforeRunProvider"/>
     <!--TODO [VISTALL] java  <programRunner id="defaultRunRunner" implementation="com.intellij.execution.impl.DefaultJavaProgramRunner"/>  -->
 
-     <hectorComponentProvider implementation="com.intellij.codeInsight.daemon.impl.ImportPopupHectorComponentProvider"/>
+    <hectorComponentProvider implementation="com.intellij.codeInsight.daemon.impl.ImportPopupHectorComponentProvider"/>
 
 
-     <usageFilteringRuleProvider implementation="com.intellij.usages.impl.ImportUsageFilteringRuleProvider"/>
-     <applicationService serviceInterface="com.intellij.usages.impl.ImportFilteringUsageViewSetting"
-                         serviceImplementation="com.intellij.usages.impl.ImportFilteringUsageViewSetting"/>
+    <usageFilteringRuleProvider implementation="com.intellij.usages.impl.ImportUsageFilteringRuleProvider"/>
+    <applicationService serviceInterface="com.intellij.usages.impl.ImportFilteringUsageViewSetting"
+                        serviceImplementation="com.intellij.usages.impl.ImportFilteringUsageViewSetting"/>
 
-     <!-- this depends on TemplateLanguageConfigurable which isn't registered in LangExtensions, so it should go here as well -->
+    <!-- this depends on TemplateLanguageConfigurable which isn't registered in LangExtensions, so it should go here as well -->
     <errorQuickFixProvider implementation="com.intellij.psi.templateLanguages.TemplateLanguageErrorQuickFixProvider"/>
 
     <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>

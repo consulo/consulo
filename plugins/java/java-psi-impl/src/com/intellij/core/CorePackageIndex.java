@@ -16,7 +16,6 @@
 package com.intellij.core;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.roots.PackageIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.CollectionQuery;
 import com.intellij.util.Query;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.testFramework.fixtures;
+package org.consulo.psi;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPackage;
-import com.intellij.psi.impl.JavaPsiFacadeEx;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.module.Module;
+import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 8:21/20.05.13
  */
-public interface JavaCodeInsightTestFixture extends CodeInsightTestFixture {
-  JavaPsiFacadeEx getJavaFacade();
+public interface PsiPackageSupportProvider {
+  ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create("com.intellij.psi.packageSupportProvider");
 
-  PsiClass addClass(@NotNull @NonNls final String classText);
-
-  @NotNull
-  PsiClass findClass(@NotNull @NonNls String name);
+  boolean isSupported(@NotNull Module module);
 
   @NotNull
-  PsiPackage findPackage(@NotNull @NonNls String name);
+  PsiPackage createPackage(@NotNull PsiManager psiManager, @NotNull PsiPackageManager packageManager, @NotNull String packageName);
 }

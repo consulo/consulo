@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi;
+package org.consulo.psi;
+
+import com.intellij.psi.PsiDirectoryContainer;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * @author dsl
+ * @author VISTALL
+ * @since 7:50/20.05.13
  */
-public interface PsiMigration {
-  PsiClass createClass(String qualifiedName);
-  PsiPackage createPackage(String qualifiedName);
-  void finish();
+public interface PsiPackage extends PsiDirectoryContainer {
+  @NotNull
+  String getQualifiedName();
+
+  PsiPackage getParentPackage();
 }

@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.PlatformIcons;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,6 +64,9 @@ public class DefaultIconProvider extends IconProvider implements DumbAware {
       }
       else if (isSourceOrTestRoot) {
         symbolIcon = IconSet.getSourceRootIcon(inTestSource);
+      }
+      else if(PsiPackageManager.getInstance(psiDirectory).findPackage(psiDirectory) != null) {
+        symbolIcon = AllIcons.Nodes.Package;
       }
       else {
         symbolIcon = PlatformIcons.DIRECTORY_CLOSED_ICON;

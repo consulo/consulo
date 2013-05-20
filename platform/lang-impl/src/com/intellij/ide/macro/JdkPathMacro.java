@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.ex.PathUtilEx;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,8 +43,9 @@ public final class JdkPathMacro extends Macro {
     if (project == null) {
       return null;
     }
-    final Sdk anyJdk = PathUtilEx.getAnyJdk(project);
-    return sdkPath(anyJdk);
+    //f/inal Sdk anyJdk = PathUtilEx.getAnyJdk(project);
+   // return sdkPath(anyJdk);
+    return null;
   }
 
   @Nullable

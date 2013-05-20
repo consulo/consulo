@@ -30,6 +30,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,29 +40,29 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public abstract class PsiPackageBase extends PsiElementBase implements PsiDirectoryContainer, Queryable {
+public abstract class PsiPackageBase extends PsiElementBase implements PsiPackage, Queryable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.PsiPackageBase");
 
-  final PsiManager myManager;
+  private final PsiManager myManager;
+  private final PsiPackageManager myPackageManager;
   private final String myQualifiedName;
 
   protected abstract Collection<PsiDirectory> getAllDirectories();
 
-  protected abstract PsiElement findPackage(String qName);
-
-  protected abstract PsiPackageBase createInstance(PsiManager manager, String qName);
-
-  public PsiPackageBase(PsiManager manager, String qualifiedName) {
+  public PsiPackageBase(PsiManager manager, PsiPackageManager packageManager, String qualifiedName) {
     myManager = manager;
+    myPackageManager = packageManager;
     myQualifiedName = qualifiedName;
   }
 
+  @Override
   public boolean equals(Object o) {
     return o != null && getClass() == o.getClass()
            && myManager == ((PsiPackageBase)o).myManager
            && myQualifiedName.equals(((PsiPackageBase)o).myQualifiedName);
   }
 
+  @Override
   public int hashCode() {
     return myQualifiedName.hashCode();
   }
@@ -120,7 +122,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiDirect
       dir.setName(name);
     }
     String nameAfterRename = PsiUtilCore.getQualifiedNameAfterRename(getQualifiedName(), name);
-    return findPackage(nameAfterRename);
+    return myPackageManager.findPackage(nameAfterRename);
   }
 
   public void checkSetName(@NotNull String name) throws IncorrectOperationException {
@@ -130,14 +132,15 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiDirect
     }
   }
 
-  public PsiPackageBase getParentPackage() {
+  @Override
+  public PsiPackage getParentPackage() {
     if (myQualifiedName.isEmpty()) return null;
     int lastDot = myQualifiedName.lastIndexOf('.');
     if (lastDot < 0) {
-      return createInstance(myManager, "");
+      return myPackageManager.findPackage("");
     }
     else {
-      return createInstance(myManager, myQualifiedName.substring(0, lastDot));
+      return myPackageManager.findPackage(myQualifiedName.substring(0, lastDot));
     }
   }
 
