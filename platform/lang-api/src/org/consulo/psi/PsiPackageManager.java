@@ -38,6 +38,8 @@ public abstract class PsiPackageManager {
     return moduleForPsiElement == null ? ServiceManager.getService(PsiPackageManager.class) : getInstance(moduleForPsiElement);
   }
 
+  public abstract void dropCache();
+
   @Nullable
   public abstract PsiPackage findPackage(@NotNull String qualifiedName);
 

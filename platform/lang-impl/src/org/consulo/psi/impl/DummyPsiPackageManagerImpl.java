@@ -26,6 +26,11 @@ import org.jetbrains.annotations.Nullable;
  * @since 8:28/20.05.13
  */
 public class DummyPsiPackageManagerImpl extends PsiPackageManager {
+  @Override
+  public void dropCache() {
+
+  }
+
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull String qualifiedName) {

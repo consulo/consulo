@@ -69,6 +69,11 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     }
   }
 
+  @Override
+  public void dropCache() {
+    myPackageCache.clear();
+  }
+
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull String qualifiedName) {

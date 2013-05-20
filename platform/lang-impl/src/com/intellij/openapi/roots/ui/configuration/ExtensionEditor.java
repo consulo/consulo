@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import com.intellij.ui.CheckboxTree;
@@ -23,6 +24,8 @@ import com.intellij.ui.JBSplitter;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.psi.PsiPackageManager;
+import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -105,6 +108,13 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     if (extension instanceof ModuleExtensionWithSdk) {
       myClasspathEditor.moduleStateChanged();
+    }
+
+    for(PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+      final Module module = extension.getModule();
+      if(supportProvider.isSupported(module))  {
+        PsiPackageManager.getInstance(module).dropCache();
+      }
     }
   }
 
