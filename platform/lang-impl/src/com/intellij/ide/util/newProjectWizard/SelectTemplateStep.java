@@ -18,6 +18,7 @@ package com.intellij.ide.util.newProjectWizard;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.BrowseFilesListener;
+import com.intellij.ide.util.DefaultModuleBuilder;
 import com.intellij.ide.util.projectWizard.*;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.module.Module;
@@ -28,7 +29,6 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
@@ -230,10 +230,11 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
 
   @Override
   public boolean validate() throws ConfigurationException {
-    ProjectTemplate template = getSelectedTemplate();
+   /* ProjectTemplate template = getSelectedTemplate();
     if (template == null) {
       throw new ConfigurationException(StringUtil.capitalize(ProjectBundle.message("project.new.wizard.from.template.error", myWizardContext.getPresentationName())), "Error");
-    }
+    }   */
+    myModuleBuilder = new DefaultModuleBuilder();
 
     if (myWizardContext.isCreatingNewProject()) {
       if (!myNamePathComponent.validateNameAndPath(myWizardContext, myFormatPanel.isDefault())) return false;
@@ -244,10 +245,10 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
       validateExistingModuleName();
     }
 
-    ValidationInfo info = template.validateSettings();
+    /*ValidationInfo info = template.validateSettings();
     if (info != null) {
       throw new ConfigurationException(info.message, "Error");
-    }
+    }    */
     if (mySettingsStep != null) {
       return mySettingsStep.validate();
     }
