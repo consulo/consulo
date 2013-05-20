@@ -152,7 +152,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
   @Override
   public boolean isValid() {
-    return !isDisposed() && getSdk() != null;
+    return !isDisposed();
   }
 
   @Override

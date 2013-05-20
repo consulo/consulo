@@ -43,8 +43,8 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
 
   @Nullable
   @Override
-  public JComponent createConfigurablePanel(@Nullable Runnable classpathStateUpdater) {
-    return new JavaModuleExtensionPanel(this, classpathStateUpdater);
+  public JComponent createConfigurablePanel(@Nullable Runnable updateOnCheck) {
+    return new JavaModuleExtensionPanel(this, updateOnCheck);
   }
 
   @Override

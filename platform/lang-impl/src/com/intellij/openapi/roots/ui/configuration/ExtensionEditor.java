@@ -20,8 +20,8 @@ import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRe
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckboxTreeBase;
 import com.intellij.ui.JBSplitter;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +43,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   private final ClasspathEditor myClasspathEditor;
   private JPanel myRootPane;
   private CheckboxTree myTree;
+  private JBSplitter mySplitter;
 
   public ExtensionEditor(ModuleConfigurationState state, ClasspathEditor e) {
     super(state);
@@ -55,50 +56,55 @@ public class ExtensionEditor extends ModuleElementsEditor {
   protected JComponent createComponentImpl() {
     myRootPane = new JPanel(new BorderLayout());
 
-    myTree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, myClasspathEditor),
-                                               new CheckboxTreeBase.CheckPolicy(true, true, false, true));
+    mySplitter = new JBSplitter();
+
+    myTree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this),
+                              new CheckboxTreeBase.CheckPolicy(true, true, false, true));
     myTree.setRootVisible(false);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.addTreeSelectionListener(new TreeSelectionListener() {
       @Override
       public void valueChanged(final TreeSelectionEvent e) {
         final List<MutableModuleExtension> selected = TreeUtil.collectSelectedObjectsOfType(myTree, MutableModuleExtension.class);
-        if (selected.isEmpty()) {
-          return;
-        }
+        mySplitter.setSecondComponent(null);
 
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            myRootPane.removeAll();
-            myRootPane.add(createPanel(selected.get(0)));
+        if (!selected.isEmpty()) {
+          final MutableModuleExtension extension = selected.get(0);
+          if (!extension.isEnabled()) {
+            return;
           }
-        });
+
+          mySplitter.setSecondComponent(createConfigurationPanel(extension));
+        }
       }
     });
 
+    mySplitter.setFirstComponent(myTree);
 
-    myRootPane.add(createPanel(null), BorderLayout.CENTER);
+    myRootPane.add(mySplitter, BorderLayout.CENTER);
 
     return myRootPane;
   }
 
-  private JComponent createPanel(MutableModuleExtension<?> extension) {
-    final JComponent configurablePanel = extension == null ? null : extension.createConfigurablePanel(new Runnable() {
+  private JComponent createConfigurationPanel(final MutableModuleExtension<?> extension) {
+    return extension.createConfigurablePanel(new Runnable() {
       @Override
       public void run() {
-        myClasspathEditor.moduleStateChanged();
+        extensionChanged(extension);
       }
     });
-    if (configurablePanel == null) {
-      return myTree;
+  }
+
+  public void extensionChanged(MutableModuleExtension<?> extension) {
+    if (!extension.isEnabled()) {
+      mySplitter.setSecondComponent(null);
     }
     else {
-      final JBSplitter splitter = new JBSplitter();
-      splitter.setSplitterProportionKey(getClass().getName());
-      splitter.setFirstComponent(myTree);
-      splitter.setSecondComponent(configurablePanel);
-      return splitter;
+      mySplitter.setSecondComponent(createConfigurationPanel(extension));
+    }
+
+    if (extension instanceof ModuleExtensionWithSdk) {
+      myClasspathEditor.moduleStateChanged();
     }
   }
 

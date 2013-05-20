@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.extension;
 
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
-import com.intellij.openapi.roots.ui.configuration.ClasspathEditor;
+import com.intellij.openapi.roots.ui.configuration.ExtensionEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckedTreeNode;
@@ -37,16 +37,16 @@ import java.util.Vector;
 public class ExtensionCheckedTreeNode extends CheckedTreeNode {
   private final ModuleExtensionProviderEP myProviderEP;
   @NotNull private final ModuleConfigurationState myState;
-  private final ClasspathEditor myClasspathEditor;
+  private final ExtensionEditor myExtensionEditor;
   private MutableModuleExtension<?> myExtension;
 
   public ExtensionCheckedTreeNode(@Nullable ModuleExtensionProviderEP providerEP,
                                   @NotNull ModuleConfigurationState state,
-                                  ClasspathEditor classpathEditor) {
+                                  ExtensionEditor extensionEditor) {
     super(null);
     myProviderEP = providerEP;
     myState = state;
-    myClasspathEditor = classpathEditor;
+    myExtensionEditor = extensionEditor;
 
     String parentKey = null;
     if (providerEP != null) {
@@ -62,7 +62,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     Vector<ExtensionCheckedTreeNode> child = new Vector<ExtensionCheckedTreeNode>();
     for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       if (Comparing.equal(ep.parentKey, parentKey)) {
-        final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myClasspathEditor);
+        final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myExtensionEditor);
         e.setParent(this);
 
         child.add(e);
@@ -92,7 +92,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       if (enabled) {
         rootModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk)myExtension);
       }
-      myClasspathEditor.moduleStateChanged();
+      myExtensionEditor.extensionChanged(myExtension);
     }
   }
 
