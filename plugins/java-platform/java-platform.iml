@@ -10,6 +10,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="lang-impl" exported="" />
     <orderEntry type="module" module-name="java-psi-api" exported="" />
+    <orderEntry type="module" module-name="java-execution-api" exported="" />
+    <orderEntry type="module" module-name="java-indexing-api" exported="" />
   </component>
 </module>
 

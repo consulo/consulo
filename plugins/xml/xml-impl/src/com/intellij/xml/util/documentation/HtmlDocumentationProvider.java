@@ -29,11 +29,13 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.xml.XmlAttributeDescriptor;
 import com.intellij.xml.XmlBundle;
 import com.intellij.xml.XmlElementDescriptor;
-import com.intellij.xml.util.ColorSampleLookupValue;
+import com.intellij.util.ColorSampleLookupValue;
+import com.intellij.xml.util.UserColorLookup;
 import com.intellij.xml.util.XmlUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -238,7 +240,7 @@ public class HtmlDocumentationProvider implements DocumentationProvider {
     }
 
     if (!istag) {
-      ColorSampleLookupValue.addColorPreviewAndCodeToLookup(element,buf);
+      addColorPreviewAndCodeToLookup(element, buf);
     }
 
     if (element != null) {
@@ -322,6 +324,14 @@ public class HtmlDocumentationProvider implements DocumentationProvider {
     }
 
     return PsiTreeUtil.getParentOfType(context,XmlTag.class,false);
+  }
+
+  public static void addColorPreviewAndCodeToLookup(final PsiElement currentElement, final StringBuilder buf) {
+    final Color colorFromElement = UserColorLookup.getColorFromElement(currentElement);
+
+    if (colorFromElement != null) {
+      ColorSampleLookupValue.addColorPreviewAndCodeToLookup(colorFromElement, buf);
+    }
   }
 
   public static void registerScriptDocumentationProvider(final DocumentationProvider provider) {

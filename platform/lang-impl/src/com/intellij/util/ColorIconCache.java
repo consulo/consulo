@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xml.util;
+package com.intellij.util;
 
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.SoftFactoryMap;

@@ -57,7 +57,7 @@ public class CreateClassOrPackageFix extends LocalQuickFixAndIntentionActionOnPs
   public static CreateClassOrPackageFix createFix(@NotNull final String qualifiedName,
                                                   @NotNull final GlobalSearchScope scope,
                                                   @NotNull final PsiElement context,
-                                                  @Nullable final PsiPackage basePackage,
+                                                  @Nullable final PsiJavaPackage basePackage,
                                                   @Nullable ClassKind kind,
                                                   @Nullable String superClass,
                                                   @Nullable String templateName) {
@@ -232,7 +232,7 @@ public class CreateClassOrPackageFix extends LocalQuickFixAndIntentionActionOnPs
     return false;
   }
 
-  public static List<PsiDirectory> getWritableDirectoryListDefault(@Nullable final PsiPackage context,
+  public static List<PsiDirectory> getWritableDirectoryListDefault(@Nullable final PsiJavaPackage context,
                                                                    final GlobalSearchScope scope,
                                                                    final PsiManager psiManager) {
     if (LOG.isDebugEnabled()) {

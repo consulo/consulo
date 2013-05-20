@@ -22,7 +22,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementDecorator;
 import com.intellij.codeInsight.lookup.LookupValueWithPriority;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiElement;
@@ -30,6 +29,7 @@ import com.intellij.psi.xml.XmlToken;
 import com.intellij.ui.ColorChooser;
 import com.intellij.ui.ColorPickerListener;
 import com.intellij.ui.ColorPickerListenerFactory;
+import com.intellij.util.ColorSampleLookupValue;
 import com.intellij.xml.XmlBundle;
 import org.jetbrains.annotations.Nullable;
 

@@ -64,6 +64,7 @@ import com.intellij.psi.util.proximity.PsiProximityComparator;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,7 +86,7 @@ public class CreateFromUsageUtils {
     if (!unresolvedOnly) {
       for (JavaResolveResult result : results) {
         if (!result.isValidResult()) return false;
-        if (result.getElement() instanceof PsiPackage) return false;
+        if (result.getElement() instanceof PsiJavaPackage) return false;
       }
     }
     return true;

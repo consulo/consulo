@@ -104,6 +104,7 @@ public abstract class ProjectRootManager implements ModificationTracker {
    * to any existing JDK instance.
    */
   @Nullable
+  @Deprecated
   public abstract Sdk getProjectSdk();
 
   @Deprecated
@@ -117,6 +118,7 @@ public abstract class ProjectRootManager implements ModificationTracker {
    *
    * @return the SDK name.
    */
+  @Deprecated
   public abstract String getProjectSdkName();
 
   @Deprecated
@@ -129,6 +131,7 @@ public abstract class ProjectRootManager implements ModificationTracker {
    *
    * @param sdk the SDK instance.
    */
+  @Deprecated
   public abstract void setProjectSdk(@Nullable Sdk sdk);
 
 
@@ -142,6 +145,7 @@ public abstract class ProjectRootManager implements ModificationTracker {
    *
    * @param name the name of the JDK.
    */
+  @Deprecated
   public abstract void setProjectSdkName(String name);
 
   @Deprecated

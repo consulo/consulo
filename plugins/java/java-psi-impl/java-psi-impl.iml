@@ -7,15 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="java-psi-api" />
-    <orderEntry type="module" module-name="core-api" />
-    <orderEntry type="module" module-name="projectModel-api" />
-    <orderEntry type="module" module-name="java-analysis-impl" />
-    <orderEntry type="module" module-name="indexing-api" />
-    <orderEntry type="module" module-name="external-system-api" />
     <orderEntry type="module" module-name="java" />
-    <orderEntry type="module" module-name="core-impl" />
-    <orderEntry type="library" name="asm4" level="project" />
   </component>
 </module>
 

@@ -77,6 +77,7 @@
               <element id="module-output" name="java-platform" />
               <element id="module-output" name="java-psi-api" />
               <element id="module-output" name="java-indexing-api" />
+              <element id="module-output" name="java-execution-api" />
             </element>
           </element>
         </element>
@@ -84,6 +85,14 @@
           <element id="directory" name="lib">
             <element id="archive" name="ant.jar">
               <element id="module-output" name="ant-new" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="java">
+          <element id="directory" name="lib">
+            <element id="archive" name="java.jar">
+              <element id="module-output" name="java" />
+              <element id="module-output" name="java-psi-impl" />
             </element>
           </element>
         </element>
@@ -118,7 +127,7 @@
           <element id="module-output" name="usageView" />
         </element>
         <element id="archive" name="idea_rt.jar">
-          <element id="module-output" name="execution-api" />
+          <element id="module-output" name="java-execution-api" />
           <element id="module-output" name="execution-impl" />
         </element>
         <element id="archive" name="boot.jar">

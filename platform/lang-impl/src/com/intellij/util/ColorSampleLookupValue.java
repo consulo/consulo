@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xml.util;
+package com.intellij.util;
 
 import com.intellij.codeInsight.lookup.DeferredUserLookupValue;
 import com.intellij.codeInsight.lookup.LookupItem;
 import com.intellij.codeInsight.lookup.LookupValueWithPriority;
 import com.intellij.codeInsight.lookup.LookupValueWithUIHint;
+import com.intellij.lang.LangBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
 import com.intellij.ui.ColorUtil;
-import com.intellij.xml.XmlBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -412,14 +411,6 @@ public class ColorSampleLookupValue implements LookupValueWithUIHint, DeferredUs
     return ourHexCodeToColorNameMap.get(colorName);
   }
 
-  public static void addColorPreviewAndCodeToLookup(final PsiElement currentElement, final StringBuilder buf) {
-    final Color colorFromElement = UserColorLookup.getColorFromElement(currentElement);
-
-    if (colorFromElement != null) {
-      addColorPreviewAndCodeToLookup(colorFromElement, buf);
-    }
-  }
-
   private static String toHex(@NotNull final Color color) {
     final StringBuilder sb = new StringBuilder();
     for (int i = 0; i < 3; i++) {
@@ -439,11 +430,11 @@ public class ColorSampleLookupValue implements LookupValueWithUIHint, DeferredUs
     final String code = '#' + toHex(color);
     final String colorName = getColorNameForHexCode(code);
     if (colorName != null) {
-      buf.append(XmlBundle.message("color.name", colorName)).append(BR);
+      buf.append(LangBundle.message("color.name", colorName)).append(BR);
     }
 
     String colorBox = "<div style=\"border: 1px solid #000000; width: 50px; height: 20px; background-color:" + code + "\"></div>";
-    buf.append(XmlBundle.message("color.preview", colorBox)).append(BR);
+    buf.append(LangBundle.message("color.preview", colorBox)).append(BR);
   }
 
   public static Color getColor(String text) {

@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReference;
@@ -50,12 +50,12 @@ public class JavaClassReferenceCompletionContributor extends CompletionContribut
 
     String[] extendClassNames = reference.getExtendClassNames();
     PsiElement context = reference.getCompletionContext();
-    if (extendClassNames != null && context instanceof PsiPackage) {
+    if (extendClassNames != null && context instanceof PsiJavaPackage) {
       if (parameters.getCompletionType() == CompletionType.SMART) {
         JavaClassReferenceSet set = reference.getJavaClassReferenceSet();
         int setStart = set.getRangeInElement().getStartOffset() + set.getElement().getTextRange().getStartOffset();
         String fullPrefix = parameters.getPosition().getContainingFile().getText().substring(setStart, parameters.getOffset());
-        reference.processSubclassVariants((PsiPackage)context, extendClassNames, result.withPrefixMatcher(fullPrefix));
+        reference.processSubclassVariants((PsiJavaPackage)context, extendClassNames, result.withPrefixMatcher(fullPrefix));
         return;
       }
       result.addLookupAdvertisement("Press " + getActionShortcut(IdeActions.ACTION_SMART_TYPE_COMPLETION) + " to see inheritors of " +
