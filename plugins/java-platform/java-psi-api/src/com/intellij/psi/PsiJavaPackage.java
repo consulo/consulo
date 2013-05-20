@@ -18,6 +18,7 @@ package com.intellij.psi;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,11 +26,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a Java package.
  */
-public interface PsiPackage extends PsiCheckedRenameElement, NavigationItem, PsiModifierListOwner, PsiDirectoryContainer, PsiQualifiedNamedElement {
+public interface PsiJavaPackage extends PsiCheckedRenameElement, NavigationItem, PsiModifierListOwner, PsiPackage, PsiQualifiedNamedElement {
   @NonNls String PACKAGE_INFO_CLASS = "package-info";
   @NonNls String PACKAGE_INFO_FILE = PACKAGE_INFO_CLASS + ".java";
 
-  PsiPackage[] EMPTY_ARRAY = new PsiPackage[0];
+  PsiJavaPackage[] EMPTY_ARRAY = new PsiJavaPackage[0];
 
   /**
    * Returns the full-qualified name of the package.
@@ -46,7 +47,7 @@ public interface PsiPackage extends PsiCheckedRenameElement, NavigationItem, Psi
    * @return the parent package, or null for the default package.
    */
   @Nullable
-  PsiPackage getParentPackage();
+  PsiJavaPackage getParentPackage();
 
   /**
    * Returns the list of subpackages of this package under all source roots of the project.
@@ -54,7 +55,7 @@ public interface PsiPackage extends PsiCheckedRenameElement, NavigationItem, Psi
    * @return the array of subpackages.
    */
   @NotNull
-  PsiPackage[] getSubPackages();
+  PsiJavaPackage[] getSubPackages();
 
   /**
    * Returns the list of subpackages of this package in the specified search scope.
@@ -63,7 +64,7 @@ public interface PsiPackage extends PsiCheckedRenameElement, NavigationItem, Psi
    * @return the array of subpackages.
    */
   @NotNull
-  PsiPackage[] getSubPackages(@NotNull GlobalSearchScope scope);
+  PsiJavaPackage[] getSubPackages(@NotNull GlobalSearchScope scope);
 
   /**
    * Returns the list of classes in all directories corresponding to the package.

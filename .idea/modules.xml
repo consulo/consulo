@@ -13,7 +13,7 @@
       <module fileurl="file://$PROJECT_DIR$/platform/annotations/annotations.iml" filepath="$PROJECT_DIR$/platform/annotations/annotations.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/ant/ant.iml" filepath="$PROJECT_DIR$/plugins/ant/ant.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/ant/jps-plugin/ant-jps-plugin.iml" filepath="$PROJECT_DIR$/plugins/ant/jps-plugin/ant-jps-plugin.iml" group="plugins" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/ant-new/ant-new.iml" filepath="$PROJECT_DIR$/plugins/ant-new/ant-new.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/ant-new/ant-new.iml" filepath="$PROJECT_DIR$/plugins/ant-new/ant-new.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/jps/antLayout/antlayout.iml" filepath="$PROJECT_DIR$/jps/antLayout/antlayout.iml" group="jps" />
       <module fileurl="file://$PROJECT_DIR$/plugins/svn4idea/bindSvn/bindSvn.iml" filepath="$PROJECT_DIR$/plugins/svn4idea/bindSvn/bindSvn.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/platform/boot/boot.iml" filepath="$PROJECT_DIR$/platform/boot/boot.iml" group="platform" />
@@ -54,6 +54,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/IntelliLang/intellilang-jps-plugin/intellilang-jps-plugin.iml" filepath="$PROJECT_DIR$/plugins/IntelliLang/intellilang-jps-plugin/intellilang-jps-plugin.iml" group="jps" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" filepath="$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-platform.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-platform.iml" group="plugins/java-platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/tools/javac2/javac2.iml" filepath="$PROJECT_DIR$/platform/tools/javac2/javac2.iml" group="platform/tools" />
       <module fileurl="file://$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" filepath="$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" group="plugins/VCS/cvs" />
       <module fileurl="file://$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" filepath="$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" group="plugins/tasks" />

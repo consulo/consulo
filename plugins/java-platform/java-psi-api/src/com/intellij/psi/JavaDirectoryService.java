@@ -38,7 +38,7 @@ public abstract class JavaDirectoryService {
    * @return the package instance, or null if the directory does not correspond to any package.
    */
   @Nullable
-  public abstract PsiPackage getPackage(@NotNull PsiDirectory dir);
+  public abstract PsiJavaPackage getPackage(@NotNull PsiDirectory dir);
 
   /**
    * Returns the list of Java classes contained in the directory.

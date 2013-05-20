@@ -69,33 +69,33 @@ public abstract class PsiElementFinder {
    * @see JavaPsiFacade#findPackage(String)
    */
   @Nullable
-  public PsiPackage findPackage(@NotNull String qualifiedName) {
+  public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
     return null;
   }
 
   /**
    * Returns the list of subpackages of the specified package in the specified search scope.
    *
-   * @param psiPackage the package to return the list of subpackages for.
+   * @param psiJavaPackage the package to return the list of subpackages for.
    * @param scope the scope in which subpackages are searched.
    * @return the list of subpackages.
-   * @see PsiPackage#getSubPackages(GlobalSearchScope)
+   * @see PsiJavaPackage#getSubPackages(GlobalSearchScope)
    */
   @NotNull
-  public PsiPackage[] getSubPackages(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
-    return PsiPackage.EMPTY_ARRAY;
+  public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiJavaPackage, @NotNull GlobalSearchScope scope) {
+    return PsiJavaPackage.EMPTY_ARRAY;
   }
 
   /**
    * Returns the list of classes in the specified package and in the specified search scope.
    *
-   * @param psiPackage the package to return the list of classes in.
+   * @param psiJavaPackage the package to return the list of classes in.
    * @param scope the scope in which classes are searched.
    * @return the list of classes.
-   * @see PsiPackage#getClasses(GlobalSearchScope)
+   * @see PsiJavaPackage#getClasses(GlobalSearchScope)
    */
   @NotNull
-  public PsiClass[] getClasses(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+  public PsiClass[] getClasses(@NotNull PsiJavaPackage psiJavaPackage, @NotNull GlobalSearchScope scope) {
     return PsiClass.EMPTY_ARRAY;
   }
 
@@ -103,8 +103,8 @@ public abstract class PsiElementFinder {
    * A method to optimize resolve (to only search classes in a package which might be there)
    */
   @NotNull
-  public Set<String> getClassNames(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
-    return getClassNames(getClasses(psiPackage, scope));
+  public Set<String> getClassNames(@NotNull PsiJavaPackage psiJavaPackage, @NotNull GlobalSearchScope scope) {
+    return getClassNames(getClasses(psiJavaPackage, scope));
   }
 
   @NotNull
@@ -120,7 +120,7 @@ public abstract class PsiElementFinder {
     return names;
   }
 
-  public boolean processPackageDirectories(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope, @NotNull Processor<PsiDirectory> consumer) {
+  public boolean processPackageDirectories(@NotNull PsiJavaPackage psiJavaPackage, @NotNull GlobalSearchScope scope, @NotNull Processor<PsiDirectory> consumer) {
     return true;
   }
 
@@ -128,14 +128,14 @@ public abstract class PsiElementFinder {
    * Returns the list of classes in the specified package and in the specified search scope.
    *
    * @param className short name of the class
-   * @param psiPackage the package to return the list of classes in.
+   * @param psiJavaPackage the package to return the list of classes in.
    * @param scope the scope in which classes are searched.
    * @return the list of classes.
-   * @see PsiPackage#getClasses(GlobalSearchScope)
+   * @see PsiJavaPackage#getClasses(GlobalSearchScope)
    */
   @NotNull
-  public PsiClass[] getClasses(@Nullable String className, @NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
-    PsiClass[] allClasses = getClasses(psiPackage, scope);
+  public PsiClass[] getClasses(@Nullable String className, @NotNull PsiJavaPackage psiJavaPackage, @NotNull GlobalSearchScope scope) {
+    PsiClass[] allClasses = getClasses(psiJavaPackage, scope);
     if (className == null) return allClasses;
     return filterByName(className, allClasses);
   }

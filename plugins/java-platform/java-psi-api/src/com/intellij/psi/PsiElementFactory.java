@@ -288,7 +288,7 @@ public interface PsiElementFactory extends PsiJavaParserFacade, JVMElementFactor
    * @return the reference element instance.
    * @throws IncorrectOperationException if <code>aPackage</code> is the default (root) package.
    */
-  @NotNull PsiJavaCodeReferenceElement createPackageReferenceElement(@NotNull PsiPackage aPackage) throws IncorrectOperationException;
+  @NotNull PsiJavaCodeReferenceElement createPackageReferenceElement(@NotNull PsiJavaPackage aPackage) throws IncorrectOperationException;
 
   /**
    * Creates a reference element resolving to the package with the specified name.
@@ -315,7 +315,7 @@ public interface PsiElementFactory extends PsiJavaParserFacade, JVMElementFactor
    * @return the reference expression instance.
    * @throws IncorrectOperationException if <code>aPackage</code> is the default (root) package.
    */
-  @NotNull PsiReferenceExpression createReferenceExpression(@NotNull PsiPackage aPackage) throws IncorrectOperationException;
+  @NotNull PsiReferenceExpression createReferenceExpression(@NotNull PsiJavaPackage aPackage) throws IncorrectOperationException;
 
   /**
    * Creates a Java identifier with the specified text.

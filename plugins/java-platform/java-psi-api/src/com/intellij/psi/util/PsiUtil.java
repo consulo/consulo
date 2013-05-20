@@ -61,7 +61,7 @@ public final class PsiUtil extends PsiUtilCore {
            PsiTreeUtil.isAncestor(((PsiAssignmentExpression)parent).getLExpression(), expr, false);
   }
 
-  public static boolean isAccessibleFromPackage(@NotNull PsiModifierListOwner element, @NotNull PsiPackage aPackage) {
+  public static boolean isAccessibleFromPackage(@NotNull PsiModifierListOwner element, @NotNull PsiJavaPackage aPackage) {
     if (element.hasModifierProperty(PsiModifier.PUBLIC)) return true;
     return !element.hasModifierProperty(PsiModifier.PRIVATE) &&
            JavaPsiFacade.getInstance(element.getProject()).isInPackage(element, aPackage);

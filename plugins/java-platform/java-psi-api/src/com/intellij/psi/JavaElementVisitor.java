@@ -196,7 +196,7 @@ public abstract class JavaElementVisitor extends PsiElementVisitor {
     visitCallExpression(expression);
   }
 
-  public void visitPackage(PsiPackage aPackage) {
+  public void visitPackage(PsiJavaPackage aPackage) {
     visitElement(aPackage);
   }
 

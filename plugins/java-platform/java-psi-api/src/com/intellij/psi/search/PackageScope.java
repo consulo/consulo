@@ -21,34 +21,35 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClassOwner;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
 public class PackageScope extends GlobalSearchScope {
   private final Collection<VirtualFile> myDirs;
-  private final PsiPackage myPackage;
+  private final PsiJavaPackage myPackage;
   private final boolean myIncludeSubpackages;
   private final boolean myIncludeLibraries;
   protected final boolean myPartOfPackagePrefix;
   protected final String myPackageQualifiedName;
   protected final String myPackageQNamePrefix;
 
-  public PackageScope(@NotNull PsiPackage aPackage, boolean includeSubpackages, final boolean includeLibraries) {
+  public PackageScope(@NotNull PsiJavaPackage aPackage, boolean includeSubpackages, final boolean includeLibraries) {
     super(aPackage.getProject());
     myPackage = aPackage;
     myIncludeSubpackages = includeSubpackages;
 
     Project project = myPackage.getProject();
     myPackageQualifiedName = myPackage.getQualifiedName();
-    myDirs = PackageIndex.getInstance(project).getDirsByPackageName(myPackageQualifiedName, true).findAll();
+    myDirs = DirectoryIndex.getInstance(project).getDirectoriesByPackageName(myPackageQualifiedName, true).findAll();
     myIncludeLibraries = includeLibraries;
 
     myPartOfPackagePrefix = JavaPsiFacade.getInstance(getProject()).isPartOfPackagePrefix(myPackageQualifiedName);
@@ -95,11 +96,11 @@ public class PackageScope extends GlobalSearchScope {
            ", includeSubpackages = " + myIncludeSubpackages;
   }
 
-  public static GlobalSearchScope packageScope(@NotNull PsiPackage aPackage, boolean includeSubpackages) {
+  public static GlobalSearchScope packageScope(@NotNull PsiJavaPackage aPackage, boolean includeSubpackages) {
     return new PackageScope(aPackage, includeSubpackages, true);
   }
 
-  public static GlobalSearchScope packageScopeWithoutLibraries(@NotNull PsiPackage aPackage, boolean includeSubpackages) {
+  public static GlobalSearchScope packageScopeWithoutLibraries(@NotNull PsiJavaPackage aPackage, boolean includeSubpackages) {
     return new PackageScope(aPackage, includeSubpackages, false);
   }
 }

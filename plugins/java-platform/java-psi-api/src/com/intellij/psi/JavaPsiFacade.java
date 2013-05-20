@@ -67,7 +67,7 @@ public abstract class JavaPsiFacade {
    * @return the PSI package, or null if no package with such name is found.
    */
   @Nullable
-  public abstract PsiPackage findPackage(@NonNls @NotNull String qualifiedName);
+  public abstract PsiJavaPackage findPackage(@NonNls @NotNull String qualifiedName);
 
   /**
    * Returns the element factory for the project, which can be used to
@@ -130,7 +130,7 @@ public abstract class JavaPsiFacade {
    * @param aPackage the package to check.
    * @return true if the element belongs to the package, false otherwise.
    */
-  public abstract boolean isInPackage(@NotNull PsiElement element, @NotNull PsiPackage aPackage);
+  public abstract boolean isInPackage(@NotNull PsiElement element, @NotNull PsiJavaPackage aPackage);
 
   /**
    * Checks if the specified PSI elements belong to the same package.

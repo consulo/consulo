@@ -75,6 +75,46 @@
           <element id="directory" name="lib">
             <element id="archive" name="java-platform.jar">
               <element id="module-output" name="java-platform" />
+              <element id="module-output" name="java-psi-api" />
+              <element id="library" level="project" name="OroMatcher" />
+              <element id="library" level="project" name="Velocity" />
+              <element id="library" level="project" name="xpp3-1.1.4-min" />
+              <element id="library" level="project" name="cli-parser" />
+              <element id="library" level="project" name="http-client-3.1" />
+              <element id="library" level="project" name="Snappy-Java" />
+              <element id="library" level="project" name="swingx" />
+              <element id="library" level="project" name="Guava" />
+              <element id="library" level="project" name="gson" />
+              <element id="library" level="project" name="NanoXML" />
+              <element id="library" level="project" name="picocontainer" />
+              <element id="library" level="project" name="jgoodies-forms" />
+              <element id="library" level="project" name="commons-codec" />
+              <element id="file-copy" path="$PROJECT_DIR$/lib/automaton.jar" />
+              <element id="library" level="project" name="Netty" />
+              <element id="library" level="project" name="proxy-vole" />
+              <element id="library" level="project" name="miglayout-swing" />
+              <element id="library" level="project" name="JDOM" />
+              <element id="library" level="project" name="Log4J" />
+              <element id="library" level="project" name="Trove4j" />
+              <element id="library" level="project" name="jna" />
+              <element id="library" level="project" name="XStream" />
+              <element id="library" level="project" name="microba" />
+              <element id="library" level="project" name="XmlRPC" />
+              <element id="library" level="project" name="commons-net" />
+              <element id="library" level="project" name="asm" />
+              <element id="library" level="project" name="CGLIB" />
+              <element id="library" level="project" name="JavaHelp" />
+              <element id="library" level="project" name="winp" />
+              <element id="library" level="project" name="Sanselan" />
+              <element id="library" level="project" name="Xerces" />
+              <element id="library" level="project" name="XmlBeans" />
+              <element id="library" level="project" name="Eclipse" />
+              <element id="module-output" name="jps-builders" />
+              <element id="library" level="project" name="asm4" />
+              <element id="library" level="project" name="protobuf" />
+              <element id="file-copy" path="$PROJECT_DIR$/jps/lib/optimizedFileManager.jar" />
+              <element id="module-output" name="forms-compiler" />
+              <element id="module-output" name="instrumentation-util" />
             </element>
           </element>
         </element>

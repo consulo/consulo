@@ -16,6 +16,7 @@
 package org.consulo.java.platform.psi.impl;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.java.JavaLanguage;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
@@ -42,6 +43,6 @@ public class JavaPsiPackageImpl extends PsiPackageBase {
   @NotNull
   @Override
   public Language getLanguage() {
-    return Language.ANY;
+    return JavaLanguage.INSTANCE;
   }
 }
