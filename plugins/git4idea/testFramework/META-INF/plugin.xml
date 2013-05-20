@@ -3,7 +3,6 @@
   <id>Git4Idea-Tests</id>
   <description>Overriding services for tests.</description>
 
-  <depends>com.intellij.modules.vcs</depends>
   <depends>Git4Idea</depends>
 
   <extensions defaultExtensionNs="com.intellij">

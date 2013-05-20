@@ -96,6 +96,16 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="git4idea">
+          <element id="directory" name="lib">
+            <element id="archive" name="git4idea.jar">
+              <element id="module-output" name="git4idea" />
+            </element>
+            <element id="library" level="module" name="ini4j-0.5.2-patched" module-name="git4idea" />
+            <element id="library" level="module" name="jgit-2.1.0" module-name="git4idea" />
+            <element id="library" level="module" name="trilead-ssh2" module-name="git4idea" />
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

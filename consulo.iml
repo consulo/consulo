@@ -38,6 +38,7 @@
     <orderEntry type="module" module-name="images" />
     <orderEntry type="module" module-name="spellchecker" />
     <orderEntry type="module" module-name="ant-new" />
+    <orderEntry type="module" module-name="git4idea" />
   </component>
 </module>
 
