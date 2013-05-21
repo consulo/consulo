@@ -3819,11 +3819,6 @@
     <extensionPoint name="stubElementTypeHolder"
                     beanClass="com.intellij.psi.stubs.StubElementTypeHolderEP"/>
 
-    <extensionPoint name="moduleType"
-                    beanClass="com.intellij.openapi.module.ModuleTypeEP">
-      <with attribute="implementationClass" implements="com.intellij.openapi.module.ModuleType"/>
-    </extensionPoint>
-
     <extensionPoint name="moduleBuilder"
                     beanClass="com.intellij.ide.util.projectWizard.ModuleBuilderFactory">
       <with attribute="builderClass" implements="com.intellij.ide.util.projectWizard.ModuleBuilder"/>
@@ -4862,23 +4857,9 @@
 
     <projectService serviceInterface="com.intellij.facet.FacetFinder" serviceImplementation="com.intellij.facet.impl.FacetFinderImpl"/>
 
-    <projectService serviceInterface="com.intellij.facet.ProjectFacetManager"
-                    serviceImplementation="com.intellij.facet.impl.ProjectFacetManagerImpl"/>
-    <applicationService serviceImplementation="com.intellij.facet.impl.invalid.InvalidFacetType"/>
-    <projectService serviceInterface="com.intellij.facet.impl.invalid.InvalidFacetManager"
-                    serviceImplementation="com.intellij.facet.impl.invalid.InvalidFacetManagerImpl"/>
+
     <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="com.intellij.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
-
-    <moduleService serviceInterface="com.intellij.facet.FacetModificationTrackingService"
-                   serviceImplementation="com.intellij.facet.impl.FacetModificationTrackingServiceImpl"/>
-
-    <applicationService serviceInterface="com.intellij.framework.detection.impl.FrameworkDetectorRegistry"
-                        serviceImplementation="com.intellij.framework.detection.impl.FrameworkDetectorRegistryImpl"/>
-
-    <projectService serviceInterface="com.intellij.framework.detection.DetectionExcludesConfiguration"
-                    serviceImplementation="com.intellij.framework.detection.impl.exclude.DetectionExcludesConfigurationImpl"/>
-    <projectService serviceImplementation="com.intellij.framework.detection.impl.exclude.old.OldFacetDetectionExcludesConfiguration"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController"
                     serviceImplementation="com.intellij.codeInsight.AutoPopupController"/>
@@ -5183,8 +5164,6 @@
                                   id="PlatformProjectConfigurator"/>
     <directoryProjectConfigurator implementation="com.intellij.platform.PlatformProjectViewOpener"/>
 
-    <iconProvider implementation="com.intellij.psi.impl.file.DirectoryIconProvider" id="directory" order="last"/>
-
     <statementUpDownMover implementation="com.intellij.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
 
     <enterHandlerDelegate implementation="com.intellij.codeInsight.editorActions.enter.EnterInStringLiteralHandler"/>
@@ -5289,26 +5268,6 @@
 
     <liveTemplateContext id="OTHER" implementation="com.intellij.codeInsight.template.EverywhereContextType" order="last"/>
 
-    <!-- Graph API -->
-    <applicationService serviceInterface="com.intellij.openapi.graph.GraphManager"
-                        serviceImplementation="com.intellij.openapi.graph.impl.GraphManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.graph.builder.util.NodeFactory"
-                        serviceImplementation="com.intellij.openapi.graph.impl.builder.NodeFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.graph.builder.util.CustomGraphActionsFactory"
-                        serviceImplementation="com.intellij.openapi.graph.impl.builder.util.CustomGraphActionsFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.graph.GraphPeerFactory"
-                        serviceImplementation="com.intellij.openapi.graph.impl.GraphPeerFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.graph.GraphSvgExporter"
-                        serviceImplementation="com.intellij.openapi.graph.impl.GraphSvgExporterImpl"/>
-
-    <projectService serviceInterface="com.intellij.openapi.graph.builder.GraphBuilderFactory"
-                    serviceImplementation="com.intellij.openapi.graph.impl.builder.GraphBuilderFactoryImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.graph.builder.dnd.ProjectViewDnDHelper"
-                    serviceImplementation="com.intellij.openapi.graph.impl.builder.dnd.ProjectViewDnDHelperImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.graph.settings.GraphSettingsProvider"
-                    serviceImplementation="com.intellij.openapi.graph.impl.builder.GraphSettingsProviderImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.graph.impl.builder.GraphEditModeFactory"
-                    serviceImplementation="com.intellij.openapi.graph.impl.builder.GraphEditModeFactoryImpl"/>
 
     <!-- SM Test runner tests locations -->
     <testSrcLocator implementation="com.intellij.execution.testframework.sm.FileUrlProvider"/>
@@ -5367,7 +5326,7 @@
     <applicationService serviceInterface="com.intellij.codeInsight.template.TemplateBuilderFactory"
                         serviceImplementation="com.intellij.codeInsight.template.TemplateBuilderFactoryImpl"/>
 
-    <!--<projectViewPane implementation="com.intellij.ide.favoritesTreeView.FavoritesProjectViewPane"/>-->
+    <projectViewPane implementation="com.intellij.ide.favoritesTreeView.FavoritesProjectViewPane"/>
     <projectViewPane implementation="com.intellij.ide.scopeView.ScopeViewPane"/>
 
     <fileIconProvider implementation="com.intellij.openapi.fileTypes.impl.NativeFileIconProvider"/>
@@ -5556,7 +5515,7 @@
     <bundledColorScheme path="/colorSchemes/vibrant_ink.xml"/>
     <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
 
-    <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider"/>
+    <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider" order="last"/>
     <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver" />
     <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver" />
   </extensions>

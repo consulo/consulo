@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 3/20/12
  */
 public interface ClsFileDecompiledPsiFileProvider {
-  ExtensionPointName<ClsFileDecompiledPsiFileProvider> EP_NAME = ExtensionPointName.create("com.intellij.psi.clsDecompiledFileProvider");
+  ExtensionPointName<ClsFileDecompiledPsiFileProvider> EP_NAME = ExtensionPointName.create("org.consulo.java.psi.clsDecompiledFileProvider");
 
   /**
    * Returns decompiled PSI associated with this classfile
