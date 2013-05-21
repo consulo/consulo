@@ -2485,6 +2485,12 @@
       <skipForDefaultProject/>
     </component>
 
+
+    <component>
+      <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
+      <implementation-class>com.intellij.openapi.command.impl.UndoManagerImpl</implementation-class>
+    </component>
+
     <component>
       <interface-class>com.intellij.openapi.project.ProjectReloadState</interface-class>
       <implementation-class>com.intellij.openapi.project.impl.ProjectReloadStateImpl</implementation-class>
