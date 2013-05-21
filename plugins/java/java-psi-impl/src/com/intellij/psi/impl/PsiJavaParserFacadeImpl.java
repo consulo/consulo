@@ -22,7 +22,6 @@ import com.intellij.lang.java.parser.JavaParser;
 import com.intellij.lang.java.parser.JavaParserUtil;
 import com.intellij.lang.java.parser.ReferenceParser;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
@@ -224,8 +223,7 @@ public class PsiJavaParserFacadeImpl implements PsiJavaParserFacade {
   @NotNull
   @Override
   public final PsiMethod createMethodFromText(@NotNull final String text, @Nullable final PsiElement context) throws IncorrectOperationException {
-    final LanguageLevel level = LanguageLevelProjectExtension.getInstance(myManager.getProject()).getLanguageLevel();
-    return createMethodFromText(text, context, level);
+    return createMethodFromText(text, context, LanguageLevel.HIGHEST);
   }
 
   @NotNull
