@@ -1505,8 +1505,6 @@
 
     <applicationService serviceInterface="com.intellij.psi.impl.file.PsiPackageImplementationHelper"
                         serviceImplementation="com.intellij.psi.impl.file.PsiPackageImplementationHelperImpl"/>
-    <completion.contributor language="JAVA" implementationClass="com.intellij.codeInspection.magicConstant.MagicCompletionContributor"
-                            id="magicCompletion" order="first, before liveTemplates"/>
   </extensions>
 
 
