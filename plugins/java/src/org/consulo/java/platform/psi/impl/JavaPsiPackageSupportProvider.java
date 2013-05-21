@@ -15,11 +15,10 @@
  */
 package org.consulo.java.platform.psi.impl;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageImpl;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.consulo.psi.PsiPackageSupportProvider;
@@ -31,14 +30,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JavaPsiPackageSupportProvider implements PsiPackageSupportProvider {
   @Override
-  public boolean isSupported(@NotNull Module module) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    return moduleRootManager.getExtension(JavaModuleExtension.class) != null;
+  public boolean isSupported(@NotNull ModuleExtension moduleExtension) {
+    return moduleExtension instanceof JavaModuleExtension;
   }
 
   @NotNull
   @Override
-  public PsiPackage createPackage(@NotNull PsiManager psiManager, @NotNull PsiPackageManager packageManager, @NotNull String packageName) {
-    return new PsiPackageImpl(psiManager, packageManager, packageName);
+  public PsiPackage createPackage(@NotNull PsiManager psiManager,
+                                  @NotNull PsiPackageManager packageManager,
+                                  @NotNull Class<? extends ModuleExtension> extensionClass,
+                                  @NotNull String packageName) {
+    return new PsiPackageImpl(psiManager, packageManager, extensionClass, packageName);
   }
 }

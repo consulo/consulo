@@ -61,32 +61,6 @@ public abstract class PsiElementFinder {
   public abstract PsiClass[] findClasses(@NotNull String qualifiedName, @NotNull GlobalSearchScope scope);
 
   /**
-   * Searches the project for the package with the specified full-qualified name and returns one
-   * if it is found.
-   *
-   * @param qualifiedName the full-qualified name of the package to find.
-   * @return the PSI package, or null if no package with such name is found.
-   * @see JavaPsiFacade#findPackage(String)
-   */
-  @Nullable
-  public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
-    return null;
-  }
-
-  /**
-   * Returns the list of subpackages of the specified package in the specified search scope.
-   *
-   * @param psiJavaPackage the package to return the list of subpackages for.
-   * @param scope the scope in which subpackages are searched.
-   * @return the list of subpackages.
-   * @see PsiJavaPackage#getSubPackages(GlobalSearchScope)
-   */
-  @NotNull
-  public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiJavaPackage, @NotNull GlobalSearchScope scope) {
-    return PsiJavaPackage.EMPTY_ARRAY;
-  }
-
-  /**
    * Returns the list of classes in the specified package and in the specified search scope.
    *
    * @param psiJavaPackage the package to return the list of classes in.

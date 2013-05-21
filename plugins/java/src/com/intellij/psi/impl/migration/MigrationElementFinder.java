@@ -67,7 +67,7 @@ public class MigrationElementFinder extends PsiElementFinder implements DumbAwar
     }
     return PsiClass.EMPTY_ARRAY;
   }
-
+ /*
   @NotNull
   @Override
   public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
@@ -77,14 +77,14 @@ public class MigrationElementFinder extends PsiElementFinder implements DumbAwar
       return packages.toArray(new PsiJavaPackage[packages.size()]);
     }
     return PsiJavaPackage.EMPTY_ARRAY;
-  }
+  }     */
 
-  @Override
+ /* @Override
   public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
     PsiMigrationImpl migration = PsiMigrationManager.getInstance(myProject).getCurrentMigration();
     if (migration != null) {
       return migration.getMigrationPackage(qualifiedName);
     }
     return null;
-  }
+  } */
 }

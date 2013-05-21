@@ -162,6 +162,9 @@ public interface ModuleRootModel {
   <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz);
 
   @NotNull
+  ModuleExtension[] getExtensions();
+
+  @NotNull
   Module[] getModuleDependencies();
 
   @NotNull

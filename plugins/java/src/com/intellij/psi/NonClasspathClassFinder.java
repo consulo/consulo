@@ -153,10 +153,10 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
     return result;
   }
 
-  @Override
+    /* @Override
   public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
-   /*
-    TODO [VISTALL] what?
+
+
     final List<VirtualFile> classRoots = getClassRoots();
     if (classRoots.isEmpty()) {
       return null;
@@ -167,9 +167,9 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
       if (dir != null && dir.isDirectory()) {
         return createPackage(qualifiedName);
       }
-    }   */
+    }
     return null;
-  }
+  }  */
 
 
   @Override
@@ -203,10 +203,10 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
     return true;
   }
 
-  @NotNull
+    /* @NotNull
   @Override
   public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
-    /*
+
     //TODO [VISTALL] what
     final List<VirtualFile> classRoots = getClassRoots();
     if (classRoots.isEmpty()) {
@@ -227,10 +227,10 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
         }
       }
     }
-    return result.toArray(new PsiJavaPackage[result.size()]);  */
+    return result.toArray(new PsiJavaPackage[result.size()]);
     return PsiJavaPackage.EMPTY_ARRAY;
   }
-
+                                         */
   @NotNull
   @Override
   public PsiClass[] findClasses(@NotNull String qualifiedName, @NotNull GlobalSearchScope scope) {

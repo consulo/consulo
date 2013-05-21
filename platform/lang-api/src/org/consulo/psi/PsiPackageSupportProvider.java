@@ -16,8 +16,8 @@
 package org.consulo.psi;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiManager;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,8 +27,11 @@ import org.jetbrains.annotations.NotNull;
 public interface PsiPackageSupportProvider {
   ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create("com.intellij.psi.packageSupportProvider");
 
-  boolean isSupported(@NotNull Module module);
+  boolean isSupported(@NotNull ModuleExtension moduleExtension);
 
   @NotNull
-  PsiPackage createPackage(@NotNull PsiManager psiManager, @NotNull PsiPackageManager packageManager, @NotNull String packageName);
+  PsiPackage createPackage(@NotNull PsiManager psiManager,
+                           @NotNull PsiPackageManager packageManager,
+                           @NotNull Class<? extends ModuleExtension> extensionClass,
+                           @NotNull String packageName);
 }

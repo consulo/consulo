@@ -23,7 +23,6 @@ import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -61,7 +60,7 @@ public abstract class JavaFileManagerBase implements JavaFileManager, Disposable
   private Set<String> myNontrivialPackagePrefixes = null;
   private boolean myInitialized = false;
   private boolean myDisposed = false;
-  private final DirectoryIndex myDirectoryIndex;
+
   protected final MessageBusConnection myConnection;
 
   public JavaFileManagerBase(
@@ -71,7 +70,6 @@ public abstract class JavaFileManagerBase implements JavaFileManager, Disposable
     myFileManager = manager.getFileManager();
     myProjectRootManager = projectRootManager;
     myUseRepository = true;
-    myDirectoryIndex = DirectoryIndex.getInstance(myManager.getProject());
     myConnection = bus.connect();
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override

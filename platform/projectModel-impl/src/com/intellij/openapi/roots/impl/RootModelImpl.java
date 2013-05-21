@@ -760,6 +760,21 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return null;
   }
 
+  @NotNull
+  @Override
+  public ModuleExtension[] getExtensions() {
+    if(myExtensions.isEmpty()) {
+      return ModuleExtension.EMPTY_ARRAY;
+    }
+    List<ModuleExtension> list = new ArrayList<ModuleExtension>(myExtensions.size());
+    for (ModuleExtension<?> extension : myExtensions) {
+      if(extension.isEnabled()) {
+        list.add(extension);
+      }
+    }
+    return list.toArray(new ModuleExtension[list.size()]);
+  }
+
   void registerOnDispose(@NotNull Disposable disposable) {
     myDisposable.add(disposable);
   }

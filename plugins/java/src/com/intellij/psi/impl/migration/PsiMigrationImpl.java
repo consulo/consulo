@@ -81,7 +81,7 @@ public class PsiMigrationImpl implements PsiMigration {
   public PsiJavaPackage createPackage(String qualifiedName) {
     assertValid();
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    final MigrationPackageImpl migrationPackage = new MigrationPackageImpl(this, null, qualifiedName);     //TODO [VISTALL] incorrect
+    final MigrationPackageImpl migrationPackage = new MigrationPackageImpl(this, qualifiedName);
     final MigrationPackageImpl oldMigrationPackage = myQNameToPackageMap.put(qualifiedName, migrationPackage);
     LOG.assertTrue(oldMigrationPackage == null, qualifiedName);
     final String parentName = parentPackageName(qualifiedName);

@@ -226,6 +226,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getExtensionWithoutCheck(clazz);
   }
 
+  @NotNull
+  @Override
+  public ModuleExtension[] getExtensions() {
+    return myRootModel.getExtensions();
+  }
+
   @Override
   public <R> R processOrder(RootPolicy<R> policy, R initialValue) {
     LOG.assertTrue(!myIsDisposed);

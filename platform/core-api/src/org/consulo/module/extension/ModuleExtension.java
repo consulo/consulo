@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
  * @since 22:39/18.05.13
  */
 public interface ModuleExtension<T extends ModuleExtension> extends PersistentStateComponent<Element> {
+  ModuleExtension[] EMPTY_ARRAY = new ModuleExtension[0];
+
   @NotNull
   String getId();
 

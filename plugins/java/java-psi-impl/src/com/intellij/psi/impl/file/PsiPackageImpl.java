@@ -34,6 +34,7 @@ import com.intellij.psi.util.*;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NonNls;
@@ -52,8 +53,11 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiJavaPackage, Qu
   private volatile Set<String> myPublicClassNamesCache;
   private final Object myPublicClassNamesCacheLock = new Object();
 
-  public PsiPackageImpl(PsiManager manager, PsiPackageManager packageManager, String qualifiedName) {
-    super(manager, packageManager, qualifiedName);
+  public PsiPackageImpl(PsiManager manager,
+                        PsiPackageManager packageManager,
+                        Class<? extends ModuleExtension> extensionClass,
+                        String qualifiedName) {
+    super(manager, packageManager, extensionClass, qualifiedName);
   }
 
   @Override

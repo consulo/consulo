@@ -16,11 +16,9 @@
 package org.consulo.psi;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleServiceManager;
-import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,20 +27,18 @@ import org.jetbrains.annotations.Nullable;
  * @since 7:56/20.05.13
  */
 public abstract class PsiPackageManager {
-  public static PsiPackageManager getInstance(@NotNull Module module) {
-    return ModuleServiceManager.getService(module, PsiPackageManager.class);
+  @NotNull
+  public static PsiPackageManager getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, PsiPackageManager.class);
   }
 
-  public static PsiPackageManager getInstance(@NotNull PsiElement element) {
-    final Module moduleForPsiElement = ModuleUtil.findModuleForPsiElement(element);
-    return moduleForPsiElement == null ? ServiceManager.getService(PsiPackageManager.class) : getInstance(moduleForPsiElement);
-  }
-
-  public abstract void dropCache();
+  public abstract void dropCache(@NotNull Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
-  public abstract PsiPackage findPackage(@NotNull String qualifiedName);
+  public abstract PsiPackage findPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
-  public abstract PsiPackage findPackage(@NotNull PsiDirectory directory);
+  public abstract PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass);
+
+  public abstract boolean findAnyPackage(@NotNull PsiDirectory directory);
 }

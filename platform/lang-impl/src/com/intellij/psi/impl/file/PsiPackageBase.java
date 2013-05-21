@@ -32,6 +32,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.*;
 import com.intellij.util.containers.HashMap;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
@@ -43,14 +44,16 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.PsiPackageBase");
 
   protected final PsiManager myManager;
-  private final PsiPackageManager myPackageManager;
+  protected final PsiPackageManager myPackageManager;
+  private final Class<? extends ModuleExtension> myExtensionClass;
   private final String myQualifiedName;
 
   protected abstract Collection<PsiDirectory> getAllDirectories();
 
-  public PsiPackageBase(PsiManager manager, PsiPackageManager packageManager, String qualifiedName) {
+  public PsiPackageBase(PsiManager manager, PsiPackageManager packageManager, Class<? extends ModuleExtension> extensionClass, String qualifiedName) {
     myManager = manager;
     myPackageManager = packageManager;
+    myExtensionClass = extensionClass;
     myQualifiedName = qualifiedName;
   }
 
@@ -132,7 +135,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
       dir.setName(name);
     }
     String nameAfterRename = PsiUtilCore.getQualifiedNameAfterRename(getQualifiedName(), name);
-    return myPackageManager.findPackage(nameAfterRename);
+    return myPackageManager.findPackage(nameAfterRename, myExtensionClass);
   }
 
   public void checkSetName(@NotNull String name) throws IncorrectOperationException {
@@ -147,10 +150,10 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     if (myQualifiedName.isEmpty()) return null;
     int lastDot = myQualifiedName.lastIndexOf('.');
     if (lastDot < 0) {
-      return myPackageManager.findPackage("");
+      return myPackageManager.findPackage("", myExtensionClass);
     }
     else {
-      return myPackageManager.findPackage(myQualifiedName.substring(0, lastDot));
+      return myPackageManager.findPackage(myQualifiedName.substring(0, lastDot), myExtensionClass);
     }
   }
 
@@ -175,7 +178,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     for (PsiDirectory dir : psiPackage.getDirectories(scope)) {
       PsiDirectory[] subDirs = dir.getSubdirectories();
       for (PsiDirectory subDir : subDirs) {
-        final PsiPackage aPackage = myPackageManager.findPackage(subDir);
+        final PsiPackage aPackage = myPackageManager.findPackage(subDir, myExtensionClass);
         if (aPackage != null) {
           final String subQualifiedName = aPackage.getQualifiedName();
           if (subQualifiedName.startsWith(qualifiedName) && !packagesMap.containsKey(subQualifiedName)) {

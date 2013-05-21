@@ -23,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
@@ -35,23 +34,19 @@ import com.intellij.psi.impl.source.JavaDummyHolderFactory;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashSet;
-import com.intellij.psi.PsiJavaPackage;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author max
@@ -60,43 +55,21 @@ public class JavaPsiFacadeImpl extends JavaPsiFacadeEx {
   private PsiElementFinder[] myElementFinders; //benign data race
   private final PsiNameHelper myNameHelper;
   private final PsiConstantEvaluationHelper myConstantEvaluationHelper;
-  private final ConcurrentMap<String, PsiJavaPackage> myPackageCache = new ConcurrentHashMap<String, PsiJavaPackage>();
+
   private final Project myProject;
   private final JavaFileManager myFileManager;
+  private final PsiPackageManager myPackageManager;
 
-  @SuppressWarnings("UnusedDeclaration")
-  private final LowMemoryWatcher myLowMemoryWatcher = LowMemoryWatcher.register(new Runnable() {
-    @Override
-    public void run() {
-      myPackageCache.clear();
-    }
-  });
 
   public JavaPsiFacadeImpl(Project project,
-                           PsiManagerImpl psiManager,
+                           PsiPackageManager psiManager,
                            JavaFileManager javaFileManager,
                            MessageBus bus) {
     myProject = project;
     myFileManager = javaFileManager;
     myNameHelper = new PsiNameHelperImpl(this);
+    myPackageManager = psiManager;
     myConstantEvaluationHelper = new PsiConstantEvaluationHelperImpl();
-
-    final PsiModificationTracker modificationTracker = psiManager.getModificationTracker();
-
-    if (bus != null) {
-      bus.connect().subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
-        private long lastTimeSeen = -1L;
-
-        @Override
-        public void modificationCountChanged() {
-          final long now = modificationTracker.getJavaStructureModificationCount();
-          if (lastTimeSeen != now) {
-            lastTimeSeen = now;
-            myPackageCache.clear();
-          }
-        }
-      });
-    }
 
     DummyHolderFactory.setFactory(new JavaDummyHolderFactory());
     JavaElementType.ANNOTATION.getIndex(); // Initialize stubs.
@@ -186,19 +159,7 @@ public class JavaPsiFacadeImpl extends JavaPsiFacadeEx {
 
   @Override
   public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
-    PsiJavaPackage aPackage = myPackageCache.get(qualifiedName);
-    if (aPackage != null) {
-      return aPackage;
-    }
-
-    for (PsiElementFinder finder : filteredFinders()) {
-      aPackage = finder.findPackage(qualifiedName);
-      if (aPackage != null) {
-        return ConcurrencyUtil.cacheOrGet(myPackageCache, qualifiedName, aPackage);
-      }
-    }
-
-    return null;
+    return (PsiJavaPackage) myPackageManager.findPackage(qualifiedName, JavaModuleExtension.class);
   }
 
   @NotNull
@@ -261,17 +222,6 @@ public class JavaPsiFacadeImpl extends JavaPsiFacadeEx {
     return true;
   }
 
-  @NotNull
-  public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
-    LinkedHashSet<PsiJavaPackage> result = new LinkedHashSet<PsiJavaPackage>();
-    for (PsiElementFinder finder : filteredFinders()) {
-      PsiJavaPackage[] packages = finder.getSubPackages(psiPackage, scope);
-      ContainerUtil.addAll(result, packages);
-    }
-
-    return result.toArray(new PsiJavaPackage[result.size()]);
-  }
-
   public PsiClass[] findClassByShortName(String name, PsiJavaPackage psiPackage, GlobalSearchScope scope) {
     List<PsiClass> result = null;
     for (PsiElementFinder finder : filteredFinders()) {
@@ -296,7 +246,7 @@ public class JavaPsiFacadeImpl extends JavaPsiFacadeEx {
       return myFileManager.findClasses(qualifiedName, scope);
     }
 
-    @Override
+  /*  @Override
     @NotNull
     public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
       final Map<String, PsiJavaPackage> packagesMap = new HashMap<String, PsiJavaPackage>();
@@ -316,7 +266,7 @@ public class JavaPsiFacadeImpl extends JavaPsiFacadeEx {
 
       packagesMap.remove(qualifiedName);    // avoid SOE caused by returning a package as a subpackage of itself
       return packagesMap.values().toArray(new PsiJavaPackage[packagesMap.size()]);
-    }
+    } */
 
     @Override
     @NotNull

@@ -21,7 +21,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFinder;
-import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,20 +47,20 @@ public class PackagePrefixElementFinder extends PsiElementFinder implements Dumb
     return PsiClass.EMPTY_ARRAY;
   }
 
-  @Override
+    /* @Override
   public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
-    /*
+
      //TODO [VISTALL] what?
      if (packagePrefixExists(qualifiedName)) {
       return new PsiPackageImpl((PsiManagerEx)PsiManager.getInstance(myProject), qualifiedName);
-    }   */
+    }
     return null;
-  }
+  }      */
 
-  @NotNull
+  /* @NotNull
   @Override
   public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
-    /*
+
     //TODO [VISTALL] what?
     final Map<String, PsiJavaPackage> packagesMap = new HashMap<String, PsiJavaPackage>();
     final String qualifiedName = psiPackage.getQualifiedName();
@@ -77,9 +76,9 @@ public class PackagePrefixElementFinder extends PsiElementFinder implements Dumb
     }
 
     packagesMap.remove(qualifiedName);    // avoid SOE caused by returning a package as a subpackage of itself
-    return packagesMap.values().toArray(new PsiJavaPackage[packagesMap.size()]); */
+    return packagesMap.values().toArray(new PsiJavaPackage[packagesMap.size()]);
     return PsiJavaPackage.EMPTY_ARRAY;
-  }
+  }                                                                             */
 
   public boolean packagePrefixExists(String packageQName) {
     for (final String prefix : myPackagePrefixIndex.getAllPackagePrefixes(null)) {

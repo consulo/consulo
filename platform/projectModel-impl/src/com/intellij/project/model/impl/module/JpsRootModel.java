@@ -93,6 +93,12 @@ public class JpsRootModel extends RootModelBase implements ModuleRootModel {
     throw new UnsupportedOperationException("'getExtension' not implemented in " + getClass().getName());
   }
 
+  @NotNull
+  @Override
+  public ModuleExtension[] getExtensions() {
+    return new ModuleExtension[0];
+  }
+
   public Project getProject() {
     return myModule.getProject();
   }
