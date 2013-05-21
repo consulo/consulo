@@ -27,6 +27,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import org.consulo.java.platform.util.JavaProjectRootsUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -70,7 +71,8 @@ public class ClassesTreeStructureProvider implements SelectableTreeStructureProv
           if (classes.length == 1 && !(classes[0] instanceof SyntheticElement) &&
               (file == null || file.getNameWithoutExtension().equals(classes[0].getName()))) {
             result.add(new ClassTreeNode(myProject, classes[0], settings1));
-          } else {
+          }
+          else {
             result.add(new PsiClassOwnerTreeNode(classOwner, settings1));
           }
           continue;
@@ -81,9 +83,11 @@ public class ClassesTreeStructureProvider implements SelectableTreeStructureProv
     return result;
   }
 
-  private boolean fileInRoots(VirtualFile file) {
-    final ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
-    return file != null && (index.isInSourceContent(file) || index.isInLibraryClasses(file) || index.isInLibrarySource(file));
+  private boolean fileInRoots(@Nullable VirtualFile file) {
+    if (file == null) {
+      return false;
+    }
+    return JavaProjectRootsUtil.isJavaSourceFile(myProject, file, true);
   }
 
   @Override
@@ -147,7 +151,7 @@ public class ClassesTreeStructureProvider implements SelectableTreeStructureProv
     }
 
     final PsiFile parentFile = parentFileOf((PsiClass)element);
-                                        // do not select JspClass
+    // do not select JspClass
     return parentFile != null && parentFile.getLanguage() == baseRootFile.getLanguage();
   }
 
@@ -173,6 +177,6 @@ public class ClassesTreeStructureProvider implements SelectableTreeStructureProv
       }
       return result;
     }
-    
+
   }
 }

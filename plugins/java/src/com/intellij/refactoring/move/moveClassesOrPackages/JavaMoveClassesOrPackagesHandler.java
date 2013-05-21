@@ -16,7 +16,6 @@
 package com.intellij.refactoring.move.moveClassesOrPackages;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
@@ -43,6 +42,7 @@ import com.intellij.refactoring.util.RadioUpDownListener;
 import com.intellij.refactoring.util.RefactoringUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashSet;
+import org.consulo.java.platform.util.JavaProjectRootsUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -91,7 +91,7 @@ public class JavaMoveClassesOrPackagesHandler extends MoveHandlerDelegate {
       if (((PsiClass)element).getContainingClass() != null) return true;
       parentFile = element.getContainingFile();
     }
-    return parentFile instanceof PsiJavaFile && ProjectRootsUtil.isOutsideSourceRoot(parentFile);
+    return parentFile instanceof PsiJavaFile && JavaProjectRootsUtil.isOutsideSourceRoot(parentFile);
   }
 
   @Override

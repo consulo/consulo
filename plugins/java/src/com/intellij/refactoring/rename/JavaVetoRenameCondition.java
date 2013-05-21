@@ -15,17 +15,17 @@
  */
 package com.intellij.refactoring.rename;
 
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
+import org.consulo.java.platform.util.JavaProjectRootsUtil;
 
 public class JavaVetoRenameCondition implements Condition<PsiElement> {
   public boolean value(final PsiElement element) {
     return element instanceof PsiJavaFile &&
          //  !JspPsiUtil.isInJspFile(element) &&
-           !ProjectRootsUtil.isOutsideSourceRoot((PsiFile)element) &&
+           !JavaProjectRootsUtil.isOutsideSourceRoot((PsiFile)element) &&
            ((PsiJavaFile) element).getClasses().length > 0;
   }
 }

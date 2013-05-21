@@ -28,11 +28,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author anna
- * Date: 17-Jan-2008
+ *         Date: 17-Jan-2008
  */
 public class ProjectRootsUtil {
-  private ProjectRootsUtil() { }
-
   public static boolean isSourceRoot(final PsiDirectory psiDirectory) {
     return isSourceRoot(psiDirectory.getVirtualFile(), psiDirectory.getProject());
   }

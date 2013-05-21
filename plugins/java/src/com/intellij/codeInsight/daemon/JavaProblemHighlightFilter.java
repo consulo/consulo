@@ -15,18 +15,18 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.consulo.java.platform.util.JavaProjectRootsUtil;
 import org.jetbrains.annotations.NotNull;
 
 
 public class JavaProblemHighlightFilter extends ProblemHighlightFilter {
   @Override
   public boolean shouldHighlight(@NotNull PsiFile psiFile) {
-    return psiFile.getFileType() != StdFileTypes.JAVA || !ProjectRootsUtil.isOutsideSourceRoot(psiFile);
+    return psiFile.getFileType() != StdFileTypes.JAVA || !JavaProjectRootsUtil.isOutsideSourceRoot(psiFile);
   }
 
   @Override

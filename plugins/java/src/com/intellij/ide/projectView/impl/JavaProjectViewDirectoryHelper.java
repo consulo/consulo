@@ -26,12 +26,12 @@ import com.intellij.ide.projectView.impl.nodes.PackageUtil;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexUtil;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiJavaPackage;
+import org.consulo.java.platform.util.JavaProjectRootsUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,7 +92,7 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
 
   @Override
   public boolean showFileInLibClasses(final VirtualFile vFile) {
-    return !FileIndexUtil.isJavaSourceFile(getProject(), vFile);
+    return !JavaProjectRootsUtil.isJavaSourceFile(getProject(), vFile, false);
   }
 
   @Override

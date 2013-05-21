@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
+@Deprecated
 public class StdFileTypes extends FileTypes {
   private StdFileTypes() { }
 

@@ -186,7 +186,7 @@ public abstract class SdkType implements SdkTypeId {
 
   public static <T extends SdkType> T findInstance(final Class<T> sdkTypeClass) {
     for (SdkType sdkType : Extensions.getExtensions(EP_NAME)) {
-      if (sdkTypeClass.equals(sdkType.getClass())) {
+      if (sdkTypeClass.isAssignableFrom(sdkType.getClass())) {
         //noinspection unchecked
         return (T)sdkType;
       }

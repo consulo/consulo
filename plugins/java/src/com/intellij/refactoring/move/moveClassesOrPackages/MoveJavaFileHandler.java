@@ -21,7 +21,6 @@
 package com.intellij.refactoring.move.moveClassesOrPackages;
 
 import com.intellij.codeInsight.ChangeContextUtil;
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
@@ -29,6 +28,7 @@ import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler;
 import com.intellij.refactoring.util.MoveRenameUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.java.platform.util.JavaProjectRootsUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class MoveJavaFileHandler extends MoveFileHandler {
   public boolean canProcessElement(PsiFile element) {
     return element instanceof PsiJavaFile &&
           // !JspPsiUtil.isInJspFile(element) &&
-           !ProjectRootsUtil.isOutsideSourceRoot(element) &&
+           !JavaProjectRootsUtil.isOutsideSourceRoot(element) &&
            !(element instanceof PsiCompiledElement);
   }
 

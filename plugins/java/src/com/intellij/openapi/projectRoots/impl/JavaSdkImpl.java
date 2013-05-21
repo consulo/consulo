@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import org.consulo.java.platform.JavaPlatformIcons;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,12 @@ public class JavaSdkImpl extends JavaSdk {
 
   @Override
   public Icon getIcon() {
+    return JavaPlatformIcons.Java;
+  }
+
+  @Nullable
+  @Override
+  public Icon getGroupIcon() {
     return AllIcons.Nodes.PpJdk;
   }
 

@@ -17,9 +17,9 @@ package com.intellij.codeInsight.problems;
 
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexUtil;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.java.platform.util.JavaProjectRootsUtil;
 
 /**
 * @author yole
@@ -33,7 +33,7 @@ public class DefaultProblemFileHighlightFilter implements Condition<VirtualFile>
 
   @Override
   public boolean value(final VirtualFile file) {
-    return FileIndexUtil.isJavaSourceFile(myProject, file)
+    return JavaProjectRootsUtil.isJavaSourceFile(myProject, file, false)
       && !CompilerManager.getInstance(myProject).isExcludedFromCompilation(file);
   }
 }
