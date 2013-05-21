@@ -25,7 +25,7 @@ public class DeepestSuperMethodsSearch extends ExtensibleQueryFactory<PsiMethod,
   public static final DeepestSuperMethodsSearch DEEPEST_SUPER_METHODS_SEARCH_INSTANCE = new DeepestSuperMethodsSearch();
 
   private DeepestSuperMethodsSearch() {
-    super("org.consule.java.platform");
+    super("org.consulo.java.platform");
   }
 
   public static Query<PsiMethod> search(PsiMethod method) {
