@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,8 +66,8 @@ public class TreeModelBuilder {
   private final Marker myMarker;
   private final boolean myAddUnmarkedFiles;
   private final PackageDependenciesNode myRoot;
-  private final Map<ScopeType, Map<Pair<Module, PsiPackage>, PackageNode>> myModulePackageNodes = new HashMap<ScopeType, Map<Pair<Module, PsiPackage>, PackageNode>>();
-  private final Map<ScopeType, Map<Pair<OrderEntry, PsiPackage>, PackageNode>> myLibraryPackageNodes = new HashMap<ScopeType, Map<Pair<OrderEntry, PsiPackage>, PackageNode>>();
+  private final Map<ScopeType, Map<Pair<Module, PsiJavaPackage>, PackageNode>> myModulePackageNodes = new HashMap<ScopeType, Map<Pair<Module, PsiJavaPackage>, PackageNode>>();
+  private final Map<ScopeType, Map<Pair<OrderEntry, PsiJavaPackage>, PackageNode>> myLibraryPackageNodes = new HashMap<ScopeType, Map<Pair<OrderEntry, PsiJavaPackage>, PackageNode>>();
   private final Map<ScopeType, Map<Module, ModuleNode>> myModuleNodes = new HashMap<ScopeType, Map<Module, ModuleNode>>();
   private final Map<ScopeType, Map<String, ModuleGroupNode>> myModuleGroupNodes = new HashMap<ScopeType, Map<String, ModuleGroupNode>>();
   private final Map<ScopeType, Map<OrderEntry, LibraryNode>> myLibraryNodes = new HashMap<ScopeType, Map<OrderEntry, LibraryNode>>();
@@ -114,8 +114,8 @@ public class TreeModelBuilder {
   }
 
   private void createMaps(ScopeType scopeType) {
-    myModulePackageNodes.put(scopeType, new HashMap<Pair<Module, PsiPackage>, PackageNode>());
-    myLibraryPackageNodes.put(scopeType, new HashMap<Pair<OrderEntry, PsiPackage>, PackageNode>());
+    myModulePackageNodes.put(scopeType, new HashMap<Pair<Module, PsiJavaPackage>, PackageNode>());
+    myLibraryPackageNodes.put(scopeType, new HashMap<Pair<OrderEntry, PsiJavaPackage>, PackageNode>());
     myModuleGroupNodes.put(scopeType, new HashMap<String, ModuleGroupNode>());
     myModuleNodes.put(scopeType, new HashMap<Module, ModuleNode>());
     myLibraryNodes.put(scopeType, new HashMap<OrderEntry, LibraryNode>());
@@ -293,7 +293,7 @@ public class TreeModelBuilder {
     LOG.assertTrue(vFile != null);
     final VirtualFile containingDirectory = vFile.getParent();
     LOG.assertTrue(containingDirectory != null);
-    PsiPackage aPackage = null;
+    PsiJavaPackage aPackage = null;
     final String packageName = myFileIndex.getPackageNameByDirectory(containingDirectory);
     if (packageName != null) {
       aPackage = myJavaPsiFacade.findPackage(packageName);
@@ -330,7 +330,7 @@ public class TreeModelBuilder {
     return map.get(myGroupByScopeType ? scopeType : ScopeType.SOURCE);
   }
 
-  private PackageDependenciesNode getLibraryDirNode(PsiPackage aPackage, OrderEntry libraryOrJdk) {
+  private PackageDependenciesNode getLibraryDirNode(PsiJavaPackage aPackage, OrderEntry libraryOrJdk) {
     if (aPackage == null || aPackage.getName() == null) {
       return getLibraryOrJDKNode(libraryOrJdk);
     }
@@ -339,7 +339,7 @@ public class TreeModelBuilder {
       return getModuleDirNode(aPackage, null, ScopeType.LIB);
     }
 
-    Pair<OrderEntry, PsiPackage> descriptor = new Pair<OrderEntry, PsiPackage>(myShowIndividualLibs ? libraryOrJdk : null, aPackage);
+    Pair<OrderEntry, PsiJavaPackage> descriptor = new Pair<OrderEntry, PsiJavaPackage>(myShowIndividualLibs ? libraryOrJdk : null, aPackage);
     PackageNode node = getMap(myLibraryPackageNodes, ScopeType.LIB).get(descriptor);
     if (node != null) return node;
 
@@ -356,12 +356,12 @@ public class TreeModelBuilder {
     return node;
   }
 
-  private PackageDependenciesNode getModuleDirNode(PsiPackage aPackage, Module module, ScopeType scopeType) {
+  private PackageDependenciesNode getModuleDirNode(PsiJavaPackage aPackage, Module module, ScopeType scopeType) {
     if (aPackage == null) {
       return getModuleNode(module, scopeType);
     }
 
-    Pair<Module, PsiPackage> descriptor = new Pair<Module, PsiPackage>(myShowModules ? module : null, aPackage);
+    Pair<Module, PsiJavaPackage> descriptor = new Pair<Module, PsiJavaPackage>(myShowModules ? module : null, aPackage);
     PackageNode node = getMap(myModulePackageNodes, scopeType).get(descriptor);
 
     if (node != null) return node;

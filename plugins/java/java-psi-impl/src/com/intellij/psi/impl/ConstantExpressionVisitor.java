@@ -513,7 +513,7 @@ class ConstantExpressionVisitor extends JavaElementVisitor implements PsiConstan
 
       PsiReferenceExpression qualifier = (PsiReferenceExpression) qualifierExpression;
       final PsiElement resolved = qualifier.resolve();
-      if (resolved instanceof PsiPackage) break;
+      if (resolved instanceof PsiJavaPackage) break;
       if (!(resolved instanceof PsiClass)) {
         myResult = null;
         return;

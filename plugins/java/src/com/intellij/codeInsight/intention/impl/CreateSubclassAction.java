@@ -168,7 +168,7 @@ public class CreateSubclassAction extends BaseIntentionAction {
   public static CreateClassDialog chooseSubclassToCreate(PsiClass psiClass) {
     final PsiDirectory sourceDir = psiClass.getContainingFile().getContainingDirectory();
 
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(sourceDir);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(sourceDir);
     final CreateClassDialog dialog = new CreateClassDialog(
       psiClass.getProject(), getTitle(psiClass),
       psiClass.getName() + IMPL_SUFFIX,

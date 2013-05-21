@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.refactoring.PackageWrapper;
 import com.intellij.refactoring.util.RefactoringConflictsUtil;
@@ -76,7 +76,7 @@ public class AutocreatingSingleSourceRootMoveDestination extends AutocreatingMov
     return checkCanCreateInSourceRoot(mySourceRoot);
   }
 
-  public String verify(PsiPackage aPackage) {
+  public String verify(PsiJavaPackage aPackage) {
     return checkCanCreateInSourceRoot(mySourceRoot);
   }
 

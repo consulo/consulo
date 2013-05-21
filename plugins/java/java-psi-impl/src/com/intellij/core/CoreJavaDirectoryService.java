@@ -15,7 +15,6 @@
  */
 package com.intellij.core;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,8 +36,8 @@ public class CoreJavaDirectoryService extends JavaDirectoryService {
   private static final Logger LOG = Logger.getInstance("#com.intellij.core.CoreJavaDirectoryService");
 
   @Override
-  public PsiPackage getPackage(@NotNull PsiDirectory dir) {
-    return ServiceManager.getService(dir.getProject(), CoreJavaFileManager.class).getPackage(dir);
+  public PsiJavaPackage getPackage(@NotNull PsiDirectory dir) {
+    return null;//TODO [VISTALL] ServiceManager.getService(dir.getProject(), CoreJavaFileManager.class).getPackage(dir);
   }
 
   @NotNull

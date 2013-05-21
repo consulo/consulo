@@ -34,7 +34,7 @@ import java.util.Set;
  * to be picked up by {@link JavaPsiFacade}.
  */
 public abstract class PsiElementFinder {
-  public static final ExtensionPointName<PsiElementFinder> EP_NAME = ExtensionPointName.create("com.intellij.java.elementFinder");
+  public static final ExtensionPointName<PsiElementFinder> EP_NAME = ExtensionPointName.create("org.consulo.java.elementFinder");
 
   /**
    * Searches the specified scope within the project for a class with the specified full-qualified

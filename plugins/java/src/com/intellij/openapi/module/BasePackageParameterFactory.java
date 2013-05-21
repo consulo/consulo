@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.PsiNameHelperImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;
@@ -38,9 +38,9 @@ import java.util.Map;
  */
 public class BasePackageParameterFactory extends ProjectTemplateParameterFactory {
 
-  private static final Condition<PsiPackage> PACKAGE_CONDITION = new Condition<PsiPackage>() {
+  private static final Condition<PsiJavaPackage> PACKAGE_CONDITION = new Condition<PsiJavaPackage>() {
     @Override
-    public boolean value(PsiPackage aPackage) {
+    public boolean value(PsiJavaPackage aPackage) {
       return JavaPsiFacade.getInstance(aPackage.getProject()).getNameHelper().isQualifiedName(aPackage.getQualifiedName()) &&
              Character.isLowerCase(aPackage.getName().charAt(0));
     }
@@ -93,14 +93,14 @@ public class BasePackageParameterFactory extends ProjectTemplateParameterFactory
 
   @Override
   public String detectParameterValue(Project project) {
-    PsiPackage root = JavaPsiFacade.getInstance(project).findPackage("");
+    PsiJavaPackage root = JavaPsiFacade.getInstance(project).findPackage("");
     if (root == null) return null;
     String name = getBasePackage(root, GlobalSearchScope.projectScope(project)).getQualifiedName();
     return StringUtil.isEmpty(name) ? null : name;
   }
 
-  private static PsiPackage getBasePackage(PsiPackage pack, GlobalSearchScope scope) {
-    List<PsiPackage> subPackages = ContainerUtil.filter(pack.getSubPackages(scope), PACKAGE_CONDITION);
+  private static PsiJavaPackage getBasePackage(PsiJavaPackage pack, GlobalSearchScope scope) {
+    List<PsiJavaPackage> subPackages = ContainerUtil.filter(pack.getSubPackages(scope), PACKAGE_CONDITION);
     return subPackages.size() == 1 ? getBasePackage(subPackages.get(0), scope) : pack;
   }
 }

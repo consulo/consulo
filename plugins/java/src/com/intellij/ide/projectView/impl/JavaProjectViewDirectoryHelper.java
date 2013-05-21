@@ -31,7 +31,7 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +44,7 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
 
   @Override
   public String getLocationString(@NotNull final PsiDirectory directory) {
-    PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     if (ProjectRootsUtil.isSourceRoot(directory) && aPackage != null) {   //package prefix
       return aPackage.getQualifiedName();
     }
@@ -53,7 +53,7 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
 
   @Override
   public boolean isShowFQName(final ViewSettings settings, final Object parentValue, final PsiDirectory value) {
-    PsiPackage aPackage;
+    PsiJavaPackage aPackage;
         return value != null
                && !(parentValue instanceof Project)
                && settings.isFlattenPackages()
@@ -65,9 +65,9 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
   @Nullable
   @Override
   public String getNodeName(final ViewSettings settings, final Object parentValue, final PsiDirectory directory) {
-    PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
 
-    PsiPackage parentPackage;
+    PsiJavaPackage parentPackage;
     if (!ProjectRootsUtil.isSourceRoot(directory) && aPackage != null && !aPackage.getQualifiedName().isEmpty() &&
                               parentValue instanceof PsiDirectory) {
 

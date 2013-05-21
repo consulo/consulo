@@ -7,8 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="java-platform" />
-    <orderEntry type="module" module-name="analysis-api" exported="" />
+    <orderEntry type="module" module-name="java" />
   </component>
 </module>
 

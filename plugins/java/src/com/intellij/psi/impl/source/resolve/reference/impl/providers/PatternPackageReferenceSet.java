@@ -1,7 +1,7 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PackageReferenceSet;
 import com.intellij.util.PatternUtil;
 import com.intellij.util.Processor;
@@ -19,16 +19,16 @@ public class PatternPackageReferenceSet extends PackageReferenceSet {
   }
 
   @Override
-  public Collection<PsiPackage> resolvePackageName(@Nullable final PsiPackage context, final String packageName) {
+  public Collection<PsiJavaPackage> resolvePackageName(@Nullable final PsiJavaPackage context, final String packageName) {
     if (context == null) return Collections.emptySet();
 
     if (packageName.contains("*")) {
       final Pattern pattern = PatternUtil.fromMask(packageName);
-      final Set<PsiPackage> packages = new HashSet<PsiPackage>();
+      final Set<PsiJavaPackage> packages = new HashSet<PsiJavaPackage>();
 
-      processSubPackages(context, new Processor<PsiPackage>() {
+      processSubPackages(context, new Processor<PsiJavaPackage>() {
         @Override
-        public boolean process(PsiPackage psiPackage) {
+        public boolean process(PsiJavaPackage psiPackage) {
           String name = psiPackage.getName();
           if (name != null && pattern.matcher(name).matches()) {
             packages.add(psiPackage);
@@ -44,9 +44,9 @@ public class PatternPackageReferenceSet extends PackageReferenceSet {
     }
   }
 
-   protected static boolean processSubPackages(final PsiPackage pkg, final Processor<PsiPackage> processor) {
+   protected static boolean processSubPackages(final PsiJavaPackage pkg, final Processor<PsiJavaPackage> processor) {
     if (!processor.process(pkg)) return false;
-    for (final PsiPackage aPackage : pkg.getSubPackages()) {
+    for (final PsiJavaPackage aPackage : pkg.getSubPackages()) {
       if (!processSubPackages(aPackage, processor)) return false;
     }
     return true;

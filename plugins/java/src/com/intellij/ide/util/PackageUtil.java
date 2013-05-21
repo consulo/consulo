@@ -24,10 +24,10 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.ProjectRootUtil;
-import com.intellij.openapi.roots.ModulePackageIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.ui.configuration.ContentEntriesEditor;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.ui.Messages;
@@ -53,7 +53,7 @@ public class PackageUtil {
   public static PsiDirectory findPossiblePackageDirectoryInModule(Module module, String packageName) {
     PsiDirectory psiDirectory = null;
     if (!"".equals(packageName)) {
-      PsiPackage rootPackage = findLongestExistingPackage(module.getProject(), packageName);
+      PsiJavaPackage rootPackage = findLongestExistingPackage(module.getProject(), packageName);
       if (rootPackage != null) {
         final PsiDirectory[] psiDirectories = getPackageDirectoriesInModule(rootPackage, module);
         if (psiDirectories.length > 0) {
@@ -99,7 +99,7 @@ public class PackageUtil {
     PsiDirectory psiDirectory = null;
 
     if (!"".equals(packageName)) {
-      PsiPackage rootPackage = findLongestExistingPackage(project, packageName);
+      PsiJavaPackage rootPackage = findLongestExistingPackage(project, packageName);
       if (rootPackage != null) {
         int beginIndex = rootPackage.getQualifiedName().length() + 1;
         packageName = beginIndex < packageName.length() ? packageName.substring(beginIndex) : "";
@@ -192,7 +192,7 @@ public class PackageUtil {
     final Project project = module.getProject();
     PsiDirectory psiDirectory = null;
     if (!packageName.isEmpty()) {
-      PsiPackage rootPackage = findLongestExistingPackage(module, packageName);
+      PsiJavaPackage rootPackage = findLongestExistingPackage(module, packageName);
       if (rootPackage != null) {
         int beginIndex = rootPackage.getQualifiedName().length() + 1;
         packageName = beginIndex < packageName.length() ? packageName.substring(beginIndex) : "";
@@ -284,15 +284,15 @@ public class PackageUtil {
     return moduleDirectories;
   }
 
-  private static PsiDirectory[] getPackageDirectoriesInModule(PsiPackage rootPackage, Module module) {
+  private static PsiDirectory[] getPackageDirectoriesInModule(PsiJavaPackage rootPackage, Module module) {
     return rootPackage.getDirectories(GlobalSearchScope.moduleScope(module));
   }
 
-  private static PsiPackage findLongestExistingPackage(Project project, String packageName) {
+  private static PsiJavaPackage findLongestExistingPackage(Project project, String packageName) {
     PsiManager manager = PsiManager.getInstance(project);
     String nameToMatch = packageName;
     while (true) {
-      PsiPackage aPackage = JavaPsiFacade.getInstance(manager.getProject()).findPackage(nameToMatch);
+      PsiJavaPackage aPackage = JavaPsiFacade.getInstance(manager.getProject()).findPackage(nameToMatch);
       if (aPackage != null && isWritablePackage(aPackage)) return aPackage;
       int lastDotIndex = nameToMatch.lastIndexOf('.');
       if (lastDotIndex >= 0) {
@@ -304,7 +304,7 @@ public class PackageUtil {
     }
   }
 
-  private static boolean isWritablePackage(PsiPackage aPackage) {
+  private static boolean isWritablePackage(PsiJavaPackage aPackage) {
     PsiDirectory[] directories = aPackage.getDirectories();
     for (PsiDirectory directory : directories) {
       if (directory.isValid() && directory.isWritable()) {
@@ -325,12 +325,12 @@ public class PackageUtil {
     return null;
   }
 
-  private static PsiPackage findLongestExistingPackage(Module module, String packageName) {
+  private static PsiJavaPackage findLongestExistingPackage(Module module, String packageName) {
     final PsiManager manager = PsiManager.getInstance(module.getProject());
 
     String nameToMatch = packageName;
     while (true) {
-      Query<VirtualFile> vFiles = ModulePackageIndex.getInstance(module).getDirsByPackageName(nameToMatch, false);
+      Query<VirtualFile> vFiles = DirectoryIndex.getInstance(module.getProject()).getDirectoriesByPackageName(nameToMatch, false);
       PsiDirectory directory = getWritableModuleDirectory(vFiles, module, manager);
       if (directory != null) return JavaDirectoryService.getInstance().getPackage(directory);
 

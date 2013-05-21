@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.PsiTestCase;
@@ -59,7 +59,7 @@ public class InheritorsTest extends PsiTestCase{
 
     final SearchScope scope;
     if (packageScopeName != null){
-      PsiPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(packageScopeName);
+      PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(packageScopeName);
       scope = PackageScope.packageScope(aPackage, true).intersectWith(GlobalSearchScope.projectScope(myProject));
     }
     else{

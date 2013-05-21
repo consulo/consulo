@@ -211,12 +211,12 @@ public class JavaResolveUtil {
                                                           final ResolveState state,
                                                           final PsiElement place,
                                                           PsiManager manager) {
-    PsiPackage defaultPackage = JavaPsiFacade.getInstance(manager.getProject()).findPackage("");
+    PsiJavaPackage defaultPackage = JavaPsiFacade.getInstance(manager.getProject()).findPackage("");
     if (defaultPackage != null) {
       if (!defaultPackage.processDeclarations(processor, state, null, place)) return false;
     }
 
-    PsiPackage langPackage = JavaPsiFacade.getInstance(manager.getProject()).findPackage(CommonClassNames.DEFAULT_PACKAGE);
+    PsiJavaPackage langPackage = JavaPsiFacade.getInstance(manager.getProject()).findPackage(CommonClassNames.DEFAULT_PACKAGE);
     if (langPackage != null) {
       if (!langPackage.processDeclarations(processor, state, null, place)) return false;
     }

@@ -42,7 +42,7 @@ public abstract class PsiShortNamesCache {
     return ServiceManager.getService(project, PsiShortNamesCache.class);
   }
   
-  public static final ExtensionPointName<PsiShortNamesCache> EP_NAME = ExtensionPointName.create("com.intellij.java.shortNamesCache");
+  public static final ExtensionPointName<PsiShortNamesCache> EP_NAME = ExtensionPointName.create("org.consulo.java.java.shortNamesCache");
 
   /**
    * Returns the list of files with the specified name.

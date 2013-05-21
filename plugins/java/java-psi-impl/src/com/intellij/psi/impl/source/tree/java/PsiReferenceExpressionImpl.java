@@ -284,7 +284,7 @@ public class PsiReferenceExpressionImpl extends PsiReferenceExpressionBase imple
     final String packageName = getCachedTextSkipWhiteSpaceAndComments();
     Project project = containingFile.getProject();
     JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(project);
-    final PsiPackage aPackage = psiFacade.findPackage(packageName);
+    final PsiJavaPackage aPackage = psiFacade.findPackage(packageName);
     if (aPackage == null) {
       return psiFacade.isPartOfPackagePrefix(packageName)
              ? CandidateInfo.RESOLVE_RESULT_FOR_PACKAGE_PREFIX_PACKAGE
@@ -292,7 +292,7 @@ public class PsiReferenceExpressionImpl extends PsiReferenceExpressionBase imple
     }
     // check that all qualifiers must resolve to package parts, to prevent local vars shadowing corresponding package case
     PsiExpression qualifier = getQualifierExpression();
-    if (qualifier instanceof PsiReferenceExpression && !(((PsiReferenceExpression)qualifier).resolve() instanceof PsiPackage)) {
+    if (qualifier instanceof PsiReferenceExpression && !(((PsiReferenceExpression)qualifier).resolve() instanceof PsiJavaPackage)) {
       return JavaResolveResult.EMPTY_ARRAY;
     }
     return new JavaResolveResult[]{new CandidateInfo(aPackage, PsiSubstitutor.EMPTY)};
@@ -423,7 +423,7 @@ public class PsiReferenceExpressionImpl extends PsiReferenceExpressionBase imple
     IElementType i = getLastChildNode().getElementType();
     boolean resolvingToMethod = element instanceof PsiMethod;
     if (i == JavaTokenType.IDENTIFIER) {
-      if (!(element instanceof PsiPackage)) {
+      if (!(element instanceof PsiJavaPackage)) {
         if (!(element instanceof PsiNamedElement)) return false;
         String name = ((PsiNamedElement)element).getName();
         if (name == null) return false;
@@ -565,8 +565,8 @@ public class PsiReferenceExpressionImpl extends PsiReferenceExpressionBase imple
       }
       return ref;
     }
-    else if (element instanceof PsiPackage) {
-      final String qName = ((PsiPackage)element).getQualifiedName();
+    else if (element instanceof PsiJavaPackage) {
+      final String qName = ((PsiJavaPackage)element).getQualifiedName();
       if (qName.isEmpty()) {
         throw new IncorrectOperationException();
       }
@@ -597,7 +597,7 @@ public class PsiReferenceExpressionImpl extends PsiReferenceExpressionBase imple
     if (qualifier == null) return false;
     if (qualifier.getElementType() != JavaElementType.REFERENCE_EXPRESSION) return false;
     PsiElement refElement = ((PsiReference)qualifier).resolve();
-    return refElement instanceof PsiPackage || isFullyQualified((CompositeElement)qualifier);
+    return refElement instanceof PsiJavaPackage || isFullyQualified((CompositeElement)qualifier);
   }
 
   @Override

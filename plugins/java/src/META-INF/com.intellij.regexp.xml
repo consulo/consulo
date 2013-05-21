@@ -1,0 +1,6 @@
+<idea-plugin version="2">
+  <extensions defaultExtensionNs="com.intellij.regexp">
+    <languageHost forClass="com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl"
+                  implementationClass="com.intellij.psi.impl.JavaRegExpHost"/>
+  </extensions>
+</idea-plugin>

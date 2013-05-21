@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class LightPackageReferenceExpression extends LightPackageReference implements PsiReferenceExpression {
-  public LightPackageReferenceExpression(PsiManager manager, PsiPackage refPackage) {
+  public LightPackageReferenceExpression(PsiManager manager, PsiJavaPackage refPackage) {
     super(manager, refPackage);
   }
 

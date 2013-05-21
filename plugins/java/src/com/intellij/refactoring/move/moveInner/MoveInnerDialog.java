@@ -191,7 +191,7 @@ public class MoveInnerDialog extends RefactoringDialog {
   private PsiElement getTargetContainer() {
     if (myTargetContainer instanceof PsiDirectory) {
       final PsiDirectory psiDirectory = (PsiDirectory)myTargetContainer;
-      PsiPackage oldPackage = getTargetPackage();
+      PsiJavaPackage oldPackage = getTargetPackage();
       String name = oldPackage == null ? "" : oldPackage.getQualifiedName();
       final String targetName = myPackageNameField.getText();
       if (!Comparing.equal(name, targetName)) {
@@ -317,14 +317,14 @@ public class MoveInnerDialog extends RefactoringDialog {
 
     myPackageNameField = new PackageNameReferenceEditorCombo("", myProject, RECENTS_KEY,
                                                              RefactoringBundle.message("choose.destination.package"));
-    PsiPackage psiPackage = getTargetPackage();
+    PsiJavaPackage psiPackage = getTargetPackage();
     if (psiPackage != null) {
       myPackageNameField.prependItem(psiPackage.getQualifiedName());
     }
   }
 
   @Nullable
-  private PsiPackage getTargetPackage() {
+  private PsiJavaPackage getTargetPackage() {
     if (myTargetContainer instanceof PsiDirectory) {
       final PsiDirectory directory = (PsiDirectory)myTargetContainer;
       return JavaDirectoryService.getInstance().getPackage(directory);

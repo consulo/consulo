@@ -47,8 +47,8 @@ public class CompletionElement{
     if(myElement instanceof PsiClass){
       return ((PsiClass)myElement).getQualifiedName();
     }
-    if(myElement instanceof PsiPackage){
-      return ((PsiPackage)myElement).getQualifiedName();
+    if(myElement instanceof PsiJavaPackage){
+      return ((PsiJavaPackage)myElement).getQualifiedName();
     }
     if(myElement instanceof PsiMethod){
       return ((PsiMethod)myElement).getSignature(mySubstitutor);

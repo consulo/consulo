@@ -35,9 +35,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+/**
+ * TODO [VISTALL]
+ */
 public class JavaCoreProjectEnvironment  extends CoreProjectEnvironment {
   private final JavaFileManager myFileManager;
-  private final PackageIndex myPackageIndex;
+  //private final PackageIndex myPackageIndex;
 
   public JavaCoreProjectEnvironment(Disposable parentDisposable, CoreApplicationEnvironment applicationEnvironment) {
     super(parentDisposable, applicationEnvironment);
@@ -51,8 +54,8 @@ public class JavaCoreProjectEnvironment  extends CoreProjectEnvironment {
     myProject.registerService(JavaCodeStyleManager.class, new CoreJavaCodeStyleManager());
     registerProjectExtensionPoint(PsiElementFinder.EP_NAME, PsiElementFinder.class);
 
-    myPackageIndex = createCorePackageIndex();
-    myProject.registerService(PackageIndex.class, myPackageIndex);
+ /*   myPackageIndex = createCorePackageIndex();
+    myProject.registerService(PackageIndex.class, myPackageIndex);     */
 
     myFileManager = createCoreFileManager();
     myProject.registerService(JavaFileManager.class, myFileManager);
@@ -70,10 +73,6 @@ public class JavaCoreProjectEnvironment  extends CoreProjectEnvironment {
     return new CoreJavaFileManager(myPsiManager);
   }
 
-  protected PackageIndex createCorePackageIndex() {
-    return new CorePackageIndex();
-  }
-
   public void addJarToClassPath (File path) {
     assert path.isFile();
 
@@ -88,7 +87,7 @@ public class JavaCoreProjectEnvironment  extends CoreProjectEnvironment {
   public void addSourcesToClasspath(@NotNull VirtualFile root) {
     assert root.isDirectory();
     ((CoreJavaFileManager)myFileManager).addToClasspath(root);
-    ((CorePackageIndex)myPackageIndex).addToClasspath(root);
+ //  ((CorePackageIndex)myPackageIndex).addToClasspath(root);
     ((MockFileIndexFacade)myFileIndexFacade).addLibraryRoot(root);
   }
 }

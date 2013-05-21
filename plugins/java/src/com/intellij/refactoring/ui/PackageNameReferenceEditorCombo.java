@@ -17,7 +17,7 @@ package com.intellij.refactoring.ui;
 
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.ui.ReferenceEditorComboWithBrowseButton;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +37,7 @@ public class PackageNameReferenceEditorCombo extends ReferenceEditorComboWithBro
         chooser.selectPackage(getText());
         chooser.show();
         if (chooser.isOK()) {
-          final PsiPackage aPackage = chooser.getSelectedPackage();
+          final PsiJavaPackage aPackage = chooser.getSelectedPackage();
           if (aPackage != null) {
             setText(aPackage.getQualifiedName());
           }

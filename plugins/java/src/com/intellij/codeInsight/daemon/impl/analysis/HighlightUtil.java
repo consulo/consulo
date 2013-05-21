@@ -2593,7 +2593,7 @@ public class HighlightUtil extends HighlightUtilBase {
     if (qualifier == null) return null;
     if (qualifier instanceof PsiReferenceExpression) {
       PsiElement qualifierResolved = ((PsiReferenceExpression)qualifier).resolve();
-      if (qualifierResolved instanceof PsiClass || qualifierResolved instanceof PsiPackage) return null;
+      if (qualifierResolved instanceof PsiClass || qualifierResolved instanceof PsiJavaPackage) return null;
     }
     String description = JavaErrorMessages.message("expected.class.or.package");
     HighlightInfo info =

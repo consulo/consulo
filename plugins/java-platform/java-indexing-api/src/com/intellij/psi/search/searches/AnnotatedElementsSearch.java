@@ -15,16 +15,13 @@
  */
 package com.intellij.psi.search.searches;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.*;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.InstanceofQuery;
 import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
 import org.jetbrains.annotations.NotNull;
 
 public class AnnotatedElementsSearch extends ExtensibleQueryFactory<PsiModifierListOwner, AnnotatedElementsSearch.Parameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.annotatedElementsSearch");
   public static final AnnotatedElementsSearch INSTANCE = new AnnotatedElementsSearch();
 
   public static class Parameters {
@@ -51,16 +48,24 @@ public class AnnotatedElementsSearch extends ExtensibleQueryFactory<PsiModifierL
     }
   }
 
-  private static Query<PsiModifierListOwner> createDelegateQuery(PsiClass annotationClass, SearchScope scope, Class<? extends PsiModifierListOwner>... types) {
+  private AnnotatedElementsSearch() {
+    super("org.consulo.java.platform");
+  }
+
+  private static Query<PsiModifierListOwner> createDelegateQuery(PsiClass annotationClass,
+                                                                 SearchScope scope,
+                                                                 Class<? extends PsiModifierListOwner>... types) {
     return INSTANCE.createQuery(new Parameters(annotationClass, scope, types));
   }
 
-  public static <T extends PsiModifierListOwner> Query<T> searchElements(@NotNull PsiClass annotationClass, @NotNull SearchScope scope, Class<? extends T>... types) {
+  public static <T extends PsiModifierListOwner> Query<T> searchElements(@NotNull PsiClass annotationClass,
+                                                                         @NotNull SearchScope scope,
+                                                                         Class<? extends T>... types) {
     return new InstanceofQuery<T>(createDelegateQuery(annotationClass, scope, types), types);
   }
 
   public static Query<PsiClass> searchPsiClasses(@NotNull PsiClass annotationClass, @NotNull SearchScope scope) {
-     return searchElements(annotationClass, scope, PsiClass.class);
+    return searchElements(annotationClass, scope, PsiClass.class);
   }
 
   public static Query<PsiMethod> searchPsiMethods(@NotNull PsiClass annotationClass, @NotNull SearchScope scope) {

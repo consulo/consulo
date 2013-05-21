@@ -93,6 +93,9 @@
             <element id="archive" name="java.jar">
               <element id="module-output" name="java" />
               <element id="module-output" name="java-psi-impl" />
+              <element id="module-output" name="java-analysis-api" />
+              <element id="module-output" name="java-analysis-impl" />
+              <element id="module-output" name="java-indexing-impl" />
             </element>
           </element>
         </element>
@@ -135,6 +138,7 @@
           <element id="module-output" name="compiler-api" />
           <element id="module-output" name="compiler-impl" />
           <element id="module-output" name="usageView" />
+          <element id="module-output" name="testRunner" />
         </element>
         <element id="archive" name="idea_rt.jar">
           <element id="module-output" name="java-execution-api" />

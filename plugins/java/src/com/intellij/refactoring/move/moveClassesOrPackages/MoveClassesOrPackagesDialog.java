@@ -114,8 +114,8 @@ public class MoveClassesOrPackagesDialog extends RefactoringDialog {
         }
       }, ModalityState.stateForComponent(myMainPanel));
     }
-    else if (initialTargetElement instanceof PsiPackage) {
-      myClassPackageChooser.setText(((PsiPackage)initialTargetElement).getQualifiedName());
+    else if (initialTargetElement instanceof PsiJavaPackage) {
+      myClassPackageChooser.setText(((PsiJavaPackage)initialTargetElement).getQualifiedName());
     }
 
     updateControlsEnabled();
@@ -340,8 +340,8 @@ public class MoveClassesOrPackagesDialog extends RefactoringDialog {
     if (element instanceof PsiDirectory) {
       message = moveDestination.verify((PsiDirectory)element);
     }
-    else if (element instanceof PsiPackage) {
-      message = moveDestination.verify((PsiPackage)element);
+    else if (element instanceof PsiJavaPackage) {
+      message = moveDestination.verify((PsiJavaPackage)element);
     }
     else {
       message = moveDestination.verify(element.getContainingFile());

@@ -72,7 +72,7 @@ public class MoveClassAndFileTest extends RefactoringTestCase {
     }
     elements[classNames.length] = elements[0].getContainingFile().getContainingDirectory().findFile(fileName);
 
-    PsiPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(newPackageName);
+    PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(newPackageName);
     assertNotNull("Package " + newPackageName + " not found", aPackage);
     final PsiDirectory[] dirs = aPackage.getDirectories();
     assertEquals(dirs.length, 1);

@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.search.searches;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.*;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
  * @author max
  */
 public class MethodReferencesSearch extends ExtensibleQueryFactory<PsiReference, MethodReferencesSearch.SearchParameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.methodReferencesSearch");
   public static final MethodReferencesSearch INSTANCE = new MethodReferencesSearch();
 
   public static class SearchParameters {
@@ -38,7 +36,10 @@ public class MethodReferencesSearch extends ExtensibleQueryFactory<PsiReference,
     private final SearchRequestCollector myOptimizer;
     private final boolean isSharedOptimizer;
 
-    public SearchParameters(PsiMethod method, SearchScope scope, boolean strictSignatureSearch, @Nullable SearchRequestCollector optimizer) {
+    public SearchParameters(PsiMethod method,
+                            SearchScope scope,
+                            boolean strictSignatureSearch,
+                            @Nullable SearchRequestCollector optimizer) {
       myMethod = method;
       myScope = scope;
       myStrictSignatureSearch = strictSignatureSearch;
@@ -67,14 +68,19 @@ public class MethodReferencesSearch extends ExtensibleQueryFactory<PsiReference,
     }
   }
 
-  private MethodReferencesSearch() {}
+  private MethodReferencesSearch() {
+    super("org.consulo.java.platform");
+  }
 
   public static Query<PsiReference> search(final PsiMethod method, SearchScope scope, final boolean strictSignatureSearch) {
     return search(new SearchParameters(method, scope, strictSignatureSearch));
   }
 
-  public static void searchOptimized(final PsiMethod method, SearchScope scope, final boolean strictSignatureSearch,
-                                     @NotNull SearchRequestCollector collector, final Processor<PsiReference> processor) {
+  public static void searchOptimized(final PsiMethod method,
+                                     SearchScope scope,
+                                     final boolean strictSignatureSearch,
+                                     @NotNull SearchRequestCollector collector,
+                                     final Processor<PsiReference> processor) {
     searchOptimized(method, scope, strictSignatureSearch, collector, false, new PairProcessor<PsiReference, SearchRequestCollector>() {
       @Override
       public boolean process(PsiReference psiReference, SearchRequestCollector collector) {
@@ -82,10 +88,16 @@ public class MethodReferencesSearch extends ExtensibleQueryFactory<PsiReference,
       }
     });
   }
-public static void searchOptimized(final PsiMethod method, SearchScope scope, final boolean strictSignatureSearch, SearchRequestCollector collector, final boolean inReadAction, PairProcessor<PsiReference, SearchRequestCollector> processor) {
+
+  public static void searchOptimized(final PsiMethod method,
+                                     SearchScope scope,
+                                     final boolean strictSignatureSearch,
+                                     SearchRequestCollector collector,
+                                     final boolean inReadAction,
+                                     PairProcessor<PsiReference, SearchRequestCollector> processor) {
     final SearchRequestCollector nested = new SearchRequestCollector(collector.getSearchSession());
-    collector.searchQuery(new QuerySearchRequest(search(new SearchParameters(method, scope, strictSignatureSearch, nested)), nested,
-                                                 inReadAction, processor));
+    collector.searchQuery(
+      new QuerySearchRequest(search(new SearchParameters(method, scope, strictSignatureSearch, nested)), nested, inReadAction, processor));
   }
 
   public static Query<PsiReference> search(final SearchParameters parameters) {
@@ -108,6 +120,7 @@ public static void searchOptimized(final PsiMethod method, SearchScope scope, fi
   }
 
   private static UniqueResultsQuery<PsiReference, ReferenceDescriptor> uniqueResults(@NotNull Query<PsiReference> composite) {
-    return new UniqueResultsQuery<PsiReference, ReferenceDescriptor>(composite, ContainerUtil.<ReferenceDescriptor>canonicalStrategy(), ReferenceDescriptor.MAPPER);
+    return new UniqueResultsQuery<PsiReference, ReferenceDescriptor>(composite, ContainerUtil.<ReferenceDescriptor>canonicalStrategy(),
+                                                                     ReferenceDescriptor.MAPPER);
   }
 }

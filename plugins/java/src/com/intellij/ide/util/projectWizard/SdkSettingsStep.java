@@ -31,6 +31,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

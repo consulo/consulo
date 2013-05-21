@@ -17,7 +17,6 @@ package com.intellij.psi.search.searches;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Computable;
@@ -44,7 +43,6 @@ import java.util.Set;
  * @author max
  */
 public class ClassInheritorsSearch extends ExtensibleQueryFactory<PsiClass, ClassInheritorsSearch.SearchParameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.classInheritorsSearch");
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.searches.ClassInheritorsSearch");
 
   public static final ClassInheritorsSearch INSTANCE = new ClassInheritorsSearch();
@@ -67,9 +65,9 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<PsiClass, Clas
               return baseClass.getName();
             }
           });
-          progress.setText(className != null ?
-                           PsiBundle.message("psi.search.inheritors.of.class.progress", className) :
-                           PsiBundle.message("psi.search.inheritors.progress"));
+          progress.setText(className != null
+                           ? PsiBundle.message("psi.search.inheritors.of.class.progress", className)
+                           : PsiBundle.message("psi.search.inheritors.progress"));
         }
 
         boolean result = processInheritors(consumer, baseClass, searchScope, parameters);
@@ -91,12 +89,20 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<PsiClass, Clas
     private final boolean myIncludeAnonymous;
     private final Condition<String> myNameCondition;
 
-    public SearchParameters(@NotNull final PsiClass aClass, @NotNull SearchScope scope, final boolean checkDeep, final boolean checkInheritance, boolean includeAnonymous) {
+    public SearchParameters(@NotNull final PsiClass aClass,
+                            @NotNull SearchScope scope,
+                            final boolean checkDeep,
+                            final boolean checkInheritance,
+                            boolean includeAnonymous) {
       this(aClass, scope, checkDeep, checkInheritance, includeAnonymous, Condition.TRUE);
     }
 
-    public SearchParameters(@NotNull final PsiClass aClass, @NotNull SearchScope scope, final boolean checkDeep, final boolean checkInheritance,
-                            boolean includeAnonymous, @NotNull final Condition<String> nameCondition) {
+    public SearchParameters(@NotNull final PsiClass aClass,
+                            @NotNull SearchScope scope,
+                            final boolean checkDeep,
+                            final boolean checkInheritance,
+                            boolean includeAnonymous,
+                            @NotNull final Condition<String> nameCondition) {
       myClass = aClass;
       myScope = scope;
       myCheckDeep = checkDeep;
@@ -110,7 +116,8 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<PsiClass, Clas
       return myClass;
     }
 
-    @NotNull public Condition<String> getNameCondition() {
+    @NotNull
+    public Condition<String> getNameCondition() {
       return myNameCondition;
     }
 
@@ -131,9 +138,15 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<PsiClass, Clas
     }
   }
 
-  private ClassInheritorsSearch() {}
+  private ClassInheritorsSearch() {
+    super("org.consulo.java.platform");
+  }
 
-  public static Query<PsiClass> search(@NotNull final PsiClass aClass, @NotNull SearchScope scope, final boolean checkDeep, final boolean checkInheritance, boolean includeAnonymous) {
+  public static Query<PsiClass> search(@NotNull final PsiClass aClass,
+                                       @NotNull SearchScope scope,
+                                       final boolean checkDeep,
+                                       final boolean checkInheritance,
+                                       boolean includeAnonymous) {
     return search(new SearchParameters(aClass, scope, checkDeep, checkInheritance, includeAnonymous));
   }
 
@@ -141,7 +154,10 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<PsiClass, Clas
     return INSTANCE.createQuery(parameters);
   }
 
-  public static Query<PsiClass> search(@NotNull final PsiClass aClass, @NotNull SearchScope scope, final boolean checkDeep, final boolean checkInheritance) {
+  public static Query<PsiClass> search(@NotNull final PsiClass aClass,
+                                       @NotNull SearchScope scope,
+                                       final boolean checkDeep,
+                                       final boolean checkInheritance) {
     return search(aClass, scope, checkDeep, checkInheritance, true);
   }
 
@@ -257,13 +273,15 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<PsiClass, Clas
       }
 
       currentBase.set(psiClass);
-      if (!DirectClassInheritorsSearch.search(psiClass, projectScope, parameters.isIncludeAnonymous(), false).forEach(processor)) return false;
+      if (!DirectClassInheritorsSearch.search(psiClass, projectScope, parameters.isIncludeAnonymous(), false).forEach(processor)) {
+        return false;
+      }
     }
     return true;
   }
 
   private static Reference<PsiClass> createHardReference(final PsiClass candidate) {
-    return new SoftReference<PsiClass>(candidate){
+    return new SoftReference<PsiClass>(candidate) {
       @Override
       public PsiClass get() {
         return candidate;

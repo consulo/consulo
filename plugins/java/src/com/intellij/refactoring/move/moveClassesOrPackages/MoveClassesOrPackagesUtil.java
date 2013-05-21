@@ -38,6 +38,7 @@ import com.intellij.refactoring.util.TextOccurrencesUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -89,8 +90,8 @@ public class MoveClassesOrPackagesUtil {
   }
 
   private static String getStringToSearch(PsiElement element) {
-    if (element instanceof PsiPackage) {
-      return ((PsiPackage)element).getQualifiedName();
+    if (element instanceof PsiJavaPackage) {
+      return ((PsiJavaPackage)element).getQualifiedName();
     }
     else if (element instanceof PsiClass) {
       return ((PsiClass)element).getQualifiedName();
@@ -105,7 +106,7 @@ public class MoveClassesOrPackagesUtil {
   }
 
   // Does not process non-code usages!
-  public static PsiPackage doMovePackage(PsiPackage aPackage, MoveDestination moveDestination)
+  public static PsiJavaPackage doMovePackage(PsiJavaPackage aPackage, MoveDestination moveDestination)
     throws IncorrectOperationException {
     final PackageWrapper targetPackage = moveDestination.getTargetPackage();
 
@@ -147,7 +148,7 @@ public class MoveClassesOrPackagesUtil {
     final VirtualFile sourceVFile = dir.getVirtualFile();
     if (movedPaths.contains(sourceVFile)) return;
     String targetName = dir.getName();
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(dir);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(dir);
     if (aPackage != null) {
       final String sourcePackageName = aPackage.getName();
       if (!sourcePackageName.equals(targetName)) {
@@ -225,7 +226,7 @@ public class MoveClassesOrPackagesUtil {
     }
 
     PsiFile file = aClass.getContainingFile();
-    final PsiPackage newPackage = JavaDirectoryService.getInstance().getPackage(moveDestination);
+    final PsiJavaPackage newPackage = JavaDirectoryService.getInstance().getPackage(moveDestination);
 
     newClass = aClass;
     if (!moveDestination.equals(file.getContainingDirectory())) {
@@ -270,7 +271,7 @@ public class MoveClassesOrPackagesUtil {
   public static PsiDirectory chooseDestinationPackage(Project project, String packageName, @Nullable PsiDirectory baseDir) {
     final PsiManager psiManager = PsiManager.getInstance(project);
     final PackageWrapper packageWrapper = new PackageWrapper(psiManager, packageName);
-    final PsiPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
+    final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
     PsiDirectory directory;
 
     PsiDirectory[] directories = aPackage != null ? aPackage.getDirectories() : null;

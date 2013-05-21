@@ -166,7 +166,7 @@ public abstract class InspectionTestCase extends PsiTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    ExtensionPoint<EntryPoint> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.DEAD_CODE_TOOL);
+    ExtensionPoint<EntryPoint> point = Extensions.getRootArea().getExtensionPoint(JavaExtensionPoints.DEAD_CODE_TOOL);
     myUnusedCodeExtension = new EntryPoint() {
       @NotNull
       @Override
@@ -210,7 +210,7 @@ public abstract class InspectionTestCase extends PsiTestCase {
 
   @Override
   protected void tearDown() throws Exception {
-    ExtensionPoint<EntryPoint> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.DEAD_CODE_TOOL);
+    ExtensionPoint<EntryPoint> point = Extensions.getRootArea().getExtensionPoint(JavaExtensionPoints.DEAD_CODE_TOOL);
     point.unregisterExtension(myUnusedCodeExtension);
     myUnusedCodeExtension = null;
     ext_src = null;

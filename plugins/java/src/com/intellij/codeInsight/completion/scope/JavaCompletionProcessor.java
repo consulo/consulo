@@ -204,7 +204,7 @@ public class JavaCompletionProcessor extends BaseScopeProcessor implements Eleme
       return true;
     }
 
-    if (element instanceof PsiPackage && myScope instanceof PsiClass && !isQualifiedContext()) {
+    if (element instanceof PsiJavaPackage && myScope instanceof PsiClass && !isQualifiedContext()) {
       return true;
     }
 
@@ -296,7 +296,7 @@ public class JavaCompletionProcessor extends BaseScopeProcessor implements Eleme
         return myFilter.isClassAcceptable(PsiMethod.class);
 
       case PACKAGE:
-        return myFilter.isClassAcceptable(PsiPackage.class);
+        return myFilter.isClassAcceptable(PsiJavaPackage.class);
 
       case VARIABLE:
         return myFilter.isClassAcceptable(PsiVariable.class);

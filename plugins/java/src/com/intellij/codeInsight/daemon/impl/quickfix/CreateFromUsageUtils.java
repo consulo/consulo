@@ -64,7 +64,7 @@ import com.intellij.psi.util.proximity.PsiProximityComparator;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import org.consulo.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -316,7 +316,7 @@ public class CreateFromUsageUtils {
     final PsiManager manager = referenceElement.getManager();
     final PsiFile sourceFile = referenceElement.getContainingFile();
     final Module module = ModuleUtilCore.findModuleForPsiElement(sourceFile);
-    PsiPackage aPackage = findTargetPackage(qualifierElement, manager, sourceFile);
+    PsiJavaPackage aPackage = findTargetPackage(qualifierElement, manager, sourceFile);
     if (aPackage == null) return null;
     final PsiDirectory targetDirectory;
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
@@ -342,10 +342,10 @@ public class CreateFromUsageUtils {
   }
 
   @Nullable
-  public static PsiPackage findTargetPackage(PsiElement qualifierElement, PsiManager manager, PsiFile sourceFile) {
-    PsiPackage aPackage = null;
-    if (qualifierElement instanceof PsiPackage) {
-      aPackage = (PsiPackage)qualifierElement;
+  public static PsiJavaPackage findTargetPackage(PsiElement qualifierElement, PsiManager manager, PsiFile sourceFile) {
+    PsiJavaPackage aPackage = null;
+    if (qualifierElement instanceof PsiJavaPackage) {
+      aPackage = (PsiJavaPackage)qualifierElement;
     }
     else {
       final PsiDirectory directory = sourceFile.getContainingDirectory();

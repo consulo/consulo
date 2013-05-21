@@ -21,14 +21,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFinder;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiPackage;
-import com.intellij.psi.impl.file.PsiPackageImpl;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author yole
@@ -54,17 +49,21 @@ public class PackagePrefixElementFinder extends PsiElementFinder implements Dumb
   }
 
   @Override
-  public PsiPackage findPackage(@NotNull String qualifiedName) {
-    if (packagePrefixExists(qualifiedName)) {
+  public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
+    /*
+     //TODO [VISTALL] what?
+     if (packagePrefixExists(qualifiedName)) {
       return new PsiPackageImpl((PsiManagerEx)PsiManager.getInstance(myProject), qualifiedName);
-    }
+    }   */
     return null;
   }
 
   @NotNull
   @Override
-  public PsiPackage[] getSubPackages(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
-    final Map<String, PsiPackage> packagesMap = new HashMap<String, PsiPackage>();
+  public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
+    /*
+    //TODO [VISTALL] what?
+    final Map<String, PsiJavaPackage> packagesMap = new HashMap<String, PsiJavaPackage>();
     final String qualifiedName = psiPackage.getQualifiedName();
 
     for (final String prefix : myPackagePrefixIndex.getAllPackagePrefixes(scope)) {
@@ -78,7 +77,8 @@ public class PackagePrefixElementFinder extends PsiElementFinder implements Dumb
     }
 
     packagesMap.remove(qualifiedName);    // avoid SOE caused by returning a package as a subpackage of itself
-    return packagesMap.values().toArray(new PsiPackage[packagesMap.size()]);
+    return packagesMap.values().toArray(new PsiJavaPackage[packagesMap.size()]); */
+    return PsiJavaPackage.EMPTY_ARRAY;
   }
 
   public boolean packagePrefixExists(String packageQName) {

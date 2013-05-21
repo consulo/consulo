@@ -133,7 +133,7 @@ public abstract class JavaExtractSuperBaseDialog extends ExtractSuperBaseDialog<
     if (!(fromDefaultPackage && StringUtil.isEmpty(targetPackageName)) && !psiFacade.getNameHelper().isQualifiedName(targetPackageName)) {
       throw new OperationFailedException("Invalid package name: " + targetPackageName);
     }
-    final PsiPackage aPackage = psiFacade.findPackage(targetPackageName);
+    final PsiJavaPackage aPackage = psiFacade.findPackage(targetPackageName);
     if (aPackage != null) {
       final PsiDirectory[] directories = aPackage.getDirectories(mySourceClass.getResolveScope());
       if (directories.length >= 1) {

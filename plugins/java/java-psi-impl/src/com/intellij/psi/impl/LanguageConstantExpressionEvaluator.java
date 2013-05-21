@@ -24,7 +24,7 @@ public class LanguageConstantExpressionEvaluator extends LanguageExtension<Const
   public static final LanguageConstantExpressionEvaluator INSTANCE = new LanguageConstantExpressionEvaluator();
 
   private LanguageConstantExpressionEvaluator() {
-    super("com.intellij.constantExpressionEvaluator");
+    super("org.consulo.java.constantExpressionEvaluator");
   }
 }
 

@@ -18,9 +18,9 @@ import org.jetbrains.annotations.Nullable;
  * @author peter
  */
 public class MockPsiDirectory extends MockPsiElement implements PsiDirectory {
-  private final PsiPackage myPackage;
+  private final PsiJavaPackage myPackage;
 
-  public MockPsiDirectory(final PsiPackage aPackage, @NotNull Disposable parentDisposable) {
+  public MockPsiDirectory(final PsiJavaPackage aPackage, @NotNull Disposable parentDisposable) {
     super(parentDisposable);
     myPackage = aPackage;
   }
@@ -97,7 +97,7 @@ public class MockPsiDirectory extends MockPsiElement implements PsiDirectory {
   @Override
   @Nullable
   public PsiDirectory getParentDirectory() {
-    final PsiPackage psiPackage = myPackage.getParentPackage();
+    final PsiJavaPackage psiPackage = myPackage.getParentPackage();
     return psiPackage == null ? null : new MockPsiDirectory(psiPackage, getProject());
   }
 

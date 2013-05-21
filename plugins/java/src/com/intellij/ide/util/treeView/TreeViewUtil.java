@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.util.containers.ConcurrentWeakHashMap;
 import org.jetbrains.annotations.NotNull;
@@ -36,13 +36,13 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TreeViewUtil {
   private static final int SUBPACKAGE_LIMIT = 2;
-  private static final Key<ConcurrentMap<PsiPackage,Boolean>> SHOULD_ABBREV_PACK_KEY = Key.create("PACK_ABBREV_CACHE");
+  private static final Key<ConcurrentMap<PsiJavaPackage,Boolean>> SHOULD_ABBREV_PACK_KEY = Key.create("PACK_ABBREV_CACHE");
 
-  private static boolean shouldAbbreviateName(PsiPackage aPackage) {
+  private static boolean shouldAbbreviateName(PsiJavaPackage aPackage) {
     final Project project = aPackage.getProject();
-    ConcurrentMap<PsiPackage, Boolean> map = project.getUserData(SHOULD_ABBREV_PACK_KEY);
+    ConcurrentMap<PsiJavaPackage, Boolean> map = project.getUserData(SHOULD_ABBREV_PACK_KEY);
     if (map == null) {
-      final ConcurrentWeakHashMap<PsiPackage, Boolean> newMap = new ConcurrentWeakHashMap<PsiPackage, Boolean>();
+      final ConcurrentWeakHashMap<PsiJavaPackage, Boolean> newMap = new ConcurrentWeakHashMap<PsiJavaPackage, Boolean>();
       map = ((UserDataHolderEx)project).putUserDataIfAbsent(SHOULD_ABBREV_PACK_KEY, newMap);
       if (map == newMap) {
         ((PsiManagerEx)PsiManager.getInstance(project)).registerRunnableToRunOnChange(new Runnable() {
@@ -61,13 +61,13 @@ public class TreeViewUtil {
     return ret;
   }
 
-  private static boolean scanPackages(@NotNull PsiPackage p, int packageNameOccurrencesFound) {
-    final PsiPackage[] subPackages = p.getSubPackages();
+  private static boolean scanPackages(@NotNull PsiJavaPackage p, int packageNameOccurrencesFound) {
+    final PsiJavaPackage[] subPackages = p.getSubPackages();
     packageNameOccurrencesFound += subPackages.length;
     if (packageNameOccurrencesFound > SUBPACKAGE_LIMIT) {
       return true;
     }
-    for (PsiPackage subPackage : subPackages) {
+    for (PsiJavaPackage subPackage : subPackages) {
       if (scanPackages(subPackage, packageNameOccurrencesFound)) {
         return true;
       }
@@ -76,9 +76,9 @@ public class TreeViewUtil {
   }
 
   @NotNull
-  public static String calcAbbreviatedPackageFQName(@NotNull PsiPackage aPackage) {
+  public static String calcAbbreviatedPackageFQName(@NotNull PsiJavaPackage aPackage) {
     final StringBuilder name = new StringBuilder(aPackage.getName());
-    for (PsiPackage parentPackage = aPackage.getParentPackage(); parentPackage != null; parentPackage = parentPackage.getParentPackage()) {
+    for (PsiJavaPackage parentPackage = aPackage.getParentPackage(); parentPackage != null; parentPackage = parentPackage.getParentPackage()) {
       final String packageName = parentPackage.getName();
       if (packageName == null || packageName.isEmpty()) {
         break; // reached default package

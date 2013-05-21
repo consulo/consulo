@@ -18,6 +18,7 @@ package com.intellij.psi;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.ArrayFactory;
 import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -26,26 +27,20 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a Java package.
  */
-public interface PsiJavaPackage extends PsiCheckedRenameElement, NavigationItem, PsiModifierListOwner, PsiPackage, PsiQualifiedNamedElement {
+public interface PsiJavaPackage extends PsiCheckedRenameElement, NavigationItem, PsiModifierListOwner, PsiPackage {
   @NonNls String PACKAGE_INFO_CLASS = "package-info";
   @NonNls String PACKAGE_INFO_FILE = PACKAGE_INFO_CLASS + ".java";
 
   PsiJavaPackage[] EMPTY_ARRAY = new PsiJavaPackage[0];
 
-  /**
-   * Returns the full-qualified name of the package.
-   *
-   * @return the full-qualified name, or an empty string for the default package.
-   */
-  @Override
-  @NotNull
-  String getQualifiedName();
+  ArrayFactory<PsiJavaPackage> ARRAY_FACTORY = new ArrayFactory<PsiJavaPackage>() {
+    @NotNull
+    @Override
+    public PsiJavaPackage[] create(final int count) {
+      return count == 0 ? EMPTY_ARRAY : new PsiJavaPackage[count];
+    }
+  };
 
-  /**
-   * Returns the parent of the package.
-   *
-   * @return the parent package, or null for the default package.
-   */
   @Nullable
   PsiJavaPackage getParentPackage();
 
@@ -90,15 +85,8 @@ public interface PsiJavaPackage extends PsiCheckedRenameElement, NavigationItem,
    * @return the list of annotations, or null if the package does not have any package-level annotations.
    * @since 5.1
    */
-  @Nullable PsiModifierList getAnnotationList();
-
-  /**
-   * This method must be invoked on the package after all directories corresponding
-   * to it have been renamed/moved accordingly to qualified name change.
-   *
-   * @param newQualifiedName the new qualified name of the package.
-   */
-  void handleQualifiedNameChange(@NotNull String newQualifiedName);
+  @Nullable
+  PsiModifierList getAnnotationList();
 
   /**
    * Returns source roots that this package occurs in package prefixes of.
@@ -106,11 +94,6 @@ public interface PsiJavaPackage extends PsiCheckedRenameElement, NavigationItem,
    * @return the array of virtual files for the source roots.
    */
   VirtualFile[] occursInPackagePrefixes();
-
-  @Override
-  @Nullable("default package")
-  @NonNls
-  String getName();
 
   boolean containsClassNamed(String name);
 

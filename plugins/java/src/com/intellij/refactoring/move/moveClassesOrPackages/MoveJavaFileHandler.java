@@ -57,7 +57,7 @@ public class MoveJavaFileHandler extends MoveFileHandler {
 
   public List<UsageInfo> findUsages(PsiFile psiFile, PsiDirectory newParent, boolean searchInComments, boolean searchInNonJavaFiles) {
     final List<UsageInfo> result = new ArrayList<UsageInfo>();
-    final PsiPackage newParentPackage = JavaDirectoryService.getInstance().getPackage(newParent);
+    final PsiJavaPackage newParentPackage = JavaDirectoryService.getInstance().getPackage(newParent);
     final String qualifiedName = newParentPackage == null ? "" : newParentPackage.getQualifiedName();
     for (PsiClass aClass : ((PsiJavaFile)psiFile).getClasses()) {
       Collections.addAll(result, MoveClassesOrPackagesUtil.findUsages(aClass, searchInComments, searchInNonJavaFiles,
@@ -91,7 +91,7 @@ public class MoveJavaFileHandler extends MoveFileHandler {
     ChangeContextUtil.decodeContextInfo(file, null, null);
     final PsiDirectory containingDirectory = file.getContainingDirectory();
     if (containingDirectory != null) {
-      final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(containingDirectory);
+      final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(containingDirectory);
       if (aPackage != null) {
         final String qualifiedName = aPackage.getQualifiedName();
         final PsiPackageStatement packageStatement = qualifiedName.length() > 0

@@ -25,7 +25,6 @@
 
 package com.intellij.codeInspection.deadCode;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.daemon.GroupNames;
@@ -111,7 +110,7 @@ public class UnusedDeclarationInspection extends FilteringInspectionTool {
   public UnusedDeclarationInspection() {
 
     myQuickFixActions = new QuickFixAction[]{new PermanentDeleteAction(), new CommentOutBin(), new MoveToEntries()};
-    ExtensionPoint<EntryPoint> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.DEAD_CODE_TOOL);
+    ExtensionPoint<EntryPoint> point = Extensions.getRootArea().getExtensionPoint(JavaExtensionPoints.DEAD_CODE_TOOL);
     final EntryPoint[] deadCodeAddins = new EntryPoint[point.getExtensions().length];
     EntryPoint[] extensions = point.getExtensions();
     for (int i = 0, extensionsLength = extensions.length; i < extensionsLength; i++) {

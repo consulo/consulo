@@ -50,12 +50,12 @@ public abstract class JavaRuntimeConfigurationProducerBase extends RuntimeConfig
   }
 
   @Nullable
-  public static PsiPackage checkPackage(final PsiElement element) {
+  public static PsiJavaPackage checkPackage(final PsiElement element) {
     if (element == null || !element.isValid()) return null;
     final Project project = element.getProject();
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    if (element instanceof PsiPackage) {
-      final PsiPackage aPackage = (PsiPackage)element;
+    if (element instanceof PsiJavaPackage) {
+      final PsiJavaPackage aPackage = (PsiJavaPackage)element;
       final PsiDirectory[] directories = aPackage.getDirectories(GlobalSearchScope.projectScope(project));
       for (final PsiDirectory directory : directories) {
         if (isSource(directory, fileIndex)) return aPackage;

@@ -27,6 +27,7 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,12 +68,12 @@ public class JavaClassReferenceProvider extends GenericReferenceProvider impleme
         final List<PsiElement> psiPackages = new ArrayList<PsiElement>();
         final String defPackageName = DEFAULT_PACKAGE.getValue(myOptions);
         if (StringUtil.isNotEmpty(defPackageName)) {
-          final PsiPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage(defPackageName);
+          final PsiJavaPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage(defPackageName);
           if (defaultPackage != null) {
             psiPackages.addAll(getSubPackages(defaultPackage));
           }
         }
-        final PsiPackage rootPackage = JavaPsiFacade.getInstance(project).findPackage("");
+        final PsiJavaPackage rootPackage = JavaPsiFacade.getInstance(project).findPackage("");
         if (rootPackage != null) {
           psiPackages.addAll(getSubPackages(rootPackage));
         }
@@ -136,10 +137,10 @@ public class JavaClassReferenceProvider extends GenericReferenceProvider impleme
     return CachedValuesManager.getManager(project).getParameterizedCachedValue(project, myKey, myProvider, false, project);
   }
 
-  private static Collection<PsiPackage> getSubPackages(final PsiPackage defaultPackage) {
-    return ContainerUtil.mapNotNull(defaultPackage.getSubPackages(), new NullableFunction<PsiPackage, PsiPackage>() {
+  private static Collection<PsiJavaPackage> getSubPackages(final PsiJavaPackage defaultPackage) {
+    return ContainerUtil.mapNotNull(defaultPackage.getSubPackages(), new NullableFunction<PsiJavaPackage, PsiJavaPackage>() {
       @Override
-      public PsiPackage fun(final PsiPackage psiPackage) {
+      public PsiJavaPackage fun(final PsiJavaPackage psiPackage) {
         final String packageName = psiPackage.getName();
         return JavaPsiFacade.getInstance(psiPackage.getProject()).getNameHelper()
             .isIdentifier(packageName, PsiUtil.getLanguageLevel(psiPackage)) ? psiPackage : null;

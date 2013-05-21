@@ -70,7 +70,7 @@ public class SingleSourceRootMoveDestination implements MoveDestination {
     return null;
   }
 
-  public String verify(PsiPackage source) {
+  public String verify(PsiJavaPackage source) {
     return null;
   }
 

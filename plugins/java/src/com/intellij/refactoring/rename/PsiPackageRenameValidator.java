@@ -21,7 +21,7 @@ import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +50,7 @@ public class PsiPackageRenameValidator implements RenameInputValidatorEx {
 
   @Override
   public ElementPattern<? extends PsiElement> getPattern() {
-    return PlatformPatterns.psiElement(PsiPackage.class);
+    return PlatformPatterns.psiElement(PsiJavaPackage.class);
   }
 
   @Override

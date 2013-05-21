@@ -16,7 +16,6 @@
 package com.intellij.psi.search.searches;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiAnonymousClass;
 import com.intellij.psi.PsiClass;
@@ -25,13 +24,11 @@ import com.intellij.psi.PsiModifier;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.EmptyQuery;
 import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
 
 /**
  * @author max
  */
 public class OverridingMethodsSearch extends ExtensibleQueryFactory<PsiMethod, OverridingMethodsSearch.SearchParameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.overridingMethodsSearch");
   public static final OverridingMethodsSearch INSTANCE = new OverridingMethodsSearch();
 
   public static class SearchParameters {
@@ -59,6 +56,7 @@ public class OverridingMethodsSearch extends ExtensibleQueryFactory<PsiMethod, O
   }
 
   private OverridingMethodsSearch() {
+    super("org.consulo.java.platform");
   }
 
   public static Query<PsiMethod> search(final PsiMethod method, SearchScope scope, final boolean checkDeep) {

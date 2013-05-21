@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dmitry Avdeev
  */
+@Deprecated
 public abstract class LanguageLevelProjectExtension {
 
   public static LanguageLevelProjectExtension getInstance(Project project) {

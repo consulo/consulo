@@ -21,7 +21,7 @@ import com.intellij.psi.*;
  * @author db
  */
 public abstract class Visitor extends JavaRecursiveElementWalkingVisitor {
-  @Override public void visitPackage(final PsiPackage aPackage) {
+  @Override public void visitPackage(final PsiJavaPackage aPackage) {
     final PsiDirectory[] dirs = aPackage.getDirectories();
 
     for (PsiDirectory dir : dirs) {

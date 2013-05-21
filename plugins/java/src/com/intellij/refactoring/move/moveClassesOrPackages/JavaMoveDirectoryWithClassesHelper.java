@@ -36,7 +36,7 @@ public class JavaMoveDirectoryWithClassesHelper extends MoveDirectoryWithClasses
 
     final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(project);
     for (String packageName : packageNames) {
-      final PsiPackage aPackage = psiFacade.findPackage(packageName);
+      final PsiJavaPackage aPackage = psiFacade.findPackage(packageName);
       if (aPackage != null) {
         boolean remainsNothing = true;
         for (PsiDirectory packageDirectory : aPackage.getDirectories()) {

@@ -37,7 +37,7 @@ public class PsiNameHelperImpl extends PsiNameHelper {
   }
 
   protected LanguageLevel getLanguageLevel() {
-    return myLanguageLevelExtension.getLanguageLevel();
+    return LanguageLevel.HIGHEST;
   }
 
   @Override

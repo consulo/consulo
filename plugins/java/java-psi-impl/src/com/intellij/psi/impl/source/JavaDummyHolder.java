@@ -121,7 +121,7 @@ public class JavaDummyHolder extends DummyHolder implements PsiImportHolder {
     return false;
   }
 
-  public boolean isInPackage(PsiPackage aPackage) {
+  public boolean isInPackage(PsiJavaPackage aPackage) {
     if (myContext != null) return JavaPsiFacade.getInstance(myContext.getProject()).isInPackage(myContext, aPackage);
     return aPackage == null || aPackage.getQualifiedName().isEmpty();
   }

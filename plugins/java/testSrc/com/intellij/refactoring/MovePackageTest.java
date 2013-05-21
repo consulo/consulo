@@ -4,7 +4,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesProcessor;
 import com.intellij.refactoring.move.moveClassesOrPackages.SingleSourceRootMoveDestination;
 import com.intellij.JavaTestUtil;
@@ -48,14 +48,14 @@ public class MovePackageTest extends MultiFileTestCase {
   }
 
   private void performAction(String[] packageNames, String newPackageName) throws Exception {
-    final PsiPackage[] packages = new PsiPackage[packageNames.length];
+    final PsiJavaPackage[] packages = new PsiJavaPackage[packageNames.length];
     for (int i = 0; i < packages.length; i++) {
       String packageName = packageNames[i];
       packages[i] = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(packageName);
       assertNotNull("Package " + packageName + " not found", packages[i]);
     }
 
-    PsiPackage newParentPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(newPackageName);
+    PsiJavaPackage newParentPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(newPackageName);
     assertNotNull(newParentPackage);
     final PsiDirectory[] dirs = newParentPackage.getDirectories();
     assertEquals(dirs.length, 1);

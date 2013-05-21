@@ -44,7 +44,7 @@ public class WrongPackageStatementInspection extends BaseJavaLocalInspectionTool
 
       PsiDirectory directory = javaFile.getContainingDirectory();
       if (directory == null) return null;
-      PsiPackage dirPackage = JavaDirectoryService.getInstance().getPackage(directory);
+      PsiJavaPackage dirPackage = JavaDirectoryService.getInstance().getPackage(directory);
       if (dirPackage == null) return null;
       PsiPackageStatement packageStatement = javaFile.getPackageStatement();
 
@@ -62,7 +62,7 @@ public class WrongPackageStatementInspection extends BaseJavaLocalInspectionTool
       }
       if (packageStatement != null) {
         final PsiJavaCodeReferenceElement packageReference = packageStatement.getPackageReference();
-        PsiPackage classPackage = (PsiPackage)packageReference.resolve();
+        PsiJavaPackage classPackage = (PsiJavaPackage)packageReference.resolve();
         List<LocalQuickFix> availableFixes = new ArrayList<LocalQuickFix>();
         if (classPackage == null || !Comparing.equal(dirPackage.getQualifiedName(), packageReference.getQualifiedName(), true)) {
           availableFixes.add(new AdjustPackageNameFix(packageName));

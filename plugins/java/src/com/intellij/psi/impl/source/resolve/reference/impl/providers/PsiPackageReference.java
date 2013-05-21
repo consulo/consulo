@@ -21,9 +21,13 @@ import com.intellij.codeInsight.daemon.JavaErrorMessages;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PsiPackageReference extends PsiPolyVariantReferenceBase<PsiElement> implements EmptyResolveMessageProvider {
 
@@ -37,13 +41,13 @@ public class PsiPackageReference extends PsiPolyVariantReferenceBase<PsiElement>
   }
 
   @NotNull
-  private Set<PsiPackage> getContext() {
+  private Set<PsiJavaPackage> getContext() {
     if (myIndex == 0) return myReferenceSet.getInitialContext();
-    Set<PsiPackage> psiPackages = new HashSet<PsiPackage>();
+    Set<PsiJavaPackage> psiPackages = new HashSet<PsiJavaPackage>();
     for (ResolveResult resolveResult : myReferenceSet.getReference(myIndex - 1).multiResolve(false)) {
       PsiElement psiElement = resolveResult.getElement();
-      if (psiElement instanceof PsiPackage) {
-        psiPackages.add((PsiPackage)psiElement);
+      if (psiElement instanceof PsiJavaPackage) {
+        psiPackages.add((PsiJavaPackage)psiElement);
       }
     }
     return psiPackages;
@@ -52,8 +56,8 @@ public class PsiPackageReference extends PsiPolyVariantReferenceBase<PsiElement>
   @Override
   @NotNull
   public Object[] getVariants() {
-    Set<PsiPackage> subPackages = new HashSet<PsiPackage>();
-    for (PsiPackage psiPackage : getContext()) {
+    Set<PsiJavaPackage> subPackages = new HashSet<PsiJavaPackage>();
+    for (PsiJavaPackage psiPackage : getContext()) {
          subPackages.addAll(Arrays.asList(psiPackage.getSubPackages()));
     }
 
@@ -69,8 +73,8 @@ public class PsiPackageReference extends PsiPolyVariantReferenceBase<PsiElement>
   @Override
   @NotNull
   public ResolveResult[] multiResolve(final boolean incompleteCode) {
-    final Collection<PsiPackage> packages = new HashSet<PsiPackage>();
-    for (PsiPackage parentPackage : getContext()) {
+    final Collection<PsiJavaPackage> packages = new HashSet<PsiJavaPackage>();
+    for (PsiJavaPackage parentPackage : getContext()) {
       packages.addAll(myReferenceSet.resolvePackageName(parentPackage, getValue()));
     }
     return PsiElementResolveResult.createResults(packages);
@@ -78,10 +82,10 @@ public class PsiPackageReference extends PsiPolyVariantReferenceBase<PsiElement>
 
   @Override
   public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException {
-    if (!(element instanceof PsiPackage)) {
+    if (!(element instanceof PsiJavaPackage)) {
       throw new IncorrectOperationException("Cannot bind to " + element);
     }
-    final String newName = ((PsiPackage)element).getQualifiedName();
+    final String newName = ((PsiJavaPackage)element).getQualifiedName();
     final TextRange range =
       new TextRange(getReferenceSet().getReference(0).getRangeInElement().getStartOffset(), getRangeInElement().getEndOffset());
     final ElementManipulator<PsiElement> manipulator = ElementManipulators.getManipulator(getElement());

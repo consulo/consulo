@@ -55,6 +55,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -139,11 +140,11 @@ public class GenerateVisitorByHierarchyAction extends AnAction {
       }
     };
     final PsiElement element = LangDataKeys.PSI_ELEMENT.getData(e.getDataContext());
-    if (element instanceof PsiPackage) {
-      dialog.selectPackage(((PsiPackage)element).getQualifiedName());
+    if (element instanceof PsiJavaPackage) {
+      dialog.selectPackage(((PsiJavaPackage)element).getQualifiedName());
     }
     else if (element instanceof PsiDirectory) {
-      final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
+      final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
       if (aPackage != null) {
         dialog.selectPackage(aPackage.getQualifiedName());
       }
@@ -163,7 +164,7 @@ public class GenerateVisitorByHierarchyAction extends AnAction {
     }
   }
 
-  public static String generateEverything(final PsiPackage psiPackage, final PsiClass rootClass, final String visitorName) {
+  public static String generateEverything(final PsiJavaPackage psiPackage, final PsiClass rootClass, final String visitorName) {
     final String visitorQName = PsiNameHelper.getShortClassName(visitorName).equals(visitorName)?
                                 psiPackage.getQualifiedName()+"."+ visitorName : visitorName;
     final PsiDirectory directory = PackageUtil.findOrCreateDirectoryForPackage(rootClass.getProject(),

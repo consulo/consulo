@@ -94,8 +94,8 @@ public class LookupItemUtil{
     if (object instanceof PsiType) {
       return PsiTypeLookupItem.createLookupItem((PsiType)object, null);
     }
-    if (object instanceof PsiPackage) {
-      return new PackageLookupItem((PsiPackage)object);
+    if (object instanceof PsiJavaPackage) {
+      return new PackageLookupItem((PsiJavaPackage)object);
     }
 
     String s = null;

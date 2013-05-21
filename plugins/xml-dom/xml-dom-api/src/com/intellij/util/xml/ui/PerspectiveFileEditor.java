@@ -185,6 +185,7 @@ abstract public class PerspectiveFileEditor extends UserDataHolderBase implement
     return myProject;
   }
 
+  @NotNull
   public final VirtualFile getVirtualFile() {
     return myFile;
   }

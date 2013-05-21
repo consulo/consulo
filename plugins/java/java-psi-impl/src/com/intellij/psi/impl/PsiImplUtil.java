@@ -561,7 +561,7 @@ public class PsiImplUtil {
     }
     else {
       if (file instanceof PsiJavaFile) {
-        PsiPackage aPackage = JavaPsiFacade.getInstance(member.getProject()).findPackage(((PsiJavaFile)file).getPackageName());
+        PsiJavaPackage aPackage = JavaPsiFacade.getInstance(member.getProject()).findPackage(((PsiJavaFile)file).getPackageName());
         if (aPackage != null) {
           SearchScope scope = PackageScope.packageScope(aPackage, false);
           scope = scope.intersectWith(maximalUseScope);

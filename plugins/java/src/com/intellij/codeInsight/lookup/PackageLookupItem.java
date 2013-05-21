@@ -19,13 +19,13 @@ import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 
 /**
 * @author peter
 */
-class PackageLookupItem extends LookupItem<PsiPackage> {
-  public PackageLookupItem(PsiPackage pkg) {
+class PackageLookupItem extends LookupItem<PsiJavaPackage> {
+  public PackageLookupItem(PsiJavaPackage pkg) {
     super(pkg, StringUtil.notNullize(pkg.getName()));
     setTailType(TailType.DOT);
   }

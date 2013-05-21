@@ -48,12 +48,12 @@ public class HighlightMessageUtil {
     else if (symbol instanceof PsiVariable) {
       symbolName = ((PsiVariable)symbol).getName();
     }
-    else if (symbol instanceof PsiPackage) {
-      symbolName = ((PsiPackage)symbol).getQualifiedName();
+    else if (symbol instanceof PsiJavaPackage) {
+      symbolName = ((PsiJavaPackage)symbol).getQualifiedName();
     }
     else if (symbol instanceof PsiFile) {
       PsiDirectory directory = ((PsiFile)symbol).getContainingDirectory();
-      PsiPackage aPackage = directory == null ? null : JavaDirectoryService.getInstance().getPackage(directory);
+      PsiJavaPackage aPackage = directory == null ? null : JavaDirectoryService.getInstance().getPackage(directory);
       symbolName = aPackage == null ? null : aPackage.getQualifiedName();
     }
     else if (symbol instanceof PsiDirectory) {

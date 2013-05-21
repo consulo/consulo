@@ -16,11 +16,8 @@
 package com.intellij.core;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.PsiPackageImpl;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +30,7 @@ import java.util.List;
 
 /**
  * @author yole
+ * TODO [VISTALL] create CorePackageManager
  */
 public class CoreJavaFileManager implements JavaFileManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.core.CoreJavaFileManager");
@@ -49,14 +47,14 @@ public class CoreJavaFileManager implements JavaFileManager {
     return myClasspath;
   }
 
-  @Override
-  public PsiPackage findPackage(@NotNull String packageName) {
-    final List<VirtualFile> files = findDirectoriesByPackageName(packageName);
+ /* @Override
+//  public PsiJavaPackage findPackage(@NotNull String packageName) {
+    /*final List<VirtualFile> files = findDirectoriesByPackageName(packageName);
     if (files.size() > 0) {
       return new PsiPackageImpl(myPsiManager, packageName);
-    }
-    return null;
-  }
+    }    */
+ //   return null;
+ // }   */
 
   private List<VirtualFile> findDirectoriesByPackageName(String packageName) {
     List<VirtualFile> result = new ArrayList<VirtualFile>();
@@ -70,8 +68,8 @@ public class CoreJavaFileManager implements JavaFileManager {
     return result;
   }
 
-  @Nullable
-  public PsiPackage getPackage(PsiDirectory dir) {
+  /*@Nullable
+  public PsiJavaPackage getPackage(PsiDirectory dir) {
     final VirtualFile file = dir.getVirtualFile();
     for (VirtualFile root : myClasspath) {
       if (VfsUtilCore.isAncestor(root, file, false)) {
@@ -81,7 +79,7 @@ public class CoreJavaFileManager implements JavaFileManager {
       }
     }
     return null;
-  }
+  }   */
 
   @Override
   public PsiClass findClass(@NotNull String qName, @NotNull GlobalSearchScope scope) {

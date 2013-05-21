@@ -627,7 +627,7 @@ public abstract class BaseExpressionToFieldHandler extends IntroduceHandlerBase 
         myTargetClass = (PsiClass)myParentClass.add(JavaPsiFacade.getElementFactory(myProject).createClass(shortName));
         return myTargetClass;
       }
-      PsiPackage psiPackage = JavaPsiFacade.getInstance(myProject).findPackage(packageName);
+      PsiJavaPackage psiPackage = JavaPsiFacade.getInstance(myProject).findPackage(packageName);
       final PsiDirectory psiDirectory;
       if (psiPackage != null) {
         final PsiDirectory[] directories = psiPackage.getDirectories(GlobalSearchScope.allScope(myProject));

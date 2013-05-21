@@ -43,8 +43,8 @@ public class CopyTest extends CodeInsightTestCase {
     String rootBefore = getRoot();
     PsiTestUtil.removeAllRoots(myModule, IdeaTestUtil.getMockJdk17());
     PsiTestUtil.createTestProjectStructure(myProject, myModule, rootBefore, myFilesToDelete);
-    PsiPackage pack1 = myJavaFacade.findPackage("pack1");
-    PsiPackage pack2 = myJavaFacade.findPackage("pack2");
+    PsiJavaPackage pack1 = myJavaFacade.findPackage("pack1");
+    PsiJavaPackage pack2 = myJavaFacade.findPackage("pack2");
     assertTrue(CopyHandler.canCopy(new PsiElement[]{pack1.getDirectories()[0], pack2.getDirectories()[0]}));
   }
 
@@ -60,7 +60,7 @@ public class CopyTest extends CodeInsightTestCase {
     assertTrue(CopyHandler.canCopy(new PsiElement[]{containingFile}));
     assertFalse(CopyHandler.canClone(new PsiElement[]{containingFile}));
 
-    PsiPackage pack2 = myJavaFacade.findPackage("pack2");
+    PsiJavaPackage pack2 = myJavaFacade.findPackage("pack2");
     final PsiDirectory targetDirectory = pack2.getDirectories()[0];
     CopyHandler.doCopy(new PsiElement[]{containingFile}, targetDirectory);
 

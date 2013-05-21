@@ -18,8 +18,9 @@ package com.intellij.refactoring;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,7 +36,7 @@ public class PackageWrapper {
     myQualifiedName = qualifiedName;
   }
 
-  public PackageWrapper(PsiPackage aPackage) {
+  public PackageWrapper(PsiJavaPackage aPackage) {
     myManager = aPackage.getManager();
     myQualifiedName = aPackage.getQualifiedName();
   }
@@ -47,7 +48,7 @@ public class PackageWrapper {
     while (qName.endsWith(".")) {
       qName = StringUtil.trimEnd(qName, ".");
     }
-    final PsiPackage aPackage = JavaPsiFacade.getInstance(myManager.getProject()).findPackage(qName);
+    final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myManager.getProject()).findPackage(qName);
     if (aPackage != null) {
       return aPackage.getDirectories();
     } else {
@@ -64,11 +65,11 @@ public class PackageWrapper {
     return myQualifiedName;
   }
 
-  public boolean equalToPackage(PsiPackage aPackage) {
+  public boolean equalToPackage(PsiJavaPackage aPackage) {
     return aPackage != null && myQualifiedName.equals(aPackage.getQualifiedName());
   }
 
-  public static PackageWrapper create(PsiPackage aPackage) {
+  public static PackageWrapper create(PsiJavaPackage aPackage) {
     return new PackageWrapper(aPackage);
   }
 }

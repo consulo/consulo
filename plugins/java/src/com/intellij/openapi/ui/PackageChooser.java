@@ -17,7 +17,7 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 
 import java.util.List;
 
@@ -29,9 +29,9 @@ public abstract class PackageChooser extends DialogWrapper {
     super(project, canBeParent);
   }
 
-  public abstract PsiPackage getSelectedPackage();
+  public abstract PsiJavaPackage getSelectedPackage();
 
-  public abstract List<PsiPackage> getSelectedPackages();
+  public abstract List<PsiJavaPackage> getSelectedPackages();
 
   public abstract void selectPackage(String qualifiedName);
 }

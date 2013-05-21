@@ -19,7 +19,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFinder;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +59,7 @@ public class MigrationElementFinder extends PsiElementFinder implements DumbAwar
 
   @NotNull
   @Override
-  public PsiClass[] getClasses(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+  public PsiClass[] getClasses(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
     PsiMigrationImpl migration = PsiMigrationManager.getInstance(myProject).getCurrentMigration();
     if (migration != null) {
       List<PsiClass> classes = migration.getMigrationClasses(psiPackage.getQualifiedName());
@@ -70,17 +70,17 @@ public class MigrationElementFinder extends PsiElementFinder implements DumbAwar
 
   @NotNull
   @Override
-  public PsiPackage[] getSubPackages(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+  public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
     PsiMigrationImpl migration = PsiMigrationManager.getInstance(myProject).getCurrentMigration();
     if (migration != null) {
-      List<PsiPackage> packages = migration.getMigrationPackages(psiPackage.getQualifiedName());
-      return packages.toArray(new PsiPackage[packages.size()]);
+      List<PsiJavaPackage> packages = migration.getMigrationPackages(psiPackage.getQualifiedName());
+      return packages.toArray(new PsiJavaPackage[packages.size()]);
     }
-    return PsiPackage.EMPTY_ARRAY;
+    return PsiJavaPackage.EMPTY_ARRAY;
   }
 
   @Override
-  public PsiPackage findPackage(@NotNull String qualifiedName) {
+  public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
     PsiMigrationImpl migration = PsiMigrationManager.getInstance(myProject).getCurrentMigration();
     if (migration != null) {
       return migration.getMigrationPackage(qualifiedName);

@@ -40,7 +40,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,8 +64,8 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
     final Collection<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
     if (elements != null) {
       for (PsiElement element : elements) {
-        if (element instanceof PsiPackage) {
-          final PsiPackage psiPackage = (PsiPackage)element;
+        if (element instanceof PsiJavaPackage) {
+          final PsiJavaPackage psiPackage = (PsiJavaPackage)element;
           final PsiDirectory[] directories = psiPackage.getDirectories();
           if (directories.length > 0) {
             final VirtualFile firstDir = directories[0].getVirtualFile();
@@ -126,7 +126,7 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
         }
       };
       final PackageElement packageElement = (PackageElement)element;
-      final PsiPackage aPackage = packageElement.getPackage();
+      final PsiJavaPackage aPackage = packageElement.getPackage();
       final Project project = aPackage.getProject();
       final GlobalSearchScope scope = packageElement.getModule() != null
                                       ? GlobalSearchScope.moduleScope(packageElement.getModule())
@@ -172,7 +172,7 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
   public String getElementUrl(final Object element) {
     if (element instanceof PackageElement) {
       PackageElement packageElement = (PackageElement)element;
-      PsiPackage aPackage = packageElement.getPackage();
+      PsiJavaPackage aPackage = packageElement.getPackage();
       if (aPackage == null) return null;
       return aPackage.getQualifiedName();
     }
@@ -193,7 +193,7 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
   public Object[] createPathFromUrl(final Project project, final String url, final String moduleName) {
     final Module module = moduleName != null ? ModuleManager.getInstance(project).findModuleByName(moduleName) : null;
     // module can be null if 'show module' turned off
-    final PsiPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(url);
+    final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(url);
     if (aPackage == null) return null;
     PackageElement packageElement = new PackageElement(module, aPackage, false);
     return new Object[]{packageElement};

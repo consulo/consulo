@@ -113,7 +113,7 @@ public class ProcessAnnotationsAction extends CompileActionBase {
       elementDescription = CompilerBundle.message("action.compile.description.module", moduleContext.getName());
     }
     else {
-      PsiPackage aPackage = null;
+      PsiJavaPackage aPackage = null;
       final Collection<VirtualFile> files = scope.getRootFiles();
       if (files.size() == 1) {
         final PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files.iterator().next());
@@ -123,8 +123,8 @@ public class ProcessAnnotationsAction extends CompileActionBase {
       }
       else {
         PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
-        if (element instanceof PsiPackage) {
-          aPackage = (PsiPackage)element;
+        if (element instanceof PsiJavaPackage) {
+          aPackage = (PsiJavaPackage)element;
         }
       }
 

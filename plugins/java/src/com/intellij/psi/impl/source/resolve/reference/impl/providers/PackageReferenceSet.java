@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.ReferenceSetBase;
 import com.intellij.util.NullableFunction;
@@ -48,11 +48,11 @@ public class PackageReferenceSet extends ReferenceSetBase<PsiPackageReference> {
     return new PsiPackageReference(this, range, index);
   }
 
-  public Collection<PsiPackage> resolvePackageName(@Nullable PsiPackage context, final String packageName) {
+  public Collection<PsiJavaPackage> resolvePackageName(@Nullable PsiJavaPackage context, final String packageName) {
     if (context != null) {
-      return ContainerUtil.filter(context.getSubPackages(), new Condition<PsiPackage>() {
+      return ContainerUtil.filter(context.getSubPackages(), new Condition<PsiJavaPackage>() {
         @Override
-        public boolean value(PsiPackage aPackage) {
+        public boolean value(PsiJavaPackage aPackage) {
           return Comparing.equal(aPackage.getName(), packageName);
         }
       });
@@ -60,20 +60,20 @@ public class PackageReferenceSet extends ReferenceSetBase<PsiPackageReference> {
     return Collections.emptyList();
   }
 
-  public Collection<PsiPackage> resolvePackage() {
+  public Collection<PsiJavaPackage> resolvePackage() {
     final PsiPackageReference packageReference = getLastReference();
     if (packageReference == null) {
       return Collections.emptyList();
     }
-    return ContainerUtil.map2List(packageReference.multiResolve(false), new NullableFunction<ResolveResult, PsiPackage>() {
+    return ContainerUtil.map2List(packageReference.multiResolve(false), new NullableFunction<ResolveResult, PsiJavaPackage>() {
       @Override
-      public PsiPackage fun(final ResolveResult resolveResult) {
-        return (PsiPackage)resolveResult.getElement();
+      public PsiJavaPackage fun(final ResolveResult resolveResult) {
+        return (PsiJavaPackage)resolveResult.getElement();
       }
     });
   }
 
-  public Set<PsiPackage> getInitialContext() {
+  public Set<PsiJavaPackage> getInitialContext() {
     return Collections.singleton(JavaPsiFacade.getInstance(getElement().getProject()).findPackage(""));
   }
 }

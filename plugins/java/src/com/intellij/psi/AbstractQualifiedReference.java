@@ -137,8 +137,8 @@ public abstract class AbstractQualifiedReference<T extends AbstractQualifiedRefe
     if (element instanceof PsiClass) {
       return replaceReference(((PsiClass)element).getQualifiedName()).shortenReferences();
     }
-    if (element instanceof PsiPackage) {
-      return replaceReference(((PsiPackage)element).getQualifiedName());
+    if (element instanceof PsiJavaPackage) {
+      return replaceReference(((PsiJavaPackage)element).getQualifiedName());
     }
     if (element instanceof PsiMetaOwner) {
       final PsiMetaData metaData = ((PsiMetaOwner)element).getMetaData();

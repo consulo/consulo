@@ -375,7 +375,7 @@ public class RemoveUnusedVariableFix implements IntentionAction {
 
     PsiFile file = aClass.getContainingFile();
     PsiDirectory directory = file.getContainingDirectory();
-    PsiPackage classPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiJavaPackage classPackage = JavaDirectoryService.getInstance().getPackage(directory);
     String packageName = classPackage == null ? null : classPackage.getQualifiedName();
 
     // all Throwable descendants from java.lang are side effects free

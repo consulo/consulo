@@ -109,7 +109,7 @@ public class CreateTestAction extends PsiElementBaseIntentionAction {
     if (srcClass == null) return;
 
     PsiDirectory srcDir = element.getContainingFile().getContainingDirectory();
-    PsiPackage srcPackage = JavaDirectoryService.getInstance().getPackage(srcDir);
+    PsiJavaPackage srcPackage = JavaDirectoryService.getInstance().getPackage(srcDir);
 
     final PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
     final HashSet<VirtualFile> testFolders = new HashSet<VirtualFile>();

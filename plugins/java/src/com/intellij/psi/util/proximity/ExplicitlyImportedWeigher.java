@@ -29,10 +29,10 @@ import org.jetbrains.annotations.Nullable;
  * @author peter
 */
 public class ExplicitlyImportedWeigher extends ProximityWeigher {
-  private static final NullableLazyKey<PsiPackage, ProximityLocation>
-    PLACE_PACKAGE = NullableLazyKey.create("placePackage", new NullableFunction<ProximityLocation, PsiPackage>() {
+  private static final NullableLazyKey<PsiJavaPackage, ProximityLocation>
+    PLACE_PACKAGE = NullableLazyKey.create("placePackage", new NullableFunction<ProximityLocation, PsiJavaPackage>() {
     @Override
-    public PsiPackage fun(ProximityLocation location) {
+    public PsiJavaPackage fun(ProximityLocation location) {
       PsiElement position = location.getPosition();
       if (position == null) return null;
 
@@ -41,7 +41,7 @@ public class ExplicitlyImportedWeigher extends ProximityWeigher {
   });
 
   @Nullable
-  private static PsiPackage getContextPackage(PsiElement position) {
+  private static PsiJavaPackage getContextPackage(PsiElement position) {
     PsiFile file = position.getContainingFile();
     if (file == null) return null;
 
@@ -96,7 +96,7 @@ public class ExplicitlyImportedWeigher extends ProximityWeigher {
 
     }
     if (element instanceof PsiMember) {
-      final PsiPackage placePackage = PLACE_PACKAGE.getValue(location);
+      final PsiJavaPackage placePackage = PLACE_PACKAGE.getValue(location);
       if (placePackage != null) {
         Module elementModule = ModuleUtil.findModuleForPsiElement(element);
         if (location.getPositionModule() == elementModule && placePackage.equals(getContextPackage(element))) {

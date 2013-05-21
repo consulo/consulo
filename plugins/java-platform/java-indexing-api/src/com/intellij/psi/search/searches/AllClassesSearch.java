@@ -19,16 +19,13 @@
  */
 package com.intellij.psi.search.searches;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
 
 public class AllClassesSearch extends ExtensibleQueryFactory<PsiClass, AllClassesSearch.SearchParameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.allClassesSearch");
   public static final AllClassesSearch INSTANCE = new AllClassesSearch();
 
   public static class SearchParameters {
@@ -57,6 +54,10 @@ public class AllClassesSearch extends ExtensibleQueryFactory<PsiClass, AllClasse
     public boolean nameMatches(String name) {
       return myShortNameCondition.value(name);
     }
+  }
+
+  private AllClassesSearch() {
+    super("org.consulo.java.platform");
   }
 
   public static Query<PsiClass> search(SearchScope scope, Project project) {

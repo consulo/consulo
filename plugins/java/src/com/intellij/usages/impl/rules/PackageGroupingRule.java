@@ -25,8 +25,8 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiPackage;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageView;
 import org.jetbrains.annotations.NotNull;
@@ -44,17 +44,17 @@ public class PackageGroupingRule extends DirectoryGroupingRule {
   protected UsageGroup getGroupForFile(final VirtualFile dir) {
     PsiDirectory psiDirectory = PsiManager.getInstance(myProject).findDirectory(dir);
     if (psiDirectory != null) {
-      PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
+      PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
       if (aPackage != null) return new PackageGroup(aPackage);
     }
     return super.getGroupForFile(dir);
   }
 
   private class PackageGroup implements UsageGroup, TypeSafeDataProvider {
-    private final PsiPackage myPackage;
+    private final PsiJavaPackage myPackage;
     private Icon myIcon;
 
-    private PackageGroup(PsiPackage aPackage) {
+    private PackageGroup(PsiJavaPackage aPackage) {
       myPackage = aPackage;
       update();
     }

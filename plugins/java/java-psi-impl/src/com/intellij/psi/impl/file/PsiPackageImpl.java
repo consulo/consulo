@@ -31,23 +31,29 @@ import com.intellij.psi.scope.NameHint;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
-public class PsiPackageImpl extends PsiPackageBase implements PsiPackage, Queryable {
+public class PsiPackageImpl extends PsiPackageBase implements PsiJavaPackage, Queryable {
   public static boolean DEBUG = false;
   private volatile CachedValue<PsiModifierList> myAnnotationList;
   private volatile CachedValue<Collection<PsiDirectory>> myDirectories;
   private volatile Set<String> myPublicClassNamesCache;
   private final Object myPublicClassNamesCacheLock = new Object();
 
-  public PsiPackageImpl(PsiManager manager, String qualifiedName) {
-    super(manager, qualifiedName);
+  public PsiPackageImpl(PsiManager manager, PsiPackageManager packageManager, String qualifiedName) {
+    super(manager, packageManager, qualifiedName);
   }
 
   @Override
@@ -67,11 +73,6 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiPackage, Querya
   }
 
   @Override
-  protected PsiElement findPackage(String qName) {
-    return getFacade().findPackage(qName);
-  }
-
-  @Override
   public void handleQualifiedNameChange(@NotNull final String newQualifiedName) {
     PsiPackageImplementationHelper.getInstance().handleQualifiedNameChange(this, newQualifiedName);
   }
@@ -86,11 +87,6 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiPackage, Querya
     return (PsiPackageImpl)super.getParentPackage();
   }
 
-
-  @Override
-  protected PsiPackageImpl createInstance(PsiManager manager, String qName) {
-    return new PsiPackageImpl(myManager, qName);
-  }
 
   @Override
   @NotNull
@@ -114,7 +110,7 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiPackage, Querya
   }
 
   public String toString() {
-    return "PsiPackage:" + getQualifiedName();
+    return "PsiJavaPackage:" + getQualifiedName();
   }
 
   @Override
@@ -144,14 +140,19 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiPackage, Querya
 
   @Override
   @NotNull
-  public PsiPackage[] getSubPackages() {
-    return getSubPackages(allScope());
+  public PsiJavaPackage[] getSubPackages() {
+    return (PsiJavaPackage[])super.getSubPackages();
   }
 
   @Override
   @NotNull
-  public PsiPackage[] getSubPackages(@NotNull GlobalSearchScope scope) {
-    return getFacade().getSubPackages(this, scope);
+  public PsiJavaPackage[] getSubPackages(@NotNull GlobalSearchScope scope) {
+    return (PsiJavaPackage[])super.getSubPackages(scope);
+  }
+
+  @Override
+  protected ArrayFactory<? extends PsiPackage> getPackageArrayFactory() {
+    return PsiJavaPackage.ARRAY_FACTORY;
   }
 
   private JavaPsiFacadeImpl getFacade() {
@@ -188,7 +189,7 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiPackage, Querya
   }
 
   @Nullable
-  private PsiPackage findSubPackageByName(String name) {
+  private PsiJavaPackage findSubPackageByName(String name) {
     final String qName = getQualifiedName();
     final String subpackageQName = qName.isEmpty() ? name : qName + "." + name;
     return getFacade().findPackage(subpackageQName);
@@ -228,14 +229,14 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiPackage, Querya
     if (classHint == null || classHint.shouldProcess(ElementClassHint.DeclarationKind.PACKAGE)) {
       NameHint nameHint = processor.getHint(NameHint.KEY);
       if (nameHint != null) {
-        PsiPackage aPackage = findSubPackageByName(nameHint.getName(state));
+        PsiJavaPackage aPackage = findSubPackageByName(nameHint.getName(state));
         if (aPackage != null) {
           if (!processor.execute(aPackage, state)) return false;
         }
       }
       else {
-        PsiPackage[] packs = getSubPackages(scope);
-        for (PsiPackage pack : packs) {
+        PsiJavaPackage[] packs = getSubPackages(scope);
+        for (PsiJavaPackage pack : packs) {
           final String packageName = pack.getName();
           if (packageName == null) continue;
           if (!facade.getNameHelper().isIdentifier(packageName, PsiUtil.getLanguageLevel(this))) {

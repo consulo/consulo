@@ -38,16 +38,16 @@ public class JavaNavBarExtension implements NavBarModelExtension{
     if (object instanceof PsiClass) {
       return ClassPresentationUtil.getNameForClass((PsiClass)object, false);
     }
-    else if (object instanceof PsiPackage) {
-      final String name = ((PsiPackage)object).getName();
+    else if (object instanceof PsiJavaPackage) {
+      final String name = ((PsiJavaPackage)object).getName();
       return name != null ? name : AnalysisScopeBundle.message("dependencies.tree.node.default.package.abbreviation");
     }
     return null;
   }
 
   public PsiElement getParent(final PsiElement psiElement) {
-    if (psiElement instanceof PsiPackage) {
-      final PsiPackage parentPackage = ((PsiPackage)psiElement).getParentPackage();
+    if (psiElement instanceof PsiJavaPackage) {
+      final PsiJavaPackage parentPackage = ((PsiJavaPackage)psiElement).getParentPackage();
       if (parentPackage != null && parentPackage.getQualifiedName().length() > 0) {
         return parentPackage;
       }

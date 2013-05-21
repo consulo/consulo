@@ -361,7 +361,7 @@ public class PsiClassImplUtil {
       return new LocalSearchScope(topClass == null ? aClass.getContainingFile() : topClass);
     }
     else {
-      PsiPackage aPackage = null;
+      PsiJavaPackage aPackage = null;
       if (file instanceof PsiJavaFile) {
         aPackage = JavaPsiFacade.getInstance(aClass.getProject()).findPackage(((PsiJavaFile)file).getPackageName());
       }

@@ -276,7 +276,7 @@ public class ImportHelper{
     JavaPsiFacade facade = JavaPsiFacade.getInstance(file.getProject());
     for (int i = onDemands.size()-1; i>=0; i--) {
       String onDemand = onDemands.get(i);
-      PsiPackage aPackage = facade.findPackage(onDemand);
+      PsiJavaPackage aPackage = facade.findPackage(onDemand);
       if (aPackage == null) {
         onDemands.remove(i);
         continue;
@@ -406,7 +406,7 @@ public class ImportHelper{
         PsiElement[] onDemandRefs = file.getOnDemandImports(false, true);
         List<String> refTexts = new ArrayList<String>(onDemandRefs.length);
         for (PsiElement ref : onDemandRefs) {
-          String refName = ref instanceof PsiClass ? ((PsiClass)ref).getQualifiedName() : ((PsiPackage)ref).getQualifiedName();
+          String refName = ref instanceof PsiClass ? ((PsiClass)ref).getQualifiedName() : ((PsiJavaPackage)ref).getQualifiedName();
           refTexts.add(refName);
         }
         calcClassesToReimport(file, facade, helper, packageName, classesToReimport, refTexts);
@@ -452,7 +452,7 @@ public class ImportHelper{
     if (onDemandRefs.isEmpty()) {
       return;
     }
-    PsiPackage aPackage = facade.findPackage(packageName);
+    PsiJavaPackage aPackage = facade.findPackage(packageName);
     if (aPackage != null) {
       PsiDirectory[] dirs = aPackage.getDirectories();
       GlobalSearchScope resolveScope = file.getResolveScope();
@@ -538,11 +538,11 @@ public class ImportHelper{
     return null;
   }
 
-  private static PsiPackage findImportOnDemand(@NotNull PsiJavaFile file, @NotNull String packageName){
+  private static PsiJavaPackage findImportOnDemand(@NotNull PsiJavaFile file, @NotNull String packageName){
     PsiElement[] refs = file.getOnDemandImports(false, true);
     for (PsiElement ref : refs) {
-      if (ref instanceof PsiPackage && ((PsiPackage)ref).getQualifiedName().equals(packageName)) {
-        return (PsiPackage)ref;
+      if (ref instanceof PsiJavaPackage && ((PsiJavaPackage)ref).getQualifiedName().equals(packageName)) {
+        return (PsiJavaPackage)ref;
       }
     }
     return null;

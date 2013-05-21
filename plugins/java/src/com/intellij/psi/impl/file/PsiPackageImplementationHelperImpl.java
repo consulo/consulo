@@ -46,12 +46,12 @@ import java.util.List;
  */
 public class PsiPackageImplementationHelperImpl extends PsiPackageImplementationHelper {
   @Override
-  public GlobalSearchScope adjustAllScope(PsiPackage psiPackage, GlobalSearchScope globalSearchScope) {
+  public GlobalSearchScope adjustAllScope(PsiJavaPackage psiPackage, GlobalSearchScope globalSearchScope) {
     return NonClasspathClassFinder.addNonClasspathScope(psiPackage.getProject(), globalSearchScope);
   }
 
   @Override
-  public VirtualFile[] occursInPackagePrefixes(PsiPackage psiPackage) {
+  public VirtualFile[] occursInPackagePrefixes(PsiJavaPackage psiPackage) {
     List<VirtualFile> result = new ArrayList<VirtualFile>();
     final Module[] modules = ModuleManager.getInstance(psiPackage.getProject()).getModules();
 
@@ -75,7 +75,7 @@ public class PsiPackageImplementationHelperImpl extends PsiPackageImplementation
   }
 
   @Override
-  public void handleQualifiedNameChange(final PsiPackage psiPackage, final String newQualifiedName) {
+  public void handleQualifiedNameChange(final PsiJavaPackage psiPackage, final String newQualifiedName) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     final String oldQualifedName = psiPackage.getQualifiedName();
     final boolean anyChanged = changePackagePrefixes(psiPackage, oldQualifedName, newQualifiedName);
@@ -94,7 +94,7 @@ public class PsiPackageImplementationHelperImpl extends PsiPackageImplementation
     }
   }
 
-  private static boolean changePackagePrefixes(PsiPackage psiPackage, final String oldQualifiedName, final String newQualifiedName) {
+  private static boolean changePackagePrefixes(PsiJavaPackage psiPackage, final String oldQualifiedName, final String newQualifiedName) {
     final Module[] modules = ModuleManager.getInstance(psiPackage.getProject()).getModules();
     List<ModifiableRootModel> modelsToCommit = new ArrayList<ModifiableRootModel>();
     for (final Module module : modules) {
@@ -130,7 +130,7 @@ public class PsiPackageImplementationHelperImpl extends PsiPackageImplementation
   }
 
   @Override
-  public void navigate(final PsiPackage psiPackage, final boolean requestFocus) {
+  public void navigate(final PsiJavaPackage psiPackage, final boolean requestFocus) {
     final Project project = psiPackage.getProject();
     ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
     window.activate(null);
@@ -145,7 +145,7 @@ public class PsiPackageImplementationHelperImpl extends PsiPackageImplementation
     });
   }
 
-  private static PsiDirectory[] suggestMostAppropriateDirectories(PsiPackage psiPackage) {
+  private static PsiDirectory[] suggestMostAppropriateDirectories(PsiJavaPackage psiPackage) {
     final Project project = psiPackage.getProject();
     PsiDirectory[] directories = null;
     final Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
@@ -169,12 +169,12 @@ public class PsiPackageImplementationHelperImpl extends PsiPackageImplementation
   }
 
   @Override
-  public boolean packagePrefixExists(PsiPackage psiPackage) {
+  public boolean packagePrefixExists(PsiJavaPackage psiPackage) {
     return PackagePrefixElementFinder.getInstance(psiPackage.getProject()).packagePrefixExists(psiPackage.getQualifiedName());
   }
 
   @Override
-  public Object[] getDirectoryCachedValueDependencies(PsiPackage psiPackage) {
+  public Object[] getDirectoryCachedValueDependencies(PsiJavaPackage psiPackage) {
     return new Object[] { PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT, ProjectRootManager.getInstance(psiPackage.getProject()) };
   }
 }

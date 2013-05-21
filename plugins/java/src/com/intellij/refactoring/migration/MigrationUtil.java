@@ -37,14 +37,14 @@ public class MigrationUtil {
   }
 
   public static UsageInfo[] findPackageUsages(Project project, PsiMigration migration, String qName) {
-    PsiPackage aPackage = findOrCreatePackage(project, migration, qName);
+    PsiJavaPackage aPackage = findOrCreatePackage(project, migration, qName);
 
     return findRefs(project, aPackage);
   }
 
   public static void doPackageMigration(Project project, PsiMigration migration, String newQName, UsageInfo[] usages) {
     try {
-      PsiPackage aPackage = findOrCreatePackage(project, migration, newQName);
+      PsiJavaPackage aPackage = findOrCreatePackage(project, migration, newQName);
 
       // rename all references
       for (UsageInfo usage : usages) {
@@ -122,14 +122,14 @@ public class MigrationUtil {
     }
   }
 
-  static PsiPackage findOrCreatePackage(Project project, final PsiMigration migration, final String qName) {
-    PsiPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(qName);
+  static PsiJavaPackage findOrCreatePackage(Project project, final PsiMigration migration, final String qName) {
+    PsiJavaPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(qName);
     if (aPackage != null) {
       return aPackage;
     }
     else {
-      return ApplicationManager.getApplication().runWriteAction(new Computable<PsiPackage>() {
-        public PsiPackage compute() {
+      return ApplicationManager.getApplication().runWriteAction(new Computable<PsiJavaPackage>() {
+        public PsiJavaPackage compute() {
           return migration.createPackage(qName);
         }
       });

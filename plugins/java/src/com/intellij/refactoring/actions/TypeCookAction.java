@@ -50,7 +50,7 @@ public class TypeCookAction extends BaseRefactoringAction {
         !(element instanceof PsiClass ||
           element instanceof PsiJavaFile ||
           element instanceof PsiDirectory ||
-          element instanceof PsiPackage
+          element instanceof PsiJavaPackage
          )
       ) {
         return false;

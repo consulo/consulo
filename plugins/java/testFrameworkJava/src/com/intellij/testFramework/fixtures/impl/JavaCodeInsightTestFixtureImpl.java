@@ -80,8 +80,8 @@ public class JavaCodeInsightTestFixtureImpl extends CodeInsightTestFixtureImpl i
 
   @Override
   @NotNull
-  public PsiPackage findPackage(@NotNull @NonNls final String name) {
-    final PsiPackage aPackage = getJavaFacade().findPackage(name);
+  public PsiJavaPackage findPackage(@NotNull @NonNls final String name) {
+    final PsiJavaPackage aPackage = getJavaFacade().findPackage(name);
     assertNotNull("Package " + name + " not found", aPackage);
     return aPackage;
   }

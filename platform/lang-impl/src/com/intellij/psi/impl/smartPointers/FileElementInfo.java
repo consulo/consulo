@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 /**
 * User: cdr
 */
-class FileElementInfo implements SmartPointerElementInfo {
+public class FileElementInfo implements SmartPointerElementInfo {
   protected final VirtualFile myVirtualFile;
   protected final Project myProject;
   protected final Language myLanguage;

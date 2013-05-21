@@ -19,8 +19,7 @@ import com.intellij.codeInsight.completion.JavaCompletionUtil;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class JavaTemplateCompletionProcessor implements TemplateCompletionProces
   @Override
   public boolean nextTabOnItemSelected(final ExpressionContext context, final LookupElement item) {
     final List<? extends PsiElement> elements = JavaCompletionUtil.getAllPsiElements(item);
-    if (elements != null && elements.size() == 1 && elements.get(0) instanceof PsiPackage) {
+    if (elements != null && elements.size() == 1 && elements.get(0) instanceof PsiJavaPackage) {
       return false;
     }
     return true;

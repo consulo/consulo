@@ -54,7 +54,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.consulo.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,7 +117,7 @@ public class JavaClassReference extends GenericReference implements PsiJavaRefer
       processorToUse = new PsiScopeProcessor() {
         @Override
         public boolean execute(@NotNull PsiElement element, ResolveState state) {
-          return !(element instanceof PsiClass || element instanceof PsiPackage) || processor.execute(element, state);
+          return !(element instanceof PsiClass || element instanceof PsiJavaPackage) || processor.execute(element, state);
         }
 
         @Override
@@ -164,7 +164,7 @@ public class JavaClassReference extends GenericReference implements PsiJavaRefer
 
   @Override
   public boolean isReferenceTo(PsiElement element) {
-    return (element instanceof PsiClass || element instanceof PsiPackage) && super.isReferenceTo(element);
+    return (element instanceof PsiClass || element instanceof PsiJavaPackage) && super.isReferenceTo(element);
   }
 
   @Override
@@ -201,8 +201,8 @@ public class JavaClassReference extends GenericReference implements PsiJavaRefer
       final boolean jvmFormat = Boolean.TRUE.equals(JavaClassReferenceProvider.JVM_FORMAT.getValue(getOptions()));
       newName = jvmFormat ? ClassUtil.getJVMClassName(psiClass) : psiClass.getQualifiedName();
     }
-    else if (element instanceof PsiPackage) {
-      PsiPackage psiPackage = (PsiPackage)element;
+    else if (element instanceof PsiJavaPackage) {
+      PsiJavaPackage psiPackage = (PsiJavaPackage)element;
       newName = psiPackage.getQualifiedName();
     }
     else {
@@ -232,8 +232,8 @@ public class JavaClassReference extends GenericReference implements PsiJavaRefer
   @NotNull
   public Object[] getVariants() {
     PsiElement context = getCompletionContext();
-    if (context instanceof PsiPackage) {
-      return processPackage((PsiPackage)context);
+    if (context instanceof PsiJavaPackage) {
+      return processPackage((PsiJavaPackage)context);
     }
     if (context instanceof PsiClass) {
       final PsiClass aClass = (PsiClass)context;
@@ -266,11 +266,11 @@ public class JavaClassReference extends GenericReference implements PsiJavaRefer
     return JavaClassReferenceProvider.EXTEND_CLASS_NAMES.getValue(getOptions());
   }
 
-  private Object[] processPackage(final PsiPackage aPackage) {
+  private Object[] processPackage(final PsiJavaPackage aPackage) {
     final ArrayList<Object> list = new ArrayList<Object>();
     final int startOffset = StringUtil.isEmpty(aPackage.getName()) ? 0 : aPackage.getQualifiedName().length() + 1;
     final GlobalSearchScope scope = getScope();
-    for (final PsiPackage subPackage : aPackage.getSubPackages(scope)) {
+    for (final PsiJavaPackage subPackage : aPackage.getSubPackages(scope)) {
       final String shortName = subPackage.getQualifiedName().substring(startOffset);
       if (JavaPsiFacade.getInstance(subPackage.getProject()).getNameHelper().isIdentifier(shortName)) {
         list.add(subPackage);
@@ -479,12 +479,12 @@ public class JavaClassReference extends GenericReference implements PsiJavaRefer
     final String extendClass = extendClasses != null && extendClasses.length > 0 ? extendClasses[0] : null;
 
     final JavaClassReference[] references = getJavaClassReferenceSet().getAllReferences();
-    PsiPackage contextPackage = null;
+    PsiJavaPackage contextPackage = null;
     for (int i = myIndex; i >= 0; i--) {
       final PsiElement context = references[i].getContext();
       if (context != null) {
-        if (context instanceof PsiPackage) {
-          contextPackage = (PsiPackage)context;
+        if (context instanceof PsiJavaPackage) {
+          contextPackage = (PsiJavaPackage)context;
         }
         break;
       }

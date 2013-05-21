@@ -52,7 +52,7 @@ public class DependenciesPanelTest extends TestSourceBasedTestCase{
     try {
       final PsiDirectory psiDirectory = getPackageDirectory("com/package1");
       Assert.assertNotNull(psiDirectory);
-      final PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
+      final PsiJavaPackage psiPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
       Assert.assertNotNull(psiPackage);
       final PsiClass[] classes = psiPackage.getClasses();
       sortClassesByName(classes);

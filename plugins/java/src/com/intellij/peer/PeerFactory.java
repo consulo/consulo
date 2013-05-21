@@ -35,10 +35,6 @@ import com.intellij.psi.search.scope.packageSet.PackageSetFactory;
 import com.intellij.ui.UIHelper;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.errorView.ErrorViewFactory;
-import org.apache.xmlrpc.WebServer;
-import org.apache.xmlrpc.XmlRpcServer;
-
-import java.net.InetAddress;
 
 /** @deprecated to remove in IDEA 13 */
 @SuppressWarnings({"UnusedDeclaration", "deprecation"})
@@ -68,10 +64,6 @@ public abstract class PeerFactory {
   public abstract PsiBuilder createBuilder(ASTNode tree, Language lang, CharSequence seq, final Project project);
 
   public abstract PsiBuilder createBuilder(ASTNode tree, Lexer lexer, Language lang, CharSequence seq, final Project project);
-
-  public abstract XmlRpcServer createRpcServer();
-
-  public abstract WebServer createWebServer(int port, InetAddress addr, XmlRpcServer xmlRpc);
 
   public abstract EditorHighlighter createEditorHighlighter(SyntaxHighlighter syntaxHighlighter, EditorColorsScheme colors);
 

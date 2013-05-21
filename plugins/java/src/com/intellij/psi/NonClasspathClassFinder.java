@@ -21,8 +21,6 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.impl.PsiManagerEx;
-import com.intellij.psi.impl.file.PsiPackageImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.NonClasspathDirectoryScope;
 import com.intellij.util.Processor;
@@ -103,7 +101,7 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
 
   @NotNull
   @Override
-  public PsiClass[] getClasses(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+  public PsiClass[] getClasses(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
     final List<VirtualFile> classRoots = getClassRoots();
     if (classRoots.isEmpty()) {
       return PsiClass.EMPTY_ARRAY;
@@ -132,7 +130,7 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
 
   @NotNull
   @Override
-  public Set<String> getClassNames(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+  public Set<String> getClassNames(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
     final List<VirtualFile> classRoots = getClassRoots();
     if (classRoots.isEmpty()) {
       return Collections.emptySet();
@@ -156,7 +154,9 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
   }
 
   @Override
-  public PsiPackage findPackage(@NotNull String qualifiedName) {
+  public PsiJavaPackage findPackage(@NotNull String qualifiedName) {
+   /*
+    TODO [VISTALL] what?
     final List<VirtualFile> classRoots = getClassRoots();
     if (classRoots.isEmpty()) {
       return null;
@@ -167,16 +167,13 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
       if (dir != null && dir.isDirectory()) {
         return createPackage(qualifiedName);
       }
-    }
+    }   */
     return null;
   }
 
-  private PsiPackageImpl createPackage(String qualifiedName) {
-    return new PsiPackageImpl((PsiManagerEx)myManager, qualifiedName);
-  }
 
   @Override
-  public boolean processPackageDirectories(@NotNull PsiPackage psiPackage,
+  public boolean processPackageDirectories(@NotNull PsiJavaPackage psiPackage,
                                            @NotNull GlobalSearchScope scope,
                                            @NotNull Processor<PsiDirectory> consumer) {
     final List<VirtualFile> classRoots = getClassRoots();
@@ -208,13 +205,15 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
 
   @NotNull
   @Override
-  public PsiPackage[] getSubPackages(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+  public PsiJavaPackage[] getSubPackages(@NotNull PsiJavaPackage psiPackage, @NotNull GlobalSearchScope scope) {
+    /*
+    //TODO [VISTALL] what
     final List<VirtualFile> classRoots = getClassRoots();
     if (classRoots.isEmpty()) {
       return super.getSubPackages(psiPackage, scope);
     }
 
-    List<PsiPackage> result = new ArrayList<PsiPackage>();
+    List<PsiJavaPackage> result = new ArrayList<PsiJavaPackage>();
     for (final VirtualFile classRoot : classRoots) {
       if (scope.contains(classRoot)) {
         final String pkgName = psiPackage.getQualifiedName();
@@ -228,7 +227,8 @@ public abstract class NonClasspathClassFinder extends PsiElementFinder {
         }
       }
     }
-    return result.toArray(new PsiPackage[result.size()]);
+    return result.toArray(new PsiJavaPackage[result.size()]);  */
+    return PsiJavaPackage.EMPTY_ARRAY;
   }
 
   @NotNull

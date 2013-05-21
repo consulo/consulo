@@ -48,7 +48,7 @@ public class ClassNameReferenceEditor extends ReferenceEditorWithBrowseButton {
                                   @Nullable final GlobalSearchScope resolveScope) {
     super(null, project, new Function<String,Document>() {
       public Document fun(final String s) {
-        PsiPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage("");
+        PsiJavaPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage("");
         final JavaCodeFragment fragment = JavaCodeFragmentFactory.getInstance(project).createReferenceCodeFragment(s, defaultPackage, true, true);
         fragment.setVisibilityChecker(JavaCodeFragment.VisibilityChecker.EVERYTHING_VISIBLE);
         if (resolveScope != null) {

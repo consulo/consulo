@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesProcessor;
 import com.intellij.testFramework.PsiTestUtil;
 import junit.framework.Assert;
@@ -142,13 +142,13 @@ public class MovePackageAsDirectoryTest extends MultiFileTestCase {
         }
       };
 
-      final PsiPackage sourcePackage = psiFacade.findPackage(myPackageName);
+      final PsiJavaPackage sourcePackage = psiFacade.findPackage(myPackageName);
       assertNotNull(sourcePackage);
       final PsiDirectory[] srcDirectories = sourcePackage.getDirectories();
       assertEquals(srcDirectories.length, 2);
       Arrays.sort(srcDirectories, directoryComparator);
 
-      final PsiPackage targetPackage = psiFacade.findPackage(myTargetPackageName);
+      final PsiJavaPackage targetPackage = psiFacade.findPackage(myTargetPackageName);
       assertNotNull(targetPackage);
       final PsiDirectory[] targetDirectories = targetPackage.getDirectories();
       Arrays.sort(targetDirectories, directoryComparator);

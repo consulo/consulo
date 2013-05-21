@@ -18,7 +18,7 @@ package com.intellij.refactoring;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NonNls;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
@@ -85,7 +85,7 @@ public class HelpID {
   @NonNls public static final String WrapReturnValue = "refactorj.wrapReturnValue";
 
   public static String getMoveHelpID(PsiElement element) {
-    if (element instanceof PsiPackage){
+    if (element instanceof PsiJavaPackage){
       return MOVE_PACKAGE;
     }
     else if (element instanceof PsiClass){

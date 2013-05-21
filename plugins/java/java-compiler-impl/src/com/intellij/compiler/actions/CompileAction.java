@@ -84,7 +84,7 @@ public class CompileAction extends CompileActionBase {
       elementDescription = CompilerBundle.message("action.compile.description.module", module.getName());
     }
     else {
-      PsiPackage aPackage = null;
+      PsiJavaPackage aPackage = null;
       if (files.length == 1) {
         final PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files[0]);
         if (directory != null) {
@@ -93,8 +93,8 @@ public class CompileAction extends CompileActionBase {
       }
       else {
         PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
-        if (element instanceof PsiPackage) {
-          aPackage = (PsiPackage)element;
+        if (element instanceof PsiJavaPackage) {
+          aPackage = (PsiJavaPackage)element;
         }
       }
 

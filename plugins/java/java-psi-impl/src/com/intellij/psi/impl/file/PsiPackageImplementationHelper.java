@@ -17,24 +17,24 @@ package com.intellij.psi.impl.file;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author yole
  */
 public abstract class PsiPackageImplementationHelper {
-  public abstract GlobalSearchScope adjustAllScope(PsiPackage psiPackage, GlobalSearchScope globalSearchScope);
+  public abstract GlobalSearchScope adjustAllScope(PsiJavaPackage psiPackage, GlobalSearchScope globalSearchScope);
 
-  public abstract VirtualFile[] occursInPackagePrefixes(PsiPackage psiPackage);
+  public abstract VirtualFile[] occursInPackagePrefixes(PsiJavaPackage psiPackage);
 
-  public abstract void handleQualifiedNameChange(PsiPackage psiPackage, String newQualifiedName);
+  public abstract void handleQualifiedNameChange(PsiJavaPackage psiPackage, String newQualifiedName);
 
-  public abstract void navigate(PsiPackage psiPackage, boolean requestFocus);
+  public abstract void navigate(PsiJavaPackage psiPackage, boolean requestFocus);
 
-  public abstract boolean packagePrefixExists(PsiPackage psiPackage);
+  public abstract boolean packagePrefixExists(PsiJavaPackage psiPackage);
 
-  public abstract Object[] getDirectoryCachedValueDependencies(PsiPackage cachedValueProvider);
+  public abstract Object[] getDirectoryCachedValueDependencies(PsiJavaPackage cachedValueProvider);
 
   public static PsiPackageImplementationHelper getInstance() {
     return ServiceManager.getService(PsiPackageImplementationHelper.class);

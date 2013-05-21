@@ -20,6 +20,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiFormatUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.psi.PsiJavaPackage;
 
 public abstract class ElementPresentation {
   private final Noun myKind;
@@ -32,7 +33,7 @@ public abstract class ElementPresentation {
     if (psiElement == null || !psiElement.isValid()) return new InvalidPresentation();
     if (psiElement instanceof PsiDirectory) return new ForDirectory((PsiDirectory)psiElement);
     if (psiElement instanceof PsiFile) return new ForFile((PsiFile)psiElement);
-    if (psiElement instanceof PsiPackage) return new ForPackage((PsiPackage)psiElement);
+    if (psiElement instanceof PsiJavaPackage) return new ForPackage((PsiJavaPackage)psiElement);
     if (psiElement instanceof XmlTag) return new ForXmlTag((XmlTag)psiElement);
     if (psiElement instanceof PsiAnonymousClass) return new ForAnonymousClass((PsiAnonymousClass)psiElement);
     if (psiElement instanceof PsiClass) return new ForClass((PsiClass)psiElement);
@@ -156,15 +157,15 @@ public abstract class ElementPresentation {
   }
 
   public static class ForPackage extends ElementPresentation {
-    private final PsiPackage myPsiPackage;
+    private final PsiJavaPackage myPsiJavaPackage;
 
-    public ForPackage(PsiPackage psiPackage) {
+    public ForPackage(PsiJavaPackage psiPackage) {
       super(Noun.PACKAGE);
-      myPsiPackage = psiPackage;
+      myPsiJavaPackage = psiPackage;
     }
 
     public String getQualifiedName() {
-      String qualifiedName = myPsiPackage.getQualifiedName();
+      String qualifiedName = myPsiJavaPackage.getQualifiedName();
       if (qualifiedName.length() == 0) return PsiBundle.message("default.package.presentation");
       return qualifiedName;
     }
@@ -218,7 +219,7 @@ public abstract class ElementPresentation {
     }
 
     public String getComment() {
-      PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(myPsiClass.getContainingFile().getContainingDirectory());
+      PsiJavaPackage psiPackage = JavaDirectoryService.getInstance().getPackage(myPsiClass.getContainingFile().getContainingDirectory());
       if (psiPackage == null) return "";
       return forElement(psiPackage).getQualifiedName();
     }

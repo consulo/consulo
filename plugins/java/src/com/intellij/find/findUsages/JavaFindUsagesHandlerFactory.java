@@ -53,7 +53,7 @@ public class JavaFindUsagesHandlerFactory extends FindUsagesHandlerFactory {
   @Override
   public FindUsagesHandler createFindUsagesHandler(@NotNull final PsiElement element, final boolean forHighlightUsages) {
     if (element instanceof PsiDirectory) {
-      final PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
+      final PsiJavaPackage psiPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
       return psiPackage == null ? null : new JavaFindUsagesHandler(psiPackage, this);
     }
 

@@ -18,6 +18,7 @@ package org.consulo.java.platform.psi.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.impl.file.PsiPackageImpl;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
@@ -38,6 +39,6 @@ public class JavaPsiPackageSupportProvider implements PsiPackageSupportProvider 
   @NotNull
   @Override
   public PsiPackage createPackage(@NotNull PsiManager psiManager, @NotNull PsiPackageManager packageManager, @NotNull String packageName) {
-    return new JavaPsiPackageImpl(psiManager, packageManager, packageName);
+    return new PsiPackageImpl(psiManager, packageManager, packageName);
   }
 }

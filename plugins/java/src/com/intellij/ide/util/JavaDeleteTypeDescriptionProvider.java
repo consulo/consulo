@@ -39,7 +39,7 @@ public class JavaDeleteTypeDescriptionProvider implements ElementDescriptionProv
                ? IdeBundle.message("prompt.delete.type.parameter", 2)
                : IdeBundle.message("prompt.delete.class", 2);
       }
-      else if (element instanceof PsiPackage) {
+      else if (element instanceof PsiJavaPackage) {
         return IdeBundle.message("prompt.delete.package", 2); 
       }
     }

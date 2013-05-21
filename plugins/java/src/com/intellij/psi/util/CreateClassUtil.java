@@ -104,7 +104,7 @@ public class CreateClassUtil {
 
   @NotNull
   private static PsiDirectory createParentDirectories(@NotNull PsiDirectory directoryRoot, @NotNull String className) throws IncorrectOperationException {
-    final PsiPackage currentPackage = JavaDirectoryService.getInstance().getPackage(directoryRoot);
+    final PsiJavaPackage currentPackage = JavaDirectoryService.getInstance().getPackage(directoryRoot);
     final String packagePrefix = currentPackage == null? null : currentPackage.getQualifiedName() + ".";
     final String packageName = extractPackage(packagePrefix != null && className.startsWith(packagePrefix)?
                                               className.substring(packagePrefix.length()) : className);
@@ -139,7 +139,7 @@ public class CreateClassUtil {
   public static PsiDirectory obtainDirectoryRootForPackage(final Module module, final String packageName) {
     final Project project = module.getProject();
     GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module);
-    final PsiPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
+    final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
     if (aPackage != null) {
       PsiDirectory[] directories = aPackage.getDirectories(scope);
       if (directories.length == 1) return getSourceRootDirectory(directories[0]);
@@ -160,7 +160,7 @@ public class CreateClassUtil {
   public static PsiDirectory getRoot(Module module, String className) {
     String aPackage = extractPackage(className);
     PsiManager psiManager = PsiManager.getInstance(module.getProject());
-    PsiPackage psiPackage = JavaPsiFacade.getInstance(psiManager.getProject()).findPackage(aPackage);
+    PsiJavaPackage psiPackage = JavaPsiFacade.getInstance(psiManager.getProject()).findPackage(aPackage);
     if (psiPackage == null) return null;
     PsiDirectory[] directories = psiPackage.getDirectories(GlobalSearchScope.moduleScope(module));
     if (directories.length == 0) return null;

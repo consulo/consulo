@@ -16,24 +16,22 @@
 
 package com.intellij.psi.search.searches;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
-import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.util.EmptyQuery;
 import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
 
 /**
  * @author ven
- * Searches deeply for all overriding methods of all methods in a class, processing pairs
- * (method in original class, overriding method)
+ *         Searches deeply for all overriding methods of all methods in a class, processing pairs
+ *         (method in original class, overriding method)
  */
-public class AllOverridingMethodsSearch extends ExtensibleQueryFactory<Pair<PsiMethod, PsiMethod>, AllOverridingMethodsSearch.SearchParameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.allOverridingMethodsSearch");
+public class AllOverridingMethodsSearch
+  extends ExtensibleQueryFactory<Pair<PsiMethod, PsiMethod>, AllOverridingMethodsSearch.SearchParameters> {
   public static final AllOverridingMethodsSearch INSTANCE = new AllOverridingMethodsSearch();
 
   public static class SearchParameters {
@@ -55,6 +53,7 @@ public class AllOverridingMethodsSearch extends ExtensibleQueryFactory<Pair<PsiM
   }
 
   private AllOverridingMethodsSearch() {
+    super("org.consulo.java.platform");
   }
 
   public static Query<Pair<PsiMethod, PsiMethod>> search(final PsiClass aClass, SearchScope scope) {

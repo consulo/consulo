@@ -34,7 +34,7 @@ import com.intellij.packageDependencies.ui.*;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.ui.*;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.treeStructure.Tree;
@@ -62,7 +62,7 @@ import java.util.List;
 public class CyclicDependenciesPanel extends JPanel implements Disposable, DataProvider {
   private static final HashSet<PsiFile> EMPTY_FILE_SET = new HashSet<PsiFile>(0);
 
-  private final HashMap<PsiPackage, Set<List<PsiPackage>>> myDependencies;
+  private final HashMap<PsiJavaPackage, Set<List<PsiJavaPackage>>> myDependencies;
   private final MyTree myLeftTree = new MyTree();
   private final MyTree myRightTree = new MyTree();
   private final DependenciesUsagesPanel myUsagesPanel;
@@ -136,14 +136,14 @@ public class CyclicDependenciesPanel extends JPanel implements Disposable, DataP
             Set<PackageNode> packNodes = new HashSet<PackageNode>();
             getPackageNodesHierarchy(selectedPackageNode, packNodes);
             for (PackageNode packageNode : packNodes) {
-              searchFor.addAll(myBuilder.getDependentFilesInPackage((PsiPackage)packageNode.getPsiElement(),
-                                                                    ((PsiPackage)nextPackageNode.getPsiElement())));
+              searchFor.addAll(myBuilder.getDependentFilesInPackage((PsiJavaPackage)packageNode.getPsiElement(),
+                                                                    ((PsiJavaPackage)nextPackageNode.getPsiElement())));
             }
             if (searchIn.isEmpty() || searchFor.isEmpty()) {
               myUsagesPanel.setToInitialPosition();
             }
             else {
-              myBuilder.setRootNodeNameInUsageView(AnalysisScopeBundle.message("cyclic.dependencies.usage.view.root.node.text", ((PsiPackage)nextPackageNode.getPsiElement()).getQualifiedName(), ((PsiPackage)selectedPackageNode.getPsiElement()).getQualifiedName()));
+              myBuilder.setRootNodeNameInUsageView(AnalysisScopeBundle.message("cyclic.dependencies.usage.view.root.node.text", ((PsiJavaPackage)nextPackageNode.getPsiElement()).getQualifiedName(), ((PsiJavaPackage)selectedPackageNode.getPsiElement()).getQualifiedName()));
               myUsagesPanel.findUsages(searchIn, searchFor);
             }
           }
@@ -254,10 +254,10 @@ public class CyclicDependenciesPanel extends JPanel implements Disposable, DataP
   }
 
   private void updateLeftTreeModel() {
-    final Set<PsiPackage> psiPackages = myDependencies.keySet();
+    final Set<PsiJavaPackage> psiPackages = myDependencies.keySet();
     final Set<PsiFile> psiFiles = new HashSet<PsiFile>();
-    for (PsiPackage psiPackage : psiPackages) {
-      final Set<List<PsiPackage>> cycles = myDependencies.get(psiPackage);
+    for (PsiJavaPackage psiPackage : psiPackages) {
+      final Set<List<PsiJavaPackage>> cycles = myDependencies.get(psiPackage);
       if (!mySettings.UI_FILTER_OUT_OF_CYCLE_PACKAGES || cycles != null && !cycles.isEmpty()) {
         psiFiles.addAll(getPackageFiles(psiPackage));
       }
@@ -290,14 +290,14 @@ public class CyclicDependenciesPanel extends JPanel implements Disposable, DataP
     if (packageNode != null) {
       boolean group = mySettings.UI_GROUP_BY_SCOPE_TYPE;
       mySettings.UI_GROUP_BY_SCOPE_TYPE = false;
-      final PsiPackage aPackage = (PsiPackage)packageNode.getPsiElement();
-      final Set<List<PsiPackage>> cyclesOfPackages = myDependencies.get(aPackage);
-      for (List<PsiPackage> packCycle : cyclesOfPackages) {
+      final PsiJavaPackage aPackage = (PsiJavaPackage)packageNode.getPsiElement();
+      final Set<List<PsiJavaPackage>> cyclesOfPackages = myDependencies.get(aPackage);
+      for (List<PsiJavaPackage> packCycle : cyclesOfPackages) {
         PackageDependenciesNode[] nodes = new PackageDependenciesNode[packCycle.size()];
         for (int i = packCycle.size() - 1; i >= 0; i--) {
-          final PsiPackage psiPackage = packCycle.get(i);
-          PsiPackage nextPackage = packCycle.get(i == 0 ? packCycle.size() - 1 : i - 1);
-          PsiPackage prevPackage = packCycle.get(i == packCycle.size() - 1 ? 0 : i + 1);
+          final PsiJavaPackage psiPackage = packCycle.get(i);
+          PsiJavaPackage nextPackage = packCycle.get(i == 0 ? packCycle.size() - 1 : i - 1);
+          PsiJavaPackage prevPackage = packCycle.get(i == packCycle.size() - 1 ? 0 : i + 1);
           final Set<PsiFile> dependentFilesInPackage = myBuilder.getDependentFilesInPackage(prevPackage, psiPackage, nextPackage);
 
           final PackageDependenciesNode pack = (PackageDependenciesNode)TreeModelBuilder
@@ -324,7 +324,7 @@ public class CyclicDependenciesPanel extends JPanel implements Disposable, DataP
     expandFirstLevel(myRightTree);
   }
 
-  private HashSet<PsiFile> getPackageFiles(final PsiPackage psiPackage) {
+  private HashSet<PsiFile> getPackageFiles(final PsiJavaPackage psiPackage) {
     final HashSet<PsiFile> psiFiles = new HashSet<PsiFile>();
     final PsiClass[] classes = psiPackage.getClasses();
     for (PsiClass aClass : classes) {
@@ -419,9 +419,9 @@ public class CyclicDependenciesPanel extends JPanel implements Disposable, DataP
         node = (PackageDependenciesNode)value;
         if (myLeftTree && !mySettings.UI_FILTER_OUT_OF_CYCLE_PACKAGES) {
           final PsiElement element = node.getPsiElement();
-          if (element instanceof PsiPackage) {
-            final PsiPackage aPackage = (PsiPackage)element;
-            final Set<List<PsiPackage>> packageDependencies = myDependencies.get(aPackage);
+          if (element instanceof PsiJavaPackage) {
+            final PsiJavaPackage aPackage = (PsiJavaPackage)element;
+            final Set<List<PsiJavaPackage>> packageDependencies = myDependencies.get(aPackage);
             if (packageDependencies != null && !packageDependencies.isEmpty()) {
                 attributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
             }

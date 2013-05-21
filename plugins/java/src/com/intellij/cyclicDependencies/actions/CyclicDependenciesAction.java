@@ -121,8 +121,8 @@ public class CyclicDependenciesAction extends AnAction{
       if (!psiDirectory.getManager().isInProject(psiDirectory)) return null;
       return new AnalysisScope(psiDirectory);
     }
-    else if (psiTarget instanceof PsiPackage) {
-      PsiPackage pack = (PsiPackage)psiTarget;
+    else if (psiTarget instanceof PsiJavaPackage) {
+      PsiJavaPackage pack = (PsiJavaPackage)psiTarget;
       PsiDirectory[] dirs = pack.getDirectories(GlobalSearchScope.projectScope(pack.getProject()));
       if (dirs.length == 0) return null;
       return new JavaAnalysisScope(pack, LangDataKeys.MODULE.getData(dataContext));

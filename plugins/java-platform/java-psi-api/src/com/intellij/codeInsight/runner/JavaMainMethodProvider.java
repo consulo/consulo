@@ -24,7 +24,7 @@ import com.intellij.psi.PsiMethod;
  */
 public interface JavaMainMethodProvider {
 
-  ExtensionPointName<JavaMainMethodProvider> EP_NAME = ExtensionPointName.create("com.intellij.javaMainMethodProvider");
+  ExtensionPointName<JavaMainMethodProvider> EP_NAME = ExtensionPointName.create("org.consulo.java.mainMethodProvider");
 
   boolean isApplicable(final PsiClass clazz);
 

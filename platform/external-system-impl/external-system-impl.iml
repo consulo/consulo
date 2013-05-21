@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="external-system-api" />
+    <orderEntry type="module" module-name="external-system-api" exported="" />
     <orderEntry type="module" module-name="projectModel-impl" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />

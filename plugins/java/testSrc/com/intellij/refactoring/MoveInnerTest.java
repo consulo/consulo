@@ -149,7 +149,7 @@ public class MoveInnerTest extends MultiFileTestCase {
     }
 
     private PsiElement findDirectory(final String packageName) {
-      final PsiPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(packageName);
+      final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(packageName);
       assert aPackage != null;
       final PsiDirectory[] directories = aPackage.getDirectories();
       return directories [0];

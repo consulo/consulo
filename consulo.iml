@@ -39,6 +39,15 @@
     <orderEntry type="module" module-name="spellchecker" />
     <orderEntry type="module" module-name="ant-new" />
     <orderEntry type="module" module-name="git4idea" />
+    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="java-analysis-api" />
+    <orderEntry type="module" module-name="java-analysis-impl" />
+    <orderEntry type="module" module-name="java-execution-api" />
+    <orderEntry type="module" module-name="java-indexing-api" />
+    <orderEntry type="module" module-name="java-indexing-impl" />
+    <orderEntry type="module" module-name="java-platform" />
+    <orderEntry type="module" module-name="java-psi-api" />
+    <orderEntry type="module" module-name="java-psi-impl" />
   </component>
 </module>
 

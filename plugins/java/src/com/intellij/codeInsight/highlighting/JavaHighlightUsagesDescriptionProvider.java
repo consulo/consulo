@@ -60,8 +60,8 @@ public class JavaHighlightUsagesDescriptionProvider implements ElementDescriptio
         elementName = LangBundle.message("java.terms.variable") + " " + elementName;
       }
     }
-    else if (element instanceof PsiPackage) {
-      elementName = ((PsiPackage)element).getQualifiedName();
+    else if (element instanceof PsiJavaPackage) {
+      elementName = ((PsiJavaPackage)element).getQualifiedName();
       elementName = LangBundle.message("java.terms.package") + " " + elementName;
     }
     return elementName;

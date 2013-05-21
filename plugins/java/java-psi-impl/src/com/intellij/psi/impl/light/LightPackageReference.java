@@ -25,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class LightPackageReference extends LightElement implements PsiJavaCodeReferenceElement {
   private final String myPackageName;
-  private final PsiPackage myRefPackage;
+  private final PsiJavaPackage myRefPackage;
 
-  public LightPackageReference(PsiManager manager, PsiPackage refPackage) {
+  public LightPackageReference(PsiManager manager, PsiJavaPackage refPackage) {
     super(manager, JavaLanguage.INSTANCE);
     myPackageName = null;
     myRefPackage = refPackage;
@@ -122,7 +122,7 @@ public class LightPackageReference extends LightElement implements PsiJavaCodeRe
 
   @Override
   public boolean isReferenceTo(PsiElement element) {
-    if (!(element instanceof PsiPackage)) return false;
+    if (!(element instanceof PsiJavaPackage)) return false;
     return getManager().areElementsEquivalent(resolve(), element);
   }
 

@@ -46,7 +46,10 @@ import com.intellij.psi.search.searches.OverridingMethodsSearch;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.targets.AliasingPsiTarget;
 import com.intellij.psi.targets.AliasingPsiTargetMapper;
-import com.intellij.psi.util.*;
+import com.intellij.psi.util.MethodSignature;
+import com.intellij.psi.util.PropertyUtil;
+import com.intellij.psi.util.PsiUtil;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.refactoring.util.JavaNonCodeSearchElementDescriptionProvider;
 import com.intellij.refactoring.util.NonCodeSearchDescriptionLocation;
@@ -54,6 +57,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,7 +87,7 @@ public class JavaFindUsagesHandler extends FindUsagesHandler{
   @NotNull
   public AbstractFindUsagesDialog getFindUsagesDialog(boolean isSingleFile, boolean toShowInNewTab, boolean mustOpenInNewTab) {
     PsiElement element = getPsiElement();
-    if (element instanceof PsiPackage) {
+    if (element instanceof PsiJavaPackage) {
       return new FindPackageUsagesDialog(element, getProject(), myFactory.getFindPackageOptions(), toShowInNewTab, mustOpenInNewTab, isSingleFile, this);
     }
     if (element instanceof PsiClass) {
@@ -202,7 +206,7 @@ public class JavaFindUsagesHandler extends FindUsagesHandler{
   @NotNull
   public FindUsagesOptions getFindUsagesOptions(@Nullable final DataContext dataContext) {
     PsiElement element = getPsiElement();
-    if (element instanceof PsiPackage) {
+    if (element instanceof PsiJavaPackage) {
       return myFactory.getFindPackageOptions();
     }
     if (element instanceof PsiClass) {
@@ -231,8 +235,8 @@ public class JavaFindUsagesHandler extends FindUsagesHandler{
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
       public void run() {
-        if (element instanceof PsiPackage) {
-          ContainerUtil.addIfNotNull(result, ((PsiPackage)element).getQualifiedName());
+        if (element instanceof PsiJavaPackage) {
+          ContainerUtil.addIfNotNull(result, ((PsiJavaPackage)element).getQualifiedName());
         }
         else if (element instanceof PsiClass) {
           final String qname = ((PsiClass)element).getQualifiedName();
@@ -324,7 +328,7 @@ public class JavaFindUsagesHandler extends FindUsagesHandler{
     if (!success) return false;
 
     if (options instanceof JavaPackageFindUsagesOptions && ((JavaPackageFindUsagesOptions)options).isClassesUsages){
-      if (!addClassesUsages((PsiPackage)element, processor, (JavaPackageFindUsagesOptions)options)) return false;
+      if (!addClassesUsages((PsiJavaPackage)element, processor, (JavaPackageFindUsagesOptions)options)) return false;
     }
 
     if (options instanceof JavaClassFindUsagesOptions) {
@@ -416,7 +420,7 @@ public class JavaFindUsagesHandler extends FindUsagesHandler{
   }
 
 
-  private static boolean addClassesUsages(@NotNull PsiPackage aPackage,
+  private static boolean addClassesUsages(@NotNull PsiJavaPackage aPackage,
                                           @NotNull final Processor<UsageInfo> processor,
                                           @NotNull final JavaPackageFindUsagesOptions options) {
     ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
@@ -451,7 +455,7 @@ public class JavaFindUsagesHandler extends FindUsagesHandler{
     return true;
   }
 
-  private static void addClassesInPackage(@NotNull PsiPackage aPackage, boolean includeSubpackages, @NotNull List<PsiClass> array) {
+  private static void addClassesInPackage(@NotNull PsiJavaPackage aPackage, boolean includeSubpackages, @NotNull List<PsiClass> array) {
     PsiDirectory[] dirs = aPackage.getDirectories();
     for (PsiDirectory dir : dirs) {
       addClassesInDirectory(dir, includeSubpackages, array);
@@ -703,9 +707,9 @@ public class JavaFindUsagesHandler extends FindUsagesHandler{
       return true;
     }
     if (options instanceof JavaPackageFindUsagesOptions && !((JavaPackageFindUsagesOptions)options).isIncludeSubpackages &&
-        ((PsiReference)usage).resolve() instanceof PsiPackage) {
+        ((PsiReference)usage).resolve() instanceof PsiJavaPackage) {
       PsiElement parent = usage.getParent();
-      if (parent instanceof PsiJavaCodeReferenceElement && ((PsiJavaCodeReferenceElement)parent).resolve() instanceof PsiPackage) {
+      if (parent instanceof PsiJavaCodeReferenceElement && ((PsiJavaCodeReferenceElement)parent).resolve() instanceof PsiJavaPackage) {
         return false;
       }
     }

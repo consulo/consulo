@@ -55,7 +55,7 @@ public class JavaTemplateUtil {
   }
 
   public static String getPackageName(@NotNull PsiDirectory directory) {
-    PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     return aPackage != null ? aPackage.getQualifiedName() : "";
   }
 

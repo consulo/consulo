@@ -19,14 +19,14 @@ import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 
-public class PackagePresentationProvider implements ItemPresentationProvider<PsiPackage> {
+public class PackagePresentationProvider implements ItemPresentationProvider<PsiJavaPackage> {
   @Override
-  public ItemPresentation getPresentation(final PsiPackage aPackage) {
+  public ItemPresentation getPresentation(final PsiJavaPackage aPackage) {
     return new ColoredItemPresentation() {
       @Override
       public TextAttributesKey getTextAttributesKey() {

@@ -43,14 +43,14 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
   @Override
   public boolean canFindUsagesFor(@NotNull PsiElement element) {
     if (element instanceof PsiDirectory) {
-      PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
+      PsiJavaPackage psiPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
       return psiPackage != null && psiPackage.getQualifiedName().length() != 0;
     }
 
     return element instanceof PsiClass ||
            element instanceof PsiVariable ||
            element instanceof PsiMethod ||
-           element instanceof PsiPackage ||
+           element instanceof PsiJavaPackage ||
            element instanceof PsiLabeledStatement ||
            ThrowSearchUtil.isSearchable(element) ||
            element instanceof PsiMetaOwner && ((PsiMetaOwner)element).getMetaData() != null;
@@ -58,7 +58,7 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
 
   @Override
   public String getHelpId(@NotNull PsiElement element) {
-    if (element instanceof PsiPackage) {
+    if (element instanceof PsiJavaPackage) {
       return HelpID.FIND_PACKAGE_USAGES;
     }
     if (element instanceof PsiClass) {
@@ -85,7 +85,7 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
     if (ThrowSearchUtil.isSearchable(element)) {
       return LangBundle.message("java.terms.exception");
     }
-    if (element instanceof PsiPackage) {
+    if (element instanceof PsiJavaPackage) {
       return LangBundle.message("java.terms.package");
     }
     if (element instanceof PsiLabeledStatement) {
@@ -143,8 +143,8 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
     if (element instanceof PsiDirectory) {
       return getPackageName((PsiDirectory)element, false);
     }
-    if (element instanceof PsiPackage) {
-      return getPackageName((PsiPackage)element);
+    if (element instanceof PsiJavaPackage) {
+      return getPackageName((PsiJavaPackage)element);
     }
     if (element instanceof PsiFile) {
       return ((PsiFile)element).getVirtualFile().getPresentableUrl();
@@ -219,8 +219,8 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
     if (element instanceof PsiDirectory) {
       return getPackageName((PsiDirectory)element, false);
     }
-    if (element instanceof PsiPackage) {
-      return getPackageName((PsiPackage)element);
+    if (element instanceof PsiJavaPackage) {
+      return getPackageName((PsiJavaPackage)element);
     }
     if (element instanceof PsiFile) {
       return useFullName ? ((PsiFile)element).getVirtualFile().getPresentableUrl() : ((PsiFile)element).getName();
@@ -321,7 +321,7 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
   }
 
   public static String getPackageName(PsiDirectory directory, boolean includeRootDir) {
-    PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     if (aPackage == null) {
       return directory.getVirtualFile().getPresentableUrl();
     }
@@ -352,7 +352,7 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
     return null;
   }
 
-  public static String getPackageName(PsiPackage psiPackage) {
+  public static String getPackageName(PsiJavaPackage psiPackage) {
     if (psiPackage == null) {
       return null;
     }

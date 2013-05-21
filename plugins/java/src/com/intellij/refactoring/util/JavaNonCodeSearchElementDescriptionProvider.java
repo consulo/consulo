@@ -27,8 +27,8 @@ public class JavaNonCodeSearchElementDescriptionProvider implements ElementDescr
   public String getElementDescription(@NotNull final PsiElement element, @NotNull final ElementDescriptionLocation location) {
     if (!(location instanceof NonCodeSearchDescriptionLocation)) return null;
     NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation) location;
-    if (element instanceof PsiPackage) {
-      return ncdLocation.isNonJava() ? ((PsiPackage)element).getQualifiedName() : StringUtil.notNullize(((PsiPackage)element).getName());
+    if (element instanceof PsiJavaPackage) {
+      return ncdLocation.isNonJava() ? ((PsiJavaPackage)element).getQualifiedName() : StringUtil.notNullize(((PsiJavaPackage)element).getName());
     }
     if (element instanceof PsiClass) {
       return ncdLocation.isNonJava() ? ((PsiClass)element).getQualifiedName() : ((PsiClass)element).getName();

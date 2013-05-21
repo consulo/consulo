@@ -47,9 +47,9 @@ public class JavaQualifiedNameProvider implements QualifiedNameProvider {
 
   @Nullable
   public PsiElement adjustElementToCopy(final PsiElement element) {
-    if (element instanceof PsiPackage) return element;
+    if (element instanceof PsiJavaPackage) return element;
     if (element instanceof PsiDirectory) {
-      final PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
+      final PsiJavaPackage psiPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)element);
       if (psiPackage != null) return psiPackage;
     }
     if (element != null && !(element instanceof PsiMember) && element.getParent() instanceof PsiMember) {
@@ -60,7 +60,7 @@ public class JavaQualifiedNameProvider implements QualifiedNameProvider {
 
   @Nullable
   public String getQualifiedName(PsiElement element) {
-    if (element instanceof PsiPackage) return ((PsiPackage)element).getQualifiedName();
+    if (element instanceof PsiJavaPackage) return ((PsiJavaPackage)element).getQualifiedName();
     element = getMember(element);
     if (element instanceof PsiClass) {
       return ((PsiClass)element).getQualifiedName();
@@ -78,7 +78,7 @@ public class JavaQualifiedNameProvider implements QualifiedNameProvider {
   }
 
   public PsiElement qualifiedNameToElement(final String fqn, final Project project) {
-    final PsiPackage psiPackage = JavaPsiFacade.getInstance(project).findPackage(fqn);
+    final PsiJavaPackage psiPackage = JavaPsiFacade.getInstance(project).findPackage(fqn);
     if (psiPackage != null) {
       return psiPackage;
     }

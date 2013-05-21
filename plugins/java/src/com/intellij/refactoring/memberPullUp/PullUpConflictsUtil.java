@@ -54,7 +54,7 @@ public class PullUpConflictsUtil {
   public static MultiMap<PsiElement, String> checkConflicts(final MemberInfo[] infos,
                                         PsiClass subclass,
                                         @Nullable PsiClass superClass,
-                                        @NotNull PsiPackage targetPackage,
+                                        @NotNull PsiJavaPackage targetPackage,
                                         @NotNull PsiDirectory targetDirectory,
                                         final InterfaceContainmentVerifier interfaceContainmentVerifier) {
     return checkConflicts(infos, subclass, superClass, targetPackage, targetDirectory, interfaceContainmentVerifier, true);
@@ -63,7 +63,7 @@ public class PullUpConflictsUtil {
   public static MultiMap<PsiElement, String> checkConflicts(final MemberInfo[] infos,
                                                             @NotNull final PsiClass subclass,
                                                             @Nullable PsiClass superClass,
-                                                            @NotNull final PsiPackage targetPackage,
+                                                            @NotNull final PsiJavaPackage targetPackage,
                                                             @NotNull PsiDirectory targetDirectory,
                                                             final InterfaceContainmentVerifier interfaceContainmentVerifier,
                                                             boolean movedMembers2Super) {
@@ -272,12 +272,12 @@ public class PullUpConflictsUtil {
 
     private PsiMember myMember;
     private PsiClass mySubClass;
-    private PsiPackage myTargetPackage;
+    private PsiJavaPackage myTargetPackage;
     private Set<PsiMember> myMovedMembers;
     private MultiMap<PsiElement, String> myConflicts;
 
     public ConflictingUsagesOfSuperClassMemebers(PsiMember member, PsiClass aClass,
-                                                 PsiPackage targetPackage,
+                                                 PsiJavaPackage targetPackage,
                                                  Set<PsiMember> movedMembers,
                                                  MultiMap<PsiElement, String> conflicts) {
       super(aClass);
@@ -312,14 +312,14 @@ public class PullUpConflictsUtil {
     private final Set<PsiMethod> myAbstractMethods;
     private final PsiClass mySubclass;
     private final PsiClass mySuperClass;
-    private final PsiPackage myTargetPackage;
+    private final PsiJavaPackage myTargetPackage;
     private final MultiMap<PsiElement, String> myConflictsList;
     private final InterfaceContainmentVerifier myInterfaceContainmentVerifier;
 
     ConflictingUsagesOfSubClassMembers(PsiElement scope,
                                        Set<PsiMember> movedMembers, Set<PsiMethod> abstractMethods,
                                        PsiClass subclass, PsiClass superClass,
-                                       PsiPackage targetPackage, MultiMap<PsiElement, String> conflictsList,
+                                       PsiJavaPackage targetPackage, MultiMap<PsiElement, String> conflictsList,
                                        InterfaceContainmentVerifier interfaceContainmentVerifier) {
       super(subclass);
       myScope = scope;

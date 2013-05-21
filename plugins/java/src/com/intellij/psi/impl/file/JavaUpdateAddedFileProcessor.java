@@ -36,7 +36,7 @@ public class JavaUpdateAddedFileProcessor extends UpdateAddedFileProcessor {
 
     PsiDirectory dir = element.getContainingDirectory();
     if (dir == null) return;
-    PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(dir);
+    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(dir);
     if (aPackage == null) return;
     String packageName = aPackage.getQualifiedName();
 

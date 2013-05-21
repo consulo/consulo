@@ -205,7 +205,7 @@ public abstract class IntroduceVariableBase extends IntroduceHandlerBase {
           else {
             if (!(expression.getParent() instanceof PsiMethodCallExpression)) {
               final PsiElement resolve = ((PsiReferenceExpression)expression).resolve();
-              if (!(resolve instanceof PsiClass) && !(resolve instanceof PsiPackage)) {
+              if (!(resolve instanceof PsiClass) && !(resolve instanceof PsiJavaPackage)) {
                 expressions.add(expression);
               }
             }

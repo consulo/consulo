@@ -54,7 +54,7 @@ public class AdjustPackageNameFix implements LocalQuickFix {
 
     PsiDirectory directory = myFile.getContainingDirectory();
     if (directory == null) return;
-    PsiPackage myTargetPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiJavaPackage myTargetPackage = JavaDirectoryService.getInstance().getPackage(directory);
     if (myTargetPackage == null) return;
 
     try {

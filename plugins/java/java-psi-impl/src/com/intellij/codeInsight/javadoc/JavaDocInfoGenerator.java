@@ -230,13 +230,13 @@ public class JavaDocInfoGenerator {
       generateVariableJavaDoc(buffer, (PsiVariable)myElement, generatePrologueAndEpilogue);
     }
     else if (myElement instanceof PsiDirectory) {
-      final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)myElement);
+      final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)myElement);
       if (aPackage == null)
         return false;
       generatePackageJavaDoc(buffer, aPackage, generatePrologueAndEpilogue);
     }
-    else if (myElement instanceof PsiPackage) {
-      generatePackageJavaDoc(buffer, (PsiPackage) myElement, generatePrologueAndEpilogue);
+    else if (myElement instanceof PsiJavaPackage) {
+      generatePackageJavaDoc(buffer, (PsiJavaPackage) myElement, generatePrologueAndEpilogue);
     } else {
       return false;
     }
@@ -516,9 +516,9 @@ public class JavaDocInfoGenerator {
       generateEpilogue(buffer);
   }
 
-  private void generatePackageJavaDoc(final StringBuilder buffer, final PsiPackage psiPackage, boolean generatePrologueAndEpilogue) {
+  private void generatePackageJavaDoc(final StringBuilder buffer, final PsiJavaPackage psiPackage, boolean generatePrologueAndEpilogue) {
     for(PsiDirectory directory: psiPackage.getDirectories()) {
-      final PsiFile packageInfoFile = directory.findFile(PsiPackage.PACKAGE_INFO_FILE);
+      final PsiFile packageInfoFile = directory.findFile(PsiJavaPackage.PACKAGE_INFO_FILE);
       if (packageInfoFile != null) {
         final ASTNode node = packageInfoFile.getNode();
         if (node != null) {

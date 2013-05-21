@@ -39,17 +39,17 @@ import java.util.ArrayList;
 class PackagePrefixFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
   private final PsiDirectory myDirectory;
   private final int myIndex;
-  private final PsiPackage[] myPackages;
+  private final PsiJavaPackage[] myPackages;
 
   public static PackagePrefixFileSystemItem create(final PsiDirectory directory) {
-    final ArrayList<PsiPackage> packages = new ArrayList<PsiPackage>();
-    for (PsiPackage cur = JavaDirectoryService.getInstance().getPackage(directory); cur != null; cur = cur.getParentPackage()) {
+    final ArrayList<PsiJavaPackage> packages = new ArrayList<PsiJavaPackage>();
+    for (PsiJavaPackage cur = JavaDirectoryService.getInstance().getPackage(directory); cur != null; cur = cur.getParentPackage()) {
       packages.add(0, cur);
     }
-    return new PackagePrefixFileSystemItem(directory, 0, packages.toArray(new PsiPackage[packages.size()]));
+    return new PackagePrefixFileSystemItem(directory, 0, packages.toArray(new PsiJavaPackage[packages.size()]));
   }
 
-  private PackagePrefixFileSystemItem(final PsiDirectory directory, int index, final PsiPackage[] packages) {
+  private PackagePrefixFileSystemItem(final PsiDirectory directory, int index, final PsiJavaPackage[] packages) {
     myDirectory = directory;
     myIndex = index;
     myPackages = packages;

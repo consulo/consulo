@@ -516,7 +516,7 @@ public class AnnotationsHighlightUtil {
       return null;
     }
     PsiFile file = statement.getContainingFile();
-    if (file != null && !PsiPackage.PACKAGE_INFO_FILE.equals(file.getName())) {
+    if (file != null && !PsiJavaPackage.PACKAGE_INFO_FILE.equals(file.getName())) {
       String description = JavaErrorMessages.message("invalid.package.annotation.containing.file");
       HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR);
       builder.range(statement.getAnnotationList().getTextRange());

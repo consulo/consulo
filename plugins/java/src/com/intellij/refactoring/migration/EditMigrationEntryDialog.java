@@ -92,7 +92,7 @@ public class EditMigrationEntryDialog extends DialogWrapper{
     final LanguageTextField.DocumentCreator documentCreator = new LanguageTextField.DocumentCreator() {
       @Override
       public Document createDocument(String value, @Nullable Language language, Project project) {
-        PsiPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage("");
+        PsiJavaPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage("");
         final JavaCodeFragment fragment =
           JavaCodeFragmentFactory.getInstance(project).createReferenceCodeFragment("", defaultPackage, true, true);
         return PsiDocumentManager.getInstance(project).getDocument(fragment);

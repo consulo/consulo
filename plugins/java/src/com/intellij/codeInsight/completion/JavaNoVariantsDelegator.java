@@ -25,7 +25,7 @@ import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.util.CollectConsumer;
 import com.intellij.util.Consumer;
-import org.consulo.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -61,7 +61,7 @@ public class JavaNoVariantsDelegator extends CompletionContributor {
 
   public static boolean containsOnlyPackages(LinkedHashSet<CompletionResult> results) {
     for (CompletionResult result : results) {
-      if (!(CompletionUtil.getTargetElement(result.getLookupElement()) instanceof PsiPackage)) {
+      if (!(CompletionUtil.getTargetElement(result.getLookupElement()) instanceof PsiJavaPackage)) {
         return false;
       }
     }

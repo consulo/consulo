@@ -51,7 +51,7 @@ public class MoveJavaClassHandler implements MoveClassHandler {
 
   public PsiClass doMoveClass(@NotNull final PsiClass aClass, @NotNull PsiDirectory moveDestination) throws IncorrectOperationException {
     PsiFile file = aClass.getContainingFile();
-    final PsiPackage newPackage = JavaDirectoryService.getInstance().getPackage(moveDestination);
+    final PsiJavaPackage newPackage = JavaDirectoryService.getInstance().getPackage(moveDestination);
 
     PsiClass newClass = null;
     if (file instanceof PsiJavaFile) {
@@ -108,8 +108,8 @@ public class MoveJavaClassHandler implements MoveClassHandler {
     }
   }
 
-  private static void correctSelfReferences(final PsiClass aClass, final PsiPackage newContainingPackage) {
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(aClass.getContainingFile().getContainingDirectory());
+  private static void correctSelfReferences(final PsiClass aClass, final PsiJavaPackage newContainingPackage) {
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(aClass.getContainingFile().getContainingDirectory());
     if (aPackage != null) {
       aClass.accept(new JavaRecursiveElementWalkingVisitor() {
         @Override

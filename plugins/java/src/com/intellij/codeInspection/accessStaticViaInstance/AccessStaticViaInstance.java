@@ -86,7 +86,7 @@ public class AccessStaticViaInstance extends BaseJavaLocalInspectionTool {
 
     if (qualifierExpression instanceof PsiReferenceExpression) {
       final PsiElement qualifierResolved = ((PsiReferenceExpression)qualifierExpression).resolve();
-      if (qualifierResolved instanceof PsiClass || qualifierResolved instanceof PsiPackage) {
+      if (qualifierResolved instanceof PsiClass || qualifierResolved instanceof PsiJavaPackage) {
         return;
       }
     }

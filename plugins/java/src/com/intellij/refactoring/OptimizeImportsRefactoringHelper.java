@@ -112,7 +112,7 @@ public class OptimizeImportsRefactoringHelper implements RefactoringHelper<Set<P
                 continue;
               }
 
-              if (resolve instanceof PsiPackage && ((PsiPackage)resolve).getDirectories(ref.getResolveScope()).length == 0) {
+              if (resolve instanceof PsiJavaPackage && ((PsiJavaPackage)resolve).getDirectories(ref.getResolveScope()).length == 0) {
                 continue;
               }
               importStatement.delete();

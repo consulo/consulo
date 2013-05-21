@@ -42,7 +42,7 @@ public class PsiJavaDirectoryFactory extends PsiDirectoryFactory {
   @Override
   @NotNull
   public String getQualifiedName(@NotNull final PsiDirectory directory, final boolean presentable) {
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     if (aPackage != null) {
       final String qualifiedName = aPackage.getQualifiedName();
       if (qualifiedName.length() > 0) return qualifiedName;

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DummyHolder extends PsiFileImpl {
-  protected final PsiElement myContext;
+  public final PsiElement myContext;
   private final CharTable myTable;
   private final Boolean myExplicitlyValid;
   private final Language myLanguage;

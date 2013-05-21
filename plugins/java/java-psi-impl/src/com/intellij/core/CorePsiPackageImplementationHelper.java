@@ -16,7 +16,7 @@
 package com.intellij.core;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.file.PsiPackageImplementationHelper;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
@@ -26,30 +26,30 @@ import com.intellij.util.ArrayUtil;
  */
 public class CorePsiPackageImplementationHelper extends PsiPackageImplementationHelper {
   @Override
-  public GlobalSearchScope adjustAllScope(PsiPackage psiPackage, GlobalSearchScope globalSearchScope) {
+  public GlobalSearchScope adjustAllScope(PsiJavaPackage psiPackage, GlobalSearchScope globalSearchScope) {
     return globalSearchScope;
   }
 
   @Override
-  public VirtualFile[] occursInPackagePrefixes(PsiPackage psiPackage) {
+  public VirtualFile[] occursInPackagePrefixes(PsiJavaPackage psiPackage) {
     return VirtualFile.EMPTY_ARRAY;
   }
 
   @Override
-  public void handleQualifiedNameChange(PsiPackage psiPackage, String newQualifiedName) {
+  public void handleQualifiedNameChange(PsiJavaPackage psiPackage, String newQualifiedName) {
   }
 
   @Override
-  public void navigate(PsiPackage psiPackage, boolean requestFocus) {
+  public void navigate(PsiJavaPackage psiPackage, boolean requestFocus) {
   }
 
   @Override
-  public boolean packagePrefixExists(PsiPackage psiPackage) {
+  public boolean packagePrefixExists(PsiJavaPackage psiPackage) {
     return false;
   }
 
   @Override
-  public Object[] getDirectoryCachedValueDependencies(PsiPackage cachedValueProvider) {
+  public Object[] getDirectoryCachedValueDependencies(PsiJavaPackage cachedValueProvider) {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 }

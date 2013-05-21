@@ -806,7 +806,7 @@ public class SrcRepositoryUseTest extends PsiTestCase{
   }
 
   private void renamePackage(String packageName, String newPackageName) throws Exception {
-    PsiPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(packageName);
+    PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage(packageName);
     assertNotNull("Package " + packageName + " not found", aPackage);
 
     //PsiDirectory dir = aPackage.getDirectories()[0];

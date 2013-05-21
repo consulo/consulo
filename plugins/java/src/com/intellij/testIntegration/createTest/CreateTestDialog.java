@@ -97,7 +97,7 @@ public class CreateTestDialog extends DialogWrapper {
   public CreateTestDialog(@NotNull Project project,
                           @NotNull String title,
                           PsiClass targetClass,
-                          PsiPackage targetPackage,
+                          PsiJavaPackage targetPackage,
                           Module targetModule) {
     super(project, true);
     myProject = project;
@@ -112,7 +112,7 @@ public class CreateTestDialog extends DialogWrapper {
     myDefaultLibraryButton.doClick();
   }
 
-  private void initControls(PsiClass targetClass, PsiPackage targetPackage) {
+  private void initControls(PsiClass targetClass, PsiJavaPackage targetPackage) {
     ButtonGroup group = new ButtonGroup();
 
     Map<String, JRadioButton> nameToButtonMap = new HashMap<String, JRadioButton>();

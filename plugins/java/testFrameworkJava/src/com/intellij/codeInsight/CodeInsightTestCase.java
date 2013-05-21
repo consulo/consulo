@@ -48,7 +48,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.testFramework.PsiTestCase;
@@ -718,8 +718,8 @@ public abstract class CodeInsightTestCase extends PsiTestCase {
   }
 
   @NotNull
-  protected PsiPackage findPackage(@NotNull @NonNls final String name) {
-    final PsiPackage aPackage = myJavaFacade.findPackage(name);
+  protected PsiJavaPackage findPackage(@NotNull @NonNls final String name) {
+    final PsiJavaPackage aPackage = myJavaFacade.findPackage(name);
     assertNotNull("Package " + name + " not found", aPackage);
     return aPackage;
   }

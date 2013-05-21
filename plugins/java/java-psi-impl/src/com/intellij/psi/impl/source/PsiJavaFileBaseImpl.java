@@ -321,7 +321,7 @@ public abstract class PsiJavaFileBaseImpl extends PsiFileImpl implements PsiJava
       processor.handleEvent(JavaScopeProcessorEvent.SET_CURRENT_FILE_CONTEXT, null);
 
       // check in current package
-      final PsiPackage aPackage = JavaPsiFacade.getInstance(myManager.getProject()).findPackage(getPackageName());
+      final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myManager.getProject()).findPackage(getPackageName());
       if (aPackage != null) {
         if (!aPackage.processDeclarations(processor, state, null, place)) {
           return false;
@@ -386,7 +386,7 @@ public abstract class PsiJavaFileBaseImpl extends PsiFileImpl implements PsiJava
   }
 
   private static boolean processOnDemandTarget(PsiElement target, PsiScopeProcessor processor, ResolveState substitutor, PsiElement place) {
-    if (target instanceof PsiPackage) {
+    if (target instanceof PsiJavaPackage) {
       if (!target.processDeclarations(processor, substitutor, null, place)) {
         return false;
       }

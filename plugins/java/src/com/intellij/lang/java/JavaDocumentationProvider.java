@@ -85,8 +85,8 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
     else if (element instanceof PsiVariable) {
       return generateVariableInfo((PsiVariable)element);
     }
-    else if (element instanceof PsiPackage) {
-      return generatePackageInfo((PsiPackage)element);
+    else if (element instanceof PsiJavaPackage) {
+      return generatePackageInfo((PsiJavaPackage)element);
     }
     else if (element instanceof BeanPropertyElement) {
       return generateMethodInfo(((BeanPropertyElement) element).getMethod(), PsiSubstitutor.EMPTY);
@@ -141,7 +141,7 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
     }
   }
 
-  private static String generatePackageInfo(PsiPackage aPackage) {
+  private static String generatePackageInfo(PsiJavaPackage aPackage) {
     return aPackage.getQualifiedName();
   }
 
@@ -603,11 +603,11 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
         }
       }
     }
-    else if (element instanceof PsiPackage) {
-      urls = findUrlForPackage((PsiPackage)element);
+    else if (element instanceof PsiJavaPackage) {
+      urls = findUrlForPackage((PsiJavaPackage)element);
     }
     else if (element instanceof PsiDirectory) {
-      PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(((PsiDirectory)element));
+      PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(((PsiDirectory)element));
       if (aPackage != null) {
         urls = findUrlForPackage(aPackage);
       }
@@ -691,7 +691,7 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
   }
 
   @Nullable
-  public static List<String> findUrlForPackage(PsiPackage aPackage) {
+  public static List<String> findUrlForPackage(PsiJavaPackage aPackage) {
     String qName = aPackage.getQualifiedName();
     qName = qName.replace('.', '/') + '/' + PACKAGE_SUMMARY_FILE;
     for (PsiDirectory directory : aPackage.getDirectories()) {

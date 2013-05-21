@@ -43,6 +43,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.VisibilityUtil;
 import com.intellij.util.containers.MultiMap;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -56,8 +57,8 @@ public class MoveClassToInnerProcessor extends BaseRefactoringProcessor {
 
   private PsiClass[] myClassesToMove;
   private final PsiClass myTargetClass;
-  private PsiPackage[] mySourcePackage;
-  private final PsiPackage myTargetPackage;
+  private PsiJavaPackage[] mySourcePackage;
+  private final PsiJavaPackage myTargetPackage;
   private String[] mySourceVisibility;
   private final boolean mySearchInComments;
   private final boolean mySearchInNonJavaFiles;
@@ -81,7 +82,7 @@ public class MoveClassToInnerProcessor extends BaseRefactoringProcessor {
 
   private void setClassesToMove(final PsiClass[] classesToMove) {
     myClassesToMove = classesToMove;
-    mySourcePackage = new PsiPackage[classesToMove.length];
+    mySourcePackage = new PsiJavaPackage[classesToMove.length];
     mySourceVisibility = new String[classesToMove.length];
     for (int i = 0; i < classesToMove.length; i++) {
       PsiClass psiClass = classesToMove[i];
@@ -290,7 +291,7 @@ public class MoveClassToInnerProcessor extends BaseRefactoringProcessor {
   }
 
   private boolean isInaccessibleFromTarget(final PsiElement element, final String visibility) {
-    final PsiPackage elementPackage = JavaDirectoryService.getInstance().getPackage(element.getContainingFile().getContainingDirectory());
+    final PsiJavaPackage elementPackage = JavaDirectoryService.getInstance().getPackage(element.getContainingFile().getContainingDirectory());
     return !PsiUtil.isAccessible(myTargetClass, element, null) ||
         (!myTargetClass.isInterface() && visibility.equals(PsiModifier.PACKAGE_LOCAL) && !Comparing.equal(elementPackage, myTargetPackage));
   }

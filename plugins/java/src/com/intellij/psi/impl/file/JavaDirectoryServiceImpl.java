@@ -50,7 +50,7 @@ public class JavaDirectoryServiceImpl extends CoreJavaDirectoryService {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.JavaDirectoryServiceImpl");
 
   @Override
-  public PsiPackage getPackage(@NotNull PsiDirectory dir) {
+  public PsiJavaPackage getPackage(@NotNull PsiDirectory dir) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(dir.getProject()).getFileIndex();
     String packageName = projectFileIndex.getPackageNameByDirectory(dir.getVirtualFile());
     if (packageName == null) return null;
@@ -178,7 +178,7 @@ public class JavaDirectoryServiceImpl extends CoreJavaDirectoryService {
     directory.checkCreateFile(fileName);
 
     PsiNameHelper helper = JavaPsiFacade.getInstance(directory.getProject()).getNameHelper();
-    PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     String qualifiedName = aPackage == null ? null : aPackage.getQualifiedName();
     if (!StringUtil.isEmpty(qualifiedName) && !helper.isQualifiedName(qualifiedName)) {
       throw new IncorrectOperationException("Cannot create class in invalid package: '"+qualifiedName+"'");

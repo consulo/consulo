@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +82,7 @@ public class PsiJavaDirectoryImpl extends PsiDirectoryImpl {
 
   @Override
   public ItemPresentation getPresentation() {
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(this);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(this);
     return aPackage != null && !StringUtil.isEmpty(aPackage.getName()) ? aPackage.getPresentation() : super.getPresentation();
   }
 }

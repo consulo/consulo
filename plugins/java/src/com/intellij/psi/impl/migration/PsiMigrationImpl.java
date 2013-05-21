@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMigration;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.util.containers.HashMap;
 
@@ -39,7 +39,7 @@ public class PsiMigrationImpl implements PsiMigration {
   private final Map<String, MigrationClassImpl> myQNameToClassMap = new HashMap<String, MigrationClassImpl>();
   private final Map<String, List<PsiClass>>  myPackageToClassesMap = new HashMap<String, List<PsiClass>>();
   private final Map<String, MigrationPackageImpl> myQNameToPackageMap = new HashMap<String, MigrationPackageImpl>();
-  private final Map<String, List<PsiPackage>>  myPackageToSubpackagesMap = new HashMap<String, List<PsiPackage>>();
+  private final Map<String, List<PsiJavaPackage>>  myPackageToSubpackagesMap = new HashMap<String, List<PsiJavaPackage>>();
   private boolean myIsValid = true;
 
   public PsiMigrationImpl(PsiMigrationManager migrationManager, JavaPsiFacade facade, PsiManagerImpl manager) {
@@ -56,7 +56,7 @@ public class PsiMigrationImpl implements PsiMigration {
     final MigrationClassImpl oldMigrationClass = myQNameToClassMap.put(qualifiedName, migrationClass);
     LOG.assertTrue(oldMigrationClass == null, qualifiedName);
     String packageName = parentPackageName(qualifiedName);
-    final PsiPackage aPackage = myFacade.findPackage(packageName);
+    final PsiJavaPackage aPackage = myFacade.findPackage(packageName);
     if (aPackage == null) {
       createPackage(packageName);
     }
@@ -78,18 +78,18 @@ public class PsiMigrationImpl implements PsiMigration {
   }
 
   @Override
-  public PsiPackage createPackage(String qualifiedName) {
+  public PsiJavaPackage createPackage(String qualifiedName) {
     assertValid();
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    final MigrationPackageImpl migrationPackage = new MigrationPackageImpl(this, qualifiedName);
+    final MigrationPackageImpl migrationPackage = new MigrationPackageImpl(this, null, qualifiedName);     //TODO [VISTALL] incorrect
     final MigrationPackageImpl oldMigrationPackage = myQNameToPackageMap.put(qualifiedName, migrationPackage);
     LOG.assertTrue(oldMigrationPackage == null, qualifiedName);
     final String parentName = parentPackageName(qualifiedName);
-    final PsiPackage aPackage = myFacade.findPackage(parentName);
+    final PsiJavaPackage aPackage = myFacade.findPackage(parentName);
     if (aPackage == null) {
       createPackage(parentName);
     }
-    List<PsiPackage> psiPackages = getSubpackagesList(parentName);
+    List<PsiJavaPackage> psiPackages = getSubpackagesList(parentName);
     psiPackages.add(migrationPackage);
     myMigrationManager.migrationModified(false);
     return migrationPackage;
@@ -110,11 +110,11 @@ public class PsiMigrationImpl implements PsiMigration {
     LOG.assertTrue(myIsValid);
   }
 
-  private List<PsiPackage> getSubpackagesList(final String parentName) {
+  private List<PsiJavaPackage> getSubpackagesList(final String parentName) {
     assertValid();
-    List<PsiPackage> psiPackages = myPackageToSubpackagesMap.get(parentName);
+    List<PsiJavaPackage> psiPackages = myPackageToSubpackagesMap.get(parentName);
     if (psiPackages == null) {
-      psiPackages = new ArrayList<PsiPackage>();
+      psiPackages = new ArrayList<PsiJavaPackage>();
       myPackageToSubpackagesMap.put(parentName, psiPackages);
     }
     return psiPackages;
@@ -125,7 +125,7 @@ public class PsiMigrationImpl implements PsiMigration {
     return getClassesList(packageName);
   }
 
-  public List<PsiPackage> getMigrationPackages(String packageName) {
+  public List<PsiJavaPackage> getMigrationPackages(String packageName) {
     assertValid();
     return getSubpackagesList(packageName);
   }
@@ -135,7 +135,7 @@ public class PsiMigrationImpl implements PsiMigration {
     return myQNameToClassMap.get(qualifiedName);
   }
 
-  public PsiPackage getMigrationPackage(String qualifiedName) {
+  public PsiJavaPackage getMigrationPackage(String qualifiedName) {
     assertValid();
     return myQNameToPackageMap.get(qualifiedName);
   }

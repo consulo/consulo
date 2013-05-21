@@ -52,7 +52,7 @@ public class ElementClassFilter implements ElementFilter {
         return element instanceof PsiMethod;
 
       case PACKAGE:
-        return element instanceof PsiPackage;
+        return element instanceof PsiJavaPackage;
 
       case VARIABLE:
         return element instanceof PsiVariable;

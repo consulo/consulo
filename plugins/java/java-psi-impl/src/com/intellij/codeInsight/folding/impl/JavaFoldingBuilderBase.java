@@ -596,7 +596,7 @@ public abstract class JavaFoldingBuilderBase extends CustomFoldingBuilder implem
     else if (element instanceof PsiDocComment) {
       PsiElement parent = element.getParent();
       if (parent instanceof PsiJavaFile) {
-        if (((PsiJavaFile)parent).getName().equals(PsiPackage.PACKAGE_INFO_FILE)) {
+        if (((PsiJavaFile)parent).getName().equals(PsiJavaPackage.PACKAGE_INFO_FILE)) {
           return false;
         }
         PsiElement firstChild = parent.getFirstChild();

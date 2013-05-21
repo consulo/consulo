@@ -312,7 +312,7 @@ public class Src15RepositoryUseTest extends PsiTestCase {
       assertTrue(correctNames.contains(member.getName()));
     }
 
-    final Collection<PsiPackage> packages =
+    final Collection<PsiJavaPackage> packages =
       AnnotatedPackagesSearch.search(annotationTypeClass, GlobalSearchScope.moduleScope(myModule)).findAll();
     assertEquals(1, packages.size());
     assertEquals("annotated", packages.iterator().next().getQualifiedName());

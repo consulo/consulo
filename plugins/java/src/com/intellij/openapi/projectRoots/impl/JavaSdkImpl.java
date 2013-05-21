@@ -78,10 +78,6 @@ public class JavaSdkImpl extends JavaSdk {
     return "reference.project.structure.sdk.java";
   }
 
-  @Override
-  public Icon getIconForAddAction() {
-    return AllIcons.General.AddJdk;
-  }
 
   @NonNls
   @Override

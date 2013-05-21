@@ -17,11 +17,11 @@ package com.intellij.ide.macro;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 
 public class FileFQPackage extends Macro {
   public String expand(DataContext dataContext) {
-    PsiPackage aPackage = FilePackageMacro.getFilePackage(dataContext);
+    PsiJavaPackage aPackage = FilePackageMacro.getFilePackage(dataContext);
     if (aPackage == null) return null;
     return aPackage.getQualifiedName();
   }

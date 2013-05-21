@@ -79,7 +79,7 @@ public class JavaFilePasteProvider implements PasteProvider {
   }
 
   private static void updatePackageStatement(final PsiJavaFile javaFile, final PsiDirectory targetDir) {
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(targetDir);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(targetDir);
     if (aPackage == null) return;
     final PsiPackageStatement oldStatement = javaFile.getPackageStatement();
     final Project project = javaFile.getProject();

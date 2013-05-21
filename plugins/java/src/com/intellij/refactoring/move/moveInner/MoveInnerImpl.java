@@ -68,13 +68,13 @@ public class MoveInnerImpl {
       }
       else if (outerClassParent instanceof PsiFile) {
         final PsiDirectory directory = innerClass.getContainingFile().getContainingDirectory();
-        final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+        final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
         if (aPackage == null) {
           if (chooseIfNotUnderSource) {
             PackageChooserDialog chooser = new PackageChooserDialog("Select Target Package", innerClass.getProject());
             chooser.show();
             if (!chooser.isOK()) return null;
-            final PsiPackage chosenPackage = chooser.getSelectedPackage();
+            final PsiJavaPackage chosenPackage = chooser.getSelectedPackage();
             if (chosenPackage == null) return null;
             return chosenPackage.getDirectories()[0];
           }

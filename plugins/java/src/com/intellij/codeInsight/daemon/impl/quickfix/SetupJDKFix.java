@@ -72,7 +72,7 @@ public class SetupJDKFix implements IntentionAction, HighPriorityAction {
       public void run() {
         Module module = ModuleUtilCore.findModuleForPsiElement(file);
         if (module != null) {
-          ModuleRootModificationUtil.setSdkInherited(module);
+          //TODO [VISTALL] ModuleRootModificationUtil.setSdkInherited(module);
         }
       }
     });

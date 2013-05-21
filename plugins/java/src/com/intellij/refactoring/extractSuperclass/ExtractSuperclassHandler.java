@@ -127,7 +127,7 @@ public class ExtractSuperclassHandler implements RefactoringActionHandler, Extra
   public boolean checkConflicts(final ExtractSuperclassDialog dialog) {
     final MemberInfo[] infos = ArrayUtil.toObjectArray(dialog.getSelectedMemberInfos(), MemberInfo.class);
     final PsiDirectory targetDirectory = dialog.getTargetDirectory();
-    final PsiPackage targetPackage;
+    final PsiJavaPackage targetPackage;
     if (targetDirectory != null) {
       targetPackage = JavaDirectoryService.getInstance().getPackage(targetDirectory);
     }

@@ -27,8 +27,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
@@ -38,16 +38,16 @@ import java.util.*;
 
 public class PackageUtil {
   @NotNull
-  public static PsiPackage[] getSubpackages(@NotNull PsiPackage aPackage,
+  public static PsiJavaPackage[] getSubpackages(@NotNull PsiJavaPackage aPackage,
                                             @Nullable Module module,
                                             @NotNull Project project,
                                             final boolean searchInLibraries) {
     final PsiDirectory[] dirs = getDirectories(aPackage, project, module, searchInLibraries);
-    final Set<PsiPackage> subpackages = new HashSet<PsiPackage>();
+    final Set<PsiJavaPackage> subpackages = new HashSet<PsiJavaPackage>();
     for (PsiDirectory dir : dirs) {
       final PsiDirectory[] subdirectories = dir.getSubdirectories();
       for (PsiDirectory subdirectory : subdirectories) {
-        final PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(subdirectory);
+        final PsiJavaPackage psiPackage = JavaDirectoryService.getInstance().getPackage(subdirectory);
         if (psiPackage != null) {
           final String name = psiPackage.getName();
           // skip "default" subpackages as they should be attributed to other modules
@@ -58,11 +58,11 @@ public class PackageUtil {
         }
       }
     }
-    return subpackages.toArray(new PsiPackage[subpackages.size()]);
+    return subpackages.toArray(new PsiJavaPackage[subpackages.size()]);
   }
 
   public static void addPackageAsChild(@NotNull Collection<AbstractTreeNode> children,
-                                       @NotNull PsiPackage aPackage,
+                                       @NotNull PsiJavaPackage aPackage,
                                        @Nullable Module module,
                                        @NotNull ViewSettings settings,
                                        final boolean inLibrary) {
@@ -72,14 +72,14 @@ public class PackageUtil {
       children.add(new PackageElementNode(project, new PackageElement(module, aPackage, inLibrary), settings));
     }
     if (settings.isFlattenPackages() || shouldSkipPackage) {
-      final PsiPackage[] subpackages = getSubpackages(aPackage, module, project, inLibrary);
-      for (PsiPackage subpackage : subpackages) {
+      final PsiJavaPackage[] subpackages = getSubpackages(aPackage, module, project, inLibrary);
+      for (PsiJavaPackage subpackage : subpackages) {
         addPackageAsChild(children, subpackage, module, settings, inLibrary);
       }
     }
   }
 
-  public static boolean isPackageEmpty(@NotNull PsiPackage aPackage,
+  public static boolean isPackageEmpty(@NotNull PsiJavaPackage aPackage,
                                        @Nullable Module module,
                                        boolean strictlyEmpty,
                                        final boolean inLibrary) {
@@ -94,7 +94,7 @@ public class PackageUtil {
   }
 
   @NotNull
-  public static PsiDirectory[] getDirectories(@NotNull PsiPackage aPackage,
+  public static PsiDirectory[] getDirectories(@NotNull PsiJavaPackage aPackage,
                                               @NotNull Project project,
                                               @Nullable Module module,
                                               boolean inLibrary) {
@@ -119,7 +119,7 @@ public class PackageUtil {
   }
 
 
-  public static boolean isPackageDefault(@NotNull PsiPackage directoryPackage) {
+  public static boolean isPackageDefault(@NotNull PsiJavaPackage directoryPackage) {
     final String qName = directoryPackage.getQualifiedName();
     return qName.isEmpty();
   }
@@ -133,19 +133,19 @@ public class PackageUtil {
     final PsiManager psiManager = PsiManager.getInstance(project);
 
     final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-    final Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
+    final Set<PsiJavaPackage> topLevelPackages = new HashSet<PsiJavaPackage>();
 
     for (final VirtualFile root : sourceRoots) {
       final PsiDirectory directory = psiManager.findDirectory(root);
       if (directory == null) {
         continue;
       }
-      final PsiPackage directoryPackage = JavaDirectoryService.getInstance().getPackage(directory);
+      final PsiJavaPackage directoryPackage = JavaDirectoryService.getInstance().getPackage(directory);
       if (directoryPackage == null || isPackageDefault(directoryPackage)) {
         // add subpackages
         final PsiDirectory[] subdirectories = directory.getSubdirectories();
         for (PsiDirectory subdirectory : subdirectories) {
-          final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(subdirectory);
+          final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(subdirectory);
           if (aPackage != null && !isPackageDefault(aPackage)) {
             topLevelPackages.add(aPackage);
           }
@@ -158,7 +158,7 @@ public class PackageUtil {
       }
     }
 
-    for (final PsiPackage topLevelPackage : topLevelPackages) {
+    for (final PsiJavaPackage topLevelPackage : topLevelPackages) {
       addPackageAsChild(children, topLevelPackage, module, settings, inLibrary);
     }
 
@@ -167,8 +167,8 @@ public class PackageUtil {
 
   @NotNull
   public static String getNodeName(@NotNull ViewSettings settings,
-                                   PsiPackage aPackage,
-                                   final PsiPackage parentPackageInTree,
+                                   PsiJavaPackage aPackage,
+                                   final PsiJavaPackage parentPackageInTree,
                                    @NotNull String defaultShortName,
                                    boolean isFQNameShown) {
     final String name;
@@ -178,7 +178,7 @@ public class PackageUtil {
              aPackage == null ? defaultShortName : aPackage.getQualifiedName();
     }
     else if (parentPackageInTree != null || aPackage != null && aPackage.getParentPackage() != null) {
-      PsiPackage parentPackage = aPackage.getParentPackage();
+      PsiJavaPackage parentPackage = aPackage.getParentPackage();
       final StringBuilder buf = new StringBuilder();
       buf.append(aPackage.getName());
       while (parentPackage != null && (parentPackageInTree == null || !parentPackage.equals(parentPackageInTree))) {

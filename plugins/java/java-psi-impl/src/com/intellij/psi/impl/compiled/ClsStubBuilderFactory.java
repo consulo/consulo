@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class ClsStubBuilderFactory<T extends PsiFile> {
 
-  public static final ExtensionPointName<ClsStubBuilderFactory> EP_NAME = ExtensionPointName.create("com.intellij.clsStubBuilderFactory");
+  public static final ExtensionPointName<ClsStubBuilderFactory> EP_NAME = ExtensionPointName.create("org.consulo.java.clsStubBuilderFactory");
 
   @Nullable
   public abstract PsiFileStub<T> buildFileStub(final VirtualFile file, byte[]  bytes) throws ClsFormatException;

@@ -25,7 +25,7 @@ import java.util.List;
 
 
 public abstract class PsiAugmentProvider {
-  public static final ExtensionPointName<PsiAugmentProvider> EP_NAME = ExtensionPointName.create("com.intellij.lang.psiAugmentProvider");
+  public static final ExtensionPointName<PsiAugmentProvider> EP_NAME = ExtensionPointName.create("org.consulo.java.platform.augmentProvider");
 
   @NotNull
   public abstract <Psi extends PsiElement> List<Psi> getAugments(@NotNull PsiElement element, @NotNull Class<Psi> type);

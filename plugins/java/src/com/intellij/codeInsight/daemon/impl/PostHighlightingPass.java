@@ -747,8 +747,8 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
       String packageName = ((PsiClassOwner)importStatement.getContainingFile()).getPackageName();
       PsiJavaCodeReferenceElement reference = importStatement.getImportReference();
       PsiElement resolved = reference == null ? null : reference.resolve();
-      if (resolved instanceof PsiPackage) {
-        isRedundant = packageName.equals(((PsiPackage)resolved).getQualifiedName());
+      if (resolved instanceof PsiJavaPackage) {
+        isRedundant = packageName.equals(((PsiJavaPackage)resolved).getQualifiedName());
       }
       else if (resolved instanceof PsiClass && !importStatement.isOnDemand()) {
         String qName = ((PsiClass)resolved).getQualifiedName();

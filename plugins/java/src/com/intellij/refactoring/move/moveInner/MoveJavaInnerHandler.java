@@ -67,7 +67,7 @@ public class MoveJavaInnerHandler implements MoveInnerHandler {
       return true;
     }
     if (targetContainer instanceof PsiDirectory) {
-      final PsiPackage targetPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)targetContainer);
+      final PsiJavaPackage targetPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)targetContainer);
       final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(outerClass.getProject());
       if (targetPackage != null && !psiFacade.isInPackage(outerClass, targetPackage)) {
         return true;

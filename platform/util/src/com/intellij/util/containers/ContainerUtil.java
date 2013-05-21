@@ -1180,7 +1180,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @NotNull
-  public static <T> T[] toArray(@Nullable Collection<T> c, @NotNull ArrayFactory<T> factory) {
+  public static <T> T[] toArray(@Nullable Collection<T> c, @NotNull ArrayFactory<? extends T> factory) {
     return c != null ? c.toArray(factory.create(c.size())) : factory.create(0);
   }
 

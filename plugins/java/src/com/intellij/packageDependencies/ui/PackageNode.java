@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
@@ -31,10 +31,10 @@ public class PackageNode extends PackageDependenciesNode {
 
   private String myPackageName;
   private final String myPackageQName;
-  private final PsiPackage myPackage;
+  private final PsiJavaPackage myPackage;
 
 
-  public PackageNode(PsiPackage aPackage, boolean showFQName) {
+  public PackageNode(PsiJavaPackage aPackage, boolean showFQName) {
     super(aPackage.getProject());
     myPackage = aPackage;
     myPackageName = showFQName ? aPackage.getQualifiedName() : aPackage.getName();

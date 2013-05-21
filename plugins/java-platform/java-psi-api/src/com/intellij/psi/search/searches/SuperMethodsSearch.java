@@ -15,20 +15,17 @@
  */
 package com.intellij.psi.search.searches;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
 import com.intellij.psi.util.MethodSignatureUtil;
 import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
  */
 public class SuperMethodsSearch extends ExtensibleQueryFactory<MethodSignatureBackedByPsiMethod, SuperMethodsSearch.SearchParameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.superMethodsSearch");
   public static final SuperMethodsSearch SUPER_METHODS_SEARCH_INSTANCE = new SuperMethodsSearch();
 
   public static class SearchParameters {
@@ -67,6 +64,7 @@ public class SuperMethodsSearch extends ExtensibleQueryFactory<MethodSignatureBa
   }
 
   private SuperMethodsSearch() {
+    super("org.consulo.java.platform");
   }
 
   public static Query<MethodSignatureBackedByPsiMethod> search(final PsiMethod derivedMethod, @Nullable final PsiClass psiClass, boolean checkBases, boolean allowStaticMethod) {

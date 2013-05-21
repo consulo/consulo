@@ -31,6 +31,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PackageScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -39,7 +40,7 @@ import java.util.Set;
 public class JavaAnalysisScope extends AnalysisScope {
   public static final int PACKAGE = 5;
 
-  public JavaAnalysisScope(PsiPackage pack, Module module) {
+  public JavaAnalysisScope(PsiJavaPackage pack, Module module) {
     super(pack.getProject());
     myModule = module;
     myElement = pack;
@@ -74,7 +75,7 @@ public class JavaAnalysisScope extends AnalysisScope {
       }
     }
     else if (myType == PACKAGE) {
-      final PsiDirectory[] directories = ((PsiPackage)myElement).getDirectories();
+      final PsiDirectory[] directories = ((PsiJavaPackage)myElement).getDirectories();
       for (PsiDirectory directory : directories) {
         modules.addAll(getAllInterestingModules(fileIndex, directory.getVirtualFile()));
       }
@@ -88,14 +89,14 @@ public class JavaAnalysisScope extends AnalysisScope {
   @Override
   public String getShortenName() {
     if (myType == PACKAGE)
-       return AnalysisScopeBundle.message("scope.package", ((PsiPackage)myElement).getQualifiedName());
+       return AnalysisScopeBundle.message("scope.package", ((PsiJavaPackage)myElement).getQualifiedName());
     return super.getShortenName();
   }
 
   @Override
   public String getDisplayName() {
     if (myType == PACKAGE) {
-      return AnalysisScopeBundle.message("scope.package", ((PsiPackage)myElement).getQualifiedName());
+      return AnalysisScopeBundle.message("scope.package", ((PsiJavaPackage)myElement).getQualifiedName());
     }
     return super.getDisplayName();
   }
@@ -112,8 +113,8 @@ public class JavaAnalysisScope extends AnalysisScope {
 
   @Override
   protected void accept(@NotNull final PsiElementVisitor visitor, final boolean needReadAction) {
-    if (myElement instanceof PsiPackage) {
-      final PsiPackage pack = (PsiPackage)myElement;
+    if (myElement instanceof PsiJavaPackage) {
+      final PsiJavaPackage pack = (PsiJavaPackage)myElement;
       final Set<PsiDirectory> dirs = new HashSet<PsiDirectory>();
       ApplicationManager.getApplication().runReadAction(new Runnable() {
         @Override
@@ -133,7 +134,7 @@ public class JavaAnalysisScope extends AnalysisScope {
   @Override
   public SearchScope toSearchScope() {
     if (myType == PACKAGE) {
-      return new PackageScope((PsiPackage)myElement, true, true);
+      return new PackageScope((PsiJavaPackage)myElement, true, true);
     }
     return super.toSearchScope();
   }

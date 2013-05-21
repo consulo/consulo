@@ -96,7 +96,7 @@ public class ArrayIndexOutOfBoundsTest extends PsiTestCase {
     Runnable runnable = new Runnable() {
       @Override
       public void run() {
-        final PsiPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage("anotherBla");
+        final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage("anotherBla");
         assertNotNull("Package anotherBla not found", aPackage);
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
@@ -114,7 +114,7 @@ public class ArrayIndexOutOfBoundsTest extends PsiTestCase {
     Runnable runnable = new Runnable() {
       @Override
       public void run() {
-        PsiPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage("bla");
+        PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myPsiManager.getProject()).findPackage("bla");
         assertNotNull("Package bla not found", aPackage);
 
         PsiDirectory dir = aPackage.getDirectories()[0];

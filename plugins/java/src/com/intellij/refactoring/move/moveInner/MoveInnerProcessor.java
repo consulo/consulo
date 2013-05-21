@@ -111,7 +111,7 @@ public class MoveInnerProcessor extends BaseRefactoringProcessor {
     final String newQName;
     if (myTargetContainer instanceof PsiDirectory) {
       final PsiDirectory targetDirectory = (PsiDirectory)myTargetContainer;
-      final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(targetDirectory);
+      final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(targetDirectory);
       LOG.assertTrue(aPackage != null);
       newQName = aPackage.getQualifiedName() + "." + myNewClassName;
     }
@@ -381,7 +381,7 @@ public class MoveInnerProcessor extends BaseRefactoringProcessor {
     if (PsiModifier.PUBLIC.equals(visibilityModifier)) return false;
     final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(myProject);
     if (myTargetContainer instanceof PsiDirectory) {
-      final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)myTargetContainer);
+      final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory)myTargetContainer);
       assert aPackage != null : myTargetContainer;
       return !psiFacade.isInPackage(myOuterClass, aPackage);
     }
@@ -390,7 +390,7 @@ public class MoveInnerProcessor extends BaseRefactoringProcessor {
     if (targetFile != null) {
       final PsiDirectory containingDirectory = targetFile.getContainingDirectory();
       if (containingDirectory != null) {
-        final PsiPackage targetPackage = JavaDirectoryService.getInstance().getPackage(containingDirectory);
+        final PsiJavaPackage targetPackage = JavaDirectoryService.getInstance().getPackage(containingDirectory);
         assert targetPackage != null : myTargetContainer;
         return psiFacade.isInPackage(myOuterClass, targetPackage);
       }

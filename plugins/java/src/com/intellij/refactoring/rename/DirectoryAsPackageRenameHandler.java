@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesProcessor;
@@ -29,10 +29,10 @@ import com.intellij.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClas
 /**
  * @author yole
  */
-public class DirectoryAsPackageRenameHandler extends DirectoryAsPackageRenameHandlerBase<PsiPackage> {
+public class DirectoryAsPackageRenameHandler extends DirectoryAsPackageRenameHandlerBase<PsiJavaPackage> {
 
   @Override
-  protected VirtualFile[] occursInPackagePrefixes(PsiPackage aPackage) {
+  protected VirtualFile[] occursInPackagePrefixes(PsiJavaPackage aPackage) {
     return aPackage.occursInPackagePrefixes();
   }
 
@@ -42,12 +42,12 @@ public class DirectoryAsPackageRenameHandler extends DirectoryAsPackageRenameHan
   }
 
   @Override
-  protected String getQualifiedName(PsiPackage aPackage) {
+  protected String getQualifiedName(PsiJavaPackage aPackage) {
     return aPackage.getQualifiedName();
   }
 
   @Override
-  protected PsiPackage getPackage(PsiDirectory psiDirectory) {
+  protected PsiJavaPackage getPackage(PsiDirectory psiDirectory) {
     return JavaDirectoryService.getInstance().getPackage(psiDirectory);
   }
 

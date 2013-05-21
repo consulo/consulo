@@ -167,8 +167,8 @@ public class MoveClassesOrPackagesProcessor extends BaseRefactoringProcessor {
       final UsageInfo[] usages = MoveClassesOrPackagesUtil.findUsages(element, mySearchInComments,
                                                                       mySearchInNonJavaFiles, newName);
       allUsages.addAll(new ArrayList<UsageInfo>(Arrays.asList(usages)));
-      if (element instanceof PsiPackage) {
-        for (PsiDirectory directory : ((PsiPackage)element).getDirectories()) {
+      if (element instanceof PsiJavaPackage) {
+        for (PsiDirectory directory : ((PsiJavaPackage)element).getDirectories()) {
           final UsageInfo[] dirUsages = MoveClassesOrPackagesUtil.findUsages(directory, mySearchInComments,
                                                                              mySearchInNonJavaFiles, newName);
           allUsages.addAll(new ArrayList<UsageInfo>(Arrays.asList(dirUsages)));
@@ -281,7 +281,7 @@ public class MoveClassesOrPackagesProcessor extends BaseRefactoringProcessor {
             if (containingFile != null && !isInsideMoved(element)) {
               PsiDirectory directory = containingFile.getContainingDirectory();
               if (directory != null) {
-                PsiPackage usagePackage = JavaDirectoryService.getInstance().getPackage(directory);
+                PsiJavaPackage usagePackage = JavaDirectoryService.getInstance().getPackage(directory);
                 if (aPackage != null && usagePackage != null && !aPackage.equalToPackage(usagePackage)) {
 
                   final String message = RefactoringBundle.message("a.package.local.class.0.will.no.longer.be.accessible.from.1",
@@ -359,7 +359,7 @@ public class MoveClassesOrPackagesProcessor extends BaseRefactoringProcessor {
     members.addElements(aClass.getInnerClasses());
 
     final RefactoringUtil.IsDescendantOf isDescendantOf = new RefactoringUtil.IsDescendantOf(aClass);
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(aClass.getContainingFile().getContainingDirectory());
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(aClass.getContainingFile().getContainingDirectory());
     final GlobalSearchScope packageScope = aPackage == null ? aClass.getResolveScope() : PackageScope.packageScopeWithoutLibraries(aPackage, false);
     for (final ClassMemberWrapper memberWrapper : members) {
       ReferencesSearch.search(memberWrapper.getMember(), packageScope, false).forEach(new Processor<PsiReference>() {
@@ -417,9 +417,9 @@ public class MoveClassesOrPackagesProcessor extends BaseRefactoringProcessor {
       newQName = StringUtil.getQualifiedName(qualifiedName, ((PsiClass)element).getName());
       oldQName = ((PsiClass)element).getQualifiedName();
     }
-    else if (element instanceof PsiPackage) {
-      newQName = StringUtil.getQualifiedName(qualifiedName, ((PsiPackage)element).getName());
-      oldQName = ((PsiPackage)element).getQualifiedName();
+    else if (element instanceof PsiJavaPackage) {
+      newQName = StringUtil.getQualifiedName(qualifiedName, ((PsiJavaPackage)element).getName());
+      oldQName = ((PsiJavaPackage)element).getQualifiedName();
     }
     else {
       LOG.assertTrue(false);
@@ -470,9 +470,9 @@ public class MoveClassesOrPackagesProcessor extends BaseRefactoringProcessor {
       for (int idx = 0; idx < myElementsToMove.length; idx++) {
         PsiElement element = myElementsToMove[idx];
         final RefactoringElementListener elementListener = getTransaction().getElementListener(element);
-        if (element instanceof PsiPackage) {
-          final PsiDirectory[] directories = ((PsiPackage)element).getDirectories();
-          final PsiPackage newElement = MoveClassesOrPackagesUtil.doMovePackage((PsiPackage)element, myMoveDestination);
+        if (element instanceof PsiJavaPackage) {
+          final PsiDirectory[] directories = ((PsiJavaPackage)element).getDirectories();
+          final PsiJavaPackage newElement = MoveClassesOrPackagesUtil.doMovePackage((PsiJavaPackage)element, myMoveDestination);
           LOG.assertTrue(newElement != null, element);
           oldToNewElementsMapping.put(element, newElement);
           int i = 0;
@@ -596,7 +596,7 @@ public class MoveClassesOrPackagesProcessor extends BaseRefactoringProcessor {
           if (containingFile != null) {
             PsiDirectory directory = containingFile.getContainingDirectory();
             if (directory != null) {
-              PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+              PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
               if (!myTargetPackage.equalToPackage(aPackage)) {
                 String message = RefactoringBundle.message("0.will.be.inaccessible.from.1", RefactoringUIUtil.getDescription(member, true),
                                                       RefactoringUIUtil.getDescription(container, true));

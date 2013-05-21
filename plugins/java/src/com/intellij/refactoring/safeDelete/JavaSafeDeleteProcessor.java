@@ -57,7 +57,7 @@ public class JavaSafeDeleteProcessor extends SafeDeleteProcessorDelegateBase {
 
   public boolean handlesElement(final PsiElement element) {
     return element instanceof PsiClass || element instanceof PsiMethod ||
-           element instanceof PsiField || element instanceof PsiParameter || element instanceof PsiLocalVariable || element instanceof PsiPackage;
+           element instanceof PsiField || element instanceof PsiParameter || element instanceof PsiLocalVariable || element instanceof PsiJavaPackage;
   }
 
   @Nullable
@@ -102,8 +102,8 @@ public class JavaSafeDeleteProcessor extends SafeDeleteProcessorDelegateBase {
                                                               @Nullable Module module,
                                                               Collection<PsiElement> allElementsToDelete) {
     Project project = element.getProject();
-    if (element instanceof PsiPackage && module != null) {
-      final PsiDirectory[] directories = ((PsiPackage)element).getDirectories(module.getModuleScope());
+    if (element instanceof PsiJavaPackage && module != null) {
+      final PsiDirectory[] directories = ((PsiJavaPackage)element).getDirectories(module.getModuleScope());
       if (directories.length == 0) return null;
       return Arrays.asList(directories);
     } else if (element instanceof PsiMethod) {
@@ -271,7 +271,7 @@ public class JavaSafeDeleteProcessor extends SafeDeleteProcessorDelegateBase {
     else if (element instanceof PsiVariable) {
       return JavaRefactoringSettings.getInstance().RENAME_SEARCH_IN_COMMENTS_FOR_VARIABLE;
     }
-    else if (element instanceof PsiPackage) {
+    else if (element instanceof PsiJavaPackage) {
       return JavaRefactoringSettings.getInstance().RENAME_SEARCH_IN_COMMENTS_FOR_PACKAGE;
     }
     return false;
@@ -288,7 +288,7 @@ public class JavaSafeDeleteProcessor extends SafeDeleteProcessorDelegateBase {
     else if (element instanceof PsiVariable) {
       JavaRefactoringSettings.getInstance().RENAME_SEARCH_IN_COMMENTS_FOR_VARIABLE = enabled;
     }
-    else if (element instanceof PsiPackage) {
+    else if (element instanceof PsiJavaPackage) {
       JavaRefactoringSettings.getInstance().RENAME_SEARCH_IN_COMMENTS_FOR_PACKAGE = enabled;
     }
   }
@@ -304,7 +304,7 @@ public class JavaSafeDeleteProcessor extends SafeDeleteProcessorDelegateBase {
     else if (element instanceof PsiVariable) {
       return JavaRefactoringSettings.getInstance().RENAME_SEARCH_FOR_TEXT_FOR_VARIABLE;
     }
-    else if (element instanceof PsiPackage) {
+    else if (element instanceof PsiJavaPackage) {
       return JavaRefactoringSettings.getInstance().RENAME_SEARCH_FOR_TEXT_FOR_PACKAGE;
     }
     return false;
@@ -321,7 +321,7 @@ public class JavaSafeDeleteProcessor extends SafeDeleteProcessorDelegateBase {
     else if (element instanceof PsiVariable) {
       JavaRefactoringSettings.getInstance().RENAME_SEARCH_FOR_TEXT_FOR_VARIABLE = enabled;
     }
-    else if (element instanceof PsiPackage) {
+    else if (element instanceof PsiJavaPackage) {
       JavaRefactoringSettings.getInstance().RENAME_SEARCH_FOR_TEXT_FOR_PACKAGE = enabled;
     }
   }

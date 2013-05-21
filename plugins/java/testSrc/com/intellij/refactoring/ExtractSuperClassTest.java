@@ -156,7 +156,7 @@ public class ExtractSuperClassTest extends RefactoringTestCase {
     if (targetPackageName == null) {
       targetDirectory = psiClass.getContainingFile().getContainingDirectory();
     } else {
-      final PsiPackage aPackage = myJavaFacade.findPackage(targetPackageName);
+      final PsiJavaPackage aPackage = myJavaFacade.findPackage(targetPackageName);
       assertNotNull(aPackage);
       targetDirectory = aPackage.getDirectories()[0];
     }
@@ -166,7 +166,7 @@ public class ExtractSuperClassTest extends RefactoringTestCase {
                                                                           psiClass, members,
                                                                           false,
                                                                           new DocCommentPolicy<PsiComment>(DocCommentPolicy.ASIS));
-    final PsiPackage targetPackage;
+    final PsiJavaPackage targetPackage;
     if (targetDirectory != null) {
       targetPackage = JavaDirectoryService.getInstance().getPackage(targetDirectory);
     }

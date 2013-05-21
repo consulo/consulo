@@ -21,7 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,10 +39,10 @@ public final class PackageElement implements Queryable, RootsProvider {
   public static final DataKey<PackageElement> DATA_KEY =  DataKey.create("package.element");
 
   @Nullable private final Module myModule;
-  @NotNull private final PsiPackage myElement;
+  @NotNull private final PsiJavaPackage myElement;
   private final boolean myIsLibraryElement;
 
-  public PackageElement(@Nullable Module module, @NotNull PsiPackage element, boolean isLibraryElement) {
+  public PackageElement(@Nullable Module module, @NotNull PsiJavaPackage element, boolean isLibraryElement) {
     myModule = module;
     myElement = element;
     myIsLibraryElement = isLibraryElement;
@@ -54,7 +54,7 @@ public final class PackageElement implements Queryable, RootsProvider {
   }
 
   @NotNull
-  public PsiPackage getPackage() {
+  public PsiJavaPackage getPackage() {
     return myElement;
   }
 
@@ -97,7 +97,7 @@ public final class PackageElement implements Queryable, RootsProvider {
 
   @Override
   public void putInfo(@NotNull Map<String, String> info) {
-    PsiPackage pkg = getPackage();
+    PsiJavaPackage pkg = getPackage();
     if (pkg instanceof Queryable) {
       ((Queryable)pkg).putInfo(info);
     }

@@ -163,7 +163,7 @@ public class FilePathReferenceProvider extends PsiReferenceProvider {
     for (VirtualFile root : sourceRoots) {
       final PsiDirectory directory = psiManager.findDirectory(root);
       if (directory != null) {
-        final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+        final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
         if (aPackage != null && aPackage.getName() != null) {
           // package prefix
           result.add(PackagePrefixFileSystemItem.create(directory));

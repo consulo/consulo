@@ -19,7 +19,11 @@ import com.intellij.ProjectTopics;
 import com.intellij.ide.highlighter.JavaClassFileType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModuleRootAdapter;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,10 +33,8 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiManagerEx;
-import com.intellij.psi.impl.file.PsiPackageImpl;
 import com.intellij.psi.impl.java.stubs.index.JavaFullClassNameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
@@ -59,7 +61,7 @@ public abstract class JavaFileManagerBase implements JavaFileManager, Disposable
   private Set<String> myNontrivialPackagePrefixes = null;
   private boolean myInitialized = false;
   private boolean myDisposed = false;
-  private final PackageIndex myPackageIndex;
+  private final DirectoryIndex myDirectoryIndex;
   protected final MessageBusConnection myConnection;
 
   public JavaFileManagerBase(
@@ -69,7 +71,7 @@ public abstract class JavaFileManagerBase implements JavaFileManager, Disposable
     myFileManager = manager.getFileManager();
     myProjectRootManager = projectRootManager;
     myUseRepository = true;
-    myPackageIndex = PackageIndex.getInstance(myManager.getProject());
+    myDirectoryIndex = DirectoryIndex.getInstance(myManager.getProject());
     myConnection = bus.connect();
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override
@@ -116,14 +118,6 @@ public abstract class JavaFileManagerBase implements JavaFileManager, Disposable
     if (!myUseRepository) {
       myNameToClassMap.clear();
     }
-  }
-
-  @Override
-  @Nullable
-  public PsiPackage findPackage(@NotNull String packageName) {
-    Query<VirtualFile> dirs = myPackageIndex.getDirsByPackageName(packageName, false);
-    if (dirs.findFirst() == null) return null;
-    return new PsiPackageImpl(myManager, packageName);
   }
 
   @Override

@@ -56,17 +56,12 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.Table;
 import com.intellij.util.ui.UIUtil;
-import org.apache.xmlrpc.IdeaAwareWebServer;
-import org.apache.xmlrpc.IdeaAwareXmlRpcServer;
-import org.apache.xmlrpc.WebServer;
-import org.apache.xmlrpc.XmlRpcServer;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.net.InetAddress;
 
 public class PeerFactoryImpl extends PeerFactory {
   private final UIHelper myUIHelper = new MyUIHelper();
@@ -231,14 +226,6 @@ public class PeerFactoryImpl extends PeerFactory {
 
   public PsiBuilder createBuilder(final ASTNode tree, final Lexer lexer, final Language lang, final CharSequence seq, final Project project) {
     return PsiBuilderFactory.getInstance().createBuilder(project, tree, lexer, lang, seq);
-  }
-
-  public XmlRpcServer createRpcServer() {
-    return new IdeaAwareXmlRpcServer();
-  }
-
-  public WebServer createWebServer(final int port, final InetAddress addr, final XmlRpcServer xmlrpc) {
-    return new IdeaAwareWebServer(port, addr, xmlrpc);
   }
 
   public EditorHighlighter createEditorHighlighter(final SyntaxHighlighter syntaxHighlighter, final EditorColorsScheme colors) {

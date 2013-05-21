@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @author mike
  */
 public interface JavadocTagInfo {
-  ExtensionPointName<JavadocTagInfo> EP_NAME = ExtensionPointName.create("com.intellij.javadocTagInfo");
+  ExtensionPointName<JavadocTagInfo> EP_NAME = ExtensionPointName.create("org.consulo.java.javadocTagInfo");
 
   @NonNls String getName();
   boolean isInline();

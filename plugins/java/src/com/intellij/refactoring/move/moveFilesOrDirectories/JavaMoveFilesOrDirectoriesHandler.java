@@ -45,10 +45,10 @@ public class JavaMoveFilesOrDirectoriesHandler extends MoveFilesOrDirectoriesHan
 
   @Override
   public PsiElement adjustTargetForMove(DataContext dataContext, PsiElement targetContainer) {
-    if (targetContainer instanceof PsiPackage) {
+    if (targetContainer instanceof PsiJavaPackage) {
       final Module module = LangDataKeys.TARGET_MODULE.getData(dataContext);
       if (module != null) {
-        final PsiDirectory[] directories = ((PsiPackage)targetContainer).getDirectories(GlobalSearchScope.moduleScope(module));
+        final PsiDirectory[] directories = ((PsiJavaPackage)targetContainer).getDirectories(GlobalSearchScope.moduleScope(module));
         if (directories.length == 1) {
           return directories[0];
         }

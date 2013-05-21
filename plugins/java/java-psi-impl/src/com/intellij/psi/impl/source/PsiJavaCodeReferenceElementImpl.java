@@ -286,8 +286,8 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
 
           return buf.toString();
         }
-        else if (target instanceof PsiPackage) {
-          return ((PsiPackage)target).getQualifiedName();
+        else if (target instanceof PsiJavaPackage) {
+          return ((PsiJavaPackage)target).getQualifiedName();
         }
         else {
           LOG.assertTrue(target == null, target);
@@ -447,7 +447,7 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
       case PACKAGE_NAME_KIND: {
         String packageName = getTextSkipWhiteSpaceAndComments();
         Project project = getManager().getProject();
-        PsiPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
+        PsiJavaPackage aPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
         if (aPackage == null || !aPackage.isValid()) {
           return JavaPsiFacade.getInstance(project).isPartOfPackagePrefix(packageName) ?
                  CandidateInfo.RESOLVE_RESULT_FOR_PACKAGE_PREFIX_PACKAGE : JavaResolveResult.EMPTY_ARRAY;
@@ -502,18 +502,18 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
         return bindToClass((PsiClass)element);
 
       case PACKAGE_NAME_KIND:
-        if (!(element instanceof PsiPackage)) {
+        if (!(element instanceof PsiJavaPackage)) {
           throw cannotBindError(element);
         }
-        return bindToPackage((PsiPackage)element);
+        return bindToPackage((PsiJavaPackage)element);
 
       case CLASS_OR_PACKAGE_NAME_KIND:
       case CLASS_FQ_OR_PACKAGE_NAME_KIND:
         if (element instanceof PsiClass) {
           return bindToClass((PsiClass)element);
         }
-        else if (element instanceof PsiPackage) {
-          return bindToPackage((PsiPackage)element);
+        else if (element instanceof PsiJavaPackage) {
+          return bindToPackage((PsiJavaPackage)element);
         }
         else {
           throw cannotBindError(element);
@@ -616,7 +616,7 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
   private boolean isFullyQualified() {
     switch (getKind()) {
       case CLASS_OR_PACKAGE_NAME_KIND:
-        if (resolve() instanceof PsiPackage) return true;
+        if (resolve() instanceof PsiJavaPackage) return true;
         //noinspection fallthrough
       case CLASS_NAME_KIND:
         break;
@@ -636,12 +636,12 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
 
     LOG.assertTrue(qualifier.getElementType() == JavaElementType.JAVA_CODE_REFERENCE);
     final PsiElement refElement = SourceTreeToPsiMap.<PsiJavaCodeReferenceElement>treeToPsiNotNull(qualifier).resolve();
-    if (refElement instanceof PsiPackage) return true;
+    if (refElement instanceof PsiJavaPackage) return true;
 
     return SourceTreeToPsiMap.<PsiJavaCodeReferenceElementImpl>treeToPsiNotNull(qualifier).isFullyQualified();
   }
 
-  private PsiElement bindToPackage(final PsiPackage aPackage) throws IncorrectOperationException {
+  private PsiElement bindToPackage(final PsiJavaPackage aPackage) throws IncorrectOperationException {
     final String qName = aPackage.getQualifiedName();
     if (qName.isEmpty()) {
       throw new IncorrectOperationException("Cannot bind to default package: "+aPackage);
@@ -667,15 +667,15 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
       }
 
       case PACKAGE_NAME_KIND: {
-        if (!(element instanceof PsiPackage)) return false;
-        final String qName = ((PsiPackage)element).getQualifiedName();
+        if (!(element instanceof PsiJavaPackage)) return false;
+        final String qName = ((PsiJavaPackage)element).getQualifiedName();
         return qName.equals(getCanonicalText());
       }
 
       case CLASS_OR_PACKAGE_NAME_KIND:
         //        if (lastChild.type != IDENTIFIER) return false;
-        if (element instanceof PsiPackage) {
-          final String qName = ((PsiPackage)element).getQualifiedName();
+        if (element instanceof PsiJavaPackage) {
+          final String qName = ((PsiJavaPackage)element).getQualifiedName();
           return qName.equals(getCanonicalText());
         }
         else if (element instanceof PsiClass) {
@@ -694,8 +694,8 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
           final String qName = ((PsiClass)element).getQualifiedName();
           return qName != null && qName.equals(getCanonicalText());
         }
-        else if (element instanceof PsiPackage) {
-          final String qName = ((PsiPackage)element).getQualifiedName();
+        else if (element instanceof PsiJavaPackage) {
+          final String qName = ((PsiJavaPackage)element).getQualifiedName();
           return qName.equals(getCanonicalText());
         }
         else {
@@ -907,8 +907,8 @@ public class PsiJavaCodeReferenceElementImpl extends CompositePsiElement impleme
           }
           return name;
         }
-        else if (target instanceof PsiPackage) {
-          return ((PsiPackage)target).getQualifiedName();
+        else if (target instanceof PsiJavaPackage) {
+          return ((PsiJavaPackage)target).getQualifiedName();
         }
         else {
           LOG.assertTrue(target == null);

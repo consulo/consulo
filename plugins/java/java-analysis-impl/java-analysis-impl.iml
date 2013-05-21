@@ -7,14 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="java-analysis-api" exported="" />
-    <orderEntry type="module" module-name="java-platform" />
-    <orderEntry type="module" module-name="analysis-api" />
-    <orderEntry type="module" module-name="analysis-impl" />
-    <orderEntry type="module" module-name="projectModel-api" />
-    <orderEntry type="module" module-name="java-psi-impl" />
-    <orderEntry type="module" module-name="projectModel-impl" />
-    <orderEntry type="module" module-name="external-system-impl" />
+    <orderEntry type="module" module-name="java" />
   </component>
 </module>
 

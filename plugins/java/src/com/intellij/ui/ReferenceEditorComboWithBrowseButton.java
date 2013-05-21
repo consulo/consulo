@@ -58,7 +58,7 @@ public class ReferenceEditorComboWithBrowseButton extends ComponentWithBrowseBut
                                          Project project,
                                          boolean isClassesAccepted, 
                                          final JavaCodeFragment.VisibilityChecker visibilityChecker) {
-    PsiPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage("");
+    PsiJavaPackage defaultPackage = JavaPsiFacade.getInstance(project).findPackage("");
     final JavaCodeFragment fragment = JavaCodeFragmentFactory.getInstance(project).createReferenceCodeFragment(text, defaultPackage, true, isClassesAccepted);
     fragment.setVisibilityChecker(visibilityChecker);
     return PsiDocumentManager.getInstance(project).getDocument(fragment);

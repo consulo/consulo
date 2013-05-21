@@ -83,7 +83,7 @@ public class MultipleRootsMoveDestination extends AutocreatingMoveDestination {
   }
 
   @Nullable
-  public String verify(PsiPackage source) {
+  public String verify(PsiJavaPackage source) {
     PsiDirectory[] directories = source.getDirectories();
     for (final PsiDirectory directory : directories) {
       String s = verify(directory);

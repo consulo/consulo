@@ -99,6 +99,6 @@ class ClsPackageStatementImpl extends ClsElementImpl implements PsiPackageStatem
 
   @Override
   public String toString() {
-    return "PsiPackageStatement:" + getPackageName();
+    return "PsiJavaPackageStatement:" + getPackageName();
   }
 }

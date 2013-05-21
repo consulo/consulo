@@ -79,7 +79,6 @@ public interface ExtensionPoints extends ToolExtensionPoints {
 
   @NonNls String INSPECTIONS_GRAPH_ANNOTATOR = "com.intellij.refGraphAnnotator";
 
-  @NonNls String DEAD_CODE_TOOL = "com.intellij.deadCode";
 
   @NonNls String JAVADOC_LOCAL = "com.intellij.javaDocNotNecessary";
 

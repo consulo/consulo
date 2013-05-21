@@ -29,13 +29,13 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 
 import javax.swing.*;
 
 public class FileStructureDialogTest extends BaseProjectViewTestCase {
   public void testFileStructureForClass() throws Exception {
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(getPackageDirectory());
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(getPackageDirectory());
     assertNotNull(aPackage);
     final PsiClass psiClass = aPackage.getClasses()[0];
     final VirtualFile virtualFile = psiClass.getContainingFile().getVirtualFile();

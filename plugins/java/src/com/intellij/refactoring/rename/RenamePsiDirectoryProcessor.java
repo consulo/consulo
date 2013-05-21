@@ -78,7 +78,7 @@ public class RenamePsiDirectoryProcessor extends RenamePsiElementProcessor {
   }
 
   public String getQualifiedNameAfterRename(final PsiElement element, final String newName, final boolean nonJava) {
-    PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(((PsiDirectory)element));
+    PsiJavaPackage psiPackage = JavaDirectoryService.getInstance().getPackage(((PsiDirectory)element));
     if (psiPackage != null) {
       return RenamePsiPackageProcessor.getPackageQualifiedNameAfterRename(psiPackage, newName, nonJava);
     }
@@ -97,7 +97,7 @@ public class RenamePsiDirectoryProcessor extends RenamePsiElementProcessor {
   @Nullable
   @Override
   public PsiElement getElementToSearchInStringsAndComments(PsiElement element) {
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory) element);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory) element);
     if (aPackage != null) return aPackage;
     return null;
   }

@@ -128,7 +128,7 @@ class CopyClassDialog extends DialogWrapper{
   protected String getQualifiedName() {
     String qualifiedName = "";
     if (myDefaultTargetDirectory != null) {
-      final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(myDefaultTargetDirectory);
+      final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(myDefaultTargetDirectory);
       if (aPackage != null) {
         qualifiedName = aPackage.getQualifiedName();
       }

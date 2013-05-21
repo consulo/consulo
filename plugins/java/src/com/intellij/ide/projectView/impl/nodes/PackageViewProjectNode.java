@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,19 +61,19 @@ public class PackageViewProjectNode extends AbstractProjectNode {
 
       final PsiManager psiManager = PsiManager.getInstance(myProject);
       final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-      final Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
+      final Set<PsiJavaPackage> topLevelPackages = new HashSet<PsiJavaPackage>();
 
       for (final VirtualFile root : sourceRoots) {
         final PsiDirectory directory = psiManager.findDirectory(root);
         if (directory == null) {
           continue;
         }
-        final PsiPackage directoryPackage = JavaDirectoryService.getInstance().getPackage(directory);
+        final PsiJavaPackage directoryPackage = JavaDirectoryService.getInstance().getPackage(directory);
         if (directoryPackage == null || PackageUtil.isPackageDefault(directoryPackage)) {
           // add subpackages
           final PsiDirectory[] subdirectories = directory.getSubdirectories();
           for (PsiDirectory subdirectory : subdirectories) {
-            final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(subdirectory);
+            final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(subdirectory);
             if (aPackage != null && !PackageUtil.isPackageDefault(aPackage)) {
               topLevelPackages.add(aPackage);
             }
@@ -87,7 +87,7 @@ public class PackageViewProjectNode extends AbstractProjectNode {
         }
       }
 
-      for (final PsiPackage psiPackage : topLevelPackages) {
+      for (final PsiJavaPackage psiPackage : topLevelPackages) {
         PackageUtil.addPackageAsChild(children, psiPackage, null, getSettings(), false);
       }
 

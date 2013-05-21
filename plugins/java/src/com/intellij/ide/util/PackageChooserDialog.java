@@ -43,6 +43,7 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import com.intellij.psi.PsiJavaPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -109,8 +110,8 @@ public class PackageChooserDialog extends PackageChooser {
           if (value instanceof DefaultMutableTreeNode) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
             Object object = node.getUserObject();
-            if (object instanceof PsiPackage) {
-              String name = ((PsiPackage)object).getName();
+            if (object instanceof PsiJavaPackage) {
+              String name = ((PsiJavaPackage)object).getName();
               if (name != null && name.length() > 0) {
                 setText(name);
               }
@@ -131,7 +132,7 @@ public class PackageChooserDialog extends PackageChooser {
       public String convert(TreePath path) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
         Object object = node.getUserObject();
-        if (object instanceof PsiPackage) return ((PsiPackage)object).getName();
+        if (object instanceof PsiJavaPackage) return ((PsiJavaPackage)object).getName();
         else
           return "";
       }
@@ -139,7 +140,7 @@ public class PackageChooserDialog extends PackageChooser {
 
     myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
       public void valueChanged(TreeSelectionEvent e) {
-        PsiPackage selection = getTreeSelection();
+        PsiJavaPackage selection = getTreeSelection();
         if (selection != null) {
           String name = selection.getQualifiedName();
           setTitle(myTitle + " - " + ("".equals(name) ? IdeBundle.message("node.default.package") : name));
@@ -183,12 +184,12 @@ public class PackageChooserDialog extends PackageChooser {
     return myTree;
   }
 
-  public PsiPackage getSelectedPackage(){
+  public PsiJavaPackage getSelectedPackage(){
     return getTreeSelection();
   }
 
-  public List<PsiPackage> getSelectedPackages() {
-    return TreeUtil.collectSelectedObjectsOfType(myTree, PsiPackage.class);
+  public List<PsiJavaPackage> getSelectedPackages() {
+    return TreeUtil.collectSelectedObjectsOfType(myTree, PsiJavaPackage.class);
   }
 
   public void selectPackage(final String qualifiedName) {
@@ -204,12 +205,12 @@ public class PackageChooserDialog extends PackageChooser {
   }
 
   @Nullable
-  private PsiPackage getTreeSelection() {
+  private PsiJavaPackage getTreeSelection() {
     if (myTree == null) return null;
     TreePath path = myTree.getSelectionPath();
     if (path == null) return null;
     DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-    return (PsiPackage)node.getUserObject();
+    return (PsiJavaPackage)node.getUserObject();
   }
 
   private void createTreeModel() {
@@ -221,7 +222,7 @@ public class PackageChooserDialog extends PackageChooser {
           if (fileOrDir.isDirectory() && fileIndex.isInSourceContent(fileOrDir)){
             final PsiDirectory psiDirectory = psiManager.findDirectory(fileOrDir);
             LOG.assertTrue(psiDirectory != null);
-            PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
+            PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
             if (aPackage != null){
               addPackage(aPackage);
             }
@@ -243,9 +244,9 @@ public class PackageChooserDialog extends PackageChooser {
   }
 
   @NotNull
-  private DefaultMutableTreeNode addPackage(PsiPackage aPackage) {
+  private DefaultMutableTreeNode addPackage(PsiJavaPackage aPackage) {
     final String qualifiedPackageName = aPackage.getQualifiedName();
-    final PsiPackage parentPackage = aPackage.getParentPackage();
+    final PsiJavaPackage parentPackage = aPackage.getParentPackage();
     if (parentPackage == null) {
       final DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)myModel.getRoot();
       if (qualifiedPackageName.length() == 0) {
@@ -276,7 +277,7 @@ public class PackageChooserDialog extends PackageChooser {
   private static DefaultMutableTreeNode findPackageNode(DefaultMutableTreeNode rootNode, String qualifiedName) {
     for (int i = 0; i < rootNode.getChildCount(); i++) {
       final DefaultMutableTreeNode child = (DefaultMutableTreeNode)rootNode.getChildAt(i);
-      final PsiPackage nodePackage = (PsiPackage)child.getUserObject();
+      final PsiJavaPackage nodePackage = (PsiJavaPackage)child.getUserObject();
       if (nodePackage != null) {
         if (Comparing.equal(nodePackage.getQualifiedName(), qualifiedName)) return child;
       }
@@ -291,7 +292,7 @@ public class PackageChooserDialog extends PackageChooser {
       Object o = enumeration.nextElement();
       if (o instanceof DefaultMutableTreeNode) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
-        PsiPackage nodePackage = (PsiPackage)node.getUserObject();
+        PsiJavaPackage nodePackage = (PsiJavaPackage)node.getUserObject();
         if (nodePackage != null) {
           if (Comparing.equal(nodePackage.getQualifiedName(), qualifiedPackageName)) return node;
         }
@@ -301,7 +302,7 @@ public class PackageChooserDialog extends PackageChooser {
   }
 
   private void createNewPackage() {
-    final PsiPackage selectedPackage = getTreeSelection();
+    final PsiJavaPackage selectedPackage = getTreeSelection();
     if (selectedPackage == null) return;
 
     final String newPackageName = Messages.showInputDialog(myProject, IdeBundle.message("prompt.enter.a.new.package.name"), IdeBundle.message("title.new.package"), Messages.getQuestionIcon(), "",
@@ -327,7 +328,7 @@ public class PackageChooserDialog extends PackageChooser {
                   newQualifiedName += newPackageName;
                   final PsiDirectory dir = PackageUtil.findOrCreateDirectoryForPackage(myProject, newQualifiedName, null, false);
                   if (dir == null) return;
-                  final PsiPackage newPackage = JavaDirectoryService.getInstance().getPackage(dir);
+                  final PsiJavaPackage newPackage = JavaDirectoryService.getInstance().getPackage(dir);
 
                   DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getSelectionPath().getLastPathComponent();
                   final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode();

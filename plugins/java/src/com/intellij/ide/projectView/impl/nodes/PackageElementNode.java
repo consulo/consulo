@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,12 +83,12 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     if (value == null) return Collections.emptyList();
     final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     final Module module = value.getModule();
-    final PsiPackage aPackage = value.getPackage();
+    final PsiJavaPackage aPackage = value.getPackage();
 
     if (!getSettings().isFlattenPackages()) {
 
-      final PsiPackage[] subpackages = PackageUtil.getSubpackages(aPackage, module, myProject, isLibraryElement());
-      for (PsiPackage subpackage : subpackages) {
+      final PsiJavaPackage[] subpackages = PackageUtil.getSubpackages(aPackage, module, myProject, isLibraryElement());
+      for (PsiJavaPackage subpackage : subpackages) {
         PackageUtil.addPackageAsChild(children, subpackage, module, getSettings(), isLibraryElement());
       }
     }
@@ -113,7 +113,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
 
   private void updateValidData(final PresentationData presentation) {
     final PackageElement value = getValue();
-    final PsiPackage aPackage = value.getPackage();
+    final PsiJavaPackage aPackage = value.getPackage();
 
     if (!getSettings().isFlattenPackages()
         && getSettings().isHideEmptyMiddlePackages()
@@ -122,7 +122,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
       return;
     }
 
-    PsiPackage parentPackage;
+    PsiJavaPackage parentPackage;
     Object parentValue = getParentValue();
     if (parentValue instanceof PackageElement) {
       parentPackage = ((PackageElement)parentValue).getPackage();
@@ -141,7 +141,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     }
   }
 
-  private boolean showFQName(final PsiPackage aPackage) {
+  private boolean showFQName(final PsiJavaPackage aPackage) {
     return getSettings().isFlattenPackages() && !aPackage.getQualifiedName().isEmpty();
   }
 
@@ -149,7 +149,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
   public String getTestPresentation() {
     final PresentationData presentation = new PresentationData();
     update(presentation);
-    return "PsiPackage: " + presentation.getPresentableText();
+    return "PsiJavaPackage: " + presentation.getPresentableText();
   }
 
   @Override

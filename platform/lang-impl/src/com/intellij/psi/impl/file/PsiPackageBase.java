@@ -26,24 +26,23 @@ import com.intellij.psi.impl.PsiElementBase;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.RowIcon;
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.*;
+import com.intellij.util.containers.HashMap;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class PsiPackageBase extends PsiElementBase implements PsiPackage, Queryable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.PsiPackageBase");
 
-  private final PsiManager myManager;
+  protected final PsiManager myManager;
   private final PsiPackageManager myPackageManager;
   private final String myQualifiedName;
 
@@ -113,6 +112,17 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
   }
 
+  @Nullable
+  @Override
+  public PsiQualifiedNamedElement getContainer() {
+    return getParentPackage();
+  }
+
+  @Override
+  public void handleQualifiedNameChange(@NotNull String newQualifiedName) {
+
+  }
+
   @Override
   @Nullable
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
@@ -142,6 +152,41 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     else {
       return myPackageManager.findPackage(myQualifiedName.substring(0, lastDot));
     }
+  }
+
+  @NotNull
+  @Override
+  public PsiPackage[] getSubPackages() {
+    return getSubPackages(GlobalSearchScope.allScope(getProject()));
+  }
+
+  @NotNull
+  @Override
+  public PsiPackage[] getSubPackages(@NotNull GlobalSearchScope scope) {
+    return getSubPackages(this, scope);
+  }
+
+  protected abstract ArrayFactory<? extends PsiPackage> getPackageArrayFactory();
+
+  @NotNull
+  public PsiPackage[] getSubPackages(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+    final Map<String, PsiPackage> packagesMap = new HashMap<String, PsiPackage>();
+    final String qualifiedName = psiPackage.getQualifiedName();
+    for (PsiDirectory dir : psiPackage.getDirectories(scope)) {
+      PsiDirectory[] subDirs = dir.getSubdirectories();
+      for (PsiDirectory subDir : subDirs) {
+        final PsiPackage aPackage = myPackageManager.findPackage(subDir);
+        if (aPackage != null) {
+          final String subQualifiedName = aPackage.getQualifiedName();
+          if (subQualifiedName.startsWith(qualifiedName) && !packagesMap.containsKey(subQualifiedName)) {
+            packagesMap.put(aPackage.getQualifiedName(), aPackage);
+          }
+        }
+      }
+    }
+
+    packagesMap.remove(qualifiedName);    // avoid SOE caused by returning a package as a subpackage of itself
+    return ContainerUtil.toArray(packagesMap.values(), getPackageArrayFactory());
   }
 
   @Override

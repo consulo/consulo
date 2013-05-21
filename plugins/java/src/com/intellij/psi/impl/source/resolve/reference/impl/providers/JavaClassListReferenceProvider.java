@@ -19,7 +19,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
@@ -70,8 +70,8 @@ public class JavaClassListReferenceProvider extends JavaClassReferenceProvider {
         final Set<String> knownTopLevelPackages = new HashSet<String>();
         final List<PsiElement> defaultPackages = getDefaultPackages(position.getProject());
         for (final PsiElement pack : defaultPackages) {
-          if (pack instanceof PsiPackage) {
-            knownTopLevelPackages.add(((PsiPackage)pack).getName());
+          if (pack instanceof PsiJavaPackage) {
+            knownTopLevelPackages.add(((PsiJavaPackage)pack).getName());
           }
         }
         return knownTopLevelPackages;

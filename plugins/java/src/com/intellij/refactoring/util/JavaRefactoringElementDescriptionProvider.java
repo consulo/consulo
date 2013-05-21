@@ -64,8 +64,8 @@ public class JavaRefactoringElementDescriptionProvider implements ElementDescrip
       return RefactoringBundle.message("local.variable.description", CommonRefactoringUtil.htmlEmphasize(((PsiVariable)element).getName()));
     }
 
-    if (element instanceof PsiPackage) {
-      return RefactoringBundle.message("package.description", CommonRefactoringUtil.htmlEmphasize(((PsiPackage)element).getName()));
+    if (element instanceof PsiJavaPackage) {
+      return RefactoringBundle.message("package.description", CommonRefactoringUtil.htmlEmphasize(((PsiJavaPackage)element).getName()));
     }
 
     if ((element instanceof PsiClass)) {

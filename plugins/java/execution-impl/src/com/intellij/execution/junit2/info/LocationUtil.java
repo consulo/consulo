@@ -20,7 +20,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 2/20/12
  */
 public class LocationUtil {
-  public static boolean isJarAttached(@NotNull Location location, @NotNull final PsiPackage aPackage, final String fqn) {
+  public static boolean isJarAttached(@NotNull Location location, @NotNull final PsiJavaPackage aPackage, final String fqn) {
     return isJarAttached(location, fqn, aPackage.getDirectories());
   }
 

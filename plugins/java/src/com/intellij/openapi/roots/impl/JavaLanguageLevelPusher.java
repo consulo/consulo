@@ -16,9 +16,10 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.fileTypes.StdFileTypes;
-import com.intellij.openapi.module.LanguageLevelUtil;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
@@ -26,6 +27,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.messages.MessageBus;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
@@ -65,12 +67,19 @@ public class JavaLanguageLevelPusher implements FilePropertyPusher<LanguageLevel
 
   @Override
   public LanguageLevel getImmediateValue(Project project, VirtualFile file) {
-    return null;
+    final Module moduleForFile = ModuleUtil.findModuleForFile(file, project);
+    if(moduleForFile == null) {
+      return null;
+    }
+    return getImmediateValue(moduleForFile);
   }
 
   @Override
   public LanguageLevel getImmediateValue(Module module) {
-    return LanguageLevelUtil.getEffectiveLanguageLevel(module);
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+
+    final JavaModuleExtension extension = moduleRootManager.getExtension(JavaModuleExtension.class);
+    return extension == null ? null : extension.getLanguageLevel();
   }
 
   @Override

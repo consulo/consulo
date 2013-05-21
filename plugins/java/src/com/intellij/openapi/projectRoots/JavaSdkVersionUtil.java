@@ -16,9 +16,10 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.psi.PsiElement;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 
 /**
  * User: anna
@@ -28,8 +29,8 @@ public class JavaSdkVersionUtil {
   public static boolean isAtLeast(PsiElement element, JavaSdkVersion minVersion) {
     final Module module = ModuleUtilCore.findModuleForPsiElement(element);
     if (module != null) {
-      final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
-      if (sdk != null && sdk.getSdkType() instanceof JavaSdk) {
+      final Sdk sdk = ModuleUtil.getSdk(module, JavaModuleExtension.class);
+      if (sdk != null) {
         final JavaSdkVersion version = JavaSdk.getInstance().getVersion(sdk);
         return version != null && version.isAtLeast(minVersion);
       }

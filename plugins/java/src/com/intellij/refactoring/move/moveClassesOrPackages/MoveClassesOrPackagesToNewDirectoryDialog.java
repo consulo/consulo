@@ -110,8 +110,8 @@ public class MoveClassesOrPackagesToNewDirectoryDialog extends DialogWrapper {
       final Module destinationModule = fileIndex.getModuleForFile(directory.getVirtualFile());
       boolean sameModule = true;
       for (PsiElement element : elementsToMove) {
-        if (element instanceof PsiPackage) {
-          for (PsiDirectory psiDirectory : ((PsiPackage)element).getDirectories()) {
+        if (element instanceof PsiJavaPackage) {
+          for (PsiDirectory psiDirectory : ((PsiJavaPackage)element).getDirectories()) {
             final VirtualFile virtualFile = psiDirectory.getVirtualFile();
             sourceRoots.add(fileIndex.getSourceRootForFile(virtualFile));
             //sameModule &= destinationModule == fileIndex.getModuleForFile(virtualFile);
@@ -170,7 +170,7 @@ public class MoveClassesOrPackagesToNewDirectoryDialog extends DialogWrapper {
     }
 
     super.doOKAction();
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     if (aPackage == null) {
       Messages.showErrorDialog(project, RefactoringBundle.message("destination.directory.does.not.correspond.to.any.package"),
                                RefactoringBundle.message("cannot.move"));
@@ -191,7 +191,7 @@ public class MoveClassesOrPackagesToNewDirectoryDialog extends DialogWrapper {
     return myDestDirectoryField.getTextField();
   }
 
-  protected void performRefactoring(Project project, PsiDirectory directory, PsiPackage aPackage,
+  protected void performRefactoring(Project project, PsiDirectory directory, PsiJavaPackage aPackage,
                                     boolean searchInComments,
                                     boolean searchForTextOccurences) {
     final VirtualFile sourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(directory.getVirtualFile());

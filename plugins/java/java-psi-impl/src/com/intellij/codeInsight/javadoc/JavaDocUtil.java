@@ -75,7 +75,7 @@ public class JavaDocUtil {
       if (aClass == null) aClass = facade.findClass(refText, context.getResolveScope());
 
       if (aClass != null) return aClass.getNavigationElement();
-      PsiPackage aPackage = facade.findPackage(refText);
+      PsiJavaPackage aPackage = facade.findPackage(refText);
       if (aPackage!=null) return aPackage;
       return null;
     }
@@ -179,8 +179,8 @@ public class JavaDocUtil {
 
   @Nullable
   public static String getReferenceText(Project project, PsiElement element) {
-    if (element instanceof PsiPackage) {
-      return ((PsiPackage)element).getQualifiedName();
+    if (element instanceof PsiJavaPackage) {
+      return ((PsiJavaPackage)element).getQualifiedName();
     }
     else if (element instanceof PsiClass) {
       final String refText = ((PsiClass)element).getQualifiedName();

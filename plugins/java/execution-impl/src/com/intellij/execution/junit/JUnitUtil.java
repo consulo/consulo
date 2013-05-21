@@ -265,7 +265,7 @@ public class JUnitUtil {
     return JavaPsiFacade.getInstance(project).findClass(qualifiedName, scope);
   }
 
-  public static PsiPackage getContainingPackage(final PsiClass psiClass) {
+  public static PsiJavaPackage getContainingPackage(final PsiClass psiClass) {
     return JavaDirectoryService.getInstance().getPackage(psiClass.getContainingFile().getContainingDirectory());
   }
 

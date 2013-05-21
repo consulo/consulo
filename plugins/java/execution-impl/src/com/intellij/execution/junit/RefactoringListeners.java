@@ -28,9 +28,9 @@ import com.intellij.refactoring.listeners.UndoRefactoringElementListener;
 import org.jetbrains.annotations.NotNull;
 
 public class RefactoringListeners {
-  public static RefactoringElementListener getListener(final PsiPackage psiPackage, final Accessor<PsiPackage> accessor) {
+  public static RefactoringElementListener getListener(final PsiJavaPackage psiPackage, final Accessor<PsiJavaPackage> accessor) {
     final StringBuilder path = new StringBuilder();
-    for (PsiPackage parent = accessor.getPsiElement(); parent != null; parent = parent.getParentPackage()) {
+    for (PsiJavaPackage parent = accessor.getPsiElement(); parent != null; parent = parent.getParentPackage()) {
       if (parent.equals(psiPackage)) return new RefactorPackage(accessor, path.toString());
       if (path.length() > 0) path.insert(0, '.');
       path.insert(0, parent.getName());
@@ -52,10 +52,10 @@ public class RefactoringListeners {
 
   public static RefactoringElementListener getClassOrPackageListener(final PsiElement element, final Accessor<PsiClass> accessor) {
     if (element instanceof PsiClass) return getListeners((PsiClass)element, accessor);
-    if (element instanceof PsiPackage) {
+    if (element instanceof PsiJavaPackage) {
       final PsiClass aClass = accessor.getPsiElement();
       if (aClass == null) return null;
-      return getListener((PsiPackage)element, new ClassPackageAccessor(accessor));
+      return getListener((PsiJavaPackage)element, new ClassPackageAccessor(accessor));
     }
     return null;
 
@@ -122,16 +122,16 @@ public class RefactoringListeners {
     }
   }
 
-  private static class RefactorPackage extends RenameElement<PsiPackage> {
-    public RefactorPackage(final Accessor<PsiPackage> accessor, final String path) {
+  private static class RefactorPackage extends RenameElement<PsiJavaPackage> {
+    public RefactorPackage(final Accessor<PsiJavaPackage> accessor, final String path) {
       super(accessor, path);
     }
 
-    public PsiPackage findNewElement(final PsiPackage psiPackage, final String qualifiedName) {
+    public PsiJavaPackage findNewElement(final PsiJavaPackage psiPackage, final String qualifiedName) {
       return JavaPsiFacade.getInstance(psiPackage.getProject()).findPackage(qualifiedName);
     }
 
-    public String getQualifiedName(final PsiPackage psiPackage) {
+    public String getQualifiedName(final PsiJavaPackage psiPackage) {
       return psiPackage.getQualifiedName();
     }
   }
@@ -151,8 +151,8 @@ public class RefactoringListeners {
     }
   }
 
-  private static class ClassPackageAccessor implements RefactoringListeners.Accessor<PsiPackage> {
-    private final PsiPackage myContainingPackage;
+  private static class ClassPackageAccessor implements RefactoringListeners.Accessor<PsiJavaPackage> {
+    private final PsiJavaPackage myContainingPackage;
     private final Module myModule;
     private final RefactoringListeners.Accessor<PsiClass> myAccessor;
     private final String myInpackageName;
@@ -179,11 +179,11 @@ public class RefactoringListeners {
       }
     }
 
-    public PsiPackage getPsiElement() {
+    public PsiJavaPackage getPsiElement() {
       return myContainingPackage;
     }
 
-    public void setPsiElement(final PsiPackage psiPackage) {
+    public void setPsiElement(final PsiJavaPackage psiPackage) {
       if (myInpackageName == null) return; //we can do nothing
       final String classQName = getClassQName(psiPackage.getQualifiedName());
       final PsiClass newClass = JUnitUtil.findPsiClass(classQName, myModule, psiPackage.getProject());

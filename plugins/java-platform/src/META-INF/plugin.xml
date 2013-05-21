@@ -19,11 +19,26 @@
   <version>1.0</version>
   <vendor>Consulo</vendor>
 
+  <extensionPoints>
+    <extensionPoint name="augmentProvider" interface="com.intellij.psi.augment.PsiAugmentProvider"/>
+
+    <extensionPoint name="allOverridingMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="annotatedElementsSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="annotatedPackagesSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="deepestSuperMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="directClassInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="methodReferencesSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="overridingMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="superMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
+  </extensionPoints>
+
+
+
   <extensions defaultExtensionNs="com.intellij">
     <moduleExtensionProvider id="java" key="java" implementationClass="org.consulo.java.platform.module.extension.JavaModuleExtensionProvider" />
 
-    <psi.packageSupportProvider implementation="org.consulo.java.platform.psi.impl.JavaPsiPackageSupportProvider" />
-
-    <sdkType implementation="org.consulo.java.platform.module.sdk.JavaSdkType" />
+   <!--    <-->
   </extensions>
 </idea-plugin>

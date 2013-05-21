@@ -16,18 +16,18 @@
 package com.intellij.psi.impl.migration;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiPackage;
 import com.intellij.psi.impl.file.PsiPackageImpl;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author dsl
  */
-public class MigrationPackageImpl extends PsiPackageImpl implements PsiPackage {
+public class MigrationPackageImpl extends PsiPackageImpl {
   private final PsiMigrationImpl myMigration;
 
-  public MigrationPackageImpl(PsiMigrationImpl migration, String qualifiedName) {
-    super(migration.getManager(), qualifiedName);
+  public MigrationPackageImpl(PsiMigrationImpl migration, PsiPackageManager manager, String qualifiedName) {
+    super(migration.getManager(), manager, qualifiedName);
     myMigration = migration;
   }
 

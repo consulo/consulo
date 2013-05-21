@@ -32,8 +32,8 @@ public class JavaUsageViewDescriptionProvider implements ElementDescriptionProvi
     }
 
     if (location instanceof UsageViewLongNameLocation) {
-      if (element instanceof PsiPackage) {
-        return ((PsiPackage)element).getQualifiedName();
+      if (element instanceof PsiJavaPackage) {
+        return ((PsiJavaPackage)element).getQualifiedName();
       }
       else if (element instanceof PsiClass) {
         if (element instanceof PsiAnonymousClass) {

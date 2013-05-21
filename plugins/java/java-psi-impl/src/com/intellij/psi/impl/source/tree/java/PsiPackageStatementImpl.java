@@ -99,6 +99,6 @@ public class PsiPackageStatementImpl extends CompositePsiElement implements PsiP
   }
 
   public String toString() {
-    return "PsiPackageStatement:" + getPackageName();
+    return "PsiJavaPackageStatement:" + getPackageName();
   }
 }

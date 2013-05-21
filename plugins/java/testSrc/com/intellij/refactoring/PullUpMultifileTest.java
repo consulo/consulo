@@ -65,7 +65,7 @@ public class PullUpMultifileTest extends MultiFileTestCase {
         membersToMove[0] = memberInfo;
 
         final PsiDirectory targetDirectory = targetClass.getContainingFile().getContainingDirectory();
-        final PsiPackage targetPackage = targetDirectory != null ? JavaDirectoryService.getInstance().getPackage(targetDirectory) : null;
+        final PsiJavaPackage targetPackage = targetDirectory != null ? JavaDirectoryService.getInstance().getPackage(targetDirectory) : null;
         conflictsMap.putAllValues(
           PullUpConflictsUtil.checkConflicts(membersToMove, srcClass, targetClass, targetPackage, targetDirectory, new InterfaceContainmentVerifier() {
             @Override
