@@ -52,6 +52,9 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
       return null;
     }
     final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(getModule().getProject()).getProjectJdksModel();
+    if(!projectJdksModel.isInitialized())   {
+      projectJdksModel.reset(getModule().getProject());
+    }
     final Sdk sdk = projectJdksModel.findSdk(mySdkName);
     if(sdk == null || sdk.getSdkType() != getSdkType()) {
       return null;
