@@ -373,13 +373,10 @@ public class JavaSdkImpl extends JavaSdk {
   public static void attachJdkAnnotations(@NotNull SdkModificator modificator) {
     LocalFileSystem lfs = LocalFileSystem.getInstance();
     // community idea under idea
-    VirtualFile root = lfs.findFileByPath(FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/java/jdkAnnotations");
+    VirtualFile root = lfs.findFileByPath(FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/jdkAnnotations");
 
-    if (root == null) {  // idea under idea
-      root = lfs.findFileByPath(FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/community/java/jdkAnnotations");
-    }
     if (root == null) { // build
-      root = VirtualFileManager.getInstance().findFileByUrl("jar://"+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/lib/jdkAnnotations.jar!/");
+      root = VirtualFileManager.getInstance().findFileByUrl("jar://"+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/lib/jdk-annotations.jar!/");
     }
     if (root == null) {
       LOG.error("jdk annotations not found in: "+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/lib/jdkAnnotations.jar!/");
