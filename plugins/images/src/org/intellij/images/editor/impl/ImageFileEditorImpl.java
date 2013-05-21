@@ -30,6 +30,7 @@ import org.intellij.images.editor.ImageZoomModel;
 import org.intellij.images.options.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -124,7 +125,13 @@ final class ImageFileEditorImpl extends UserDataHolderBase implements ImageFileE
         return null;
     }
 
-    public void dispose() {
+  @Nullable
+  @Override
+  public VirtualFile getVirtualFile() {
+    return imageEditor.getFile();
+  }
+
+  public void dispose() {
         VirtualFileManager.getInstance().removeVirtualFileListener(imageEditor);
         ImageEditorManagerImpl.releaseImageEditor(imageEditor);
     }

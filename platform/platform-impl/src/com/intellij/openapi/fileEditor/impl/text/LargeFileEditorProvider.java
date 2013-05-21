@@ -27,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -146,6 +147,12 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
     @Override
     public StructureViewBuilder getStructureViewBuilder() {
       return null;
+    }
+
+    @Nullable
+    @Override
+    public VirtualFile getVirtualFile() {
+      return myFile;
     }
 
     @Override

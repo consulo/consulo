@@ -25,6 +25,7 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NotNull;
@@ -171,6 +172,12 @@ public class HttpFileEditor implements TextEditor {
     if (textEditor != null) {
       return textEditor.getStructureViewBuilder();
     }
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getVirtualFile() {
     return null;
   }
 

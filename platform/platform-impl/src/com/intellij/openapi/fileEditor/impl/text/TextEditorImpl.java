@@ -25,6 +25,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -153,6 +154,12 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null || !file.isValid()) return null;
     return StructureViewBuilder.PROVIDER.getStructureViewBuilder(file.getFileType(), file, myProject);
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getVirtualFile() {
+    return FileDocumentManager.getInstance().getFile(myComponent.getEditor().getDocument());
   }
 
   @Override

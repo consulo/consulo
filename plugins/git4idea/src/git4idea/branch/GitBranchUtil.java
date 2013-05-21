@@ -21,12 +21,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.ui.Messages;
@@ -47,7 +45,6 @@ import git4idea.config.GitVcsSettings;
 import git4idea.repo.*;
 import git4idea.ui.branch.GitMultiRootBranchConfig;
 import git4idea.validators.GitNewBranchNameValidator;
-import org.intellij.images.editor.ImageFileEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -375,12 +372,7 @@ public class GitBranchUtil {
     final FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(project, statusBar);
     VirtualFile result = null;
     if (fileEditor != null) {
-      if (fileEditor instanceof TextEditor) {
-        Document document = ((TextEditor)fileEditor).getEditor().getDocument();
-        result = FileDocumentManager.getInstance().getFile(document);
-      } else if (fileEditor instanceof ImageFileEditor) {
-        result = ((ImageFileEditor)fileEditor).getImageEditor().getFile();
-      }
+      result = fileEditor.getVirtualFile();
     }
 
     if (result == null) {

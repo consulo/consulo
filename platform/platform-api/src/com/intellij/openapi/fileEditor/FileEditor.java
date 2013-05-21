@@ -19,6 +19,7 @@ import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.UserDataHolder;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,4 +130,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
 
   @Nullable
   StructureViewBuilder getStructureViewBuilder();
+
+  @Nullable
+  VirtualFile getVirtualFile();
 }

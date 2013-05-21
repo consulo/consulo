@@ -255,6 +255,12 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
       return StructureViewBuilder.PROVIDER.getStructureViewBuilder(file.getFileType(), file, project);
     }
 
+    @Nullable
+    @Override
+    public VirtualFile getVirtualFile() {
+      return null;
+    }
+
     @Override
     @NotNull
     public FileEditorState getState(@NotNull FileEditorStateLevel level) {
