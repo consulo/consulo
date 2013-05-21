@@ -41,4 +41,7 @@ public abstract class PsiPackageManager {
   public abstract PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass);
 
   public abstract boolean findAnyPackage(@NotNull PsiDirectory directory);
+
+  @NotNull
+  public abstract Project getProject();
 }

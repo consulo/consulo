@@ -3994,6 +3994,7 @@
     <extensionPoint name="testFramework" interface="com.intellij.testIntegration.TestFramework"/>
     <extensionPoint name="unusedDeclarationFixProvider"
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
+    <extensionPoint name="psi.packageResolver" interface="org.consulo.psi.PsiPackageResolver" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -5556,5 +5557,7 @@
     <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
 
     <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider"/>
+    <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver" />
+    <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver" />
   </extensions>
 </idea-plugin>

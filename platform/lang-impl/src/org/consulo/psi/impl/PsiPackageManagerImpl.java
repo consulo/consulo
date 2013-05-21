@@ -16,7 +16,6 @@
 package org.consulo.psi.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -35,11 +34,10 @@ import com.intellij.util.messages.MessageBus;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
-import org.consulo.psi.PsiPackageSupportProvider;
+import org.consulo.psi.PsiPackageResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
@@ -96,14 +94,14 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     ConcurrentMap<String, PsiPackage> map = myPackageCache.get(extensionClass);
     if (map != null) {
       final PsiPackage psiPackage = map.get(qualifiedName);
-      if(psiPackage != null) {
+      if (psiPackage != null) {
         return psiPackage;
       }
     }
 
     final PsiPackage newPackage = createPackage(qualifiedName, extensionClass);
     if (newPackage != null) {
-      if(map == null) {
+      if (map == null) {
         myPackageCache.put(extensionClass, map = new ConcurrentHashMap<String, PsiPackage>());
       }
 
@@ -119,26 +117,11 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
       return null;
     }
 
-    PsiManager psiManager = PsiManager.getInstance(myProject);
-    final Iterator<VirtualFile> iterator = dirs.iterator();
-    while (iterator.hasNext()) {
-      final VirtualFile next = iterator.next();
-
-      final Module moduleForFile = ModuleUtil.findModuleForFile(next, myProject);
-      if (moduleForFile == null) {
-        continue;
-      }
-
-      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForFile);
-
-      final ModuleExtension extension = moduleRootManager.getExtension(extensionClass);
-      if (extension == null) {
-        continue;
-      }
-
-      for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
-        if (p.isSupported(extension)) {
-          return p.createPackage(psiManager, this, extensionClass, qualifiedName);
+    for (VirtualFile next : dirs) {
+      for (PsiPackageResolver psiPackageResolver : PsiPackageResolver.EP_NAME.getExtensions()) {
+        final PsiPackage psiPackage = psiPackageResolver.resolvePackage(this, next, extensionClass, qualifiedName);
+        if (psiPackage != null) {
+          return psiPackage;
         }
       }
     }
@@ -165,17 +148,23 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     }
 
     Module module = ModuleUtilCore.findModuleForPsiElement(directory);
-    if(module == null) {
+    if (module == null) {
       return false;
     }
 
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-    for(ModuleExtension moduleExtension : rootManager.getExtensions()) {
+    for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
       final PsiPackage aPackage = findPackage(packageName, moduleExtension.getClass());
-      if(aPackage != null) {
+      if (aPackage != null) {
         return true;
       }
     }
     return false;
+  }
+
+  @NotNull
+  @Override
+  public Project getProject() {
+    return myProject;
   }
 }

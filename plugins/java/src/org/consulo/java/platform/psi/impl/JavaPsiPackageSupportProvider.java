@@ -29,9 +29,10 @@ import org.jetbrains.annotations.NotNull;
  * @since 8:43/20.05.13
  */
 public class JavaPsiPackageSupportProvider implements PsiPackageSupportProvider {
+  @NotNull
   @Override
-  public boolean isSupported(@NotNull ModuleExtension moduleExtension) {
-    return moduleExtension instanceof JavaModuleExtension;
+  public Class<? extends ModuleExtension> getSupportedModuleExtensionClass() {
+    return JavaModuleExtension.class;
   }
 
   @NotNull

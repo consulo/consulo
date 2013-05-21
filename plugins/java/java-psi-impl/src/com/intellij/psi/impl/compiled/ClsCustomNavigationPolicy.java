@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 3/2/12
  */
 public interface ClsCustomNavigationPolicy {
-  ExtensionPointName<ClsCustomNavigationPolicy> EP_NAME = ExtensionPointName.create("com.intellij.psi.clsCustomNavigationPolicy");
+  ExtensionPointName<ClsCustomNavigationPolicy> EP_NAME = ExtensionPointName.create("org.consulo.java.psi.clsCustomNavigationPolicy");
 
   @Nullable
   PsiElement getNavigationElement(@NotNull ClsClassImpl clsClass);
