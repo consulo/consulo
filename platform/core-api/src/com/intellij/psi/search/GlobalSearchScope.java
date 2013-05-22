@@ -568,7 +568,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
     private final VirtualFile myVirtualFile;
     private final Module myModule;
 
-    private FileScope(@NotNull Project project, final VirtualFile virtualFile) {
+    protected FileScope(@NotNull Project project, final VirtualFile virtualFile) {
       super(project);
       myVirtualFile = virtualFile;
       FileIndexFacade fileIndex = ServiceManager.getService(project, FileIndexFacade.class);

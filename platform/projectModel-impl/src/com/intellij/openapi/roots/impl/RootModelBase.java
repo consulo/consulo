@@ -65,7 +65,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public String[] getExcludeRootUrls() {
     final List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolder.ContentFolderType.EXCLUDED));
+      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderType.EXCLUDED));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -75,7 +75,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public VirtualFile[] getExcludeRoots() {
     final List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolder.ContentFolderType.EXCLUDED));
+      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderType.EXCLUDED));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }
@@ -91,7 +91,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public String[] getSourceRootUrls(boolean includingTests) {
     List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderUrls(includingTests ? ContentFolder.ContentFolderType.TEST : ContentFolder.ContentFolderType.SOURCE));
+      Collections.addAll(result, contentEntry.getFolderUrls(includingTests ? ContentFolderType.TEST : ContentFolderType.SOURCE));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -107,7 +107,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
     List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-       Collections.addAll(result, contentEntry.getFolderFiles(includingTests ? ContentFolder.ContentFolderType.TEST : ContentFolder.ContentFolderType.SOURCE));
+       Collections.addAll(result, contentEntry.getFolderFiles(includingTests ? ContentFolderType.TEST : ContentFolderType.SOURCE));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }

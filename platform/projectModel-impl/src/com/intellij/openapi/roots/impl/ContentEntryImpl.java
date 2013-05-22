@@ -20,6 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
@@ -91,7 +92,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
-  public ContentFolder[] getFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType) {
     List<ContentFolder> list = new ArrayList<ContentFolder>();
     for (ContentFolder contentFolder : myContentFolders) {
       if (contentFolder.getType() == contentFolderType) {
@@ -103,7 +104,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
-  public VirtualFile[] getFolderFiles(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
     for (ContentFolder contentFolder : myContentFolders) {
       if (contentFolder.getType() == contentFolderType) {
@@ -115,7 +116,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
-  public String[] getFolderUrls(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
     List<String> list = new ArrayList<String>();
     for (ContentFolder contentFolder : myContentFolders) {
       if (contentFolder.getType() == contentFolderType) {
@@ -132,14 +133,14 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType) {
     assertCanAddFolder(file);
     return addFolder(new ContentFolderImpl(file, contentFolderType, this));
   }
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderType contentFolderType) {
     assertFolderUnderMe(url);
     return addFolder(new ContentFolderImpl(url, contentFolderType, this));
   }
@@ -151,7 +152,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   }
 
   @Override
-  public void clearFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public void clearFolders(@NotNull ContentFolderType contentFolderType) {
     assert !isDisposed();
     getRootModel().assertWritable();
 

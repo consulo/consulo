@@ -29,14 +29,6 @@ import org.jetbrains.annotations.Nullable;
 public interface ContentFolder extends Synthetic {
   ContentFolder[] EMPTY_ARRAY = new ContentFolder[0];
 
-  enum ContentFolderType {
-    SOURCE,
-    TEST,
-    RESOURCE,
-    EXCLUDED,
-    EXCLUDED_OUTPUT
-  }
-
   /**
    * Returns the type of root directory
    * @return

@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
@@ -33,9 +34,9 @@ import javax.swing.*;
  */
 public class ToggleFolderStateAction extends ContentEntryEditingAction {
   private final ContentEntryTreeEditor myEntryTreeEditor;
-  private final ContentFolder.ContentFolderType myContentFolderType;
+  private final ContentFolderType myContentFolderType;
 
-  public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolder.ContentFolderType contentFolderType) {
+  public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolderType contentFolderType) {
     super(tree);
     myEntryTreeEditor = entryEditor;
     myContentFolderType = contentFolderType;
@@ -70,7 +71,8 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     if (selectedFiles.length == 0) return false;
 
     final ContentEntryEditor editor = myEntryTreeEditor.getContentEntryEditor();
-    return editor.getFolder(selectedFiles[0], myContentFolderType) != null;
+    final ContentFolder folder = editor.getFolder(selectedFiles[0]);
+    return folder != null && folder.getType() == myContentFolderType;
   }
 
   @Override
@@ -80,7 +82,7 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
 
     final ContentEntryEditor contentEntryEditor = myEntryTreeEditor.getContentEntryEditor();
     for (VirtualFile selectedFile : selectedFiles) {
-      final ContentFolder contentFolder = contentEntryEditor.getFolder(selectedFile, myContentFolderType);
+      final ContentFolder contentFolder = contentEntryEditor.getFolder(selectedFile);
       if (isSelected) {
         if (contentFolder == null) { // not marked yet
           contentEntryEditor.addFolder(selectedFile, myContentFolderType);

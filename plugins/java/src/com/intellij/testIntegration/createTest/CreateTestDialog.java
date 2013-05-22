@@ -38,6 +38,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -480,7 +481,7 @@ public class CreateTestDialog extends DialogWrapper {
   private PsiDirectory chooseDefaultDirectory(String packageName) {
     List<PsiDirectory> dirs = new ArrayList<PsiDirectory>();
     for (ContentEntry e : ModuleRootManager.getInstance(myTargetModule).getContentEntries()) {
-      for (ContentFolder f : e.getFolders(ContentFolder.ContentFolderType.TEST)) {
+      for (ContentFolder f : e.getFolders(ContentFolderType.TEST)) {
         final VirtualFile file = f.getFile();
         if (file != null) {
           final PsiDirectory dir = PsiManager.getInstance(myProject).findDirectory(file);

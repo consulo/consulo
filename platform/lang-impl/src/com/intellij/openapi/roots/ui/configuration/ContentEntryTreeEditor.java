@@ -36,6 +36,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import com.intellij.openapi.util.Disposer;
@@ -97,19 +98,19 @@ public class ContentEntryTreeEditor {
   }
 
   protected void createEditingActions() {
-    ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.SOURCE);
+    ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, ContentFolderType.SOURCE);
     action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK)), myTree);
     myEditingActionsGroup.add(action);
 
-    action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.RESOURCE);
+    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.RESOURCE);
     action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK)), myTree);
     myEditingActionsGroup.add(action);
 
-    action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.TEST);
+    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.TEST);
     action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_MASK)), myTree);
     myEditingActionsGroup.add(action);
 
-    action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.EXCLUDED);
+    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.EXCLUDED);
     action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_MASK)), myTree);
     myEditingActionsGroup.add(action);
   }

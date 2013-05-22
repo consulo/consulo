@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 
 import javax.swing.*;
 
@@ -28,7 +28,7 @@ import javax.swing.*;
  */
 public class ContentFolderIconUtil {
 
-  public static Icon getRootIcon(ContentFolder.ContentFolderType contentFolderType) {
+  public static Icon getRootIcon(ContentFolderType contentFolderType) {
     switch (contentFolderType) {
       case SOURCE:
         return AllIcons.Modules.SourceRoot;

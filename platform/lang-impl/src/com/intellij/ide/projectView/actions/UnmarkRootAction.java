@@ -16,30 +16,51 @@
 package com.intellij.ide.projectView.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author yole
  */
 public class UnmarkRootAction extends MarkRootAction {
   public UnmarkRootAction() {
-    super(true);
+    super(null);
   }
 
   @Override
   public void update(AnActionEvent e) {
-    Ref<Boolean> rootType = new Ref<Boolean>();
-    boolean enabled = canMark(e, true, true, false, rootType);
-    if (rootType.get() == null) {
-      enabled = false;
+    e.getPresentation().setEnabledAndVisible(canUnmark(e));
+    e.getPresentation().setText("Unmark");
+  }
+
+  public boolean canUnmark(AnActionEvent e) {
+    Module module = e.getData(LangDataKeys.MODULE);
+    VirtualFile[] vFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    if (module == null || vFiles == null) {
+      return false;
     }
-    else if (rootType.get()) {
-      e.getPresentation().setText("Unmark as Source Root");
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    final ContentEntry[] contentEntries = moduleRootManager.getContentEntries();
+
+    for (VirtualFile vFile : vFiles) {
+      if (!vFile.isDirectory()) {
+        continue;
+      }
+
+      for (ContentEntry contentEntry : contentEntries) {
+        for (ContentFolder contentFolder : contentEntry.getFolders()) {
+          if (Comparing.equal(contentFolder.getFile(), vFile)) {
+            return true;
+          }
+        }
+      }
     }
-    else {
-      e.getPresentation().setText("Unmark as Test Source Root");
-    }
-    e.getPresentation().setVisible(enabled);
-    e.getPresentation().setEnabled(enabled);
+    return false;
   }
 }

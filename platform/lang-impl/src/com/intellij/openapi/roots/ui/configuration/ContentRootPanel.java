@@ -20,6 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -99,7 +100,7 @@ public abstract class ContentRootPanel extends JPanel {
   }
 
   protected void addFolderGroupComponents() {
-    ContentFolder[] contentFolders = getContentEntry().getFolders(ContentFolder.ContentFolderType.SOURCE);
+    ContentFolder[] contentFolders = getContentEntry().getFolders(ContentFolderType.SOURCE);
     if (contentFolders.length != 0) {
       final JComponent sourcesComponent =
         createFolderGroupComponent(ProjectBundle.message("module.paths.sources.group"), contentFolders, SOURCES_COLOR);
@@ -107,7 +108,7 @@ public abstract class ContentRootPanel extends JPanel {
                                                         GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
     }
 
-    contentFolders = getContentEntry().getFolders(ContentFolder.ContentFolderType.TEST);
+    contentFolders = getContentEntry().getFolders(ContentFolderType.TEST);
     if (contentFolders.length != 0) {
       final JComponent testSourcesComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.test.sources.group"),
                                                                          contentFolders,
@@ -116,7 +117,7 @@ public abstract class ContentRootPanel extends JPanel {
                                                             GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
     }
 
-    contentFolders = getContentEntry().getFolders(ContentFolder.ContentFolderType.RESOURCE);
+    contentFolders = getContentEntry().getFolders(ContentFolderType.RESOURCE);
     if (contentFolders.length != 0) {
       final JComponent testSourcesComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.resources.group"),
                                                                          contentFolders,
@@ -125,7 +126,7 @@ public abstract class ContentRootPanel extends JPanel {
                                                             GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
     }
 
-    contentFolders = getContentEntry().getFolders(ContentFolder.ContentFolderType.EXCLUDED);
+    contentFolders = getContentEntry().getFolders(ContentFolderType.EXCLUDED);
     if (contentFolders.length != 0) {
       final JComponent excludedComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.excluded.group"),
                                                                       contentFolders, EXCLUDED_COLOR);

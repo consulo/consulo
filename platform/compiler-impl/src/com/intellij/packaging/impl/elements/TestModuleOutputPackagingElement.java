@@ -68,7 +68,7 @@ public class TestModuleOutputPackagingElement extends ModuleOutputPackagingEleme
     List<VirtualFile> roots = new SmartList<VirtualFile>();
     ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
     for (ContentEntry entry : rootModel.getContentEntries()) {
-      for (ContentFolder folder : entry.getFolders(ContentFolder.ContentFolderType.TEST)) {
+      for (ContentFolder folder : entry.getFolders(ContentFolderType.TEST)) {
         ContainerUtil.addIfNotNull(folder.getFile(), roots);
       }
     }

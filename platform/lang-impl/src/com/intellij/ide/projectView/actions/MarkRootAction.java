@@ -23,7 +23,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -33,26 +32,15 @@ import org.jetbrains.annotations.Nullable;
  * @author yole
  */
 public class MarkRootAction extends DumbAwareAction {
-  private final boolean myMarkAsTestSources;
-  private final boolean myMarkAsExcluded;
-  private final boolean myUnmark;
+  @Nullable
+  private final ContentFolderType myContentFolderType;
 
   public MarkRootAction() {
-    myMarkAsTestSources = false;
-    myMarkAsExcluded = false;
-    myUnmark = false;
+    this(ContentFolderType.SOURCE);
   }
 
-  protected MarkRootAction(boolean markAsTestSources, boolean markAsExcluded) {
-    myMarkAsTestSources = markAsTestSources;
-    myMarkAsExcluded = markAsExcluded;
-    myUnmark = false;
-  }
-
-  protected MarkRootAction(boolean unmark) {
-    myMarkAsTestSources = false;
-    myMarkAsExcluded = false;
-    myUnmark = true;
+  protected MarkRootAction(@Nullable ContentFolderType contentFolderType) {
+    myContentFolderType = contentFolderType;
   }
 
   @Override
@@ -64,20 +52,15 @@ public class MarkRootAction extends DumbAwareAction {
     for (VirtualFile vFile : vFiles) {
       ContentEntry entry = findContentEntry(model, vFile);
       if (entry != null) {
-        final SourceFolder[] sourceFolders = entry.getSourceFolders();
-        for (SourceFolder sourceFolder : sourceFolders) {
+        final ContentFolder[] sourceFolders = entry.getFolders();
+        for (ContentFolder sourceFolder : sourceFolders) {
           if (Comparing.equal(sourceFolder.getFile(), vFile)) {
-            entry.removeSourceFolder(sourceFolder);
+            entry.removeFolder(sourceFolder);
             break;
           }
         }
-        if (!myUnmark) {
-          if (myMarkAsExcluded) {
-            entry.addExcludeFolder(vFile);
-          }
-          else {
-            entry.addSourceFolder(vFile, myMarkAsTestSources);
-          }
+        if (myContentFolderType != null) {
+          entry.addFolder(vFile, myContentFolderType);
         }
       }
     }
@@ -103,43 +86,33 @@ public class MarkRootAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    boolean enabled = canMark(e, myMarkAsTestSources || myMarkAsExcluded || myUnmark, !myMarkAsTestSources || myMarkAsExcluded || myUnmark,
-                              myMarkAsExcluded, null);
+    boolean enabled = canMark(e);
     e.getPresentation().setVisible(enabled);
     e.getPresentation().setEnabled(enabled);
   }
 
-  public static boolean canMark(AnActionEvent e,
-                                boolean acceptSourceRoot,
-                                boolean acceptTestSourceRoot,
-                                boolean acceptInSourceContent,
-                                @Nullable Ref<Boolean> rootType) {
+  public boolean canMark(AnActionEvent e) {
     Module module = e.getData(LangDataKeys.MODULE);
     VirtualFile[] vFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     if (module == null || vFiles == null) {
       return false;
     }
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    final ContentEntry[] contentEntries = moduleRootManager.getContentEntries();
+
     for (VirtualFile vFile : vFiles) {
       if (!vFile.isDirectory()) {
         return false;
       }
-      if (!fileIndex.isInContent(vFile)) {
-        return false;
-      }
-      if (Comparing.equal(fileIndex.getSourceRootForFile(vFile), vFile)) {
-        boolean isTestSourceRoot = fileIndex.isInTestSourceContent(vFile);
-        if (acceptSourceRoot && !isTestSourceRoot) {
-          if (rootType != null) rootType.set(true);
-          return true;
+
+      for (ContentEntry contentEntry : contentEntries) {
+        for (ContentFolder contentFolder : contentEntry.getFolders()) {
+          if (Comparing.equal(contentFolder.getFile(), vFile)) {
+            if (contentFolder.getType() == myContentFolderType) {
+              return false;
+            }
+          }
         }
-        if (acceptTestSourceRoot && isTestSourceRoot) {
-          if (rootType != null) rootType.set(false);
-          return true;
-        }
-      }
-      if (fileIndex.isInSourceContent(vFile) && !acceptInSourceContent) {
-        return false;
       }
     }
     return true;

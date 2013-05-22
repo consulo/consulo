@@ -25,10 +25,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -147,7 +144,7 @@ public class CreateTestAction extends PsiElementBaseIntentionAction {
 
     final ContentEntry[] entries = ModuleRootManager.getInstance(srcModule).getContentEntries();
     for (ContentEntry entry : entries) {
-      for (ContentFolder sourceFolder : entry.getFolders(ContentFolder.ContentFolderType.TEST)) {
+      for (ContentFolder sourceFolder : entry.getFolders(ContentFolderType.TEST)) {
         final VirtualFile sourceFolderFile = sourceFolder.getFile();
         if (sourceFolderFile != null) {
           testFolders.add(sourceFolderFile);

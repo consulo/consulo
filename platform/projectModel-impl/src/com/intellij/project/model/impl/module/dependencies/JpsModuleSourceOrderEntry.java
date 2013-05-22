@@ -61,8 +61,8 @@ public class JpsModuleSourceOrderEntry extends JpsOrderEntry<JpsModuleSourceDepe
     if (OrderRootType.SOURCES.equals(type)) {
       final ContentEntry[] content = getRootModel().getContentEntries();
       for (ContentEntry contentEntry : content) {
-        ContentFolder[] contentFolders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolder.ContentFolderType.SOURCE),
-                                                               contentEntry.getFolders(ContentFolder.ContentFolderType.TEST));
+        ContentFolder[] contentFolders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolderType.SOURCE),
+                                                               contentEntry.getFolders(ContentFolderType.TEST));
         for (ContentFolder sourceFolder : contentFolders) {
           final String url = sourceFolder.getUrl();
           result.add(url);

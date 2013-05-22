@@ -19,6 +19,7 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
@@ -184,7 +185,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   @Nullable
-  public ContentFolder addFolder(@NotNull final VirtualFile file, ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull final VirtualFile file, ContentFolderType contentFolderType) {
     final ContentEntry contentEntry = getContentEntry();
     if (contentEntry != null) {
       final ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
@@ -218,13 +219,12 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   @Nullable
-  public ContentFolder getFolder(@NotNull final VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder getFolder(@NotNull final VirtualFile file) {
     final ContentEntry contentEntry = getContentEntry();
     if (contentEntry == null) {
       return null;
     }
-    final ContentFolder[] folders = contentEntry.getFolders(contentFolderType);
-    for (ContentFolder contentFolder : folders) {
+    for (ContentFolder contentFolder : contentEntry.getFolders()) {
       final VirtualFile f = contentFolder.getFile();
       if (f != null && f.equals(file)) {
         return contentFolder;

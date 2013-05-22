@@ -18,6 +18,7 @@ package com.intellij.project.model.impl.module.content;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.project.model.impl.module.JpsRootModel;
 import org.jetbrains.annotations.NotNull;
@@ -66,19 +67,19 @@ public class JpsContentEntry implements ContentEntry, Disposable {
 
   @NotNull
   @Override
-  public ContentFolder[] getFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType) {
     return new ContentFolder[0];
   }
 
   @NotNull
   @Override
-  public VirtualFile[] getFolderFiles(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     return new VirtualFile[0];
   }
 
   @NotNull
   @Override
-  public String[] getFolderUrls(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
     return new String[0];
   }
 
@@ -89,13 +90,13 @@ public class JpsContentEntry implements ContentEntry, Disposable {
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType) {
     return null;
   }
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderType contentFolderType) {
     return null;
   }
 
@@ -105,7 +106,7 @@ public class JpsContentEntry implements ContentEntry, Disposable {
   }
 
   @Override
-  public void clearFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public void clearFolders(@NotNull ContentFolderType contentFolderType) {
 
   }
 

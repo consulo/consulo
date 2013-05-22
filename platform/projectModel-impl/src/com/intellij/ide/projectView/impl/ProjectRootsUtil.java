@@ -65,8 +65,8 @@ public class ProjectRootsUtil {
     if (module == null) return false;
     final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
     for (ContentEntry contentEntry : contentEntries) {
-      final ContentFolder[] contentFolders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolder.ContentFolderType.SOURCE),
-                                                                   contentEntry.getFolders(ContentFolder.ContentFolderType.TEST));
+      final ContentFolder[] contentFolders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolderType.SOURCE),
+                                                                   contentEntry.getFolders(ContentFolderType.TEST));
       for (ContentFolder sourceFolder : contentFolders) {
         if (Comparing.equal(virtualFile, sourceFolder.getFile())) return true;
       }

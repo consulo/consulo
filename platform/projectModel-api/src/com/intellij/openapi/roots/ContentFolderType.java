@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.projectView.actions;
-
-import com.intellij.openapi.roots.ContentFolderType;
+package com.intellij.openapi.roots;
 
 /**
- * @author yole
- */
-public class MarkTestSourceRootAction extends MarkRootAction {
-  public MarkTestSourceRootAction() {
-    super(ContentFolderType.TEST);
-  }
+* @author VISTALL
+* @since 13:20/22.05.13
+*/
+public enum ContentFolderType {
+  SOURCE,
+  TEST,
+  RESOURCE,
+  EXCLUDED,
+  EXCLUDED_OUTPUT
 }

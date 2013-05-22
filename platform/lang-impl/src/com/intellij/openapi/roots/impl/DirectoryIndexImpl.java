@@ -801,15 +801,15 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
       for (ContentEntry contentEntry : contentEntries) {
         VirtualFile contentRoot = contentEntry.getFile();
-        ContentFolder[] folders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolder.ContentFolderType.SOURCE), contentEntry.getFolders(
-          ContentFolder.ContentFolderType.TEST));
+        ContentFolder[] folders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolderType.SOURCE), contentEntry.getFolders(
+          ContentFolderType.TEST));
         if (reverseAllSets) {
           folders = ArrayUtil.reverseArray(folders);
         }
         for (ContentFolder sourceFolder : folders) {
           VirtualFile dir = sourceFolder.getFile();
           if (dir instanceof NewVirtualFile && contentRoot instanceof NewVirtualFile) {
-            fillMapWithModuleSource(module, (NewVirtualFile)contentRoot, (NewVirtualFile)dir, "", (NewVirtualFile)dir, sourceFolder.getType() == ContentFolder.ContentFolderType.TEST, progress);
+            fillMapWithModuleSource(module, (NewVirtualFile)contentRoot, (NewVirtualFile)dir, "", (NewVirtualFile)dir, sourceFolder.getType() == ContentFolderType.TEST, progress);
           }
         }
       }
@@ -1210,7 +1210,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           VirtualFile contentRoot = contentEntry.getFile();
           if (!(contentRoot instanceof NewVirtualFile)) continue;
 
-          ContentFolder[] excludeRoots = contentEntry.getFolders(ContentFolder.ContentFolderType.EXCLUDED);
+          ContentFolder[] excludeRoots = contentEntry.getFolders(ContentFolderType.EXCLUDED);
           for (ContentFolder excludeRoot : excludeRoots) {
             // Output paths should be excluded (if marked as such) regardless if they're under corresponding module's content root
             VirtualFile excludeRootFile = excludeRoot.getFile();

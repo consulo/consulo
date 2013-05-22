@@ -17,6 +17,7 @@ package com.intellij.ide.projectView.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public class MarkExcludeRootAction extends MarkRootAction {
   public MarkExcludeRootAction() {
-    super(false, true);
+    super(ContentFolderType.EXCLUDED);
   }
 
   @Override

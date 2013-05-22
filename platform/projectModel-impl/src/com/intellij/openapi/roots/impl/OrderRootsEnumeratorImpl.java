@@ -219,7 +219,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
       else {
         for (ContentEntry entry : rootModel.getContentEntries()) {
-          Collections.addAll(result, entry.getFolderFiles(ContentFolder.ContentFolderType.TEST));
+          Collections.addAll(result, entry.getFolderFiles(ContentFolderType.TEST));
         }
       }
     }
@@ -252,7 +252,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
       else {
         for (ContentEntry entry : rootModel.getContentEntries()) {
-          Collections.addAll(result, entry.getFolderUrls(ContentFolder.ContentFolderType.TEST));
+          Collections.addAll(result, entry.getFolderUrls(ContentFolderType.TEST));
         }
       }
     }

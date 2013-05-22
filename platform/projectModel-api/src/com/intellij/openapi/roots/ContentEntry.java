@@ -53,7 +53,7 @@ public interface ContentEntry extends Synthetic {
    * @return
    */
   @NotNull
-  ContentFolder[] getFolders(@NotNull ContentFolder.ContentFolderType contentFolderType);
+  ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType);
 
   /**
    * Returns the list of directories roots under this content root.
@@ -61,20 +61,20 @@ public interface ContentEntry extends Synthetic {
    * @return
    */
   @NotNull
-  VirtualFile[] getFolderFiles(@NotNull ContentFolder.ContentFolderType contentFolderType);
+  VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType);
 
   @NotNull
-  String[] getFolderUrls(@NotNull ContentFolder.ContentFolderType contentFolderType);
+  String[] getFolderUrls(@NotNull ContentFolderType contentFolderType);
 
   ContentFolder[] getFolders();
 
   @NotNull
-  ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType);
+  ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType);
 
   @NotNull
-  ContentFolder addFolder(@NotNull String url, @NotNull ContentFolder.ContentFolderType contentFolderType);
+  ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderType contentFolderType);
 
   void removeFolder(@NotNull ContentFolder contentFolder);
 
-  void clearFolders(@NotNull ContentFolder.ContentFolderType contentFolderType);
+  void clearFolders(@NotNull ContentFolderType contentFolderType);
 }

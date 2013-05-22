@@ -31,10 +31,7 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootModel;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
@@ -229,8 +226,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
           );
         }
 
-        final VirtualFile[] sourceAndTestFiles = ArrayUtil.mergeArrays(contentEntry.getFolderFiles(ContentFolder.ContentFolderType.SOURCE),
-                                                                 contentEntry.getFolderFiles(ContentFolder.ContentFolderType.TEST));
+        final VirtualFile[] sourceAndTestFiles = ArrayUtil.mergeArrays(contentEntry.getFolderFiles(ContentFolderType.SOURCE),
+                                                                 contentEntry.getFolderFiles(ContentFolderType.TEST));
         for (VirtualFile srcRoot : sourceAndTestFiles) {
           final VirtualFile anotherContentRoot = srcRootsToContentRootMap.put(srcRoot, contentRoot);
           if (anotherContentRoot != null) {

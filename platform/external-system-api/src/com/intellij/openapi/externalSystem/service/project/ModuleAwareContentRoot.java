@@ -3,6 +3,7 @@ package com.intellij.openapi.externalSystem.service.project;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,19 +49,19 @@ public class ModuleAwareContentRoot implements ContentEntry {
 
   @NotNull
   @Override
-  public ContentFolder[] getFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType) {
     return myDelegate.getFolders(contentFolderType);
   }
 
   @NotNull
   @Override
-  public VirtualFile[] getFolderFiles(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     return myDelegate.getFolderFiles(contentFolderType);
   }
 
   @NotNull
   @Override
-  public String[] getFolderUrls(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
     return myDelegate.getFolderUrls(contentFolderType);
   }
 
@@ -71,13 +72,13 @@ public class ModuleAwareContentRoot implements ContentEntry {
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType) {
     return myDelegate.addFolder(file, contentFolderType);
   }
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderType contentFolderType) {
     return myDelegate.addFolder(url, contentFolderType);
   }
 
@@ -88,7 +89,7 @@ public class ModuleAwareContentRoot implements ContentEntry {
   }
 
   @Override
-  public void clearFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+  public void clearFolders(@NotNull ContentFolderType contentFolderType) {
     myDelegate.clearFolders(contentFolderType);
   }
 
