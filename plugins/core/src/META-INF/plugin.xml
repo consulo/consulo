@@ -3993,6 +3993,7 @@
     <extensionPoint name="unusedDeclarationFixProvider"
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
     <extensionPoint name="psi.packageResolver" interface="org.consulo.psi.PsiPackageResolver" />
+    <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
