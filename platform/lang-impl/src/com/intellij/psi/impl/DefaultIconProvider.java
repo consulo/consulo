@@ -39,7 +39,7 @@ import javax.swing.*;
  * @author yole
  */
 public class DefaultIconProvider extends IconProvider implements DumbAware {
-  public static final DefaultIconProvider INSTANCE = IconProvider.EXTENSION_POINT_NAME.findExtension(DefaultIconProvider.class);
+  public static final DefaultIconProvider INSTANCE = new DefaultIconProvider();
 
   @Override
   @Nullable
