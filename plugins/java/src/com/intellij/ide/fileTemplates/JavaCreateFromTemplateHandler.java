@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.ide.IdeBundle;
+import com.intellij.core.JavaCoreBundle;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.StdFileTypes;
@@ -119,7 +119,7 @@ public class JavaCreateFromTemplateHandler implements CreateFromTemplateHandler 
 
   @Override
   public String getErrorMessage() {
-    return IdeBundle.message("title.cannot.create.class");
+    return JavaCoreBundle.message("title.cannot.create.class");
   }
 
   @Override

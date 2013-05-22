@@ -6,7 +6,7 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 
 public interface MemberImplementorExplorer {
-  ExtensionPointName<MemberImplementorExplorer> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.methodImplementor");
+  ExtensionPointName<MemberImplementorExplorer> EXTENSION_POINT_NAME = ExtensionPointName.create("org.consulo.java.methodImplementor");
 
   @NotNull
   PsiMethod[] getMethodsToImplement(PsiClass aClass);

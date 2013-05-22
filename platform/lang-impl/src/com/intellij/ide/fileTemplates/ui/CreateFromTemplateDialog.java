@@ -116,6 +116,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
                                                              myDirectory);
     }
     catch (Exception e) {
+      e.printStackTrace();
       showErrorDialog(e);
     }
   }

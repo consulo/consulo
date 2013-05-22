@@ -85,19 +85,6 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements JDOM
     myJ2eeTemplatesManager = myTemplateSettings.getJ2eeTemplatesManager();
     myAllManagers = myTemplateSettings.getAllManagers();
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      for (String tname : Arrays.asList("Class", "AnnotationType", "Enum", "Interface")) {
-        for (FileTemplate template : myInternalTemplatesManager.getAllTemplates(true)) {
-          if (tname.equals(template.getName())) {
-            myInternalTemplatesManager.removeTemplate(((FileTemplateBase)template).getQualifiedName());
-            break;
-          }
-        }
-        final FileTemplateBase template = myInternalTemplatesManager.addTemplate(tname, "java");
-        template.setText(normalizeText(getTestClassTemplateText(tname)));
-      }
-    }
-
   }
 
   @Override

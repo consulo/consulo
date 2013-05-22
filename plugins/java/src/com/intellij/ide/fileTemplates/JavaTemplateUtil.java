@@ -19,7 +19,6 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -33,10 +32,10 @@ public class JavaTemplateUtil {
   @NonNls public static final String TEMPLATE_I18NIZED_EXPRESSION = "I18nized Expression.java";
   @NonNls public static final String TEMPLATE_I18NIZED_CONCATENATION = "I18nized Concatenation.java";
   @NonNls public static final String TEMPLATE_I18NIZED_JSP_EXPRESSION = "I18nized JSP Expression.jsp";
-  @NonNls public static final String INTERNAL_CLASS_TEMPLATE_NAME = "Class";
-  @NonNls public static final String INTERNAL_INTERFACE_TEMPLATE_NAME = "Interface";
-  @NonNls public static final String INTERNAL_ANNOTATION_TYPE_TEMPLATE_NAME = "AnnotationType";
-  @NonNls public static final String INTERNAL_ENUM_TEMPLATE_NAME = "Enum";
+  @NonNls public static final String INTERNAL_CLASS_TEMPLATE_NAME = "Java Class";
+  @NonNls public static final String INTERNAL_INTERFACE_TEMPLATE_NAME = "Java Interface";
+  @NonNls public static final String INTERNAL_ANNOTATION_TYPE_TEMPLATE_NAME = "Java AnnotationType";
+  @NonNls public static final String INTERNAL_ENUM_TEMPLATE_NAME = "Java Enum";
 
   private JavaTemplateUtil() {
   }
