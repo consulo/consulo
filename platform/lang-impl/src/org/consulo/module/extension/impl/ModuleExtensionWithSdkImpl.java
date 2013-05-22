@@ -68,7 +68,7 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
     return mySdkName;
   }
 
-  @NotNull
+  @Nullable
   @Override
   public SdkType getSdkType() {
     return SdkType.findInstance(getSdkTypeClass());

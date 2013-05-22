@@ -52,7 +52,7 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
     mySdkComboBox = new SdkComboBox(projectJdksModel, new Condition<SdkTypeId>() {
       @Override
       public boolean value(SdkTypeId sdkTypeId) {
-        return sdkTypeId == sdkType;
+        return sdkType != null && sdkTypeId == sdkType;
       }
     });
 

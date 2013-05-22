@@ -184,6 +184,7 @@ public abstract class SdkType implements SdkTypeId {
     return null;
   }
 
+  @Nullable
   public static <T extends SdkType> T findInstance(final Class<T> sdkTypeClass) {
     for (SdkType sdkType : Extensions.getExtensions(EP_NAME)) {
       if (sdkTypeClass.isAssignableFrom(sdkType.getClass())) {
@@ -191,7 +192,6 @@ public abstract class SdkType implements SdkTypeId {
         return (T)sdkType;
       }
     }
-    assert false;
     return null;
   }
 
