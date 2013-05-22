@@ -20,6 +20,7 @@ import com.intellij.conversion.CannotConvertException;
 import com.intellij.conversion.ComponentManagerSettings;
 import com.intellij.conversion.ModuleSettings;
 import com.intellij.ide.highlighter.ModuleFileType;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.util.JDOMUtil;
@@ -77,10 +78,11 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
   public Collection<File> getSourceRoots(boolean includeTests) {
     final List<File> result = new ArrayList<File>();
     for (Element contentRoot : getContentRootElements()) {
-      for (Element sourceFolder : JDOMUtil.getChildren(contentRoot, SourceFolderImpl.ELEMENT_NAME)) {
-        boolean isTestFolder = Boolean.parseBoolean(sourceFolder.getAttributeValue(SourceFolderImpl.TEST_SOURCE_ATTR));
-        if (includeTests || !isTestFolder) {
-          result.add(getFile(sourceFolder.getAttributeValue(SourceFolderImpl.URL_ATTRIBUTE)));
+      for (Element sourceFolder : contentRoot.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
+        ContentFolderType contentFolderType = ContentFolderType.valueOf(sourceFolder.getAttributeValue(ContentFolderImpl.TYPE_ATTRIBUTE));
+        if (includeTests && (contentFolderType == ContentFolderType.SOURCE || contentFolderType == ContentFolderType.TEST) ||
+            !includeTests && contentFolderType == ContentFolderType.SOURCE) {
+          result.add(getFile(sourceFolder.getAttributeValue(ContentFolderImpl.URL_ATTRIBUTE)));
         }
       }
     }
@@ -195,14 +197,21 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
   }
 
   private void addExcludedFolder(File directory, Element contentRoot) {
-    for (Element excludedFolder : JDOMUtil.getChildren(contentRoot, ExcludeFolderImpl.ELEMENT_NAME)) {
-      final File excludedDir = getFile(excludedFolder.getAttributeValue(ExcludeFolderImpl.URL_ATTRIBUTE));
+    for (Element excludedFolder : contentRoot.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
+      ContentFolderType contentFolderType = ContentFolderType.valueOf(excludedFolder.getAttributeValue(ContentFolderImpl.TYPE_ATTRIBUTE));
+      if (contentFolderType != ContentFolderType.EXCLUDED) {
+        continue;
+      }
+
+      final File excludedDir = getFile(excludedFolder.getAttributeValue(ContentFolderImpl.URL_ATTRIBUTE));
       if (FileUtil.isAncestor(excludedDir, directory, false)) {
         return;
       }
     }
     String path = myContext.collapsePath(FileUtil.toSystemIndependentName(directory.getAbsolutePath()), this);
-    contentRoot.addContent(new Element(ExcludeFolderImpl.ELEMENT_NAME).setAttribute(ExcludeFolderImpl.URL_ATTRIBUTE, VfsUtil.pathToUrl(path)));
+    contentRoot.addContent(
+      new Element(ContentFolderImpl.ELEMENT_NAME).setAttribute(ContentFolderImpl.URL_ATTRIBUTE, VfsUtil.pathToUrl(path))
+        .setAttribute(ContentFolderImpl.TYPE_ATTRIBUTE, ContentFolderType.EXCLUDED.name()));
   }
 
   private File getFile(String url) {

@@ -21,7 +21,7 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.xml.util.ColorSampleLookupValue;
+import com.intellij.util.ColorSampleLookupValue;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

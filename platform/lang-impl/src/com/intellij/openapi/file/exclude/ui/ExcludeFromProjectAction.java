@@ -19,11 +19,12 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.file.exclude.ProjectFileExclusionManagerImpl;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -61,7 +62,7 @@ public class ExcludeFromProjectAction extends AnAction {
       VirtualFile entryFile = entry.getFile();
       if (entryFile != null) {
         if (VfsUtilCore.isAncestor(entryFile, folder, true)) {
-          entry.addExcludeFolder(folder);
+          entry.addFolder(folder, ContentFolderType.EXCLUDED);
           model.commit();
           return;
         }

@@ -349,7 +349,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
           final String srcpath = FileUtil.toSystemIndependentName(srcRoot.getDirectory().getPath());
           final VirtualFile sourceRoot = lfs.refreshAndFindFileByPath(srcpath);
           if (sourceRoot != null) {
-            contentEntry.addSourceFolder(sourceRoot, shouldBeTestRoot(srcRoot.getDirectory()),"");
+            contentEntry.addFolder(sourceRoot, shouldBeTestRoot(srcRoot.getDirectory()) ? ContentFolderType.TEST : ContentFolderType.SOURCE);
           }
         }
       }

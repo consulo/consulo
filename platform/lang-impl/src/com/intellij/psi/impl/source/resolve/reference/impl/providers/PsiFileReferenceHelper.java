@@ -21,18 +21,25 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Query;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author peter
@@ -83,19 +90,6 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
             if (module != null) {
               OrderEntry orderEntry = ModuleRootManager.getInstance(module).getFileIndex().getOrderEntryForFile(file);
 
-              if (orderEntry instanceof ModuleSourceOrderEntry) {
-                for(ContentEntry e: ((ModuleSourceOrderEntry)orderEntry).getRootModel().getContentEntries()) {
-                  for(SourceFolder sf:e.getSourceFolders()) {
-                    if (Comparing.equal(sf.getFile(), root)) {
-                      String s = sf.getPackagePrefix();
-                      if (s.length() > 0) {
-                        path = s + "." + path;
-                        break;
-                      }
-                    }
-                  }
-                }
-              }
               return getContextsForModule(module, path, module.getModuleWithDependenciesScope());
             }
           }

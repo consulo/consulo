@@ -39,6 +39,8 @@ import javax.swing.*;
  * @author yole
  */
 public class DefaultIconProvider extends IconProvider implements DumbAware {
+  public static final DefaultIconProvider INSTANCE = IconProvider.EXTENSION_POINT_NAME.findExtension(DefaultIconProvider.class);
+
   @Override
   @Nullable
   public Icon getIcon(@NotNull final PsiElement element, final int flags) {

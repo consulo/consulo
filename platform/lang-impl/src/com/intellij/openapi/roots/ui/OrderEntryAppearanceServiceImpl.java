@@ -155,10 +155,10 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @NotNull
   @Override
   public CellAppearanceEx forContentFolder(@NotNull final ContentFolder folder) {
-    if (folder instanceof SourceFolder) {
+    if (folder.getType() ==ContentFolderType.SOURCE || folder.getType() == ContentFolderType.TEST || folder.getType() == ContentFolderType.RESOURCE) {
       return formatRelativePath(folder, PlatformIcons.FOLDER_ICON);
     }
-    else if (folder instanceof ExcludeFolder) {
+    else if (folder.getType() == ContentFolderType.EXCLUDED || folder.getType() == ContentFolderType.EXCLUDED_OUTPUT) {
       return formatRelativePath(folder, EXCLUDE_FOLDER_ICON);
     }
     else {

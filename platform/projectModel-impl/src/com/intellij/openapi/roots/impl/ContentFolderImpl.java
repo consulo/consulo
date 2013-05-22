@@ -34,8 +34,12 @@ import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer
  * @author dsl
  */
 public class ContentFolderImpl extends RootModelComponentBase implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
-  @NonNls public static final String URL_ATTRIBUTE = JpsModuleRootModelSerializer.URL_ATTRIBUTE;
-  @NonNls public static final String TYPE_ATTRIBUTE = JpsModuleRootModelSerializer.TYPE_ATTRIBUTE;
+  @NonNls
+  public static final String URL_ATTRIBUTE = JpsModuleRootModelSerializer.URL_ATTRIBUTE;
+  @NonNls
+  public static final String TYPE_ATTRIBUTE = JpsModuleRootModelSerializer.TYPE_ATTRIBUTE;
+  @NonNls
+  public static final String ELEMENT_NAME = "content-folder";
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.SimpleContentFolderBaseImpl");
 

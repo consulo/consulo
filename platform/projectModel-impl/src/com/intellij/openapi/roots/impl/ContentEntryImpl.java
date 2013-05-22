@@ -64,7 +64,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   ContentEntryImpl(@NotNull Element e, @NotNull RootModelImpl m) throws InvalidDataException {
     this(getUrlFrom(e), m);
 
-    for (Element child : e.getChildren("content-folder")) {
+    for (Element child : e.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
       myContentFolders.add(new ContentFolderImpl(child, this));
     }
   }
@@ -223,7 +223,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
     LOG.assertTrue(ELEMENT_NAME.equals(element.getName()));
     element.setAttribute(URL_ATTRIBUTE, myRoot.getUrl());
     for (ContentFolder contentFolder : myContentFolders) {
-      final Element subElement = new Element("content-folder");
+      final Element subElement = new Element(ContentFolderImpl.ELEMENT_NAME);
       ((ContentFolderImpl)contentFolder).writeExternal(subElement);
       element.addContent(subElement);
     }
