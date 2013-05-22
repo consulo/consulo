@@ -78,6 +78,7 @@
               <element id="module-output" name="java-psi-api" />
               <element id="module-output" name="java-indexing-api" />
               <element id="module-output" name="java-execution-api" />
+              <element id="module-output" name="java-execution-impl" />
             </element>
             <element id="archive" name="jdk-annotations.jar">
               <element id="dir-copy" path="$PROJECT_DIR$/plugins/java-platform/jdkAnnotations" />

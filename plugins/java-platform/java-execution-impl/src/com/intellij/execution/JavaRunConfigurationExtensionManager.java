@@ -26,7 +26,7 @@ import com.intellij.openapi.diagnostic.Logger;
  * Date: 10/4/11
  */
 public class JavaRunConfigurationExtensionManager extends RunConfigurationExtensionsManager<RunConfigurationBase, RunConfigurationExtension> {
-  private static final Logger LOG = Logger.getInstance("#" + RunConfigurationExtension.class.getName());
+  private static final Logger LOG = Logger.getInstance(RunConfigurationExtension.class.getName());
 
   public JavaRunConfigurationExtensionManager() {
     super(RunConfigurationExtension.EP_NAME);

@@ -33,6 +33,7 @@ import gnu.trove.TIntObjectHashMap;
 
 import javax.swing.*;
 
+@Deprecated
 public class ElementPresentationUtil implements PlatformIcons {
   private ElementPresentationUtil() {
   }

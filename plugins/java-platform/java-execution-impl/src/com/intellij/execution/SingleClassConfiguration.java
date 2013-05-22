@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.ui;
+package com.intellij.execution;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.PsiClass;
 
 /**
- * Extension point for providing custom jre to be shown at run configuration control.
- * 
- * @author Denis Zhdanov
- * @since 5/9/13 10:04 PM
+ * @author dyoma
  */
-public interface JreProvider {
+public interface SingleClassConfiguration {
+  void setMainClass(final PsiClass psiClass);
 
-  ExtensionPointName<JreProvider> EP_NAME = new ExtensionPointName<JreProvider>("com.intellij.jreProvider");
-  
-  @NotNull
-  String getJrePath();
+  PsiClass getMainClass();
+  void setMainClassName(String qualifiedName);
 }

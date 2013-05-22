@@ -25,11 +25,11 @@ package com.intellij.execution.util;
 import com.intellij.execution.CommonJavaRunConfigurationParameters;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.Nullable;
 
 public class JreVersionDetector {
@@ -40,13 +40,11 @@ public class JreVersionDetector {
   public boolean isModuleJre50Configured(final ModuleBasedConfiguration configuration) {
     final Module module = configuration.getConfigurationModule().getModule();
     if (module != null && !module.isDisposed()) {
-      final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-      final Sdk jdk = rootManager.getSdk();
-      return isJre50(jdk);
+      final Sdk sdk = ModuleUtil.getSdk(module, JavaModuleExtension.class);
+      return isJre50(sdk);
     }
 
-    final Sdk projectJdk = ProjectRootManager.getInstance(configuration.getProject()).getProjectSdk();
-    return isJre50(projectJdk);
+    return false;
   }
 
   public boolean isJre50Configured(final CommonJavaRunConfigurationParameters configuration) {

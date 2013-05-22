@@ -4552,8 +4552,6 @@
 
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
-    <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>
-
 
     <OrderRootTypeUI key="JAVADOC"
                      implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.JavadocOrderRootTypeUIFactory"/>

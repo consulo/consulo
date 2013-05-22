@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.application;
 
-import com.intellij.execution.ExecutionBundle;
+import com.intellij.core.JavaCoreBundle;
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
@@ -54,11 +54,11 @@ public class ApplicationConfigurationType implements ConfigurationType {
   }
 
   public String getDisplayName() {
-    return ExecutionBundle.message("application.configuration.name");
+    return JavaCoreBundle.message("application.configuration.name");
   }
 
   public String getConfigurationTypeDescription() {
-    return ExecutionBundle.message("application.configuration.description");
+    return JavaCoreBundle.message("application.configuration.description");
   }
 
   public Icon getIcon() {
@@ -95,7 +95,7 @@ public class ApplicationConfigurationType implements ConfigurationType {
   @NotNull
   @NonNls
   public String getId() {
-    return "Application";
+    return "JavaApplication";
   }
 
   @Nullable

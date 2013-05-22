@@ -48,6 +48,7 @@
     <orderEntry type="module" module-name="java-platform" />
     <orderEntry type="module" module-name="java-psi-api" />
     <orderEntry type="module" module-name="java-psi-impl" />
+    <orderEntry type="module" module-name="java-execution-impl" />
   </component>
 </module>
 

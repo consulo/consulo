@@ -1583,8 +1583,7 @@
     <!--TODO [VISTALL] execution
        <configurationType implementation="com.intellij.execution.applet.AppletConfigurationType"/>
        <configurationProducer implementation="com.intellij.execution.applet.AppletConfigurationProducer"/>
-       <configurationType implementation="com.intellij.execution.application.ApplicationConfigurationType"/>
-       <configurationProducer implementation="com.intellij.execution.application.ApplicationConfigurationProducer"/>
+
        <configurationType implementation="com.intellij.execution.remote.RemoteConfigurationType"/>     -->
 
     <!--TODO [VISTALL] core depend?? <applicationService serviceInterface="com.intellij.packageDependencies.DependenciesVisitorFactory"
@@ -1832,6 +1831,8 @@
     <applicationService serviceInterface="com.intellij.psi.impl.file.PsiPackageImplementationHelper"
                         serviceImplementation="com.intellij.psi.impl.file.PsiPackageImplementationHelperImpl"/>
     <sdkType implementation="com.intellij.openapi.projectRoots.impl.JavaSdkImpl" />
+  <!--  <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>  -->
+
   </extensions>
 
 

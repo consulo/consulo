@@ -18,6 +18,7 @@ package com.intellij.execution.junit;
 import com.intellij.execution.JavaExecutionUtil;
 import com.intellij.execution.SingleClassConfiguration;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -61,9 +62,17 @@ public class RefactoringListeners {
 
   }
 
+  public static PsiClass findPsiClass(final String qualifiedName, final Module module, final Project project) {
+    final GlobalSearchScope scope =
+      module == null ? GlobalSearchScope.projectScope(project) : GlobalSearchScope.moduleWithDependenciesScope(module);
+    return JavaPsiFacade.getInstance(project).findClass(qualifiedName, scope);
+  }
+
   public interface Accessor<T extends PsiElement> {
     void setName(String qualifiedName);
+
     T getPsiElement();
+
     void setPsiElement(T psiElement);
   }
 
@@ -88,7 +97,7 @@ public class RefactoringListeners {
   }
 
   private static abstract class RenameElement<T extends PsiElement> extends RefactoringElementAdapter
-                                                                    implements UndoRefactoringElementListener{
+    implements UndoRefactoringElementListener {
     private final Accessor<T> myAccessor;
     private final String myPath;
 
@@ -186,7 +195,7 @@ public class RefactoringListeners {
     public void setPsiElement(final PsiJavaPackage psiPackage) {
       if (myInpackageName == null) return; //we can do nothing
       final String classQName = getClassQName(psiPackage.getQualifiedName());
-      final PsiClass newClass = JUnitUtil.findPsiClass(classQName, myModule, psiPackage.getProject());
+      final PsiClass newClass = findPsiClass(classQName, myModule, psiPackage.getProject());
       if (newClass != null) {
         myAccessor.setPsiElement(newClass);
       }

@@ -61,7 +61,7 @@ public class ApplicationConfiguration extends ModuleBasedConfiguration<JavaRunCo
   public boolean ENABLE_SWING_INSPECTOR;
 
   public String ENV_VARIABLES;
-  private Map<String,String> myEnvs = new LinkedHashMap<String, String>();
+  private Map<String, String> myEnvs = new LinkedHashMap<String, String>();
   public boolean PASS_PARENT_ENVS = true;
 
   public ApplicationConfiguration(final String name, final Project project, ApplicationConfigurationType applicationConfigurationType) {
@@ -108,8 +108,8 @@ public class ApplicationConfiguration extends ModuleBasedConfiguration<JavaRunCo
   }
 
   public RefactoringElementListener getRefactoringElementListener(final PsiElement element) {
-    final RefactoringElementListener listener = RefactoringListeners.
-      getClassOrPackageListener(element, new RefactoringListeners.SingleClassConfigurationAccessor(this));
+    final RefactoringElementListener listener =
+      RefactoringListeners.getClassOrPackageListener(element, new RefactoringListeners.SingleClassConfigurationAccessor(this));
     return RunConfigurationExtension.wrapRefactoringElementListener(element, this, listener);
   }
 
@@ -141,7 +141,8 @@ public class ApplicationConfiguration extends ModuleBasedConfiguration<JavaRunCo
   public void checkConfiguration() throws RuntimeConfigurationException {
     JavaParametersUtil.checkAlternativeJRE(this);
     final JavaRunConfigurationModule configurationModule = getConfigurationModule();
-    final PsiClass psiClass = configurationModule.checkModuleAndClassName(MAIN_CLASS_NAME, ExecutionBundle.message("no.main.class.specified.error.text"));
+    final PsiClass psiClass =
+      configurationModule.checkModuleAndClassName(MAIN_CLASS_NAME, ExecutionBundle.message("no.main.class.specified.error.text"));
     if (!PsiMethodUtil.hasMainMethod(psiClass)) {
       throw new RuntimeConfigurationWarning(ExecutionBundle.message("main.method.not.found.in.class.error.message", MAIN_CLASS_NAME));
     }
@@ -202,20 +203,20 @@ public class ApplicationConfiguration extends ModuleBasedConfiguration<JavaRunCo
   }
 
   public boolean isAlternativeJrePathEnabled() {
-     return ALTERNATIVE_JRE_PATH_ENABLED;
-   }
+    return ALTERNATIVE_JRE_PATH_ENABLED;
+  }
 
-   public void setAlternativeJrePathEnabled(boolean enabled) {
-     this.ALTERNATIVE_JRE_PATH_ENABLED = enabled;
-   }
+  public void setAlternativeJrePathEnabled(boolean enabled) {
+    this.ALTERNATIVE_JRE_PATH_ENABLED = enabled;
+  }
 
-   public String getAlternativeJrePath() {
-     return ALTERNATIVE_JRE_PATH;
-   }
+  public String getAlternativeJrePath() {
+    return ALTERNATIVE_JRE_PATH;
+  }
 
-   public void setAlternativeJrePath(String path) {
-     this.ALTERNATIVE_JRE_PATH = path;
-   }
+  public void setAlternativeJrePath(String path) {
+    this.ALTERNATIVE_JRE_PATH = path;
+  }
 
   public Collection<Module> getValidModules() {
     return JavaRunConfigurationModule.getModulesForClass(getProject(), MAIN_CLASS_NAME);
@@ -247,8 +248,7 @@ public class ApplicationConfiguration extends ModuleBasedConfiguration<JavaRunCo
 
     private final ApplicationConfiguration myConfiguration;
 
-    public JavaApplicationCommandLineState(@NotNull final ApplicationConfiguration configuration,
-                                           final ExecutionEnvironment environment) {
+    public JavaApplicationCommandLineState(@NotNull final ApplicationConfiguration configuration, final ExecutionEnvironment environment) {
       super(environment);
       myConfiguration = configuration;
     }
@@ -256,17 +256,14 @@ public class ApplicationConfiguration extends ModuleBasedConfiguration<JavaRunCo
     protected JavaParameters createJavaParameters() throws ExecutionException {
       final JavaParameters params = new JavaParameters();
       final JavaRunConfigurationModule module = myConfiguration.getConfigurationModule();
-      
-      final int classPathType = JavaParametersUtil.getClasspathType(module,
-                                                                    myConfiguration.MAIN_CLASS_NAME, 
-                                                                    false);
-      final String jreHome = myConfiguration.ALTERNATIVE_JRE_PATH_ENABLED ? myConfiguration.ALTERNATIVE_JRE_PATH 
-                                                                          : null;
+
+      final int classPathType = JavaParametersUtil.getClasspathType(module, myConfiguration.MAIN_CLASS_NAME, false);
+      final String jreHome = myConfiguration.ALTERNATIVE_JRE_PATH_ENABLED ? myConfiguration.ALTERNATIVE_JRE_PATH : null;
       JavaParametersUtil.configureModule(module, params, classPathType, jreHome);
       JavaParametersUtil.configureConfiguration(params, myConfiguration);
 
       params.setMainClass(myConfiguration.MAIN_CLASS_NAME);
-      for(RunConfigurationExtension ext: Extensions.getExtensions(RunConfigurationExtension.EP_NAME)) {
+      for (RunConfigurationExtension ext : Extensions.getExtensions(RunConfigurationExtension.EP_NAME)) {
         ext.updateJavaParameters(myConfiguration, params, getRunnerSettings());
       }
 
