@@ -20,7 +20,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.SourceFolder;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
@@ -54,8 +54,8 @@ public class TestModuleOutputElementType extends ModuleOutputElementTypeBase<Tes
 
   public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
     for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
-      for (SourceFolder folder : entry.getSourceFolders()) {
-        if (folder.isTestSource()) return true;
+      if(entry.getFolders(ContentFolder.ContentFolderType.TEST).length != 0) {
+        return true;
       }
     }
     return false;

@@ -35,13 +35,11 @@ import com.intellij.openapi.fileChooser.impl.FileTreeBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.SourceFolder;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
-import com.intellij.openapi.roots.ui.configuration.actions.ToggleExcludedStateAction;
-import com.intellij.openapi.roots.ui.configuration.actions.ToggleSourcesStateAction;
+import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
@@ -62,13 +60,12 @@ import java.util.Comparator;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Oct 9, 2003
- * Time: 1:19:47 PM
+ *         Date: Oct 9, 2003
+ *         Time: 1:19:47 PM
  */
 public class ContentEntryTreeEditor {
   private final Project myProject;
-  private final boolean myCanMarkSources;
-  private final boolean myCanMarkTestSources;
+
   protected Tree myTree;
   private FileSystemTreeImpl myFileSystemTree;
   private final JPanel myTreePanel;
@@ -78,10 +75,9 @@ public class ContentEntryTreeEditor {
   private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
   private final FileChooserDescriptor myDescriptor;
 
-  public ContentEntryTreeEditor(Project project, boolean canMarkSources, boolean canMarkTestSources) {
+  public ContentEntryTreeEditor(Project project) {
     myProject = project;
-    myCanMarkSources = canMarkSources;
-    myCanMarkTestSources = canMarkTestSources;
+
     myTree = new Tree();
     myTree.setRootVisible(true);
     myTree.setShowsRootHandles(true);
@@ -101,17 +97,21 @@ public class ContentEntryTreeEditor {
   }
 
   protected void createEditingActions() {
-    if (myCanMarkSources) {
-      ToggleSourcesStateAction markSourcesAction = new ToggleSourcesStateAction(myTree, this, false);
-      markSourcesAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK)), myTree);
-      myEditingActionsGroup.add(markSourcesAction);
-    }
+    ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.SOURCE);
+    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK)), myTree);
+    myEditingActionsGroup.add(action);
 
-    if (myCanMarkTestSources) {
-      setupTestsAction();
-    }
+    action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.RESOURCE);
+    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK)), myTree);
+    myEditingActionsGroup.add(action);
 
-    setupExcludedAction();
+    action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.TEST);
+    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_MASK)), myTree);
+    myEditingActionsGroup.add(action);
+
+    action = new ToggleFolderStateAction(myTree, this, ContentFolder.ContentFolderType.EXCLUDED);
+    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_MASK)), myTree);
+    myEditingActionsGroup.add(action);
   }
 
   protected TreeCellRenderer getContentEntryCellRenderer() {
@@ -165,8 +165,11 @@ public class ContentEntryTreeEditor {
 
     myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, getContentEntryCellRenderer(), init, null) {
       @Override
-      protected AbstractTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, AbstractTreeStructure treeStructure,
-                                                      Comparator<NodeDescriptor> comparator, FileChooserDescriptor descriptor,
+      protected AbstractTreeBuilder createTreeBuilder(JTree tree,
+                                                      DefaultTreeModel treeModel,
+                                                      AbstractTreeStructure treeStructure,
+                                                      Comparator<NodeDescriptor> comparator,
+                                                      FileChooserDescriptor descriptor,
                                                       final Runnable onInitialized) {
         return new MyFileTreeBuilder(tree, treeModel, treeStructure, comparator, descriptor, onInitialized);
       }
@@ -218,37 +221,25 @@ public class ContentEntryTreeEditor {
     }
   }
 
+  public Project getProject() {
+    return myProject;
+  }
+
   private class MyContentEntryEditorListener extends ContentEntryEditorListenerAdapter {
     @Override
-    public void sourceFolderAdded(@NotNull ContentEntryEditor editor, SourceFolder folder) {
+    public void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
       update();
     }
 
     @Override
-    public void sourceFolderRemoved(@NotNull ContentEntryEditor editor, VirtualFile file, boolean isTestSource) {
-      update();
-    }
-
-    @Override
-    public void folderExcluded(@NotNull ContentEntryEditor editor, VirtualFile file) {
-      update();
-    }
-
-    @Override
-    public void folderIncluded(@NotNull ContentEntryEditor editor, VirtualFile file) {
-      update();
-    }
-
-    @Override
-    public void packagePrefixSet(@NotNull ContentEntryEditor editor, @NotNull SourceFolder folder) {
+    public void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
       update();
     }
   }
 
   private static class MyNewFolderAction extends NewFolderAction implements CustomComponentAction {
     private MyNewFolderAction() {
-      super(ActionsBundle.message("action.FileChooser.NewFolder.text"),
-            ActionsBundle.message("action.FileChooser.NewFolder.description"),
+      super(ActionsBundle.message("action.FileChooser.NewFolder.text"), ActionsBundle.message("action.FileChooser.NewFolder.description"),
             AllIcons.Actions.NewFolder);
     }
 
@@ -288,17 +279,4 @@ public class ContentEntryTreeEditor {
       return null;
     }
   }
-
-  protected void setupTestsAction() {
-    ToggleSourcesStateAction markTestsAction = new ToggleSourcesStateAction(myTree, this, true);
-    markTestsAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_MASK)), myTree);
-    myEditingActionsGroup.add(markTestsAction);
-  }
-
-  protected void setupExcludedAction() {
-    ToggleExcludedStateAction toggleExcludedAction = new ToggleExcludedStateAction(myTree, this);
-    myEditingActionsGroup.add(toggleExcludedAction);
-    toggleExcludedAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_MASK)), myTree);
-  }
-
 }

@@ -13,7 +13,7 @@ import com.intellij.openapi.application.ex.PathManagerEx
 import com.intellij.openapi.roots.ContentEntry
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ModuleRootManager
-import com.intellij.openapi.roots.SourceFolder
+
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.JavaPsiFacade

@@ -125,16 +125,13 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   private static void createSourceRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {
-    SourceFolder[] folders = entry.getSourceFolders();
-    if (folders == null) {
+    ContentFolder[] folders = entry.getFolders(ContentFolder.ContentFolderType.SOURCE);
+    if (folders.length == 0) {
       LOG.info(String.format("Importing source root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-      entry.addSourceFolder(toVfsUrl(path), false);
+      entry.addFolder(toVfsUrl(path), ContentFolder.ContentFolderType.SOURCE);
       return;
     }
-    for (SourceFolder folder : folders) {
-      if (folder.isTestSource()) {
-        continue;
-      }
+    for (ContentFolder folder : folders) {
       VirtualFile file = folder.getFile();
       if (file == null) {
         continue;
@@ -144,17 +141,17 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing source root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addSourceFolder(toVfsUrl(path), false);
+    entry.addFolder(toVfsUrl(path), ContentFolder.ContentFolderType.SOURCE);
   }
 
   private static void createExcludedRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {
-    ExcludeFolder[] folders = entry.getExcludeFolders();
-    if (folders == null) {
+    ContentFolder[] folders = entry.getFolders(ContentFolder.ContentFolderType.EXCLUDED);
+    if (folders.length == 0) {
       LOG.info(String.format("Importing excluded root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-      entry.addExcludeFolder(toVfsUrl(path));
+      entry.addFolder(toVfsUrl(path), ContentFolder.ContentFolderType.EXCLUDED);
       return;
     }
-    for (ExcludeFolder folder : folders) {
+    for (ContentFolder folder : folders) {
       VirtualFile file = folder.getFile();
       if (file == null) {
         continue;
@@ -164,20 +161,17 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing excluded root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addExcludeFolder(toVfsUrl(path));
+    entry.addFolder(toVfsUrl(path), ContentFolder.ContentFolderType.EXCLUDED);
   }
 
   private static void createTestRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {
-    SourceFolder[] folders = entry.getSourceFolders();
-    if (folders == null) {
+    ContentFolder[] folders = entry.getFolders(ContentFolder.ContentFolderType.TEST);
+    if (folders.length == 0) {
       LOG.info(String.format("Importing test root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-      entry.addSourceFolder(toVfsUrl(path), true);
+      entry.addFolder(toVfsUrl(path), ContentFolder.ContentFolderType.TEST);
       return;
     }
-    for (SourceFolder folder : folders) {
-      if (!folder.isTestSource()) {
-        continue;
-      }
+    for (ContentFolder folder : folders) {
       VirtualFile file = folder.getFile();
       if (file == null) {
         continue;
@@ -187,7 +181,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing test root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addSourceFolder(toVfsUrl(path), true);
+    entry.addFolder(toVfsUrl(path), ContentFolder.ContentFolderType.EXCLUDED.TEST);
   }
 
   @Override

@@ -320,7 +320,6 @@
 
     <generation.topLevelFactory language="JAVA" implementationClass="com.intellij.psi.impl.JavaFactoryProvider"/>
 
-    <elementFinder implementation="com.intellij.psi.impl.PackagePrefixElementFinder"/>
     <elementFinder implementation="com.intellij.psi.impl.migration.MigrationElementFinder"/>
   </extensions>
 

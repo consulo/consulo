@@ -2,8 +2,7 @@ package com.intellij.openapi.externalSystem.service.project;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ExcludeFolder;
-import com.intellij.openapi.roots.SourceFolder;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,69 +46,50 @@ public class ModuleAwareContentRoot implements ContentEntry {
     return myDelegate.getUrl();
   }
 
+  @NotNull
   @Override
-  public SourceFolder[] getSourceFolders() {
-    return myDelegate.getSourceFolders();
+  public ContentFolder[] getFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return myDelegate.getFolders(contentFolderType);
+  }
+
+  @NotNull
+  @Override
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return myDelegate.getFolderFiles(contentFolderType);
+  }
+
+  @NotNull
+  @Override
+  public String[] getFolderUrls(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return myDelegate.getFolderUrls(contentFolderType);
   }
 
   @Override
-  public VirtualFile[] getSourceFolderFiles() {
-    return myDelegate.getSourceFolderFiles();
+  public ContentFolder[] getFolders() {
+    return myDelegate.getFolders();
+  }
+
+  @NotNull
+  @Override
+  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return myDelegate.addFolder(file, contentFolderType);
+  }
+
+  @NotNull
+  @Override
+  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return myDelegate.addFolder(url, contentFolderType);
   }
 
   @Override
-  public ExcludeFolder[] getExcludeFolders() {
-    return myDelegate.getExcludeFolders();
+  public void removeFolder(@NotNull ContentFolder contentFolder) {
+    myDelegate.removeFolder(contentFolder);
+
   }
 
   @Override
-  public VirtualFile[] getExcludeFolderFiles() {
-    return myDelegate.getExcludeFolderFiles();
-  }
-
-  @Override
-  public SourceFolder addSourceFolder(@NotNull VirtualFile file, boolean isTestSource) {
-    return myDelegate.addSourceFolder(file, isTestSource);
-  }
-
-  @Override
-  public SourceFolder addSourceFolder(@NotNull VirtualFile file, boolean isTestSource, @NotNull String packagePrefix) {
-    return myDelegate.addSourceFolder(file, isTestSource, packagePrefix);
-  }
-
-  @Override
-  public SourceFolder addSourceFolder(@NotNull String url, boolean isTestSource) {
-    return myDelegate.addSourceFolder(url, isTestSource);
-  }
-
-  @Override
-  public void removeSourceFolder(@NotNull SourceFolder sourceFolder) {
-    myDelegate.removeSourceFolder(sourceFolder);
-  }
-
-  @Override
-  public void clearSourceFolders() {
-    myDelegate.clearSourceFolders();
-  }
-
-  @Override
-  public ExcludeFolder addExcludeFolder(@NotNull VirtualFile file) {
-    return myDelegate.addExcludeFolder(file);
-  }
-
-  @Override
-  public ExcludeFolder addExcludeFolder(@NotNull String url) {
-    return myDelegate.addExcludeFolder(url);
-  }
-
-  @Override
-  public void removeExcludeFolder(@NotNull ExcludeFolder excludeFolder) {
-    myDelegate.removeExcludeFolder(excludeFolder);
-  }
-
-  @Override
-  public void clearExcludeFolders() {
-    myDelegate.clearExcludeFolders();
+  public void clearFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+    myDelegate.clearFolders(contentFolderType);
   }
 
   @Override

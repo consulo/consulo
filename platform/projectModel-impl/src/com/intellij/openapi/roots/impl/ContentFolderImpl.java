@@ -30,46 +30,64 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 
 /**
- *  @author dsl
+ * @author dsl
  */
-public abstract class ContentFolderBaseImpl extends RootModelComponentBase implements ContentFolder, Comparable<ContentFolderBaseImpl> {
+public class ContentFolderImpl extends RootModelComponentBase implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
   @NonNls public static final String URL_ATTRIBUTE = JpsModuleRootModelSerializer.URL_ATTRIBUTE;
+  @NonNls public static final String TYPE_ATTRIBUTE = JpsModuleRootModelSerializer.TYPE_ATTRIBUTE;
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.SimpleContentFolderBaseImpl");
 
   private final VirtualFilePointer myFilePointer;
   protected final ContentEntryImpl myContentEntry;
+  private final ContentFolderType myContentFolderType;
 
-  ContentFolderBaseImpl(@NotNull VirtualFile file, @NotNull ContentEntryImpl contentEntry) {
+  ContentFolderImpl(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType, @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
+    myContentFolderType = contentFolderType;
     myFilePointer = VirtualFilePointerManager.getInstance().create(file, this, null);
   }
 
-  ContentFolderBaseImpl(@NotNull String url, @NotNull ContentEntryImpl contentEntry) {
+  ContentFolderImpl(@NotNull String url, @NotNull ContentFolderType contentFolderType, @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
+    myContentFolderType = contentFolderType;
     myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
-  protected ContentFolderBaseImpl(@NotNull ContentFolderBaseImpl that, @NotNull ContentEntryImpl contentEntry) {
-    this(that.myFilePointer, contentEntry);
+  protected ContentFolderImpl(@NotNull ContentFolderImpl that,
+                              @NotNull ContentEntryImpl contentEntry) {
+    this(that.myFilePointer, that.getType(), contentEntry);
   }
 
-  ContentFolderBaseImpl(@NotNull Element element, @NotNull ContentEntryImpl contentEntry) throws InvalidDataException {
-    this(getUrlFrom(element), contentEntry);
+  ContentFolderImpl(@NotNull Element element, @NotNull ContentEntryImpl contentEntry) throws InvalidDataException {
+    this(getUrlFrom(element), getType(element), contentEntry);
   }
 
-  protected ContentFolderBaseImpl(@NotNull VirtualFilePointer filePointer, @NotNull ContentEntryImpl contentEntry) {
+  protected ContentFolderImpl(@NotNull VirtualFilePointer filePointer,
+                              @NotNull ContentFolderType contentFolderType,
+                              @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
-    myFilePointer = VirtualFilePointerManager.getInstance().duplicate(filePointer,this, null);
+    myContentFolderType = contentFolderType;
+    myFilePointer = VirtualFilePointerManager.getInstance().duplicate(filePointer, this, null);
   }
 
   private static String getUrlFrom(Element element) throws InvalidDataException {
     String url = element.getAttributeValue(URL_ATTRIBUTE);
-    if (url == null) throw new InvalidDataException();
+    if (url == null) {
+      throw new InvalidDataException();
+    }
     return url;
+  }
+
+  private static ContentFolderType getType(Element element) throws InvalidDataException {
+    String type = element.getAttributeValue(TYPE_ATTRIBUTE);
+    if (type == null) {
+      throw new InvalidDataException();
+    }
+    return ContentFolderType.valueOf(type);
   }
 
   @Override
@@ -87,8 +105,8 @@ public abstract class ContentFolderBaseImpl extends RootModelComponentBase imple
     return myContentEntry;
   }
 
-  protected void writeFolder(Element element, String elementName) {
-    LOG.assertTrue(element.getName().equals(elementName));
+  protected void writeExternal(Element element) {
+    element.setAttribute(TYPE_ATTRIBUTE, myContentFolderType.name());
     element.setAttribute(URL_ATTRIBUTE, myFilePointer.getUrl());
   }
 
@@ -100,28 +118,41 @@ public abstract class ContentFolderBaseImpl extends RootModelComponentBase imple
 
   @Override
   public boolean isSynthetic() {
-    return false;
+    return myContentFolderType == ContentFolderType.EXCLUDED_OUTPUT;
+  }
+
+  @NotNull
+  @Override
+  public ContentFolderType getType() {
+    return myContentFolderType;
   }
 
   @Override
-  public int compareTo(ContentFolderBaseImpl folder) {
+  public int compareTo(ContentFolderImpl folder) {
     return getUrl().compareTo(folder.getUrl());
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof ContentFolderBaseImpl)) return false;
-    return compareTo((ContentFolderBaseImpl)obj) == 0;
+    if (!(obj instanceof ContentFolderImpl)) return false;
+    return compareTo((ContentFolderImpl)obj) == 0;
   }
 
   @Override
   public int hashCode() {
     return getUrl().hashCode();
   }
-  
+
   @Nullable
   @Override
   public String toString() {
     return myFilePointer == null ? null : getUrl();
+  }
+
+  @Override
+  public ContentFolder cloneFolder(ContentEntry contentEntry) {
+    assert !((ContentEntryImpl)contentEntry).isDisposed() : "target entry already disposed: " + contentEntry;
+    assert !isDisposed() : "Already disposed: " + this;
+    return new ContentFolderImpl(this, (ContentEntryImpl)contentEntry);
   }
 }

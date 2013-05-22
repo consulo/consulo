@@ -351,29 +351,13 @@ public class JavadocConfiguration implements ModuleRunProfile, JDOMExternalizabl
       if (file instanceof PsiJavaFile) {
         final PsiJavaFile javaFile = (PsiJavaFile)file;
         final String packageName = javaFile.getPackageName();
-        if (containsPackagePrefix(module, packageName) || (packageName.length() == 0 /*&& !(javaFile instanceof JspFile)*/) || !myUsePackageNotation) {
+        if ((packageName.length() == 0 /*&& !(javaFile instanceof JspFile)*/) || !myUsePackageNotation) {
           mySourceFiles.add(FileUtil.toSystemIndependentName(fileOrDir.getPath()));
         }
         else {
           myPackages.add(packageName);
         }
       }
-    }
-
-    private static boolean containsPackagePrefix(Module module, String packageFQName) {
-      if (module == null) return false;
-      final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
-      for (ContentEntry contentEntry : contentEntries) {
-        final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-        for (SourceFolder sourceFolder : sourceFolders) {
-          final String packagePrefix = sourceFolder.getPackagePrefix();
-          final int prefixLength = packagePrefix.length();
-          if (prefixLength > 0 && packageFQName.startsWith(packagePrefix)) {
-            return true;
-          }
-        }
-      }
-      return false;
     }
   }
 }

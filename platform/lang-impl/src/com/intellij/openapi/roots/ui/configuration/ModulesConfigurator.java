@@ -32,6 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
@@ -48,6 +49,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import org.jetbrains.annotations.NotNull;
@@ -226,7 +228,10 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
             ProjectBundle.message("module.paths.validation.duplicate.content.error", contentRoot.getPresentableUrl(), previousName, moduleName)
           );
         }
-        for (VirtualFile srcRoot : contentEntry.getSourceFolderFiles()) {
+
+        final VirtualFile[] sourceAndTestFiles = ArrayUtil.mergeArrays(contentEntry.getFolderFiles(ContentFolder.ContentFolderType.SOURCE),
+                                                                 contentEntry.getFolderFiles(ContentFolder.ContentFolderType.TEST));
+        for (VirtualFile srcRoot : sourceAndTestFiles) {
           final VirtualFile anotherContentRoot = srcRootsToContentRootMap.put(srcRoot, contentRoot);
           if (anotherContentRoot != null) {
             final String problematicModule;

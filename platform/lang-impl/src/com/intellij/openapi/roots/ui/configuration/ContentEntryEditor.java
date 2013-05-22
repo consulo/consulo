@@ -17,7 +17,9 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -43,24 +45,21 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   private JPanel myMainPanel;
   protected EventDispatcher<ContentEntryEditorListener> myEventDispatcher;
   private final String myContentEntryUrl;
-  protected final boolean myCanMarkSources;
-  protected final boolean myCanMarkTestSources;
 
-  public interface ContentEntryEditorListener extends EventListener{
+  public interface ContentEntryEditorListener extends EventListener {
     void editingStarted(@NotNull ContentEntryEditor editor);
+
     void beforeEntryDeleted(@NotNull ContentEntryEditor editor);
-    void sourceFolderAdded(@NotNull ContentEntryEditor editor, SourceFolder folder);
-    void sourceFolderRemoved(@NotNull ContentEntryEditor editor, VirtualFile file, boolean isTestSource);
-    void folderExcluded(@NotNull ContentEntryEditor editor, VirtualFile file);
-    void folderIncluded(@NotNull ContentEntryEditor editor, VirtualFile file);
+
+    void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder contentFolder);
+
+    void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder contentFolder);
+
     void navigationRequested(@NotNull ContentEntryEditor editor, VirtualFile file);
-    void packagePrefixSet(@NotNull ContentEntryEditor editor, @NotNull SourceFolder folder);
   }
 
-  public ContentEntryEditor(final String contentEntryUrl, boolean canMarkSources, boolean canMarkTestSources) {
+  public ContentEntryEditor(final String contentEntryUrl) {
     myContentEntryUrl = contentEntryUrl;
-    myCanMarkSources = canMarkSources;
-    myCanMarkTestSources = canMarkTestSources;
   }
 
   public String getContentEntryUrl() {
@@ -75,12 +74,14 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
       public void mouseClicked(MouseEvent e) {
         myEventDispatcher.getMulticaster().editingStarted(ContentEntryEditor.this);
       }
+
       @Override
       public void mouseEntered(MouseEvent e) {
         if (!myIsSelected) {
           highlight(true);
         }
       }
+
       @Override
       public void mouseExited(MouseEvent e) {
         if (!myIsSelected) {
@@ -125,15 +126,8 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
 
   @Override
   public void deleteContentFolder(ContentEntry contentEntry, ContentFolder folder) {
-    if (folder instanceof SourceFolder) {
-      removeSourceFolder((SourceFolder)folder);
-      update();
-    }
-    else if (folder instanceof ExcludeFolder) {
-      removeExcludeFolder((ExcludeFolder)folder);
-      update();
-    }
-
+    removeFolder(folder);
+    update();
   }
 
   @Override
@@ -142,13 +136,6 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
     if (file != null) { // file can be deleted externally
       myEventDispatcher.getMulticaster().navigationRequested(this, file);
     }
-  }
-
-  @Override
-  public void setPackagePrefix(@NotNull SourceFolder folder, @NotNull String prefix) {
-    folder.setPackagePrefix(prefix);
-    update();
-    myEventDispatcher.getMulticaster().packagePrefixSet(this, folder);
   }
 
   public void addContentEntryEditorListener(ContentEntryEditorListener listener) {
@@ -188,7 +175,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   protected ContentRootPanel createContentRootPane() {
-    return new ContentRootPanel(this, myCanMarkSources, myCanMarkTestSources) {
+    return new ContentRootPanel(this) {
       @Override
       protected ContentEntry getContentEntry() {
         return ContentEntryEditor.this.getContentEntry();
@@ -197,15 +184,15 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   @Nullable
-  public SourceFolder addSourceFolder(@NotNull final VirtualFile file, boolean isTestSource, String packagePrefix) {
+  public ContentFolder addFolder(@NotNull final VirtualFile file, ContentFolder.ContentFolderType contentFolderType) {
     final ContentEntry contentEntry = getContentEntry();
     if (contentEntry != null) {
-      final SourceFolder sourceFolder = contentEntry.addSourceFolder(file, isTestSource, packagePrefix);
+      final ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
       try {
-        return sourceFolder;
+        return contentFolder;
       }
       finally {
-        myEventDispatcher.getMulticaster().sourceFolderAdded(this, sourceFolder);
+        myEventDispatcher.getMulticaster().folderAdded(this, contentFolder);
         update();
       }
     }
@@ -213,123 +200,34 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
     return null;
   }
 
-  @Nullable
-  protected SourceFolder doAddSourceFolder(@NotNull final VirtualFile file, final boolean isTestSource) {
-    final ContentEntry contentEntry = getContentEntry();
-    return contentEntry != null ? contentEntry.addSourceFolder(file, isTestSource) : null;
-  }
 
-  public void removeSourceFolder(@NotNull final SourceFolder sourceFolder) {
+  public void removeFolder(@NotNull final ContentFolder contentFolder) {
     try {
-      doRemoveSourceFolder(sourceFolder);
-    }
-    finally {
-      myEventDispatcher.getMulticaster().sourceFolderRemoved(this, sourceFolder.getFile(), sourceFolder.isTestSource());
-      update();
-    }
-  }
-
-  protected void doRemoveSourceFolder(@NotNull final SourceFolder sourceFolder) {
-    final ContentEntry contentEntry = getContentEntry();
-    if (contentEntry != null) contentEntry.removeSourceFolder(sourceFolder);
-  }
-
-  @Nullable
-  public ExcludeFolder addExcludeFolder(@NotNull final VirtualFile file) {
-    try {
-      return doAddExcludeFolder(file);
-    }
-    finally {
-      myEventDispatcher.getMulticaster().folderExcluded(this, file);
-      update();
-    }
-  }
-
-  @Nullable
-  protected ExcludeFolder doAddExcludeFolder(@NotNull final VirtualFile file) {
-    final ContentEntry contentEntry = getContentEntry();
-    return contentEntry != null ? contentEntry.addExcludeFolder(file) : null;
-  }
-
-  public void removeExcludeFolder(@NotNull final ExcludeFolder excludeFolder) {
-    try {
-      doRemoveExcludeFolder(excludeFolder);
-    }
-    finally {
-      myEventDispatcher.getMulticaster().folderIncluded(this, excludeFolder.getFile());
-      update();
-    }
-  }
-
-  protected void doRemoveExcludeFolder(@NotNull final ExcludeFolder excludeFolder) {
-    if (!excludeFolder.isSynthetic()) {
+      if (contentFolder.isSynthetic()) {
+        return;
+      }
       final ContentEntry contentEntry = getContentEntry();
-      if (contentEntry != null) contentEntry.removeExcludeFolder(excludeFolder);
-    }
-  }
-
-  public boolean isSource(@NotNull final VirtualFile file) {
-    final SourceFolder sourceFolder = getSourceFolder(file);
-    return sourceFolder != null && !sourceFolder.isTestSource();
-  }
-
-  public boolean isTestSource(@NotNull final VirtualFile file) {
-    final SourceFolder sourceFolder = getSourceFolder(file);
-    return sourceFolder != null && sourceFolder.isTestSource();
-  }
-
-  public boolean isExcluded(@NotNull final VirtualFile file) {
-    return getExcludeFolder(file) != null;
-  }
-
-  public boolean isUnderExcludedDirectory(@NotNull final VirtualFile file) {
-    final ContentEntry contentEntry = getContentEntry();
-    if (contentEntry == null) {
-      return false;
-    }
-    final ExcludeFolder[] excludeFolders = contentEntry.getExcludeFolders();
-    for (ExcludeFolder excludeFolder : excludeFolders) {
-      final VirtualFile excludedDir = excludeFolder.getFile();
-      if (excludedDir == null) {
-        continue;
-      }
-      if (VfsUtilCore.isAncestor(excludedDir, file, true)) {
-        return true;
+      if (contentEntry != null) {
+        contentEntry.removeFolder(contentFolder);
       }
     }
-    return false;
+    finally {
+      myEventDispatcher.getMulticaster().folderRemoved(this, contentFolder);
+      update();
+    }
   }
 
   @Nullable
-  public ExcludeFolder getExcludeFolder(@NotNull final VirtualFile file) {
+  public ContentFolder getFolder(@NotNull final VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType) {
     final ContentEntry contentEntry = getContentEntry();
     if (contentEntry == null) {
       return null;
     }
-    final ExcludeFolder[] excludeFolders = contentEntry.getExcludeFolders();
-    for (final ExcludeFolder excludeFolder : excludeFolders) {
-      final VirtualFile f = excludeFolder.getFile();
-      if (f == null) {
-        continue;
-      }
-      if (f.equals(file)) {
-        return excludeFolder;
-      }
-    }
-    return null;
-  }
-
-  @Nullable
-  public SourceFolder getSourceFolder(@NotNull final VirtualFile file) {
-    final ContentEntry contentEntry = getContentEntry();
-    if (contentEntry == null) {
-      return null;
-    }
-    final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-    for (SourceFolder sourceFolder : sourceFolders) {
-      final VirtualFile f = sourceFolder.getFile();
+    final ContentFolder[] folders = contentEntry.getFolders(contentFolderType);
+    for (ContentFolder contentFolder : folders) {
+      final VirtualFile f = contentFolder.getFile();
       if (f != null && f.equals(file)) {
-        return sourceFolder;
+        return contentFolder;
       }
     }
     return null;

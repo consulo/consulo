@@ -18,5 +18,5 @@ package com.intellij.openapi.roots;
 /**
  *  @author dsl
  */
-public interface UserDefinedExcludeFolder extends ExcludeFolder {
+public interface UserDefinedExcludeFolder extends ContentFolder {
 }

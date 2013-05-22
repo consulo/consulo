@@ -18,10 +18,7 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.SourceFolder;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.ArtifactAntGenerationContext;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
@@ -71,10 +68,8 @@ public class TestModuleOutputPackagingElement extends ModuleOutputPackagingEleme
     List<VirtualFile> roots = new SmartList<VirtualFile>();
     ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
     for (ContentEntry entry : rootModel.getContentEntries()) {
-      for (SourceFolder folder : entry.getSourceFolders()) {
-        if (folder.isTestSource()) {
-          ContainerUtil.addIfNotNull(folder.getFile(), roots);
-        }
+      for (ContentFolder folder : entry.getFolders(ContentFolder.ContentFolderType.TEST)) {
+        ContainerUtil.addIfNotNull(folder.getFile(), roots);
       }
     }
     return roots;

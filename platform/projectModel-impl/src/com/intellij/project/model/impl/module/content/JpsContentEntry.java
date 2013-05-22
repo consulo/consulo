@@ -16,45 +16,28 @@
 package com.intellij.project.model.impl.module.content;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ExcludeFolder;
-import com.intellij.openapi.roots.SourceFolder;
-import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.project.model.impl.module.JpsRootModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.JpsElementFactory;
-import org.jetbrains.jps.model.java.JavaSourceRootProperties;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 import org.jetbrains.jps.model.module.JpsModule;
-import org.jetbrains.jps.model.module.JpsModuleSourceRoot;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author nik
  */
 public class JpsContentEntry implements ContentEntry, Disposable {
-  private final VirtualFilePointer myRoot;
+ /* private final VirtualFilePointer myRoot;
   private final JpsModule myModule;
   private final JpsRootModel myRootModel;
-  private final List<JpsSourceFolder> mySourceFolders;
-  private final List<JpsExcludeFolder> myExcludeFolders;
+  private final List<JpsContentFolder> myContentFolders;  */
 
   public JpsContentEntry(JpsModule module, JpsRootModel rootModel, String rootUrl) {
-    myModule = module;
+    /*myModule = module;
     myRootModel = rootModel;
     myRoot = VirtualFilePointerManager.getInstance().create(rootUrl, this, null);
-    mySourceFolders = new ArrayList<JpsSourceFolder>();
+    myContentFolders = new ArrayList<JpsContentFolder>();
     String rootPath = VfsUtilCore.urlToPath(getUrl());
     for (JpsModuleSourceRoot root : myModule.getSourceRoots()) {
       if (FileUtil.isAncestor(rootPath, VfsUtilCore.urlToPath(root.getUrl()), false)) {
@@ -66,10 +49,77 @@ public class JpsContentEntry implements ContentEntry, Disposable {
       if (FileUtil.isAncestor(rootPath, VfsUtilCore.urlToPath(excludedUrl), false)) {
         myExcludeFolders.add(new JpsExcludeFolder(excludedUrl, this));
       }
-    }
+    } */
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getFile() {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public String getUrl() {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public ContentFolder[] getFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return new ContentFolder[0];
+  }
+
+  @NotNull
+  @Override
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return new VirtualFile[0];
+  }
+
+  @NotNull
+  @Override
+  public String[] getFolderUrls(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return new String[0];
   }
 
   @Override
+  public ContentFolder[] getFolders() {
+    return new ContentFolder[0];
+  }
+
+  @NotNull
+  @Override
+  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolder.ContentFolderType contentFolderType) {
+    return null;
+  }
+
+  @Override
+  public void removeFolder(@NotNull ContentFolder contentFolder) {
+
+  }
+
+  @Override
+  public void clearFolders(@NotNull ContentFolder.ContentFolderType contentFolderType) {
+
+  }
+
+  @Override
+  public void dispose() {
+
+  }
+
+  @Override
+  public boolean isSynthetic() {
+    return false;
+  }
+
+/*  @Override
   public VirtualFile getFile() {
     return myRoot.getFile();
   }
@@ -217,11 +267,8 @@ public class JpsContentEntry implements ContentEntry, Disposable {
 
   @Override
   public void dispose() {
-    for (JpsSourceFolder folder : mySourceFolders) {
+    for (JpsContentFolder folder : myContentFolders) {
       Disposer.dispose(folder);
     }
-    for (JpsExcludeFolder folder : myExcludeFolders) {
-      Disposer.dispose(folder);
-    }
-  }
+  } */
 }

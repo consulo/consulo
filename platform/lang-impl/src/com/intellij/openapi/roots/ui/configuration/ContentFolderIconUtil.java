@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.roots.ContentFolder;
 
 import javax.swing.*;
 
@@ -25,13 +26,20 @@ import javax.swing.*;
  *         Date: Oct 20
  * @author 2003
  */
-public class IconSet {
+public class ContentFolderIconUtil {
 
-  public static Icon getSourceRootIcon(boolean isTestSource) {
-    return isTestSource ? AllIcons.Modules.TestRoot : AllIcons.Modules.SourceRoot;
-  }
-
-  public static Icon getSourceFolderIcon(boolean isTestSource) {
-    return isTestSource ? AllIcons.Modules.TestSourceFolder : AllIcons.Modules.SourceFolder;
+  public static Icon getRootIcon(ContentFolder.ContentFolderType contentFolderType) {
+    switch (contentFolderType) {
+      case SOURCE:
+        return AllIcons.Modules.SourceRoot;
+      case TEST:
+        return AllIcons.Modules.TestRoot;
+      case RESOURCE:
+        return AllIcons.Modules.ResourceRoot;
+      case EXCLUDED:
+      case EXCLUDED_OUTPUT:
+        return AllIcons.Modules.ExcludeRoot;
+    }
+    return null;
   }
 }

@@ -20,18 +20,19 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ExcludeFolder;
-import com.intellij.openapi.roots.SourceFolder;
+import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.SimpleTextAttributes;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
 
 public class ContentEntryTreeCellRenderer extends NodeRenderer {
   protected final ContentEntryTreeEditor myTreeEditor;
@@ -54,10 +55,6 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
           if (file != null && file.isDirectory()) {
             final ContentEntry contentEntry = editor.getContentEntry();
             if (contentEntry != null) {
-              final String prefix = getPrefix(contentEntry, file);
-              if (!prefix.isEmpty()) {
-                append(" (" + prefix + ")", new SimpleTextAttributes(Font.PLAIN, JBColor.GRAY));
-              }
               setIcon(updateIcon(contentEntry, file, getIcon()));
             }
           }
@@ -66,40 +63,44 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
     }
   }
 
-  private static String getPrefix(final ContentEntry entry, final VirtualFile file) {
-    for (final SourceFolder sourceFolder : entry.getSourceFolders()) {
-      if (file.equals(sourceFolder.getFile())) {
-        return sourceFolder.getPackagePrefix();
-      }
-    }
-    return "";
-  }
 
   protected Icon updateIcon(final ContentEntry entry, final VirtualFile file, Icon originalIcon) {
-    for (ExcludeFolder excludeFolder : entry.getExcludeFolders()) {
-      final VirtualFile excludePath = excludeFolder.getFile();
-      if (excludePath != null && VfsUtilCore.isAncestor(excludePath, file, false)) {
-        return AllIcons.Modules.ExcludeRoot;
-      }
-    }
-
-    final SourceFolder[] sourceFolders = entry.getSourceFolders();
-    for (SourceFolder sourceFolder : sourceFolders) {
-      if (file.equals(sourceFolder.getFile())) {
-        return IconSet.getSourceRootIcon(sourceFolder.isTestSource());
-      }
-    }
-
     Icon icon = originalIcon;
     VirtualFile currentRoot = null;
-    for (SourceFolder sourceFolder : sourceFolders) {
-      final VirtualFile sourcePath = sourceFolder.getFile();
-      if (sourcePath != null && VfsUtilCore.isAncestor(sourcePath, file, true)) {
-        if (currentRoot != null && VfsUtilCore.isAncestor(sourcePath, currentRoot, false)) {
+    for (ContentFolder contentFolder : entry.getFolders()) {
+      final VirtualFile contentPath = contentFolder.getFile();
+      if (file.equals(contentPath)) {
+        icon = ContentFolderIconUtil.getRootIcon(contentFolder.getType());
+      }
+      else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
+        if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
           continue;
         }
-        icon = IconSet.getSourceFolderIcon(sourceFolder.isTestSource());
-        currentRoot = sourcePath;
+        switch (contentFolder.getType()) {
+          case EXCLUDED:
+          case EXCLUDED_OUTPUT:
+            icon = AllIcons.Modules.ExcludeRoot;
+            break;
+          case SOURCE:
+            final Module moduleForFile = ModuleUtil.findModuleForFile(file, myTreeEditor.getProject());
+            if (moduleForFile == null) {
+              continue;
+            }
+            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForFile);
+            for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
+              for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+                if (supportProvider.getSupportedModuleExtensionClass() == moduleExtension.getClass()) {
+                  icon = AllIcons.Modules.PackageFolder;
+                }
+              }
+            }
+            break;
+          case RESOURCE:
+            break;
+          case TEST:
+            icon = AllIcons.Modules.TestSourceFolder;
+        }
+        currentRoot = contentPath;
       }
     }
     return icon;

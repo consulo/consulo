@@ -801,14 +801,15 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
       for (ContentEntry contentEntry : contentEntries) {
         VirtualFile contentRoot = contentEntry.getFile();
-        SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
+        ContentFolder[] folders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolder.ContentFolderType.SOURCE), contentEntry.getFolders(
+          ContentFolder.ContentFolderType.TEST));
         if (reverseAllSets) {
-          sourceFolders = ArrayUtil.reverseArray(sourceFolders);
+          folders = ArrayUtil.reverseArray(folders);
         }
-        for (SourceFolder sourceFolder : sourceFolders) {
+        for (ContentFolder sourceFolder : folders) {
           VirtualFile dir = sourceFolder.getFile();
           if (dir instanceof NewVirtualFile && contentRoot instanceof NewVirtualFile) {
-            fillMapWithModuleSource(module, (NewVirtualFile)contentRoot, (NewVirtualFile)dir, sourceFolder.getPackagePrefix(), (NewVirtualFile)dir, sourceFolder.isTestSource(), progress);
+            fillMapWithModuleSource(module, (NewVirtualFile)contentRoot, (NewVirtualFile)dir, "", (NewVirtualFile)dir, sourceFolder.getType() == ContentFolder.ContentFolderType.TEST, progress);
           }
         }
       }
@@ -1209,8 +1210,8 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           VirtualFile contentRoot = contentEntry.getFile();
           if (!(contentRoot instanceof NewVirtualFile)) continue;
 
-          ExcludeFolder[] excludeRoots = contentEntry.getExcludeFolders();
-          for (ExcludeFolder excludeRoot : excludeRoots) {
+          ContentFolder[] excludeRoots = contentEntry.getFolders(ContentFolder.ContentFolderType.EXCLUDED);
+          for (ContentFolder excludeRoot : excludeRoots) {
             // Output paths should be excluded (if marked as such) regardless if they're under corresponding module's content root
             VirtualFile excludeRootFile = excludeRoot.getFile();
             if (excludeRootFile instanceof NewVirtualFile) {

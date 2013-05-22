@@ -48,93 +48,33 @@ public interface ContentEntry extends Synthetic {
   String getUrl();
 
   /**
-   * Returns the list of source roots under this content root.
-   *
-   * @return list of this <code>ContentEntry</code> {@link com.intellij.openapi.roots.SourceFolder}s
+   * Returns the list of content roots under this content root.
+   * @param contentFolderType
+   * @return
    */
-  SourceFolder[] getSourceFolders();
+  @NotNull
+  ContentFolder[] getFolders(@NotNull ContentFolder.ContentFolderType contentFolderType);
 
   /**
-   * Returns the list of directories for valid source roots under this content root.
-   *
-   * @return list of all valid source roots.
+   * Returns the list of directories roots under this content root.
+   * @param contentFolderType
+   * @return
    */
-  VirtualFile[] getSourceFolderFiles();
+  @NotNull
+  VirtualFile[] getFolderFiles(@NotNull ContentFolder.ContentFolderType contentFolderType);
 
-  /**
-   * Returns the list of excluded roots under this content root.
-   *
-   * @return list of this <code>ContentEntry</code> {@link com.intellij.openapi.roots.ExcludeFolder}s
-   */
-  ExcludeFolder[] getExcludeFolders();
+  @NotNull
+  String[] getFolderUrls(@NotNull ContentFolder.ContentFolderType contentFolderType);
 
-  /**
-   * Returns the list of directories for valid excluded roots under this content root.
-   *
-   * @return list of all valid exclude roots.
-   */
-  VirtualFile[] getExcludeFolderFiles();
+  ContentFolder[] getFolders();
 
-  /**
-   * Adds a source or test source root under the content root.
-   *
-   * @param file         the directory to add as a source root.
-   * @param isTestSource true if the directory is added as a test source root.
-   * @return the object representing the added root.
-   */
-  SourceFolder addSourceFolder(@NotNull VirtualFile file, boolean isTestSource);
+  @NotNull
+  ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolder.ContentFolderType contentFolderType);
 
-  /**
-   * Adds a source or test source root with the specified package prefix under the content root.
-   *
-   * @param file          the directory to add as a source root.
-   * @param isTestSource  true if the directory is added as a test source root.
-   * @param packagePrefix the package prefix for the root to add, or an empty string if no
-   *                      package prefix is required.
-   * @return the object representing the added root.
-   */
-  SourceFolder addSourceFolder(@NotNull VirtualFile file, boolean isTestSource, @NotNull String packagePrefix);
+  @NotNull
+  ContentFolder addFolder(@NotNull String url, @NotNull ContentFolder.ContentFolderType contentFolderType);
 
-  /**
-   * Adds a source or test source root under the content root.
-   *
-   * @param  url the directory url to add as a source root.
-   * @param isTestSource true if the directory is added as a test source root.
-   * @return the object representing the added root.
-   */
-  SourceFolder addSourceFolder(@NotNull String url, boolean isTestSource);
+  void removeFolder(@NotNull ContentFolder contentFolder);
 
-  /**
-   * Removes a source or test source root from this content root.
-   *
-   * @param sourceFolder the source root to remove (must belong to this content root).
-   */
-  void removeSourceFolder(@NotNull SourceFolder sourceFolder);
-
-  void clearSourceFolders();
-
-  /**
-   * Adds an exclude root under the content root.
-   *
-   * @param file the directory to add as an exclude root.
-   * @return the object representing the added root.
-   */
-  ExcludeFolder addExcludeFolder(@NotNull VirtualFile file);
-
-  /**
-   * Adds an exclude root under the content root.
-   *
-   * @param url the directory url to add as an exclude root.
-   * @return the object representing the added root.
-   */
-  ExcludeFolder addExcludeFolder(@NotNull String url);
-
-  /**
-   * Removes an exclude root from this content root.
-   *
-   * @param excludeFolder the exclude root to remove (must belong to this content root).
-   */
-  void removeExcludeFolder(@NotNull ExcludeFolder excludeFolder);
-
-  void clearExcludeFolders();
+  void clearFolders(@NotNull ContentFolder.ContentFolderType contentFolderType);
 }

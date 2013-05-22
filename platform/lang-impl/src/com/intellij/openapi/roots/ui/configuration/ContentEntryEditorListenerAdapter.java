@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.openapi.roots.SourceFolder;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,26 +35,16 @@ public class ContentEntryEditorListenerAdapter implements ContentEntryEditor.Con
   }
 
   @Override
-  public void sourceFolderAdded(@NotNull ContentEntryEditor editor, SourceFolder folder) {
+  public void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
+
   }
 
   @Override
-  public void sourceFolderRemoved(@NotNull ContentEntryEditor editor, VirtualFile file, boolean isTestSource) {
-  }
+  public void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
 
-  @Override
-  public void folderExcluded(@NotNull ContentEntryEditor editor, VirtualFile file) {
-  }
-
-  @Override
-  public void folderIncluded(@NotNull ContentEntryEditor editor, VirtualFile file) {
   }
 
   @Override
   public void navigationRequested(@NotNull ContentEntryEditor editor, VirtualFile file) {
-  }
-
-  @Override
-  public void packagePrefixSet(@NotNull ContentEntryEditor editor, @NotNull SourceFolder folder) {
   }
 }

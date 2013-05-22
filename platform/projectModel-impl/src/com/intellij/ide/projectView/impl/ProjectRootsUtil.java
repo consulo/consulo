@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,12 +65,31 @@ public class ProjectRootsUtil {
     if (module == null) return false;
     final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
     for (ContentEntry contentEntry : contentEntries) {
-      final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-      for (SourceFolder sourceFolder : sourceFolders) {
+      final ContentFolder[] contentFolders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolder.ContentFolderType.SOURCE),
+                                                                   contentEntry.getFolders(ContentFolder.ContentFolderType.TEST));
+      for (ContentFolder sourceFolder : contentFolders) {
         if (Comparing.equal(virtualFile, sourceFolder.getFile())) return true;
       }
     }
     return false;
+  }
+
+  @Nullable
+  public static ContentFolder findContentRoot(@NotNull VirtualFile virtualFile, final Project project) {
+    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    final Module module = projectFileIndex.getModuleForFile(virtualFile);
+    if (module == null) {
+      return null;
+    }
+    final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
+    for (ContentEntry contentEntry : contentEntries) {
+      for (ContentFolder sourceFolder : contentEntry.getFolders()) {
+        if (Comparing.equal(virtualFile, sourceFolder.getFile())) {
+          return sourceFolder;
+        }
+      }
+    }
+    return null;
   }
 
   public static boolean isLibraryRoot(final VirtualFile directoryFile, final Project project) {

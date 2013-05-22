@@ -26,13 +26,21 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author nik
  */
-public class JpsContentFolderBase implements Disposable, ContentFolder {
+public class JpsContentFolder implements Disposable, ContentFolder {
   protected final JpsContentEntry myContentEntry;
+  private final ContentFolderType myContentFolderType;
   protected VirtualFilePointer myFilePointer;
 
-  public JpsContentFolderBase(String url, JpsContentEntry contentEntry) {
+  public JpsContentFolder(String url, ContentFolderType contentFolderType, JpsContentEntry contentEntry) {
+    myContentFolderType = contentFolderType;
     myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
     myContentEntry = contentEntry;
+  }
+
+  @NotNull
+  @Override
+  public ContentFolderType getType() {
+    return myContentFolderType;
   }
 
   @Override
@@ -54,7 +62,7 @@ public class JpsContentFolderBase implements Disposable, ContentFolder {
 
   @Override
   public boolean isSynthetic() {
-    return false;
+    return myContentFolderType == ContentFolderType.EXCLUDED_OUTPUT;
   }
 
   @Override

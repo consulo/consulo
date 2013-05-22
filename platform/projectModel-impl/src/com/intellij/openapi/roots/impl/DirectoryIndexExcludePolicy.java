@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author yole
  */
+@Deprecated
 public interface DirectoryIndexExcludePolicy {
   ExtensionPointName<DirectoryIndexExcludePolicy> EP_NAME = ExtensionPointName.create("com.intellij.directoryIndexExcludePolicy");
 

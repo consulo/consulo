@@ -77,15 +77,11 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   private final String myModuleName;
   private final ModulesProvider myModulesProvider;
   private final ModuleConfigurationState myState;
-  private final boolean myCanMarkSources;
-  private final boolean myCanMarkTestSources;
 
-  public ContentEntriesEditor(String moduleName, final ModuleConfigurationState state, boolean canMarkSources, boolean canMarkTestSources) {
+  public ContentEntriesEditor(String moduleName, final ModuleConfigurationState state) {
     super(state);
     myState = state;
     myModuleName = moduleName;
-    myCanMarkSources = canMarkSources;
-    myCanMarkTestSources = canMarkTestSources;
     myModulesProvider = state.getModulesProvider();
     final VirtualFileManagerAdapter fileManagerListener = new VirtualFileManagerAdapter() {
       @Override
@@ -146,8 +142,6 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     final JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
 
-    addAdditionalSettingsToPanel(mainPanel);
-
     final JPanel entriesPanel = new JPanel(new BorderLayout());
 
     final DefaultActionGroup group = new DefaultActionGroup();
@@ -169,39 +163,17 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     editorsPanel.add(entriesPanel,
                      new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-    myRootTreeEditor = createContentEntryTreeEditor(project);
+    myRootTreeEditor = new ContentEntryTreeEditor(project);
     final JComponent treeEditorComponent = myRootTreeEditor.createComponent();
     splitter.setSecondComponent(treeEditorComponent);
-
-    final JPanel innerPanel = createBottomControl(module);
-    if (innerPanel != null) {
-      mainPanel.add(innerPanel, BorderLayout.SOUTH);
-    }
 
     final ModifiableRootModel model = getModel();
     if (model != null) {
       final ContentEntry[] contentEntries = model.getContentEntries();
-      if (contentEntries.length > 0) {
-        for (final ContentEntry contentEntry : contentEntries) {
-          addContentEntryPanel(contentEntry.getUrl());
-        }
-        selectContentEntry(contentEntries[0].getUrl());
-      }
+      addContentEntryPanels(contentEntries);
     }
 
     return mainPanel;
-  }
-
-  @Nullable
-  protected JPanel createBottomControl(Module module) {
-    return null;
-  }
-
-  protected ContentEntryTreeEditor createContentEntryTreeEditor(Project project) {
-    return new ContentEntryTreeEditor(project, myCanMarkSources, myCanMarkTestSources);
-  }
-
-  protected void addAdditionalSettingsToPanel(final JPanel mainPanel) {
   }
 
   protected Module getModule() {
@@ -230,7 +202,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   }
 
   protected ContentEntryEditor createContentEntryEditor(String contentEntryUrl) {
-    return new ContentEntryEditor(contentEntryUrl, myCanMarkSources, myCanMarkTestSources) {
+    return new ContentEntryEditor(contentEntryUrl) {
       @Override
       protected ModifiableRootModel getModel() {
         return ContentEntriesEditor.this.getModel();
@@ -327,6 +299,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   }
 
   protected void addContentEntryPanels(ContentEntry[] contentEntriesArray) {
+    if(contentEntriesArray.length == 0) {
+      return;
+    }
     for (ContentEntry contentEntry : contentEntriesArray) {
       addContentEntryPanel(contentEntry.getUrl());
     }
@@ -401,7 +376,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         @Override
         public void consume(List<VirtualFile> files) {
           myLastSelectedDir = files.get(0);
-          addContentEntries(VfsUtilCore.toVirtualFileArray(files));
+          final List<ContentEntry> contentEntries = addContentEntries(VfsUtilCore.toVirtualFileArray(files));
+
+          addContentEntryPanels(contentEntries.toArray(new ContentEntry[contentEntries.size()]));
         }
       });
     }

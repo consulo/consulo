@@ -16,30 +16,20 @@
 package com.intellij.psi.impl.file;
 
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.undo.GlobalUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.PackagePrefixElementFinder;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiModificationTracker;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author yole
@@ -52,81 +42,12 @@ public class PsiPackageImplementationHelperImpl extends PsiPackageImplementation
 
   @Override
   public VirtualFile[] occursInPackagePrefixes(PsiJavaPackage psiPackage) {
-    List<VirtualFile> result = new ArrayList<VirtualFile>();
-    final Module[] modules = ModuleManager.getInstance(psiPackage.getProject()).getModules();
-
-    for (final Module module : modules) {
-      final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
-      for (final ContentEntry contentEntry : contentEntries) {
-        final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-        for (final SourceFolder sourceFolder : sourceFolders) {
-          final String packagePrefix = sourceFolder.getPackagePrefix();
-          if (packagePrefix.startsWith(psiPackage.getQualifiedName())) {
-            final VirtualFile file = sourceFolder.getFile();
-            if (file != null) {
-              result.add(file);
-            }
-          }
-        }
-      }
-    }
-
-    return VfsUtil.toVirtualFileArray(result);
+    return VirtualFile.EMPTY_ARRAY;
   }
 
   @Override
   public void handleQualifiedNameChange(final PsiJavaPackage psiPackage, final String newQualifiedName) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    final String oldQualifedName = psiPackage.getQualifiedName();
-    final boolean anyChanged = changePackagePrefixes(psiPackage, oldQualifedName, newQualifiedName);
-    if (anyChanged) {
-      UndoManager.getInstance(psiPackage.getProject()).undoableActionPerformed(new GlobalUndoableAction() {
-        @Override
-        public void undo() {
-          changePackagePrefixes(psiPackage, newQualifiedName, oldQualifedName);
-        }
 
-        @Override
-        public void redo() {
-          changePackagePrefixes(psiPackage, oldQualifedName, newQualifiedName);
-        }
-      });
-    }
-  }
-
-  private static boolean changePackagePrefixes(PsiJavaPackage psiPackage, final String oldQualifiedName, final String newQualifiedName) {
-    final Module[] modules = ModuleManager.getInstance(psiPackage.getProject()).getModules();
-    List<ModifiableRootModel> modelsToCommit = new ArrayList<ModifiableRootModel>();
-    for (final Module module : modules) {
-      boolean anyChange = false;
-      final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
-      final ContentEntry[] contentEntries = rootModel.getContentEntries();
-      for (final ContentEntry contentEntry : contentEntries) {
-        final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-        for (final SourceFolder sourceFolder : sourceFolders) {
-          final String packagePrefix = sourceFolder.getPackagePrefix();
-          if (packagePrefix.startsWith(oldQualifiedName)) {
-            sourceFolder.setPackagePrefix(newQualifiedName + packagePrefix.substring(oldQualifiedName.length()));
-            anyChange = true;
-          }
-        }
-      }
-      if (anyChange) {
-        modelsToCommit.add(rootModel);
-      } else {
-        rootModel.dispose();
-      }
-    }
-
-    if (!modelsToCommit.isEmpty()) {
-      ModifiableRootModel[] rootModels = modelsToCommit.toArray(new ModifiableRootModel[modelsToCommit.size()]);
-      if (rootModels.length > 0) {
-        ModifiableModelCommitter.multiCommit(rootModels, ModuleManager.getInstance(rootModels[0].getProject()).getModifiableModel());
-      }
-      return true;
-    } else {
-      return false;
-    }
   }
 
   @Override
@@ -170,7 +91,7 @@ public class PsiPackageImplementationHelperImpl extends PsiPackageImplementation
 
   @Override
   public boolean packagePrefixExists(PsiJavaPackage psiPackage) {
-    return PackagePrefixElementFinder.getInstance(psiPackage.getProject()).packagePrefixExists(psiPackage.getQualifiedName());
+    return false;
   }
 
   @Override

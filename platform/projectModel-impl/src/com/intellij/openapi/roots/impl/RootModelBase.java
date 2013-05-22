@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,10 +65,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public String[] getExcludeRootUrls() {
     final List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      final ExcludeFolder[] excludeFolders = contentEntry.getExcludeFolders();
-      for (ExcludeFolder excludeFolder : excludeFolders) {
-        result.add(excludeFolder.getUrl());
-      }
+      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolder.ContentFolderType.EXCLUDED));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -77,13 +75,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public VirtualFile[] getExcludeRoots() {
     final List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-      final ExcludeFolder[] excludeFolders = contentEntry.getExcludeFolders();
-      for (ExcludeFolder excludeFolder : excludeFolders) {
-        final VirtualFile file = excludeFolder.getFile();
-        if (file != null) {
-          result.add(file);
-        }
-      }
+      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolder.ContentFolderType.EXCLUDED));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }
@@ -99,12 +91,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public String[] getSourceRootUrls(boolean includingTests) {
     List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-      for (SourceFolder sourceFolder : sourceFolders) {
-        if (includingTests || !sourceFolder.isTestSource()) {
-          result.add(sourceFolder.getUrl());
-        }
-      }
+      Collections.addAll(result, contentEntry.getFolderUrls(includingTests ? ContentFolder.ContentFolderType.TEST : ContentFolder.ContentFolderType.SOURCE));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -120,13 +107,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
     List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-      final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-      for (SourceFolder sourceFolder : sourceFolders) {
-        final VirtualFile file = sourceFolder.getFile();
-        if (file != null && (includingTests || !sourceFolder.isTestSource())) {
-          result.add(file);
-        }
-      }
+       Collections.addAll(result, contentEntry.getFolderFiles(includingTests ? ContentFolder.ContentFolderType.TEST : ContentFolder.ContentFolderType.SOURCE));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }

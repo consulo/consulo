@@ -19,10 +19,7 @@ package com.intellij.ide.util.projectWizard;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.CompilerModuleExtension;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Pair;
@@ -97,7 +94,7 @@ public class JavaModuleBuilder extends ModuleBuilder implements SourcePathsBuild
           final VirtualFile sourceRoot = LocalFileSystem.getInstance()
             .refreshAndFindFileByPath(FileUtil.toSystemIndependentName(first));
           if (sourceRoot != null) {
-            contentEntry.addSourceFolder(sourceRoot, false, sourcePath.second);
+            contentEntry.addFolder(sourceRoot, ContentFolder.ContentFolderType.SOURCE);
           }
         }
       }
