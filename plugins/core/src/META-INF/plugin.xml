@@ -3997,8 +3997,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <postStartupActivity implementation="com.intellij.platform.FilesystemToolwindowOpener"/>
-
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <appStarter implementation="com.intellij.openapi.diff.DiffApplication"/>
     <appStarter implementation="com.intellij.openapi.diff.MergeApplication"/>
