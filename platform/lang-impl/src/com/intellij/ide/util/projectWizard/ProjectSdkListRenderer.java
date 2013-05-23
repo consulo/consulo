@@ -30,7 +30,7 @@ public class ProjectSdkListRenderer extends ColoredListCellRendererWrapper {
   @Override
   public void doCustomize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
     if (value == null || value instanceof Sdk) {
-      OrderEntryAppearanceService.getInstance().forJdk((Sdk)value, false, selected, true).customize(this);
+      OrderEntryAppearanceService.getInstance().forSdk((Sdk)value, false, selected, true).customize(this);
     }
     else {
       final String str = value.toString();

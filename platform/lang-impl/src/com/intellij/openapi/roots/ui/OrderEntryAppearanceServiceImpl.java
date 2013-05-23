@@ -40,6 +40,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PlatformIcons;
+import org.consulo.module.extension.ModuleExtensionProvider;
+import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,19 +52,20 @@ import java.io.File;
 public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService {
   private static final Icon EXCLUDE_FOLDER_ICON = IconLoader.getDisabledIcon(PlatformIcons.FOLDER_ICON);
 
-  private static final String NO_JDK = ProjectBundle.message("jdk.missing.item");
+  private static final String NO_SDK = ProjectBundle.message("sdk.missing.item");
 
   @NotNull
   @Override
   public CellAppearanceEx forOrderEntry(Project project, @NotNull final OrderEntry orderEntry, final boolean selected) {
-    if (orderEntry instanceof SdkOrderEntry) {
-      SdkOrderEntry jdkLibraryEntry = (SdkOrderEntry)orderEntry;
-      Sdk jdk = jdkLibraryEntry.getSdk();
-      if (!orderEntry.isValid()) {
-        final String oldJdkName = jdkLibraryEntry.getSdkName();
-        return FileAppearanceService.getInstance().forInvalidUrl(oldJdkName != null ? oldJdkName : NO_JDK);
+    if(orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+      ModuleExtensionWithSdkOrderEntry sdkLibraryEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
+      Sdk sdk = sdkLibraryEntry.getSdk();
+      if (!orderEntry.isValid() || sdk == null) {
+        final String oldSdkName = sdkLibraryEntry.getSdkName();
+        final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(sdkLibraryEntry.getModuleExtensionId());
+        return FileAppearanceService.getInstance().forInvalidUrl(oldSdkName != null ? oldSdkName : provider.getName());
       }
-      return forJdk(jdk, false, selected, true);
+      return forSdk(sdk, false, selected, true);
     }
     else if (!orderEntry.isValid()) {
       return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
@@ -114,9 +117,9 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
   @NotNull
   @Override
-  public CellAppearanceEx forJdk(@Nullable final Sdk jdk, final boolean isInComboBox, final boolean selected, final boolean showVersion) {
+  public CellAppearanceEx forSdk(@Nullable final Sdk jdk, final boolean isInComboBox, final boolean selected, final boolean showVersion) {
     if (jdk == null) {
-      return FileAppearanceService.getInstance().forInvalidUrl(NO_JDK);
+      return FileAppearanceService.getInstance().forInvalidUrl(NO_SDK);
     }
 
     String name = jdk.getName();

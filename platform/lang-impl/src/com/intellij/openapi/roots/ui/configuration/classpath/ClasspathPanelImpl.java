@@ -632,7 +632,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                                                     final boolean selected) {
     final OrderEntryAppearanceService service = OrderEntryAppearanceService.getInstance();
     if (item instanceof InvalidJdkItem) {
-      return service.forJdk(null, false, selected, true);
+      return service.forSdk(null, false, selected, true);
     }
     else {
       final OrderEntry entry = item.getEntry();

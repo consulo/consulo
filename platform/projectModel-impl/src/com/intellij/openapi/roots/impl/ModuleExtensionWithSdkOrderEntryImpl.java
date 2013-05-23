@@ -113,11 +113,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     if(moduleExtension == null) {
       return null;
     }
-    final Sdk sdk = moduleExtension.getSdk();
-    if(sdk == null) {
-      return null;
-    }
-    return sdk.getName();
+    return moduleExtension.getSdkName();
   }
 
   @Override

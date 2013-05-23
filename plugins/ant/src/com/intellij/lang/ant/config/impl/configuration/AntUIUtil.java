@@ -189,7 +189,7 @@ public class AntUIUtil {
         }
       }
       else  {
-        OrderEntryAppearanceService.getInstance().forJdk(jdk, myInComboBox, selected, true).customize(this);
+        OrderEntryAppearanceService.getInstance().forSdk(jdk, myInComboBox, selected, true).customize(this);
       }
     }
   }

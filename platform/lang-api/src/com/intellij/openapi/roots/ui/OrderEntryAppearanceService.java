@@ -37,7 +37,7 @@ public abstract class OrderEntryAppearanceService {
   public abstract CellAppearanceEx forLibrary(Project project, @NotNull Library library, boolean hasInvalidRoots);
 
   @NotNull
-  public abstract CellAppearanceEx forJdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion);
+  public abstract CellAppearanceEx forSdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion);
 
   @NotNull
   public abstract CellAppearanceEx forContentFolder(@NotNull ContentFolder folder);
