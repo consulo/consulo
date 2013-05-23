@@ -18,19 +18,13 @@ package org.jetbrains.idea.devkit.sdk;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.roots.JavadocOrderRootType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.cls.BytePointer;
-import com.intellij.util.cls.ClsFormatException;
-import com.intellij.util.cls.ClsUtil;
 import icons.DevkitIcons;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -81,9 +75,6 @@ public class ConsuloSdkType extends SdkType {
   }
 
   public boolean isValidSdkHome(String path) {
-    if (isFromIDEAProject(path)) {
-      return true;
-    }
     File home = new File(path);
     if (!home.exists()) {
       return false;
@@ -104,18 +95,6 @@ public class ConsuloSdkType extends SdkType {
     }
 
     return null;
-  }
-
-  public static boolean isFromIDEAProject(String path) {
-    File home = new File(path);
-    File[] openapiDir = home.listFiles(new FileFilter() {
-      public boolean accept(File pathname) {
-        @NonNls final String name = pathname.getName();
-        if (name.equals("openapi") && pathname.isDirectory()) return true; //todo
-        return false;
-      }
-    });
-    return openapiDir != null && openapiDir.length != 0;
   }
 
   @Nullable
@@ -166,59 +145,21 @@ public class ConsuloSdkType extends SdkType {
     }
   }
 
-  private static int getIdeaClassFileVersion(final Sdk ideaSdk) {
-    int result = -1;
-    File apiJar = getMainJar(ideaSdk.getHomePath());
-    if (apiJar == null) return -1;
-    final VirtualFile mainClassFile = JarFileSystem.getInstance()
-      .findFileByPath(FileUtil.toSystemIndependentName(apiJar.getPath()) + "!/com/intellij/psi/PsiManager.class");
-    if (mainClassFile != null) {
-      final BytePointer ptr;
-      try {
-        ptr = new BytePointer(mainClassFile.contentsToByteArray(), 6);
-        result = ClsUtil.readU2(ptr);
-      }
-      catch (IOException e) {
-        // ignore
-      }
-      catch (ClsFormatException e) {
-        // ignore
-      }
-    }
-    return result;
-  }
+  @Override
+  public void setupSdkPaths(Sdk sdk) {
+    final SdkModificator sdkModificator = sdk.getSdkModificator();
+    final String sdkHome = sdk.getHomePath();
 
-  @Nullable
-  private static JavaSdkVersion getRequiredJdkVersion(final Sdk ideaSdk) {
-    int classFileVersion = getIdeaClassFileVersion(ideaSdk);
-    switch (classFileVersion) {
-      case 48:
-        return JavaSdkVersion.JDK_1_4;
-      case 49:
-        return JavaSdkVersion.JDK_1_5;
-      case 50:
-        return JavaSdkVersion.JDK_1_6;
-      case 51:
-        return JavaSdkVersion.JDK_1_7;
-    }
-    return null;
-  }
-
-  public static void setupSdkPaths(final SdkModificator sdkModificator, final String sdkHome, final Sdk internalJava) {
-    //roots from internal jre
-    addClasses(sdkModificator, internalJava);
-    addDocs(sdkModificator, internalJava);
-    addSources(sdkModificator, internalJava);
-    //roots for openapi and other libs
-    if (!isFromIDEAProject(sdkHome)) {
-      final VirtualFile[] ideaLib = getIdeaLibrary(sdkHome);
-      if (ideaLib != null) {
-        for (VirtualFile aIdeaLib : ideaLib) {
-          sdkModificator.addRoot(aIdeaLib, OrderRootType.CLASSES);
-        }
+    final VirtualFile[] ideaLib = getIdeaLibrary(sdkHome);
+    if (ideaLib != null) {
+      for (VirtualFile aIdeaLib : ideaLib) {
+        sdkModificator.addRoot(aIdeaLib, OrderRootType.CLASSES);
       }
-      addSources(new File(sdkHome), sdkModificator);
     }
+    addSources(new File(sdkHome), sdkModificator);
+
+    sdkModificator.setSdkAdditionalData(new Sandbox(getDefaultSandbox(), sdk));
+    sdkModificator.commitChanges();
   }
 
   static String getDefaultSandbox() {
@@ -255,61 +196,6 @@ public class ConsuloSdkType extends SdkType {
     }
   }
 
-  private static void addClasses(SdkModificator sdkModificator, final Sdk javaSdk) {
-    addOrderEntries(OrderRootType.CLASSES, javaSdk, sdkModificator);
-  }
-
-  private static void addDocs(SdkModificator sdkModificator, final Sdk javaSdk) {
-    if (!addOrderEntries(JavadocOrderRootType.getInstance(), javaSdk, sdkModificator) && SystemInfo.isMac) {
-      Sdk[] jdks = ProjectJdkTable.getInstance().getAllJdks();
-      for (Sdk jdk : jdks) {
-        if (jdk.getSdkType() instanceof JavaSdk) {
-          addOrderEntries(JavadocOrderRootType.getInstance(), jdk, sdkModificator);
-          break;
-        }
-      }
-    }
-  }
-
-  private static void addSources(SdkModificator sdkModificator, final Sdk javaSdk) {
-    if (javaSdk != null) {
-      if (!addOrderEntries(OrderRootType.SOURCES, javaSdk, sdkModificator)) {
-        if (SystemInfo.isMac) {
-          Sdk[] jdks = ProjectJdkTable.getInstance().getAllJdks();
-          for (Sdk jdk : jdks) {
-            if (jdk.getSdkType() instanceof JavaSdk) {
-              addOrderEntries(OrderRootType.SOURCES, jdk, sdkModificator);
-              break;
-            }
-          }
-        }
-        else {
-          final File jdkHome = new File(javaSdk.getHomePath()).getParentFile();
-          @NonNls final String srcZip = "src.zip";
-          final File jarFile = new File(jdkHome, srcZip);
-          if (jarFile.exists()) {
-            JarFileSystem jarFileSystem = JarFileSystem.getInstance();
-            String path = jarFile.getAbsolutePath().replace(File.separatorChar, '/') + JarFileSystem.JAR_SEPARATOR;
-            jarFileSystem.setNoCopyJarForPath(path);
-            sdkModificator.addRoot(jarFileSystem.findFileByPath(path), OrderRootType.SOURCES);
-          }
-        }
-      }
-    }
-  }
-
-  private static boolean addOrderEntries(OrderRootType orderRootType, Sdk sdk, SdkModificator toModificator) {
-    boolean wasSmthAdded = false;
-    final String[] entries = sdk.getRootProvider().getUrls(orderRootType);
-    for (String entry : entries) {
-      VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(entry);
-      if (virtualFile != null) {
-        toModificator.addRoot(virtualFile, orderRootType);
-        wasSmthAdded = true;
-      }
-    }
-    return wasSmthAdded;
-  }
 
   public AdditionalDataConfigurable createAdditionalDataConfigurable(final SdkModel sdkModel, SdkModificator sdkModificator) {
     return new IdeaJdkConfigurable(sdkModel, sdkModificator);
