@@ -27,7 +27,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2:00/23.05.13
  */
-public class PluginModuleExtensionProvider implements ModuleExtensionProvider<PluginModuleExtension, MutablePluginModuleExtension> {
+public class PluginModuleExtensionProvider implements ModuleExtensionProvider<PluginModuleExtension, PluginMutableModuleExtension> {
   @Nullable
   @Override
   public Icon getIcon() {
@@ -51,9 +51,9 @@ public class PluginModuleExtensionProvider implements ModuleExtensionProvider<Pl
   }
 
   @Override
-  public MutablePluginModuleExtension createMutable(@NotNull String id,
+  public PluginMutableModuleExtension createMutable(@NotNull String id,
                                                     @NotNull Module module,
                                                     @NotNull PluginModuleExtension pluginModuleExtension) {
-    return new MutablePluginModuleExtension(id, module, pluginModuleExtension);
+    return new PluginMutableModuleExtension(id, module, pluginModuleExtension);
   }
 }

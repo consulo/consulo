@@ -23,6 +23,8 @@ import com.intellij.openapi.roots.ui.configuration.SdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.Condition;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -34,11 +36,12 @@ import java.awt.event.ItemListener;
  */
 public class ModuleExtensionWithSdkPanel extends JPanel {
   private final MutableModuleExtensionWithSdk<?> myExtensionWithSdk;
+  @Nullable
   private final Runnable myClasspathStateUpdater;
   private JPanel myRoot;
   private SdkComboBox mySdkComboBox;
 
-  public ModuleExtensionWithSdkPanel(MutableModuleExtensionWithSdk<?> extensionWithSdk, Runnable classpathStateUpdater) {
+  public ModuleExtensionWithSdkPanel(@NotNull MutableModuleExtensionWithSdk<?> extensionWithSdk, @Nullable Runnable classpathStateUpdater) {
     myExtensionWithSdk = extensionWithSdk;
     myClasspathStateUpdater = classpathStateUpdater;
   }

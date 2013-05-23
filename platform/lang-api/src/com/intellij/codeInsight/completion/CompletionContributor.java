@@ -222,7 +222,7 @@ public abstract class CompletionContributor {
    * @return String representation of action shortcut. Useful while advertising something
    * @see #advertise(CompletionParameters)
    */
-  protected static String getActionShortcut(@NonNls final String actionId) {
+  public static String getActionShortcut(@NonNls final String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }
 

@@ -19,27 +19,33 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Comparing;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 1:58/23.05.13
  */
-public class MutablePluginModuleExtension extends PluginModuleExtension implements MutableModuleExtensionWithSdk<PluginModuleExtension> {
+public class PluginMutableModuleExtension extends PluginModuleExtension implements MutableModuleExtensionWithSdk<PluginModuleExtension> {
   private PluginModuleExtension myPluginModuleExtension;
 
-  public MutablePluginModuleExtension(@NotNull String id, @NotNull Module module, PluginModuleExtension pluginModuleExtension) {
+  public PluginMutableModuleExtension(@NotNull String id, @NotNull Module module, PluginModuleExtension pluginModuleExtension) {
     super(id, module);
     myPluginModuleExtension = pluginModuleExtension;
+
+    commit(myPluginModuleExtension);
   }
 
   @Nullable
   @Override
   public JComponent createConfigurablePanel(@Nullable Runnable updateOnCheck) {
-    return null;
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(new ModuleExtensionWithSdkPanel(this, updateOnCheck), BorderLayout.NORTH);
+    return panel;
   }
 
   @Override
