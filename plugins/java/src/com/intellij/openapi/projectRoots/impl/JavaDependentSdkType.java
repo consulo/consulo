@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NonNls;
  * @author Dmitry Avdeev
  *         Date: 12/5/12
  */
+@Deprecated
 public abstract class JavaDependentSdkType extends DependentSdkType {
 
   public JavaDependentSdkType(@NonNls String name) {

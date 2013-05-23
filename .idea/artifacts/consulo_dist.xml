@@ -113,6 +113,21 @@
             <element id="library" level="module" name="trilead-ssh2" module-name="git4idea" />
           </element>
         </element>
+        <element id="directory" name="properties">
+          <element id="directory" name="lib">
+            <element id="archive" name="properties.jar">
+              <element id="module-output" name="properties" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="devkit">
+          <element id="directory" name="lib">
+            <element id="archive" name="devkit.jar">
+              <element id="module-output" name="devkit" />
+            </element>
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/devkit/lib/dtdparser113.jar" />
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

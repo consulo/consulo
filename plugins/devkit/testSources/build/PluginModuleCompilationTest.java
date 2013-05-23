@@ -29,8 +29,8 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import org.jetbrains.idea.devkit.projectRoots.IdeaJdk;
-import org.jetbrains.idea.devkit.projectRoots.Sandbox;
+import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
+import org.jetbrains.idea.devkit.sdk.Sandbox;
 
 import java.io.File;
 import java.util.Arrays;
@@ -49,7 +49,7 @@ public class PluginModuleCompilationTest extends BaseCompilerTestCase {
     new WriteAction() {
       protected void run(final Result result) {
         ProjectJdkTable table = ProjectJdkTable.getInstance();
-        myPluginSdk = table.createSdk("IDEA plugin SDK", SdkType.findInstance(IdeaJdk.class));
+        myPluginSdk = table.createSdk("IDEA plugin SDK", SdkType.findInstance(ConsuloSdkType.class));
         SdkModificator modificator = myPluginSdk.getSdkModificator();
         modificator.setSdkAdditionalData(new Sandbox(getSandboxPath(), getTestProjectJdk(), myPluginSdk));
         String rootPath = FileUtil.toSystemIndependentName(PathManager.getJarPathForClass(FileUtilRt.class));

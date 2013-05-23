@@ -17,6 +17,9 @@ package com.intellij.execution;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionProvider;
+import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jetbrains.annotations.NotNull;
 
 public class CantRunException extends ExecutionException {
@@ -31,8 +34,20 @@ public class CantRunException extends ExecutionException {
     return new CantRunException(ExecutionBundle.message("module.does.not.exist.error.message", moduleName));
   }
 
+  @Deprecated
   public static CantRunException noJdkForModule(@NotNull final Module module) {
     return new CantRunException(ExecutionBundle.message("no.jdk.for.module.error.message", module.getName()));
+  }
+
+  public static CantRunException noModuleExtension(@NotNull Module module, @NotNull final Class<? extends ModuleExtension> extensionName) {
+
+    return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", extensionName.getName(), module.getName()));
+  }
+
+  public static CantRunException noSdkForModuleExtension(@NotNull final ModuleExtension e) {
+    final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(e.getId());
+    assert provider != null;
+    return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", provider.getName(), e.getModule().getName()));
   }
 
   public static CantRunException jdkMisconfigured(@NotNull final Sdk jdk, @NotNull final Module module) {

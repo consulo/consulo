@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.idea.devkit.module.PluginModuleType;
-import org.jetbrains.idea.devkit.projectRoots.IdeaJdk;
+import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
 
 /**
  * @author Dmitry Avdeev
@@ -31,7 +31,7 @@ import org.jetbrains.idea.devkit.projectRoots.IdeaJdk;
 public class PluginProjectWizardTest extends ProjectWizardTestCase {
 
   public void testPluginProject() throws Exception {
-    createSdk("devkit", IdeaJdk.getInstance());
+    createSdk("devkit", ConsuloSdkType.getInstance());
     Project project = createProjectFromTemplate(JavaModuleType.JAVA_GROUP, PluginModuleType.getInstance().getName(), null);
     VirtualFile baseDir = project.getBaseDir();
     VirtualFile virtualFile = VfsUtil.findRelativeFile("META-INF/plugin.xml", baseDir);

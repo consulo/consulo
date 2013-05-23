@@ -757,6 +757,12 @@ public class ResourceBundleEditor extends UserDataHolderBase implements FileEdit
     return null;
   }
 
+  @Nullable
+  @Override
+  public VirtualFile getVirtualFile() {
+    return null;
+  }
+
   @Override
   public void dispose() {
     VirtualFileManager.getInstance().removeVirtualFileListener(myVfsListener);

@@ -60,12 +60,13 @@ public class JavaSdkImpl extends JavaSdk {
   public static final DataKey<Boolean> KEY = DataKey.create("JavaSdk");
 
   public JavaSdkImpl() {
-    super("JavaSDK");
+    super(ProjectBundle.message("sdk.java.name"));
   }
 
+  @NotNull
   @Override
   public String getPresentableName() {
-    return ProjectBundle.message("sdk.java.name");
+    return getName();
   }
 
   @Override

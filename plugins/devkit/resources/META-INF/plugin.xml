@@ -22,12 +22,13 @@
     <useScopeEnlarger implementation="org.jetbrains.idea.devkit.DevKitUseScopeEnlarger"/>
 
     <configurationType implementation="org.jetbrains.idea.devkit.run.PluginConfigurationType"/>
-    <moduleType id="PLUGIN_MODULE" implementationClass="org.jetbrains.idea.devkit.module.PluginModuleType" classpathProvider="true"/>
-    <sdkType implementation="org.jetbrains.idea.devkit.projectRoots.IdeaJdk"/>
+
+    <sdkType implementation="org.jetbrains.idea.devkit.sdk.ConsuloSdkType"/>
     <compileServer.plugin classpath="jps/devkit-jps-plugin.jar"/>
     <fileTemplateGroup implementation="org.jetbrains.idea.devkit.DevKitFileTemplatesFactory"/>
     <documentationProvider implementation="org.jetbrains.idea.devkit.references.extensions.ExtensionPointQuickDocProvider"/>
 
+    <moduleExtensionProvider key="consulo-plugin" parent-key="java" implementationClass="org.jetbrains.idea.devkit.module.extension.PluginModuleExtensionProvider" />
     <localInspection language="XML" shortName="PluginXmlValidity" displayName="Plugin.xml Validity"
                      bundle="org.jetbrains.idea.devkit.DevKitBundle"
                      groupKey="inspections.group.name" enabledByDefault="true" level="ERROR"
@@ -78,7 +79,7 @@
                      level="WARNING"
                      implementationClass="org.jetbrains.idea.devkit.inspections.ExtensionPointBeanClassInspection"/>
 
-    <moduleConfigurationEditorProvider implementation="org.jetbrains.idea.devkit.module.PluginModuleEditorsProvider"/>
+>
     <implicitUsageProvider implementation="org.jetbrains.idea.devkit.inspections.DevKitEntryPoints"/>
     <psi.referenceContributor implementation="org.jetbrains.idea.devkit.dom.impl.InspectionsPropertiesReferenceProviderContributor"/>
     <psi.referenceContributor implementation="org.jetbrains.idea.devkit.references.IconsReferencesContributor"/>
