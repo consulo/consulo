@@ -26,6 +26,9 @@ import javax.swing.*;
  * @since 11:40/19.05.13
  */
 public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRenderer {
+  public ExtensionTreeCellRenderer() {
+    super(false, false);
+  }
   @Override
   public void customizeRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     if(value instanceof ExtensionCheckedTreeNode) {

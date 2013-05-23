@@ -62,7 +62,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     mySplitter = new JBSplitter();
 
     myTree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this),
-                              new CheckboxTreeBase.CheckPolicy(true, true, false, true));
+                              new CheckboxTreeBase.CheckPolicy(false, true, true, false));
     myTree.setRootVisible(false);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -89,7 +89,8 @@ public class ExtensionEditor extends ModuleElementsEditor {
     return myRootPane;
   }
 
-  private JComponent createConfigurationPanel(final MutableModuleExtension<?> extension) {
+  @Nullable
+  private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension<?> extension) {
     return extension.createConfigurablePanel(new Runnable() {
       @Override
       public void run() {
@@ -110,9 +111,9 @@ public class ExtensionEditor extends ModuleElementsEditor {
       myClasspathEditor.moduleStateChanged();
     }
 
-    for(PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+    for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
       final Module module = extension.getModule();
-      if(supportProvider.getSupportedModuleExtensionClass() == extension.getClass())  {
+      if (supportProvider.getSupportedModuleExtensionClass() == extension.getClass()) {
         PsiPackageManager.getInstance(module.getProject()).dropCache(extension.getClass());
       }
     }
