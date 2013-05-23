@@ -81,6 +81,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
         }
       }
     });
+    TreeUtil.expandAll(myTree);
 
     mySplitter.setFirstComponent(myTree);
 
