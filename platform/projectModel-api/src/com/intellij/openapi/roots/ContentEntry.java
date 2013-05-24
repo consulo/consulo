@@ -55,6 +55,9 @@ public interface ContentEntry extends Synthetic {
   @NotNull
   ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType);
 
+  @NotNull
+  ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes);
+
   /**
    * Returns the list of directories roots under this content root.
    * @param contentFolderType

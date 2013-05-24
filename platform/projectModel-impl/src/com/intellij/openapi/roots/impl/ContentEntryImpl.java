@@ -104,6 +104,18 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
+  public ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes) {
+    List<ContentFolder> list = new ArrayList<ContentFolder>();
+    for (ContentFolder contentFolder : myContentFolders) {
+      if (ArrayUtil.contains(contentFolder.getType(), contentFolderTypes)) {
+        list.add(contentFolder);
+      }
+    }
+    return list.isEmpty() ? ContentFolder.EMPTY_ARRAY : list.toArray(new ContentFolder[list.size()]);
+  }
+
+  @NotNull
+  @Override
   public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
     for (ContentFolder contentFolder : myContentFolders) {

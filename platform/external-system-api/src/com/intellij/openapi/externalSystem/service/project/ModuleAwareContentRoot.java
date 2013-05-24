@@ -55,6 +55,12 @@ public class ModuleAwareContentRoot implements ContentEntry {
 
   @NotNull
   @Override
+  public ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes) {
+    return myDelegate.getFolders(contentFolderTypes);
+  }
+
+  @NotNull
+  @Override
   public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     return myDelegate.getFolderFiles(contentFolderType);
   }

@@ -73,6 +73,12 @@ public class JpsContentEntry implements ContentEntry, Disposable {
 
   @NotNull
   @Override
+  public ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes) {
+    return new ContentFolder[0];
+  }
+
+  @NotNull
+  @Override
   public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     return new VirtualFile[0];
   }
