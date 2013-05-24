@@ -16,7 +16,6 @@
 package com.intellij.codeInsight.template.impl.editorActions;
 
 import com.intellij.codeInsight.template.TemplateManager;
-import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -35,7 +34,7 @@ public class SpaceHandler extends TypedActionHandlerBase {
     if (charTyped == ' ') {
       Project project = PlatformDataKeys.PROJECT.getData(dataContext);
       if (project != null) {
-        TemplateManagerImpl templateManager = (TemplateManagerImpl)TemplateManager.getInstance(project);
+        TemplateManager templateManager = TemplateManager.getInstance(project);
         if (templateManager != null && templateManager.startTemplate(editor, TemplateSettings.SPACE_CHAR)) {
           return;
         }
