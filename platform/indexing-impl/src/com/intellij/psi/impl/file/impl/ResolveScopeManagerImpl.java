@@ -96,11 +96,13 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
 
       LibraryOrderEntry lib = null;
       for (OrderEntry entry : orderEntries) {
+        if(entry instanceof ModuleExtensionWithSdkOrderEntry) {
+          modulesLibraryUsedIn.add(entry.getOwnerModule());
+        }
         if (entry instanceof SdkOrderEntry) {
           return LibraryScopeCache.getInstance(myProject).getScopeForSdk((SdkOrderEntry)entry);
         }
-
-        if (entry instanceof LibraryOrderEntry) {
+        else if (entry instanceof LibraryOrderEntry) {
           lib = (LibraryOrderEntry)entry;
           modulesLibraryUsedIn.add(entry.getOwnerModule());
         }
