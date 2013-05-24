@@ -28,7 +28,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.psi.impl.light.LightTypeElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -444,7 +443,7 @@ public class GenerateMembersUtil {
       return JavaPsiFacade.getInstance(method.getProject()).getElementFactory();
     }
 
-    return JVMElementFactories.getFactory(target.getLanguage(), method.getProject());
+    return JVMElementFactories.requireFactory(target.getLanguage(), method.getProject());
   }
 
   private static boolean isBaseNameGenerated(JavaCodeStyleManager csManager, PsiType parameterType, String paramName) {

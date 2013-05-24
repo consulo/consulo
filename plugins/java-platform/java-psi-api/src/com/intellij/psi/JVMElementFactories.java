@@ -28,7 +28,7 @@ public class JVMElementFactories extends LanguageExtension<JVMElementFactoryProv
   private static final JVMElementFactories INSTANCE = new JVMElementFactories();
 
   private JVMElementFactories() {
-    super("com.intellij.generation.topLevelFactory");
+    super("org.consulo.java.generation.topLevelFactory");
   }
 
   @Nullable
