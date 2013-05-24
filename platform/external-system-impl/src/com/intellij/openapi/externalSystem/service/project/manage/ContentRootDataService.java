@@ -181,7 +181,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing test root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addFolder(toVfsUrl(path), ContentFolderType.EXCLUDED.TEST);
+    entry.addFolder(toVfsUrl(path), ContentFolderType.TEST);
   }
 
   @Override
