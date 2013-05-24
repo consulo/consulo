@@ -20,6 +20,7 @@
   <vendor>Consulo</vendor>
   <depends>org.consulo.java.platform</depends>
   <depends optional="true" config-file="com.intellij.regexp.xml">com.intellij.regexp</depends>
+  <depends optional="true" config-file="com.intellij.copyright.xml">com.intellij.copyright</depends>
   <depends>com.intellij.xml</depends>
   <depends>com.intellij.xml.dom</depends>
 

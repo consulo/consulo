@@ -27,6 +27,8 @@ import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.options.LanguageOptions;
 import com.maddyhome.idea.copyright.options.XmlOptions;
 
+import javax.xml.bind.annotation.XmlElementDecl;
+
 /**
  * User: anna
  * Date: 10/27/10
@@ -39,7 +41,7 @@ public class UpdateXmlCopyrightsProvider extends UpdateCopyrightsProvider {
 
   @Override
   public LanguageOptions getDefaultOptions() {
-    return createDefaultOptions(false);
+    return UpdateCopyrightsProvider.createDefaultOptions(false);
   }
 
   public static class UpdateXmlFileCopyright extends UpdatePsiFileCopyright

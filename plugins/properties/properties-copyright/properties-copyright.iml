@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module relativePaths="true" type="JAVA_MODULE" version="4">
+<module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -7,9 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="properties" />
+    <orderEntry type="module" module-name="copyright" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="library" name="Velocity" level="project" />
-    <orderEntry type="module" module-name="vcs-api" />
   </component>
 </module>
 

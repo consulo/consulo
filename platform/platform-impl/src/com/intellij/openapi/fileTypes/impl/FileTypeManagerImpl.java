@@ -111,6 +111,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
 
   private final MessageBus myMessageBus;
   private final Map<String, StandardFileType> myStandardFileTypes = new LinkedHashMap<String, StandardFileType>();
+  @Deprecated
   @NonNls private static final String[] FILE_TYPES_WITH_PREDEFINED_EXTENSIONS = {"JSP", "JSPX", "DTD", "HTML", "Properties", "XHTML"};
   private final SchemesManager<FileType, AbstractFileType> mySchemesManager;
   @NonNls private static final String FILE_SPEC = "$ROOT_CONFIG$/filetypes";

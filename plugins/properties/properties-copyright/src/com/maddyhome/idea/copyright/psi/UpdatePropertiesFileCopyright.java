@@ -16,6 +16,7 @@
 
 package com.maddyhome.idea.copyright.psi;
 
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -25,6 +26,13 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 
 public class UpdatePropertiesFileCopyright extends UpdatePsiFileCopyright {
+  public static class UpdatePropertiesFileCopyrightProvider extends UpdateCopyrightsProvider {
+    @Override
+    public UpdateCopyright createInstance(Project project, Module module, VirtualFile file, FileType base, CopyrightProfile options) {
+      return new UpdatePropertiesFileCopyright(project, module, file, options);
+    }
+  }
+
   public UpdatePropertiesFileCopyright(Project project, Module module, VirtualFile root, CopyrightProfile options) {
     super(project, module, root, options);
   }

@@ -6,6 +6,7 @@
     This plugin enables smart editing of properties files.
   </description>
   <vendor>JetBrains</vendor>
+  <depends config-file="com.intellij.copyright.xml" optional="com.intellij.copyright.xml">com.intellij.copyright</depends>
 
   <extensionPoints>
     <extensionPoint name="implicitPropertyUsageProvider" interface="com.intellij.codeInspection.unused.ImplicitPropertyUsageProvider"/>

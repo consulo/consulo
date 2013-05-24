@@ -11,6 +11,7 @@
     <orderEntry type="module" module-name="xml-api" exported="" />
     <orderEntry type="library" name="Xerces" level="project" />
     <orderEntry type="library" name="XmlBeans" level="project" />
+    <orderEntry type="module" module-name="xml-copyright" />
   </component>
 </module>
 

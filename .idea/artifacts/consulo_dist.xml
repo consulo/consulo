@@ -60,6 +60,7 @@
             <element id="archive" name="xml.jar">
               <element id="module-output" name="xml-api" />
               <element id="module-output" name="xml-impl" />
+              <element id="module-output" name="xml-copyright" />
             </element>
           </element>
         </element>
@@ -100,6 +101,7 @@
               <element id="module-output" name="java-analysis-api" />
               <element id="module-output" name="java-analysis-impl" />
               <element id="module-output" name="java-indexing-impl" />
+              <element id="module-output" name="java-copyright" />
             </element>
           </element>
         </element>
@@ -117,6 +119,7 @@
           <element id="directory" name="lib">
             <element id="archive" name="properties.jar">
               <element id="module-output" name="properties" />
+              <element id="module-output" name="properties-copyright" />
             </element>
           </element>
         </element>
@@ -126,6 +129,13 @@
               <element id="module-output" name="devkit" />
             </element>
             <element id="file-copy" path="$PROJECT_DIR$/plugins/devkit/lib/dtdparser113.jar" />
+          </element>
+        </element>
+        <element id="directory" name="copyright">
+          <element id="directory" name="lib">
+            <element id="archive" name="copyright.jar">
+              <element id="module-output" name="copyright" />
+            </element>
           </element>
         </element>
       </element>

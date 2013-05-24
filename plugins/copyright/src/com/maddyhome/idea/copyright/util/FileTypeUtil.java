@@ -292,33 +292,12 @@ public class FileTypeUtil {
   }
 
   private static boolean isSupportedType(FileType type) {
-    if (type.isBinary() || type.getName().indexOf("IDEA") >= 0 || "GUI_DESIGNER_FORM".equals(type.getName())) {
+    Commenter commenter = getCommenter(type);
+    boolean hasComment = commenter != null && (commenter.getLineCommentPrefix() != null || commenter.getBlockCommentPrefix() != null);
+    if (!hasComment) {
       return false;
     }
-    else {
-      Commenter commenter = getCommenter(type);
-      boolean hasComment = commenter != null &&
-                           (commenter.getLineCommentPrefix() != null || commenter.getBlockCommentPrefix() != null);
-      if (!hasComment) {
-        return false;
-      }
-      if (type.equals(StdFileTypes.DTD)) {
-        return true;
-      }
-      if (type.equals(StdFileTypes.HTML)) {
-        return true;
-      }
-      if (type.equals(StdFileTypes.XHTML)) {
-        return true;
-      }
-      if (type.equals(StdFileTypes.PROPERTIES)) {
-        return true;
-      }
-      if ("JavaScript".equals(type.getName())) {
-        return true;
-      }
-      return CopyrightUpdaters.INSTANCE.forFileType(type) != null;
-    }
+    return CopyrightUpdaters.INSTANCE.forFileType(type) != null;
   }
 
   private void loadFileTypes() {
