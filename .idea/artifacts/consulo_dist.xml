@@ -138,6 +138,17 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="relaxng">
+          <element id="directory" name="lib">
+            <element id="archive" name="relaxng.jar">
+              <element id="module-output" name="relaxng" />
+            </element>
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/isorelax.jar" />
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/jing.jar" />
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/rngom-20051226-patched.jar" />
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/trang-core.jar" />
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

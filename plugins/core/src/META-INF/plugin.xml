@@ -4484,10 +4484,6 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.GlobalLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.JdkListConfigurable"/>
 
-    <!-- Errors -->
-    <!-- Show full error options configurable only in full IDEA - platform supports only default IDE profile for now -->
-    <projectConfigurable provider="com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurableProvider"/>
-
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler" order="after project"
                          key="compiler.configurable.display.name" bundle="messages.CompilerBundle"
