@@ -801,8 +801,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
       for (ContentEntry contentEntry : contentEntries) {
         VirtualFile contentRoot = contentEntry.getFile();
-        ContentFolder[] folders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolderType.SOURCE), contentEntry.getFolders(
-          ContentFolderType.TEST));
+        ContentFolder[] folders = contentEntry.getFolders(ContentFolderType.SOURCE, ContentFolderType.TEST, ContentFolderType.RESOURCE);
         if (reverseAllSets) {
           folders = ArrayUtil.reverseArray(folders);
         }
