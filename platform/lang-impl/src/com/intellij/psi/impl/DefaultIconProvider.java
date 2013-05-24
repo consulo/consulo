@@ -68,7 +68,7 @@ public class DefaultIconProvider extends IconProvider implements DumbAware {
       else if (contentFolder != null) {
         symbolIcon = ContentFolderIconUtil.getRootIcon(contentFolder.getType());
       }
-      else if(PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory)) {
+      else if(PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory) != null) {
         symbolIcon = AllIcons.Nodes.Package;
       }
       else {

@@ -15,29 +15,28 @@
  */
 package com.intellij.compiler.options;
 
-import com.intellij.compiler.CompilerSettingsFactory;
+import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.NullableFunction;
-import com.intellij.util.containers.ContainerUtil;
+import org.consulo.compiler.CompilerSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompilerConfigurable implements SearchableConfigurable.Parent, Configurable.NoScroll {
 
   private final Project myProject;
-  private final CompilerUIConfigurable myCompilerUIConfigurable;
   private Configurable[] myKids;
 
   public CompilerConfigurable(Project project) {
     myProject = project;
-    myCompilerUIConfigurable = new CompilerUIConfigurable(myProject);
   }
 
   public String getDisplayName() {
@@ -59,7 +58,7 @@ public class CompilerConfigurable implements SearchableConfigurable.Parent, Conf
   }
 
   public JComponent createComponent() {
-    return myCompilerUIConfigurable.createComponent();
+    return null;
   }
 
   public boolean hasOwnContent() {
@@ -71,31 +70,36 @@ public class CompilerConfigurable implements SearchableConfigurable.Parent, Conf
   }
 
   public boolean isModified() {
-    return myCompilerUIConfigurable.isModified();
+    return false;
   }
 
   public void apply() throws ConfigurationException {
-    myCompilerUIConfigurable.apply();
+
   }
 
   public void reset() {
-    myCompilerUIConfigurable.reset();
+
   }
 
   public void disposeUIResources() {
-    myCompilerUIConfigurable.disposeUIResources();
+
   }
 
   public Configurable[] getConfigurables() {
     if (myKids == null) {
-      final CompilerSettingsFactory[] factories = Extensions.getExtensions(CompilerSettingsFactory.EP_NAME, myProject);
-      myKids = ContainerUtil.mapNotNull(factories, new NullableFunction<CompilerSettingsFactory, Configurable>() {
-        @Nullable
-        @Override
-        public Configurable fun(CompilerSettingsFactory factory) {
-            return factory.create(myProject);
+      final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
+      final com.intellij.openapi.compiler.Compiler[] compilers = compilerManager.getAllCompilers();
+      List<Configurable> configurables = new ArrayList<Configurable>(compilers.length);
+      for (Compiler compiler : compilers) {
+        final CompilerSettings<Compiler> settings = compilerManager.getSettings(compiler);
+
+        final Configurable configurable = settings.createConfigurable();
+        if(configurable != null) {
+          configurables.add(configurable);
         }
-      }, new Configurable[0]);
+      }
+
+      myKids = configurables.toArray(new Configurable[configurables.size()]);
     }
 
     return myKids;

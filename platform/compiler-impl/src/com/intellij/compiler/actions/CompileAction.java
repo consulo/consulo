@@ -31,7 +31,11 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,17 +88,17 @@ public class CompileAction extends CompileActionBase {
       elementDescription = CompilerBundle.message("action.compile.description.module", module.getName());
     }
     else {
-      PsiJavaPackage aPackage = null;
+      PsiPackage aPackage = null;
       if (files.length == 1) {
         final PsiDirectory directory = PsiManager.getInstance(project).findDirectory(files[0]);
         if (directory != null) {
-          aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+          aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);
         }
       }
       else {
         PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
-        if (element instanceof PsiJavaPackage) {
-          aPackage = (PsiJavaPackage)element;
+        if (element instanceof PsiPackage) {
+          aPackage = (PsiPackage)element;
         }
       }
 
@@ -171,7 +175,7 @@ public class CompileAction extends CompileActionBase {
       }
       if (file.isDirectory()) {
         final PsiDirectory directory = psiManager.findDirectory(file);
-        if (directory == null || JavaDirectoryService.getInstance().getPackage(directory) == null) {
+        if (directory == null || PsiPackageManager.getInstance(project).findAnyPackage(directory) == null) {
           continue;
         }
       }

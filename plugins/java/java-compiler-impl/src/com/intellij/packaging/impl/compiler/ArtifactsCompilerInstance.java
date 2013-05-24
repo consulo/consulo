@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.compiler.CompilerManagerImpl;
+import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.packagingCompiler.*;
 import com.intellij.openapi.application.ApplicationManager;

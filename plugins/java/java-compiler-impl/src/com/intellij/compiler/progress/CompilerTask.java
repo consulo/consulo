@@ -21,7 +21,7 @@
  */
 package com.intellij.compiler.progress;
 
-import com.intellij.compiler.CompilerManagerImpl;
+import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.impl.CompilerErrorTreeView;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;

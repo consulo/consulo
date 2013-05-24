@@ -52,6 +52,7 @@ import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.Chunk;
 import com.intellij.util.cls.ClsFormatException;
 import gnu.trove.THashMap;
+import org.consulo.compiler.impl.CompilerManagerImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

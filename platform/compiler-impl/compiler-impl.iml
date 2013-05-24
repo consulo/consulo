@@ -16,6 +16,8 @@
     <orderEntry type="library" name="Netty" level="project" />
     <orderEntry type="module" module-name="jps-model-impl" />
     <orderEntry type="library" name="OroMatcher" level="project" />
+    <orderEntry type="module" module-name="compiler-artifact-api" />
+    <orderEntry type="module" module-name="compiler-artifact-impl" />
   </component>
 </module>
 

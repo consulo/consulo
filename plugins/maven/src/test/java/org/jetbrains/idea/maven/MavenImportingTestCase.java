@@ -16,7 +16,7 @@
 
 package org.jetbrains.idea.maven;
 
-import com.intellij.compiler.CompilerManagerImpl;
+import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.CompilerTestUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.impl.ModuleCompileScope;

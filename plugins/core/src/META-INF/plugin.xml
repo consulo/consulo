@@ -1849,20 +1849,15 @@
       <add-to-group group-id="AnalyzeMenu" anchor="first"/>
     </group>
 
-    <group id="BuildMenu" popup="true">
-      <!--TODO [VISTALL] java depend   -->
-      <action id="CompileDirty" class="com.intellij.openapi.actionSystem.EmptyAction" icon="AllIcons.Actions.Compile"/>
-      <!--com.intellij.compiler.actions.CompileDirtyAction"-->
-      <action id="MakeModule" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <!--com.intellij.compiler.actions.MakeModuleAction-->
-      <action id="Compile" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <!--com.intellij.compiler.actions.CompileAction-->
+    <group id="BuildMenu" popup="true">->
+      <action id="CompileDirty" class="com.intellij.compiler.actions.CompileDirtyAction" icon="AllIcons.Actions.Compile"/>
+      <action id="MakeModule" class="com.intellij.compiler.actions.MakeModuleAction"/>
+      <action id="Compile" class="com.intellij.compiler.actions.CompileAction"/>
 
       <action id="RunAPT" class="com.intellij.openapi.actionSystem.EmptyAction"/>
       <!--com.intellij.compiler.actions.ProcessAnnotationsAction-->
       <separator/>
-      <action id="CompileProject" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <!--com.intellij.compiler.actions.CompileProjectAction-->
+      <action id="CompileProject" class="com.intellij.compiler.actions.CompileProjectAction"/>
       <separator/>
       <action id="GenerateAntBuild" class="com.intellij.openapi.actionSystem.EmptyAction"/>
       <!--com.intellij.compiler.actions.GenerateAntBuildAction-->
@@ -3995,6 +3990,7 @@
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
     <extensionPoint name="psi.packageResolver" interface="org.consulo.psi.PsiPackageResolver" />
     <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
+    <extensionPoint name="compilerProvider" interface="org.consulo.compiler.CompilerProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -4426,7 +4422,7 @@
     <applicationService serviceImplementation="com.intellij.packaging.impl.artifacts.InvalidArtifactType"/>
 
     <projectService serviceInterface="com.intellij.openapi.compiler.CompilerManager"
-                    serviceImplementation="com.intellij.compiler.CompilerManagerImpl"/>
+                    serviceImplementation="org.consulo.compiler.impl.CompilerManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.roots.CompilerProjectExtension"
                     serviceImplementation="com.intellij.openapi.roots.impl.CompilerProjectExtensionImpl"/>
 
@@ -4485,19 +4481,7 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.JdkListConfigurable"/>
 
     <!-- Compiler -->
-    <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler" order="after project"
-                         key="compiler.configurable.display.name" bundle="messages.CompilerBundle"
-                         childrenEPName="com.intellij.compilerSettingsFactory">
-      <configurable instance="com.intellij.openapi.compiler.options.ExcludedEntriesConfigurable"
-                    id="reference.projectsettings.compiler.excludes"
-                    displayName="Excludes"/>
-      <configurable instance="com.intellij.compiler.options.JavaCompilersTab" id="reference.projectsettings.compiler.javacompiler"
-                    key="java.compiler.description" bundle="messages.CompilerBundle"/>
-      <configurable instance="com.intellij.compiler.options.AnnotationProcessorsConfigurable"
-                    id="reference.projectsettings.compiler.annotationProcessors" displayName="Annotation Processors"/>
-      <configurable instance="com.intellij.compiler.options.RmicConfigurable" id="reference.projectsettings.compiler.rmicompiler"
-                    key="rmi.compiler.description" bundle="messages.CompilerBundle"/>
-    </projectConfigurable>
+    <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler" order="after project" />
 
     <projectConfigurable instance="com.intellij.psi.templateLanguages.TemplateDataLanguageConfigurable" id="Template Data Languages"
                          key="template.data.language.configurable" bundle="messages.LangBundle"/>
@@ -5510,5 +5494,6 @@
     <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider" order="last"/>
     <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver" />
     <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver" />
+    <compilerProvider implementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerProvider" />
   </extensions>
 </idea-plugin>

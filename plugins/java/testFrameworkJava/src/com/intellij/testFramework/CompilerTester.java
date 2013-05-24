@@ -15,7 +15,7 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.compiler.CompilerManagerImpl;
+import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.CompilerTestUtil;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Result;

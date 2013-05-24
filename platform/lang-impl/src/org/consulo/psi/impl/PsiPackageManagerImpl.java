@@ -140,26 +140,26 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
   }
 
   @Override
-  public boolean findAnyPackage(@NotNull PsiDirectory directory) {
+  public PsiPackage findAnyPackage(@NotNull PsiDirectory directory) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(directory.getProject()).getFileIndex();
     String packageName = projectFileIndex.getPackageNameByDirectory(directory.getVirtualFile());
     if (packageName == null) {
-      return false;
+      return null;
     }
 
     Module module = ModuleUtilCore.findModuleForPsiElement(directory);
     if (module == null) {
-      return false;
+      return null;
     }
 
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
     for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
       final PsiPackage aPackage = findPackage(packageName, moduleExtension.getClass());
       if (aPackage != null) {
-        return true;
+        return aPackage;
       }
     }
-    return false;
+    return null;
   }
 
   @NotNull

@@ -13,30 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.compiler;
+package org.consulo.compiler.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.compiler.CompilerProvider;
+import org.consulo.compiler.CompilerSettings;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 10:44/21.05.13
  */
-public class CompilerManagerImpl extends CompilerManager {
+@State(name="CompilerManager", storages=@Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED))
+public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element>{
+
+  private Map<Compiler, CompilerSettings> myCompilers = new LinkedHashMap<Compiler, CompilerSettings>();
+
+  public CompilerManagerImpl() {
+    final CompilerProvider[] extensions = CompilerProvider.EP_NAME.getExtensions();
+    for (CompilerProvider extension : extensions) {
+      myCompilers.put(extension.createCompiler(), extension.createSettings());
+    }
+  }
+
   @Override
   public boolean isCompilationActive() {
-    return false;
+    return true;
   }
 
   @Override
@@ -68,14 +82,25 @@ public class CompilerManagerImpl extends CompilerManager {
 
   @NotNull
   @Override
-  public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass) {
-    return (T[])Array.newInstance(compilerClass, 0);
+  public Compiler[] getAllCompilers() {
+    return myCompilers.keySet().toArray(new Compiler[myCompilers.size()]);
   }
 
   @NotNull
-  @Override
+  public <T  extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass) {
+    return getCompilers(compilerClass, CompilerFilter.ALL);
+  }
+
+  @NotNull
   public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, CompilerFilter filter) {
-    return (T[])Array.newInstance(compilerClass, 0);
+    final List<T> compilers = new ArrayList<T>(myCompilers.size());
+    for (final Compiler item : myCompilers.keySet()) {
+      if (compilerClass.isAssignableFrom(item.getClass()) && filter.acceptCompiler(item)) {
+        compilers.add((T)item);
+      }
+    }
+    final T[] array = (T[])Array.newInstance(compilerClass, compilers.size());
+    return compilers.toArray(array);
   }
 
   @Override
@@ -223,5 +248,22 @@ public class CompilerManagerImpl extends CompilerManager {
   @Override
   public boolean isValidationEnabled(Module moduleType) {
     return false;
+  }
+
+  @NotNull
+  @Override
+  public <T extends Compiler> CompilerSettings<T> getSettings(T compiler) {
+    return myCompilers.get(compiler);
+  }
+
+  @Nullable
+  @Override
+  public Element getState() {
+    return new Element("test");
+  }
+
+  @Override
+  public void loadState(Element state) {
+
   }
 }

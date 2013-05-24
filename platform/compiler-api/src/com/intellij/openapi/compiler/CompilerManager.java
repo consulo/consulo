@@ -23,6 +23,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.compiler.CompilerSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,6 +78,9 @@ public abstract class CompilerManager {
    * @param compiler the compiler to unregister.
    */
   public abstract void removeCompiler(@NotNull Compiler compiler);
+
+  @NotNull
+  public abstract Compiler[] getAllCompilers();
 
   /**
    * Returns all registered compilers of the specified class.
@@ -286,4 +290,7 @@ public abstract class CompilerManager {
 
 
   public abstract boolean isValidationEnabled(Module moduleType);
+
+  @NotNull
+  public abstract  <T extends Compiler> CompilerSettings<T> getSettings(T compiler);
 }
