@@ -526,8 +526,13 @@ public class ExceptionUtil {
   private static boolean isHandled(PsiElement element, PsiClassType exceptionType, PsiElement topElement) {
     if (element == null || element.getParent() == topElement || element.getParent() == null) return false;
 
-    final PsiElement parent = element.getParent();
+    for(ExtraExceptionHandler handler : ExtraExceptionHandler.EP_NAME.getExtensions()) {
+      if(handler.isHandled(exceptionType, element)) {
+        return true;
+      }
+    }
 
+    final PsiElement parent = element.getParent();
     if (parent instanceof PsiMethod) {
       PsiMethod method = (PsiMethod)parent;
       return isHandledByMethodThrowsClause(method, exceptionType);

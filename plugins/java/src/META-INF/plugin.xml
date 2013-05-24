@@ -571,6 +571,7 @@
                     interface="com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy"/>
     <extensionPoint name="psi.clsDecompiledFileProvider"
                     interface="com.intellij.psi.ClsFileDecompiledPsiFileProvider"/>
+    <extensionPoint name="extraExceptionHandler" interface="com.intellij.codeInsight.ExtraExceptionHandler" />
   </extensionPoints>
 
   <!--TODO [VISTALL] move to platform-->
