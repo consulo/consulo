@@ -672,6 +672,8 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
         }
       }
     }
+    /*
+    TODO [VISTALL] temp NPE fix
     if (module != null) {
       String[] javadocPaths = JavaModuleExternalPaths.getInstance(module).getJavadocUrls();
       final List<String> httpRoots = PlatformDocumentationUtil.getHttpRoots(javadocPaths, relPath);
@@ -679,7 +681,7 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
       if (httpRoots != null || !fileIndex.isInLibraryClasses(virtualFile)) {
         return httpRoots;
       }
-    }
+    }   */
 
     final List<OrderEntry> orderEntries = fileIndex.getOrderEntriesForFile(virtualFile);
     for (OrderEntry orderEntry : orderEntries) {
