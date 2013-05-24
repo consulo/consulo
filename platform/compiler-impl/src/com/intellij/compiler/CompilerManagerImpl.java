@@ -192,12 +192,6 @@ public class CompilerManagerImpl extends CompilerManager {
 
   @NotNull
   @Override
-  public OutputToSourceMapping getJavaCompilerOutputMapping() {
-    return null;
-  }
-
-  @NotNull
-  @Override
   public CompileScope createFilesCompileScope(@NotNull VirtualFile[] files) {
     return null;
   }

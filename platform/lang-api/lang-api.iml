@@ -17,6 +17,7 @@
     <orderEntry type="module" module-name="analysis-api" exported="" />
     <orderEntry type="module" module-name="compiler-api" />
     <orderEntry type="module" module-name="resources-en" />
+    <orderEntry type="module" module-name="compiler-artifact-api" />
   </component>
 </module>
 

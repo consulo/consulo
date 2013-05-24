@@ -31,6 +31,8 @@
     <orderEntry type="module" module-name="analysis-impl" exported="" />
     <orderEntry type="module" module-name="compiler-api" />
     <orderEntry type="module" module-name="compiler-impl" />
+    <orderEntry type="module" module-name="compiler-artifact-api" />
+    <orderEntry type="module" module-name="compiler-artifact-impl" />
   </component>
 </module>
 

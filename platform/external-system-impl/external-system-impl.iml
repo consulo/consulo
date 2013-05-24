@@ -11,6 +11,7 @@
     <orderEntry type="module" module-name="projectModel-impl" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
+    <orderEntry type="module" module-name="compiler-artifact-api" />
   </component>
 </module>
 

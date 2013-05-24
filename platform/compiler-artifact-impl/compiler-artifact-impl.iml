@@ -7,11 +7,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="core-api" exported="" />
-    <orderEntry type="module" module-name="projectModel-api" exported="" />
-    <orderEntry type="module" module-name="platform-api" exported="" />
-    <orderEntry type="module" module-name="lang-api" exported="" />
+    <orderEntry type="module" module-name="compiler-api" />
+    <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="compiler-artifact-api" />
+    <orderEntry type="module" module-name="lang-impl" />
   </component>
 </module>
 

@@ -270,9 +270,6 @@ public abstract class CompilerManager {
    */
   public abstract boolean isExcludedFromCompilation(@NotNull VirtualFile file);
 
-  @NotNull
-  public abstract OutputToSourceMapping getJavaCompilerOutputMapping();
-
   /*
    * Convetience methods for creating frequently-used compile scopes
    */

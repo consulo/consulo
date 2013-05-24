@@ -179,6 +179,8 @@
           <element id="module-output" name="compiler-impl" />
           <element id="module-output" name="usageView" />
           <element id="module-output" name="testRunner" />
+          <element id="module-output" name="compiler-artifact-api" />
+          <element id="module-output" name="compiler-artifact-impl" />
         </element>
         <element id="archive" name="idea_rt.jar">
           <element id="module-output" name="java-execution-api" />
