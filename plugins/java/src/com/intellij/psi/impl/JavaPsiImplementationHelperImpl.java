@@ -24,6 +24,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -41,6 +42,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import gnu.trove.THashSet;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -156,7 +158,12 @@ public class JavaPsiImplementationHelperImpl extends JavaPsiImplementationHelper
           }
         }
       }
-      return LanguageLevelProjectExtension.getInstance(myProject).getLanguageLevel();
+      final Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
+      if(moduleForFile == null) {
+        return null;
+      }
+      final JavaModuleExtension extension = ModuleUtil.getExtension(moduleForFile, JavaModuleExtension.class);
+      return extension == null ? null : extension.getLanguageLevel();
     }
     return null;
   }

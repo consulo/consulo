@@ -6,7 +6,9 @@
     This plugin enables smart editing of properties files.
   </description>
   <vendor>JetBrains</vendor>
-  <depends config-file="com.intellij.copyright.xml" optional="com.intellij.copyright.xml">com.intellij.copyright</depends>
+  <depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
+  <depends config-file="com.intellij.copyright.xml" optional="true">com.intellij.copyright</depends>
+  <depends config-file="com.intellij.spellchecker.xml" optional="true">com.intellij.spellchecker</depends>
 
   <extensionPoints>
     <extensionPoint name="implicitPropertyUsageProvider" interface="com.intellij.codeInspection.unused.ImplicitPropertyUsageProvider"/>
@@ -35,7 +37,7 @@
                                       implementationClass="com.intellij.lang.properties.PropertiesWordCompletionFilter"/>
     <lang.psiStructureViewFactory language="Properties"
                                   implementationClass="com.intellij.lang.properties.structureView.PropertiesStructureViewBuilderFactory"/>
-    <lang.ast.factory language="Properties" implementationClass="com.intellij.lang.properties.psi.impl.PropertiesASTFactory"/>
+    <lang.ast.leafFactory implementation="com.intellij.lang.properties.psi.impl.PropertiesASTLeafFactory"/>
     <joinLinesHandler implementation="com.intellij.lang.properties.PropertiesJoinLinesHandler"/>
     
     <enterHandlerDelegate implementation="com.intellij.codeInsight.editorActions.enter.EnterInPropertiesFileHandler"/>
@@ -75,10 +77,8 @@
     <projectService serviceInterface="com.intellij.lang.properties.PropertiesReferenceManager" serviceImplementation="com.intellij.lang.properties.PropertiesReferenceManager"/>
 
     <fileEditorProvider implementation="com.intellij.lang.properties.editor.ResourceBundleEditorProvider"/>
-    <spellchecker.support language="Properties" implementationClass="com.intellij.lang.properties.spellchecker.PropertiesSpellcheckingStrategy"/>
-
     <fileBasedIndex implementation="com.intellij.lang.properties.xml.XmlPropertiesIndex"/>
-    <standardResource url="http://java.sun.com/dtd/properties.dtd" path="schemas/properties.dtd"/>
+
     <iconProvider implementation="com.intellij.lang.properties.xml.XmlPropertiesIconProvider"/>
     <psi.referenceContributor language="XML" implementation="com.intellij.lang.properties.xml.XmlPropertiesReferenceContributor"/>
     <lang.foldingBuilder language="Properties" implementationClass="com.intellij.lang.properties.editor.PropertiesFoldingBuilder" />

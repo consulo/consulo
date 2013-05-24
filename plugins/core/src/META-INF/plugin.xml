@@ -3381,10 +3381,13 @@
     <extensionPoint name="lang.structureViewExtension"
                     interface="com.intellij.ide.structureView.StructureViewExtension"/>
 
-    <extensionPoint name="lang.ast.factory"
-                    beanClass="com.intellij.lang.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.ASTFactory"/>
-    </extensionPoint>
+    <extensionPoint name="lang.psi.elementFactory" interface="com.intellij.lang.PsiElementFactory" />
+
+    <extensionPoint name="lang.ast.lazyFactory" interface="com.intellij.lang.ASTLazyFactory" />
+
+    <extensionPoint name="lang.ast.leafFactory" interface="com.intellij.lang.ASTLeafFactory" />
+
+    <extensionPoint name="lang.ast.compositeFactory" interface="com.intellij.lang.ASTCompositeFactory" />
 
     <extensionPoint name="lang.formatter" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
@@ -4968,7 +4971,7 @@
     <lang.parserDefinition language="TEXT" implementationClass="com.intellij.openapi.fileTypes.PlainTextParserDefinition"/>
     <lang.syntaxHighlighterFactory key="TEXT" implementationClass="com.intellij.openapi.fileTypes.PlainTextSyntaxHighlighterFactory"/>
     <braceMatcher filetype="PLAIN_TEXT" implementationClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeBraceMatcher"/>
-    <lang.ast.factory language="TEXT" implementationClass="com.intellij.psi.impl.source.tree.PlainTextASTFactory"/>
+    <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.PlainTextASTLeafFactory"/>
 
     <getDataRule key="psi.File" implementationClass="com.intellij.ide.impl.dataRules.PsiFileRule"/>
     <getDataRule key="psi.Element" implementationClass="com.intellij.ide.impl.dataRules.PsiElementFromSelectionRule"/>
@@ -5495,5 +5498,9 @@
     <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver" />
     <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver" />
     <compilerProvider implementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerProvider" />
+    <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last" />
+    <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last" />
+    <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last" />
+    <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultLangPsiElementFactory" order="last" />
   </extensions>
 </idea-plugin>

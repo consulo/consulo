@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,37 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.properties.psi.impl;
+package com.intellij.lang.impl;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.properties.parsing.PropertiesTokenTypes;
-import com.intellij.psi.impl.source.tree.*;
+import com.intellij.lang.ASTCompositeFactory;
+import com.intellij.psi.impl.source.tree.CompositeElement;
+import com.intellij.psi.impl.source.tree.FileElement;
+import com.intellij.psi.tree.ICompositeElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author cdr
+ * @author VISTALL
+ * @since 2:23/02.04.13
  */
-public class PropertiesASTFactory extends ASTFactory {
-  @Nullable
-  public CompositeElement createComposite(final IElementType type) {
+public class DefaultASTCompositeFactory implements ASTCompositeFactory {
+  @NotNull
+  @Override
+  public CompositeElement createComposite(IElementType type) {
     if (type instanceof IFileElementType) {
       return new FileElement(type, null);
+    }
+    if (type instanceof ICompositeElementType) {
+      return (CompositeElement)((ICompositeElementType)type).createCompositeNode();
     }
     return new CompositeElement(type);
   }
 
-  @Nullable
-  public LeafElement createLeaf(final IElementType type, CharSequence text) {
-    if (type == PropertiesTokenTypes.VALUE_CHARACTERS) {
-      return new PropertyValueImpl(type, text);
-    }
-
-    if (type == PropertiesTokenTypes.END_OF_LINE_COMMENT) {
-      return new PsiCommentImpl(type, text);
-    }
-
-    return new LeafPsiElement(type, text);
+  @Override
+  public boolean apply(@Nullable IElementType input) {
+    return true;
   }
 }

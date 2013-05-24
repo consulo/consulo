@@ -17,7 +17,7 @@ package com.intellij.core;
 
 import com.intellij.concurrency.*;
 import com.intellij.lang.*;
-import com.intellij.lang.impl.PsiBuilderFactoryImpl;
+import com.intellij.lang.impl.*;
 import com.intellij.mock.MockApplication;
 import com.intellij.mock.MockFileDocumentManagerImpl;
 import com.intellij.mock.MockReferenceProvidersRegistry;
@@ -26,10 +26,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.progress.*;
@@ -104,7 +101,6 @@ public class CoreApplicationEnvironment {
     registerComponentInstance(appContainer, VirtualFileManager.class, virtualFileManager);
 
     myApplication.registerService(VirtualFilePointerManager.class, createVirtualFilePointerManager());
-    myApplication.registerService(DefaultASTFactory.class, new CoreASTFactory());
     myApplication.registerService(PsiBuilderFactory.class, new PsiBuilderFactoryImpl());
     myApplication.registerService(ReferenceProvidersRegistry.class, new MockReferenceProvidersRegistry());
     myApplication.registerService(StubTreeLoader.class, new CoreStubTreeLoader());
@@ -112,6 +108,11 @@ public class CoreApplicationEnvironment {
 
     registerApplicationExtensionPoint(ContentBasedFileSubstitutor.EP_NAME, ContentBasedFileSubstitutor.class);
     registerExtensionPoint(Extensions.getRootArea(), BinaryFileStubBuilders.EP_NAME, FileTypeExtensionPoint.class);
+
+    addExtension(ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory(), LoadingOrder.LAST);
+    addExtension(ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory(), LoadingOrder.LAST);
+    addExtension(ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory(), LoadingOrder.LAST);
+    addExtension(PsiElementFactory.EP.getExtensionPointName(), new DefaultPsiElementFactory(), LoadingOrder.LAST);
 
     ProgressIndicatorProvider.ourInstance = createProgressIndicatorProvider();
 
@@ -276,6 +277,16 @@ public class CoreApplicationEnvironment {
     });
   }
 
+  public <T> void addExtension(ExtensionPointName<T> name, final T extension, LoadingOrder loadingOrder) {
+    final ExtensionPoint<T> extensionPoint = Extensions.getRootArea().getExtensionPoint(name);
+    extensionPoint.registerExtension(extension, loadingOrder);
+    Disposer.register(myParentDisposable, new Disposable() {
+      @Override
+      public void dispose() {
+        extensionPoint.unregisterExtension(extension);
+      }
+    });
+  }
 
   public static <T> void registerExtensionPoint(final ExtensionsArea area, final ExtensionPointName<T> extensionPointName,
                                                    final Class<? extends T> aClass) {

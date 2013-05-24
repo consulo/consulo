@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,8 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.DefaultASTFactory;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.lang.ASTLeafFactory;
 import com.intellij.psi.impl.source.Constants;
-import com.intellij.psi.impl.source.javadoc.CorePsiDocTagValueImpl;
 import com.intellij.psi.impl.source.javadoc.PsiDocTokenImpl;
 import com.intellij.psi.impl.source.tree.java.PsiIdentifierImpl;
 import com.intellij.psi.impl.source.tree.java.PsiJavaTokenImpl;
@@ -27,17 +24,18 @@ import com.intellij.psi.impl.source.tree.java.PsiKeywordImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.java.IJavaDocElementType;
 import com.intellij.psi.tree.java.IJavaElementType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
-public class CoreJavaASTFactory extends ASTFactory implements Constants {
-  private final DefaultASTFactory myDefaultASTFactory = ServiceManager.getService(DefaultASTFactory.class);
-
+public class CoreJavaASTLeafFactory implements Constants, ASTLeafFactory {
   @Override
+  @NotNull
   public LeafElement createLeaf(final IElementType type, final CharSequence text) {
     if (type == C_STYLE_COMMENT || type == END_OF_LINE_COMMENT) {
-      return myDefaultASTFactory.createComment(type, text);
+      return new PsiCoreCommentImpl(type, text);
     }
     else if (type == IDENTIFIER) {
       return new PsiIdentifierImpl(text);
@@ -57,10 +55,11 @@ public class CoreJavaASTFactory extends ASTFactory implements Constants {
   }
 
   @Override
-  public CompositeElement createComposite(IElementType type) {
-    if (type == DOC_TAG_VALUE_ELEMENT) {
-      return new CorePsiDocTagValueImpl();
-    }
-    return null;
+  public boolean apply(@Nullable IElementType input) {
+    return input == C_STYLE_COMMENT ||
+           input == END_OF_LINE_COMMENT ||
+           input == IDENTIFIER ||
+           KEYWORD_BIT_SET.contains(input) ||
+           input instanceof IJavaElementType || input instanceof IJavaDocElementType;
   }
 }

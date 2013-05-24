@@ -313,11 +313,9 @@
     <lang.psiStructureViewFactory language="HTML" implementationClass="com.intellij.lang.xml.XmlStructureViewBuilderFactory"/>
     <lang.psiStructureViewFactory language="XHTML" implementationClass="com.intellij.lang.xml.XmlStructureViewBuilderFactory"/>
 
-    <lang.ast.factory language="XML" implementationClass="com.intellij.lang.xml.XmlASTFactory"/>
-    <lang.ast.factory language="DTD" implementationClass="com.intellij.lang.xml.XmlASTFactory"/>
-    <lang.ast.factory language="HTML" implementationClass="com.intellij.lang.xml.XmlASTFactory"/>
-    <lang.ast.factory language="XHTML" implementationClass="com.intellij.lang.xml.XmlASTFactory"/>
-    <lang.ast.factory language="JAVA_HOLDER_METHOD_TREE" implementationClass="com.intellij.lang.xml.XmlASTFactory"/>
+    <lang.ast.lazyFactory implementation="com.intellij.lang.xml.XmlASTLazyFactory" />
+    <lang.ast.compositeFactory implementation="com.intellij.lang.xml.XmlASTCompositeFactory" />
+    <lang.ast.leafFactory implementation="com.intellij.lang.xml.XmlASTLeafFactory" />
 
     <codeStyleSettingsProvider implementation="com.intellij.application.options.XmlCodeStyleSettingsProvider"/>
     <codeStyleSettingsProvider implementation="com.intellij.application.options.HtmlCodeStyleSettingsProvider"/>

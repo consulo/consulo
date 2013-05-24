@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,19 @@
  */
 package com.intellij.lang;
 
-import com.intellij.core.CoreASTFactory;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.impl.source.tree.PsiCommentImpl;
+import com.intellij.psi.impl.source.tree.LazyParseableElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.ILazyParseableElementType;
+import com.intellij.util.containers.Predicate;
+import org.jetbrains.annotations.NotNull;
 
-public class DefaultASTFactoryImpl extends CoreASTFactory implements DefaultASTFactory {
-  @Override
-  public LeafElement createComment(IElementType type, CharSequence text) {
-    return new PsiCommentImpl(type, text);
-  }
+/**
+ * @author VISTALL
+ * @since 2:10/02.04.13
+ */
+public interface ASTLazyFactory extends Predicate<IElementType> {
+  ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.lazyFactory");
+
+  @NotNull
+  LazyParseableElement createLazy(final ILazyParseableElementType type, final CharSequence text);
 }
