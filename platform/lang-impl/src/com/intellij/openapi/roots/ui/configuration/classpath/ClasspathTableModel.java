@@ -23,6 +23,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.util.ui.ItemRemovable;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -62,11 +63,11 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
     return myItems.get(row);
   }
 
-  public void addItem(ClasspathTableItem<?> item) {
+  public void addItem(@NotNull ClasspathTableItem<?> item) {
     myItems.add(item);
   }
 
-  public void addItemAt(ClasspathTableItem<?> item, int row) {
+  public void addItemAt(@NotNull ClasspathTableItem<?> item, int row) {
     myItems.add(row, item);
   }
 

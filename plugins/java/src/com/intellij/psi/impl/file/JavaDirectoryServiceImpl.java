@@ -30,7 +30,6 @@ import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.LanguageLevelUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
@@ -213,7 +212,7 @@ public class JavaDirectoryServiceImpl extends CoreJavaDirectoryService {
       return LanguageLevelUtil.getEffectiveLanguageLevel(module);
     }
 
-    return LanguageLevelProjectExtension.getInstance(project).getLanguageLevel();
+    return LanguageLevel.HIGHEST;
   }
 
 }

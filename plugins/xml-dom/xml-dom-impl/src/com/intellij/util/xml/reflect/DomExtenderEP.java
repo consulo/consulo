@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class DomExtenderEP extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.xml.reflect.DomExtenderEP");
-  public static final ExtensionPointName<DomExtenderEP> EP_NAME = ExtensionPointName.create("com.intellij.dom.extender");
+  public static final ExtensionPointName<DomExtenderEP> EP_NAME = ExtensionPointName.create("com.intellij.xml.dom.extender");
 
   @Attribute("domClass")
   public String domClassName;

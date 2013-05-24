@@ -24,14 +24,15 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 
 /**
- *  @author dsl
+ * @author dsl
  */
 public class OrderEntryFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.OrderEntryFactory");
   @NonNls public static final String ORDER_ENTRY_ELEMENT_NAME = JpsModuleRootModelSerializer.ORDER_ENTRY_TAG;
   @NonNls public static final String ORDER_ENTRY_TYPE_ATTR = JpsModuleRootModelSerializer.TYPE_ATTRIBUTE;
 
-  static OrderEntry createOrderEntryByElement(Element element, RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) throws InvalidDataException {
+  static OrderEntry createOrderEntryByElement(Element element, RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager)
+    throws InvalidDataException {
     LOG.assertTrue(ORDER_ENTRY_ELEMENT_NAME.equals(element.getName()));
     final String type = element.getAttributeValue(ORDER_ENTRY_TYPE_ATTR);
     if (type == null) {
@@ -43,9 +44,11 @@ public class OrderEntryFactory {
     else if (ModuleExtensionWithSdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new ModuleExtensionWithSdkOrderEntryImpl(element, rootModel, projectRootManager);
     }
+    /*
+    FIXME [VISTALL] currently inherit sdk is not working
     else if (InheritedSdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new InheritedSdkOrderEntryImpl(element, rootModel, projectRootManager);
-    }
+    }   */
     else if (LibraryOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new LibraryOrderEntryImpl(element, rootModel, projectRootManager);
     }
@@ -55,7 +58,10 @@ public class OrderEntryFactory {
     else if (ModuleOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new ModuleOrderEntryImpl(element, rootModel);
     }
-    else throw new InvalidDataException("Unknown order entry type:" + type);
+    else {
+      LOG.warn("Unknown order entry type:" + type);
+      return null;
+    }
   }
 
   static Element createOrderEntryElement(String type) {

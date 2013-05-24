@@ -118,6 +118,9 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     boolean moduleSourceAdded = false;
     for (Element child : orderElements) {
       final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this, myProjectRootManager);
+      if(orderEntry == null) {
+        continue;
+      }
       if (orderEntry instanceof ModuleSourceOrderEntry) {
         if (moduleSourceAdded) {
           continue;
