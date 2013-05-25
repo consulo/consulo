@@ -17,18 +17,13 @@ package com.intellij.refactoring.move.moveClassesOrPackages;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Map;
 
 public abstract class MoveAllClassesInFileHandler {
-  public static  ExtensionPointName<MoveAllClassesInFileHandler> EP_NAME = new ExtensionPointName<MoveAllClassesInFileHandler>("com.intellij.refactoring.moveAllClassesInFileHandler");
+  public static  ExtensionPointName<MoveAllClassesInFileHandler> EP_NAME = new ExtensionPointName<MoveAllClassesInFileHandler>("org.consulo.java.refactoring.moveAllClassesInFileHandler");
 
   public abstract void processMoveAllClassesInFile(@NotNull Map<PsiClass, Boolean> allClasses, PsiClass psiClass, PsiElement... elementsToMove);
 }
