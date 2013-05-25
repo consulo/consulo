@@ -1,6 +1,7 @@
 package org.consulo.compiler;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,7 +12,7 @@ public interface CompilerProvider<T extends com.intellij.openapi.compiler.Compil
   ExtensionPointName<CompilerProvider> EP_NAME = ExtensionPointName.create("com.intellij.compilerProvider");
 
   @NotNull
-  T createCompiler();
+  T createCompiler(Project project);
 
-  CompilerSettings<T> createSettings();
+  CompilerSettings createSettings(@NotNull Project project);
 }

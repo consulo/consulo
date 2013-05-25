@@ -17,12 +17,34 @@
 
 package com.intellij.compiler.impl.resourceCompiler;
 
+import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.impl.CompilerUtil;
+import com.intellij.compiler.make.MakeUtil;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.compiler.*;
+import com.intellij.openapi.compiler.ex.CompileContextEx;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.util.Chunk;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
 /*
  * @author: Eugene Zhuravlev
  * Date: Jan 17, 2003
  * Time: 3:48:26 PM
  */
-public class ResourceCompiler /*implements TranslatingCompiler*/ { /*
+public class ResourceCompiler implements TranslatingCompiler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.resourceCompiler.ResourceCompiler");
   private final Project myProject;
   private final CompilerConfiguration myConfiguration;
@@ -39,7 +61,7 @@ public class ResourceCompiler /*implements TranslatingCompiler*/ { /*
   }
 
   public boolean validateConfiguration(CompileScope scope) {
-    ((CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject)).convertPatterns();
+   //TODO ((CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject)).convertPatterns();
     return true;
   }
 
@@ -210,5 +232,5 @@ public class ResourceCompiler /*implements TranslatingCompiler*/ { /*
     public VirtualFile getSourceFile() {
       return myFile;
     }
-  }    */
+  }
 }

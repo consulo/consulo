@@ -5502,5 +5502,6 @@
     <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last" />
     <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last" />
     <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultLangPsiElementFactory" order="last" />
+    <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider" />
   </extensions>
 </idea-plugin>

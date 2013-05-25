@@ -651,8 +651,6 @@
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <projectService serviceInterface="com.intellij.compiler.CompilerConfiguration"
-                    serviceImplementation="com.intellij.compiler.CompilerConfigurationImpl"/>
     <lang.syntaxHighlighterFactory key="JAVA" implementationClass="com.intellij.lang.java.JavaSyntaxHighlighterFactory"/>
 
 

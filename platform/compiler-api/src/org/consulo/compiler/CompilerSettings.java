@@ -8,6 +8,6 @@ import org.jdom.Element;
  * @author VISTALL
  * @since 19:58/24.05.13
  */
-public interface CompilerSettings<T> extends PersistentStateComponent<Element>{
+public interface CompilerSettings extends PersistentStateComponent<Element>{
   Configurable createConfigurable();
 }

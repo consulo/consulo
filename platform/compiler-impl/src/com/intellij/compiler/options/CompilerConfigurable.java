@@ -91,7 +91,7 @@ public class CompilerConfigurable implements SearchableConfigurable.Parent, Conf
       final com.intellij.openapi.compiler.Compiler[] compilers = compilerManager.getAllCompilers();
       List<Configurable> configurables = new ArrayList<Configurable>(compilers.length);
       for (Compiler compiler : compilers) {
-        final CompilerSettings<Compiler> settings = compilerManager.getSettings(compiler);
+        final CompilerSettings settings = compilerManager.getSettings(compiler);
 
         final Configurable configurable = settings.createConfigurable();
         if(configurable != null) {

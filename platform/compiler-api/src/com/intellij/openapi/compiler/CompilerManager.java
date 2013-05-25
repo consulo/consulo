@@ -292,5 +292,5 @@ public abstract class CompilerManager {
   public abstract boolean isValidationEnabled(Module moduleType);
 
   @NotNull
-  public abstract  <T extends Compiler> CompilerSettings<T> getSettings(T compiler);
+  public abstract  <T extends Compiler> CompilerSettings getSettings(T compiler);
 }
