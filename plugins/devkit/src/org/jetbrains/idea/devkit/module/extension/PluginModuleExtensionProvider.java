@@ -40,16 +40,19 @@ public class PluginModuleExtensionProvider implements ModuleExtensionProvider<Pl
     return "Consulo Plugin";
   }
 
+  @NotNull
   @Override
   public Class<PluginModuleExtension> getImmutableClass() {
     return PluginModuleExtension.class;
   }
 
+  @NotNull
   @Override
   public PluginModuleExtension createImmutable(@NotNull String id, @NotNull Module module) {
     return new PluginModuleExtension(id, module);
   }
 
+  @NotNull
   @Override
   public PluginMutableModuleExtension createMutable(@NotNull String id,
                                                     @NotNull Module module,

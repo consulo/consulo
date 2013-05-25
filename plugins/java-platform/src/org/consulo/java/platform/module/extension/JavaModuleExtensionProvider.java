@@ -41,16 +41,19 @@ public class JavaModuleExtensionProvider implements
     return "Java";
   }
 
+  @NotNull
   @Override
   public Class<JavaModuleExtension> getImmutableClass() {
     return JavaModuleExtension.class;
   }
 
+  @NotNull
   @Override
   public JavaModuleExtension createImmutable(@NotNull String id, @NotNull Module module) {
     return new JavaModuleExtension(id, module);
   }
 
+  @NotNull
   @Override
   public JavaMutableModuleExtension createMutable(@NotNull String id, @NotNull Module module, @NotNull JavaModuleExtension javaModuleExtension) {
     return new JavaMutableModuleExtension(id, module, javaModuleExtension);

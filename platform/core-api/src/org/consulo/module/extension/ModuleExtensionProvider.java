@@ -32,9 +32,12 @@ public interface ModuleExtensionProvider<ImmutableModel extends ModuleExtension,
   @NotNull
   String getName();
 
+  @NotNull
   Class<ImmutableModel> getImmutableClass();
 
+  @NotNull
   ImmutableModel createImmutable(@NotNull String id, @NotNull Module module);
 
+  @NotNull
   MutableModel createMutable(@NotNull String id, @NotNull Module module, @NotNull ImmutableModel immutableModel);
 }
