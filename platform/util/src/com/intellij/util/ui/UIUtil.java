@@ -933,15 +933,8 @@ public class UIUtil {
     return UIManager.getColor("OptionPane.background");
   }
 
-  /**
-   * @deprecated Quaqua is gone (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean isUnderQuaquaLookAndFeel() {
-    return false;
-  }
-
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
   public static boolean isUnderAlloyLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Alloy");
   }

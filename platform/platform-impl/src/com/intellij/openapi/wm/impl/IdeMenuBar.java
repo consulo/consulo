@@ -302,7 +302,6 @@ public class IdeMenuBar extends JMenuBar {
         add(new ActionMenu(null, ActionPlaces.MAIN_MENU, (ActionGroup)action, myPresentationFactory, enableMnemonics, true));
       }
 
-      fixMenuBackground();
       updateMnemonicsVisibility();
       if (myClockPanel != null) {
         add(myClockPanel);
@@ -320,18 +319,11 @@ public class IdeMenuBar extends JMenuBar {
   }
 
   @Override
-  public void updateUI() {
-    super.updateUI();
-    fixMenuBackground();
-  }
-
-  @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    if (UIUtil.isUnderDarcula()) {
-      g.setColor(UIManager.getColor("MenuItem.background"));
-      g.fillRect(0, 0, getWidth(), getHeight());
-    }
+
+    g.setColor(UIManager.getColor("MenuItem.background"));
+    g.fillRect(0, 0, getWidth(), getHeight());
   }
 
   @Override
@@ -347,19 +339,6 @@ public class IdeMenuBar extends JMenuBar {
     }
     else if (myState != State.COLLAPSED) {
       super.paintChildren(g);
-    }
-  }
-
-  /**
-   * Hacks a problem under Alloy LaF which draws menu bar in different background menu items are drawn in.
-   */
-  private void fixMenuBackground() {
-    if (UIUtil.isUnderAlloyLookAndFeel() && getMenuCount() > 0) {
-      final JMenu menu = getMenu(0);
-      if (menu != null) {  // hack for Substance LAF compatibility
-        menu.updateUI();
-        setBackground(menu.getBackground());
-      }
     }
   }
 
