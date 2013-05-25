@@ -37,7 +37,7 @@ public class PluginModuleExtensionProvider implements ModuleExtensionProvider<Pl
   @NotNull
   @Override
   public String getName() {
-    return "Consulo Plugin";
+    return "Consulo DevKit";
   }
 
   @NotNull
