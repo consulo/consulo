@@ -16,6 +16,7 @@
 package com.intellij.platform;
 
 import com.intellij.CommonBundle;
+import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
@@ -74,7 +75,7 @@ public class ModuleAttachProcessor extends ProjectAttachProcessor {
     final String[] files = projectDir.list();
     if (files != null) {
       for (String file : files) {
-        if (FileUtilRt.extensionEquals(file, "iml")) {
+        if (FileUtilRt.extensionEquals(file, ModuleFileType.DEFAULT_EXTENSION)) {
           VirtualFile imlFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(projectDir, file));
           if (imlFile != null) {
             attachModule(project, imlFile, callback);
