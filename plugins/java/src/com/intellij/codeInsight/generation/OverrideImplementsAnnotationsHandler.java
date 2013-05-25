@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 public interface OverrideImplementsAnnotationsHandler {
-  ExtensionPointName<OverrideImplementsAnnotationsHandler> EP_NAME = ExtensionPointName.create("com.intellij.overrideImplementsAnnotationsHandler");
+  ExtensionPointName<OverrideImplementsAnnotationsHandler> EP_NAME = ExtensionPointName.create("org.consulo.java.overrideImplementsAnnotationsHandler");
 
   String[] getAnnotations(Project project);
   @NotNull
