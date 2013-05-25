@@ -94,7 +94,7 @@ public class PsiLocalVariableImpl extends CompositePsiElement implements PsiLoca
 
   @Override
   @NotNull
-  public final PsiType getType() {
+  public PsiType getType() {
     return JavaSharedImplUtil.getType(getTypeElement(), getNameIdentifier());
   }
 
