@@ -20,6 +20,7 @@ import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.DefaultModuleBuilder;
 import com.intellij.ide.util.newProjectWizard.modes.ImportImlMode;
 import com.intellij.ide.util.projectWizard.*;
@@ -214,7 +215,7 @@ public class TemplateModuleBuilder extends ModuleBuilder {
       String iml = ContainerUtil.find(dir.list(), new Condition<String>() {
         @Override
         public boolean value(String s) {
-          return s.endsWith(".iml");
+          return s.endsWith(ModuleFileType.DOT_DEFAULT_EXTENSION);
         }
       });
       if (moduleMode) {

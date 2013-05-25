@@ -17,6 +17,7 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -64,7 +65,7 @@ import java.util.*;
 public abstract class ModuleManagerImpl extends ModuleManager implements ProjectComponent, PersistentStateComponent<Element>, ModificationTracker {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.module.impl.ModuleManagerImpl");
   public static final Key<String> DISPOSED_MODULE_NAME = Key.create("DisposedNeverAddedModuleName");
-  private static final String IML_EXTENSION = ".iml";
+  private static final String IML_EXTENSION = ModuleFileType.DOT_DEFAULT_EXTENSION;
   protected final Project myProject;
   protected final MessageBus myMessageBus;
   protected volatile ModuleModelImpl myModuleModel = new ModuleModelImpl();

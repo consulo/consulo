@@ -20,6 +20,7 @@
  */
 package org.jetbrains.idea.eclipse;
 
+import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.openapi.module.Module;
@@ -70,7 +71,7 @@ public class EclipseEmlTest extends IdeaTestCase {
       @Override
       public Module compute() {
         return ModuleManager.getInstance(project)
-          .newModule(path + "/" + EclipseProjectFinder.findProjectName(path) + IdeaXml.IML_EXT);
+          .newModule(path + "/" + EclipseProjectFinder.findProjectName(path) + ModuleFileType.DOT_DEFAULT_EXTENSION);
       }
     });
 

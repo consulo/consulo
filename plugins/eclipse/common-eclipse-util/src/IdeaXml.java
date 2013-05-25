@@ -84,6 +84,5 @@ public interface IdeaXml {
   @NonNls String CLASSPATH_CONTEXT = "classpath";
   @NonNls String TEMPLATE_CONTEXT = "template";
   @NonNls String EXCLUDE_OUTPUT = "exclude-output";
-  @NonNls String IML_EXT = ".iml";
   String JUNIT = "junit";
 }

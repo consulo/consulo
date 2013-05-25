@@ -827,8 +827,8 @@
                     serviceImplementation="com.intellij.refactoring.RefactoringManager"/>
     <projectService serviceInterface="com.intellij.refactoring.listeners.JavaRefactoringListenerManager"
                     serviceImplementation="com.intellij.refactoring.listeners.impl.JavaRefactoringListenerManagerImpl"/>
-    <!--TOOD [VISTALL] core depend <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
-                     serviceImplementation="com.intellij.refactoring.openapi.impl.JavaRefactoringFactoryImpl"/>   -->
+    <projectService serviceInterface="com.intellij.refactoring.JavaRefactoringFactory"
+                     serviceImplementation="com.intellij.refactoring.openapi.impl.JavaRefactoringFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.folding.JavaCodeFoldingSettings"
                         serviceImplementation="com.intellij.codeInsight.folding.impl.JavaCodeFoldingSettingsImpl"/>

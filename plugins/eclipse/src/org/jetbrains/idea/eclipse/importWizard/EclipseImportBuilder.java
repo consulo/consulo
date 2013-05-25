@@ -15,6 +15,7 @@
  */
 package org.jetbrains.idea.eclipse.importWizard;
 
+import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -255,7 +256,7 @@ public class EclipseImportBuilder extends ProjectImportBuilder<String> implement
         }
         final String moduleName = EclipseProjectFinder.findProjectName(path);
         moduleNames.add(moduleName);
-        final File imlFile = new File(modulesDirectory + File.separator + moduleName + IdeaXml.IML_EXT);
+        final File imlFile = new File(modulesDirectory + File.separator + moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION);
         if (imlFile.isFile()) {
           files.add(imlFile);
         }
@@ -311,7 +312,7 @@ public class EclipseImportBuilder extends ProjectImportBuilder<String> implement
         if (modulesDirectory == null) {
           modulesDirectory = path;
         }
-        final Module module = moduleModel.newModule(modulesDirectory + "/" + EclipseProjectFinder.findProjectName(path) + IdeaXml.IML_EXT);
+        final Module module = moduleModel.newModule(modulesDirectory + "/" + EclipseProjectFinder.findProjectName(path) + ModuleFileType.DOT_DEFAULT_EXTENSION);
         result.add(module);
         final Set<String> natures = collectNatures(path);
 

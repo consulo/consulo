@@ -20,6 +20,7 @@
  */
 package org.jetbrains.idea.eclipse;
 
+import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.PathManager;
@@ -84,7 +85,7 @@ public class EclipseImlTest extends IdeaTestCase {
       public Module compute() {
         return ModuleManager.getInstance(project)
           .newModule(new File(path) + File.separator + EclipseProjectFinder
-            .findProjectName(path) + IdeaXml.IML_EXT);
+            .findProjectName(path) + ModuleFileType.DOT_DEFAULT_EXTENSION);
       }
     });
     final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();

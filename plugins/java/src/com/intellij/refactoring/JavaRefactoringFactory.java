@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class JavaRefactoringFactory extends RefactoringFactory {
   public static JavaRefactoringFactory getInstance(Project project) {
-    return (JavaRefactoringFactory) ServiceManager.getService(project, RefactoringFactory.class);
+    return (JavaRefactoringFactory) ServiceManager.getService(project, JavaRefactoringFactory.class);
   }
 
   public abstract JavaRenameRefactoring createRename(PsiElement element, String newName);
