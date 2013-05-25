@@ -120,7 +120,7 @@ public class BlockSupportImpl extends BlockSupport {
 
           CharSequence newTextStr = newFileText.subSequence(start, end);
 
-          if (reparseable.isParsable(newTextStr, baseLanguage, project)) {
+          if (reparseable.isParsable(file, newTextStr, baseLanguage, project)) {
             ASTNode chameleon = reparseable.createNode(newTextStr);
             if (chameleon != null) {
               DummyHolder holder = DummyHolderFactory.createHolder(fileImpl.getManager(), null, node.getPsi(), charTable);

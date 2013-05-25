@@ -21,7 +21,9 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 public class IReparseableElementType extends ILazyParseableElementType {
   public IReparseableElementType(@NonNls String debugName) {
@@ -41,12 +43,13 @@ public class IReparseableElementType extends ILazyParseableElementType {
    * Checks if the specified character sequence can be parsed as a valid content of the
    * chameleon node.
    *
+   * @param psiFile
    * @param buffer  the content to parse.
    * @param fileLanguage language of the file
    * @param project the project containing the content.  @return true if the content is valid, false if not
    */
 
-  public boolean isParsable(CharSequence buffer, Language fileLanguage, final Project project) {
+  public boolean isParsable(@NotNull PsiFile psiFile, CharSequence buffer, Language fileLanguage, final Project project) {
     return false;
   }
 }

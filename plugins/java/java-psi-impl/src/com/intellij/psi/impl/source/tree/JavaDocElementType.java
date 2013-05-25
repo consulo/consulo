@@ -22,14 +22,13 @@ import com.intellij.lang.java.JavaLanguage;
 import com.intellij.lang.java.parser.JavaParserUtil;
 import com.intellij.lang.java.parser.JavadocParser;
 import com.intellij.lexer.JavaLexer;
+import com.intellij.openapi.module.EffectiveLanguageLevelUtil;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.pom.java.LanguageLevel;
-import com.intellij.psi.impl.source.javadoc.PsiDocCommentImpl;
-import com.intellij.psi.impl.source.javadoc.PsiDocMethodOrFieldRef;
-import com.intellij.psi.impl.source.javadoc.PsiDocParamRef;
-import com.intellij.psi.impl.source.javadoc.PsiDocTagImpl;
-import com.intellij.psi.impl.source.javadoc.PsiInlineDocTagImpl;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.impl.source.javadoc.*;
 import com.intellij.psi.tree.*;
 import com.intellij.psi.tree.java.IJavaDocElementType;
 import com.intellij.util.ReflectionUtil;
@@ -56,7 +55,7 @@ public interface JavaDocElementType {
   }
 
   class JavaDocLazyElementType extends ILazyParseableElementType {
-    private JavaDocLazyElementType(@NonNls final String debugName) {
+    JavaDocLazyElementType(@NonNls final String debugName) {
       super(debugName, JavaLanguage.INSTANCE);
     }
 
@@ -122,8 +121,11 @@ public interface JavaDocElementType {
     }
 
     @Override
-    public boolean isParsable(final CharSequence buffer, Language fileLanguage, final Project project) {
-      final JavaLexer lexer = new JavaLexer(LanguageLevelProjectExtension.getInstance(project).getLanguageLevel());
+    public boolean isParsable(@NotNull PsiFile psiFile, final CharSequence buffer, Language fileLanguage, final Project project) {
+      final Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(psiFile);
+      LanguageLevel languageLevel = moduleForPsiElement == null ? LanguageLevel.HIGHEST : EffectiveLanguageLevelUtil.getEffectiveLanguageLevel(moduleForPsiElement);
+
+      final JavaLexer lexer = new JavaLexer(languageLevel);
       lexer.start(buffer);
       if (lexer.getTokenType() == DOC_COMMENT) {
         lexer.advance();
