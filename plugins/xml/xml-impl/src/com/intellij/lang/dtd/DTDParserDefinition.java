@@ -22,6 +22,7 @@ import com.intellij.lang.PsiParser;
 import com.intellij.lang.xml.XMLParserDefinition;
 import com.intellij.lexer.DtdLexer;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
@@ -64,7 +65,7 @@ public class DTDParserDefinition extends XMLParserDefinition {
 
   @NotNull
   @Override
-  public Lexer createLexer(Project project) {
+  public Lexer createLexer(@NotNull Project project, Module module) {
     return new DtdLexer(false);
   }
 }

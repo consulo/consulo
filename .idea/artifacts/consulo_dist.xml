@@ -84,6 +84,9 @@
             <element id="archive" name="jdk-annotations.jar">
               <element id="dir-copy" path="$PROJECT_DIR$/plugins/java-platform/jdkAnnotations" />
             </element>
+            <element id="archive" name="java-rt.jar">
+              <element id="module-output" name="java-rt" />
+            </element>
           </element>
         </element>
         <element id="directory" name="ant">

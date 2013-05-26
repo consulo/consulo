@@ -47,7 +47,7 @@ public class CompilerParsingThread implements Runnable, OutputParser.Callback {
   private String myPushBackLine = null;
   private volatile boolean myProcessExited = false;
   private final CompileContext myContext;
-  
+
   public CompilerParsingThread(Process process, OutputParser outputParser, final boolean readErrorStream, boolean trimLines, CompileContext context) {
     myProcess = process;
     myOutputParser = outputParser;

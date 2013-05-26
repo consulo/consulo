@@ -19,6 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.xml.XMLParserDefinition;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.XHtmlLexer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
@@ -32,12 +33,12 @@ import org.jetbrains.annotations.NotNull;
 public class XHTMLParserDefinition extends XMLParserDefinition {
 
   @NotNull
-  public Lexer createLexer(Project project) {
+  public Lexer createLexer(@NotNull Project project, Module module) {
     return new XHtmlLexer();
   }
 
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(left.getPsi().getProject());
+    final Lexer lexer = createLexer(left.getPsi().getProject(), null);
     return canStickTokensTogetherByLexerInXml(left, right, lexer, 0);
   }
 

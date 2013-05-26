@@ -90,7 +90,7 @@ public class XPathLanguageInjector implements MultiHostInjector {
         while ((i = XsltSupport.getAVTOffset(value, j)) != -1) {
           if (lexer == null) {
             lexer = LanguageParserDefinitions.INSTANCE.forLanguage(languageLevel.getXPathVersion().getLanguage())
-              .createLexer(attribute.getProject());
+              .createLexer(attribute.getProject(), null);
           }
 
           // "A right curly brace inside a Literal in an expression is not recognized as terminating the expression."

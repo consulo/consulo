@@ -56,7 +56,7 @@ public class JavacOutputParser extends OutputParser {
   public boolean processMessageLine(Callback callback) {
     if (super.processMessageLine(callback)) {
       return true;
-    }                                              
+    }
     final String line = callback.getCurrentLine();
     if (line == null) {
       return false;

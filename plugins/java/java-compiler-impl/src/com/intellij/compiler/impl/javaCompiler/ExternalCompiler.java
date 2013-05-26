@@ -15,6 +15,7 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
+import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;

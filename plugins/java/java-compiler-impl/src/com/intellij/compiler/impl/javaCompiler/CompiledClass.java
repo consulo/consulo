@@ -16,8 +16,8 @@
 package com.intellij.compiler.impl.javaCompiler;
 
 /**
-* @author cdr
-*/
+ * @author cdr
+ */
 final class CompiledClass {
   public final int qName;
   public final String relativePathToSource;

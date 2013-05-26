@@ -19,33 +19,7 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class ModuleUtil extends ModuleUtilCore {
 
   private ModuleUtil() {}
-
-  @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Module module, @NotNull Class<E> extensionClass) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    return moduleRootManager.getExtension(extensionClass);
-  }
-
-  @Nullable
-  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Module module, @NotNull Class<E> extensionClass) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-
-    final E extension = moduleRootManager.getExtension(extensionClass);
-    if(extension == null) {
-      return null;
-    }
-    else {
-      return (S) extension.getSdk();
-    }
-  }
 }

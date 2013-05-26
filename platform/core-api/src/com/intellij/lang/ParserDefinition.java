@@ -16,6 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -23,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Defines the implementation of a parser for a custom language.
@@ -34,11 +36,13 @@ public interface ParserDefinition {
    * Returns the lexer for lexing files in the specified project. This lexer does not need to support incremental relexing - it is always
    * called for the entire file.
    *
+   *
    * @param project the project to which the lexer is connected.
+   * @param module
    * @return the lexer instance.
    */
   @NotNull
-  Lexer createLexer(Project project);
+  Lexer createLexer(@NotNull Project project, @Nullable Module module);
 
   /**
    * Returns the parser for parsing files in the specified project.

@@ -158,32 +158,6 @@ public class CompilerUtil {
     }
   }
 
-  public static void addTargetCommandLineSwitch(final ModuleChunk chunk, final List<String> commandLine) {
-    String optionValue = null;
-    CompilerConfiguration config = null;
-    final Module[] modules = chunk.getModules();
-    for (Module module : modules) {
-      if (config == null) {
-        config = CompilerConfiguration.getInstance(module.getProject());
-      }
-      final String moduleTarget = config.getBytecodeTargetLevel(module);
-      if (moduleTarget == null) {
-        continue;
-      }
-      if (optionValue == null) {
-        optionValue = moduleTarget;
-      }
-      else {
-        if (moduleTarget.compareTo(optionValue) < 0) {
-          optionValue = moduleTarget; // use the lower possible target among modules that form the chunk
-        }
-      }
-    }
-    if (optionValue != null) {
-      commandLine.add("-target");
-      commandLine.add(optionValue);
-    }
-  }
 
 
   public static boolean isOfVersion(String versionString, String checkedVersion) {

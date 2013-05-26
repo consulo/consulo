@@ -17,7 +17,6 @@ package com.intellij.compiler.ant;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,9 +39,6 @@ public class ModuleChunk {
    * A array of custom compilation providers.
    */
   private final ChunkCustomCompilerExtension[] myCustomCompilers;
-  /**
-   * The main module in the chunck (guessed by heuristic or selected by user)
-   */
   private Module myMainModule;
   /**
    * Chucnk dependendencies
@@ -86,15 +82,6 @@ public class ModuleChunk {
     return CompilerModuleExtension.getInstance(myMainModule).getCompilerOutputUrlForTests();
   }
 
-  public boolean isJdkInherited() {
-    return  false;//TODO [VISTALL] new apiModuleRootManager.getInstance(myMainModule).isSdkInherited();
-  }
-
-  @Nullable
-  public Sdk getJdk() {
-    return null; //TODO [VISTALL] new api ModuleRootManager.getInstance(myMainModule).getSdk();
-  }
-
   public ModuleChunk[] getDependentChunks() {
     return myDependentChunks;
   }
@@ -129,5 +116,9 @@ public class ModuleChunk {
       }
     }
     return false;
+  }
+
+  public Module getMainModule() {
+    return myMainModule;
   }
 }

@@ -137,7 +137,7 @@ public class XmlBuilderDriver {
     final ParserDefinition xmlParserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(XMLLanguage.INSTANCE);
     assert xmlParserDefinition != null;
 
-    PsiBuilder b = PsiBuilderFactory.getInstance().createBuilder(xmlParserDefinition, xmlParserDefinition.createLexer(null), myText);
+    PsiBuilder b = PsiBuilderFactory.getInstance().createBuilder(xmlParserDefinition, xmlParserDefinition.createLexer(null, null), myText);
     new XmlParsing(b).parseDocument();
     return b;
   }

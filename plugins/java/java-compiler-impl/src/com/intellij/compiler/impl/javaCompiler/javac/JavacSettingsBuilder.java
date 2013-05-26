@@ -16,7 +16,7 @@
 package com.intellij.compiler.impl.javaCompiler.javac;
 
 import com.intellij.compiler.CompilerEncodingService;
-import com.intellij.compiler.impl.javaCompiler.ModuleChunk;
+import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.Chunk;
 import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
@@ -87,6 +87,6 @@ public class JavacSettingsBuilder {
       }
       options.append(option);
     }
-   return options.toString();
+    return options.toString();
   }
 }

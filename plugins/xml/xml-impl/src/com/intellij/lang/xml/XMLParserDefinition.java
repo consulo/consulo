@@ -20,6 +20,7 @@ import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.XmlLexer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class XMLParserDefinition implements ParserDefinition {
   @NotNull
-  public Lexer createLexer(Project project) {
+  public Lexer createLexer(@NotNull Project project, Module module) {
     return new XmlLexer();
   }
 
@@ -76,7 +77,7 @@ public class XMLParserDefinition implements ParserDefinition {
   }
 
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(left.getPsi().getProject());
+    final Lexer lexer = createLexer(left.getPsi().getProject(), null);
     return canStickTokensTogetherByLexerInXml(left, right, lexer, 0);
   }
 

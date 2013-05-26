@@ -15,17 +15,11 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
-import com.intellij.codeInsight.NullableNotNullManager;
 import com.intellij.compiler.*;
-import com.intellij.compiler.classParsing.AnnotationConstantValue;
-import com.intellij.compiler.classParsing.MethodInfo;
 import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.impl.CompilerUtil;
-import com.intellij.compiler.make.Cache;
+import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.compiler.make.CacheCorruptedException;
-import com.intellij.compiler.make.DependencyCache;
-import com.intellij.compiler.make.MakeUtil;
-import com.intellij.compiler.notNullVerification.NotNullVerifyingInstrumenter;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
@@ -40,24 +34,17 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.Chunk;
-import com.intellij.util.cls.ClsFormatException;
 import gnu.trove.THashMap;
-import org.consulo.compiler.impl.CompilerManagerImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.asm4.ClassReader;
-import org.jetbrains.asm4.ClassWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -317,13 +304,13 @@ public class BackendCompilerWrapper {
   }
 
   private void saveTestData() {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
+   /* ApplicationManager.getApplication().runReadAction(new Runnable() {
       public void run() {
         for (VirtualFile file : myFilesToCompile) {
           CompilerManagerImpl.addCompiledPath(file.getPath());
         }
       }
-    });
+    }); */
   }
 
   private final Object lock = new Object();
@@ -332,11 +319,11 @@ public class BackendCompilerWrapper {
     private final ClassParsingThread myClassParsingThread;
 
     private SynchedCompilerParsing(Process process,
-                                  final CompileContext context,
-                                  OutputParser outputParser,
-                                  ClassParsingThread classParsingThread,
-                                  boolean readErrorStream,
-                                  boolean trimLines) {
+                                   final CompileContext context,
+                                   OutputParser outputParser,
+                                   ClassParsingThread classParsingThread,
+                                   boolean readErrorStream,
+                                   boolean trimLines) {
       super(process, outputParser, readErrorStream, trimLines,context);
       myClassParsingThread = classParsingThread;
     }
@@ -389,7 +376,7 @@ public class BackendCompilerWrapper {
     try {
       final Process process = myCompiler.launchProcess(chunk, outputDir, myCompileContext);
       final long compilationStart = System.currentTimeMillis();
-      final ClassParsingThread classParsingThread = new ClassParsingThread(isJdk6(chunk.getJdk()), outputDir);
+      final ClassParsingThread classParsingThread = new ClassParsingThread(isJdk6(JavaSdkUtil.getSdkForCompilation(chunk)), outputDir);
       final Future<?> classParsingThreadFuture = ApplicationManager.getApplication().executeOnPooledThread(classParsingThread);
 
       OutputParser errorParser = myCompiler.createErrorParser(outputDir, process);
@@ -617,11 +604,11 @@ public class BackendCompilerWrapper {
     final Ref<CacheCorruptedException> exRef = new Ref<CacheCorruptedException>(null);
     final ModuleFileIndex fileIndex = ModuleRootManager.getInstance(module).getFileIndex();
     final GlobalSearchScope srcRootScope = GlobalSearchScope.moduleScope(module).intersectWith(
-        GlobalSearchScopes.directoryScope(myProject, sourceRoot, true));
-    
+      GlobalSearchScopes.directoryScope(myProject, sourceRoot, true));
+
     final ContentIterator contentIterator = new ContentIterator() {
       public boolean processFile(final VirtualFile child) {
-        try {
+        /*try {
           if (child.isValid()) {
             if (!child.isDirectory() && myCompiler.getCompilableFileTypes().contains(child.getFileType())) {
               updateOutputItemsList(outputDir, child, sourceRoot, packagePrefix, filesToRefresh, results, srcRootScope);
@@ -630,9 +617,9 @@ public class BackendCompilerWrapper {
           return true;
         }
         catch (CacheCorruptedException e) {
-          exRef.set(e);
-          return false;
-        }
+          exRef.set(e);  */
+          return false;  /*
+        }   */
       }
     };
     if (fileIndex.isInContent(from)) {
@@ -671,7 +658,7 @@ public class BackendCompilerWrapper {
     paths.add(new CompiledClass(classQName, relativePathToSource, pathToClass));
   }
 
-  private void updateOutputItemsList(final String outputDir, final VirtualFile srcFile,
+  /*private void updateOutputItemsList(final String outputDir, final VirtualFile srcFile,
                                      VirtualFile sourceRoot,
                                      final String packagePrefix, final List<File> filesToRefresh,
                                      Map<String, Collection<TranslatingCompiler.OutputItem>> results,
@@ -687,7 +674,7 @@ public class BackendCompilerWrapper {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Checking [pathToClass; relPathToSource] = " + cc);
       }
-      
+
       boolean pathsEquals = FileUtil.pathsEqual(filePath, cc.relativePathToSource);
       if (!pathsEquals) {
         final String qName = myCompileContext.getDependencyCache().resolve(cc.qName);
@@ -712,7 +699,7 @@ public class BackendCompilerWrapper {
           });
         }
       }
-      
+
       if (pathsEquals) {
         final String outputPath = cc.pathToClass.replace(File.separatorChar, '/');
         final Pair<String, String> realLocation = moveToRealLocation(outputDir, outputPath, srcFile, filesToRefresh);
@@ -742,7 +729,7 @@ public class BackendCompilerWrapper {
         }
       }
     }
-  }
+  }      */
 
   /**
    *
@@ -902,7 +889,7 @@ public class BackendCompilerWrapper {
     }
 
     private void processPath(FileObject fileObject, Project project) throws CacheCorruptedException {
-      File file = fileObject.getFile();
+   /*   File file = fileObject.getFile();
       final String path = file.getPath();
       try {
         if (CompilerConfiguration.MAKE_ENABLED) {
@@ -942,7 +929,7 @@ public class BackendCompilerWrapper {
           final int slashIndex = _path.lastIndexOf('/');
           final String sourceFileName = _path.substring(slashIndex + 1, tailIndex) + ".java";
           String relativePathToSource = _path.substring(myOutputDir.length(), tailIndex) + ".java";
-          putName(sourceFileName, 0 /*doesn't matter here*/ , relativePathToSource.startsWith("/")? relativePathToSource : "/" + relativePathToSource, path);
+          putName(sourceFileName, 0 , relativePathToSource.startsWith("/")? relativePathToSource : "/" + relativePathToSource, path);
         }
       }
       catch (ClsFormatException e) {
@@ -958,11 +945,11 @@ public class BackendCompilerWrapper {
       finally {
         myStatistics.incClassesCount();
         updateStatistics();
-      }
+      }  */
     }
   }
 
-  private static boolean hasNotNullAnnotations(final Cache cache, final SymbolTable symbolTable, final int className, Project project) throws CacheCorruptedException {
+ /* private static boolean hasNotNullAnnotations(final Cache cache, final SymbolTable symbolTable, final int className, Project project) throws CacheCorruptedException {
     final NullableNotNullManager manager = NullableNotNullManager.getInstance(project);
     final List<String> notNulls = manager.getNotNulls();
     for (MethodInfo methodId : cache.getMethods(className)) {
@@ -981,12 +968,12 @@ public class BackendCompilerWrapper {
       }
     }
     return false;
-  }
+  }    */
 
   private static boolean isJdk6(final Sdk jdk) {
     return jdk != null && JavaSdk.getInstance().isOfVersionOrHigher(jdk, JavaSdkVersion.JDK_1_6);
   }
-  
+
   private static final class CompileStatistics {
     private static final Key<CompileStatistics> KEY = Key.create("_Compile_Statistics_");
     private int myClassesCount;

@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class FilePathActionJavac extends JavacParserAction {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.javaCompiler.javac.FilePathActionJavac");
   private final Matcher myJdk7FormatMatcher;
-  
+
   public FilePathActionJavac(final Matcher matcher) {
     super(matcher);
     myJdk7FormatMatcher = Pattern.compile("^\\w+\\[(.+)\\]$", Pattern.CASE_INSENSITIVE).matcher("");

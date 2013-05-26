@@ -19,6 +19,7 @@ package com.intellij.lang.impl;
 import com.intellij.lang.*;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
     final Language language = chameleon.getTokenType().getLanguage();
     ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
 
-    return new PsiBuilderImpl(project, parserDefinition, createLexer(project, language), chameleon, chameleon.getText());
+    return new PsiBuilderImpl(project, parserDefinition, createLexer(project, chameleon.getContainingFile(), language), chameleon, chameleon.getText());
   }
 
   @NotNull
@@ -49,7 +50,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
                                   @NotNull final Language lang,
                                   @NotNull final CharSequence seq) {
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : createLexer(project, lang), chameleon, seq);
+    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : createLexer(project, null, lang), chameleon, seq);
   }
 
   @NotNull
@@ -61,13 +62,13 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
                                   @NotNull final CharSequence seq) {
     final Language language = chameleon.getTokenType().getLanguage();
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
-    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : createLexer(project, lang), chameleon, seq);
+    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : createLexer(project, null, lang), chameleon, seq);
   }
 
-  private static Lexer createLexer(final Project project, final Language lang) {
+  private static Lexer createLexer(@NotNull final Project project, @Nullable final PsiFile psiFile,  @NotNull final Language lang) {
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
     assert parserDefinition != null : "ParserDefinition absent for language: " + lang.getID();
-    return parserDefinition.createLexer(project);
+    return parserDefinition.createLexer(project, null);
   }
 
   @NotNull

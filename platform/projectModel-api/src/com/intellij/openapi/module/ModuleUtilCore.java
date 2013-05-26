@@ -18,6 +18,7 @@ package com.intellij.openapi.module;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,6 +27,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -209,6 +212,25 @@ public class ModuleUtilCore {
     }
     else {
       return moduleRootManager.getFileIndex().isInContent(file);
+    }
+  }
+
+  @Nullable
+  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Module module, @NotNull Class<E> extensionClass) {
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    return moduleRootManager.getExtension(extensionClass);
+  }
+
+  @Nullable
+  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Module module, @NotNull Class<E> extensionClass) {
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+
+    final E extension = moduleRootManager.getExtension(extensionClass);
+    if(extension == null) {
+      return null;
+    }
+    else {
+      return (S) extension.getSdk();
     }
   }
 

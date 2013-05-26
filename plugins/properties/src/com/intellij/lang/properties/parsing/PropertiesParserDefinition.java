@@ -24,6 +24,7 @@ import com.intellij.lang.properties.psi.impl.PropertiesListImpl;
 import com.intellij.lang.properties.psi.impl.PropertyImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -40,7 +41,7 @@ public class PropertiesParserDefinition implements ParserDefinition {
   private static final Logger LOG = Logger.getInstance("#com.intellij.lang.properties.PropertiesParserDefinition");
 
   @NotNull
-  public Lexer createLexer(Project project) {
+  public Lexer createLexer(@NotNull Project project, Module module) {
     return new PropertiesLexer();
   }
 

@@ -262,6 +262,10 @@ public class ModuleChunk extends Chunk<Module> {
     return nodes.toArray(new Module[nodes.size()]);
   }
 
+  public Module getModule() {
+    return getNodes().iterator().next();
+  }
+
   public String getSourcePath() {
     return getSourcePath(mySourcesFilter);
   }

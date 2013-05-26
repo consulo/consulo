@@ -21,8 +21,9 @@ import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.JavaLexer;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.java.stubs.JavaStubElementType;
@@ -33,6 +34,7 @@ import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,8 +43,9 @@ import org.jetbrains.annotations.NotNull;
 public class JavaParserDefinition implements ParserDefinition {
   @Override
   @NotNull
-  public Lexer createLexer(final Project project) {
-    final LanguageLevel languageLevel = LanguageLevelProjectExtension.getInstance(project).getLanguageLevel();
+  public Lexer createLexer(@NotNull final Project project, Module module) {
+    JavaModuleExtension moduleExtension = module == null ? null : ModuleUtil.getExtension(module, JavaModuleExtension.class);
+    LanguageLevel languageLevel = moduleExtension == null ? LanguageLevel.HIGHEST : moduleExtension.getLanguageLevel();
     return createLexer(languageLevel);
   }
 

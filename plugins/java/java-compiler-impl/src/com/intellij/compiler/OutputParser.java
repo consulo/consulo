@@ -27,7 +27,7 @@ public abstract class OutputParser {
   protected final List<ParserAction> myParserActions = new ArrayList<ParserAction>(10);
 
   public interface Callback {
-    @NonNls String getNextLine();        
+    @NonNls String getNextLine();
     @NonNls String getCurrentLine();
     void pushBack(String line);
     void setProgressText(String text);

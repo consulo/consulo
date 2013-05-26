@@ -201,7 +201,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
       throw new AssertionError("No parser definition for " + language);
     }
     final Project project = myManager.getProject();
-    final Lexer lexer = parserDefinition.createLexer(project);
+    final Lexer lexer = parserDefinition.createLexer(project, null);
     final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, holder, lexer, language, text);
     final ASTNode node = parserDefinition.createParser(project).parse(type, builder);
     holder.rawAddChildren((TreeElement)node);

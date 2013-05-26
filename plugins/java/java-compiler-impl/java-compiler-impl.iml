@@ -7,19 +7,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="resources-en" />
-    <orderEntry type="module" module-name="platform-impl" />
-    <orderEntry type="module" module-name="jps-builders" />
-    <orderEntry type="module" module-name="java" />
-    <orderEntry type="module" module-name="jps-model-serialization" />
-    <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="library" name="Netty" level="project" />
-    <orderEntry type="library" name="Eclipse" level="project" />
-    <orderEntry type="module" module-name="instrumentation-util" />
-    <orderEntry type="module" module-name="java-analysis-impl" />
-    <orderEntry type="library" name="OroMatcher" level="project" />
-    <orderEntry type="module" module-name="jps-model-impl" />
+    <orderEntry type="module" module-name="java-platform" />
+    <orderEntry type="module" module-name="compiler-impl" />
+    <orderEntry type="module" module-name="java-rt" />
+    <orderEntry type="library" name="asm4" level="project" />
   </component>
 </module>
 

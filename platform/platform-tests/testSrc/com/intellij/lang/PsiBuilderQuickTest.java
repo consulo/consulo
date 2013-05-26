@@ -18,6 +18,7 @@ package com.intellij.lang;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerBase;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -546,7 +547,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
     ParserDefinition parserDefinition = new ParserDefinition() {
       @NotNull
       @Override
-      public Lexer createLexer(Project project) {
+      public Lexer createLexer(@NotNull Project project, Module module) {
         return new MyTestLexer();
       }
 
@@ -594,7 +595,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         return null;
       }
     };
-    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(getProject()), null, text, null, null);
+    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(getProject(), null), null, text, null, null);
   }
 
   private interface Parser {
@@ -665,7 +666,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         ParserDefinition parserDefinition = new ParserDefinition() {
           @NotNull
           @Override
-          public Lexer createLexer(Project project) {
+          public Lexer createLexer(@NotNull Project project, Module module) {
             return null;
           }
 

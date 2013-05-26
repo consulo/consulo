@@ -25,6 +25,7 @@ import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.EmptyLexer;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PlainTextTokenTypes;
@@ -47,7 +48,7 @@ public class PlainTextParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public Lexer createLexer(Project project) {
+  public Lexer createLexer(@NotNull Project project, Module module) {
     return new EmptyLexer();
   }
 

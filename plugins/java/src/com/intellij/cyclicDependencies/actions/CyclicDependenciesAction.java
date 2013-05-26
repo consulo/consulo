@@ -63,7 +63,8 @@ public class CyclicDependenciesAction extends AnAction{
       if (scope == null || scope.getScopeType() != AnalysisScope.MODULES){
         ProjectModuleOrPackageDialog dlg = null;
         if (module != null) {
-          dlg = new ProjectModuleOrPackageDialog(ModuleManager.getInstance(project).getModules().length == 1 ? null : ModuleUtilCore.getModuleNameInReadAction(module), scope);
+          dlg = new ProjectModuleOrPackageDialog(ModuleManager.getInstance(project).getModules().length == 1 ? null : ModuleUtilCore
+            .getModuleNameInReadAction(module), scope);
           dlg.show();
           if (!dlg.isOK()) return;
         }

@@ -15,13 +15,10 @@
  */
 package com.intellij.compiler.impl.javaCompiler.javac;
 
-import com.intellij.compiler.CompilerConfiguration;
-import com.intellij.compiler.CompilerConfigurationImpl;
-import com.intellij.compiler.CompilerIOUtil;
-import com.intellij.compiler.OutputParser;
+import com.intellij.compiler.*;
 import com.intellij.compiler.impl.CompilerUtil;
+import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.compiler.impl.javaCompiler.ExternalCompiler;
-import com.intellij.compiler.impl.javaCompiler.ModuleChunk;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
@@ -32,11 +29,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.ex.JavaSdkUtil;
 import com.intellij.openapi.projectRoots.impl.MockJdkWrapper;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -53,6 +49,8 @@ import java.io.*;
 import java.util.*;
 
 public class JavacCompiler extends ExternalCompiler {
+  @NonNls public static final String TESTS_EXTERNAL_COMPILER_HOME_PROPERTY_NAME = "tests.external.compiler.home";
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.javaCompiler.javac.JavacCompiler");
   private final Project myProject;
   private final List<File> myTempFiles = new ArrayList<File>();
@@ -82,7 +80,7 @@ public class JavacCompiler extends ExternalCompiler {
     final Module[] modules = scope.getAffectedModules();
     final Set<Sdk> checkedJdks = new HashSet<Sdk>();
     for (final Module module : modules) {
-      final Sdk jdk  = ModuleRootManager.getInstance(module).getSdk();
+      final Sdk jdk = JavaSdkUtil.getSdkForCompilation(module);
       if (jdk == null || checkedJdks.contains(jdk)) {
         continue;
       }
@@ -93,37 +91,32 @@ public class JavacCompiler extends ExternalCompiler {
       }
       final VirtualFile homeDirectory = jdk.getHomeDirectory();
       if (homeDirectory == null) {
-        Messages.showMessageDialog(
-          myProject, CompilerBundle.jdkHomeNotFoundMessage(jdk), CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon()
-        );
+        Messages.showMessageDialog(myProject, CompilerBundle.jdkHomeNotFoundMessage(jdk), CompilerBundle.message("compiler.javac.name"),
+                                   Messages.getErrorIcon());
         return false;
       }
       final String vmExecutablePath = ((JavaSdkType)sdkType).getVMExecutablePath(jdk);
       if (vmExecutablePath == null) {
-        Messages.showMessageDialog(
-          myProject, CompilerBundle.message("javac.error.vm.executable.missing", jdk.getName()), CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon()
-        );
+        Messages.showMessageDialog(myProject, CompilerBundle.message("javac.error.vm.executable.missing", jdk.getName()),
+                                   CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon());
         return false;
       }
       final String toolsJarPath = ((JavaSdkType)sdkType).getToolsPath(jdk);
       if (toolsJarPath == null) {
-        Messages.showMessageDialog(
-          myProject, CompilerBundle.message("javac.error.tools.jar.missing", jdk.getName()), CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon()
-        );
+        Messages.showMessageDialog(myProject, CompilerBundle.message("javac.error.tools.jar.missing", jdk.getName()),
+                                   CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon());
         return false;
       }
       final String versionString = jdk.getVersionString();
       if (versionString == null) {
-        Messages.showMessageDialog(
-          myProject, CompilerBundle.message("javac.error.unknown.jdk.version", jdk.getName()), CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon()
-        );
+        Messages.showMessageDialog(myProject, CompilerBundle.message("javac.error.unknown.jdk.version", jdk.getName()),
+                                   CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon());
         return false;
       }
 
       if (CompilerUtil.isOfVersion(versionString, "1.0")) {
-        Messages.showMessageDialog(
-          myProject, CompilerBundle.message("javac.error.1_0_compilation.not.supported"), CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon()
-        );
+        Messages.showMessageDialog(myProject, CompilerBundle.message("javac.error.1_0_compilation.not.supported"),
+                                   CompilerBundle.message("compiler.javac.name"), Messages.getErrorIcon());
         return false;
       }
     }
@@ -170,7 +163,8 @@ public class JavacCompiler extends ExternalCompiler {
         public String[] compute() {
           try {
             final List<String> commandLine = new ArrayList<String>();
-            createStartupCommand(chunk, commandLine, outputPath, JavacConfiguration.getOptions(myProject, JavacConfiguration.class), context.isAnnotationProcessorsEnabled());
+            createStartupCommand(chunk, commandLine, outputPath, JavacConfiguration.getOptions(myProject, JavacConfiguration.class),
+                                 context.isAnnotationProcessorsEnabled());
             return ArrayUtil.toStringArray(commandLine);
           }
           catch (IOException e) {
@@ -188,8 +182,11 @@ public class JavacCompiler extends ExternalCompiler {
     }
   }
 
-  private void createStartupCommand(final ModuleChunk chunk, @NonNls final List<String> commandLine, final String outputPath,
-                                    JpsJavaCompilerOptions javacOptions, final boolean annotationProcessorsEnabled) throws IOException {
+  private void createStartupCommand(final ModuleChunk chunk,
+                                    @NonNls final List<String> commandLine,
+                                    final String outputPath,
+                                    JpsJavaCompilerOptions javacOptions,
+                                    final boolean annotationProcessorsEnabled) throws IOException {
     final Sdk jdk = getJdkForStartupCommand(chunk);
     final String versionString = jdk.getVersionString();
     JavaSdkVersion version = JavaSdk.getInstance().getVersion(jdk);
@@ -240,7 +237,8 @@ public class JavacCompiler extends ExternalCompiler {
       commandLine.add(JAVAC_MAIN_CLASS_OLD);
     }
 
-    addCommandLineOptions(chunk, commandLine, outputPath, jdk, isVersion1_0, isVersion1_1, myTempFiles, true, true, myAnnotationProcessorMode);
+    addCommandLineOptions(chunk, commandLine, outputPath, jdk, isVersion1_0, isVersion1_1, myTempFiles, true, true,
+                          myAnnotationProcessorMode);
 
     commandLine.addAll(additionalOptions);
 
@@ -278,8 +276,12 @@ public class JavacCompiler extends ExternalCompiler {
     }
   }
 
-  public static List<String> addAdditionalSettings(List<String> commandLine, JpsJavaCompilerOptions javacOptions, boolean isAnnotationProcessing,
-                                                   JavaSdkVersion version, ModuleChunk chunk, boolean annotationProcessorsEnabled) {
+  public static List<String> addAdditionalSettings(List<String> commandLine,
+                                                   JpsJavaCompilerOptions javacOptions,
+                                                   boolean isAnnotationProcessing,
+                                                   JavaSdkVersion version,
+                                                   ModuleChunk chunk,
+                                                   boolean annotationProcessorsEnabled) {
     final List<String> additionalOptions = new ArrayList<String>();
     StringTokenizer tokenizer = new StringTokenizer(new JavacSettingsBuilder(javacOptions).getOptionsString(chunk), " ");
     if (!version.isAtLeast(JavaSdkVersion.JDK_1_6)) {
@@ -287,7 +289,8 @@ public class JavacCompiler extends ExternalCompiler {
       annotationProcessorsEnabled = false;
     }
     if (isAnnotationProcessing) {
-      final AnnotationProcessingConfiguration config = CompilerConfiguration.getInstance(chunk.getProject()).getAnnotationProcessingConfiguration(chunk.getModules()[0]);
+      final AnnotationProcessingConfiguration config =
+        CompilerConfiguration.getInstance(chunk.getProject()).getAnnotationProcessingConfiguration(chunk.getModules()[0]);
       additionalOptions.add("-Xprefer:source");
       additionalOptions.add("-implicit:none");
       additionalOptions.add("-proc:only");
@@ -302,7 +305,7 @@ public class JavacCompiler extends ExternalCompiler {
         additionalOptions.add(StringUtil.join(processors, ","));
       }
       for (Map.Entry<String, String> entry : config.getProcessorOptions().entrySet()) {
-        additionalOptions.add("-A" + entry.getKey() + "=" +entry.getValue());
+        additionalOptions.add("-A" + entry.getKey() + "=" + entry.getValue());
       }
     }
     else {
@@ -348,15 +351,20 @@ public class JavacCompiler extends ExternalCompiler {
     return additionalOptions;
   }
 
-  public static void addCommandLineOptions(ModuleChunk chunk, @NonNls List<String> commandLine, String outputPath, Sdk jdk,
+  public static void addCommandLineOptions(ModuleChunk chunk,
+                                           @NonNls List<String> commandLine,
+                                           String outputPath,
+                                           Sdk jdk,
                                            boolean version1_0,
                                            boolean version1_1,
-                                           List<File> tempFiles, boolean addSourcePath, boolean useTempFile,
+                                           List<File> tempFiles,
+                                           boolean addSourcePath,
+                                           boolean useTempFile,
                                            boolean isAnnotationProcessingMode) throws IOException {
 
-    LanguageLevel languageLevel = chunk.getLanguageLevel();
-    CompilerUtil.addSourceCommandLineSwitch(jdk, languageLevel, commandLine);
-    CompilerUtil.addTargetCommandLineSwitch(chunk, commandLine);
+    LanguageLevel languageLevel = JavaSdkUtil.getLanguageLevelForCompilation(chunk);
+    JavaCompilerUtil.addSourceCommandLineSwitch(jdk, languageLevel, commandLine);
+    JavaCompilerUtil.addTargetCommandLineSwitch(chunk, commandLine);
 
     commandLine.add("-verbose");
 
@@ -382,7 +390,7 @@ public class JavacCompiler extends ExternalCompiler {
       // this may cause problems if we have java code in IDEA working directory
       if (isAnnotationProcessingMode) {
         final int currentSourcesMode = chunk.getSourcesFilter();
-        commandLine.add(chunk.getSourcePath(currentSourcesMode == ModuleChunk.TEST_SOURCES? ModuleChunk.ALL_SOURCES : currentSourcesMode));
+        commandLine.add(chunk.getSourcePath(currentSourcesMode == ModuleChunk.TEST_SOURCES ? ModuleChunk.ALL_SOURCES : currentSourcesMode));
       }
       else {
         commandLine.add("\"\"");
@@ -404,7 +412,11 @@ public class JavacCompiler extends ExternalCompiler {
     }
   }
 
-  private static void addClassPathValue(final Sdk jdk, final boolean isVersion1_0, final List<String> commandLine, final String cpString, @NonNls final String tempFileName,
+  private static void addClassPathValue(final Sdk jdk,
+                                        final boolean isVersion1_0,
+                                        final List<String> commandLine,
+                                        final String cpString,
+                                        @NonNls final String tempFileName,
                                         List<File> tempFiles,
                                         boolean useTempFile) throws IOException {
     if (!useTempFile) {
@@ -431,9 +443,10 @@ public class JavacCompiler extends ExternalCompiler {
   }
 
   private Sdk getJdkForStartupCommand(final ModuleChunk chunk) {
-    final Sdk jdk = chunk.getJdk();
-    if (ApplicationManager.getApplication().isUnitTestMode() && JavacConfiguration.getOptions(myProject, JavacConfiguration.class).isTestsUseExternalCompiler()) {
-      final String jdkHomePath = CompilerConfigurationImpl.getTestsExternalCompilerHome();
+    final Sdk jdk = JavaSdkUtil.getSdkForCompilation(chunk);
+    if (ApplicationManager.getApplication().isUnitTestMode() &&
+        JavacConfiguration.getOptions(myProject, JavacConfiguration.class).isTestsUseExternalCompiler()) {
+      final String jdkHomePath = getTestsExternalCompilerHome();
       if (jdkHomePath == null) {
         throw new IllegalArgumentException("[TEST-MODE] Cannot determine home directory for JDK to use javac from");
       }
@@ -441,6 +454,19 @@ public class JavacCompiler extends ExternalCompiler {
       return new MockJdkWrapper(jdkHomePath, jdk);
     }
     return jdk;
+  }
+
+  public static String getTestsExternalCompilerHome() {
+    String compilerHome = System.getProperty(TESTS_EXTERNAL_COMPILER_HOME_PROPERTY_NAME, null);
+    if (compilerHome == null) {
+      if (SystemInfo.isMac) {
+        compilerHome = new File(System.getProperty("java.home")).getAbsolutePath();
+      }
+      else {
+        compilerHome = new File(System.getProperty("java.home")).getParentFile().getAbsolutePath();
+      }
+    }
+    return compilerHome;
   }
 
   public void compileFinished() {

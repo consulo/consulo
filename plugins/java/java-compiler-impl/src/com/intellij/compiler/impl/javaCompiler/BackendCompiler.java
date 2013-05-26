@@ -16,6 +16,7 @@
 package com.intellij.compiler.impl.javaCompiler;
 
 import com.intellij.compiler.OutputParser;
+import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.extensions.ExtensionPointName;

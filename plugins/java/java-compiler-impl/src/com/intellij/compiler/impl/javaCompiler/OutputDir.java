@@ -18,8 +18,8 @@ package com.intellij.compiler.impl.javaCompiler;
 import org.jetbrains.annotations.NotNull;
 
 /**
-* @author cdr
-*/
+ * @author cdr
+ */
 class OutputDir {
   private final String myPath;
   private final int myKind;

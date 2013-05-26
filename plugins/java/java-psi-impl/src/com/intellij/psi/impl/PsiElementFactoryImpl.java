@@ -23,6 +23,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
+import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleSettingsFacade;
@@ -355,7 +356,7 @@ public class PsiElementFactoryImpl extends PsiJavaParserFacadeImpl implements Ps
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
     assert parserDefinition != null : "No parser definition for language " + language;
     final Project project = myManager.getProject();
-    final Lexer lexer = parserDefinition.createLexer(project);
+    final Lexer lexer = parserDefinition.createLexer(project, null);
     final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, holder, lexer, language, text);
     final ASTNode node = parserDefinition.createParser(project).parse(type, builder);
     holder.rawAddChildren((TreeElement)node);

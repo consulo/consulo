@@ -21,10 +21,9 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
-import com.intellij.compiler.CompilerConfiguration;
-import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.CompilerException;
 import com.intellij.compiler.impl.CompileDriver;
+import com.intellij.compiler.impl.javaCompiler.javac.JavacCompiler;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
@@ -45,11 +44,13 @@ public class JavaCompiler implements TranslatingCompiler {
     myProject = project;
   }
 
+  @Override
   @NotNull
   public String getDescription() {
     return CompilerBundle.message("java.compiler.description");
   }
 
+  @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
     final BackendCompiler backEndCompiler = getBackEndCompiler();
     if (backEndCompiler instanceof ExternalCompiler) {
@@ -58,6 +59,7 @@ public class JavaCompiler implements TranslatingCompiler {
     return backEndCompiler.getCompilableFileTypes().contains(file.getFileType());
   }
 
+  @Override
   public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
     final BackendCompiler backEndCompiler = getBackEndCompiler();
     final BackendCompilerWrapper wrapper = new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), (CompileContextEx)context, backEndCompiler, sink);
@@ -83,12 +85,12 @@ public class JavaCompiler implements TranslatingCompiler {
     }
   }
 
+  @Override
   public boolean validateConfiguration(CompileScope scope) {
     return getBackEndCompiler().checkCompiler(scope);
   }
 
   private BackendCompiler getBackEndCompiler() {
-    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
-    return configuration.getDefaultCompiler();
+    return new JavacCompiler(myProject);
   }
 }
