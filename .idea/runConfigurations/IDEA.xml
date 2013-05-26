@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="IDEA" type="Application" factoryName="Application" singleton="true">
-    <log_file path="$PROJECT_DIR$/system/log/idea.log" checked="true" skipped="true" show_all="false" alias="idea.log" />
+    <log_file path="$PROJECT_DIR$/out/artifacts/dist/system/log/idea.log" checked="true" skipped="true" show_all="false" alias="idea.log" />
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="com.intellij.idea.Main" />
     <option name="VM_PARAMETERS" value="-ea -Xbootclasspath/p:$MODULE_DIR$/out/artifacts/dist/lib/boot.jar -Xmx192m -Didea.is.internal=true -Didea.plugins.path=G:/consulo-ext-plugins -Didea.home.path=$MODULE_DIR$/out/artifacts/dist -XX:MaxPermSize=150m -classpath $MODULE_DIR$/out/artifacts/dist/lib/*;I:/Programs/jdk6/lib/tools.jar;" />

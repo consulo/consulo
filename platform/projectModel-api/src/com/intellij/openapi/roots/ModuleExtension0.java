@@ -27,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
 public abstract class ModuleExtension0<T extends ModuleExtension0> implements JDOMExternalizable, Disposable, Comparable<ModuleExtension0> {
   public static final ExtensionPointName<ModuleExtension0> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtension");
 

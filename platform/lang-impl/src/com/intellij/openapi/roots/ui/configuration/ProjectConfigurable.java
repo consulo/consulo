@@ -27,7 +27,6 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
-import com.intellij.openapi.roots.CompilerProjectExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
@@ -43,6 +42,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -161,7 +161,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     myFreeze = true;
     try {
 
-      final String compilerOutput = getOriginalCompilerOutputUrl();
+      final String compilerOutput = CompilerPathsManager.getInstance(myProject).getCompilerOutputUrl();
       if (compilerOutput != null) {
         myProjectCompilerOutput.setText(FileUtil.toSystemDependentName(VfsUtil.urlToPath(compilerOutput)));
       }
@@ -179,8 +179,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   @Override
   public void apply() throws ConfigurationException {
-    final CompilerProjectExtension compilerProjectExtension = CompilerProjectExtension.getInstance(myProject);
-    assert compilerProjectExtension != null : myProject;
+    final CompilerPathsManager compilerProjectExtension = CompilerPathsManager.getInstance(myProject);
 
     if (myProjectName != null && StringUtil.isEmptyOrSpaces(myProjectName.getText())) {
       throw new ConfigurationException("Please, specify project name!");
@@ -250,7 +249,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @Override
   @SuppressWarnings({"SimplifiableIfStatement"})
   public boolean isModified() {
-    final String compilerOutput = getOriginalCompilerOutputUrl();
+    final String compilerOutput = CompilerPathsManager.getInstance(myProject).getCompilerOutputUrl();
     if (!Comparing.strEqual(FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)),
                             FileUtil.toSystemIndependentName(myProjectCompilerOutput.getText()))) return true;
     if (myProjectName != null) {
@@ -258,12 +257,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     }
 
     return false;
-  }
-
-  @Nullable
-  private String getOriginalCompilerOutputUrl() {
-    final CompilerProjectExtension extension = CompilerProjectExtension.getInstance(myProject);
-    return extension != null ? extension.getCompilerOutputUrl() : null;
   }
 
   private void createUIComponents() {

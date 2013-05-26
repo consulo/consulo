@@ -23,7 +23,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtil;
@@ -31,6 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.PathUtil;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
@@ -55,6 +56,7 @@ public class CompilerPaths {
 
   /**
    * Returns a directory
+   *
    * @param project
    * @param compiler
    * @return a directory where compiler may generate files. All generated files are not deleted when the application exits
@@ -131,14 +133,15 @@ public class CompilerPaths {
     if (StringUtil.endsWithIgnoreCase(projectName, ProjectFileType.DOT_DEFAULT_EXTENSION)) {
       projectName = projectName.substring(0, projectName.length() - ProjectFileType.DOT_DEFAULT_EXTENSION.length());
     }
-    
+
     projectName = projectName.toLowerCase(Locale.US).replace(':', '_'); // replace ':' from windows drive names
     return projectName;
   }
 
   public static File getCompilerSystemDirectory() {
     //noinspection HardCodedStringLiteral
-    final String systemPath = ourSystemPath != null? ourSystemPath : (ourSystemPath = PathUtil.getCanonicalPath(PathManager.getSystemPath()));
+    final String systemPath =
+      ourSystemPath != null ? ourSystemPath : (ourSystemPath = PathUtil.getCanonicalPath(PathManager.getSystemPath()));
     return new File(systemPath, "compiler");
   }
 
@@ -146,23 +149,23 @@ public class CompilerPaths {
    * @param module
    * @param forTestClasses true if directory for test sources, false - for sources.
    * @return a directory to which the sources (or test sources depending on the second partameter) should be compiled.
-   * Null is returned if output directory is not specified or is not valid
+   *         Null is returned if output directory is not specified or is not valid
    */
   @Nullable
   public static VirtualFile getModuleOutputDirectory(final Module module, boolean forTestClasses) {
-    final CompilerModuleExtension compilerModuleExtension = CompilerModuleExtension.getInstance(module);
+    final CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
     VirtualFile outPath;
     if (forTestClasses) {
-      final VirtualFile path = compilerModuleExtension.getCompilerOutputPathForTests();
+      final VirtualFile path = manager.getCompilerOutput(module, ContentFolderType.TEST);
       if (path != null) {
         outPath = path;
       }
       else {
-        outPath = compilerModuleExtension.getCompilerOutputPath();
+        outPath = manager.getCompilerOutput(module, ContentFolderType.SOURCE);
       }
     }
     else {
-      outPath = compilerModuleExtension.getCompilerOutputPath();
+      outPath = manager.getCompilerOutput(module, ContentFolderType.SOURCE);
     }
     if (outPath == null) {
       return null;
@@ -179,42 +182,30 @@ public class CompilerPaths {
    * The method still returns a non-null value if the output path is specified in Settings but does not exist on disk.
    */
   @Nullable
-  public static String getModuleOutputPath(final Module module, boolean forTestClasses) {
+  public static String getModuleOutputPath(final Module module, final boolean forTestClasses) {
     final String outPathUrl;
     final Application application = ApplicationManager.getApplication();
-    final CompilerModuleExtension extension = CompilerModuleExtension.getInstance(module);
-    if (forTestClasses) {
-      if (application.isDispatchThread()) {
-        final String url = extension.getCompilerOutputUrlForTests();
-        outPathUrl = url != null ? url : extension.getCompilerOutputUrl();
-      }
-      else {
-        outPathUrl = application.runReadAction(new Computable<String>() {
-          public String compute() {
-            final String url = extension.getCompilerOutputUrlForTests();
-            return url != null ? url : extension.getCompilerOutputUrl();
-          }
-        });
-      }
+    final CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(module.getProject());
+
+    if (application.isDispatchThread()) {
+      outPathUrl = pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.SOURCE);
     }
-    else { // for ordinary classes
-      if (application.isDispatchThread()) {
-        outPathUrl = extension.getCompilerOutputUrl();
-      }
-      else {
-        outPathUrl = application.runReadAction(new Computable<String>() {
-          public String compute() {
-            return extension.getCompilerOutputUrl();
-          }
-        });
-      }
+    else {
+      outPathUrl = application.runReadAction(new Computable<String>() {
+        @Override
+        public String compute() {
+          return pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+        }
+      });
     }
-    return outPathUrl != null? VirtualFileManager.extractPath(outPathUrl) : null;
+
+    return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
   }
 
   @Nullable
   public static String getAnnotationProcessorsGenerationPath(Module module) {
-    final AnnotationProcessingConfiguration config = CompilerConfiguration.getInstance(module.getProject()).getAnnotationProcessingConfiguration(module);
+    final AnnotationProcessingConfiguration config =
+      CompilerConfiguration.getInstance(module.getProject()).getAnnotationProcessingConfiguration(module);
     final String sourceDirName = config.getGeneratedSourcesDirectoryName(false);
     if (config.isOutputRelativeToContentRoot()) {
       final String[] roots = ModuleRootManager.getInstance(module).getContentRootUrls();
@@ -224,7 +215,9 @@ public class CompilerPaths {
       if (roots.length > 1) {
         Arrays.sort(roots, URLS_COMPARATOR);
       }
-      return StringUtil.isEmpty(sourceDirName)? VirtualFileManager.extractPath(roots[0]): VirtualFileManager.extractPath(roots[0]) + "/" + sourceDirName;
+      return StringUtil.isEmpty(sourceDirName)
+             ? VirtualFileManager.extractPath(roots[0])
+             : VirtualFileManager.extractPath(roots[0]) + "/" + sourceDirName;
     }
 
 
@@ -232,14 +225,18 @@ public class CompilerPaths {
     if (path == null) {
       return null;
     }
-    return StringUtil.isEmpty(sourceDirName)? path : path + "/" + sourceDirName;
+    return StringUtil.isEmpty(sourceDirName) ? path : path + "/" + sourceDirName;
   }
-  
+
   @NonNls
   public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, final boolean forTestSources) {
     final String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
     //noinspection HardCodedStringLiteral
     final String moduleDir = module.getName().replaceAll("\\s+", "_") + "." + Integer.toHexString(module.getModuleFilePath().hashCode());
-    return generatedCompilerDirectoryPath.replace(File.separatorChar, '/') + "/" + moduleDir + "/" + (forTestSources? "test" : "production");
+    return generatedCompilerDirectoryPath.replace(File.separatorChar, '/') +
+           "/" +
+           moduleDir +
+           "/" +
+           (forTestSources ? "test" : "production");
   }
 }

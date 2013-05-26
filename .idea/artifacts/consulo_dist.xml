@@ -105,6 +105,7 @@
               <element id="module-output" name="java-analysis-impl" />
               <element id="module-output" name="java-indexing-impl" />
               <element id="module-output" name="java-copyright" />
+              <element id="module-output" name="java-compiler-impl" />
             </element>
           </element>
         </element>
@@ -218,6 +219,7 @@
           <element id="module-output" name="jps-standalone-builder" />
           <element id="module-output" name="jps-model-serialization" />
           <element id="module-output" name="jps-model-impl" />
+          <element id="module-output" name="jps-builders" />
         </element>
         <element id="archive" name="annotations.jar">
           <element id="module-output" name="annotations" />

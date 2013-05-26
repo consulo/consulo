@@ -19,12 +19,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.CompilerModuleExtension;
-import com.intellij.openapi.roots.CompilerProjectExtension;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import com.intellij.openapi.util.io.FileUtil;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
 
   @Override
   public boolean isExcludeRoot(final VirtualFile file) {
-    CompilerProjectExtension compilerProjectExtension = CompilerProjectExtension.getInstance(myProject);
+    CompilerPathsManager compilerProjectExtension = CompilerPathsManager.getInstance(myProject);
     if (isEqualWithFileOrUrl(file, compilerProjectExtension.getCompilerOutput(), compilerProjectExtension.getCompilerOutputUrl())) return true;
 
     for (Module m : ModuleManager.getInstance(myProject).getModules()) {
@@ -62,7 +62,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
   @NotNull
   @Override
   public VirtualFile[] getExcludeRootsForProject() {
-    VirtualFile outputPath = CompilerProjectExtension.getInstance(myProject).getCompilerOutput();
+    VirtualFile outputPath = CompilerPathsManager.getInstance(myProject).getCompilerOutput();
     if (outputPath != null) {
       return new VirtualFile[] { outputPath };
     }
@@ -78,7 +78,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
       return VirtualFilePointer.EMPTY_ARRAY;
     }
     if (extension.isCompilerOutputPathInherited()) {
-      result.add(CompilerProjectExtension.getInstance(myProject).getCompilerOutputPointer());
+      result.add(CompilerPathsManager.getInstance(myProject).getCompilerOutputPointer());
     }
     else {
       if (!extension.isExcludeOutput()) return VirtualFilePointer.EMPTY_ARRAY;

@@ -35,10 +35,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -52,6 +49,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.OrderedSet;
 import com.intellij.util.indexing.FileBasedIndex;
 import gnu.trove.TIntHashSet;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,14 +115,14 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     final Set<VirtualFile> testOutputDirs = new java.util.HashSet<VirtualFile>();
     final Set<VirtualFile> productionOutputDirs = new java.util.HashSet<VirtualFile>();
 
+    CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(getProject());
     for (Module module : allModules) {
-      final CompilerModuleExtension manager = CompilerModuleExtension.getInstance(module);
-      final VirtualFile output = manager.getCompilerOutputPath();
+      final VirtualFile output = pathsManager.getCompilerOutput(module, ContentFolderType.SOURCE);
       if (output != null && output.isValid()) {
         allDirs.add(output);
         productionOutputDirs.add(output);
       }
-      final VirtualFile testsOutput = manager.getCompilerOutputPathForTests();
+      final VirtualFile testsOutput = pathsManager.getCompilerOutput(module, ContentFolderType.TEST);
       if (testsOutput != null && testsOutput.isValid()) {
         allDirs.add(testsOutput);
         testOutputDirs.add(testsOutput);

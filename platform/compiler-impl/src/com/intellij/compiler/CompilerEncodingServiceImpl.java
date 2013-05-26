@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler;
 
-import com.intellij.compiler.CompilerEncodingService;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;

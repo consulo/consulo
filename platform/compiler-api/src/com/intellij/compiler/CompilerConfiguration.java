@@ -24,6 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
 
+import java.util.Map;
+import java.util.Set;
+
 public abstract class CompilerConfiguration {
   // need this flag for profiling purposes. In production code is always set to 'true'
   public static final boolean MAKE_ENABLED = true;
@@ -51,7 +54,46 @@ public abstract class CompilerConfiguration {
       @NotNull
       @Override
       public AnnotationProcessingConfiguration getAnnotationProcessingConfiguration(Module module) {
-        return null;
+        return new AnnotationProcessingConfiguration() {
+          @Override
+          public boolean isEnabled() {
+            return false;
+          }
+
+          @NotNull
+          @Override
+          public String getProcessorPath() {
+            return null;
+          }
+
+          @NotNull
+          @Override
+          public String getGeneratedSourcesDirectoryName(boolean forTests) {
+            return null;
+          }
+
+          @Override
+          public boolean isOutputRelativeToContentRoot() {
+            return false;
+          }
+
+          @NotNull
+          @Override
+          public Set<String> getProcessors() {
+            return null;
+          }
+
+          @NotNull
+          @Override
+          public Map<String, String> getProcessorOptions() {
+            return null;
+          }
+
+          @Override
+          public boolean isObtainProcessorsFromClasspath() {
+            return false;
+          }
+        };
       }
 
       @Override

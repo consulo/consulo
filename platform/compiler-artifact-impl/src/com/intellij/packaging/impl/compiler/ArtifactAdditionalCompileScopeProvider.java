@@ -16,15 +16,10 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.compiler.impl.AdditionalCompileScopeProvider;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerFilter;
 import com.intellij.openapi.project.Project;
-import com.intellij.packaging.artifacts.Artifact;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
 
 /**
  * @author nik
@@ -32,10 +27,10 @@ import java.util.Set;
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
   @Override
   public CompileScope getAdditionalScope(@NotNull final CompileScope baseScope, @NotNull CompilerFilter filter, @NotNull final Project project) {
-    if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
+   // if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
       return null;
-    }
-    final ArtifactsCompiler compiler = ArtifactsCompiler.getInstance(project);
+  //  }
+   /* final ArtifactsCompiler compiler = ArtifactsCompiler.getInstance(project);
     if (compiler == null || !filter.acceptCompiler(compiler)) {
       return null;
     }
@@ -44,6 +39,6 @@ public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileSco
         final Set<Artifact> artifacts = ArtifactCompileScope.getArtifactsToBuild(project, baseScope, false);
         result.setResult(ArtifactCompileScope.createScopeForModulesInArtifacts(project, artifacts));
       } 
-    }.execute().getResultObject();
+    }.execute().getResultObject();     */
   }
 }

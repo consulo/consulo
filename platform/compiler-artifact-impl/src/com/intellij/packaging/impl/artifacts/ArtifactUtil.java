@@ -18,7 +18,6 @@ package com.intellij.packaging.impl.artifacts;
 import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerProjectExtension;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Trinity;
@@ -38,6 +37,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -211,8 +211,7 @@ public class ArtifactUtil {
 
   @Nullable
   public static String getDefaultArtifactOutputPath(@NotNull String artifactName, final @NotNull Project project) {
-    final CompilerProjectExtension extension = CompilerProjectExtension.getInstance(project);
-    if (extension == null) return null;
+    final CompilerPathsManager extension = CompilerPathsManager.getInstance(project);
     String outputUrl = extension.getCompilerOutputUrl();
     if (outputUrl == null || outputUrl.length() == 0) {
       final VirtualFile baseDir = project.getBaseDir();

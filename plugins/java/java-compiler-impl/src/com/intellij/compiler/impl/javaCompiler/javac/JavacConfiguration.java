@@ -51,7 +51,8 @@ public class JavacConfiguration implements PersistentStateComponent<JpsJavaCompi
   }
 
   public static JpsJavaCompilerOptions getOptions(Project project, Class<? extends JavacConfiguration> aClass) {
-    JavacConfiguration configuration = ServiceManager.getService(project, aClass);
-    return configuration.mySettings;
+    /*JavacConfiguration configuration = ServiceManager.getService(project, aClass);
+    return configuration.mySettings;   */
+    return new JpsJavaCompilerOptions();
   }
 }

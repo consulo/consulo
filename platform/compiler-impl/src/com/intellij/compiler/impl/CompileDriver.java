@@ -80,6 +80,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.OrderedSet;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -2418,7 +2419,7 @@ public class CompileDriver {
             if (config.getAnnotationProcessingConfiguration(module).isEnabled()) {
               final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
               if (path == null) {
-                final CompilerProjectExtension extension = CompilerProjectExtension.getInstance(module.getProject());
+                final CompilerPathsManager extension = CompilerPathsManager.getInstance(module.getProject());
                 if (extension == null || extension.getCompilerOutputUrl() == null) {
                   isProjectCompilePathSpecified = false;
                 }

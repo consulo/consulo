@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 27-Dec-2007
- */
-package com.intellij.openapi.roots;
+package org.consulo.compiler;
 
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CompilerProjectExtension {
-
-  public static @Nullable CompilerProjectExtension getInstance(Project project) {
-    return ServiceManager.getService(project, CompilerProjectExtension.class);
+/**
+ * @author VISTALL
+ * @since 17:03/26.05.13
+ */
+public abstract class CompilerPathsManager {
+  @NotNull
+  public static CompilerPathsManager getInstance(@NotNull final Project project) {
+    return ServiceManager.getService(project, CompilerPathsManager.class);
   }
 
   @Nullable
@@ -43,4 +45,9 @@ public abstract class CompilerProjectExtension {
   public abstract void setCompilerOutputPointer(VirtualFilePointer pointer);
 
   public abstract void setCompilerOutputUrl(String compilerOutputUrl);
+
+  public abstract String getCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
+
+  @Nullable
+  public abstract VirtualFile getCompilerOutput(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
 }

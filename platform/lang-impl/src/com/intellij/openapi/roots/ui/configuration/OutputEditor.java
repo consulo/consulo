@@ -23,7 +23,6 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -34,38 +33,23 @@ import java.awt.*;
 
 public class OutputEditor extends ModuleElementsEditor {
   private final BuildElementsEditor myCompilerOutputEditor;
-  private final JavadocEditor myJavadocEditor;
-  private final AnnotationsEditor myAnnotationsEditor;
 
   protected OutputEditor(final ModuleConfigurationState state) {
     super(state);
     myCompilerOutputEditor = new BuildElementsEditor(state);
-    myJavadocEditor = new JavadocEditor(state);
-    myAnnotationsEditor = new AnnotationsEditor(state);
   }
 
   @Override
   protected JComponent createComponentImpl() {
-    final JPanel panel = new JPanel(new GridBagLayout());
+    final JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
-    final GridBagConstraints gc =
-      new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-    panel.add(myCompilerOutputEditor.createComponentImpl(), gc);
-    final JPanel javadocPanel = (JPanel)myJavadocEditor.createComponentImpl();
-    javadocPanel.setBorder(IdeBorderFactory.createTitledBorder(myJavadocEditor.getDisplayName(), false));
-    gc.weighty = 1;
-    panel.add(javadocPanel, gc);
-    final JPanel annotationsPanel = (JPanel)myAnnotationsEditor.createComponentImpl();
-    annotationsPanel.setBorder(IdeBorderFactory.createTitledBorder(myAnnotationsEditor.getDisplayName(), false));
-    panel.add(annotationsPanel, gc);
+    panel.add(myCompilerOutputEditor.createComponentImpl(), BorderLayout.NORTH);
     return panel;
   }
 
   @Override
   public void saveData() {
     myCompilerOutputEditor.saveData();
-    myJavadocEditor.saveData();
-    myAnnotationsEditor.saveData();
   }
 
   @Override
@@ -73,22 +57,16 @@ public class OutputEditor extends ModuleElementsEditor {
     return ProjectBundle.message("project.roots.path.tab.title");
   }
 
-
   @Override
   public void moduleStateChanged() {
     super.moduleStateChanged();
     myCompilerOutputEditor.moduleStateChanged();
-    myJavadocEditor.moduleStateChanged();
-    myAnnotationsEditor.moduleStateChanged();
   }
-
 
   @Override
   public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
     super.moduleCompileOutputChanged(baseUrl, moduleName);
     myCompilerOutputEditor.moduleCompileOutputChanged(baseUrl, moduleName);
-    myJavadocEditor.moduleCompileOutputChanged(baseUrl, moduleName);
-    myAnnotationsEditor.moduleCompileOutputChanged(baseUrl, moduleName);
   }
 
   @Override

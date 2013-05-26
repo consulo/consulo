@@ -2469,6 +2469,11 @@
       <implementation-class>com.intellij.openapi.wm.impl.FocusManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
+      <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</implementation-class>
+    </component>
   </application-components>
 
   <project-components>
@@ -2481,7 +2486,6 @@
       <implementation-class>com.intellij.notification.EventLog$ProjectTracker</implementation-class>
       <skipForDefaultProject/>
     </component>
-
 
     <component>
       <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
@@ -2892,6 +2896,11 @@
     <component>
       <interface-class>com.intellij.packaging.artifacts.ArtifactManager</interface-class>
       <implementation-class>com.intellij.packaging.impl.artifacts.ArtifactManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.compiler.impl.CompilerCacheManager</interface-class>
+      <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
     </component>
   </project-components>
 
@@ -4426,11 +4435,9 @@
 
     <projectService serviceInterface="com.intellij.openapi.compiler.CompilerManager"
                     serviceImplementation="org.consulo.compiler.impl.CompilerManagerImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.roots.CompilerProjectExtension"
-                    serviceImplementation="com.intellij.openapi.roots.impl.CompilerProjectExtensionImpl"/>
 
     <projectService serviceInterface="com.intellij.compiler.CompilerEncodingService"
-                    serviceImplementation="com.intellij.compiler.impl.CompilerEncodingServiceImpl"/>
+                    serviceImplementation="com.intellij.compiler.CompilerEncodingServiceImpl"/>
 
     <projectService serviceInterface="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"
                     serviceImplementation="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"/>
@@ -4591,8 +4598,8 @@
     <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
-    <!--TODO [VISTALL] JAVA <projectExtension implementation="com.intellij.openapi.roots.impl.CompilerProjectExtensionImpl$MyProjectExtension"/>
-    <<roots.watchedRootsProvider implementation="com.intellij.openapi.roots.impl.CompilerProjectExtensionImpl$MyWatchedRootsProvider"/> -->
+    <projectService serviceInterface="org.consulo.compiler.CompilerPathsManager" serviceImplementation="org.consulo.compiler.impl.CompilerPathsManagerImpl" />
+    <roots.watchedRootsProvider implementation="org.consulo.compiler.impl.CompilerPathsManagerImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"

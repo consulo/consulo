@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
 public abstract class CompilerModuleExtension extends ModuleExtension0 {
   @NonNls public static final String PRODUCTION = "production";
   @NonNls public static final String TEST = "test";

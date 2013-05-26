@@ -28,14 +28,19 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ModuleExtension0;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.InsertPathAction;
 import com.intellij.util.ui.UIUtil;
+import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -271,7 +276,126 @@ public class BuildElementsEditor extends ModuleElementsEditor {
   }
 
   public CompilerModuleExtension getCompilerExtension() {
-    return getModel().getModuleExtensionOld(CompilerModuleExtension.class);
+    return new CompilerModuleExtension() {
+      @Nullable
+      @Override
+      public VirtualFile getCompilerOutputPath() {
+        return null;
+      }
+
+      @Override
+      public void setCompilerOutputPath(VirtualFile file) {
+
+      }
+
+      @Nullable
+      @Override
+      public String getCompilerOutputUrl() {
+        return null;
+      }
+
+      @Override
+      public void setCompilerOutputPath(String url) {
+
+      }
+
+      @Nullable
+      @Override
+      public VirtualFile getCompilerOutputPathForTests() {
+        return null;
+      }
+
+      @Override
+      public void setCompilerOutputPathForTests(VirtualFile file) {
+
+      }
+
+      @Nullable
+      @Override
+      public String getCompilerOutputUrlForTests() {
+        return null;
+      }
+
+      @Override
+      public void setCompilerOutputPathForTests(String url) {
+
+      }
+
+      @Override
+      public void inheritCompilerOutputPath(boolean inherit) {
+
+      }
+
+      @Override
+      public boolean isCompilerOutputPathInherited() {
+        return false;
+      }
+
+      @Override
+      public VirtualFilePointer getCompilerOutputPointer() {
+        return null;
+      }
+
+      @Override
+      public VirtualFilePointer getCompilerOutputForTestsPointer() {
+        return null;
+      }
+
+      @Override
+      public void setExcludeOutput(boolean exclude) {
+
+      }
+
+      @Override
+      public boolean isExcludeOutput() {
+        return false;
+      }
+
+      @Override
+      public VirtualFile[] getOutputRoots(boolean includeTests) {
+        return new VirtualFile[0];
+      }
+
+      @Override
+      public String[] getOutputRootUrls(boolean includeTests) {
+        return new String[0];
+      }
+
+      @Override
+      public ModuleExtension0 getModifiableModel(boolean writable) {
+        return null;
+      }
+
+      @Override
+      public void commit() {
+
+      }
+
+      @Override
+      public boolean isChanged() {
+        return false;
+      }
+
+      @Override
+      public int compareTo(Object o) {
+        return 0;
+      }
+
+      @Override
+      public void dispose() {
+
+      }
+
+      @Override
+      public void readExternal(Element element) throws InvalidDataException {
+
+      }
+
+      @Override
+      public void writeExternal(Element element) throws WriteExternalException {
+
+      }
+    };
   }
 
   private interface CommitPathRunnable {

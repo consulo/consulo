@@ -176,10 +176,10 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
     return false;
   }
 
-  private void createEditors(Module module) {
+  private void createEditors() {
     ModuleConfigurationState state = createModuleConfigurationState();
     myEditors.add(new ContentEntriesEditor(myName, state));
-    //TODO [VISTALL] myEditors.add(new OutputEditor(state));
+    myEditors.add(new OutputEditor(state));
     final ClasspathEditor e = new ClasspathEditor(state);
     myEditors.add(e);
     myEditors.add(new ExtensionEditor(state, e));
@@ -200,7 +200,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
 
     myGenericSettingsPanel = new ModuleEditorPanel();
 
-    createEditors(getModule());
+    createEditors();
 
     JPanel northPanel = new JPanel(new GridBagLayout());
 

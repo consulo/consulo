@@ -1835,6 +1835,7 @@
     <sdkType implementation="com.intellij.openapi.projectRoots.impl.JavaSdkImpl" />
   <!--  <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>  -->
 
+    <compilerProvider implementation="com.intellij.compiler.impl.javaCompiler.JavaCompilerProvider" />
   </extensions>
 
 

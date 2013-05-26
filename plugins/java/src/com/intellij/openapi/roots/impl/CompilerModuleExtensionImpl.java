@@ -23,7 +23,6 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.CompilerModuleExtension;
-import com.intellij.openapi.roots.CompilerProjectExtension;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
@@ -32,6 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -144,7 +144,7 @@ public class CompilerModuleExtensionImpl extends CompilerModuleExtension {
   @Nullable
   public VirtualFile getCompilerOutputPath() {
     if (myInheritedCompilerOutput) {
-      final VirtualFile projectOutputPath = CompilerProjectExtension.getInstance(getProject()).getCompilerOutput();
+      final VirtualFile projectOutputPath = CompilerPathsManager.getInstance(getProject()).getCompilerOutput();
       if (projectOutputPath == null) return null;
       return projectOutputPath.findFileByRelativePath(PRODUCTION + "/" + getModule().getName());
     }
@@ -155,7 +155,7 @@ public class CompilerModuleExtensionImpl extends CompilerModuleExtension {
   @Nullable
   public VirtualFile getCompilerOutputPathForTests() {
     if (myInheritedCompilerOutput) {
-      final VirtualFile projectOutputPath = CompilerProjectExtension.getInstance(getProject()).getCompilerOutput();
+      final VirtualFile projectOutputPath = CompilerPathsManager.getInstance(getProject()).getCompilerOutput();
       if (projectOutputPath == null) return null;
       return projectOutputPath.findFileByRelativePath(TEST + "/" + getModule().getName());
     }
@@ -166,7 +166,7 @@ public class CompilerModuleExtensionImpl extends CompilerModuleExtension {
   @Nullable
   public String getCompilerOutputUrl() {
     if (myInheritedCompilerOutput) {
-      final String projectOutputPath = CompilerProjectExtension.getInstance(getProject()).getCompilerOutputUrl();
+      final String projectOutputPath = CompilerPathsManager.getInstance(getProject()).getCompilerOutputUrl();
       if (projectOutputPath == null) return null;
       return projectOutputPath + "/" + PRODUCTION + "/" + getModule().getName();
     }
@@ -177,7 +177,7 @@ public class CompilerModuleExtensionImpl extends CompilerModuleExtension {
   @Nullable
   public String getCompilerOutputUrlForTests() {
     if (myInheritedCompilerOutput) {
-      final String projectOutputPath = CompilerProjectExtension.getInstance(getProject()).getCompilerOutputUrl();
+      final String projectOutputPath = CompilerPathsManager.getInstance(getProject()).getCompilerOutputUrl();
       if (projectOutputPath == null) return null;
       return projectOutputPath + "/" + TEST + "/" + getModule().getName();
     }

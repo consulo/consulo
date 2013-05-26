@@ -24,7 +24,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PathsList;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -224,19 +224,31 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
     }
     else if (type.equals(OrderRootType.CLASSES)) {
-      final CompilerModuleExtension extension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
-      if (extension != null) {
-        if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
-          if (includeTests && includeProduction) {
-            Collections.addAll(result, extension.getOutputRoots(false));
+      CompilerPathsManager manager = CompilerPathsManager.getInstance(rootModel.getModule().getProject());
+      if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
+        if (includeTests && includeProduction) {
+          VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.SOURCE);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
+          }
+
+          compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.TEST);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
+          }
+        }
+      }
+      else {
+        if (includeProduction) {
+          VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.SOURCE);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
           }
         }
         else {
-          if (includeProduction) {
-            Collections.addAll(result, extension.getOutputRoots(includeTests));
-          }
-          else {
-            ContainerUtil.addIfNotNull(result, extension.getCompilerOutputPathForTests());
+          VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.TEST);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
           }
         }
       }
@@ -257,24 +269,35 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
     }
     else if (type.equals(OrderRootType.CLASSES)) {
-      final CompilerModuleExtension extension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
-      if (extension != null) {
-        if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
-          if (includeTests && includeProduction) {
-            Collections.addAll(result, extension.getOutputRootUrls(false));
+      CompilerPathsManager manager = CompilerPathsManager.getInstance(rootModel.getModule().getProject());
+      if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
+        if (includeTests && includeProduction) {
+          String compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.SOURCE);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
           }
-        }
-        else {
-          if (includeProduction) {
-            Collections.addAll(result, extension.getOutputRootUrls(includeTests));
-          }
-          else {
-            ContainerUtil.addIfNotNull(result, extension.getCompilerOutputUrlForTests());
+
+          compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.TEST);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
           }
         }
       }
-    }
-  }
+      else {
+        if (includeProduction) {
+          String compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.SOURCE);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
+          }
+        }
+        else {
+          String compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.TEST);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
+          }
+        }
+      }
+    }  }
 
   private OrderRootType getRootType(OrderEntry e) {
     return myRootType != null ? myRootType : myRootTypeProvider.fun(e);
