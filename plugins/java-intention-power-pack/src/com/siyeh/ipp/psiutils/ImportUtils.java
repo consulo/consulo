@@ -24,6 +24,7 @@ import com.intellij.psi.util.ClassUtil;
 import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -272,7 +273,7 @@ public class ImportUtils {
       if (element == null || !(element instanceof PsiPackage)) {
         continue;
       }
-      final PsiPackage aPackage = (PsiPackage)element;
+      final PsiJavaPackage aPackage = (PsiJavaPackage)element;
       final PsiClass[] classes = aPackage.getClasses();
       for (final PsiClass aClass : classes) {
         final String className = aClass.getName();
@@ -340,7 +341,7 @@ public class ImportUtils {
     }
     final Project project = file.getProject();
     final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(project);
-    final PsiPackage filePackage = psiFacade.findPackage(filePackageName);
+    final PsiJavaPackage filePackage = psiFacade.findPackage(filePackageName);
     if (filePackage == null) {
       return false;
     }
@@ -362,7 +363,7 @@ public class ImportUtils {
     }
     final Project project = file.getProject();
     final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(project);
-    final PsiPackage javaLangPackage = psiFacade.findPackage("java.lang");
+    final PsiJavaPackage javaLangPackage = psiFacade.findPackage("java.lang");
     if (javaLangPackage == null) {
       return false;
     }

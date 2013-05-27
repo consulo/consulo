@@ -198,6 +198,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="java-intention-power-pack">
+          <element id="directory" name="lib">
+            <element id="archive" name="java-intention-power-pack.jar">
+              <element id="module-output" name="java-intention-power-pack" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

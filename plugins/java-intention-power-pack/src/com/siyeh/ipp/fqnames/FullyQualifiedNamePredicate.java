@@ -46,7 +46,7 @@ class FullyQualifiedNamePredicate implements PsiElementPredicate {
     }
     final PsiJavaCodeReferenceElement qualifierReferenceElement = (PsiJavaCodeReferenceElement)qualifier;
     final PsiElement resolved = qualifierReferenceElement.resolve();
-    if (!(resolved instanceof PsiPackage)) {
+    if (!(resolved instanceof PsiJavaPackage)) {
       if (!(resolved instanceof PsiClass)) {
         return false;
       }

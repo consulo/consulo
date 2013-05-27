@@ -66,7 +66,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-inspection-gadgets/java-inspection-gadgets.iml" filepath="$PROJECT_DIR$/plugins/java-inspection-gadgets/java-inspection-gadgets.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-intention-power-pack/java-intention-power-pack.iml" filepath="$PROJECT_DIR$/plugins/java-intention-power-pack/java-intention-power-pack.iml" group="plugins" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java-intention-power-pack/java-intention-power-pack.iml" filepath="$PROJECT_DIR$/plugins/java-intention-power-pack/java-intention-power-pack.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-platform.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-platform.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-psi-impl/java-psi-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-psi-impl/java-psi-impl.iml" group="plugins/java" />
