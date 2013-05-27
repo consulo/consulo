@@ -104,10 +104,16 @@
               <element id="module-output" name="java-analysis-api" />
               <element id="module-output" name="java-analysis-impl" />
               <element id="module-output" name="java-indexing-impl" />
-              <element id="module-output" name="java-copyright" />
               <element id="module-output" name="java-compiler-impl" />
+            </element>
+            <element id="archive" name="java-debugger-api.jar">
               <element id="module-output" name="java-debugger-api" />
+            </element>
+            <element id="archive" name="java-debugger-impl.jar">
               <element id="module-output" name="java-debugger-impl" />
+            </element>
+            <element id="archive" name="java-copyright.jar">
+              <element id="module-output" name="java-copyright" />
             </element>
           </element>
         </element>
