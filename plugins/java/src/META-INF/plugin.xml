@@ -570,6 +570,8 @@
     <extensionPoint name="extraExceptionHandler" interface="com.intellij.codeInsight.ExtraExceptionHandler"/>
 
     <extensionPoint name="compilerProvider" interface="com.intellij.compiler.impl.javaCompiler.JavaBackendCompilerProvider"/>
+    <extensionPoint name="runConfigurationExtension" interface="com.intellij.execution.RunConfigurationExtension" />
+    <extensionPoint name="jreProvider" interface="com.intellij.execution.ui.JreProvider" />
   </extensionPoints>
 
   <!--TODO [VISTALL] move to platform-->
@@ -1844,6 +1846,9 @@
     <!--  <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>  -->
 
     <compilerProvider implementation="com.intellij.compiler.impl.javaCompiler.JavaCompilerProvider"/>
+
+    <configurationType implementation="com.intellij.execution.application.ApplicationConfigurationType"/>
+    <configurationProducer implementation="com.intellij.execution.application.ApplicationConfigurationProducer"/>
   </extensions>
 
 

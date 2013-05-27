@@ -37,7 +37,6 @@
     <orderEntry type="module" module-name="xml-dom-impl" />
     <orderEntry type="module" module-name="images" />
     <orderEntry type="module" module-name="spellchecker" />
-    <orderEntry type="module" module-name="ant-new" exported="" />
     <orderEntry type="module" module-name="git4idea" />
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="java-analysis-api" />
@@ -48,7 +47,6 @@
     <orderEntry type="module" module-name="java-platform" />
     <orderEntry type="module" module-name="java-psi-api" />
     <orderEntry type="module" module-name="java-psi-impl" />
-    <orderEntry type="module" module-name="java-execution-impl" />
     <orderEntry type="module" module-name="devkit" />
     <orderEntry type="module" module-name="properties" />
   </component>

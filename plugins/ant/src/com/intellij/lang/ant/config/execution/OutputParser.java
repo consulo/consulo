@@ -17,7 +17,6 @@ package com.intellij.lang.ant.config.execution;
 
 import com.intellij.compiler.impl.javaCompiler.FileObject;
 import com.intellij.compiler.impl.javaCompiler.javac.JavacOutputParser;
-import com.intellij.compiler.impl.javaCompiler.jikes.JikesOutputParser;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.lang.ant.AntBundle;
 import com.intellij.openapi.application.ApplicationManager;
@@ -35,6 +34,8 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.intellij.compiler.impl.javaCompiler.jikes.JikesOutputParser;
 
 public class OutputParser{
 
@@ -232,7 +233,8 @@ public class OutputParser{
 
     com.intellij.compiler.OutputParser outputParser;
     if (isJikes) {
-      outputParser = new JikesOutputParser(project);
+      outputParser = null;
+    //  outputParser = new JikesOutputParser(project);
     }
     else {
       outputParser = new JavacOutputParser(project);

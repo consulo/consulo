@@ -32,16 +32,11 @@
     <extensionPoint name="overridingMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
     <extensionPoint name="superMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
     <extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
-    <extensionPoint name="runConfigurationExtension" interface="com.intellij.execution.RunConfigurationExtension" />
-    <extensionPoint name="jreProvider" interface="com.intellij.execution.ui.JreProvider" />
   </extensionPoints>
 
 
 
   <extensions defaultExtensionNs="com.intellij">
     <moduleExtensionProvider id="java" key="java" implementationClass="org.consulo.java.platform.module.extension.JavaModuleExtensionProvider" />
-
-    <configurationType implementation="com.intellij.execution.application.ApplicationConfigurationType"/>
-    <configurationProducer implementation="com.intellij.execution.application.ApplicationConfigurationProducer"/>
   </extensions>
 </idea-plugin>

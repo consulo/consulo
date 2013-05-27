@@ -17,18 +17,17 @@ package com.intellij.lang.ant.config.execution;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.rt.compiler.JavacRunner;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
 import com.intellij.util.containers.ComparatorUtil;
-import static com.intellij.util.containers.ContainerUtil.map;
-import static com.intellij.util.containers.ContainerUtil.skipNulls;
 import com.intellij.util.containers.Convertor;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,13 +36,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.intellij.util.containers.ContainerUtil.map;
+import static com.intellij.util.containers.ContainerUtil.skipNulls;
+
 public class PathUtilEx {
   @NonNls private static final String IDEA_PREPEND_RTJAR = "idea.prepend.rtjar";
 
   private static final Function<Module, Sdk> MODULE_JDK = new Function<Module, Sdk>() {
     @Nullable
     public Sdk fun(Module module) {
-      return ModuleRootManager.getInstance(module).getSdk();
+      final JavaModuleExtension extension = ModuleUtil.getExtension(module, JavaModuleExtension.class);
+      return extension == null ? null : extension.getSdk();
     }
   };
   private static final Convertor<Sdk, String> SDK_VERSION = new Convertor<Sdk, String>() {

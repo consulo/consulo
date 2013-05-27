@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.ex;
 
+import com.intellij.rt.compiler.JavacRunner;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
 import org.jetbrains.annotations.NonNls;
@@ -52,8 +53,6 @@ public class JavaSdkUtil {
   }
 
   public static String getIdeaRtJarPath() {
-   //TODO [VISTALL] compiler
-    return null;
-   // return PathUtil.getJarPathForClass(JavacRunner.class);
+    return PathUtil.getJarPathForClass(JavacRunner.class);
   }
 }

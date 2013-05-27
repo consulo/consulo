@@ -9,6 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="lang-impl" exported="" />
     <orderEntry type="module" module-name="java-platform" exported="" />
+    <orderEntry type="module" module-name="java-rt" />
   </component>
 </module>
 
