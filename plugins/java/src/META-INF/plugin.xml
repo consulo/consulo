@@ -572,6 +572,8 @@
     <extensionPoint name="psi.clsDecompiledFileProvider"
                     interface="com.intellij.psi.ClsFileDecompiledPsiFileProvider"/>
     <extensionPoint name="extraExceptionHandler" interface="com.intellij.codeInsight.ExtraExceptionHandler" />
+
+    <extensionPoint name="compilerProvider" interface="com.intellij.compiler.impl.javaCompiler.JavaBackendCompilerProvider"/>
   </extensionPoints>
 
   <!--TODO [VISTALL] move to platform-->
@@ -648,6 +650,8 @@
     <generation.topLevelFactory language="JAVA" implementationClass="com.intellij.psi.impl.JavaFactoryProvider"/>
 
     <elementFinder implementation="com.intellij.psi.impl.migration.MigrationElementFinder"/>
+
+    <compilerProvider implementation="com.intellij.compiler.impl.javaCompiler.javac.JavacBackendCompilerProvider" />
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">

@@ -19,7 +19,6 @@ import com.intellij.compiler.OutputParser;
 import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.NonNls;
@@ -30,8 +29,6 @@ import java.io.IOException;
 import java.util.Set;
 
 public interface BackendCompiler {
-  ExtensionPointName<BackendCompiler> EP_NAME = ExtensionPointName.create("com.intellij.java.compiler");
-
   @NotNull @NonNls String getId(); // used for externalization
   @NotNull String getPresentableName();
   @NotNull Configurable createConfigurable();

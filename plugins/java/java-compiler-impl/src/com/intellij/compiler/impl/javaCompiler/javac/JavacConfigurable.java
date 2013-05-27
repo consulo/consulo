@@ -42,18 +42,22 @@ public class JavacConfigurable implements Configurable{
     myAdditionalOptionsField.setDialogCaption(CompilerBundle.message("java.compiler.option.additional.command.line.parameters"));
   }
 
+  @Override
   public String getDisplayName() {
-    return null;
+    return "Javac";
   }
 
+  @Override
   public String getHelpTopic() {
     return null;
   }
 
+  @Override
   public JComponent createComponent() {
     return myPanel;
   }
 
+  @Override
   public boolean isModified() {
     boolean isModified = false;
     isModified |= ComparingUtils.isModified(myJavacMaximumHeapField, myJavacSettings.MAXIMUM_HEAP_SIZE);
@@ -65,6 +69,7 @@ public class JavacConfigurable implements Configurable{
     return isModified;
   }
 
+  @Override
   public void apply() throws ConfigurationException {
 
     try {
@@ -83,6 +88,7 @@ public class JavacConfigurable implements Configurable{
     myJavacSettings.ADDITIONAL_OPTIONS_STRING = myAdditionalOptionsField.getText();
   }
 
+  @Override
   public void reset() {
     myJavacMaximumHeapField.setText(Integer.toString(myJavacSettings.MAXIMUM_HEAP_SIZE));
     myCbDeprecation.setSelected(myJavacSettings.DEPRECATION);
@@ -91,6 +97,7 @@ public class JavacConfigurable implements Configurable{
     myAdditionalOptionsField.setText(myJavacSettings.ADDITIONAL_OPTIONS_STRING);
   }
 
+  @Override
   public void disposeUIResources() {
   }
 

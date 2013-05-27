@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl.javaCompiler.api;
 
-import com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration;
+import com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerSettings;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -29,7 +29,7 @@ import com.intellij.openapi.project.Project;
    ,@Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
     }
 )
-public class CompilerAPIConfiguration extends JavacConfiguration {
+public class CompilerAPIConfiguration extends JavacCompilerSettings {
   public CompilerAPIConfiguration(Project project) {
     super(project);
   }

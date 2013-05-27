@@ -23,7 +23,6 @@ package com.intellij.compiler.impl.javaCompiler;
 
 import com.intellij.compiler.CompilerException;
 import com.intellij.compiler.impl.CompileDriver;
-import com.intellij.compiler.impl.javaCompiler.javac.JavacCompiler;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
@@ -91,6 +90,7 @@ public class JavaCompiler implements TranslatingCompiler {
   }
 
   private BackendCompiler getBackEndCompiler() {
-    return new JavacCompiler(myProject);
+    JavaCompilerSettings javaCompilerSettings = CompilerManager.getInstance(myProject).getSettings(this);
+    return javaCompilerSettings.getSelectedCompiler();
   }
 }

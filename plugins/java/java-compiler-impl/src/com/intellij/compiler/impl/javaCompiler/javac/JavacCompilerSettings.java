@@ -16,23 +16,19 @@
 package com.intellij.compiler.impl.javaCompiler.javac;
 
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import org.consulo.compiler.CompilerSettings;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
-@State(
-  name = "JavacSettings",
-  storages = {
-    @Storage( file = StoragePathMacros.PROJECT_FILE)
-    ,@Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
-  }
-)
-public class JavacConfiguration implements PersistentStateComponent<JpsJavaCompilerOptions> {
+public class JavacCompilerSettings implements CompilerSettings, PersistentStateComponent<JpsJavaCompilerOptions> {
   private final JpsJavaCompilerOptions mySettings = new JpsJavaCompilerOptions();
   private final Project myProject;
 
-  public JavacConfiguration(Project project) {
+  public JavacCompilerSettings(Project project) {
     myProject = project;
   }
 
@@ -50,9 +46,15 @@ public class JavacConfiguration implements PersistentStateComponent<JpsJavaCompi
     XmlSerializerUtil.copyBean(state, mySettings);
   }
 
-  public static JpsJavaCompilerOptions getOptions(Project project, Class<? extends JavacConfiguration> aClass) {
+  public static JpsJavaCompilerOptions getOptions(Project project, Class<? extends JavacCompilerSettings> aClass) {
     /*JavacConfiguration configuration = ServiceManager.getService(project, aClass);
     return configuration.mySettings;   */
     return new JpsJavaCompilerOptions();
+  }
+
+  @Nullable
+  @Override
+  public Configurable createConfigurable() {
+    return new JavacConfigurable(mySettings);
   }
 }

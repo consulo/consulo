@@ -17,7 +17,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import org.apache.oro.text.regex.*;
 import org.consulo.compiler.CompilerSettings;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,16 +59,6 @@ public class ResourceCompilerSettings implements CompilerSettings {
     loadDefaultWildcardPatterns();
   }
 
-  @Nullable
-  @Override
-  public Element getState() {
-    return null;
-  }
-
-  @Override
-  public void loadState(Element state) {
-
-  }
 
   public void convertPatterns() {
     if (!needPatternConversion()) {
@@ -296,6 +285,6 @@ public class ResourceCompilerSettings implements CompilerSettings {
 
   @Override
   public Configurable createConfigurable() {
-    return new TextConfigurable<CompilerSettings>(this, "Test", "Test", "Test", AllIcons.Nodes.Module);
+    return new TextConfigurable<CompilerSettings>(this, "Resource", "Test", "Test", AllIcons.Nodes.Module);
   }
 }

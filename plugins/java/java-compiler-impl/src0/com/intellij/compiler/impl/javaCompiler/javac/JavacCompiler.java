@@ -144,7 +144,7 @@ public class JavacCompiler extends ExternalCompiler {
 
   @NotNull
   public Configurable createConfigurable() {
-    return new JavacConfigurable(JavacConfiguration.getOptions(myProject, JavacConfiguration.class));
+    return new JavacConfigurable(JavacCompilerSettings.getOptions(myProject, JavacCompilerSettings.class));
   }
 
   public OutputParser createErrorParser(@NotNull final String outputDir, Process process) {
@@ -170,7 +170,7 @@ public class JavacCompiler extends ExternalCompiler {
         public String[] compute() {
           try {
             final List<String> commandLine = new ArrayList<String>();
-            createStartupCommand(chunk, commandLine, outputPath, JavacConfiguration.getOptions(myProject, JavacConfiguration.class), context.isAnnotationProcessorsEnabled());
+            createStartupCommand(chunk, commandLine, outputPath, JavacCompilerSettings.getOptions(myProject, JavacCompilerSettings.class), context.isAnnotationProcessorsEnabled());
             return ArrayUtil.toStringArray(commandLine);
           }
           catch (IOException e) {
@@ -432,7 +432,7 @@ public class JavacCompiler extends ExternalCompiler {
 
   private Sdk getJdkForStartupCommand(final ModuleChunk chunk) {
     final Sdk jdk = chunk.getJdk();
-    if (ApplicationManager.getApplication().isUnitTestMode() && JavacConfiguration.getOptions(myProject, JavacConfiguration.class).isTestsUseExternalCompiler()) {
+    if (ApplicationManager.getApplication().isUnitTestMode() && JavacCompilerSettings.getOptions(myProject, JavacCompilerSettings.class).isTestsUseExternalCompiler()) {
       final String jdkHomePath = CompilerConfigurationImpl.getTestsExternalCompilerHome();
       if (jdkHomePath == null) {
         throw new IllegalArgumentException("[TEST-MODE] Cannot determine home directory for JDK to use javac from");

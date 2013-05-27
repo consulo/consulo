@@ -16,7 +16,7 @@
 package com.intellij.compiler.ant;
 
 import com.intellij.compiler.ant.taskdefs.*;
-import com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration;
+import com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerSettings;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -49,7 +49,7 @@ public class BuildPropertiesImpl extends BuildProperties {
     //noinspection HardCodedStringLiteral
     add(new Comment(CompilerBundle.message("generated.ant.build.disable.tests.property.comment"),
                     new Property(PROPERTY_SKIP_TESTS, "true")));
-    final JpsJavaCompilerOptions javacSettings = JavacConfiguration.getOptions(project, JavacConfiguration.class);
+    final JpsJavaCompilerOptions javacSettings = JavacCompilerSettings.getOptions(project, JavacCompilerSettings.class);
     add(new Comment(CompilerBundle.message("generated.ant.build.compiler.options.comment")), 1);
     //noinspection HardCodedStringLiteral
     add(new Property(PROPERTY_COMPILER_GENERATE_DEBUG_INFO, javacSettings.DEBUGGING_INFO ? "on" : "off"), 1);

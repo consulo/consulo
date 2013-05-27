@@ -17,7 +17,7 @@ package com.intellij.compiler.server;
 
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration;
+import com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerSettings;
 import com.intellij.compiler.server.impl.CompileServerClasspathManager;
 import com.intellij.execution.ExecutionAdapter;
 import com.intellij.execution.ExecutionException;
@@ -769,7 +769,7 @@ public class BuildManager implements ApplicationComponent{
     // todo: remove when old make implementation is removed
     if (heapSize == CompilerWorkspaceConfiguration.DEFAULT_COMPILE_PROCESS_HEAP_SIZE) {
       // check if javac is set to use larger heap, and if so, use it.
-      heapSize = Math.max(heapSize, JavacConfiguration.getOptions(project, JavacConfiguration.class).MAXIMUM_HEAP_SIZE);
+      heapSize = Math.max(heapSize, JavacCompilerSettings.getOptions(project, JavacCompilerSettings.class).MAXIMUM_HEAP_SIZE);
     }
 
     cmdLine.addParameter("-Xmx" + heapSize + "m");

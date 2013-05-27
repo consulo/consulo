@@ -319,8 +319,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @NotNull
   @Override
-  public <T extends Compiler> CompilerSettings getSettings(T compiler) {
-    return myCompilers.get(compiler);
+  public <T extends CompilerSettings> T getSettings(Compiler compiler) {
+    return (T)myCompilers.get(compiler);
   }
 
   @Nullable
