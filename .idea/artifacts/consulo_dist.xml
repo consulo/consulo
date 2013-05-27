@@ -153,6 +153,13 @@
             <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/trang-core.jar" />
           </element>
         </element>
+        <element id="directory" name="hg4idea">
+          <element id="directory" name="lib">
+            <element id="archive" name="hg4idea.jar">
+              <element id="module-output" name="hg4idea" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
