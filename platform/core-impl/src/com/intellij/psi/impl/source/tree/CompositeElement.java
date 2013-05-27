@@ -18,7 +18,9 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.extapi.psi.ASTDelegatePsiElement;
-import com.intellij.lang.*;
+import com.intellij.lang.ASTFactory;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.PsiElementFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -40,7 +42,6 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ArrayFactory;
-import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -805,14 +806,7 @@ public class CompositeElement extends TreeElement {
   }
 
   protected PsiElement createPsiNoLock() {
-    final Language lang = getElementType().getLanguage();
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-    if (parserDefinition != null) {
-      return parserDefinition.createElement(this);
-    }
-
-    //noinspection ConstantConditions
-    return null;
+    return PsiElementFactory.EP.getValue(getElementType()).createElement(this);
   }
 
   public void setPsi(@NotNull PsiElement psi) {
