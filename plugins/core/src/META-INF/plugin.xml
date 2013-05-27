@@ -4381,7 +4381,6 @@
     <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.PlainArtifactType" order="last"/>
     <compiler.additionalCompileScopeProvider implementation="com.intellij.packaging.impl.compiler.ArtifactAdditionalCompileScopeProvider"/>
     <compiler.buildTargetScopeProvider implementation="com.intellij.packaging.impl.compiler.ArtifactBuildTargetScopeProvider"/>
-    <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler"/>
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
 
 
@@ -5508,5 +5507,7 @@
     <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last" />
     <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last" />
     <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider" />
+
+    <compilerProvider implementation="com.intellij.packaging.impl.artifacts.ArtifactsCompilerProvider" id="artifactsCompiler" />
   </extensions>
 </idea-plugin>

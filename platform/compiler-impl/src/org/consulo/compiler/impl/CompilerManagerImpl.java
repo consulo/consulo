@@ -48,8 +48,7 @@ import java.util.concurrent.Semaphore;
 @State(
   name = "CompilerManager",
   storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)}
-)
+    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
   private class ListenerNotificator implements CompileStatusNotification {
     private final @Nullable CompileStatusNotification myDelegate;
@@ -80,7 +79,9 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
     final CompilerProvider[] extensions = CompilerProvider.EP_NAME.getExtensions();
     for (CompilerProvider extension : extensions) {
-      myCompilers.put(extension.createCompiler(project), extension.createSettings(project));
+      final CompilerSettings settings = extension.createSettings(project);
+
+      myCompilers.put(extension.createCompiler(project), settings == null ? CompilerSettings.EMPTY : settings);
     }
 
     final File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
