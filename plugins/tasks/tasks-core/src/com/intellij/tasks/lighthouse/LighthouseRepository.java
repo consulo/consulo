@@ -96,10 +96,10 @@ public class LighthouseRepository extends BaseRepositoryImpl {
         throw new Exception("Error fetching issues for: " + url + ", HTTP status code: " + method.getStatusCode() +
                           "\n" + element.getText());
       }
-      @SuppressWarnings({"unchecked"})
-      List<Object> children = element.getChildren("ticket");
+      List<Element> children = element.getChildren("ticket");
 
       List<Task> taskList = ContainerUtil.mapNotNull(children, new NullableFunction<Object, Task>() {
+        @Override
         public Task fun(Object o) {
           return createIssue((Element)o);
         }

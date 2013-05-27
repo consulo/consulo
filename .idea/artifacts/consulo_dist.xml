@@ -160,6 +160,29 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="github">
+          <element id="directory" name="lib">
+            <element id="archive" name="github.jar">
+              <element id="module-output" name="github" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="tasks">
+          <element id="directory" name="lib">
+            <element id="archive" name="tasks-api.jar">
+              <element id="module-output" name="tasks-api" />
+            </element>
+            <element id="archive" name="tasks-core.jar">
+              <element id="module-output" name="tasks-core" />
+            </element>
+            <element id="library" level="module" name="markdownj" module-name="tasks-core" />
+            <element id="library" level="module" name="axis-1.4" module-name="tasks-core" />
+            <element id="archive" name="jire-connector.jar">
+              <element id="module-output" name="jira-connector" />
+            </element>
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/tasks/tasks-core/lib/commons-discovery-0.4.jar" />
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

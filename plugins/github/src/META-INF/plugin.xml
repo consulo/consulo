@@ -4,7 +4,6 @@
   <vendor>JetBrains</vendor>
   <description>GitHub integration</description>
 
-  <depends>com.intellij.modules.lang</depends>
   <depends>Git4Idea</depends>
   <depends optional="true" config-file="github-tracker.xml">com.intellij.tasks</depends>
 

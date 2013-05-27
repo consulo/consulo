@@ -48,7 +48,8 @@ public class RedmineRepository extends BaseRepositoryImpl {
   private String myProjectId;
 
   @SuppressWarnings({"UnusedDeclaration"})
-  public RedmineRepository() {}
+  public RedmineRepository() {
+  }
 
   public RedmineRepository(RedmineRepositoryType type) {
     super(type);
@@ -67,7 +68,7 @@ public class RedmineRepository extends BaseRepositoryImpl {
 
   @Override
   public Task[] getIssues(@Nullable String query, int max, long since) throws Exception {
-    @SuppressWarnings({"unchecked"}) List<Object> children = getIssues(query, max);
+    List<Element> children = getIssues(query, max);
 
     final List<Task> tasks = ContainerUtil.mapNotNull(children, new NullableFunction<Object, Task>() {
       public Task fun(Object o) {
@@ -95,7 +96,8 @@ public class RedmineRepository extends BaseRepositoryImpl {
     try {
       updated.set(parseDate(element, "updated_on"));
       created.set(parseDate(element, "created_on"));
-    } catch (ParseException e) {
+    }
+    catch (ParseException e) {
       LOG.warn(e);
     }
 
@@ -188,22 +190,21 @@ public class RedmineRepository extends BaseRepositoryImpl {
     return super.isConfigured() && !StringUtil.isEmpty(myProjectId);
   }
 
-  @SuppressWarnings({"unchecked"})
-  private List<Object> getIssues(@Nullable String query, int max) throws Exception {
+  private List<Element> getIssues(@Nullable String query, int max) throws Exception {
     String url = "/projects/" + myProjectId + "/issues.xml?";
     final boolean hasKey = !StringUtil.isEmpty(myAPIKey) && !isUseHttpAuthentication();
     if (hasKey) {
-      url +="key=" + myAPIKey;
+      url += "key=" + myAPIKey;
     }
     if (hasKey) url += "&";
     // getting only open id's
-    url += encodeUrl("fields[]") + "=status_id&"  + 
+    url += encodeUrl("fields[]") + "=status_id&" +
            encodeUrl("operators[status_id]") + "=o&" +
            encodeUrl("values[status_id][]") + "=1";
     final boolean hasQuery = !StringUtil.isEmpty(query);
     if (hasQuery) {
       url += "&" + encodeUrl("fields[]") + "=subject&" +
-             encodeUrl("operators[subject]") + "=" + encodeUrl("~") + "&" + 
+             encodeUrl("operators[subject]") + "=" + encodeUrl("~") + "&" +
              encodeUrl("values[subject][]") + "=" + encodeUrl(query);
     }
     if (max >= 0) {
@@ -217,7 +218,8 @@ public class RedmineRepository extends BaseRepositoryImpl {
     Element element;
     try {
       element = new SAXBuilder(false).build(source).getRootElement();
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       LOG.error("Error fetching issues for: " + url + ", HTTP status code: " + method.getStatusCode(), t, response);
       throw new Exception("Error fetching issues for: " + url + ", HTTP status code: " + method.getStatusCode() +
                           "\n" + response);

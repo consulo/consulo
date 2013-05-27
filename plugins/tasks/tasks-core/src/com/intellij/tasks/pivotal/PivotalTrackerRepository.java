@@ -83,9 +83,10 @@ public class PivotalTrackerRepository extends BaseRepositoryImpl {
 
   @Override
   public Task[] getIssues(@Nullable final String query, final int max, final long since) throws Exception {
-    @SuppressWarnings({"unchecked"}) List<Object> children = getStories(query, max);
+   List<Element> children = getStories(query, max);
 
     final List<Task> tasks = ContainerUtil.mapNotNull(children, new NullableFunction<Object, Task>() {
+      @Override
       public Task fun(Object o) {
         return createIssue((Element)o);
       }
@@ -93,8 +94,7 @@ public class PivotalTrackerRepository extends BaseRepositoryImpl {
     return tasks.toArray(new Task[tasks.size()]);
   }
 
-  @SuppressWarnings({"unchecked"})
-  private List<Object> getStories(@Nullable final String query, final int max) throws Exception {
+  private List<Element> getStories(@Nullable final String query, final int max) throws Exception {
     String url = API_URL + "/projects/" + myProjectId + "/stories";
     url += "?filter=" + encodeUrl("state:started,unstarted,unscheduled,rejected");
     if (!StringUtil.isEmpty(query)) {

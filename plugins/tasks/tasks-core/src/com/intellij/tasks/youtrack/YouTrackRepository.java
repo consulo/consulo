@@ -91,10 +91,11 @@ public class YouTrackRepository extends BaseRepositoryImpl {
     if ("error".equals(element.getName())) {
       throw new Exception("Error from YouTrack for " + requestUrl + ": '" + element.getText() + "'");
     }
-    @SuppressWarnings({"unchecked"})
-    List<Object> children = element.getChildren("issue");
+
+    List<Element> children = element.getChildren("issue");
 
     final List<Task> tasks = ContainerUtil.mapNotNull(children, new NullableFunction<Object, Task>() {
+      @Override
       public Task fun(Object o) {
         return createIssue((Element)o);
       }
