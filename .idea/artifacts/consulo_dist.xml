@@ -106,6 +106,8 @@
               <element id="module-output" name="java-indexing-impl" />
               <element id="module-output" name="java-copyright" />
               <element id="module-output" name="java-compiler-impl" />
+              <element id="module-output" name="java-debugger-api" />
+              <element id="module-output" name="java-debugger-impl" />
             </element>
           </element>
         </element>
@@ -215,10 +217,6 @@
           <element id="module-output" name="testRunner" />
           <element id="module-output" name="compiler-artifact-api" />
           <element id="module-output" name="compiler-artifact-impl" />
-        </element>
-        <element id="archive" name="idea_rt.jar">
-          <element id="module-output" name="java-execution-api" />
-          <element id="module-output" name="execution-impl" />
         </element>
         <element id="archive" name="boot.jar">
           <element id="module-output" name="boot" />

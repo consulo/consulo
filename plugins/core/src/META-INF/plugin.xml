@@ -3094,7 +3094,6 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.EditorHighlighterProvider"/>
     </extensionPoint>
     <extensionPoint name="fileDocumentManagerListener" interface="com.intellij.openapi.fileEditor.FileDocumentManagerListener"/>
-    <extensionPoint name="exceptionFilter" interface="com.intellij.execution.filters.ExceptionFilterFactory"/>
     <extensionPoint name="fileDocumentSynchronizationVetoer" interface="com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer"/>
 
     <extensionPoint name="itemPresentationProvider" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
@@ -3181,9 +3180,6 @@
 
     <extensionPoint name="compiler.resourceCompilerExtension"
                     interface="com.intellij.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
-
-    <extensionPoint name="java.programPatcher"
-                    interface="com.intellij.execution.runners.JavaProgramPatcher"/>
 
     <extensionPoint name="OrderRootTypeUI"
                     beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean"/>
@@ -4283,10 +4279,9 @@
                 factoryClass="com.intellij.notification.EventLogToolWindowFactory"/>
 
     <projectService serviceInterface="com.intellij.openapi.wm.impl.ProjectFrameBounds"
-                    serviceImplementation="com.intellij.openapi.wm.impl.ProjectFrameBounds"/>
+                    serviceImplementation="com.intellij.openapi.wm.impl.ProjectFrameBounds"/> <!--
     <exceptionFilter implementation="com.intellij.execution.filters.ExceptionBaseFilterFactory"/>
-    <exceptionFilter implementation="com.intellij.execution.filters.ExceptionExFilterFactory"/>
-    <exceptionFilter implementation="com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationExceptionFilterFactory"/>
+    <exceptionFilter implementation="com.intellij.execution.filters.ExceptionExFilterFactory"/>   -->
 
     <applicationService serviceInterface="com.intellij.ide.TypePresentationService"
                         serviceImplementation="com.intellij.ide.TypePresentationServiceImpl"/>
@@ -4404,14 +4399,7 @@
     <applicationService serviceInterface="com.intellij.execution.runners.ProcessProxyFactory"
                         serviceImplementation="com.intellij.execution.runners.ProcessProxyFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.debugger.settings.NodeRendererSettings"
-                        serviceImplementation="com.intellij.debugger.settings.NodeRendererSettings"/>
-    <applicationService serviceInterface="com.intellij.debugger.settings.ViewsGeneralSettings"
-                        serviceImplementation="com.intellij.debugger.settings.ViewsGeneralSettings"/>
-    <applicationService serviceInterface="com.intellij.debugger.settings.DebuggerSettings"
-                        serviceImplementation="com.intellij.debugger.settings.DebuggerSettings"/>
-    <applicationService serviceInterface="com.intellij.debugger.settings.ThreadsViewSettings"
-                        serviceImplementation="com.intellij.debugger.settings.ThreadsViewSettings"/>
+
 
     <applicationService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
                         serviceImplementation="com.intellij.packaging.impl.elements.PackagingElementFactoryImpl"/>

@@ -60,6 +60,8 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-copyright/java-copyright.iml" filepath="$PROJECT_DIR$/plugins/java/java-copyright/java-copyright.iml" group="plugins/java" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/debugger-api/java-debugger-api.iml" filepath="$PROJECT_DIR$/plugins/java/debugger-api/java-debugger-api.iml" group="plugins/java" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" filepath="$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-execution-impl/java-execution-impl.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-execution-impl/java-execution-impl.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" filepath="$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" group="plugins" />

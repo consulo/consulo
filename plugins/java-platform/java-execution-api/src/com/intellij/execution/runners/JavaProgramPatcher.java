@@ -11,7 +11,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
  * @author peter
  */
 public abstract class JavaProgramPatcher {
-  public static final ExtensionPointName<JavaProgramPatcher> EP_NAME = ExtensionPointName.create("com.intellij.java.programPatcher");
+  public static final ExtensionPointName<JavaProgramPatcher> EP_NAME = ExtensionPointName.create("org.consulo.java.programPatcher");
 
   public abstract void patchJavaParameters(Executor executor, RunProfile configuration, JavaParameters javaParameters);
 }

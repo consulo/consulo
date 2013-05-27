@@ -32,7 +32,7 @@ import javax.swing.*;
  */
 public abstract class BreakpointFactory {
   public static final ExtensionPointName<BreakpointFactory> EXTENSION_POINT_NAME =
-    ExtensionPointName.create("com.intellij.debugger.breakpointFactory");
+    ExtensionPointName.create("org.consulo.java.debugger.breakpointFactory");
 
   public static BreakpointFactory[] getBreakpointFactories() {
     return ApplicationManager.getApplication().getExtensions(EXTENSION_POINT_NAME);

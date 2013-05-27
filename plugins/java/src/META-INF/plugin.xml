@@ -116,7 +116,7 @@
       <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="MemberPushDown"/>
     </group>
 
-  <!--  <action id="Hotswap" class="com.intellij.debugger.actions.HotSwapAction">
+    <action id="Hotswap" class="com.intellij.debugger.actions.HotSwapAction">
       <add-to-group group-id="DebugMainMenu" anchor="before" relative-to-action="StepOver"/>
     </action>
 
@@ -137,7 +137,7 @@
     <action id="DumpThreads" class="com.intellij.debugger.actions.ThreadDumpAction" text="Take a thread dump" icon="AllIcons.Actions.Dump">
       <add-to-group group-id="RunMenu" anchor="last"/>
     </action>
-                     -->
+
     <action id="GenerateJavadoc" class="com.intellij.javadoc.actions.GenerateJavadocAction">
       <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="SaveFileAsTemplate"/>
     </action>
@@ -161,7 +161,7 @@
       <add-to-group group-id="Internal"/>
     </action>
 
-    <!--TODO [VISTALL] debugger<group id="JavaDebuggerActions">
+    <group id="JavaDebuggerActions">
       <action id="Debugger.AdjustArrayRange" class="com.intellij.debugger.actions.AdjustArrayRangeAction"/>
       <action id="Debugger.Inspect" class="com.intellij.debugger.actions.InspectAction"/>
       <action id="Debugger.ViewText" class="com.intellij.debugger.actions.ViewTextAction"/>
@@ -179,7 +179,9 @@
       <action id="Debugger.RemoveWatch" class="com.intellij.debugger.actions.RemoveWatchAction" icon="AllIcons.Actions.Delete"/>
       <action id="Debugger.ViewAsGroup" class="com.intellij.debugger.actions.ViewAsGroup"/>
       <action id="Debugger.SetValue" class="com.intellij.debugger.actions.SetValueAction"/>
-      -<action id="Debugger.ShowAsHex" class="com.intellij.debugger.actions.ShowAsHexAction" text="Show as Hex"/> -
+      -
+      <action id="Debugger.ShowAsHex" class="com.intellij.debugger.actions.ShowAsHexAction" text="Show as Hex"/>
+      -
       <action id="Debugger.ShowFrame" class="com.intellij.debugger.actions.ShowFrameAction"/>
       <action id="Debugger.ResumeThread" class="com.intellij.debugger.actions.ResumeThreadAction"/>
       <action id="Debugger.FreezeThread" class="com.intellij.debugger.actions.FreezeThreadAction"/>
@@ -205,7 +207,7 @@
       <separator/>
       <add-to-group group-id="ProjectViewCompileGroup" anchor="first"/>
       <add-to-group group-id="StructureViewCompileGroup" anchor="first"/>
-    </group>      -->
+    </group>
 
     <action id="TypeHierarchy.BaseOnThisType" class="com.intellij.ide.hierarchy.type.TypeHierarchyBrowser$BaseOnThisTypeAction">
       <add-to-group group-id="TypeHierarchyPopupMenu" anchor="first"/>
@@ -232,7 +234,7 @@
       <add-to-group group-id="FileSettingsGroup" anchor="last"/>
     </action>
 
-   <!-- <group id="Debugger.FramePanelPopup">
+    <group id="Debugger.FramePanelPopup">
       <reference ref="Debugger.AdjustArrayRange"/>
       <reference ref="Debugger.Inspect"/>
       <reference ref="Debugger.MarkObject"/>
@@ -260,7 +262,7 @@
       <reference ref="Debugger.EditNodeSource"/>
       <reference ref="Debugger.EditTypeSource"/>
       <separator/>
-      -<reference ref="Debugger.ShowAsHex"/>-
+      <!--<reference ref="Debugger.ShowAsHex"/>-->
       <reference ref="Debugger.ViewAsGroup"/>
       <separator/>
       <reference ref="Debugger.AddToWatch"/>
@@ -283,7 +285,7 @@
       <separator/>
       <reference ref="Debugger.AddToWatch"/>
       <separator/>
-      -<reference ref="Debugger.ShowAsHex"/>-
+      <!--<reference ref="Debugger.ShowAsHex"/>-->
       <reference ref="Debugger.ViewAsGroup"/>
       <separator/>
       <reference ref="ToggleFieldBreakpoint"/>
@@ -295,14 +297,14 @@
     </group>
 
     <group id="Debugger.ThreadsPanelPopup">
-      -<reference ref="Debugger.ResumeThread"/>-
-      -<reference ref="Debugger.FreezeThread"/>-
+      <!--<reference ref="Debugger.ResumeThread"/>-->
+      <!--<reference ref="Debugger.FreezeThread"/>-->
       <reference ref="Debugger.InterruptThread"/>
-      -<reference ref="Debugger.ShowFrame"/>-
+      <!--<reference ref="Debugger.ShowFrame"/>-->
       <reference ref="Debugger.PopFrame"/>
-      -<reference ref="Debugger.EditFrameSource"/>-
-      -<reference ref="Debugger.EditTypeSource"/>-
-      -<reference ref="EditSource"/>-
+      <!--<reference ref="Debugger.EditFrameSource"/>-->
+      <!--<reference ref="Debugger.EditTypeSource"/>-->
+      <!--<reference ref="EditSource"/>-->
       <separator/>
       <reference ref="ExportThreads"/>
       <separator/>
@@ -322,7 +324,7 @@
       <reference ref="Debugger.EditNodeSource"/>
       <reference ref="Debugger.EditTypeSource"/>
       <separator/>
-      -<reference ref="Debugger.ShowAsHex"/>-
+      <!--<reference ref="Debugger.ShowAsHex"/>-->
       <reference ref="Debugger.ViewAsGroup"/>
       <separator/>
       <reference ref="Debugger.AddToWatch"/>
@@ -333,7 +335,7 @@
       <reference ref="Debugger.ViewText"/>
       <reference ref="Debugger.CompareValueWithClipboard"/>
       <reference ref="Debugger.CustomizeContextView"/>
-    </group>   -->
+    </group>
 
     <action id="ShowPackageDeps" class="com.intellij.packageDependencies.actions.AnalyzeDependenciesAction">
       <add-to-group group-id="ShowPackageDepsGroup" anchor="first"/>
@@ -348,7 +350,7 @@
     <action id="ShowModulesDependencies" class="com.intellij.moduleDependencies.ShowModuleDependenciesAction">
       <add-to-group group-id="AnalyzeActions" anchor="last"/>
     </action>
-    <action id="FileChooser.GotoJDK" class="com.intellij.openapi.projectRoots.JdkPopupAction" >
+    <action id="FileChooser.GotoJDK" class="com.intellij.openapi.projectRoots.JdkPopupAction">
       <add-to-group group-id="FileChooserToolbar" anchor="last"/>
     </action>
   </actions>
@@ -360,12 +362,6 @@
       <interface-class>com.intellij.openapi.projectRoots.JavaSdk</interface-class>
       <implementation-class>com.intellij.openapi.projectRoots.impl.JavaSdkImpl</implementation-class>
     </component>
-    <!-- <component>
-       <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</implementation-class>
-     </component>
-     <component>
-       <implementation-class>com.intellij.compiler.server.BuildManager</implementation-class>
-     </component>       -->
   </application-components>
 
   <project-components>
@@ -391,33 +387,33 @@
       <implementation-class>com.intellij.codeInsight.daemon.impl.PostHighlightingPassFactory</implementation-class>
     </component>
 
-    <!--
-     <component>
-       <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
-     </component>
+    <component>
+      <interface-class>com.intellij.debugger.ui.DebuggerPanelsManager</interface-class>
+      <implementation-class>com.intellij.debugger.ui.DebuggerPanelsManager</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.debugger.impl.HotSwapManager</interface-class>
+      <implementation-class>com.intellij.debugger.impl.HotSwapManager</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.debugger.ui.HotSwapUI</interface-class>
+      <implementation-class>com.intellij.debugger.ui.HotSwapUIImpl</implementation-class>
+    </component>
 
-     <component>
-       <interface-class>com.intellij.debugger.ui.DebuggerPanelsManager</interface-class>
-       <implementation-class>com.intellij.debugger.ui.DebuggerPanelsManager</implementation-class>
-     </component>
-     <component>
-       <interface-class>com.intellij.debugger.impl.HotSwapManager</interface-class>
-       <implementation-class>com.intellij.debugger.impl.HotSwapManager</implementation-class>
-     </component>
-     <component>
-       <interface-class>com.intellij.debugger.ui.HotSwapUI</interface-class>
-       <implementation-class>com.intellij.debugger.ui.HotSwapUIImpl</implementation-class>
-     </component>
-
-     <component>
-       <interface-class>com.intellij.debugger.DebuggerManager</interface-class>
-       <implementation-class>com.intellij.debugger.impl.DebuggerManagerImpl</implementation-class>
-       <option name="workspace" value="true"/>
-       <loadForDefaultProject/>
-     </component> -->
+    <component>
+      <interface-class>com.intellij.debugger.DebuggerManager</interface-class>
+      <implementation-class>com.intellij.debugger.impl.DebuggerManagerImpl</implementation-class>
+      <option name="workspace" value="true"/>
+      <loadForDefaultProject/>
+    </component>
   </project-components>
 
   <extensionPoints>
+
+    <extensionPoint name="exceptionFilter" interface="com.intellij.execution.filters.ExceptionFilterFactory"/>
+    <extensionPoint name="programPatcher"
+                    interface="com.intellij.execution.runners.JavaProgramPatcher"/>
+
     <extensionPoint name="codeInsight.changeVariableTypeQuickFixProvider"
                     interface="com.intellij.codeInsight.quickfix.ChangeVariableTypeQuickFixProvider"/>
     <extensionPoint name="conversion.rule"
@@ -495,7 +491,7 @@
     <extensionPoint name="clsStubBuilderFactory" interface="com.intellij.psi.impl.compiled.ClsStubBuilderFactory"/>
     <extensionPoint name="mainMethodProvider" interface="com.intellij.codeInsight.runner.JavaMainMethodProvider"/>
 
-    <extensionPoint name="debuggerClassFilterProvider" interface="com.intellij.ui.classFilter.DebuggerClassFilterProvider"/>
+    <extensionPoint name="debugger.ClassFilterProvider" interface="com.intellij.ui.classFilter.DebuggerClassFilterProvider"/>
     <extensionPoint name="topLevelClassProvider" interface="com.intellij.debugger.engine.TopLevelParentClassProvider"/>
 
     <extensionPoint name="debuggerEditorTextProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -571,7 +567,7 @@
                     interface="com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy"/>
     <extensionPoint name="psi.clsDecompiledFileProvider"
                     interface="com.intellij.psi.ClsFileDecompiledPsiFileProvider"/>
-    <extensionPoint name="extraExceptionHandler" interface="com.intellij.codeInsight.ExtraExceptionHandler" />
+    <extensionPoint name="extraExceptionHandler" interface="com.intellij.codeInsight.ExtraExceptionHandler"/>
 
     <extensionPoint name="compilerProvider" interface="com.intellij.compiler.impl.javaCompiler.JavaBackendCompilerProvider"/>
   </extensionPoints>
@@ -596,6 +592,8 @@
   </extensions>
 
   <extensions defaultExtensionNs="org.consulo.java">
+    <exceptionFilter implementation="com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationExceptionFilterFactory"/>
+
     <constantExpressionEvaluator language="JAVA" implementationClass="com.intellij.psi.impl.PsiExpressionEvaluator"/>
     <annotationSupport language="JAVA" implementationClass="com.intellij.psi.impl.source.tree.java.JavaAnnotationSupport"/>
     <codeInsight.changeVariableTypeQuickFixProvider
@@ -651,7 +649,7 @@
 
     <elementFinder implementation="com.intellij.psi.impl.migration.MigrationElementFinder"/>
 
-    <compilerProvider implementation="com.intellij.compiler.impl.javaCompiler.javac.JavacBackendCompilerProvider" />
+    <compilerProvider implementation="com.intellij.compiler.impl.javaCompiler.javac.JavacBackendCompilerProvider"/>
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -787,6 +785,15 @@
     <applicationService serviceInterface="com.intellij.util.descriptors.ConfigFileFactory"
                         serviceImplementation="com.intellij.util.descriptors.impl.ConfigFileFactoryImpl"/>
 
+    <applicationService serviceInterface="com.intellij.debugger.settings.NodeRendererSettings"
+                        serviceImplementation="com.intellij.debugger.settings.NodeRendererSettings"/>
+    <applicationService serviceInterface="com.intellij.debugger.settings.ViewsGeneralSettings"
+                        serviceImplementation="com.intellij.debugger.settings.ViewsGeneralSettings"/>
+    <applicationService serviceInterface="com.intellij.debugger.settings.DebuggerSettings"
+                        serviceImplementation="com.intellij.debugger.settings.DebuggerSettings"/>
+    <applicationService serviceInterface="com.intellij.debugger.settings.ThreadsViewSettings"
+                        serviceImplementation="com.intellij.debugger.settings.ThreadsViewSettings"/>
+
     <projectService serviceInterface="com.intellij.ide.util.TreeClassChooserFactory"
                     serviceImplementation="com.intellij.ide.util.TreeClassChooserFactoryImpl"/>
     <projectService serviceInterface="com.intellij.codeInsight.guess.GuessManager"
@@ -830,7 +837,7 @@
     <projectService serviceInterface="com.intellij.refactoring.listeners.JavaRefactoringListenerManager"
                     serviceImplementation="com.intellij.refactoring.listeners.impl.JavaRefactoringListenerManagerImpl"/>
     <projectService serviceInterface="com.intellij.refactoring.JavaRefactoringFactory"
-                     serviceImplementation="com.intellij.refactoring.openapi.impl.JavaRefactoringFactoryImpl"/>
+                    serviceImplementation="com.intellij.refactoring.openapi.impl.JavaRefactoringFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.folding.JavaCodeFoldingSettings"
                         serviceImplementation="com.intellij.codeInsight.folding.impl.JavaCodeFoldingSettingsImpl"/>
@@ -1563,7 +1570,7 @@
     <highlightUsagesHandlerFactory implementation="com.intellij.codeInsight.highlighting.HighlightExitPointsHandlerFactory"/>
     <highlightUsagesHandlerFactory implementation="com.intellij.codeInsight.highlighting.HighlightOverridingMethodsHandlerFactory"/>
 
-   <!-- <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/> -->
+    <!-- <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/> -->
 
     <patternDialectProvider implementation="com.intellij.packageDependencies.ui.PackagePatternProvider" id="package" order="before file"/>
     <scopeDescriptorProvider implementation="com.intellij.ide.util.scopeChooser.HierarchyScopeDescriptorProvider"/>
@@ -1786,10 +1793,9 @@
 
     <resolveScopeEnlarger implementation="com.intellij.psi.NonClasspathResolveScopeEnlarger"/>
 
-    <!--TODO [VISTALL] not found  <xdebugger.debuggerSupport implementation="com.intellij.debugger.ui.JavaDebuggerSupport"/>
+    <xdebugger.debuggerSupport implementation="com.intellij.debugger.ui.JavaDebuggerSupport"/>
 
-      <programRunner id="defaultDebugRunner" implementation="com.intellij.debugger.impl.GenericDebuggerRunner" order="last"/>     -->
-
+    <programRunner id="defaultDebugRunner" implementation="com.intellij.debugger.impl.GenericDebuggerRunner" order="last"/>
 
     <itemPresentationProvider forClass="com.intellij.psi.PsiJavaPackage"
                               implementationClass="com.intellij.psi.presentation.java.PackagePresentationProvider"/>
@@ -1803,8 +1809,6 @@
                               implementationClass="com.intellij.psi.presentation.java.VariablePresentationProvider"/>
     <itemPresentationProvider forClass="com.intellij.psi.PsiParameter"
                               implementationClass="com.intellij.psi.presentation.java.VariablePresentationProvider"/>
-
-    <!--TODO [VISTALL] compiler depend    <iconLayerProvider implementation="com.intellij.compiler.CompilerIconLayerProvider"/>  -->
 
     <treeCopyHandler implementation="com.intellij.psi.impl.source.tree.JavaTreeCopyHandler"/>
     <treeGenerator implementation="com.intellij.psi.impl.source.tree.JavaTreeGenerator"/>
@@ -1836,10 +1840,10 @@
 
     <applicationService serviceInterface="com.intellij.psi.impl.file.PsiPackageImplementationHelper"
                         serviceImplementation="com.intellij.psi.impl.file.PsiPackageImplementationHelperImpl"/>
-    <sdkType implementation="com.intellij.openapi.projectRoots.impl.JavaSdkImpl" />
-  <!--  <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>  -->
+    <sdkType implementation="com.intellij.openapi.projectRoots.impl.JavaSdkImpl"/>
+    <!--  <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>  -->
 
-    <compilerProvider implementation="com.intellij.compiler.impl.javaCompiler.JavaCompilerProvider" />
+    <compilerProvider implementation="com.intellij.compiler.impl.javaCompiler.JavaCompilerProvider"/>
   </extensions>
 
 

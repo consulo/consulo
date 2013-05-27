@@ -7,9 +7,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="java-psi-api" exported="" />
-    <orderEntry type="module" module-name="execution-api" exported="" />
-    <orderEntry type="module" module-name="resources-en" />
+    <orderEntry type="module" module-name="java-debugger-api" />
+    <orderEntry type="module" module-name="xdebugger-impl" />
+    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="java-rt" />
   </component>
 </module>
 

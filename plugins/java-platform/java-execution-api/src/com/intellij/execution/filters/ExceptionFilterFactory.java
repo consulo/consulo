@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 7:46 PM
  */
 public interface ExceptionFilterFactory {
-  ExtensionPointName<ExceptionFilterFactory> EP_NAME = ExtensionPointName.create("com.intellij.exceptionFilter");
+  ExtensionPointName<ExceptionFilterFactory> EP_NAME = ExtensionPointName.create("org.consulo.java.exceptionFilter");
 
   @NotNull
   Filter create(@NotNull GlobalSearchScope searchScope);
