@@ -18,7 +18,6 @@ package com.intellij.openapi.compiler.generic;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.builders.BuildTarget;
 
 import java.io.File;
 import java.util.List;

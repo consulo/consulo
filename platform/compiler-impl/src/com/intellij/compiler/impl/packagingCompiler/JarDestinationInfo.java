@@ -30,7 +30,7 @@ public class JarDestinationInfo extends DestinationInfo {
 
   public JarDestinationInfo(final String pathInJar, final JarInfo jarInfo, DestinationInfo jarDestination) {
     super(appendPathInJar(jarDestination.getOutputPath(), pathInJar), jarDestination.getOutputFile(), jarDestination.getOutputFilePath());
-    LOG.assertTrue(!pathInJar.startsWith(".."), pathInJar);
+    LOG.assertTrue(!pathInJar.startsWith(""), pathInJar);
     myPathInJar = StringUtil.startsWithChar(pathInJar, '/') ? pathInJar : "/" + pathInJar;
     myJarInfo = jarInfo;
   }

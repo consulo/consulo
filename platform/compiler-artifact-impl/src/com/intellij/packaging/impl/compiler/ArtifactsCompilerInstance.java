@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.packagingCompiler.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -39,7 +38,10 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactProperties;
@@ -235,7 +237,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         myContext.getProgressIndicator().setFraction(++i * 1.0 / changedItems.size());
         processedItems.add(sourceItem);
         if (testMode) {
-          CompilerManagerImpl.addRecompiledPath(FileUtil.toSystemDependentName(sourceItem.getFile().getPath()));
+          //FIXME [VISTALL] CompilerManagerImpl.addRecompiledPath(FileUtil.toSystemDependentName(sourceItem.getFile().getPath()));
         }
       }
 
@@ -256,7 +258,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         LOG.assertTrue(item != null, source);
         processedItems.add(item);
         if (testMode) {
-          CompilerManagerImpl.addRecompiledPath(FileUtil.toSystemDependentName(item.getFile().getPath()));
+          //FIXME [VISTALL] CompilerManagerImpl.addRecompiledPath(FileUtil.toSystemDependentName(item.getFile().getPath()));
         }
       }
 
@@ -400,7 +402,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         deletedJars.add(filePath);
       }
       if (testMode) {
-        CompilerManagerImpl.addDeletedPath(file.getAbsolutePath());
+        //FIXME [VISTALL] CompilerManagerImpl.addDeletedPath(file.getAbsolutePath());
       }
     }
     else {

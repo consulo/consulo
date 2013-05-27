@@ -27,6 +27,7 @@ public class ExplodedDestinationInfo extends DestinationInfo {
     super(outputPath, outputFile, outputPath);
   }
 
+  @Override
   public String toString() {
     return getOutputPath();
   }

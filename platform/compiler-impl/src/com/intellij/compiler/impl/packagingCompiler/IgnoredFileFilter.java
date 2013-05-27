@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 public class IgnoredFileFilter implements FileFilter {
+    @Override
     public boolean accept(File file) {
       final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
       final String name = file.getName();

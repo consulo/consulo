@@ -1859,12 +1859,10 @@
       <separator/>
       <action id="CompileProject" class="com.intellij.compiler.actions.CompileProjectAction"/>
       <separator/>
-      <action id="GenerateAntBuild" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <!--com.intellij.compiler.actions.GenerateAntBuildAction-->
-      <separator/>
-      <action id="BuildArtifact" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <!--com.intellij.compiler.actions.BuildArtifactAction-->
+      <!--<action id="GenerateAntBuild" class="com.intellij.compiler.actions.GenerateAntBuildAction"/>
 
+      <separator/>  -->
+      <action id="BuildArtifact" class="com.intellij.compiler.actions.BuildArtifactAction"/>
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="RunMenu"/>
     </group>
 
@@ -4565,11 +4563,11 @@
     <orderRootType implementation="com.intellij.openapi.roots.JavadocOrderRootType"/>
 
 
-    <!--TODO [VISTALL] java<stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRun" id="compileBeforeRun"/>
+    <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRun" id="compileBeforeRun"/>
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRunNoErrorCheck"
                             id="compileBeforeRunNoErrorCheck" order="after compileBeforeRun"/>
      <stepsBeforeRunProvider implementation="com.intellij.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
-                            order="after compileBeforeRunNoErrorCheck"/>   -->
+                            order="after compileBeforeRunNoErrorCheck"/>
     <stepsBeforeRunProvider implementation="com.intellij.execution.impl.RunConfigurationBeforeRunProvider"/>
     <!--TODO [VISTALL] java  <programRunner id="defaultRunRunner" implementation="com.intellij.execution.impl.DefaultJavaProgramRunner"/>  -->
 
@@ -5508,7 +5506,7 @@
     <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last" />
     <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last" />
     <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last" />
-    <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultLangPsiElementFactory" order="last" />
+    <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last" />
     <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider" />
   </extensions>
 </idea-plugin>

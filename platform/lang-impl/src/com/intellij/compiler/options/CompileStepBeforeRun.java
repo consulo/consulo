@@ -21,7 +21,6 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOption;
-import com.intellij.execution.remote.RemoteConfiguration;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -84,7 +83,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
   }
 
   public MakeBeforeRunTask createTask(RunConfiguration runConfiguration) {
-    return !(runConfiguration instanceof RemoteConfiguration) && runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption
+    return /*!(runConfiguration instanceof RemoteConfiguration) && */runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption
            ? new MakeBeforeRunTask()
            : null;
   }
