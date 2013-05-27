@@ -109,6 +109,11 @@ public class CoreApplicationEnvironment {
     registerApplicationExtensionPoint(ContentBasedFileSubstitutor.EP_NAME, ContentBasedFileSubstitutor.class);
     registerExtensionPoint(Extensions.getRootArea(), BinaryFileStubBuilders.EP_NAME, FileTypeExtensionPoint.class);
 
+    registerExtensionPoint(Extensions.getRootArea(), ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
+    registerExtensionPoint(Extensions.getRootArea(), ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
+    registerExtensionPoint(Extensions.getRootArea(), ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
+    registerExtensionPoint(Extensions.getRootArea(), PsiElementFactory.EP.getExtensionPointName(), PsiElementFactory.class);
+
     addExtension(ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory(), LoadingOrder.LAST);
     addExtension(ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory(), LoadingOrder.LAST);
     addExtension(ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory(), LoadingOrder.LAST);

@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="consulo-artifacts">
+    <output-path>$PROJECT_DIR$/out/artifacts/core</output-path>
+    <root id="root">
+      <element id="archive" name="consulo-core.jar">
+        <element id="module-output" name="util" />
+        <element id="module-output" name="util-rt" />
+        <element id="module-output" name="boot" />
+        <element id="module-output" name="core-impl" />
+        <element id="module-output" name="core-api" />
+        <element id="module-output" name="extensions" />
+      </element>
+      <element id="library" level="project" name="asm" />
+      <element id="library" level="project" name="cli-parser" />
+      <element id="library" level="project" name="Guava" />
+      <element id="library" level="project" name="picocontainer" />
+      <element id="library" level="project" name="Trove4j" />
+      <element id="archive" name="annotations.jar">
+        <element id="module-output" name="annotations" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -34,6 +34,9 @@
       <option name="BuildArtifacts" enabled="true">
         <artifact name="consulo-dist" />
       </option>
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="consulo-artifacts" />
+      </option>
     </method>
   </configuration>
 </component>
