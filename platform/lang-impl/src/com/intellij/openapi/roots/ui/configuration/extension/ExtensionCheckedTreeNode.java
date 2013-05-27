@@ -101,6 +101,51 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     return myExtension == null || myExtension.isEnabled();
   }
 
+  @Override
+  public boolean isEnabled() {
+    if (myExtension == null) {
+      return true;
+    }
+
+    final ModifiableRootModel rootModel = myState.getRootModel();
+    if (rootModel == null) {
+      return false;
+    }
+
+    final ModuleExtensionProviderEP absoluteParent = findParentWithoutParent(myExtension.getId());
+
+    final ModuleExtension extension = rootModel.getExtension(absoluteParent.getInstance().getImmutableClass());
+    if (extension != null) {
+      return true;
+    }
+
+    // if no nodes checked - it enabled
+    for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+      if (ep.parentKey != null) {
+        continue;
+      }
+      final ModuleExtension tempExtension = rootModel.getExtension(ep.getInstance().getImmutableClass());
+      if (tempExtension != null) {
+        return false;
+      }
+    } return true;
+  }
+
+  @NotNull
+  private static ModuleExtensionProviderEP findParentWithoutParent(String id) {
+    for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
+      if (ep.key.equals(id)) {
+        if (ep.parentKey == null) {
+          return ep;
+        }
+        else {
+          return findParentWithoutParent(ep.parentKey);
+        }
+      }
+    }
+    throw new IllegalArgumentException("Cant find for id: " + id);
+  }
+
   public ModuleExtensionProviderEP getProviderEP() {
     return myProviderEP;
   }
