@@ -221,7 +221,7 @@ public class UnnecessaryFullyQualifiedNameInspection extends BaseInspection {
       }
       final PsiJavaCodeReferenceElement qualifierReference = (PsiJavaCodeReferenceElement)qualifier;
       final PsiElement qualifierTarget = qualifierReference.resolve();
-      if (!(qualifierTarget instanceof PsiPackage)) {
+      if (!(qualifierTarget instanceof PsiJavaPackage)) {
         return;
       }
       final List<PsiJavaCodeReferenceElement> references = new ArrayList(2);

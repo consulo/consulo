@@ -20,8 +20,10 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.*;
+import com.intellij.psi.util.ClassUtil;
 import com.intellij.psi.util.InheritanceUtil;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtil;
 import com.siyeh.HardcodedMethodConstants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -249,10 +251,10 @@ public class ImportUtils {
         continue;
       }
       final PsiElement element = importReference.resolve();
-      if (element == null || !(element instanceof PsiPackage)) {
+      if (element == null || !(element instanceof PsiJavaPackage)) {
         continue;
       }
-      final PsiPackage aPackage = (PsiPackage)element;
+      final PsiJavaPackage aPackage = (PsiJavaPackage)element;
       final PsiClass[] classes = aPackage.getClasses();
       for (final PsiClass aClass : classes) {
         final String className = aClass.getName();
@@ -320,7 +322,7 @@ public class ImportUtils {
     }
     final Project project = file.getProject();
     final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(project);
-    final PsiPackage filePackage = psiFacade.findPackage(filePackageName);
+    final PsiJavaPackage filePackage = psiFacade.findPackage(filePackageName);
     if (filePackage == null) {
       return false;
     }
@@ -342,7 +344,7 @@ public class ImportUtils {
     }
     final Project project = file.getProject();
     final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(project);
-    final PsiPackage javaLangPackage = psiFacade.findPackage(HardcodedMethodConstants.JAVA_LANG);
+    final PsiJavaPackage javaLangPackage = psiFacade.findPackage(HardcodedMethodConstants.JAVA_LANG);
     if (javaLangPackage == null) {
       return false;
     }

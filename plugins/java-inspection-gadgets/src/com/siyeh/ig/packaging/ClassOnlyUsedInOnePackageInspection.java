@@ -20,7 +20,10 @@ import com.intellij.codeInspection.CommonProblemDescriptor;
 import com.intellij.codeInspection.GlobalInspectionContext;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.reference.*;
+import com.intellij.codeInspection.reference.RefClass;
+import com.intellij.codeInspection.reference.RefEntity;
+import com.intellij.codeInspection.reference.RefJavaUtil;
+import com.intellij.codeInspection.reference.RefPackage;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiIdentifier;
 import com.siyeh.InspectionGadgetsBundle;
@@ -42,11 +45,10 @@ public class ClassOnlyUsedInOnePackageInspection extends BaseGlobalInspection {
 
   @Nullable
   @Override
-  public CommonProblemDescriptor[] checkElement(
-    RefEntity refEntity,
-    AnalysisScope scope,
-    InspectionManager manager,
-    GlobalInspectionContext globalContext) {
+  public CommonProblemDescriptor[] checkElement(RefEntity refEntity,
+                                                AnalysisScope scope,
+                                                InspectionManager manager,
+                                                GlobalInspectionContext globalContext) {
     if (!(refEntity instanceof RefClass)) {
       return null;
     }
@@ -95,12 +97,8 @@ public class ClassOnlyUsedInOnePackageInspection extends BaseGlobalInspection {
       return null;
     }
     final String packageName = otherPackage.getName();
-    return new CommonProblemDescriptor[]{
-      manager.createProblemDescriptor(identifier,
-                                      InspectionGadgetsBundle.message(
-                                        "class.only.used.in.one.package.problem.descriptor",
-                                        packageName),
-                                      true, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, false)
-    };
+    return new CommonProblemDescriptor[]{manager.createProblemDescriptor(identifier, InspectionGadgetsBundle
+      .message("class.only.used.in.one.package.problem.descriptor", packageName), true, ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                                                                         false)};
   }
 }

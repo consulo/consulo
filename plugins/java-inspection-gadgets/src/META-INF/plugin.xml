@@ -1,13 +1,11 @@
 <idea-plugin version="2">
-  <name>Inspection Gadgets</name>
+  <name>Java Inspection Gadgets</name>
   <id>InspectionGadgets</id>
   <vendor>JetBrains</vendor>
 
   <category>inspection</category>
   <version>1.0</version>
   <depends>org.consulo.java</depends>
-  <depends>com.intellij.xml</depends>
-
   <resource-bundle>com.siyeh.InspectionGadgetsBundle</resource-bundle>
 
   <extensions xmlns="com.intellij">

@@ -191,6 +191,13 @@
             <element id="file-copy" path="$PROJECT_DIR$/plugins/tasks/tasks-core/lib/commons-discovery-0.4.jar" />
           </element>
         </element>
+        <element id="directory" name="java-inspection-gadgets">
+          <element id="directory" name="lib">
+            <element id="archive" name="java-inspection-gadgets.jar">
+              <element id="module-output" name="java-inspection-gadgets" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
