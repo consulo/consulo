@@ -208,6 +208,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="java-generate-tostring">
+          <element id="directory" name="lib">
+            <element id="archive" name="java-generate-tostring.jar">
+              <element id="module-output" name="java-generate-tostring" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

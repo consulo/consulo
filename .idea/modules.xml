@@ -40,7 +40,6 @@
       <module fileurl="file://$PROJECT_DIR$/platform/external-system-impl/external-system-impl.iml" filepath="$PROJECT_DIR$/platform/external-system-impl/external-system-impl.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/tools/forms-compiler/forms-compiler.iml" filepath="$PROJECT_DIR$/platform/tools/forms-compiler/forms-compiler.iml" group="platform/tools" />
       <module fileurl="file://$PROJECT_DIR$/platform/forms_rt/forms_rt.iml" filepath="$PROJECT_DIR$/platform/forms_rt/forms_rt.iml" group="platform" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/generate-tostring/generate-tostring.iml" filepath="$PROJECT_DIR$/plugins/generate-tostring/generate-tostring.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/git4idea/git4idea.iml" filepath="$PROJECT_DIR$/plugins/git4idea/git4idea.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/plugins/git4idea/rt/git4idea-rt.iml" filepath="$PROJECT_DIR$/plugins/git4idea/rt/git4idea-rt.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/plugins/github/github.iml" filepath="$PROJECT_DIR$/plugins/github/github.iml" group="plugins" />
@@ -61,6 +60,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" filepath="$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-execution-impl/java-execution-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-execution-impl/java-execution-impl.iml" group="plugins/java" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java-generate-tostring/java-generate-tostring.iml" filepath="$PROJECT_DIR$/plugins/java-generate-tostring/java-generate-tostring.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" filepath="$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" group="plugins/java" />
