@@ -44,6 +44,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/git4idea/rt/git4idea-rt.iml" filepath="$PROJECT_DIR$/plugins/git4idea/rt/git4idea-rt.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/plugins/github/github.iml" filepath="$PROJECT_DIR$/plugins/github/github.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/gradle/gradle.iml" filepath="$PROJECT_DIR$/plugins/gradle/gradle.iml" group="plugins" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/groovy/groovy.iml" filepath="$PROJECT_DIR$/plugins/groovy/groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/hg4idea/hg4idea.iml" filepath="$PROJECT_DIR$/plugins/hg4idea/hg4idea.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/platform/icons/icons.iml" filepath="$PROJECT_DIR$/platform/icons/icons.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/images/images.iml" filepath="$PROJECT_DIR$/plugins/images/images.iml" group="plugins" />

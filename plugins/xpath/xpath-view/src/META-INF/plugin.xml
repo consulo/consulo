@@ -28,8 +28,9 @@
   ]]>
   </change-notes>
 
-  <depends>com.intellij.modules.xml</depends>
-  
+  <depends>com.intellij.xml</depends>
+  <depends>org.consulo.java</depends>
+
   <!-- wasn't sure if the plugin manager correctly handles dependent plugins -->
   <!--<depends>XPathLanguage</depends>-->
 
@@ -157,12 +158,15 @@
 
     <psi.referenceContributor language="XML" implementation="org.intellij.lang.xpath.xslt.impl.XsltReferenceContributor$XML"/>
     <psi.referenceContributor language="XPath" implementation="org.intellij.lang.xpath.xslt.impl.XsltReferenceContributor$XPath"/>
-    <standardResourceProvider implementation="org.intellij.lang.xpath.xslt.impl.XsltResourceProvider"/>
     <defaultLiveTemplatesProvider implementation="org.intellij.plugins.xpathView.XPathAppComponent" />
 
     <implicitUsageProvider implementation="org.intellij.lang.xpath.xslt.impl.XsltImplicitUsagesProvider" />
 
     <renameInputValidator implementation="org.intellij.lang.xpath.xslt.impl.XsltRenameInputValidator"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="com.intellij.xml">
+    <standardResourceProvider implementation="org.intellij.lang.xpath.xslt.impl.XsltResourceProvider"/>
   </extensions>
 
   <extensions defaultExtensionNs="XPathView">

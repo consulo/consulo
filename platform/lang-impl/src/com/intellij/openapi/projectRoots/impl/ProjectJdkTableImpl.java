@@ -63,23 +63,20 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
   public ProjectJdkTableImpl() {
     myMessageBus = ApplicationManager.getApplication().getMessageBus();
     myListenerList = new MessageListenerList<Listener>(myMessageBus, JDK_TABLE_TOPIC);
-    // support external changes to jdk libraries (Endorsed Standards Override)
+    // support external changes to sdk libraries (Endorsed Standards Override)
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
       @Override
       public void fileCreated(VirtualFileEvent event) {
-        updateJdks(event.getFile());
+        updateSdks(event.getFile());
       }
 
-      private void updateJdks(VirtualFile file) {
+      private void updateSdks(VirtualFile file) {
         if (file.isDirectory() || !FileTypes.ARCHIVE.equals(file.getFileType())) {
           // consider only archive files that may contain libraries
           return;
         }
         for (Sdk sdk : mySdks) {
           final SdkType sdkType = (SdkType)sdk.getSdkType();
-          if (!(sdkType instanceof JavaSdkType)) {
-            continue;
-          }
           final VirtualFile home = sdk.getHomeDirectory();
           if (home == null) {
             continue;

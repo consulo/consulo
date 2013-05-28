@@ -15,6 +15,7 @@
  */
 package org.intellij.plugins.xpathView.search;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -95,7 +96,7 @@ public class ScopePanel extends JPanel implements Disposable{
           @Override
           public void customize(JList list, Module m, int index, boolean selected, boolean hasFocus) {
             if (m != null) {
-              setIcon(ModuleType.get(m).getIcon());
+              setIcon(AllIcons.Nodes.Module);
               setText(m.getName());
             }
           }

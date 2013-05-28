@@ -215,6 +215,16 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="xpath">
+          <element id="directory" name="lib">
+            <element id="archive" name="xpath.jar">
+              <element id="module-output" name="xpath" />
+            </element>
+            <element id="archive" name="xslt-rt.jar">
+              <element id="module-output" name="xslt-rt" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

@@ -280,7 +280,7 @@ class XsltRunSettingsEditor extends SettingsEditor<XsltRunConfiguration> {
                 return module.getName();
               }
             }));
-            setIcon(ModuleType.get(module).getIcon());
+            setIcon(AllIcons.Nodes.Module);
           }
           else if (value instanceof String) {
             setText((String)value);

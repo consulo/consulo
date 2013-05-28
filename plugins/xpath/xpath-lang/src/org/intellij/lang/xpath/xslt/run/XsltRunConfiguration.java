@@ -32,11 +32,11 @@ import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.*;
@@ -49,6 +49,7 @@ import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.SystemProperties;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.intellij.lang.xpath.xslt.XsltSupport;
 import org.intellij.lang.xpath.xslt.associations.FileAssociationsManager;
 import org.jdom.Element;
@@ -469,11 +470,9 @@ public final class XsltRunConfiguration extends RunConfigurationBase implements 
         Sdk jdk = null;
         final Module module = getEffectiveModule();
         if (module != null) {
-            jdk = ModuleRootManager.getInstance(module).getSdk();
+          jdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
         }
-        if (jdk == null) {
-            jdk = ProjectRootManager.getInstance(getProject()).getProjectSdk();
-        }
+
         // EA-33419
         if (jdk == null || !(jdk.getSdkType() instanceof JavaSdkType)) {
           return getDefaultSdk();
