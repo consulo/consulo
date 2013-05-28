@@ -10,7 +10,7 @@
   <vendor email="sascha.weinreuter@cit.de">Sascha Weinreuter</vendor>
 
   <depends>XPathView</depends>
-  <depends>com.intellij.modules.xml</depends>
+  <depends>com.intellij.xml</depends>
 
   <change-notes>
     Xalan Support. To debug with Xalan instead of SAXON, a supported Xalan version (2.7.x) should be present in the

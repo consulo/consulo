@@ -225,6 +225,25 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="xslt-debugger">
+          <element id="directory" name="lib">
+            <element id="archive" name="xslt-debugger.jar">
+              <element id="module-output" name="xslt-debugger" />
+            </element>
+            <element id="archive" name="xslt-debugger-engine.jar">
+              <element id="module-output" name="xslt-debugger-engine" />
+            </element>
+            <element id="directory" name="rt">
+              <element id="archive" name="xslt-debugger-engine-impl.jar">
+                <element id="module-output" name="xslt-debugger-engine-impl" />
+              </element>
+              <element id="library" level="module" name="Saxon-6.5.5" module-name="xslt-debugger-engine-impl" />
+              <element id="library" level="module" name="Saxon-9HE" module-name="xslt-debugger-engine-impl" />
+              <element id="library" level="module" name="Xalan-2.7.1" module-name="xslt-debugger-engine-impl" />
+            </element>
+            <element id="library" level="module" name="RMI Stubs" module-name="xslt-debugger-engine" />
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
