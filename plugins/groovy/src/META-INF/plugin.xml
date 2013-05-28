@@ -210,13 +210,16 @@
     <debuggerClassFilterProvider implementation="org.jetbrains.plugins.groovy.debugger.filters.GroovyDebuggerClassFilterProvider"/>
     <debuggerEditorTextProvider language="Groovy" implementationClass="org.jetbrains.plugins.groovy.debugger.GroovyEditorTextProvider"/>
 
-    <directClassInheritorsSearch implementation="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyDirectInheritorsSearcher"/>
-
     <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.lang.psi.GroovyDeclarationSearcher"/>
     <elementFinder implementation="org.jetbrains.plugins.groovy.lang.psi.impl.javaView.GroovyClassFinder"/>
     <elementFinder implementation="org.jetbrains.plugins.groovy.gant.GantClassFinder"/>
     <java.shortNamesCache implementation="org.jetbrains.plugins.groovy.lang.stubs.GroovyShortNamesCache"/>
+    <generation.topLevelFactory language="Groovy" implementationClass="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyFactoryProvider"/>
 
+  </extensions>
+
+  <extensions defaultExtensionNs="org.consulo.java.platform">
+    <directClassInheritorsSearch implementation="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyDirectInheritorsSearcher"/>
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij.properties">
@@ -513,8 +516,6 @@
     <stacktrace.fold substring="at org.codehaus.groovy.runtime.DefaultGroovyMethodsSupport." negate="true"/>
 
     <projectStructureDetector implementation="org.jetbrains.plugins.groovy.GroovySourceRootDetector" id="groovyDetector"/>
-
-    <generation.topLevelFactory language="Groovy" implementationClass="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyFactoryProvider"/>
 
     <postStartupActivity implementation="org.jetbrains.plugins.groovy.mvc.MvcProjectWithoutLibraryNotificator"/>
 
