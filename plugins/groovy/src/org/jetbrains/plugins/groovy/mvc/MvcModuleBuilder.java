@@ -15,21 +15,11 @@
  */
 package org.jetbrains.plugins.groovy.mvc;
 
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.SdkSettingsStep;
-import com.intellij.ide.util.projectWizard.SettingsStep;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.groovy.config.GroovyAwareModuleBuilder;
-
-import javax.swing.*;
-
 /**
  * @author peter
  */
-public class MvcModuleBuilder extends GroovyAwareModuleBuilder {
-  private final MvcFramework myFramework;
+public class MvcModuleBuilder/** extends GroovyAwareModuleBuilder*/ {
+ /* private final MvcFramework myFramework;
 
   protected MvcModuleBuilder(MvcFramework framework, Icon bigIcon) {
     super(framework.getFrameworkName(), framework.getDisplayName() + " Module",
@@ -51,5 +41,5 @@ public class MvcModuleBuilder extends GroovyAwareModuleBuilder {
             return isSuitableSdkType(sdkType);
           }
         });
-  }
+  }  */
 }

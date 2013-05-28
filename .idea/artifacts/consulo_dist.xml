@@ -244,6 +244,26 @@
             <element id="library" level="module" name="RMI Stubs" module-name="xslt-debugger-engine" />
           </element>
         </element>
+        <element id="directory" name="groovy">
+          <element id="directory" name="lib">
+            <element id="archive" name="groovy.jar">
+              <element id="module-output" name="groovy" />
+            </element>
+            <element id="archive" name="groovy-spellchecker.jar">
+              <element id="module-output" name="groovy-spellchecker" />
+            </element>
+            <element id="archive" name="groovy-copyright.jar">
+              <element id="module-output" name="groovy-copyright" />
+            </element>
+            <element id="archive" name="groovy-jps-plugin.jar">
+              <element id="module-output" name="groovy-jps-plugin" />
+            </element>
+            <element id="archive" name="groovy-rt.jar">
+              <element id="module-output" name="groovy-rt-constants" />
+              <element id="module-output" name="groovy-rt" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

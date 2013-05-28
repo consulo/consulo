@@ -111,7 +111,7 @@ public class GrKindWeigher extends CompletionWeigher {
       if (o instanceof PsiMember) {
         final PsiClass containingClass = ((PsiMember)o).getContainingClass();
         if (isAccessor((PsiMember)o)) return NotQualifiedKind.accessor;
-        if (o instanceof PsiClass && ((PsiClass)o).getContainingClass() == null || o instanceof PsiPackage) return NotQualifiedKind.unknown;
+        if (o instanceof PsiClass && ((PsiClass)o).getContainingClass() == null || o instanceof PsiJavaPackage) return NotQualifiedKind.unknown;
         if (o instanceof PsiClass) return NotQualifiedKind.innerClass;
         if (PsiTreeUtil.isContextAncestor(containingClass, position, false)) return NotQualifiedKind.currentClassMember;
         return NotQualifiedKind.member;
@@ -128,7 +128,7 @@ public class GrKindWeigher extends CompletionWeigher {
         if (isQualifierClassMember((PsiMember)o, qualifier)) {
           return QualifiedKind.currentClassMember;
         }
-        if (o instanceof PsiClass && ((PsiClass)o).getContainingClass() == null || o instanceof PsiPackage) return QualifiedKind.unknown;
+        if (o instanceof PsiClass && ((PsiClass)o).getContainingClass() == null || o instanceof PsiJavaPackage) return QualifiedKind.unknown;
         if (o instanceof PsiClass) return QualifiedKind.innerClass;
         return QualifiedKind.member;
       }

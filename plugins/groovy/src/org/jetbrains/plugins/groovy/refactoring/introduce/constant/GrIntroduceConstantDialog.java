@@ -399,7 +399,7 @@ public class GrIntroduceConstantDialog extends DialogWrapper
       if (targetClass != null) return targetClass;
 
       final String packageName = StringUtil.getPackageName(qualifiedName);
-      PsiPackage psiPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
+      PsiJavaPackage psiPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
       final PsiDirectory psiDirectory;
       if (psiPackage != null) {
         final PsiDirectory[] directories = psiPackage.getDirectories(GlobalSearchScope.allScope(project));

@@ -30,6 +30,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -57,11 +58,11 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
-import org.jetbrains.plugins.groovy.config.GroovyLibraryDescription;
 import org.jetbrains.plugins.groovy.lang.psi.util.GroovyCommonClassNames;
 import org.jetbrains.plugins.groovy.refactoring.GroovyNamesUtil;
 
@@ -89,9 +90,6 @@ public abstract class MvcFramework {
     return isCommonPluginsModule(module) || isGlobalPluginModule(module);
   }
 
-  public GroovyLibraryDescription createLibraryDescription() {
-    return new GroovyLibraryDescription(getSdkHomePropertyName(), getLibraryKind(), getDisplayName());
-  }
 
   public boolean hasFrameworkJar(@NotNull Module module) {
     GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, false);
@@ -127,7 +125,7 @@ public abstract class MvcFramework {
 
   public void createApplicationIfNeeded(@NotNull final Module module) {
     if (findAppRoot(module) == null && module.getUserData(CREATE_APP_STRUCTURE) == Boolean.TRUE) {
-      while (ModuleRootManager.getInstance(module).getSdk() == null) {
+      while (ModuleUtilCore.getSdk(module, JavaModuleExtension.class) == null) {
         if (Messages.showYesNoDialog(module.getProject(), "Cannot generate " + getDisplayName() + " project structure because JDK is not specified for module \"" +
                                                           module.getName() + "\".\n" +
                                                           getDisplayName() + " project will not be created if you don't specify JDK.\nDo you want to specify JDK?",
@@ -400,7 +398,7 @@ public abstract class MvcFramework {
   }
 
   public static void addJavaHome(@NotNull JavaParameters params, @NotNull Module module) {
-    final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
     if (sdk != null && sdk.getSdkType() instanceof JavaSdkType) {
       String path = StringUtil.trimEnd(sdk.getHomePath(), File.separator);
       if (StringUtil.isNotEmpty(path)) {

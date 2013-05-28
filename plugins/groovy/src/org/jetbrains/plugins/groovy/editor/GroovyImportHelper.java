@@ -91,14 +91,14 @@ public class GroovyImportHelper {
     final DelegatingScopeProcessor packageSkipper = new DelegatingScopeProcessor(processor) {
       @Override
       public boolean execute(@NotNull PsiElement element, ResolveState state) {
-        if (element instanceof PsiPackage) return true;
+        if (element instanceof PsiJavaPackage) return true;
         return super.execute(element, state);
       }
     };
 
 
     for (final String implicitlyImported : getImplicitlyImportedPackages(file)) {
-      PsiPackage aPackage = facade.findPackage(implicitlyImported);
+      PsiJavaPackage aPackage = facade.findPackage(implicitlyImported);
       if (aPackage == null) continue;
 
       if (!aPackage.processDeclarations(packageSkipper, state, lastParent, place)) {

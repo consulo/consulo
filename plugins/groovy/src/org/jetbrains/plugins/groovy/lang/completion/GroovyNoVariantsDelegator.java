@@ -103,7 +103,7 @@ public class GroovyNoVariantsDelegator extends CompletionContributor {
       return;
     }
     PsiElement target = ((GrReferenceElement)qualifier).resolve();
-    if (target != null && !(target instanceof PsiPackage)) {
+    if (target != null && !(target instanceof PsiJavaPackage)) {
       return;
     }
 

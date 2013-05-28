@@ -167,7 +167,7 @@ public class GroovyInsertHandler implements InsertHandler<LookupElement> {
       return;
     }
 
-    if (obj instanceof PsiPackage) {
+    if (obj instanceof PsiJavaPackage) {
       AutoPopupController.getInstance(context.getProject()).scheduleAutoPopup(context.getEditor(), null);
     }
   }

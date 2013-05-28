@@ -11,9 +11,7 @@ import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentation
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainerFactory;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ParameterizedRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.config.GroovyLibraryDescription;
 
 import java.util.Arrays;
 
@@ -23,7 +21,7 @@ import java.util.Arrays;
 public class MvcUpgradeAction extends MvcActionBase {
   @Override
   protected void actionPerformed(@NotNull AnActionEvent e, @NotNull final Module module, @NotNull final MvcFramework framework) {
-    final GroovyLibraryDescription description = framework.createLibraryDescription();
+   /*final GroovyLibraryDescription description = framework.createLibraryDescription();
     final AddCustomLibraryDialog dialog = AddCustomLibraryDialog.createDialog(description, module, new ParameterizedRunnable<ModifiableRootModel>() {
         @Override
         public void run(ModifiableRootModel modifiableRootModel) {
@@ -36,7 +34,7 @@ public class MvcUpgradeAction extends MvcActionBase {
     if (dialog.isOK()) {
       module.putUserData(MvcFramework.UPGRADE, Boolean.TRUE);
       module.putUserData(MvcModuleStructureUtil.LAST_MVC_VERSION, null);
-    }
+    } */
   }
 
   private static void removeOldMvcSdk(MvcFramework framework, ModifiableRootModel model) {

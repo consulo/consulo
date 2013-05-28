@@ -121,7 +121,7 @@ public class StaticChecker {
       }
 
       PsiElement qualifierResolved = ((GrReferenceExpression)qualifier).resolve();
-      if (qualifierResolved instanceof PsiClass || qualifierResolved instanceof PsiPackage) { //static context
+      if (qualifierResolved instanceof PsiClass || qualifierResolved instanceof PsiJavaPackage) { //static context
         if (member instanceof PsiClass) {
           return true;
         }

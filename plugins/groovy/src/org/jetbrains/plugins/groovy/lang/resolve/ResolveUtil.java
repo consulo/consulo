@@ -861,7 +861,7 @@ public class ResolveUtil {
     PsiFile file = place.getContainingFile();
     PsiDirectory psiDirectory = file.getContainingDirectory();
     if (psiDirectory != null && file instanceof GroovyFile) {
-      PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
+      PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
       if (aPackage != null) {
         return aPackage.getQualifiedName();
       }
@@ -906,7 +906,7 @@ public class ResolveUtil {
     GrExpression qualifier = ref.getQualifier();
     if (qualifier instanceof GrReferenceExpression) {
       final PsiElement resolvedQualifier = ((GrReferenceExpression)qualifier).resolve();
-      return resolvedQualifier instanceof PsiClass || resolvedQualifier instanceof PsiPackage;
+      return resolvedQualifier instanceof PsiClass || resolvedQualifier instanceof PsiJavaPackage;
     }
     else {
       return qualifier == null;

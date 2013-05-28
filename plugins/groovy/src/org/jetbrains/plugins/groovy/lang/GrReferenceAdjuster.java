@@ -192,7 +192,7 @@ public class GrReferenceAdjuster {
       if (qualifier instanceof GrReferenceExpression && PsiUtil.isThisReference(qualifier)) return true;
       if (qualifier instanceof GrReferenceExpression && seemsToBeQualifiedClassName((GrExpression)qualifier)) {
         final PsiElement resolved = ((GrReferenceExpression)qualifier).resolve();
-        if (resolved instanceof PsiClass || resolved instanceof PsiPackage) return true;
+        if (resolved instanceof PsiClass || resolved instanceof PsiJavaPackage) return true;
       }
     }
     return false;

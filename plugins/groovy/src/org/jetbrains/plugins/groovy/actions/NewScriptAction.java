@@ -18,8 +18,6 @@ package org.jetbrains.plugins.groovy.actions;
 
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
 import com.intellij.ide.actions.JavaCreateTemplateInPackageAction;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
@@ -31,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.GroovyBundle;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
-import org.jetbrains.plugins.groovy.util.LibrariesUtil;
 
 public class NewScriptAction extends JavaCreateTemplateInPackageAction<GroovyFile> implements DumbAware {
 
@@ -46,11 +43,6 @@ public class NewScriptAction extends JavaCreateTemplateInPackageAction<GroovyFil
       .setTitle(GroovyBundle.message("newscript.dlg.prompt"))
       .addKind("Groovy script", JetgroovyIcons.Groovy.Groovy_16x16, GroovyTemplates.GROOVY_SCRIPT)
       .addKind("GroovyDSL script", JetgroovyIcons.Groovy.Groovy_16x16, GroovyTemplates.GROOVY_DSL_SCRIPT);
-  }
-
-  @Override
-  protected boolean isAvailable(DataContext dataContext) {
-    return super.isAvailable(dataContext) && LibrariesUtil.hasGroovySdk(LangDataKeys.MODULE.getData(dataContext));
   }
 
   @Override

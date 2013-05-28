@@ -16,7 +16,7 @@
 
 package org.jetbrains.plugins.groovy.compiler;
 
-import com.intellij.compiler.impl.javaCompiler.ModuleChunk;
+import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.util.PathsList;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.NotNull;

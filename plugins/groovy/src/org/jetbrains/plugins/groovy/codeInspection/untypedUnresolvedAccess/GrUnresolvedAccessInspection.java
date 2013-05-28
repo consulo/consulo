@@ -118,7 +118,7 @@ public class GrUnresolvedAccessInspection extends GroovySuppressableInspectionTo
   }
 
   private static boolean isRefToPackage(GrExpression expr) {
-    return expr instanceof GrReferenceExpression && ((GrReferenceExpression)expr).resolve() instanceof PsiPackage;
+    return expr instanceof GrReferenceExpression && ((GrReferenceExpression)expr).resolve() instanceof PsiJavaPackage;
   }
 
   @Nullable

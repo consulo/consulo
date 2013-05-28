@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.IconUtil;
 import org.jetbrains.plugins.groovy.doc.GroovyDocConfiguration;
 
@@ -46,9 +46,9 @@ public class GroovyDocAddPackageAction extends AnAction implements DumbAware {
     PackageChooserDialog chooser = new PackageChooserDialog("Choose packages", project);
     chooser.show();
 
-    final List<PsiPackage> packages = chooser.getSelectedPackages();
+    final List<PsiJavaPackage> packages = chooser.getSelectedPackages();
 
-    for (PsiPackage aPackage : packages) {
+    for (PsiJavaPackage aPackage : packages) {
       final String qualifiedName = aPackage.getQualifiedName();
 
       if (qualifiedName.isEmpty()){

@@ -434,7 +434,7 @@ public class GroovyCompletionContributor extends CompletionContributor {
         consumer.consume(LookupElementBuilder.create(string).withItemTextUnderlined(true));
       }
       if (parameters.getInvocationCount() < 2 && qualifier != null && qualifierType == null &&
-          !(qualifier instanceof GrReferenceExpression && ((GrReferenceExpression)qualifier).resolve() instanceof PsiPackage)) {
+          !(qualifier instanceof GrReferenceExpression && ((GrReferenceExpression)qualifier).resolve() instanceof PsiJavaPackage)) {
         if (parameters.getInvocationCount() == 1) {
           showInfo();
         }

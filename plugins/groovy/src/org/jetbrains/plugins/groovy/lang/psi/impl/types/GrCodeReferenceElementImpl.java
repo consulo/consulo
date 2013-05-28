@@ -30,6 +30,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.lang.completion.GroovyCompletionUtil;
@@ -321,7 +322,7 @@ public class GrCodeReferenceElementImpl extends GrReferenceElementImpl<GrCodeRef
         LOG.assertTrue(refText != null, this.getText());
 
         String parentPackageFQName = StringUtil.getPackageName(refText);
-        final PsiPackage parentPackage = JavaPsiFacade.getInstance(getProject()).findPackage(parentPackageFQName);
+        final PsiJavaPackage parentPackage = JavaPsiFacade.getInstance(getProject()).findPackage(parentPackageFQName);
         if (parentPackage != null) {
           final GlobalSearchScope scope = getResolveScope();
           if (kind == PACKAGE_FQ) {
@@ -354,8 +355,8 @@ public class GrCodeReferenceElementImpl extends GrReferenceElementImpl<GrCodeRef
         GrCodeReferenceElement qualifier = getQualifier();
         if (qualifier != null) {
           PsiElement qualifierResolved = qualifier.resolve();
-          if (qualifierResolved instanceof PsiPackage) {
-            PsiPackage aPackage = (PsiPackage)qualifierResolved;
+          if (qualifierResolved instanceof PsiJavaPackage) {
+            PsiJavaPackage aPackage = (PsiJavaPackage)qualifierResolved;
             for (PsiClass aClass : aPackage.getClasses(getResolveScope())) {
               feedLookupElements(aClass, afterNew, consumer, matcher);
             }
@@ -505,8 +506,8 @@ public class GrCodeReferenceElementImpl extends GrReferenceElementImpl<GrCodeRef
           GrCodeReferenceElement qualifier = ref.getQualifier();
           if (qualifier != null) {
             PsiElement qualifierResolved = qualifier.resolve();
-            if (qualifierResolved instanceof PsiPackage) {
-              for (final PsiClass aClass : ((PsiPackage)qualifierResolved).getClasses(ref.getResolveScope())) {
+            if (qualifierResolved instanceof PsiJavaPackage) {
+              for (final PsiClass aClass : ((PsiJavaPackage)qualifierResolved).getClasses(ref.getResolveScope())) {
                 if (refName.equals(aClass.getName())) {
                   boolean isAccessible = PsiUtil.isAccessible(ref, aClass);
                   return new GroovyResolveResult[]{new GroovyResolveResultImpl(aClass, isAccessible)};
@@ -514,8 +515,8 @@ public class GrCodeReferenceElementImpl extends GrReferenceElementImpl<GrCodeRef
               }
 
               if (kind == CLASS_OR_PACKAGE) {
-                final String fqName = ((PsiPackage)qualifierResolved).getQualifiedName() + "." + refName;
-                final PsiPackage aPackage = JavaPsiFacade.getInstance(ref.getProject()).findPackage(fqName);
+                final String fqName = ((PsiJavaPackage)qualifierResolved).getQualifiedName() + "." + refName;
+                final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(ref.getProject()).findPackage(fqName);
                 if (aPackage != null) return new GroovyResolveResult[]{new GroovyResolveResultImpl(aPackage, true)};
               }
             }

@@ -20,12 +20,13 @@
   <description>Plugin for Groovy language support, including Groovy++, Grape, Gant and Griffon</description>
   <version>9.0</version>
   <vendor>JetBrains</vendor>
+  <depends optional="true" config-file="com.intellij.spellchecker.xml">com.intellij.spellchecker</depends>
   <depends>com.intellij.properties</depends>
   <depends>org.consulo.java</depends>
   <depends>com.intellij.xml</depends>
   <depends>com.intellij.xml.dom</depends>
 
-  <depends optional="true" config-file="groovy-copyright.xml">com.intellij.copyright</depends>
+  <depends optional="true" config-file="com.intellij.copyright.xml">com.intellij.copyright</depends>
   <depends optional="true" config-file="intellilang-groovy-support.xml">org.intellij.intelliLang</depends>
   <depends optional="true">AntSupport</depends>
   <depends optional="true">cucumber</depends>
@@ -180,31 +181,13 @@
     <customAnnotationChecker implementation="org.jetbrains.plugins.groovy.annotator.TypeCheckedAnnotationChecker"/>
   </extensions>
 
-  <extensions defaultExtensionNs="com.intellij.properties">
-    <implicitPropertyUsageProvider implementation="org.jetbrains.plugins.groovy.dgm.DGMImplicitPropertyUsageProvider"/>
-  </extensions>
-
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="org.consulo.java">
     <psi.clsCustomNavigationPolicy implementation="org.jetbrains.plugins.groovy.codeInsight.GroovyClsCustomNavigationPolicy"/>
-
-    <moduleBuilder builderClass="org.jetbrains.plugins.groovy.config.GroovyAwareModuleBuilder"/>
-
-    <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.geb.GebContentDeclarationSearcher"/>
-
-    <itemPresentationProvider forClass="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyFileImpl"
-                              implementationClass="org.jetbrains.plugins.groovy.findUsages.GrFileItemPresentationProvider"/>
-
-    <testFramework implementation="org.jetbrains.plugins.groovy.testIntegration.GroovyTestFramework" order="first"/>
-    <testCreator language="Groovy" implementationClass="com.intellij.testIntegration.JavaTestCreator"/>
     <testGenerator language="Groovy" implementationClass="org.jetbrains.plugins.groovy.testIntegration.GroovyTestGenerator"/>
     <constructorBodyGenerator language="Groovy"
                               implementationClass="org.jetbrains.plugins.groovy.annotator.intentions.dynamic.GrConstructorBodyGenerator"/>
-    <editorNotificationProvider implementation="org.jetbrains.plugins.groovy.annotator.ConfigureGroovyLibraryNotificationProvider"/>
     <refactoring.introduceParameterMethodUsagesProcessor
         implementation="org.jetbrains.plugins.groovy.refactoring.introduce.parameter.java2groovy.GroovyIntroduceParameterMethodUsagesProcessor"/>
-    <refactoring.changeSignatureUsageProcessor
-        implementation="org.jetbrains.plugins.groovy.refactoring.changeSignature.GrChangeSignatureUsageProcessor" id="groovyProcessor"
-        order="before javaProcessor"/>
     <safeDelete.importSearcher implementation="org.jetbrains.plugins.groovy.refactoring.safeDelete.GroovyImportSearcher"/>
     <refactoring.safeDelete.JavaSafeDeleteDelegate implementationClass="org.jetbrains.plugins.groovy.refactoring.safeDelete.JavaSafeDeleteDelegateForGroovy" language="Groovy"/>
 
@@ -217,6 +200,45 @@
                          implementationClass="org.jetbrains.plugins.groovy.refactoring.introduce.parameter.GroovyExpressionConverter"/>
 
     <codeInsight.createFieldFromUsageHelper language="Groovy" implementationClass="org.jetbrains.plugins.groovy.annotator.intentions.GroovyCreateFieldFromUsageHelper"/>
+    <methodImplementor implementation="org.jetbrains.plugins.groovy.overrideImplement.GroovyMethodImplementor"/>
+    <refactoring.moveClassHandler implementation="org.jetbrains.plugins.groovy.refactoring.move.MoveGroovyClassHandler"/>
+    <refactoring.moveClassToInnerHandler implementation="org.jetbrains.plugins.groovy.refactoring.move.GroovyMoveClassToInnerHandler"/>
+    <refactoring.moveMemberHandler language="Groovy"
+                                   implementationClass="org.jetbrains.plugins.groovy.refactoring.move.MoveGroovyMemberHandler"/>
+    <topLevelClassProvider implementation="org.jetbrains.plugins.groovy.debugger.GroovyTopLevelParentClassProvider"/>
+
+    <debuggerClassFilterProvider implementation="org.jetbrains.plugins.groovy.debugger.filters.GroovyDebuggerClassFilterProvider"/>
+    <debuggerEditorTextProvider language="Groovy" implementationClass="org.jetbrains.plugins.groovy.debugger.GroovyEditorTextProvider"/>
+
+    <directClassInheritorsSearch implementation="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyDirectInheritorsSearcher"/>
+
+    <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.lang.psi.GroovyDeclarationSearcher"/>
+    <elementFinder implementation="org.jetbrains.plugins.groovy.lang.psi.impl.javaView.GroovyClassFinder"/>
+    <elementFinder implementation="org.jetbrains.plugins.groovy.gant.GantClassFinder"/>
+    <java.shortNamesCache implementation="org.jetbrains.plugins.groovy.lang.stubs.GroovyShortNamesCache"/>
+
+  </extensions>
+
+  <extensions defaultExtensionNs="com.intellij.properties">
+    <implicitPropertyUsageProvider implementation="org.jetbrains.plugins.groovy.dgm.DGMImplicitPropertyUsageProvider"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <moduleExtensionProvider key="groovy" parent-key="java" implementationClass="org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtensionProvider" />
+
+    <moduleBuilder builderClass="org.jetbrains.plugins.groovy.config.GroovyAwareModuleBuilder"/>
+
+    <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.geb.GebContentDeclarationSearcher"/>
+
+    <itemPresentationProvider forClass="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyFileImpl"
+                              implementationClass="org.jetbrains.plugins.groovy.findUsages.GrFileItemPresentationProvider"/>
+
+    <testFramework implementation="org.jetbrains.plugins.groovy.testIntegration.GroovyTestFramework" order="first"/>
+    <testCreator language="Groovy" implementationClass="com.intellij.testIntegration.JavaTestCreator"/>
+    <editorNotificationProvider implementation="org.jetbrains.plugins.groovy.annotator.ConfigureGroovyLibraryNotificationProvider"/>
+    <refactoring.changeSignatureUsageProcessor
+        implementation="org.jetbrains.plugins.groovy.refactoring.changeSignature.GrChangeSignatureUsageProcessor" id="groovyProcessor"
+        order="before javaProcessor"/>
 
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <fileTypeFactory implementation="org.jetbrains.plugins.groovy.GroovyFileTypeLoader"/>
@@ -232,11 +254,8 @@
     <projectService serviceInterface="org.jetbrains.plugins.groovy.gant.GantSettings"
                     serviceImplementation="org.jetbrains.plugins.groovy.gant.GantSettings"/>
 
-    <spellchecker.support language="Groovy"
-                          implementationClass="org.jetbrains.plugins.groovy.codeInspection.spellchecker.GroovySpellcheckingStrategy"/>
 
     <colorSettingsPage implementation="org.jetbrains.plugins.groovy.highlighter.GroovyColorsAndFontsPage"/>
-    <framework.type implementation="org.jetbrains.plugins.groovy.config.GroovyFrameworkType"/>
     <renameHandler implementation="org.jetbrains.plugins.groovy.refactoring.rename.PropertyRenameHandler"/>
     <renamePsiElementProcessor id="groovyFieldRenameProcessor"
                                implementation="org.jetbrains.plugins.groovy.refactoring.rename.RenameGrFieldProcessor"
@@ -328,18 +347,13 @@
     <codeInsight.implementMethod language="Groovy"
                                  implementationClass="org.jetbrains.plugins.groovy.overrideImplement.GroovyImplementMethodsHandler"/>
 
-    <methodImplementor implementation="org.jetbrains.plugins.groovy.overrideImplement.GroovyMethodImplementor"/>
     <codeInsight.parameterInfo language="Groovy" implementationClass="org.jetbrains.plugins.groovy.lang.parameterInfo.GroovyParameterInfoHandler"/>
     <codeInsight.parameterInfo language="Groovy" implementationClass="org.jetbrains.plugins.groovy.lang.parameterInfo.GroovyAnnotationAttributeInfoHandler"/>
     <codeInsight.parameterInfo language="Groovy" implementationClass="org.jetbrains.plugins.groovy.lang.parameterInfo.GroovyTypeParameterInfoHandler"/>
     <refactoring.inlineHandler language="Groovy" implementationClass="org.jetbrains.plugins.groovy.refactoring.inline.GroovyInlineHandler"/>
     <inlineActionHandler implementation="org.jetbrains.plugins.groovy.refactoring.inline.GroovyInlineLocalHandler"/>
-
-    <refactoring.moveClassHandler implementation="org.jetbrains.plugins.groovy.refactoring.move.MoveGroovyClassHandler"/>
-    <refactoring.moveClassToInnerHandler implementation="org.jetbrains.plugins.groovy.refactoring.move.GroovyMoveClassToInnerHandler"/>
     <moveFileHandler implementation="org.jetbrains.plugins.groovy.refactoring.move.MoveGroovyFileHandler"/>
-    <refactoring.moveMemberHandler language="Groovy"
-                                   implementationClass="org.jetbrains.plugins.groovy.refactoring.move.MoveGroovyMemberHandler"/>
+
 
     <refactoring.helper implementation="org.jetbrains.plugins.groovy.refactoring.GroovyImportOptimizerRefactoringHelper"/>
     <codeInsight.lineMarkerProvider language="Groovy"
@@ -380,13 +394,8 @@
     <weigher key="proximity" implementationClass="org.jetbrains.plugins.groovy.lang.completion.weighers.GrReferenceListWeigher"
              id="groovyReferenceListWeigher" order="before openedInEditor"/>
 
-    <topLevelClassProvider implementation="org.jetbrains.plugins.groovy.debugger.GroovyTopLevelParentClassProvider"/>
-
-    <debuggerClassFilterProvider implementation="org.jetbrains.plugins.groovy.debugger.filters.GroovyDebuggerClassFilterProvider"/>
 
     <useScopeEnlarger implementation="org.jetbrains.plugins.groovy.lang.psi.impl.search.GrPrivateFieldScopeEnlarger"/>
-
-    <debuggerEditorTextProvider language="Groovy" implementationClass="org.jetbrains.plugins.groovy.debugger.GroovyEditorTextProvider"/>
 
     <xdebugger.settings implementation="org.jetbrains.plugins.groovy.debugger.filters.GroovyDebuggerSettings"/>
     <langCodeStyleSettingsProvider implementation="org.jetbrains.plugins.groovy.codeStyle.GroovyLanguageCodeStyleSettingsProvider"/>
@@ -401,9 +410,6 @@
     <lang.elementManipulator forClass="org.jetbrains.plugins.groovy.lang.psi.api.statements.arguments.GrArgumentLabel"
                              implementationClass="org.jetbrains.plugins.groovy.lang.psi.impl.statements.arguments.GrArgumentLabelManipulator"/>
 
-    <directClassInheritorsSearch implementation="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyDirectInheritorsSearcher"/>
-
-    <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.lang.psi.GroovyDeclarationSearcher"/>
 
     <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.spock.SpockPomDeclarationSearcher"/>
 
@@ -471,7 +477,6 @@
 
     <antCustomCompiler implementation="org.jetbrains.plugins.groovy.ant.GroovyAntCustomCompilerProvider"/>
 
-    <project.converterProvider implementation="org.jetbrains.plugins.groovy.config.GroovyModuleConverterProvider"/>
     <project.converterProvider implementation="org.jetbrains.plugins.groovy.config.GroovyRunConfigurationConverterProvider"/>
 
     <iconProvider implementation="org.jetbrains.plugins.groovy.GroovyIconProvider"/>
@@ -487,9 +492,6 @@
 
     <resolveScopeProvider implementation="org.jetbrains.plugins.groovy.lang.resolve.GroovyResolveScopeProvider"/>
 
-    <java.elementFinder implementation="org.jetbrains.plugins.groovy.lang.psi.impl.javaView.GroovyClassFinder"/>
-    <java.elementFinder implementation="org.jetbrains.plugins.groovy.gant.GantClassFinder"/>
-    <java.shortNamesCache implementation="org.jetbrains.plugins.groovy.lang.stubs.GroovyShortNamesCache"/>
 
     <projectService serviceInterface="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyPsiManager"
                     serviceImplementation="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyPsiManager"/>

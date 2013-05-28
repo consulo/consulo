@@ -24,7 +24,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.StdModuleTypes;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -46,6 +46,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -84,8 +86,8 @@ public class MvcModuleStructureUtil {
 
     Map<VirtualFile, Boolean> sourceRoots = new HashMap<VirtualFile, Boolean>();
     for (ContentEntry entry : moduleRootManager.getContentEntries()) {
-      for (SourceFolder folder : entry.getSourceFolders()) {
-        sourceRoots.put(folder.getFile(), folder.isTestSource());
+      for (ContentFolder folder : entry.getFolders(ContentFolderType.SOURCE, ContentFolderType.TEST)) {
+        sourceRoots.put(folder.getFile(), folder.getType() == ContentFolderType.TEST);
       }
     }
 
@@ -109,7 +111,7 @@ public class MvcModuleStructureUtil {
       if (src != null && moduleRootManager.getFileIndex().isInContent(src)) {
         actions.add(new Consumer<ContentEntry>() {
           public void consume(ContentEntry contentEntry) {
-            contentEntry.addExcludeFolder(src);
+            contentEntry.addFolder(src, ContentFolderType.EXCLUDED);
           }
         });
       }
@@ -144,10 +146,10 @@ public class MvcModuleStructureUtil {
     if (sourceRoots.containsKey(file)) {
       actions.add(new Consumer<ContentEntry>() {
         public void consume(ContentEntry contentEntry) {
-          SourceFolder[] folders = contentEntry.getSourceFolders();
-          for (SourceFolder folder : folders) {
+          ContentFolder[] folders = contentEntry.getFolders();
+          for (ContentFolder folder : folders) {
             if (Comparing.equal(folder.getFile(), file)) {
-              contentEntry.removeSourceFolder(folder);
+              contentEntry.removeFolder(folder);
             }
           }
         }
@@ -216,10 +218,10 @@ public class MvcModuleStructureUtil {
         actions.add(new Consumer<ContentEntry>() {
           @Override
           public void consume(ContentEntry entry) {
-            for (SourceFolder folder : entry.getSourceFolders()) {
+            for (ContentFolder folder : entry.getFolders()) {
               if (Comparing.equal(folder.getFile(), src)) {
-                entry.removeSourceFolder(folder);
-                entry.addSourceFolder(src, isTest, "");
+                entry.removeFolder(folder);
+                entry.addFolder(src, ContentFolderType.TEST);
                 break;
               }
             }
@@ -231,7 +233,7 @@ public class MvcModuleStructureUtil {
 
     actions.add(new Consumer<ContentEntry>() {
       public void consume(ContentEntry contentEntry) {
-        contentEntry.addSourceFolder(src, isTest, "");
+        contentEntry.addFolder(src, isTest ? ContentFolderType.TEST : ContentFolderType.SOURCE);
       }
     });
   }
@@ -344,7 +346,7 @@ public class MvcModuleStructureUtil {
   }
 
   private static void removeInvalidSourceRoots(List<Consumer<ModifiableRootModel>> actions, MvcProjectStructure structure) {
-    final Set<SourceFolder> toRemove = ContainerUtil.newTroveSet();
+    final Set<ContentFolder> toRemove = ContainerUtil.newTroveSet();
     final Set<ContentEntry> toRemoveContent = ContainerUtil.newTroveSet();
     for (ContentEntry entry : ModuleRootManager.getInstance(structure.myModule).getContentEntries()) {
       final VirtualFile file = entry.getFile();
@@ -352,7 +354,7 @@ public class MvcModuleStructureUtil {
         toRemoveContent.add(entry);
       }
 
-      for (SourceFolder folder : entry.getSourceFolders()) {
+      for (ContentFolder folder : entry.getFolders()) {
         if (folder.getFile() == null) {
           toRemove.add(folder);
         }
@@ -367,9 +369,9 @@ public class MvcModuleStructureUtil {
           }
 
           for (ContentEntry entry : model.getContentEntries()) {
-            for (SourceFolder folder : entry.getSourceFolders()) {
+            for (ContentFolder folder : entry.getFolders()) {
               if (toRemove.remove(folder)) {
-                entry.removeSourceFolder(folder);
+                entry.removeFolder(folder);
               }
             }
           }
@@ -486,7 +488,8 @@ public class MvcModuleStructureUtil {
     final ModuleRootManager auxRootManager = ModuleRootManager.getInstance(pluginsModule);
     final ModuleRootManager appRootManager = ModuleRootManager.getInstance(appModule);
 
-    final boolean isSdkEquals = Comparing.equal(auxRootManager.getSdk(), appRootManager.getSdk());
+    final boolean isSdkEquals = Comparing.equal(ModuleUtilCore.getExtension(pluginsModule, JavaModuleExtension.class), ModuleUtilCore.getExtension(
+      appModule, JavaModuleExtension.class));
 
     List<Library> appLibraries = new ArrayList<Library>();
     Library appUserLibrary = extractNonModuleLibraries(appLibraries, appRootManager, false, framework.getUserLibraryName());
@@ -627,12 +630,13 @@ public class MvcModuleStructureUtil {
   }
 
   public static void copySdk(ModuleRootModel from, ModifiableRootModel to) {
-    if (from.isSdkInherited()) {
-      to.inheritSdk();
-    }
-    else {
-      to.setSdk(from.getSdk());
-    }
+    final JavaModuleExtension fromExtension = from.getExtension(JavaModuleExtension.class);
+    final JavaMutableModuleExtension toExtension = (JavaMutableModuleExtension)to.getExtension(JavaModuleExtension.class);
+
+    assert fromExtension != null;
+    assert toExtension != null;
+
+    toExtension.setSdk(fromExtension.getSdk());
   }
 
   public static void copySdkAndLibraries(ModuleRootModel from, ModifiableRootModel to, @NotNull MvcFramework framework) {

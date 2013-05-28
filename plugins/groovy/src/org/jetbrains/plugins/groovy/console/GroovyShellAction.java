@@ -29,13 +29,13 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ModulesAlphaComparator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -43,10 +43,10 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.PlatformIcons;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.lang.psi.impl.GroovyFileImpl;
-import org.jetbrains.plugins.groovy.util.GroovyUtils;
 
 import java.util.*;
 
@@ -62,11 +62,9 @@ public class GroovyShellAction extends DumbAwareAction {
   private static List<Module> getGroovyCompatibleModules(Project project) {
     ArrayList<Module> result = new ArrayList<Module>();
     for (Module module : ModuleManager.getInstance(project).getModules()) {
-      if (GroovyUtils.isSuitableModule(module)) {
-        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
-        if (sdk != null && sdk.getSdkType() instanceof JavaSdkType) {
-          result.add(module);
-        }
+      Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+      if (sdk != null && sdk.getSdkType() instanceof JavaSdkType) {
+        result.add(module);
       }
     }
     return result;
@@ -145,7 +143,8 @@ public class GroovyShellAction extends DumbAwareAction {
     if (shellRunner == null) return;
 
     AbstractConsoleRunnerWithHistory<GroovyConsoleView> runner =
-      new AbstractConsoleRunnerWithHistory<GroovyConsoleView>(module.getProject(), "Groovy Shell", shellRunner.getWorkingDirectory(module)) {
+      new AbstractConsoleRunnerWithHistory<GroovyConsoleView>(module.getProject(), "Groovy Shell",
+                                                              shellRunner.getWorkingDirectory(module)) {
 
         @Override
         protected GroovyConsoleView createConsoleView() {
@@ -164,7 +163,7 @@ public class GroovyShellAction extends DumbAwareAction {
         protected Process createProcess() throws ExecutionException {
           JavaParameters javaParameters = shellRunner.createJavaParameters(module);
 
-          final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+          final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
           assert sdk != null;
           SdkTypeId sdkType = sdk.getSdkType();
           assert sdkType instanceof JavaSdkType;

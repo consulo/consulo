@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
@@ -49,7 +49,7 @@ public class GriffonDefaultImportContributor extends DefaultImportContributor {
     return CachedValuesManager.getManager(module.getProject()).getCachedValue(module, new CachedValueProvider<Pair<List<String>, List<String>>>() {
       @Override
       public Result<Pair<List<String>, List<String>>> compute() {
-        PsiPackage aPackage = JavaPsiFacade.getInstance(module.getProject()).findPackage("META-INF");
+        PsiJavaPackage aPackage = JavaPsiFacade.getInstance(module.getProject()).findPackage("META-INF");
         if (aPackage != null) {
           for (PsiDirectory directory : aPackage.getDirectories(GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module))) {
             PsiFile file = directory.findFile("griffon-default-imports.properties");

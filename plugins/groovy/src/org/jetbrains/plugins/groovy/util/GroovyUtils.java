@@ -18,8 +18,6 @@ package org.jetbrains.plugins.groovy.util;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.PluginPathManager;
-import com.intellij.openapi.module.JavaModuleType;
-import com.intellij.openapi.module.Module;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +36,6 @@ import java.util.regex.Pattern;
  * @author ilyas
  */
 public abstract class GroovyUtils {
-  public static final String PLUGIN_MODULE_ID = "PLUGIN_MODULE";
 
   public static File[] getFilesInDirectoryByPattern(String dirPath, final String patternString) {
     final Pattern pattern = Pattern.compile(patternString);
@@ -62,15 +59,6 @@ public abstract class GroovyUtils {
     }
 
     return result;
-  }
-
-  public static boolean isSuitableModule(Module module) {
-    if (module == null) return false;
-    return isAcceptableModuleType(ModuleType.get(module));
-  }
-
-  public static boolean isAcceptableModuleType(ModuleType type) {
-    return type instanceof JavaModuleType || PLUGIN_MODULE_ID.equals(type.getId()) || "ANDROID_MODULE".equals(type.getId());
   }
 
   @Nullable

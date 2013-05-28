@@ -5,7 +5,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.annotator.GroovyFrameworkConfigNotification;
-import org.jetbrains.plugins.groovy.config.GroovyLibraryDescription;
 
 /**
  * @author sergey.evdokimov
@@ -31,7 +30,7 @@ public class MvcConfigureNotification extends GroovyFrameworkConfigNotification 
     return framework.hasFrameworkJar(module);
   }
 
-  public static void configure(@NotNull MvcFramework framework, @NotNull Module module) {
+ /* public static void configure(@NotNull MvcFramework framework, @NotNull Module module) {
     final GroovyLibraryDescription description = framework.createLibraryDescription();
     final AddCustomLibraryDialog dialog = AddCustomLibraryDialog.createDialog(description, module, null);
     dialog.setTitle("Change " + framework.getDisplayName() + " SDK version");
@@ -40,7 +39,7 @@ public class MvcConfigureNotification extends GroovyFrameworkConfigNotification 
     if (dialog.isOK()) {
       module.putUserData(MvcFramework.UPGRADE, Boolean.TRUE);
     }
-  }
+  }    */
 
   @Override
   public EditorNotificationPanel createConfigureNotificationPanel(final @NotNull Module module) {
@@ -49,7 +48,7 @@ public class MvcConfigureNotification extends GroovyFrameworkConfigNotification 
     panel.createActionLabel("Configure " + framework.getFrameworkName() + " SDK", new Runnable() {
       @Override
       public void run() {
-        configure(framework, module);
+       // configure(framework, module);
       }
     });
 

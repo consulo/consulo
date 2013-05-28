@@ -35,6 +35,7 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import icons.JetgroovyIcons;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
@@ -177,13 +178,13 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
 
     if (classHint == null || classHint.shouldProcess(ClassHint.ResolveKind.PACKAGE)) {
       if (expectedName != null) {
-        final PsiPackage pkg = facade.findPackage(expectedName);
+        final PsiJavaPackage pkg = facade.findPackage(expectedName);
         if (pkg != null && !processor.execute(pkg, state)) {
           return false;
         }
       }
       else {
-        PsiPackage defaultPackage = facade.findPackage("");
+        PsiJavaPackage defaultPackage = facade.findPackage("");
         if (defaultPackage != null) {
           for (PsiPackage subPackage : defaultPackage.getSubPackages(getResolveScope())) {
             if (!ResolveUtil.processElement(processor, subPackage, state)) return false;
@@ -249,11 +250,11 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
                                                       PsiElement lastParent,
                                                       PsiElement place, JavaPsiFacade facade,
                                                       String packageName) {
-    PsiPackage aPackage = facade.findPackage(packageName);
+    PsiJavaPackage aPackage = facade.findPackage(packageName);
     if (aPackage != null && !aPackage.processDeclarations(new DelegatingScopeProcessor(processor) {
       @Override
       public boolean execute(@NotNull PsiElement element, ResolveState state) {
-        if (element instanceof PsiPackage) return true;
+        if (element instanceof PsiJavaPackage) return true;
         return super.execute(element, state);
       }
     }, state, lastParent, place)) {

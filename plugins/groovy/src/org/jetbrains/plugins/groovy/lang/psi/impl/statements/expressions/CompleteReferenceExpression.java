@@ -31,6 +31,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashSet;
 import icons.JetgroovyIcons;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
@@ -458,7 +459,7 @@ public class CompleteReferenceExpression {
       GroovyResolveResult result = (GroovyResolveResult)o;
       if (!result.isStaticsOK()) return;
       if (!result.isAccessible() && myParameters.getInvocationCount() < 2) return;
-      if (mySkipPackages && result.getElement() instanceof PsiPackage) return;
+      if (mySkipPackages && result.getElement() instanceof PsiJavaPackage) return;
 
       PsiElement element = result.getElement();
       if (element instanceof PsiVariable && !myMatcher.prefixMatches(((PsiVariable)element).getName())) {

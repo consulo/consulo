@@ -18,7 +18,7 @@ package org.jetbrains.plugins.groovy.codeInspection.untypedUnresolvedAccess;
 
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +64,7 @@ public class GroovyUntypedAccessInspection extends BaseInspection {
 
       PsiElement resolved = resolveResult.getElement();
       if (resolved != null) {
-        if (isDeclarationAssignment(refExpr) || resolved instanceof PsiPackage) return;
+        if (isDeclarationAssignment(refExpr) || resolved instanceof PsiJavaPackage) return;
       }
       else {
         GrExpression qualifier = refExpr.getQualifierExpression();

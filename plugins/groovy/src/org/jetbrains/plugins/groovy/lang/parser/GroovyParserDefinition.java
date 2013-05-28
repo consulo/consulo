@@ -21,6 +21,7 @@ import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -47,7 +48,7 @@ public class GroovyParserDefinition implements ParserDefinition {
   public static final IStubFileElementType GROOVY_FILE = new GrStubFileElementType(GroovyFileType.GROOVY_LANGUAGE);
 
   @NotNull
-  public Lexer createLexer(Project project) {
+  public Lexer createLexer(Project project, Module module) {
     return new GroovyLexer();
   }
 

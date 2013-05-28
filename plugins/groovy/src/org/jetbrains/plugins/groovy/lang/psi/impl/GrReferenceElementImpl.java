@@ -135,8 +135,8 @@ public abstract class GrReferenceElementImpl<Q extends PsiElement> extends Groov
       }
       return qualifiedRef;
     }
-    else if (element instanceof PsiPackage) {
-      return bindWithQualifiedRef(((PsiPackage)element).getQualifiedName());
+    else if (element instanceof PsiJavaPackage) {
+      return bindWithQualifiedRef(((PsiJavaPackage)element).getQualifiedName());
     }
 
     throw new IncorrectOperationException("Cannot bind to:" + element + " of class " + element.getClass());

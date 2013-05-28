@@ -15,18 +15,11 @@
  */
 package org.jetbrains.plugins.groovy.mvc;
 
-import com.intellij.ide.util.importProject.ProjectDescriptor;
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.ProjectWizardStepFactory;
-import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.ide.util.projectWizard.importSources.DetectedProjectRoot;
-import com.intellij.ide.util.projectWizard.importSources.ProjectFromSourcesBuilder;
 import com.intellij.ide.util.projectWizard.importSources.ProjectStructureDetector;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,14 +47,14 @@ public abstract class MvcProjectStructureDetector extends ProjectStructureDetect
     return DirectoryProcessingResult.PROCESS_CHILDREN;
   }
 
-  @Override
+  /*@Override
   public List<ModuleWizardStep> createWizardSteps(ProjectFromSourcesBuilder builder,
                                                   ProjectDescriptor projectDescriptor,
                                                   Icon stepIcon) {
     final ModuleWizardStep groovySdkStep = new GroovySdkForProjectFromSourcesStep(this, builder, projectDescriptor, myFramework);
     final ModuleWizardStep javaSdkStep = ProjectWizardStepFactory.getInstance().createProjectJdkStep(builder.getContext());
     return Arrays.asList(javaSdkStep, groovySdkStep);
-  }
+  } */
 
   private class GroovyMvcProjectRoot extends DetectedProjectRoot {
     public GroovyMvcProjectRoot(File dir) {

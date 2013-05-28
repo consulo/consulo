@@ -17,6 +17,7 @@
 package org.jetbrains.plugins.groovy.runner;
 
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
@@ -122,7 +123,7 @@ public class GroovyRunConfigurationEditor extends SettingsEditor<GroovyScriptRun
       @Override
       public void customize(JList list, Module module, int index, boolean selected, boolean hasFocus) {
         if (module != null) {
-          setIcon(ModuleType.get(module).getIcon());
+          setIcon(AllIcons.Nodes.Module);
           setText(module.getName());
         }
       }

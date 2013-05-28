@@ -341,7 +341,7 @@ public class GroovyImportOptimizer implements ImportOptimizer {
               imp.getAnnotationList().replace(factory.createModifierList(annos));
             }
             result.add(imp);
-            final PsiPackage aPackage = JavaPsiFacade.getInstance(myFile.getProject()).findPackage(s);
+            final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myFile.getProject()).findPackage(s);
             if (aPackage != null) {
               for (PsiClass clazz : aPackage.getClasses(myFile.getResolveScope())) {
                 onDemandImportedSimpleClassNames.add(clazz.getName());

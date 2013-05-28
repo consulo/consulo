@@ -27,6 +27,7 @@ import com.intellij.refactoring.move.moveClassesOrPackages.MoveClassHandler;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
@@ -65,7 +66,7 @@ public class MoveGroovyClassHandler implements MoveClassHandler {
     PsiFile file = aClass.getContainingFile();
     if (!(file instanceof GroovyFile)) return null;
 
-    final PsiPackage newPackage = JavaDirectoryService.getInstance().getPackage(moveDestination);
+    final PsiJavaPackage newPackage = JavaDirectoryService.getInstance().getPackage(moveDestination);
     LOG.assertTrue(newPackage != null);
 
     PsiClass newClass = null;
@@ -272,8 +273,8 @@ public class MoveGroovyClassHandler implements MoveClassHandler {
     }
   }
 
-  private static void correctSelfReferences(final PsiClass aClass, final PsiPackage newContainingPackage) {
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(aClass.getContainingFile().getContainingDirectory());
+  private static void correctSelfReferences(final PsiClass aClass, final PsiJavaPackage newContainingPackage) {
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(aClass.getContainingFile().getContainingDirectory());
     if (aPackage == null) {
       return;
     }

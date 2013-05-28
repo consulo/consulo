@@ -21,14 +21,14 @@ import com.intellij.ide.actions.CreateElementActionBase;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.util.GroovyUtils;
-import org.jetbrains.plugins.groovy.util.LibrariesUtil;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 
 import javax.swing.*;
 
@@ -60,7 +60,7 @@ public abstract class NewGroovyActionBase extends CreateElementActionBase {
     }
 
     Module module = LangDataKeys.MODULE.getData(dataContext);
-    return GroovyUtils.isSuitableModule(module) && LibrariesUtil.hasGroovySdk(module);
+    return module != null && ModuleUtilCore.getExtension(module, GroovyModuleExtension.class) != null;
   }
 
   @NotNull

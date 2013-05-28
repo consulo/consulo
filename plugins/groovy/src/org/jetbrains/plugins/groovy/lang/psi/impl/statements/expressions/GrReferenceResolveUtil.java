@@ -138,7 +138,7 @@ public class GrReferenceResolveUtil {
       if (qualifier instanceof GrReferenceExpression) {
         PsiElement resolved = ((GrReferenceExpression)qualifier).resolve();
         if (resolved != null && !resolved.processDeclarations(processor, state, null, place)) return false;
-        if (!(resolved instanceof PsiPackage)) {
+        if (!(resolved instanceof PsiJavaPackage)) {
           qualifierType = TypesUtil.getJavaLangObject(place);
           if (!processQualifierType(processor, qualifierType, state, place)) return false;
         }

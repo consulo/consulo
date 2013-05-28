@@ -221,7 +221,7 @@ public class ResolverProcessor implements PsiScopeProcessor, NameHint, ClassHint
   private static ResolveKind getResolveKind(PsiElement element) {
     if (element instanceof PsiVariable) return PROPERTY;
     if (element instanceof PsiMethod) return METHOD;
-    if (element instanceof PsiPackage) return PACKAGE;
+    if (element instanceof PsiJavaPackage) return PACKAGE;
     if (element instanceof PsiClass) return CLASS;
     return null;
   }

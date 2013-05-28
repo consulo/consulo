@@ -109,9 +109,9 @@ public class GroovycStubGenerator extends GroovyCompilerBase {
   private static boolean containsJavaSources(Module module, boolean inTests) {
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
     for (ContentEntry entry : rootManager.getContentEntries()) {
-      for (SourceFolder folder : entry.getSourceFolders()) {
+      for (ContentFolder folder : entry.getFolders()) {
         VirtualFile dir = folder.getFile();
-        if ((!inTests || folder.isTestSource()) && dir != null) {
+        if ((!inTests && folder.getType() == ContentFolderType.SOURCE|| folder.getType() == ContentFolderType.TEST && inTests) && dir != null) {
           if (!rootManager.getFileIndex().iterateContentUnderDirectory(dir, new ContentIterator() {
             @Override
             public boolean processFile(VirtualFile fileOrDir) {

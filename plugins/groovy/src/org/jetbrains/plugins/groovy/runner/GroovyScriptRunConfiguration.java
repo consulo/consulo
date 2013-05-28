@@ -28,12 +28,12 @@ import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SimpleJavaSdkType;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizer;
@@ -51,6 +51,7 @@ import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.hash.LinkedHashMap;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -280,7 +281,7 @@ public class GroovyScriptRunConfiguration extends ModuleBasedConfiguration<RunCo
     params.setCharset(null);
 
     if (module != null) {
-      final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
       if (sdk != null && sdk.getSdkType() instanceof JavaSdkType) {
         params.setJdk(sdk);
       }

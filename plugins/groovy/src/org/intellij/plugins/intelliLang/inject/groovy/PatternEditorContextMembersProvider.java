@@ -15,46 +15,12 @@
  */
 package org.intellij.plugins.intelliLang.inject.groovy;
 
-import com.intellij.openapi.fileTypes.StdFileTypes;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.patterns.compiler.PatternClassBean;
-import com.intellij.patterns.compiler.PatternCompilerFactory;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.cache.CacheManager;
-import com.intellij.psi.impl.search.LowLevelSearchUtil;
-import com.intellij.psi.impl.source.resolve.FileContextUtil;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.TextOccurenceProcessor;
-import com.intellij.psi.search.UsageSearchContext;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlText;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.StringSearcher;
-import org.intellij.plugins.intelliLang.inject.InjectorUtils;
-import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.groovy.GroovyFileType;
-import org.jetbrains.plugins.groovy.lang.resolve.NonCodeMembersContributor;
-
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author Gregory.Shrago
  */
-public class PatternEditorContextMembersProvider extends NonCodeMembersContributor {
+public class PatternEditorContextMembersProvider/* extends NonCodeMembersContributor */{
 
-  public static final Key<CachedValue<List<PsiElement>>> INJECTION_PARSED_CONTEXT = Key.create("INJECTION_PARSED_CONTEXT");
+ /* public static final Key<CachedValue<List<PsiElement>>> INJECTION_PARSED_CONTEXT = Key.create("INJECTION_PARSED_CONTEXT");
 
   @Override
   public void processDynamicElements(@NotNull PsiType qualifierType,
@@ -169,6 +135,5 @@ public class PatternEditorContextMembersProvider extends NonCodeMembersContribut
       roots.add(getRootByClasses(classes, project));
     }
     return roots;
-  }
-
+  }*/
 }

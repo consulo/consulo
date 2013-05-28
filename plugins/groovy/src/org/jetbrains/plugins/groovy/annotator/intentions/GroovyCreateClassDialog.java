@@ -32,8 +32,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiNameHelper;
-import com.intellij.psi.PsiPackage;
 import com.intellij.refactoring.util.RefactoringMessageUtil;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.IncorrectOperationException;
@@ -79,7 +79,7 @@ public class GroovyCreateClassDialog extends DialogWrapper {
         PackageChooserDialog chooser = new PackageChooserDialog(GroovyInspectionBundle.message("dialog.create.class.package.chooser.title"), myProject);
         chooser.selectPackage(myPackageTextField.getText());
         chooser.show();
-        PsiPackage aPackage = chooser.getSelectedPackage();
+        PsiJavaPackage aPackage = chooser.getSelectedPackage();
         if (aPackage != null) {
           myPackageTextField.setText(aPackage.getQualifiedName());
         }

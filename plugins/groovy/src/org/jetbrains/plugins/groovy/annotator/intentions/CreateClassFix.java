@@ -151,7 +151,7 @@ public abstract class CreateClassFix {
         PsiElement qualifier = myRefElement.getQualifier();
 
         if (qualifier == null ||
-            qualifier instanceof GrReferenceElement && ((GrReferenceElement)qualifier).resolve() instanceof PsiPackage) {
+            qualifier instanceof GrReferenceElement && ((GrReferenceElement)qualifier).resolve() instanceof PsiJavaPackage) {
           createTopLevelClass(project, groovyFile);
         }
         else {
@@ -210,7 +210,7 @@ public abstract class CreateClassFix {
           }
           else if (qualifier instanceof GrReferenceExpression) {
             final PsiElement resolved = ((GrReferenceExpression)qualifier).resolve();
-            if (resolved instanceof PsiClass || resolved instanceof PsiPackage) {
+            if (resolved instanceof PsiClass || resolved instanceof PsiJavaPackage) {
               return resolved;
             }
           }
@@ -257,8 +257,8 @@ public abstract class CreateClassFix {
         final PsiElement qualifier = myRefElement.getQualifier();
         if (qualifier instanceof GrReferenceElement) {
           final PsiElement resolved = ((GrReferenceElement)qualifier).resolve();
-          if (resolved instanceof PsiPackage) {
-            return ((PsiPackage)resolved).getQualifiedName();
+          if (resolved instanceof PsiJavaPackage) {
+            return ((PsiJavaPackage)resolved).getQualifiedName();
           }
         }
         return file instanceof GroovyFile ? file.getPackageName() : "";

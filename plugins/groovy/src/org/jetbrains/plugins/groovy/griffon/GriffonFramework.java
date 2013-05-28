@@ -25,6 +25,7 @@ import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -44,6 +45,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import gnu.trove.TIntArrayList;
 import icons.JetgroovyIcons;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -231,7 +233,10 @@ public class GriffonFramework extends MvcFramework {
                                              @NotNull MvcCommand command) throws ExecutionException {
     JavaParameters params = new JavaParameters();
 
-    Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    if(sdk == null) {
+      return params;
+    }
 
     params.setJdk(sdk);
     final VirtualFile sdkRoot = getSdkRoot(module);

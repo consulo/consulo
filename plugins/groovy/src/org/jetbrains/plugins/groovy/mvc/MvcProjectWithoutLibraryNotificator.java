@@ -52,7 +52,7 @@ public class MvcProjectWithoutLibraryNotificator implements StartupActivity, Dum
                            @Override
                            public void hyperlinkUpdate(@NotNull Notification notification,
                                                        @NotNull HyperlinkEvent event) {
-                             MvcConfigureNotification.configure(framework, module);
+                             //MvcConfigureNotification.configure(framework, module);
                            }
                          }).notify(project);
       }

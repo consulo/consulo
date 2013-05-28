@@ -222,7 +222,7 @@ public class GrImportStatementImpl extends GroovyPsiElementImpl implements GrImp
     else {
       String qName = PsiUtil.getQualifiedReferenceText(ref);
       if (qName != null) {
-        PsiPackage aPackage = JavaPsiFacade.getInstance(getProject()).findPackage(qName);
+        PsiJavaPackage aPackage = JavaPsiFacade.getInstance(getProject()).findPackage(qName);
         if (aPackage != null && !((GroovyFile)getContainingFile()).getPackageName().equals(aPackage.getQualifiedName())) {
           state = state.put(ResolverProcessor.RESOLVE_CONTEXT, this);
           if (!aPackage.processDeclarations(processor, state, lastParent, place)) return false;

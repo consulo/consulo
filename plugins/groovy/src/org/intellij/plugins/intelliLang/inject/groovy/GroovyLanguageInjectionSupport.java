@@ -16,18 +16,11 @@
 
 package org.intellij.plugins.intelliLang.inject.groovy;
 
-import com.intellij.psi.PsiElement;
-import org.intellij.plugins.intelliLang.inject.AbstractLanguageInjectionSupport;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement;
-import org.jetbrains.plugins.groovy.lang.psi.patterns.GroovyPatterns;
-
 /**
  * @author Gregory.Shrago
  */
-public class GroovyLanguageInjectionSupport extends AbstractLanguageInjectionSupport {
-  @NonNls private static final String SUPPORT_ID = "groovy";
+public class GroovyLanguageInjectionSupport/* extends AbstractLanguageInjectionSupport*/ {
+/*  @NonNls private static final String SUPPORT_ID = "groovy";
 
   @NotNull
   public String getId() {
@@ -46,5 +39,5 @@ public class GroovyLanguageInjectionSupport extends AbstractLanguageInjectionSup
   @Override
   public String getHelpId() {
     return "reference.settings.language.injection.groovy";
-  }
+  }  */
 }

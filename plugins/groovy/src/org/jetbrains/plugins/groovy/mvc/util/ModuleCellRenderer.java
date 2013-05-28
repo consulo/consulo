@@ -15,6 +15,7 @@
  */
 package org.jetbrains.plugins.groovy.mvc.util;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.ListCellRendererWrapper;
 
@@ -31,7 +32,7 @@ public class ModuleCellRenderer extends ListCellRendererWrapper<Module> {
   @Override
   public void customize(JList list, Module module, int index, boolean selected, boolean hasFocus) {
     if (module != null) {
-      setIcon(ModuleType.get(module).getIcon());
+      setIcon(AllIcons.Nodes.Module);
       setText(module.getName());
     }
   }

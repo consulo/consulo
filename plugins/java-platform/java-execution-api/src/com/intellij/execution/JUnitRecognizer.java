@@ -1,7 +1,6 @@
 package com.intellij.execution;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class JUnitRecognizer {
 
-  public static final ExtensionPointName<JUnitRecognizer> EP_NAME = ExtensionPointName.create("com.intellij.junitRecognizer");
+  public static final ExtensionPointName<JUnitRecognizer> EP_NAME = ExtensionPointName.create("org.consulo.java.junitRecognizer");
 
   public abstract boolean isTestAnnotated(@NotNull PsiMethod method);
 

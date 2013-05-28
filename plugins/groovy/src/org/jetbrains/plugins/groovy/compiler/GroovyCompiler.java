@@ -22,10 +22,10 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.ClasspathEditor;
@@ -35,12 +35,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import icons.JetgroovyIcons;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.GroovyBundle;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.GroovyFileTypeLoader;
 import org.jetbrains.plugins.groovy.config.GroovyConfigUtils;
-import org.jetbrains.plugins.groovy.util.GroovyUtils;
 import org.jetbrains.plugins.groovy.util.LibrariesUtil;
 
 import java.util.HashSet;
@@ -96,8 +96,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
 
     Set<Module> nojdkModules = new HashSet<Module>();
     for (Module module : modules) {
-      if(!GroovyUtils.isAcceptableModuleType(ModuleType.get(module))) continue;
-      final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
       if (sdk == null || !(sdk.getSdkType() instanceof JavaSdkType)) {
         nojdkModules.add(module);
         continue;

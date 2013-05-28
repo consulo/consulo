@@ -19,10 +19,9 @@ package org.jetbrains.plugins.groovy.compiler;
 import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.FileSetCompileScope;
+import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.compiler.impl.TranslatingCompilerFilesMonitor;
-import com.intellij.compiler.impl.javaCompiler.ModuleChunk;
 import com.intellij.compiler.impl.javaCompiler.OutputItemImpl;
-import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.DependencyCache;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaParameters;
@@ -38,6 +37,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -60,10 +60,10 @@ import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.*;
-import com.intellij.util.cls.ClsFormatException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import gnu.trove.THashSet;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.groovy.compiler.rt.GroovycRunner;
 import org.jetbrains.jps.incremental.groovy.GroovycOSProcessHandler;
@@ -74,10 +74,8 @@ import org.jetbrains.plugins.groovy.config.GroovyConfigUtils;
 import org.jetbrains.plugins.groovy.extensions.GroovyScriptType;
 import org.jetbrains.plugins.groovy.extensions.GroovyScriptTypeDetector;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
-import org.jetbrains.plugins.groovy.util.GroovyUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -99,7 +97,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
                                     VirtualFile outputDir,
                                     OutputSink sink, boolean tests) {
     //assert !ApplicationManager.getApplication().isDispatchThread();
-    final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
     assert sdk != null; //verified before
     SdkTypeId sdkType = sdk.getSdkType();
     assert sdkType instanceof JavaSdkType;
@@ -260,7 +258,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
           LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(outputItem.outputPath));
           items.add(new OutputItemImpl(outputItem.outputPath, sourceVirtualFile));
 
-          final File classFile = new File(outputItem.outputPath);
+         /* final File classFile = new File(outputItem.outputPath);
           try {
             dependencyCache.reparseClassFile(classFile, FileUtil.loadFileBytes(classFile));
           }
@@ -274,7 +272,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
           }
           catch (IOException e) {
             LOG.error(e);
-          }
+          }   */
         }
       }
 
@@ -367,11 +365,9 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
       final CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
       final PsiManager psiManager = PsiManager.getInstance(myProject);
 
-      if (GroovyUtils.isAcceptableModuleType(ModuleType.get(module))) {
-        for (final VirtualFile file : moduleFiles) {
-          if (shouldCompile(file, configuration, psiManager)) {
-            (index.isInTestSourceContent(file) ? toCompileTests : toCompile).add(file);
-          }
+      for (final VirtualFile file : moduleFiles) {
+        if (shouldCompile(file, configuration, psiManager)) {
+          (index.isInTestSourceContent(file) ? toCompileTests : toCompile).add(file);
         }
       }
 

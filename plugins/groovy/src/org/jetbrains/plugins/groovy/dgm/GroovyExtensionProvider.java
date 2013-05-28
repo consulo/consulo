@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
@@ -48,7 +48,7 @@ public class GroovyExtensionProvider {
   }
 
   public Pair<List<String>, List<String>> collectExtensions(GlobalSearchScope resolveScope) {
-    PsiPackage aPackage = JavaPsiFacade.getInstance(myProject).findPackage("META-INF.services");
+    PsiJavaPackage aPackage = JavaPsiFacade.getInstance(myProject).findPackage("META-INF.services");
     if (aPackage == null) {
       return new Pair<List<String>, List<String>>(Collections.<String>emptyList(), Collections.<String>emptyList());
     }

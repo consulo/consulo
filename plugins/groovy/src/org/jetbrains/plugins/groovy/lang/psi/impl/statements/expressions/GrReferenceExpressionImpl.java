@@ -253,7 +253,7 @@ public class GrReferenceExpressionImpl extends GrReferenceElementImpl<GrExpressi
 
   private static boolean containsPackage(@NotNull GroovyResolveResult[] candidates) {
     for (GroovyResolveResult candidate : candidates) {
-      if (candidate.getElement() instanceof PsiPackage) return true;
+      if (candidate.getElement() instanceof PsiJavaPackage) return true;
     }
     return false;
   }
@@ -494,7 +494,7 @@ public class GrReferenceExpressionImpl extends GrReferenceElementImpl<GrExpressi
 
   @Override
   public boolean isFullyQualified() {
-    if (getKind() == Kind.TYPE_OR_PROPERTY && resolve() instanceof PsiPackage) return true;
+    if (getKind() == Kind.TYPE_OR_PROPERTY && resolve() instanceof PsiJavaPackage) return true;
 
     final GrExpression qualifier = getQualifier();
     if (!(qualifier instanceof GrReferenceExpressionImpl)) return false;
@@ -730,7 +730,7 @@ public class GrReferenceExpressionImpl extends GrReferenceElementImpl<GrExpressi
   @Nullable
   private static PsiType getInferredTypes(GrReferenceExpressionImpl refExpr, @Nullable PsiElement resolved) {
     final GrExpression qualifier = refExpr.getQualifier();
-    if (qualifier == null && !(resolved instanceof PsiClass || resolved instanceof PsiPackage)) {
+    if (qualifier == null && !(resolved instanceof PsiClass || resolved instanceof PsiJavaPackage)) {
       return TypeInferenceHelper.getCurrentContext().getVariableType(refExpr);
     }
     else if (qualifier != null) {
