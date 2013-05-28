@@ -22,7 +22,7 @@ import com.intellij.psi.PsiFile;
  * @author Dennis.Ushakov
  */
 public interface JVMDebugProvider {
-  ExtensionPointName<JVMDebugProvider> EP_NAME = ExtensionPointName.create("com.intellij.debugger.jvmDebugProvider");
+  ExtensionPointName<JVMDebugProvider> EP_NAME = ExtensionPointName.create("org.consulo.java.debugger.jvmDebugProvider");
 
   boolean supportsJVMDebugging(PsiFile file);
 }
