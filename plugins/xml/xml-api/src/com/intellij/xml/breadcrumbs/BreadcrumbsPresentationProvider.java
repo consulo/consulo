@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class BreadcrumbsPresentationProvider {
   public static final ExtensionPointName<BreadcrumbsPresentationProvider> EP_NAME =
-    ExtensionPointName.create("com.intellij.breadcrumbsPresentationProvider");
+    ExtensionPointName.create("com.intellij.xml.breadcrumbsPresentationProvider");
 
   @Nullable
   public abstract CrumbPresentation[] getCrumbPresentations(@NotNull PsiElement[] element);
