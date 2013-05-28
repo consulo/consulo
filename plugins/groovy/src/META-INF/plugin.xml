@@ -226,8 +226,6 @@
   <extensions defaultExtensionNs="com.intellij">
     <moduleExtensionProvider key="groovy" parent-key="java" implementationClass="org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtensionProvider" />
 
-    <moduleBuilder builderClass="org.jetbrains.plugins.groovy.config.GroovyAwareModuleBuilder"/>
-
     <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.geb.GebContentDeclarationSearcher"/>
 
     <itemPresentationProvider forClass="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyFileImpl"
@@ -1388,7 +1386,7 @@
     <psi.referenceContributor implementation="org.jetbrains.plugins.groovy.gpp.GppReferenceContributor"/>
 
     <library.presentationProvider implementation="org.jetbrains.plugins.groovy.griffon.GriffonLibraryPresentationProvider"/>
-    <moduleBuilder builderClass="org.jetbrains.plugins.groovy.griffon.GriffonModuleBuilder" id="griffonModuleBuilder"/>
+
     <projectStructureDetector implementation="org.jetbrains.plugins.groovy.griffon.GriffonProjectStructureDetector" order="before groovyDetector"/>
     <programRunner implementation="org.jetbrains.plugins.groovy.griffon.GriffonDebuggerRunner"/>
     <configurationType implementation="org.jetbrains.plugins.groovy.griffon.GriffonRunConfigurationType"/>
