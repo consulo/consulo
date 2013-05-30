@@ -81,6 +81,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     for(Element element : state.getChildren("extension")) {
       final String id = element.getAttributeValue("id");
       if(myId.equals(id)) {
+        myIsEnabled = true;
         loadStateImpl(element);
         break;
       }
