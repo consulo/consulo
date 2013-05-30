@@ -60,9 +60,12 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   @Nullable
   @Override
   public Element getState() {
+    if(!isEnabled()) {
+      return null;
+    }
     Element element = new Element("extension");
     element.setAttribute("id", myId);
-    element.setAttribute("enabled", String.valueOf(myIsEnabled));
+
 
     getStateImpl(element);
 
@@ -78,8 +81,6 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     for(Element element : state.getChildren("extension")) {
       final String id = element.getAttributeValue("id");
       if(myId.equals(id)) {
-        myIsEnabled = Boolean.valueOf(element.getAttributeValue("enabled"));
-
         loadStateImpl(element);
         break;
       }

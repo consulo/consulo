@@ -440,7 +440,11 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   public void writeExternal(@NotNull Element element) throws WriteExternalException {
     for (ModuleExtension<?> extension : myExtensions) {
-      element.addContent(extension.getState());
+      final Element state = extension.getState();
+      if(state == null) {
+        continue;
+      }
+      element.addContent(state);
     }
 
     for (ContentEntry contentEntry : getContent()) {
