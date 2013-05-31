@@ -28,7 +28,6 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
@@ -39,7 +38,9 @@ import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * User: anna
@@ -53,7 +54,6 @@ public class ProjectSdksModel implements SdkModel {
 
   private boolean myModified = false;
 
-  private Sdk myProjectSdk;
   private boolean myInitialized = false;
 
   @Override
@@ -95,9 +95,6 @@ public class ProjectSdksModel implements SdkModel {
       catch (CloneNotSupportedException e) {
         LOG.error(e);
       }
-    }
-    if (project != null) {
-      myProjectSdk = findSdk(ProjectRootManager.getInstance(project).getProjectSdkName());
     }
     myModified = false;
     myInitialized = true;
@@ -314,13 +311,14 @@ public class ProjectSdksModel implements SdkModel {
   }
 
   @Nullable
+  @Deprecated
   public Sdk getProjectSdk() {
-    if (!myProjectSdks.containsValue(myProjectSdk)) return null;
-    return myProjectSdk;
+    return null;
   }
 
+  @Deprecated
   public void setProjectSdk(final Sdk projectSdk) {
-    myProjectSdk = projectSdk;
+
   }
 
   public boolean isInitialized() {
