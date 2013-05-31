@@ -249,15 +249,12 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
     myFailedModulePaths.clear();
     myFailedModulePaths.addAll(myModulePaths);
-    final List<Module> modulesWithUnknownTypes = new ArrayList<Module>();
+
     List<ModuleLoadingErrorDescription> errors = new ArrayList<ModuleLoadingErrorDescription>();
 
     for (final ModulePath modulePath : myModulePaths) {
       try {
         final Module module = moduleModel.loadModuleInternal(modulePath.getPath(), progressIndicator);
-        if (isUnknownModuleType(module)) {
-          modulesWithUnknownTypes.add(module);
-        }
         final String groupPathString = modulePath.getModuleGroup();
         if (groupPathString != null) {
           final String[] groupPath = groupPathString.split(MODULE_GROUP_SEPARATOR);
@@ -280,16 +277,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     fireErrors(errors);
-
-    showUnknownModuleTypeNotification(modulesWithUnknownTypes);
   }
 
-  protected boolean isUnknownModuleType(Module module) {
-    return false;
-  }
-
-  protected void showUnknownModuleTypeNotification(List<Module> types) {
-  }
 
   protected void fireModuleAdded(Module module) {
     myMessageBus.syncPublisher(ProjectTopics.MODULES).moduleAdded(myProject, module);

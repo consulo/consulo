@@ -34,7 +34,6 @@ import com.intellij.util.messages.MessageHandler;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * @author yole
@@ -73,34 +72,6 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
       }
     });
 
-  }
-
-  @Override
-  protected void showUnknownModuleTypeNotification(List<Module> modulesWithUnknownTypes) {
-    /*if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !modulesWithUnknownTypes.isEmpty()) {
-      String message;
-      if (modulesWithUnknownTypes.size() == 1) {
-        message = ProjectBundle.message("module.unknown.type.single.error", modulesWithUnknownTypes.get(0).getName(),
-                                        ModuleType.get(modulesWithUnknownTypes.get(0)).getId());
-      }
-      else {
-        StringBuilder modulesBuilder = new StringBuilder();
-        for (final Module module : modulesWithUnknownTypes) {
-          modulesBuilder.append("<br>\"");
-          modulesBuilder.append(module.getName()).append("\" (type '").append(ModuleType.get(module).getId()).append("')");
-        }
-        modulesBuilder.append("<br>");
-        message = ProjectBundle.message("module.unknown.type.multiple.error", modulesBuilder.toString());
-      }
-      // it is not modal warning at all
-      //Messages.showWarningDialog(myProject, message, ProjectBundle.message("module.unknown.type.title"));
-      Notifications.Bus.notify(new Notification(
-        "Module Manager",
-        ProjectBundle.message("module.unknown.type.title"),
-        message,
-        NotificationType.WARNING
-      ), myProject);
-    }  */
   }
 
   @Override
