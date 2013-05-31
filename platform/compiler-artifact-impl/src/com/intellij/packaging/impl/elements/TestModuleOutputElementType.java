@@ -43,6 +43,7 @@ public class TestModuleOutputElementType extends ModuleOutputElementTypeBase<Tes
     return new TestModuleOutputPackagingElement(project);
   }
 
+  @Override
   protected ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull ModulePointer pointer) {
     return new TestModuleOutputPackagingElement(project, pointer);
   }
@@ -52,6 +53,7 @@ public class TestModuleOutputElementType extends ModuleOutputElementTypeBase<Tes
     return PlatformIcons.TEST_SOURCE_FOLDER;
   }
 
+  @Override
   public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
     for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
       if(entry.getFolders(ContentFolderType.TEST).length != 0) {
