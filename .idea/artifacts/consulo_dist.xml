@@ -60,7 +60,12 @@
             <element id="archive" name="xml.jar">
               <element id="module-output" name="xml-api" />
               <element id="module-output" name="xml-impl" />
+            </element>
+            <element id="archive" name="xml-copyright.jar">
               <element id="module-output" name="xml-copyright" />
+            </element>
+            <element id="archive" name="xml-intellilang.xml">
+              <element id="module-output" name="xml-intellilang" />
             </element>
           </element>
         </element>
@@ -117,6 +122,9 @@
             </element>
             <element id="archive" name="java-copyright.jar">
               <element id="module-output" name="java-copyright" />
+            </element>
+            <element id="archive" name="java-intellilang.jar">
+              <element id="module-output" name="java-intellilang" />
             </element>
           </element>
         </element>
@@ -223,6 +231,9 @@
             <element id="archive" name="xslt-rt.jar">
               <element id="module-output" name="xslt-rt" />
             </element>
+            <element id="archive" name="xpath-intellilang.jar">
+              <element id="module-output" name="xpath-intellilang" />
+            </element>
           </element>
         </element>
         <element id="directory" name="xslt-debugger">
@@ -262,12 +273,22 @@
               <element id="module-output" name="groovy-rt-constants" />
               <element id="module-output" name="groovy-rt" />
             </element>
+            <element id="archive" name="groovy-intellilang.jar">
+              <element id="module-output" name="groovy-intellilang" />
+            </element>
           </element>
         </element>
         <element id="directory" name="jvm-bytecode-viewer">
           <element id="directory" name="lib">
             <element id="archive" name="jvm-bytecode-viewer.jar">
               <element id="module-output" name="jvm-bytecode-viewer" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="intellijlang">
+          <element id="directory" name="lib">
+            <element id="archive" name="intellijlang.jar">
+              <element id="module-output" name="IntelliLang" />
             </element>
           </element>
         </element>

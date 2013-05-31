@@ -2,6 +2,7 @@
   <id>com.intellij.xml</id>
   <name>XML</name>
   <depends optional="true" config-file="com.intellij.copyright.xml">com.intellij.copyright</depends>
+  <depends optional="true" config-file="org.intellij.intelliLang.xml">org.intellij.intelliLang</depends>
   <actions>
 
     <group id="ToolsXmlGroup" popup="true" class="com.intellij.xml.actions.XmlActionsGroup">

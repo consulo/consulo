@@ -27,7 +27,7 @@
   <depends>com.intellij.xml.dom</depends>
 
   <depends optional="true" config-file="com.intellij.copyright.xml">com.intellij.copyright</depends>
-  <depends optional="true" config-file="intellilang-groovy-support.xml">org.intellij.intelliLang</depends>
+  <depends optional="true" config-file="org.intellij.intelliLang.xml">org.intellij.intelliLang</depends>
   <depends optional="true">AntSupport</depends>
   <depends optional="true">cucumber</depends>
 

@@ -30,6 +30,7 @@
 
   <depends>com.intellij.xml</depends>
   <depends>org.consulo.java</depends>
+  <depends optional="true" config-file="org.intellij.intellilang.xml">org.intellij.intelliLang</depends>
 
   <!-- wasn't sure if the plugin manager correctly handles dependent plugins -->
   <!--<depends>XPathLanguage</depends>-->

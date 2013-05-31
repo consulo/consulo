@@ -4,12 +4,6 @@
   <vendor>JetBrains</vendor>
   <description><![CDATA[User configurable language injection support (originally developed by Sascha Weinreuter sascha.weinreuter@cit.de)]]></description>
   <version>8.0</version>
-
-  <depends optional="true" config-file="intellilang-xpath-support.xml">XPathView</depends>
-  <depends optional="true" config-file="intellilang-java-support.xml">org.consulo.java</depends>
-  <depends optional="true" config-file="intellilang-xml-support.xml">com.intellij.xml</depends>
-
-
   <extensionPoints>
     <extensionPoint name="languageSupport" interface="org.intellij.plugins.intelliLang.inject.LanguageInjectionSupport"/>
     <extensionPoint name="injectionConfig" beanClass="org.intellij.plugins.intelliLang.inject.LanguageInjectionConfigBean"/>
