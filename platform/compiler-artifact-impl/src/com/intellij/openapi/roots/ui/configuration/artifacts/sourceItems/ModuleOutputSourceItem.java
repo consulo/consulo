@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.module.ModulePointerManager;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.ProductionModuleOutputPackagingElement;
@@ -53,7 +54,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   @Override
   public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
     final ModulePointer modulePointer = ModulePointerManager.getInstance(context.getProject()).create(myModule);
-    return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, false)) {
+    return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, ContentFolderType.SOURCE)) {
       @Override
       public int getWeight() {
         return SourceItemWeights.MODULE_OUTPUT_WEIGHT;

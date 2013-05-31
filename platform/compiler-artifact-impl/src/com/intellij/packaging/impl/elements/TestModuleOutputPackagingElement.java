@@ -15,24 +15,10 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.ArtifactAntGenerationContext;
-import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
-import com.intellij.packaging.impl.ui.ModuleElementPresentation;
-import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.ui.PackagingElementPresentation;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author nik
@@ -47,10 +33,6 @@ public class TestModuleOutputPackagingElement extends ModuleOutputPackagingEleme
   }
 
   @Override
-  public String toString() {
-    return "module-tests:" + getModuleName();
-  }
-
   protected String getModuleOutputAntProperty(ArtifactAntGenerationContext generationContext) {
     return generationContext.getModuleTestOutputPath(myModulePointer.getModuleName());
   }
@@ -58,25 +40,5 @@ public class TestModuleOutputPackagingElement extends ModuleOutputPackagingEleme
   @Override
   protected ContentFolderType getContentFolderType() {
     return ContentFolderType.TEST;
-  }
-
-  @NotNull
-  @Override
-  public Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context) {
-    Module module = findModule(context);
-    if (module == null) return Collections.emptyList();
-
-    List<VirtualFile> roots = new SmartList<VirtualFile>();
-    ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
-    for (ContentEntry entry : rootModel.getContentEntries()) {
-      for (ContentFolder folder : entry.getFolders(ContentFolderType.TEST)) {
-        ContainerUtil.addIfNotNull(folder.getFile(), roots);
-      }
-    }
-    return roots;
-  }
-
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
-    return new DelegatedPackagingElementPresentation(new ModuleElementPresentation(myModulePointer, context, true));
   }
 }

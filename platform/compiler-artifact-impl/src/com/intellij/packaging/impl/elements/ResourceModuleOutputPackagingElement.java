@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,33 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.packaging.elements.ArtifactAntGenerationContext;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 9:56/31.05.13
  */
-public class TestModuleOutputElementType extends ModuleOutputElementTypeBase<TestModuleOutputPackagingElement> {
-  public static final TestModuleOutputElementType ELEMENT_TYPE = new TestModuleOutputElementType();
-
-  public TestModuleOutputElementType() {
-    super("module-test-output", CompilerBundle.message("element.type.name.module.test.output"));
+public class ResourceModuleOutputPackagingElement extends ModuleOutputPackagingElementBase {
+  public ResourceModuleOutputPackagingElement(@NotNull Project project) {
+    super(ResourceModuleOutputElementType.ELEMENT_TYPE, project);
   }
 
-  @NotNull
-  @Override
-  public TestModuleOutputPackagingElement createEmpty(@NotNull Project project) {
-    return new TestModuleOutputPackagingElement(project);
+  public ResourceModuleOutputPackagingElement(@NotNull Project project, @NotNull ModulePointer modulePointer) {
+    super(ResourceModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
   }
 
   @Override
-  protected ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull ModulePointer pointer) {
-    return new TestModuleOutputPackagingElement(project, pointer);
+  protected String getModuleOutputAntProperty(ArtifactAntGenerationContext generationContext) {
+    return generationContext.getModuleOutputPath(myModulePointer.getModuleName());
   }
 
-  @NotNull
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.TEST;
+    return ContentFolderType.RESOURCE;
   }
+
 }

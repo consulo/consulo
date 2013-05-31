@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,29 +22,30 @@ import com.intellij.openapi.roots.ContentFolderType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 9:54/31.05.13
  */
-public class TestModuleOutputElementType extends ModuleOutputElementTypeBase<TestModuleOutputPackagingElement> {
-  public static final TestModuleOutputElementType ELEMENT_TYPE = new TestModuleOutputElementType();
+public class ResourceModuleOutputElementType extends ModuleOutputElementTypeBase<ResourceModuleOutputPackagingElement> {
+  public static final ResourceModuleOutputElementType ELEMENT_TYPE = new ResourceModuleOutputElementType();
 
-  public TestModuleOutputElementType() {
-    super("module-test-output", CompilerBundle.message("element.type.name.module.test.output"));
+  ResourceModuleOutputElementType() {
+    super("module-resource-output", CompilerBundle.message("element.type.name.module.resource.output"));
   }
 
+  @Override
   @NotNull
-  @Override
-  public TestModuleOutputPackagingElement createEmpty(@NotNull Project project) {
-    return new TestModuleOutputPackagingElement(project);
+  public ResourceModuleOutputPackagingElement createEmpty(@NotNull Project project) {
+    return new ResourceModuleOutputPackagingElement(project);
   }
 
   @Override
-  protected ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull ModulePointer pointer) {
-    return new TestModuleOutputPackagingElement(project, pointer);
+  protected ResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull ModulePointer pointer) {
+    return new ResourceModuleOutputPackagingElement(project, pointer);
   }
 
   @NotNull
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.TEST;
+    return ContentFolderType.RESOURCE;
   }
 }

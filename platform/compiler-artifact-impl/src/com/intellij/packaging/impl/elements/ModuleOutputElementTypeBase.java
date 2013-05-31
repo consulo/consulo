@@ -20,6 +20,9 @@ import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
@@ -27,7 +30,9 @@ import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +44,30 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
     super(id, presentableName);
   }
 
+  @NotNull
+  protected abstract ContentFolderType getContentFolderType();
+
+  @Nullable
+  @Override
+  public Icon getCreateElementIcon() {
+    return ContentFolderIconUtil.getRootIcon(getContentFolderType()) ;
+  }
+
+  public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
+    for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
+      if(entry.getFolders(ContentFolderType.TEST).length != 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @Override
   public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
     return !getSuitableModules(context).isEmpty();
   }
 
+  @Override
   @NotNull
   public List<? extends PackagingElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
                                                                        @NotNull CompositePackagingElement<?> parent) {
@@ -70,6 +94,4 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
     }
     return modules;
   }
-
-  public abstract boolean isSuitableModule(ModulesProvider modulesProvider, Module module);
 }

@@ -21,27 +21,37 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
+import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
+import com.intellij.packaging.impl.ui.ModuleElementPresentation;
+import com.intellij.packaging.ui.ArtifactEditorContext;
+import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * @author nik
  */
-public abstract class ModuleOutputPackagingElementBase extends PackagingElement<ModuleOutputPackagingElementBase.ModuleOutputPackagingElementState>
-  implements ModuleOutputPackagingElement {
+public abstract class ModuleOutputPackagingElementBase
+  extends PackagingElement<ModuleOutputPackagingElementBase.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
   @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
   protected ModulePointer myModulePointer;
   protected final Project myProject;
@@ -90,6 +100,30 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
 
   @NotNull
   @Override
+  public Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context) {
+    Module module = myModulePointer.getModule();
+    if (module == null) {
+      return Collections.emptyList();
+    }
+
+    List<VirtualFile> roots = new SmartList<VirtualFile>();
+    ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
+    for (ContentEntry entry : rootModel.getContentEntries()) {
+      for (ContentFolder folder : entry.getFolders(getContentFolderType())) {
+        ContainerUtil.addIfNotNull(folder.getFile(), roots);
+      }
+    }
+    return roots;
+  }
+
+  @NonNls
+  @Override
+  public String toString() {
+    return "module:" + getModuleName();
+  }
+
+  @NotNull
+  @Override
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;
   }
@@ -101,6 +135,7 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
            myModulePointer.equals(((ModuleOutputPackagingElementBase)element).myModulePointer);
   }
 
+  @Override
   public ModuleOutputPackagingElementState getState() {
     final ModuleOutputPackagingElementState state = new ModuleOutputPackagingElementState();
     if (myModulePointer != null) {
@@ -109,6 +144,7 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
     return state;
   }
 
+  @Override
   public void loadState(ModuleOutputPackagingElementState state) {
     final String moduleName = state.getModuleName();
     myModulePointer = moduleName != null ? ModulePointerManager.getInstance(myProject).create(moduleName) : null;
@@ -118,6 +154,11 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
   @Nullable
   public String getModuleName() {
     return myModulePointer != null ? myModulePointer.getModuleName() : null;
+  }
+
+  @Override
+  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+    return new DelegatedPackagingElementPresentation(new ModuleElementPresentation(myModulePointer, context, getContentFolderType()));
   }
 
   @Override

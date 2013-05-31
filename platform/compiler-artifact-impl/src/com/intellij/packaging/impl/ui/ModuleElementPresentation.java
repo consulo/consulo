@@ -15,17 +15,17 @@
  */
 package com.intellij.packaging.impl.ui;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,14 +35,15 @@ import org.jetbrains.annotations.Nullable;
 public class ModuleElementPresentation extends TreeNodePresentation {
   private final ModulePointer myModulePointer;
   private final ArtifactEditorContext myContext;
-  private final boolean myTestOutput;
+  private final ContentFolderType myContentFolderType;
 
-  public ModuleElementPresentation(@Nullable ModulePointer modulePointer, @NotNull ArtifactEditorContext context, final boolean testOutput) {
+  public ModuleElementPresentation(@Nullable ModulePointer modulePointer, @NotNull ArtifactEditorContext context, final ContentFolderType contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
-    myTestOutput = testOutput;
+    myContentFolderType = contentFolderType;
   }
 
+  @Override
   public String getPresentableName() {
     return myModulePointer != null ? myModulePointer.getModuleName() : "<unknown>";
   }
@@ -65,14 +66,11 @@ public class ModuleElementPresentation extends TreeNodePresentation {
     }
   }
 
+  @Override
   public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     final Module module = findModule();
-    if (myTestOutput) {
-      presentationData.setIcon(PlatformIcons.TEST_SOURCE_FOLDER);
-    }
-    else if (module != null) {
-      presentationData.setIcon(AllIcons.Nodes.Module);
-    }
+    presentationData.setIcon(ContentFolderIconUtil.getRootIcon(myContentFolderType));
+
     String moduleName;
     if (module != null) {
       moduleName = module.getName();
@@ -91,8 +89,21 @@ public class ModuleElementPresentation extends TreeNodePresentation {
       moduleName = "<unknown>";
     }
 
-    String text = myTestOutput ? CompilerBundle.message("node.text.0.test.compile.output", moduleName)
-                               : CompilerBundle.message("node.text.0.compile.output", moduleName);
+    String text;
+    switch (myContentFolderType) {
+
+      case SOURCE:
+        text = CompilerBundle.message("node.text.0.compile.output", moduleName);
+        break;
+      case TEST:
+        text = CompilerBundle.message("node.text.0.test.compile.output", moduleName);
+        break;
+      case RESOURCE:
+        text = CompilerBundle.message("node.text.0.resource.compile.output", moduleName);
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
     presentationData.addText(text, module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 

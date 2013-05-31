@@ -32,31 +32,38 @@ public class DelegatedPackagingElementPresentation extends PackagingElementPrese
     myDelegate = delegate;
   }
 
+  @Override
   public String getPresentableName() {
     return myDelegate.getPresentableName();
   }
 
+  @Override
   public String getSearchName() {
     return myDelegate.getSearchName();
   }
 
+  @Override
   public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     myDelegate.render(presentationData, mainAttributes, commentAttributes);
   }
 
+  @Override
   @Nullable
   public String getTooltipText() {
     return myDelegate.getTooltipText();
   }
 
+  @Override
   public boolean canNavigateToSource() {
     return myDelegate.canNavigateToSource();
   }
 
+  @Override
   public void navigateToSource() {
     myDelegate.navigateToSource();
   }
 
+  @Override
   public int getWeight() {
     return myDelegate.getWeight();
   }
