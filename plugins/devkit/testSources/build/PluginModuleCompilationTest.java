@@ -21,7 +21,7 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.ModuleImpl;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -48,14 +48,14 @@ public class PluginModuleCompilationTest extends BaseCompilerTestCase {
     super.setUpJdk();
     new WriteAction() {
       protected void run(final Result result) {
-        ProjectJdkTable table = ProjectJdkTable.getInstance();
+        ProjectSdkTable table = ProjectSdkTable.getInstance();
         myPluginSdk = table.createSdk("IDEA plugin SDK", SdkType.findInstance(ConsuloSdkType.class));
         SdkModificator modificator = myPluginSdk.getSdkModificator();
         modificator.setSdkAdditionalData(new Sandbox(getSandboxPath(), getTestProjectJdk(), myPluginSdk));
         String rootPath = FileUtil.toSystemIndependentName(PathManager.getJarPathForClass(FileUtilRt.class));
         modificator.addRoot(LocalFileSystem.getInstance().refreshAndFindFileByPath(rootPath), OrderRootType.CLASSES);
         modificator.commitChanges();
-        table.addJdk(myPluginSdk);
+        table.addSdk(myPluginSdk);
       }
     }.execute();
   }
@@ -73,7 +73,7 @@ public class PluginModuleCompilationTest extends BaseCompilerTestCase {
   protected void tearDown() throws Exception {
     new WriteAction() {
       protected void run(final Result result) {
-        ProjectJdkTable.getInstance().removeJdk(myPluginSdk);
+        ProjectSdkTable.getInstance().removeSdk(myPluginSdk);
       }
     }.execute();
 

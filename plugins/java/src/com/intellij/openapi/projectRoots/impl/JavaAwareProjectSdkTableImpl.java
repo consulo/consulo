@@ -34,15 +34,15 @@ import org.jdom.Element;
       file = StoragePathMacros.APP_CONFIG + "/jdk.table.xml"
     )}
 )
-public class JavaAwareProjectJdkTableImpl extends ProjectJdkTableImpl {
-  public static JavaAwareProjectJdkTableImpl getInstanceEx() {
-    return (JavaAwareProjectJdkTableImpl)ServiceManager.getService(ProjectJdkTable.class);
+public class JavaAwareProjectSdkTableImpl extends ProjectSdkTableImpl {
+  public static JavaAwareProjectSdkTableImpl getInstanceEx() {
+    return (JavaAwareProjectSdkTableImpl)ServiceManager.getService(ProjectSdkTable.class);
   }
 
   private final JavaSdk myJavaSdk;
   private Sdk myInternalJdk;
 
-  public JavaAwareProjectJdkTableImpl(final JavaSdk javaSdk) {
+  public JavaAwareProjectSdkTableImpl(final JavaSdk javaSdk) {
     myJavaSdk = javaSdk;
   }
 
@@ -56,8 +56,8 @@ public class JavaAwareProjectJdkTableImpl extends ProjectJdkTableImpl {
   }
 
   @Override
-  public void removeJdk(final Sdk jdk) {
-    super.removeJdk(jdk);
+  public void removeSdk(final Sdk jdk) {
+    super.removeSdk(jdk);
     if (jdk.equals(myInternalJdk)) {
       myInternalJdk = null;
     }

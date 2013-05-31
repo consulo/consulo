@@ -23,7 +23,7 @@ import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -113,7 +113,7 @@ public class SdkConfigurationUtil {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ProjectJdkTable.getInstance().addJdk(sdk);
+        ProjectSdkTable.getInstance().addSdk(sdk);
       }
     });
   }
@@ -122,7 +122,7 @@ public class SdkConfigurationUtil {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ProjectJdkTable.getInstance().removeJdk(sdk);
+        ProjectSdkTable.getInstance().removeSdk(sdk);
       }
     });
   }
@@ -204,7 +204,7 @@ public class SdkConfigurationUtil {
       }
     }
     for (SdkType type : sdkTypes) {
-      List<Sdk> sdks = ProjectJdkTable.getInstance().getSdksOfType(type);
+      List<Sdk> sdks = ProjectSdkTable.getInstance().getSdksOfType(type);
       if (!sdks.isEmpty()) {
         if (comparator != null) {
           Collections.sort(sdks, comparator);
@@ -238,7 +238,7 @@ public class SdkConfigurationUtil {
       }
     });
     if (sdkHome != null) {
-      final Sdk newSdk = setupSdk(ProjectJdkTable.getInstance().getAllJdks(), sdkHome, sdkType, true, null, null);
+      final Sdk newSdk = setupSdk(ProjectSdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, null, null);
       if (newSdk != null) {
         addSdk(newSdk);
       }
@@ -267,7 +267,7 @@ public class SdkConfigurationUtil {
   public static void selectSdkHome(final SdkType sdkType, @NotNull final Consumer<String> consumer) {
     final FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
-      Sdk sdk = ProjectJdkTable.getInstance().findMostRecentSdkOfType(sdkType);
+      Sdk sdk = ProjectSdkTable.getInstance().findMostRecentSdkOfType(sdkType);
       if (sdk == null) throw new RuntimeException("No SDK of type " + sdkType + " found");
       consumer.consume(sdk.getHomePath());
       return;

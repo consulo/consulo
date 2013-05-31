@@ -41,28 +41,28 @@ import java.util.List;
 import java.util.Map;
 
 @State(
-  name="ProjectJdkTable",
+  name="ProjectSdkTable",
   roamingType = RoamingType.DISABLED,
   storages= {
     @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/jdk.table.xml"
+      file = StoragePathMacros.APP_CONFIG + "/sdk.table.xml"
     )}
 )
-public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentStateComponent<Element>, ExportableComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectJdkTableImpl");
+public class ProjectSdkTableImpl extends ProjectSdkTable implements PersistentStateComponent<Element>, ExportableComponent {
+  private static final Logger LOG = Logger.getInstance(ProjectSdkTableImpl.class);
 
   private final List<Sdk> mySdks = new ArrayList<Sdk>();
 
   private final MessageListenerList<Listener> myListenerList;
 
-  @NonNls public static final String ELEMENT_JDK = "jdk";
+  @NonNls public static final String ELEMENT_SDK = "sdk";
 
   private final Map<String, ProjectJdkImpl> myCachedProjectJdks = new HashMap<String, ProjectJdkImpl>();
   private final MessageBus myMessageBus;
 
-  public ProjectJdkTableImpl() {
+  public ProjectSdkTableImpl() {
     myMessageBus = ApplicationManager.getApplication().getMessageBus();
-    myListenerList = new MessageListenerList<Listener>(myMessageBus, JDK_TABLE_TOPIC);
+    myListenerList = new MessageListenerList<Listener>(myMessageBus, SDK_TABLE_TOPIC);
     // support external changes to sdk libraries (Endorsed Standards Override)
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
       @Override
@@ -94,7 +94,7 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
   @Override
   @NotNull
   public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile("jdk.table")};
+    return new File[]{PathManager.getOptionsFile("sdk.table")};
   }
 
   @Override
@@ -105,7 +105,7 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
 
   @Override
   @Nullable
-  public Sdk findJdk(String name) {
+  public Sdk findSdk(String name) {
     for (Sdk jdk : mySdks) {
       if (Comparing.strEqual(name, jdk.getName())) {
         return jdk;
@@ -116,8 +116,8 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
 
   @Override
   @Nullable
-  public Sdk findJdk(String name, String type) {
-    Sdk projectJdk = findJdk(name);
+  public Sdk findSdk(String name, String type) {
+    Sdk projectJdk = findSdk(name);
     if (projectJdk != null){
       return projectJdk;
     }
@@ -126,7 +126,7 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
     projectJdk = myCachedProjectJdks.get(uniqueName);
     if (projectJdk != null) return projectJdk;
 
-    @NonNls final String jdkPrefix = "jdk.";
+    @NonNls final String jdkPrefix = "sdk.";
     final String jdkPath = System.getProperty(jdkPrefix + name);
     if (jdkPath == null) return null;
 
@@ -151,14 +151,14 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
   }
 
   @Override
-  public Sdk[] getAllJdks() {
+  public Sdk[] getAllSdks() {
     return mySdks.toArray(new Sdk[mySdks.size()]);
   }
 
   @Override
   public List<Sdk> getSdksOfType(final SdkTypeId type) {
     List<Sdk> result = new ArrayList<Sdk>();
-    final Sdk[] sdks = getAllJdks();
+    final Sdk[] sdks = getAllSdks();
     for(Sdk sdk: sdks) {
       if (sdk.getSdkType() == type) {
         result.add(sdk);
@@ -168,21 +168,21 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
   }
 
   @Override
-  public void addJdk(Sdk jdk) {
+  public void addSdk(Sdk jdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     mySdks.add(jdk);
-    myMessageBus.syncPublisher(JDK_TABLE_TOPIC).jdkAdded(jdk);
+    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkAdded(jdk);
   }
 
   @Override
-  public void removeJdk(Sdk jdk) {
+  public void removeSdk(Sdk jdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    myMessageBus.syncPublisher(JDK_TABLE_TOPIC).jdkRemoved(jdk);
+    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(jdk);
     mySdks.remove(jdk);
   }
 
   @Override
-  public void updateJdk(Sdk originalJdk, Sdk modifiedJdk) {
+  public void updateSdk(Sdk originalJdk, Sdk modifiedJdk) {
     final String previousName = originalJdk.getName();
     final String newName = modifiedJdk.getName();
 
@@ -190,7 +190,7 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
 
     if (!previousName.equals(newName)) {
       // fire changes because after renaming JDK its name may match the associated jdk name of modules/project
-      myMessageBus.syncPublisher(JDK_TABLE_TOPIC).jdkNameChanged(originalJdk, previousName);
+      myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalJdk, previousName);
     }
   }
 
@@ -233,7 +233,7 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
   public void loadState(Element element) {
     mySdks.clear();
 
-    final List children = element.getChildren(ELEMENT_JDK);
+    final List children = element.getChildren(ELEMENT_SDK);
     for (final Object aChildren : children) {
       final Element e = (Element)aChildren;
       final ProjectJdkImpl jdk = new ProjectJdkImpl(null, null);
@@ -249,9 +249,9 @@ public class ProjectJdkTableImpl extends ProjectJdkTable implements PersistentSt
 
   @Override
   public Element getState() {
-    Element element = new Element("ProjectJdkTableImpl");
+    Element element = new Element("ProjectSdkTableImpl");
     for (Sdk jdk : mySdks) {
-      final Element e = new Element(ELEMENT_JDK);
+      final Element e = new Element(ELEMENT_SDK);
       try {
         ((ProjectJdkImpl)jdk).writeExternal(e);
       }

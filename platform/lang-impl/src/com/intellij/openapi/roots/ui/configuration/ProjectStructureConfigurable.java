@@ -89,7 +89,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
 
   private Configurable mySelectedConfigurable;
 
-  private final ProjectSdksModel myProjectJdksModel = new ProjectSdksModel();
+  private final ProjectSdksModel myProjectSdksModel = new ProjectSdksModel();
 
   private ProjectConfigurable myProjectConfig;
   private final ProjectLibrariesConfigurable myProjectLibrariesConfig;
@@ -101,7 +101,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
   private final List<Configurable> myName2Config = new ArrayList<Configurable>();
   private final StructureConfigurableContext myContext;
   private final ModulesConfigurator myModuleConfigurator;
-  private JdkListConfigurable myJdkListConfig;
+  private SdkListConfigurable mySdkListConfig;
 
   private final JLabel myEmptySelection = new JLabel("<html><body><center>Select a setting to view or edit its details here</center></body></html>", JLabel.CENTER);
 
@@ -229,15 +229,15 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
 
 
   private void addJdkListConfig() {
-    if (myJdkListConfig == null) {
-      myJdkListConfig = JdkListConfigurable.getInstance(myProject);
-      myJdkListConfig.init(myContext);
+    if (mySdkListConfig == null) {
+      mySdkListConfig = SdkListConfigurable.getInstance(myProject);
+      mySdkListConfig.init(myContext);
     }
-    addConfigurable(myJdkListConfig);
+    addConfigurable(mySdkListConfig);
   }
 
   private void addProjectConfig() {
-    myProjectConfig = new ProjectConfigurable(myProject, myContext, myModuleConfigurator, myProjectJdksModel);
+    myProjectConfig = new ProjectConfigurable(myProject, myContext, myModuleConfigurator, myProjectSdksModel);
     addConfigurable(myProjectConfig);
   }
 
@@ -295,7 +295,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
 
       myContext.reset();
 
-      myProjectJdksModel.reset(myProject);
+      myProjectSdksModel.reset(myProject);
 
       Configurable toSelect = null;
       for (Configurable each : myName2Config) {
@@ -398,7 +398,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
   }
 
   public ActionCallback select(@NotNull Sdk sdk, final boolean requestFocus) {
-    Place place = createPlaceFor(myJdkListConfig);
+    Place place = createPlaceFor(mySdkListConfig);
     place.putPath(BaseStructureConfigurable.TREE_NAME, sdk.getName());
     return navigateTo(place, requestFocus);
   }
@@ -534,12 +534,12 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
     return ServiceManager.getService(project, ProjectStructureConfigurable.class);
   }
 
-  public ProjectSdksModel getProjectJdksModel() {
-    return myProjectJdksModel;
+  public ProjectSdksModel getProjectSdksModel() {
+    return myProjectSdksModel;
   }
 
-  public JdkListConfigurable getJdkConfig() {
-    return myJdkListConfig;
+  public SdkListConfigurable getSdkConfig() {
+    return mySdkListConfig;
   }
 
   public ProjectLibrariesConfigurable getProjectLibrariesConfig() {

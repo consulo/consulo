@@ -270,7 +270,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     }
     
     final Map<Sdk, Sdk> modifiedToOriginalMap = new HashMap<Sdk, Sdk>();
-    final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(myProject).getProjectJdksModel();
+    final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(myProject).getProjectSdksModel();
     for (Map.Entry<Sdk, Sdk> entry : projectJdksModel.getProjectSdks().entrySet()) {
       modifiedToOriginalMap.put(entry.getValue(), entry.getKey());
     }

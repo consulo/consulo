@@ -30,7 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.JdkConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsStateService;
@@ -49,20 +49,20 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.*;
 
-public class ProjectJdksConfigurable extends MasterDetailsComponent {
+public class ProjectSdksConfigurable extends MasterDetailsComponent {
 
-  private final ProjectSdksModel myProjectJdksModel;
+  private final ProjectSdksModel myProjectSdksModel;
   private final Project myProject;
   @NonNls
   private static final String SPLITTER_PROPORTION = "project.jdk.splitter";
 
-  public ProjectJdksConfigurable(Project project) {
-    this(project, ProjectStructureConfigurable.getInstance(project).getProjectJdksModel());
+  public ProjectSdksConfigurable(Project project) {
+    this(project, ProjectStructureConfigurable.getInstance(project).getProjectSdksModel());
   }
 
-  public ProjectJdksConfigurable(Project project, ProjectSdksModel sdksModel) {
+  public ProjectSdksConfigurable(Project project, ProjectSdksModel sdksModel) {
     myProject = project;
-    myProjectJdksModel = sdksModel;
+    myProjectSdksModel = sdksModel;
     initTree();
   }
 
@@ -93,15 +93,16 @@ public class ProjectJdksConfigurable extends MasterDetailsComponent {
   public void reset() {
     super.reset();
 
-    myProjectJdksModel.reset(myProject);
+    myProjectSdksModel.reset(myProject);
 
     myRoot.removeAllChildren();
-    final Map<Sdk, Sdk> sdks = myProjectJdksModel.getProjectSdks();
+    final Map<Sdk, Sdk> sdks = myProjectSdksModel.getProjectSdks();
     for (Sdk sdk : sdks.keySet()) {
-      final JdkConfigurable configurable = new JdkConfigurable((ProjectJdkImpl)sdks.get(sdk), myProjectJdksModel, TREE_UPDATER, myHistory, myProject);
+      final SdkConfigurable
+        configurable = new SdkConfigurable((ProjectJdkImpl)sdks.get(sdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject);
       addNode(new MyNode(configurable), myRoot);
     }
-    selectJdk(myProjectJdksModel.getProjectSdk()); //restore selection
+    selectJdk(myProjectSdksModel.getProjectSdk()); //restore selection
     final String value = PropertiesComponent.getInstance().getValue(SPLITTER_PROPORTION);
     if (value != null) {
       try {
@@ -137,14 +138,14 @@ public class ProjectJdksConfigurable extends MasterDetailsComponent {
       }
     }
 
-    if (myProjectJdksModel.isModified() || modifiedJdks) myProjectJdksModel.apply(this);
-    myProjectJdksModel.setProjectSdk(getSelectedJdk());
+    if (myProjectSdksModel.isModified() || modifiedJdks) myProjectSdksModel.apply(this);
+    myProjectSdksModel.setProjectSdk(getSelectedJdk());
  }
 
 
   @Override
   public boolean isModified() {
-    return super.isModified() || myProjectJdksModel.isModified();
+    return super.isModified() || myProjectSdksModel.isModified();
   }
 
 
@@ -154,7 +155,7 @@ public class ProjectJdksConfigurable extends MasterDetailsComponent {
     if (splitter != null) {
       PropertiesComponent.getInstance().setValue(SPLITTER_PROPORTION, String.valueOf(splitter.getProportion()));
     }
-    myProjectJdksModel.disposeUIResources();
+    myProjectSdksModel.disposeUIResources();
     super.disposeUIResources();
   }
 
@@ -164,10 +165,12 @@ public class ProjectJdksConfigurable extends MasterDetailsComponent {
     final ArrayList<AnAction> actions = new ArrayList<AnAction>();
     DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.new.jdk.text"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
-    myProjectJdksModel.createAddActions(group, myTree, new Consumer<Sdk>() {
+    myProjectSdksModel.createAddActions(group, myTree, new Consumer<Sdk>() {
       @Override
       public void consume(final Sdk projectJdk) {
-        addNode(new MyNode(new JdkConfigurable(((ProjectJdkImpl)projectJdk), myProjectJdksModel, TREE_UPDATER, myHistory, myProject), false), myRoot);
+        addNode(
+          new MyNode(new SdkConfigurable(((ProjectJdkImpl)projectJdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject), false),
+          myRoot);
         selectNodeInTree(findNodeByObject(myRoot, projectJdk));
       }
     });
@@ -182,12 +185,12 @@ public class ProjectJdksConfigurable extends MasterDetailsComponent {
     for(int i = 0; i < myRoot.getChildCount(); i++){
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode)myRoot.getChildAt(i);
       final NamedConfigurable namedConfigurable = (NamedConfigurable)node.getUserObject();
-      jdks.add(((JdkConfigurable)namedConfigurable).getEditableObject());
+      jdks.add(((SdkConfigurable)namedConfigurable).getEditableObject());
     }
-    final HashMap<Sdk, Sdk> sdks = new HashMap<Sdk, Sdk>(myProjectJdksModel.getProjectSdks());
+    final HashMap<Sdk, Sdk> sdks = new HashMap<Sdk, Sdk>(myProjectSdksModel.getProjectSdks());
     for (Sdk sdk : sdks.values()) {
       if (!jdks.contains(sdk)) {
-        myProjectJdksModel.removeSdk(sdk);
+        myProjectSdksModel.removeSdk(sdk);
       }
     }
   }
@@ -195,7 +198,7 @@ public class ProjectJdksConfigurable extends MasterDetailsComponent {
   @Override
   protected boolean wasObjectStored(Object editableObject) {
     //noinspection RedundantCast
-    return myProjectJdksModel.getProjectSdks().containsKey((Sdk)editableObject);
+    return myProjectSdksModel.getProjectSdks().containsKey((Sdk)editableObject);
   }
 
   @Nullable

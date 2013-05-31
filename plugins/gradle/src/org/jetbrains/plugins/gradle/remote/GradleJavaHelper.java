@@ -2,14 +2,13 @@ package org.jetbrains.plugins.gradle.remote;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JdkUtil;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +45,7 @@ public class GradleJavaHelper {
       }
     }
 
-    Sdk[] sdks = ProjectJdkTable.getInstance().getAllJdks();
+    Sdk[] sdks = ProjectSdkTable.getInstance().getAllSdks();
     if (sdks != null) {
       for (Sdk sdk : sdks) {
         String path = sdk.getHomePath();

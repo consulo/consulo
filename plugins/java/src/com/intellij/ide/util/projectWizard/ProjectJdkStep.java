@@ -27,7 +27,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ui.configuration.ProjectJdksConfigurable;
+import com.intellij.openapi.roots.ui.configuration.ProjectSdksConfigurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 
@@ -41,15 +41,15 @@ import java.awt.*;
 public class ProjectJdkStep extends ModuleWizardStep {
   private final WizardContext myContext;
 
-  protected final ProjectJdksConfigurable myProjectJdksConfigurable;
+  protected final ProjectSdksConfigurable myProjectSdksConfigurable;
 
   private final JComponent myJDKsComponent;
 
   public ProjectJdkStep(final WizardContext context) {
     myContext = context;
-    myProjectJdksConfigurable = new ProjectJdksConfigurable(ProjectManager.getInstance().getDefaultProject());
-    myProjectJdksConfigurable.reset();
-    myJDKsComponent = myProjectJdksConfigurable.createComponent();
+    myProjectSdksConfigurable = new ProjectSdksConfigurable(ProjectManager.getInstance().getDefaultProject());
+    myProjectSdksConfigurable.reset();
+    myJDKsComponent = myProjectSdksConfigurable.createComponent();
   }
 
   public JComponent getPreferredFocusedComponent() {
@@ -80,7 +80,7 @@ public class ProjectJdkStep extends ModuleWizardStep {
 
 
   public Sdk getJdk() {
-    return myProjectJdksConfigurable.getSelectedJdk();
+    return myProjectSdksConfigurable.getSelectedJdk();
   }
 
   public Icon getIcon() {
@@ -88,7 +88,7 @@ public class ProjectJdkStep extends ModuleWizardStep {
   }
 
   public boolean validate() throws ConfigurationException {
-    final Sdk jdk = myProjectJdksConfigurable.getSelectedJdk();
+    final Sdk jdk = myProjectSdksConfigurable.getSelectedJdk();
     if (jdk == null && !ApplicationManager.getApplication().isUnitTestMode()) {
       int result = Messages.showOkCancelDialog(IdeBundle.message("prompt.confirm.project.no.jdk"),
                                                IdeBundle.message("title.no.jdk.specified"), Messages.getWarningIcon());
@@ -96,7 +96,7 @@ public class ProjectJdkStep extends ModuleWizardStep {
         return false;
       }
     }
-    myProjectJdksConfigurable.apply();
+    myProjectSdksConfigurable.apply();
     return true;
   }
 
@@ -107,6 +107,6 @@ public class ProjectJdkStep extends ModuleWizardStep {
 
   public void disposeUIResources() {
     super.disposeUIResources();
-    myProjectJdksConfigurable.disposeUIResources();
+    myProjectSdksConfigurable.disposeUIResources();
   }
 }

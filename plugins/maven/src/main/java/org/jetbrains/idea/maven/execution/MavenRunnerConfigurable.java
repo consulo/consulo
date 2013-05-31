@@ -22,7 +22,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.ui.IdeBorderFactory;
@@ -207,7 +207,7 @@ public abstract class MavenRunnerConfigurable implements SearchableConfigurable,
   private Map<String, String> collectJdkNamesAndDescriptions() {
     Map<String, String> result = new LinkedHashMap<String, String>();
 
-    for (Sdk projectJdk : ProjectJdkTable.getInstance().getSdksOfType(JavaSdk.getInstance())) {
+    for (Sdk projectJdk : ProjectSdkTable.getInstance().getSdksOfType(JavaSdk.getInstance())) {
       String name = projectJdk.getName();
       result.put(name, name);
     }

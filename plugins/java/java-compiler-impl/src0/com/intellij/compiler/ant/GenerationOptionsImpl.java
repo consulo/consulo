@@ -22,7 +22,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.OrderRootType;
@@ -287,7 +287,7 @@ public class GenerationOptionsImpl extends GenerationOptions {
     if (myJdkUrls != null) {
       return myJdkUrls;
     }
-    final Sdk[] projectJdks = ProjectJdkTable.getInstance().getAllJdks();
+    final Sdk[] projectJdks = ProjectSdkTable.getInstance().getAllSdks();
     myJdkUrls = new HashSet<String>();
     for (Sdk jdk : projectJdks) {
       ContainerUtil.addAll(myJdkUrls, jdk.getRootProvider().getUrls(OrderRootType.CLASSES));

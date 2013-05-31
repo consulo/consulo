@@ -23,7 +23,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.InvalidDataException;
@@ -138,7 +138,7 @@ public class GlobalAntConfiguration implements ApplicationComponent, JDOMExterna
   }
 
   public static Sdk findJdk(final String jdkName) {
-    return ProjectJdkTable.getInstance().findJdk(jdkName);
+    return ProjectSdkTable.getInstance().findSdk(jdkName);
   }
 
   public static MacroManager getMacroManager() {

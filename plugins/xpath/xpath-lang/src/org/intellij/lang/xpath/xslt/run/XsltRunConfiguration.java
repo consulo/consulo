@@ -394,7 +394,7 @@ public final class XsltRunConfiguration extends RunConfigurationBase implements 
 
     @Nullable
     public Sdk getJdk() {
-        return myJdk != null ? ProjectJdkTable.getInstance().findJdk(myJdk) : null;
+        return myJdk != null ? ProjectSdkTable.getInstance().findSdk(myJdk) : null;
     }
 
     public void setXmlInputFile(@NotNull String xmlInputFile) {
@@ -449,7 +449,7 @@ public final class XsltRunConfiguration extends RunConfigurationBase implements 
         if (ourDefaultSdk == null) {
             final String jdkHome = SystemProperties.getJavaHome();
             final String versionName = ProjectBundle.message("sdk.java.name.template", SystemProperties.getJavaVersion());
-            Sdk sdk = ProjectJdkTable.getInstance().createSdk(versionName, new SimpleJavaSdkType());
+            Sdk sdk = ProjectSdkTable.getInstance().createSdk(versionName, new SimpleJavaSdkType());
             SdkModificator modificator = sdk.getSdkModificator();
             modificator.setHomePath(jdkHome);
             modificator.commitChanges();
@@ -465,7 +465,7 @@ public final class XsltRunConfiguration extends RunConfigurationBase implements 
             return getDefaultSdk(); 
         }
         if (myJdkChoice == JdkChoice.JDK) {
-            return myJdk != null ? ProjectJdkTable.getInstance().findJdk(myJdk) : null;
+            return myJdk != null ? ProjectSdkTable.getInstance().findSdk(myJdk) : null;
         }
         Sdk jdk = null;
         final Module module = getEffectiveModule();

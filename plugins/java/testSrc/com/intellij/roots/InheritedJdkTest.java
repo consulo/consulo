@@ -16,10 +16,8 @@
 package com.intellij.roots;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
-import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.ModuleTestCase;
@@ -38,7 +36,7 @@ public class InheritedJdkTest extends ModuleTestCase {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ProjectJdkTable.getInstance().addJdk(jdk);
+        ProjectSdkTable.getInstance().addSdk(jdk);
       }
     });
     final ModuleRootManager rootManager = ModuleRootManager.getInstance(myModule);
@@ -64,7 +62,7 @@ public class InheritedJdkTest extends ModuleTestCase {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ProjectJdkTable.getInstance().addJdk(jdk1);
+        ProjectSdkTable.getInstance().addSdk(jdk1);
       }
     });
     ModuleRootModificationUtil.setModuleSdk(myModule, jdk1);
@@ -84,7 +82,7 @@ public class InheritedJdkTest extends ModuleTestCase {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ProjectJdkTable.getInstance().addJdk(mockJdk);
+        ProjectSdkTable.getInstance().addSdk(mockJdk);
       }
     });
     final ProjectRootManagerEx projectRootManager = ProjectRootManagerEx.getInstanceEx(myProject);
@@ -120,7 +118,7 @@ public class InheritedJdkTest extends ModuleTestCase {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ProjectJdkTable.getInstance().addJdk(jdk1);
+        ProjectSdkTable.getInstance().addSdk(jdk1);
       }
     });
 

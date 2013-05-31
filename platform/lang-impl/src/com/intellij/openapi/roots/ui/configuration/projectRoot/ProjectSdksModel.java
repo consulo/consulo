@@ -87,7 +87,7 @@ public class ProjectSdksModel implements SdkModel {
 
   public void reset(@Nullable Project project) {
     myProjectSdks.clear();
-    final Sdk[] projectSdks = ProjectJdkTable.getInstance().getAllJdks();
+    final Sdk[] projectSdks = ProjectSdkTable.getInstance().getAllSdks();
     for (Sdk sdk : projectSdks) {
       try {
         myProjectSdks.put(sdk, (Sdk)sdk.clone());
@@ -129,19 +129,19 @@ public class ProjectSdksModel implements SdkModel {
     if (!canApply(errorString, configurable, addedOnly)) {
       throw new ConfigurationException(errorString[0]);
     }
-    final Sdk[] allFromTable = ProjectJdkTable.getInstance().getAllJdks();
+    final Sdk[] allFromTable = ProjectSdkTable.getInstance().getAllSdks();
     final ArrayList<Sdk> itemsInTable = new ArrayList<Sdk>();
     // Delete removed and fill itemsInTable
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        final ProjectJdkTable jdkTable = ProjectJdkTable.getInstance();
+        final ProjectSdkTable jdkTable = ProjectSdkTable.getInstance();
         for (final Sdk tableItem : allFromTable) {
           if (myProjectSdks.containsKey(tableItem)) {
             itemsInTable.add(tableItem);
           }
           else {
-            jdkTable.removeJdk(tableItem);
+            jdkTable.removeSdk(tableItem);
           }
         }
       }
@@ -150,18 +150,18 @@ public class ProjectSdksModel implements SdkModel {
       @Override
       public void run() {
         // Now all removed items are deleted from table, itemsInTable contains all items in table
-        final ProjectJdkTable jdkTable = ProjectJdkTable.getInstance();
+        final ProjectSdkTable jdkTable = ProjectSdkTable.getInstance();
         for (Sdk originalJdk : itemsInTable) {
           final Sdk modifiedJdk = myProjectSdks.get(originalJdk);
           LOG.assertTrue(modifiedJdk != null);
-          jdkTable.updateJdk(originalJdk, modifiedJdk);
+          jdkTable.updateSdk(originalJdk, modifiedJdk);
         }
         // Add new items to table
-        final Sdk[] allJdks = jdkTable.getAllJdks();
+        final Sdk[] allJdks = jdkTable.getAllSdks();
         for (final Sdk projectJdk : myProjectSdks.keySet()) {
           LOG.assertTrue(projectJdk != null);
           if (ArrayUtilRt.find(allJdks, projectJdk) == -1) {
-            jdkTable.addJdk(projectJdk);
+            jdkTable.addSdk(projectJdk);
           }
         }
       }
@@ -173,7 +173,7 @@ public class ProjectSdksModel implements SdkModel {
 
     LinkedHashMap<Sdk, Sdk> sdks = new LinkedHashMap<Sdk, Sdk>(myProjectSdks);
     if (addedOnly) {
-      Sdk[] allJdks = ProjectJdkTable.getInstance().getAllJdks();
+      Sdk[] allJdks = ProjectSdkTable.getInstance().getAllSdks();
       for (Sdk jdk : allJdks) {
         sdks.remove(jdk);
       }

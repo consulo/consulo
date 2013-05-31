@@ -9,7 +9,7 @@ import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -116,12 +116,12 @@ public abstract class ProjectWizardTestCase extends PlatformTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     Sdk projectSdk = ProjectRootManager.getInstance(getProject()).getProjectSdk();
-    Sdk[] jdks = ProjectJdkTable.getInstance().getAllJdks();
+    Sdk[] jdks = ProjectSdkTable.getInstance().getAllSdks();
     for (final Sdk jdk : jdks) {
       if (projectSdk != jdk) {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           public void run() {
-            ProjectJdkTable.getInstance().removeJdk(jdk);
+            ProjectSdkTable.getInstance().removeSdk(jdk);
           }
         });
       }
@@ -145,7 +145,7 @@ public abstract class ProjectWizardTestCase extends PlatformTestCase {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       public void run() {
         for (Sdk sdk : mySdks) {
-          ProjectJdkTable.getInstance().removeJdk(sdk);
+          ProjectSdkTable.getInstance().removeSdk(sdk);
         }
       }
     });
@@ -181,10 +181,10 @@ public abstract class ProjectWizardTestCase extends PlatformTestCase {
   }
 
   protected Sdk createSdk(String name, SdkTypeId sdkType) {
-    final Sdk sdk = ProjectJdkTable.getInstance().createSdk(name, sdkType);
+    final Sdk sdk = ProjectSdkTable.getInstance().createSdk(name, sdkType);
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       public void run() {
-        ProjectJdkTable.getInstance().addJdk(sdk);
+        ProjectSdkTable.getInstance().addSdk(sdk);
       }
     });
     mySdks.add(sdk);

@@ -15,7 +15,7 @@
  */
 package com.intellij.core;
 
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
@@ -26,11 +26,11 @@ import java.util.List;
 /**
  * @author yole
  */
-public class CoreProjectJdkTable extends ProjectJdkTable {
+public class CoreProjectSdkTable extends ProjectSdkTable {
   private final List<Sdk> mySdks = new ArrayList<Sdk>();
 
   @Override
-  public Sdk findJdk(String name) {
+  public Sdk findSdk(String name) {
     synchronized (mySdks) {
       for (Sdk jdk : mySdks) {
         if (Comparing.strEqual(name, jdk.getName())) {
@@ -42,12 +42,12 @@ public class CoreProjectJdkTable extends ProjectJdkTable {
   }
 
   @Override
-  public Sdk findJdk(String name, String type) {
-    return findJdk(name);
+  public Sdk findSdk(String name, String type) {
+    return findSdk(name);
   }
 
   @Override
-  public Sdk[] getAllJdks() {
+  public Sdk[] getAllSdks() {
     synchronized (mySdks) {
       return mySdks.toArray(new Sdk[mySdks.size()]);
     }
@@ -67,21 +67,21 @@ public class CoreProjectJdkTable extends ProjectJdkTable {
   }
 
   @Override
-  public void addJdk(Sdk jdk) {
+  public void addSdk(Sdk jdk) {
     synchronized (mySdks) {
       mySdks.add(jdk);
     }
   }
 
   @Override
-  public void removeJdk(Sdk jdk) {
+  public void removeSdk(Sdk jdk) {
     synchronized (mySdks) {
       mySdks.remove(jdk);
     }
   }
 
   @Override
-  public void updateJdk(Sdk originalJdk, Sdk modifiedJdk) {
+  public void updateSdk(Sdk originalJdk, Sdk modifiedJdk) {
     throw new UnsupportedOperationException();
   }
 

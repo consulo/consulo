@@ -38,14 +38,16 @@ import javax.swing.*;
  * User: anna
  * Date: 05-Jun-2006
  */
-public class JdkConfigurable extends ProjectStructureElementConfigurable<Sdk> implements Place.Navigator {
+public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> implements Place.Navigator {
   private final ProjectJdkImpl myProjectJdk;
   private final SdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public JdkConfigurable(final ProjectJdkImpl projectJdk,
+  public SdkConfigurable(final ProjectJdkImpl projectJdk,
                          final ProjectSdksModel sdksModel,
-                         final Runnable updateTree, @NotNull History history, Project project) {
+                         final Runnable updateTree,
+                         @NotNull History history,
+                         Project project) {
     super(true, updateTree);
     myProjectJdk = projectJdk;
     mySdkEditor = createSdkEditor(sdksModel, history, myProjectJdk);

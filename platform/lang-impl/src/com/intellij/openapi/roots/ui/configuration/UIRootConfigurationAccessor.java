@@ -57,7 +57,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Override
   @Nullable
   public Sdk getSdk(final Sdk sdk, final String sdkName) {
-    final ProjectSdksModel model = ProjectStructureConfigurable.getInstance(myProject).getJdkConfig().getJdksTreeModel();
+    final ProjectSdksModel model = ProjectStructureConfigurable.getInstance(myProject).getSdkConfig().getSdksTreeModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
@@ -71,7 +71,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
 
   @Override
   public Sdk getProjectSdk(final Project project) {
-    return ProjectStructureConfigurable.getInstance(project).getProjectJdksModel().getProjectSdk();
+    return ProjectStructureConfigurable.getInstance(project).getProjectSdksModel().getProjectSdk();
   }
 
   @Override
@@ -83,7 +83,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
       return projectJdk.getName();
     }
     else {
-      final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(project).getProjectJdksModel();
+      final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(project).getProjectSdksModel();
       return projectJdksModel.findSdk(projectJdkName) == null ? projectJdkName : null;
     }
   }

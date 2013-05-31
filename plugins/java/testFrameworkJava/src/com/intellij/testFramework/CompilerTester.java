@@ -15,6 +15,7 @@
  */
 package com.intellij.testFramework;
 
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.CompilerTestUtil;
 import com.intellij.openapi.application.AccessToken;
@@ -23,7 +24,6 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.CompilerProjectExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -70,7 +70,7 @@ public class CompilerTester {
         CompilerProjectExtension.getInstance(getProject()).setCompilerOutputUrl(myMainOutput.findOrCreateDir("out").getUrl());
         if (myExternalMake) {
           CompilerTestUtil.enableExternalCompiler(getProject());
-          ModuleRootModificationUtil.setModuleSdk(myModule, JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk());
+          ModuleRootModificationUtil.setModuleSdk(myModule, JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk());
         }
         else {
           CompilerTestUtil.disableExternalCompiler(getProject());

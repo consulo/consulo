@@ -23,7 +23,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -203,7 +203,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   @Override
   public Sdk getProjectSdk() {
-    return myProjectSdkName == null ? null : ProjectJdkTable.getInstance().findJdk(myProjectSdkName, myProjectSdkType);
+    return myProjectSdkName == null ? null : ProjectSdkTable.getInstance().findSdk(myProjectSdkName, myProjectSdkType);
   }
 
   @Override
@@ -559,50 +559,50 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   private JdkTableMultiListener myJdkTableMultiListener = null;
 
-  private class JdkTableMultiListener implements ProjectJdkTable.Listener {
-    final EventDispatcher<ProjectJdkTable.Listener> myDispatcher = EventDispatcher.create(ProjectJdkTable.Listener.class);
+  private class JdkTableMultiListener implements ProjectSdkTable.Listener {
+    final EventDispatcher<ProjectSdkTable.Listener> myDispatcher = EventDispatcher.create(ProjectSdkTable.Listener.class);
     private MessageBusConnection listenerConnection;
 
     private JdkTableMultiListener(Project project) {
       listenerConnection = project.getMessageBus().connect();
-      listenerConnection.subscribe(ProjectJdkTable.JDK_TABLE_TOPIC, this);
+      listenerConnection.subscribe(ProjectSdkTable.SDK_TABLE_TOPIC, this);
     }
 
-    private void addListener(ProjectJdkTable.Listener listener) {
+    private void addListener(ProjectSdkTable.Listener listener) {
       myDispatcher.addListener(listener);
     }
 
-    private void removeListener(ProjectJdkTable.Listener listener) {
+    private void removeListener(ProjectSdkTable.Listener listener) {
       myDispatcher.removeListener(listener);
       uninstallListener(true);
     }
 
     @Override
-    public void jdkAdded(final Sdk jdk) {
+    public void sdkAdded(final Sdk jdk) {
       mergeRootsChangesDuring(new Runnable() {
         @Override
         public void run() {
-          myDispatcher.getMulticaster().jdkAdded(jdk);
+          myDispatcher.getMulticaster().sdkAdded(jdk);
         }
       });
     }
 
     @Override
-    public void jdkRemoved(final Sdk jdk) {
+    public void sdkRemoved(final Sdk jdk) {
       mergeRootsChangesDuring(new Runnable() {
         @Override
         public void run() {
-          myDispatcher.getMulticaster().jdkRemoved(jdk);
+          myDispatcher.getMulticaster().sdkRemoved(jdk);
         }
       });
     }
 
     @Override
-    public void jdkNameChanged(final Sdk jdk, final String previousName) {
+    public void sdkNameChanged(final Sdk jdk, final String previousName) {
       mergeRootsChangesDuring(new Runnable() {
         @Override
         public void run() {
-          myDispatcher.getMulticaster().jdkNameChanged(jdk, previousName);
+          myDispatcher.getMulticaster().sdkNameChanged(jdk, previousName);
         }
       });
       String currentName = getProjectSdkName();
@@ -625,7 +625,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<RootProvider, Set<OrderEntry>>();
 
-  void addJdkTableListener(ProjectJdkTable.Listener jdkTableListener) {
+  void addJdkTableListener(ProjectSdkTable.Listener jdkTableListener) {
     getJdkTableMultiListener().addListener(jdkTableListener);
   }
 
@@ -636,7 +636,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     return myJdkTableMultiListener;
   }
 
-  void removeJdkTableListener(ProjectJdkTable.Listener jdkTableListener) {
+  void removeJdkTableListener(ProjectSdkTable.Listener jdkTableListener) {
     if (myJdkTableMultiListener == null) return;
     myJdkTableMultiListener.removeListener(jdkTableListener);
   }

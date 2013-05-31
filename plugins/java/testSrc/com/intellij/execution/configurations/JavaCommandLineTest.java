@@ -21,7 +21,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.DefaultJavaProcessHandler;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import com.intellij.testFramework.LightIdeaTestCase;
 import junit.framework.Assert;
 
@@ -53,7 +53,7 @@ public class JavaCommandLineTest extends LightIdeaTestCase {
     String commandLineString;
 
     javaParameters = new JavaParameters();
-    final Sdk internalJdk = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+    final Sdk internalJdk = JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk();
     javaParameters.setJdk(internalJdk);
     javaParameters.setMainClass("Main");
     commandLineString = CommandLineBuilder.createFromJavaParameters(javaParameters).getCommandLineString();

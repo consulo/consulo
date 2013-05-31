@@ -17,7 +17,7 @@ package com.intellij.execution.ui;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.ide.util.BrowseFilesListener;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.TextComponentAccessor;
@@ -56,7 +56,7 @@ public class AlternativeJREPanel extends JPanel implements PanelWithAnchor {
         foundJDKs.add(path);
       }
     }
-    final Sdk[] allJDKs = ProjectJdkTable.getInstance().getAllJdks();
+    final Sdk[] allJDKs = ProjectSdkTable.getInstance().getAllSdks();
     for (Sdk jdk : allJDKs) {
       foundJDKs.add(jdk.getHomePath());
     }

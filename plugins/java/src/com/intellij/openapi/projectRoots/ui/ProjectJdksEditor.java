@@ -22,7 +22,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ui.configuration.ProjectJdksConfigurable;
+import com.intellij.openapi.roots.ui.configuration.ProjectSdksConfigurable;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
@@ -34,15 +34,15 @@ import java.awt.*;
  * @author MYakovlev
  */
 public class ProjectJdksEditor extends DialogWrapper {
-  private ProjectJdksConfigurable myConfigurable;
+  private ProjectSdksConfigurable myConfigurable;
   private Sdk myProjectJdk;
 
 
   public ProjectJdksEditor(final Sdk jdk, Project project, Component parent) {
-    this(jdk, parent, new ProjectJdksConfigurable(project));
+    this(jdk, parent, new ProjectSdksConfigurable(project));
   }
   
-  public ProjectJdksEditor(final Sdk jdk, Component parent, ProjectJdksConfigurable configurable) {
+  public ProjectJdksEditor(final Sdk jdk, Component parent, ProjectSdksConfigurable configurable) {
     super(parent, true);
     myConfigurable = configurable;
     SwingUtilities.invokeLater(new Runnable(){

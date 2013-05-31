@@ -18,9 +18,9 @@ package com.intellij;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.PathManagerEx;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.util.text.StringUtil;
 
@@ -43,19 +43,19 @@ public class JavaTestUtil {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        Sdk jdk = ProjectJdkTable.getInstance().findJdk("JDK");
+        Sdk jdk = ProjectSdkTable.getInstance().findSdk("JDK");
         if (jdk != null) {
-          ProjectJdkTable.getInstance().removeJdk(jdk);
+          ProjectSdkTable.getInstance().removeSdk(jdk);
         }
 
-        ProjectJdkTable.getInstance().addJdk(getTestJdk());
+        ProjectSdkTable.getInstance().addSdk(getTestJdk());
       }
     });
   }
 
   private static Sdk getTestJdk() {
     try {
-      ProjectJdkImpl jdk = (ProjectJdkImpl)JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk().clone();
+      ProjectJdkImpl jdk = (ProjectJdkImpl)JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk().clone();
       jdk.setName("JDK");
       return jdk;
     }

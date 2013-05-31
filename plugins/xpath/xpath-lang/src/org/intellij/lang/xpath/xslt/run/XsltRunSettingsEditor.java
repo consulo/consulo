@@ -29,7 +29,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -288,7 +288,7 @@ class XsltRunSettingsEditor extends SettingsEditor<XsltRunConfiguration> {
         }
       });
 
-      final List<Sdk> allJdks = ContainerUtil.filter(ProjectJdkTable.getInstance().getAllJdks(), new Condition<Sdk>() {
+      final List<Sdk> allJdks = ContainerUtil.filter(ProjectSdkTable.getInstance().getAllSdks(), new Condition<Sdk>() {
         @Override
         public boolean value(Sdk sdk) {
           return sdk.getSdkType() instanceof JavaSdkType;

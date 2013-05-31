@@ -108,7 +108,7 @@ public class GradleProjectImportBuilder extends AbstractExternalProjectImportBui
   @Nullable
   private static Sdk findJdk(@NotNull JavaSdkVersion version) {
     JavaSdk javaSdk = JavaSdk.getInstance();
-    List<Sdk> javaSdks = ProjectJdkTable.getInstance().getSdksOfType(javaSdk);
+    List<Sdk> javaSdks = ProjectSdkTable.getInstance().getSdksOfType(javaSdk);
     Sdk candidate = null;
     for (Sdk sdk : javaSdks) {
       JavaSdkVersion v = javaSdk.getVersion(sdk);

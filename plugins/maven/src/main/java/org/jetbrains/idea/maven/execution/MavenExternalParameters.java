@@ -32,9 +32,9 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.util.io.FileUtil;
@@ -271,7 +271,7 @@ public class MavenExternalParameters {
   private static Sdk getJdk(@Nullable Project project, MavenRunnerSettings runnerSettings, boolean isGlobalRunnerSettings) throws ExecutionException {
     String name = runnerSettings.getJreName();
     if (name.equals(MavenRunnerSettings.USE_INTERNAL_JAVA)) {
-      return JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+      return JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk();
     }
 
     if (name.equals(MavenRunnerSettings.USE_PROJECT_JDK)) {
@@ -283,9 +283,9 @@ public class MavenExternalParameters {
       }
 
       if (project == null) {
-        Sdk recent = ProjectJdkTable.getInstance().findMostRecentSdkOfType(JavaSdk.getInstance());
+        Sdk recent = ProjectSdkTable.getInstance().findMostRecentSdkOfType(JavaSdk.getInstance());
         if (recent != null) return recent;
-        return JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+        return JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk();
       }
 
       throw new ProjectJdkSettingsOpenerExecutionException("Project JDK is not specified. <a href='#'>Configure</a>", project);
@@ -303,7 +303,7 @@ public class MavenExternalParameters {
       return jdk;
     }
 
-    for (Sdk projectJdk : ProjectJdkTable.getInstance().getAllJdks()) {
+    for (Sdk projectJdk : ProjectSdkTable.getInstance().getAllSdks()) {
       if (projectJdk.getName().equals(name)) {
         return projectJdk;
       }

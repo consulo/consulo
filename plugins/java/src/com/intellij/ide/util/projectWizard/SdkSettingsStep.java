@@ -21,7 +21,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -86,7 +86,7 @@ public class SdkSettingsStep extends ModuleWizardStep {
 
     String value = component.getValue(selectedJdkProperty);
     if (value != null) {
-      Sdk jdk = ProjectJdkTable.getInstance().findJdk(value);
+      Sdk jdk = ProjectSdkTable.getInstance().findSdk(value);
       if (jdk != null) {
         mySdkComboBox.setSelectedJdk(jdk);
       }

@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -117,23 +117,23 @@ public class InheritedSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl implem
   }
 
 
-  private class MyJdkTableListener implements ProjectJdkTable.Listener {
+  private class MyJdkTableListener implements ProjectSdkTable.Listener {
     @Override
-    public void jdkRemoved(Sdk jdk) {
+    public void sdkRemoved(Sdk jdk) {
       if (jdk.equals(getSdk())) {
         updateFromRootProviderAndSubscribe();
       }
     }
 
     @Override
-    public void jdkAdded(Sdk jdk) {
+    public void sdkAdded(Sdk jdk) {
       if (isAffectedByJdk(jdk)) {
         updateFromRootProviderAndSubscribe();
       }
     }
 
     @Override
-    public void jdkNameChanged(Sdk jdk, String previousName) {
+    public void sdkNameChanged(Sdk jdk, String previousName) {
       if (isAffectedByJdk(jdk)) {
         // if current name matches my name
         updateFromRootProviderAndSubscribe();

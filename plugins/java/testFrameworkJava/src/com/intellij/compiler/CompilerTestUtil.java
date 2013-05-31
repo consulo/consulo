@@ -10,9 +10,9 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkTableImpl;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
+import com.intellij.openapi.projectRoots.impl.ProjectSdkTableImpl;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
@@ -54,10 +54,10 @@ public class CompilerTestUtil {
 
   public static void saveApplicationSettings() {
     try {
-      ProjectJdkTableImpl table = (ProjectJdkTableImpl)ProjectJdkTable.getInstance();
+      ProjectSdkTableImpl table = (ProjectSdkTableImpl)ProjectSdkTable.getInstance();
       Element root = new Element("application");
       root.addContent(JDomSerializationUtil.createComponentElement(JpsGlobalLoader.SDK_TABLE_COMPONENT_NAME).addContent(table.getState().cloneContent()));
-      saveApplicationComponent(root, ((ProjectJdkTableImpl)ProjectJdkTable.getInstance()).getExportFiles()[0]);
+      saveApplicationComponent(root, ((ProjectSdkTableImpl)ProjectSdkTable.getInstance()).getExportFiles()[0]);
 
       FileTypeManagerImpl fileTypeManager = (FileTypeManagerImpl)FileTypeManager.getInstance();
       Element fileTypesComponent = JDomSerializationUtil.createComponentElement(fileTypeManager.getComponentName());
@@ -82,8 +82,8 @@ public class CompilerTestUtil {
       protected void run(final Result result) {
         CompilerWorkspaceConfiguration.getInstance(project).USE_COMPILE_SERVER = true;
         ApplicationManagerEx.getApplicationEx().doNotSave(false);
-        JavaAwareProjectJdkTableImpl table = JavaAwareProjectJdkTableImpl.getInstanceEx();
-        table.addJdk(table.getInternalJdk());
+        JavaAwareProjectSdkTableImpl table = JavaAwareProjectSdkTableImpl.getInstanceEx();
+        table.addSdk(table.getInternalJdk());
       }
     }.execute();
   }
@@ -93,8 +93,8 @@ public class CompilerTestUtil {
       protected void run(final Result result) {
         CompilerWorkspaceConfiguration.getInstance(project).USE_COMPILE_SERVER = false;
         ApplicationManagerEx.getApplicationEx().doNotSave(true);
-        JavaAwareProjectJdkTableImpl table = JavaAwareProjectJdkTableImpl.getInstanceEx();
-        table.removeJdk(table.getInternalJdk());
+        JavaAwareProjectSdkTableImpl table = JavaAwareProjectSdkTableImpl.getInstanceEx();
+        table.removeSdk(table.getInternalJdk());
         BuildManager.getInstance().stopWatchingProject(project);
       }
     }.execute();

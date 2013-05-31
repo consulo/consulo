@@ -24,7 +24,7 @@ import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.impl.BasePathMacroManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ex.JavaSdkUtil;
 import com.intellij.openapi.roots.*;
@@ -181,7 +181,7 @@ public class EclipseClasspathReader extends AbstractEclipseClasspathReader<Modif
       rootModel.inheritSdk();
     }
     else {
-      final Sdk moduleJdk = ProjectJdkTable.getInstance().findJdk(jdkName);
+      final Sdk moduleJdk = ProjectSdkTable.getInstance().findSdk(jdkName);
       if (moduleJdk != null) {
         rootModel.setSdk(moduleJdk);
       }

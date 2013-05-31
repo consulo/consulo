@@ -18,11 +18,10 @@ package com.intellij.roots;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
@@ -85,7 +84,7 @@ public class RootsChangedTest extends ModuleTestCase {
     assertEventsCount(2);
 
     final Sdk jdk = IdeaTestUtil.getMockJdk17();
-    ProjectJdkTable.getInstance().addJdk(jdk);
+    ProjectSdkTable.getInstance().addSdk(jdk);
     assertEventsCount(0);
 
     final ModifiableRootModel rootModelA = ModuleRootManager.getInstance(moduleA).getModifiableModel();
@@ -103,7 +102,7 @@ public class RootsChangedTest extends ModuleTestCase {
     sdkModificator.commitChanges();
     assertEventsCount(1);
 
-    ProjectJdkTable.getInstance().removeJdk(jdk);
+    ProjectSdkTable.getInstance().removeSdk(jdk);
     assertEventsCount(1);
   }
 
@@ -113,11 +112,11 @@ public class RootsChangedTest extends ModuleTestCase {
     assertEventsCount(2);
 
     final Sdk jdk = IdeaTestUtil.getMockJdk17("AAA");
-    ProjectJdkTable.getInstance().addJdk(jdk);
+    ProjectSdkTable.getInstance().addSdk(jdk);
     assertEventsCount(0);
 
     final Sdk jdkBBB = IdeaTestUtil.getMockJdk17("BBB");
-    ProjectJdkTable.getInstance().addJdk(jdk);
+    ProjectSdkTable.getInstance().addSdk(jdk);
     assertEventsCount(0);
 
     ProjectRootManager.getInstance(myProject).setProjectSdk(jdkBBB);
@@ -141,7 +140,7 @@ public class RootsChangedTest extends ModuleTestCase {
     sdkModificator.commitChanges();
     assertEventsCount(1);
 
-    ProjectJdkTable.getInstance().removeJdk(jdk);
+    ProjectSdkTable.getInstance().removeSdk(jdk);
     assertEventsCount(1);
   }
 

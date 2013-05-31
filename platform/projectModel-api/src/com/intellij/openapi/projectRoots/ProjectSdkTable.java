@@ -24,24 +24,27 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EventListener;
 import java.util.List;
 
-public abstract class ProjectJdkTable {
-  public static ProjectJdkTable getInstance() {
-    return ServiceManager.getService(ProjectJdkTable.class);
+public abstract class ProjectSdkTable {
+  public static Topic<Listener> SDK_TABLE_TOPIC = Topic.create("Project SDK table", Listener.class);
+
+  public static ProjectSdkTable getInstance() {
+    return ServiceManager.getService(ProjectSdkTable.class);
   }
 
   @Nullable
-  public abstract Sdk findJdk(String name);
+  public abstract Sdk findSdk(String name);
 
   @Nullable
-  public abstract Sdk findJdk(String name, String type);
+  public abstract Sdk findSdk(String name, String type);
 
-  public abstract Sdk[] getAllJdks();
+  public abstract Sdk[] getAllSdks();
 
   public abstract List<Sdk> getSdksOfType(SdkTypeId type);
 
   @Nullable
   public Sdk findMostRecentSdkOfType(final SdkTypeId type) {
     return findMostRecentSdk(new Condition<Sdk>() {
+      @Override
       public boolean value(Sdk sdk) {
         return sdk.getSdkType() == type;
       }
@@ -51,7 +54,7 @@ public abstract class ProjectJdkTable {
   @Nullable
   public Sdk findMostRecentSdk(Condition<Sdk> condition) {
     Sdk found = null;
-    for (Sdk each : getAllJdks()) {
+    for (Sdk each : getAllSdks()) {
       if (!condition.value(each)) continue;
       if (found == null) {
         found = each;
@@ -62,27 +65,27 @@ public abstract class ProjectJdkTable {
     return found;
   }
 
-  public abstract void addJdk(Sdk jdk);
+  public abstract void addSdk(Sdk sdk);
 
-  public abstract void removeJdk(Sdk jdk);
+  public abstract void removeSdk(Sdk sdk);
 
-  public abstract void updateJdk(Sdk originalJdk, Sdk modifiedJdk);
+  public abstract void updateSdk(Sdk originalSdk, Sdk modifiedSdk);
 
   public interface Listener extends EventListener {
-    void jdkAdded(Sdk jdk);
+    void sdkAdded(Sdk sdk);
 
-    void jdkRemoved(Sdk jdk);
+    void sdkRemoved(Sdk sdk);
 
-    void jdkNameChanged(Sdk jdk, String previousName);
+    void sdkNameChanged(Sdk sdk, String previousName);
   }
 
   /**
-   * @deprecated use {@link ProjectJdkTable#JDK_TABLE_TOPIC} instead
+   * @deprecated use {@link ProjectSdkTable#SDK_TABLE_TOPIC} instead
    */
   public abstract void addListener(Listener listener);
 
   /**
-   * @deprecated use {@link ProjectJdkTable#JDK_TABLE_TOPIC} instead
+   * @deprecated use {@link ProjectSdkTable#SDK_TABLE_TOPIC} instead
    */
   public abstract void removeListener(Listener listener);
 
@@ -91,6 +94,4 @@ public abstract class ProjectJdkTable {
   public abstract SdkTypeId getSdkTypeByName(String name);
 
   public abstract Sdk createSdk(final String name, final SdkTypeId sdkType);
-
-  public static Topic<Listener> JDK_TABLE_TOPIC = Topic.create("Project JDK table", Listener.class);
 }

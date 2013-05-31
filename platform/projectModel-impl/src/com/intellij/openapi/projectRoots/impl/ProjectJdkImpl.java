@@ -80,7 +80,7 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
   @NotNull
   public SdkTypeId getSdkType() {
     if (mySdkType == null) {
-      mySdkType = ProjectJdkTable.getInstance().getDefaultSdkType();
+      mySdkType = ProjectSdkTable.getInstance().getDefaultSdkType();
     }
     return mySdkType;
   }
@@ -137,7 +137,7 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
     final Element typeChild = element.getChild(ELEMENT_TYPE);
     final String sdkTypeName = typeChild != null? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
     if (sdkTypeName != null) {
-      mySdkType = ProjectJdkTable.getInstance().getSdkTypeByName(sdkTypeName);
+      mySdkType = ProjectSdkTable.getInstance().getSdkTypeByName(sdkTypeName);
     }
     final Element version = element.getChild(ELEMENT_VERSION);
 

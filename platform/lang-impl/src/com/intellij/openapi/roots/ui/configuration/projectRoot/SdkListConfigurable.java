@@ -44,8 +44,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 
-public class JdkListConfigurable extends BaseStructureConfigurable {
-  private final ProjectSdksModel myJdksTreeModel;
+public class SdkListConfigurable extends BaseStructureConfigurable {
+  private final ProjectSdksModel mySdksTreeModel;
   private final SdkModel.Listener myListener = new SdkModel.Listener() {
     @Override
     public void sdkAdded(Sdk sdk) {
@@ -69,17 +69,17 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
       final TreePath path = myTree.getSelectionPath();
       if (path != null) {
         final NamedConfigurable configurable = ((MyNode)path.getLastPathComponent()).getConfigurable();
-        if (configurable != null && configurable instanceof JdkConfigurable) {
+        if (configurable != null && configurable instanceof SdkConfigurable) {
           configurable.updateName();
         }
       }
     }
   };
 
-  public JdkListConfigurable(final Project project, ProjectStructureConfigurable root) {
+  public SdkListConfigurable(final Project project, ProjectStructureConfigurable root) {
     super(project);
-    myJdksTreeModel = root.getProjectJdksModel();
-    myJdksTreeModel.addListener(myListener);
+    mySdksTreeModel = root.getProjectSdksModel();
+    mySdksTreeModel.addListener(myListener);
   }
 
   @Override
@@ -126,7 +126,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
   protected void loadTree() {
     final Map<SdkType, List<Sdk>> map = new HashMap<SdkType, List<Sdk>>();
 
-    for(Sdk sdk : myJdksTreeModel.getProjectSdks().values()) {
+    for(Sdk sdk : mySdksTreeModel.getProjectSdks().values()) {
       final SdkType sdkType = (SdkType)sdk.getSdkType();
 
       List<Sdk> list = map.get(sdkType);
@@ -146,7 +146,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
       addNode(groupNode, myRoot);
 
       for(Sdk sdk : value) {
-        final JdkConfigurable configurable = new JdkConfigurable((ProjectJdkImpl)sdk, myJdksTreeModel, TREE_UPDATER, myHistory,
+        final SdkConfigurable configurable = new SdkConfigurable((ProjectJdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory,
                                                                  myProject);
 
         addNode(new MyNode(configurable), groupNode);
@@ -163,7 +163,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
   @Override
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     final List<ProjectStructureElement> result = new ArrayList<ProjectStructureElement>();
-    for (Sdk sdk : myJdksTreeModel.getProjectSdks().values()) {
+    for (Sdk sdk : mySdksTreeModel.getProjectSdks().values()) {
       result.add(new SdkProjectStructureElement(myContext, sdk));
     }
     return result;
@@ -173,7 +173,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
     if (!myUiDisposed) {
       myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(myContext, sdk));
 
-      MyNode newSdkNode = new MyNode(new JdkConfigurable((ProjectJdkImpl)sdk, myJdksTreeModel, TREE_UPDATER, myHistory, myProject));
+      MyNode newSdkNode = new MyNode(new SdkConfigurable((ProjectJdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory, myProject));
  
       final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
       if(groupNode != null) {
@@ -209,12 +209,12 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   public void dispose() {
-    myJdksTreeModel.removeListener(myListener);
-    myJdksTreeModel.disposeUIResources();
+    mySdksTreeModel.removeListener(myListener);
+    mySdksTreeModel.disposeUIResources();
   }
 
-  public ProjectSdksModel getJdksTreeModel() {
-    return myJdksTreeModel;
+  public ProjectSdksModel getSdksTreeModel() {
+    return mySdksTreeModel;
   }
 
   @Override
@@ -239,17 +239,17 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
       }
     }
 
-    if (myJdksTreeModel.isModified() || modifiedJdks) myJdksTreeModel.apply(this);
-    myJdksTreeModel.setProjectSdk(ProjectRootManager.getInstance(myProject).getProjectSdk());
+    if (mySdksTreeModel.isModified() || modifiedJdks) mySdksTreeModel.apply(this);
+    mySdksTreeModel.setProjectSdk(ProjectRootManager.getInstance(myProject).getProjectSdk());
   }
 
   @Override
   public boolean isModified() {
-    return super.isModified() || myJdksTreeModel.isModified();
+    return super.isModified() || mySdksTreeModel.isModified();
   }
 
-  public static JdkListConfigurable getInstance(Project project) {
-    return ServiceManager.getService(project, JdkListConfigurable.class);
+  public static SdkListConfigurable getInstance(Project project) {
+    return ServiceManager.getService(project, SdkListConfigurable.class);
   }
 
   @Override
@@ -259,7 +259,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
       @Override
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.new.jdk.text"), true);
-        myJdksTreeModel.createAddActions(group, myTree, new Consumer<Sdk>() {
+        mySdksTreeModel.createAddActions(group, myTree, new Consumer<Sdk>() {
           @Override
           public void consume(final Sdk projectJdk) {
             addSdkNode(projectJdk, true);
@@ -272,7 +272,7 @@ public class JdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   protected void removeJdk(final Sdk jdk) {
-    myJdksTreeModel.removeSdk(jdk);
+    mySdksTreeModel.removeSdk(jdk);
     myContext.getDaemonAnalyzer().removeElement(new SdkProjectStructureElement(myContext, jdk));
   }
 

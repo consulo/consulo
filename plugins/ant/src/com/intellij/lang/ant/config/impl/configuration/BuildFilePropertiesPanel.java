@@ -22,7 +22,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.ProjectJdksEditor;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
@@ -415,7 +415,7 @@ public class BuildFilePropertiesPanel {
           if (application == null) {
             return Collections.singletonList((Sdk)null).iterator();
           }
-          ArrayList<Sdk> allJdks = new ArrayList<Sdk>(Arrays.asList(ProjectJdkTable.getInstance().getAllJdks()));
+          ArrayList<Sdk> allJdks = new ArrayList<Sdk>(Arrays.asList(ProjectSdkTable.getInstance().getAllSdks()));
           allJdks.add(0, null);
           return allJdks.iterator();
         }

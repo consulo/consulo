@@ -27,7 +27,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy;
@@ -129,7 +129,7 @@ public class IdeaSpecificSettings extends AbstractIdeaSpecificSettings<Modifiabl
     } else {
       final String jdkName = root.getAttributeValue("jdk");
       if (jdkName != null) {
-        final Sdk jdkByName = ProjectJdkTable.getInstance().findJdk(jdkName);
+        final Sdk jdkByName = ProjectSdkTable.getInstance().findSdk(jdkName);
         if (jdkByName != null) {
           model.setSdk(jdkByName);
         }

@@ -23,7 +23,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.JdkListConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -147,7 +147,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
           @Override
           public void consume(final Sdk jdk) {
             if (project != null) {
-              final JdkListConfigurable configurable = JdkListConfigurable.getInstance(project);
+              final SdkListConfigurable configurable = SdkListConfigurable.getInstance(project);
               configurable.addSdkNode(jdk, false);
             }
             reloadModel(new SdkComboBoxItem(jdk), project);
@@ -189,7 +189,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
       public void actionPerformed(ActionEvent e) {
         final SdkComboBoxItem selectedItem = getSelectedItem();
         if (selectedItem instanceof ProjectSdkComboBoxItem) {
-          editButton.setEnabled(ProjectStructureConfigurable.getInstance(project).getProjectJdksModel().getProjectSdk() != null);
+          editButton.setEnabled(ProjectStructureConfigurable.getInstance(project).getProjectSdksModel().getProjectSdk() != null);
         }
         else {
           editButton.setEnabled(!(selectedItem instanceof InvalidSdkComboBoxItem) && selectedItem != null && selectedItem.getSdk() != null);
@@ -262,7 +262,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
     model.removeAllElements();
     model.addElement(firstItem);
-    final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(project).getProjectJdksModel();
+    final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(project).getProjectSdksModel();
     List<Sdk> projectJdks = new ArrayList<Sdk>(projectJdksModel.getProjectSdks().values());
     if (myFilter != null) {
       projectJdks = ContainerUtil.filter(projectJdks, getSdkFilter(myFilter));

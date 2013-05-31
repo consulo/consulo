@@ -22,7 +22,7 @@ import com.intellij.lang.ant.config.impl.AntConfigurationImpl;
 import com.intellij.lang.ant.config.impl.AntInstallation;
 import com.intellij.lang.ant.config.impl.GlobalAntConfiguration;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.SystemInfo;
@@ -186,7 +186,7 @@ public abstract class AntDomProject extends AntDomNamedElement implements Proper
         jdkName = AntConfigurationImpl.DEFAULT_JDK_NAME.get(buildFile.getAllOptions());
       }
       if (jdkName != null && jdkName.length() > 0) {
-        return ProjectJdkTable.getInstance().findJdk(jdkName);
+        return ProjectSdkTable.getInstance().findSdk(jdkName);
       }
     }
     return ProjectRootManager.getInstance(tag.getProject()).getProjectSdk();

@@ -37,7 +37,7 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   }
 
   public Sdk createJdk(final String jdkName, final String home) {
-    final Sdk jdk = ProjectJdkTable.getInstance().createSdk(jdkName, this);
+    final Sdk jdk = ProjectSdkTable.getInstance().createSdk(jdkName, this);
     SdkModificator sdkModificator = jdk.getSdkModificator();
 
     String path = home.replace(File.separatorChar, '/');

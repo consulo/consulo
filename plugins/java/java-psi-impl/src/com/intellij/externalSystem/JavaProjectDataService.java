@@ -23,7 +23,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -82,7 +82,7 @@ public class JavaProjectDataService implements ProjectDataService<JavaProjectDat
   @Nullable
   private static Sdk findJdk(@NotNull JavaSdkVersion version) {
     JavaSdk javaSdk = JavaSdk.getInstance();
-    List<Sdk> javaSdks = ProjectJdkTable.getInstance().getSdksOfType(javaSdk);
+    List<Sdk> javaSdks = ProjectSdkTable.getInstance().getSdksOfType(javaSdk);
     Sdk candidate = null;
     for (Sdk sdk : javaSdks) {
       JavaSdkVersion v = javaSdk.getVersion(sdk);

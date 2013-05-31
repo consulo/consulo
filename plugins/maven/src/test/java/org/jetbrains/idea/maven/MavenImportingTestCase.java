@@ -16,6 +16,7 @@
 
 package org.jetbrains.idea.maven;
 
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.CompilerTestUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
@@ -32,7 +33,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
@@ -511,7 +511,7 @@ public abstract class MavenImportingTestCase extends MavenTestCase {
   }
 
   protected Sdk setupJdkForModule(final String moduleName) {
-    final Sdk sdk = useJps()? JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk() : createJdk("Java 1.5");
+    final Sdk sdk = useJps()? JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk() : createJdk("Java 1.5");
     ModuleRootModificationUtil.setModuleSdk(getModule(moduleName), sdk);
     return sdk;
   }

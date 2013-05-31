@@ -4471,7 +4471,7 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.GlobalLibrariesConfigurable"/>
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.JdkListConfigurable"/>
+    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler" order="after project" />
@@ -5388,8 +5388,8 @@
     <!--Platform-->
     <applicationService serviceInterface="com.intellij.packageDependencies.DependenciesVisitorFactory"
                         serviceImplementation="com.intellij.packageDependencies.DependenciesVisitorFactory"/>
-    <applicationService serviceInterface="com.intellij.openapi.projectRoots.ProjectJdkTable"
-                        serviceImplementation="com.intellij.openapi.projectRoots.impl.ProjectJdkTableImpl"/>
+    <applicationService serviceInterface="com.intellij.openapi.projectRoots.ProjectSdkTable"
+                        serviceImplementation="com.intellij.openapi.projectRoots.impl.ProjectSdkTableImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.TargetElementUtilBase"
                         serviceImplementation="com.intellij.codeInsight.TargetElementUtilBase"/>
     <applicationService serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"
@@ -5397,7 +5397,7 @@
     <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
     <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
 
-    <exportable serviceInterface="com.intellij.openapi.projectRoots.ProjectJdkTable"/>
+    <exportable serviceInterface="com.intellij.openapi.projectRoots.ProjectSdkTable"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleDefaultVcsRootPolicy"/>
