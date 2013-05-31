@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -19,6 +19,7 @@ import com.intellij.psi.util.ClassUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.content.Content;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.asm4.ClassReader;
@@ -173,15 +174,14 @@ public class ByteCodeViewerManager extends DockablePopupManager<ByteCodeViewerCo
       final PsiFile containingFile = containingClass.getContainingFile();
       final VirtualFile virtualFile = containingFile.getVirtualFile();
       if (virtualFile == null) return null;
-      final CompilerModuleExtension moduleExtension = CompilerModuleExtension.getInstance(module);
-      if (moduleExtension == null) return null;
+      final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(psiElement.getProject());
       String classPath;
       if (ProjectRootManager.getInstance(module.getProject()).getFileIndex().isInTestSourceContent(virtualFile)) {
-        final VirtualFile pathForTests = moduleExtension.getCompilerOutputPathForTests();
+        final VirtualFile pathForTests = compilerPathsManager.getCompilerOutput(module, ContentFolderType.TEST);
         if (pathForTests == null) return null;
         classPath = pathForTests.getPath();
       } else {
-        final VirtualFile compilerOutputPath = moduleExtension.getCompilerOutputPath();
+        final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(module, ContentFolderType.SOURCE);
         if (compilerOutputPath == null) return null;
         classPath = compilerOutputPath.getPath();
       }

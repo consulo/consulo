@@ -264,6 +264,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="jvm-bytecode-viewer">
+          <element id="directory" name="lib">
+            <element id="archive" name="jvm-bytecode-viewer.jar">
+              <element id="module-output" name="jvm-bytecode-viewer" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

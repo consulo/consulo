@@ -1,6 +1,7 @@
 package com.intellij.byteCodeViewer;
 
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -13,7 +14,6 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.project.Project;
@@ -39,7 +39,7 @@ public class ByteCodeViewerComponent extends JPanel implements Disposable {
     doc.setReadOnly(true);
     myEditor = factory.createEditor(doc, project);
     EditorHighlighterFactory editorHighlighterFactory = EditorHighlighterFactory.getInstance();
-    final SyntaxHighlighter syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(StdFileTypes.JAVA, project, null);
+    final SyntaxHighlighter syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(JavaFileType.INSTANCE, project, null);
     ((EditorEx)myEditor).setHighlighter(editorHighlighterFactory.createEditorHighlighter(syntaxHighlighter, EditorColorsManager.getInstance().getGlobalScheme()));
     ((EditorEx)myEditor).setBackgroundColor(EditorFragmentComponent.getBackgroundColor(myEditor));
     myEditor.getColorsScheme().setColor(EditorColors.CARET_ROW_COLOR, LightColors.SLIGHTLY_GRAY);
