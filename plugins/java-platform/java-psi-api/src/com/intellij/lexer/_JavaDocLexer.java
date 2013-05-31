@@ -28,8 +28,7 @@ import com.intellij.psi.tree.IElementType;
  * on 15.09.08 21:08 from the specification file
  * <tt>C:/JetBrains/IDEA/tools/lexer/_JavaDocLexer.flex</tt>
  */
-class _JavaDocLexer implements FlexLexer {
-  /** initial size of the lookahead buffer */
+class _JavaDocLexer implements FlexLexer { /** initial size of the lookahead buffer */
   private static final int ZZ_BUFFERSIZE = 16384;
 
   /** lexical states */
