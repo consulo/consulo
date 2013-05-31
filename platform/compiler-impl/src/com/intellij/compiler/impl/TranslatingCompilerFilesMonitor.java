@@ -58,6 +58,7 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.*;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -589,16 +590,14 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   }
 
   private TIntObjectHashMap<Pair<Integer, Integer>> buildOutputRootsLayout(ProjectRef projRef) {
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(projRef.get());
     final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
     for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
-      final CompilerModuleExtension manager = CompilerModuleExtension.getInstance(module);
-      if (manager != null) {
-        final VirtualFile output = manager.getCompilerOutputPath();
+        final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ContentFolderType.SOURCE);
         final int first = output != null? Math.abs(getFileId(output)) : -1;
-        final VirtualFile testsOutput = manager.getCompilerOutputPathForTests();
+        final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, ContentFolderType.TEST);
         final int second = testsOutput != null? Math.abs(getFileId(testsOutput)) : -1;
         map.put(getModuleId(module), new Pair<Integer, Integer>(first, second));
-      }
     }
     return map;
   }

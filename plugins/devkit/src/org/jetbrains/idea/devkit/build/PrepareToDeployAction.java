@@ -30,7 +30,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -41,6 +41,7 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.devkit.DevKitBundle;
@@ -309,7 +310,7 @@ public class PrepareToDeployAction extends AnAction {
       final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
       final HashSet<String> writtenItemRelativePaths = new HashSet<String>();
       for (Module module1 : modules) {
-        final VirtualFile compilerOutputPath = CompilerModuleExtension.getInstance(module1).getCompilerOutputPath();
+        final VirtualFile compilerOutputPath = CompilerPathsManager.getInstance(module1.getProject()).getCompilerOutput(module1, ContentFolderType.SOURCE);
         if (compilerOutputPath == null) continue; //pre-condition: output dirs for all modules are up-to-date
         ZipUtil.addDirToZipRecursively(jarPlugin, jarFile, new File(compilerOutputPath.getPath()), "",
                                        createFilter(progressIndicator, myFileTypeManager), writtenItemRelativePaths);

@@ -20,7 +20,7 @@ import com.intellij.openapi.compiler.CompilerPaths;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.containers.OrderedSet;
+import org.consulo.compiler.CompilerPathsManager;
 
 import java.io.File;
 import java.util.Collection;
@@ -80,6 +81,7 @@ public class CompilerPathsEx extends CompilerPaths {
   public static void visitFiles(final Collection<VirtualFile> directories, final FileVisitor visitor) {
     for (final VirtualFile outputDir : directories) {
       ApplicationManager.getApplication().runReadAction(new Runnable() {
+        @Override
         public void run() {
           final String path = outputDir.getPath();
           visitor.accept(outputDir, path, path);
@@ -89,20 +91,25 @@ public class CompilerPathsEx extends CompilerPaths {
   }
 
   public static String[] getOutputPaths(Module[] modules) {
+    if(modules.length == 0) {
+      return ArrayUtil.EMPTY_STRING_ARRAY;
+    }
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(modules[0].getProject());
     final Set<String> outputPaths = new OrderedSet<String>();
     for (Module module : modules) {
-      final CompilerModuleExtension compilerModuleExtension = CompilerModuleExtension.getInstance(module);
-      if (compilerModuleExtension == null) {
-        continue;
-      }
-      String outputPathUrl = compilerModuleExtension.getCompilerOutputUrl();
+      String outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.SOURCE);
       if (outputPathUrl != null) {
         outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
       }
 
-      String outputPathForTestsUrl = compilerModuleExtension.getCompilerOutputUrlForTests();
-      if (outputPathForTestsUrl != null) {
-        outputPaths.add(VirtualFileManager.extractPath(outputPathForTestsUrl).replace('/', File.separatorChar));
+      outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.TEST);
+      if (outputPathUrl != null) {
+        outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
+      }
+
+      outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.RESOURCE);
+      if (outputPathUrl != null) {
+        outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
       }
     }
     return ArrayUtil.toStringArray(outputPaths);

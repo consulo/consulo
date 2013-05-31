@@ -25,6 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.Processor;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -200,10 +201,13 @@ public class ModuleDependenciesAnalyzer {
               }
               else if (orderEntry instanceof ModuleSourceOrderEntry) {
                 if (!myProduction || !myCompile) {
-                  CompilerModuleExtension e = CompilerModuleExtension.getInstance(m);
+                  CompilerPathsManager e = CompilerPathsManager.getInstance(m.getProject());
                   final OrderPath p = new OrderPath(myStack);
-                  for (String u : e.getOutputRootUrls(!myCompile ? !myProduction : level > 0 && !myProduction)) {
-                    addUrlPath(p, u);
+
+                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.SOURCE));
+                  boolean includeTests = !myCompile ? !myProduction : level > 0 && !myProduction;
+                  if(includeTests) {
+                    addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.RESOURCE));
                   }
                   addEntryPath(orderEntry, p);
                 }
@@ -234,7 +238,10 @@ public class ModuleDependenciesAnalyzer {
      * @param p the path to add
      * @param u the url to update
      */
-    private void addUrlPath(OrderPath p, String u) {
+    private void addUrlPath(OrderPath p, @Nullable String u) {
+      if(u == null) {
+        return;
+      }
       final List<OrderPath> orderPaths = myUrlExplanations.get(u);
       if (orderPaths != null) {
         orderPaths.add(p);

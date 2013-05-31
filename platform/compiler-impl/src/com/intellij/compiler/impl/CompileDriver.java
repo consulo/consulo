@@ -1165,23 +1165,27 @@ public class CompileDriver {
   }
 
   private void clearAffectedOutputPathsIfPossible(final CompileContextEx context) {
+    final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(context.getProject());
     final List<File> scopeOutputs = new ReadAction<List<File>>() {
+      @Override
       protected void run(final Result<List<File>> result) {
         final MultiMap<File, Module> outputToModulesMap = new MultiMap<File, Module>();
         for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-          final CompilerModuleExtension compilerModuleExtension = CompilerModuleExtension.getInstance(module);
-          if (compilerModuleExtension == null) {
-            continue;
-          }
-          final String outputPathUrl = compilerModuleExtension.getCompilerOutputUrl();
+          final String outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.SOURCE);
           if (outputPathUrl != null) {
             final String path = VirtualFileManager.extractPath(outputPathUrl);
             outputToModulesMap.putValue(new File(path), module);
           }
 
-          final String outputPathForTestsUrl = compilerModuleExtension.getCompilerOutputUrlForTests();
+          final String outputPathForTestsUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.TEST);
           if (outputPathForTestsUrl != null) {
             final String path = VirtualFileManager.extractPath(outputPathForTestsUrl);
+            outputToModulesMap.putValue(new File(path), module);
+          }
+
+          final String outputPathForResourceUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.RESOURCE);
+          if (outputPathForResourceUrl != null) {
+            final String path = VirtualFileManager.extractPath(outputPathForResourceUrl);
             outputToModulesMap.putValue(new File(path), module);
           }
         }
@@ -1205,6 +1209,7 @@ public class CompileDriver {
     }.execute().getResultObject();
     if (scopeOutputs.size() > 0) {
       CompilerUtil.runInContext(context, CompilerBundle.message("progress.clearing.output"), new ThrowableRunnable<RuntimeException>() {
+        @Override
         public void run() {
           CompilerUtil.clearOutputDirectories(scopeOutputs);
         }

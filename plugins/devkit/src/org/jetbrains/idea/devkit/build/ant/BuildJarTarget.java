@@ -23,12 +23,13 @@ package org.jetbrains.idea.devkit.build.ant;
 import com.intellij.compiler.ant.*;
 import com.intellij.compiler.ant.taskdefs.*;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.idea.devkit.DevKitBundle;
 import org.jetbrains.idea.devkit.build.PluginBuildConfiguration;
@@ -107,7 +108,7 @@ public class BuildJarTarget extends Target {
                                       final PluginBuildConfiguration moduleBuildProperties) {
     final Tag jarTag = new Jar(jarPathProperty, "preserve");
     for (Module m : modules) {
-      final String path = VfsUtil.urlToPath(CompilerModuleExtension.getInstance(m).getCompilerOutputUrl());
+      final String path = VfsUtil.urlToPath(CompilerPathsManager.getInstance(m.getProject()).getCompilerOutputUrl(m, ContentFolderType.SOURCE));
       final String relativePath = GenerationUtils.toRelativePath(path, moduleBaseDir, m, genOptions);
       jarTag.add(new ZipFileSet(relativePath, "", true));
     }
