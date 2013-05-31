@@ -64,33 +64,36 @@ public class JavadocParser {
     while (!builder.eof()) builder.advanceLexer();
   }
 
-  public static void parseDocCommentText(@NotNull final PsiBuilder builder) {
+  public static void parseDocCommentText(@NotNull final PsiBuilder builder, LanguageLevel languageLevel) {
     builder.enforceCommentTokens(SKIP_TOKENS);
 
     while (!builder.eof()) {
       final IElementType tokenType = getTokenType(builder);
       if (tokenType == JavaDocTokenType.DOC_TAG_NAME) {
-        parseTag(builder);
+        parseTag(builder, languageLevel);
       }
       else {
-        parseDataItem(builder, null, false);
+        parseDataItem(builder, null, false, languageLevel);
       }
     }
   }
 
-  private static void parseTag(@NotNull final PsiBuilder builder) {
+  private static void parseTag(@NotNull final PsiBuilder builder, LanguageLevel languageLevel) {
     final String tagName = builder.getTokenText();
     final PsiBuilder.Marker tag = builder.mark();
     builder.advanceLexer();
     while (true) {
       final IElementType tokenType = getTokenType(builder);
       if (tokenType == null || tokenType == JavaDocTokenType.DOC_TAG_NAME || tokenType == JavaDocTokenType.DOC_COMMENT_END) break;
-      parseDataItem(builder, tagName, false);
+      parseDataItem(builder, tagName, false, languageLevel);
     }
     tag.done(JavaDocElementType.DOC_TAG);
   }
 
-  private static void parseDataItem(@NotNull final PsiBuilder builder, @Nullable final String tagName, final boolean isInline) {
+  private static void parseDataItem(@NotNull final PsiBuilder builder,
+                                    @Nullable final String tagName,
+                                    final boolean isInline,
+                                    LanguageLevel languageLevel) {
     IElementType tokenType = getTokenType(builder);
     if (tokenType == JavaDocTokenType.DOC_INLINE_TAG_START) {
       int braceScope = getBraceScope(builder);
@@ -124,7 +127,7 @@ public class JavadocParser {
           break;
         }
 
-        parseDataItem(builder, inlineTagName, true);
+        parseDataItem(builder, inlineTagName, true, languageLevel);
         if (tokenType == JavaDocTokenType.DOC_INLINE_TAG_END) {
           braceScope = getBraceScope(builder);
           if (braceScope > 0) setBraceScope(builder, --braceScope);
@@ -140,7 +143,7 @@ public class JavadocParser {
         parseSeeTagValue(builder);
       }
       else {
-        if (JavaParserUtil.getLanguageLevel(builder).isAtLeast(LanguageLevel.JDK_1_4) && LINK_PLAIN_TAG.equals(tagName) && isInline) {
+        if (languageLevel.isAtLeast(LanguageLevel.JDK_1_4) && LINK_PLAIN_TAG.equals(tagName) && isInline) {
           parseSeeTagValue(builder);
         }
         else if (!isInline && (THROWS_TAG.equals(tagName) || EXCEPTION_TAG.equals(tagName))) {
@@ -153,7 +156,7 @@ public class JavadocParser {
           parseSimpleTagValue(builder, true);
         }
         else {
-          if (JavaParserUtil.getLanguageLevel(builder).isAtLeast(LanguageLevel.JDK_1_5) && VALUE_TAG.equals(tagName) && isInline) {
+          if (languageLevel.isAtLeast(LanguageLevel.JDK_1_5) && VALUE_TAG.equals(tagName) && isInline) {
             parseSeeTagValue(builder);
           }
           else {

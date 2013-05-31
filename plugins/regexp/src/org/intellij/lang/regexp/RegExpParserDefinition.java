@@ -17,10 +17,10 @@ package org.intellij.lang.regexp;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -38,14 +38,16 @@ public class RegExpParserDefinition implements ParserDefinition {
   private static final TokenSet COMMENT_TOKENS = TokenSet.create(RegExpTT.COMMENT);
 
     @NotNull
-    public Lexer createLexer(@NotNull Project project, Module module) {
+    public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
         return new RegExpLexer(EnumSet.of(RegExpCapability.NESTED_CHARACTER_CLASSES));
     }
 
-    public PsiParser createParser(Project project) {
+    @NotNull
+    public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
         return new RegExpParser();
     }
 
+    @NotNull
     public IFileElementType getFileNodeType() {
         return RegExpElementTypes.REGEXP_FILE;
     }

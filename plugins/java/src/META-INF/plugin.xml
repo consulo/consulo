@@ -1321,6 +1321,7 @@
     </intentionAction>
 
     <lang.parserDefinition language="JAVA" implementationClass="com.intellij.lang.java.JavaParserDefinition"/>
+    <lang.versionResolver language="JAVA" implementationClass="com.intellij.lang.java.JavaLanguageVersionResolver" />
 
     <lang.refactoringSupport language="JAVA" implementationClass="com.intellij.lang.java.JavaRefactoringSupportProvider"/>
     <lang.refactoringSupport.classMembersRefactoringSupport language="JAVA"

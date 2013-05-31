@@ -3416,6 +3416,10 @@
       <with attribute="implementationClass" implements="com.intellij.lang.ParserDefinition"/>
     </extensionPoint>
 
+    <extensionPoint name="lang.versionResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.lang.LanguageVersionResolver"/>
+    </extensionPoint>
+
     <extensionPoint name="lang.treePatcher" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.templateLanguages.TreePatcher"/>
     </extensionPoint>

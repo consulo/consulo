@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.util;
 
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -852,19 +853,13 @@ public final class PsiUtil extends PsiUtilCore {
 
   @NotNull
   public static LanguageLevel getLanguageLevel(@NotNull PsiElement element) {
-    if (element instanceof PsiDirectory) return JavaDirectoryService.getInstance().getLanguageLevel((PsiDirectory)element);
-    final PsiFile file = element.getContainingFile();
-    if (file == null) {
+    final LanguageVersion languageVersion = element.getLanguageVersion();
+    if(languageVersion instanceof LanguageLevel) {
+      return (LanguageLevel)languageVersion;
+    }
+    else {
       return LanguageLevel.HIGHEST;
     }
-
-    if (!(file instanceof PsiJavaFile)) {
-      final PsiElement context = file.getContext();
-      if (context != null) return getLanguageLevel(context);
-      return LanguageLevel.HIGHEST;
-    }
-
-    return ((PsiJavaFile)file).getLanguageLevel();
   }
 
   public static boolean isInstantiatable(@NotNull PsiClass clazz) {

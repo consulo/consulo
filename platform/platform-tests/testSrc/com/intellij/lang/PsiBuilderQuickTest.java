@@ -18,7 +18,6 @@ package com.intellij.lang;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerBase;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -547,15 +546,17 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
     ParserDefinition parserDefinition = new ParserDefinition() {
       @NotNull
       @Override
-      public Lexer createLexer(@NotNull Project project, Module module) {
+      public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
         return new MyTestLexer();
       }
 
+      @NotNull
       @Override
-      public PsiParser createParser(Project project) {
+      public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
         return null;
       }
 
+      @NotNull
       @Override
       public IFileElementType getFileNodeType() {
         return null;
@@ -595,7 +596,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         return null;
       }
     };
-    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(getProject(), null), null, text, null, null);
+    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(project, null), null, text, null, null);
   }
 
   private interface Parser {
@@ -666,15 +667,17 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         ParserDefinition parserDefinition = new ParserDefinition() {
           @NotNull
           @Override
-          public Lexer createLexer(@NotNull Project project, Module module) {
+          public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
             return null;
           }
 
+          @NotNull
           @Override
-          public PsiParser createParser(Project project) {
+          public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
             return null;
           }
 
+          @NotNull
           @Override
           public IFileElementType getFileNodeType() {
             return null;

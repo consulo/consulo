@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * The plugin side of a custom language parser. Receives tokens returned from
  * lexer and builds an AST tree out of them.
  *
- * @see ParserDefinition#createParser(com.intellij.openapi.project.Project) 
+ * @see ParserDefinition#createParser(com.intellij.openapi.project.Project, LanguageVersion)
  */
 
 public interface PsiParser {
@@ -33,10 +33,12 @@ public interface PsiParser {
    * or (if chameleon tokens are used) the text of a chameleon token which needs to
    * be reparsed.
    *
+   *
    * @param root    the type of the root element in the AST tree.
    * @param builder the builder which is used to retrieve the original file tokens and build the AST tree.
+   * @param languageVersion
    * @return the root of the resulting AST tree.
    */
   @NotNull
-  ASTNode parse(IElementType root, PsiBuilder builder);
+  ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion);
 }

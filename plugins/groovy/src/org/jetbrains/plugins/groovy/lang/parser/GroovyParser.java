@@ -17,6 +17,7 @@
 package org.jetbrains.plugins.groovy.lang.parser;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
@@ -61,7 +62,7 @@ public class GroovyParser implements PsiParser {
   }
 
   @NotNull
-  public ASTNode parse(IElementType root, PsiBuilder builder) {
+  public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
     //builder.setDebugMode(true);
     if (root == OPEN_BLOCK) {
       OpenOrClosableBlock.parseOpenBlockDeep(builder, this);

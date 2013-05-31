@@ -15,14 +15,9 @@
  */
 package com.intellij.lang.java;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageUtil;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
+import com.intellij.lang.*;
 import com.intellij.lexer.JavaLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
@@ -34,7 +29,6 @@ import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -43,17 +37,14 @@ import org.jetbrains.annotations.NotNull;
 public class JavaParserDefinition implements ParserDefinition {
   @Override
   @NotNull
-  public Lexer createLexer(@NotNull final Project project, Module module) {
-    JavaModuleExtension moduleExtension = module == null ? null : ModuleUtil.getExtension(module, JavaModuleExtension.class);
-    LanguageLevel languageLevel = moduleExtension == null ? LanguageLevel.HIGHEST : moduleExtension.getLanguageLevel();
-    return createLexer(languageLevel);
+  public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+    if(languageVersion == Language.UNKNOWN_VERSION) {
+      throw new IllegalArgumentException("Cant find language version");
+    }
+    return new JavaLexer((LanguageLevel)languageVersion);
   }
 
   @NotNull
-  public static Lexer createLexer(final LanguageLevel languageLevel) {
-    return new JavaLexer(languageLevel);
-  }
-
   @Override
   public IFileElementType getFileNodeType() {
     return JavaStubElementTypes.JAVA_FILE;
@@ -79,8 +70,8 @@ public class JavaParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public PsiParser createParser(final Project project) {
-    throw new UnsupportedOperationException("Should not be called directly");
+  public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+    return new JavaParser();
   }
 
   @Override

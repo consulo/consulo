@@ -16,12 +16,8 @@
 
 package org.jetbrains.plugins.groovy.lang.parser;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageUtil;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
+import com.intellij.lang.*;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -48,14 +44,16 @@ public class GroovyParserDefinition implements ParserDefinition {
   public static final IStubFileElementType GROOVY_FILE = new GrStubFileElementType(GroovyFileType.GROOVY_LANGUAGE);
 
   @NotNull
-  public Lexer createLexer(Project project, Module module) {
+  public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new GroovyLexer();
   }
 
-  public PsiParser createParser(Project project) {
+  @NotNull
+  public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new GroovyParser();
   }
 
+  @NotNull
   public IFileElementType getFileNodeType() {
     return GROOVY_FILE;
   }

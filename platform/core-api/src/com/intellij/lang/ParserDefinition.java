@@ -16,7 +16,6 @@
 package com.intellij.lang;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -36,27 +35,27 @@ public interface ParserDefinition {
    * Returns the lexer for lexing files in the specified project. This lexer does not need to support incremental relexing - it is always
    * called for the entire file.
    *
-   *
-   * @param project the project to which the lexer is connected.
-   * @param module
+   * @param project
+   * @param languageVersion
    * @return the lexer instance.
    */
   @NotNull
-  Lexer createLexer(@NotNull Project project, @Nullable Module module);
+  Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion);
 
   /**
    * Returns the parser for parsing files in the specified project.
-   *
-   * @param project the project to which the parser is connected.
-   * @return the parser instance.
+   * @param project
+   * @param languageVersion @return the parser instance.
    */
-  PsiParser createParser(Project project);
+  @NotNull
+  PsiParser createParser(@Nullable Project project, @NotNull LanguageVersion languageVersion);
 
   /**
    * Returns the element type of the node describing a file in the specified language.
    *
    * @return the file node element type.
    */
+  @NotNull
   IFileElementType getFileNodeType();
 
   /**

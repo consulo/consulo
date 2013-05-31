@@ -20,8 +20,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import com.intellij.lang.*;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
@@ -37,6 +36,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ReflectionCache;
 import org.jetbrains.annotations.NotNull;
@@ -329,6 +329,12 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   @NotNull
   public Language getLanguage() {
     return getElementType().getLanguage();
+  }
+
+  @NotNull
+  @Override
+  public LanguageVersion getLanguageVersion() {
+    return PsiTreeUtil.getLanguageVersion(this);
   }
 
   @Override

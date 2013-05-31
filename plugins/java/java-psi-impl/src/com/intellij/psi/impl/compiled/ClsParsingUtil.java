@@ -41,7 +41,7 @@ public class ClsParsingUtil {
 
   private static final JavaParserUtil.ParserWrapper ANNOTATION_VALUE = new JavaParserUtil.ParserWrapper() {
     @Override
-    public void parse(final PsiBuilder builder) {
+    public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
       JavaParser.INSTANCE.getDeclarationParser().parseAnnotationValue(builder);
     }
   };

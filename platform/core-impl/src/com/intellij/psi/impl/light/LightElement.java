@@ -16,8 +16,7 @@
 
 package com.intellij.psi.impl.light;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import com.intellij.lang.*;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;

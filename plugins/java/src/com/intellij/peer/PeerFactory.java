@@ -15,17 +15,12 @@
  */
 package com.intellij.peer;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lexer.Lexer;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diff.DiffRequestFactory;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.ui.DialogWrapperPeerFactory;
@@ -60,10 +55,6 @@ public abstract class PeerFactory {
   public abstract DiffRequestFactory getDiffRequestFactory();
 
   public abstract VcsContextFactory getVcsContextFactory();
-
-  public abstract PsiBuilder createBuilder(ASTNode tree, Language lang, CharSequence seq, final Project project);
-
-  public abstract PsiBuilder createBuilder(ASTNode tree, Lexer lexer, Language lang, CharSequence seq, final Project project);
 
   public abstract EditorHighlighter createEditorHighlighter(SyntaxHighlighter syntaxHighlighter, EditorColorsScheme colors);
 

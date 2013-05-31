@@ -74,7 +74,7 @@ public interface JavaDocElementType {
   ILazyParseableElementType DOC_REFERENCE_HOLDER = new JavaDocLazyElementType("DOC_REFERENCE_HOLDER") {
     private final JavaParserUtil.ParserWrapper myParser = new JavaParserUtil.ParserWrapper() {
       @Override
-      public void parse(final PsiBuilder builder) {
+      public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
         JavadocParser.parseJavadocReference(builder);
       }
     };
@@ -89,7 +89,7 @@ public interface JavaDocElementType {
   ILazyParseableElementType DOC_TYPE_HOLDER = new JavaDocLazyElementType("DOC_TYPE_HOLDER") {
     private final JavaParserUtil.ParserWrapper myParser = new JavaParserUtil.ParserWrapper() {
       @Override
-      public void parse(final PsiBuilder builder) {
+      public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
         JavadocParser.parseJavadocType(builder);
       }
     };
@@ -104,8 +104,8 @@ public interface JavaDocElementType {
   ILazyParseableElementType DOC_COMMENT = new IReparseableElementType("DOC_COMMENT", JavaLanguage.INSTANCE) {
     private final JavaParserUtil.ParserWrapper myParser = new JavaParserUtil.ParserWrapper() {
       @Override
-      public void parse(final PsiBuilder builder) {
-        JavadocParser.parseDocCommentText(builder);
+      public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
+        JavadocParser.parseDocCommentText(builder, languageLevel);
       }
     };
 

@@ -16,32 +16,37 @@
 package com.intellij.lang.xhtml;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.xml.XMLParserDefinition;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.XHtmlLexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.xml.XmlFileImpl;
 import com.intellij.psi.xml.XmlElementType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
  */
 public class XHTMLParserDefinition extends XMLParserDefinition {
 
+  @Override
   @NotNull
-  public Lexer createLexer(@NotNull Project project, Module module) {
+  public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion) {
     return new XHtmlLexer();
   }
 
+  @Override
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(left.getPsi().getProject(), null);
+    final Lexer lexer = createLexer(null, Language.UNKNOWN_VERSION);
     return canStickTokensTogetherByLexerInXml(left, right, lexer, 0);
   }
 
+  @Override
   public PsiFile createFile(FileViewProvider viewProvider) {
     return new XmlFileImpl(viewProvider, XmlElementType.XHTML_FILE);
   }

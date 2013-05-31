@@ -19,13 +19,9 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
+import com.intellij.lang.*;
 import com.intellij.lexer.EmptyLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PlainTextTokenTypes;
@@ -48,16 +44,17 @@ public class PlainTextParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public Lexer createLexer(@NotNull Project project, Module module) {
+  public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new EmptyLexer();
   }
 
   @Override
   @NotNull
-  public PsiParser createParser(Project project) {
+  public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     throw new UnsupportedOperationException("Not supported");
   }
 
+  @NotNull
   @Override
   public IFileElementType getFileNodeType() {
     return PLAIN_FILE_ELEMENT_TYPE;

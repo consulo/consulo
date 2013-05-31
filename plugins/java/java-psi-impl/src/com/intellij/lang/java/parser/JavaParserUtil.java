@@ -19,7 +19,6 @@ import com.intellij.codeInsight.daemon.JavaErrorMessages;
 import com.intellij.lang.*;
 import com.intellij.lang.impl.PsiBuilderAdapter;
 import com.intellij.lang.java.JavaLanguage;
-import com.intellij.lang.java.JavaParserDefinition;
 import com.intellij.lexer.JavaDocLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -45,11 +44,10 @@ import org.jetbrains.annotations.PropertyKey;
 import java.util.List;
 
 public class JavaParserUtil {
-  private static final Key<LanguageLevel> LANG_LEVEL_KEY = Key.create("JavaParserUtil.LanguageLevel");
   private static final Key<Boolean> DEEP_PARSE_BLOCKS_IN_STATEMENTS = Key.create("JavaParserUtil.ParserExtender");
 
   public interface ParserWrapper {
-    void parse(PsiBuilder builder);
+    void parse(PsiBuilder builder, LanguageLevel languageLevel);
   }
 
   public static final WhitespacesAndCommentsBinder GREEDY_RIGHT_EDGE_PROCESSOR = new WhitespacesAndCommentsBinder() {
@@ -129,17 +127,6 @@ public class JavaParserUtil {
 
   private JavaParserUtil() { }
 
-  public static void setLanguageLevel(final PsiBuilder builder, final LanguageLevel level) {
-    builder.putUserDataUnprotected(LANG_LEVEL_KEY, level);
-  }
-
-  @NotNull
-  public static LanguageLevel getLanguageLevel(final PsiBuilder builder) {
-    final LanguageLevel level = builder.getUserDataUnprotected(LANG_LEVEL_KEY);
-    assert level != null : builder;
-    return level;
-  }
-
   public static void setParseStatementCodeBlocksDeep(final PsiBuilder builder, final boolean deep) {
     builder.putUserDataUnprotected(DEEP_PARSE_BLOCKS_IN_STATEMENTS, deep);
   }
@@ -149,6 +136,7 @@ public class JavaParserUtil {
   }
 
   @NotNull
+  @Deprecated
   public static PsiBuilder createBuilder(final ASTNode chameleon) {
     final PsiElement psi = chameleon.getPsi();
     assert psi != null : chameleon;
@@ -165,16 +153,15 @@ public class JavaParserUtil {
 
     final PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
     final LanguageLevel level = PsiUtil.getLanguageLevel(psi);
-    final Lexer lexer = JavaParserDefinition.createLexer(level);
+    final Lexer lexer = LanguageParserDefinitions.INSTANCE.forLanguage(JavaLanguage.INSTANCE).createLexer(project, level);
     Language language = psi.getLanguage();
     if (!language.isKindOf(JavaLanguage.INSTANCE)) language = JavaLanguage.INSTANCE;
-    final PsiBuilder builder = factory.createBuilder(project, chameleon, lexer, language, text);
-    setLanguageLevel(builder, level);
 
-    return builder;
+    return factory.createBuilder(project, chameleon, lexer, language, level, text);
   }
 
   @NotNull
+  @Deprecated
   public static PsiBuilder createBuilder(final LighterLazyParseableNode chameleon) {
     final PsiElement psi = chameleon.getContainingFile();
     assert psi != null : chameleon;
@@ -182,11 +169,9 @@ public class JavaParserUtil {
 
     final PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
     final LanguageLevel level = PsiUtil.getLanguageLevel(psi);
-    final Lexer lexer = JavaParserDefinition.createLexer(level);
-    final PsiBuilder builder = factory.createBuilder(project, chameleon, lexer, chameleon.getTokenType().getLanguage(), chameleon.getText());
-    setLanguageLevel(builder, level);
+    final Lexer lexer = LanguageParserDefinitions.INSTANCE.forLanguage(JavaLanguage.INSTANCE).createLexer(project, level);
 
-    return builder;
+    return factory.createBuilder(project, chameleon, lexer, chameleon.getTokenType().getLanguage(), level, chameleon.getText());
   }
 
   @Nullable
@@ -200,15 +185,15 @@ public class JavaParserUtil {
     assert psi != null : chameleon;
     final Project project = psi.getProject();
 
+    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(JavaLanguage.INSTANCE);
     final PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
     final Lexer lexer = chameleon.getElementType() == JavaDocElementType.DOC_COMMENT
                         ? new JavaDocLexer(level.isAtLeast(LanguageLevel.JDK_1_5))
-                        : JavaParserDefinition.createLexer(level);
-    final PsiBuilder builder = factory.createBuilder(project, chameleon, lexer, chameleon.getElementType().getLanguage(), chameleon.getChars());
-    setLanguageLevel(builder, level);
+                        : parserDefinition.createLexer(project, level);
+    final PsiBuilder builder = factory.createBuilder(project, chameleon, lexer, chameleon.getElementType().getLanguage(), level, chameleon.getChars());
 
     final PsiBuilder.Marker root = builder.mark();
-    wrapper.parse(builder);
+    wrapper.parse(builder, level);
     if (!builder.eof()) {
       if (!eatAll) throw new AssertionError("Unexpected tokens");
       final PsiBuilder.Marker extras = builder.mark();

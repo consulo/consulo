@@ -31,16 +31,17 @@ public abstract class PsiBuilderFactory {
   }
 
   @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull Project project, @NotNull ASTNode chameleon);
+  public abstract PsiBuilder createBuilder(@NotNull Project project, @NotNull ASTNode chameleon, @NotNull LanguageVersion languageVersion);
 
   @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull Project project, @NotNull LighterLazyParseableNode chameleon);
+  public abstract PsiBuilder createBuilder(@NotNull Project project, @NotNull LighterLazyParseableNode chameleon, @NotNull LanguageVersion languageVersion);
 
   @NotNull
   public abstract PsiBuilder createBuilder(@NotNull Project project,
                                            @NotNull ASTNode chameleon,
                                            @Nullable Lexer lexer,
                                            @NotNull Language lang,
+                                           @NotNull LanguageVersion languageVersion,
                                            @NotNull CharSequence seq);
 
   @NotNull
@@ -48,8 +49,9 @@ public abstract class PsiBuilderFactory {
                                            @NotNull LighterLazyParseableNode chameleon,
                                            @Nullable Lexer lexer,
                                            @NotNull Language lang,
+                                           @NotNull LanguageVersion languageVersion,
                                            @NotNull CharSequence seq);
 
   @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull ParserDefinition parserDefinition, @NotNull Lexer lexer, @NotNull CharSequence seq);
+  public abstract PsiBuilder createBuilder(@NotNull ParserDefinition parserDefinition, @NotNull Lexer lexer, @NotNull LanguageVersion languageVersion, @NotNull CharSequence seq);
 }

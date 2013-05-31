@@ -190,6 +190,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   @Nullable
   public PsiElement createElementFromText(@Nullable final String text,
                                           @NotNull final Language language,
+                                          @NotNull final LanguageVersion languageVersion,
                                           @NotNull final IElementType type,
                                           @Nullable final PsiElement context) {
     if (text == null) return null;
@@ -201,9 +202,9 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
       throw new AssertionError("No parser definition for " + language);
     }
     final Project project = myManager.getProject();
-    final Lexer lexer = parserDefinition.createLexer(project, null);
-    final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, holder, lexer, language, text);
-    final ASTNode node = parserDefinition.createParser(project).parse(type, builder);
+    final Lexer lexer = parserDefinition.createLexer(project, languageVersion);
+    final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, holder, lexer, language, languageVersion, text);
+    final ASTNode node = parserDefinition.createParser(project, languageVersion).parse(type, builder, languageVersion);
     holder.rawAddChildren((TreeElement)node);
     markGenerated(result);
     return node.getPsi();
