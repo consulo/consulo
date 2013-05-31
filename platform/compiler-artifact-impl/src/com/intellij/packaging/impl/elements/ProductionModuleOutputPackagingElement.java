@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.ArtifactAntGenerationContext;
@@ -55,8 +55,9 @@ public class ProductionModuleOutputPackagingElement extends ModuleOutputPackagin
     return generationContext.getModuleOutputPath(myModulePointer.getModuleName());
   }
 
-  protected VirtualFile getModuleOutputPath(CompilerModuleExtension extension) {
-    return extension.getCompilerOutputPath();
+  @Override
+  protected ContentFolderType getContentFolderType() {
+    return ContentFolderType.SOURCE;
   }
 
   @NotNull

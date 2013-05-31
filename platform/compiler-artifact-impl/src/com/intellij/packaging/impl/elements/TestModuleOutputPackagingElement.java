@@ -55,8 +55,9 @@ public class TestModuleOutputPackagingElement extends ModuleOutputPackagingEleme
     return generationContext.getModuleTestOutputPath(myModulePointer.getModuleName());
   }
 
-  protected VirtualFile getModuleOutputPath(CompilerModuleExtension extension) {
-    return extension.getCompilerOutputPathForTests();
+  @Override
+  protected ContentFolderType getContentFolderType() {
+    return ContentFolderType.TEST;
   }
 
   @NotNull

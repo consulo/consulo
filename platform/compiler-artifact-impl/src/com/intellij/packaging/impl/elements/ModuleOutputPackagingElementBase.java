@@ -21,7 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,6 +29,7 @@ import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +40,8 @@ import java.util.List;
 /**
  * @author nik
  */
-public abstract class ModuleOutputPackagingElementBase extends PackagingElement<ModuleOutputPackagingElementBase.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
+public abstract class ModuleOutputPackagingElementBase extends PackagingElement<ModuleOutputPackagingElementBase.ModuleOutputPackagingElementState>
+  implements ModuleOutputPackagingElement {
   @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
   protected ModulePointer myModulePointer;
   protected final Project myProject;
@@ -56,7 +58,8 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
   }
 
   @Override
-  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext, @NotNull AntCopyInstructionCreator creator,
+  public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext,
+                                                          @NotNull AntCopyInstructionCreator creator,
                                                           @NotNull ArtifactAntGenerationContext generationContext,
                                                           @NotNull ArtifactType artifactType) {
     if (myModulePointer != null) {
@@ -71,21 +74,19 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
   @Override
   public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
                                                      @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext, @NotNull ArtifactType artifactType) {
+                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext,
+                                                     @NotNull ArtifactType artifactType) {
     final Module module = findModule(resolvingContext);
     if (module != null) {
-      final CompilerModuleExtension extension = CompilerModuleExtension.getInstance(module);
-      if (extension != null) {
-        final VirtualFile output = getModuleOutputPath(extension);
-        if (output != null) {
-          creator.addDirectoryCopyInstructions(output, null);
-        }
+      final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
+      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, getContentFolderType());
+      if (output != null) {
+        creator.addDirectoryCopyInstructions(output, null);
       }
     }
   }
 
-  @Nullable
-  protected abstract VirtualFile getModuleOutputPath(CompilerModuleExtension extension);
+  protected abstract ContentFolderType getContentFolderType();
 
   @NotNull
   @Override
@@ -95,8 +96,9 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
 
   @Override
   public boolean isEqualTo(@NotNull PackagingElement<?> element) {
-    return element.getClass() == getClass() && myModulePointer != null
-           && myModulePointer.equals(((ModuleOutputPackagingElementBase)element).myModulePointer);
+    return element.getClass() == getClass() &&
+           myModulePointer != null &&
+           myModulePointer.equals(((ModuleOutputPackagingElementBase)element).myModulePointer);
   }
 
   public ModuleOutputPackagingElementState getState() {
@@ -126,7 +128,7 @@ public abstract class ModuleOutputPackagingElementBase extends PackagingElement<
       final ModulesProvider modulesProvider = context.getModulesProvider();
       if (module != null) {
         if (modulesProvider instanceof DefaultModulesProvider//optimization
-           || ArrayUtil.contains(module, modulesProvider.getModules())) {
+            || ArrayUtil.contains(module, modulesProvider.getModules())) {
           return module;
         }
       }
