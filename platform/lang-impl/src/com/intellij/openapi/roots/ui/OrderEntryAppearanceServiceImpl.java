@@ -63,7 +63,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       if (!orderEntry.isValid() || sdk == null) {
         final String oldSdkName = sdkLibraryEntry.getSdkName();
         final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(sdkLibraryEntry.getModuleExtensionId());
-        return FileAppearanceService.getInstance().forInvalidUrl(oldSdkName != null ? oldSdkName : provider.getName());
+        return FileAppearanceService.getInstance().forInvalidUrl(oldSdkName != null ? oldSdkName : provider == null ? NO_SDK : provider.getName());
       }
       return forSdk(sdk, false, selected, true);
     }
