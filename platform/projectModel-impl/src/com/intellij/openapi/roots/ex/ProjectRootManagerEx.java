@@ -20,16 +20,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EventListener;
-
 public abstract class ProjectRootManagerEx extends ProjectRootManager {
   public static ProjectRootManagerEx getInstanceEx(Project project) {
     return (ProjectRootManagerEx)getInstance(project);
   }
-
-  public abstract void addProjectJdkListener(ProjectJdkListener listener);
-
-  public abstract void removeProjectJdkListener(ProjectJdkListener listener);
 
   // invokes runnable surrounded by beforeRootsChage()/rootsChanged() callbacks
   public abstract void makeRootsChange(@NotNull Runnable runnable, boolean filetypes, boolean fireEvents);
@@ -37,9 +31,4 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
   public abstract void mergeRootsChangesDuring(@NotNull Runnable runnable);
 
   public abstract void clearScopesCachesForModules();
-
-
-  public interface ProjectJdkListener extends EventListener {
-    void projectJdkChanged();
-  }
 }

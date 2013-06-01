@@ -246,7 +246,6 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
         myLibrary = newLibrary;
         myLibraryName = null;
         myLibraryLevel = null;
-        updateFromRootProviderAndSubscribe();
       }
     }
   }
@@ -256,7 +255,6 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
       myLibraryName = myLibrary.getName();
       myLibraryLevel = myLibrary.getTable().getTableLevel();
       myLibrary = null;
-      updateFromRootProviderAndSubscribe();
     }
   }
 

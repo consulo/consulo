@@ -39,7 +39,6 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.LibraryOrderEntryBaseImpl");
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @NotNull protected DependencyScope myScope = DependencyScope.COMPILE;
-  @Nullable private RootProvider myCurrentlySubscribedRootProvider = null;
 
   LibraryOrderEntryBaseImpl(@NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
     super(rootModel);
@@ -47,7 +46,7 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
   }
 
   protected final void init() {
-    updateFromRootProviderAndSubscribe();
+
   }
 
   @Override
@@ -97,38 +96,8 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
     return getRootModel().getModule();
   }
 
-  protected void updateFromRootProviderAndSubscribe() {
-    getRootModel().makeExternalChange(new Runnable() {
-      @Override
-      public void run() {
-        resubscribe(getRootProvider());
-      }
-    });
-  }
-
-  private void resubscribe(RootProvider wrapper) {
-    unsubscribe();
-    subscribe(wrapper);
-  }
-
-  private void subscribe(@Nullable RootProvider wrapper) {
-    if (wrapper != null) {
-      myProjectRootManagerImpl.subscribeToRootProvider(this, wrapper);
-    }
-    myCurrentlySubscribedRootProvider = wrapper;
-  }
-
-
-  private void unsubscribe() {
-    if (myCurrentlySubscribedRootProvider != null) {
-      myProjectRootManagerImpl.unsubscribeFromRootProvider(this, myCurrentlySubscribedRootProvider);
-    }
-    myCurrentlySubscribedRootProvider = null;
-  }
-
   @Override
   public void dispose() {
-    unsubscribe();
     super.dispose();
   }
 }

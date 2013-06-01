@@ -26,10 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
-import com.intellij.openapi.roots.ProjectExtension;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.pom.java.LanguageLevel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -138,23 +135,5 @@ public class LanguageLevelProjectExtensionImpl extends LanguageLevelProjectExten
 
   private boolean willReload() {
     return myProject.isOpen() && !ApplicationManager.getApplication().isUnitTestMode();
-  }
-
-  public static class MyProjectExtension extends ProjectExtension {
-    private final Project myProject;
-
-    public MyProjectExtension(final Project project) {
-      myProject = project;
-    }
-
-    @Override
-    public void readExternal(final Element element) throws InvalidDataException {
-      ((LanguageLevelProjectExtensionImpl)getInstance(myProject)).readExternal(element);
-    }
-
-    @Override
-    public void writeExternal(final Element element) throws WriteExternalException {
-      ((LanguageLevelProjectExtensionImpl)getInstance(myProject)).writeExternal(element);
-    }
   }
 }

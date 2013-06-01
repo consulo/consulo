@@ -23,7 +23,6 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -38,16 +37,17 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
-import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author max
@@ -55,15 +55,7 @@ import java.util.*;
 public class ProjectRootManagerImpl extends ProjectRootManagerEx implements ProjectComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootManagerImpl");
 
-  @NonNls public static final String PROJECT_JDK_NAME_ATTR = "project-jdk-name";
-  @NonNls public static final String PROJECT_JDK_TYPE_ATTR = "project-jdk-type";
-
   protected final Project myProject;
-
-  private final EventDispatcher<ProjectJdkListener> myProjectJdkEventDispatcher = EventDispatcher.create(ProjectJdkListener.class);
-
-  private String myProjectSdkName;
-  private String myProjectSdkType;
 
   private long myModificationCount = 0;
   @NonNls private static final String ATTRIBUTE_VERSION = "version";
@@ -203,54 +195,22 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   @Override
   public Sdk getProjectSdk() {
-    return myProjectSdkName == null ? null : ProjectSdkTable.getInstance().findSdk(myProjectSdkName, myProjectSdkType);
+    return null;
   }
 
   @Override
   public String getProjectSdkName() {
-    return myProjectSdkName;
+    return null;
   }
 
   @Override
   public void setProjectSdk(Sdk sdk) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    if (sdk == null) {
-      myProjectSdkName = null;
-      myProjectSdkType = null;
-    }
-    else {
-      myProjectSdkName = sdk.getName();
-      myProjectSdkType = sdk.getSdkType().getName();
-    }
-    mergeRootsChangesDuring(new Runnable() {
-      @Override
-      public void run() {
-        myProjectJdkEventDispatcher.getMulticaster().projectJdkChanged();
-      }
-    });
+
   }
 
   @Override
   public void setProjectSdkName(String name) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    myProjectSdkName = name;
 
-    mergeRootsChangesDuring(new Runnable() {
-      @Override
-      public void run() {
-        myProjectJdkEventDispatcher.getMulticaster().projectJdkChanged();
-      }
-    });
-  }
-
-  @Override
-  public void addProjectJdkListener(ProjectJdkListener listener) {
-    myProjectJdkEventDispatcher.addListener(listener);
-  }
-
-  @Override
-  public void removeProjectJdkListener(ProjectJdkListener listener) {
-    myProjectJdkEventDispatcher.removeListener(listener);
   }
 
   @Override
@@ -273,7 +233,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   @Override
   public void disposeComponent() {
-    myJdkTableMultiListener = null;
   }
 
   @Override
@@ -281,8 +240,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     for (ProjectExtension extension : Extensions.getExtensions(ProjectExtension.EP_NAME, myProject)) {
       extension.readExternal(element);
     }
-    myProjectSdkName = element.getAttributeValue(PROJECT_JDK_NAME_ATTR);
-    myProjectSdkType = element.getAttributeValue(PROJECT_JDK_TYPE_ATTR);
   }
 
   @Override
@@ -290,12 +247,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     element.setAttribute(ATTRIBUTE_VERSION, "2");
     for (ProjectExtension extension : Extensions.getExtensions(ProjectExtension.EP_NAME, myProject)) {
       extension.writeExternal(element);
-    }
-    if (myProjectSdkName != null) {
-      element.setAttribute(PROJECT_JDK_NAME_ATTR, myProjectSdkName);
-    }
-    if (myProjectSdkType != null) {
-      element.setAttribute(PROJECT_JDK_TYPE_ATTR, myProjectSdkType);
     }
   }
 
@@ -440,27 +391,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     return ModuleManager.getInstance(myProject);
   }
 
-  void subscribeToRootProvider(OrderEntry owner, final RootProvider provider) {
-    Set<OrderEntry> owners = myRegisteredRootProviders.get(provider);
-    if (owners == null) {
-      owners = new HashSet<OrderEntry>();
-      myRegisteredRootProviders.put(provider, owners);
-      provider.addRootSetChangedListener(myRootProviderChangeListener);
-    }
-    owners.add(owner);
-  }
-
-  void unsubscribeFromRootProvider(OrderEntry owner, final RootProvider provider) {
-    Set<OrderEntry> owners = myRegisteredRootProviders.get(provider);
-    if (owners != null) {
-      owners.remove(owner);
-      if (owners.isEmpty()) {
-        provider.removeRootSetChangedListener(myRootProviderChangeListener);
-        myRegisteredRootProviders.remove(provider);
-      }
-    }
-  }
-
   void addListenerForTable(LibraryTable.Listener libraryListener,
                            final LibraryTable libraryTable) {
     LibraryTableMultilistener multilistener = myLibraryTableMultilisteners.get(libraryTable);
@@ -557,89 +487,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     }
   }
 
-  private JdkTableMultiListener myJdkTableMultiListener = null;
-
-  private class JdkTableMultiListener implements ProjectSdkTable.Listener {
-    final EventDispatcher<ProjectSdkTable.Listener> myDispatcher = EventDispatcher.create(ProjectSdkTable.Listener.class);
-    private MessageBusConnection listenerConnection;
-
-    private JdkTableMultiListener(Project project) {
-      listenerConnection = project.getMessageBus().connect();
-      listenerConnection.subscribe(ProjectSdkTable.SDK_TABLE_TOPIC, this);
-    }
-
-    private void addListener(ProjectSdkTable.Listener listener) {
-      myDispatcher.addListener(listener);
-    }
-
-    private void removeListener(ProjectSdkTable.Listener listener) {
-      myDispatcher.removeListener(listener);
-      uninstallListener(true);
-    }
-
-    @Override
-    public void sdkAdded(final Sdk jdk) {
-      mergeRootsChangesDuring(new Runnable() {
-        @Override
-        public void run() {
-          myDispatcher.getMulticaster().sdkAdded(jdk);
-        }
-      });
-    }
-
-    @Override
-    public void sdkRemoved(final Sdk jdk) {
-      mergeRootsChangesDuring(new Runnable() {
-        @Override
-        public void run() {
-          myDispatcher.getMulticaster().sdkRemoved(jdk);
-        }
-      });
-    }
-
-    @Override
-    public void sdkNameChanged(final Sdk jdk, final String previousName) {
-      mergeRootsChangesDuring(new Runnable() {
-        @Override
-        public void run() {
-          myDispatcher.getMulticaster().sdkNameChanged(jdk, previousName);
-        }
-      });
-      String currentName = getProjectSdkName();
-      if (previousName != null && previousName.equals(currentName)) {
-        // if already had jdk name and that name was the name of the jdk just changed
-        myProjectSdkName = jdk.getName();
-        myProjectSdkType = jdk.getSdkType().getName();
-      }
-    }
-
-    public void uninstallListener(boolean soft) {
-      if (!soft || !myDispatcher.hasListeners()) {
-        if (listenerConnection != null) {
-          listenerConnection.disconnect();
-          listenerConnection = null;
-        }
-      }
-    }
-  }
-
-  private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<RootProvider, Set<OrderEntry>>();
-
-  void addJdkTableListener(ProjectSdkTable.Listener jdkTableListener) {
-    getJdkTableMultiListener().addListener(jdkTableListener);
-  }
-
-  private JdkTableMultiListener getJdkTableMultiListener() {
-    if (myJdkTableMultiListener == null) {
-      myJdkTableMultiListener = new JdkTableMultiListener(myProject);
-    }
-    return myJdkTableMultiListener;
-  }
-
-  void removeJdkTableListener(ProjectSdkTable.Listener jdkTableListener) {
-    if (myJdkTableMultiListener == null) return;
-    myJdkTableMultiListener.removeListener(jdkTableListener);
-  }
 
   private class RootProviderChangeListener implements RootProvider.RootSetChangedListener {
     private boolean myInsideRootsChange;
