@@ -163,7 +163,7 @@ public class AllIcons {
   public static class Ant {
     public static final Icon AntInstallation = IconLoader.getIcon("/ant/antInstallation.png"); // 16x16
     public static final Icon Build = IconLoader.getIcon("/ant/build.png"); // 16x16
-    public static final Icon BuildGroup = IconLoader.getIcon("/ant/buildGroup.png"); // 16x16
+    public static final Icon AntGroup = IconLoader.getIcon("/ant/antGroup.png"); // 16x16
     public static final Icon ChangeView = IconLoader.getIcon("/ant/changeView.png"); // 16x16
     public static final Icon Message = IconLoader.getIcon("/ant/message.png"); // 16x16
     public static final Icon MetaTarget = IconLoader.getIcon("/ant/metaTarget.png"); // 16x16
@@ -800,7 +800,6 @@ public class AllIcons {
     }
     public static final Icon Jsr45 = IconLoader.getIcon("/nodes/jsr45.png"); // 16x16
     public static final Icon JunitTestMark = IconLoader.getIcon("/nodes/junitTestMark.png"); // 16x16
-    public static final Icon KeymapAnt = IconLoader.getIcon("/nodes/keymapAnt.png"); // 16x16
     public static final Icon KeymapEditor = IconLoader.getIcon("/nodes/keymapEditor.png"); // 16x16
     public static final Icon KeymapMainMenu = IconLoader.getIcon("/nodes/keymapMainMenu.png"); // 16x16
     public static final Icon KeymapOther = IconLoader.getIcon("/nodes/keymapOther.png"); // 16x16

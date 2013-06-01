@@ -42,7 +42,7 @@ public class AntSdkType extends SdkType {
   @Nullable
   @Override
   public Icon getGroupIcon() {
-    return AllIcons.Nodes.KeymapAnt;
+    return AllIcons.Ant.AntGroup;
   }
 
   @Nullable

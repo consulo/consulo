@@ -48,7 +48,7 @@ public class AntGroupManagerActionGroup extends ActionGroup {
     myGroup = group;
     myTree = tree;
     if(myGroup != null) {
-      getTemplatePresentation().setIcon(AllIcons.Ant.BuildGroup);
+      getTemplatePresentation().setIcon(AllIcons.Ant.AntGroup);
     }
     myDefaultActions = new AnAction[] {new CreateNewGroupAction(group, tree), new MoveToThisGroupAction(tree, group)};
   }

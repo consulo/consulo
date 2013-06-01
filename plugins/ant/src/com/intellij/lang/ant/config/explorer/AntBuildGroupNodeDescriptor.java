@@ -31,7 +31,7 @@ public class AntBuildGroupNodeDescriptor extends AntNodeDescriptor {
     super(project, parentDescriptor);
     myGroup = group;
     myName = myGroup.getName();
-    setIcon(AllIcons.Ant.BuildGroup);
+    setIcon(AllIcons.Ant.AntGroup);
   }
 
   @Override
