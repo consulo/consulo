@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
@@ -27,6 +28,7 @@ import java.util.List;
 public abstract class ProjectSdkTable {
   public static Topic<Listener> SDK_TABLE_TOPIC = Topic.create("Project SDK table", Listener.class);
 
+  @NotNull
   public static ProjectSdkTable getInstance() {
     return ServiceManager.getService(ProjectSdkTable.class);
   }

@@ -20,6 +20,7 @@ import com.intellij.ide.util.projectWizard.ProjectSdkListRenderer;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
+import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -220,6 +221,22 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     removeInvalidElement();
     addItem(new InvalidSdkComboBoxItem(name));
     setSelectedIndex(getModel().getSize() - 1);
+  }
+
+  public void setSelectedSdk(@Nullable String name) {
+    if(name != null) {
+      ProjectSdkTable projectSdkTable = ProjectSdkTable.getInstance();
+      final Sdk sdk = projectSdkTable.findSdk(name);
+      if(sdk != null) {
+        setSelectedJdk(sdk);
+      }
+      else {
+        setInvalidJdk(name);
+      }
+    }
+    else {
+      setInvalidJdk("null");
+    }
   }
   
   private int indexOf(Sdk jdk) {
