@@ -29,6 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
@@ -114,7 +115,7 @@ public abstract class AnnotationBasedInstrumentingCompiler implements ClassInstr
       final boolean jdk6 = jdk != null && JavaSdk.getInstance().isOfVersionOrHigher(jdk, JavaSdkVersion.JDK_1_6);
 
       final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(project);
-      final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput();
+      final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(module, ContentFolderType.SOURCE);
       if (compilerOutputPath != null) {
         final String packageName = srcFile.getPackageName();
         final VirtualFile packageDir =
