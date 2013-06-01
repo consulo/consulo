@@ -23,6 +23,8 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.ElementPresentationUtil;
+import com.intellij.psi.util.PsiFormatUtil;
+import com.intellij.psi.util.PsiFormatUtilBase;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -69,7 +71,15 @@ public class ClassTreeNode extends BasePsiMemberNode<PsiClass>{
   public void updateImpl(PresentationData data) {
     final PsiClass aClass = getValue();
     if (aClass != null) {
-      data.setPresentableText(aClass.getName());
+      if(aClass.hasTypeParameters()) {
+        StringBuilder builder  = new StringBuilder();
+        builder.append(aClass.getName());
+        PsiFormatUtil.formatTypeParameters(aClass, builder, PsiFormatUtilBase.SHOW_TYPE_PARAMETER_EXTENDS);
+        data.setPresentableText(builder.toString());
+      }
+      else {
+        data.setPresentableText(aClass.getName());
+      }
     }
   }
 
