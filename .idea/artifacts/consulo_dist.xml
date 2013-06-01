@@ -179,13 +179,6 @@
             </element>
           </element>
         </element>
-        <element id="directory" name="github">
-          <element id="directory" name="lib">
-            <element id="archive" name="github.jar">
-              <element id="module-output" name="github" />
-            </element>
-          </element>
-        </element>
         <element id="directory" name="tasks">
           <element id="directory" name="lib">
             <element id="archive" name="tasks-api.jar">
