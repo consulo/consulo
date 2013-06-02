@@ -42,9 +42,17 @@ public abstract class CompilerPathsManager {
 
   public abstract VirtualFilePointer getCompilerOutputPointer();
 
-  public abstract void setCompilerOutputPointer(VirtualFilePointer pointer);
+  public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
 
-  public abstract void setCompilerOutputUrl(String compilerOutputUrl);
+  public abstract boolean isInheritedCompilerOutput(@NotNull Module module);
+
+  public abstract void setInheritedCompilerOutput(@NotNull Module module, boolean val);
+
+  public abstract boolean isExcludeOutput(@NotNull Module module);
+
+  public abstract void setExcludeOutput(@NotNull Module module, boolean val);
+
+  public abstract void setCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderType contentFolderType, @Nullable String compilerOutputUrl);
 
   public abstract String getCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
 

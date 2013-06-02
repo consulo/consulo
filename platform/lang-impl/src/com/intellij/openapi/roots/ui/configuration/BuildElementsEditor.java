@@ -26,26 +26,22 @@ import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.CompilerModuleExtension;
-import com.intellij.openapi.roots.ModuleExtension0;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.InsertPathAction;
 import com.intellij.util.ui.UIUtil;
-import org.jdom.Element;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,9 +54,11 @@ public class BuildElementsEditor extends ModuleElementsEditor {
 
   private CommitableFieldPanel myOutputPathPanel;
   private CommitableFieldPanel myTestsOutputPathPanel;
+  private CommitableFieldPanel myResourcesOutputPathPanel;
   private JCheckBox myCbExcludeOutput;
   private JLabel myOutputLabel;
   private JLabel myTestOutputLabel;
+  private JLabel myResourceOutputLabel;
 
   protected BuildElementsEditor(final ModuleConfigurationState state) {
     super(state);
@@ -68,6 +66,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
 
   @Override
   public JComponent createComponentImpl() {
+    final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
     myInheritCompilerOutput = new JRadioButton(ProjectBundle.message("project.inherit.compile.output.path"));
     myPerModuleCompilerOutput = new JRadioButton(ProjectBundle.message("project.module.compile.output.path"));
     ButtonGroup group = new ButtonGroup();
@@ -87,23 +86,36 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     myOutputPathPanel = createOutputPathPanel(ProjectBundle.message("module.paths.output.title"), new CommitPathRunnable() {
       @Override
       public void saveUrl(String url) {
-        if (getCompilerExtension().isCompilerOutputPathInherited()) return;  //do not override settings if any
-        getCompilerExtension().setCompilerOutputPath(url);
+        if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
+          return;
+        }
+        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.SOURCE, url);
       }
     });
     myTestsOutputPathPanel = createOutputPathPanel(ProjectBundle.message("module.paths.test.output.title"), new CommitPathRunnable() {
       @Override
       public void saveUrl(String url) {
-        if (getCompilerExtension().isCompilerOutputPathInherited()) return; //do not override settings if any
-        getCompilerExtension().setCompilerOutputPathForTests(url);
+        if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
+          return;
+        }
+        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.TEST, url);
+      }
+    });
+    myResourcesOutputPathPanel = createOutputPathPanel(ProjectBundle.message("module.paths.resource.output.title"), new CommitPathRunnable() {
+      @Override
+      public void saveUrl(String url) {
+        if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
+          return;
+        }
+        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.RESOURCE, url);
       }
     });
 
-    myCbExcludeOutput = new JCheckBox(ProjectBundle.message("module.paths.exclude.output.checkbox"), getCompilerExtension().isExcludeOutput());
+    myCbExcludeOutput = new JCheckBox(ProjectBundle.message("module.paths.exclude.output.checkbox"), compilerPathsManager.isExcludeOutput(getModule()));
     myCbExcludeOutput.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        getCompilerExtension().setExcludeOutput(myCbExcludeOutput.isSelected());
+        compilerPathsManager.setExcludeOutput(getModule(), myCbExcludeOutput.isSelected());
       }
     });
 
@@ -130,6 +142,13 @@ public class BuildElementsEditor extends ModuleElementsEditor {
                                                                         GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                                                                         new Insets(6, 4, 0, 0), 0, 0));
 
+    myResourceOutputLabel = new JLabel(ProjectBundle.message("module.paths.resource.output.label"));
+    outputPathsPanel.add(myResourceOutputLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
+                                                                   GridBagConstraints.NONE, new Insets(6, 16, 0, 4), 0, 0));
+    outputPathsPanel.add(myResourcesOutputPathPanel, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0,
+                                                                        GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                                                                        new Insets(6, 4, 0, 0), 0, 0));
+
     outputPathsPanel.add(myCbExcludeOutput, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.WEST,
                                                                    GridBagConstraints.NONE, new Insets(6, 16, 0, 0), 0, 0));
 
@@ -137,7 +156,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     updateOutputPathPresentation();
 
     //compiler settings
-    final boolean outputPathInherited = getCompilerExtension().isCompilerOutputPathInherited();
+    final boolean outputPathInherited =compilerPathsManager.isInheritedCompilerOutput(getModule());
     myInheritCompilerOutput.setSelected(outputPathInherited);
     myPerModuleCompilerOutput.setSelected(!outputPathInherited);
     enableCompilerSettings(!outputPathInherited);
@@ -150,31 +169,47 @@ public class BuildElementsEditor extends ModuleElementsEditor {
   }
 
   private void updateOutputPathPresentation() {
-    if (getCompilerExtension().isCompilerOutputPathInherited()) {
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
+    if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
       final String baseUrl = ProjectStructureConfigurable.getInstance(myProject).getProjectConfig().getCompilerOutputUrl();
-      moduleCompileOutputChanged(baseUrl, getModel().getModule().getName());
+      moduleCompileOutputChanged(baseUrl, getModule().getName());
     } else {
-      final VirtualFile compilerOutputPath = getCompilerExtension().getCompilerOutputPath();
+      final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.SOURCE);
       if (compilerOutputPath != null) {
         myOutputPathPanel.setText(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
       }
       else {
-        final String compilerOutputUrl = getCompilerExtension().getCompilerOutputUrl();
+        final String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.SOURCE);
         if (compilerOutputUrl != null) {
           myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerOutputUrl)));
         }
       }
-      final VirtualFile testsOutputPath = getCompilerExtension().getCompilerOutputPathForTests();
+      final VirtualFile testsOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.TEST);
       if (testsOutputPath != null) {
         myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(testsOutputPath.getPath()));
       }
       else {
-        final String testsOutputUrl = getCompilerExtension().getCompilerOutputUrlForTests();
+        final String testsOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.TEST);
         if (testsOutputUrl != null) {
           myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(testsOutputUrl)));
         }
       }
+      final VirtualFile resourcesOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.RESOURCE);
+      if (resourcesOutputPath != null) {
+        myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(resourcesOutputPath.getPath()));
+      }
+      else {
+        final String resourcesOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.RESOURCE);
+        if (resourcesOutputUrl != null) {
+          myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(resourcesOutputUrl)));
+        }
+      }
     }
+  }
+
+  @NotNull
+  public Module getModule() {
+    return getModel().getModule();
   }
 
   private void enableCompilerSettings(final boolean enabled) {
@@ -182,8 +217,11 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     UIUtil.setEnabled(myOutputLabel, enabled, true);
     UIUtil.setEnabled(myTestsOutputPathPanel, enabled, true);
     UIUtil.setEnabled(myTestOutputLabel, enabled, true);
+    UIUtil.setEnabled(myResourcesOutputPathPanel, enabled, true);
+    UIUtil.setEnabled(myResourceOutputLabel, enabled, true);
     myCbExcludeOutput.setEnabled(enabled);
-    getCompilerExtension().inheritCompilerOutputPath(!enabled);
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
+    compilerPathsManager.setInheritedCompilerOutput(getModule(), !enabled);
     updateOutputPathPresentation();
   }
 
@@ -217,27 +255,14 @@ public class BuildElementsEditor extends ModuleElementsEditor {
       }
     };
 
-    textField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
-        commitRunnable.run();
-      }
-    });
-
-    return new CommitableFieldPanel(textField, null, null, new BrowseFilesListener(textField, title, "", outputPathsChooserDescriptor) {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e);
-        commitRunnable.run();
-      }
-    }, null, commitRunnable);
+    return new CommitableFieldPanel(textField, null, null, new BrowseFilesListener(textField, title, "", outputPathsChooserDescriptor), null, commitRunnable);
   }
 
   @Override
   public void saveData() {
     myOutputPathPanel.commit();
     myTestsOutputPathPanel.commit();
-    getCompilerExtension().commit();
+    myResourcesOutputPathPanel.commit();
   }
 
   @Override
@@ -255,147 +280,26 @@ public class BuildElementsEditor extends ModuleElementsEditor {
 
   @Override
   public void moduleStateChanged() {
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
     //if content enties tree was changed
-    myCbExcludeOutput.setSelected(getCompilerExtension().isExcludeOutput());
+    myCbExcludeOutput.setSelected(compilerPathsManager.isExcludeOutput(getModule()));
   }
 
   @Override
   public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
-    if (getCompilerExtension().isCompilerOutputPathInherited()) {
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
+    if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
       if (baseUrl != null) {
-        myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(baseUrl + "/" + CompilerModuleExtension
-          .PRODUCTION + "/" + moduleName)));
-        myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(baseUrl + "/" + CompilerModuleExtension
-          .TEST + "/" + moduleName)));
+        myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.SOURCE))));
+        myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.TEST))));
+        myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.RESOURCE))));
       }
       else {
         myOutputPathPanel.setText(null);
         myTestsOutputPathPanel.setText(null);
+        myResourcesOutputPathPanel.setText(null);
       }
     }
-  }
-
-  public CompilerModuleExtension getCompilerExtension() {
-    return new CompilerModuleExtension() {
-      @Nullable
-      @Override
-      public VirtualFile getCompilerOutputPath() {
-        return null;
-      }
-
-      @Override
-      public void setCompilerOutputPath(VirtualFile file) {
-
-      }
-
-      @Nullable
-      @Override
-      public String getCompilerOutputUrl() {
-        return null;
-      }
-
-      @Override
-      public void setCompilerOutputPath(String url) {
-
-      }
-
-      @Nullable
-      @Override
-      public VirtualFile getCompilerOutputPathForTests() {
-        return null;
-      }
-
-      @Override
-      public void setCompilerOutputPathForTests(VirtualFile file) {
-
-      }
-
-      @Nullable
-      @Override
-      public String getCompilerOutputUrlForTests() {
-        return null;
-      }
-
-      @Override
-      public void setCompilerOutputPathForTests(String url) {
-
-      }
-
-      @Override
-      public void inheritCompilerOutputPath(boolean inherit) {
-
-      }
-
-      @Override
-      public boolean isCompilerOutputPathInherited() {
-        return false;
-      }
-
-      @Override
-      public VirtualFilePointer getCompilerOutputPointer() {
-        return null;
-      }
-
-      @Override
-      public VirtualFilePointer getCompilerOutputForTestsPointer() {
-        return null;
-      }
-
-      @Override
-      public void setExcludeOutput(boolean exclude) {
-
-      }
-
-      @Override
-      public boolean isExcludeOutput() {
-        return false;
-      }
-
-      @Override
-      public VirtualFile[] getOutputRoots(boolean includeTests) {
-        return new VirtualFile[0];
-      }
-
-      @Override
-      public String[] getOutputRootUrls(boolean includeTests) {
-        return new String[0];
-      }
-
-      @Override
-      public ModuleExtension0 getModifiableModel(boolean writable) {
-        return null;
-      }
-
-      @Override
-      public void commit() {
-
-      }
-
-      @Override
-      public boolean isChanged() {
-        return false;
-      }
-
-      @Override
-      public int compareTo(Object o) {
-        return 0;
-      }
-
-      @Override
-      public void dispose() {
-
-      }
-
-      @Override
-      public void readExternal(Element element) throws InvalidDataException {
-
-      }
-
-      @Override
-      public void writeExternal(Element element) throws WriteExternalException {
-
-      }
-    };
   }
 
   private interface CommitPathRunnable {
