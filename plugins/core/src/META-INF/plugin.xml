@@ -5494,6 +5494,7 @@
     <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last" />
     <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider" />
 
+    <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
     <compilerProvider implementation="com.intellij.packaging.impl.artifacts.ArtifactsCompilerProvider" id="artifactsCompiler" />
   </extensions>
 </idea-plugin>

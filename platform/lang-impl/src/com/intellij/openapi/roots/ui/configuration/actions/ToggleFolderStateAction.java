@@ -57,7 +57,6 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.resources.action.description"));
         break;
       case EXCLUDED:
-      case EXCLUDED_OUTPUT:
         templatePresentation.setText(ProjectBundle.message("module.toggle.excluded.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.excluded.action.description"));
         break;

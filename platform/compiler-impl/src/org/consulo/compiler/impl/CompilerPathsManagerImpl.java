@@ -211,6 +211,13 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
     return compileInfo.virtualFilePointers.get(contentFolderType).getFile();
   }
 
+  @NotNull
+  @Override
+  public VirtualFilePointer getCompilerOutputPointer(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
+    final CompileInfo compileInfo = myModulesToVirtualFilePoints.get(module);
+    assert compileInfo != null;
+    return compileInfo.virtualFilePointers.get(contentFolderType);
+  }
 
   @NotNull
   private Set<String> getRootsToWatch() {

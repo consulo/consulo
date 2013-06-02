@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.roots;
 
+import org.consulo.annotations.Immutable;
+
 /**
 * @author VISTALL
 * @since 13:20/22.05.13
@@ -23,6 +25,8 @@ public enum ContentFolderType {
   SOURCE,
   TEST,
   RESOURCE,
-  EXCLUDED,
-  EXCLUDED_OUTPUT
+  EXCLUDED;
+
+  @Immutable
+  public static final ContentFolderType[] SOURCE_FOLDER_TYPES = new ContentFolderType[] {SOURCE, TEST, RESOURCE};
 }

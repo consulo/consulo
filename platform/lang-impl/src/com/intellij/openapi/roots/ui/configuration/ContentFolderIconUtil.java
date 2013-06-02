@@ -37,7 +37,6 @@ public class ContentFolderIconUtil {
       case RESOURCE:
         return AllIcons.Modules.ResourceRoot;
       case EXCLUDED:
-      case EXCLUDED_OUTPUT:
         return AllIcons.Modules.ExcludeRoot;
     }
     return null;

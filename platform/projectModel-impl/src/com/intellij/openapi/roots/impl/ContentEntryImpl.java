@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentFolderType;
@@ -94,10 +95,8 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @Override
   public ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType) {
     List<ContentFolder> list = new ArrayList<ContentFolder>();
-    for (ContentFolder contentFolder : myContentFolders) {
-      if (contentFolder.getType() == contentFolderType) {
-        list.add(contentFolder);
-      }
+    for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
+      list.add(contentFolder);
     }
     return list.isEmpty() ? ContentFolder.EMPTY_ARRAY : list.toArray(new ContentFolder[list.size()]);
   }
@@ -106,10 +105,8 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @Override
   public ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes) {
     List<ContentFolder> list = new ArrayList<ContentFolder>();
-    for (ContentFolder contentFolder : myContentFolders) {
-      if (ArrayUtil.contains(contentFolder.getType(), contentFolderTypes)) {
-        list.add(contentFolder);
-      }
+    for (ContentFolder contentFolder : getFolders0(contentFolderTypes)) {
+      list.add(contentFolder);
     }
     return list.isEmpty() ? ContentFolder.EMPTY_ARRAY : list.toArray(new ContentFolder[list.size()]);
   }
@@ -118,10 +115,8 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @Override
   public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
-    for (ContentFolder contentFolder : myContentFolders) {
-      if (contentFolder.getType() == contentFolderType) {
-        list.add(contentFolder.getFile());
-      }
+    for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
+      list.add(contentFolder.getFile());
     }
     return VfsUtilCore.toVirtualFileArray(list);
   }
@@ -130,17 +125,75 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @Override
   public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
     List<String> list = new ArrayList<String>();
-    for (ContentFolder contentFolder : myContentFolders) {
-      if (contentFolder.getType() == contentFolderType) {
-        list.add(contentFolder.getUrl());
-      }
+    for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
+      list.add(contentFolder.getUrl());
     }
     return ArrayUtil.toStringArray(list);
   }
 
   @Override
   public ContentFolder[] getFolders() {
-    return myContentFolders.isEmpty() ? ContentFolder.EMPTY_ARRAY : myContentFolders.toArray(new ContentFolder[myContentFolders.size()]);
+    final List<ContentFolder> contentFolders = getFolders0();
+    return contentFolders.isEmpty() ? ContentFolder.EMPTY_ARRAY : contentFolders.toArray(new ContentFolder[contentFolders.size()]);
+  }
+
+  private List<ContentFolder> getFolders0(ContentFolderType contentFolderType) {
+    List<ContentFolder> list = new ArrayList<ContentFolder>();
+    for (ContentFolder contentFolder : myContentFolders) {
+      if (contentFolder.getType() == contentFolderType) {
+        list.add(contentFolder);
+      }
+    }
+
+    if(contentFolderType == ContentFolderType.EXCLUDED) {
+      for (DirectoryIndexExcludePolicy excludePolicy : Extensions
+        .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
+        final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
+        for (VirtualFilePointer file : files) {
+          ContentFolderImpl contentFolder = new ContentFolderImpl(file, ContentFolderType.EXCLUDED, this);
+          contentFolder.setSynthetic();
+          list.add(contentFolder);
+        }
+      }
+    }
+    return list;
+  }
+
+  private List<ContentFolder> getFolders0(ContentFolderType... contentFolderTypes) {
+    List<ContentFolder> list = new ArrayList<ContentFolder>();
+    for (ContentFolder contentFolder : myContentFolders) {
+      if (ArrayUtil.contains(contentFolderTypes, contentFolder.getType())) {
+        list.add(contentFolder);
+      }
+    }
+
+    if(ArrayUtil.contains(contentFolderTypes, ContentFolderType.EXCLUDED)) {
+      for (DirectoryIndexExcludePolicy excludePolicy : Extensions
+        .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
+        final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
+        for (VirtualFilePointer file : files) {
+          ContentFolderImpl contentFolder = new ContentFolderImpl(file, ContentFolderType.EXCLUDED, this);
+          contentFolder.setSynthetic();
+          list.add(contentFolder);
+        }
+      }
+    }
+    return list;
+  }
+
+  private List<ContentFolder> getFolders0() {
+    List<ContentFolder> list = new ArrayList<ContentFolder>(myContentFolders);
+
+    for (DirectoryIndexExcludePolicy excludePolicy : Extensions
+      .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
+      final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
+      for (VirtualFilePointer file : files) {
+        ContentFolderImpl contentFolder = new ContentFolderImpl(file, ContentFolderType.EXCLUDED, this);
+        contentFolder.setSynthetic();
+        list.add(contentFolder);
+      }
+    }
+    return list;
   }
 
   @NotNull

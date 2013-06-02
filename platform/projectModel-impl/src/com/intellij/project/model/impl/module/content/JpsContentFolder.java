@@ -63,7 +63,7 @@ public class JpsContentFolder implements Disposable, ContentFolder {
 
   @Override
   public boolean isSynthetic() {
-    return myContentFolderType == ContentFolderType.EXCLUDED_OUTPUT;
+    return false;
   }
 
   @Override

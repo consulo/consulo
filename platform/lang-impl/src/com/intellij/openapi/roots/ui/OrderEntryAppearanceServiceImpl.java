@@ -161,7 +161,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     if (folder.getType() ==ContentFolderType.SOURCE || folder.getType() == ContentFolderType.TEST || folder.getType() == ContentFolderType.RESOURCE) {
       return formatRelativePath(folder, PlatformIcons.FOLDER_ICON);
     }
-    else if (folder.getType() == ContentFolderType.EXCLUDED || folder.getType() == ContentFolderType.EXCLUDED_OUTPUT) {
+    else if (folder.getType() == ContentFolderType.EXCLUDED) {
       return formatRelativePath(folder, EXCLUDE_FOLDER_ICON);
     }
     else {

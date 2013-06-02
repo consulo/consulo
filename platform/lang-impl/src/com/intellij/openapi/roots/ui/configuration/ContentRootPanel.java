@@ -254,7 +254,6 @@ public abstract class ContentRootPanel extends JPanel {
         case RESOURCE:
           break;
         case EXCLUDED:
-        case EXCLUDED_OUTPUT:
           tooltipText = ProjectBundle.message("module.paths.include.excluded.tooltip");
           break;
       }

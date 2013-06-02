@@ -78,7 +78,6 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
         }
         switch (contentFolder.getType()) {
           case EXCLUDED:
-          case EXCLUDED_OUTPUT:
             icon = AllIcons.Modules.ExcludeRoot;
             break;
           case SOURCE:

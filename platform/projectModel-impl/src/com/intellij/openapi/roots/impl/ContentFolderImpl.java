@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentFolderType;
@@ -41,8 +40,7 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   @NonNls
   public static final String ELEMENT_NAME = "content-folder";
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.SimpleContentFolderBaseImpl");
-
+  private boolean myIsSynthetic;
   private final VirtualFilePointer myFilePointer;
   protected final ContentEntryImpl myContentEntry;
   private final ContentFolderType myContentFolderType;
@@ -123,7 +121,7 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
 
   @Override
   public boolean isSynthetic() {
-    return myContentFolderType == ContentFolderType.EXCLUDED_OUTPUT;
+    return myIsSynthetic;
   }
 
   @NotNull
@@ -152,6 +150,11 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   @Override
   public String toString() {
     return myFilePointer == null ? null : getUrl();
+  }
+
+  public void setSynthetic() {
+    assert !myIsSynthetic;
+    myIsSynthetic = true;
   }
 
   @Override

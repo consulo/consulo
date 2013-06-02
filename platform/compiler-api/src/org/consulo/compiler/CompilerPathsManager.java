@@ -58,4 +58,7 @@ public abstract class CompilerPathsManager {
 
   @Nullable
   public abstract VirtualFile getCompilerOutput(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
+
+  @NotNull
+  public abstract VirtualFilePointer getCompilerOutputPointer(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
 }
