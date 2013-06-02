@@ -143,15 +143,12 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     if (ourPlatformPrefixInitialized) {
       return;
     }
-    URL resource = PlatformTestCase.class.getClassLoader().getResource("idea/ApplicationInfo.xml");
+    URL resource = PlatformTestCase.class.getClassLoader().getResource("idea/ConsuloApplicationInfo.xml");
     if (resource == null) {
-      resource = PlatformTestCase.class.getClassLoader().getResource("idea/IdeaApplicationInfo.xml");
-      if (resource == null) {
-        setPlatformPrefix("PlatformLangXml");
-      }
-      else {
-        setPlatformPrefix("Idea");
-      }
+      throw new UnsupportedOperationException("Application config is not found.");
+    }
+    else {
+      initPlatformLangPrefix();
     }
   }
 
@@ -219,8 +216,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     LocalFileSystem.getInstance().refreshIoFiles(myFilesToDelete);
 
     setUpModule();
-
-    setUpJdk();
 
     LightPlatformTestCase.clearUncommittedDocuments(getProject());
 
@@ -556,22 +551,13 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     StartupManagerImpl sm = (StartupManagerImpl)StartupManager.getInstance(myProject);
 
     mm.projectOpened();
-    setUpJdk();
     sm.runStartupActivities();
     sm.startCacheUpdate();
     // extra init for libraries
     sm.runPostStartupActivities();
   }
 
-  protected void setUpJdk() {
-    //final ProjectJdkEx jdk = ProjectJdkUtil.getDefaultJdk("java 1.4");
-    final Sdk jdk = getTestProjectJdk();
-//    ProjectJdkImpl jdk = ProjectJdkTable.getInstance().addJdk(defaultJdk);
-    /*Module[] modules = ModuleManager.getInstance(myProject).getModules();
-    for (Module module : modules) {
-      ModuleRootModificationUtil.setModuleSdk(module, jdk);
-    }      */
-  }
+
 
   @Nullable
   protected Sdk getTestProjectJdk() {
@@ -790,39 +776,13 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   }
 
   public static void initPlatformLangPrefix() {
-    initPlatformPrefix(IDEA_MARKER_CLASS, "PlatformLangXml");
-  }
-
-  /**
-   * This is the main point to set up your platform prefix. This allows you to use some sub-set of
-   * core plugin descriptors to make initialization faster (e.g. for running tests in classpath of the module where the test is located).
-   * It is calculated by some marker class presence in classpath.
-   * Note that it applies NEGATIVE logic for detection: prefix will be set if only marker class
-   * is NOT present in classpath.
-   * Also, only the very FIRST call to this method will take effect.
-   *
-   * @param classToTest marker class qualified name e.g. {@link #IDEA_MARKER_CLASS}.
-   * @param prefix platform prefix to be set up if marker class not found in classpath.
-   */
-  public static void initPlatformPrefix(String classToTest, String prefix) {
     if (!ourPlatformPrefixInitialized) {
       ourPlatformPrefixInitialized = true;
-      boolean isUltimate = true;
-      try {
-        PlatformTestCase.class.getClassLoader().loadClass(classToTest);
-      }
-      catch (ClassNotFoundException e) {
-        isUltimate = false;
-      }
-      if (!isUltimate) {
-        setPlatformPrefix(prefix);
-      }
+
+      System.setProperty(PlatformUtils.PLATFORM_PREFIX_KEY, PlatformUtils.CONSULO_PREFIX);
     }
   }
 
-  private static void setPlatformPrefix(String prefix) {
-    System.setProperty(PlatformUtils.PLATFORM_PREFIX_KEY, prefix);
-  }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.METHOD, ElementType.TYPE})

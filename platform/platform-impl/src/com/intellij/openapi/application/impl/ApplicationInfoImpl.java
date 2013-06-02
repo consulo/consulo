@@ -24,7 +24,6 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -420,7 +419,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
         ourShadowInstance.readExternal(doc.getRootElement());
       }
       catch (FileNotFoundException e) {
-        LOG.error("Resource is not in classpath or wrong platform prefix: " + System.getProperty(PlatformUtils.PLATFORM_PREFIX_KEY), e);
+        LOG.error("Resource is not in classpath or wrong platform prefix", e);
       }
       catch (Exception e) {
         LOG.error(e);

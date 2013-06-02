@@ -117,7 +117,12 @@ public class PluginManager {
     PluginClassLoaderDetector.install();
     long start = System.currentTimeMillis();
     try {
-      initializePlugins(progress);
+      if(ApplicationManager.getApplication().isUnitTestMode()) {
+        ourPlugins = new IdeaPluginDescriptorImpl[0];
+      }
+      else {
+        initializePlugins(progress);
+      }
     }
     catch (RuntimeException e) {
       getLogger().error(e);

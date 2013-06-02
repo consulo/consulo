@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact build-on-make="true" name="consulo-artifacts">
+  <artifact name="consulo-artifacts">
     <output-path>$PROJECT_DIR$/out/artifacts/core</output-path>
     <root id="root">
       <element id="archive" name="consulo-core.jar">

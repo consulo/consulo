@@ -379,9 +379,9 @@ public class JDOMUtil {
   }
 
   @NotNull
-  public static Document loadDocument(Class clazz, String reaource) throws JDOMException, IOException {
-    InputStream stream = clazz.getResourceAsStream(reaource);
-    if (stream == null) throw new FileNotFoundException(reaource);
+  public static Document loadDocument(Class clazz, String resource) throws JDOMException, IOException {
+    InputStream stream = clazz.getResourceAsStream(resource);
+    if (stream == null) throw new FileNotFoundException(resource);
     return loadDocument(stream);
   }
 

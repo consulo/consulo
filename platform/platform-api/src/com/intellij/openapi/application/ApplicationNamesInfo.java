@@ -95,10 +95,6 @@ public class ApplicationNamesInfo {
   }
 
   public static String getComponentName() {
-    final String prefix = System.getProperty(PlatformUtils.PLATFORM_PREFIX_KEY);
-    if (prefix != null) {
-      return prefix + COMPONENT_NAME;
-    }
-    return COMPONENT_NAME;
+    return PlatformUtils.CONSULO_PREFIX + COMPONENT_NAME;
   }
 }
