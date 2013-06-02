@@ -14,7 +14,6 @@ public interface CompilerSettings{
     public Configurable createConfigurable() {
       return null;
     }
-
   };
   @Nullable
   Configurable createConfigurable();

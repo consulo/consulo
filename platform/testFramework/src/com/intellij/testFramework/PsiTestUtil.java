@@ -52,15 +52,12 @@ import java.util.List;
 
 @NonNls
 public class PsiTestUtil {
-  public static VirtualFile createTestProjectStructure(Project project,
-                                                       Module module,
-                                                       String rootPath,
-                                                       Collection<File> filesToDelete) throws Exception {
+  public static VirtualFile createTestProjectStructure(Project project, Module module, String rootPath, Collection<File> filesToDelete)
+    throws Exception {
     return createTestProjectStructure(project, module, rootPath, filesToDelete, true);
   }
 
-  public static VirtualFile createTestProjectStructure(Project project, Module module, Collection<File> filesToDelete)
-    throws Exception {
+  public static VirtualFile createTestProjectStructure(Project project, Module module, Collection<File> filesToDelete) throws Exception {
     return createTestProjectStructure(project, module, null, filesToDelete, true);
   }
 
@@ -147,7 +144,7 @@ public class PsiTestUtil {
         final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
         final ContentEntry contentEntry = rootModel.addContentEntry(vDir);
-        contentEntry.addSourceFolder(vDir, testSource);
+        contentEntry.addFolder(vDir, testSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
         rootModel.commit();
       }
     }.execute().throwException();
@@ -165,7 +162,7 @@ public class PsiTestUtil {
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
         ContentEntry entry = findContentEntry(rootModel, vDir);
         if (entry == null) entry = rootModel.addContentEntry(vDir);
-        entry.addSourceFolder(vDir, isTestSource);
+        entry.addFolder(vDir, isTestSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
         rootModel.commit();
       }
     }.execute().throwException();
@@ -203,7 +200,7 @@ public class PsiTestUtil {
 
   public static void addExcludedRoot(Module module, VirtualFile dir) {
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    findContentEntryWithAssertion(model, dir).addExcludeFolder(dir);
+    findContentEntryWithAssertion(model, dir).addFolder(dir, ContentFolderType.EXCLUDED);
     commitModel(model);
   }
 
@@ -226,9 +223,9 @@ public class PsiTestUtil {
   public static void removeSourceRoot(Module module, VirtualFile root) {
     final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
     ContentEntry entry = findContentEntryWithAssertion(rootModel, root);
-    for (SourceFolder sourceFolder : entry.getSourceFolders()) {
+    for (ContentFolder sourceFolder : entry.getFolders()) {
       if (root.equals(sourceFolder.getFile())) {
-        entry.removeSourceFolder(sourceFolder);
+        entry.removeFolder(sourceFolder);
         break;
       }
     }
@@ -238,10 +235,10 @@ public class PsiTestUtil {
   public static void removeExcludedRoot(Module module, VirtualFile root) {
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
     ContentEntry entry = findContentEntryWithAssertion(model, root);
-    final ExcludeFolder[] excludeFolders = entry.getExcludeFolders();
-    for (ExcludeFolder excludeFolder : excludeFolders) {
+    final ContentFolder[] excludeFolders = entry.getFolders();
+    for (ContentFolder excludeFolder : excludeFolders) {
       if (root.equals(excludeFolder.getFile())) {
-        entry.removeExcludeFolder(excludeFolder);
+        entry.removeFolder(excludeFolder);
       }
     }
     commitModel(model);
@@ -258,7 +255,8 @@ public class PsiTestUtil {
 
   public static void checkFileStructure(PsiFile file) throws IncorrectOperationException {
     String originalTree = DebugUtil.psiTreeToString(file, false);
-    PsiFile dummyFile = PsiFileFactory.getInstance(file.getProject()).createFileFromText(file.getName(), file.getFileType(), file.getText());
+    PsiFile dummyFile =
+      PsiFileFactory.getInstance(file.getProject()).createFileFromText(file.getName(), file.getFileType(), file.getText());
     String reparsedTree = DebugUtil.psiTreeToString(dummyFile, false);
     Assert.assertEquals(reparsedTree, originalTree);
   }
@@ -329,7 +327,8 @@ public class PsiTestUtil {
   }
 
   public static void addLibrary(final Module module,
-                                final String libName, final String libDir,
+                                final String libName,
+                                final String libDir,
                                 final String[] classRoots,
                                 final String[] sourceRoots) {
     final String parentUrl =
@@ -356,7 +355,7 @@ public class PsiTestUtil {
         final Module dep = ModuleManager.getInstance(project).findModuleByName(moduleName);
         final ModifiableRootModel model = ModuleRootManager.getInstance(dep).getModifiableModel();
         final ContentEntry entry = model.addContentEntry(root);
-        entry.addSourceFolder(root, false);
+        entry.addFolder(root, ContentFolderType.SOURCE);
 
         model.commit();
         result.setResult(dep);

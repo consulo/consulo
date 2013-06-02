@@ -75,6 +75,12 @@ public class Mock {
       return null;
     }
 
+    @Nullable
+    @Override
+    public VirtualFile getVirtualFile() {
+      return null;
+    }
+
     @Override
     @NotNull
     public FileEditorState getState(@NotNull FileEditorStateLevel level) {

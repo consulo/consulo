@@ -102,7 +102,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesProcessor;
 import com.intellij.refactoring.rename.RenameProcessor;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
-import com.intellij.rt.execution.junit.FileComparisonFailure;
 import com.intellij.testFramework.*;
 import com.intellij.testFramework.fixtures.*;
 import com.intellij.usageView.UsageInfo;

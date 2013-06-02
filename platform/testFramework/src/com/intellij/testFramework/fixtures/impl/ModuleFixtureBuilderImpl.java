@@ -22,6 +22,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -136,7 +137,7 @@ public abstract class ModuleFixtureBuilderImpl<T extends ModuleFixture> implemen
         }
         //assert vf != null : "cannot find source root: " + sourceRoot;
         if (vf != null) {
-          contentEntry.addSourceFolder(vf, false);
+          contentEntry.addFolder(vf, ContentFolderType.SOURCE);
         }
       }
     }

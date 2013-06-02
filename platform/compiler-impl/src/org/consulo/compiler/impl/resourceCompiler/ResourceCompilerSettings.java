@@ -5,6 +5,7 @@ import com.intellij.compiler.MalformedPatternException;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.compiler.CompilerBundle;
+import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
@@ -17,9 +18,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import org.apache.oro.text.regex.*;
 import org.consulo.compiler.CompilerSettings;
+import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.jps.model.serialization.java.compiler.JpsJavaCompilerConfigurationSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.StringTokenizer;
  * @author VISTALL
  * @since 20:16/24.05.13
  */
-public class ResourceCompilerSettings implements CompilerSettings {
+public class ResourceCompilerSettings implements CompilerSettings, PersistentStateComponent<Element> {
   private static class CompiledPattern {
     @NotNull final Pattern fileName;
     @Nullable final Pattern dir;
@@ -281,6 +284,35 @@ public class ResourceCompilerSettings implements CompilerSettings {
       extensionsString.append(patterns[idx]);
     }
     return extensionsString.toString();
+  }
+
+  @Nullable
+  @Override
+  public Element getState() {
+    Element parentNode = new Element("state");
+    final Element newChild = addChild(parentNode, JpsJavaCompilerConfigurationSerializer.RESOURCE_EXTENSIONS);
+    for (final String pattern : getRegexpPatterns()) {
+      addChild(newChild, JpsJavaCompilerConfigurationSerializer.ENTRY).setAttribute(JpsJavaCompilerConfigurationSerializer.NAME, pattern);
+    }
+
+    if (myWildcardPatternsInitialized || !myWildcardPatterns.isEmpty()) {
+      final Element wildcardPatterns = addChild(parentNode, JpsJavaCompilerConfigurationSerializer.WILDCARD_RESOURCE_PATTERNS);
+      for (final String wildcardPattern : myWildcardPatterns) {
+        addChild(wildcardPatterns, JpsJavaCompilerConfigurationSerializer.ENTRY).setAttribute(JpsJavaCompilerConfigurationSerializer.NAME, wildcardPattern);
+      }
+    }
+    return parentNode;
+  }
+
+  @Override
+  public void loadState(Element state) {
+
+  }
+
+  private static Element addChild(Element parent, final String childName) {
+    final Element child = new Element(childName);
+    parent.addContent(child);
+    return child;
   }
 
   @Override
