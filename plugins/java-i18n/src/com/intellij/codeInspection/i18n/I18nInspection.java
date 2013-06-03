@@ -652,7 +652,7 @@ public class I18nInspection extends BaseLocalInspectionTool {
     return directory != null && isPackageNonNls(JavaDirectoryService.getInstance().getPackage(directory));
   }
 
-  public static boolean isPackageNonNls(final PsiPackage psiPackage) {
+  public static boolean isPackageNonNls(final PsiJavaPackage psiPackage) {
     if (psiPackage == null || psiPackage.getName() == null) {
       return false;
     }

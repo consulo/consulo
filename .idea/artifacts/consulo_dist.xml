@@ -285,6 +285,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="java-i18n">
+          <element id="directory" name="lib">
+            <element id="archive" name="java-i18n.jar">
+              <element id="module-output" name="java-i18n" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
