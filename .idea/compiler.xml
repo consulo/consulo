@@ -5,6 +5,7 @@
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
+    <addNotNullAssertions enabled="false" />
     <excludeFromCompile>
       <file url="file://$PROJECT_DIR$/jps/jps-builders/src/org/jetbrains/jps/incremental/java/OptimizedFileManager.java" />
       <file url="file://$PROJECT_DIR$/jps/jps-builders/src/org/jetbrains/jps/javac/OptimizedFileManager.java" />
@@ -26,7 +27,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.6">
-      <module name="groovy_rt" target="1.5" />
       <module name="javac2" target="1.5" />
     </bytecodeTargetLevel>
   </component>
@@ -39,7 +39,7 @@
     <option name="DEPRECATION" value="false" />
   </component>
   <component name="JavacSettings">
-    <option name="MAXIMUM_HEAP_SIZE" value="400" />
+    <option name="MAXIMUM_HEAP_SIZE" value="2000" />
   </component>
 </project>
 
