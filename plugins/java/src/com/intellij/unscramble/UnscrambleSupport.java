@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.Nullable;
 
 public interface UnscrambleSupport {
-  ExtensionPointName<UnscrambleSupport> EP_NAME = ExtensionPointName.create("com.intellij.unscrambleSupport");
+  ExtensionPointName<UnscrambleSupport> EP_NAME = ExtensionPointName.create("org.consulo.java.unscrambleSupport");
 
   @Nullable
   String unscramble(Project project, String text, String logName);

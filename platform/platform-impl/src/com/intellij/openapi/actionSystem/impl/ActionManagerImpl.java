@@ -348,7 +348,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       return null;
     }
 
-    String text = loadTextForElement(element, bundle, id, ACTION_ELEMENT_NAME);
+    String text = loadTextForElement(element, bundle, id, ACTION_ELEMENT_NAME, className);
 
     String iconPath = element.getAttributeValue(ICON_ATTR_NAME);
 
@@ -467,9 +467,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
-  private static String loadTextForElement(final Element element, final ResourceBundle bundle, final String id, String elementType) {
+  private static String loadTextForElement(final Element element, final ResourceBundle bundle, final String id, String elementType, final String actionClass) {
     final String value = element.getAttributeValue(TEXT_ATTR_NAME);
-    return CommonBundle.messageOrDefault(bundle, elementType + "." + id + "." + TEXT_ATTR_NAME, value == null ? "" : value);
+    return CommonBundle.messageOrDefault(bundle, elementType + "." + id + "." + TEXT_ATTR_NAME, value == null ?/* actionClass */"" : value);
   }
 
   private AnAction processGroupElement(Element element, final ClassLoader loader, PluginId pluginId) {
@@ -517,7 +517,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       Presentation presentation = group.getTemplatePresentation();
 
       // text
-      String text = loadTextForElement(element, bundle, id, GROUP_ELEMENT_NAME);
+      String text = loadTextForElement(element, bundle, id, GROUP_ELEMENT_NAME, className);
       // don't override value which was set in API with empty value from xml descriptor
       if (!StringUtil.isEmpty(text) || presentation.getText() == null) {
         presentation.setText(text);
@@ -538,32 +538,31 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
         group.setPopup(Boolean.valueOf(popup).booleanValue());
       }
       // process all group's children. There are other groups, actions, references and links
-      for (final Object o : element.getChildren()) {
-        Element child = (Element)o;
-        String name = child.getName();
+      for (final Element o : element.getChildren()) {
+        String name = o.getName();
         if (ACTION_ELEMENT_NAME.equals(name)) {
-          AnAction action = processActionElement(child, loader, pluginId);
+          AnAction action = processActionElement(o, loader, pluginId);
           if (action != null) {
             assertActionIsGroupOrStub(action);
-            ((DefaultActionGroup)group).addAction(action, Constraints.LAST, this).setAsSecondary(isSecondary(child));
+            ((DefaultActionGroup)group).addAction(action, Constraints.LAST, this).setAsSecondary(isSecondary(o));
           }
         }
         else if (SEPARATOR_ELEMENT_NAME.equals(name)) {
-          processSeparatorNode((DefaultActionGroup)group, child, pluginId);
+          processSeparatorNode((DefaultActionGroup)group, o, pluginId);
         }
         else if (GROUP_ELEMENT_NAME.equals(name)) {
-          AnAction action = processGroupElement(child, loader, pluginId);
+          AnAction action = processGroupElement(o, loader, pluginId);
           if (action != null) {
             ((DefaultActionGroup)group).add(action, this);
           }
         }
         else if (ADD_TO_GROUP_ELEMENT_NAME.equals(name)) {
-          processAddToGroupNode(group, child, pluginId, isSecondary(child));
+          processAddToGroupNode(group, o, pluginId, isSecondary(o));
         }
         else if (REFERENCE_ELEMENT_NAME.equals(name)) {
-          AnAction action = processReferenceElement(child, pluginId);
+          AnAction action = processReferenceElement(o, pluginId);
           if (action != null) {
-            ((DefaultActionGroup)group).addAction(action, Constraints.LAST, this).setAsSecondary(isSecondary(child));
+            ((DefaultActionGroup)group).addAction(action, Constraints.LAST, this).setAsSecondary(isSecondary(o));
           }
         }
         else {
