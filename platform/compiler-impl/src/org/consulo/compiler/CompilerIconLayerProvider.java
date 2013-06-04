@@ -16,13 +16,15 @@
 package org.consulo.compiler;
 
 import com.intellij.codeInsight.CodeInsightBundle;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconLayerProvider;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -37,13 +39,13 @@ public class CompilerIconLayerProvider implements IconLayerProvider {
     VirtualFile vFile = null;
     Project project = null;
     if (element instanceof PsiElement) {
-      project = ((PsiElement) element).getProject();
-      final PsiFile containingFile = ((PsiElement) element).getContainingFile();
+      project = ((PsiElement)element).getProject();
+      final PsiFile containingFile = ((PsiElement)element).getContainingFile();
       vFile = containingFile == null ? null : containingFile.getVirtualFile();
     }
 
     if (vFile != null && isExcluded(vFile, project)) {
-      return PlatformIcons.EXCLUDED_FROM_COMPILE_ICON;
+      return AllIcons.Nodes.ExcludedFromCompile;
     }
     return null;
   }
@@ -54,8 +56,8 @@ public class CompilerIconLayerProvider implements IconLayerProvider {
   }
 
   public static boolean isExcluded(final VirtualFile vFile, final Project project) {
-    return false/*vFile != null
-           && FileIndexFacade.getInstance(project).isInSource(vFile)
-           && CompilerConfiguration.getInstance(project).isExcludedFromCompilation(vFile)*/;
+    return vFile != null &&
+           FileIndexFacade.getInstance(project).isInSource(vFile) &&
+           CompilerManager.getInstance(project).isExcludedFromCompilation(vFile);
   }
 }

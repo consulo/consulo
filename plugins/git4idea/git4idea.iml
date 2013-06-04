@@ -57,11 +57,8 @@
     </orderEntry>
     <orderEntry type="library" scope="TEST" name="Groovy" level="project" />
     <orderEntry type="module" module-name="dvcs" />
-    <orderEntry type="library" scope="TEST" name="cucumber-jvm" level="project" />
-    <orderEntry type="library" scope="TEST" name="cucumber-java" level="project" />
     <orderEntry type="library" name="JSch" level="project" />
     <orderEntry type="module" module-name="spellchecker" />
-    <orderEntry type="module" module-name="cucumber-test-runner" scope="RUNTIME" />
   </component>
 </module>
 
