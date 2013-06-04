@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NonNls;
 /**
  * Extension points provided by IDEA core are listed here.
  */
+@Deprecated
 public interface ExtensionPoints extends ToolExtensionPoints {
   /**
    * This extension point should be used instead of former application-components, project-components, module-components.

@@ -162,12 +162,12 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   private List<ContentFolder> getFolders0(ContentFolderType... contentFolderTypes) {
     List<ContentFolder> list = new ArrayList<ContentFolder>();
     for (ContentFolder contentFolder : myContentFolders) {
-      if (ArrayUtil.contains(contentFolderTypes, contentFolder.getType())) {
+      if (ArrayUtil.contains(contentFolder.getType(), contentFolderTypes)) {
         list.add(contentFolder);
       }
     }
 
-    if(ArrayUtil.contains(contentFolderTypes, ContentFolderType.EXCLUDED)) {
+    if(ArrayUtil.contains(ContentFolderType.EXCLUDED, contentFolderTypes)) {
       for (DirectoryIndexExcludePolicy excludePolicy : Extensions
         .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
         final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
