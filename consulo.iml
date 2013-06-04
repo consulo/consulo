@@ -50,6 +50,39 @@
     <orderEntry type="module" module-name="java-psi-impl" />
     <orderEntry type="module" module-name="devkit" />
     <orderEntry type="module" module-name="properties" />
+    <orderEntry type="module" module-name="groovy" />
+    <orderEntry type="module" module-name="groovy-copyright" />
+    <orderEntry type="module" module-name="groovy-intellilang" />
+    <orderEntry type="module" module-name="groovy-jps-plugin" />
+    <orderEntry type="module" module-name="groovy-rt" />
+    <orderEntry type="module" module-name="groovy-rt-constants" />
+    <orderEntry type="module" module-name="groovy-spellchecker" />
+    <orderEntry type="module" module-name="ant" />
+    <orderEntry type="module" module-name="ant-jps-plugin" />
+    <orderEntry type="module" module-name="IntelliLang" />
+    <orderEntry type="module" module-name="intellilang-jps-plugin" />
+    <orderEntry type="module" module-name="java-compiler-impl" />
+    <orderEntry type="module" module-name="java-copyright" />
+    <orderEntry type="module" module-name="java-debugger-api" />
+    <orderEntry type="module" module-name="java-debugger-impl" />
+    <orderEntry type="module" module-name="java-execution-impl" />
+    <orderEntry type="module" module-name="java-generate-tostring" />
+    <orderEntry type="module" module-name="java-i18n" />
+    <orderEntry type="module" module-name="java-inspection-gadgets" />
+    <orderEntry type="module" module-name="java-intellilang" />
+    <orderEntry type="module" module-name="java-intention-power-pack" />
+    <orderEntry type="module" module-name="properties-copyright" />
+    <orderEntry type="module" module-name="relaxng" />
+    <orderEntry type="module" module-name="xml-api" />
+    <orderEntry type="module" module-name="xml-copyright" />
+    <orderEntry type="module" module-name="xml-dom-api" />
+    <orderEntry type="module" module-name="xml-intellilang" />
+    <orderEntry type="module" module-name="xpath" />
+    <orderEntry type="module" module-name="xpath-intellilang" />
+    <orderEntry type="module" module-name="xslt-debugger" />
+    <orderEntry type="module" module-name="xslt-debugger-engine" />
+    <orderEntry type="module" module-name="xslt-debugger-engine-impl" />
+    <orderEntry type="module" module-name="xslt-rt" />
   </component>
 </module>
 
