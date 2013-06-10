@@ -20,6 +20,7 @@ import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.impl.RunManagerImpl;
+import com.intellij.execution.testframework.TestSearchScope;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -92,6 +93,15 @@ public abstract class JavaRuntimeConfigurationProducerBase extends RuntimeConfig
       }
     }
     return false;
+  }
+
+  protected TestSearchScope setupPackageConfiguration(ConfigurationContext context, Project project, ModuleBasedConfiguration configuration, TestSearchScope scope) {
+    if (scope != TestSearchScope.WHOLE_PROJECT) {
+      if (!setupConfigurationModule(context, configuration)) {
+        return TestSearchScope.WHOLE_PROJECT;
+      }
+    }
+    return scope;
   }
   
   protected Module findModule(ModuleBasedConfiguration configuration, Module contextModule) {

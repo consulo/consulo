@@ -15,11 +15,21 @@
   -->
 
 <idea-plugin>
+  <id>com.intellij.junit</id>
   <name>JUnit</name>
   <description>Provides possibility to run JUnit 3.x and 4.x tests and view their results</description>
   <version>1.0</version>
   <vendor>JetBrains</vendor>
   <depends>org.consulo.java</depends>
+  <extensions defaultExtensionNs="org.consulo.java">
+    <deadCode implementation="com.intellij.execution.junit2.inspection.JUnitEntryPoint"/>
+  </extensions>
+
+  <extensionPoints>
+    <extensionPoint name="patcher"
+                    interface="com.intellij.execution.JUnitPatcher"/>
+  </extensionPoints>
+
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <configurationProducer implementation="com.intellij.execution.junit.AllInDirectoryConfigurationProducer"/>
@@ -27,7 +37,6 @@
     <configurationProducer implementation="com.intellij.execution.junit.PatternConfigurationProducer"/>
     <configurationProducer implementation="com.intellij.execution.junit.TestClassConfigurationProducer"/>
     <configurationProducer implementation="com.intellij.execution.junit.TestMethodConfigurationProducer"/>
-    <deadCode implementation="com.intellij.execution.junit2.inspection.JUnitEntryPoint"/>
     <cantBeStatic implementation="com.intellij.execution.junit2.inspection.JUnitCantBeStaticExtension" />
     <testFramework implementation="com.intellij.execution.junit.JUnit3Framework"/>
     <testFramework implementation="com.intellij.execution.junit.JUnit4Framework"/>

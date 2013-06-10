@@ -36,8 +36,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.util.Function;
@@ -151,7 +151,7 @@ public class TestsPattern extends TestPackage {
   public boolean isConfiguredByElement(JUnitConfiguration configuration,
                                        PsiClass testClass,
                                        PsiMethod testMethod,
-                                       PsiPackage testPackage) {
+                                       PsiJavaPackage testPackage) {
     /*if (testMethod != null && Comparing.strEqual(testMethod.getName(), configuration.getPersistentData().METHOD_NAME)) {
       return true;
     }*/

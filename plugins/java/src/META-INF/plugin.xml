@@ -410,9 +410,6 @@
     <extensionPoint name="generateAccessorProvider"
                     interface="com.intellij.util.NotNullFunction"/>
 
-    <extensionPoint name="junitPatcher"
-                    interface="com.intellij.execution.JUnitPatcher"/>
-
     <extensionPoint name="junitRecognizer"
                     interface="com.intellij.execution.JUnitRecognizer"/>
 

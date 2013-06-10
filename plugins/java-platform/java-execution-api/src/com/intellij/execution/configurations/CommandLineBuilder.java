@@ -28,11 +28,12 @@ import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Computable;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandLineBuilder {
   private CommandLineBuilder() { }
 
-  public static GeneralCommandLine createFromJavaParameters(final SimpleJavaParameters javaParameters) throws CantRunException {
+  public static GeneralCommandLine createFromJavaParameters(@NotNull final SimpleJavaParameters javaParameters) throws CantRunException {
     return createFromJavaParameters(javaParameters, false);
   }
 
@@ -47,7 +48,7 @@ public class CommandLineBuilder {
    * @return a command line.
    * @throws CantRunException if there are problems with JDK setup.
    */
-  public static GeneralCommandLine createFromJavaParameters(final SimpleJavaParameters javaParameters,
+  public static GeneralCommandLine createFromJavaParameters(@NotNull final SimpleJavaParameters javaParameters,
                                                             final Project project,
                                                             final boolean dynamicClasspath) throws CantRunException {
     return createFromJavaParameters(javaParameters, dynamicClasspath && JdkUtil.useDynamicClasspath(project));
@@ -59,7 +60,7 @@ public class CommandLineBuilder {
    * @return a command line.
    * @throws CantRunException if there are problems with JDK setup.
    */
-  public static GeneralCommandLine createFromJavaParameters(final SimpleJavaParameters javaParameters,
+  public static GeneralCommandLine createFromJavaParameters(@NotNull final SimpleJavaParameters javaParameters,
                                                             final boolean forceDynamicClasspath) throws CantRunException {
     try {
       return ApplicationManager.getApplication().runReadAction(new Computable<GeneralCommandLine>() {

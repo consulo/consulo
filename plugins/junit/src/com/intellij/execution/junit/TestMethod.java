@@ -24,8 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.refactoring.listeners.RefactoringElementAdapter;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
@@ -105,7 +105,7 @@ class TestMethod extends TestObject {
   public boolean isConfiguredByElement(final JUnitConfiguration configuration,
                                        PsiClass testClass,
                                        PsiMethod testMethod,
-                                       PsiPackage testPackage) {
+                                       PsiJavaPackage testPackage) {
     if (testMethod == null) return false;
     if (testClass == null) return false;
     final JUnitConfiguration.Data data = configuration.getPersistentData();

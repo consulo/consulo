@@ -31,14 +31,13 @@ import com.intellij.execution.ui.ClassBrowser;
 import com.intellij.execution.ui.CommonJavaParametersPanel;
 import com.intellij.execution.ui.ConfigurationModuleSelector;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ide.util.ClassFilter;
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
@@ -47,14 +46,12 @@ import com.intellij.openapi.ui.ex.MessagesEx;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.ui.EditorTextField;
-import com.intellij.ui.EditorTextFieldWithBrowseButton;
-import com.intellij.ui.InsertPathAction;
-import com.intellij.ui.PanelWithAnchor;
+import com.intellij.ui.*;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.TextFieldCompletionProvider;
 import gnu.trove.TIntArrayList;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -566,7 +563,7 @@ public class JUnitConfigurable extends SettingsEditor<JUnitConfiguration> implem
     return ((LabeledComponent<EditorTextFieldWithBrowseButton>)getTestLocation(JUnitConfigurationModel.CLASS)).getComponent().getText();
   }
 
-  private void setPackage(final PsiPackage aPackage) {
+  private void setPackage(final PsiJavaPackage aPackage) {
     if (aPackage == null) return;
     ((LabeledComponent<EditorTextFieldWithBrowseButton>)getTestLocation(JUnitConfigurationModel.ALL_IN_PACKAGE)).getComponent()
       .setText(aPackage.getQualifiedName());

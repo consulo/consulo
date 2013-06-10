@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
 
@@ -102,7 +102,7 @@ class TestDirectory extends TestPackage {
   }
 
   @Override
-  protected PsiPackage getPackage(JUnitConfiguration.Data data) throws CantRunException {
+  protected PsiJavaPackage getPackage(JUnitConfiguration.Data data) throws CantRunException {
     final String dirName = data.getDirName();
     final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(dirName));
     if (file == null) {
@@ -112,7 +112,7 @@ class TestDirectory extends TestPackage {
     if (directory == null) {
       throw new CantRunException("Directory \'" + dirName + "\' is not found");
     }
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     if (aPackage == null) {
       throw new CantRunException("Package not found in directory");
     }

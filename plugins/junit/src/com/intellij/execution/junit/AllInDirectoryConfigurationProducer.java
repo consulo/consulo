@@ -25,11 +25,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 
 
 public class AllInDirectoryConfigurationProducer extends JUnitConfigurationProducer {
@@ -39,7 +41,7 @@ public class AllInDirectoryConfigurationProducer extends JUnitConfigurationProdu
     final Project project = location.getProject();
     final PsiElement element = location.getPsiElement();
     if (!(element instanceof PsiDirectory)) return null;
-    final PsiPackage aPackage = checkPackage(element);
+    final PsiJavaPackage aPackage = checkPackage(element);
     if (aPackage == null) return null;
     final VirtualFile virtualFile = ((PsiDirectory)element).getVirtualFile();
     final Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
@@ -47,12 +49,10 @@ public class AllInDirectoryConfigurationProducer extends JUnitConfigurationProdu
     final ContentEntry[] entries = ModuleRootManager.getInstance(module).getContentEntries();
     int testRootCount = 0;
     for (ContentEntry entry : entries) {
-      for (SourceFolder sourceFolder : entry.getSourceFolders()) {
-        if (sourceFolder.isTestSource()) {
-          testRootCount++;
-          if (testRootCount > 1) {
-            break;
-          }
+      for (ContentFolder sourceFolder : entry.getFolders(ContentFolderType.TEST)) {
+        testRootCount++;
+        if (testRootCount > 1) {
+          break;
         }
       }
     }

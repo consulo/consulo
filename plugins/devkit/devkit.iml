@@ -22,6 +22,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="compiler-artifact-api" />
+    <orderEntry type="module" module-name="junit" />
   </component>
 </module>
 

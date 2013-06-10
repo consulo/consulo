@@ -53,6 +53,7 @@ import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.util.Function;
 import gnu.trove.THashSet;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -199,15 +200,15 @@ public class TestPackage extends TestObject {
   }
 
   protected GlobalSearchScope filterScope(final JUnitConfiguration.Data data) throws CantRunException {
-    final PsiPackage aPackage = getPackage(data);
+    final PsiJavaPackage aPackage = getPackage(data);
     return PackageScope.packageScope(aPackage, true);
   }
 
-  protected PsiPackage getPackage(JUnitConfiguration.Data data) throws CantRunException {
+  protected PsiJavaPackage getPackage(JUnitConfiguration.Data data) throws CantRunException {
     final Project project = myConfiguration.getProject();
     final String packageName = data.getPackageName();
     final PsiManager psiManager = PsiManager.getInstance(project);
-    final PsiPackage aPackage = JavaPsiFacade.getInstance(psiManager.getProject()).findPackage(packageName);
+    final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(psiManager.getProject()).findPackage(packageName);
     if (aPackage == null) throw CantRunException.packageNotFound(packageName);
     return aPackage;
   }
@@ -225,14 +226,14 @@ public class TestPackage extends TestObject {
   }
 
   public RefactoringElementListener getListener(final PsiElement element, final JUnitConfiguration configuration) {
-    if (!(element instanceof PsiPackage)) return null;
-    return RefactoringListeners.getListener((PsiPackage)element, configuration.myPackage);
+    if (!(element instanceof PsiJavaPackage)) return null;
+    return RefactoringListeners.getListener((PsiJavaPackage)element, configuration.myPackage);
   }
 
   public boolean isConfiguredByElement(final JUnitConfiguration configuration,
                                        PsiClass testClass,
                                        PsiMethod testMethod,
-                                       PsiPackage testPackage) {
+                                       PsiJavaPackage testPackage) {
     return testPackage != null
            && Comparing.equal(testPackage.getQualifiedName(), configuration.getPersistentData().getPackageName());
   }

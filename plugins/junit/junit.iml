@@ -15,6 +15,7 @@
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="xdebugger-api" />
     <orderEntry type="module" module-name="compiler-api" />
+    <orderEntry type="module" module-name="java" />
   </component>
   <component name="copyright">
     <Base>

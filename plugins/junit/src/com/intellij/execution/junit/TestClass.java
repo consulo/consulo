@@ -29,8 +29,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiPackage;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 
 class TestClass extends TestObject {
@@ -59,7 +59,7 @@ class TestClass extends TestObject {
   public boolean isConfiguredByElement(final JUnitConfiguration configuration,
                                        PsiClass testClass,
                                        PsiMethod testMethod,
-                                       PsiPackage testPackage) {
+                                       PsiJavaPackage testPackage) {
 
     if (testClass == null) {
       return false;

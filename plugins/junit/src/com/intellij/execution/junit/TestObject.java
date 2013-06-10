@@ -16,7 +16,6 @@
 
 package com.intellij.execution.junit;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.junit2.TestProxy;
@@ -47,12 +46,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ex.JavaSdkUtil;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
@@ -61,14 +59,15 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiPackage;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.rt.execution.junit.IDEAJUnitListener;
 import com.intellij.rt.execution.junit.JUnitStarter;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessageTypes;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -141,7 +140,7 @@ public abstract class TestObject implements JavaCommandLine {
   public abstract boolean isConfiguredByElement(JUnitConfiguration configuration,
                                                 PsiClass testClass,
                                                 PsiMethod testMethod,
-                                                PsiPackage testPackage);
+                                                PsiJavaPackage testPackage);
 
   protected void configureModule(final JavaParameters parameters, final RunConfigurationModule configurationModule, final String mainClassName)
     throws CantRunException {
@@ -165,7 +164,7 @@ public abstract class TestObject implements JavaCommandLine {
     public boolean isConfiguredByElement(final JUnitConfiguration configuration,
                                          PsiClass testClass,
                                          PsiMethod testMethod,
-                                         PsiPackage testPackage) {
+                                         PsiJavaPackage testPackage) {
       return false;
     }
 
@@ -198,10 +197,15 @@ public abstract class TestObject implements JavaCommandLine {
     JavaParametersUtil.configureConfiguration(myJavaParameters, myConfiguration);
     myJavaParameters.setMainClass(JUnitConfiguration.JUNIT_START_CLASS);
     final Module module = myConfiguration.getConfigurationModule().getModule();
+    if(module == null) {
+      throw new ExecutionException("No module");
+    }
     if (myJavaParameters.getJdk() == null){
-      myJavaParameters.setJdk(module != null
-                              ? ModuleRootManager.getInstance(module).getSdk()
-                              : ProjectRootManager.getInstance(myProject).getProjectSdk());
+      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+      if(sdk == null) {
+        throw new ExecutionException("Sdk not found for module: " + module.getName());
+      }
+      myJavaParameters.setJdk(sdk);
     }
 
     myJavaParameters.getClassPath().add(JavaSdkUtil.getIdeaRtJarPath());
@@ -247,9 +251,8 @@ public abstract class TestObject implements JavaCommandLine {
       myJavaParameters = new JavaParameters();
       initialize();
       final Module module = myConfiguration.getConfigurationModule().getModule();
-      final Object[] patchers = Extensions.getExtensions(ExtensionPoints.JUNIT_PATCHER);
-      for (Object patcher : patchers) {
-        ((JUnitPatcher)patcher).patchJavaParameters(module, myJavaParameters);
+      for (JUnitPatcher patcher : JUnitPatcher.EP_NAME.getExtensions()) {
+        patcher.patchJavaParameters(module, myJavaParameters);
       }
     }
     return myJavaParameters;
@@ -407,7 +410,7 @@ public abstract class TestObject implements JavaCommandLine {
 
   protected JUnitProcessHandler createHandler(Executor executor) throws ExecutionException {
     appendForkInfo(executor);
-    return JUnitProcessHandler.runCommandLine(CommandLineBuilder.createFromJavaParameters(myJavaParameters, myProject, true));
+    return JUnitProcessHandler.runCommandLine(CommandLineBuilder.createFromJavaParameters(getJavaParameters(), myProject, true));
   }
 
   private void appendForkInfo(Executor executor) throws ExecutionException {

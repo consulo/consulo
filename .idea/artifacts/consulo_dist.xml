@@ -306,6 +306,16 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="junit">
+          <element id="directory" name="lib">
+            <element id="archive" name="junit.jar">
+              <element id="module-output" name="junit" />
+            </element>
+            <element id="archive" name="junit_rt.jar">
+              <element id="module-output" name="junit_rt" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

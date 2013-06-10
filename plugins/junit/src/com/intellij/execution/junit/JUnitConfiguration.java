@@ -32,11 +32,15 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.DefaultJDOMExternalizer;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
+import org.consulo.psi.PsiPackage;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -233,20 +237,20 @@ public class JUnitConfiguration extends ModuleBasedConfiguration<JavaRunConfigur
     return super.getModules();
   }
 
-  final RefactoringListeners.Accessor<PsiPackage> myPackage = new RefactoringListeners.Accessor<PsiPackage>() {
+  final RefactoringListeners.Accessor<PsiJavaPackage> myPackage = new RefactoringListeners.Accessor<PsiJavaPackage>() {
     public void setName(final String qualifiedName) {
       final boolean generatedName = isGeneratedName();
       myData.PACKAGE_NAME = qualifiedName;
       if (generatedName) setGeneratedName();
     }
 
-    public PsiPackage getPsiElement() {
+    public PsiJavaPackage getPsiElement() {
       final String qualifiedName = myData.getPackageName();
       return qualifiedName != null ? JavaPsiFacade.getInstance(getProject()).findPackage(qualifiedName)
              : null;
     }
 
-    public void setPsiElement(final PsiPackage psiPackage) {
+    public void setPsiElement(final PsiJavaPackage psiPackage) {
       setName(psiPackage.getQualifiedName());
     }
   };
