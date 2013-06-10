@@ -60,7 +60,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   }
 
   @NonNls
-  private static final String DEFAULT_PATH = "file://$PROJECT_DIR$/out";
+  private static final String DEFAULT_PATH = "/out";
   @NonNls
   private static final String OUTPUT_TAG = "output";
   @NonNls
@@ -99,7 +99,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   }
 
   private void createDefaults() {
-    myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance().create(DEFAULT_PATH, myProject, null);
+    myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance().create(myProject.getBaseDir() + DEFAULT_PATH, myProject, null);
     ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     for (Module module : moduleManager.getModules()) {
       if (!myModulesToVirtualFilePoints.containsKey(module)) {
@@ -136,7 +136,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   @Override
   public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
     if (compilerOutputUrl == null) {
-      compilerOutputUrl = DEFAULT_PATH;
+      compilerOutputUrl = myProject.getBasePath() + DEFAULT_PATH;
     }
     myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
     //myCompilerOutputWatchRequest = LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, compilerOutputUrl, true);
@@ -163,7 +163,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
 
   private VirtualFilePointer createDefaultPointerForModule(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
     final VirtualFilePointerManager instance = VirtualFilePointerManager.getInstance();
-    return instance.create(DEFAULT_PATH + "/" + module.getName() + "/" + contentFolderType.name().toLowerCase() + "/", myProject, null);
+    return instance.create(myProject.getBaseDir() + DEFAULT_PATH + "/" + module.getName() + "/" + contentFolderType.name().toLowerCase() + "/", myProject, null);
   }
 
   @Override
@@ -274,6 +274,8 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
 
   @Override
   public void loadState(Element element) {
+    PathMacroManager.getInstance(myProject).expandPaths(element);
+
     final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     String url = element.getAttributeValue(URL);
     if (url != null) {
