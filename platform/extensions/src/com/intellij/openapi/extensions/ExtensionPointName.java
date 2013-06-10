@@ -48,6 +48,11 @@ public class ExtensionPointName<T> {
     return Extensions.getExtensions(this);
   }
 
+  @NotNull
+  public T[] getExtension(@NotNull AreaInstance areaInstance) {
+    return Extensions.getExtensions(this, areaInstance);
+  }
+
   public <V extends T> V findExtension(Class<V> instanceOf) {
     return ContainerUtil.findInstance(getExtensions(), instanceOf);
   }
