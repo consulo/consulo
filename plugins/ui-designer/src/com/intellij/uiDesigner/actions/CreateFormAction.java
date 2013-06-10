@@ -81,7 +81,7 @@ public class CreateFormAction extends AbstractCreateFormAction {
     PsiElement createdFile;
     PsiClass newClass = null;
     try {
-      final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+      final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
       assert aPackage != null;
       final String packageName = aPackage.getQualifiedName();
       String fqClassName = null;

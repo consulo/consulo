@@ -1,15 +1,10 @@
 <idea-plugin version="2">
   <name>UI Designer (Core)</name>
   <id>com.intellij.ui-designer-new</id>
-  <description>
-    Provides shared functionality for visual editing plugins.
-  </description>
+  <description>Provides shared functionality for visual editing plugins.</description>
   <vendor>JetBrains</vendor>
-
+  <depends>com.intellij.xml</depends>
   <resource-bundle>messages.DesignerBundle</resource-bundle>
-
-  <depends>com.intellij.modules.lang</depends>
-
   <project-components>
     <component>
       <implementation-class>com.intellij.designer.DesignerToolWindowManager</implementation-class>

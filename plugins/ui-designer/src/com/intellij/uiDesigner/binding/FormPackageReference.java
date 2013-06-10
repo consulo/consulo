@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiPlainTextFile;
-import com.intellij.psi.PsiPackage;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,10 +40,10 @@ public class FormPackageReference extends ReferenceInForm {
 
   @Override
   public boolean isReferenceTo(final PsiElement element) {
-    if (!(element instanceof PsiPackage)) {
+    if (!(element instanceof PsiJavaPackage)) {
       return false;
     }
-    final String qName = ((PsiPackage)element).getQualifiedName().replace('.', '/');
+    final String qName = ((PsiJavaPackage)element).getQualifiedName().replace('.', '/');
     final String rangeText = getRangeText();
     return qName.equals(rangeText);
   }

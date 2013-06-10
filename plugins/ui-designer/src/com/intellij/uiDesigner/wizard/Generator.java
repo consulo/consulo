@@ -425,7 +425,7 @@ public final class Generator {
     final PsiDirectory rootDirectory = psiManager.findDirectory(sourceRoot);
     LOG.assertTrue(rootDirectory != null);
 
-    final PsiPackage aPackage = JavaPsiFacade.getInstance(psiManager.getProject()).findPackage(wizardData.myPackageName);
+    final PsiJavaPackage aPackage = JavaPsiFacade.getInstance(psiManager.getProject()).findPackage(wizardData.myPackageName);
     if (aPackage == null) {
       throw new MyException(UIDesignerBundle.message("error.package.does.not.exist", wizardData.myPackageName));
     }

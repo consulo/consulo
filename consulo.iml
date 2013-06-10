@@ -7,7 +7,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="annotations" />
     <orderEntry type="module" module-name="boot" />
-    <orderEntry type="library" name="Lombok" level="project" />
     <orderEntry type="module" module-name="bootstrap" />
     <orderEntry type="module" module-name="extensions" />
     <orderEntry type="module" module-name="forms_rt" />
@@ -84,6 +83,9 @@
     <orderEntry type="module" module-name="xslt-debugger-engine-impl" />
     <orderEntry type="module" module-name="xslt-rt" />
     <orderEntry type="module" module-name="smRunner" />
+    <orderEntry type="module" module-name="ui-designer-core" />
+    <orderEntry type="module" module-name="ui-designer" />
+    <orderEntry type="module" module-name="forms-compiler" />
   </component>
 </module>
 

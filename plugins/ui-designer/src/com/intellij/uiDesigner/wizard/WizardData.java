@@ -78,7 +78,7 @@ public final class WizardData {
     LOG.assertTrue(directory.isDirectory());
     final PsiDirectory psiDirectory = manager.findDirectory(directory);
     LOG.assertTrue(psiDirectory != null);
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
     if(aPackage != null){
       myPackageName = aPackage.getQualifiedName();
     }

@@ -292,6 +292,20 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="ui-designer">
+          <element id="directory" name="lib">
+            <element id="archive" name="ui-designer.jar">
+              <element id="module-output" name="ui-designer" />
+            </element>
+          </element>
+        </element>
+        <element id="directory" name="ui-designer-core">
+          <element id="directory" name="lib">
+            <element id="archive" name="ui-designer-core.jar">
+              <element id="module-output" name="ui-designer-core" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
@@ -362,6 +376,9 @@
         </element>
         <element id="archive" name="icons.jar">
           <element id="module-output" name="icons" />
+        </element>
+        <element id="archive" name="form_compiler.jar">
+          <element id="module-output" name="forms-compiler" />
         </element>
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/build.txt" />

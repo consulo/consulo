@@ -198,7 +198,7 @@ public final class ComponentItemDialog extends DialogWrapper {
 
   private void setEditorText(final String className) {
     final JavaCodeFragmentFactory factory = JavaCodeFragmentFactory.getInstance(myProject);
-    PsiPackage defaultPackage = JavaPsiFacade.getInstance(myProject).findPackage("");
+    PsiJavaPackage defaultPackage = JavaPsiFacade.getInstance(myProject).findPackage("");
     final PsiCodeFragment fragment = factory.createReferenceCodeFragment(className, defaultPackage, true, true);
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(fragment);
     myEditorTextField.setDocument(myDocument);

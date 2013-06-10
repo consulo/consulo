@@ -34,6 +34,7 @@ import com.intellij.uiDesigner.UIDesignerBundle;
 import com.intellij.uiDesigner.designSurface.GuiEditor;
 import com.intellij.uiDesigner.radComponents.RadComponent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -155,6 +156,12 @@ public final class UIFormEditor extends UserDataHolderBase implements /*Navigata
 
   public StructureViewBuilder getStructureViewBuilder() {
     return null;
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getVirtualFile() {
+    return myFile;
   }
 
   /*

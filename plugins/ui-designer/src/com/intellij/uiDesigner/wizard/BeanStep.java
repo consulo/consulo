@@ -105,7 +105,7 @@ final class BeanStep extends StepAdapter{
         final PackageChooserDialog dialog = new PackageChooserDialog(UIDesignerBundle.message("title.choose.package"), myData.myProject);
         dialog.selectPackage(myTfWithBtnChoosePackage.getText());
         dialog.show();
-        final PsiPackage aPackage = dialog.getSelectedPackage();
+        final PsiJavaPackage aPackage = dialog.getSelectedPackage();
         if (aPackage != null) {
           myTfWithBtnChoosePackage.setText(aPackage.getQualifiedName());
         }

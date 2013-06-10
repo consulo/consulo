@@ -5,6 +5,7 @@
   <resource-bundle>messages.UIDesignerBundle</resource-bundle>
   <depends>com.intellij.java-i18n</depends>
   <depends>com.intellij.properties</depends>
+  <depends>com.intellij.xml</depends>
   <depends>org.consulo.java</depends>
 
   <extensionPoints>
@@ -25,14 +26,17 @@
     <formInspectionTool implementation="com.intellij.uiDesigner.inspections.FormSpellCheckingInspection"/>
   </extensions>
 
+  <extensions defaultExtensionNs="org.consulo.java">
+    <i18nInspectionTool implementation="com.intellij.uiDesigner.i18n.I18nFormInspection"/>
+    <java15InspectionTool implementation="com.intellij.uiDesigner.inspections.Java15FormInspection"/>
+    <invalidPropertyKeyInspectionTool implementation="com.intellij.uiDesigner.i18n.InvalidPropertyKeyFormInspection"/>
+  </extensions>
+
   <extensions defaultExtensionNs="com.intellij">
      <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
     <fileTypeFactory implementation="com.intellij.uiDesigner.FormFileTypeFactory"/>
 
-    <invalidPropertyKeyInspectionTool implementation="com.intellij.uiDesigner.i18n.InvalidPropertyKeyFormInspection"/>
-    <i18nInspectionTool implementation="com.intellij.uiDesigner.i18n.I18nFormInspection"/>
-    <java15InspectionTool implementation="com.intellij.uiDesigner.inspections.Java15FormInspection"/>
 
     <projectConfigurable instance="com.intellij.uiDesigner.GuiDesignerConfigurable" id="project.propGUI" key="title.gui.designer"
                          bundle="messages.UIDesignerBundle"/>

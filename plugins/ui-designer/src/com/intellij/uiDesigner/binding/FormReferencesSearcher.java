@@ -52,7 +52,7 @@ public class FormReferencesSearcher implements QueryExecutor<PsiReference, Refer
                                          ? (LocalSearchScope) p.getScope()
                                          : null;
 
-    if (refElement instanceof PsiPackage) {
+    if (refElement instanceof PsiJavaPackage) {
       //no need to do anything
       //if (!UIFormUtil.processReferencesInUIForms(consumer, (PsiPackage)refElement, scope)) return false;
     }

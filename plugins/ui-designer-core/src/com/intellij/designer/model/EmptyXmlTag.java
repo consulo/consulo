@@ -17,6 +17,7 @@ package com.intellij.designer.model;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -268,6 +269,11 @@ public class EmptyXmlTag implements XmlTag {
 
   @Override
   public Language getLanguage() {
+    return null;
+  }
+
+  @Override
+  public LanguageVersion getLanguageVersion() {
     return null;
   }
 

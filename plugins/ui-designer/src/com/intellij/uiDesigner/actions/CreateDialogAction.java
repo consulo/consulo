@@ -188,7 +188,7 @@ public final class CreateDialogAction extends AbstractCreateFormAction {
     JavaCodeStyleManager.getInstance(directory.getProject()).shortenClassReferences(sourceFile);
     CodeStyleManager.getInstance(directory.getProject()).reformat(sourceFile);
 
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     final String packageName = aPackage.getQualifiedName();
     final String fqClassName = packageName.length() == 0 ? newName : packageName + "." + newName;
 

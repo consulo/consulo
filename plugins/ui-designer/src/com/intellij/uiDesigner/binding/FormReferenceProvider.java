@@ -321,7 +321,7 @@ public class FormReferenceProvider extends PsiReferenceProvider {
       return null;
     }
     final String packageName;
-    final PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
     if (aPackage == null) {
       packageName = "";
     }

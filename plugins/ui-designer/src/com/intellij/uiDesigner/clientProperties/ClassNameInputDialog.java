@@ -45,7 +45,7 @@ public class ClassNameInputDialog extends DialogWrapper {
   private void createUIComponents() {
     myEditorTextField1 = new EditorTextField("", myProject, StdFileTypes.JAVA);
     final JavaCodeFragmentFactory factory = JavaCodeFragmentFactory.getInstance(myProject);
-    PsiPackage defaultPackage = JavaPsiFacade.getInstance(myProject).findPackage("");
+    PsiJavaPackage defaultPackage = JavaPsiFacade.getInstance(myProject).findPackage("");
     final PsiCodeFragment fragment = factory.createReferenceCodeFragment("", defaultPackage, true, true);
     myEditorTextField1.setDocument(PsiDocumentManager.getInstance(myProject).getDocument(fragment));
   }
