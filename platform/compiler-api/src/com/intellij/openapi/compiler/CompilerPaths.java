@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -205,7 +205,7 @@ public class CompilerPaths {
   @Nullable
   public static String getAnnotationProcessorsGenerationPath(Module module) {
     final AnnotationProcessingConfiguration config =
-      CompilerConfiguration.getInstance(module.getProject()).getAnnotationProcessingConfiguration(module);
+      CompilerConfigurationOld.getInstance(module.getProject()).getAnnotationProcessingConfiguration(module);
     final String sourceDirName = config.getGeneratedSourcesDirectoryName(false);
     if (config.isOutputRelativeToContentRoot()) {
       final String[] roots = ModuleRootManager.getInstance(module).getContentRootUrls();

@@ -21,7 +21,7 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.CompilerException;
 import com.intellij.compiler.impl.CompileDriver;
@@ -88,7 +88,7 @@ public class JavaCompiler implements TranslatingCompiler {
   }
 
   private BackendCompiler getBackEndCompiler() {
-    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
     return configuration.getDefaultCompiler();
   }
 }

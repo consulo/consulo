@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.SymbolTable;
 import com.intellij.compiler.classParsing.MethodInfo;
@@ -135,7 +135,7 @@ public class CacheUtils {
     final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
     throws CacheCorruptedException, ExitException {
     
-    if (!CompilerConfiguration.MAKE_ENABLED) {
+    if (!CompilerConfigurationOld.MAKE_ENABLED) {
       return Collections.emptyList();
     }
     context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
@@ -150,7 +150,7 @@ public class CacheUtils {
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       public void run() {
         try {
-          CompilerConfiguration compilerConfiguration = CompilerConfiguration.getInstance(context.getProject());
+          CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(context.getProject());
           SourceFileFinder sourceFileFinder = new SourceFileFinder(context.getProject(), context);
           final Cache cache = dependencyCache.getCache();
           for (final int infoQName : filteredDeps.getFirst()) {

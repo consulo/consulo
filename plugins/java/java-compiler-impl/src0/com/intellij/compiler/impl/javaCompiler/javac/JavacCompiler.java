@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl.javaCompiler.javac;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.compiler.OutputParser;
@@ -287,7 +287,7 @@ public class JavacCompiler extends ExternalCompiler {
       annotationProcessorsEnabled = false;
     }
     if (isAnnotationProcessing) {
-      final AnnotationProcessingConfiguration config = CompilerConfiguration.getInstance(chunk.getProject()).getAnnotationProcessingConfiguration(chunk.getModules()[0]);
+      final AnnotationProcessingConfiguration config = CompilerConfigurationOld.getInstance(chunk.getProject()).getAnnotationProcessingConfiguration(chunk.getModules()[0]);
       additionalOptions.add("-Xprefer:source");
       additionalOptions.add("-implicit:none");
       additionalOptions.add("-proc:only");

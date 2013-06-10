@@ -21,7 +21,7 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.make.DependencyCache;
@@ -94,7 +94,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     myStartCompilationStamp = System.currentTimeMillis();
     myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     myProjectCompileScope = new ProjectCompileScope(myProject);
-    myIsAnnotationProcessorsEnabled = CompilerConfiguration.getInstance(project).isAnnotationProcessorsEnabled();
+    myIsAnnotationProcessorsEnabled = CompilerConfigurationOld.getInstance(project).isAnnotationProcessorsEnabled();
 
     if (compilerSession != null) {
       compilerSession.setContentIdKey(compileScope.getUserData(CompilerManager.CONTENT_ID_KEY));

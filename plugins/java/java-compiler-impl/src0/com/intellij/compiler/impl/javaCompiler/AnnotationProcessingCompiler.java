@@ -21,7 +21,7 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.CompilerException;
 import com.intellij.compiler.impl.CompileContextExProxy;
@@ -47,11 +47,11 @@ import java.util.Set;
 public class AnnotationProcessingCompiler implements TranslatingCompiler{
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.javaCompiler.JavaCompiler");
   private final Project myProject;
-  private final CompilerConfiguration myConfig;
+  private final CompilerConfigurationOld myConfig;
 
   public AnnotationProcessingCompiler(Project project) {
     myProject = project;
-    myConfig = CompilerConfiguration.getInstance(project);
+    myConfig = CompilerConfigurationOld.getInstance(project);
   }
 
   @NotNull

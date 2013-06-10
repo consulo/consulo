@@ -17,7 +17,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.ModuleCompilerUtil;
@@ -161,7 +161,7 @@ public class CompileDriver {
       final IntermediateOutputCompiler[] generatingCompilers =
         CompilerManager.getInstance(myProject).getCompilers(IntermediateOutputCompiler.class, myCompilerFilter);
       final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
-      final CompilerConfiguration config = CompilerConfiguration.getInstance(project);
+      final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(project);
       for (Module module : allModules) {
         for (IntermediateOutputCompiler compiler : generatingCompilers) {
           final VirtualFile productionOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, false));
@@ -447,7 +447,7 @@ public class CompileDriver {
 
   private void attachAnnotationProcessorsOutputDirectories(CompileContextEx context) {
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
-    final CompilerConfiguration config = CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
     final Set<Module> affected = new HashSet<Module>(Arrays.asList(context.getCompileScope().getAffectedModules()));
     for (Module module : affected) {
       if (!config.getAnnotationProcessingConfiguration(module).isEnabled()) {
@@ -867,7 +867,7 @@ public class CompileDriver {
       }
       if (compileContext.isAnnotationProcessorsEnabled()) {
         final Set<File> genSourceRoots = new THashSet<File>(FileUtil.FILE_HASHING_STRATEGY);
-        final CompilerConfiguration config = CompilerConfiguration.getInstance(myProject);
+        final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
         for (Module module : affectedModules) {
           if (config.getAnnotationProcessingConfiguration(module).isEnabled()) {
             final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
@@ -1463,7 +1463,7 @@ public class CompileDriver {
           }
           while (!dependentFiles.isEmpty() && context.getMessageCount(CompilerMessageCategory.ERROR) == 0);
 
-          if (CompilerConfiguration.MAKE_ENABLED) {
+          if (CompilerConfigurationOld.MAKE_ENABLED) {
             if (!context.getProgressIndicator().isCanceled()) {
               // when cancelled pretend nothing was compiled and next compile will compile everything from the scratch
               final ProgressIndicator indicator = context.getProgressIndicator();
@@ -1767,7 +1767,7 @@ public class CompileDriver {
       outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), false)));
       outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), true)));
     }
-    final CompilerConfiguration config = CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
     if (context.isAnnotationProcessorsEnabled()) {
       for (Module module : modules) {
         if (config.getAnnotationProcessingConfiguration(module).isEnabled()) {
@@ -2373,7 +2373,7 @@ public class CompileDriver {
       boolean isProjectCompilePathSpecified = true;
       final List<String> modulesWithoutJdkAssigned = new ArrayList<String>();
       final Set<File> nonExistingOutputPaths = new HashSet<File>();
-      final CompilerConfiguration config = CompilerConfiguration.getInstance(myProject);
+      final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
       final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
       final boolean useOutOfProcessBuild = useOutOfProcessBuild();
       for (final Module module : scopeModules) {

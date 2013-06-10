@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl.javaCompiler.jikes;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.OutputParser;
 import com.intellij.compiler.impl.CompilerUtil;
@@ -97,7 +97,7 @@ public class JikesCompiler extends ExternalCompiler {
   }
 
   private void openConfigurationDialog() {
-    final CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
     final Collection<BackendCompiler> compilers = configuration.getRegisteredJavaCompilers();
     final BackendCompiler defaultCompiler = configuration.getDefaultCompiler();
     final JavaCompilersTab compilersTab = new JavaCompilersTab(myProject, compilers, defaultCompiler);

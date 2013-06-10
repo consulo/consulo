@@ -15,8 +15,9 @@
  */
 
 package org.jetbrains.plugins.groovy.compiler
-import com.intellij.compiler.CompilerConfiguration
+import com.intellij.compiler.CompilerConfigurationOld
 import com.intellij.compiler.CompilerConfigurationImpl
+import com.intellij.compiler.CompilerConfigurationOld
 import com.intellij.compiler.server.BuildManager
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.PathManager
@@ -313,7 +314,7 @@ public class Transf implements ASTTransformation {
                                              "static def autoImported() { 239 }\n" +
                                              "}");
 
-    CompilerConfiguration.getInstance(getProject()).addResourceFilePattern("*.ASTTransformation");
+    CompilerConfigurationOld.getInstance(getProject()).addResourceFilePattern("*.ASTTransformation");
 
     myFixture.addFileToProject("META-INF/services/org.codehaus.groovy.transform.ASTTransformation", "Transf");
   }
@@ -671,7 +672,7 @@ public class Main {
 
   private void excludeFromCompilation(PsiFile foo) {
     final ExcludedEntriesConfiguration configuration =
-      ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(project)).getExcludedEntriesConfiguration()
+      ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project)).getExcludedEntriesConfiguration()
     configuration.addExcludeEntryDescription(new ExcludeEntryDescription(foo.virtualFile, false, true, testRootDisposable))
   }
 

@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -50,7 +50,7 @@ public class TypeCustomizerInspection extends BaseInspection {
     return new BaseInspectionVisitor() {
       @Override
       public void visitFile(GroovyFileBase file) {
-        if (!CompilerConfiguration.getInstance(file.getProject()).isResourceFile(file.getVirtualFile())) {
+        if (!CompilerConfigurationOld.getInstance(file.getProject()).isResourceFile(file.getVirtualFile())) {
           if (fileSeemsToBeTypeCustomizer(file)) {
             final LocalQuickFix[] fixes = {new AddToResourceFix(file)};
             final String message = GroovyInspectionBundle.message("type.customizer.is.not.marked.as.a.resource.file");
@@ -116,12 +116,12 @@ public class TypeCustomizerInspection extends BaseInspection {
       final VirtualFile projectRoot = project.getBaseDir();
       if (sourceRoot == null) {
         final String path = VfsUtilCore.getRelativePath(virtualFile, projectRoot, '/');
-        CompilerConfiguration.getInstance(project).addResourceFilePattern(path);
+        CompilerConfigurationOld.getInstance(project).addResourceFilePattern(path);
       }
       else {
         final String path = VfsUtilCore.getRelativePath(virtualFile, sourceRoot, '/');
         final String sourceRootPath = VfsUtilCore.getRelativePath(sourceRoot, projectRoot, '/');
-        CompilerConfiguration.getInstance(project).addResourceFilePattern(sourceRootPath + ':' + path);
+        CompilerConfigurationOld.getInstance(project).addResourceFilePattern(sourceRootPath + ':' + path);
       }
       DaemonCodeAnalyzer.getInstance(project).restart(myFile);
     }

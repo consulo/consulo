@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.impl.ExitException;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
@@ -75,7 +75,7 @@ public class CacheUtils {
     final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
     throws CacheCorruptedException, ExitException {
 
-    if (!CompilerConfiguration.MAKE_ENABLED) {
+    if (!CompilerConfigurationOld.MAKE_ENABLED) {
       return Collections.emptyList();
     }
    /* context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));

@@ -726,7 +726,7 @@ public class BackendCompilerWrapper {
           if (PACKAGE_ANNOTATION_FILE_NAME.equals(srcFile.getName())) {
             myProcessedPackageInfos.add(srcFile);
           }
-          if (CompilerConfiguration.MAKE_ENABLED) {
+          if (CompilerConfigurationOld.MAKE_ENABLED) {
             newCache.setPath(cc.qName, realLocation.getSecond());
           }
           if (LOG.isDebugEnabled()) {
@@ -863,7 +863,7 @@ public class BackendCompilerWrapper {
     private ClassParsingThread(final boolean isJdk16, String outputDir) {
       myIsJdk16 = isJdk16;
       myOutputDir = FileUtil.toSystemIndependentName(outputDir);
-      myAddNotNullAssertions = CompilerConfiguration.getInstance(myProject).isAddNotNullAssertions();
+      myAddNotNullAssertions = CompilerConfigurationOld.getInstance(myProject).isAddNotNullAssertions();
     }
 
     private volatile boolean processing;
@@ -905,7 +905,7 @@ public class BackendCompilerWrapper {
       File file = fileObject.getFile();
       final String path = file.getPath();
       try {
-        if (CompilerConfiguration.MAKE_ENABLED) {
+        if (CompilerConfigurationOld.MAKE_ENABLED) {
           byte[] fileContent = fileObject.getContent();
           // the file is assumed to exist!
           final DependencyCache dependencyCache = myCompileContext.getDependencyCache();

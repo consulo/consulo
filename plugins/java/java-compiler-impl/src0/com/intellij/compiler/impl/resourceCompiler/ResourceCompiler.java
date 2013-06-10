@@ -21,7 +21,7 @@
  */
 package com.intellij.compiler.impl.resourceCompiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.make.MakeUtil;
@@ -47,10 +47,10 @@ import java.util.*;
 public class ResourceCompiler implements TranslatingCompiler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.resourceCompiler.ResourceCompiler");
   private final Project myProject;
-  private final CompilerConfiguration myConfiguration;
+  private final CompilerConfigurationOld myConfiguration;
   private final ResourceCompilerExtension[] myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensions();
 
-  public ResourceCompiler(Project project, CompilerConfiguration compilerConfiguration) {
+  public ResourceCompiler(Project project, CompilerConfigurationOld compilerConfiguration) {
     myProject = project;
     myConfiguration = compilerConfiguration;
   }
@@ -61,7 +61,7 @@ public class ResourceCompiler implements TranslatingCompiler {
   }
 
   public boolean validateConfiguration(CompileScope scope) {
-    ((CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject)).convertPatterns();
+    ((CompilerConfigurationImpl) CompilerConfigurationOld.getInstance(myProject)).convertPatterns();
     return true;
   }
 

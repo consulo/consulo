@@ -38,15 +38,8 @@ public class ConfigurableExtensionPointUtil {
   }
 
 
-  public static List<Configurable> buildConfigurablesList(final ConfigurableEP<Configurable>[] extensions,
-                                                          final Configurable[] components,
-                                                          @Nullable ConfigurableFilter filter) {
+  public static List<Configurable> buildConfigurablesList(final ConfigurableEP<Configurable>[] extensions, @Nullable ConfigurableFilter filter) {
     final List<Configurable> result = new ArrayList<Configurable>();
-    for (Configurable component : components) {
-      if (!isSuppressed(component, filter)) {
-        result.add(component);
-      }
-    }
 
     final Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<String, ConfigurableWrapper>();
     for (ConfigurableEP<Configurable> ep : extensions) {

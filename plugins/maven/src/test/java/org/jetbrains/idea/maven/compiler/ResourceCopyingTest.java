@@ -15,7 +15,7 @@
  */
 package org.jetbrains.idea.maven.compiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -48,9 +48,9 @@ public abstract class ResourceCopyingTest extends MavenImportingTestCase {
   protected void setUpInWriteAction() throws Exception {
     super.setUpInWriteAction();
 
-    CompilerConfiguration.getInstance(myProject).addResourceFilePattern("!*.xxx");
-    CompilerConfiguration.getInstance(myProject).addResourceFilePattern("!*.yyy");
-    CompilerConfiguration.getInstance(myProject).addResourceFilePattern("!*.zzz");
+    CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern("!*.xxx");
+    CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern("!*.yyy");
+    CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern("!*.zzz");
   }
 
   public void testBasic() throws Exception {
@@ -312,7 +312,7 @@ public abstract class ResourceCopyingTest extends MavenImportingTestCase {
       if (ignore()) return;
     }
 
-    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
     configuration.addResourceFilePattern("*.zzz");
 
     createProjectSubFile("res/file.xxx");

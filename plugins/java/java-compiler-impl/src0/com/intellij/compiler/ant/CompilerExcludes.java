@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.ant;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.ant.taskdefs.Exclude;
 import com.intellij.compiler.ant.taskdefs.PatternSet;
@@ -33,7 +33,7 @@ public class CompilerExcludes extends Generator {
   private final PatternSet myPatternSet;
 
   public CompilerExcludes(Project project, GenerationOptions genOptions) {
-    final CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(project);
+    final CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
     final ExcludeEntryDescription[] excludeEntryDescriptions =
       compilerConfiguration.getExcludedEntriesConfiguration().getExcludeEntryDescriptions();
     myPatternSet = new PatternSet(BuildProperties.PROPERTY_COMPILER_EXCLUDES);
@@ -65,7 +65,7 @@ public class CompilerExcludes extends Generator {
   }
 
   public static boolean isAvailable(Project project) {
-    final CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(project);
+    final CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
     final ExcludeEntryDescription[] excludeEntryDescriptions =
       compilerConfiguration.getExcludedEntriesConfiguration().getExcludeEntryDescriptions();
     return excludeEntryDescriptions.length > 0;

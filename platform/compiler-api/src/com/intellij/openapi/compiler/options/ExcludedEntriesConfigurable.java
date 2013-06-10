@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.compiler.options;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -51,7 +51,7 @@ public class ExcludedEntriesConfigurable implements UnnamedConfigurable {
 
   public ExcludedEntriesConfigurable(Project project) {
     this(project, new FileChooserDescriptor(true, true, false, false, false, true),
-         CompilerConfiguration.getInstance(project).getExcludedEntriesConfiguration());
+         CompilerConfigurationOld.getInstance(project).getExcludedEntriesConfiguration());
   }
 
   public ExcludedEntriesConfigurable(Project project, FileChooserDescriptor descriptor, final ExcludedEntriesConfiguration configuration) {

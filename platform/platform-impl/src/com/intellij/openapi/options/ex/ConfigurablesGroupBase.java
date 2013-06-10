@@ -31,22 +31,19 @@ public abstract class ConfigurablesGroupBase implements ConfigurableGroup {
   private Configurable[] myChildren;
   private ComponentManager myComponentManager;
   private final ExtensionPointName<ConfigurableEP<Configurable>> myConfigurablesExtensionPoint;
-  private final boolean myLoadComponents;
 
-  protected ConfigurablesGroupBase(ComponentManager componentManager, final ExtensionPointName<ConfigurableEP<Configurable>> configurablesExtensionPoint,
-                                   boolean loadComponents) {
+  protected ConfigurablesGroupBase(ComponentManager componentManager,
+                                   final ExtensionPointName<ConfigurableEP<Configurable>> configurablesExtensionPoint) {
     myComponentManager = componentManager;
     myConfigurablesExtensionPoint = configurablesExtensionPoint;
-    myLoadComponents = loadComponents;
   }
 
   @Override
   public Configurable[] getConfigurables() {
     if (myChildren == null) {
       final ConfigurableEP<Configurable>[] extensions = myComponentManager.getExtensions(myConfigurablesExtensionPoint);
-      Configurable[] components = myLoadComponents ? myComponentManager.getComponents(Configurable.class) : new Configurable[0];
 
-      List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(extensions, components, getConfigurableFilter());
+      List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(extensions, getConfigurableFilter());
       myChildren = result.toArray(new Configurable[result.size()]);
     }
     return myChildren;

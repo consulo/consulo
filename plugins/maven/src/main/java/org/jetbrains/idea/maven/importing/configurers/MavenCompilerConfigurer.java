@@ -15,7 +15,7 @@
  */
 package org.jetbrains.idea.maven.importing.configurers;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.openapi.compiler.options.ExcludeEntryDescription;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
@@ -37,7 +37,7 @@ public class MavenCompilerConfigurer extends MavenModuleConfigurer {
 
     String targetLevel = mavenProject.getTargetLevel();
     if (targetLevel != null) {
-      CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(project);
+      CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
       configuration.setBytecodeTargetLevel(module, targetLevel);
     }
 
@@ -47,7 +47,7 @@ public class MavenCompilerConfigurer extends MavenModuleConfigurer {
     VirtualFile archetypeResourcesDir = VfsUtil.findRelativeFile(directoryFile, "src", "main", "resources", "archetype-resources");
 
     if (archetypeResourcesDir != null) {
-      CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(project);
+      CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
 
       if (!compilerConfiguration.isExcludedFromCompilation(archetypeResourcesDir)) {
         ExcludedEntriesConfiguration cfg = compilerConfiguration.getExcludedEntriesConfiguration();

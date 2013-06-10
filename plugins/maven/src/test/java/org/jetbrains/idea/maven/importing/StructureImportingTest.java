@@ -15,7 +15,7 @@
  */
 package org.jetbrains.idea.maven.importing;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
@@ -859,7 +859,7 @@ public class StructureImportingTest extends MavenImportingTestCase {
 
     Module module = getModule("project");
 
-    String targetLevel = CompilerConfiguration.getInstance(myProject).getBytecodeTargetLevel(module);
+    String targetLevel = CompilerConfigurationOld.getInstance(myProject).getBytecodeTargetLevel(module);
 
     assertEquals("1.3", targetLevel);
   }
@@ -912,9 +912,9 @@ public class StructureImportingTest extends MavenImportingTestCase {
 
     importProject();
 
-    assertEquals("1.3", CompilerConfiguration.getInstance(myProject).getBytecodeTargetLevel(getModule("project")));
-    assertEquals("1.3", CompilerConfiguration.getInstance(myProject).getBytecodeTargetLevel(getModule("m1")));
-    assertEquals("1.5", CompilerConfiguration.getInstance(myProject).getBytecodeTargetLevel(getModule("m2")));
+    assertEquals("1.3", CompilerConfigurationOld.getInstance(myProject).getBytecodeTargetLevel(getModule("project")));
+    assertEquals("1.3", CompilerConfigurationOld.getInstance(myProject).getBytecodeTargetLevel(getModule("m1")));
+    assertEquals("1.5", CompilerConfigurationOld.getInstance(myProject).getBytecodeTargetLevel(getModule("m2")));
   }
 
   public void testProjectWithBuiltExtension() throws Exception {

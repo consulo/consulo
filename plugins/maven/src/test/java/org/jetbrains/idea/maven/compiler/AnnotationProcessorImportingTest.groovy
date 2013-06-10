@@ -15,8 +15,9 @@
  */
 package org.jetbrains.idea.maven.compiler
 
-import com.intellij.compiler.CompilerConfiguration
+import com.intellij.compiler.CompilerConfigurationOld
 import com.intellij.compiler.CompilerConfigurationImpl
+import com.intellij.compiler.CompilerConfigurationOld
 import org.jetbrains.idea.maven.MavenImportingTestCase
 import org.jetbrains.idea.maven.importing.configurers.MavenAnnotationProcessorConfigurer
 
@@ -124,7 +125,7 @@ class AnnotationProcessorImportingTest extends MavenImportingTestCase {
 
 """;
 
-    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject))
+    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject))
 
     assert compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.MAVEN_DEFAULT_ANNOTATION_PROFILE).getModuleNames() == new HashSet<String>(["module1"])
     assert compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.PROFILE_PREFIX + 'module2').getProcessors() == new HashSet<String>(["com.test.SourceCodeGeneratingAnnotationProcessor2"])
@@ -151,7 +152,7 @@ class AnnotationProcessorImportingTest extends MavenImportingTestCase {
 </build>
 """;
 
-    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject))
+    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject))
 
     assert compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.MAVEN_DEFAULT_ANNOTATION_PROFILE) == null
     assert compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.PROFILE_PREFIX + "project").getGeneratedSourcesDirectoryName(false).replace('\\', '/').endsWith("out/generated")
@@ -179,7 +180,7 @@ class AnnotationProcessorImportingTest extends MavenImportingTestCase {
 </build>
 """;
 
-    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject))
+    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject))
 
     assert compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.MAVEN_DEFAULT_ANNOTATION_PROFILE) == null
     def processorOptions = compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.PROFILE_PREFIX + "project").getProcessorOptions()
@@ -225,7 +226,7 @@ class AnnotationProcessorImportingTest extends MavenImportingTestCase {
 </build>
 """;
 
-    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject))
+    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject))
 
     assert compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.MAVEN_DEFAULT_ANNOTATION_PROFILE) == null
     def profile = compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.PROFILE_PREFIX + "project")
@@ -283,7 +284,7 @@ class AnnotationProcessorImportingTest extends MavenImportingTestCase {
 </build>
 """;
 
-    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject))
+    def compilerConfiguration = ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject))
 
     assert compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.MAVEN_DEFAULT_ANNOTATION_PROFILE) == null
     def profile = compilerConfiguration.findModuleProcessorProfile(MavenAnnotationProcessorConfigurer.PROFILE_PREFIX + "project")

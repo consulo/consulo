@@ -1,6 +1,6 @@
 package org.consulo.compiler.impl.resourceCompiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.MalformedPatternException;
 import com.intellij.compiler.impl.resourceCompiler.ResourceCompiler;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
@@ -21,7 +21,7 @@ public class ResourceCompilerProvider implements CompilerProvider<ResourceCompil
   @NotNull
   @Override
   public ResourceCompiler createCompiler(Project project) {
-    return new ResourceCompiler(project, new CompilerConfiguration(){
+    return new ResourceCompiler(project, new CompilerConfigurationOld(){
       @Nullable
       @Override
       public String getBytecodeTargetLevel(Module module) {

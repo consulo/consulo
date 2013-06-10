@@ -182,10 +182,11 @@
         <separator/>
         <group id="FileMainSettingsGroup">
           <action id="ShowSettings" class="com.intellij.ide.actions.ShowSettingsAction"/>
-          <action id="ShowProjectStructureSettings" class="com.intellij.ide.actions.ShowStructureSettingsAction" icon="AllIcons.General.ProjectStructure" />
+          <action id="ShowProjectStructureSettings" class="com.intellij.ide.actions.ShowStructureSettingsAction"
+                  icon="AllIcons.General.ProjectStructure"/>
           <group id="FileOtherSettingsGroup" class="com.intellij.ide.actions.SmartPopupActionGroup">
             <action id="TemplateProjectProperties" class="com.intellij.ide.actions.TemplateProjectPropertiesAction"/>
-            <action id="TemplateProjectStructure" class="com.intellij.ide.actions.TemplateProjectStructureAction" />
+            <action id="TemplateProjectStructure" class="com.intellij.ide.actions.TemplateProjectStructureAction"/>
             <group id="FileSettingsGroup"/>
           </group>
           <separator/>
@@ -2166,7 +2167,8 @@
 
     <group>
       <action id="MarkSourceRoot" class="com.intellij.ide.projectView.actions.MarkRootAction" icon="AllIcons.Modules.SourceRoot"/>
-      <action id="MarkResourceRoot" class="com.intellij.ide.projectView.actions.MarkResourceRootAction" icon="AllIcons.Modules.ResourceRoot"/>
+      <action id="MarkResourceRoot" class="com.intellij.ide.projectView.actions.MarkResourceRootAction"
+              icon="AllIcons.Modules.ResourceRoot"/>
       <action id="MarkTestSourceRoot" class="com.intellij.ide.projectView.actions.MarkTestSourceRootAction"
               icon="AllIcons.Modules.TestRoot"/>
       <action id="MarkExcludeRoot" class="com.intellij.ide.projectView.actions.MarkExcludeRootAction" icon="AllIcons.Modules.ExcludeRoot"/>
@@ -3216,8 +3218,7 @@
 
 
     <extensionPoint name="compiler" area="IDEA_PROJECT" interface="com.intellij.openapi.compiler.Compiler"/>
-    <extensionPoint name="compilerFactory" area="IDEA_PROJECT" interface="com.intellij.openapi.compiler.CompilerFactory"/>
-    <extensionPoint name="compilerSettingsFactory" area="IDEA_PROJECT" interface="com.intellij.compiler.CompilerSettingsFactory"/>
+
     <extensionPoint name="compileServer.plugin" beanClass="com.intellij.compiler.server.CompileServerPlugin"/>
     <extensionPoint name="compileServer.pathProvider" area="IDEA_PROJECT"
                     interface="com.intellij.compiler.server.CompileServerPathProvider"/>
@@ -3399,13 +3400,13 @@
     <extensionPoint name="lang.structureViewExtension"
                     interface="com.intellij.ide.structureView.StructureViewExtension"/>
 
-    <extensionPoint name="lang.psi.elementFactory" interface="com.intellij.lang.PsiElementFactory" />
+    <extensionPoint name="lang.psi.elementFactory" interface="com.intellij.lang.PsiElementFactory"/>
 
-    <extensionPoint name="lang.ast.lazyFactory" interface="com.intellij.lang.ASTLazyFactory" />
+    <extensionPoint name="lang.ast.lazyFactory" interface="com.intellij.lang.ASTLazyFactory"/>
 
-    <extensionPoint name="lang.ast.leafFactory" interface="com.intellij.lang.ASTLeafFactory" />
+    <extensionPoint name="lang.ast.leafFactory" interface="com.intellij.lang.ASTLeafFactory"/>
 
-    <extensionPoint name="lang.ast.compositeFactory" interface="com.intellij.lang.ASTCompositeFactory" />
+    <extensionPoint name="lang.ast.compositeFactory" interface="com.intellij.lang.ASTCompositeFactory"/>
 
     <extensionPoint name="lang.formatter" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
@@ -4013,9 +4014,9 @@
     <extensionPoint name="testFramework" interface="com.intellij.testIntegration.TestFramework"/>
     <extensionPoint name="unusedDeclarationFixProvider"
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
-    <extensionPoint name="psi.packageResolver" interface="org.consulo.psi.PsiPackageResolver" />
+    <extensionPoint name="psi.packageResolver" interface="org.consulo.psi.PsiPackageResolver"/>
     <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
-    <extensionPoint name="compilerProvider" interface="org.consulo.compiler.CompilerProvider" />
+    <extensionPoint name="compilerProvider" interface="org.consulo.compiler.CompilerProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -4257,7 +4258,8 @@
     <applicationService serviceInterface="com.intellij.openapi.ui.popup.StackingPopupDispatcher"
                         serviceImplementation="com.intellij.ui.popup.StackingPopupDispatcherImpl"/>
 
-    <projectService serviceInterface="org.consulo.psi.PsiPackageManager" serviceImplementation="org.consulo.psi.impl.PsiPackageManagerImpl"/>
+    <projectService serviceInterface="org.consulo.psi.PsiPackageManager"
+                    serviceImplementation="org.consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
     <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
@@ -4300,9 +4302,10 @@
                 factoryClass="com.intellij.notification.EventLogToolWindowFactory"/>
 
     <projectService serviceInterface="com.intellij.openapi.wm.impl.ProjectFrameBounds"
-                    serviceImplementation="com.intellij.openapi.wm.impl.ProjectFrameBounds"/> <!--
-    <exceptionFilter implementation="com.intellij.execution.filters.ExceptionBaseFilterFactory"/>
-    <exceptionFilter implementation="com.intellij.execution.filters.ExceptionExFilterFactory"/>   -->
+                    serviceImplementation="com.intellij.openapi.wm.impl.ProjectFrameBounds"/>
+    <!--
+       <exceptionFilter implementation="com.intellij.execution.filters.ExceptionBaseFilterFactory"/>
+       <exceptionFilter implementation="com.intellij.execution.filters.ExceptionExFilterFactory"/>   -->
 
     <applicationService serviceInterface="com.intellij.ide.TypePresentationService"
                         serviceImplementation="com.intellij.ide.TypePresentationServiceImpl"/>
@@ -4421,7 +4424,6 @@
                         serviceImplementation="com.intellij.execution.runners.ProcessProxyFactoryImpl"/>
 
 
-
     <applicationService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"
                         serviceImplementation="com.intellij.packaging.impl.elements.PackagingElementFactoryImpl"/>
 
@@ -4439,6 +4441,9 @@
 
     <projectService serviceInterface="com.intellij.openapi.compiler.CompilerManager"
                     serviceImplementation="org.consulo.compiler.impl.CompilerManagerImpl"/>
+
+    <projectService serviceInterface="com.intellij.compiler.CompilerConfiguration"
+                    serviceImplementation="com.intellij.compiler.CompilerConfigurationImpl"/>
 
     <projectService serviceInterface="com.intellij.compiler.CompilerEncodingService"
                     serviceImplementation="com.intellij.compiler.CompilerEncodingServiceImpl"/>
@@ -4495,7 +4500,8 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
     <!-- Compiler -->
-    <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler" order="after project" />
+    <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"
+                         key="compiler.configurable.display.name" bundle="messages.CompilerBundle" order="after project"/>
 
     <projectConfigurable instance="com.intellij.psi.templateLanguages.TemplateDataLanguageConfigurable" id="Template Data Languages"
                          key="template.data.language.configurable" bundle="messages.LangBundle"/>
@@ -4572,7 +4578,7 @@
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRun" id="compileBeforeRun"/>
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRunNoErrorCheck"
                             id="compileBeforeRunNoErrorCheck" order="after compileBeforeRun"/>
-     <stepsBeforeRunProvider implementation="com.intellij.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
+    <stepsBeforeRunProvider implementation="com.intellij.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
                             order="after compileBeforeRunNoErrorCheck"/>
     <stepsBeforeRunProvider implementation="com.intellij.execution.impl.RunConfigurationBeforeRunProvider"/>
     <!--TODO [VISTALL] java  <programRunner id="defaultRunRunner" implementation="com.intellij.execution.impl.DefaultJavaProgramRunner"/>  -->
@@ -4602,7 +4608,8 @@
     <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
-    <projectService serviceInterface="org.consulo.compiler.CompilerPathsManager" serviceImplementation="org.consulo.compiler.impl.CompilerPathsManagerImpl" />
+    <projectService serviceInterface="org.consulo.compiler.CompilerPathsManager"
+                    serviceImplementation="org.consulo.compiler.impl.CompilerPathsManagerImpl"/>
     <roots.watchedRootsProvider implementation="org.consulo.compiler.impl.CompilerPathsManagerImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
@@ -5506,16 +5513,16 @@
     <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
 
     <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider" order="last"/>
-    <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver" />
-    <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver" />
-    <compilerProvider implementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerProvider" />
-    <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last" />
-    <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last" />
-    <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last" />
-    <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last" />
-    <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider" />
+    <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver"/>
+    <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver"/>
+    <compilerProvider implementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerProvider"/>
+    <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last"/>
+    <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>
+    <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last"/>
+    <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last"/>
+    <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
-    <compilerProvider implementation="com.intellij.packaging.impl.artifacts.ArtifactsCompilerProvider" id="artifactsCompiler" />
+    <compilerProvider implementation="com.intellij.packaging.impl.artifacts.ArtifactsCompilerProvider" id="artifactsCompiler"/>
   </extensions>
 </idea-plugin>

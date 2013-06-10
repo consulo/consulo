@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl.javaCompiler.api;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.impl.javaCompiler.BackendCompiler;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -45,7 +45,7 @@ public class CompilerPerfTestAction extends AnAction {
 
     final CompilerManager compilerManager = CompilerManager.getInstance(project);
 
-    final CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(project);
+    final CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
     List<BackendCompiler> compilers = (List<BackendCompiler>)configuration.getRegisteredJavaCompilers();
     final List<BackendCompiler> allCompilers = ContainerUtil.concat(compilers, compilers, compilers, compilers, compilers, compilers, compilers);
     final int[] i = new int[1];

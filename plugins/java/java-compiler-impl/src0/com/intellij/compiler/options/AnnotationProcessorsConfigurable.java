@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.options;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -64,7 +64,7 @@ public class AnnotationProcessorsConfigurable implements SearchableConfigurable,
   }
 
   public boolean isModified() {
-    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
 
     if (!config.getDefaultProcessorProfile().equals(myMainPanel.getDefaultProfile())) {
       return true;
@@ -89,13 +89,13 @@ public class AnnotationProcessorsConfigurable implements SearchableConfigurable,
   }
 
   public void apply() throws ConfigurationException {
-    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
     config.setDefaultProcessorProfile(myMainPanel.getDefaultProfile());
     config.setModuleProcessorProfiles(myMainPanel.getModuleProfiles());
   }
 
   public void reset() {
-    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
     myMainPanel.initProfiles(config.getDefaultProcessorProfile(), config.getModuleProcessorProfiles());
   }
 

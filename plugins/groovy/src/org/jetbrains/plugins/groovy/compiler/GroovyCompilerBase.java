@@ -16,7 +16,7 @@
 
 package org.jetbrains.plugins.groovy.compiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.FileSetCompileScope;
 import com.intellij.compiler.impl.ModuleChunk;
@@ -362,7 +362,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
       final ModuleFileIndex index = ModuleRootManager.getInstance(module).getFileIndex();
       final List<VirtualFile> toCompile = new ArrayList<VirtualFile>();
       final List<VirtualFile> toCompileTests = new ArrayList<VirtualFile>();
-      final CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
+      final CompilerConfigurationOld configuration = CompilerConfigurationOld.getInstance(myProject);
       final PsiManager psiManager = PsiManager.getInstance(myProject);
 
       for (final VirtualFile file : moduleFiles) {
@@ -382,7 +382,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
 
   }
 
-  private static boolean shouldCompile(final VirtualFile file, CompilerConfiguration configuration, final PsiManager manager) {
+  private static boolean shouldCompile(final VirtualFile file, CompilerConfigurationOld configuration, final PsiManager manager) {
     if (configuration.isResourceFile(file)) {
       return false;
     }

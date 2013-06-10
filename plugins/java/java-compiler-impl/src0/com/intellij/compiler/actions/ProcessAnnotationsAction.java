@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.impl.FileSetCompileScope;
 import com.intellij.compiler.impl.ModuleCompileScope;
@@ -85,7 +85,7 @@ public class ProcessAnnotationsAction extends CompileActionBase {
       return;
     }
     
-    final CompilerConfiguration compilerConfiguration = CompilerConfiguration.getInstance(project);
+    final CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(project);
     
     final Module module = LangDataKeys.MODULE.getData(dataContext);
     final Module moduleContext = LangDataKeys.MODULE_CONTEXT.getData(dataContext);

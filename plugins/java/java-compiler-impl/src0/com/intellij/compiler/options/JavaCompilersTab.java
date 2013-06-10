@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.options;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.impl.javaCompiler.BackendCompiler;
 import com.intellij.openapi.compiler.CompilerBundle;
@@ -54,14 +54,14 @@ public class JavaCompilersTab implements SearchableConfigurable, Configurable.No
   private final TargetOptionsComponent myTargetLevelComponent;
 
   public JavaCompilersTab(final Project project) {
-    this(project, ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(project)).getRegisteredJavaCompilers(),
-         ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(project)).getDefaultCompiler());
+    this(project, ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project)).getRegisteredJavaCompilers(),
+         ((CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project)).getDefaultCompiler());
   }
 
   public JavaCompilersTab(final Project project, Collection<BackendCompiler> compilers, BackendCompiler defaultCompiler) {
     myProject = project;
     myDefaultCompiler = defaultCompiler;
-    myCompilerConfiguration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(project);
+    myCompilerConfiguration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
     myConfigurables = new ArrayList<Configurable>(compilers.size());
 
     myCardLayout = new CardLayout();

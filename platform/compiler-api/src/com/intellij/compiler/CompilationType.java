@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.compiler;
+package com.intellij.compiler;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import org.consulo.annotations.Immutable;
 
 /**
- * @author yole
- */
-public interface CompilerFactory {
-  ExtensionPointName<CompilerFactory> EP_NAME = ExtensionPointName.create("com.intellij.compilerFactory");
-  
-  Compiler[] createCompilers(@NotNull CompilerManager compilerManager);
+* @author VISTALL
+* @since 12:58/10.06.13
+*/
+public enum CompilationType {
+  DISABLE,
+  IN_PROGRESS,
+  EXTERNAL;
+
+  @Immutable
+  public static CompilationType[] VALUES = values();
 }

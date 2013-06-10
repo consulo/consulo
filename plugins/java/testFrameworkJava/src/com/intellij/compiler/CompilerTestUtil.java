@@ -38,7 +38,7 @@ public class CompilerTestUtil {
   }
 
   public static void setupJavacForTests(Project project) {
-    CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(project);
+    CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
     compilerConfiguration.projectOpened();
     compilerConfiguration.setDefaultCompiler(compilerConfiguration.getJavacCompiler());
 

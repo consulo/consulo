@@ -16,7 +16,7 @@
 
 package org.jetbrains.plugins.groovy.compiler;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
@@ -83,7 +83,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
     for (VirtualFile file : files) {
       if (scriptExtensions.contains(file.getExtension()) ||
           compilerManager.isExcludedFromCompilation(file) ||
-          CompilerConfiguration.getInstance(myProject).isResourceFile(file)) {
+          CompilerConfigurationOld.getInstance(myProject).isResourceFile(file)) {
         continue;
       }
 
@@ -140,7 +140,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
                                                   "AST Transformations Found",
                                                   JetgroovyIcons.Groovy.Groovy_32x32);
       if (result == 0) {
-        CompilerConfiguration.getInstance(myProject).addResourceFilePattern(AST_TRANSFORM_FILE_NAME);
+        CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern(AST_TRANSFORM_FILE_NAME);
       } else {
         configuration.transformsOk = true;
       }
@@ -150,7 +150,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
   }
 
   private boolean needTransformCopying(CompileScope compileScope) {
-    final CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationOld configuration = CompilerConfigurationOld.getInstance(myProject);
     final ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
     for (VirtualFile file : FilenameIndex.getVirtualFilesByName(myProject, AST_TRANSFORM_FILE_NAME, GlobalSearchScope.projectScope(myProject))) {
       if (compileScope.belongs(file.getUrl()) && index.isInSource(file) && !configuration.isResourceFile(file)) {

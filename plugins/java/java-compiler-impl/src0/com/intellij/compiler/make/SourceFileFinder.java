@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.module.Module;
@@ -45,12 +45,12 @@ public class SourceFileFinder {
   private final Project myProject;
   private final CompileContext myCompileContext;
   private Map<VirtualFile, String> myProjectSourceRoots = null;
-  private final CompilerConfiguration myCompilerConfiguration;
+  private final CompilerConfigurationOld myCompilerConfiguration;
 
   public SourceFileFinder(Project project, CompileContext compileContext) {
     myProject = project;
     myCompileContext = compileContext;
-    myCompilerConfiguration = CompilerConfiguration.getInstance(project);
+    myCompilerConfiguration = CompilerConfigurationOld.getInstance(project);
   }
 
   public VirtualFile findSourceFile(String qualifiedName, final String srcName, boolean checkIfExcludedFromMake) {

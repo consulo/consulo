@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.options;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.MalformedPatternException;
 import com.intellij.openapi.compiler.CompilerBundle;
@@ -98,7 +98,7 @@ public class CompilerUIConfigurable implements SearchableConfigurable, Configura
 
   public void reset() {
 
-    final CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationOld configuration = CompilerConfigurationOld.getInstance(myProject);
     final CompilerWorkspaceConfiguration workspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(myProject);
     myCbAutoShowFirstError.setSelected(workspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
     myCbClearOutputDirectory.setSelected(workspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
@@ -130,7 +130,7 @@ public class CompilerUIConfigurable implements SearchableConfigurable, Configura
 
   public void apply() throws ConfigurationException {
 
-    CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
+    CompilerConfigurationOld configuration = CompilerConfigurationOld.getInstance(myProject);
     final CompilerWorkspaceConfiguration workspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(myProject);
     workspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = myCbAutoShowFirstError.isSelected();
     workspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = myCbClearOutputDirectory.isSelected();
@@ -150,7 +150,7 @@ public class CompilerUIConfigurable implements SearchableConfigurable, Configura
     configuration.setAddNotNullAssertions(myCbAssertNotNull.isSelected());
     configuration.removeResourceFilePatterns();
     String extensionString = myResourcePatternsField.getText().trim();
-    applyResourcePatterns(extensionString, CompilerConfiguration.getInstance(myProject));
+    applyResourcePatterns(extensionString, CompilerConfigurationOld.getInstance(myProject));
     if (wasUsingExternalMake != workspaceConfiguration.USE_COMPILE_SERVER) {
       myProject.getMessageBus().syncPublisher(ExternalBuildOptionListener.TOPIC).externalBuildOptionChanged(workspaceConfiguration.USE_COMPILE_SERVER);
     }
@@ -159,7 +159,7 @@ public class CompilerUIConfigurable implements SearchableConfigurable, Configura
     }  */
   }
 
-  private static void applyResourcePatterns(String extensionString, final CompilerConfiguration configuration)
+  private static void applyResourcePatterns(String extensionString, final CompilerConfigurationOld configuration)
     throws ConfigurationException {
     StringTokenizer tokenizer = new StringTokenizer(extensionString, ";", false);
     List<String[]> errors = new ArrayList<String[]>();
@@ -201,7 +201,7 @@ public class CompilerUIConfigurable implements SearchableConfigurable, Configura
     isModified |= ComparingUtils.isModified(myHeapSizeField, workspaceConfiguration.COMPILER_PROCESS_HEAP_SIZE);
     isModified |= ComparingUtils.isModified(myVMOptionsField, workspaceConfiguration.COMPILER_PROCESS_ADDITIONAL_VM_OPTIONS);
 
-    final CompilerConfiguration compilerConfiguration = CompilerConfiguration.getInstance(myProject);
+    final CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(myProject);
     isModified |= ComparingUtils.isModified(myCbAssertNotNull, compilerConfiguration.isAddNotNullAssertions());
     isModified |= ComparingUtils.isModified(myCbClearOutputDirectory, workspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
     isModified |= ComparingUtils.isModified(myResourcePatternsField, patternsToString(compilerConfiguration.getResourceFilePatterns()));

@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorTreeNodeDescriptor;
@@ -51,7 +51,7 @@ class ExcludeFromCompileAction extends AnAction {
 
     if (file != null && file.isValid()) {
       ExcludeEntryDescription description = new ExcludeEntryDescription(file, false, true, myProject);
-      ((CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject)).getExcludedEntriesConfiguration().addExcludeEntryDescription(description);
+      ((CompilerConfigurationImpl) CompilerConfigurationOld.getInstance(myProject)).getExcludedEntriesConfiguration().addExcludeEntryDescription(description);
       FileStatusManager.getInstance(myProject).fileStatusesChanged();
     }
   }

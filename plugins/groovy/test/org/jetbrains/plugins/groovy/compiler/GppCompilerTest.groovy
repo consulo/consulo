@@ -16,8 +16,9 @@
 
 package org.jetbrains.plugins.groovy.compiler
 
-import com.intellij.compiler.CompilerConfiguration
-import com.intellij.compiler.CompilerConfigurationImpl;
+import com.intellij.compiler.CompilerConfigurationOld
+import com.intellij.compiler.CompilerConfigurationImpl
+import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.server.BuildManager
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VfsUtil
@@ -33,14 +34,14 @@ public abstract class GppCompilerTest extends GroovyCompilerTestCase {
   @Override protected void setUp() {
     super.setUp();
     PsiTestUtil.addLibrary myFixture.module, "gpp", TestUtils.absoluteTestDataPath + "/realGroovypp/", "groovy-all-1.8.2.jar", "groovypp-all-0.9.0_1.8.2.jar"
-    CompilerConfigurationImpl conf = CompilerConfiguration.getInstance(project)
+    CompilerConfigurationImpl conf = CompilerConfigurationOld.getInstance(project)
     oldPatterns = conf.resourceFilePatterns
     conf.addResourceFilePattern("!*.gpp")
   }
 
   @Override
   protected void tearDown() {
-    CompilerConfigurationImpl conf = CompilerConfiguration.getInstance(project)
+    CompilerConfigurationImpl conf = CompilerConfigurationOld.getInstance(project)
     conf.removeResourceFilePatterns()
     oldPatterns.each { conf.addResourceFilePattern(it) }
     super.tearDown()
