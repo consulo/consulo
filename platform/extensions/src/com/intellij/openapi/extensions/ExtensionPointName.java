@@ -49,7 +49,7 @@ public class ExtensionPointName<T> {
   }
 
   @NotNull
-  public T[] getExtension(@NotNull AreaInstance areaInstance) {
+  public T[] getExtensions(@NotNull AreaInstance areaInstance) {
     return Extensions.getExtensions(this, areaInstance);
   }
 
