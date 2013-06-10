@@ -16,6 +16,7 @@
 package org.intellij.lang.regexp;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.StringEscapesTokenTypes;
@@ -38,7 +39,7 @@ public class RegExpParser implements PsiParser {
   }
 
   @NotNull
-  public ASTNode parse(IElementType root, PsiBuilder builder) {
+  public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
 //        builder.setDebugMode(true);
     final PsiBuilder.Marker rootMarker = builder.mark();
 

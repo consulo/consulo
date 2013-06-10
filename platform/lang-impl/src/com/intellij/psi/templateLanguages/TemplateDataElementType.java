@@ -23,7 +23,6 @@ import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -62,8 +61,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   }
 
   protected Lexer createBaseLexer(TemplateLanguageFileViewProvider viewProvider) {
-    return LanguageParserDefinitions.INSTANCE.forLanguage(viewProvider.getBaseLanguage()).createLexer(viewProvider.getManager().getProject(),
-                                                                                                      null);
+    return LanguageParserDefinitions.INSTANCE.forLanguage(viewProvider.getBaseLanguage()).createLexer(null, Language.UNKNOWN_VERSION);
   }
 
   protected LanguageFileType createTemplateFakeFileType(final Language language) {
@@ -85,8 +83,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     final PsiFile templateFile = createTemplateFile(file, language, chars, viewProvider);
 
     final TreeElement parsed = ((PsiFileImpl)templateFile).calcTreeElement();
-    Lexer langLexer = LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(file.getProject(), ModuleUtilCore
-      .findModuleForPsiElement(file));
+    Lexer langLexer = LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(file.getProject(), null);
     final Lexer lexer = new MergingLexerAdapter(
       new TemplateBlackAndWhiteLexer(createBaseLexer(viewProvider), langLexer, myTemplateElementType, myOuterElementType),
       TokenSet.create(myTemplateElementType, myOuterElementType));

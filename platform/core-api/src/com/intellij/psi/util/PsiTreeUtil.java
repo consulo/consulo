@@ -16,6 +16,9 @@
 package com.intellij.psi.util;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
+import com.intellij.lang.LanguageVersionResolver;
+import com.intellij.lang.LanguageVersionResolvers;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
@@ -1009,5 +1012,17 @@ public class PsiTreeUtil {
     }
 
     return res;
+  }
+
+  @NotNull
+  public static LanguageVersion getLanguageVersion(@NotNull PsiElement element) {
+    LanguageVersion languageVersion = element.getUserData(LanguageVersion.KEY);
+    if(languageVersion == null) {
+      final Language language = element.getLanguage();
+      final LanguageVersionResolver versionResolver = LanguageVersionResolvers.INSTANCE.forLanguage(language);
+      languageVersion = versionResolver.getLanguageVersion(language, element);
+      element.putUserData(LanguageVersion.KEY, languageVersion);
+    }
+    return languageVersion;
   }
 }

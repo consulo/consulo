@@ -72,13 +72,6 @@ public class JavaFileElementType extends ILightStubFileElementType<PsiJavaFileSt
     return builder.getLightTree();
   }
 
-  @Override
-  public ASTNode parseContents(final ASTNode chameleon) {
-    final PsiBuilder builder = JavaParserUtil.createBuilder(chameleon);
-    doParse(builder);
-    return builder.getTreeBuilt().getFirstChildNode();
-  }
-
   private void doParse(final PsiBuilder builder) {
     final PsiBuilder.Marker root = builder.mark();
     JavaParser.INSTANCE.getFileParser().parse(builder);

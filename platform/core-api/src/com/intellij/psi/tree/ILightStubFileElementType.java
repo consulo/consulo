@@ -44,11 +44,14 @@ public class ILightStubFileElementType<T extends PsiFileStub> extends IStubFileE
 
     final Project project = psi.getProject();
     final PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
-    final PsiBuilder builder = factory.createBuilder(project, chameleon);
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(getLanguage());
+    final Language language = getLanguage();
+    final LanguageVersionResolver versionResolver = LanguageVersionResolvers.INSTANCE.forLanguage(language);
+    final LanguageVersion languageVersion = versionResolver.getLanguageVersion(language, psi);
+    final PsiBuilder builder = factory.createBuilder(project, chameleon, languageVersion);
+    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
     assert parserDefinition != null : this;
-    final PsiParser parser = parserDefinition.createParser(project);
-    parser.parse(this, builder);
+    final PsiParser parser = parserDefinition.createParser(project, languageVersion);
+    parser.parse(this, builder, languageVersion);
     return builder.getLightTree();
   }
 }

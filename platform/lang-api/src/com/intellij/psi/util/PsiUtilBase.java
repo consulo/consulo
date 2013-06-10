@@ -17,10 +17,7 @@
 package com.intellij.psi.util;
 
 import com.intellij.ide.DataManager;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
+import com.intellij.lang.*;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -49,7 +46,7 @@ public class PsiUtilBase extends PsiUtilCore {
   public static final PsiParser NULL_PARSER = new PsiParser() {
     @Override
     @NotNull
-    public ASTNode parse(IElementType root, PsiBuilder builder) {
+    public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
       throw new IllegalAccessError();
     }
   };

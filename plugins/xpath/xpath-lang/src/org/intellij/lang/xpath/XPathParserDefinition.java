@@ -16,10 +16,10 @@
 package org.intellij.lang.xpath;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -36,10 +36,11 @@ import org.jetbrains.annotations.Nullable;
 public class XPathParserDefinition implements ParserDefinition {
 
     @NotNull
-    public Lexer createLexer(@NotNull Project project, Module module) {
+    public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
         return XPathLexer.create(false);
     }
 
+    @NotNull
     public IFileElementType getFileNodeType() {
         return XPathElementTypes.FILE;
     }
@@ -59,7 +60,8 @@ public class XPathParserDefinition implements ParserDefinition {
         return TokenSet.create(XPathTokenTypes.STRING_LITERAL);
     }
 
-    public PsiParser createParser(Project project) {
+    @NotNull
+    public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
         return new XPathParser();
     }
 

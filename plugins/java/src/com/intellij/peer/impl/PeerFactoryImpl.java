@@ -17,11 +17,6 @@ package com.intellij.peer.impl;
 
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import com.intellij.ide.util.PackageChooserDialog;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiBuilderFactory;
-import com.intellij.lexer.Lexer;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diff.DiffRequestFactory;
 import com.intellij.openapi.editor.Document;
@@ -218,14 +213,6 @@ public class PeerFactoryImpl extends PeerFactory {
 
   public VcsContextFactory getVcsContextFactory() {
     return VcsContextFactory.SERVICE.getInstance();
-  }
-
-  public PsiBuilder createBuilder(ASTNode tree, Language lang, CharSequence seq, final Project project) {
-    return PsiBuilderFactory.getInstance().createBuilder(project, tree, null, lang, seq);
-  }
-
-  public PsiBuilder createBuilder(final ASTNode tree, final Lexer lexer, final Language lang, final CharSequence seq, final Project project) {
-    return PsiBuilderFactory.getInstance().createBuilder(project, tree, lexer, lang, seq);
   }
 
   public EditorHighlighter createEditorHighlighter(final SyntaxHighlighter syntaxHighlighter, final EditorColorsScheme colors) {

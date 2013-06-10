@@ -58,10 +58,12 @@ public class ILazyParseableElementType extends IElementType {
 
   protected ASTNode doParseContents(@NotNull final ASTNode chameleon, @NotNull final PsiElement psi) {
     final Project project = psi.getProject();
-    Language languageForParser = getLanguageForParser(psi);
-    final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, chameleon.getChars());
-    final PsiParser parser = LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(project);
-    return parser.parse(this, builder).getFirstChildNode();
+    final Language languageForParser = getLanguageForParser(psi);
+    final LanguageVersionResolver versionResolver = LanguageVersionResolvers.INSTANCE.forLanguage(languageForParser);
+    final LanguageVersion languageVersion = versionResolver.getLanguageVersion(languageForParser, psi);
+    final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
+    final PsiParser parser = LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(project, languageVersion);
+    return parser.parse(this, builder, languageVersion).getFirstChildNode();
   }
 
   protected Language getLanguageForParser(PsiElement psi) {

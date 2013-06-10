@@ -443,7 +443,7 @@ public interface PsiElementFactory extends PsiJavaParserFacade, JVMElementFactor
   /**
    * Create a lightweight PsiElement of given element type in a lightweight non-physical PsiFile (aka DummyHolder) in a given context.
    * Element type's language should have a parser definition which supports parsing for this element type (first
-   * parameter in {@link com.intellij.lang.PsiParser#parse(com.intellij.psi.tree.IElementType, com.intellij.lang.PsiBuilder)}.
+   * parameter in {@link com.intellij.lang.PsiParser#parse(com.intellij.psi.tree.IElementType, com.intellij.lang.PsiBuilder, com.intellij.lang.LanguageVersion)}.
    * @param text text to parse
    * @param type node type
    * @param context context

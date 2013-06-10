@@ -17,6 +17,7 @@ package com.intellij.lang.properties.parsing;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.properties.psi.impl.PropertiesFileImpl;
@@ -24,7 +25,6 @@ import com.intellij.lang.properties.psi.impl.PropertiesListImpl;
 import com.intellij.lang.properties.psi.impl.PropertyImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -41,10 +41,11 @@ public class PropertiesParserDefinition implements ParserDefinition {
   private static final Logger LOG = Logger.getInstance("#com.intellij.lang.properties.PropertiesParserDefinition");
 
   @NotNull
-  public Lexer createLexer(@NotNull Project project, Module module) {
+  public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new PropertiesLexer();
   }
 
+  @NotNull
   public IFileElementType getFileNodeType() {
     return PropertiesElementTypes.FILE;
   }
@@ -65,7 +66,7 @@ public class PropertiesParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public PsiParser createParser(final Project project) {
+  public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new PropertiesParser();
   }
 

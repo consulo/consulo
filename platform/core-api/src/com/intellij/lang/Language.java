@@ -24,6 +24,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
+import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +59,21 @@ public abstract class Language extends UserDataHolderBase {
       return "Language: ANY";
     }
   };
+
+  public static LanguageVersion UNKNOWN_VERSION = new LanguageVersion() {
+    @NotNull
+    @Override
+    public String getName() {
+      return "LanguageVersion: UNKNOWN";
+    }
+
+    @Override
+    public Language getLanguage() {
+      return ANY;
+    }
+  };
+
+  private static LanguageVersion[] ourLanguageVersions = new LanguageVersion[] {UNKNOWN_VERSION};
 
   protected Language(@NotNull @NonNls String id) {
     this(id, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -177,6 +193,12 @@ public abstract class Language extends UserDataHolderBase {
     return myBaseLanguage;
   }
 
+  @NotNull
+  @Immutable
+  public LanguageVersion[] getVersions() {
+    return ourLanguageVersions;
+  }
+
   public String getDisplayName() {
     return getID();
   }
@@ -198,6 +220,7 @@ public abstract class Language extends UserDataHolderBase {
     return false;
   }
 
+  @Deprecated
   public List<Language> getDialects() {
     return myDialects;
   }

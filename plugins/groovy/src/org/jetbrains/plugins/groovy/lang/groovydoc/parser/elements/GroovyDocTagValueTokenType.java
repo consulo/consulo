@@ -17,6 +17,7 @@
 package org.jetbrains.plugins.groovy.lang.groovydoc.parser.elements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.openapi.project.Project;
@@ -105,7 +106,7 @@ public class GroovyDocTagValueTokenType extends GroovyDocChameleonElementType im
   private ASTNode parseImpl(ASTNode chameleon) {
     final PsiElement parentElement = chameleon.getTreeParent().getPsi();
     final Project project = parentElement.getProject();
-    final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new GroovyLexer(), getLanguage(), chameleon.getText());
+    final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new GroovyLexer(), getLanguage(), Language.UNKNOWN_VERSION, chameleon.getText());
 
     PsiBuilder.Marker rootMarker = builder.mark();
     if (BUILT_IN_TYPES.contains(chameleon.getText())) {

@@ -47,10 +47,10 @@ public interface GroovyDocElementTypes extends GroovyDocTokenTypes {
       final PsiElement parentElement = chameleon.getTreeParent().getPsi();
       final Project project = JavaPsiFacade.getInstance(parentElement.getProject()).getProject();
 
-      final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new GroovyDocLexer(), getLanguage(), chameleon.getText());
+      final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new GroovyDocLexer(), getLanguage(), Language.UNKNOWN_VERSION, chameleon.getText());
       final PsiParser parser = new GroovyDocParser();
 
-      return parser.parse(this, builder).getFirstChildNode();
+      return parser.parse(this, builder, Language.UNKNOWN_VERSION).getFirstChildNode();
     }
 
     @Override

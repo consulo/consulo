@@ -42,7 +42,7 @@ public class JavaTreeGenerator implements TreeGenerator {
 
   private static final JavaParserUtil.ParserWrapper MOD_LIST = new JavaParserUtil.ParserWrapper() {
     @Override
-    public void parse(final PsiBuilder builder) {
+    public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
       JavaParser.INSTANCE.getDeclarationParser().parseModifierList(builder);
     }
   };

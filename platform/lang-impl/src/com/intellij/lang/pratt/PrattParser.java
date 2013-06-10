@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.pratt;
 
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
@@ -29,7 +30,7 @@ public abstract class PrattParser implements PsiParser {
 
   @Override
   @NotNull
-  public final ASTNode parse(final IElementType root, final PsiBuilder builder) {
+  public final ASTNode parse(@NotNull final IElementType root, @NotNull final PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
     final PrattBuilder prattBuilder = PrattBuilderImpl.createBuilder(builder, getRegistry());
     final MutableMarker marker = prattBuilder.mark();
     parse(prattBuilder);

@@ -193,7 +193,7 @@ public interface JavaElementType {
   IElementType STATEMENTS = new ICodeFragmentElementType("STATEMENTS", JavaLanguage.INSTANCE) {
     private final JavaParserUtil.ParserWrapper myParser = new JavaParserUtil.ParserWrapper() {
       @Override
-      public void parse(final PsiBuilder builder) {
+      public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
         JavaParser.INSTANCE.getStatementParser().parseStatements(builder);
       }
     };
@@ -208,7 +208,7 @@ public interface JavaElementType {
   IElementType EXPRESSION_TEXT = new ICodeFragmentElementType("EXPRESSION_TEXT", JavaLanguage.INSTANCE) {
     private final JavaParserUtil.ParserWrapper myParser = new JavaParserUtil.ParserWrapper() {
       @Override
-      public void parse(final PsiBuilder builder) {
+      public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
         JavaParser.INSTANCE.getExpressionParser().parse(builder);
       }
     };
@@ -223,7 +223,7 @@ public interface JavaElementType {
   IElementType REFERENCE_TEXT = new ICodeFragmentElementType("REFERENCE_TEXT", JavaLanguage.INSTANCE) {
     private final JavaParserUtil.ParserWrapper myParser = new JavaParserUtil.ParserWrapper() {
       @Override
-      public void parse(final PsiBuilder builder) {
+      public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
         JavaParser.INSTANCE.getReferenceParser().parseJavaCodeReference(builder, false, true, false, false);
       }
     };
@@ -238,7 +238,7 @@ public interface JavaElementType {
   IElementType TYPE_TEXT = new ICodeFragmentElementType("TYPE_TEXT", JavaLanguage.INSTANCE) {
     private final JavaParserUtil.ParserWrapper myParser = new JavaParserUtil.ParserWrapper() {
       @Override
-      public void parse(final PsiBuilder builder) {
+      public void parse(final PsiBuilder builder, LanguageLevel languageLevel) {
         JavaParser.INSTANCE.getReferenceParser().parseType(builder, ReferenceParser.EAT_LAST_DOT | ReferenceParser.ELLIPSIS |
                                                                     ReferenceParser.WILDCARD | ReferenceParser.DISJUNCTIONS);
       }
@@ -259,7 +259,7 @@ public interface JavaElementType {
     @NotNull
     @Override
     public ASTNode createCompositeNode() {
-      return new CompositePsiElement(this) { };
+      return new CompositePsiElement(this) {};
     }
 
     @Nullable

@@ -15,14 +15,10 @@
  */
 package com.intellij.lang.dtd;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageUtil;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
+import com.intellij.lang.*;
 import com.intellij.lang.xml.XMLParserDefinition;
 import com.intellij.lexer.DtdLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
@@ -48,16 +44,17 @@ public class DTDParserDefinition extends XMLParserDefinition {
 
   @NotNull
   @Override
-  public PsiParser createParser(Project project) {
+  public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new PsiParser() {
       @NotNull
       @Override
-      public ASTNode parse(IElementType root, PsiBuilder builder) {
+      public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
         return new DtdParsing(root, XmlEntityDecl.EntityContextType.GENERIC_XML, builder).parse();
       }
     };
   }
 
+  @NotNull
   @Override
   public IFileElementType getFileNodeType() {
     return XmlElementType.DTD_FILE;
@@ -65,7 +62,7 @@ public class DTDParserDefinition extends XMLParserDefinition {
 
   @NotNull
   @Override
-  public Lexer createLexer(@NotNull Project project, Module module) {
+  public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new DtdLexer(false);
   }
 }

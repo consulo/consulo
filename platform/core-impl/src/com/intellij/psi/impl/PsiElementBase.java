@@ -18,6 +18,7 @@
 package com.intellij.psi.impl;
 
 import com.intellij.ide.util.PsiNavigationSupport;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -27,6 +28,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ReflectionCache;
 import org.jetbrains.annotations.NotNull;
@@ -265,5 +267,11 @@ public abstract class PsiElementBase extends ElementBase implements NavigatableP
   @NotNull
   protected <T> T findNotNullChildByClass(Class<T> aClass) {
     return notNullChild(findChildByClass(aClass));
+  }
+
+  @NotNull
+  @Override
+  public LanguageVersion getLanguageVersion() {
+    return PsiTreeUtil.getLanguageVersion(this);
   }
 }

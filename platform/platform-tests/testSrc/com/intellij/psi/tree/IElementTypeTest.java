@@ -45,8 +45,8 @@ public class IElementTypeTest extends LightPlatformCodeInsightFixtureTestCase {
         languageMap.put(language.getBaseLanguage(), key);
       }
       try {
-        Lexer lexer = definition.createLexer(getProject(), null);
-        PsiParser parser = definition.createParser(getProject());
+        Lexer lexer = definition.createLexer(project, null);
+        PsiParser parser = definition.createParser(project, null);
       }
       catch (UnsupportedOperationException e1) {
       }

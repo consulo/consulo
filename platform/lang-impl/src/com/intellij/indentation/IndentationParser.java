@@ -1,6 +1,7 @@
 package com.intellij.indentation;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
@@ -35,7 +36,7 @@ public abstract class IndentationParser implements PsiParser {
 
   @Override
   @NotNull
-  public final ASTNode parse(final IElementType root, final PsiBuilder builder) {
+  public final ASTNode parse(@NotNull final IElementType root, @NotNull final PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
     final PsiBuilder.Marker fileMarker = builder.mark();
     final PsiBuilder.Marker documentMarker = builder.mark();
 

@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.module;
 
-import com.intellij.openapi.projectRoots.JavaSdk;
-import com.intellij.openapi.projectRoots.JavaSdkVersion;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
 import org.jetbrains.annotations.NotNull;
@@ -38,20 +36,5 @@ public class LanguageLevelUtil extends EffectiveLanguageLevelUtil {
     }
 
     return getLanguageLevelForFile(file.getParent());
-  }
-
-  /**
-   * @deprecated use {@link com.intellij.openapi.projectRoots.JavaSdkVersion#getMaxLanguageLevel()} instead
-   */
-  public static LanguageLevel getDefaultLanguageLevel(@NotNull String versionString) {
-    JavaSdkVersion version = JavaSdk.getInstance().getVersion(versionString);
-    return version != null ? version.getMaxLanguageLevel() : LanguageLevel.JDK_1_3;
-  }
-
-  /**
-   * @deprecated use {@link com.intellij.openapi.projectRoots.JavaSdkVersion#isAtLeast(com.intellij.openapi.projectRoots.JavaSdkVersion)} instead
-   */
-  public static boolean isOfVersionOrHigher(@NotNull String versionString, String checkedVersion) {
-    return JavaSdk.getInstance().compareTo(versionString, checkedVersion) >= 0;
   }
 }

@@ -19,10 +19,7 @@
  */
 package com.intellij.psi.impl.source.parsing.xml;
 
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiBuilderFactory;
+import com.intellij.lang.*;
 import com.intellij.lang.html.HTMLLanguage;
 import com.intellij.lang.html.HtmlParsing;
 
@@ -31,11 +28,12 @@ public class HtmlBuilderDriver extends XmlBuilderDriver {
     super(text);
   }
 
+  @Override
   protected PsiBuilder createBuilderAndParse() {
     final ParserDefinition htmlParserDef = LanguageParserDefinitions.INSTANCE.forLanguage(HTMLLanguage.INSTANCE);
     assert htmlParserDef != null;
 
-    PsiBuilder b = PsiBuilderFactory.getInstance().createBuilder(htmlParserDef, htmlParserDef.createLexer(null, null), getText());
+    PsiBuilder b = PsiBuilderFactory.getInstance().createBuilder(htmlParserDef, htmlParserDef.createLexer(null, Language.UNKNOWN_VERSION), Language.UNKNOWN_VERSION, getText());
     new HtmlParsing(b).parseDocument();
     return b;
   }

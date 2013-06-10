@@ -17,6 +17,7 @@ package com.intellij.psi;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
@@ -68,6 +69,13 @@ public interface PsiElement extends UserDataHolder, Iconable {
    */
   @NotNull
   Language getLanguage();
+
+  /**
+   * Return the language version of the PSI element.
+   * @return
+   */
+  @NotNull
+  LanguageVersion getLanguageVersion();
 
   /**
    * Returns the PSI manager for the project to which the PSI element belongs.

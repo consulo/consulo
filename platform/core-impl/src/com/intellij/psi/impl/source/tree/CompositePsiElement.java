@@ -17,8 +17,7 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.ide.util.PsiNavigationSupport;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
+import com.intellij.lang.*;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
@@ -34,6 +33,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +41,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.CompositePsiElement");
   protected static int ourHC = 0;
 
-  protected CompositePsiElement(IElementType type) {
+  public CompositePsiElement(IElementType type) {
     super(type);
     setPsi(this);
   }
@@ -320,6 +320,12 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
   @Override
   public boolean isEquivalentTo(final PsiElement another) {
     return this == another;
+  }
+
+  @NotNull
+  @Override
+  public LanguageVersion getLanguageVersion() {
+    return PsiTreeUtil.getLanguageVersion(this);
   }
 }
 

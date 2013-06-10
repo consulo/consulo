@@ -15,13 +15,10 @@
  */
 package com.intellij.lang.html;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
+import com.intellij.lang.*;
 import com.intellij.lang.xml.XMLParserDefinition;
 import com.intellij.lexer.HtmlLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -33,51 +30,62 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.psi.xml.XmlElementType;
 import com.intellij.psi.xml.XmlTokenType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
  */
 public class HTMLParserDefinition implements ParserDefinition {
+  @Override
   @NotNull
-  public Lexer createLexer(@NotNull Project project, Module module) {
+  public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion) {
     return new HtmlLexer();
   }
 
+  @Override
+  @NotNull
   public IFileElementType getFileNodeType() {
     return XmlElementType.HTML_FILE;
   }
 
+  @Override
   @NotNull
   public TokenSet getWhitespaceTokens() {
     return XmlTokenType.WHITESPACES;
   }
 
+  @Override
   @NotNull
   public TokenSet getCommentTokens() {
     return XmlTokenType.COMMENTS;
   }
 
+  @Override
   @NotNull
   public TokenSet getStringLiteralElements() {
     return TokenSet.EMPTY;
   }
 
+  @Override
   @NotNull
-  public PsiParser createParser(final Project project) {
+  public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
     return new HTMLParser();
   }
 
+  @Override
   @NotNull
   public PsiElement createElement(ASTNode node) {
     return PsiUtilCore.NULL_PSI_ELEMENT;
   }
 
+  @Override
   public PsiFile createFile(FileViewProvider viewProvider) {
     return new HtmlFileImpl(viewProvider);
   }
 
+  @Override
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(left.getPsi().getProject(), null);
+    final Lexer lexer = createLexer(null, Language.UNKNOWN_VERSION);
     return XMLParserDefinition.canStickTokensTogetherByLexerInXml(left, right, lexer, 0);
   }
 }
