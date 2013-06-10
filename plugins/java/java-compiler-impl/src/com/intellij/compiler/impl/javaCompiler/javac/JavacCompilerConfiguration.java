@@ -16,19 +16,29 @@
 package com.intellij.compiler.impl.javaCompiler.javac;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.consulo.compiler.CompilerSettings;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
-public class JavacCompilerSettings implements CompilerSettings, PersistentStateComponent<JpsJavaCompilerOptions> {
+@State(
+  name = "JavacCompilerConfiguration",
+  storages = {
+    @Storage(file = StoragePathMacros.PROJECT_FILE),
+    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
+  }
+)
+public class JavacCompilerConfiguration implements PersistentStateComponent<JpsJavaCompilerOptions> {
+  @NotNull
+  public static JpsJavaCompilerOptions getInstance(Project project) {
+    final JavacCompilerConfiguration service = ServiceManager.getService(project, JavacCompilerConfiguration.class);
+    return service.mySettings;
+  }
+  
   private final JpsJavaCompilerOptions mySettings = new JpsJavaCompilerOptions();
   private final Project myProject;
 
-  public JavacCompilerSettings(Project project) {
+  public JavacCompilerConfiguration(Project project) {
     myProject = project;
   }
 
@@ -44,17 +54,5 @@ public class JavacCompilerSettings implements CompilerSettings, PersistentStateC
   @Override
   public void loadState(JpsJavaCompilerOptions state) {
     XmlSerializerUtil.copyBean(state, mySettings);
-  }
-
-  public static JpsJavaCompilerOptions getOptions(Project project, Class<? extends JavacCompilerSettings> aClass) {
-    /*JavacConfiguration configuration = ServiceManager.getService(project, aClass);
-    return configuration.mySettings;   */
-    return new JpsJavaCompilerOptions();
-  }
-
-  @Nullable
-  @Override
-  public Configurable createConfigurable() {
-    return new JavacConfigurable(mySettings);
   }
 }

@@ -42,7 +42,6 @@ import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
-import org.jetbrains.jps.model.java.compiler.JavaCompilers;
 import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
 import java.io.*;
@@ -125,19 +124,13 @@ public class JavacCompiler extends ExternalCompiler {
   }
 
   @NotNull
-  @NonNls
-  public String getId() { // used for externalization
-    return JavaCompilers.JAVAC_ID;
-  }
-
-  @NotNull
   public String getPresentableName() {
     return CompilerBundle.message("compiler.javac.name");
   }
 
   @NotNull
   public Configurable createConfigurable() {
-    return new JavacConfigurable(JavacCompilerSettings.getOptions(myProject, JavacCompilerSettings.class));
+    return new JavacConfigurable(myProject);
   }
 
   public OutputParser createErrorParser(@NotNull final String outputDir, Process process) {
@@ -163,7 +156,8 @@ public class JavacCompiler extends ExternalCompiler {
         public String[] compute() {
           try {
             final List<String> commandLine = new ArrayList<String>();
-            createStartupCommand(chunk, commandLine, outputPath, JavacCompilerSettings.getOptions(myProject, JavacCompilerSettings.class),
+            createStartupCommand(chunk, commandLine, outputPath, JavacCompilerConfiguration
+              .getInstance(myProject),
                                  context.isAnnotationProcessorsEnabled());
             return ArrayUtil.toStringArray(commandLine);
           }
@@ -445,7 +439,7 @@ public class JavacCompiler extends ExternalCompiler {
   private Sdk getJdkForStartupCommand(final ModuleChunk chunk) {
     final Sdk jdk = JavaSdkUtil.getSdkForCompilation(chunk);
     if (ApplicationManager.getApplication().isUnitTestMode() &&
-        JavacCompilerSettings.getOptions(myProject, JavacCompilerSettings.class).isTestsUseExternalCompiler()) {
+        JavacCompilerConfiguration.getInstance(myProject).isTestsUseExternalCompiler()) {
       final String jdkHomePath = getTestsExternalCompilerHome();
       if (jdkHomePath == null) {
         throw new IllegalArgumentException("[TEST-MODE] Cannot determine home directory for JDK to use javac from");

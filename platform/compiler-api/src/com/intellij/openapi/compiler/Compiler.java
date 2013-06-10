@@ -25,7 +25,6 @@ import com.intellij.openapi.extensions.ExtensionPointName;
  * @see CompilerManager#removeCompiler(Compiler)
  */
 public interface Compiler {
-  @Deprecated
   ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create("com.intellij.compiler");
   
   /**

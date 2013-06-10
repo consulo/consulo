@@ -23,7 +23,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.compiler.CompilerSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,36 +48,12 @@ public abstract class CompilerManager {
   
   public abstract boolean isCompilationActive();
   
-  /**
-   * Registers a custom compiler.
-   *
-   * @param compiler the compiler to register.
-   */
-  public abstract void addCompiler(@NotNull Compiler compiler);
-
-  /**
-   * Registers a custom translating compiler. Input and output filetype sets allow compiler manager
-   * to sort translating compilers so that output of one compiler will be used as input for another one
-   * 
-   * @param compiler compiler implementation 
-   * @param inputTypes a set of filetypes that compiler accepts as input
-   * @param outputTypes a set of filetypes that compiler can generate
-   */
-  public abstract void addTranslatingCompiler(@NotNull TranslatingCompiler compiler, Set<FileType> inputTypes, Set<FileType> outputTypes);
-
   @NotNull
   public abstract Set<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler);
   
   @NotNull
   public abstract Set<FileType> getRegisteredOutputTypes(@NotNull TranslatingCompiler compiler);
   
-  /**
-   * Unregisters a custom compiler.
-   *
-   * @param compiler the compiler to unregister.
-   */
-  public abstract void removeCompiler(@NotNull Compiler compiler);
-
   @NotNull
   public abstract Compiler[] getAllCompilers();
 
@@ -290,7 +265,4 @@ public abstract class CompilerManager {
 
 
   public abstract boolean isValidationEnabled(Module moduleType);
-
-  @NotNull
-  public abstract <T extends CompilerSettings> T getSettings(Compiler compiler);
 }

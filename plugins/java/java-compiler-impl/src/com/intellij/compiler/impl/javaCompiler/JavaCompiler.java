@@ -26,17 +26,17 @@ import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
+import org.consulo.lombok.annotations.LoggerFieldOwner;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+@LoggerFieldOwner
 public class JavaCompiler implements TranslatingCompiler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.javaCompiler.JavaCompiler");
   private final Project myProject;
 
   public JavaCompiler(Project project) {
@@ -73,13 +73,13 @@ public class JavaCompiler implements TranslatingCompiler {
         e.printStackTrace();
       }
       context.addMessage(CompilerMessageCategory.ERROR, e.getMessage(), null, -1, -1);
-      LOG.info(e);
+      LOGGER.info(e);
     }
     catch (CacheCorruptedException e) {
       if (CompileDriver.ourDebugMode) {
         e.printStackTrace();
       }
-      LOG.info(e);
+      LOGGER.info(e);
       context.requestRebuildNextTime(e.getMessage());
     }
   }
@@ -90,7 +90,6 @@ public class JavaCompiler implements TranslatingCompiler {
   }
 
   private BackendCompiler getBackEndCompiler() {
-    JavaCompilerSettings javaCompilerSettings = CompilerManager.getInstance(myProject).getSettings(this);
-    return javaCompilerSettings.getSelectedCompiler();
+    return JavaCompilerConfiguration.getInstance(myProject).getActiveCompiler();
   }
 }

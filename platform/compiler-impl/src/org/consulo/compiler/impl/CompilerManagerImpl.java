@@ -30,8 +30,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import org.consulo.compiler.CompilerProvider;
-import org.consulo.compiler.CompilerSettings;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,7 +64,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     }
   }
 
-  private Map<Compiler, CompilerSettings> myCompilers = new LinkedHashMap<Compiler, CompilerSettings>();
+  private final List<Compiler> myCompilers = new ArrayList<Compiler>();
   private final Project myProject;
   private final CompilationStatusListener myEventPublisher;
   private final Set<LocalFileSystem.WatchRequest> myWatchRoots;
@@ -77,11 +75,9 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
     myProject = project;
     myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
-    final CompilerProvider[] extensions = CompilerProvider.EP_NAME.getExtensions();
-    for (CompilerProvider extension : extensions) {
-      final CompilerSettings settings = extension.createSettings(project);
 
-      myCompilers.put(extension.createCompiler(project), settings == null ? CompilerSettings.EMPTY : settings);
+    for (Compiler extension : Compiler.EP_NAME.getExtensions(project)) {
+      myCompilers.add(extension);
     }
 
     final File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
@@ -100,16 +96,6 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     });
   }
 
-  @Override
-  public void addCompiler(@NotNull com.intellij.openapi.compiler.Compiler compiler) {
-
-  }
-
-  @Override
-  public void addTranslatingCompiler(@NotNull TranslatingCompiler compiler, Set<FileType> inputTypes, Set<FileType> outputTypes) {
-
-  }
-
   @NotNull
   @Override
   public Set<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler) {
@@ -122,15 +108,10 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     return Collections.emptySet();
   }
 
-  @Override
-  public void removeCompiler(@NotNull Compiler compiler) {
-
-  }
-
   @NotNull
   @Override
   public Compiler[] getAllCompilers() {
-    return myCompilers.keySet().toArray(new Compiler[myCompilers.size()]);
+    return myCompilers.toArray(new Compiler[myCompilers.size()]);
   }
 
   @Override
@@ -143,7 +124,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @NotNull
   public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, CompilerFilter filter) {
     final List<T> compilers = new ArrayList<T>(myCompilers.size());
-    for (final Compiler item : myCompilers.keySet()) {
+    for (final Compiler item : myCompilers) {
       if (compilerClass.isAssignableFrom(item.getClass()) && filter.acceptCompiler(item)) {
         compilers.add((T)item);
       }
@@ -315,12 +296,6 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   public boolean isValidationEnabled(Module moduleType) {
     return true;
-  }
-
-  @NotNull
-  @Override
-  public <T extends CompilerSettings> T getSettings(Compiler compiler) {
-    return (T)myCompilers.get(compiler);
   }
 
   @Nullable

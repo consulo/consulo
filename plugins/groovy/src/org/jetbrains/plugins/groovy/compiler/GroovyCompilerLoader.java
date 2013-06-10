@@ -21,8 +21,6 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
@@ -30,9 +28,6 @@ import com.intellij.ui.EditorNotificationPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.compiler.generator.GroovycStubGenerator;
-
-import java.util.Arrays;
-import java.util.HashSet;
 
 /**
  * @author ilyas
@@ -47,14 +42,14 @@ public class GroovyCompilerLoader extends AbstractProjectComponent {
     CompilerManager compilerManager = CompilerManager.getInstance(myProject);
     compilerManager.addCompilableFileType(GroovyFileType.GROOVY_FILE_TYPE);
 
-    compilerManager.addTranslatingCompiler(new GroovycStubGenerator(myProject),
+   /* compilerManager.addTranslatingCompiler(new GroovycStubGenerator(myProject),
                                            new HashSet<FileType>(Arrays.asList(StdFileTypes.JAVA, GroovyFileType.GROOVY_FILE_TYPE)),
                                            new HashSet<FileType>(Arrays.asList(StdFileTypes.JAVA)));
 
     compilerManager.addTranslatingCompiler(new GroovyCompiler(myProject),
                                            new HashSet<FileType>(Arrays.asList(GroovyFileType.GROOVY_FILE_TYPE, StdFileTypes.CLASS)),
                                            new HashSet<FileType>(Arrays.asList(StdFileTypes.CLASS)));
-
+                                                                                                                   */
     myProject.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
       public void fileOpened(@NotNull FileEditorManager source, @NotNull final VirtualFile file) {

@@ -19,6 +19,7 @@ import com.intellij.compiler.options.ComparingUtils;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.RawCommandLineEditor;
 import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
@@ -37,8 +38,8 @@ public class JavacConfigurable implements Configurable{
   private JTextField myJavacMaximumHeapField;
   private final JpsJavaCompilerOptions myJavacSettings;
 
-  public JavacConfigurable(final JpsJavaCompilerOptions javacSettings) {
-    myJavacSettings = javacSettings;
+  public JavacConfigurable(final Project project) {
+    myJavacSettings = JavacCompilerConfiguration.getInstance(project);
     myAdditionalOptionsField.setDialogCaption(CompilerBundle.message("java.compiler.option.additional.command.line.parameters"));
   }
 

@@ -17,13 +17,11 @@
 
 package com.intellij.compiler.impl.resourceCompiler;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.make.MakeUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -33,6 +31,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Chunk;
+import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
+import org.consulo.lombok.annotations.LoggerFieldOwner;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -44,15 +44,15 @@ import java.util.*;
  * Date: Jan 17, 2003
  * Time: 3:48:26 PM
  */
+@LoggerFieldOwner
 public class ResourceCompiler implements TranslatingCompiler {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.resourceCompiler.ResourceCompiler");
   private final Project myProject;
-  private final CompilerConfigurationOld myConfiguration;
   private final ResourceCompilerExtension[] myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensions();
+  private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
 
-  public ResourceCompiler(Project project, CompilerConfigurationOld compilerConfiguration) {
+  public ResourceCompiler(Project project) {
     myProject = project;
-    myConfiguration = compilerConfiguration;
+    myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
   }
 
   @NotNull
@@ -61,7 +61,7 @@ public class ResourceCompiler implements TranslatingCompiler {
   }
 
   public boolean validateConfiguration(CompileScope scope) {
-   //TODO ((CompilerConfigurationImpl) CompilerConfiguration.getInstance(myProject)).convertPatterns();
+    myResourceCompilerConfiguration.convertPatterns();
     return true;
   }
 
@@ -70,7 +70,7 @@ public class ResourceCompiler implements TranslatingCompiler {
     if (module != null && skipStandardResourceCompiler(module)) {
       return false;
     }
-    return myConfiguration.isResourceFile(file);
+    return myResourceCompilerConfiguration.isResourceFile(file);
   }
 
   public void compile(final CompileContext context, Chunk<Module> moduleChunk, final VirtualFile[] files, OutputSink sink) {
@@ -189,8 +189,8 @@ public class ResourceCompiler implements TranslatingCompiler {
     }
 
     public MyOutputItem copy(List<File> filesToRefresh) throws IOException {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Copying " + myFromPath + " to " + myToPath);
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("Copying " + myFromPath + " to " + myToPath);
       }
       final File targetFile = new File(myToPath);
       FileUtil.copyContent(new File(myFromPath), targetFile);

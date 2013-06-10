@@ -2,22 +2,25 @@ package org.consulo.compiler.impl.resourceCompiler;
 
 import com.intellij.CommonBundle;
 import com.intellij.compiler.MalformedPatternException;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.TextConfigurable;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.DefaultJDOMExternalizer;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.apache.oro.text.regex.*;
-import org.consulo.compiler.CompilerSettings;
+import org.consulo.lombok.annotations.LoggerFieldOwner;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +35,16 @@ import java.util.StringTokenizer;
  * @author VISTALL
  * @since 20:16/24.05.13
  */
-public class ResourceCompilerSettings implements CompilerSettings, PersistentStateComponent<Element> {
+@LoggerFieldOwner
+@ProjectService
+@State(
+  name = "ResourceCompilerConfiguration",
+  storages = {
+    @Storage(file = StoragePathMacros.PROJECT_FILE),
+    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
+  }
+)
+public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
   private static class CompiledPattern {
     @NotNull final Pattern fileName;
     @Nullable final Pattern dir;
@@ -45,8 +57,6 @@ public class ResourceCompilerSettings implements CompilerSettings, PersistentSta
     }
   }
 
-  private static final Logger LOG = Logger.getInstance(ResourceCompilerSettings.class);
-
   private Project myProject;
   // extensions of the files considered as resource files
   private final List<Pattern> myRegexpResourcePatterns = new ArrayList<Pattern>();
@@ -55,13 +65,77 @@ public class ResourceCompilerSettings implements CompilerSettings, PersistentSta
   private final List<CompiledPattern> myCompiledPatterns = new ArrayList<CompiledPattern>();
   private final List<CompiledPattern> myNegatedCompiledPatterns = new ArrayList<CompiledPattern>();
   private boolean myWildcardPatternsInitialized = false;
+  private final Perl5Matcher myPatternMatcher = new Perl5Matcher();
 
-  public ResourceCompilerSettings(Project project) {
+  public ResourceCompilerConfiguration(Project project) {
     myProject = project;
 
     loadDefaultWildcardPatterns();
   }
 
+  public boolean isResourceFile(VirtualFile virtualFile) {
+    return isResourceFile(virtualFile.getName(), virtualFile.getParent());
+  }
+
+  private boolean isResourceFile(String name, @Nullable VirtualFile parent) {
+    final Ref<String> parentRef = Ref.create(null);
+    //noinspection ForLoopReplaceableByForEach
+    for (int i = 0; i < myCompiledPatterns.size(); i++) {
+      if (matches(name, parent, parentRef, myCompiledPatterns.get(i))) {
+        return true;
+      }
+    }
+
+    if (myNegatedCompiledPatterns.isEmpty()) {
+      return false;
+    }
+
+    //noinspection ForLoopReplaceableByForEach
+    for (int i = 0; i < myNegatedCompiledPatterns.size(); i++) {
+      if (matches(name, parent, parentRef, myNegatedCompiledPatterns.get(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  private boolean matches(String name, VirtualFile parent, Ref<String> parentRef, CompiledPattern pair) {
+    if (!matches(name, pair.fileName)) {
+      return false;
+    }
+
+    if (parent != null && (pair.dir != null || pair.srcRoot != null)) {
+      VirtualFile srcRoot = ProjectRootManager.getInstance(myProject).getFileIndex().getSourceRootForFile(parent);
+      if (pair.dir != null) {
+        String parentPath = parentRef.get();
+        if (parentPath == null) {
+          parentRef.set(parentPath = srcRoot == null ? parent.getPath() : VfsUtilCore.getRelativePath(parent, srcRoot, '/'));
+        }
+        if (parentPath == null || !matches("/" + parentPath, pair.dir)) {
+          return false;
+        }
+      }
+
+      if (pair.srcRoot != null) {
+        String srcRootName = srcRoot == null ? null : srcRoot.getName();
+        if (srcRootName == null || !matches(srcRootName, pair.srcRoot)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+  private boolean matches(String s, Pattern p) {
+    synchronized (myPatternMatcher) {
+      try {
+        return myPatternMatcher.matches(s, p);
+      }
+      catch (Exception e) {
+        LOGGER.error("Exception matching file name \"" + s + "\" against the pattern \"" + p + "\"", e);
+        return false;
+      }
+    }
+  }
 
   public void convertPatterns() {
     if (!needPatternConversion()) {
@@ -138,7 +212,7 @@ public class ResourceCompilerSettings implements CompilerSettings, PersistentSta
       addWildcardResourcePattern("!?*.clj");
     }
     catch (MalformedPatternException e) {
-      LOG.error(e);
+      LOGGER.error(e);
     }
   }
 
@@ -306,8 +380,59 @@ public class ResourceCompilerSettings implements CompilerSettings, PersistentSta
 
   @Override
   public void loadState(Element state) {
-
+    try {
+      readExternal(state);
+    }
+    catch (InvalidDataException e) {
+      LOGGER.error(e);
+    }
   }
+
+  private void removeRegexpPatterns() {
+    myRegexpResourcePatterns.clear();
+  }
+
+  private void addRegexpPattern(String namePattern) throws MalformedPatternException {
+    Pattern pattern = compilePattern(namePattern);
+    if (pattern != null) {
+      myRegexpResourcePatterns.add(pattern);
+    }
+  }
+
+  public void readExternal(Element parentNode) throws InvalidDataException {
+    DefaultJDOMExternalizer.readExternal(this, parentNode);
+
+    try {
+      removeRegexpPatterns();
+      Element node = parentNode.getChild(JpsJavaCompilerConfigurationSerializer.RESOURCE_EXTENSIONS);
+      if (node != null) {
+        for (final Object o : node.getChildren(JpsJavaCompilerConfigurationSerializer.ENTRY)) {
+          Element element = (Element)o;
+          String pattern = element.getAttributeValue(JpsJavaCompilerConfigurationSerializer.NAME);
+          if (!StringUtil.isEmpty(pattern)) {
+            addRegexpPattern(pattern);
+          }
+        }
+      }
+
+      removeWildcardPatterns();
+      node = parentNode.getChild(JpsJavaCompilerConfigurationSerializer.WILDCARD_RESOURCE_PATTERNS);
+      if (node != null) {
+        myWildcardPatternsInitialized = true;
+        for (final Object o : node.getChildren(JpsJavaCompilerConfigurationSerializer.ENTRY)) {
+          final Element element = (Element)o;
+          String pattern = element.getAttributeValue(JpsJavaCompilerConfigurationSerializer.NAME);
+          if (!StringUtil.isEmpty(pattern)) {
+            addWildcardResourcePattern(pattern);
+          }
+        }
+      }
+    }
+    catch (MalformedPatternException e) {
+      throw new InvalidDataException(e);
+    }
+  }
+
 
   private static Element addChild(Element parent, final String childName) {
     final Element child = new Element(childName);
@@ -315,8 +440,4 @@ public class ResourceCompilerSettings implements CompilerSettings, PersistentSta
     return child;
   }
 
-  @Override
-  public Configurable createConfigurable() {
-    return new TextConfigurable<CompilerSettings>(this, "Resource", "Test", "Test", AllIcons.Nodes.Module);
-  }
 }

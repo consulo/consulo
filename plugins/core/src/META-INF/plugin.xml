@@ -4016,7 +4016,6 @@
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
     <extensionPoint name="psi.packageResolver" interface="org.consulo.psi.PsiPackageResolver"/>
     <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
-    <extensionPoint name="compilerProvider" interface="org.consulo.compiler.CompilerProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -5515,7 +5514,7 @@
     <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider" order="last"/>
     <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver"/>
     <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver"/>
-    <compilerProvider implementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerProvider"/>
+
     <lang.ast.lazyFactory implementation="com.intellij.lang.impl.DefaultASTLazyFactory" order="last"/>
     <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>
     <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last"/>
@@ -5523,6 +5522,9 @@
     <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
-    <compilerProvider implementation="com.intellij.packaging.impl.artifacts.ArtifactsCompilerProvider" id="artifactsCompiler"/>
+    <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler"/>
+    <compiler implementation="com.intellij.compiler.impl.resourceCompiler.ResourceCompiler" id="resourceCompiler"/>
+    <projectService serviceInterface="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"
+                    serviceImplementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"/>
   </extensions>
 </idea-plugin>
