@@ -25,7 +25,6 @@ import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -49,30 +48,36 @@ public class ResourceCompiler implements TranslatingCompiler {
   private final Project myProject;
   private final ResourceCompilerExtension[] myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensions();
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
+  private final ProjectFileIndex myProjectFileIndex;
 
   public ResourceCompiler(Project project) {
     myProject = project;
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
+    myProjectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
   }
 
+  @Override
   @NotNull
   public String getDescription() {
     return CompilerBundle.message("resource.compiler.description");
   }
 
+  @Override
   public boolean validateConfiguration(CompileScope scope) {
     myResourceCompilerConfiguration.convertPatterns();
     return true;
   }
 
+  @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
     final Module module = context.getModuleByFile(file);
     if (module != null && skipStandardResourceCompiler(module)) {
       return false;
     }
-    return myResourceCompilerConfiguration.isResourceFile(file);
+    return myProjectFileIndex.isInResource(file) || myResourceCompilerConfiguration.isResourceFile(file);
   }
 
+  @Override
   public void compile(final CompileContext context, Chunk<Module> moduleChunk, final VirtualFile[] files, OutputSink sink) {
     context.getProgressIndicator().pushState();
     context.getProgressIndicator().setText(CompilerBundle.message("progress.copying.resources"));
@@ -81,8 +86,8 @@ public class ResourceCompiler implements TranslatingCompiler {
     final LinkedList<CopyCommand> copyCommands = new LinkedList<CopyCommand>();
     final Module singleChunkModule = moduleChunk.getNodes().size() == 1? moduleChunk.getNodes().iterator().next() : null;
     ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
       public void run() {
-        final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
         for (final VirtualFile file : files) {
           if (context.getProgressIndicator().isCanceled()) {
             break;
@@ -104,7 +109,7 @@ public class ResourceCompiler implements TranslatingCompiler {
           }
           final String outputPath = outputDir.getPath();
 
-          final String packagePrefix = fileIndex.getPackageNameByDirectory(fileRoot);
+          final String packagePrefix = myProjectFileIndex.getPackageNameByDirectory(fileRoot);
           final String targetPath;
           if (packagePrefix != null && packagePrefix.length() > 0) {
             targetPath = outputPath + "/" + packagePrefix.replace('.', '/') + "/" + relativePath;
@@ -225,10 +230,12 @@ public class ResourceCompiler implements TranslatingCompiler {
       myFile = sourceFile;
     }
 
+    @Override
     public String getOutputPath() {
       return myTargetPath;
     }
 
+    @Override
     public VirtualFile getSourceFile() {
       return myFile;
     }

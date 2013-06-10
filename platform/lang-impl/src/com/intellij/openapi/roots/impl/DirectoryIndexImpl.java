@@ -228,7 +228,14 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       if (module != null) {
         if (parentInfo.isInModuleSource()) {
           String newDirPackageName = getPackageNameForSubdir(parentPackage, file.getName());
-          state.fillMapWithModuleSource(module, (NewVirtualFile)parentContentRoot, file, newDirPackageName, (NewVirtualFile)parentInfo.getSourceRoot(), parentInfo.isTestSource(), null);
+          ContentFolderType contentFolderType = ContentFolderType.SOURCE;
+          if(parentInfo.isTestSource()) {
+            contentFolderType = ContentFolderType.TEST;
+          }
+          else if(parentInfo.isResource()) {
+            contentFolderType = ContentFolderType.RESOURCE;
+          }
+          state.fillMapWithModuleSource(module, (NewVirtualFile)parentContentRoot, file, newDirPackageName, (NewVirtualFile)parentInfo.getSourceRoot(), contentFolderType, null);
         }
       }
 
@@ -808,7 +815,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
         for (ContentFolder sourceFolder : folders) {
           VirtualFile dir = sourceFolder.getFile();
           if (dir instanceof NewVirtualFile && contentRoot instanceof NewVirtualFile) {
-            fillMapWithModuleSource(module, (NewVirtualFile)contentRoot, (NewVirtualFile)dir, "", (NewVirtualFile)dir, sourceFolder.getType() == ContentFolderType.TEST, progress);
+            fillMapWithModuleSource(module, (NewVirtualFile)contentRoot, (NewVirtualFile)dir, "", (NewVirtualFile)dir, sourceFolder.getType(), progress);
           }
         }
       }
@@ -819,7 +826,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
                                          @NotNull final NewVirtualFile dir,
                                          @NotNull final String packageName,
                                          @NotNull final NewVirtualFile sourceRoot,
-                                         final boolean isTestSource,
+                                         final ContentFolderType contentFolderType,
                                          @Nullable final ProgressIndicator progress) {
       assertWritable();
       if (!isValid(dir)) return;
@@ -845,7 +852,8 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           assert VfsUtilCore.isAncestor(dir, file, false) : "dir: " + dir + " (" + dir.getFileSystem() + "); file: " + file + " (" + file.getFileSystem() + ")";
 
           int flag = info.getSourceFlag() | DirectoryInfo.MODULE_SOURCE_FLAG;
-          flag = BitUtil.set(flag, DirectoryInfo.TEST_SOURCE_FLAG, isTestSource);
+          flag = BitUtil.set(flag, DirectoryInfo.MODULE_TEST_FLAG, contentFolderType == ContentFolderType.TEST);
+          flag = BitUtil.set(flag, DirectoryInfo.MODULE_RESOURCE_FLAG, contentFolderType == ContentFolderType.RESOURCE);
           info = with(id, info, null, null, sourceRoot, null, (byte)flag, null);
 
           String currentPackage = myPackages.isEmpty() ? packageName : getPackageNameForSubdir(myPackages.peek(), file.getName());

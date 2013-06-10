@@ -42,11 +42,12 @@ public final class DirectoryInfo {
   private final VirtualFile contentRoot;
   private final VirtualFile sourceRoot;
 
-  public static final byte TEST_SOURCE_FLAG = 1; // (makes sense only if MODULE_SOURCE_FLAG is set)
-  public static final byte LIBRARY_SOURCE_FLAG = 2; // set if it's a directory with sources of some library
-  public static final byte MODULE_SOURCE_FLAG = 4; // set if files in this directory belongs to sources of the module (if field 'module' is not null)
+  public static final byte MODULE_TEST_FLAG       = 1 << 0; // (makes sense only if MODULE_SOURCE_FLAG is set)
+  public static final byte LIBRARY_SOURCE_FLAG     = 1 << 1; // set if it's a directory with sources of some library
+  public static final byte MODULE_SOURCE_FLAG      = 1 << 2; // set if files in this directory belongs to sources of the module (if field 'module' is not null)
+  public static final byte MODULE_RESOURCE_FLAG    = 1 << 3; // set if files in this directory belongs to resource of the module (if field 'module' is not null)
 
-  @MagicConstant(flags = {TEST_SOURCE_FLAG, LIBRARY_SOURCE_FLAG, MODULE_SOURCE_FLAG})
+  @MagicConstant(flags = {MODULE_TEST_FLAG, MODULE_RESOURCE_FLAG, LIBRARY_SOURCE_FLAG, MODULE_SOURCE_FLAG})
   public @interface SourceFlag {}
 
   @SourceFlag
@@ -107,6 +108,7 @@ public final class DirectoryInfo {
            "module=" + getModule() +
            ", isInModuleSource=" + isInModuleSource() +
            ", isTestSource=" + isTestSource() +
+           ", isResource=" + isResource() +
            ", isInLibrarySource=" + isInLibrarySource() +
            ", libraryClassRoot=" + getLibraryClassRoot() +
            ", contentRoot=" + getContentRoot() +
@@ -296,8 +298,12 @@ public final class DirectoryInfo {
     return BitUtil.isSet(sourceFlag, MODULE_SOURCE_FLAG);
   }
 
+  public boolean isResource() {
+    return BitUtil.isSet(sourceFlag, MODULE_RESOURCE_FLAG);
+  }
+
   public boolean isTestSource() {
-    return BitUtil.isSet(sourceFlag, TEST_SOURCE_FLAG);
+    return BitUtil.isSet(sourceFlag, MODULE_TEST_FLAG);
   }
 
   public boolean isInLibrarySource() {

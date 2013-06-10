@@ -201,6 +201,18 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   }
 
   @Override
+  public boolean isInResource(@NotNull VirtualFile fileOrDir) {
+    DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
+    if (info != null) {
+      return info.isResource();
+    }
+    else {
+      VirtualFile parent = fileOrDir.getParent();
+      return parent != null && isInResource(parent);
+    }
+  }
+
+  @Override
   public boolean isInLibraryClasses(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
     if (info != null) {     
