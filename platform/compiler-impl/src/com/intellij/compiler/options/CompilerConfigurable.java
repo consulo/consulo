@@ -17,22 +17,27 @@ package com.intellij.compiler.options;
 
 import com.intellij.compiler.CompilationType;
 import com.intellij.compiler.CompilerConfiguration;
+import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.components.JBLabel;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class CompilerConfigurable implements Configurable {
-  private JComboBox myComboBox;
-  private CompilerConfiguration myCompilerConfiguration;
+  private final CompilerConfiguration myCompilerConfiguration;
+  private final CompilerWorkspaceConfiguration myCompilerWorkspaceConfiguration;
+
+  private JComboBox myCompilerOptions;
+  private JPanel myRootPanel;
+  private JCheckBox myCbClearOutputDirectory;
+  private JCheckBox myCbAutoShowFirstError;
 
   public CompilerConfigurable(Project project) {
     myCompilerConfiguration = CompilerConfiguration.getInstance(project);
+    myCompilerWorkspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(project);
   }
 
   @Override
@@ -47,39 +52,37 @@ public class CompilerConfigurable implements Configurable {
 
   @Override
   public JComponent createComponent() {
-    myComboBox = new JComboBox(CompilationType.VALUES);
-    myComboBox.setSelectedItem(myCompilerConfiguration.getCompilationType());
-
-    JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-    JPanel temp = new JPanel(new BorderLayout());
-    temp.add(new JBLabel("Compilation type: "), BorderLayout.WEST);
-    temp.add(myComboBox, BorderLayout.CENTER);
-
-    mainPanel.add(temp);
-    return mainPanel;
+    return myRootPanel;
   }
 
   @Override
   public boolean isModified() {
-    if(!Comparing.equal(myComboBox.getSelectedItem(), myCompilerConfiguration.getCompilationType())) {
-      return true;
-    }
-    return false;
+    boolean isModified = !Comparing.equal(myCompilerOptions.getSelectedItem(), myCompilerConfiguration.getCompilationType());
+    isModified |= ComparingUtils.isModified(myCbClearOutputDirectory, myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
+    isModified |= ComparingUtils.isModified(myCbAutoShowFirstError, myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
+    return isModified;
   }
 
   @Override
   public void apply() throws ConfigurationException {
-    myCompilerConfiguration.setCompilationType((CompilationType)myComboBox.getSelectedItem());
+    myCompilerConfiguration.setCompilationType((CompilationType)myCompilerOptions.getSelectedItem());
+    myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = myCbAutoShowFirstError.isSelected();
+    myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = myCbClearOutputDirectory.isSelected();
   }
 
   @Override
   public void reset() {
-    myComboBox.setSelectedItem(myCompilerConfiguration.getCompilationType());
+    myCompilerOptions.setSelectedItem(myCompilerConfiguration.getCompilationType());
+    myCbAutoShowFirstError.setSelected(myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
+    myCbClearOutputDirectory.setSelected(myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
   }
 
   @Override
   public void disposeUIResources() {
 
+  }
+
+  private void createUIComponents() {
+    myCompilerOptions = new JComboBox(CompilationType.VALUES);
   }
 }

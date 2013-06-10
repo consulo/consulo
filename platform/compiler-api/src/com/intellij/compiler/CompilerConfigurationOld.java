@@ -27,6 +27,7 @@ import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
 import java.util.Map;
 import java.util.Set;
 
+@Deprecated
 public abstract class CompilerConfigurationOld {
   // need this flag for profiling purposes. In production code is always set to 'true'
   public static final boolean MAKE_ENABLED = true;

@@ -17,10 +17,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.compiler.CompilerConfigurationOld;
-import com.intellij.compiler.CompilerMessageImpl;
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.compiler.ModuleCompilerUtil;
+import com.intellij.compiler.*;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.make.DependencyCache;
