@@ -5,6 +5,7 @@ package com.intellij.mock;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -174,6 +175,12 @@ public class MockPsiElement extends UserDataHolderBase implements PsiElement, Na
   @NotNull
   public Language getLanguage() {
     throw new UnsupportedOperationException("Method getLanguage is not yet implemented in " + getClass().getName());
+  }
+
+  @NotNull
+  @Override
+  public LanguageVersion getLanguageVersion() {
+    throw new UnsupportedOperationException("Method getLanguageVersion is not yet implemented in " + getClass().getName());
   }
 
   @Override
