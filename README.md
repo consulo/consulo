@@ -1,10 +1,10 @@
-# IntelliJ IDEA Community Edition
+# Consulo
 
-This is the official GitHub mirror of the [IntelliJ IDEA Community Edition](http://www.jetbrains.com/idea/) source code.
+This is fork of IntelliJ IDEA Community Edition
 
 ## Building
 
-To develop IntelliJ IDEA, you can use either IntelliJ IDEA Community Edition or IntelliJ IDEA Ultimate. To build and run the code:
+To develop Consulo, you can use either IntelliJ IDEA Community Edition or IntelliJ IDEA Ultimate. To build and run the code:
 
 * Make sure you have the Groovy plugin enabled. Parts of IntelliJ IDEA are written in Groovy, and you will get compilation errors if you don't have the plugin enabled.
 * Make sure you have the UI Designer plugin enabled. Most of IntelliJ IDEA's UI is built using the UI Designer, and the version you build will not run correctly if you don't have the plugin enabled.
@@ -14,14 +14,6 @@ To develop IntelliJ IDEA, you can use either IntelliJ IDEA Community Edition or 
 * Use Build | Make Project to build the code
 * To run the code, use the provided shared run configuration "IDEA".
 
-## Contributing
+## Links
 
-Pull requests are welcome. Please make sure that you follow the [IntelliJ Coding Guidelines](http://www.jetbrains.org/display/IJOS/IntelliJ+Coding+Guidelines).
-Note that you'll need to submit a [Contributor Agreement](http://www.jetbrains.org/display/IJOS/Contributor+Agreement) before we can accept your pull request.
-
-See http://www.jetbrains.org/ for more information.
-
-## Developer Documentation
-
-You can find information on the internal architecture of IntelliJ IDEA and plugin development at the
-[PluginDevelopment](http://confluence.jetbrains.com/display/IDEADEV/PluginDevelopment) site.
+* [Tracker](http://napile.myjetbrains.com/youtrack/issues/CO)
