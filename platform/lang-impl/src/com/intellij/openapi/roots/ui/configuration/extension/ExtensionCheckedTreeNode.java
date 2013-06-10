@@ -16,14 +16,12 @@
 package com.intellij.openapi.roots.ui.configuration.extension;
 
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ExtensionEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckedTreeNode;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,21 +77,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       return;
     }
     myExtension.setEnabled(enabled);
-    if (myExtension instanceof ModuleExtensionWithSdk) {
-      final ModifiableRootModel rootModel = myState.getRootModel();
-      if (rootModel == null) {
-        return;
-      }
-
-      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = rootModel.findModuleExtensionSdkEntry(myExtension);
-      if (sdkOrderEntry != null) {
-        rootModel.removeOrderEntry(sdkOrderEntry);
-      }
-      if (enabled) {
-        rootModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk)myExtension);
-      }
-      myExtensionEditor.extensionChanged(myExtension);
-    }
+    myExtensionEditor.extensionChanged(myExtension);
   }
 
   @Override

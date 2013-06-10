@@ -17,6 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -26,7 +27,7 @@ class ClasspathTableItem<T extends OrderEntry> {
   @Nullable protected final T myEntry;
   private final boolean myRemovable;
 
-  @Nullable
+  @NotNull
   public static ClasspathTableItem<?> createItem(OrderEntry orderEntry, StructureConfigurableContext context) {
     if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
       return new ClasspathTableItem<OrderEntry>(orderEntry, false);
@@ -40,7 +41,9 @@ class ClasspathTableItem<T extends OrderEntry> {
     else if (orderEntry instanceof ModuleSourceOrderEntry) {
       return new ClasspathTableItem<OrderEntry>(orderEntry, false);
     }
-    return null;
+    else {
+      throw new IllegalArgumentException("Unknown order entry: " + orderEntry.getClass());
+    }
   }
 
   public static ClasspathTableItem<LibraryOrderEntry> createLibItem(final LibraryOrderEntry orderEntry, final StructureConfigurableContext context) {

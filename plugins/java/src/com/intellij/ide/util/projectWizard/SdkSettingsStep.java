@@ -54,14 +54,14 @@ public class SdkSettingsStep extends ModuleWizardStep {
     Project project = myWizardContext.getProject();
     myModel.reset(project);
 
-    mySdkComboBox = new SdkComboBox(myModel, sdkFilter);
+    mySdkComboBox = new SdkComboBox(myModel, sdkFilter, false);
 
     final PropertiesComponent component = project == null ? PropertiesComponent.getInstance() : PropertiesComponent.getInstance(project);
     final String selectedJdkProperty = "jdk.selected";
     mySdkComboBox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        Sdk jdk = mySdkComboBox.getSelectedJdk();
+        Sdk jdk = mySdkComboBox.getSelectedSdk();
         if (jdk != null) {
           component.setValue(selectedJdkProperty, jdk.getName());
         }
@@ -80,7 +80,7 @@ public class SdkSettingsStep extends ModuleWizardStep {
       Project defaultProject = ProjectManager.getInstance().getDefaultProject();
       Sdk sdk = ProjectRootManager.getInstance(defaultProject).getProjectSdk();
       if (sdk != null && sdkFilter.value(sdk.getSdkType())) {
-        mySdkComboBox.setSelectedJdk(sdk);
+        mySdkComboBox.setSelectedSdk(sdk);
       }
     }
 
@@ -88,7 +88,7 @@ public class SdkSettingsStep extends ModuleWizardStep {
     if (value != null) {
       Sdk jdk = ProjectSdkTable.getInstance().findSdk(value);
       if (jdk != null) {
-        mySdkComboBox.setSelectedJdk(jdk);
+        mySdkComboBox.setSelectedSdk(jdk);
       }
     }
 
@@ -113,20 +113,20 @@ public class SdkSettingsStep extends ModuleWizardStep {
   public void updateDataModel() {
     Project project = myWizardContext.getProject();
     if (project == null) {
-      Sdk jdk = mySdkComboBox.getSelectedJdk();
+      Sdk jdk = mySdkComboBox.getSelectedSdk();
       myWizardContext.setProjectJdk(jdk);
     }
     else {
       Sdk sdk = ProjectRootManager.getInstance(project).getProjectSdk();
       if (sdk == null || !myModuleBuilder.isSuitableSdkType(sdk.getSdkType())) {
-        myModuleBuilder.setModuleJdk(mySdkComboBox.getSelectedJdk());
+        myModuleBuilder.setModuleJdk(mySdkComboBox.getSelectedSdk());
       } // else, inherit project jdk
     }
   }
 
   @Override
   public boolean validate() throws ConfigurationException {
-    if (mySdkComboBox.getSelectedJdk() == null) {
+    if (mySdkComboBox.getSelectedSdk() == null) {
       if (Messages.showDialog(getNoSdkMessage(),
                                        IdeBundle.message("title.no.jdk.specified"),
                                        new String[]{CommonBundle.getYesButtonText(), CommonBundle.getNoButtonText()}, 1, Messages.getWarningIcon()) != Messages.YES) {

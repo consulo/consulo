@@ -163,8 +163,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
-    setOrderEntriesFrom(rootModel);
-
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       final ModuleExtensionProvider provider = providerEP.getInstance();
 
@@ -174,6 +172,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
       myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
     }
+
+    setOrderEntriesFrom(rootModel);
   }
 
   private void addSourceOrderEntries() {

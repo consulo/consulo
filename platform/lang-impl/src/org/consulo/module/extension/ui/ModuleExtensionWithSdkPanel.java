@@ -15,7 +15,6 @@
  */
 package org.consulo.module.extension.ui;
 
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
@@ -50,27 +49,21 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
     myRoot = this;
 
     final SdkType sdkType = myExtensionWithSdk.getSdkType();
-    final ProjectSdksModel projectJdksModel =
+    final ProjectSdksModel projectSdksModel =
       ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject()).getProjectSdksModel();
-    mySdkComboBox = new SdkComboBox(projectJdksModel, new Condition<SdkTypeId>() {
+    mySdkComboBox = new SdkComboBox(projectSdksModel, new Condition<SdkTypeId>() {
       @Override
       public boolean value(SdkTypeId sdkTypeId) {
         return sdkType != null && sdkTypeId == sdkType;
       }
-    });
+    }, true);
 
-    final Sdk sdk = myExtensionWithSdk.getSdk();
-    if (sdk == null) {
-      mySdkComboBox.setInvalidJdk(myExtensionWithSdk.getSdkName());
-    }
-    else {
-      mySdkComboBox.setSelectedJdk(sdk);
-    }
+    mySdkComboBox.setSelectedSdk(myExtensionWithSdk.getSdkName());
 
     mySdkComboBox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
-        myExtensionWithSdk.setSdk(mySdkComboBox.getSelectedJdk());
+        myExtensionWithSdk.setSdk(mySdkComboBox.getSelectedSdk());
         if(myClasspathStateUpdater != null) {
           SwingUtilities.invokeLater(myClasspathStateUpdater);
         }

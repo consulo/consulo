@@ -16,6 +16,8 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import com.intellij.ui.CheckboxTree;
@@ -108,7 +110,20 @@ public class ExtensionEditor extends ModuleElementsEditor {
       mySplitter.setSecondComponent(createConfigurationPanel(extension));
     }
 
+    final ModifiableRootModel rootModel = myState.getRootModel();
+    assert rootModel != null;
+
     if (extension instanceof ModuleExtensionWithSdk) {
+      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = rootModel.findModuleExtensionSdkEntry(extension);
+      if (sdkOrderEntry != null) {
+        rootModel.removeOrderEntry(sdkOrderEntry);
+      }
+
+      final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
+      if(sdkExtension.getSdkName() != null && extension.isEnabled()) {
+        rootModel.addModuleExtensionSdkEntry(sdkExtension);
+      }
+
       myClasspathEditor.moduleStateChanged();
     }
 

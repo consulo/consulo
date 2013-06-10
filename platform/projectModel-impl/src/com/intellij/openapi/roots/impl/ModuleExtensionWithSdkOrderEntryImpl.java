@@ -24,6 +24,7 @@ import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
@@ -64,20 +65,22 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
     final String moduleExtensionId = element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
     final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(moduleExtensionId);
-    final ModuleExtensionWithSdk extension = provider == null ? null : (ModuleExtensionWithSdk) rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
+    final ModuleExtensionWithSdk extension =
+      provider == null ? null : (ModuleExtensionWithSdk)rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
 
     init(extension, moduleExtensionId);
   }
 
-  private ModuleExtensionWithSdkOrderEntryImpl(@NotNull ModuleExtensionWithSdkOrderEntryImpl that,
+  private ModuleExtensionWithSdkOrderEntryImpl(@Nullable ModuleExtensionWithSdk<?> that,
+                                               @Nullable String id,
                                                @NotNull RootModelImpl rootModel,
                                                @NotNull ProjectRootManagerImpl projectRootManager) {
     super(rootModel, projectRootManager);
-    init(that.getModuleExtension(), that.getModuleExtensionId());
+    init(that, id);
   }
 
 
-  private void init(final ModuleExtensionWithSdk moduleExtension, String extensionId) {
+  private void init(@Nullable final ModuleExtensionWithSdk moduleExtension, @Nullable String extensionId) {
     myModuleExtension = moduleExtension;
     myModuleExtensionId = extensionId;
     init();
@@ -86,11 +89,11 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Override
   protected RootProvider getRootProvider() {
     final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
-    if(moduleExtension == null) {
+    if (moduleExtension == null) {
       return null;
     }
     final Sdk sdk = moduleExtension.getSdk();
-    if(sdk == null) {
+    if (sdk == null) {
       return null;
     }
     return sdk.getRootProvider();
@@ -100,7 +103,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Nullable
   public Sdk getSdk() {
     final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
-    if(moduleExtension == null) {
+    if (moduleExtension == null) {
       return null;
     }
     return moduleExtension.getSdk();
@@ -110,7 +113,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Nullable
   public String getSdkName() {
     final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
-    if(moduleExtension == null) {
+    if (moduleExtension == null) {
       return null;
     }
     return moduleExtension.getSdkName();
@@ -132,7 +135,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
       builder.append(" : ");
 
       final Sdk sdk = myModuleExtension.getSdk();
-      if(sdk == null) {
+      if (sdk == null) {
         builder.append(myModuleExtension.getSdkName());
       }
       else {
@@ -168,7 +171,11 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   public OrderEntry cloneEntry(@NotNull RootModelImpl rootModel,
                                ProjectRootManagerImpl projectRootManager,
                                VirtualFilePointerManager filePointerManager) {
-    return new ModuleExtensionWithSdkOrderEntryImpl(this, rootModel,
+
+    final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(myModuleExtensionId);
+    final ModuleExtension extension = provider == null ? null : rootModel.getExtension(provider.getImmutableClass());
+    return new ModuleExtensionWithSdkOrderEntryImpl(
+      extension instanceof ModuleExtensionWithSdk ? (ModuleExtensionWithSdk<?>)extension : null, myModuleExtensionId, rootModel,
                                                     ProjectRootManagerImpl.getInstanceImpl(getRootModel().getModule().getProject()));
   }
 
