@@ -335,6 +335,9 @@
       <reference ref="Debugger.CustomizeContextView"/>
     </group>
 
+    <action id="FileChooser.GotoJDK" class="com.intellij.openapi.projectRoots.JdkPopupAction">
+      <add-to-group group-id="FileChooserToolbar" anchor="last"/>
+    </action>
 
   </actions>
   <application-components>

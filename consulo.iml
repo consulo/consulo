@@ -83,6 +83,7 @@
     <orderEntry type="module" module-name="xslt-debugger-engine" />
     <orderEntry type="module" module-name="xslt-debugger-engine-impl" />
     <orderEntry type="module" module-name="xslt-rt" />
+    <orderEntry type="module" module-name="smRunner" />
   </component>
 </module>
 
