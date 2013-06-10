@@ -16,10 +16,7 @@
 package com.intellij.psi.impl.source.parsing.xml;
 
 import com.intellij.codeInsight.daemon.XmlErrorMessages;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiBuilderFactory;
+import com.intellij.lang.*;
 import com.intellij.lang.dtd.DTDLanguage;
 import com.intellij.lexer.DtdLexer;
 import com.intellij.lexer._DtdLexer;
@@ -69,7 +66,7 @@ public class DtdParsing extends XmlParsing implements XmlElementType {
           public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
             super.start(buffer, startOffset, endOffset, myInitialState);
           }
-        }, chars
+        }, Language.UNKNOWN_VERSION, chars
       )
     );
     if (contextFile != null) myBuilder.putUserDataUnprotected(FileContextUtil.CONTAINING_FILE_KEY, contextFile);

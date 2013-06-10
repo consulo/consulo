@@ -17,6 +17,7 @@ package com.intellij.psi.util;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
@@ -48,6 +49,12 @@ public class PsiUtilCore {
     @Override
     @NotNull
     public Language getLanguage() {
+      throw createException();
+    }
+
+    @NotNull
+    @Override
+    public LanguageVersion getLanguageVersion() {
       throw createException();
     }
 

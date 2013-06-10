@@ -2,6 +2,7 @@ package com.intellij.mock;
 
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.StdFileTypes;
@@ -110,6 +111,12 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   @NotNull
   public Language getLanguage() {
     return StdFileTypes.JAVA.getLanguage();
+  }
+
+  @NotNull
+  @Override
+  public LanguageVersion getLanguageVersion() {
+    return Language.UNKNOWN_VERSION;
   }
 
   @Override
