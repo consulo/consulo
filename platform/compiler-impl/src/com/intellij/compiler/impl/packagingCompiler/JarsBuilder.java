@@ -19,7 +19,6 @@ package com.intellij.compiler.impl.packagingCompiler;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.deployment.DeploymentUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -27,6 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
+import com.intellij.packaging.impl.util.DeploymentUtilImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
@@ -111,7 +111,7 @@ public class JarsBuilder {
             fromFile = toFile;
           }
           else {
-            DeploymentUtil.getInstance().copyFile(fromFile, toFile, myContext, writtenPaths, myFileFilter);
+            DeploymentUtilImpl.copyFile(fromFile, toFile, myContext, writtenPaths, myFileFilter);
           }
 
         }

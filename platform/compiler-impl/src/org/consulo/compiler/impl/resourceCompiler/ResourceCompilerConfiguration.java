@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.apache.oro.text.regex.*;
-import org.consulo.lombok.annotations.LoggerFieldOwner;
+import org.consulo.lombok.annotations.Logger;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -35,15 +35,12 @@ import java.util.StringTokenizer;
  * @author VISTALL
  * @since 20:16/24.05.13
  */
-@LoggerFieldOwner
+@Logger
 @ProjectService
 @State(
   name = "ResourceCompilerConfiguration",
-  storages = {
-    @Storage(file = StoragePathMacros.PROJECT_FILE),
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
-  }
-)
+  storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
+    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
   private static class CompiledPattern {
     @NotNull final Pattern fileName;
@@ -98,6 +95,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     }
     return true;
   }
+
   private boolean matches(String name, VirtualFile parent, Ref<String> parentRef, CompiledPattern pair) {
     if (!matches(name, pair.fileName)) {
       return false;
@@ -125,6 +123,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
 
     return true;
   }
+
   private boolean matches(String s, Pattern p) {
     synchronized (myPatternMatcher) {
       try {
@@ -372,7 +371,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     if (myWildcardPatternsInitialized || !myWildcardPatterns.isEmpty()) {
       final Element wildcardPatterns = addChild(parentNode, JpsJavaCompilerConfigurationSerializer.WILDCARD_RESOURCE_PATTERNS);
       for (final String wildcardPattern : myWildcardPatterns) {
-        addChild(wildcardPatterns, JpsJavaCompilerConfigurationSerializer.ENTRY).setAttribute(JpsJavaCompilerConfigurationSerializer.NAME, wildcardPattern);
+        addChild(wildcardPatterns, JpsJavaCompilerConfigurationSerializer.ENTRY)
+          .setAttribute(JpsJavaCompilerConfigurationSerializer.NAME, wildcardPattern);
       }
     }
     return parentNode;

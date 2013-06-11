@@ -29,7 +29,6 @@ import com.intellij.openapi.compiler.generic.GenericCompilerProcessingItem;
 import com.intellij.openapi.compiler.generic.VirtualFilePersistentState;
 import com.intellij.openapi.compiler.make.BuildParticipant;
 import com.intellij.openapi.compiler.make.BuildParticipantProvider;
-import com.intellij.openapi.deployment.DeploymentUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -49,6 +48,7 @@ import com.intellij.packaging.artifacts.ArtifactPropertiesProvider;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.artifacts.ArtifactSortingUtil;
+import com.intellij.packaging.impl.util.DeploymentUtilImpl;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
@@ -179,7 +179,6 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     FULL_LOG.debug("Building " + artifact.getName());
     final boolean testMode = ApplicationManager.getApplication().isUnitTestMode();
 
-    final DeploymentUtil deploymentUtil = DeploymentUtil.getInstance();
     final FileFilter fileFilter = new IgnoredFileFilter();
     final Set<JarInfo> changedJars = new THashSet<JarInfo>();
     for (String deletedJar : deletedJars) {
@@ -209,7 +208,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                   if (sourceFile.isInLocalFileSystem()) {
                     final File ioFromFile = VfsUtilCore.virtualToIoFile(sourceFile);
                     if (ioFromFile.exists()) {
-                      deploymentUtil.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
+                      DeploymentUtilImpl.copyFile(ioFromFile, toFile, myContext, writtenPaths, fileFilter);
                     }
                     else {
                       LOG.debug("Cannot copy " + ioFromFile.getAbsolutePath() + ": file doesn't exist");

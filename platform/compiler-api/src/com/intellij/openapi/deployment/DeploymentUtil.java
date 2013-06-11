@@ -15,33 +15,12 @@
  */
 package com.intellij.openapi.deployment;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.make.BuildRecipe;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.StringBuilderSpinAllocator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.util.Set;
 
 public abstract class DeploymentUtil {
-  public static DeploymentUtil getInstance() {
-    return ServiceManager.getService(DeploymentUtil.class);
-  }
-
-  public abstract void copyFile(@NotNull File fromFile,
-                                @NotNull File toFile,
-                                @NotNull CompileContext context,
-                                @Nullable Set<String> writtenPaths,
-                                @Nullable FileFilter fileFilter) throws IOException;
-
-  @Deprecated
-  public abstract boolean addItemsRecursively(@NotNull BuildRecipe items, @NotNull File root, String outputRelativePath);
-
   public static String trimForwardSlashes(@NotNull String path) {
     while (path.length() != 0 && (path.charAt(0) == '/' || path.charAt(0) == File.separatorChar)) {
       path = path.substring(1);
@@ -77,43 +56,5 @@ public abstract class DeploymentUtil {
       tail = relativePath;
     }
     return basePath + tail;
-  }
-
-
-  /**
-   * @deprecated use {@link com.intellij.openapi.util.io.FileUtil#getRelativePath}
-   */
-  @Nullable
-  public static String getRelativePath(@NotNull String basePath, @NotNull final String filePath) {
-    if (basePath.equals(filePath)) return "";
-    if (!basePath.endsWith(File.separator)) basePath += File.separatorChar;
-
-    int len = 0;
-    int lastSeparatorIndex = 0; // need this for cases like this: base="/temp/abcde/baseDir" and file="/temp/ab"
-    while (len < filePath.length() && len < basePath.length() && filePath.charAt(len) == basePath.charAt(len)) {
-      if (basePath.charAt(len) == File.separatorChar) {
-        lastSeparatorIndex = len;
-      }
-      len++;
-    }
-
-    if (len == 0) {
-      return null;
-    }
-    final StringBuilder relativePath = StringBuilderSpinAllocator.alloc();
-    try {
-      for (int i=len; i < basePath.length(); i++) {
-        if (basePath.charAt(i) == File.separatorChar) {
-          relativePath.append("..");
-          relativePath.append(File.separatorChar);
-        }
-      }
-      relativePath.append(filePath.substring(lastSeparatorIndex + 1));
-
-      return relativePath.toString();
-    }
-    finally {
-      StringBuilderSpinAllocator.dispose(relativePath);
-    }
   }
 }

@@ -12,6 +12,7 @@
     <orderEntry type="module" module-name="compiler-artifact-api" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="jps-builders" />
+    <orderEntry type="library" name="Lombok" level="project" />
   </component>
 </module>
 

@@ -4405,8 +4405,6 @@
 
     <applicationService serviceInterface="com.intellij.peer.PeerFactory" serviceImplementation="com.intellij.peer.impl.PeerFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.deployment.DeploymentUtil"
-                        serviceImplementation="com.intellij.openapi.deployment.DeploymentUtilImpl"/>
     <applicationService serviceInterface="com.intellij.compiler.ant.BuildTargetsFactory"
                         serviceImplementation="com.intellij.compiler.ant.BuildTargetsFactoryImpl"/>
 

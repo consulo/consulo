@@ -30,12 +30,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
-import org.consulo.lombok.annotations.LoggerFieldOwner;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-@LoggerFieldOwner
+@Logger
 public class JavaCompiler implements TranslatingCompiler {
   private final Project myProject;
 
@@ -61,7 +61,8 @@ public class JavaCompiler implements TranslatingCompiler {
   @Override
   public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
     final BackendCompiler backEndCompiler = getBackEndCompiler();
-    final BackendCompilerWrapper wrapper = new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), (CompileContextEx)context, backEndCompiler, sink);
+    final BackendCompilerWrapper wrapper =
+      new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), (CompileContextEx)context, backEndCompiler, sink);
     try {
       if (CompileDriver.ourDebugMode) {
         System.out.println("Starting java compiler; with backend compiler: " + backEndCompiler.getClass().getName());
