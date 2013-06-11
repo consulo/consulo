@@ -28,6 +28,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import org.consulo.psi.PsiPackage;
 
 import java.util.*;
 
@@ -214,14 +215,14 @@ public class TestData implements Cloneable
     return setMainClass(location instanceof MethodLocation ? ((MethodLocation)location).getContainingClass() : method.getContainingClass());
   }
 
-  public Module setPackage(PsiPackage pkg) {
+  public Module setPackage(PsiJavaPackage pkg) {
     PACKAGE_NAME = pkg.getQualifiedName();
     return null;
   }
 
   public Module setMainClass(PsiClass psiclass) {
     MAIN_CLASS_NAME = JavaExecutionUtil.getRuntimeQualifiedName(psiclass);
-    PsiPackage psipackage = JUnitUtil.getContainingPackage(psiclass);
+    PsiJavaPackage psipackage = JUnitUtil.getContainingPackage(psiclass);
     PACKAGE_NAME = psipackage == null ? "" : psipackage.getQualifiedName();
     return JavaExecutionUtil.findModule(psiclass);
   }

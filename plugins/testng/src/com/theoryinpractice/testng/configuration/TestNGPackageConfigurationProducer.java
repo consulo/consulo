@@ -22,13 +22,13 @@ import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.junit2.info.LocationUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.theoryinpractice.testng.model.TestData;
 import com.theoryinpractice.testng.model.TestType;
 import com.theoryinpractice.testng.util.TestNGUtil;
 
 public class TestNGPackageConfigurationProducer extends TestNGConfigurationProducer {
-  private PsiPackage myPackage = null;
+  private PsiJavaPackage myPackage = null;
 
   protected RunnerAndConfigurationSettings createConfigurationByElement(final Location location, final ConfigurationContext context) {
     final Project project = location.getProject();

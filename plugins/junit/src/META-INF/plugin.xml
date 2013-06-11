@@ -27,7 +27,7 @@
 
   <extensionPoints>
     <extensionPoint name="patcher"
-                    interface="com.intellij.execution.JUnitPatcher"/>
+                    interface="com.intellij.execution.JavaTestPatcher"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">

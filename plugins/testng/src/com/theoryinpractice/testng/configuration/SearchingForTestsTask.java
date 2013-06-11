@@ -275,10 +275,10 @@ public class SearchingForTestsTask extends Task.Backgroundable {
     final PsiManager psiManager = PsiManager.getInstance(myProject);
     if (data.TEST_OBJECT.equals(TestType.PACKAGE.getType())) {
       final String packageName = data.getPackageName();
-      PsiPackage psiPackage = ApplicationManager.getApplication().runReadAction(
-        new Computable<PsiPackage>() {
+      PsiJavaPackage psiPackage = ApplicationManager.getApplication().runReadAction(
+        new Computable<PsiJavaPackage>() {
           @Nullable
-          public PsiPackage compute() {
+          public PsiJavaPackage compute() {
             return JavaPsiFacade.getInstance(psiManager.getProject()).findPackage(packageName);
           }
         }

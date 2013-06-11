@@ -22,7 +22,6 @@
  */
 package com.theoryinpractice.testng.configuration;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.debugger.engine.DebuggerUtils;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
@@ -36,16 +35,13 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.util.JavaParametersUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.module.LanguageLevelUtil;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ex.JavaSdkUtil;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
@@ -66,6 +62,7 @@ import com.theoryinpractice.testng.model.*;
 import com.theoryinpractice.testng.ui.TestNGConsoleView;
 import com.theoryinpractice.testng.ui.TestNGResults;
 import com.theoryinpractice.testng.ui.actions.RerunFailedTestsAction;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.testng.CommandLineArgs;
@@ -240,9 +237,16 @@ public class TestNGRunnableState extends JavaCommandLineState {
 
     //the next few lines are awkward for a reason, using compareTo for some reason causes a JVM class verification error!
     Module module = config.getConfigurationModule().getModule();
-    LanguageLevel effectiveLanguageLevel = module == null
-                                           ? LanguageLevelProjectExtension.getInstance(project).getLanguageLevel()
-                                           : LanguageLevelUtil.getEffectiveLanguageLevel(module);
+    if(module == null) {
+      throw new ExecutionException("Module is not selected");
+    }
+
+    JavaModuleExtension moduleExtension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
+    if(moduleExtension == null) {
+      throw new ExecutionException("Java extension is not found");
+    }
+
+    LanguageLevel effectiveLanguageLevel = moduleExtension.getLanguageLevel();
     final boolean is15 = effectiveLanguageLevel != LanguageLevel.JDK_1_4 && effectiveLanguageLevel != LanguageLevel.JDK_1_3;
 
     LOG.info("Language level is " + effectiveLanguageLevel.toString());
@@ -251,11 +255,11 @@ public class TestNGRunnableState extends JavaCommandLineState {
 
     // Configure rest of jars
     JavaParametersUtil.configureConfiguration(javaParameters, config);
-    Sdk jdk = module == null ? ProjectRootManager.getInstance(project).getProjectSdk() : ModuleRootManager.getInstance(module).getSdk();
+    Sdk jdk = moduleExtension.getSdk();
     javaParameters.setJdk(jdk);
-    final Object[] patchers = Extensions.getExtensions(ExtensionPoints.JUNIT_PATCHER);
-    for (Object patcher : patchers) {
-      ((JUnitPatcher)patcher).patchJavaParameters(module, javaParameters);
+
+    for (JavaTestPatcher patcher : JavaTestPatcher.EP_NAME.getExtensions()) {
+      patcher.patchJavaParameters(module, javaParameters);
     }
     JavaSdkUtil.addRtJar(javaParameters.getClassPath());
 

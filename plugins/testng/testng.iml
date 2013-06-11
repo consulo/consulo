@@ -14,6 +14,8 @@
     <orderEntry type="library" name="TestNG" level="project" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="xml-impl" />
+    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="java-debugger-api" />
   </component>
   <component name="copyright">
     <Base>

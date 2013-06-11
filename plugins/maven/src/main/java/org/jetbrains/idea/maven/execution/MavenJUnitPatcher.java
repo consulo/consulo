@@ -15,7 +15,7 @@
  */
 package org.jetbrains.idea.maven.execution;
 
-import com.intellij.execution.JUnitPatcher;
+import com.intellij.execution.JavaTestPatcher;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.openapi.module.Module;
 import org.jdom.Element;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author Sergey Evdokimov
  */
-public class MavenJUnitPatcher extends JUnitPatcher {
+public class MavenJUnitPatcher extends JavaTestPatcher {
 
   @Override
   public void patchJavaParameters(@Nullable Module module, JavaParameters javaParameters) {

@@ -27,48 +27,49 @@ import com.intellij.openapi.module.Module;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiJavaPackage;
 import com.theoryinpractice.testng.configuration.TestNGConfiguration;
 import com.theoryinpractice.testng.configuration.TestNGConfigurationType;
 
 /**
  * @author Hani Suleiman Date: Dec 1, 2006 Time: 9:40:24 PM
  */
-public class CreatePackageTestAction extends AnAction
-{
-    private PsiPackage pkg;
-    private Module module;
+public class CreatePackageTestAction extends AnAction {
+  private PsiJavaPackage pkg;
+  private Module module;
 
-    public void update(AnActionEvent event) {
-        pkg = getSelectedPackage(event.getDataContext());
-        event.getPresentation().setVisible(pkg != null);
-        event.getPresentation().setEnabled(pkg != null);
-        if (pkg != null) {
-            event.getPresentation().setText("Create \"Tests in '" + pkg.getQualifiedName() + "'\"...");
-            module = LangDataKeys.MODULE.getData(event.getDataContext());
-        } else {
-            module = null;
-        }
+  public void update(AnActionEvent event) {
+    pkg = getSelectedPackage(event.getDataContext());
+    event.getPresentation().setVisible(pkg != null);
+    event.getPresentation().setEnabled(pkg != null);
+    if (pkg != null) {
+      event.getPresentation().setText("Create \"Tests in '" + pkg.getQualifiedName() + "'\"...");
+      module = LangDataKeys.MODULE.getData(event.getDataContext());
+    }
+    else {
+      module = null;
+    }
+  }
+
+  public void actionPerformed(AnActionEvent event) {
+    RunManager runManager = RunManager.getInstance(pkg.getProject());
+    ConfigurationFactory[] factory =
+      ApplicationManager.getApplication().getComponent(TestNGConfigurationType.class).getConfigurationFactories();
+    RunnerAndConfigurationSettings settings = runManager.createRunConfiguration("", factory[0]);
+    final TestNGConfiguration configuration = (TestNGConfiguration)settings.getConfiguration();
+    configuration.setPackageConfiguration(module, pkg);
+    settings.setName(configuration.getName());
+  }
+
+  PsiJavaPackage getSelectedPackage(DataContext context) {
+    final PsiElement element = LangDataKeys.PSI_ELEMENT.getData(context);
+    if (element == null) {
+      return null;
     }
 
-    public void actionPerformed(AnActionEvent event) {
-        RunManager runManager = RunManager.getInstance(pkg.getProject());
-        ConfigurationFactory[] factory = ApplicationManager.getApplication().getComponent(TestNGConfigurationType.class).getConfigurationFactories();
-        RunnerAndConfigurationSettings settings = runManager.createRunConfiguration("", factory[0]);
-        final TestNGConfiguration configuration = (TestNGConfiguration) settings.getConfiguration();
-        configuration.setPackageConfiguration(module, pkg);
-        settings.setName(configuration.getName());
+    if (element instanceof PsiDirectory) {
+      return JavaDirectoryService.getInstance().getPackage(((PsiDirectory)element));
     }
-
-    PsiPackage getSelectedPackage(DataContext context) {
-        final PsiElement element = LangDataKeys.PSI_ELEMENT.getData(context);
-        if (element == null) {
-            return null;
-        }
-
-        if (element instanceof PsiDirectory) {
-          return JavaDirectoryService.getInstance().getPackage(((PsiDirectory)element));
-        }
-        return null;
-    }
+    return null;
+  }
 }

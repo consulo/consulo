@@ -47,6 +47,7 @@ import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.listeners.UndoRefactoringElementListener;
 import com.theoryinpractice.testng.model.TestData;
 import com.theoryinpractice.testng.model.TestType;
+import org.consulo.psi.PsiPackage;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +72,7 @@ public class TestNGConfiguration extends ModuleBasedConfiguration<JavaRunConfigu
 
   public static final String DEFAULT_PACKAGE_NAME = ExecutionBundle.message("default.package.presentable.name");
   public static final String DEFAULT_PACKAGE_CONFIGURATION_NAME = ExecutionBundle.message("default.package.configuration.name");
-  private final RefactoringListeners.Accessor<PsiPackage> myPackage = new RefactoringListeners.Accessor<PsiPackage>() {
+  private final RefactoringListeners.Accessor<PsiJavaPackage> myPackage = new RefactoringListeners.Accessor<PsiJavaPackage>() {
     public void setName(final String qualifiedName) {
       final boolean generatedName = isGeneratedName();
       data.PACKAGE_NAME = qualifiedName;
@@ -79,12 +80,12 @@ public class TestNGConfiguration extends ModuleBasedConfiguration<JavaRunConfigu
     }
 
     @Nullable
-    public PsiPackage getPsiElement() {
+    public PsiJavaPackage getPsiElement() {
       final String qualifiedName = data.getPackageName();
       return qualifiedName != null ? JavaPsiFacade.getInstance(getProject()).findPackage(qualifiedName) : null;
     }
 
-    public void setPsiElement(final PsiPackage psiPackage) {
+    public void setPsiElement(final PsiJavaPackage psiPackage) {
       setName(psiPackage.getQualifiedName());
     }
   };
@@ -247,7 +248,7 @@ public class TestNGConfiguration extends ModuleBasedConfiguration<JavaRunConfigu
     setGeneratedName();
   }
 
-  public void setPackageConfiguration(Module module, PsiPackage pkg) {
+  public void setPackageConfiguration(Module module, PsiJavaPackage pkg) {
     data.setPackage(pkg);
     setModule(module);
     data.TEST_OBJECT = TestType.PACKAGE.getType();
@@ -442,8 +443,8 @@ public class TestNGConfiguration extends ModuleBasedConfiguration<JavaRunConfigu
   @Nullable
   public RefactoringElementListener getRefactoringElementListener(final PsiElement element) {
     if (data.TEST_OBJECT.equals(TestType.PACKAGE.getType())) {
-      if (!(element instanceof PsiPackage)) return null;
-      final RefactoringElementListener listener = RefactoringListeners.getListener((PsiPackage)element, myPackage);
+      if (!(element instanceof PsiJavaPackage)) return null;
+      final RefactoringElementListener listener = RefactoringListeners.getListener((PsiJavaPackage)element, myPackage);
       return RunConfigurationExtension.wrapRefactoringElementListener(element, this, listener);
     }
     else if (data.TEST_OBJECT.equals(TestType.CLASS.getType())) {

@@ -88,6 +88,8 @@
     <orderEntry type="module" module-name="forms-compiler" />
     <orderEntry type="module" module-name="junit" />
     <orderEntry type="module" module-name="junit_rt" />
+    <orderEntry type="module" module-name="testng" />
+    <orderEntry type="module" module-name="testng_rt" />
   </component>
 </module>
 

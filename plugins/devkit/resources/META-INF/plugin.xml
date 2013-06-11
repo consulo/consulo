@@ -12,6 +12,9 @@
 
   <resource-bundle>org.jetbrains.idea.devkit.DevKitBundle</resource-bundle>
 
+  <extensions defaultExtensionNs="org.consulo.java">
+    <testPatcher implementation="org.jetbrains.idea.devkit.run.JUnitDevKitPatcher" />
+  </extensions>
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
@@ -78,7 +81,6 @@
                      level="WARNING"
                      implementationClass="org.jetbrains.idea.devkit.inspections.ExtensionPointBeanClassInspection"/>
 
->
     <implicitUsageProvider implementation="org.jetbrains.idea.devkit.inspections.DevKitEntryPoints"/>
     <psi.referenceContributor implementation="org.jetbrains.idea.devkit.dom.impl.InspectionsPropertiesReferenceProviderContributor"/>
     <psi.referenceContributor implementation="org.jetbrains.idea.devkit.references.IconsReferencesContributor"/>

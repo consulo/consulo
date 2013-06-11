@@ -316,6 +316,17 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="testng">
+          <element id="directory" name="lib">
+            <element id="archive" name="testng-plugin.jar">
+              <element id="module-output" name="testng" />
+            </element>
+            <element id="archive" name="testng_rt.jar">
+              <element id="module-output" name="testng_rt" />
+            </element>
+            <element id="library" level="project" name="TestNG" />
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

@@ -396,6 +396,7 @@
 
   <extensionPoints>
 
+    <extensionPoint name="testPatcher" interface="com.intellij.execution.JavaTestPatcher"/>
     <extensionPoint name="exceptionFilter" interface="com.intellij.execution.filters.ExceptionFilterFactory"/>
     <extensionPoint name="programPatcher"
                     interface="com.intellij.execution.runners.JavaProgramPatcher"/>
