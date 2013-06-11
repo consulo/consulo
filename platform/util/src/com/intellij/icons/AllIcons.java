@@ -710,8 +710,7 @@ public class AllIcons {
     public static final Icon Sources = IconLoader.getIcon("/modules/sources.png"); // 16x16
     public static final Icon Split = IconLoader.getIcon("/modules/split.png"); // 16x16
     public static final Icon TestRoot = IconLoader.getIcon("/modules/testRoot.png"); // 16x16
-    public static final Icon TestSourceFolder = IconLoader.getIcon("/modules/testSourceFolder.png"); // 16x16
-    
+
     public static class Types {
       public static final Icon EjbModule = IconLoader.getIcon("/modules/types/ejbModule.png"); // 24x24
       public static final Icon EmptyProjectType = IconLoader.getIcon("/modules/types/emptyProjectType.png"); // 24x24
@@ -813,6 +812,7 @@ public class AllIcons {
     public static final Icon NewParameter = IconLoader.getIcon("/nodes/newParameter.png"); // 14x14
     public static final Icon NodePlaceholder = IconLoader.getIcon("/nodes/nodePlaceholder.png"); // 16x16
     public static final Icon Package = IconLoader.getIcon("/nodes/package.png"); // 16x16
+    public static final Icon TestPackage = IconLoader.getIcon("/nodes/testPackage.png"); // 16x16
     public static final Icon Padlock = IconLoader.getIcon("/nodes/padlock.png"); // 16x16
     public static final Icon Parameter = IconLoader.getIcon("/nodes/parameter.png"); // 16x16
     public static final Icon PinToolWindow = IconLoader.getIcon("/nodes/pinToolWindow.png"); // 13x13
@@ -842,14 +842,12 @@ public class AllIcons {
     public static final Icon SecurityRole = IconLoader.getIcon("/nodes/SecurityRole.png"); // 16x16
     public static final Icon Servlet = IconLoader.getIcon("/nodes/servlet.png"); // 16x16
     public static final Icon SortBySeverity = IconLoader.getIcon("/nodes/sortBySeverity.png"); // 16x16
-    public static final Icon SourceFolder = IconLoader.getIcon("/nodes/sourceFolder.png"); // 16x16
     public static final Icon Static = IconLoader.getIcon("/nodes/static.png"); // 16x16
     public static final Icon StaticMark = IconLoader.getIcon("/nodes/staticMark.png"); // 16x16
     public static final Icon Symlink = IconLoader.getIcon("/nodes/symlink.png"); // 16x16
     public static final Icon TabAlert = IconLoader.getIcon("/nodes/tabAlert.png"); // 16x16
     public static final Icon TabPin = IconLoader.getIcon("/nodes/tabPin.png"); // 16x16
     public static final Icon Tag = IconLoader.getIcon("/nodes/tag.png"); // 16x16
-    public static final Icon TestSourceFolder = IconLoader.getIcon("/nodes/testSourceFolder.png"); // 16x16
     public static final Icon TreeClosed = IconLoader.getIcon("/nodes/TreeClosed.png"); // 16x16
     public static final Icon TreeCollapseNode = IconLoader.getIcon("/nodes/treeCollapseNode.png"); // 16x16
     public static final Icon TreeExpandNode = IconLoader.getIcon("/nodes/treeExpandNode.png"); // 16x16

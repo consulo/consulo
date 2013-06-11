@@ -49,7 +49,7 @@ public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
   @Override
   public Icon getIcon() {
-    return AllIcons.Nodes.SourceFolder;
+    return AllIcons.Nodes.Package;
   }
 
   @Override

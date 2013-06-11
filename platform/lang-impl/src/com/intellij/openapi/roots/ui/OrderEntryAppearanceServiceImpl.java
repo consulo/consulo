@@ -177,7 +177,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
   @NotNull
   private static Icon sourceFolderIcon(final boolean testSource) {
-    return testSource ? PlatformIcons.TEST_SOURCE_FOLDER : PlatformIcons.SOURCE_FOLDERS_ICON;
+    return testSource ? AllIcons.Nodes.TestPackage : AllIcons.Nodes.Package;
   }
 
   @NotNull

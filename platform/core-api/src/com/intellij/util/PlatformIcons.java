@@ -102,8 +102,7 @@ public interface PlatformIcons {
   @Deprecated Icon OPENED_MODULE_GROUP_ICON = CLOSED_MODULE_GROUP_ICON;
 
   Icon FOLDER_ICON = AllIcons.Nodes.Folder;
-  Icon SOURCE_FOLDERS_ICON = AllIcons.Nodes.SourceFolder;
-  Icon TEST_SOURCE_FOLDER = AllIcons.Nodes.TestSourceFolder;
+
   Icon INVALID_ENTRY_ICON = AllIcons.Nodes.PpInvalid;
 
   Icon MODULES_SOURCE_FOLDERS_ICON = AllIcons.Modules.SourceRoot;

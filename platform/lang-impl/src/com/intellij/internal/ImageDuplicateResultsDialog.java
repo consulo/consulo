@@ -17,6 +17,7 @@ package com.intellij.internal;
 
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.PropertyName;
@@ -146,7 +147,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
       @NotNull
       @Override
       public JComponent fun(Object dom) {
-        return new JLabel(dom instanceof Module ? ((Module)dom).getName() : dom.toString(), PlatformIcons.SOURCE_FOLDERS_ICON, SwingConstants.LEFT);
+        return new JLabel(dom instanceof Module ? ((Module)dom).getName() : dom.toString(), AllIcons.Nodes.Package, SwingConstants.LEFT);
       }
     };
     list.installCellRenderer(modulesRenderer);

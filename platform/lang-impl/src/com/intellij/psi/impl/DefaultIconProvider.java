@@ -18,17 +18,14 @@ package com.intellij.psi.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconProvider;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.PlatformIcons;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,25 +51,19 @@ public class DefaultIconProvider extends IconProvider implements DumbAware {
 
       Icon symbolIcon;
       if (isJarRoot) {
-        symbolIcon = PlatformIcons.JAR_ICON;
+        symbolIcon = AllIcons.Nodes.PpJar;
       }
       else if (isContentRoot) {
-        Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vFile);
-        if (module != null) {
-          symbolIcon = AllIcons.Nodes.Module;
-        }
-        else {
-          symbolIcon = PlatformIcons.CONTENT_ROOT_ICON_CLOSED;
-        }
+        symbolIcon = AllIcons.Nodes.Module;
       }
       else if (contentFolder != null) {
         symbolIcon = ContentFolderIconUtil.getRootIcon(contentFolder.getType());
       }
       else if(PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory) != null) {
-        symbolIcon = AllIcons.Nodes.Package;
+        symbolIcon = ProjectRootsUtil.isInTestSource(psiDirectory) ? AllIcons.Nodes.TestPackage : AllIcons.Nodes.Package;
       }
       else {
-        symbolIcon = PlatformIcons.DIRECTORY_CLOSED_ICON;
+        symbolIcon = AllIcons.Nodes.TreeClosed;
       }
       return ElementBase.createLayeredIcon(element, symbolIcon, 0);
     }

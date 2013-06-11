@@ -21,9 +21,10 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -81,7 +82,9 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
             icon = AllIcons.Modules.ExcludeRoot;
             break;
           case SOURCE:
-            final Module moduleForFile = ModuleUtil.findModuleForFile(file, myTreeEditor.getProject());
+          case RESOURCE:
+          case TEST:
+            final Module moduleForFile = ModuleUtilCore.findModuleForFile(file, myTreeEditor.getProject());
             if (moduleForFile == null) {
               continue;
             }
@@ -89,15 +92,11 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
             for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
               for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
                 if (supportProvider.getSupportedModuleExtensionClass() == moduleExtension.getClass()) {
-                  icon = AllIcons.Modules.PackageFolder;
+                  icon = contentFolder.getType() == ContentFolderType.TEST ? AllIcons.Nodes.TestPackage : AllIcons.Nodes.Package;
                 }
               }
             }
             break;
-          case RESOURCE:
-            break;
-          case TEST:
-            icon = AllIcons.Modules.TestSourceFolder;
         }
         currentRoot = contentPath;
       }

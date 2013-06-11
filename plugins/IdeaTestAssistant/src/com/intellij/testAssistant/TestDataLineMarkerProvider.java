@@ -19,14 +19,13 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,7 @@ public class TestDataLineMarkerProvider implements LineMarkerProvider {
       final PsiMethod method = (PsiMethod)element;
       if (isTestMethod(method)) {
         return new LineMarkerInfo<PsiMethod>(
-          method, method.getModifierList().getTextRange(), PlatformIcons.TEST_SOURCE_FOLDER, Pass.UPDATE_ALL, null, new TestDataNavigationHandler(),
+          method, method.getModifierList().getTextRange(), AllIcons.Nodes.TestPackage, Pass.UPDATE_ALL, null, new TestDataNavigationHandler(),
           GutterIconRenderer.Alignment.LEFT);
       }
     }

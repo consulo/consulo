@@ -101,7 +101,7 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer{
     }
     myText = module.getName();
     if (inTestSource) {
-      setIcon(AllIcons.Modules.TestSourceFolder);
+      setIcon(AllIcons.Nodes.TestPackage);
     }
     else {
       setIcon(AllIcons.Nodes.Module);

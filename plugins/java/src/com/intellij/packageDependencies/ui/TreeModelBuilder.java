@@ -103,8 +103,8 @@ public class TreeModelBuilder {
     createMaps(ScopeType.TEST);
 
     if (myGroupByScopeType) {
-      mySourceRoot = new GeneralGroupNode(PRODUCTION_NAME, AllIcons.Modules.PackageFolder, project);
-      myTestRoot = new GeneralGroupNode(TEST_NAME, AllIcons.Modules.TestSourceFolder, project);
+      mySourceRoot = new GeneralGroupNode(PRODUCTION_NAME, AllIcons.Nodes.Package, project);
+      myTestRoot = new GeneralGroupNode(TEST_NAME, AllIcons.Nodes.TestPackage, project);
       myLibsRoot = new GeneralGroupNode(LIBRARY_NAME, AllIcons.Nodes.PpLibFolder, project);
       myRoot.add(mySourceRoot);
       myRoot.add(myTestRoot);
