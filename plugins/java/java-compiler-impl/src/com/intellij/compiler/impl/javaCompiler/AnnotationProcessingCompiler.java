@@ -21,8 +21,6 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
-import com.intellij.compiler.CompilerConfigurationOld;
-import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.CompilerException;
 import com.intellij.compiler.impl.CompileContextExProxy;
 import com.intellij.compiler.impl.javaCompiler.javac.JavacCompiler;
@@ -30,7 +28,6 @@ import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -38,52 +35,59 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AnnotationProcessingCompiler implements TranslatingCompiler{
-  private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.javaCompiler.JavaCompiler");
+@Logger
+public class AnnotationProcessingCompiler implements TranslatingCompiler {
   private final Project myProject;
-  private final CompilerConfigurationOld myConfig;
+  private final JavaCompilerConfiguration myCompilerConfiguration;
 
   public AnnotationProcessingCompiler(Project project) {
     myProject = project;
-    myConfig = CompilerConfigurationOld.getInstance(project);
+    myCompilerConfiguration = JavaCompilerConfiguration.getInstance(project);
   }
 
+  @Override
   @NotNull
   public String getDescription() {
     return CompilerBundle.message("annotation.processing.compiler.description");
   }
 
+  @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
-    if (!context.isAnnotationProcessorsEnabled()) {
+    if (!myCompilerConfiguration.isAnnotationProcessorsEnabled()) {
       return false;
-    } 
+    }
     return file.getFileType() == StdFileTypes.JAVA && !isExcludedFromAnnotationProcessing(file, context);
   }
 
+  @Override
   public void compile(final CompileContext context, final Chunk<Module> moduleChunk, final VirtualFile[] files, OutputSink sink) {
-    if (!context.isAnnotationProcessorsEnabled()) {
+    if (!myCompilerConfiguration.isAnnotationProcessorsEnabled()) {
       return;
     }
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
     final CompileContextEx _context = new CompileContextExProxy((CompileContextEx)context) {
+      @Override
       public VirtualFile getModuleOutputDirectory(Module module) {
         final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-        return path != null? lfs.findFileByPath(path) : null;
+        return path != null ? lfs.findFileByPath(path) : null;
       }
 
+      @Override
       public VirtualFile getModuleOutputDirectoryForTests(Module module) {
         return getModuleOutputDirectory(module);
       }
     };
     final JavacCompiler javacCompiler = getBackEndCompiler();
     final boolean processorMode = javacCompiler.setAnnotationProcessorMode(true);
-    final BackendCompilerWrapper wrapper = new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), _context, javacCompiler, sink);
+    final BackendCompilerWrapper wrapper =
+      new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), _context, javacCompiler, sink);
     wrapper.setForceCompileTestsSeparately(true);
     try {
       wrapper.compile();
@@ -92,13 +96,14 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler{
       _context.addMessage(CompilerMessageCategory.ERROR, e.getMessage(), null, -1, -1);
     }
     catch (CacheCorruptedException e) {
-      LOG.info(e);
+      LOGGER.info(e);
       _context.requestRebuildNextTime(e.getMessage());
     }
     finally {
       javacCompiler.setAnnotationProcessorMode(processorMode);
       final Set<VirtualFile> dirsToRefresh = new HashSet<VirtualFile>();
       ApplicationManager.getApplication().runReadAction(new Runnable() {
+        @Override
         public void run() {
           for (Module module : moduleChunk.getNodes()) {
             final VirtualFile out = _context.getModuleOutputDirectory(module);
@@ -115,23 +120,24 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler{
   }
 
   private boolean isExcludedFromAnnotationProcessing(VirtualFile file, CompileContext context) {
-    if (!context.isAnnotationProcessorsEnabled()) {
+    if (!myCompilerConfiguration.isAnnotationProcessorsEnabled()) {
       return true;
     }
     final Module module = context.getModuleByFile(file);
     if (module != null) {
-      if (!myConfig.getAnnotationProcessingConfiguration(module).isEnabled()) {
+      if (!myCompilerConfiguration.getAnnotationProcessingConfiguration(module).isEnabled()) {
         return true;
       }
       final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-      final VirtualFile generationDir = path != null? LocalFileSystem.getInstance().findFileByPath(path) : null;
+      final VirtualFile generationDir = path != null ? LocalFileSystem.getInstance().findFileByPath(path) : null;
       if (generationDir != null && VfsUtil.isAncestor(generationDir, file, false)) {
         return true;
       }
     }
-    return myConfig.isExcludedFromCompilation(file);
+    return CompilerManager.getInstance(myProject).isExcludedFromCompilation(file);
   }
 
+  @Override
   public boolean validateConfiguration(CompileScope scope) {
     final JavacCompiler compiler = getBackEndCompiler();
     final boolean previousValue = compiler.setAnnotationProcessorMode(true);
@@ -144,8 +150,6 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler{
   }
 
   private JavacCompiler getBackEndCompiler() {
-    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)myConfig;
-    return configuration.getJavacCompiler();
+    return (JavacCompiler)myCompilerConfiguration.findCompiler(JavaCompilerConfiguration.DEFAULT_COMPILER);
   }
-
 }

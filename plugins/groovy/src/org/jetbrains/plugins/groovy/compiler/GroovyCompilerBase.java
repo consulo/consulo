@@ -63,6 +63,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import gnu.trove.THashSet;
+import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.groovy.compiler.rt.GroovycRunner;
@@ -366,7 +367,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
       final PsiManager psiManager = PsiManager.getInstance(myProject);
 
       for (final VirtualFile file : moduleFiles) {
-        if (shouldCompile(file, configuration, psiManager)) {
+        if (shouldCompile(file, psiManager)) {
           (index.isInTestSourceContent(file) ? toCompileTests : toCompile).add(file);
         }
       }
@@ -382,8 +383,8 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
 
   }
 
-  private static boolean shouldCompile(final VirtualFile file, CompilerConfigurationOld configuration, final PsiManager manager) {
-    if (configuration.isResourceFile(file)) {
+  private static boolean shouldCompile(final VirtualFile file, final PsiManager manager) {
+    if (ResourceCompilerConfiguration.getInstance(manager.getProject()).isResourceFile(file)) {
       return false;
     }
 

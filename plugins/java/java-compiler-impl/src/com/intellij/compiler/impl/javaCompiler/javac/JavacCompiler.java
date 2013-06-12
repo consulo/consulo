@@ -19,6 +19,7 @@ import com.intellij.compiler.*;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.compiler.impl.javaCompiler.ExternalCompiler;
+import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
@@ -156,9 +157,8 @@ public class JavacCompiler extends ExternalCompiler {
         public String[] compute() {
           try {
             final List<String> commandLine = new ArrayList<String>();
-            createStartupCommand(chunk, commandLine, outputPath, JavacCompilerConfiguration
-              .getInstance(myProject),
-                                 context.isAnnotationProcessorsEnabled());
+            createStartupCommand(chunk, commandLine, outputPath, JavacCompilerConfiguration.getInstance(myProject),
+                                 JavaCompilerConfiguration.getInstance(myProject).isAnnotationProcessorsEnabled());
             return ArrayUtil.toStringArray(commandLine);
           }
           catch (IOException e) {

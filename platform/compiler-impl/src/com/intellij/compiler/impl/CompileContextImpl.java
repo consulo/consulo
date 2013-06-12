@@ -21,7 +21,6 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.make.DependencyCache;
@@ -35,7 +34,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -66,7 +68,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private final DependencyCache myDependencyCache;
   private final boolean myMake;
   private final boolean myIsRebuild;
-  private final boolean myIsAnnotationProcessorsEnabled;
+
   private boolean myRebuildRequested = false;
   private String myRebuildReason;
   private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<VirtualFile, Module>();
@@ -94,7 +96,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     myStartCompilationStamp = System.currentTimeMillis();
     myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     myProjectCompileScope = new ProjectCompileScope(myProject);
-    myIsAnnotationProcessorsEnabled = CompilerConfigurationOld.getInstance(project).isAnnotationProcessorsEnabled();
+
 
     if (compilerSession != null) {
       compilerSession.setContentIdKey(compileScope.getUserData(CompilerManager.CONTENT_ID_KEY));
@@ -108,6 +110,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return myShouldUpdateProblemsView;
   }
 
+  @Override
   public void recalculateOutputDirs() {
     final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
@@ -135,16 +138,19 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     myTestOutputDirectories = Collections.unmodifiableSet(testOutputDirs);
   }
 
+  @Override
   public void markGenerated(Collection<VirtualFile> files) {
     for (final VirtualFile file : files) {
       myGeneratedSources.add(FileBasedIndex.getFileId(file));
     }
   }
 
+  @Override
   public long getStartCompilationStamp() {
     return myStartCompilationStamp;
   }
 
+  @Override
   public boolean isGenerated(VirtualFile file) {
     if (myGeneratedSources.contains(FileBasedIndex.getFileId(file))) {
       return true;
@@ -195,14 +201,17 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
   */
 
+  @Override
   public Project getProject() {
     return myProject;
   }
 
+  @Override
   public DependencyCache getDependencyCache() {
     return myDependencyCache;
   }
 
+  @Override
   public CompilerMessage[] getMessages(CompilerMessageCategory category) {
     Collection<CompilerMessage> collection = myMessages.get(category);
     if (collection == null) {
@@ -211,11 +220,13 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return collection.toArray(new CompilerMessage[collection.size()]);
   }
 
+  @Override
   public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
     CompilerMessageImpl msg = new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, null);
     addMessage(msg);
   }
 
+  @Override
   public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum,
                          Navigatable navigatable) {
     CompilerMessageImpl msg = new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
@@ -259,6 +270,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return file;
   }
 
+  @Override
   public void addMessage(CompilerMessage msg) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       LOG.info("addMessage: " + msg + " this=" + this);
@@ -277,6 +289,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
   }
 
+  @Override
   public int getMessageCount(CompilerMessageCategory category) {
     if (category != null) {
       Collection<CompilerMessage> collection = myMessages.get(category);
@@ -291,14 +304,17 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return count;
   }
 
+  @Override
   public CompileScope getCompileScope() {
     return myCompileScope;
   }
 
+  @Override
   public CompileScope getProjectCompileScope() {
     return myProjectCompileScope;
   }
 
+  @Override
   public void requestRebuildNextTime(String message) {
     if (!myRebuildRequested) {
       myRebuildRequested = true;
@@ -315,6 +331,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return myRebuildReason;
   }
 
+  @Override
   public ProgressIndicator getProgressIndicator() {
     //if (myProgressIndicatorProxy != null) {
     //  return myProgressIndicatorProxy;
@@ -322,6 +339,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return myTask.getIndicator();
   }
 
+  @Override
   public void assignModule(@NotNull VirtualFile root, @NotNull Module module, final boolean isTestSource, @Nullable Compiler compiler) {
     try {
       myRootToModuleMap.put(root, module);
@@ -343,11 +361,13 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
   }
 
+  @Override
   @Nullable
   public VirtualFile getSourceFileByOutputFile(VirtualFile outputFile) {
     return TranslatingCompilerFilesMonitor.getSourceFileByOutput(outputFile);
   }
 
+  @Override
   public Module getModuleByFile(VirtualFile file) {
     final Module module = myProjectFileIndex.getModuleForFile(file);
     if (module != null) {
@@ -369,6 +389,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   private final Map<Module, VirtualFile[]> myModuleToRootsCache = new HashMap<Module, VirtualFile[]>();
 
+  @Override
   public VirtualFile[] getSourceRoots(Module module) {
     VirtualFile[] cachedRoots = myModuleToRootsCache.get(module);
     if (cachedRoots != null) {
@@ -406,39 +427,49 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return true;
   }
 
+  @Override
   public VirtualFile[] getAllOutputDirectories() {
     return myOutputDirectories;
   }
 
+  @Override
   @NotNull
   public Set<VirtualFile> getTestOutputDirectories() {
     return myTestOutputDirectories;
   }
 
+  @Override
   public VirtualFile getModuleOutputDirectory(Module module) {
     return CompilerPaths.getModuleOutputDirectory(module, false);
   }
 
+  @Override
   public VirtualFile getModuleOutputDirectoryForTests(Module module) {
     return CompilerPaths.getModuleOutputDirectory(module, true);
   }
 
+  @Override
   public boolean isMake() {
     return myMake;
   }
 
+  @Override
   public boolean isRebuild() {
     return myIsRebuild;
   }
 
+  @Override
+  @Deprecated
   public boolean isAnnotationProcessorsEnabled() {
-    return myIsAnnotationProcessorsEnabled;
+    return false;
   }
 
+  @Override
   public void addScope(final CompileScope additionalScope) {
     myCompileScope = new CompositeScope(myCompileScope, additionalScope);
   }
 
+  @Override
   public boolean isInTestSourceContent(@NotNull final VirtualFile fileOrDir) {
     if (myProjectFileIndex.isInTestSourceContent(fileOrDir)) {
       return true;
@@ -449,6 +480,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return false;
   }
 
+  @Override
   public boolean isInSourceContent(@NotNull final VirtualFile fileOrDir) {
     if (myProjectFileIndex.isInSourceContent(fileOrDir)) {
       return true;

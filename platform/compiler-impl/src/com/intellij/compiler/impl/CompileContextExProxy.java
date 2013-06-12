@@ -43,44 +43,54 @@ public class CompileContextExProxy implements CompileContextEx {
     myDelegate = delegate;
   }
 
+  @Override
   public Project getProject() {
     return myDelegate.getProject();
   }
 
+  @Override
   public DependencyCache getDependencyCache() {
     return myDelegate.getDependencyCache();
   }
 
+  @Override
   public VirtualFile getSourceFileByOutputFile(final VirtualFile outputFile) {
     return myDelegate.getSourceFileByOutputFile(outputFile);
   }
 
+  @Override
   public void addMessage(final CompilerMessage message) {
     myDelegate.addMessage(message);
   }
 
+  @Override
   @NotNull
   public Set<VirtualFile> getTestOutputDirectories() {
     return myDelegate.getTestOutputDirectories();
   }
 
+  @Override
   public boolean isInTestSourceContent(@NotNull final VirtualFile fileOrDir) {
     return myDelegate.isInTestSourceContent(fileOrDir);
   }
 
+  @Override
   public boolean isInSourceContent(@NotNull final VirtualFile fileOrDir) {
     return myDelegate.isInSourceContent(fileOrDir);
   }
 
+  @Override
   public void addScope(final CompileScope additionalScope) {
     myDelegate.addScope(additionalScope);
   }
 
+  @Override
   public void addMessage(final CompilerMessageCategory category,
                          final String message, @Nullable final String url, final int lineNum, final int columnNum) {
     myDelegate.addMessage(category, message, url, lineNum, columnNum);
   }
 
+  @Override
   public void addMessage(final CompilerMessageCategory category, final String message, @Nullable final String url,
                          final int lineNum,
                          final int columnNum,
@@ -88,86 +98,107 @@ public class CompileContextExProxy implements CompileContextEx {
     myDelegate.addMessage(category, message, url, lineNum, columnNum, navigatable);
   }
 
+  @Override
   public CompilerMessage[] getMessages(final CompilerMessageCategory category) {
     return myDelegate.getMessages(category);
   }
 
+  @Override
   public int getMessageCount(final CompilerMessageCategory category) {
     return myDelegate.getMessageCount(category);
   }
 
+  @Override
   public ProgressIndicator getProgressIndicator() {
     return myDelegate.getProgressIndicator();
   }
 
+  @Override
   public CompileScope getCompileScope() {
     return myDelegate.getCompileScope();
   }
 
+  @Override
   public CompileScope getProjectCompileScope() {
     return myDelegate.getProjectCompileScope();
   }
 
+  @Override
   public void requestRebuildNextTime(final String message) {
     myDelegate.requestRebuildNextTime(message);
   }
 
+  @Override
   public Module getModuleByFile(final VirtualFile file) {
     return myDelegate.getModuleByFile(file);
   }
 
+  @Override
   public VirtualFile[] getSourceRoots(final Module module) {
     return myDelegate.getSourceRoots(module);
   }
 
+  @Override
   public VirtualFile[] getAllOutputDirectories() {
     return myDelegate.getAllOutputDirectories();
   }
 
+  @Override
   public VirtualFile getModuleOutputDirectory(final Module module) {
     return myDelegate.getModuleOutputDirectory(module);
   }
 
+  @Override
   public VirtualFile getModuleOutputDirectoryForTests(final Module module) {
     return myDelegate.getModuleOutputDirectoryForTests(module);
   }
 
+  @Override
   public boolean isMake() {
     return myDelegate.isMake();
   }
 
+  @Override
   public boolean isAnnotationProcessorsEnabled() {
     return myDelegate.isAnnotationProcessorsEnabled();
   }
 
+  @Override
   public boolean isRebuild() {
     return myDelegate.isRebuild();
   }
 
+  @Override
   public <T> T getUserData(@NotNull final Key<T> key) {
     return myDelegate.getUserData(key);
   }
 
+  @Override
   public <T> void putUserData(@NotNull final Key<T> key, final T value) {
     myDelegate.putUserData(key, value);
   }
 
+  @Override
   public void recalculateOutputDirs() {
     myDelegate.recalculateOutputDirs();
   }
 
+  @Override
   public void markGenerated(Collection<VirtualFile> files) {
     myDelegate.markGenerated(files);
   }
 
+  @Override
   public boolean isGenerated(VirtualFile file) {
     return myDelegate.isGenerated(file);
   }
 
+  @Override
   public long getStartCompilationStamp() {
     return myDelegate.getStartCompilationStamp();
   }
 
+  @Override
   public void assignModule(@NotNull VirtualFile root, @NotNull Module module, boolean isTestSource, com.intellij.openapi.compiler.Compiler compiler) {
     myDelegate.assignModule(root, module, isTestSource, compiler);
   }

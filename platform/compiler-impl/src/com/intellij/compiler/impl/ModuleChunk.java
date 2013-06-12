@@ -17,6 +17,7 @@ package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -167,7 +168,7 @@ public class ModuleChunk extends Chunk<Module> {
           }
         }
       }
-      if (compilerConfiguration.isExcludedFromCompilation(root)) {
+      if (CompilerManager.getInstance(project).isExcludedFromCompilation(root)) {
         continue;
       }
       filteredRoots.add(root);

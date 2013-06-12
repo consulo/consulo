@@ -274,7 +274,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
           }
           final int fileId = getFileId(file);
           if (_forceCompile) {
-            if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
+            if (compiler.isCompilableFile(file, context) && !CompilerManager.getInstance(project).isExcludedFromCompilation(file)) {
               toCompile.add(file);
               if (ourDebugMode) {
                 System.out.println("\t INCLUDED " + file.getPresentableUrl());
@@ -291,7 +291,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
             }
           }
           else if (pathsToRecompile.contains(fileId)) {
-            if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
+            if (compiler.isCompilableFile(file, context) && !CompilerManager.getInstance(project).isExcludedFromCompilation(file)) {
               toCompile.add(file);
               if (ourDebugMode) {
                 System.out.println("\t INCLUDED " + file.getPresentableUrl());

@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.codeInspection.BaseInspection;
@@ -50,7 +51,7 @@ public class TypeCustomizerInspection extends BaseInspection {
     return new BaseInspectionVisitor() {
       @Override
       public void visitFile(GroovyFileBase file) {
-        if (!CompilerConfigurationOld.getInstance(file.getProject()).isResourceFile(file.getVirtualFile())) {
+        if (!ResourceCompilerConfiguration.getInstance(file.getProject()).isResourceFile(file.getVirtualFile())) {
           if (fileSeemsToBeTypeCustomizer(file)) {
             final LocalQuickFix[] fixes = {new AddToResourceFix(file)};
             final String message = GroovyInspectionBundle.message("type.customizer.is.not.marked.as.a.resource.file");
@@ -116,7 +117,7 @@ public class TypeCustomizerInspection extends BaseInspection {
       final VirtualFile projectRoot = project.getBaseDir();
       if (sourceRoot == null) {
         final String path = VfsUtilCore.getRelativePath(virtualFile, projectRoot, '/');
-        CompilerConfigurationOld.getInstance(project).addResourceFilePattern(path);
+        ResourceCompilerConfiguration.getInstance(project).addResourceFilePattern(path);
       }
       else {
         final String path = VfsUtilCore.getRelativePath(virtualFile, sourceRoot, '/');

@@ -357,7 +357,7 @@ public class CompilerManagerImpl extends CompilerManager {
   }
 
   public boolean isExcludedFromCompilation(@NotNull VirtualFile file) {
-    return CompilerConfigurationOld.getInstance(myProject).isExcludedFromCompilation(file);
+   return false;
   }
 
   private static final OutputToSourceMapping OUTPUT_TO_SOURCE_MAPPING = new OutputToSourceMapping() {

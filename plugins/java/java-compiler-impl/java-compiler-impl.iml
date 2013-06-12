@@ -12,6 +12,7 @@
     <orderEntry type="module" module-name="compiler-impl" exported="" />
     <orderEntry type="module" module-name="java-rt" />
     <orderEntry type="library" name="asm4" level="project" />
+    <orderEntry type="module" module-name="jps-model-impl" />
   </component>
 </module>
 

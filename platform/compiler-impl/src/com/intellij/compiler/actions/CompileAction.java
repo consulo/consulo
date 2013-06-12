@@ -34,6 +34,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 
@@ -113,7 +114,7 @@ public class CompileAction extends CompileActionBase {
       else if (files.length == 1) {
         final VirtualFile file = files[0];
         FileType fileType = file.getFileType();
-        if (CompilerManager.getInstance(project).isCompilableFileType(fileType) || isCompilableResourceFile(project, compilerConfiguration, file)) {
+        if (CompilerManager.getInstance(project).isCompilableFileType(fileType) || isCompilableResourceFile(project, file)) {
           elementDescription = "'" + file.getName() + "'";
         }
         else {
@@ -181,7 +182,7 @@ public class CompileAction extends CompileActionBase {
       }
       else {
         FileType fileType = file.getFileType();
-        if (!(compilerManager.isCompilableFileType(fileType) || isCompilableResourceFile(project, compilerConfiguration, file))) {
+        if (!(compilerManager.isCompilableFileType(fileType) || isCompilableResourceFile(project, file))) {
           continue;
         }
       }
@@ -190,8 +191,8 @@ public class CompileAction extends CompileActionBase {
     return VfsUtil.toVirtualFileArray(filesToCompile);
   }
 
-  private static boolean isCompilableResourceFile(final Project project, final CompilerConfigurationOld compilerConfiguration, final VirtualFile file) {
-    if (!compilerConfiguration.isResourceFile(file)) {
+  private static boolean isCompilableResourceFile(final Project project, final VirtualFile file) {
+    if (!ResourceCompilerConfiguration.getInstance(project).isResourceFile(file)) {
       return false;
     }
     final Collection<? extends Artifact> artifacts = ArtifactBySourceFileFinder.getInstance(project).findArtifacts(file);

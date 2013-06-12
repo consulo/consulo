@@ -35,6 +35,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import icons.JetgroovyIcons;
+import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.GroovyBundle;
@@ -83,7 +84,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
     for (VirtualFile file : files) {
       if (scriptExtensions.contains(file.getExtension()) ||
           compilerManager.isExcludedFromCompilation(file) ||
-          CompilerConfigurationOld.getInstance(myProject).isResourceFile(file)) {
+          ResourceCompilerConfiguration.getInstance(myProject).isResourceFile(file)) {
         continue;
       }
 
@@ -150,10 +151,9 @@ public class GroovyCompiler extends GroovyCompilerBase {
   }
 
   private boolean needTransformCopying(CompileScope compileScope) {
-    final CompilerConfigurationOld configuration = CompilerConfigurationOld.getInstance(myProject);
     final ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
     for (VirtualFile file : FilenameIndex.getVirtualFilesByName(myProject, AST_TRANSFORM_FILE_NAME, GlobalSearchScope.projectScope(myProject))) {
-      if (compileScope.belongs(file.getUrl()) && index.isInSource(file) && !configuration.isResourceFile(file)) {
+      if (compileScope.belongs(file.getUrl()) && index.isInSource(file) && !ResourceCompilerConfiguration.getInstance(myProject).isResourceFile(file)) {
         return true;
       }
     }

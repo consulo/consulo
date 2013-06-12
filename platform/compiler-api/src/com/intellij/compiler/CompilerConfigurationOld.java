@@ -19,7 +19,6 @@ package com.intellij.compiler;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
@@ -102,20 +101,6 @@ public abstract class CompilerConfigurationOld {
         return false;
       }
 
-      @Override
-      public boolean isExcludedFromCompilation(VirtualFile virtualFile) {
-        return false;
-      }
-
-      @Override
-      public boolean isResourceFile(VirtualFile virtualFile) {
-        return false;
-      }
-
-      @Override
-      public boolean isResourceFile(String path) {
-        return false;
-      }
 
       @Override
       public void addResourceFilePattern(String namePattern) throws MalformedPatternException {
@@ -154,11 +139,7 @@ public abstract class CompilerConfigurationOld {
     };
   }
 
-  public abstract boolean isExcludedFromCompilation(VirtualFile virtualFile);
 
-  public abstract boolean isResourceFile(VirtualFile virtualFile);
-
-  public abstract boolean isResourceFile(String path);
 
   public abstract void addResourceFilePattern(String namePattern) throws MalformedPatternException;
 

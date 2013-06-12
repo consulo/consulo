@@ -15,11 +15,11 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.impl.FileSetCompileScope;
 import com.intellij.compiler.impl.ModuleCompileScope;
 import com.intellij.compiler.impl.javaCompiler.AnnotationProcessingCompiler;
+import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
 import com.intellij.compiler.impl.resourceCompiler.ResourceCompiler;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
@@ -46,9 +46,11 @@ import java.util.List;
 
 public class ProcessAnnotationsAction extends CompileActionBase {
 
+  @Override
   protected void doAction(DataContext dataContext, Project project) {
     final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
     final CompilerFilter filter = new CompilerFilter() {
+      @Override
       public boolean acceptCompiler(com.intellij.openapi.compiler.Compiler compiler) {
         // EclipseLink CanonicalModelProcessor reads input from output hence adding ResourcesCompiler
         return compiler instanceof AnnotationProcessingCompiler || compiler instanceof ResourceCompiler;
@@ -65,6 +67,7 @@ public class ProcessAnnotationsAction extends CompileActionBase {
     }
   }
 
+  @Override
   public void update(AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
@@ -85,7 +88,7 @@ public class ProcessAnnotationsAction extends CompileActionBase {
       return;
     }
     
-    final CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(project);
+    final JavaCompilerConfiguration compilerConfiguration = JavaCompilerConfiguration.getInstance(project);
     
     final Module module = LangDataKeys.MODULE.getData(dataContext);
     final Module moduleContext = LangDataKeys.MODULE_CONTEXT.getData(dataContext);

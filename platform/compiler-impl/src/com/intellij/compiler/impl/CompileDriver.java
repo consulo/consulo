@@ -121,23 +121,27 @@ public class CompileDriver {
 
   private static final FileProcessingCompilerAdapterFactory FILE_PROCESSING_COMPILER_ADAPTER_FACTORY =
     new FileProcessingCompilerAdapterFactory() {
+      @Override
       public FileProcessingCompilerAdapter create(CompileContext context, FileProcessingCompiler compiler) {
         return new FileProcessingCompilerAdapter(context, compiler);
       }
     };
   private static final FileProcessingCompilerAdapterFactory FILE_PACKAGING_COMPILER_ADAPTER_FACTORY =
     new FileProcessingCompilerAdapterFactory() {
+      @Override
       public FileProcessingCompilerAdapter create(CompileContext context, FileProcessingCompiler compiler) {
         return new PackagingCompilerAdapter(context, (PackagingCompiler)compiler);
       }
     };
   private CompilerFilter myCompilerFilter = CompilerFilter.ALL;
   private static final CompilerFilter SOURCE_PROCESSING_ONLY = new CompilerFilter() {
+    @Override
     public boolean acceptCompiler(Compiler compiler) {
       return compiler instanceof SourceProcessingCompiler;
     }
   };
   private static final CompilerFilter ALL_EXCEPT_SOURCE_PROCESSING = new CompilerFilter() {
+    @Override
     public boolean acceptCompiler(Compiler compiler) {
       return !SOURCE_PROCESSING_ONLY.acceptCompiler(compiler);
     }
@@ -244,6 +248,7 @@ public class CompileDriver {
     final Runnable compileWork;
     if (useOutOfProcessBuild()) {
       compileWork = new Runnable() {
+        @Override
         public void run() {
           final ProgressIndicator indicator = compileContext.getProgressIndicator();
           if (indicator.isCanceled() || myProject.isDisposed()) {
@@ -271,6 +276,7 @@ public class CompileDriver {
     }
     else {
       compileWork = new Runnable() {
+        @Override
         public void run() {
           try {
             myAllOutputDirectories = getAllOutputDirectories(compileContext);
@@ -671,6 +677,7 @@ public class CompileDriver {
     final Runnable compileWork;
     if (useExtProcessBuild) {
       compileWork = new Runnable() {
+        @Override
         public void run() {
           final ProgressIndicator indicator = compileContext.getProgressIndicator();
           if (indicator.isCanceled() || myProject.isDisposed()) {
@@ -726,6 +733,7 @@ public class CompileDriver {
     }
     else {
       compileWork = new Runnable() {
+        @Override
         public void run() {
           if (compileContext.getProgressIndicator().isCanceled()) {
             if (callback != null) {
@@ -752,6 +760,7 @@ public class CompileDriver {
     }
 
     compileTask.start(compileWork, new Runnable() {
+      @Override
       public void run() {
         if (isRebuild) {
           final int rv = Messages.showOkCancelDialog(myProject, "You are about to rebuild the whole project.\nRun 'Make Project' instead?",
@@ -820,6 +829,7 @@ public class CompileDriver {
       CompilerCacheManager.getInstance(myProject).flushCaches();
       if (compileContext.isRebuildRequested()) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
           public void run() {
             final CompilerMessageImpl msg =
               new CompilerMessageImpl(myProject, CompilerMessageCategory.INFORMATION, compileContext.getRebuildReason());
@@ -880,6 +890,7 @@ public class CompileDriver {
       }
     }
     SwingUtilities.invokeLater(new Runnable() {
+      @Override
       public void run() {
         int errorCount = 0;
         int warningCount = 0;
@@ -1051,6 +1062,7 @@ public class CompileDriver {
       final Semaphore semaphore = new Semaphore();
       semaphore.down();
       DumbService.getInstance(myProject).runWhenSmart(new Runnable() {
+        @Override
         public void run() {
           semaphore.up();
         }
@@ -1081,6 +1093,7 @@ public class CompileDriver {
                                         forceCompile, true, onlyCheckStatus);
 
         final CompileScope intermediateSources = attachIntermediateOutputDirectories(new CompositeScope(CompileScope.EMPTY_ARRAY) {
+          @Override
           @NotNull
           public Module[] getAffectedModules() {
             return context.getCompileScope().getAffectedModules();
@@ -1125,6 +1138,7 @@ public class CompileDriver {
 
         if (didSomething && GENERATE_CLASSPATH_INDEX) {
           CompilerUtil.runInContext(context, "Generating classpath index...", new ThrowableRunnable<RuntimeException>() {
+            @Override
             public void run() {
               int count = 0;
               for (VirtualFile file : allOutputDirs) {
@@ -1270,6 +1284,7 @@ public class CompileDriver {
 
   private static void dropDependencyCache(final CompileContextEx context) {
     CompilerUtil.runInContext(context, CompilerBundle.message("progress.saving.caches"), new ThrowableRunnable<RuntimeException>() {
+      @Override
       public void run() {
         context.getDependencyCache().resetState();
       }
@@ -1311,6 +1326,7 @@ public class CompileDriver {
 
     final List<Chunk<Module>> sortedChunks =
       Collections.unmodifiableList(ApplicationManager.getApplication().runReadAction(new Computable<List<Chunk<Module>>>() {
+        @Override
         public List<Chunk<Module>> compute() {
           final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
           return ModuleCompilerUtil.getSortedModuleChunks(myProject, Arrays.asList(moduleManager.getModules()));
@@ -1352,6 +1368,7 @@ public class CompileDriver {
                 final Set<VirtualFile> prevSnapshot =
                   round > 0 && snapshot != null ? new HashSet<VirtualFile>(Arrays.asList(snapshot)) : Collections.<VirtualFile>emptySet();
                 snapshot = ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile[]>() {
+                  @Override
                   public VirtualFile[] compute() {
                     return context.getCompileScope().getFiles(null, true);
                   }
@@ -1379,10 +1396,12 @@ public class CompileDriver {
                 // wrap compile context so that output goes into intermediate directories
                 final IntermediateOutputCompiler _compiler = (IntermediateOutputCompiler)compiler;
                 _context = new CompileContextExProxy(context) {
+                  @Override
                   public VirtualFile getModuleOutputDirectory(final Module module) {
                     return getGenerationOutputDir(_compiler, module, false);
                   }
 
+                  @Override
                   public VirtualFile getModuleOutputDirectoryForTests(final Module module) {
                     return getGenerationOutputDir(_compiler, module, true);
                   }
@@ -1505,6 +1524,7 @@ public class CompileDriver {
     }
     catch (ProcessCanceledException e) {
       ProgressManager.getInstance().executeNonCancelableSection(new Runnable() {
+        @Override
         public void run() {
           try {
             final Collection<VirtualFile> deps = CacheUtils.findDependentFiles(context, Collections.<VirtualFile>emptySet(), null);
@@ -1540,6 +1560,7 @@ public class CompileDriver {
                                                    final Collection<VirtualFile> files) {
     final List<VirtualFile> filesInScope = new ArrayList<VirtualFile>(files.size());
     ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
       public void run() {
         for (VirtualFile file : files) {
           if (context.getCompileScope().belongs(file.getUrl())) {
@@ -1597,10 +1618,12 @@ public class CompileDriver {
             if (compiler instanceof IntermediateOutputCompiler) {
               final IntermediateOutputCompiler _compiler = (IntermediateOutputCompiler)compiler;
               _context = new CompileContextExProxy(context) {
+                @Override
                 public VirtualFile getModuleOutputDirectory(final Module module) {
                   return getGenerationOutputDir(_compiler, module, false);
                 }
 
+                @Override
                 public VirtualFile getModuleOutputDirectoryForTests(final Module module) {
                   return getGenerationOutputDir(_compiler, module, true);
                 }
@@ -1658,6 +1681,7 @@ public class CompileDriver {
 
   private void deleteAll(final CompileContextEx context) {
     CompilerUtil.runInContext(context, CompilerBundle.message("progress.clearing.output"), new ThrowableRunnable<RuntimeException>() {
+      @Override
       public void run() {
         final boolean isTestMode = ApplicationManager.getApplication().isUnitTestMode();
         final VirtualFile[] allSources = context.getProjectCompileScope().getFiles(null, true);
@@ -1679,6 +1703,7 @@ public class CompileDriver {
                 else if (compiler instanceof TranslatingCompiler) {
                   final ArrayList<Trinity<File, String, Boolean>> toDelete = new ArrayList<Trinity<File, String, Boolean>>();
                   ApplicationManager.getApplication().runReadAction(new Runnable() {
+                    @Override
                     public void run() {
                       TranslatingCompilerFilesMonitor.getInstance()
                         .collectFiles(context, (TranslatingCompiler)compiler, Arrays.<VirtualFile>asList(allSources).iterator(), true /*pass true to make sure that every source in scope file is processed*/,
@@ -1716,6 +1741,7 @@ public class CompileDriver {
   private void dropScopesCaches() {
     // hack to be sure the classpath will include the output directories
     ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
       public void run() {
         ((ProjectRootManagerEx)ProjectRootManager.getInstance(myProject)).clearScopesCachesForModules();
       }
@@ -1859,6 +1885,7 @@ public class CompileDriver {
       final Map<GeneratingCompiler.GenerationItem, String> itemToOutputPathMap = new HashMap<GeneratingCompiler.GenerationItem, String>();
       final IOException[] ex = {null};
       ApplicationManager.getApplication().runReadAction(new Runnable() {
+        @Override
         public void run() {
           for (final GeneratingCompiler.GenerationItem item : allItems) {
             final Module itemModule = item.getModule();
@@ -1910,6 +1937,7 @@ public class CompileDriver {
       if (!pathsToRemove.isEmpty()) {
         CompilerUtil
           .runInContext(context, CompilerBundle.message("progress.synchronizing.output.directory"), new ThrowableRunnable<IOException>() {
+            @Override
             public void run() throws IOException {
               for (final String path : pathsToRemove) {
                 final File file = new File(path);
@@ -1933,6 +1961,7 @@ public class CompileDriver {
 
       for (final Module module : modules) {
         CompilerUtil.runInContext(context, "Generating output from " + compiler.getDescription(), new ThrowableRunnable<IOException>() {
+          @Override
           public void run() throws IOException {
             final Set<GeneratingCompiler.GenerationItem> items = moduleToItemMap.get(module);
             if (items != null && !items.isEmpty()) {
@@ -1944,6 +1973,7 @@ public class CompileDriver {
 
                 CompilerUtil
                   .runInContext(context, CompilerBundle.message("progress.updating.caches"), new ThrowableRunnable<IOException>() {
+                    @Override
                     public void run() throws IOException {
                       if (successfullyGenerated.length > 0) {
                         affectedModules.add(module);
@@ -1974,6 +2004,7 @@ public class CompileDriver {
       if (!generatedFiles.isEmpty()) {
         DumbService.getInstance(myProject).waitForSmartMode();
         List<VirtualFile> vFiles = ApplicationManager.getApplication().runReadAction(new Computable<List<VirtualFile>>() {
+          @Override
           public List<VirtualFile> compute() {
             final ArrayList<VirtualFile> vFiles = new ArrayList<VirtualFile>(generatedFiles.size());
             for (File generatedFile : generatedFiles) {
@@ -2025,6 +2056,7 @@ public class CompileDriver {
     final boolean[] wereFilesDeleted = {false};
     try {
       ApplicationManager.getApplication().runReadAction(new Runnable() {
+        @Override
         public void run() {
           TranslatingCompilerFilesMonitor.getInstance()
             .collectFiles(context, compiler, srcSnapshot.iterator(), forceCompile, isRebuild, toCompile, toDelete);
@@ -2087,6 +2119,7 @@ public class CompileDriver {
     final boolean[] wereFilesDeleted = {false};
     CompilerUtil.runInContext(context, CompilerBundle.message("progress.synchronizing.output.directory"),
                               new ThrowableRunnable<CacheCorruptedException>() {
+                                @Override
                                 public void run() throws CacheCorruptedException {
                                   final long start = System.currentTimeMillis();
                                   try {
@@ -2179,6 +2212,7 @@ public class CompileDriver {
     final IOException[] ex = {null};
     DumbService.getInstance(myProject).waitForSmartMode();
     ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
       public void run() {
         try {
           for (FileProcessingCompiler.ProcessingItem item : items) {
@@ -2213,8 +2247,10 @@ public class CompileDriver {
     if (!urls.isEmpty()) {
       CompilerUtil
         .runInContext(context, CompilerBundle.message("progress.processing.outdated.files"), new ThrowableRunnable<IOException>() {
+          @Override
           public void run() throws IOException {
             ApplicationManager.getApplication().runReadAction(new Runnable() {
+              @Override
               public void run() {
                 for (final String url : urls) {
                   if (!allUrls.contains(url)) {
@@ -2267,6 +2303,7 @@ public class CompileDriver {
       return true;
     }
     CompilerUtil.runInContext(context, CompilerBundle.message("progress.updating.caches"), new ThrowableRunnable<IOException>() {
+      @Override
       public void run() {
         final List<VirtualFile> vFiles = new ArrayList<VirtualFile>(processed.length);
         for (FileProcessingCompiler.ProcessingItem aProcessed : processed) {
@@ -2316,6 +2353,7 @@ public class CompileDriver {
     FileDocumentManager.getInstance().saveAllDocuments();
 
     progressManagerTask.start(new Runnable() {
+      @Override
       public void run() {
         try {
           task.execute(compileContext);
@@ -2354,6 +2392,7 @@ public class CompileDriver {
       WindowManager.getInstance().getStatusBar(myProject).setInfo("");
       if (progressIndicator instanceof CompilerTask) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
           public void run() {
             ((CompilerTask)progressIndicator).showCompilerContent();
           }
@@ -2693,6 +2732,7 @@ public class CompileDriver {
     public void doUpdate() throws IOException {
       final IOException[] ex = {null};
       ApplicationManager.getApplication().runReadAction(new Runnable() {
+        @Override
         public void run() {
           try {
             for (Map.Entry<VirtualFile, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> entry : myData
@@ -2736,6 +2776,7 @@ public class CompileDriver {
       return Collections.unmodifiableSet(myCompiledSources);
     }
 
+    @Override
     public void add(final String outputRoot, final Collection<TranslatingCompiler.OutputItem> items, final VirtualFile[] filesToRecompile) {
       for (TranslatingCompiler.OutputItem item : items) {
         final VirtualFile file = item.getSourceFile();
@@ -2858,6 +2899,7 @@ public class CompileDriver {
     private final TIntHashSet myProcessedNames = new TIntHashSet();
     private final Set<VirtualFile> myProcessedFiles = new HashSet<VirtualFile>();
 
+    @Override
     public Pair<int[], Set<VirtualFile>> fun(Pair<int[], Set<VirtualFile>> deps) {
       final TIntHashSet currentDeps = new TIntHashSet(deps.getFirst());
       currentDeps.removeAll(myProcessedNames.toArray());

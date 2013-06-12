@@ -16,11 +16,11 @@
 
 package com.intellij.execution.junit;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.execution.configurations.ConfigurationUtil;
 import com.intellij.execution.testframework.SourceScope;
 import com.intellij.ide.util.ClassFilter;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -56,7 +56,7 @@ public class TestClassFilter implements ClassFilter.ClassFilterWithScope {
       public Boolean compute() {
         return ConfigurationUtil.PUBLIC_INSTANTIATABLE_CLASS.value(aClass) &&
                (aClass.isInheritor(myBase, true) || JUnitUtil.isTestClass(aClass))
-               && !CompilerConfigurationOld.getInstance(getProject()).isExcludedFromCompilation(PsiUtilCore.getVirtualFile(aClass));
+               && !CompilerManager.getInstance(aClass.getProject()).getInstance(getProject()).isExcludedFromCompilation(PsiUtilCore.getVirtualFile(aClass));
       }
     });
   }

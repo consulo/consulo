@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -38,6 +37,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -340,7 +340,7 @@ public class ArtifactUtil {
   public static Collection<Trinity<Artifact, PackagingElementPath, String>> findContainingArtifactsWithOutputPaths(@NotNull final VirtualFile file,
                                                                                                                    @NotNull Project project,
                                                                                                                    final Artifact[] artifacts) {
-    final boolean isResourceFile = CompilerConfigurationOld.getInstance(project).isResourceFile(file);
+    final boolean isResourceFile = ResourceCompilerConfiguration.getInstance(project).isResourceFile(file);
     final List<Trinity<Artifact, PackagingElementPath, String>> result = new ArrayList<Trinity<Artifact, PackagingElementPath, String>>();
     final PackagingElementResolvingContext context = ArtifactManager.getInstance(project).getResolvingContext();
     for (final Artifact artifact : artifacts) {
@@ -434,10 +434,9 @@ public class ArtifactUtil {
           }
         }
         else if (element instanceof ModuleOutputPackagingElement) {
-          final CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(context.getProject());
           for (VirtualFile sourceRoot : ((ModuleOutputPackagingElement)element).getSourceRoots(context)) {
             final VirtualFile sourceFile = sourceRoot.findFileByRelativePath(path);
-            if (sourceFile != null && compilerConfiguration.isResourceFile(sourceFile)) {
+            if (sourceFile != null && ResourceCompilerConfiguration.getInstance(context.getProject()).isResourceFile(sourceFile)) {
               result.add(sourceFile);
             }
           }
