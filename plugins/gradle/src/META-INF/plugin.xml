@@ -20,12 +20,16 @@
   <vendor>JetBrains</vendor>
   <description>Gradle integration</description>
 
-  <depends>com.intellij.modules.lang</depends>
+  <depends>org.consulo.java</depends>
   <depends>org.intellij.groovy</depends>
 
   <extensionPoints>
     <extensionPoint name="projectResolve" interface="org.jetbrains.plugins.gradle.service.project.GradleProjectResolverExtension"/>
   </extensionPoints>
+
+  <extensions defaultExtensionNs="org.consulo.java">
+    <elementFinder implementation="org.jetbrains.plugins.gradle.config.GradleClassFinder"/>
+  </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
@@ -35,7 +39,6 @@
                          instance="org.jetbrains.plugins.gradle.service.settings.GradleConfigurable"
                          key="gradle.name" bundle="i18n.GradleBundle"/>
     <library.presentationProvider implementation="org.jetbrains.plugins.gradle.config.GradleLibraryPresentationProvider" order="last"/>
-    <java.elementFinder implementation="org.jetbrains.plugins.gradle.config.GradleClassFinder"/>
     <projectOpenProcessor implementation="org.jetbrains.plugins.gradle.service.settings.GradleProjectOpenProcessor"/>
 
     <externalSystemManager implementation="org.jetbrains.plugins.gradle.GradleManager"/>

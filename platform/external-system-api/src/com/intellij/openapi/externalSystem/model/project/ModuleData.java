@@ -24,14 +24,10 @@ public class ModuleData extends AbstractNamedData implements Named {
   @NotNull private String myModuleFilePath;
   private boolean myInheritProjectCompileOutputPath = true;
 
-  public ModuleData(@NotNull ProjectSystemId owner,
-                    @NotNull String typeId,
-                    @NotNull String name,
-                    @NotNull String moduleFileDirectoryPath,
-                    @NotNull String externalConfigPath)
+  public ModuleData(@NotNull ProjectSystemId owner, @NotNull String name, @NotNull String moduleFileDirectoryPath, @NotNull String externalConfigPath)
   {
     super(owner, name);
-    myModuleTypeId = typeId;
+    myModuleTypeId = "java";
     myExternalConfigPath = externalConfigPath;
     setModuleFileDirectoryPath(moduleFileDirectoryPath);
   }

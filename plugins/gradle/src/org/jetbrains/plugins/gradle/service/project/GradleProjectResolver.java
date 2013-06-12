@@ -10,7 +10,6 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.TaskData;
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -143,9 +142,7 @@ public class GradleProjectResolver implements ExternalSystemProjectResolver<Grad
         throw new IllegalStateException("Module with undefined name detected: " + gradleModule);
       }
       ProjectData projectData = ideProject.getData();
-      ModuleData ideModule = new ModuleData(GradleConstants.SYSTEM_ID,
-                                            StdModuleTypes.JAVA.getId(),
-                                            moduleName,
+      ModuleData ideModule = new ModuleData(GradleConstants.SYSTEM_ID, moduleName,
                                             projectData.getIdeProjectFileDirectoryPath(),
                                             gradleModule.getGradleProject().getPath());
       Pair<DataNode<ModuleData>, IdeaModule> previouslyParsedModule = result.get(moduleName);

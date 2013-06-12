@@ -330,6 +330,17 @@
             <element id="library" level="project" name="TestNG" />
           </element>
         </element>
+        <element id="directory" name="gradle">
+          <element id="directory" name="lib">
+            <element id="library" level="module" name="Gradle" module-name="gradle" />
+            <element id="library" level="module" name="GradleGuava" module-name="gradle" />
+            <element id="library" level="module" name="Jsr305" module-name="gradle" />
+            <element id="library" level="module" name="Slf4j" module-name="gradle" />
+            <element id="archive" name="gradle-intellij-plugin.jar">
+              <element id="module-output" name="gradle" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
