@@ -90,6 +90,11 @@
     <orderEntry type="module" module-name="junit_rt" />
     <orderEntry type="module" module-name="testng" />
     <orderEntry type="module" module-name="testng_rt" />
+    <orderEntry type="module" module-name="tasks-api" />
+    <orderEntry type="module" module-name="tasks-core" />
+    <orderEntry type="module" module-name="tasks-java" />
+    <orderEntry type="module" module-name="tasks-tests" />
+    <orderEntry type="module" module-name="tasks-time-tracking" />
   </component>
 </module>
 

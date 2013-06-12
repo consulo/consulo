@@ -4,9 +4,7 @@
   <description>Enables task and context management</description>
   <version>1.0</version>
   <vendor>JetBrains</vendor>
-
-  <!--fake dependency for Web IDE-->
-  <depends>com.intellij.modules.xml</depends>
+  <depends>com.intellij.xml</depends>
   <depends optional="true" config-file="java-contexts.xml">org.consulo.java</depends>
 
   <project-components>

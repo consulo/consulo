@@ -193,6 +193,9 @@
               <element id="module-output" name="jira-connector" />
             </element>
             <element id="file-copy" path="$PROJECT_DIR$/plugins/tasks/tasks-core/lib/commons-discovery-0.4.jar" />
+            <element id="archive" name="tasks-java.jar">
+              <element id="module-output" name="tasks-java" />
+            </element>
           </element>
         </element>
         <element id="directory" name="java-inspection-gadgets">
