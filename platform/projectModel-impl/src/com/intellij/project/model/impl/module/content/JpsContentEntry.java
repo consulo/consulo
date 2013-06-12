@@ -21,6 +21,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.project.model.impl.module.JpsRootModel;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.module.JpsModule;
@@ -85,10 +86,23 @@ public class JpsContentEntry implements ContentEntry, Disposable {
 
   @NotNull
   @Override
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes) {
+    return new VirtualFile[0];
+  }
+
+  @NotNull
+  @Override
   public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
     return new String[0];
   }
 
+  @NotNull
+  @Override
+  public String[] getFolderUrls(@NotNull ContentFolderType... contentFolderTypes) {
+    return new String[0];
+  }
+
+  @NonNull
   @Override
   public ContentFolder[] getFolders() {
     return new ContentFolder[0];

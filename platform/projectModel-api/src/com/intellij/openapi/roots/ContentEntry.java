@@ -67,8 +67,15 @@ public interface ContentEntry extends Synthetic {
   VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType);
 
   @NotNull
+  VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes);
+
+  @NotNull
   String[] getFolderUrls(@NotNull ContentFolderType contentFolderType);
 
+  @NotNull
+  String[] getFolderUrls(@NotNull ContentFolderType... contentFolderTypes);
+
+  @NotNull
   ContentFolder[] getFolders();
 
   @NotNull

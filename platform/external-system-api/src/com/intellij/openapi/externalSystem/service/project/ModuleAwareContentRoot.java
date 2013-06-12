@@ -5,6 +5,7 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -67,10 +68,23 @@ public class ModuleAwareContentRoot implements ContentEntry {
 
   @NotNull
   @Override
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes) {
+    return myDelegate.getFolderFiles(contentFolderTypes);
+  }
+
+  @NotNull
+  @Override
   public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
     return myDelegate.getFolderUrls(contentFolderType);
   }
 
+  @NotNull
+  @Override
+  public String[] getFolderUrls(@NotNull ContentFolderType... contentFolderTypes) {
+    return myDelegate.getFolderUrls(contentFolderTypes);
+  }
+
+  @NonNull
   @Override
   public ContentFolder[] getFolders() {
     return myDelegate.getFolders();

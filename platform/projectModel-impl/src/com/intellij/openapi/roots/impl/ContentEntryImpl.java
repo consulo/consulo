@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
@@ -31,6 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -41,8 +41,8 @@ import java.util.*;
 /**
  * @author dsl
  */
+@Logger
 public class ContentEntryImpl extends RootModelComponentBase implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.SimpleContentEntryImpl");
   @NotNull
   private final VirtualFilePointer myRoot;
   @NonNls
@@ -71,7 +71,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   }
 
   private static String getUrlFrom(@NotNull Element e) throws InvalidDataException {
-    LOG.assertTrue(ELEMENT_NAME.equals(e.getName()));
+    LOGGER.assertTrue(ELEMENT_NAME.equals(e.getName()));
 
     String url = e.getAttributeValue(URL_ATTRIBUTE);
     if (url == null) throw new InvalidDataException();
@@ -123,6 +123,16 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
+  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes) {
+    List<VirtualFile> list = new ArrayList<VirtualFile>();
+    for (ContentFolder contentFolder : getFolders0(contentFolderTypes)) {
+      list.add(contentFolder.getFile());
+    }
+    return VfsUtilCore.toVirtualFileArray(list);
+  }
+
+  @NotNull
+  @Override
   public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
     List<String> list = new ArrayList<String>();
     for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
@@ -131,6 +141,18 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
     return ArrayUtil.toStringArray(list);
   }
 
+  @NotNull
+  @Override
+  public String[] getFolderUrls(@NotNull ContentFolderType... contentFolderTypes) {
+    List<String> list = new ArrayList<String>();
+    for (ContentFolder contentFolder : getFolders0(contentFolderTypes)) {
+      list.add(contentFolder.getUrl());
+    }
+    return ArrayUtil.toStringArray(list);
+
+  }
+
+  @NotNull
   @Override
   public ContentFolder[] getFolders() {
     final List<ContentFolder> contentFolders = getFolders0();
@@ -251,14 +273,14 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   private <T extends ContentFolder> void assertCanRemoveFrom(T f, @NotNull Set<T> ff) {
     getRootModel().assertWritable();
-    LOG.assertTrue(ff.contains(f));
+    LOGGER.assertTrue(ff.contains(f));
   }
 
   private void assertFolderUnderMe(@NotNull String url) {
     final String path = VfsUtilCore.urlToPath(url);
     final String rootPath = VfsUtilCore.urlToPath(getUrl());
     if (!FileUtil.isAncestor(rootPath, path, false)) {
-      LOG.error("The file '" + path + "' is not under content entry root '" + rootPath + "'");
+      LOGGER.error("The file '" + path + "' is not under content entry root '" + rootPath + "'");
     }
   }
 
@@ -285,7 +307,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   public void writeExternal(@NotNull Element element) throws WriteExternalException {
     assert !isDisposed();
-    LOG.assertTrue(ELEMENT_NAME.equals(element.getName()));
+    LOGGER.assertTrue(ELEMENT_NAME.equals(element.getName()));
     element.setAttribute(URL_ATTRIBUTE, myRoot.getUrl());
     for (ContentFolder contentFolder : myContentFolders) {
       final Element subElement = new Element(ContentFolderImpl.ELEMENT_NAME);
