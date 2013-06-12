@@ -27,7 +27,7 @@ import org.consulo.module.extension.ModuleExtension;
  * @since 16:40/12.06.13
  */
 public class ToolWindowModuleExtensionCondition implements Condition<Project> {
-  private final Class<? extends ModuleExtension<?>> myExtensionClass;
+  private final Class<? extends ModuleExtension> myExtensionClass;
 
   public ToolWindowModuleExtensionCondition(Class<? extends ModuleExtension<?>> extensionClass) {
     myExtensionClass = extensionClass;
@@ -37,7 +37,7 @@ public class ToolWindowModuleExtensionCondition implements Condition<Project> {
   public boolean value(Project project) {
     Module[] modules = ModuleManager.getInstance(project).getModules();
     for (Module module : modules) {
-      final ModuleExtension<?> extension = ModuleUtilCore.getExtension(module, myExtensionClass);
+      final ModuleExtension extension = ModuleUtilCore.getExtension(module, myExtensionClass);
       if(extension != null) {
         return true;
       }
