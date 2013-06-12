@@ -11,7 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="maven-server-api" exported="" />
     <orderEntry type="module" module-name="platform-impl" />
-    <orderEntry type="module" module-name="IntelliLang-xml" />
     <orderEntry type="module" module-name="properties" />
     <orderEntry type="module" module-name="forms_rt" exported="" />
     <orderEntry type="library" name="jgoodies-forms" level="project" />
@@ -50,6 +49,10 @@
     <orderEntry type="module" module-name="compiler-api" />
     <orderEntry type="module" module-name="xml-dom-impl" />
     <orderEntry type="module" module-name="xml-impl" />
+    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="compiler-artifact-impl" />
+    <orderEntry type="library" name="Groovy" level="project" />
+    <orderEntry type="module" module-name="groovy" />
   </component>
   <component name="copyright">
     <Base>

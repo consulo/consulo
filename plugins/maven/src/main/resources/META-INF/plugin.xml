@@ -6,6 +6,7 @@
   <vendor>JetBrains</vendor>
   <depends>com.intellij.xml</depends>
   <depends>com.intellij.xml.dom</depends>
+  <depends>org.consulo.java</depends>
   <extensionPoints>
     <extensionPoint name="importer" interface="org.jetbrains.idea.maven.importing.MavenImporter"/>
     <extensionPoint name="additional.importing.settings" interface="org.jetbrains.idea.maven.project.AdditionalMavenImportingSettings"/>
@@ -16,6 +17,27 @@
 
   <depends>com.intellij.properties</depends>
   <depends optional="true" config-file="groovy-support.xml">org.intellij.groovy</depends>
+
+  <extensions defaultExtensionNs="com.intellij.xml.dom">
+    <fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomProjectModelDescription"/>
+    <fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomProfilesModelDescription"/>
+    <fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomOldProfilesModelDescription"/>
+    <fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomSettingsModelDescription"/>
+    <fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomPluginModelDescription"/>
+
+    <extender domClass="org.jetbrains.idea.maven.dom.model.MavenDomConfiguration"
+                  extenderClass="org.jetbrains.idea.maven.dom.MavenPluginConfigurationDomExtender"/>
+    <extender domClass="org.jetbrains.idea.maven.dom.model.MavenDomConfigurationParameter"
+                  extenderClass="org.jetbrains.idea.maven.dom.MavenPluginConfigurationParameterDomExtender"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="com.intellij.xml">
+    <standardResourceProvider implementation="org.jetbrains.idea.maven.dom.MavenSchemaProvider"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="org.consulo.java">
+    <testPatcher implementation="org.jetbrains.idea.maven.execution.MavenJUnitPatcher" />
+  </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="org.jetbrains.idea.maven.utils.MavenFileTypeFactory"/>
@@ -48,8 +70,6 @@
     <configurationProducer implementation="org.jetbrains.idea.maven.execution.MavenConfigurationProducer"/>
     <orderEnumerationHandlerFactory implementation="org.jetbrains.idea.maven.execution.MavenOrderEnumeratorHandler$FactoryImpl"/>
 
-    <junitPatcher implementation="org.jetbrains.idea.maven.execution.MavenJUnitPatcher" />
-
     <compiler implementation="org.jetbrains.idea.maven.compiler.MavenResourceCompiler" order="last"/>
     <compileServer.plugin classpath="maven-jps-plugin.jar;maven3/plexus-utils-2.0.6.jar"/>
 
@@ -69,11 +89,6 @@
     <projectTemplateFileProcessor implementation="org.jetbrains.idea.maven.utils.MavenTemplateFileProcessor"/>
 
     <xml.elementDescriptorProvider implementation="org.jetbrains.idea.maven.dom.MavenDomElementDescriptorProvider"/>
-    <dom.fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomProjectModelDescription"/>
-    <dom.fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomProfilesModelDescription"/>
-    <dom.fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomOldProfilesModelDescription"/>
-    <dom.fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomSettingsModelDescription"/>
-    <dom.fileDescription implementation="org.jetbrains.idea.maven.dom.MavenDomPluginModelDescription"/>
 
     <lang.documentationProvider language="XML" implementationClass="org.jetbrains.idea.maven.dom.MavenModelDocumentationProvider"
                                 order="first"/>
@@ -93,10 +108,6 @@
                      groupKey="inspection.group" enabledByDefault="true" level="WARNING"
                      implementationClass="org.jetbrains.idea.maven.dom.inspections.MavenRedundantGroupIdInspection"/>
 
-    <dom.extender domClass="org.jetbrains.idea.maven.dom.model.MavenDomConfiguration"
-                  extenderClass="org.jetbrains.idea.maven.dom.MavenPluginConfigurationDomExtender"/>
-    <dom.extender domClass="org.jetbrains.idea.maven.dom.model.MavenDomConfigurationParameter"
-                  extenderClass="org.jetbrains.idea.maven.dom.MavenPluginConfigurationParameterDomExtender"/>
 
     <completion.contributor language="any"
                             implementationClass="org.jetbrains.idea.maven.dom.references.MavenPropertyCompletionContributor"
@@ -114,8 +125,6 @@
 
     <renameHandler implementation="org.jetbrains.idea.maven.dom.refactorings.MavenPropertyRenameHandler" order="first"/>
     <vetoRenameCondition implementation="org.jetbrains.idea.maven.dom.refactorings.MavenVetoModelRenameCondition"/>
-
-    <standardResourceProvider implementation="org.jetbrains.idea.maven.dom.MavenSchemaProvider"/>
 
     <projectService serviceImplementation="org.jetbrains.idea.maven.dom.MavenDomElementDescriptorHolder"/>
     <applicationService serviceImplementation="org.jetbrains.idea.maven.dom.converters.MavenDomConvertersRegistry"/>

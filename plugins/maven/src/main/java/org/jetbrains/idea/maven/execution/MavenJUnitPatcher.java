@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author Sergey Evdokimov
  */
-public class MavenJUnitPatcher extends JavaTestPatcher {
+public class MavenJUnitPatcher implements JavaTestPatcher {
 
   @Override
   public void patchJavaParameters(@Nullable Module module, JavaParameters javaParameters) {
