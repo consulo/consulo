@@ -17,7 +17,9 @@ package org.jetbrains.idea.devkit.module.extension;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Comparing;
+import lombok.NonNull;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
@@ -42,10 +44,10 @@ public class PluginMutableModuleExtension extends PluginModuleExtension implemen
 
   @Nullable
   @Override
-  public JComponent createConfigurablePanel(@Nullable Runnable updateOnCheck) {
+  public JComponent createConfigurablePanel(@NonNull ModifiableRootModel rootModel, @Nullable Runnable updateOnCheck) {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(new ModuleExtensionWithSdkPanel(this, updateOnCheck), BorderLayout.NORTH);
-    return panel;
+    return new PluginConfigPanel(this, rootModel, updateOnCheck);
   }
 
   @Override

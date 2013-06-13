@@ -30,6 +30,7 @@
     <fileTemplateGroup implementation="org.jetbrains.idea.devkit.DevKitFileTemplatesFactory"/>
     <documentationProvider implementation="org.jetbrains.idea.devkit.references.extensions.ExtensionPointQuickDocProvider"/>
 
+    <library.presentationProvider implementation="org.jetbrains.idea.devkit.module.library.PluginLibraryPresentationProvider" />
     <moduleExtensionProvider key="consulo-plugin" parent-key="java" implementationClass="org.jetbrains.idea.devkit.module.extension.PluginModuleExtensionProvider" />
     <localInspection language="XML" shortName="PluginXmlValidity" displayName="Plugin.xml Validity"
                      bundle="org.jetbrains.idea.devkit.DevKitBundle"
