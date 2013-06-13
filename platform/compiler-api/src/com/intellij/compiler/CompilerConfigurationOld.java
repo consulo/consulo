@@ -19,12 +19,7 @@ package com.intellij.compiler;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
-
-import java.util.Map;
-import java.util.Set;
 
 @Deprecated
 public abstract class CompilerConfigurationOld {
@@ -35,14 +30,6 @@ public abstract class CompilerConfigurationOld {
   @Nullable
   public abstract String getBytecodeTargetLevel(Module module);
 
-  @NotNull
-  public abstract AnnotationProcessingConfiguration getAnnotationProcessingConfiguration(Module module);
-
-  /**
-   * @return true if exists at least one enabled annotation processing profile
-   */
-  public abstract boolean isAnnotationProcessorsEnabled();
-
   public static CompilerConfigurationOld getInstance(Project project) {
     return new CompilerConfigurationOld(){
       @Nullable
@@ -51,55 +38,6 @@ public abstract class CompilerConfigurationOld {
         return null;
       }
 
-      @NotNull
-      @Override
-      public AnnotationProcessingConfiguration getAnnotationProcessingConfiguration(Module module) {
-        return new AnnotationProcessingConfiguration() {
-          @Override
-          public boolean isEnabled() {
-            return false;
-          }
-
-          @NotNull
-          @Override
-          public String getProcessorPath() {
-            return null;
-          }
-
-          @NotNull
-          @Override
-          public String getGeneratedSourcesDirectoryName(boolean forTests) {
-            return null;
-          }
-
-          @Override
-          public boolean isOutputRelativeToContentRoot() {
-            return false;
-          }
-
-          @NotNull
-          @Override
-          public Set<String> getProcessors() {
-            return null;
-          }
-
-          @NotNull
-          @Override
-          public Map<String, String> getProcessorOptions() {
-            return null;
-          }
-
-          @Override
-          public boolean isObtainProcessorsFromClasspath() {
-            return false;
-          }
-        };
-      }
-
-      @Override
-      public boolean isAnnotationProcessorsEnabled() {
-        return false;
-      }
 
 
       @Override

@@ -284,7 +284,7 @@ public class JavacCompiler extends ExternalCompiler {
     }
     if (isAnnotationProcessing) {
       final AnnotationProcessingConfiguration config =
-        CompilerConfigurationOld.getInstance(chunk.getProject()).getAnnotationProcessingConfiguration(chunk.getModules()[0]);
+        JavaCompilerConfiguration.getInstance(chunk.getProject()).getAnnotationProcessingConfiguration(chunk.getModules()[0]);
       additionalOptions.add("-Xprefer:source");
       additionalOptions.add("-implicit:none");
       additionalOptions.add("-proc:only");

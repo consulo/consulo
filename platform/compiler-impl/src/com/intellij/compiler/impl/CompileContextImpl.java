@@ -62,7 +62,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.CompileContextImpl");
   private final Project myProject;
   private final CompilerTask myTask;
-  private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages = new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
+  private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages =
+    new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
   private final boolean myShouldUpdateProblemsView;
   private CompileScope myCompileScope;
   private final DependencyCache myDependencyCache;
@@ -73,7 +74,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private String myRebuildReason;
   private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<VirtualFile, Module>();
   private final Map<Module, Set<VirtualFile>> myModuleToRootsMap = new HashMap<Module, Set<VirtualFile>>();
-  private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap = new HashMap<VirtualFile, Pair<SourceGeneratingCompiler, Module>>();
+  private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap =
+    new HashMap<VirtualFile, Pair<SourceGeneratingCompiler, Module>>();
   private final Set<VirtualFile> myGeneratedTestRoots = new java.util.HashSet<VirtualFile>();
   private VirtualFile[] myOutputDirectories;
   private Set<VirtualFile> myTestOutputDirectories;
@@ -86,7 +88,9 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   public CompileContextImpl(final Project project,
                             final CompilerTask compilerSession,
                             CompileScope compileScope,
-                            DependencyCache dependencyCache, boolean isMake, boolean isRebuild) {
+                            DependencyCache dependencyCache,
+                            boolean isMake,
+                            boolean isRebuild) {
     myProject = project;
     myTask = compilerSession;
     myCompileScope = compileScope;
@@ -160,9 +164,12 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
     final Module module = getModuleByFile(file);
     if (module != null) {
-      final String procGenRoot = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-      if (procGenRoot != null && VfsUtil.isAncestor(new File(procGenRoot), new File(file.getPath()), true)) {
-        return true;
+      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+        for (String path : provider.getOutputDirectories(getProject(), module)) {
+          if (path != null && VfsUtilCore.isAncestor(new File(path), new File(file.getPath()), true)) {
+            return true;
+          }
+        }
       }
     }
     return false;
@@ -222,14 +229,20 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
-    CompilerMessageImpl msg = new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, null);
+    CompilerMessageImpl msg =
+      new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, null);
     addMessage(msg);
   }
 
   @Override
-  public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum,
+  public void addMessage(CompilerMessageCategory category,
+                         String message,
+                         String url,
+                         int lineNum,
+                         int columnNum,
                          Navigatable navigatable) {
-    CompilerMessageImpl msg = new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
+    CompilerMessageImpl msg =
+      new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
     addMessage(msg);
   }
 
@@ -456,12 +469,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   @Override
   public boolean isRebuild() {
     return myIsRebuild;
-  }
-
-  @Override
-  @Deprecated
-  public boolean isAnnotationProcessorsEnabled() {
-    return false;
   }
 
   @Override

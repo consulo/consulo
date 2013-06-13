@@ -31,6 +31,7 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.testFramework.TestLoggerFactory
+import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration
 import org.jetbrains.plugins.groovy.compiler.generator.GroovycStubGenerator
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 /**
@@ -314,7 +315,7 @@ public class Transf implements ASTTransformation {
                                              "static def autoImported() { 239 }\n" +
                                              "}");
 
-    CompilerConfigurationOld.getInstance(getProject()).addResourceFilePattern("*.ASTTransformation");
+    ResourceCompilerConfiguration.getInstance(getProject()).addResourceFilePattern("*.ASTTransformation");
 
     myFixture.addFileToProject("META-INF/services/org.codehaus.groovy.transform.ASTTransformation", "Transf");
   }

@@ -152,7 +152,4 @@ public interface CompileContext extends UserDataHolder {
   boolean isRebuild();
 
   Project getProject();
-
-  @Deprecated
-  boolean isAnnotationProcessorsEnabled();
 }

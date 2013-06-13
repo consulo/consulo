@@ -48,9 +48,9 @@ public abstract class ResourceCopyingTest extends MavenImportingTestCase {
   protected void setUpInWriteAction() throws Exception {
     super.setUpInWriteAction();
 
-    CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern("!*.xxx");
-    CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern("!*.yyy");
-    CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern("!*.zzz");
+    ResourceCompilerConfiguration.getInstance(myProject).addResourceFilePattern("!*.xxx");
+    ResourceCompilerConfiguration.getInstance(myProject).addResourceFilePattern("!*.yyy");
+    ResourceCompilerConfiguration.getInstance(myProject).addResourceFilePattern("!*.zzz");
   }
 
   public void testBasic() throws Exception {

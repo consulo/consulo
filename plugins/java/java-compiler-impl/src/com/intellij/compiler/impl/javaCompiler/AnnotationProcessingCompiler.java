@@ -21,7 +21,9 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
+import com.intellij.CommonBundle;
 import com.intellij.compiler.CompilerException;
+import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.impl.CompileContextExProxy;
 import com.intellij.compiler.impl.javaCompiler.javac.JavacCompiler;
 import com.intellij.compiler.make.CacheCorruptedException;
@@ -31,15 +33,19 @@ import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
+import com.intellij.util.StringBuilderSpinAllocator;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Logger
@@ -75,7 +81,7 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
     final CompileContextEx _context = new CompileContextExProxy((CompileContextEx)context) {
       @Override
       public VirtualFile getModuleOutputDirectory(Module module) {
-        final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
+        final String path = JavaAdditionalOutputDirectoriesProvider.getAnnotationProcessorsGenerationPath(module);
         return path != null ? lfs.findFileByPath(path) : null;
       }
 
@@ -128,7 +134,7 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
       if (!myCompilerConfiguration.getAnnotationProcessingConfiguration(module).isEnabled()) {
         return true;
       }
-      final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
+      final String path = JavaAdditionalOutputDirectoriesProvider.getAnnotationProcessorsGenerationPath(module);
       final VirtualFile generationDir = path != null ? LocalFileSystem.getInstance().findFileByPath(path) : null;
       if (generationDir != null && VfsUtil.isAncestor(generationDir, file, false)) {
         return true;
@@ -139,6 +145,20 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
 
   @Override
   public boolean validateConfiguration(CompileScope scope) {
+    final List<Chunk<Module>> chunks = ModuleCompilerUtil.getSortedModuleChunks(myProject, Arrays.asList(scope.getAffectedModules()));
+    for (final Chunk<Module> chunk : chunks) {
+      final Set<Module> chunkModules = chunk.getNodes();
+      if (chunkModules.size() <= 1) {
+        continue; // no need to check one-module chunks
+      }
+      for (Module chunkModule : chunkModules) {
+        if (myCompilerConfiguration.getAnnotationProcessingConfiguration(chunkModule).isEnabled()) {
+          showCyclesNotSupportedForAnnotationProcessors(chunkModules.toArray(new Module[chunkModules.size()]));
+          return false;
+        }
+      }
+    }
+
     final JavacCompiler compiler = getBackEndCompiler();
     final boolean previousValue = compiler.setAnnotationProcessorMode(true);
     try {
@@ -146,6 +166,36 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
     }
     finally {
       compiler.setAnnotationProcessorMode(previousValue);
+    }
+  }
+
+  private void showCyclesNotSupportedForAnnotationProcessors(Module[] modulesInChunk) {
+    LOGGER.assertTrue(modulesInChunk.length > 0);
+    String moduleNameToSelect = modulesInChunk[0].getName();
+    final String moduleNames = getModulesString(modulesInChunk);
+    Messages
+      .showMessageDialog(myProject, CompilerBundle.message("error.annotation.processing.not.supported.for.module.cycles", moduleNames),
+                         CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+    showConfigurationDialog(moduleNameToSelect, null);
+  }
+
+  private void showConfigurationDialog(String moduleNameToSelect, String tabNameToSelect) {
+    ProjectSettingsService.getInstance(myProject).showModuleConfigurationDialog(moduleNameToSelect, tabNameToSelect);
+  }
+
+  private static String getModulesString(Module[] modulesInChunk) {
+    final StringBuilder moduleNames = StringBuilderSpinAllocator.alloc();
+    try {
+      for (Module module : modulesInChunk) {
+        if (moduleNames.length() > 0) {
+          moduleNames.append("\n");
+        }
+        moduleNames.append("\"").append(module.getName()).append("\"");
+      }
+      return moduleNames.toString();
+    }
+    finally {
+      StringBuilderSpinAllocator.dispose(moduleNames);
     }
   }
 

@@ -16,7 +16,6 @@
 
 package org.jetbrains.plugins.groovy.compiler;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
@@ -141,7 +140,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
                                                   "AST Transformations Found",
                                                   JetgroovyIcons.Groovy.Groovy_32x32);
       if (result == 0) {
-        CompilerConfigurationOld.getInstance(myProject).addResourceFilePattern(AST_TRANSFORM_FILE_NAME);
+        ResourceCompilerConfiguration.getInstance(myProject).addResourceFilePattern(AST_TRANSFORM_FILE_NAME);
       } else {
         configuration.transformsOk = true;
       }

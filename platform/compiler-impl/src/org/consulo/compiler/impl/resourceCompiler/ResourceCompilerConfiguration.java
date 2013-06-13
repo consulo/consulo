@@ -74,6 +74,18 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     return isResourceFile(virtualFile.getName(), virtualFile.getParent());
   }
 
+  public String[] getResourceFilePatterns() {
+    return getWildcardPatterns();
+  }
+
+  private String[] getWildcardPatterns() {
+    return ArrayUtil.toStringArray(myWildcardPatterns);
+  }
+
+  public void removeResourceFilePatterns() {
+    removeWildcardPatterns();
+  }
+
   private boolean isResourceFile(String name, @Nullable VirtualFile parent) {
     final Ref<String> parentRef = Ref.create(null);
     //noinspection ForLoopReplaceableByForEach
@@ -220,6 +232,10 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     myWildcardPatterns.clear();
     myCompiledPatterns.clear();
     myNegatedCompiledPatterns.clear();
+  }
+
+  public void addResourceFilePattern(String namePattern) throws MalformedPatternException {
+    addWildcardResourcePattern(namePattern);
   }
 
   private void addWildcardResourcePattern(@NonNls final String wildcardPattern) throws MalformedPatternException {

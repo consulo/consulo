@@ -15,8 +15,7 @@
  */
 package com.intellij.compiler.options;
 
-import com.intellij.compiler.CompilerConfigurationOld;
-import com.intellij.compiler.CompilerConfigurationImpl;
+import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -25,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.java.compiler.ProcessorConfigProfile;
 
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,42 +36,48 @@ public class AnnotationProcessorsConfigurable implements SearchableConfigurable,
 
   private final Project myProject;
   private AnnotationProcessorsPanel myMainPanel;
+  private JavaCompilerConfiguration myCompilerConfiguration;
 
   public AnnotationProcessorsConfigurable(final Project project) {
     myProject = project;
+    myCompilerConfiguration = JavaCompilerConfiguration.getInstance(project);
   }
 
+  @Override
   public String getDisplayName() {
     return "Annotation Processors";
   }
 
+  @Override
   public String getHelpTopic() {
     return "reference.projectsettings.compiler.annotationProcessors";
   }
 
+  @Override
   @NotNull
   public String getId() {
     return getHelpTopic();
   }
 
+  @Override
   public Runnable enableSearch(String option) {
     return null;
   }
 
+  @Override
   public JComponent createComponent() {
     myMainPanel = new AnnotationProcessorsPanel(myProject);
     return myMainPanel;
   }
 
+  @Override
   public boolean isModified() {
-    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
-
-    if (!config.getDefaultProcessorProfile().equals(myMainPanel.getDefaultProfile())) {
+    if (!myCompilerConfiguration.getDefaultProcessorProfile().equals(myMainPanel.getDefaultProfile())) {
       return true;
     }
 
-    final Map<String, ProcessorConfigProfile> configProfiles = new java.util.HashMap<String, ProcessorConfigProfile>();
-    for (ProcessorConfigProfile profile : config.getModuleProcessorProfiles()) {
+    final Map<String, ProcessorConfigProfile> configProfiles = new HashMap<String, ProcessorConfigProfile>();
+    for (ProcessorConfigProfile profile : myCompilerConfiguration.getModuleProcessorProfiles()) {
       configProfiles.put(profile.getName(), profile);
     }
     final List<ProcessorConfigProfile> panelProfiles = myMainPanel.getModuleProfiles();
@@ -88,17 +94,18 @@ public class AnnotationProcessorsConfigurable implements SearchableConfigurable,
     return false;
   }
 
+  @Override
   public void apply() throws ConfigurationException {
-    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
-    config.setDefaultProcessorProfile(myMainPanel.getDefaultProfile());
-    config.setModuleProcessorProfiles(myMainPanel.getModuleProfiles());
+    myCompilerConfiguration.setDefaultProcessorProfile(myMainPanel.getDefaultProfile());
+    myCompilerConfiguration.setModuleProcessorProfiles(myMainPanel.getModuleProfiles());
   }
 
+  @Override
   public void reset() {
-    final CompilerConfigurationImpl config = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(myProject);
-    myMainPanel.initProfiles(config.getDefaultProcessorProfile(), config.getModuleProcessorProfiles());
+    myMainPanel.initProfiles(myCompilerConfiguration.getDefaultProcessorProfile(), myCompilerConfiguration.getModuleProcessorProfiles());
   }
 
+  @Override
   public void disposeUIResources() {
   }
 

@@ -19,7 +19,6 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -122,7 +121,7 @@ public class TypeCustomizerInspection extends BaseInspection {
       else {
         final String path = VfsUtilCore.getRelativePath(virtualFile, sourceRoot, '/');
         final String sourceRootPath = VfsUtilCore.getRelativePath(sourceRoot, projectRoot, '/');
-        CompilerConfigurationOld.getInstance(project).addResourceFilePattern(sourceRootPath + ':' + path);
+        ResourceCompilerConfiguration.getInstance(project).addResourceFilePattern(sourceRootPath + ':' + path);
       }
       DaemonCodeAnalyzer.getInstance(project).restart(myFile);
     }

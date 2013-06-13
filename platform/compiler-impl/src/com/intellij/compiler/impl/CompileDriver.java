@@ -17,7 +17,10 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.compiler.*;
+import com.intellij.compiler.CompilerConfigurationOld;
+import com.intellij.compiler.CompilerMessageImpl;
+import com.intellij.compiler.CompilerWorkspaceConfiguration;
+import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.make.DependencyCache;
@@ -104,7 +107,7 @@ public class CompileDriver {
 
   private final Project myProject;
   private final Map<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> myGenerationCompilerModuleToOutputDirMap;
-    // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
+  // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
   private final String myCachesDirectoryPath;
   private boolean myShouldClearOutputDirectory;
 
@@ -162,7 +165,7 @@ public class CompileDriver {
       final IntermediateOutputCompiler[] generatingCompilers =
         CompilerManager.getInstance(myProject).getCompilers(IntermediateOutputCompiler.class, myCompilerFilter);
       final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
-      final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(project);
+
       for (Module module : allModules) {
         for (IntermediateOutputCompiler compiler : generatingCompilers) {
           final VirtualFile productionOutput = lookupVFile(lfs, CompilerPaths.getGenerationOutputPath(compiler, module, false));
@@ -171,10 +174,13 @@ public class CompileDriver {
           final Pair<VirtualFile, VirtualFile> outputs = new Pair<VirtualFile, VirtualFile>(productionOutput, testOutput);
           myGenerationCompilerModuleToOutputDirMap.put(pair, outputs);
         }
-        if (config.getAnnotationProcessingConfiguration(module).isEnabled()) {
-          final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-          if (path != null) {
-            lookupVFile(lfs, path);  // ensure the file is created and added to VFS
+
+        for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+          final String[] outputDirectories = provider.getOutputDirectories(project, module);
+          if (outputDirectories.length > 0) {
+            for (String path : outputDirectories) {
+              lookupVFile(lfs, path);
+            }
           }
         }
       }
@@ -448,28 +454,24 @@ public class CompileDriver {
     return Boolean.TRUE.equals(scope.getUserData(COMPILATION_STARTED_AUTOMATICALLY));
   }
 
-  private void attachAnnotationProcessorsOutputDirectories(CompileContextEx context) {
+  private void attachAdditionalOutputDirectories(CompileContextEx context) {
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
-    final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
     final Set<Module> affected = new HashSet<Module>(Arrays.asList(context.getCompileScope().getAffectedModules()));
     for (Module module : affected) {
-      if (!config.getAnnotationProcessingConfiguration(module).isEnabled()) {
-        continue;
+      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+        for (String path : provider.getOutputDirectories(myProject, module)) {
+          final VirtualFile vFile = lfs.findFileByPath(path);
+          if (vFile == null) {
+            continue;
+          }
+          if (ModuleRootManager.getInstance(module).getFileIndex().isInSourceContent(vFile)) {
+            // no need to add, is already marked as source
+            continue;
+          }
+          context.addScope(new FileSetCompileScope(Collections.singletonList(vFile), new Module[]{module}));
+          context.assignModule(vFile, module, false, null);
+        }
       }
-      final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-      if (path == null) {
-        continue;
-      }
-      final VirtualFile vFile = lfs.findFileByPath(path);
-      if (vFile == null) {
-        continue;
-      }
-      if (ModuleRootManager.getInstance(module).getFileIndex().isInSourceContent(vFile)) {
-        // no need to add, is already marked as source
-        continue;
-      }
-      context.addScope(new FileSetCompileScope(Collections.singletonList(vFile), new Module[]{module}));
-      context.assignModule(vFile, module, false, null);
     }
   }
 
@@ -671,7 +673,7 @@ public class CompileDriver {
         compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
         compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
       }
-      attachAnnotationProcessorsOutputDirectories(compileContext);
+      attachAdditionalOutputDirectories(compileContext);
     }
 
     final Runnable compileWork;
@@ -872,21 +874,20 @@ public class CompileDriver {
         lfs.refreshIoFiles(outputs, false, false, null);
         indicator.setText("");
       }
-      if (compileContext.isAnnotationProcessorsEnabled()) {
-        final Set<File> genSourceRoots = new THashSet<File>(FileUtil.FILE_HASHING_STRATEGY);
-        final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
+
+      final Set<File> genSourceRoots = new THashSet<File>(FileUtil.FILE_HASHING_STRATEGY);
+      for (AdditionalOutputDirectoriesProvider additionalOutputDirectoriesProvider : AdditionalOutputDirectoriesProvider.EP_NAME
+        .getExtensions()) {
         for (Module module : affectedModules) {
-          if (config.getAnnotationProcessingConfiguration(module).isEnabled()) {
-            final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-            if (path != null) {
-              genSourceRoots.add(new File(path));
-            }
+          for (String path : additionalOutputDirectoriesProvider.getOutputDirectories(myProject, module)) {
+            genSourceRoots.add(new File(path));
           }
         }
-        if (!genSourceRoots.isEmpty()) {
-          // refresh generates source roots asynchronously; needed for error highlighting update
-          lfs.refreshIoFiles(genSourceRoots, true, true, null);
-        }
+      }
+
+      if (!genSourceRoots.isEmpty()) {
+        // refresh generates source roots asynchronously; needed for error highlighting update
+        lfs.refreshIoFiles(genSourceRoots, true, true, null);
       }
     }
     SwingUtilities.invokeLater(new Runnable() {
@@ -1790,14 +1791,11 @@ public class CompileDriver {
       outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), false)));
       outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), true)));
     }
-    final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
-    if (context.isAnnotationProcessorsEnabled()) {
+
+    for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
       for (Module module : modules) {
-        if (config.getAnnotationProcessingConfiguration(module).isEnabled()) {
-          final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-          if (path != null) {
-            outputDirs.add(new File(path));
-          }
+        for (String path : provider.getOutputDirectories(myProject, module)) {
+          outputDirs.add(new File(path));
         }
       }
     }
@@ -2409,7 +2407,6 @@ public class CompileDriver {
       boolean isProjectCompilePathSpecified = true;
       final List<String> modulesWithoutJdkAssigned = new ArrayList<String>();
       final Set<File> nonExistingOutputPaths = new HashSet<File>();
-      final CompilerConfigurationOld config = CompilerConfigurationOld.getInstance(myProject);
       final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
       final boolean useOutOfProcessBuild = useOutOfProcessBuild();
       for (final Module module : scopeModules) {
@@ -2457,21 +2454,22 @@ public class CompileDriver {
             }
           }
           if (!useOutOfProcessBuild) {
-            if (config.getAnnotationProcessingConfiguration(module).isEnabled()) {
-              final String path = CompilerPaths.getAnnotationProcessorsGenerationPath(module);
-              if (path == null) {
-                final CompilerPathsManager extension = CompilerPathsManager.getInstance(module.getProject());
-                if (extension == null || extension.getCompilerOutputUrl() == null) {
-                  isProjectCompilePathSpecified = false;
+            for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+              for (String path : provider.getOutputDirectories(myProject, module)) {
+                if (path == null) {
+                  final CompilerPathsManager extension = CompilerPathsManager.getInstance(module.getProject());
+                  if (extension == null || extension.getCompilerOutputUrl() == null) {
+                    isProjectCompilePathSpecified = false;
+                  }
+                  else {
+                    modulesWithoutOutputPathSpecified.add(module.getName());
+                  }
                 }
                 else {
-                  modulesWithoutOutputPathSpecified.add(module.getName());
-                }
-              }
-              else {
-                final File file = new File(path);
-                if (!file.exists()) {
-                  nonExistingOutputPaths.add(file);
+                  final File file = new File(path);
+                  if (!file.exists()) {
+                    nonExistingOutputPaths.add(file);
+                  }
                 }
               }
             }
@@ -2543,19 +2541,7 @@ public class CompileDriver {
       else {
         CompilerPathsEx.CLEAR_ALL_OUTPUTS_KEY.set(scope, false);
       }
-      final List<Chunk<Module>> chunks = ModuleCompilerUtil.getSortedModuleChunks(myProject, Arrays.asList(scopeModules));
-      for (final Chunk<Module> chunk : chunks) {
-        final Set<Module> chunkModules = chunk.getNodes();
-        if (chunkModules.size() <= 1) {
-          continue; // no need to check one-module chunks
-        }
-        for (Module chunkModule : chunkModules) {
-          if (config.getAnnotationProcessingConfiguration(chunkModule).isEnabled()) {
-            showCyclesNotSupportedForAnnotationProcessors(chunkModules.toArray(new Module[chunkModules.size()]));
-            return false;
-          }
-        }
-      }
+
       if (!useOutOfProcessBuild) {
         final Compiler[] allCompilers = compilerManager.getCompilers(Compiler.class);
         for (Compiler compiler : allCompilers) {
@@ -2591,16 +2577,6 @@ public class CompileDriver {
     final String moduleNames = getModulesString(modulesInChunk);
     Messages.showMessageDialog(myProject, CompilerBundle.message("error.chunk.modules.must.have.same.jdk", moduleNames),
                                CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-    showConfigurationDialog(moduleNameToSelect, null);
-  }
-
-  private void showCyclesNotSupportedForAnnotationProcessors(Module[] modulesInChunk) {
-    LOG.assertTrue(modulesInChunk.length > 0);
-    String moduleNameToSelect = modulesInChunk[0].getName();
-    final String moduleNames = getModulesString(modulesInChunk);
-    Messages
-      .showMessageDialog(myProject, CompilerBundle.message("error.annotation.processing.not.supported.for.module.cycles", moduleNames),
-                         CommonBundle.getErrorTitle(), Messages.getErrorIcon());
     showConfigurationDialog(moduleNameToSelect, null);
   }
 

@@ -574,11 +574,6 @@
     <deepestSuperMethodsSearch implementation="com.intellij.psi.impl.search.MethodDeepestSuperSearcher"/>
   </extensions>
 
-
-  <extensions defaultExtensionNs="com.intellij">
-    <psi.packageSupportProvider implementation="org.consulo.java.platform.psi.impl.JavaPsiPackageSupportProvider"/>
-  </extensions>
-
   <extensions defaultExtensionNs="org.consulo.java">
     <exceptionFilter implementation="com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationExceptionFilterFactory"/>
 
@@ -594,7 +589,7 @@
                                             implementationClass="com.intellij.codeInsight.daemon.impl.quickfix.JavaCreateFieldFromUsageHelper"/>
 
     <codeInsight.containerProvider implementation="com.intellij.codeInsight.JavaContainerProvider" id="JAVA"/>
-    <customPropertyScopeProvider implementation="com.intellij.psi.impl.search.SimpleAccessorScopeProvider"/>
+
 
     <java.shortNamesCache implementation="com.intellij.psi.impl.PsiShortNamesCacheImpl"/>
 
@@ -651,6 +646,9 @@
 
     <projectConfigurable id="project.propCompiler.java" bundle="messages.JavaCoreBundle" key="java" parentId="project.propCompiler"
                          instance="com.intellij.compiler.impl.javaCompiler.JavaCompilerConfigurable"/>
+
+    <projectConfigurable bundle="messages.JavaBundle" key="annotation.processor.name" parentId="project.propCompiler.java"
+                         instance="com.intellij.compiler.options.AnnotationProcessorsConfigurable"/>
 
     <projectConfigurable bundle="messages.JavaBundle" key="javac.name" parentId="project.propCompiler.java"
                          instance="com.intellij.compiler.impl.javaCompiler.javac.JavacConfigurable"/>
@@ -1847,6 +1845,11 @@
 
     <configurationType implementation="com.intellij.execution.application.ApplicationConfigurationType"/>
     <configurationProducer implementation="com.intellij.execution.application.ApplicationConfigurationProducer"/>
+
+    <psi.packageSupportProvider implementation="org.consulo.java.platform.psi.impl.JavaPsiPackageSupportProvider"/>
+    <customPropertyScopeProvider implementation="com.intellij.psi.impl.search.SimpleAccessorScopeProvider"/>
+
+    <compiler.additionalOutputDirectoriesProvider implementation="com.intellij.compiler.impl.javaCompiler.JavaAdditionalOutputDirectoriesProvider" />
   </extensions>
 
 

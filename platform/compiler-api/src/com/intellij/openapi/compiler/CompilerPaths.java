@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -24,7 +23,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -34,10 +32,8 @@ import com.intellij.util.PathUtil;
 import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Locale;
 
@@ -47,7 +43,7 @@ import java.util.Locale;
 public class CompilerPaths {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.compiler.CompilerPaths");
   private static volatile String ourSystemPath;
-  private static final Comparator<String> URLS_COMPARATOR = new Comparator<String>() {
+  public static final Comparator<String> URLS_COMPARATOR = new Comparator<String>() {
     public int compare(String o1, String o2) {
       return o1.compareTo(o2);
     }
@@ -200,32 +196,6 @@ public class CompilerPaths {
     }
 
     return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
-  }
-
-  @Nullable
-  public static String getAnnotationProcessorsGenerationPath(Module module) {
-    final AnnotationProcessingConfiguration config =
-      CompilerConfigurationOld.getInstance(module.getProject()).getAnnotationProcessingConfiguration(module);
-    final String sourceDirName = config.getGeneratedSourcesDirectoryName(false);
-    if (config.isOutputRelativeToContentRoot()) {
-      final String[] roots = ModuleRootManager.getInstance(module).getContentRootUrls();
-      if (roots.length == 0) {
-        return null;
-      }
-      if (roots.length > 1) {
-        Arrays.sort(roots, URLS_COMPARATOR);
-      }
-      return StringUtil.isEmpty(sourceDirName)
-             ? VirtualFileManager.extractPath(roots[0])
-             : VirtualFileManager.extractPath(roots[0]) + "/" + sourceDirName;
-    }
-
-
-    final String path = getModuleOutputPath(module, false);
-    if (path == null) {
-      return null;
-    }
-    return StringUtil.isEmpty(sourceDirName) ? path : path + "/" + sourceDirName;
   }
 
   @NonNls

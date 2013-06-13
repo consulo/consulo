@@ -159,11 +159,6 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  public boolean isAnnotationProcessorsEnabled() {
-    return myDelegate.isAnnotationProcessorsEnabled();
-  }
-
-  @Override
   public boolean isRebuild() {
     return myDelegate.isRebuild();
   }
