@@ -16,11 +16,11 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckboxTreeBase;
 import com.intellij.ui.JBSplitter;
@@ -123,10 +123,9 @@ public class ExtensionEditor extends ModuleElementsEditor {
         rootModel.removeOrderEntry(sdkOrderEntry);
       }
 
-      if (sdkOrderEntry != null) {
-        final Sdk sdk = sdkOrderEntry.getSdk();
+      if (extension.isEnabled()) {
         final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
-        if (!sdk.equals(sdkExtension.getSdk())) {
+        if (sdkOrderEntry == null || !Comparing.equal(sdkExtension.getSdk(), sdkOrderEntry.getSdk())) {
           if (extension.isEnabled()) {
             rootModel.addModuleExtensionSdkEntry(sdkExtension);
           }
