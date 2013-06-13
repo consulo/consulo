@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
@@ -94,7 +95,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   @Nullable
   private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension<?> extension) {
-    return extension.createConfigurablePanel(new Runnable() {
+    return extension.createConfigurablePanel(myState.getRootModel(), new Runnable() {
       @Override
       public void run() {
         extensionChanged(extension);
@@ -103,11 +104,14 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   public void extensionChanged(MutableModuleExtension<?> extension) {
-    if (!extension.isEnabled()) {
-      mySplitter.setSecondComponent(null);
-    }
-    else {
-      mySplitter.setSecondComponent(createConfigurationPanel(extension));
+    final JComponent secondComponent = mySplitter.getSecondComponent();
+    if(secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
+      if (!extension.isEnabled()) {
+        mySplitter.setSecondComponent(null);
+      }
+      else {
+        mySplitter.setSecondComponent(createConfigurationPanel(extension));
+      }
     }
 
     final ModifiableRootModel rootModel = myState.getRootModel();
@@ -115,16 +119,19 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     if (extension instanceof ModuleExtensionWithSdk) {
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = rootModel.findModuleExtensionSdkEntry(extension);
-      if (sdkOrderEntry != null) {
+      if (!extension.isEnabled() && sdkOrderEntry != null) {
         rootModel.removeOrderEntry(sdkOrderEntry);
       }
 
-      final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
-      if(sdkExtension.getSdkName() != null && extension.isEnabled()) {
-        rootModel.addModuleExtensionSdkEntry(sdkExtension);
+      if (sdkOrderEntry != null) {
+        final Sdk sdk = sdkOrderEntry.getSdk();
+        final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
+        if (!sdk.equals(sdkExtension.getSdk())) {
+          if (extension.isEnabled()) {
+            rootModel.addModuleExtensionSdkEntry(sdkExtension);
+          }
+        }
       }
-
-      myClasspathEditor.moduleStateChanged();
     }
 
     for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
@@ -133,6 +140,8 @@ public class ExtensionEditor extends ModuleElementsEditor {
         PsiPackageManager.getInstance(module.getProject()).dropCache(extension.getClass());
       }
     }
+
+    myClasspathEditor.moduleStateChanged();
   }
 
   @Override

@@ -1,6 +1,8 @@
 package org.jetbrains.plugins.groovy.module.extension;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import lombok.NonNull;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +25,7 @@ public class GroovyMutableModuleExtension extends GroovyModuleExtension implemen
 
   @Nullable
   @Override
-  public JComponent createConfigurablePanel(@Nullable Runnable updateOnCheck) {
+  public JComponent createConfigurablePanel(@NonNull ModifiableRootModel rootModel, @Nullable Runnable updateOnCheck) {
     return null;
   }
 

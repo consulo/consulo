@@ -595,7 +595,7 @@ public class PluginManager {
     return IdeaPluginDescriptorImpl.EMPTY_ARRAY;
   }
 
-  private static int countPlugins(String pluginsPath) {
+  public static int countPlugins(String pluginsPath) {
     File configuredPluginsDir = new File(pluginsPath);
     if (configuredPluginsDir.exists()) {
       String[] list = configuredPluginsDir.list();

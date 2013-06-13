@@ -17,8 +17,10 @@ package org.consulo.java.platform.module.extension;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.pom.java.LanguageLevel;
+import lombok.NonNull;
 import org.consulo.java.platform.module.extension.ui.JavaModuleExtensionPanel;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +45,7 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
 
   @Nullable
   @Override
-  public JComponent createConfigurablePanel(@Nullable Runnable updateOnCheck) {
+  public JComponent createConfigurablePanel(@NonNull ModifiableRootModel rootModel, @Nullable Runnable updateOnCheck) {
     return new JavaModuleExtensionPanel(this, updateOnCheck);
   }
 
