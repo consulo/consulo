@@ -29,11 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: kirillk
- * Date: 8/17/11
- * Time: 10:04 AM
- * To change this template use File | Settings | File Templates.
+ * @author kirillk
+ * @since 10:04 AM/8/17/11
  */
 public class ActivityMonitorTest extends UsefulTestCase {
   private UiActivityMonitorImpl myMonitor;
@@ -44,7 +41,7 @@ public class ActivityMonitorTest extends UsefulTestCase {
     super.setUp();
     myCurrentState = ModalityState.NON_MODAL;
     final ModalityStateEx any = new ModalityStateEx();
-    Extensions.registerAreaClass("IDEA_PROJECT", null);
+    Extensions.registerAreaClass("CONSULO_PROJECT", null);
     ApplicationManager.setApplication(new MockApplication(getTestRootDisposable()) {
       @NotNull
       @Override

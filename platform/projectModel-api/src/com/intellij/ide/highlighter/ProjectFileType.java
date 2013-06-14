@@ -29,33 +29,40 @@ public class ProjectFileType implements InternalFileType {
   @NonNls public static final String DEFAULT_EXTENSION = "ipr";
   @NonNls public static final String DOT_DEFAULT_EXTENSION = ".ipr";
 
+  @Override
   @NotNull
   public String getName() {
-    return "IDEA_PROJECT";
+    return "CONSULO_PROJECT";
   }
 
+  @Override
   @NotNull
   public String getDescription() {
     return IdeBundle.message("filetype.description.idea.project");
   }
 
+  @Override
   @NotNull
   public String getDefaultExtension() {
     return DEFAULT_EXTENSION;
   }
 
+  @Override
   public Icon getIcon() {
     return AllIcons.Icon16;
   }
 
+  @Override
   public boolean isBinary() {
     return false;
   }
 
+  @Override
   public boolean isReadOnly() {
     return true;
   }
 
+  @Override
   public String getCharset(@NotNull VirtualFile file, final byte[] content) {
     return CharsetToolkit.UTF8;
   }

@@ -29,13 +29,13 @@ public interface ExtensionPoints extends ToolExtensionPoints {
    * Extension declaration sample is as follows:
    * <pre>
    * &lt;extensions xmlns="com.intellij"&gt;
-   *   &lt;component area="IDEA_PROJECT"&gt;
+   *   &lt;component area="CONSULO_PROJECT"&gt;
    *     &lt;implementation&gt;my.plugin.pagckage.MyProjectComponent&lt;/implementation&gt;
    *   &lt;/component&gt;
    * &lt;/extensions&gt;
    * </pre>
    * <p/>
-   * Possible registration areas are IDEA_PROJECT, MODULE_PROJECT which stand for ProjectComponent and ModuleComponent correspondingly.
+   * Possible registration areas are CONSULO_PROJECT, CONSULO_MODULE which stand for ProjectComponent and ModuleComponent correspondingly.
    * If area attribute is omitted the component will be registered in root area which corresponds to ApplicationComponent.
    */
   @NonNls String COMPONENT = "com.intellij.component";

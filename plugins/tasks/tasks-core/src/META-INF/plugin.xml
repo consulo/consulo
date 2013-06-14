@@ -84,7 +84,7 @@
 
   <extensionPoints>
     <extensionPoint name="repositoryType" interface="com.intellij.tasks.TaskRepositoryType"/>
-    <extensionPoint area="IDEA_PROJECT" name="contextProvider" interface="com.intellij.tasks.context.WorkingContextProvider"/>
+    <extensionPoint area="CONSULO_PROJECT" name="contextProvider" interface="com.intellij.tasks.context.WorkingContextProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">

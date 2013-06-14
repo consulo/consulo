@@ -30,8 +30,8 @@ public class StdFileTypes extends FileTypes {
   public static final LanguageFileType JS = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("JavaScript");
   public static final LanguageFileType PROPERTIES = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("Properties");
   public static final FileType GUI_DESIGNER_FORM = FileTypeManager.getInstance().getStdFileType("GUI_DESIGNER_FORM");
-  public static final FileType IDEA_WORKSPACE = FileTypeManager.getInstance().getStdFileType("IDEA_WORKSPACE");
-  public static final FileType IDEA_PROJECT = FileTypeManager.getInstance().getStdFileType("IDEA_PROJECT");
-  public static final FileType IDEA_MODULE = FileTypeManager.getInstance().getStdFileType("IDEA_MODULE");
+  public static final FileType IDEA_WORKSPACE = FileTypeManager.getInstance().getStdFileType("CONSULO_WORKSPACE");
+  public static final FileType IDEA_PROJECT = FileTypeManager.getInstance().getStdFileType("CONSULO_PROJECT");
+  public static final FileType IDEA_MODULE = FileTypeManager.getInstance().getStdFileType("CONSULO_MODULE");
   public static final FileType PATCH = FileTypeManager.getInstance().getStdFileType("PATCH");
 }

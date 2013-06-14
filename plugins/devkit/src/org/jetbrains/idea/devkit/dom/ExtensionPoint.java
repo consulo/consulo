@@ -29,9 +29,8 @@ import java.util.List;
 @Presentation(typeName = "Extension Point")
 public interface ExtensionPoint extends DomElement {
   enum Area {
-    IDEA_PROJECT,
-    IDEA_MODULE,
-    IDEA_APPLICATION
+    CONSULO_PROJECT,
+    CONSULO_MODULE
   }
 
   @NotNull

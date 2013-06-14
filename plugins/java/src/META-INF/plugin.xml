@@ -458,14 +458,14 @@
 
     <extensionPoint name="debugger.positionManagerFactory"
                     interface="com.intellij.debugger.PositionManagerFactory"
-                    area="IDEA_PROJECT"/>
+                    area="CONSULO_PROJECT"/>
     <extensionPoint name="debugger.jvmSmartStepIntoHandler"
                     interface="com.intellij.debugger.actions.JvmSmartStepIntoHandler"/>
 
 
     <extensionPoint name="compiler.inspectionValidator"
                     interface="com.intellij.openapi.compiler.util.InspectionValidator"
-                    area="IDEA_PROJECT"/>
+                    area="CONSULO_PROJECT"/>
 
     <extensionPoint name="javaExpressionSurrounder"
                     interface="com.intellij.codeInsight.generation.surroundWith.JavaExpressionSurrounder"/>
@@ -482,7 +482,7 @@
       <with attribute="implementationClass" implements="com.intellij.debugger.impl.EditorTextProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="javadocTagInfo" area="IDEA_PROJECT" interface="com.intellij.psi.javadoc.JavadocTagInfo"/>
+    <extensionPoint name="javadocTagInfo" area="CONSULO_PROJECT" interface="com.intellij.psi.javadoc.JavadocTagInfo"/>
 
     <extensionPoint name="refactoring.introduceParameterMethodUsagesProcessor"
                     interface="com.intellij.refactoring.introduceParameter.IntroduceParameterMethodUsagesProcessor"/>
@@ -501,8 +501,8 @@
 
     <!--<extensionPoint name="expectedTypesProvider" interface="com.intellij.codeInsight.ExpectedTypesProviderExtension"/>-->
 
-    <extensionPoint name="elementFinder" area="IDEA_PROJECT" interface="com.intellij.psi.PsiElementFinder"/>
-    <extensionPoint name="java.shortNamesCache" area="IDEA_PROJECT" interface="com.intellij.psi.search.PsiShortNamesCache"/>
+    <extensionPoint name="elementFinder" area="CONSULO_PROJECT" interface="com.intellij.psi.PsiElementFinder"/>
+    <extensionPoint name="java.shortNamesCache" area="CONSULO_PROJECT" interface="com.intellij.psi.search.PsiShortNamesCache"/>
 
     <extensionPoint name="allowedApiFilter" interface="com.intellij.psi.impl.AllowedApiFilterExtension"/>
 
@@ -553,7 +553,7 @@
                     interface="com.intellij.psi.ClsFileDecompiledPsiFileProvider"/>
     <extensionPoint name="extraExceptionHandler" interface="com.intellij.codeInsight.ExtraExceptionHandler"/>
 
-    <extensionPoint name="backendCompiler" beanClass="com.intellij.compiler.impl.javaCompiler.BackendCompilerEP" area="IDEA_PROJECT">
+    <extensionPoint name="backendCompiler" beanClass="com.intellij.compiler.impl.javaCompiler.BackendCompilerEP" area="CONSULO_PROJECT">
       <with attribute="implementationClass" implements="com.intellij.compiler.impl.javaCompiler.BackendCompiler"/>
     </extensionPoint>
     <extensionPoint name="runConfigurationExtension" interface="com.intellij.execution.RunConfigurationExtension"/>

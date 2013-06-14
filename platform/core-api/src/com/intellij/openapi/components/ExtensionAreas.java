@@ -20,7 +20,9 @@ import org.jetbrains.annotations.NonNls;
 /**
  * @author yole
  */
-public class ExtensionAreas {
-  @NonNls public static final String IDEA_PROJECT = "IDEA_PROJECT";
-  @NonNls public static final String IDEA_MODULE = "IDEA_MODULE";
+public interface ExtensionAreas {
+  @NonNls
+  String IDEA_PROJECT = "CONSULO_PROJECT";
+  @NonNls
+  String IDEA_MODULE = "CONSULO_MODULE";
 }
