@@ -64,18 +64,22 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
     super(project, factory, name);
   }
 
+  @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new PluginRunConfigurationEditor(this);
   }
 
+  @Override
   public JDOMExternalizable createRunnerSettings(ConfigurationInfoProvider provider) {
     return null;
   }
 
+  @Override
   public SettingsEditor<JDOMExternalizable> getRunnerSettingsEditor(ProgramRunner runner) {
     return null;
   }
 
+  @Override
   public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
     final Module module = getModule();
     if (module == null) {
@@ -117,6 +121,7 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
 
 
     final JavaCommandLineState state = new JavaCommandLineState(env) {
+      @Override
       protected JavaParameters createJavaParameters() throws ExecutionException {
 
         final JavaParameters params = new JavaParameters();
@@ -212,11 +217,13 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
     }
   }
 
+  @Override
   public void checkConfiguration() throws RuntimeConfigurationException {
     if (getModule() == null) {
       throw new RuntimeConfigurationException(DevKitBundle.message("run.configuration.no.module.specified"));
     }
     String moduleName = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+      @Override
       public String compute() {
         return getModule().getName();
       }
@@ -235,12 +242,14 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
   }
 
 
+  @Override
   @NotNull
   public Module[] getModules() {
     final Module module = getModule();
     return module != null ? new Module[]{module} : Module.EMPTY_ARRAY;
   }
 
+  @Override
   public void readExternal(Element element) throws InvalidDataException {
     Element module = element.getChild(MODULE);
     if (module != null) {
@@ -256,9 +265,11 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
     super.readExternal(element);
   }
 
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     Element moduleElement = new Element(MODULE);
     moduleElement.setAttribute(NAME, ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+      @Override
       public String compute() {
         final Module module = getModule();
         return module != null ? module.getName() : myModuleName != null ? myModuleName : "";
