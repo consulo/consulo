@@ -18,7 +18,6 @@
   <name>IDEA</name>
 
   <extensions defaultExtensionNs="com.intellij">
-    <projectImportProvider implementation="com.intellij.ide.util.projectWizard.IDEAProjectImportProvider"/>
-
+    <projectImportProvider implementation="org.consulo.idea.util.projectWizard.IDEAProjectImportProvider"/>
   </extensions>
 </idea-plugin>

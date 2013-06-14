@@ -96,6 +96,7 @@
     <orderEntry type="module" module-name="tasks-tests" />
     <orderEntry type="module" module-name="tasks-time-tracking" />
     <orderEntry type="module" module-name="gradle" />
+    <orderEntry type="module" module-name="idea" />
   </component>
 </module>
 
