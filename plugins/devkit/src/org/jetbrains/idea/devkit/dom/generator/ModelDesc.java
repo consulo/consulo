@@ -77,15 +77,19 @@ public class ModelDesc {
 
   public String toJavaTypeName(String tname, String ns) {
     final int lastIndex = tname.lastIndexOf('.');
-    String xmlName = lastIndex>-1? tname.substring(lastIndex+1): tname;
+    String xmlName = lastIndex > -1 ? tname.substring(lastIndex + 1) : tname;
     NamespaceDesc nsd = getNSD(ns);
     if (ns == null || !ns.endsWith(".dtd")) {
-      if (xmlName.endsWith(Util.ANONYMOUS_ELEM_TYPE_SUFFIX)) xmlName = xmlName.substring(0, xmlName.length() - Util.ANONYMOUS_ELEM_TYPE_SUFFIX.length());
-      else if (xmlName.endsWith(Util.ANONYMOUS_ATTR_TYPE_SUFFIX)) xmlName = xmlName.substring(0, xmlName.length() - Util.ANONYMOUS_ATTR_TYPE_SUFFIX.length());
+      if (xmlName.endsWith(Util.ANONYMOUS_ELEM_TYPE_SUFFIX)) {
+        xmlName = xmlName.substring(0, xmlName.length() - Util.ANONYMOUS_ELEM_TYPE_SUFFIX.length());
+      }
+      else if (xmlName.endsWith(Util.ANONYMOUS_ATTR_TYPE_SUFFIX)) {
+        xmlName = xmlName.substring(0, xmlName.length() - Util.ANONYMOUS_ATTR_TYPE_SUFFIX.length());
+      }
       else if (xmlName.endsWith(Util.TYPE_SUFFIX)) xmlName = xmlName.substring(0, xmlName.length() - Util.TYPE_SUFFIX.length());
     }
     String rc = Util.capitalize(Util.toJavaName(xmlName));
-    if (nsd.prefix != null && nsd.prefix.length()>0 && !rc.startsWith(nsd.prefix)) {
+    if (nsd.prefix != null && nsd.prefix.length() > 0 && !rc.startsWith(nsd.prefix)) {
       rc = nsd.prefix + rc;
     }
     if (Util.RESERVED_NAMES_MAP.containsKey(rc)) {
@@ -94,7 +98,7 @@ public class ModelDesc {
     if (name2replaceMap.containsKey(rc)) {
       rc = Util.expandProperties(name2replaceMap.get(rc), nsd.props);
     }
-    
+
     return rc;
   }
 
@@ -112,30 +116,33 @@ public class ModelDesc {
 //    out.println(qname2FileMap);
     out.println("-- nsdMap ---");
     for (Map.Entry<String, NamespaceDesc> entry : nsdMap.entrySet()) {
-      out.println("namespace key: "+entry.getKey());
+      out.println("namespace key: " + entry.getKey());
       dumpNamespace(entry.getValue(), out);
     }
     out.println("-- jtMap ---");
     for (Map.Entry<String, TypeDesc> entry : jtMap.entrySet()) {
-      out.println("type key: "+entry.getKey());
+      out.println("type key: " + entry.getKey());
       dumpTypeDesc(entry.getValue(), out);
     }
   }
 
   private void dumpTypeDesc(TypeDesc td, PrintWriter out) {
     final ArrayList<String> superList;
-    if (td.supers !=null) {
+    if (td.supers != null) {
       superList = new ArrayList<String>();
       for (TypeDesc aSuper : td.supers) {
-        superList.add(getNSDPrefix(aSuper)+aSuper.name);
+        superList.add(getNSDPrefix(aSuper) + aSuper.name);
       }
-    } else superList = null;
+    }
+    else {
+      superList = null;
+    }
     out.println("  name      " + td.name);
     out.println("  type      " + td.type);
     out.println("  xsName    " + td.xsName);
     out.println("  xsNS      " + td.xsNamespace);
     out.println("  dups      " + td.duplicates);
-    out.println("  supers    " + (superList!=null?superList:"null"));
+    out.println("  supers    " + (superList != null ? superList : "null"));
     out.println("  doc       " + (td.documentation != null ? td.documentation.length() : "null"));
     for (Map.Entry<String, FieldDesc> entry : td.fdMap.entrySet()) {
       out.println("  field key: " + entry.getKey());
@@ -148,24 +155,24 @@ public class ModelDesc {
     if (td.type == TypeDesc.TypeEnum.ENUM) return;
     out.println("    clType    " + fd.clType);
     out.println("    required  " + fd.required);
-    out.println("    index     " + fd.idx+"/"+fd.realIndex);
+    out.println("    index     " + fd.idx + "/" + fd.realIndex);
     out.println("    choiceOpt " + fd.choiceOpt);
-    out.println("    choice    " + (fd.choice!=null?fd.choice.length:"null"));
+    out.println("    choice    " + (fd.choice != null ? fd.choice.length : "null"));
     out.println("    content   " + fd.contentQualifiedName);
     out.println("    dupIdx    " + fd.duplicateIndex);
     out.println("    elName    " + fd.elementName);
     out.println("    elType    " + fd.elementType);
     out.println("    def       " + fd.def);
-    out.println("    doc       " + (fd.documentation != null? fd.documentation.length(): "null"));
+    out.println("    doc       " + (fd.documentation != null ? fd.documentation.length() : "null"));
   }
 
   private void dumpNamespace(NamespaceDesc value, PrintWriter out) {
     if (value.skip) return;
-    out.println("  name     "+value.name);
-    out.println("  prefix   "+value.prefix);
-    out.println("  pkgName  "+value.pkgName);
-    out.println("  pkgNames "+(value.pkgNames != null?Arrays.asList(value.pkgNames):"null"));
-    out.println("  enumPkg  "+value.enumPkg);
-    out.println("  super    "+value.superClass);
+    out.println("  name     " + value.name);
+    out.println("  prefix   " + value.prefix);
+    out.println("  pkgName  " + value.pkgName);
+    out.println("  pkgNames " + (value.pkgNames != null ? Arrays.asList(value.pkgNames) : "null"));
+    out.println("  enumPkg  " + value.enumPkg);
+    out.println("  super    " + value.superClass);
   }
 }

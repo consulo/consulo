@@ -44,7 +44,7 @@ public class Main {
       loader = new DTDModelLoader();
     }
     else {
-      System.out.println("'"+mode+"' format not supported");
+      System.out.println("'" + mode + "' format not supported");
       System.exit(-1);
       return;
     }

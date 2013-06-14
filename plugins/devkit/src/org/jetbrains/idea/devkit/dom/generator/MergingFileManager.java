@@ -60,20 +60,24 @@ public class MergingFileManager implements FileManager {
           if (target.exists() && !target.delete()) {
             Util.logerr("file replace failed: " + target);
             outFile.delete();
-          } else {
+          }
+          else {
             outFile.renameTo(target);
             Util.logwarn("file replaced: " + target);
           }
-        } else {
+        }
+        else {
           outFile.delete();
           if (target.exists() && !target.delete()) {
             Util.logerr("file replace failed: " + target);
-          } else {
+          }
+          else {
             writeFile(target, mergedLines);
             Util.logwarn("file merged: " + target);
           }
         }
-      } else {
+      }
+      else {
         outFile.delete();
       }
     }
@@ -93,39 +97,46 @@ public class MergingFileManager implements FileManager {
       if (classScope) {
         merged.addAll(Arrays.asList(curLines).subList(curIdx, curLines.length));
         break;
-      } else if (prev.trim().startsWith("import ") || cur.trim().startsWith("import ")) {
+      }
+      else if (prev.trim().startsWith("import ") || cur.trim().startsWith("import ")) {
         if (importMerged) continue;
         importMerged = true;
         int[] indices = new int[]{curIdx, prevIdx};
         mergeImports(merged, curLines, prevLines, indices);
         curIdx = indices[0];
         prevIdx = indices[1];
-      } else if (cur.equals(prev)) {
-        if (cur.trim().startsWith("public interface ")
-                || cur.trim().startsWith("public enum ")) classScope = true;
+      }
+      else if (cur.equals(prev)) {
+        if (cur.trim().startsWith("public interface ") || cur.trim().startsWith("public enum ")) classScope = true;
         merged.add(cur);
         curIdx++;
         prevIdx++;
-      } else if (prev.trim().startsWith("@")) {
+      }
+      else if (prev.trim().startsWith("@")) {
         merged.add(prev);
         prevIdx++;
-      } else if (cur.trim().startsWith("@")) {
+      }
+      else if (cur.trim().startsWith("@")) {
         merged.add(cur);
         curIdx++;
-      } else if (cur.trim().startsWith("package  ") && prev.trim().startsWith("package ")) {
+      }
+      else if (cur.trim().startsWith("package  ") && prev.trim().startsWith("package ")) {
         merged.add(prev);
         curIdx++;
         prevIdx++;
-      } else if (cur.trim().startsWith("public interface ") && prev.trim().startsWith("public interface ")) {
+      }
+      else if (cur.trim().startsWith("public interface ") && prev.trim().startsWith("public interface ")) {
         classScope = true;
         prevIdx = addAllStringsUpTo(merged, prevLines, prevIdx, "{");
         curIdx = addAllStringsUpTo(null, curLines, curIdx, "{");
-      } else if (cur.trim().startsWith("* ")) {
+      }
+      else if (cur.trim().startsWith("* ")) {
         curIdx = addAllStringsUpTo(merged, curLines, curIdx, "*/");
         if (prev.trim().startsWith("* ") || prev.trim().endsWith("*/")) {
           prevIdx = addAllStringsUpTo(null, prevLines, prevIdx, "*/");
         }
-      } else {
+      }
+      else {
         merged.add(cur);
         curIdx++;
         prevIdx++;
@@ -134,9 +145,11 @@ public class MergingFileManager implements FileManager {
     String[] mergedLines = ArrayUtil.toStringArray(merged);
     if (compareLines(mergedLines, prevLines, 2) == 0) {
       return prevLines;
-    } else if (compareLines(mergedLines, curLines, 2) == 0) {
+    }
+    else if (compareLines(mergedLines, curLines, 2) == 0) {
       return curLines;
-    } else {
+    }
+    else {
       return mergedLines;
     }
   }
@@ -184,7 +197,8 @@ public class MergingFileManager implements FileManager {
       str = startIdx < lines.length ? lines[startIdx] : upTo;
       if (merged != null) merged.add(str);
       startIdx++;
-    } while (!str.trim().endsWith(upTo) && startIdx < lines.length);
+    }
+    while (!str.trim().endsWith(upTo) && startIdx < lines.length);
     return startIdx;
   }
 
@@ -209,13 +223,16 @@ public class MergingFileManager implements FileManager {
         String mergedLine = mergedLines[i];
         out.println(mergedLine);
       }
-    } catch (Exception ex) {
+    }
+    catch (Exception ex) {
       ex.printStackTrace();
-    } finally {
+    }
+    finally {
       if (out != null) {
         try {
           out.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
       }
     }
@@ -232,13 +249,16 @@ public class MergingFileManager implements FileManager {
       while ((str = in.readLine()) != null) {
         list.add(str);
       }
-    } catch (Exception ex) {
+    }
+    catch (Exception ex) {
       ex.printStackTrace();
-    } finally {
+    }
+    finally {
       if (in != null) {
         try {
           in.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
         }
       }
     }

@@ -25,11 +25,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.idea.devkit.build.PluginBuildConfiguration;
 import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
 
-public class PluginModuleBuilder extends JavaModuleBuilder{
+public class PluginModuleBuilder extends JavaModuleBuilder {
   @NonNls private static final String META_INF = "META-INF";
   @NonNls private static final String PLUGIN_XML = "plugin.xml";
-
-
 
 
   public void setupRootModel(final ModifiableRootModel rootModel) throws ConfigurationException {

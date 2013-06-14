@@ -60,32 +60,31 @@ public class GenerateComponentExternalizationAction extends AnAction {
               final PsiJavaCodeReferenceElement referenceElement =
                 factory.createReferenceFromText(PERSISTENCE_STATE_COMPONENT + "<" + qualifiedName + ">", target);
               implList.add(styler.shortenClassReferences(referenceElement.copy()));
-              PsiMethod read = factory.createMethodFromText(
-                "public void loadState(" + qualifiedName + " state) {\n" +
-                "    com.intellij.util.xmlb.XmlSerializerUtil.copyBean(state, this);\n" +
-                "}",
-                target
-              );
+              PsiMethod read = factory.createMethodFromText("public void loadState(" + qualifiedName + " state) {\n" +
+                                                            "    com.intellij.util.xmlb.XmlSerializerUtil.copyBean(state, this);\n" +
+                                                            "}", target);
 
               read = (PsiMethod)formatter.reformat(target.add(read));
               styler.shortenClassReferences(read);
 
-              PsiMethod write = factory.createMethodFromText(
-                "public " + qualifiedName + " getState() {\n" +
-                "    return this;\n" +
-                "}\n",
-                target
-              );
+              PsiMethod write = factory.createMethodFromText("public " + qualifiedName + " getState() {\n" +
+                                                             "    return this;\n" +
+                                                             "}\n", target);
               write = (PsiMethod)formatter.reformat(target.add(write));
               styler.shortenClassReferences(write);
 
               PsiAnnotation annotation = target.getModifierList().addAnnotation(STATE);
 
-              annotation = (PsiAnnotation)formatter.reformat(annotation.replace(
-                factory.createAnnotationFromText("@" + STATE +
-                                                 "(name = \"" + qualifiedName + "\", " +
-                                                 "storages = {@" + STORAGE + "(file = \"" + StoragePathMacros.WORKSPACE_FILE + "\"\n )})",
-                                                 target)));
+              annotation = (PsiAnnotation)formatter.reformat(annotation.replace(factory.createAnnotationFromText("@" +
+                                                                                                                 STATE +
+                                                                                                                 "(name = \"" +
+                                                                                                                 qualifiedName +
+                                                                                                                 "\", " +
+                                                                                                                 "storages = {@" +
+                                                                                                                 STORAGE +
+                                                                                                                 "(file = \"" +
+                                                                                                                 StoragePathMacros.WORKSPACE_FILE +
+                                                                                                                 "\"\n )})", target)));
               styler.shortenClassReferences(annotation);
             }
             catch (IncorrectOperationException e1) {
@@ -96,8 +95,8 @@ public class GenerateComponentExternalizationAction extends AnAction {
       }
     };
 
-    CommandProcessor.getInstance().executeCommand(target.getProject(), runnable,
-                                                  DevKitBundle.message("command.implement.externalizable"), null);
+    CommandProcessor.getInstance()
+      .executeCommand(target.getProject(), runnable, DevKitBundle.message("command.implement.externalizable"), null);
   }
 
   @Nullable

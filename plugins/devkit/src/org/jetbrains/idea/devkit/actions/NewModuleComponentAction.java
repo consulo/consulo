@@ -16,19 +16,18 @@
 package org.jetbrains.idea.devkit.actions;
 
 import com.intellij.psi.PsiDirectory;
-import org.jetbrains.idea.devkit.util.ComponentType;
 import org.jetbrains.idea.devkit.DevKitBundle;
+import org.jetbrains.idea.devkit.util.ComponentType;
 
 /**
  * @author max
  */
 public class NewModuleComponentAction extends GenerateClassAndPatchPluginXmlActionBase {
   /**
-   *.
+   * .
    */
   public NewModuleComponentAction() {
-    super(DevKitBundle.message("new.menu.module.component.text"),
-          DevKitBundle.message("new.menu.module.component.description"), null);
+    super(DevKitBundle.message("new.menu.module.component.text"), DevKitBundle.message("new.menu.module.component.description"), null);
   }
 
   protected ComponentType getComponentType() {

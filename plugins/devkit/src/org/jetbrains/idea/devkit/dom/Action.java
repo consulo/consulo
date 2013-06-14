@@ -31,120 +31,138 @@ import java.util.List;
  */
 public interface Action extends DomElement {
 
-	/**
-	 * Returns the value of the popup child.
-	 * Attribute popup
-	 * @return the value of the popup child.
-	 */
-	@NotNull
-	GenericAttributeValue<String> getPopup();
+  /**
+   * Returns the value of the popup child.
+   * Attribute popup
+   *
+   * @return the value of the popup child.
+   */
+  @NotNull
+  GenericAttributeValue<String> getPopup();
 
 
-	/**
-	 * Returns the value of the icon child.
-	 * Attribute icon
-	 * @return the value of the icon child.
-	 */
-	@NotNull
-	GenericAttributeValue<String> getIcon();
+  /**
+   * Returns the value of the icon child.
+   * Attribute icon
+   *
+   * @return the value of the icon child.
+   */
+  @NotNull
+  GenericAttributeValue<String> getIcon();
 
 
-	/**
-	 * Returns the value of the description child.
-	 * Attribute description
-	 * @return the value of the description child.
-	 */
-	@NotNull
-	GenericAttributeValue<String> getDescription();
+  /**
+   * Returns the value of the description child.
+   * Attribute description
+   *
+   * @return the value of the description child.
+   */
+  @NotNull
+  GenericAttributeValue<String> getDescription();
 
 
-	/**
-	 * Returns the value of the class child.
-	 * Attribute class
-	 * @return the value of the class child.
-	 */
-	@NotNull
-	@Attribute ("class")
-	@Required
-        @ExtendClass(value = "com.intellij.openapi.actionSystem.AnAction",
-            instantiatable = true, allowNonPublic = true, allowAbstract = false, allowInterface = false)
-        @Convert(PluginPsiClassConverter.class)
-        GenericAttributeValue<PsiClass> getClazz();
+  /**
+   * Returns the value of the class child.
+   * Attribute class
+   *
+   * @return the value of the class child.
+   */
+  @NotNull
+  @Attribute("class")
+  @Required
+  @ExtendClass(value = "com.intellij.openapi.actionSystem.AnAction",
+               instantiatable = true, allowNonPublic = true, allowAbstract = false, allowInterface = false)
+  @Convert(PluginPsiClassConverter.class)
+  GenericAttributeValue<PsiClass> getClazz();
 
 
-	/**
-	 * Returns the value of the text child.
-	 * Attribute text
-	 * @return the value of the text child.
-	 */
-	@NotNull
-	GenericAttributeValue<String> getText();
+  /**
+   * Returns the value of the text child.
+   * Attribute text
+   *
+   * @return the value of the text child.
+   */
+  @NotNull
+  GenericAttributeValue<String> getText();
 
 
-	/**
-	 * Returns the value of the id child.
-	 * Attribute id
-	 * @return the value of the id child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getId();
+  /**
+   * Returns the value of the id child.
+   * Attribute id
+   *
+   * @return the value of the id child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getId();
 
 
-	/**
-	 * Returns the list of keyboard-shortcut children.
-	 * @return the list of keyboard-shortcut children.
-	 */
-	@NotNull
-	List<KeyboardShortcut> getKeyboardShortcuts();
-	/**
-	 * Adds new child to the list of keyboard-shortcut children.
-	 * @return created child
-	 */
-	KeyboardShortcut addKeyboardShortcut();
+  /**
+   * Returns the list of keyboard-shortcut children.
+   *
+   * @return the list of keyboard-shortcut children.
+   */
+  @NotNull
+  List<KeyboardShortcut> getKeyboardShortcuts();
+
+  /**
+   * Adds new child to the list of keyboard-shortcut children.
+   *
+   * @return created child
+   */
+  KeyboardShortcut addKeyboardShortcut();
 
 
-	/**
-	 * Returns the list of mouse-shortcut children.
-	 * @return the list of mouse-shortcut children.
-	 */
-	@NotNull
-	List<MouseShortcut> getMouseShortcuts();
-	/**
-	 * Adds new child to the list of mouse-shortcut children.
-	 * @return created child
-	 */
-	MouseShortcut addMouseShortcut();
+  /**
+   * Returns the list of mouse-shortcut children.
+   *
+   * @return the list of mouse-shortcut children.
+   */
+  @NotNull
+  List<MouseShortcut> getMouseShortcuts();
+
+  /**
+   * Adds new child to the list of mouse-shortcut children.
+   *
+   * @return created child
+   */
+  MouseShortcut addMouseShortcut();
 
 
-	/**
-	 * Returns the list of shortcut children.
-	 * @return the list of shortcut children.
-	 */
-	@NotNull
-	List<Shortcut> getShortcuts();
-	/**
-	 * Adds new child to the list of shortcut children.
-	 * @return created child
-	 */
-	Shortcut addShortcut();
+  /**
+   * Returns the list of shortcut children.
+   *
+   * @return the list of shortcut children.
+   */
+  @NotNull
+  List<Shortcut> getShortcuts();
+
+  /**
+   * Adds new child to the list of shortcut children.
+   *
+   * @return created child
+   */
+  Shortcut addShortcut();
 
 
-	/**
-	 * Returns the list of add-to-group children.
-	 * @return the list of add-to-group children.
-	 */
-	@NotNull
-	List<AddToGroup> getAddToGroups();
-	/**
-	 * Adds new child to the list of add-to-group children.
-	 * @return created child
-	 */
-	AddToGroup addAddToGroup();
+  /**
+   * Returns the list of add-to-group children.
+   *
+   * @return the list of add-to-group children.
+   */
+  @NotNull
+  List<AddToGroup> getAddToGroups();
 
-        @NotNull
-        GenericAttributeValue<String> getUseShortcutOf();
+  /**
+   * Adds new child to the list of add-to-group children.
+   *
+   * @return created child
+   */
+  AddToGroup addAddToGroup();
 
-        @NotNull
-        GenericAttributeValue<String> getKeymap();
+  @NotNull
+  GenericAttributeValue<String> getUseShortcutOf();
+
+  @NotNull
+  GenericAttributeValue<String> getKeymap();
 }

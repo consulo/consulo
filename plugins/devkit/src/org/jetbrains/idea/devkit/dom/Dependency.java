@@ -27,8 +27,9 @@ import org.jetbrains.idea.devkit.dom.impl.IdeaPluginConverter;
 
 @Convert(IdeaPluginConverter.class)
 public interface Dependency extends GenericDomValue<IdeaPlugin> {
-	@NotNull
-	GenericAttributeValue<String> getOptional();
-	@NotNull
-	GenericAttributeValue<String> getConfigFile();
+  @NotNull
+  GenericAttributeValue<String> getOptional();
+
+  @NotNull
+  GenericAttributeValue<String> getConfigFile();
 }

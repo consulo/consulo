@@ -24,8 +24,8 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTagValue;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -44,9 +44,9 @@ public enum ComponentType {
     boolean process(ComponentType type, XmlTag component, @Nullable XmlTagValue impl, @Nullable XmlTagValue intf);
   }
 
-  ComponentType(Class<? extends BaseComponent> clazz, @NonNls String name,
-                @PropertyKey(resourceBundle = "org.jetbrains.idea.devkit.DevKitBundle") String propertyKey)
-  {
+  ComponentType(Class<? extends BaseComponent> clazz,
+                @NonNls String name,
+                @PropertyKey(resourceBundle = "org.jetbrains.idea.devkit.DevKitBundle") String propertyKey) {
     myPropertyKey = propertyKey;
     myClassName = clazz.getName();
     myName = name;
@@ -87,10 +87,7 @@ public enum ComponentType {
       for (XmlTag component : components) {
         final XmlTag impl = component.findFirstSubTag("implementation-class");
         final XmlTag intf = component.findFirstSubTag("interface-class");
-        if (!processor.process(this, component,
-                impl != null ? impl.getValue() : null,
-                intf != null ? intf.getValue() : null))
-        {
+        if (!processor.process(this, component, impl != null ? impl.getValue() : null, intf != null ? intf.getValue() : null)) {
           return;
         }
       }

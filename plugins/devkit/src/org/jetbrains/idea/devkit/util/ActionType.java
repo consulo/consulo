@@ -19,8 +19,8 @@ package org.jetbrains.idea.devkit.util;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.IncorrectOperationException;
@@ -60,7 +60,8 @@ public enum ActionType {
           if (!processor.process(this, actionOrGroup)) {
             return;
           }
-        } else if (this == ACTION && GROUP.myName.equals(actionOrGroup.getName())) {
+        }
+        else if (this == ACTION && GROUP.myName.equals(actionOrGroup.getName())) {
           final XmlTag[] groupActions = actionOrGroup.findSubTags(myName);
           for (XmlTag a : groupActions) {
             if (!processor.process(this, a)) {

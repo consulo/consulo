@@ -41,7 +41,8 @@ public class ChunkBuildPluginExtension extends ChunkBuildExtension {
 
   @NotNull
   public String[] getTargets(final ModuleChunk chunk) {
-    return isPlugins(chunk.getModules()) ? new String[] {PluginBuildProperties.getBuildJarTargetName(chunk.getName())}
+    return isPlugins(chunk.getModules())
+           ? new String[]{PluginBuildProperties.getBuildJarTargetName(chunk.getName())}
            : ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
@@ -58,11 +59,14 @@ public class ChunkBuildPluginExtension extends ChunkBuildExtension {
       @NonNls String jarPath = chunk.getBaseDir().getPath() + "/" + chunk.getName();
       if (libs.isEmpty()) {
         jarPath += ".jar";
-      } else {
+      }
+      else {
         jarPath += ".zip";
       }
 
-      generator.add(new Property(PluginBuildProperties.getJarPathProperty(chunk.getName()), GenerationUtils.toRelativePath(jarPath, chunk, genOptions)), 1);
+      generator.add(
+        new Property(PluginBuildProperties.getJarPathProperty(chunk.getName()), GenerationUtils.toRelativePath(jarPath, chunk, genOptions)),
+        1);
 
       generator.add(factory.createComment(DevKitBundle.message("ant.build.jar.comment", chunk.getName())), 1);
       generator.add(new BuildJarTarget(chunk, genOptions, buildProperties));

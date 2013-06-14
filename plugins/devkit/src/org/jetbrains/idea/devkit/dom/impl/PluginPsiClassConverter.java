@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author peter
-*/
+ */
 public class PluginPsiClassConverter extends PsiClassConverter {
   protected GlobalSearchScope getScope(@NotNull ConvertContext context) {
     return GlobalSearchScope.allScope(context.getProject());

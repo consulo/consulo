@@ -81,9 +81,8 @@ public class AddWithTagFix implements LocalQuickFix {
       String className = "";
       if (epName != null) {
         int pos = epName.lastIndexOf('.');
-        epName = StringUtil.capitalize(pos >= 0 ? epName.substring(pos+1) : epName);
-        PsiClass[] classesByName = PsiShortNamesCache.getInstance(project).getClassesByName(epName,
-                                                                                            ProjectScope.getAllScope(project));
+        epName = StringUtil.capitalize(pos >= 0 ? epName.substring(pos + 1) : epName);
+        PsiClass[] classesByName = PsiShortNamesCache.getInstance(project).getClassesByName(epName, ProjectScope.getAllScope(project));
         if (classesByName.length == 1) {
           className = classesByName[0].getQualifiedName();
         }

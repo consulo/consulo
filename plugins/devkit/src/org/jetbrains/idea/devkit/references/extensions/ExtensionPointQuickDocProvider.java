@@ -56,9 +56,7 @@ public class ExtensionPointQuickDocProvider implements DocumentationProvider {
       if (originalElement instanceof XmlToken && ((XmlToken)originalElement).getTokenType() == XmlTokenType.XML_NAME) {
         PsiElement attr;
         PsiElement tag;
-        if (context != null
-            && (attr = context.getParent()) instanceof XmlAttribute
-            && (tag = attr.getParent()) instanceof XmlTag) {
+        if (context != null && (attr = context.getParent()) instanceof XmlAttribute && (tag = attr.getParent()) instanceof XmlTag) {
           final String interfaceFqn = ((XmlTag)tag).getAttributeValue("interface");
           final String beanClassFqn = ((XmlTag)tag).getAttributeValue("beanClass");
           fqn = interfaceFqn == null ? beanClassFqn : interfaceFqn;

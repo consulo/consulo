@@ -52,7 +52,8 @@ public class ShuffleNamesAction extends AnAction {
     if (editor == null || file == null) return;
     final Project project = file.getProject();
     CommandProcessorEx commandProcessor = (CommandProcessorEx)CommandProcessorEx.getInstance();
-    Object commandToken = commandProcessor.startCommand(project, e.getPresentation().getText(), e.getPresentation().getText(), UndoConfirmationPolicy.DEFAULT);
+    Object commandToken =
+      commandProcessor.startCommand(project, e.getPresentation().getText(), e.getPresentation().getText(), UndoConfirmationPolicy.DEFAULT);
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(getClass());
     try {
       shuffleIds(file, editor);
@@ -76,12 +77,14 @@ public class ShuffleNamesAction extends AnAction {
           String text = element.getText();
           if (text.isEmpty()) return;
 
-          for (int i=0, len=text.length(); i<len/2; i++) {
+          for (int i = 0, len = text.length(); i < len / 2; i++) {
             char c = text.charAt(i);
-            if (c == text.charAt(len-i-1) && !Character.isLetter(c)) {
+            if (c == text.charAt(len - i - 1) && !Character.isLetter(c)) {
               quote.append(c);
             }
-            else break;
+            else {
+              break;
+            }
           }
 
           boolean isQuoted = quote.length() > 0;
@@ -90,7 +93,8 @@ public class ShuffleNamesAction extends AnAction {
               (isNumber = text.matches("[0-9]+"))) {
             String replacement = map.get(text);
             if (replacement == null) {
-              split.addAll(Arrays.asList((isQuoted? text.substring(quote.length(), text.length()-quote.length()).replace("''", "") : text).split("")));
+              split.addAll(Arrays.asList(
+                (isQuoted ? text.substring(quote.length(), text.length() - quote.length()).replace("''", "") : text).split("")));
               if (!isNumber) {
                 for (ListIterator<String> it = split.listIterator(); it.hasNext(); ) {
                   String s = it.next();
@@ -101,7 +105,7 @@ public class ShuffleNamesAction extends AnAction {
                   int c = s.charAt(0);
                   int cap = c & 32;
                   c &= ~cap;
-                  c = (char) ((c >= 'A') && (c <= 'Z') ? ((c - 'A' + 7) % 26 + 'A') : c) | cap;
+                  c = (char)((c >= 'A') && (c <= 'Z') ? ((c - 'A' + 7) % 26 + 'A') : c) | cap;
                   it.set(String.valueOf((char)c));
                 }
               }

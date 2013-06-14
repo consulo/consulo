@@ -20,5 +20,5 @@ package org.jetbrains.idea.devkit.dom;
  */
 public enum Anchor {
 
-    first, last, before, after
+  first, last, before, after
 }

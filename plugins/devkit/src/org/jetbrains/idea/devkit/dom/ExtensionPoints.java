@@ -28,5 +28,6 @@ public interface ExtensionPoints extends DomElement {
   @NotNull
   @SubTagList("extensionPoint")
   List<ExtensionPoint> getExtensionPoints();
+
   ExtensionPoint addExtensionPoint();
 }

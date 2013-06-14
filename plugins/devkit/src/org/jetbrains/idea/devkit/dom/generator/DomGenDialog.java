@@ -24,7 +24,7 @@ import java.io.File;
 /**
  * @author Konstantin Bulenkov
  */
-public class DomGenDialog extends DialogWrapper{
+public class DomGenDialog extends DialogWrapper {
   final DomGenPanel panel;
   final JComponent comp;
 
@@ -59,7 +59,8 @@ public class DomGenDialog extends DialogWrapper{
     try {
       final File output = new File(panel.getOutputDir());
       modelGen.perform(output, new File(location).getParentFile());
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       e.printStackTrace(System.err);
     }
     panel.saveAll();

@@ -24,8 +24,8 @@ import com.intellij.openapi.fileTypes.StdFileTypes;
 public class DevKitFileTemplatesFactory implements FileTemplateGroupDescriptorFactory {
 
   public FileTemplateGroupDescriptor getFileTemplatesDescriptor() {
-    FileTemplateGroupDescriptor descriptor = new FileTemplateGroupDescriptor(DevKitBundle.message("plugin.descriptor"),
-                                                                             AllIcons.Nodes.Plugin);
+    FileTemplateGroupDescriptor descriptor =
+      new FileTemplateGroupDescriptor(DevKitBundle.message("plugin.descriptor"), AllIcons.Nodes.Plugin);
     descriptor.addTemplate(new FileTemplateDescriptor("plugin.xml", StdFileTypes.XML.getIcon()));
     descriptor.addTemplate(new FileTemplateDescriptor("ProjectComponent.java", StdFileTypes.JAVA.getIcon()));
     descriptor.addTemplate(new FileTemplateDescriptor("ApplicationComponent.java", StdFileTypes.JAVA.getIcon()));

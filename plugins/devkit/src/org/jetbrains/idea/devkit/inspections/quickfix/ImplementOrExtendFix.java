@@ -42,15 +42,16 @@ public class ImplementOrExtendFix extends BaseFix {
 
     if (compClass.isInterface() && compClass.getImplementsList() != null) {
       fix = new ImplementOrExtendFix(compClass, checkedClass, onTheFly);
-    } else if (!compClass.isInterface()) {
+    }
+    else if (!compClass.isInterface()) {
       final PsiReferenceList extendsList = checkedClass.getExtendsList();
       if (extendsList != null) {
         if (extendsList.getReferenceElements().length == 0) {
           fix = new ImplementOrExtendFix(compClass, checkedClass, onTheFly);
-        } else if (extendsList.getReferenceElements().length == 1) {
+        }
+        else if (extendsList.getReferenceElements().length == 1) {
           // check for explicit "extends Object" case
-          final PsiClassType javaLangObject = PsiType.getJavaLangObject(checkedClass.getManager(),
-                  checkedClass.getResolveScope());
+          final PsiClassType javaLangObject = PsiType.getJavaLangObject(checkedClass.getManager(), checkedClass.getResolveScope());
           if (extendsList.getReferencedTypes()[0].equals(javaLangObject)) {
             fix = new ImplementOrExtendFix(compClass, checkedClass, onTheFly);
           }
@@ -64,8 +65,7 @@ public class ImplementOrExtendFix extends BaseFix {
   public String getName() {
     return (myCompClass.isInterface()
             ? StringUtil.capitalize(DevKitBundle.message("keyword.implement"))
-            : StringUtil.capitalize(DevKitBundle.message("keyword.extend")))
-            + " '" + myCompClass.getQualifiedName() + "'";
+            : StringUtil.capitalize(DevKitBundle.message("keyword.extend"))) + " '" + myCompClass.getQualifiedName() + "'";
   }
 
   @NotNull
@@ -82,7 +82,8 @@ public class ImplementOrExtendFix extends BaseFix {
     if (myCompClass.isInterface()) {
       list = clazz.getImplementsList();
       assert list != null;
-    } else {
+    }
+    else {
       final PsiReferenceList extendsList = clazz.getExtendsList();
       assert extendsList != null;
       if (extendsList.getReferencedTypes().length > 0) {

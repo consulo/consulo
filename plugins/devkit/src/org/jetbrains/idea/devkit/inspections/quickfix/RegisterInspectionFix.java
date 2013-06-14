@@ -54,9 +54,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* @author Dmitry Avdeev
-*         Date: 1/20/12
-*/
+ * @author Dmitry Avdeev
+ *         Date: 1/20/12
+ */
 class RegisterInspectionFix implements IntentionAction {
 
   private final PsiClass myPsiClass;
@@ -94,7 +94,9 @@ class RegisterInspectionFix implements IntentionAction {
     });
   }
 
-  public static void choosePluginDescriptor(final Project project, Editor editor, final PsiFile file,
+  public static void choosePluginDescriptor(final Project project,
+                                            Editor editor,
+                                            final PsiFile file,
                                             final Consumer<DomFileElement<IdeaPlugin>> consumer) {
     Module module = ModuleUtil.findModuleForPsiElement(file);
     assert module != null;
@@ -148,20 +150,13 @@ class RegisterInspectionFix implements IntentionAction {
           return FINAL_CHOICE;
         }
       };
-    JBPopupFactory.getInstance().createListPopup(popupStep)
-      .showInBestPositionFor(editor);
+    JBPopupFactory.getInstance().createListPopup(popupStep).showInBestPositionFor(editor);
   }
 
-  private static final ImmutableMap<String, String> INTELLIJ_MODULES = ImmutableMap.<String, String>builder()
-    .put("platform-api", "PlatformExtensions.xml")
-    .put("platform-impl", "PlatformExtensions.xml")
-    .put("lang-api", "LangExtensions.xml")
-    .put("lang-impl", "LangExtensions.xml")
-    .put("vcs-api", "VcsExtensions.xml")
-    .put("vcs-impl", "VcsExtensions.xml")
-    .put("openapi", "IdeaPlugin.xml")
-    .put("java-impl", "IdeaPlugin.xml")
-    .build();
+  private static final ImmutableMap<String, String> INTELLIJ_MODULES =
+    ImmutableMap.<String, String>builder().put("platform-api", "PlatformExtensions.xml").put("platform-impl", "PlatformExtensions.xml")
+      .put("lang-api", "LangExtensions.xml").put("lang-impl", "LangExtensions.xml").put("vcs-api", "VcsExtensions.xml")
+      .put("vcs-impl", "VcsExtensions.xml").put("openapi", "IdeaPlugin.xml").put("java-impl", "IdeaPlugin.xml").build();
 
   private static List<DomFileElement<IdeaPlugin>> findAppropriateIntelliJModule(String name, List<DomFileElement<IdeaPlugin>> elements) {
     String extensionsFile = INTELLIJ_MODULES.get(name);

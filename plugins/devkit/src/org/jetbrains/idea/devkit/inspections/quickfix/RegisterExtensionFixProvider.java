@@ -50,15 +50,15 @@ public class RegisterExtensionFixProvider implements UnusedDeclarationFixProvide
     if (!(parent instanceof PsiClass)) return IntentionAction.EMPTY_ARRAY;
     PsiClass parentClass = (PsiClass)parent;
     if (InheritanceUtil.isInheritor(parentClass, LocalInspectionTool.class.getName())) {
-      return new IntentionAction[] { new RegisterInspectionFix(parentClass, LocalInspectionEP.LOCAL_INSPECTION) };
+      return new IntentionAction[]{new RegisterInspectionFix(parentClass, LocalInspectionEP.LOCAL_INSPECTION)};
     }
     if (InheritanceUtil.isInheritor(parentClass, GlobalInspectionTool.class.getName())) {
-      return new IntentionAction[] { new RegisterInspectionFix(parentClass, InspectionEP.GLOBAL_INSPECTION) };
+      return new IntentionAction[]{new RegisterInspectionFix(parentClass, InspectionEP.GLOBAL_INSPECTION)};
     }
     List<ExtensionPointCandidate> candidateList = new ArrayList<ExtensionPointCandidate>();
     findExtensionPointCandidatesInHierarchy(parentClass, candidateList, new HashSet<PsiClass>());
     if (!candidateList.isEmpty()) {
-      return new IntentionAction[] { new RegisterExtensionFix(parentClass, candidateList) };
+      return new IntentionAction[]{new RegisterExtensionFix(parentClass, candidateList)};
     }
     return IntentionAction.EMPTY_ARRAY;
   }
@@ -80,7 +80,8 @@ public class RegisterExtensionFixProvider implements UnusedDeclarationFixProvide
     if (name == null) {
       return;
     }
-    GlobalSearchScope scope = GlobalSearchScope.getScopeRestrictedByFileTypes(ProjectScope.getAllScope(aClass.getProject()), XmlFileType.INSTANCE);
+    GlobalSearchScope scope =
+      GlobalSearchScope.getScopeRestrictedByFileTypes(ProjectScope.getAllScope(aClass.getProject()), XmlFileType.INSTANCE);
     PsiSearchHelper.SERVICE.getInstance(aClass.getProject()).processUsagesInNonJavaFiles(name, new PsiNonJavaFileReferenceProcessor() {
       @Override
       public boolean process(PsiFile file, int startOffset, int endOffset) {

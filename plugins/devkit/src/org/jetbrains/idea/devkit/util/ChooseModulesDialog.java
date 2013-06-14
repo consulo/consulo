@@ -57,7 +57,7 @@ public class ChooseModulesDialog extends DialogWrapper {
   private final boolean[] myStates;
 
   public ChooseModulesDialog(final Project project, List<Module> candidateModules, @NonNls String title) {
-    this ( project, candidateModules, title, DevKitBundle.message("select.plugin.modules.to.patch"));
+    this(project, candidateModules, title, DevKitBundle.message("select.plugin.modules.to.patch"));
   }
 
   public ChooseModulesDialog(final Project project, List<Module> candidateModules, @NonNls String title, final String message) {
@@ -105,8 +105,7 @@ public class ChooseModulesDialog extends DialogWrapper {
     });
     myView.addKeyListener(new KeyAdapter() {
       public void keyTyped(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER
-                || e.getKeyChar() == '\n') {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyChar() == '\n') {
           doOKAction();
         }
       }
@@ -188,8 +187,10 @@ public class ChooseModulesDialog extends DialogWrapper {
           final VirtualFile projectPath = myProject.getBaseDir();
           assert projectPath != null;
           if (VfsUtilCore.isAncestor(projectPath, virtualFile, false)) {
-            append(" (" + VfsUtilCore.getRelativePath(virtualFile, projectPath, File.separatorChar) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-          } else {
+            append(" (" + VfsUtilCore.getRelativePath(virtualFile, projectPath, File.separatorChar) + ")",
+                   SimpleTextAttributes.GRAYED_ATTRIBUTES);
+          }
+          else {
             append(" (" + virtualFile.getPresentableUrl() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
           }
         }

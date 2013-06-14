@@ -15,15 +15,13 @@
  */
 package org.jetbrains.idea.devkit.module;
 
-import com.intellij.util.descriptors.ConfigFileVersion;
 import com.intellij.util.descriptors.ConfigFileMetaData;
+import com.intellij.util.descriptors.ConfigFileVersion;
 import org.jetbrains.idea.devkit.DevKitBundle;
 
 public interface PluginDescriptorConstants {
   String VERSION = "1.0";
-  ConfigFileVersion[] VERSIONS = {
-    new ConfigFileVersion(VERSION, "plugin.xml")
-  };
+  ConfigFileVersion[] VERSIONS = {new ConfigFileVersion(VERSION, "plugin.xml")};
 
   ConfigFileMetaData META_DATA =
     new ConfigFileMetaData(DevKitBundle.message("plugin.descriptor"), "plugin.xml", "META-INF", VERSIONS, null, false, true, true);

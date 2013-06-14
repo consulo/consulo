@@ -29,32 +29,35 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface AddToGroup extends DomElement {
 
-	/**
-	 * Returns the value of the anchor child.
-	 * Attribute anchor
-	 * @return the value of the anchor child.
-	 */
-	@NotNull
-	GenericAttributeValue<Anchor> getAnchor();
+  /**
+   * Returns the value of the anchor child.
+   * Attribute anchor
+   *
+   * @return the value of the anchor child.
+   */
+  @NotNull
+  GenericAttributeValue<Anchor> getAnchor();
 
 
-	/**
-	 * Returns the value of the relative-to-action child.
-	 * Attribute relative-to-action
-	 * @return the value of the relative-to-action child.
-	 */
-	@NotNull
-	GenericAttributeValue<String> getRelativeToAction();
+  /**
+   * Returns the value of the relative-to-action child.
+   * Attribute relative-to-action
+   *
+   * @return the value of the relative-to-action child.
+   */
+  @NotNull
+  GenericAttributeValue<String> getRelativeToAction();
 
 
-	/**
-	 * Returns the value of the group-id child.
-	 * Attribute group-id
-	 * @return the value of the group-id child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getGroupId();
+  /**
+   * Returns the value of the group-id child.
+   * Attribute group-id
+   *
+   * @return the value of the group-id child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getGroupId();
 
 
 }

@@ -49,7 +49,8 @@ import java.util.ArrayList;
 
 public class PluginRunConfigurationEditor extends SettingsEditor<PluginRunConfiguration> implements PanelWithAnchor {
   private final ModulesCombobox myModules = new ModulesCombobox();
-  private final JBLabel myModuleLabel = new JBLabel(ExecutionBundle.message("application.configuration.use.classpath.and.jdk.of.module.label"));
+  private final JBLabel myModuleLabel =
+    new JBLabel(ExecutionBundle.message("application.configuration.use.classpath.and.jdk.of.module.label"));
   private final LabeledComponent<RawCommandLineEditor> myVMParameters = new LabeledComponent<RawCommandLineEditor>();
   private final LabeledComponent<RawCommandLineEditor> myProgramParameters = new LabeledComponent<RawCommandLineEditor>();
   private JComponent anchor;
@@ -71,22 +72,23 @@ public class PluginRunConfigurationEditor extends SettingsEditor<PluginRunConfig
     myModules.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         final Module selectedModule = myModules.getSelectedModule();
-        if (selectedModule != null){
+        if (selectedModule != null) {
           prc.removeAllLogFiles();
           final PluginModuleExtension extension = ModuleUtil.getExtension(selectedModule, PluginModuleExtension.class);
-          if(extension == null) {
+          if (extension == null) {
             return;
           }
           Sdk consuloSdk = extension.getSdk();
           if (consuloSdk != null) {
             final String sandboxHome = ((Sandbox)consuloSdk.getSdkAdditionalData()).getSandboxHome();
-            if (sandboxHome == null){
+            if (sandboxHome == null) {
               return;
             }
             try {
-              @NonNls final String file = new File(sandboxHome).getCanonicalPath() + File.separator + "system" + File.separator + "log" + File.separator +
-                                  "idea.log";
-              if (new File(file).exists()){
+              @NonNls final String file =
+                new File(sandboxHome).getCanonicalPath() + File.separator + "system" + File.separator + "log" + File.separator +
+                "idea.log";
+              if (new File(file).exists()) {
                 prc.addLogFile(file, DevKitBundle.message("idea.log.tab.title"), myShowLogs.isSelected());
               }
             }
@@ -114,14 +116,14 @@ public class PluginRunConfigurationEditor extends SettingsEditor<PluginRunConfig
     myProgramParameters.setAnchor(anchor);
   }
 
-  private static void setShow(PluginRunConfiguration prc, boolean show){
+  private static void setShow(PluginRunConfiguration prc, boolean show) {
     final ArrayList<LogFileOptions> logFiles = prc.getLogFiles();
-    for (LogFileOptions logFile: logFiles) {
+    for (LogFileOptions logFile : logFiles) {
       logFile.setEnable(show);
     }
   }
 
-  private static boolean isShow(PluginRunConfiguration prc){
+  private static boolean isShow(PluginRunConfiguration prc) {
     final ArrayList<LogFileOptions> logFiles = prc.getLogFiles();
     for (LogFileOptions logFile : logFiles) {
       if (logFile.isEnabled()) return true;
@@ -159,7 +161,9 @@ public class PluginRunConfigurationEditor extends SettingsEditor<PluginRunConfig
     myProgramParameters.getComponent().setDialogCaption(myProgramParameters.getRawText());
     myProgramParameters.setLabelLocation(BorderLayout.WEST);
 
-    GridBagConstraints gc = new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 0, 0, 0), UIUtil.DEFAULT_HGAP, UIUtil.DEFAULT_VGAP);
+    GridBagConstraints gc =
+      new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                             new Insets(2, 0, 0, 0), UIUtil.DEFAULT_HGAP, UIUtil.DEFAULT_VGAP);
     wholePanel.add(myVMParameters, gc);
     wholePanel.add(myProgramParameters, gc);
     gc.gridwidth = 1;

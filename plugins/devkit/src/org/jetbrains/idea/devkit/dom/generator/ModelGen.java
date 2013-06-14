@@ -65,9 +65,7 @@ public class ModelGen {
   public static Element loadXml(File configXml) throws Exception {
     SAXBuilder saxBuilder = new SAXBuilder();
     saxBuilder.setEntityResolver(new EntityResolver() {
-      public InputSource resolveEntity(String publicId,
-                                       String systemId)
-              throws SAXException, IOException {
+      public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
         return new InputSource(new CharArrayReader(new char[0]));
       }
     });
@@ -92,18 +90,18 @@ public class ModelGen {
 
   public void loadConfig(Element element) {
     final Element namespaceEl = element.getChild("namespaces");
-    for (Element e : (List<Element>) namespaceEl.getChildren("schemaLocation")) {
+    for (Element e : (List<Element>)namespaceEl.getChildren("schemaLocation")) {
       final String name = e.getAttributeValue("name");
       final String file = e.getAttributeValue("file");
       schemaLocationMap.put(name, file);
     }
-    for (Element e : (List<Element>) namespaceEl.getChildren("reserved-name")) {
+    for (Element e : (List<Element>)namespaceEl.getChildren("reserved-name")) {
       final String name = e.getAttributeValue("name");
       final String replacement = e.getAttributeValue("replace-with");
       model.name2replaceMap.put(name, replacement);
     }
     NamespaceDesc def = new NamespaceDesc("", "generated", "java.lang.Object", "", null, null, null, null);
-    for (Element nsElement : (List<Element>) namespaceEl.getChildren("namespace")) {
+    for (Element nsElement : (List<Element>)namespaceEl.getChildren("namespace")) {
       final String name = nsElement.getAttributeValue("name");
       final NamespaceDesc nsDesc = new NamespaceDesc(name, def);
 
@@ -115,13 +113,13 @@ public class ModelGen {
       final String packageEnumS = nsElement.getAttributeValue("enums");
       final String interfaces = nsElement.getAttributeValue("interfaces");
       final ArrayList<String> list = new ArrayList<String>();
-      for (Element pkgElement : (List<Element>) nsElement.getChildren("package")) {
+      for (Element pkgElement : (List<Element>)nsElement.getChildren("package")) {
         final String pkgName = pkgElement.getAttributeValue("name");
         final String fileName = pkgElement.getAttributeValue("file");
         list.add(fileName);
         list.add(pkgName);
       }
-      for (Element pkgElement : (List<Element>) nsElement.getChildren("property")) {
+      for (Element pkgElement : (List<Element>)nsElement.getChildren("property")) {
         final String propertyName = pkgElement.getAttributeValue("name");
         final String propertyValue = pkgElement.getAttributeValue("value");
         nsDesc.props.put(propertyName, propertyValue);
@@ -155,7 +153,8 @@ public class ModelGen {
           final String location = schemaLocationMap.get(xmlResourceIdentifier.getNamespace());
           if (location != null) {
             esid = location;
-          } else {
+          }
+          else {
             return null;
           }
         }
@@ -166,7 +165,8 @@ public class ModelGen {
           if (root.isDirectory()) {
             final String fileName = esid.substring(esid.lastIndexOf('/') + 1);
             f = new File(root, fileName);
-          } else {
+          }
+          else {
             f = root;
           }
         }

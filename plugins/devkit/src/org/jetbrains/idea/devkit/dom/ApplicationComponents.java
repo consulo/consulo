@@ -29,17 +29,20 @@ import java.util.List;
  */
 public interface ApplicationComponents extends DomElement {
 
-	/**
-	 * Returns the list of component children.
-	 * @return the list of component children.
-	 */
-	@NotNull
-	List<Component.Application> getComponents();
-	/**
-	 * Adds new child to the list of component children.
-	 * @return created child
-	 */
-	Component.Application addComponent();
+  /**
+   * Returns the list of component children.
+   *
+   * @return the list of component children.
+   */
+  @NotNull
+  List<Component.Application> getComponents();
+
+  /**
+   * Adds new child to the list of component children.
+   *
+   * @return created child
+   */
+  Component.Application addComponent();
 
 
 }

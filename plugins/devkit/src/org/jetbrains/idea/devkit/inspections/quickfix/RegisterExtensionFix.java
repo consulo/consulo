@@ -127,13 +127,10 @@ public class RegisterExtensionFix implements IntentionAction {
     PsiNavigateUtil.navigate(navTarget);
   }
 
-  private static final ImmutableMap<String, String> KEY_MAP = ImmutableMap.<String, String>builder()
-    .put(KeyedFactoryEPBean.class.getName(), "key")
-    .put(KeyedLazyInstanceEP.class.getName(), "key")
-    .put(FileTypeExtensionPoint.class.getName(), "filetype")
-    .put(LanguageExtensionPoint.class.getName(), "language")
-    .put(ClassExtensionPoint.class.getName(), "forClass")
-    .build();
+  private static final ImmutableMap<String, String> KEY_MAP =
+    ImmutableMap.<String, String>builder().put(KeyedFactoryEPBean.class.getName(), "key").put(KeyedLazyInstanceEP.class.getName(), "key")
+      .put(FileTypeExtensionPoint.class.getName(), "filetype").put(LanguageExtensionPoint.class.getName(), "language")
+      .put(ClassExtensionPoint.class.getName(), "forClass").build();
 
 
   @Override

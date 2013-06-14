@@ -56,8 +56,8 @@ public class ShowSerializedXmlAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(getEventProject(e) != null && e.getData(LangDataKeys.PSI_FILE) != null
-                                   && e.getData(PlatformDataKeys.EDITOR) != null);
+    e.getPresentation()
+      .setEnabled(getEventProject(e) != null && e.getData(LangDataKeys.PSI_FILE) != null && e.getData(PlatformDataKeys.EDITOR) != null);
   }
 
   @Override
@@ -92,7 +92,7 @@ public class ShowSerializedXmlAction extends DumbAwareAction {
         LOG.info(e1);
       }
     }
-    
+
     final Project project = module.getProject();
     UrlClassLoader loader = new UrlClassLoader(urls, XmlSerializer.class.getClassLoader());
     final Class<?> aClass;
@@ -117,8 +117,8 @@ public class ShowSerializedXmlAction extends DumbAwareAction {
 
     final Element element = XmlSerializer.serialize(o);
     final String text = JDOMUtil.writeElement(element, "\n");
-    Messages.showIdeaMessageDialog(project, text, "Serialized XML for '" + className + "'",
-                                   new String[]{CommonBundle.getOkButtonText()}, 0, Messages.getInformationIcon(), null);
+    Messages.showIdeaMessageDialog(project, text, "Serialized XML for '" + className + "'", new String[]{CommonBundle.getOkButtonText()}, 0,
+                                   Messages.getInformationIcon(), null);
   }
 
   @Nullable
@@ -141,14 +141,20 @@ public class ShowSerializedXmlAction extends DumbAwareAction {
       if (String.class.isAssignableFrom(valueClass)) {
         return "value" + (myNum++);
       }
-      else if (byte.class.isAssignableFrom(valueClass) || Byte.class.isAssignableFrom(valueClass)
-               || short.class.isAssignableFrom(valueClass) || Short.class.isAssignableFrom(valueClass)
-               || int.class.isAssignableFrom(valueClass) || Integer.class.isAssignableFrom(valueClass)
-               || long.class.isAssignableFrom(valueClass) || Long.class.isAssignableFrom(valueClass)) {
+      else if (byte.class.isAssignableFrom(valueClass) ||
+               Byte.class.isAssignableFrom(valueClass) ||
+               short.class.isAssignableFrom(valueClass) ||
+               Short.class.isAssignableFrom(valueClass) ||
+               int.class.isAssignableFrom(valueClass) ||
+               Integer.class.isAssignableFrom(valueClass) ||
+               long.class.isAssignableFrom(valueClass) ||
+               Long.class.isAssignableFrom(valueClass)) {
         return myNum++ % 127;
       }
-      else if (double.class.isAssignableFrom(valueClass) || Double.class.isAssignableFrom(valueClass)
-               || float.class.isAssignableFrom(valueClass) || Float.class.isAssignableFrom(valueClass)) {
+      else if (double.class.isAssignableFrom(valueClass) ||
+               Double.class.isAssignableFrom(valueClass) ||
+               float.class.isAssignableFrom(valueClass) ||
+               Float.class.isAssignableFrom(valueClass)) {
         return 0.5 + myNum++;
       }
       else if (boolean.class.isAssignableFrom(valueClass) || Boolean.class.isAssignableFrom(valueClass)) {
@@ -168,7 +174,8 @@ public class ShowSerializedXmlAction extends DumbAwareAction {
         return createArray(valueClass, processedTypes);
       }
       else if (Element.class.isAssignableFrom(valueClass)) {
-        return new Element("customElement" + (myNum++)).setAttribute("attribute", "value" + (myNum++)).addContent(new Element("child" + (myNum++)));
+        return new Element("customElement" + (myNum++)).setAttribute("attribute", "value" + (myNum++))
+          .addContent(new Element("child" + (myNum++)));
       }
       else {
         return createObject(valueClass, processedTypes);

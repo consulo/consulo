@@ -16,19 +16,19 @@
 package org.jetbrains.idea.devkit.actions;
 
 import com.intellij.psi.PsiDirectory;
-import org.jetbrains.idea.devkit.util.ComponentType;
 import org.jetbrains.idea.devkit.DevKitBundle;
+import org.jetbrains.idea.devkit.util.ComponentType;
 
 /**
  * @author max
  */
 public class NewApplicationComponentAction extends GenerateClassAndPatchPluginXmlActionBase {
   /**
-   *.
+   * .
    */
   public NewApplicationComponentAction() {
-    super(DevKitBundle.message("new.menu.application.component.text"),
-          DevKitBundle.message("new.menu.application.component.description"), null);
+    super(DevKitBundle.message("new.menu.application.component.text"), DevKitBundle.message("new.menu.application.component.description"),
+          null);
   }
 
   protected ComponentType getComponentType() {

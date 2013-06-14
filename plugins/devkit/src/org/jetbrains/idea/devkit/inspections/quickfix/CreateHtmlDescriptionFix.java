@@ -54,7 +54,7 @@ import java.util.List;
  */
 public class CreateHtmlDescriptionFix implements LocalQuickFix, Iconable {
   private final String myFilename;
-  private final Module myModule;  
+  private final Module myModule;
   @NonNls private static final String TEMPLATE_NAME = "InspectionDescription.html";
   private final boolean isIntention;
 
@@ -75,10 +75,9 @@ public class CreateHtmlDescriptionFix implements LocalQuickFix, Iconable {
   }
 
   public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-    final List<VirtualFile> virtualFiles = isIntention ?
-                                           IntentionDescriptionNotFoundInspection.getPotentialRoots(myModule)
-                                           :
-                                           InspectionDescriptionNotFoundInspection.getPotentialRoots(myModule);
+    final List<VirtualFile> virtualFiles = isIntention
+                                           ? IntentionDescriptionNotFoundInspection.getPotentialRoots(myModule)
+                                           : InspectionDescriptionNotFoundInspection.getPotentialRoots(myModule);
     final VirtualFile[] roots = prepare(VfsUtil.toVirtualFileArray(virtualFiles));
     if (roots.length == 1) {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -99,21 +98,19 @@ public class CreateHtmlDescriptionFix implements LocalQuickFix, Iconable {
       }
       final JBList files = new JBList(ArrayUtil.toStringArray(options));
       files.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      final JBPopup popup = JBPopupFactory.getInstance()
-        .createListPopupBuilder(files)
-        .setTitle(DevKitBundle.message("select.target.location.of.description", myFilename))
-        .setItemChoosenCallback(new Runnable() {
-        public void run() {
-          final int index = files.getSelectedIndex();
-          if (0 <= index && index < roots.length) {
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              public void run() {
-                createDescription(roots[index]);
-              }
-            });
+      final JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(files)
+        .setTitle(DevKitBundle.message("select.target.location.of.description", myFilename)).setItemChoosenCallback(new Runnable() {
+          public void run() {
+            final int index = files.getSelectedIndex();
+            if (0 <= index && index < roots.length) {
+              ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                public void run() {
+                  createDescription(roots[index]);
+                }
+              });
+            }
           }
-        }
-      }).createPopup();
+        }).createPopup();
       final Editor editor = FileEditorManager.getInstance(myModule.getProject()).getSelectedTextEditor();
       if (editor == null) return;
       popup.showInBestPositionFor(editor);
@@ -142,7 +139,8 @@ public class CreateHtmlDescriptionFix implements LocalQuickFix, Iconable {
         }
       }
       final FileTemplate descrTemplate = FileTemplateManager.getInstance().getJ2eeTemplate(TEMPLATE_NAME);
-      final PsiElement template = FileTemplateUtil.createFromTemplate(descrTemplate, isIntention? "description.html" : myFilename, null, descrRoot);
+      final PsiElement template =
+        FileTemplateUtil.createFromTemplate(descrTemplate, isIntention ? "description.html" : myFilename, null, descrRoot);
       if (template instanceof PsiFile) {
         final VirtualFile file = ((PsiFile)template).getVirtualFile();
         if (file != null) {

@@ -22,8 +22,8 @@
  */
 package org.jetbrains.idea.devkit.dom.generator;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Konstantin Bulenkov
@@ -79,6 +79,6 @@ public class NamespaceDesc {
 
 
   public String toString() {
-    return "NS:"+name+" "+(skip?"skip":"")+pkgName;
+    return "NS:" + name + " " + (skip ? "skip" : "") + pkgName;
   }
 }

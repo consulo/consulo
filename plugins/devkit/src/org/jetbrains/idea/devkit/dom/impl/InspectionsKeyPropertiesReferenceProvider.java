@@ -78,12 +78,12 @@ public class InspectionsKeyPropertiesReferenceProvider extends PsiReferenceProvi
         }
       }
       if (value != null) {
-        return new PsiReference[]{new PropertyReference(value, xmlAttribute.getValueElement(), bundle, soft){
+        return new PsiReference[]{new PropertyReference(value, xmlAttribute.getValueElement(), bundle, soft) {
           @Override
           protected List<PropertiesFile> retrievePropertyFilesByBundleName(String bundleName, PsiElement element) {
             final Project project = element.getProject();
             return PropertiesReferenceManager.getInstance(project)
-                     .findPropertiesFiles(GlobalSearchScope.projectScope(project), bundleName, BundleNameEvaluator.DEFAULT);
+              .findPropertiesFiles(GlobalSearchScope.projectScope(project), bundleName, BundleNameEvaluator.DEFAULT);
           }
         }};
       }

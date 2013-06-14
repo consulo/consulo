@@ -43,9 +43,9 @@ public class UseJBColorInspection extends DevKitInspectionBase {
   @Override
   public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
     final Module module = ModuleUtilCore.findModuleForPsiElement(holder.getFile());
-    if  (module == null
-         || !(PlatformUtils.isIdeaProject(holder.getProject()) || PluginModuleUtil.isPluginModuleOrDependency(module))) {
-      return new JavaElementVisitor(){};
+    if (module == null || !(PlatformUtils.isIdeaProject(holder.getProject()) || PluginModuleUtil.isPluginModuleOrDependency(module))) {
+      return new JavaElementVisitor() {
+      };
     }
     return new JavaElementVisitor() {
       @Override
@@ -73,11 +73,13 @@ public class UseJBColorInspection extends DevKitInspectionBase {
             }
             if (text.equalsIgnoreCase("lightGray")) {
               text = "LIGHT_GRAY";
-            } else if (text.equalsIgnoreCase("darkGray")) {
+            }
+            else if (text.equalsIgnoreCase("darkGray")) {
               text = "DARK_GRAY";
             }
             final ProblemDescriptor descriptor = holder.getManager()
-              .createProblemDescriptor(expression, "Change to JBColor." + text.toUpperCase(), new ConvertToJBColorConstantQuickFix(text.toUpperCase()),
+              .createProblemDescriptor(expression, "Change to JBColor." + text.toUpperCase(),
+                                       new ConvertToJBColorConstantQuickFix(text.toUpperCase()),
                                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly);
             holder.registerProblem(descriptor);
           }
@@ -102,8 +104,8 @@ public class UseJBColorInspection extends DevKitInspectionBase {
             final PsiType parentType = ((PsiNewExpression)parent.getParent()).getType();
             if (parentType == null || JBColor.class.getName().equals(parentType.getCanonicalText())) return null;
           }
-            return manager.createProblemDescriptor(expression, "Replace with JBColor", new ConvertToJBColorQuickFix(),
-                                                   ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly);
+          return manager.createProblemDescriptor(expression, "Replace with JBColor", new ConvertToJBColorQuickFix(),
+                                                 ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly);
         }
       }
     }

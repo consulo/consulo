@@ -29,5 +29,6 @@ import java.io.File;
  */
 public interface FileManager {
   public File releaseOutputFile(File outFile);
+
   public File getOutputFile(File target);
 }

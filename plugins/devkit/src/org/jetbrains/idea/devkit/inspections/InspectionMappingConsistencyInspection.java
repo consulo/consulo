@@ -50,13 +50,14 @@ public class InspectionMappingConsistencyInspection extends DevKitInspectionBase
   public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder,
                                         boolean isOnTheFly,
                                         @NotNull LocalInspectionToolSession session) {
-    return new XmlElementVisitor()  {
+    return new XmlElementVisitor() {
       @Override
       public void visitXmlTag(XmlTag tag) {
         DomElement element = DomUtil.getDomElement(tag);
         if (element instanceof Extension) {
           ExtensionPoint extensionPoint = ((Extension)element).getExtensionPoint();
-          if (extensionPoint != null && InheritanceUtil.isInheritor(extensionPoint.getBeanClass().getValue(), "com.intellij.codeInspection.InspectionEP")) {
+          if (extensionPoint != null &&
+              InheritanceUtil.isInheritor(extensionPoint.getBeanClass().getValue(), "com.intellij.codeInspection.InspectionEP")) {
             boolean key = tag.getAttribute("key") != null;
             boolean groupKey = tag.getAttribute("groupKey") != null;
             if (key) {
@@ -89,7 +90,7 @@ public class InspectionMappingConsistencyInspection extends DevKitInspectionBase
   }
 
   private static void registerProblem(DomElement element, ProblemsHolder holder, String message, String... createAttrs) {
-    final Pair<TextRange,PsiElement> range = DomUtil.getProblemRange(element.getXmlTag());
+    final Pair<TextRange, PsiElement> range = DomUtil.getProblemRange(element.getXmlTag());
     holder.registerProblem(range.second, range.first, message, ContainerUtil.map(createAttrs, new Function<String, LocalQuickFix>() {
       @Override
       public LocalQuickFix fun(final String s) {

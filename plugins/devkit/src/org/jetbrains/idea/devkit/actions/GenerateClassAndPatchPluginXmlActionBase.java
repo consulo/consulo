@@ -36,6 +36,7 @@ public abstract class GenerateClassAndPatchPluginXmlActionBase extends GenerateP
   }
 
   protected abstract String getClassNamePrompt();
+
   protected abstract String getClassNamePromptTitle();
 
   protected PsiElement[] invokeDialogImpl(Project project, PsiDirectory directory) {

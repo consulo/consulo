@@ -90,17 +90,17 @@ public class PluginConfigPanel extends JPanel {
       @Override
       public void checkBoxSelectionChanged(int index, boolean value) {
         final Object itemAt = myPluginsList.getItemAt(index);
-        if(itemAt != null) {
+        if (itemAt != null) {
           final LibraryTable moduleLibraryTable = myRootModel.getModuleLibraryTable();
           final IdeaPluginDescriptorImpl ideaPluginDescriptor = (IdeaPluginDescriptorImpl)itemAt;
-          if(value) {
+          if (value) {
             final List<File> classPath = ideaPluginDescriptor.getClassPath();
 
             final Library library = moduleLibraryTable.createLibrary(LIBRARY_PREFIX + ideaPluginDescriptor.getName());
             final Library.ModifiableModel modifiableModel = library.getModifiableModel();
 
             JarFileSystem jarFileSystem = JarFileSystem.getInstance();
-            for(File file : classPath) {
+            for (File file : classPath) {
               modifiableModel.addRoot(jarFileSystem.findFileByPath(file.getPath() + JarFileSystem.JAR_SEPARATOR), OrderRootType.CLASSES);
             }
 
@@ -108,7 +108,7 @@ public class PluginConfigPanel extends JPanel {
           }
           else {
             final Library library = findLibrary(ideaPluginDescriptor);
-            if(library != null) {
+            if (library != null) {
               moduleLibraryTable.removeLibrary(library);
             }
           }
@@ -142,7 +142,7 @@ public class PluginConfigPanel extends JPanel {
           // remove Core plugin - because it added to SDK
           while (iterator.hasNext()) {
             final IdeaPluginDescriptorImpl next = iterator.next();
-            if(next.getPluginId().getIdString().equals(PluginManager.CORE_PLUGIN_ID)) {
+            if (next.getPluginId().getIdString().equals(PluginManager.CORE_PLUGIN_ID)) {
               iterator.remove();
               break;
             }
@@ -161,8 +161,8 @@ public class PluginConfigPanel extends JPanel {
         myPluginsList.setItems(items, IdeaPluginDescriptorToString.ourInstance);
         myPluginsList.setPaintBusy(val);
 
-        if(!val) {
-          for(IdeaPluginDescriptorImpl item : items) {
+        if (!val) {
+          for (IdeaPluginDescriptorImpl item : items) {
             myPluginsList.setItemSelected(item, findLibrary(item) != null);
           }
         }
@@ -177,7 +177,7 @@ public class PluginConfigPanel extends JPanel {
     while (libraryIterator.hasNext()) {
       final Library next = libraryIterator.next();
       final String name = next.getName();
-      if(name != null && name.equals(pluginName)) {
+      if (name != null && name.equals(pluginName)) {
         return next;
       }
     }

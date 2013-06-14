@@ -29,24 +29,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Option extends DomElement {
 
-	/**
-	 * Returns the value of the name child.
-	 * Attribute name
-	 * @return the value of the name child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getName();
+  /**
+   * Returns the value of the name child.
+   * Attribute name
+   *
+   * @return the value of the name child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getName();
 
 
-	/**
-	 * Returns the value of the value child.
-	 * Attribute value
-	 * @return the value of the value child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getValue();
+  /**
+   * Returns the value of the value child.
+   * Attribute value
+   *
+   * @return the value of the value child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getValue();
 
 
 }

@@ -61,15 +61,16 @@ public class ToggleHighlightingMarkupAction extends AnAction {
     if (editor == null || file == null) return;
     final Project project = file.getProject();
     CommandProcessorEx commandProcessor = (CommandProcessorEx)CommandProcessorEx.getInstance();
-    Object commandToken = commandProcessor.startCommand(project, e.getPresentation().getText(), e.getPresentation().getText(), UndoConfirmationPolicy.DEFAULT);
+    Object commandToken =
+      commandProcessor.startCommand(project, e.getPresentation().getText(), e.getPresentation().getText(), UndoConfirmationPolicy.DEFAULT);
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(getClass());
     try {
       final SelectionModel selectionModel = editor.getSelectionModel();
       int[] starts = selectionModel.getBlockSelectionStarts();
       int[] ends = selectionModel.getBlockSelectionEnds();
 
-      int startOffset = starts.length == 0? 0 : starts[0];
-      int endOffset = ends.length == 0? editor.getDocument().getTextLength() : ends[ends.length - 1];
+      int startOffset = starts.length == 0 ? 0 : starts[0];
+      int endOffset = ends.length == 0 ? editor.getDocument().getTextLength() : ends[ends.length - 1];
 
       perform(project, editor.getDocument(), startOffset, endOffset);
     }
@@ -82,7 +83,8 @@ public class ToggleHighlightingMarkupAction extends AnAction {
   private static void perform(Project project, final Document document, final int startOffset, final int endOffset) {
     final CharSequence sequence = document.getCharsSequence();
     final StringBuilder sb = new StringBuilder();
-    Pattern pattern = Pattern.compile("<(error|warning|EOLError|EOLWarning|info|weak_warning)((?:\\s|=|\\w+|\\\"(?:[^\"]|\\\\\\\")*?\\\")*?)>(.*?)</\\1>");
+    Pattern pattern =
+      Pattern.compile("<(error|warning|EOLError|EOLWarning|info|weak_warning)((?:\\s|=|\\w+|\\\"(?:[^\"]|\\\\\\\")*?\\\")*?)>(.*?)</\\1>");
     Matcher matcher = pattern.matcher(sequence);
     List<TextRange> ranges = new ArrayList<TextRange>();
     if (matcher.find(startOffset)) {
@@ -115,11 +117,10 @@ public class ToggleHighlightingMarkupAction extends AnAction {
       sb.append(sequence, pos, sequence.length());
     }
     else {
-      final int[] offset = new int[] {0};
+      final int[] offset = new int[]{0};
       final ArrayList<HighlightInfo> infos = new ArrayList<HighlightInfo>();
-      DaemonCodeAnalyzerImpl.processHighlights(
-        document, project, HighlightSeverity.WARNING, 0, sequence.length(),
-        new Processor<HighlightInfo>() {
+      DaemonCodeAnalyzerImpl
+        .processHighlights(document, project, HighlightSeverity.WARNING, 0, sequence.length(), new Processor<HighlightInfo>() {
           @Override
           public boolean process(HighlightInfo info) {
             if (info.getSeverity() != HighlightSeverity.WARNING && info.getSeverity() != HighlightSeverity.ERROR) return true;
@@ -140,7 +141,8 @@ public class ToggleHighlightingMarkupAction extends AnAction {
                                 StringBuilder sb,
                                 CharSequence sequence,
                                 int offset,
-                                ArrayList<HighlightInfo> infos, final boolean compact) {
+                                ArrayList<HighlightInfo> infos,
+                                final boolean compact) {
     if (info == null || !infos.isEmpty() && getMaxEnd(infos) < info.getStartOffset()) {
       if (infos.size() == 1) {
         HighlightInfo cur = infos.remove(0);
@@ -167,8 +169,9 @@ public class ToggleHighlightingMarkupAction extends AnAction {
     if (info != null) {
       boolean found = false;
       for (HighlightInfo cur : infos) {
-        if (cur.getStartOffset() == info.getStartOffset() && cur.getEndOffset() == info.getEndOffset() && cur.getSeverity() ==
-                                                                                                          info.getSeverity()) {
+        if (cur.getStartOffset() == info.getStartOffset() &&
+            cur.getEndOffset() == info.getEndOffset() &&
+            cur.getSeverity() == info.getSeverity()) {
           found = true;
           break;
         }

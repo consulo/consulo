@@ -34,7 +34,8 @@ public class PluginBuildParticipantProvider extends BuildParticipantProvider {
     }
 
     final PluginBuildConfiguration configuration = PluginBuildConfiguration.getInstance(module);
-    return configuration != null ? Collections.singletonList(configuration.getBuildParticipant())
-                                 : Collections.<PluginBuildParticipant>emptyList();
+    return configuration != null
+           ? Collections.singletonList(configuration.getBuildParticipant())
+           : Collections.<PluginBuildParticipant>emptyList();
   }
 }

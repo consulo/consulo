@@ -60,7 +60,9 @@ public class DomGenPanel {
   private void createUIComponents() {
     mySchemaLocation = new TextFieldWithBrowseButton();
     final String title = "Choose XSD or DTD schema";
-    mySchemaLocation.addBrowseFolderListener(title, "Make sure there are only necessary schemes in directory where your XSD or DTD schema is located", myProject, new FileTypeDescriptor(title, "xsd", "dtd"));
+    mySchemaLocation
+      .addBrowseFolderListener(title, "Make sure there are only necessary schemes in directory where your XSD or DTD schema is located",
+                               myProject, new FileTypeDescriptor(title, "xsd", "dtd"));
     mySchemaLocation.getTextField().setEditable(false);
     mySchemaLocation.addActionListener(new ActionListener() {
       @Override
@@ -99,7 +101,8 @@ public class DomGenPanel {
       }
     });
     myOutputDir = new TextFieldWithBrowseButton();
-    myOutputDir.addBrowseFolderListener("Select Output For Generated Files", "", myProject, FileChooserDescriptorFactory.getDirectoryChooserDescriptor("Output For Generated Files"));
+    myOutputDir.addBrowseFolderListener("Select Output For Generated Files", "", myProject,
+                                        FileChooserDescriptorFactory.getDirectoryChooserDescriptor("Output For Generated Files"));
   }
 
   public JComponent getComponent() {
@@ -107,7 +110,8 @@ public class DomGenPanel {
   }
 
   public NamespaceDesc getNamespaceDescriptor() {
-    return new NamespaceDesc(myNamespace.getText().trim(), myPackage.getText().trim(), mySuperClass.getText().trim(), "", null, null, null, null);
+    return new NamespaceDesc(myNamespace.getText().trim(), myPackage.getText().trim(), mySuperClass.getText().trim(), "", null, null, null,
+                             null);
   }
 
   public String getLocation() {
@@ -119,6 +123,7 @@ public class DomGenPanel {
   }
 
   private static final String PREFIX = "DomGenPanel.";
+
   public void restore() {
     myNamespace.setText(getValue("namespace", ""));
     myPackage.setText(getValue("package", "com.intellij.myframework.model"));

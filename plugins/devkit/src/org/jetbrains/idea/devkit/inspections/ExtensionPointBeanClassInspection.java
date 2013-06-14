@@ -45,9 +45,8 @@ public class ExtensionPointBeanClassInspection extends DevKitInspectionBase {
         if (element instanceof ExtensionPoint) {
           ExtensionPoint extensionPoint = (ExtensionPoint)element;
           if (extensionPoint.getWithElements().isEmpty() && !collectMissingWithTags(extensionPoint).isEmpty()) {
-            holder.registerProblem(tag,
-                                   "<extensionPoint> does not have <with> tags to specify the types of class fields",
-                                   new AddWithTagFix());
+            holder
+              .registerProblem(tag, "<extensionPoint> does not have <with> tags to specify the types of class fields", new AddWithTagFix());
           }
         }
       }

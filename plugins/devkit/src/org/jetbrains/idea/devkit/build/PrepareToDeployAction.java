@@ -107,10 +107,11 @@ public class PrepareToDeployAction extends AnAction {
                                      }
                                      messageBuf.append(message);
                                    }
-                                   Messages.showInfoMessage(messageBuf.toString(),
-                                                            pluginModules.size() == 1
-                                                            ? DevKitBundle.message("success.deployment.message", pluginModules.get(0).getName())
-                                                            : DevKitBundle.message("success.deployment.message.all"));
+                                   Messages.showInfoMessage(messageBuf.toString(), pluginModules.size() == 1
+                                                                                   ? DevKitBundle.message("success.deployment.message",
+                                                                                                          pluginModules.get(0).getName())
+                                                                                   : DevKitBundle
+                                                                                     .message("success.deployment.message.all"));
                                  }
                                }
                              });
@@ -133,8 +134,8 @@ public class PrepareToDeployAction extends AnAction {
     final File oldFile = new File(oldPath);
     if (oldFile.exists()) {
       if (Messages
-        .showYesNoDialog(module.getProject(), DevKitBundle.message("suggest.to.delete", oldPath), DevKitBundle.message("info.message"),
-                         Messages.getInformationIcon()) == DialogWrapper.OK_EXIT_CODE) {
+            .showYesNoDialog(module.getProject(), DevKitBundle.message("suggest.to.delete", oldPath), DevKitBundle.message("info.message"),
+                             Messages.getInformationIcon()) == DialogWrapper.OK_EXIT_CODE) {
         FileUtil.delete(oldFile);
       }
     }
@@ -310,7 +311,8 @@ public class PrepareToDeployAction extends AnAction {
       final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
       final HashSet<String> writtenItemRelativePaths = new HashSet<String>();
       for (Module module1 : modules) {
-        final VirtualFile compilerOutputPath = CompilerPathsManager.getInstance(module1.getProject()).getCompilerOutput(module1, ContentFolderType.SOURCE);
+        final VirtualFile compilerOutputPath =
+          CompilerPathsManager.getInstance(module1.getProject()).getCompilerOutput(module1, ContentFolderType.SOURCE);
         if (compilerOutputPath == null) continue; //pre-condition: output dirs for all modules are up-to-date
         ZipUtil.addDirToZipRecursively(jarPlugin, jarFile, new File(compilerOutputPath.getPath()), "",
                                        createFilter(progressIndicator, myFileTypeManager), writtenItemRelativePaths);

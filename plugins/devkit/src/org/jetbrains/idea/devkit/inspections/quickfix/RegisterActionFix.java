@@ -20,10 +20,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.devkit.DevKitBundle;
 import org.jetbrains.idea.devkit.actions.NewActionDialog;
 import org.jetbrains.idea.devkit.util.ActionType;
-import org.jetbrains.annotations.NotNull;
 
 public class RegisterActionFix extends AbstractRegisterFix {
   private NewActionDialog myDialog;
@@ -53,7 +53,8 @@ public class RegisterActionFix extends AbstractRegisterFix {
   public void patchPluginXml(XmlFile pluginXml, PsiClass aClass) throws IncorrectOperationException {
     if (ActionType.GROUP.isOfType(aClass)) {
       ActionType.GROUP.patchPluginXml(pluginXml, aClass, myDialog);
-    } else {
+    }
+    else {
       ActionType.ACTION.patchPluginXml(pluginXml, aClass, myDialog);
     }
   }

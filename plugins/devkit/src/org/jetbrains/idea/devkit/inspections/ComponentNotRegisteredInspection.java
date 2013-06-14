@@ -68,18 +68,16 @@ public class ComponentNotRegisteredInspection extends DevKitInspectionBase {
     final JPanel jPanel = new JPanel();
     jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 
-    final JCheckBox ignoreNonPublic = new JCheckBox(
-            DevKitBundle.message("inspections.component.not.registered.option.ignore.non.public"),
-            IGNORE_NON_PUBLIC);
+    final JCheckBox ignoreNonPublic =
+      new JCheckBox(DevKitBundle.message("inspections.component.not.registered.option.ignore.non.public"), IGNORE_NON_PUBLIC);
     ignoreNonPublic.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
         IGNORE_NON_PUBLIC = ignoreNonPublic.isSelected();
       }
     });
 
-    final JCheckBox checkJavaActions = new JCheckBox(
-            DevKitBundle.message("inspections.component.not.registered.option.check.actions"),
-            CHECK_ACTIONS);
+    final JCheckBox checkJavaActions =
+      new JCheckBox(DevKitBundle.message("inspections.component.not.registered.option.check.actions"), CHECK_ACTIONS);
     checkJavaActions.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
         final boolean selected = checkJavaActions.isSelected();
@@ -101,8 +99,7 @@ public class ComponentNotRegisteredInspection extends DevKitInspectionBase {
         classIdentifier != null &&
         psiFile != null &&
         psiFile.getVirtualFile() != null &&
-        !isAbstract(checkedClass))
-    {
+        !isAbstract(checkedClass)) {
       if (PsiUtil.isInnerClass(checkedClass)) {
         // don't check inner classes (make this an option?)
         return null;
@@ -123,13 +120,12 @@ public class ComponentNotRegisteredInspection extends DevKitInspectionBase {
           }
           if (!isActionRegistered(checkedClass) && canFix(checkedClass)) {
             final LocalQuickFix fix = new RegisterActionFix(checkedClass);
-            final ProblemDescriptor problem = manager.createProblemDescriptor(
-                    classIdentifier,
-                    DevKitBundle.message("inspections.component.not.registered.message",
-                                         DevKitBundle.message("new.menu.action.text")),
-                    fix, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly);
+            final ProblemDescriptor problem = manager.createProblemDescriptor(classIdentifier, DevKitBundle
+              .message("inspections.component.not.registered.message", DevKitBundle.message("new.menu.action.text")), fix,
+                                                                              ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly);
             return new ProblemDescriptor[]{problem};
-          } else {
+          }
+          else {
             // action IS registered, stop here
             return null;
           }
@@ -146,12 +142,12 @@ public class ComponentNotRegisteredInspection extends DevKitInspectionBase {
         if (checkedClass.isInheritor(compClass, true)) {
           if (getRegistrationTypes(checkedClass, false) == null && canFix(checkedClass)) {
             final LocalQuickFix fix = new RegisterComponentFix(type, checkedClass);
-            final ProblemDescriptor problem = manager.createProblemDescriptor(classIdentifier,
-                                                                              DevKitBundle.message("inspections.component.not.registered.message",
-                                                                                                   DevKitBundle.message(type.myPropertyKey)),
-                                                                              fix, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly);
+            final ProblemDescriptor problem = manager.createProblemDescriptor(classIdentifier, DevKitBundle
+              .message("inspections.component.not.registered.message", DevKitBundle.message(type.myPropertyKey)), fix,
+                                                                              ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly);
             return new ProblemDescriptor[]{problem};
-          } else {
+          }
+          else {
             // component IS registered, stop here
             return null;
           }

@@ -42,7 +42,8 @@ public class PluginConfigurationType implements ConfigurationType {
         final PluginRunConfiguration runConfiguration = new PluginRunConfiguration(project, this, "");
         if (runConfiguration.VM_PARAMETERS == null) {
           runConfiguration.VM_PARAMETERS = getVmParameters();
-        } else {
+        }
+        else {
           runConfiguration.VM_PARAMETERS += getVmParameters();
         }
         return runConfiguration;
@@ -52,7 +53,7 @@ public class PluginConfigurationType implements ConfigurationType {
         final PluginRunConfiguration pluginRunConfiguration = (PluginRunConfiguration)template;
         if (pluginRunConfiguration.getModule() == null) {
           final Module[] modules = PluginModuleUtil.getAllPluginModules(pluginRunConfiguration.getProject());
-          if (modules.length > 0){
+          if (modules.length > 0) {
             pluginRunConfiguration.setModule(modules[0]);
           }
         }
@@ -74,7 +75,7 @@ public class PluginConfigurationType implements ConfigurationType {
   }
 
   public ConfigurationFactory[] getConfigurationFactories() {
-    return new ConfigurationFactory[] {myFactory};
+    return new ConfigurationFactory[]{myFactory};
   }
 
   @NotNull

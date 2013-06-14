@@ -20,8 +20,6 @@ import com.intellij.patterns.XmlPatterns;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.psi.PsiReferenceRegistrar;
 
-import static com.intellij.patterns.StandardPatterns.string;
-
 /**
  * User: anna
  * Date: 10/7/11
@@ -29,11 +27,12 @@ import static com.intellij.patterns.StandardPatterns.string;
 public class InspectionsPropertiesReferenceProviderContributor extends PsiReferenceContributor {
   @Override
   public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
-    ElementPattern pattern = XmlPatterns.xmlAttributeValue()
-      .withParent(XmlPatterns.xmlAttribute().withLocalName("key", "groupKey")
-                    .withParent(XmlPatterns.xmlTag().withName("localInspection", "globalInspection")
-                                  .withSuperParent(2, XmlPatterns.xmlTag().withName("idea-plugin"))));
-    registrar.registerReferenceProvider(pattern, new InspectionsKeyPropertiesReferenceProvider(false),
-                                        PsiReferenceRegistrar.DEFAULT_PRIORITY);
+    ElementPattern pattern = XmlPatterns.xmlAttributeValue().withParent(XmlPatterns.xmlAttribute().withLocalName("key", "groupKey")
+                                                                          .withParent(XmlPatterns.xmlTag()
+                                                                                        .withName("localInspection", "globalInspection")
+                                                                                        .withSuperParent(2, XmlPatterns.xmlTag()
+                                                                                          .withName("idea-plugin"))));
+    registrar
+      .registerReferenceProvider(pattern, new InspectionsKeyPropertiesReferenceProvider(false), PsiReferenceRegistrar.DEFAULT_PRIORITY);
   }
 }

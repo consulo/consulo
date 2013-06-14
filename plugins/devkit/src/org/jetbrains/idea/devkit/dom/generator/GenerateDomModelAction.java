@@ -28,7 +28,7 @@ public class GenerateDomModelAction extends AnAction {
   public void actionPerformed(AnActionEvent e) {
     final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
     if (project != null) {
-      new DomGenDialog(project).show();      
+      new DomGenDialog(project).show();
     }
   }
 }

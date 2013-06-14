@@ -46,10 +46,10 @@ public class JUnitDevKitPatcher implements JavaTestPatcher {
     if (jdk == null) return;
 
     @NonNls String libPath = jdk.getHomePath() + File.separator + "lib";
-    
+
     final ParametersList vm = javaParameters.getVMParametersList();
     vm.add("-Xbootclasspath/a:" + libPath + File.separator + "boot.jar");
-    if (!vm.hasProperty("idea.load.plugins.id") && module != null &&  ModuleUtil.getExtension(module, JavaModuleExtension.class) != null) {
+    if (!vm.hasProperty("idea.load.plugins.id") && module != null && ModuleUtil.getExtension(module, JavaModuleExtension.class) != null) {
       final String id = DescriptorUtil.getPluginId(module);
       if (id != null) {
         vm.defineProperty("idea.load.plugins.id", id);

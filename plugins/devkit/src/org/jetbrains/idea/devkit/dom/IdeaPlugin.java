@@ -52,43 +52,51 @@ public interface IdeaPlugin extends DomElement {
 
   @NotNull
   List<GenericDomValue<String>> getDescriptions();
+
   GenericDomValue<String> addDescription();
 
 
   @NotNull
   List<GenericDomValue<String>> getVersions();
+
   GenericDomValue<String> addVersion();
 
 
   @NotNull
   List<Vendor> getVendors();
+
   Vendor addVendor();
 
 
   @NotNull
   List<GenericDomValue<String>> getChangeNotess();
+
   GenericDomValue<String> addChangeNotes();
 
 
   @NotNull
   List<IdeaVersion> getIdeaVersions();
+
   IdeaVersion addIdeaVersion();
 
 
   @NotNull
   List<GenericDomValue<String>> getCategories();
+
   GenericDomValue<String> addCategory();
 
 
   @NotNull
   @SubTagList("resource-bundle")
   List<GenericDomValue<String>> getResourceBundles();
+
   GenericDomValue<String> addResourceBundle();
 
 
   @NotNull
   @SubTagList("depends")
   List<Dependency> getDependencies();
+
   @SubTagList("depends")
   Dependency addDependency();
 
@@ -99,11 +107,13 @@ public interface IdeaPlugin extends DomElement {
   @NotNull
   @SubTagList("extensions")
   List<Extensions> getExtensions();
+
   Extensions addExtensions();
 
   @NotNull
   @SubTagList("extensionPoints")
   List<ExtensionPoints> getExtensionPoints();
+
   ExtensionPoints addExtensionPoints();
 
 
@@ -120,6 +130,7 @@ public interface IdeaPlugin extends DomElement {
   @NotNull
   @SubTagList("actions")
   List<Actions> getActions();
+
   Actions addActions();
 
 

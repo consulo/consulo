@@ -44,13 +44,15 @@ public class PluginBuildUtil {
   private PluginBuildUtil() {
   }
 
-  @NonNls @Nullable public static String getPluginExPath(Module module) {
+  @NonNls
+  @Nullable
+  public static String getPluginExPath(Module module) {
     final PluginModuleExtension extension = ModuleUtil.getExtension(module, PluginModuleExtension.class);
     if (extension == null) {
       return null;
     }
     final Sdk sdk = extension.getSdk();
-    if(sdk == null) {
+    if (sdk == null) {
       return null;
     }
     String sandboxHome = ((Sandbox)sdk.getSdkAdditionalData()).getSandboxHome();

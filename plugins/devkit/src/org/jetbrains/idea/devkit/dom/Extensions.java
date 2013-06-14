@@ -31,14 +31,15 @@ import java.util.List;
 public interface Extensions extends DomElement {
   @NotNull
   @Attribute("defaultExtensionNs")
-  @Convert(value=ExtensionNsConverter.class, soft=true)
+  @Convert(value = ExtensionNsConverter.class, soft = true)
   GenericAttributeValue<IdeaPlugin> getDefaultExtensionNs();
 
   @NotNull
-  @Convert(value=ExtensionNsConverter.class, soft=true)
+  @Convert(value = ExtensionNsConverter.class, soft = true)
   GenericAttributeValue<IdeaPlugin> getXmlns();
 
   List<Extension> getExtensions();
+
   Extension addExtension();
 
   Extension addExtension(String name);

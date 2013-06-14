@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class IntentionDescriptionNotFoundInspection extends DevKitInspectionBase{
+public class IntentionDescriptionNotFoundInspection extends DevKitInspectionBase {
   @NonNls private static final String INTENTION = "com.intellij.codeInsight.intention.IntentionAction";
   @NonNls private static final String INSPECTION_DESCRIPTIONS = "intentionDescriptions";
 
@@ -56,7 +56,7 @@ public class IntentionDescriptionNotFoundInspection extends DevKitInspectionBase
 
     final PsiClass base = JavaPsiFacade.getInstance(project).findClass(INTENTION, GlobalSearchScope.allScope(project));
 
-    if (base == null || ! aClass.isInheritor(base, true)) return null;
+    if (base == null || !aClass.isInheritor(base, true)) return null;
 
     String descriptionDir = getDescriptionDirName(aClass);
     if (StringUtil.isEmptyOrSpaces(descriptionDir)) {
@@ -72,8 +72,8 @@ public class IntentionDescriptionNotFoundInspection extends DevKitInspectionBase
           PsiElement problem = aClass.getNameIdentifier();
           ProblemDescriptor problemDescriptor = manager.createProblemDescriptor(problem == null ? nameIdentifier : problem,
                                                                                 "Intention must have 'before.*.template' and 'after.*.template' beside 'description.html'",
-                                                                                isOnTheFly,
-                                                                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING, false);
+                                                                                isOnTheFly, ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                                                                                false);
           return new ProblemDescriptor[]{problemDescriptor};
         }
 
@@ -84,8 +84,8 @@ public class IntentionDescriptionNotFoundInspection extends DevKitInspectionBase
 
     final PsiElement problem = aClass.getNameIdentifier();
     final ProblemDescriptor problemDescriptor = manager
-      .createProblemDescriptor(problem == null ? nameIdentifier : problem,
-                               "Intention does not have a description", isOnTheFly, new LocalQuickFix[]{new CreateHtmlDescriptionFix(descriptionDir, module, true)},
+      .createProblemDescriptor(problem == null ? nameIdentifier : problem, "Intention does not have a description", isOnTheFly,
+                               new LocalQuickFix[]{new CreateHtmlDescriptionFix(descriptionDir, module, true)},
                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
     return new ProblemDescriptor[]{problemDescriptor};
   }
@@ -132,7 +132,8 @@ public class IntentionDescriptionNotFoundInspection extends DevKitInspectionBase
         final PsiDirectory parent = dir.getParentDirectory();
         if (parent != null) result.add(parent.getVirtualFile());
       }
-    } else {
+    }
+    else {
       ContainerUtil.addAll(result, ModuleRootManager.getInstance(module).getSourceRoots());
     }
     return result;
@@ -142,7 +143,8 @@ public class IntentionDescriptionNotFoundInspection extends DevKitInspectionBase
     final PsiPackage aPackage = JavaPsiFacade.getInstance(module.getProject()).findPackage(INSPECTION_DESCRIPTIONS);
     if (aPackage != null) {
       return aPackage.getDirectories(GlobalSearchScope.moduleWithDependenciesScope(module));
-    } else {
+    }
+    else {
       return PsiDirectory.EMPTY_ARRAY;
     }
   }

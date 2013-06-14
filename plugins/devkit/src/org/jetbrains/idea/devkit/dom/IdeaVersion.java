@@ -25,17 +25,17 @@ import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 
 public interface IdeaVersion extends DomElement {
-	@NotNull
-	GenericAttributeValue<String> getMax();
+  @NotNull
+  GenericAttributeValue<String> getMax();
 
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getSinceBuild();
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getSinceBuild();
 
-	@NotNull
-	GenericAttributeValue<String> getUntilBuild();
+  @NotNull
+  GenericAttributeValue<String> getUntilBuild();
 
 
-	@NotNull
-	GenericAttributeValue<String> getMin();
+  @NotNull
+  GenericAttributeValue<String> getMin();
 }

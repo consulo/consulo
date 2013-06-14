@@ -63,7 +63,8 @@ public abstract class DevKitInspectionBase extends BaseJavaLocalInspectionTool {
 
     if (ModuleUtil.getExtension(module, JavaModuleExtension.class) != null) {
       return checkModule(module, psiClass, null, includeActions);
-    } else {
+    }
+    else {
       Set<PsiClass> types = null;
       final List<Module> modules = PluginModuleUtil.getCandidateModules(module);
       for (Module m : modules) {

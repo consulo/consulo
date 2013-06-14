@@ -33,7 +33,7 @@ public class PrepareAllToDeployAction extends PrepareToDeployAction {
 
   public void actionPerformed(final AnActionEvent e) {
     final Project project = e.getData(PlatformDataKeys.PROJECT);
-    if ( project == null ) return;
+    if (project == null) return;
 
     List<Module> pluginModules = new ArrayList<Module>();
     for (Module aModule : ModuleManager.getInstance(project).getModules()) {

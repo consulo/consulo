@@ -43,7 +43,7 @@ public class DTDModelLoader implements ModelLoader {
         Util.log("skipping " + fileName);
         continue;
       }
-      Util.log("loading " + fileName+"..");
+      Util.log("loading " + fileName + "..");
       String ns = fileName.substring(fileName.lastIndexOf(File.separatorChar) + 1);
       //loadDTDByXerces(ns, dtdFile, resolver);
 
@@ -88,7 +88,8 @@ public class DTDModelLoader implements ModelLoader {
       final String typeQName = model.toJavaQualifiedTypeName(namespace, typeName, false);
       if (resultQNames.contains(typeQName)) {
         continue;
-      } else {
+      }
+      else {
         resultQNames.add(typeQName);
       }
       final TypeDesc td = new TypeDesc(el.name, namespace, typeName, TypeDesc.TypeEnum.CLASS);
@@ -99,8 +100,8 @@ public class DTDModelLoader implements ModelLoader {
         td.fdMap.put(fd.name, fd);
       }
       for (Object o : el.attributes.keySet()) {
-        String attrName = (String) o;
-        DTDAttribute attr = (DTDAttribute) el.attributes.get(attrName);
+        String attrName = (String)o;
+        DTDAttribute attr = (DTDAttribute)el.attributes.get(attrName);
         if (attr.decl == DTDDecl.FIXED || "ID".equals(attr.type)) {
           continue;
         }
@@ -114,7 +115,7 @@ public class DTDModelLoader implements ModelLoader {
       final ArrayList<List<DTDItem>> choiceList = new ArrayList<List<DTDItem>>();
       final LinkedList<Entry> plist = new LinkedList<Entry>();
       if (el.content instanceof DTDContainer) {
-      //if ((el.content instanceof DTDChoice) || (el.content instanceof DTDSequence)) {
+        //if ((el.content instanceof DTDChoice) || (el.content instanceof DTDSequence)) {
         plist.add(new Entry(el.content, false, true));
       }
       while (!plist.isEmpty()) {
@@ -123,21 +124,23 @@ public class DTDModelLoader implements ModelLoader {
         final DTDItem p = pentry.p;
 
         if (p instanceof DTDName) {
-          final DTDName n = (DTDName) p;
-          final DTDElement nel = (DTDElement) dtd.elements.get(n.value);
+          final DTDName n = (DTDName)p;
+          final DTDElement nel = (DTDElement)dtd.elements.get(n.value);
           final String pName = n.value;
-          final FieldDesc fd1 = new FieldDesc(FieldDesc.STR, Util.toJavaFieldName(pName), pName, null, "null", pentry.required && (n.cardinal == DTDCardinal.ONEMANY || n.cardinal == DTDCardinal.NONE));
+          final FieldDesc fd1 = new FieldDesc(FieldDesc.STR, Util.toJavaFieldName(pName), pName, null, "null",
+                                              pentry.required && (n.cardinal == DTDCardinal.ONEMANY || n.cardinal == DTDCardinal.NONE));
           fd1.tagName = pName;
           if (nel != null) {
             fd1.documentation = parseDTDItemDocumentation(dtd, nel, "Type " + nel.name + " documentation");
           }
           if (nel == null) {
             fd1.type = model.toJavaTypeName(fd1.tagName, namespace);
-          } else if (nel.content instanceof DTDEmpty || nel.content instanceof DTDAny) {
+          }
+          else if (nel.content instanceof DTDEmpty || nel.content instanceof DTDAny) {
             boolean hasAttrFields = false;
             boolean hasTextContents = nel.content instanceof DTDAny;
             for (Object o : nel.attributes.values()) {
-              DTDAttribute attr = (DTDAttribute) o;
+              DTDAttribute attr = (DTDAttribute)o;
               if (attr.decl != DTDDecl.FIXED && !"ID".equals(attr.type)) {
                 hasAttrFields = true;
                 break;
@@ -152,22 +155,25 @@ public class DTDModelLoader implements ModelLoader {
               if (!visitedElements.contains(nel)) {
                 elements[ptr++] = nel;
               }
-            } else if (hasTextContents) {
+            }
+            else if (hasTextContents) {
               fd1.clType = FieldDesc.STR;
               fd1.type = "String";
               fd1.def = "null";
-            } else {
+            }
+            else {
               fd1.clType = FieldDesc.BOOL;
               fd1.type = "boolean";
               fd1.def = "false";
             }
-          } else if (nel.content instanceof DTDContainer) {
+          }
+          else if (nel.content instanceof DTDContainer) {
             boolean hasAttrFields = false;
             boolean hasTextField = false;
-            if ((nel.content instanceof DTDMixed) && ((DTDMixed) nel.content).getItemsVec().size() == 1) {
+            if ((nel.content instanceof DTDMixed) && ((DTDMixed)nel.content).getItemsVec().size() == 1) {
               hasTextField = true;
               for (Object o : nel.attributes.values()) {
-                final DTDAttribute attr = (DTDAttribute) o;
+                final DTDAttribute attr = (DTDAttribute)o;
                 if (attr.decl != DTDDecl.FIXED && !"ID".equals(attr.type)) {
                   hasAttrFields = true;
                   break;
@@ -178,7 +184,8 @@ public class DTDModelLoader implements ModelLoader {
               fd1.clType = FieldDesc.STR;
               fd1.type = "String";
               fd1.def = "null";
-            } else {
+            }
+            else {
               fd1.clType = FieldDesc.OBJ;
               fd1.type = model.toJavaTypeName(fd1.tagName, namespace);
               fd1.contentQualifiedName = model.toJavaQualifiedTypeName(namespace, fd1.tagName, false);
@@ -187,7 +194,8 @@ public class DTDModelLoader implements ModelLoader {
                 elements[ptr++] = nel;
               }
             }
-          } else {
+          }
+          else {
             fd1.type = "ERROR:Name";
           }
           if ((pentry.many || n.cardinal.type >= 2) && fd1.clType != FieldDesc.BOOL) {
@@ -201,8 +209,9 @@ public class DTDModelLoader implements ModelLoader {
           }
           fd1.realIndex = td.fdMap.size();
           duplicates = Util.addToNameMap(td.fdMap, fd1, false) || duplicates;
-        } else if (p instanceof DTDContainer) {
-          final DTDContainer cont = (DTDContainer) p;
+        }
+        else if (p instanceof DTDContainer) {
+          final DTDContainer cont = (DTDContainer)p;
           final boolean isChoice = cont instanceof DTDChoice;
           // 0 - NONE, 1 - OPT, 2 - ZEROMANY, 3 - ONEMANY
           final boolean required = !isChoice && pentry.required && p.cardinal != DTDCardinal.ZEROMANY && p.cardinal != DTDCardinal.OPTIONAL;
@@ -214,7 +223,8 @@ public class DTDModelLoader implements ModelLoader {
           for (DTDItem aL : l) {
             plist.add(new Entry(aL, many, required));
           }
-        } else {
+        }
+        else {
           Util.logerr("unknown item " + p);
         }
       }
@@ -234,18 +244,19 @@ public class DTDModelLoader implements ModelLoader {
         while (!elist.isEmpty()) {
           DTDItem p = elist.removeFirst();
           if (p instanceof DTDContainer) {
-            List<DTDItem> l2 = ((DTDContainer) p).getItemsVec();
+            List<DTDItem> l2 = ((DTDContainer)p).getItemsVec();
             for (DTDItem aL2 : l2) {
               elist.addFirst(aL2);
             }
-          } else if (p instanceof DTDName) {
+          }
+          else if (p instanceof DTDName) {
             clist.add(p);
           }
         }
         boolean choiceOpt = true;
         FieldDesc[] choice = new FieldDesc[clist.size()];
         for (i = 0; i < choice.length; i++) {
-          DTDName p = (DTDName) clist.get(i);
+          DTDName p = (DTDName)clist.get(i);
           String s = Util.toJavaFieldName(p.value);
           FieldDesc fd = td.fdMap.get(s);
           if (fd == null) {
@@ -287,7 +298,7 @@ public class DTDModelLoader implements ModelLoader {
     if (elementIndex < 1) return null;
     Object prev = dtd.items.get(elementIndex - 1);
     if (!(prev instanceof DTDComment)) return null;
-    DTDComment comment = (DTDComment) prev;
+    DTDComment comment = (DTDComment)prev;
     return title + "\n" + "<pre>\n" + comment.getText() + "\n</pre>";
   }
 
@@ -321,11 +332,11 @@ public class DTDModelLoader implements ModelLoader {
       StringBuffer sb = new StringBuffer("Empty root: possible elements: ");
       HashMap map = new HashMap(dtd.elements);
       for (Object o : dtd.elements.values()) {
-        DTDElement el = (DTDElement) o;
+        DTDElement el = (DTDElement)o;
         if (el.content instanceof DTDContainer) {
-          for (Object obj : ((DTDContainer) el.content).getItemsVec()) {
+          for (Object obj : ((DTDContainer)el.content).getItemsVec()) {
             if (obj instanceof DTDName) {
-              map.remove(((DTDName) obj).value);
+              map.remove(((DTDName)obj).value);
             }
           }
         }

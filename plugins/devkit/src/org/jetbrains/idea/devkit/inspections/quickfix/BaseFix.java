@@ -26,8 +26,8 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.idea.devkit.DevKitBundle;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.devkit.DevKitBundle;
 
 /**
  * @author swr
@@ -56,11 +56,9 @@ abstract class BaseFix implements LocalQuickFix {
       if (status.hasReadonlyFiles()) {
         final String className = clazz != null ? clazz.getQualifiedName() : myElement.getContainingFile().getName();
 
-        Messages.showMessageDialog(project,
-                DevKitBundle.message("inspections.registration.problems.quickfix.read-only",
-                        className),
-                getName(),
-                Messages.getErrorIcon());
+        Messages
+          .showMessageDialog(project, DevKitBundle.message("inspections.registration.problems.quickfix.read-only", className), getName(),
+                             Messages.getErrorIcon());
         return;
       }
     }

@@ -29,24 +29,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface MouseShortcut extends DomElement {
 
-	/**
-	 * Returns the value of the keymap child.
-	 * Attribute keymap
-	 * @return the value of the keymap child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getKeymap();
+  /**
+   * Returns the value of the keymap child.
+   * Attribute keymap
+   *
+   * @return the value of the keymap child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getKeymap();
 
 
-	/**
-	 * Returns the value of the keystroke child.
-	 * Attribute keystroke
-	 * @return the value of the keystroke child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getKeystroke();
+  /**
+   * Returns the value of the keystroke child.
+   * Attribute keystroke
+   *
+   * @return the value of the keystroke child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getKeystroke();
 
 
 }

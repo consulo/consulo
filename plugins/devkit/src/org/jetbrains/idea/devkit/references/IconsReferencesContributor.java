@@ -55,16 +55,17 @@ import static com.intellij.patterns.PsiJavaPatterns.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class IconsReferencesContributor extends PsiReferenceContributor implements QueryExecutor<PsiReference, ReferencesSearch.SearchParameters> {
+public class IconsReferencesContributor extends PsiReferenceContributor
+  implements QueryExecutor<PsiReference, ReferencesSearch.SearchParameters> {
   @Override
   public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
     final StringPattern methodName = string().oneOf("findIcon", "getIcon");
     final PsiMethodPattern method = psiMethod().withName(methodName).definedInClass(IconLoader.class.getName());
-    final PsiJavaElementPattern.Capture<PsiLiteralExpression> javaFile
-      = literalExpression().and(psiExpression().methodCallParameter(0, method));
+    final PsiJavaElementPattern.Capture<PsiLiteralExpression> javaFile =
+      literalExpression().and(psiExpression().methodCallParameter(0, method));
 
-    final PsiJavaElementPattern.Capture<PsiLiteralExpression> annotationValue
-      = literalExpression().annotationParam("com.intellij.ide.presentation.Presentation", "icon");
+    final PsiJavaElementPattern.Capture<PsiLiteralExpression> annotationValue =
+      literalExpression().annotationParam("com.intellij.ide.presentation.Presentation", "icon");
 
     final XmlAttributeValuePattern pluginXml = XmlPatterns.xmlAttributeValue().withLocalName("icon");
 
@@ -73,82 +74,80 @@ public class IconsReferencesContributor extends PsiReferenceContributor implemen
       @Override
       public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull ProcessingContext context) {
         if (!PlatformUtils.isIdeaProject(element.getProject())) return PsiReference.EMPTY_ARRAY;
-        return new PsiReference[] {
-          new PsiReferenceBase<PsiElement>(element, true) {
-            @Override
-            public PsiElement resolve() {
-              String value = (String)((PsiLiteralExpression)element).getValue();
-              if (value != null) {
-                List<String> path = StringUtil.split(value, ".");
-                if (path.size() > 1 && path.get(0).endsWith("Icons")) {
-                  Project project = element.getProject();
-                  PsiClass cur = JavaPsiFacade.getInstance(project).findClass(fqnIconsClass(path.get(0)),
-                                                                              GlobalSearchScope.projectScope(project));
+        return new PsiReference[]{new PsiReferenceBase<PsiElement>(element, true) {
+          @Override
+          public PsiElement resolve() {
+            String value = (String)((PsiLiteralExpression)element).getValue();
+            if (value != null) {
+              List<String> path = StringUtil.split(value, ".");
+              if (path.size() > 1 && path.get(0).endsWith("Icons")) {
+                Project project = element.getProject();
+                PsiClass cur =
+                  JavaPsiFacade.getInstance(project).findClass(fqnIconsClass(path.get(0)), GlobalSearchScope.projectScope(project));
+                if (cur == null) {
+                  return null;
+                }
+
+                for (int i = 1; i < path.size() - 1; i++) {
+                  cur = cur.findInnerClassByName(path.get(i), false);
                   if (cur == null) {
                     return null;
                   }
-
-                  for (int i = 1; i < path.size() - 1; i++) {
-                    cur = cur.findInnerClassByName(path.get(i), false);
-                    if (cur == null) {
-                      return null;
-                    }
-                  }
-
-                  return cur.findFieldByName(path.get(path.size() - 1), false);
                 }
+
+                return cur.findFieldByName(path.get(path.size() - 1), false);
               }
-
-              return null;
             }
 
-            @Override
-            public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-              PsiElement field = resolve();
-              if (field instanceof PsiField) {
-                String fqn = ((PsiField)field).getContainingClass().getQualifiedName();
-
-                if (fqn.startsWith("com.intellij.icons.")) {
-                  return replace(newElementName, fqn, "com.intellij.icons.", element);
-                }
-                else if (fqn.startsWith("icons.")) {
-                  return replace(newElementName, fqn, "icons.", element);
-                }
-              }
-
-              return super.handleElementRename(newElementName);
-            }
-
-            @Override
-            public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-              if (element instanceof PsiField) {
-                String fqn = ((PsiField)element).getContainingClass().getQualifiedName();
-
-                String newElementName = ((PsiField)element).getName();
-                if (fqn.startsWith("com.intellij.icons.")) {
-                  return replace(newElementName, fqn, "com.intellij.icons.", getElement());
-                }
-                else if (fqn.startsWith("icons.")) {
-                  return replace(newElementName, fqn, "icons.", getElement());
-                }
-              }
-
-              return super.bindToElement(element);
-            }
-
-            private PsiElement replace(String newElementName, String fqn, String pckg, PsiElement container) {
-              String newValue = "\"" + fqn.substring(pckg.length()) + "." + newElementName + "\"";
-              return getElement().replace(
-                JavaPsiFacade.getElementFactory(container.getProject()).createExpressionFromText(newValue, container.getParent()));
-            }
-
-            @NotNull
-            @Override
-            public Object[] getVariants() {
-              return EMPTY_ARRAY;
-            }
+            return null;
           }
-        };
+
+          @Override
+          public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+            PsiElement field = resolve();
+            if (field instanceof PsiField) {
+              String fqn = ((PsiField)field).getContainingClass().getQualifiedName();
+
+              if (fqn.startsWith("com.intellij.icons.")) {
+                return replace(newElementName, fqn, "com.intellij.icons.", element);
+              }
+              else if (fqn.startsWith("icons.")) {
+                return replace(newElementName, fqn, "icons.", element);
+              }
+            }
+
+            return super.handleElementRename(newElementName);
+          }
+
+          @Override
+          public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+            if (element instanceof PsiField) {
+              String fqn = ((PsiField)element).getContainingClass().getQualifiedName();
+
+              String newElementName = ((PsiField)element).getName();
+              if (fqn.startsWith("com.intellij.icons.")) {
+                return replace(newElementName, fqn, "com.intellij.icons.", getElement());
+              }
+              else if (fqn.startsWith("icons.")) {
+                return replace(newElementName, fqn, "icons.", getElement());
+              }
+            }
+
+            return super.bindToElement(element);
+          }
+
+          private PsiElement replace(String newElementName, String fqn, String pckg, PsiElement container) {
+            String newValue = "\"" + fqn.substring(pckg.length()) + "." + newElementName + "\"";
+            return getElement()
+              .replace(JavaPsiFacade.getElementFactory(container.getProject()).createExpressionFromText(newValue, container.getParent()));
+          }
+
+          @NotNull
+          @Override
+          public Object[] getVariants() {
+            return EMPTY_ARRAY;
+          }
+        }};
       }
     });
 
@@ -183,90 +182,88 @@ public class IconsReferencesContributor extends PsiReferenceContributor implemen
       @NotNull
       @Override
       public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull ProcessingContext context) {
-        return new PsiReference[] {
-          new PsiReferenceBase<PsiElement>(element, true) {
-            @Override
-            public PsiElement resolve() {
-              String value = ((XmlAttributeValue)element).getValue();
-              if (value.startsWith("/")) {
-                FileReference lastRef = new FileReferenceSet(element).getLastReference();
-                return lastRef != null ? lastRef.resolve() : null;
-              }
-              else {
-                List<String> path = StringUtil.split(value, ".");
-                if (path.size() > 1 && path.get(0).endsWith("Icons")) {
-                  Project project = element.getProject();
-                  PsiClass cur = JavaPsiFacade.getInstance(project).findClass(fqnIconsClass(path.get(0)),
-                                                                             GlobalSearchScope.projectScope(project));
+        return new PsiReference[]{new PsiReferenceBase<PsiElement>(element, true) {
+          @Override
+          public PsiElement resolve() {
+            String value = ((XmlAttributeValue)element).getValue();
+            if (value.startsWith("/")) {
+              FileReference lastRef = new FileReferenceSet(element).getLastReference();
+              return lastRef != null ? lastRef.resolve() : null;
+            }
+            else {
+              List<String> path = StringUtil.split(value, ".");
+              if (path.size() > 1 && path.get(0).endsWith("Icons")) {
+                Project project = element.getProject();
+                PsiClass cur =
+                  JavaPsiFacade.getInstance(project).findClass(fqnIconsClass(path.get(0)), GlobalSearchScope.projectScope(project));
+                if (cur == null) return null;
+
+                for (int i = 1; i < path.size() - 1; i++) {
+                  cur = cur.findInnerClassByName(path.get(i), false);
                   if (cur == null) return null;
-
-                  for (int i = 1; i < path.size() - 1; i++) {
-                    cur = cur.findInnerClassByName(path.get(i), false);
-                    if (cur == null) return null;
-                  }
-
-                  return cur.findFieldByName(path.get(path.size() - 1), false);
                 }
-              }
 
-              return null;
+                return cur.findFieldByName(path.get(path.size() - 1), false);
+              }
             }
 
-            @Override
-            public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-              PsiElement element = resolve();
-              if (element instanceof PsiFile) {
-                FileReference lastRef = new FileReferenceSet(element).getLastReference();
-                return lastRef.handleElementRename(newElementName);
-              }
-              else if (element instanceof PsiField) {
-                String fqn = ((PsiField)element).getContainingClass().getQualifiedName();
-
-                if (fqn.startsWith("com.intellij.icons.")) {
-                  return replace(fqn, newElementName, "com.intellij.icons.");
-                }
-                else if (fqn.startsWith("icons.")) {
-                  return replace(fqn, newElementName, "icons.");
-                }
-              }
-
-              return super.handleElementRename(newElementName);
-            }
-
-            @Override
-            public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-              if (element instanceof PsiFile) {
-                FileReference lastRef = new FileReferenceSet(element).getLastReference();
-                return lastRef.bindToElement(element);
-              }
-              else if (element instanceof PsiField) {
-                String fqn = ((PsiField)element).getContainingClass().getQualifiedName();
-
-                String newName = ((PsiField)element).getName();
-                if (fqn.startsWith("com.intellij.icons.")) {
-                  return replace(fqn, newName, "com.intellij.icons.");
-                }
-                else if (fqn.startsWith("icons.")) {
-                  return replace(fqn, newName, "icons.");
-                }
-              }
-
-              return super.bindToElement(element);
-            }
-
-            private PsiElement replace(String fqn, String newName, String pckg) {
-              XmlAttribute parent = (XmlAttribute)getElement().getParent();
-              parent.setValue(fqn.substring(pckg.length()) + "." + newName);
-              return parent.getValueElement();
-            }
-
-            @NotNull
-            @Override
-            public Object[] getVariants() {
-              return EMPTY_ARRAY;
-            }
+            return null;
           }
-        };
+
+          @Override
+          public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+            PsiElement element = resolve();
+            if (element instanceof PsiFile) {
+              FileReference lastRef = new FileReferenceSet(element).getLastReference();
+              return lastRef.handleElementRename(newElementName);
+            }
+            else if (element instanceof PsiField) {
+              String fqn = ((PsiField)element).getContainingClass().getQualifiedName();
+
+              if (fqn.startsWith("com.intellij.icons.")) {
+                return replace(fqn, newElementName, "com.intellij.icons.");
+              }
+              else if (fqn.startsWith("icons.")) {
+                return replace(fqn, newElementName, "icons.");
+              }
+            }
+
+            return super.handleElementRename(newElementName);
+          }
+
+          @Override
+          public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+            if (element instanceof PsiFile) {
+              FileReference lastRef = new FileReferenceSet(element).getLastReference();
+              return lastRef.bindToElement(element);
+            }
+            else if (element instanceof PsiField) {
+              String fqn = ((PsiField)element).getContainingClass().getQualifiedName();
+
+              String newName = ((PsiField)element).getName();
+              if (fqn.startsWith("com.intellij.icons.")) {
+                return replace(fqn, newName, "com.intellij.icons.");
+              }
+              else if (fqn.startsWith("icons.")) {
+                return replace(fqn, newName, "icons.");
+              }
+            }
+
+            return super.bindToElement(element);
+          }
+
+          private PsiElement replace(String fqn, String newName, String pckg) {
+            XmlAttribute parent = (XmlAttribute)getElement().getParent();
+            parent.setValue(fqn.substring(pckg.length()) + "." + newName);
+            return parent.getValueElement();
+          }
+
+          @NotNull
+          @Override
+          public Object[] getVariants() {
+            return EMPTY_ARRAY;
+          }
+        }};
       }
     });
   }
@@ -337,8 +334,7 @@ public class IconsReferencesContributor extends PsiReferenceContributor implemen
   }
 
   private static boolean isIconsModule(Module module) {
-    return module != null && "icons".equals(module.getName())
-           && ModuleRootManager.getInstance(module).getSourceRoots().length == 1;
+    return module != null && "icons".equals(module.getName()) && ModuleRootManager.getInstance(module).getSourceRoots().length == 1;
   }
 
   private static boolean isImage(VirtualFile image) {

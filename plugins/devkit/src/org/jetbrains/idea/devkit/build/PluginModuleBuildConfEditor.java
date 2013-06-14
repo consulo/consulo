@@ -42,7 +42,8 @@ import java.io.File;
  */
 public class PluginModuleBuildConfEditor implements ModuleConfigurationEditor {
   private final JPanel myWholePanel = new JPanel(new GridBagLayout());
-  @NonNls private final JLabel myPluginXMLLabel = new JLabel(DevKitBundle.message("deployment.view.meta-inf.label", " META-INF" + File.separator + "plugin.xml:"));
+  @NonNls private final JLabel myPluginXMLLabel =
+    new JLabel(DevKitBundle.message("deployment.view.meta-inf.label", " META-INF" + File.separator + "plugin.xml:"));
   private final TextFieldWithBrowseButton myPluginXML = new TextFieldWithBrowseButton();
 
   private final TextFieldWithBrowseButton myManifest = new TextFieldWithBrowseButton();
@@ -61,8 +62,13 @@ public class PluginModuleBuildConfEditor implements ModuleConfigurationEditor {
   }
 
   public JComponent createComponent() {
-    myPluginXML.addActionListener(new BrowseFilesListener(myPluginXML.getTextField(), DevKitBundle.message("deployment.directory.location", META_INF), DevKitBundle.message("saved.message.common", META_INF + File.separator + PLUGIN_XML), BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR));
-    myManifest.addActionListener(new BrowseFilesListener(myManifest.getTextField(), DevKitBundle.message("deployment.view.select", MANIFEST_MF), DevKitBundle.message("manifest.selection", MANIFEST_MF), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR));
+    myPluginXML.addActionListener(
+      new BrowseFilesListener(myPluginXML.getTextField(), DevKitBundle.message("deployment.directory.location", META_INF),
+                              DevKitBundle.message("saved.message.common", META_INF + File.separator + PLUGIN_XML),
+                              BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR));
+    myManifest.addActionListener(
+      new BrowseFilesListener(myManifest.getTextField(), DevKitBundle.message("deployment.view.select", MANIFEST_MF),
+                              DevKitBundle.message("manifest.selection", MANIFEST_MF), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR));
     myManifest.setEnabled(myBuildProperties.isUseUserManifest());
     myUseUserManifest.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -71,8 +77,9 @@ public class PluginModuleBuildConfEditor implements ModuleConfigurationEditor {
         myManifest.setEnabled(selected);
       }
     });
-    final GridBagConstraints gc = new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST,
-                                                         GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0);
+    final GridBagConstraints gc =
+      new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                             new Insets(2, 2, 2, 2), 0, 0);
     myWholePanel.add(myPluginXMLLabel, gc);
     myWholePanel.add(myPluginXML, gc);
     JPanel manifestPanel = new JPanel(new GridBagLayout());
@@ -83,7 +90,7 @@ public class PluginModuleBuildConfEditor implements ModuleConfigurationEditor {
     gc.weighty = 1.0;
     manifestPanel.add(myManifest, gc);
     myWholePanel.add(manifestPanel, gc);
-    myWholePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+    myWholePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     return myWholePanel;
   }
 
@@ -99,7 +106,7 @@ public class PluginModuleBuildConfEditor implements ModuleConfigurationEditor {
   }
 
   public void apply() throws ConfigurationException {
-    if (myUseUserManifest.isSelected() && myManifest.getText() != null && !new File(myManifest.getText()).exists()){
+    if (myUseUserManifest.isSelected() && myManifest.getText() != null && !new File(myManifest.getText()).exists()) {
       throw new ConfigurationException(DevKitBundle.message("error.file.not.found.message", myManifest.getText()));
     }
     final File plugin = myBuildProperties.getPluginXmlPath() != null ? new File(myBuildProperties.getPluginXmlPath()) : null;
@@ -107,18 +114,14 @@ public class PluginModuleBuildConfEditor implements ModuleConfigurationEditor {
     if (plugin != null &&
         plugin.exists() &&
         !plugin.getPath().equals(newPluginPath) &&
-        Messages.showYesNoDialog(myModule.getProject(),
-                                 DevKitBundle.message("deployment.view.delete", plugin.getPath()),
+        Messages.showYesNoDialog(myModule.getProject(), DevKitBundle.message("deployment.view.delete", plugin.getPath()),
                                  DevKitBundle.message("deployment.cleanup", META_INF), null) == DialogWrapper.OK_EXIT_CODE) {
 
-      CommandProcessor.getInstance().executeCommand(myModule.getProject(),
-                                                    new Runnable() {
-                                                      public void run() {
-                                                        FileUtil.delete(plugin.getParentFile());
-                                                      }
-                                                    },
-                                                    DevKitBundle.message("deployment.cleanup", META_INF),
-                                                    null);
+      CommandProcessor.getInstance().executeCommand(myModule.getProject(), new Runnable() {
+        public void run() {
+          FileUtil.delete(plugin.getParentFile());
+        }
+      }, DevKitBundle.message("deployment.cleanup", META_INF), null);
     }
     myBuildProperties.setPluginXmlPathAndCreateDescriptorIfDoesntExist(newPluginPath);
     myBuildProperties.setManifestPath(myManifest.getText());
@@ -126,14 +129,17 @@ public class PluginModuleBuildConfEditor implements ModuleConfigurationEditor {
   }
 
   public void reset() {
-    myPluginXML.setText(myBuildProperties.getPluginXmlPath().substring(0, myBuildProperties.getPluginXmlPath().length() - META_INF.length() - PLUGIN_XML.length() - 2));
+    myPluginXML.setText(myBuildProperties.getPluginXmlPath()
+                          .substring(0, myBuildProperties.getPluginXmlPath().length() - META_INF.length() - PLUGIN_XML.length() - 2));
     myManifest.setText(myBuildProperties.getManifestPath());
     myUseUserManifest.setSelected(myBuildProperties.isUseUserManifest());
   }
 
-  public void disposeUIResources() {}
+  public void disposeUIResources() {
+  }
 
-  public void saveData() {}
+  public void saveData() {
+  }
 
   public String getDisplayName() {
     return DevKitBundle.message("deployment.title");

@@ -77,7 +77,7 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
   private Project myProject;
   private ButtonGroup myAnchorButtonGroup;
 
-  public  NewActionDialog(PsiClass actionClass) {
+  public NewActionDialog(PsiClass actionClass) {
     this(actionClass.getProject());
 
     myActionNameEdit.setText(actionClass.getQualifiedName());
@@ -97,11 +97,11 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
     final String[] actionIds = actionManager.getActionIds("");
     Arrays.sort(actionIds);
     final List<ActionGroup> actionGroups = new ArrayList<ActionGroup>();
-    for(String actionId: actionIds) {
+    for (String actionId : actionIds) {
       if (actionManager.isGroup(actionId)) {
         final AnAction anAction = actionManager.getAction(actionId);
         if (anAction instanceof DefaultActionGroup) {
-          actionGroups.add((ActionGroup) anAction);
+          actionGroups.add((ActionGroup)anAction);
         }
       }
     }
@@ -109,7 +109,7 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
     myGroupList.setCellRenderer(new MyActionRenderer());
     myGroupList.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
-        ActionGroup group = (ActionGroup) myGroupList.getSelectedValue();
+        ActionGroup group = (ActionGroup)myGroupList.getSelectedValue();
         if (group == null) {
           myActionList.setListData(ArrayUtil.EMPTY_OBJECT_ARRAY);
         }
@@ -117,7 +117,7 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
           final AnAction[] actions = group.getChildren(null);
           // filter out actions that don't have IDs - they can't be used for anchoring in plugin.xml
           List<AnAction> realActions = new ArrayList<AnAction>();
-          for(AnAction action: actions) {
+          for (AnAction action : actions) {
             if (actionManager.getId(action) != null) {
               realActions.add(action);
             }
@@ -128,7 +128,7 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
     });
     new ListSpeedSearch(myGroupList, new Function<Object, String>() {
       public String fun(final Object o) {
-        return ActionManager.getInstance().getId((AnAction) o);
+        return ActionManager.getInstance().getId((AnAction)o);
       }
     });
 
@@ -184,7 +184,8 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
     return myRootPanel;
   }
 
-  @Override public JComponent getPreferredFocusedComponent() {
+  @Override
+  public JComponent getPreferredFocusedComponent() {
     return myActionIdEdit;
   }
 
@@ -208,13 +209,13 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
 
   @Nullable
   public String getSelectedGroupId() {
-    ActionGroup group = (ActionGroup) myGroupList.getSelectedValue();
+    ActionGroup group = (ActionGroup)myGroupList.getSelectedValue();
     return group == null ? null : ActionManager.getInstance().getId(group);
   }
 
   @Nullable
   public String getSelectedActionId() {
-    AnAction action = (AnAction) myActionList.getSelectedValue();
+    AnAction action = (AnAction)myActionList.getSelectedValue();
     return action == null ? null : ActionManager.getInstance().getId(action);
   }
 
@@ -238,16 +239,15 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
 
   private static String getKeystrokeText(KeyStroke keyStroke) {
     //noinspection HardCodedStringLiteral
-    return keyStroke != null ?
-            keyStroke.toString().replaceAll("pressed ", "").replaceAll("released ", "") :
-            null;
+    return keyStroke != null ? keyStroke.toString().replaceAll("pressed ", "").replaceAll("released ", "") : null;
   }
 
   private void updateControls() {
     setOKActionEnabled(myActionIdEdit.getText().length() > 0 &&
                        myActionNameEdit.getText().length() > 0 &&
                        myActionTextEdit.getText().length() > 0 &&
-                       (!myActionNameEdit.isEditable() || JavaPsiFacade.getInstance(myProject).getNameHelper().isIdentifier(myActionNameEdit.getText())));
+                       (!myActionNameEdit.isEditable() ||
+                        JavaPsiFacade.getInstance(myProject).getNameHelper().isIdentifier(myActionNameEdit.getText())));
 
     myAnchorBeforeRadio.setEnabled(myActionList.getSelectedValue() != null);
     myAnchorAfterRadio.setEnabled(myActionList.getSelectedValue() != null);
@@ -263,7 +263,7 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
 
   private static class MyActionRenderer extends ColoredListCellRenderer {
     protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-      AnAction group = (AnAction) value;
+      AnAction group = (AnAction)value;
       append(ActionManager.getInstance().getId(group), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       final String text = group.getTemplatePresentation().getText();
       if (text != null) {
@@ -297,13 +297,11 @@ public class NewActionDialog extends DialogWrapper implements ActionData {
     protected void processKeyEvent(KeyEvent e) {
       if (e.getID() == KeyEvent.KEY_PRESSED) {
         int keyCode = e.getKeyCode();
-        if (
-          keyCode == KeyEvent.VK_SHIFT ||
-          keyCode == KeyEvent.VK_ALT ||
-          keyCode == KeyEvent.VK_CONTROL ||
-          keyCode == KeyEvent.VK_ALT_GRAPH ||
-          keyCode == KeyEvent.VK_META
-        ){
+        if (keyCode == KeyEvent.VK_SHIFT ||
+            keyCode == KeyEvent.VK_ALT ||
+            keyCode == KeyEvent.VK_CONTROL ||
+            keyCode == KeyEvent.VK_ALT_GRAPH ||
+            keyCode == KeyEvent.VK_META) {
           return;
         }
 

@@ -54,7 +54,8 @@ public class CreateConstructorFix extends BaseFix {
     final PsiMethod[] constructors = clazz.getConstructors();
     if (constructors.length > 0) {
       ctor = (PsiMethod)clazz.addBefore(ctor, constructors[0]);
-    } else {
+    }
+    else {
       // shouldn't get here - it's legal if there's no ctor present at all
       ctor = (PsiMethod)clazz.add(ctor);
     }

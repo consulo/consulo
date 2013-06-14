@@ -41,7 +41,7 @@ import java.awt.event.ActionListener;
 
 /**
  * @author anna
- * Date: Nov 22, 2004
+ *         Date: Nov 22, 2004
  */
 public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
   private final JLabel mySandboxHomeLabel = new JLabel(DevKitBundle.message("sandbox.home.label"));
@@ -52,7 +52,6 @@ public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
 
   private boolean myModified;
   @NonNls private static final String SANDBOX_HISTORY = "DEVKIT_SANDBOX_HISTORY";
-
 
 
   public IdeaJdkConfigurable(final SdkModel sdkModel, final SdkModificator sdkModificator) {
@@ -66,8 +65,9 @@ public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
   public JComponent createComponent() {
     mySandboxHome.setHistorySize(5);
     JPanel wholePanel = new JPanel(new GridBagLayout());
-    wholePanel.add(mySandboxHomeLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 1.0, GridBagConstraints.WEST,
-                                                              GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+    wholePanel.add(mySandboxHomeLabel,
+                   new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                                          new Insets(0, 0, 0, 0), 0, 0));
     wholePanel.add(GuiUtils.constructFieldWithBrowseButton(mySandboxHome, new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
@@ -79,9 +79,8 @@ public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
         }
         myModified = true;
       }
-    }), new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.EAST,
-                               GridBagConstraints.HORIZONTAL, new Insets(0, 30, 0, 0), 0, 0));
-
+    }), new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+                               new Insets(0, 30, 0, 0), 0, 0));
 
 
     mySandboxHome.addDocumentListener(new DocumentAdapter() {
@@ -120,7 +119,7 @@ public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
         modificator.commitChanges();
       }
     });
-    ((ProjectJdkImpl) myIdeaJdk).resetVersionString();
+    ((ProjectJdkImpl)myIdeaJdk).resetVersionString();
     myModified = false;
   }
 
@@ -132,7 +131,8 @@ public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
       mySandboxHome.setText(sandboxHome);
       mySandboxHome.setSelectedItem(sandboxHome);
       myModified = false;
-    } else {
+    }
+    else {
       mySandboxHome.setText(ConsuloSdkType.getDefaultSandbox());
     }
   }

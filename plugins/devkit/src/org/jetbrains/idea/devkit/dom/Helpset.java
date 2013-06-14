@@ -30,29 +30,31 @@ import org.jetbrains.annotations.NotNull;
  * <pre>
  *  helpset is a name of file from PLUGIN/help/ folder
  *   Example: <helpset file="myhelp.jar" path="/Help.hs"/>
- *  
+ *
  * </pre>
  */
 public interface Helpset extends DomElement {
 
-	/**
-	 * Returns the value of the file child.
-	 * Attribute file
-	 * @return the value of the file child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getFile();
+  /**
+   * Returns the value of the file child.
+   * Attribute file
+   *
+   * @return the value of the file child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getFile();
 
 
-	/**
-	 * Returns the value of the path child.
-	 * Attribute path
-	 * @return the value of the path child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getPath();
+  /**
+   * Returns the value of the path child.
+   * Attribute path
+   *
+   * @return the value of the path child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getPath();
 
 
 }

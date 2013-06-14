@@ -36,25 +36,18 @@ public class Util {
   public static final String ANONYMOUS_ELEM_TYPE_SUFFIX = "ElemType";
   public static final String ANONYMOUS_ATTR_TYPE_SUFFIX = "AttrType";
   public static final String TYPE_SUFFIX = "Type";
-  
+
   //
   // Constants
   //
   public static final String XSD_NS = "http://www.w3.org/2001/XMLSchema";
 
   // reserved names map
-  public static final String[] RESERVED_NAMES_TABLE = {
-          "abstract", "default", "if", "private", "this",
-          "boolean", "do", "implements", "protected", "throw",
-          "break", "double", "import", "public", "throws",
-          "byte", "else", "instanceof", "return", "transient",
-          "case", "extends", "int", "short", "try",
-          "catch", "final", "interface", "static", "void",
-          "char", "finally", "long", "strictfp", "volatile",
-          "class", "float", "native", "super", "while",
-          "const", "for", "new", "switch",
-          "continue", "goto", "package", "synchronized"
-  };
+  public static final String[] RESERVED_NAMES_TABLE =
+    {"abstract", "default", "if", "private", "this", "boolean", "do", "implements", "protected", "throw", "break", "double", "import",
+      "public", "throws", "byte", "else", "instanceof", "return", "transient", "case", "extends", "int", "short", "try", "catch", "final",
+      "interface", "static", "void", "char", "finally", "long", "strictfp", "volatile", "class", "float", "native", "super", "while",
+      "const", "for", "new", "switch", "continue", "goto", "package", "synchronized"};
   public static final HashMap<String, String> RESERVED_NAMES_MAP;
 
   static {
@@ -84,13 +77,15 @@ public class Util {
     // return suggestion+"List";
     final String VOWELS = "aeiouy";
     if (suggestion.endsWith("s") || suggestion.endsWith("x") ||
-            suggestion.endsWith("ch")) {
+        suggestion.endsWith("ch")) {
       suggestion += "es";
-    } else {
+    }
+    else {
       int len = suggestion.length();
       if (suggestion.endsWith("y") && len > 1 && VOWELS.indexOf(suggestion.charAt(len - 2)) < 0) {
         suggestion = suggestion.substring(0, len - 1) + "ies";
-      } else {
+      }
+      else {
         suggestion += "s";
       }
     }
@@ -109,8 +104,7 @@ public class Util {
   public static String computeEnumConstantName(String val, String typeName) {
     String id = val;
     for (int i = 1; i < id.length(); i++) {
-      if (Character.isUpperCase(id.charAt(i))
-              && Character.isLowerCase(id.charAt(i - 1))) {
+      if (Character.isUpperCase(id.charAt(i)) && Character.isLowerCase(id.charAt(i - 1))) {
         id = id.substring(0, i) + "_" + id.substring(i);
         i++;
       }
@@ -163,10 +157,12 @@ public class Util {
         // attr <-> field
         fd2.name = fd1.name + "Attr";
         fdMap.put(fd2.name, fd2);
-      } else if (merge) {
+      }
+      else if (merge) {
         fdMap.put(fd2.name, fd2);
         return false;
-      } else {
+      }
+      else {
         duplicates = true;
         fd2.name = fd1.name + "1";
         fd2.duplicateIndex = 1;
@@ -174,7 +170,8 @@ public class Util {
         fd1.name = fd1.name + "2";
         fd1.duplicateIndex = 2;
       }
-    } else if ((fd2 = fdMap.get(fd1.name + "1")) != null) {
+    }
+    else if ((fd2 = fdMap.get(fd1.name + "1")) != null) {
       int id = 2;
       while (fdMap.containsKey(fd1.name + id)) id++;
       fd1.name = fd1.name + id;
@@ -189,12 +186,16 @@ public class Util {
     int state = 0;
     final StringBuilder result = new StringBuilder();
     final StringBuilder variable = new StringBuilder();
-    for (int i=0; i<str.length(); i++) {
+    for (int i = 0; i < str.length(); i++) {
       final char ch = str.charAt(i);
       switch (state) {
         case 0:
-          if (ch == '$') state = 1;
-          else result.append(ch);
+          if (ch == '$') {
+            state = 1;
+          }
+          else {
+            result.append(ch);
+          }
           break;
         case 1:
           if (ch == '{') {
@@ -209,7 +210,7 @@ public class Util {
         case 2:
           if (ch == '}') {
             final String value = map.get(variable.toString());
-            result.append(value == null? variable : value);
+            result.append(value == null ? variable : value);
             state = 0;
           }
           else {

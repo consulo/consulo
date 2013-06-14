@@ -46,13 +46,13 @@ public class PluginLibraryPresentationProvider extends LibraryPresentationProvid
   @Nullable
   @Override
   public DummyLibraryProperties detect(@NotNull List<VirtualFile> classesRoots) {
-    if(classesRoots.isEmpty()) {
+    if (classesRoots.isEmpty()) {
       return null;
     }
 
-    for(VirtualFile virtualFile : classesRoots) {
+    for (VirtualFile virtualFile : classesRoots) {
       final VirtualFile fileByRelativePath = virtualFile.findFileByRelativePath("META-INF/plugin.xml");
-      if(fileByRelativePath != null) {
+      if (fileByRelativePath != null) {
         return DummyLibraryProperties.INSTANCE;
       }
     }

@@ -57,10 +57,10 @@ public class PluginMutableModuleExtension extends PluginModuleExtension implemen
 
   @Override
   public boolean isModified() {
-    if(myIsEnabled != myPluginModuleExtension.isEnabled()) {
+    if (myIsEnabled != myPluginModuleExtension.isEnabled()) {
       return true;
     }
-    if(!Comparing.equal(mySdkName, myPluginModuleExtension.getSdkName())) {
+    if (!Comparing.equal(mySdkName, myPluginModuleExtension.getSdkName())) {
       return true;
     }
     return false;

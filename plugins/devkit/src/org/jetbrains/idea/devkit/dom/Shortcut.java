@@ -29,33 +29,36 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Shortcut extends DomElement {
 
-	/**
-	 * Returns the value of the first-keystroke child.
-	 * Attribute first-keystroke
-	 * @return the value of the first-keystroke child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getFirstKeystroke();
+  /**
+   * Returns the value of the first-keystroke child.
+   * Attribute first-keystroke
+   *
+   * @return the value of the first-keystroke child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getFirstKeystroke();
 
 
-	/**
-	 * Returns the value of the keymap child.
-	 * Attribute keymap
-	 * @return the value of the keymap child.
-	 */
-	@NotNull
-	@Required
-	GenericAttributeValue<String> getKeymap();
+  /**
+   * Returns the value of the keymap child.
+   * Attribute keymap
+   *
+   * @return the value of the keymap child.
+   */
+  @NotNull
+  @Required
+  GenericAttributeValue<String> getKeymap();
 
 
-	/**
-	 * Returns the value of the second-keystroke child.
-	 * Attribute second-keystroke
-	 * @return the value of the second-keystroke child.
-	 */
-	@NotNull
-	GenericAttributeValue<String> getSecondKeystroke();
+  /**
+   * Returns the value of the second-keystroke child.
+   * Attribute second-keystroke
+   *
+   * @return the value of the second-keystroke child.
+   */
+  @NotNull
+  GenericAttributeValue<String> getSecondKeystroke();
 
 
 }

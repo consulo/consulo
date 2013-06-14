@@ -295,7 +295,7 @@ public class JetBrainsEmitter implements Emitter {
           else if (field.simpleTypesString.indexOf(":boolean;") != -1) { // true-falseType
             newType = REPLACE_TYPES_WITH_INTERFACES ? "Boolean" : "boolean";
           }
-          for (int idx = 0; idx != -1;) {
+          for (int idx = 0; idx != -1; ) {
             simpleTypes.add(field.simpleTypesString.substring(idx));
             idx = field.simpleTypesString.indexOf(';', idx) + 1;
             if (idx == 0) break;

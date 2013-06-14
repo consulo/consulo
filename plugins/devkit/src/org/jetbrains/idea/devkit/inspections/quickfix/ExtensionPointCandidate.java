@@ -16,8 +16,8 @@
 package org.jetbrains.idea.devkit.inspections.quickfix;
 
 /**
-* @author yole
-*/
+ * @author yole
+ */
 class ExtensionPointCandidate {
   public final String epName;
   public final String attributeName;

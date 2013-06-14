@@ -41,9 +41,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 public class BuildJarTarget extends Target {
-  public BuildJarTarget(final ModuleChunk chunk,
-                        final GenerationOptions genOptions,
-                        final PluginBuildConfiguration moduleBuildProperties) {
+  public BuildJarTarget(final ModuleChunk chunk, final GenerationOptions genOptions, final PluginBuildConfiguration moduleBuildProperties) {
     super(PluginBuildProperties.getBuildJarTargetName(chunk.getName()), BuildProperties.getCompileTargetName(chunk.getName()),
           DevKitBundle.message("ant.build.jar.description", chunk.getName()), null);
 
@@ -65,7 +63,8 @@ public class BuildJarTarget extends Target {
 
     if (libs.isEmpty()) {
       add(createPluginsJar(jarPathPropertyRef, modules, moduleBaseDir, genOptions, moduleBuildProperties));
-    } else {
+    }
+    else {
       @NonNls final String tempSuffix = "temp";
       final File jarDir = new File(moduleBaseDir.getParentFile(), tempSuffix);
       String tempDir = GenerationUtils.toRelativePath(jarDir.getPath(), chunk, genOptions);
@@ -86,7 +85,8 @@ public class BuildJarTarget extends Target {
           final String relativePath = GenerationUtils.toRelativePath(file, chunk, genOptions);
           if (file.getFileSystem() instanceof JarFileSystem) {
             add(new Copy(relativePath, libRelativePath + file.getName()));
-          } else {
+          }
+          else {
             final Jar jar = new Jar(libRelativePath + file.getNameWithoutExtension() + ".jar", "preserve");
             jar.add(new ZipFileSet(relativePath, "", true));
             add(jar);
@@ -103,12 +103,14 @@ public class BuildJarTarget extends Target {
   }
 
   private static Tag createPluginsJar(@NonNls final String jarPathProperty,
-                                      final Module[] modules, final File moduleBaseDir,
+                                      final Module[] modules,
+                                      final File moduleBaseDir,
                                       final GenerationOptions genOptions,
                                       final PluginBuildConfiguration moduleBuildProperties) {
     final Tag jarTag = new Jar(jarPathProperty, "preserve");
     for (Module m : modules) {
-      final String path = VfsUtil.urlToPath(CompilerPathsManager.getInstance(m.getProject()).getCompilerOutputUrl(m, ContentFolderType.SOURCE));
+      final String path =
+        VfsUtil.urlToPath(CompilerPathsManager.getInstance(m.getProject()).getCompilerOutputUrl(m, ContentFolderType.SOURCE));
       final String relativePath = GenerationUtils.toRelativePath(path, moduleBaseDir, m, genOptions);
       jarTag.add(new ZipFileSet(relativePath, "", true));
     }

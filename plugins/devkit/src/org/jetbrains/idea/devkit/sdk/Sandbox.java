@@ -32,7 +32,7 @@ import org.jetbrains.idea.devkit.DevKitBundle;
  * User: anna
  * Date: Nov 22, 2004
  */
-public class Sandbox implements ValidatableSdkAdditionalData, JDOMExternalizable{
+public class Sandbox implements ValidatableSdkAdditionalData, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#org.jetbrains.idea.devkit.sdk.Sandbox");
 
   @SuppressWarnings({"WeakerAccess"})
@@ -63,7 +63,7 @@ public class Sandbox implements ValidatableSdkAdditionalData, JDOMExternalizable
   }
 
   public void checkValid(SdkModel sdkModel) throws ConfigurationException {
-    if (mySandboxHome == null || mySandboxHome.length() == 0){
+    if (mySandboxHome == null || mySandboxHome.length() == 0) {
       throw new ConfigurationException(DevKitBundle.message("sandbox.specification"));
     }
   }

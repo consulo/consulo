@@ -58,11 +58,13 @@ public abstract class GeneratePluginClassAction extends CreateElementActionBase 
     super(text, description, icon);
   }
 
-  @NotNull protected final PsiElement[] invokeDialog(Project project, PsiDirectory directory) {
+  @NotNull
+  protected final PsiElement[] invokeDialog(Project project, PsiDirectory directory) {
     try {
       final PsiElement[] psiElements = invokeDialogImpl(project, directory);
       return psiElements == CANCELED ? PsiElement.EMPTY_ARRAY : psiElements;
-    } finally {
+    }
+    finally {
       myFilesToPatch.clear();
     }
   }
@@ -173,8 +175,9 @@ public abstract class GeneratePluginClassAction extends CreateElementActionBase 
 
     DescriptorUtil.patchPluginXml(this, klass, myFilesToPatch.toArray(new XmlFile[myFilesToPatch.size()]));
 
-    return new PsiElement[] {klass};
+    return new PsiElement[]{klass};
   }
 
-  @NonNls protected abstract String getClassTemplateName();
+  @NonNls
+  protected abstract String getClassTemplateName();
 }
