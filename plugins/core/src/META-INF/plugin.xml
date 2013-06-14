@@ -5489,6 +5489,7 @@
 
     <executor implementation="com.intellij.execution.executors.DefaultDebugExecutor" order="first,after run"/>
 
+    <bundledColorScheme path="/colorSchemes/Consulo Light.xml"/>
     <bundledColorScheme path="/colorSchemes/Darcula.xml"/>
     <bundledColorScheme path="/colorSchemes/all_hallows_eve.xml"/>
     <bundledColorScheme path="/colorSchemes/blackboard.xml"/>
