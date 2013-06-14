@@ -82,6 +82,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     });
   }
 
+  @Override
   public Key<BuildArtifactsBeforeRunTask> getId() {
     return ID;
   }
@@ -119,15 +120,18 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     return CompilerBundle.message("build.artifacts.before.run.description.multiple", pointers.size());
   }
 
+  @Override
   public boolean isConfigurable() {
     return true;
   }
 
+  @Override
   public BuildArtifactsBeforeRunTask createTask(RunConfiguration runConfiguration) {
     if (myProject.isDefault()) return null;
     return new BuildArtifactsBeforeRunTask(myProject);
   }
 
+  @Override
   public boolean configureTask(RunConfiguration runConfiguration, BuildArtifactsBeforeRunTask task) {
     final Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
     Set<ArtifactPointer> pointers = new THashSet<ArtifactPointer>();
@@ -162,6 +166,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     return false;
   }
 
+  @Override
   public boolean executeTask(DataContext context,
                              RunConfiguration configuration,
                              ExecutionEnvironment env,
@@ -171,6 +176,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
 
     final List<Artifact> artifacts = new ArrayList<Artifact>();
     new ReadAction() {
+      @Override
       protected void run(final Result result) {
         for (ArtifactPointer pointer : task.getArtifactPointers()) {
           ContainerUtil.addIfNotNull(pointer.getArtifact(), artifacts);
@@ -179,12 +185,14 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     }.execute();
     
     final CompileStatusNotification callback = new CompileStatusNotification() {
+      @Override
       public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
         result.set(!aborted && errors == 0);
         finished.up();
       }
     };
     final CompilerFilter compilerFilter = new CompilerFilter() {
+      @Override
       public boolean acceptCompiler(Compiler compiler) {
         return compiler instanceof ArtifactsCompiler
                || compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
@@ -192,6 +200,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     };
 
     ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+      @Override
       public void run() {
         final CompilerManager manager = CompilerManager.getInstance(myProject);
         finished.down();
