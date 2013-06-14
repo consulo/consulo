@@ -47,39 +47,52 @@ public class ModuleScopeProviderImpl implements ModuleScopeProvider {
   }
 
 
+  @NotNull
+  @Override
   public GlobalSearchScope getModuleScope() {
     return getCachedScope(ModuleWithDependenciesScope.COMPILE | ModuleWithDependenciesScope.TESTS);
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleScope(boolean includeTests) {
     return getCachedScope(ModuleWithDependenciesScope.COMPILE | (includeTests ? ModuleWithDependenciesScope.TESTS : 0));
   }
 
+  @NotNull
+  @Override
   public GlobalSearchScope getModuleWithLibrariesScope() {
     return getCachedScope(ModuleWithDependenciesScope.COMPILE | ModuleWithDependenciesScope.TESTS | ModuleWithDependenciesScope.LIBRARIES);
   }
 
+  @NotNull
+  @Override
   public GlobalSearchScope getModuleWithDependenciesScope() {
     return getCachedScope(ModuleWithDependenciesScope.COMPILE | ModuleWithDependenciesScope.TESTS | ModuleWithDependenciesScope.MODULES);
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleContentScope() {
     return getCachedScope(ModuleWithDependenciesScope.CONTENT);
   }
 
+  @NotNull
   @Override
   public GlobalSearchScope getModuleContentWithDependenciesScope() {
     return getCachedScope(ModuleWithDependenciesScope.CONTENT | ModuleWithDependenciesScope.MODULES);
   }
 
+  @NotNull
+  @Override
   public GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests) {
     return getCachedScope(ModuleWithDependenciesScope.COMPILE |
                           ModuleWithDependenciesScope.MODULES |
                           ModuleWithDependenciesScope.LIBRARIES | (includeTests ? ModuleWithDependenciesScope.TESTS : 0));
   }
 
+  @NotNull
+  @Override
   public GlobalSearchScope getModuleWithDependentsScope() {
     if (myModuleWithDependentsScope == null) {
       myModuleWithDependentsScope = new ModuleWithDependentsScope(myModule, false);
@@ -87,6 +100,8 @@ public class ModuleScopeProviderImpl implements ModuleScopeProvider {
     return myModuleWithDependentsScope;
   }
 
+  @NotNull
+  @Override
   public GlobalSearchScope getModuleTestsWithDependentsScope() {
     if (myModuleTestsWithDependentsScope == null) {
       myModuleTestsWithDependentsScope = new ModuleWithDependentsScope(myModule, true);
@@ -94,6 +109,8 @@ public class ModuleScopeProviderImpl implements ModuleScopeProvider {
     return myModuleTestsWithDependentsScope;
   }
 
+  @NotNull
+  @Override
   public GlobalSearchScope getModuleRuntimeScope(boolean includeTests) {
     return getCachedScope(
       ModuleWithDependenciesScope.MODULES | ModuleWithDependenciesScope.LIBRARIES | (includeTests ? ModuleWithDependenciesScope.TESTS : 0));
