@@ -35,6 +35,6 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
   @Nullable
   @Override
   public Icon getProjectIcon() {
-    return AllIcons.Nodes.IdeaProject;
+    return AllIcons.Icon16;
   }
 }

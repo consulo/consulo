@@ -97,7 +97,7 @@ public class CreateBranchOrTagDialog extends DialogWrapper {
     setTitle(SvnBundle.message("dialog.title.branch"));
     getHelpAction().setEnabled(true);
     myUseThisVariantToLabel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
-    myProjectButton.setIcon(AllIcons.Nodes.IdeaProject);
+    myProjectButton.setIcon(AllIcons.Icon16);
     myBranchTagBaseComboBox.setPreferredSize(new Dimension(myBranchTagBaseComboBox.getPreferredSize().width,
                                                            myWorkingCopyField.getPreferredSize().height));
 

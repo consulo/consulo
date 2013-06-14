@@ -56,7 +56,7 @@ public class TestDnd extends AnAction {
           .setImageProvider(new Function<DnDActionInfo, DnDImage>() {
             @Override
             public DnDImage fun(DnDActionInfo info) {
-              return new DnDImage(IconUtil.toImage(AllIcons.Icon));
+              return new DnDImage(IconUtil.toImage(AllIcons.Icon32));
             }
           })
           .install();

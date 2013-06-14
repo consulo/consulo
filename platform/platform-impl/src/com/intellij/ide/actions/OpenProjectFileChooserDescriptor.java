@@ -54,7 +54,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   private static Icon getImporterIcon(final VirtualFile virtualFile) {
     final ProjectOpenProcessor provider = ProjectOpenProcessor.getImportProvider(virtualFile);
     if (provider != null) {
-      return virtualFile.isDirectory() && provider.lookForProjectsInDirectory() ? AllIcons.Nodes.IdeaModule : provider.getIcon(virtualFile);
+      return virtualFile.isDirectory() && provider.lookForProjectsInDirectory() ? AllIcons.Icon16 : provider.getIcon(virtualFile);
     }
     return null;
   }

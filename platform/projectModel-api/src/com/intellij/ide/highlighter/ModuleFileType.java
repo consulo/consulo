@@ -45,7 +45,7 @@ public class ModuleFileType implements InternalFileType {
   }
 
   public Icon getIcon() {
-    return AllIcons.Nodes.IdeaModule;
+    return AllIcons.Icon16;
   }
 
   public boolean isBinary() {

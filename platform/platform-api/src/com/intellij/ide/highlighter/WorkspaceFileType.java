@@ -45,7 +45,7 @@ public class WorkspaceFileType implements InternalFileType {
   }
 
   public Icon getIcon() {
-    return AllIcons.Nodes.IdeaWorkspace;
+    return AllIcons.Icon16;
   }
 
   public boolean isBinary() {

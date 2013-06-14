@@ -533,14 +533,8 @@ public class AllIcons {
     public static final Icon Supertypes = IconLoader.getIcon("/hierarchy/supertypes.png"); // 16x16
 
   }
-  public static final Icon Icon = IconLoader.getIcon("/icon.png"); // 32x32
-  public static final Icon Icon_128 = IconLoader.getIcon("/icon_128.png"); // 128x128
-  public static final Icon Icon_CE = IconLoader.getIcon("/icon_CE.png"); // 32x32
-  public static final Icon Icon_CE_128 = IconLoader.getIcon("/icon_CE_128.png"); // 128x128
-  public static final Icon Icon_CEsmall = IconLoader.getIcon("/icon_CEsmall.png"); // 16x16
-  public static final Icon Icon_CEwhite = IconLoader.getIcon("/icon_CEwhite.png"); // 32x32
-  public static final Icon Icon_small = IconLoader.getIcon("/icon_small.png"); // 16x16
-  public static final Icon Icon_white = IconLoader.getIcon("/icon_white.png"); // 32x32
+  public static final Icon Icon16 = IconLoader.getIcon("/icon16.png"); // 16x16
+  public static final Icon Icon32 = IconLoader.getIcon("/icon32.png"); // 32x32
   
   public static class Icons {
     
@@ -775,9 +769,6 @@ public class AllIcons {
     public static final Icon Folder = IconLoader.getIcon("/nodes/folder.png"); // 16x16
     public static final Icon Function = IconLoader.getIcon("/nodes/function.png"); // 16x16
     public static final Icon HomeFolder = IconLoader.getIcon("/nodes/homeFolder.png"); // 16x16
-    public static final Icon IdeaModule = IconLoader.getIcon("/nodes/ideaModule.png"); // 16x16
-    public static final Icon IdeaProject = IconLoader.getIcon("/nodes/ideaProject.png"); // 16x16
-    public static final Icon IdeaWorkspace = IconLoader.getIcon("/nodes/ideaWorkspace.png"); // 16x16
     public static final Icon InspectionResults = IconLoader.getIcon("/nodes/inspectionResults.png"); // 16x16
     public static final Icon Interface = IconLoader.getIcon("/nodes/interface.png"); // 16x16
     public static final Icon J2eeParameter = IconLoader.getIcon("/nodes/j2eeParameter.png"); // 16x16

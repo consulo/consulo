@@ -49,6 +49,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/groovy/groovy-spellchecker/groovy-spellchecker.iml" filepath="$PROJECT_DIR$/plugins/groovy/groovy-spellchecker/groovy-spellchecker.iml" group="plugins/groovy" />
       <module fileurl="file://$PROJECT_DIR$/plugins/hg4idea/hg4idea.iml" filepath="$PROJECT_DIR$/plugins/hg4idea/hg4idea.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/platform/icons/icons.iml" filepath="$PROJECT_DIR$/platform/icons/icons.iml" group="platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/idea/idea.iml" filepath="$PROJECT_DIR$/plugins/idea/idea.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/images/images.iml" filepath="$PROJECT_DIR$/plugins/images/images.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/platform/indexing-api/indexing-api.iml" filepath="$PROJECT_DIR$/platform/indexing-api/indexing-api.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/indexing-impl/indexing-impl.iml" filepath="$PROJECT_DIR$/platform/indexing-impl/indexing-impl.iml" group="platform" />

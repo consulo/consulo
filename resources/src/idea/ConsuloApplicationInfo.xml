@@ -3,11 +3,11 @@
   <company name="Consulo.org" url="http://www.jetbrains.com/?fromIDE"/>
   <build number="__BUILD_NUMBER__" date="__BUILD_DATE__"/>
   <install-over minbuild="10.0" maxbuild="10.9999" version="1.0"/>
-  <logo url="/idea_community_logo.png" textcolor="ffffff" progressColor="ffaa16" progressY="230" progressTailIcon="/community_progress_tail.png"/>
-  <about url="/idea_community_about.png" foreground="000000" logoX="300" logoY="265" logoW="75" logoH="30"/>
-  <icon size32="/icon_CE.png" size16="/icon_CEsmall.png" size32opaque="/icon_CEwhite.png" size12="/toolwindows/toolWindowProject.png" size128="/icon_CE_128.png" ico="idea_CE.ico"/>
+  <logo url="/logo.png" textcolor="ffffff" progressColor="ffaa16" progressY="230" progressTailIcon="/community_progress_tail.png"/>
+  <about url="/logo_about.png" foreground="000000" logoX="300" logoY="265" logoW="75" logoH="30"/>
+  <icon size32="/icon32.png" size16="/icon16.png" size32opaque="/icon16.png" size12="/toolwindows/toolWindowProject.png" size128="/icon128.png" ico="icon.ico"/>
   <package code="__PACKAGE_CODE__"/>
-  <names product="CONSULO" fullname="Consulo" script="consulo"/>
+  <names product="Consulo" fullname="Consulo" script="consulo"/>
 
   <welcome-screen logo-url="/Logo_welcomeScreen.png"
                   caption-url="/welcomeCaption_community.png" 
@@ -15,7 +15,7 @@
 
   <third-party url="http://www.jetbrains.org/"/>
 
-  <editor background-url="/idea_logo_background.png"/>
+  <editor background-url="/logo.png"/>
 
   <update-urls check="http://www.jetbrains.com/updates/updates.xml"
                patches="http://download.jetbrains.com/idea/"/>

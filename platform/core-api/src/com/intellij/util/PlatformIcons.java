@@ -70,7 +70,7 @@ public interface PlatformIcons {
   Icon WARNING_INTRODUCTION_ICON = AllIcons.Nodes.WarningIntroduction;
   Icon JAVA_OUTSIDE_SOURCE_ICON = AllIcons.FileTypes.JavaOutsideSource;
   Icon EXCLUDED_FROM_COMPILE_ICON = AllIcons.Nodes.ExcludedFromCompile;
-  Icon PROJECT_ICON = AllIcons.Icon_small;
+  Icon PROJECT_ICON = AllIcons.Icon16;
   Icon UI_FORM_ICON = AllIcons.FileTypes.UiForm;
   Icon JSP_ICON = AllIcons.FileTypes.Jsp;
   Icon SMALL_VCS_CONFIGURABLE = AllIcons.General.SmallConfigurableVcs;

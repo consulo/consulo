@@ -341,6 +341,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="idea">
+          <element id="directory" name="lib">
+            <element id="archive" name="idea.jar">
+              <element id="module-output" name="idea" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
