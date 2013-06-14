@@ -83,7 +83,8 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
 
   public CompilerPathsManagerImpl(@NotNull Project project) {
     myProject = project;
-    myProject.getMessageBus().connect().subscribe(ProjectTopics.MODULES, new ModuleAdapter() {
+
+    final ModuleAdapter handler = new ModuleAdapter() {
       @Override
       public void moduleAdded(Project project, Module module) {
         createDefaultForModule(module);
@@ -93,7 +94,10 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
       public void moduleRemoved(Project project, Module module) {
         myModulesToVirtualFilePoints.remove(module);
       }
-    });
+    };
+
+    myProject.getMessageBus().connect().subscribe(ProjectTopics.MODULES, handler);
+    myProject.getMessageBus().connect().subscribe(ProjectTopics.MODIFIABLE_MODEL_FOR_MODULES, handler);
 
     createDefaults();
   }
