@@ -18,7 +18,6 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.RootConfigurationAccessor;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
@@ -67,24 +66,5 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
       return ModuleStructureConfigurable.getInstance(myProject).getModule(moduleName);
     }
     return module;
-  }
-
-  @Override
-  public Sdk getProjectSdk(final Project project) {
-    return ProjectStructureConfigurable.getInstance(project).getProjectSdksModel().getProjectSdk();
-  }
-
-  @Override
-  @Nullable
-  public String getProjectSdkName(final Project project) {
-    final String projectJdkName = ProjectRootManager.getInstance(project).getProjectSdkName();
-    final Sdk projectJdk = getProjectSdk(project);
-    if (projectJdk != null) {
-      return projectJdk.getName();
-    }
-    else {
-      final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(project).getProjectSdksModel();
-      return projectJdksModel.findSdk(projectJdkName) == null ? projectJdkName : null;
-    }
   }
 }

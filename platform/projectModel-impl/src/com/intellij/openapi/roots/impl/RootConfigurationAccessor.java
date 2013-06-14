@@ -17,9 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.libraries.Library;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,14 +37,5 @@ public class RootConfigurationAccessor {
 
   public Module getModule(final Module module, final String moduleName) {
     return module;
-  }
-
-  public Sdk getProjectSdk(Project project) {
-    return ProjectRootManager.getInstance(project).getProjectSdk();
-  }
-
-  @Nullable
-  public String getProjectSdkName(final Project project) {
-    return ProjectRootManager.getInstance(project).getProjectSdkName();
   }
 }
