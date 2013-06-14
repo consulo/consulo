@@ -39,7 +39,7 @@ public class ModuleScopeProviderImpl implements ModuleScopeProvider {
   @NotNull
   public GlobalSearchScope getCachedScope(@ModuleWithDependenciesScope.ScopeConstant int options) {
     GlobalSearchScope scope = myScopeCache.get(options);
-   /* if (scope == null)*/ {
+    if (scope == null) {
       scope = new ModuleWithDependenciesScope(myModule, options);
       myScopeCache.put(options, scope);
     }
