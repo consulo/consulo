@@ -147,9 +147,6 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     if (!valid) {
       return SimpleTextAttributes.ERROR_ATTRIBUTES;
     }
-    else if (selected && !(SystemInfo.isWinVistaOrNewer && UIManager.getLookAndFeel().getName().contains("Windows"))) {
-      return SimpleTextAttributes.SELECTED_SIMPLE_CELL_ATTRIBUTES;
-    }
     else {
       return SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES;
     }
