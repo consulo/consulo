@@ -33,10 +33,12 @@ import java.util.List;
 /**
  * Compiler which copies the compiled files to a different directory.
  */
-public abstract class CopyingCompiler implements PackagingCompiler{
+public abstract class CopyingCompiler implements PackagingCompiler {
   public abstract VirtualFile[] getFilesToCopy(CompileContext context);
-  public abstract String getDestinationPath(VirtualFile sourceFile);
 
+  public abstract String getDestinationPath(CompileContext context, VirtualFile sourceFile);
+
+  @Override
   public final void processOutdatedItem(CompileContext context, String url, @Nullable ValidityState state) {
     if (state != null) {
       final String destinationPath = ((DestinationFileInfo)state).getDestinationPath();
@@ -44,21 +46,24 @@ public abstract class CopyingCompiler implements PackagingCompiler{
     }
   }
 
+  @Override
   @NotNull
   public final ProcessingItem[] getProcessingItems(final CompileContext context) {
     return ApplicationManager.getApplication().runReadAction(new Computable<ProcessingItem[]>() {
+      @Override
       public ProcessingItem[] compute() {
         final VirtualFile[] filesToCopy = getFilesToCopy(context);
         final ProcessingItem[] items = new ProcessingItem[filesToCopy.length];
         for (int idx = 0; idx < filesToCopy.length; idx++) {
           final VirtualFile file = filesToCopy[idx];
-          items[idx] = new CopyItem(file, getDestinationPath(file));
+          items[idx] = new CopyItem(file, getDestinationPath(context, file));
         }
         return items;
       }
     });
   }
 
+  @Override
   public ProcessingItem[] process(CompileContext context, ProcessingItem[] items) {
     final List<ProcessingItem> successfullyProcessed = new ArrayList<ProcessingItem>(items.length);
     for (ProcessingItem item : items) {
@@ -66,29 +71,40 @@ public abstract class CopyingCompiler implements PackagingCompiler{
       final String fromPath = copyItem.getSourcePath();
       final String toPath = copyItem.getDestinationPath();
       try {
-        FileUtil.copy(new File(fromPath), new File(toPath));
+        if (isDirectoryCopying()) {
+          FileUtil.copyDir(new File(fromPath), new File(toPath));
+        }
+        else {
+          FileUtil.copy(new File(fromPath), new File(toPath));
+        }
+
         successfullyProcessed.add(copyItem);
       }
       catch (IOException e) {
-        context.addMessage(
-          CompilerMessageCategory.ERROR,
-          CompilerBundle.message("error.copying", fromPath, toPath, e.getMessage()),
-          null, -1, -1
-        );
+        context
+          .addMessage(CompilerMessageCategory.ERROR, CompilerBundle.message("error.copying", fromPath, toPath, e.getMessage()), null, -1,
+                      -1);
       }
     }
     return successfullyProcessed.toArray(new ProcessingItem[successfullyProcessed.size()]);
   }
 
+  protected boolean isDirectoryCopying() {
+    return false;
+  }
+
+  @Override
   @NotNull
   public String getDescription() {
     return CompilerBundle.message("file.copying.compiler.description");
   }
 
+  @Override
   public boolean validateConfiguration(CompileScope scope) {
     return true;
   }
 
+  @Override
   public ValidityState createValidityState(DataInput in) throws IOException {
     return new DestinationFileInfo(IOUtil.readString(in), true);
   }
@@ -104,11 +120,13 @@ public abstract class CopyingCompiler implements PackagingCompiler{
       myInfo = new DestinationFileInfo(destinationPath, new File(destinationPath).exists());
     }
 
+    @Override
     @NotNull
     public VirtualFile getFile() {
       return myFile;
     }
 
+    @Override
     public ValidityState getValidityState() {
       return myInfo;
     }
@@ -131,6 +149,7 @@ public abstract class CopyingCompiler implements PackagingCompiler{
       myFileExists = fileExists;
     }
 
+    @Override
     public boolean equalsTo(ValidityState otherState) {
       if (!(otherState instanceof DestinationFileInfo)) {
         return false;
@@ -139,6 +158,7 @@ public abstract class CopyingCompiler implements PackagingCompiler{
       return (myFileExists == destinationFileInfo.myFileExists) && (destinationPath.equals(destinationFileInfo.destinationPath));
     }
 
+    @Override
     public void save(DataOutput out) throws IOException {
       IOUtil.writeString(destinationPath, out);
     }

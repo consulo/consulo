@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.run;
+package org.jetbrains.idea.devkit.run.stepBefore;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTask;
 
 /**
  * @author VISTALL
- * @since 15:09/14.06.13
+ * @since 15:17/14.06.13
  */
-public class BuildArtifactsBeforeRunTask extends AbstractArtifactsBeforeRunTask<BuildArtifactsBeforeRunTask> {
-  public BuildArtifactsBeforeRunTask(Project project) {
-    super(project, BuildArtifactsBeforeRunTaskProvider.ID);
+public class CopyArtifactsBeforeRunTask extends AbstractArtifactsBeforeRunTask<CopyArtifactsBeforeRunTask> {
+  public CopyArtifactsBeforeRunTask(Project project) {
+    super(project, CopyArtifactsBeforeRunTaskProvider.ID);
   }
 }

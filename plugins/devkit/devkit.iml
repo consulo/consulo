@@ -21,8 +21,8 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="compiler-artifact-api" />
     <orderEntry type="module" module-name="junit" />
+    <orderEntry type="module" module-name="compiler-artifact-impl" />
   </component>
 </module>
 

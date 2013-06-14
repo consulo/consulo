@@ -178,7 +178,6 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
         params.getClassPath().addFirst(libPath + File.separator + "extensions.jar");
         params.getClassPath().addFirst(libPath + File.separator + "bootstrap.jar");
         params.getClassPath().addFirst(libPath + File.separator + "idea.jar");
-        params.getClassPath().addFirst(libPath + File.separator + "idea_rt.jar");
         params.getClassPath().addFirst(((JavaSdkType)javaSdk.getSdkType()).getToolsPath(javaSdk));
 
         params.setMainClass("com.intellij.idea.Main");

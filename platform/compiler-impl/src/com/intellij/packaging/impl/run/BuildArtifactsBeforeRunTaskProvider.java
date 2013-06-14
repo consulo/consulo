@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
 package com.intellij.packaging.impl.run;
 
 import com.intellij.execution.BeforeRunTask;
-import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.RunManagerEx;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.impl.ConfigurationSettingsEditorWrapper;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
@@ -29,83 +27,46 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogBuilder;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
-import com.intellij.packaging.artifacts.*;
+import com.intellij.packaging.artifacts.Artifact;
+import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.impl.compiler.ArtifactAwareCompiler;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactsCompiler;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 15:11/14.06.13
  */
-public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<BuildArtifactsBeforeRunTask> {
+public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBeforeRunTaskProvider<BuildArtifactsBeforeRunTask> {
   @NonNls public static final String BUILD_ARTIFACTS_ID = "BuildArtifacts";
   public static final Key<BuildArtifactsBeforeRunTask> ID = Key.create(BUILD_ARTIFACTS_ID);
-  private final Project myProject;
 
   public BuildArtifactsBeforeRunTaskProvider(Project project) {
-    myProject = project;
-    project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactAdapter() {
-      @Override
-      public void artifactRemoved(@NotNull Artifact artifact) {
-        final RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
-        for (RunConfiguration configuration : runManager.getAllConfigurations()) {
-          final List<BuildArtifactsBeforeRunTask> tasks = runManager.getBeforeRunTasks(configuration, ID);
-          for (BuildArtifactsBeforeRunTask task : tasks) {
-            final String artifactName = artifact.getName();
-            final List<ArtifactPointer> pointersList = task.getArtifactPointers();
-            final ArtifactPointer[] pointers = pointersList.toArray(new ArtifactPointer[pointersList.size()]);
-            for (ArtifactPointer pointer : pointers) {
-              if (pointer.getArtifactName().equals(artifactName) && ArtifactManager.getInstance(myProject).findArtifact(artifactName) == null) {
-                task.removeArtifact(pointer);
-              }
-            }
-          }
-        }
-      }
-    });
+    super(project, ID);
   }
 
   @Override
-  public Key<BuildArtifactsBeforeRunTask> getId() {
-    return ID;
-  }
-
-  @Override
-  public Icon getIcon() {
-    return AllIcons.Nodes.Artifact;
+  public BuildArtifactsBeforeRunTask createTask(RunConfiguration runConfiguration) {
+    if (myProject.isDefault()) {
+      return null;
+    }
+    return new BuildArtifactsBeforeRunTask(myProject);
   }
 
   @Override
   public String getName() {
     return CompilerBundle.message("build.artifacts.before.run.description.empty");
-  }
-
-  @Override
-  public Icon getTaskIcon(BuildArtifactsBeforeRunTask task) {
-    List<ArtifactPointer> pointers = task.getArtifactPointers();
-    if (pointers == null || pointers.isEmpty())
-      return getIcon();
-    Artifact artifact = pointers.get(0).getArtifact();
-    if (artifact == null)
-      return getIcon();
-    return artifact.getArtifactType().getIcon();
   }
 
   @Override
@@ -118,52 +79,6 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
       return CompilerBundle.message("build.artifacts.before.run.description.single", pointers.get(0).getArtifactName());
     }
     return CompilerBundle.message("build.artifacts.before.run.description.multiple", pointers.size());
-  }
-
-  @Override
-  public boolean isConfigurable() {
-    return true;
-  }
-
-  @Override
-  public BuildArtifactsBeforeRunTask createTask(RunConfiguration runConfiguration) {
-    if (myProject.isDefault()) return null;
-    return new BuildArtifactsBeforeRunTask(myProject);
-  }
-
-  @Override
-  public boolean configureTask(RunConfiguration runConfiguration, BuildArtifactsBeforeRunTask task) {
-    final Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
-    Set<ArtifactPointer> pointers = new THashSet<ArtifactPointer>();
-    for (Artifact artifact : artifacts) {
-      pointers.add(ArtifactPointerManager.getInstance(myProject).createPointer(artifact));
-    }
-    pointers.addAll(task.getArtifactPointers());
-    ArtifactChooser chooser = new ArtifactChooser(new ArrayList<ArtifactPointer>(pointers));
-    chooser.markElements(task.getArtifactPointers());
-    chooser.setPreferredSize(new Dimension(400, 300));
-
-    DialogBuilder builder = new DialogBuilder(myProject);
-    builder.setTitle(CompilerBundle.message("build.artifacts.before.run.selector.title"));
-    builder.setDimensionServiceKey("#BuildArtifactsBeforeRunChooser");
-    builder.addOkAction();
-    builder.addCancelAction();
-    builder.setCenterPanel(chooser);
-    builder.setPreferredFocusComponent(chooser);
-    if (builder.show() == DialogWrapper.OK_EXIT_CODE) {
-      task.setArtifactPointers(chooser.getMarkedElements());
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public boolean canExecuteTask(RunConfiguration configuration, BuildArtifactsBeforeRunTask task) {
-    for (ArtifactPointer pointer:  task.getArtifactPointers()) {
-      if (pointer.getArtifact() != null)
-        return true;
-    }
-    return false;
   }
 
   @Override
@@ -183,7 +98,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
         }
       }
     }.execute();
-    
+
     final CompileStatusNotification callback = new CompileStatusNotification() {
       @Override
       public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
@@ -193,9 +108,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     };
     final CompilerFilter compilerFilter = new CompilerFilter() {
       @Override
-      public boolean acceptCompiler(Compiler compiler) {
-        return compiler instanceof ArtifactsCompiler
-               || compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
+      public boolean acceptCompiler(com.intellij.openapi.compiler.Compiler compiler) {
+        return compiler instanceof ArtifactsCompiler ||
+               compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
       }
     };
 
@@ -220,20 +135,20 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     final ConfigurationSettingsEditorWrapper editor = ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY.getData(dataContext);
     if (editor != null) {
       List<BeforeRunTask> tasks = editor.getStepsBeforeLaunch();
-      List<BuildArtifactsBeforeRunTask> myTasks = new ArrayList<BuildArtifactsBeforeRunTask>();
+      List<AbstractArtifactsBeforeRunTask> myTasks = new ArrayList<AbstractArtifactsBeforeRunTask>();
       for (BeforeRunTask task : tasks) {
-        if (task instanceof BuildArtifactsBeforeRunTask) {
-          myTasks.add((BuildArtifactsBeforeRunTask)task);
+        if (task instanceof AbstractArtifactsBeforeRunTask) {
+          myTasks.add((AbstractArtifactsBeforeRunTask)task);
         }
       }
       if (enable && myTasks.isEmpty()) {
-        BuildArtifactsBeforeRunTask task = new BuildArtifactsBeforeRunTask(project);
+        AbstractArtifactsBeforeRunTask task = new BuildArtifactsBeforeRunTask(project);
         task.addArtifact(artifact);
         task.setEnabled(true);
         editor.addBeforeLaunchStep(task);
       }
       else {
-        for (BuildArtifactsBeforeRunTask task : myTasks) {
+        for (AbstractArtifactsBeforeRunTask task : myTasks) {
           if (enable) {
             task.addArtifact(artifact);
             task.setEnabled(true);
@@ -249,7 +164,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
     }
   }
 
-  public static void setBuildArtifactBeforeRun(@NotNull Project project, @NotNull RunConfiguration configuration, @NotNull Artifact artifact) {
+  public static void setBuildArtifactBeforeRun(@NotNull Project project,
+                                               @NotNull RunConfiguration configuration,
+                                               @NotNull Artifact artifact) {
     RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
     final List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, ID);
     if (buildArtifactsTasks.isEmpty()) { //Add new task if absent
@@ -260,7 +177,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends BeforeRunTaskProvider<B
       runManager.setBeforeRunTasks(configuration, tasks, false);
     }
 
-    for (BuildArtifactsBeforeRunTask task : buildArtifactsTasks) {
+    for (AbstractArtifactsBeforeRunTask task : buildArtifactsTasks) {
       task.setEnabled(true);
       task.addArtifact(artifact);
 

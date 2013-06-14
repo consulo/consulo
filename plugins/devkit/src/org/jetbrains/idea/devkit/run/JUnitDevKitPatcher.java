@@ -19,7 +19,7 @@ import com.intellij.execution.JavaTestPatcher;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
 import lombok.NonNull;
@@ -49,7 +49,7 @@ public class JUnitDevKitPatcher implements JavaTestPatcher {
 
     final ParametersList vm = javaParameters.getVMParametersList();
     vm.add("-Xbootclasspath/a:" + libPath + File.separator + "boot.jar");
-    if (!vm.hasProperty("idea.load.plugins.id") && module != null && ModuleUtil.getExtension(module, JavaModuleExtension.class) != null) {
+    if (!vm.hasProperty("idea.load.plugins.id") && module != null && ModuleUtilCore.getExtension(module, JavaModuleExtension.class) != null) {
       final String id = DescriptorUtil.getPluginId(module);
       if (id != null) {
         vm.defineProperty("idea.load.plugins.id", id);
