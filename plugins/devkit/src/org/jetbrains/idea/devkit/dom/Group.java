@@ -143,6 +143,4 @@ public interface Group extends Actions {
    * @return created child
    */
   AddToGroup addAddToGroup();
-
-
 }

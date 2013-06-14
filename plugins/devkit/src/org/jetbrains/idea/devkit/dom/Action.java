@@ -165,4 +165,10 @@ public interface Action extends DomElement {
 
   @NotNull
   GenericAttributeValue<String> getKeymap();
+
+  /**
+   * Return internal flag - show in internal Consulo mode.
+   * @return
+   */
+  GenericAttributeValue<Boolean> isInternal();
 }
