@@ -24,10 +24,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
@@ -182,8 +181,34 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
           }
         }
       }
-    }
+      else if("orderEntry".equals(name)) {
+       String type = element.getAttributeValue("type");
+        if("module".equals(type)) {
+          String moduleName = element.getAttributeValue("module-name");
 
+          modifiableModel.addInvalidModuleEntry(moduleName);
+        }
+        else if("module-library".equals(type)) {
+          final Element libraryElement = element.getChild("library");
+
+          final LibraryTable moduleLibraryTable = modifiableModel.getModuleLibraryTable();
+
+          final Library library = moduleLibraryTable.createLibrary(libraryElement.getAttributeValue("name"));
+          for(Element libraryEntry : libraryElement.getChildren()) {
+            final String libraryEntryName = libraryEntry.getName();
+            if("CLASSES".equals(libraryEntryName))  {
+              parse(library, libraryEntry, OrderRootType.CLASSES);
+            }
+            else if("JAVADOC".equals(libraryEntryName)) {
+              parse(library, libraryEntry, OrderRootType.DOCUMENTATION);
+            }
+            else if("SOURCES".equals(libraryEntryName)) {
+              parse(library, libraryEntry, OrderRootType.SOURCES);
+            }
+          }
+        }
+      }
+    }
     //TODO [VISTALL] facets converting
 
     for(ModuleExtension<?> moduleExtension : modifiableModel.getExtensions()) {
@@ -206,5 +231,18 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
 
 
     return module;
+  }
+
+  private static void parse(Library library, Element element, OrderRootType orderRootType) {
+    final Library.ModifiableModel modifiableModel = library.getModifiableModel();
+
+    for(Element child : element.getChildren()) {
+      final String name = child.getName();
+      if("root".equals(name)) {
+        final String url = child.getAttributeValue("url");
+        modifiableModel.addRoot(url, orderRootType);
+      }
+    }
+    modifiableModel.commit();
   }
 }
