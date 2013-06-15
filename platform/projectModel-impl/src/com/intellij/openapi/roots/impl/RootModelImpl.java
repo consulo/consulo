@@ -504,11 +504,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   @Override
   public String getSdkName() {
-    for (OrderEntry orderEntry : getOrderEntries()) {
-      if (orderEntry instanceof SdkOrderEntry) {
-        return ((SdkOrderEntry)orderEntry).getSdkName();
-      }
-    }
     return null;
   }
 
