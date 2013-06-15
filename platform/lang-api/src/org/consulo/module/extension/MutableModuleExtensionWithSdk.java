@@ -15,6 +15,7 @@
  */
 package org.consulo.module.extension;
 
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,4 +25,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface MutableModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>, MutableModuleExtension<T> {
   void setSdk(@Nullable Sdk sdk);
+
+  void setSdkInheritModule(@Nullable Module module);
 }

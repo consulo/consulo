@@ -18,7 +18,6 @@ package org.jetbrains.idea.devkit.module.extension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.util.Comparing;
 import lombok.NonNull;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
@@ -57,13 +56,7 @@ public class PluginMutableModuleExtension extends PluginModuleExtension implemen
 
   @Override
   public boolean isModified() {
-    if (myIsEnabled != myPluginModuleExtension.isEnabled()) {
-      return true;
-    }
-    if (!Comparing.equal(getSdkName(), myPluginModuleExtension.getSdkName())) {
-      return true;
-    }
-    return false;
+    return isModifiedImpl(myPluginModuleExtension);
   }
 
   @Override
@@ -74,5 +67,10 @@ public class PluginMutableModuleExtension extends PluginModuleExtension implemen
   @Override
   public void setSdk(@Nullable Sdk sdk) {
     setSdkImpl(sdk);
+  }
+
+  @Override
+  public void setSdkInheritModule(@Nullable Module module) {
+    setSdkInheritModuleImpl(module);
   }
 }

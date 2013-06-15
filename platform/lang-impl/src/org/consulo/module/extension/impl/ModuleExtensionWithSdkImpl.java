@@ -16,8 +16,10 @@
 package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.sdk.SdkUtil;
@@ -33,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T>
   implements ModuleExtensionWithSdk<T> {
   protected NamedPointer<Sdk> mySdkPointer;
+  protected NamedPointer<Module> myModulePointer;
 
   public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull Module module) {
     super(id, module);
@@ -48,6 +51,20 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   protected void setSdkImpl(@Nullable Sdk sdk) {
     mySdkPointer = sdk == null ? null : SdkUtil.createPointer(sdk);
+  }
+
+  protected void setSdkInheritModuleImpl(@Nullable Module module) {
+    myModulePointer = module == null ? null : ModuleUtilCore.createPointer(module);
+  }
+
+  public boolean isModifiedImpl(ModuleExtensionWithSdk<T> originExtension) {
+    if (myIsEnabled != originExtension.isEnabled()) {
+      return true;
+    }
+    if (!Comparing.equal(getSdkName(), originExtension.getSdkName())) {
+      return true;
+    }
+    return !Comparing.equal(getSdkInheritModuleName(), originExtension.getSdkInheritModuleName());
   }
 
   @Nullable
@@ -66,6 +83,24 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
       return null;
     }
     return mySdkPointer.getName();
+  }
+
+  @Nullable
+  @Override
+  public Module getSdkInheritModule() {
+    if(myModulePointer == null) {
+      return null;
+    }
+    return myModulePointer.get();
+  }
+
+  @Nullable
+  @Override
+  public String getSdkInheritModuleName() {
+    if(myModulePointer == null) {
+      return null;
+    }
+    return myModulePointer.getName();
   }
 
   @Nullable

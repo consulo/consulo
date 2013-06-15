@@ -18,7 +18,6 @@ package org.consulo.java.platform.module.extension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.pom.java.LanguageLevel;
 import lombok.NonNull;
 import org.consulo.java.platform.module.extension.ui.JavaModuleExtensionPanel;
@@ -60,12 +59,10 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
 
   @Override
   public boolean isModified() {
-    if(myIsEnabled != myModuleExtension.isEnabled()) {
+    if(isModifiedImpl(myModuleExtension)) {
       return true;
     }
-    if(!Comparing.equal(getSdkName(), myModuleExtension.getSdkName())) {
-      return true;
-    }
+
     if(!myLanguageLevel.equals(myModuleExtension.getLanguageLevel())) {
       return true;
     }
@@ -80,5 +77,10 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
   @Override
   public void setSdk(@Nullable Sdk sdk) {
     setSdkImpl(sdk);
+  }
+
+  @Override
+  public void setSdkInheritModule(@Nullable Module module) {
+    setSdkInheritModuleImpl(module);
   }
 }
