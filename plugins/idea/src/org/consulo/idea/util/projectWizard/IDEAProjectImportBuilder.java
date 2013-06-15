@@ -27,7 +27,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import org.consulo.idea.IdeaConstants;
@@ -98,7 +97,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
     }
     List<Module> modules = Collections.emptyList();
     try {
-      modules = loadModules(projectPath, file, model, modulesProvider, project);
+      modules = loadModules(file, model, project);
     }
     catch (JDOMException e) {
       e.printStackTrace();
@@ -109,10 +108,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
     return modules;
   }
 
-  private static List<Module> loadModules(String projectPath,
-                                          File ideaDir,
-                                          ModifiableModuleModel modifiableModuleModel,
-                                          ModulesProvider modulesProvider, Project project) throws JDOMException, IOException {
+  private static List<Module> loadModules(File ideaDir, ModifiableModuleModel modifiableModuleModel, Project project) throws JDOMException, IOException {
     List<Module> modules = new ArrayList<Module>();
     File modulesFile = new File(ideaDir, "modules.xml");
 
@@ -131,18 +127,13 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
         continue;
       }
 
-      filepath = StringUtil.replace(filepath, "$PROJECT_DIR$", projectPath);
-
-      modules.add(loadModule(projectPath, filepath, modifiableModuleModel, modulesProvider, project));
+      modules.add(loadModule(filepath, modifiableModuleModel, project));
     }
 
     return modules;
   }
 
-  private static Module loadModule(String projectPath,
-                                   String moduleFilePath,
-                                   ModifiableModuleModel originalModel,
-                                   ModulesProvider modulesProvider, Project project) throws JDOMException, IOException {
+  private static Module loadModule(String moduleFilePath, ModifiableModuleModel originalModel, Project project) throws JDOMException, IOException {
     final boolean fromProjectStructure = originalModel != null;
 
     final Document document = JDOMUtil.loadDocument(new File(moduleFilePath));
