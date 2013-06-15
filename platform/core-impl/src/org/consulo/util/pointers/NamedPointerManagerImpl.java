@@ -34,11 +34,11 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   @Nullable
   public abstract T findByName(@NotNull String name);
 
-  protected void updatePointers(T module) {
-    NamedPointerImpl<T> pointer = myUnresolved.remove(module.getName());
+  protected void updatePointers(T value) {
+    NamedPointerImpl<T> pointer = myUnresolved.remove(value.getName());
     if (pointer != null && pointer.get() == null) {
-      pointer.setValue(module);
-      registerPointer(module, pointer);
+      pointer.setValue(value);
+      registerPointer(value, pointer);
     }
   }
 
@@ -46,10 +46,10 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     myPointers.put(value, pointer);
   }
 
-  protected void unregisterPointer(T module) {
-    final NamedPointerImpl<T> pointer = myPointers.remove(module);
+  protected void unregisterPointer(T value) {
+    final NamedPointerImpl<T> pointer = myPointers.remove(value);
     if (pointer != null) {
-      pointer.dropValue(module);
+      pointer.dropValue(value);
       myUnresolved.put(pointer.getName(), pointer);
     }
   }
@@ -74,9 +74,9 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   @NotNull
   @Override
   public NamedPointer<T> create(@NotNull String name) {
-    final T module = findByName(name);
-    if (module != null) {
-      return create(module);
+    final T value = findByName(name);
+    if (value != null) {
+      return create(value);
     }
 
     NamedPointerImpl<T> pointer = myUnresolved.get(name);
