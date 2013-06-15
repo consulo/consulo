@@ -4407,19 +4407,8 @@
     <gotoRelatedProvider implementation="com.intellij.testIntegration.GotoTestRelatedProvider"/>
 
 
-    <applicationService serviceInterface="com.intellij.ide.util.projectWizard.ProjectWizardStepFactory"
-                        serviceImplementation="com.intellij.ide.util.projectWizard.ProjectWizardStepFactoryImpl"/>
-
-    <applicationService serviceInterface="com.intellij.peer.PeerFactory" serviceImplementation="com.intellij.peer.impl.PeerFactoryImpl"/>
-
     <applicationService serviceInterface="com.intellij.compiler.ant.BuildTargetsFactory"
                         serviceImplementation="com.intellij.compiler.ant.BuildTargetsFactoryImpl"/>
-
-    <applicationService serviceInterface="com.intellij.openapi.roots.libraries.LibrariesHelper"
-                        serviceImplementation="com.intellij.openapi.roots.libraries.LibrariesHelperImpl"/>
-
-    <applicationService serviceInterface="com.intellij.execution.runners.ProcessProxyFactory"
-                        serviceImplementation="com.intellij.execution.runners.ProcessProxyFactoryImpl"/>
 
 
     <applicationService serviceInterface="com.intellij.packaging.elements.PackagingElementFactory"

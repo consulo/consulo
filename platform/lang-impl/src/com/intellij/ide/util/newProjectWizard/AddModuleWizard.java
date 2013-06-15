@@ -35,10 +35,8 @@ import com.intellij.ide.wizard.Step;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.ui.Messages;
@@ -315,23 +313,6 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
   }
 
   @Nullable
-  public static Sdk getNewProjectJdk(WizardContext context) {
-    if (context.getProjectJdk() != null) {
-      return context.getProjectJdk();
-    }
-    return getProjectSdkByDefault(context);
-  }
-
-  public static Sdk getProjectSdkByDefault(WizardContext context) {
-    final Project project = context.getProject() == null ? ProjectManager.getInstance().getDefaultProject() : context.getProject();
-    final Sdk projectJdk = ProjectRootManager.getInstance(project).getProjectSdk();
-    if (projectJdk != null) {
-      return projectJdk;
-    }
-    return null;
-  }
-
-  @Nullable
   public static Sdk getMostRecentSuitableSdk(final WizardContext context) {
     if (context.getProject() == null) {
       @Nullable final ProjectBuilder projectBuilder = context.getProjectBuilder();
@@ -347,11 +328,6 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
   @NotNull
   public WizardContext getWizardContext() {
     return myWizardContext;
-  }
-
-  @Nullable
-  public Sdk getNewProjectJdk() {
-    return getNewProjectJdk(myWizardContext);
   }
 
   @NotNull

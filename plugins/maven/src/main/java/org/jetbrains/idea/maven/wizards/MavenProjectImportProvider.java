@@ -78,7 +78,7 @@ public class MavenProjectImportProvider extends ProjectImportProvider {
         public String getHelpId() {
           return "reference.dialogs.new.project.import.maven.page3";
         }
-      }, stepFactory.createProjectJdkStep(wizardContext), stepFactory.createNameAndLocationStep(wizardContext)};
+      }, stepFactory.createNameAndLocationStep(wizardContext)};
   }
 
   @Override

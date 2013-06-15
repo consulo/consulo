@@ -15,18 +15,12 @@
  */
 package com.intellij.ide.util.projectWizard;
 
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.newProjectWizard.SourcePathsStep;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -35,8 +29,6 @@ import javax.swing.*;
  *         Date: Oct 6, 2004
  */
 public class ProjectWizardStepFactoryImpl extends ProjectWizardStepFactory {
-  private static final Key<ProjectJdkStep> PROJECT_JDK_STEP_KEY = Key.create("ProjectJdkStep");
-
   public ModuleWizardStep createNameAndLocationStep(WizardContext wizardContext, JavaModuleBuilder builder, ModulesProvider modulesProvider, Icon icon, String helpId) {
     return new NameLocationStep(wizardContext, builder, modulesProvider, icon, helpId);
   }
@@ -58,71 +50,6 @@ public class ProjectWizardStepFactoryImpl extends ProjectWizardStepFactory {
 
   public ModuleWizardStep createSourcePathsStep(final WizardContext context, final SourcePathsBuilder builder, final Icon icon, @NonNls final String helpId) {
     return new SourcePathsStep(builder, icon, helpId);
-  }
-
-  /**
-   * @deprecated
-   */
-  public ModuleWizardStep createProjectJdkStep(WizardContext context,
-                                               final JavaModuleBuilder builder,
-                                               final Computable<Boolean> isVisible,
-                                               final Icon icon,
-                                               final String helpId) {
-    return createProjectJdkStep(context, null, builder, isVisible, icon, helpId);
-  }
-
-  public ModuleWizardStep createProjectJdkStep(WizardContext context,
-                                               SdkType type,
-                                               final JavaModuleBuilder builder,
-                                               final Computable<Boolean> isVisible,
-                                               final Icon icon,
-                                               @NonNls final String helpId) {
-    return new ProjectJdkForModuleStep(context, type){
-      public void updateDataModel() {
-        super.updateDataModel();
-        builder.setModuleJdk(getJdk());
-      }
-
-      public boolean isStepVisible() {
-        return isVisible.compute().booleanValue();
-      }
-
-      public Icon getIcon() {
-        return icon;
-      }
-
-      @Override
-      public String getName() {
-        return "Specify JDK";
-      }
-
-      public String getHelpId() {
-        return helpId;
-      }
-    };
-  }
-
-  public ModuleWizardStep createProjectJdkStep(final WizardContext wizardContext) {
-    ProjectJdkStep projectSdkStep = wizardContext.getUserData(PROJECT_JDK_STEP_KEY);
-    if (projectSdkStep != null) {
-      return projectSdkStep;
-    }
-    projectSdkStep = new ProjectJdkStep(wizardContext) {
-      public boolean isStepVisible() {
-        final Sdk newProjectJdk = AddModuleWizard.getProjectSdkByDefault(wizardContext);
-        if (newProjectJdk == null) return true;
-        final ProjectBuilder projectBuilder = wizardContext.getProjectBuilder();
-        return projectBuilder != null && !projectBuilder.isSuitableSdk(newProjectJdk);
-      }
-    };
-    wizardContext.putUserData(PROJECT_JDK_STEP_KEY, projectSdkStep);
-    return projectSdkStep;
-  }
-
-  @Nullable
-  @Override
-  public Sdk getNewProjectSdk(WizardContext wizardContext) {
-    return AddModuleWizard.getNewProjectJdk(wizardContext);
   }
 
   @Override
