@@ -178,18 +178,13 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
       @Override
       protected void run(Result<Object> result) throws Throwable {
         modifiableModel.commit();
+        if(!fromProjectStructure) {
+          newModel.commit();
+        }
       }
     }.execute();
 
-    if(!fromProjectStructure) {
-      new WriteAction<Object>()
-      {
-        @Override
-        protected void run(Result<Object> result) throws Throwable {
-          newModel.commit();
-        }
-      }.execute();
-    }
+
 
     return module;
   }
