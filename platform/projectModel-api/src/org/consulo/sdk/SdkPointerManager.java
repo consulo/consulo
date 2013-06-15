@@ -15,9 +15,12 @@
  */
 package org.consulo.sdk;
 
+import com.intellij.openapi.projectRoots.Sdk;
+import org.consulo.util.pointers.NamedPointerManager;
+
 /**
  * @author VISTALL
  * @since 17:17/15.06.13
  */
-public class SdkPointer {
+public interface SdkPointerManager extends NamedPointerManager<Sdk> {
 }

@@ -63,7 +63,7 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
     if(myIsEnabled != myModuleExtension.isEnabled()) {
       return true;
     }
-    if(!Comparing.equal(mySdkName, myModuleExtension.getSdkName())) {
+    if(!Comparing.equal(getSdkName(), myModuleExtension.getSdkName())) {
       return true;
     }
     if(!myLanguageLevel.equals(myModuleExtension.getLanguageLevel())) {
@@ -79,6 +79,6 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
 
   @Override
   public void setSdk(@Nullable Sdk sdk) {
-    mySdkName = sdk == null ? null : sdk.getName();
+    setSdkImpl(sdk);
   }
 }

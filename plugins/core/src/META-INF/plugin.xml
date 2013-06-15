@@ -3753,7 +3753,8 @@
 
     <extensionPoint name="renameInputValidator" interface="com.intellij.refactoring.rename.RenameInputValidator"/>
 
-    <extensionPoint name="findUsagesHandlerFactory" interface="com.intellij.find.findUsages.FindUsagesHandlerFactory" area="CONSULO_PROJECT"/>
+    <extensionPoint name="findUsagesHandlerFactory" interface="com.intellij.find.findUsages.FindUsagesHandlerFactory"
+                    area="CONSULO_PROJECT"/>
     <extensionPoint name="customUsageSearcher" interface="com.intellij.find.findUsages.CustomUsageSearcher"/>
 
     <extensionPoint name="readWriteAccessDetector" interface="com.intellij.codeInsight.highlighting.ReadWriteAccessDetector"/>
@@ -3942,7 +3943,8 @@
 
     <extensionPoint name="inlineActionHandler" interface="com.intellij.lang.refactoring.InlineActionHandler"/>
 
-    <extensionPoint name="projectViewNodeDecorator" interface="com.intellij.ide.projectView.ProjectViewNodeDecorator" area="CONSULO_PROJECT"/>
+    <extensionPoint name="projectViewNodeDecorator" interface="com.intellij.ide.projectView.ProjectViewNodeDecorator"
+                    area="CONSULO_PROJECT"/>
 
     <extensionPoint name="previewHintProvider" interface="com.intellij.codeInsight.preview.PreviewHintProvider"/>
     <extensionPoint name="testActionProvider" interface="com.intellij.execution.testframework.ToggleModelActionProvider"/>
@@ -4790,6 +4792,9 @@
 
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
+
+    <applicationService serviceInterface="org.consulo.sdk.SdkPointerManager"
+                        serviceImplementation="org.consulo.sdk.impl.SdkPointerManagerImpl"/>
     <rearranger.ui implementation="com.intellij.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
     <projectService serviceInterface="com.intellij.ui.EditorTextFieldProvider"

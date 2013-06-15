@@ -60,7 +60,7 @@ public class PluginMutableModuleExtension extends PluginModuleExtension implemen
     if (myIsEnabled != myPluginModuleExtension.isEnabled()) {
       return true;
     }
-    if (!Comparing.equal(mySdkName, myPluginModuleExtension.getSdkName())) {
+    if (!Comparing.equal(getSdkName(), myPluginModuleExtension.getSdkName())) {
       return true;
     }
     return false;
@@ -73,6 +73,6 @@ public class PluginMutableModuleExtension extends PluginModuleExtension implemen
 
   @Override
   public void setSdk(@Nullable Sdk sdk) {
-    mySdkName = sdk == null ? null : sdk.getName();
+    setSdkImpl(sdk);
   }
 }

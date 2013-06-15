@@ -18,10 +18,10 @@ package org.consulo.module.extension.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.text.StringUtil;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.consulo.sdk.SdkUtil;
+import org.consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T>
   implements ModuleExtensionWithSdk<T> {
-  protected String mySdkName;
+  protected NamedPointer<Sdk> mySdkPointer;
 
   public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull Module module) {
     super(id, module);
@@ -42,30 +42,30 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
   public void commit(@NotNull T mutableModuleExtension) {
     super.commit(mutableModuleExtension);
 
-    mySdkName = mutableModuleExtension.getSdkName();
+    final String sdkName = mutableModuleExtension.getSdkName();
+    mySdkPointer = sdkName == null ? null : SdkUtil.createPointer(sdkName);
+  }
+
+  protected void setSdkImpl(@Nullable Sdk sdk) {
+    mySdkPointer = sdk == null ? null : SdkUtil.createPointer(sdk);
   }
 
   @Nullable
   @Override
   public Sdk getSdk() {
-    if (mySdkName == null) {
+    if(mySdkPointer == null) {
       return null;
     }
-    final ProjectSdksModel projectJdksModel = ProjectStructureConfigurable.getInstance(getModule().getProject()).getProjectSdksModel();
-    if(!projectJdksModel.isInitialized())   {
-      projectJdksModel.reset(getModule().getProject());
-    }
-    final Sdk sdk = projectJdksModel.findSdk(mySdkName);
-    if(sdk == null || sdk.getSdkType() != getSdkType()) {
-      return null;
-    }
-    return sdk;
+    return mySdkPointer.get();
   }
 
   @Nullable
   @Override
   public String getSdkName() {
-    return mySdkName;
+    if(mySdkPointer == null) {
+      return null;
+    }
+    return mySdkPointer.getName();
   }
 
   @Nullable
@@ -78,11 +78,14 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   @Override
   protected void getStateImpl(@NotNull Element element) {
-    element.setAttribute("sdk-name", StringUtil.notNullize(mySdkName));
+    element.setAttribute("sdk-name", StringUtil.notNullize(getSdkName()));
   }
 
   @Override
   protected void loadStateImpl(@NotNull Element element) {
-    mySdkName = StringUtil.nullize(element.getAttributeValue("sdk-name"));
+    final String sdkName = StringUtil.nullize(element.getAttributeValue("sdk-name"));
+    if(sdkName != null) {
+      mySdkPointer = SdkUtil.createPointer(sdkName);
+    }
   }
 }
