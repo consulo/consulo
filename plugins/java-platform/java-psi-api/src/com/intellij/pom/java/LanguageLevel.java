@@ -20,13 +20,15 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.util.Key;
+import org.consulo.util.pointers.Named;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author dsl
  */
-public enum LanguageLevel implements LanguageVersion {
+public enum LanguageLevel implements LanguageVersion, Named, NamedPointer<LanguageLevel> {
   JDK_1_3(JavaCoreBundle.message("jdk.1.3.language.level.description")),
   JDK_1_4(JavaCoreBundle.message("jdk.1.4.language.level.description")),
   JDK_1_5(JavaCoreBundle.message("jdk.1.5.language.level.description")),
@@ -49,6 +51,11 @@ public enum LanguageLevel implements LanguageVersion {
 
   public boolean isAtLeast(final LanguageLevel level) {
     return compareTo(level) >= 0;
+  }
+
+  @Override
+  public LanguageLevel get() {
+    return this;
   }
 
   @NotNull

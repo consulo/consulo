@@ -62,7 +62,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
       }
       return getItemFromModule(module);
     }
-    return myTargetPointer == null ? null : myTargetPointer.get();
+    return myTargetPointer == null ? getDefaultValue() : myTargetPointer.get();
   }
 
   @Nullable
@@ -113,9 +113,9 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   }
 
   @Override
-  public void set(@Nullable String moduleName, @Nullable String sdkName) {
+  public void set(@Nullable String moduleName, @Nullable String name) {
     myModulePointer = moduleName == null ? null : ModuleUtilCore.createPointer(myProject, moduleName);
-    myTargetPointer = sdkName == null ? null : getPointer(myProject, sdkName);
+    myTargetPointer = name == null ? null : getPointer(myProject, name);
   }
 
   public void toXml(Element element) {
@@ -132,6 +132,11 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     if (itemName != null) {
       myTargetPointer = getPointer(myProject, itemName);
     }
+  }
+
+  @Nullable
+  public T getDefaultValue() {
+    return null;
   }
 
   @Nullable

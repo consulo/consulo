@@ -25,5 +25,5 @@ import org.jetbrains.annotations.Nullable;
 public interface MutableModuleInheritableNamedPointer<T extends Named> extends ModuleInheritableNamedPointer<T> {
   void set(ModuleInheritableNamedPointer<T> value);
 
-  void set(@Nullable String moduleName, @Nullable String sdkName);
+  void set(@Nullable String moduleName, @Nullable String name);
 }

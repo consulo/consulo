@@ -54,8 +54,10 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
     myIsEnabled = val;
   }
 
-  public void setLanguageLevel(@NotNull LanguageLevel languageLevel) {
-    myLanguageLevel = languageLevel;
+  @Override
+  @NotNull
+  public MutableModuleInheritableNamedPointer<LanguageLevel> getInheritableLanguageLevel() {
+    return myLanguageLevel;
   }
 
   @Override
@@ -64,7 +66,7 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
       return true;
     }
 
-    if(!myLanguageLevel.equals(myModuleExtension.getLanguageLevel())) {
+    if(!myLanguageLevel.equals(myModuleExtension)) {
       return true;
     }
     return false;

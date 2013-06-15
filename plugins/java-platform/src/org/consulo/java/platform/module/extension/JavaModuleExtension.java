@@ -19,6 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.pom.java.LanguageLevel;
+import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -28,21 +29,28 @@ import org.jetbrains.annotations.NotNull;
  * @since 10:02/19.05.13
  */
 public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleExtension> {
-  protected LanguageLevel myLanguageLevel = LanguageLevel.HIGHEST;
+  protected LanguageLevelModuleInheritableNamedPointerImpl myLanguageLevel;
 
   public JavaModuleExtension(@NotNull String id, @NotNull Module module) {
     super(id, module);
+    myLanguageLevel = new LanguageLevelModuleInheritableNamedPointerImpl(module.getProject(), id);
   }
 
   @Override
   public void commit(@NotNull JavaModuleExtension mutableModuleExtension) {
     super.commit(mutableModuleExtension);
 
-    myLanguageLevel = mutableModuleExtension.getLanguageLevel();
+    myLanguageLevel.set(mutableModuleExtension.getInheritableLanguageLevel());
   }
 
   @NotNull
   public LanguageLevel getLanguageLevel() {
+    final LanguageLevel languageLevel = myLanguageLevel.get();
+    return languageLevel == null ? LanguageLevel.HIGHEST : languageLevel;
+  }
+
+  @NotNull
+  public ModuleInheritableNamedPointer<LanguageLevel> getInheritableLanguageLevel() {
     return myLanguageLevel;
   }
 
@@ -55,16 +63,13 @@ public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleEx
   protected void getStateImpl(@NotNull Element element) {
     super.getStateImpl(element);
 
-    element.setAttribute("language-level", myLanguageLevel.name());
+    myLanguageLevel.toXml(element);
   }
 
   @Override
   protected void loadStateImpl(@NotNull Element element) {
     super.loadStateImpl(element);
 
-    final String languageLevelValue = element.getAttributeValue("language-level");
-    if (languageLevelValue != null) {
-      myLanguageLevel = LanguageLevel.valueOf(languageLevelValue);
-    }
+    myLanguageLevel.fromXml(element);
   }
 }
