@@ -15,16 +15,41 @@
  */
 package org.consulo.idea.util.projectWizard;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectImportProvider;
+import org.consulo.idea.IdeaConstants;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 18:48/14.06.13
  */
-public class IDEAProjectImportProvider extends ProjectImportProvider {
-  public IDEAProjectImportProvider() {
-    super(new IDEAProjectImportBuilder());
+public class IdeaProjectImportProvider extends ProjectImportProvider {
+  public IdeaProjectImportProvider() {
+    super(new IdeaProjectImportBuilder());
+  }
+
+  @Override
+  public boolean canImport(VirtualFile fileOrDirectory, @Nullable Project project) {
+    if (fileOrDirectory.isDirectory()) {
+      return true;
+    }
+    else {
+      return canImportFromFile(fileOrDirectory);
+    }
+  }
+
+  @Override
+  @Nullable
+  public Icon getIconForFile(VirtualFile file) {
+    final VirtualFile child = file.findChild(IdeaConstants.PROJECT_DIR);
+    if(child != null) {
+      return getIcon();
+    }
+    return null;
   }
 
   @Nullable

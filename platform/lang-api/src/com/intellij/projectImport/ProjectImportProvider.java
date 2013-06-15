@@ -102,4 +102,9 @@ public abstract class ProjectImportProvider {
   public String getFileSample() {
     return null;
   }
+
+  @Nullable
+  public Icon getIconForFile(VirtualFile file) {
+    return null;
+  }
 }

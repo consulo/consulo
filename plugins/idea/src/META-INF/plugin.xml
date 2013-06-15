@@ -18,6 +18,8 @@
   <name>IDEA</name>
 
   <extensions defaultExtensionNs="com.intellij">
-    <projectImportProvider implementation="org.consulo.idea.util.projectWizard.IDEAProjectImportProvider"/>
+    <projectImportProvider implementation="org.consulo.idea.util.projectWizard.IdeaProjectImportProvider"/>
+
+    <fileTypeFactory implementation="org.consulo.idea.file.IdeaModuleFileTypeFactory" />
   </extensions>
 </idea-plugin>

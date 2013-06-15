@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import org.consulo.idea.IdeaIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,16 +33,16 @@ import java.util.List;
  * @author VISTALL
  * @since 18:49/14.06.13
  */
-public class IDEAProjectImportBuilder extends ProjectImportBuilder<Object> {
+public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
   @NotNull
   @Override
   public String getName() {
-    return null;
+    return "IntelliJ IDEA";
   }
 
   @Override
   public Icon getIcon() {
-    return null;
+    return IdeaIcons.Idea;
   }
 
   @Override
