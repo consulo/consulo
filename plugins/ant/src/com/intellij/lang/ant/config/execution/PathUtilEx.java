@@ -17,7 +17,7 @@ package com.intellij.lang.ant.config.execution;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -45,8 +45,7 @@ public class PathUtilEx {
   private static final Function<Module, Sdk> MODULE_JDK = new Function<Module, Sdk>() {
     @Nullable
     public Sdk fun(Module module) {
-      final JavaModuleExtension extension = ModuleUtil.getExtension(module, JavaModuleExtension.class);
-      return extension == null ? null : extension.getSdk();
+      return ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
     }
   };
   private static final Convertor<Sdk, String> SDK_VERSION = new Convertor<Sdk, String>() {

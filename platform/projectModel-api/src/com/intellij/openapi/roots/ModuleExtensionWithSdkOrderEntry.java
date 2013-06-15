@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,5 +27,5 @@ public interface ModuleExtensionWithSdkOrderEntry extends SdkOrderEntry {
   String getModuleExtensionId();
 
   @Nullable
-  ModuleExtension<?> getModuleExtension();
+  ModuleExtensionWithSdk<?> getModuleExtension();
 }

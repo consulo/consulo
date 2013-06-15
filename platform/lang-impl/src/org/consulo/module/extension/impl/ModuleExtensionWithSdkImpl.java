@@ -16,14 +16,10 @@
 package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.consulo.sdk.SdkUtil;
-import org.consulo.util.pointers.NamedPointer;
+import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,73 +30,45 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionImpl<T>
   implements ModuleExtensionWithSdk<T> {
-  protected NamedPointer<Sdk> mySdkPointer;
-  protected NamedPointer<Module> myModulePointer;
+
+  private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
   public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull Module module) {
     super(id, module);
+
+    mySdkPointer = new SdkModuleInheritableNamedPointerImpl(module.getProject(), id);
   }
 
   @Override
   public void commit(@NotNull T mutableModuleExtension) {
     super.commit(mutableModuleExtension);
 
-    final String sdkName = mutableModuleExtension.getSdkName();
-    mySdkPointer = sdkName == null ? null : SdkUtil.createPointer(sdkName);
+    mySdkPointer.set(mutableModuleExtension.getInheritableSdk());
   }
 
-  protected void setSdkImpl(@Nullable Sdk sdk) {
-    mySdkPointer = sdk == null ? null : SdkUtil.createPointer(sdk);
+  @NotNull
+  @Override
+  public ModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
+    return mySdkPointer;
   }
 
-  protected void setSdkInheritModuleImpl(@Nullable Module module) {
-    myModulePointer = module == null ? null : ModuleUtilCore.createPointer(module);
+  @Nullable
+  @Override
+  public Sdk getSdk() {
+    return getInheritableSdk().get();
+  }
+
+  @Nullable
+  @Override
+  public String getSdkName() {
+    return getInheritableSdk().getName();
   }
 
   public boolean isModifiedImpl(ModuleExtensionWithSdk<T> originExtension) {
     if (myIsEnabled != originExtension.isEnabled()) {
       return true;
     }
-    if (!Comparing.equal(getSdkName(), originExtension.getSdkName())) {
-      return true;
-    }
-    return !Comparing.equal(getSdkInheritModuleName(), originExtension.getSdkInheritModuleName());
-  }
-
-  @Nullable
-  @Override
-  public Sdk getSdk() {
-    if(mySdkPointer == null) {
-      return null;
-    }
-    return mySdkPointer.get();
-  }
-
-  @Nullable
-  @Override
-  public String getSdkName() {
-    if(mySdkPointer == null) {
-      return null;
-    }
-    return mySdkPointer.getName();
-  }
-
-  @Nullable
-  @Override
-  public Module getSdkInheritModule() {
-    if(myModulePointer == null) {
-      return null;
-    }
-    return myModulePointer.get();
-  }
-
-  @Nullable
-  @Override
-  public String getSdkInheritModuleName() {
-    if(myModulePointer == null) {
-      return null;
-    }
-    return myModulePointer.getName();
+    return !mySdkPointer.equals(originExtension.getInheritableSdk());
   }
 
   @Nullable
@@ -113,14 +81,15 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   @Override
   protected void getStateImpl(@NotNull Element element) {
-    element.setAttribute("sdk-name", StringUtil.notNullize(getSdkName()));
+    super.getStateImpl(element);
+
+    mySdkPointer.toXml(element);
   }
 
   @Override
   protected void loadStateImpl(@NotNull Element element) {
-    final String sdkName = StringUtil.nullize(element.getAttributeValue("sdk-name"));
-    if(sdkName != null) {
-      mySdkPointer = SdkUtil.createPointer(sdkName);
-    }
+    super.loadStateImpl(element);
+
+    mySdkPointer.fromXml(element);
   }
 }

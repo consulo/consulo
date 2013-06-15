@@ -636,7 +636,7 @@ public class MvcModuleStructureUtil {
     assert fromExtension != null;
     assert toExtension != null;
 
-    toExtension.setSdk(fromExtension.getSdk());
+    toExtension.getInheritableSdk().set(fromExtension.getInheritableSdk());
   }
 
   public static void copySdkAndLibraries(ModuleRootModel from, ModifiableRootModel to, @NotNull MvcFramework framework) {

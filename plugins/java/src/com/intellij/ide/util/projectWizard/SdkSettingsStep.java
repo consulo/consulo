@@ -75,7 +75,7 @@ public class SdkSettingsStep extends ModuleWizardStep {
         return;
       }
     }
-    else  {
+    else {
       // set default project SDK
       Project defaultProject = ProjectManager.getInstance().getDefaultProject();
       Sdk sdk = ProjectRootManager.getInstance(defaultProject).getProjectSdk();
@@ -93,10 +93,7 @@ public class SdkSettingsStep extends ModuleWizardStep {
     }
 
     JButton button = new JButton("Ne\u001Bw...");
-    mySdkComboBox.setSetupButton(button, project, myModel,
-                                 project == null ? new SdkComboBox.NoneSdkComboBoxItem() : new SdkComboBox.ProjectSdkComboBoxItem(),
-                                 null,
-                                 false);
+    mySdkComboBox.setSetupButton(button, project, myModel, new SdkComboBox.NoneSdkComboBoxItem(), null, false);
     JPanel jdkPanel = new JPanel(new BorderLayout(4, 0));
     jdkPanel.add(mySdkComboBox);
     jdkPanel.add(button, BorderLayout.EAST);
@@ -127,19 +124,20 @@ public class SdkSettingsStep extends ModuleWizardStep {
   @Override
   public boolean validate() throws ConfigurationException {
     if (mySdkComboBox.getSelectedSdk() == null) {
-      if (Messages.showDialog(getNoSdkMessage(),
-                                       IdeBundle.message("title.no.jdk.specified"),
-                                       new String[]{CommonBundle.getYesButtonText(), CommonBundle.getNoButtonText()}, 1, Messages.getWarningIcon()) != Messages.YES) {
+      if (Messages.showDialog(getNoSdkMessage(), IdeBundle.message("title.no.jdk.specified"),
+                              new String[]{CommonBundle.getYesButtonText(), CommonBundle.getNoButtonText()}, 1,
+                              Messages.getWarningIcon()) != Messages.YES) {
         return false;
       }
     }
     try {
       myModel.apply(null, true);
-    } catch (ConfigurationException e) {
+    }
+    catch (ConfigurationException e) {
       //IDEA-98382 We should allow Next step if user has wrong SDK
-      if (Messages.showDialog(e.getMessage() + "/nDo you want to proceed?",
-                                       e.getTitle(),
-                                       new String[]{CommonBundle.getYesButtonText(), CommonBundle.getNoButtonText()}, 1, Messages.getWarningIcon()) != Messages.YES) {
+      if (Messages.showDialog(e.getMessage() + "/nDo you want to proceed?", e.getTitle(),
+                              new String[]{CommonBundle.getYesButtonText(), CommonBundle.getNoButtonText()}, 1,
+                              Messages.getWarningIcon()) != Messages.YES) {
         return false;
       }
     }

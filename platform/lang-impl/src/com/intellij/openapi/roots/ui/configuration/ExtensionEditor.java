@@ -105,7 +105,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   public void extensionChanged(MutableModuleExtension<?> extension) {
     final JComponent secondComponent = mySplitter.getSecondComponent();
-    if(secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
+    if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
       if (!extension.isEnabled()) {
         mySplitter.setSecondComponent(null);
       }
@@ -125,9 +125,15 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
       if (extension.isEnabled()) {
         final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
-        if (sdkOrderEntry == null || !Comparing.equal(sdkExtension.getSdk(), sdkOrderEntry.getSdk())) {
-          if (extension.isEnabled()) {
+        if (!sdkExtension.getInheritableSdk().isNull()) {
+          if (sdkOrderEntry == null) {
             rootModel.addModuleExtensionSdkEntry(sdkExtension);
+          }
+          else {
+            final ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
+            if (moduleExtension != null && !Comparing.equal(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
+              rootModel.addModuleExtensionSdkEntry(sdkExtension);
+            }
           }
         }
       }

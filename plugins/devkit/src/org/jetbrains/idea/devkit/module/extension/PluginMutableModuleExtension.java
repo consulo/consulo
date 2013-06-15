@@ -20,6 +20,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import lombok.NonNull;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,13 +65,9 @@ public class PluginMutableModuleExtension extends PluginModuleExtension implemen
     myPluginModuleExtension.commit(this);
   }
 
+  @NotNull
   @Override
-  public void setSdk(@Nullable Sdk sdk) {
-    setSdkImpl(sdk);
-  }
-
-  @Override
-  public void setSdkInheritModule(@Nullable Module module) {
-    setSdkInheritModuleImpl(module);
+  public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
+    return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
   }
 }

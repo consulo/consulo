@@ -18,7 +18,7 @@ package com.intellij.project.model.impl.module.dependencies;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.project.model.impl.module.JpsRootModel;
-import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.module.JpsSdkDependency;
@@ -44,7 +44,7 @@ public class JpsModuleExtensionWithSdkOrderEntry extends JpsSdkOrderEntryBase im
 
   @Nullable
   @Override
-  public ModuleExtension<?> getModuleExtension() {
+  public ModuleExtensionWithSdk<?> getModuleExtension() {
     return null;
   }
 }

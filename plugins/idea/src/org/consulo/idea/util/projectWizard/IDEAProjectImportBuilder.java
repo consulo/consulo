@@ -213,6 +213,9 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
 
     for(ModuleExtension<?> moduleExtension : modifiableModel.getExtensions()) {
       if(moduleExtension instanceof ModuleExtensionWithSdk) {
+        if(((ModuleExtensionWithSdk) moduleExtension).getInheritableSdk().isNull()) {
+          continue;
+        }
         modifiableModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk<?>)moduleExtension);
       }
     }

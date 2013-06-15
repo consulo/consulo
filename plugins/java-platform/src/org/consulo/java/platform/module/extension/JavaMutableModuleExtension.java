@@ -22,6 +22,7 @@ import com.intellij.pom.java.LanguageLevel;
 import lombok.NonNull;
 import org.consulo.java.platform.module.extension.ui.JavaModuleExtensionPanel;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,13 +75,9 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
     myModuleExtension.commit(this);
   }
 
+  @NotNull
   @Override
-  public void setSdk(@Nullable Sdk sdk) {
-    setSdkImpl(sdk);
-  }
-
-  @Override
-  public void setSdkInheritModule(@Nullable Module module) {
-    setSdkInheritModuleImpl(module);
+  public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
+    return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
   }
 }

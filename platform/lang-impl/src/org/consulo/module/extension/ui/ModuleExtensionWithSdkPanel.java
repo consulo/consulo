@@ -15,6 +15,8 @@
  */
 package org.consulo.module.extension.ui;
 
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
@@ -22,6 +24,7 @@ import com.intellij.openapi.roots.ui.configuration.SdkComboBox;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.util.Condition;
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,14 +60,32 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
         return sdkType != null && sdkTypeId == sdkType;
       }
     }, true);
+    mySdkComboBox.insertModuleItems(myExtensionWithSdk);
 
-    mySdkComboBox.setSelectedSdk(myExtensionWithSdk.getSdkName());
+    final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = myExtensionWithSdk.getInheritableSdk();
+    if (inheritableSdk.isNull()) {
+      mySdkComboBox.setSelectedNoneSdk();
+    }
+    else {
+      final String sdkInheritModuleName = inheritableSdk.getModuleName();
+      if (sdkInheritModuleName != null) {
+        final Module sdkInheritModule = inheritableSdk.getModule();
+        if (sdkInheritModule == null) {
+          mySdkComboBox.addInvalidModuleItem(sdkInheritModuleName);
+        }
+        mySdkComboBox.setSelectedModule(sdkInheritModuleName);
+      }
+      else {
+        mySdkComboBox.setSelectedSdk(inheritableSdk.getName());
+      }
+    }
 
     mySdkComboBox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
-        myExtensionWithSdk.setSdk(mySdkComboBox.getSelectedSdk());
-        if(myClasspathStateUpdater != null) {
+        inheritableSdk.set(mySdkComboBox.getSelectedModuleName(), mySdkComboBox.getSelectedSdkName());
+
+        if (myClasspathStateUpdater != null) {
           SwingUtilities.invokeLater(myClasspathStateUpdater);
         }
       }

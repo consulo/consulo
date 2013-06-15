@@ -15,25 +15,21 @@
  */
 package org.consulo.module.extension;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.module.Module;
+import org.consulo.util.pointers.Named;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 23:26/18.05.13
+ * @since 19:58/15.06.13
  */
-public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtension<T> {
-  @NotNull
-  ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
+public interface ModuleInheritableNamedPointer<T extends Named> extends NamedPointer<T> {
+  @Nullable
+  Module getModule();
 
   @Nullable
-  Sdk getSdk();
+  String getModuleName();
 
-  @Nullable
-  String getSdkName();
-
-  @Nullable
-  SdkType getSdkType();
+  boolean isNull();
 }
