@@ -10,6 +10,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="compiler-artifact-impl" />
+    <orderEntry type="module" module-name="projectModel-impl" />
   </component>
 </module>
 

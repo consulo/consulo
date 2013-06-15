@@ -28,6 +28,7 @@ import javax.swing.*;
  * @since 20:26/14.06.13
  */
 public class IdeaModuleFileType implements FileType {
+  public static final String DEFAULT_EXTENSION = "iml";
   public static final IdeaModuleFileType INSTANCE = new IdeaModuleFileType();
 
   @NotNull
@@ -45,7 +46,7 @@ public class IdeaModuleFileType implements FileType {
   @NotNull
   @Override
   public String getDefaultExtension() {
-    return "iml";
+    return DEFAULT_EXTENSION;
   }
 
   @Nullable
