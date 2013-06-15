@@ -16,9 +16,10 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.module.ModulePointer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,7 +40,7 @@ public class ResourceModuleOutputElementType extends ModuleOutputElementTypeBase
   }
 
   @Override
-  protected ResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull ModulePointer pointer) {
+  protected ResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
     return new ResourceModuleOutputPackagingElement(project, pointer);
   }
 

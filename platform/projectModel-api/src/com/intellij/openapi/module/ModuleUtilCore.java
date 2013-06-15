@@ -17,6 +17,7 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
@@ -29,6 +30,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -232,6 +234,18 @@ public class ModuleUtilCore {
     else {
       return (S) extension.getSdk();
     }
+  }
+
+  @NotNull
+  public static NamedPointer<Module> createPointer(@NotNull Module module) {
+    ModulePointerManager manager = ServiceManager.getService(module.getProject(), ModulePointerManager.class);
+    return manager.create(module);
+  }
+
+  @NotNull
+  public static NamedPointer<Module> createPointer(@NotNull Project project, @NotNull String name) {
+    ModulePointerManager manager = ServiceManager.getService(project, ModulePointerManager.class);
+    return manager.create(name);
   }
 
   public interface ModuleVisitor {

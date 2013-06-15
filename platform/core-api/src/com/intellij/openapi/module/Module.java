@@ -21,6 +21,7 @@ import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @see ModuleManager#getModules()
  * @see ModuleComponent
  */
-public interface Module extends ComponentManager, AreaInstance, Disposable {
+public interface Module extends ComponentManager, AreaInstance, Disposable, Named {
   /**
    * The empty array of modules which cab be reused to avoid unnecessary allocations.
    */
@@ -63,7 +64,9 @@ public interface Module extends ComponentManager, AreaInstance, Disposable {
    *
    * @return the module name.
    */
-  @NotNull String getName();
+  @Override
+  @NotNull
+  String getName();
 
   /**
    * Checks if the module instance has been disposed and unloaded.

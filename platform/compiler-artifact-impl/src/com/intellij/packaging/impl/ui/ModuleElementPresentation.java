@@ -19,13 +19,13 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.SimpleTextAttributes;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,11 +33,11 @@ import org.jetbrains.annotations.Nullable;
  * @author nik
  */
 public class ModuleElementPresentation extends TreeNodePresentation {
-  private final ModulePointer myModulePointer;
+  private final NamedPointer<Module> myModulePointer;
   private final ArtifactEditorContext myContext;
   private final ContentFolderType myContentFolderType;
 
-  public ModuleElementPresentation(@Nullable ModulePointer modulePointer, @NotNull ArtifactEditorContext context, final ContentFolderType contentFolderType) {
+  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer, @NotNull ArtifactEditorContext context, final ContentFolderType contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
     myContentFolderType = contentFolderType;
@@ -45,7 +45,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
 
   @Override
   public String getPresentableName() {
-    return myModulePointer != null ? myModulePointer.getModuleName() : "<unknown>";
+    return myModulePointer != null ? myModulePointer.getName() : "<unknown>";
   }
 
   @Override
@@ -55,7 +55,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
 
   @Nullable
   private Module findModule() {
-    return myModulePointer != null ? myModulePointer.getModule() : null;
+    return myModulePointer != null ? myModulePointer.get() : null;
   }
 
   @Override
@@ -83,7 +83,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
       }
     }
     else if (myModulePointer != null) {
-      moduleName = myModulePointer.getModuleName();
+      moduleName = myModulePointer.getName();
     }
     else {
       moduleName = "<unknown>";

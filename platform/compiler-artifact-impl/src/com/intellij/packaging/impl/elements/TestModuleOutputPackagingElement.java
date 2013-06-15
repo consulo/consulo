@@ -15,10 +15,11 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.module.ModulePointer;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.ArtifactAntGenerationContext;
+import org.consulo.util.pointers.NamedPointer;
 
 /**
  * @author nik
@@ -28,13 +29,13 @@ public class TestModuleOutputPackagingElement extends ModuleOutputPackagingEleme
     super(TestModuleOutputElementType.ELEMENT_TYPE, project);
   }
 
-  public TestModuleOutputPackagingElement(Project project, ModulePointer modulePointer) {
+  public TestModuleOutputPackagingElement(Project project, NamedPointer<Module> modulePointer) {
     super(TestModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
   }
 
   @Override
   protected String getModuleOutputAntProperty(ArtifactAntGenerationContext generationContext) {
-    return generationContext.getModuleTestOutputPath(myModulePointer.getModuleName());
+    return generationContext.getModuleTestOutputPath(myModulePointer.getName());
   }
 
   @Override

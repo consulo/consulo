@@ -18,8 +18,7 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.compiler.ant.BuildProperties;
 import com.intellij.compiler.ant.Generator;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModulePointer;
-import com.intellij.openapi.module.ModulePointerManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
@@ -39,6 +38,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,10 +53,10 @@ import java.util.List;
 public abstract class ModuleOutputPackagingElementBase
   extends PackagingElement<ModuleOutputPackagingElementBase.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
   @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
-  protected ModulePointer myModulePointer;
+  protected NamedPointer<Module> myModulePointer;
   protected final Project myProject;
 
-  public ModuleOutputPackagingElementBase(PackagingElementType type, Project project, ModulePointer modulePointer) {
+  public ModuleOutputPackagingElementBase(PackagingElementType type, Project project, NamedPointer<Module> modulePointer) {
     super(type);
     myProject = project;
     myModulePointer = modulePointer;
@@ -101,7 +101,7 @@ public abstract class ModuleOutputPackagingElementBase
   @NotNull
   @Override
   public Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context) {
-    Module module = myModulePointer.getModule();
+    Module module = myModulePointer.get();
     if (module == null) {
       return Collections.emptyList();
     }
@@ -139,7 +139,7 @@ public abstract class ModuleOutputPackagingElementBase
   public ModuleOutputPackagingElementState getState() {
     final ModuleOutputPackagingElementState state = new ModuleOutputPackagingElementState();
     if (myModulePointer != null) {
-      state.setModuleName(myModulePointer.getModuleName());
+      state.setModuleName(myModulePointer.getName());
     }
     return state;
   }
@@ -147,13 +147,13 @@ public abstract class ModuleOutputPackagingElementBase
   @Override
   public void loadState(ModuleOutputPackagingElementState state) {
     final String moduleName = state.getModuleName();
-    myModulePointer = moduleName != null ? ModulePointerManager.getInstance(myProject).create(moduleName) : null;
+    myModulePointer = moduleName != null ? ModuleUtilCore.createPointer(myProject, moduleName) : null;
   }
 
   @Override
   @Nullable
   public String getModuleName() {
-    return myModulePointer != null ? myModulePointer.getModuleName() : null;
+    return myModulePointer != null ? myModulePointer.getName() : null;
   }
 
   @Override
@@ -165,7 +165,7 @@ public abstract class ModuleOutputPackagingElementBase
   @Nullable
   public Module findModule(PackagingElementResolvingContext context) {
     if (myModulePointer != null) {
-      final Module module = myModulePointer.getModule();
+      final Module module = myModulePointer.get();
       final ModulesProvider modulesProvider = context.getModulesProvider();
       if (module != null) {
         if (modulesProvider instanceof DefaultModulesProvider//optimization
@@ -173,7 +173,7 @@ public abstract class ModuleOutputPackagingElementBase
           return module;
         }
       }
-      return modulesProvider.getModule(myModulePointer.getModuleName());
+      return modulesProvider.getModule(myModulePointer.getName());
     }
     return null;
   }

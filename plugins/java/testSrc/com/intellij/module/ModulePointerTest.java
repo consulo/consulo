@@ -26,7 +26,7 @@ import com.intellij.testFramework.PlatformTestCase;
  */
 public class ModulePointerTest extends PlatformTestCase {
   public void testCreateByName() throws Exception {
-    final ModulePointer pointer = getPointerManager().create("m");
+    final NamedPointer<Module> pointer = getPointerManager().create("m");
     assertSame(pointer, getPointerManager().create("m"));
     assertNull(pointer.getModule());
     assertEquals("m", pointer.getModuleName());
@@ -39,7 +39,7 @@ public class ModulePointerTest extends PlatformTestCase {
 
   public void testCreateByModule() throws Exception {
     final Module module = addModule("x");
-    final ModulePointer pointer = getPointerManager().create(module);
+    final NamedPointer<Module> pointer = getPointerManager().create(module);
     assertSame(pointer, getPointerManager().create(module));
     assertSame(pointer, getPointerManager().create("x"));
     assertSame(module, pointer.getModule());
@@ -57,7 +57,7 @@ public class ModulePointerTest extends PlatformTestCase {
   }
 
   public void testRenameModule() throws Exception {
-    final ModulePointer pointer = getPointerManager().create("abc");
+    final NamedPointer<Module> pointer = getPointerManager().create("abc");
     final Module module = addModule("abc");
     ModifiableModuleModel model = getModuleManager().getModifiableModel();
     model.renameModule(module, "xyz");
@@ -67,7 +67,7 @@ public class ModulePointerTest extends PlatformTestCase {
   }
 
   public void testDisposePointerFromUncommitedModifiableModel() throws Exception {
-    final ModulePointer pointer = getPointerManager().create("xxx");
+    final NamedPointer<Module> pointer = getPointerManager().create("xxx");
 
     final ModifiableModuleModel modifiableModel = getModuleManager().getModifiableModel();
     final Module module = modifiableModel.newModule(myProject.getBaseDir().getPath() + "/xxx.iml");

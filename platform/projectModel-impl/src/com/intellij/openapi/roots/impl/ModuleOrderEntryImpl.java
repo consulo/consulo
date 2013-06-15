@@ -17,20 +17,20 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModulePointer;
-import com.intellij.openapi.module.ModulePointerManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
+import org.consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 import org.jetbrains.jps.model.serialization.java.JpsJavaModelSerializerExtension;
+import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 
 /**
  * @author dsl
@@ -41,20 +41,20 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   @NonNls private static final String EXPORTED_ATTR = JpsJavaModelSerializerExtension.EXPORTED_ATTRIBUTE;
   @NonNls private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
 
-  private final ModulePointer myModulePointer;
+  private final NamedPointer<Module> myModulePointer;
   private boolean myExported = false;
   @NotNull private DependencyScope myScope;
   private boolean myProductionOnTestDependency;
 
   ModuleOrderEntryImpl(@NotNull Module module, @NotNull RootModelImpl rootModel) {
     super(rootModel);
-    myModulePointer = ModulePointerManager.getInstance(module.getProject()).create(module);
+    myModulePointer = ModuleUtilCore.createPointer(module);
     myScope = DependencyScope.COMPILE;
   }
 
   ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull RootModelImpl rootModel) {
     super(rootModel);
-    myModulePointer = ModulePointerManager.getInstance(rootModel.getProject()).create(moduleName);
+    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), moduleName);
     myScope = DependencyScope.COMPILE;
   }
 
@@ -66,15 +66,15 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
       throw new InvalidDataException();
     }
 
-    myModulePointer = ModulePointerManager.getInstance(rootModel.getProject()).create(moduleName);
+    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), moduleName);
     myScope = DependencyScope.readExternal(element);
     myProductionOnTestDependency = element.getAttributeValue(PRODUCTION_ON_TEST_ATTRIBUTE) != null;
   }
 
   private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, RootModelImpl rootModel) {
     super(rootModel);
-    final ModulePointer thatModule = that.myModulePointer;
-    myModulePointer = ModulePointerManager.getInstance(rootModel.getProject()).create(thatModule.getModuleName());
+    final NamedPointer<Module> thatModule = that.myModulePointer;
+    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), thatModule.getName());
     myExported = that.myExported;
     myProductionOnTestDependency = that.myProductionOnTestDependency;
     myScope = that.myScope;
@@ -103,7 +103,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
 
   @Nullable
   private OrderRootsEnumerator getEnumerator(OrderRootType type) {
-    final Module module = myModulePointer.getModule();
+    final Module module = myModulePointer.get();
     if (module == null) return null;
 
     return ModuleRootManagerImpl.getCachingEnumeratorForType(type, module);
@@ -140,7 +140,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   @Override
   @Nullable
   public Module getModule() {
-    return getRootModel().getConfigurationAccessor().getModule(myModulePointer.getModule(), myModulePointer.getModuleName());
+    return getRootModel().getConfigurationAccessor().getModule(myModulePointer.get(), myModulePointer.getName());
   }
 
   @Override
@@ -159,7 +159,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
 
   @Override
   public String getModuleName() {
-    return myModulePointer.getModuleName();
+    return myModulePointer.getName();
   }
 
   @Override

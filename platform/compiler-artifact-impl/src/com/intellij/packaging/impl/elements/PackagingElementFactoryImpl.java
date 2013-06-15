@@ -18,8 +18,7 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModulePointer;
-import com.intellij.openapi.module.ModulePointerManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
@@ -37,6 +36,7 @@ import com.intellij.packaging.elements.*;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PathUtil;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -132,6 +132,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     return new ArtifactPackagingElement(project, ArtifactPointerManager.getInstance(project).createPointer(artifact));
   }
 
+  @Override
   @NotNull
   public DirectoryPackagingElement createDirectory(@NotNull @NonNls String directoryName) {
     return new DirectoryPackagingElement(directoryName);
@@ -186,23 +187,24 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     return parent.addOrFindChild(last);
   }
 
+  @Override
   @NotNull
   public PackagingElement<?> createModuleOutput(@NotNull String moduleName, @NotNull Project project) {
-    final ModulePointer pointer = ModulePointerManager.getInstance(project).create(moduleName);
+    final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(project, moduleName);
     return new ProductionModuleOutputPackagingElement(project, pointer);
   }
 
   @NotNull
   @Override
   public PackagingElement<?> createModuleOutput(@NotNull Module module) {
-    final ModulePointer modulePointer = ModulePointerManager.getInstance(module.getProject()).create(module);
+    final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(module);
     return new ProductionModuleOutputPackagingElement(module.getProject(), modulePointer);
   }
 
   @NotNull
   @Override
   public PackagingElement<?> createTestModuleOutput(@NotNull Module module) {
-    ModulePointer pointer = ModulePointerManager.getInstance(module.getProject()).create(module);
+    NamedPointer<Module> pointer = ModuleUtilCore.createPointer(module);
     return new TestModuleOutputPackagingElement(module.getProject(), pointer);
   }
 
@@ -240,6 +242,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     return new LibraryPackagingElement(level, libraryName, moduleName);
   }
 
+  @Override
   @NotNull
   public CompositePackagingElement<?> createArchive(@NotNull @NonNls String archiveFileName) {
     return new ArchivePackagingElement(archiveFileName);
@@ -348,12 +351,14 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
       return false;
     }
 
+    @Override
     @NotNull
     public List<? extends ArtifactRootElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
                                                                    @NotNull CompositePackagingElement<?> parent) {
       throw new UnsupportedOperationException("'create' not implemented in " + getClass().getName());
     }
 
+    @Override
     @NotNull
     public ArtifactRootElement<?> createEmpty(@NotNull Project project) {
       return new ArtifactRootElementImpl();

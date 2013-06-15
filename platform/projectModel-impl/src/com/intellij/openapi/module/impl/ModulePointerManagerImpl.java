@@ -19,27 +19,27 @@ import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModulePointer;
 import com.intellij.openapi.module.ModulePointerManager;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import org.consulo.util.pointers.NamedPointerImpl;
+import org.consulo.util.pointers.NamedPointerManagerImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nik
  */
-public class ModulePointerManagerImpl extends ModulePointerManager {
-  private final Map<String, ModulePointerImpl> myUnresolved = new HashMap<String, ModulePointerImpl>();
-  private final Map<Module, ModulePointerImpl> myPointers = new HashMap<Module, ModulePointerImpl>();
-  private final Project myProject;
-
+public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> implements ModulePointerManager {
   public ModulePointerManagerImpl(Project project) {
-    myProject = project;
+    super(project);
+  }
+
+  @Override
+  public void attachListeners(@NotNull Project project) {
     project.getMessageBus().connect().subscribe(ProjectTopics.MODULES, new ModuleAdapter() {
       @Override
       public void beforeModuleRemoved(Project project, Module module) {
@@ -48,74 +48,33 @@ public class ModulePointerManagerImpl extends ModulePointerManager {
 
       @Override
       public void moduleAdded(Project project, Module module) {
-        moduleAppears(module);
+        updatePointers(module);
       }
 
       @Override
       public void modulesRenamed(Project project, List<Module> modules) {
         for (Module module : modules) {
-          moduleAppears(module);
+          updatePointers(module);
         }
       }
     });
   }
 
-  private void moduleAppears(Module module) {
-    ModulePointerImpl pointer = myUnresolved.remove(module.getName());
-    if (pointer != null && pointer.getModule() == null) {
-      pointer.moduleAdded(module);
-      registerPointer(module, pointer);
-    }
-  }
+  @Override
+  protected void registerPointer(final Module value, final NamedPointerImpl<Module> pointer) {
+    super.registerPointer(value, pointer);
 
-  private void registerPointer(final Module module, final ModulePointerImpl pointer) {
-    myPointers.put(module, pointer);
-    Disposer.register(module, new Disposable() {
+    Disposer.register(value, new Disposable() {
       @Override
       public void dispose() {
-        unregisterPointer(module);
+        unregisterPointer(value);
       }
     });
   }
 
-  private void unregisterPointer(Module module) {
-    final ModulePointerImpl pointer = myPointers.remove(module);
-    if (pointer != null) {
-      pointer.moduleRemoved(module);
-      myUnresolved.put(pointer.getModuleName(), pointer);
-    }
-  }
-
-  @NotNull
+  @Nullable
   @Override
-  public ModulePointer create(@NotNull Module module) {
-    ModulePointerImpl pointer = myPointers.get(module);
-    if (pointer == null) {
-      pointer = myUnresolved.get(module.getName());
-      if (pointer == null) {
-        pointer = new ModulePointerImpl(module);
-      }
-      else {
-        pointer.moduleAdded(module);
-      }
-      registerPointer(module, pointer);
-    }
-    return pointer;
-  }
-
-  @NotNull
-  @Override
-  public ModulePointer create(@NotNull String moduleName) {
-    final Module module = ModuleManager.getInstance(myProject).findModuleByName(moduleName);
-    if (module != null) {
-      return create(module);
-    }
-
-    ModulePointerImpl pointer = myUnresolved.get(moduleName);
-    if (pointer == null) {
-      pointer = new ModulePointerImpl(moduleName);
-      myUnresolved.put(moduleName, pointer);
-    }
-    return pointer;
+  public Module findByName(Project project, @NotNull String name) {
+    return ModuleManager.getInstance(project).findModuleByName(name);
   }
 }

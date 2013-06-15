@@ -16,8 +16,7 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModulePointer;
-import com.intellij.openapi.module.ModulePointerManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
@@ -29,6 +28,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,14 +75,13 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
     List<Module> selected = context.chooseModules(suitableModules, ProjectBundle.message("dialog.title.packaging.choose.module"));
 
     final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
-    final ModulePointerManager pointerManager = ModulePointerManager.getInstance(context.getProject());
     for (Module module : selected) {
-      elements.add(createElement(context.getProject(), pointerManager.create(module)));
+      elements.add(createElement(context.getProject(), ModuleUtilCore.createPointer(module)));
     }
     return elements;
   }
 
-  protected abstract ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull ModulePointer pointer);
+  protected abstract ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer);
 
   private List<Module> getSuitableModules(ArtifactEditorContext context) {
     ModulesProvider modulesProvider = context.getModulesProvider();

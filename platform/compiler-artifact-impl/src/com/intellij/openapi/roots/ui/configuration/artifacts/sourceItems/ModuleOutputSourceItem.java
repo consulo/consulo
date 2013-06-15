@@ -16,14 +16,17 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModulePointer;
-import com.intellij.openapi.module.ModulePointerManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.ProductionModuleOutputPackagingElement;
 import com.intellij.packaging.impl.ui.ModuleElementPresentation;
-import com.intellij.packaging.ui.*;
+import com.intellij.packaging.ui.ArtifactEditorContext;
+import com.intellij.packaging.ui.PackagingSourceItem;
+import com.intellij.packaging.ui.SourceItemPresentation;
+import com.intellij.packaging.ui.SourceItemWeights;
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -53,7 +56,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
 
   @Override
   public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
-    final ModulePointer modulePointer = ModulePointerManager.getInstance(context.getProject()).create(myModule);
+    final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
     return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, ContentFolderType.SOURCE)) {
       @Override
       public int getWeight() {
@@ -65,7 +68,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   @Override
   @NotNull
   public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
-    final ModulePointer modulePointer = ModulePointerManager.getInstance(context.getProject()).create(myModule);
+    final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
     return Collections.singletonList(new ProductionModuleOutputPackagingElement(context.getProject(), modulePointer));
   }
 
