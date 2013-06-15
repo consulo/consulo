@@ -24,11 +24,11 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.impl.ProjectUtil;
+import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.ui.Messages;
@@ -56,15 +56,18 @@ public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> e
     myBuilder = builder;
   }
 
+  @Override
   public String getName() {
     return getBuilder().getName();
   }
 
+  @Override
   @Nullable
   public Icon getIcon() {
     return getBuilder().getIcon();
   }
 
+  @Override
   public boolean canOpenProject(final VirtualFile file) {
     final String[] supported = getSupportedExtensions();
     if (supported != null) {
@@ -109,6 +112,7 @@ public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> e
   @Nullable
   public abstract String[] getSupportedExtensions();
 
+  @Override
   @Nullable
   public Project doOpenProject(@NotNull VirtualFile virtualFile, Project projectToClose, boolean forceOpenInNewFrame) {
     try {
@@ -136,15 +140,6 @@ public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> e
           wizardContext.setProjectName(IdeBundle.message("project.import.default.name.dotIdea", getName()));
         }
       }
-
-      Project defaultProject = ProjectManager.getInstance().getDefaultProject();
-     /*
-      TODO [VISTALL] removed dependency
-      Sdk jdk = ProjectRootManager.getInstance(defaultProject).getProjectSdk();
-      if (jdk == null) {
-        jdk = ProjectJdkTable.getInstance().findMostRecentSdkOfType(JavaSdk.getInstance());
-      }
-      wizardContext.setProjectJdk(jdk);     */
 
       final String dotIdeaFilePath = wizardContext.getProjectFileDirectory() + File.separator + Project.DIRECTORY_STORE_FOLDER;
       final String projectFilePath = wizardContext.getProjectFileDirectory() + File.separator + wizardContext.getProjectName() +
@@ -209,26 +204,12 @@ public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> e
 
         projectToOpen.save();
 
-
-        /*TODO [VISTALL] removed dependency
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          public void run() {
-            Sdk jdk = wizardContext.getProjectJdk();
-            if (jdk != null) NewProjectUtil.applyJdkToProject(projectToOpen, jdk);
-
-            final String projectDirPath = wizardContext.getProjectFileDirectory();
-            CompilerProjectExtension.getInstance(projectToOpen).setCompilerOutputUrl(getUrl(
-              StringUtil.endsWithChar(projectDirPath, '/') ? projectDirPath + "classes" : projectDirPath + "/classes"));
-          }
-        });  */
-
         getBuilder().commit(projectToOpen, null, ModulesProvider.EMPTY_MODULES_PROVIDER);
       }
 
-    /*  TODO [VISTALL] removed dependency
-    if (!forceOpenInNewFrame) {
-        NewProjectUtil.closePreviousProject(projectToClose);
-      } */
+      if (!forceOpenInNewFrame) {
+        NewProjectUtilPlatform.closePreviousProject(projectToClose);
+      }
       ProjectUtil.updateLastProjectLocation(pathToOpen);
       ProjectManagerEx.getInstanceEx().openProject(projectToOpen);
 

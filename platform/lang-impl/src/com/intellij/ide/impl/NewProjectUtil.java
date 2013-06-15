@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.ide.GeneralSettings;
+import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizardPro;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
@@ -27,7 +27,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.StorageScheme;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -45,18 +44,21 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.ui.UIUtil;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
-public class NewProjectUtil {
+@Logger
+public class NewProjectUtil extends NewProjectUtilPlatform {
   private NewProjectUtil() {
   }
 
   public static void createNewProject(Project projectToClose, @Nullable final String defaultPath) {
     final boolean proceed = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
+      @Override
       public void run() {
         ProjectManager.getInstance().getDefaultProject(); //warm up components
       }
@@ -95,7 +97,7 @@ public class NewProjectUtil {
 
     try {
       File projectDir = new File(projectFilePath).getParentFile();
-      LOG.assertTrue(projectDir != null, "Cannot create project in '" + projectFilePath + "': no parent file exists");
+      LOGGER.assertTrue(projectDir != null, "Cannot create project in '" + projectFilePath + "': no parent file exists");
       FileUtil.ensureExists(projectDir);
       if (StorageScheme.DIRECTORY_BASED == dialog.getStorageScheme()) {
         final File ideaDir = new File(projectFilePath, Project.DIRECTORY_STORE_FOLDER);
@@ -118,8 +120,10 @@ public class NewProjectUtil {
 
       final String compileOutput = dialog.getNewCompileOutput();
       CommandProcessor.getInstance().executeCommand(newProject, new Runnable() {
+        @Override
         public void run() {
           ApplicationManager.getApplication().runWriteAction(new Runnable() {
+            @Override
             public void run() {
               String canonicalPath = compileOutput;
               try {
@@ -153,16 +157,19 @@ public class NewProjectUtil {
 
       final boolean need2OpenProjectStructure = projectBuilder == null || projectBuilder.isOpenProjectSettingsAfter();
       StartupManager.getInstance(newProject).registerPostStartupActivity(new Runnable() {
+        @Override
         public void run() {
           // ensure the dialog is shown after all startup activities are done
           //noinspection SSBasedInspection
           SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
               if (newProject.isDisposed() || ApplicationManager.getApplication().isUnitTestMode()) return;
               if (need2OpenProjectStructure) {
                 ModulesConfigurator.showDialog(newProject, null, null);
               }
               ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
                 public void run() {
                   if (newProject.isDisposed()) return;
                   final ToolWindow toolWindow = ToolWindowManager.getInstance(newProject).getToolWindow(ToolWindowId.PROJECT_VIEW);
@@ -203,17 +210,4 @@ public class NewProjectUtil {
       }
     }
   }
-
-
-  public static void closePreviousProject(final Project projectToClose) {
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    if (openProjects.length > 0) {
-      int exitCode = ProjectUtil.confirmOpenNewProject(true);
-      if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
-        ProjectUtil.closeAndDispose(projectToClose != null ? projectToClose : openProjects[openProjects.length - 1]);
-      }
-    }
-  }
-
-  private final static Logger LOG = Logger.getInstance(NewProjectUtil.class);
 }
