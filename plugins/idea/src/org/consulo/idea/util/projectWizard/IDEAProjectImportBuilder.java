@@ -24,7 +24,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
@@ -32,9 +35,9 @@ import com.intellij.projectImport.ProjectImportBuilder;
 import org.consulo.idea.IdeaConstants;
 import org.consulo.idea.IdeaIcons;
 import org.consulo.idea.file.IdeaModuleFileType;
-import org.consulo.module.extension.ModuleExtensionProvider;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
-import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -109,8 +112,10 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
   }
 
   private static List<Module> loadModules(File ideaDir, ModifiableModuleModel modifiableModuleModel, Project project) throws JDOMException, IOException {
-    List<Module> modules = new ArrayList<Module>();
     File modulesFile = new File(ideaDir, "modules.xml");
+    if(!modulesFile.exists())  {
+      return Collections.emptyList();
+    }
 
     final Document document = JDOMUtil.loadDocument(modulesFile);
 
@@ -119,6 +124,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
     XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*");
 
     final List list = xpathExpression.selectNodes(document);
+    List<Module> modules = new ArrayList<Module>(list.size());
     for (Object o : list) {
       Element element = (Element)o;
 
@@ -151,7 +157,12 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
 
     final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
-    enableExtensionsByType(moduleType, modifiableModel);
+    for(IdeaModuleTypeToModuleExtensionConverterEP ep : IdeaModuleTypeToModuleExtensionConverterEP.EP_NAME.getExtensions()) {
+      if(ep.getKey().equals(moduleType)) {
+        ep.getInstance().convertTypeToExtension(modifiableModel);
+        break;
+      }
+    }
 
     XPath xpathExpression = XPath.newInstance("/module[@version='4']/component[@name='NewModuleRootManager']/*");
     final List list = xpathExpression.selectNodes(document);
@@ -173,6 +184,14 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
       }
     }
 
+    //TODO [VISTALL] facets converting
+
+    for(ModuleExtension<?> moduleExtension : modifiableModel.getExtensions()) {
+      if(moduleExtension instanceof ModuleExtensionWithSdk) {
+        modifiableModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk<?>)moduleExtension);
+      }
+    }
+
     new WriteAction<Object>()
     {
       @Override
@@ -187,29 +206,5 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
 
 
     return module;
-  }
-
-
-  private static void enableExtensionsByType(@NotNull String moduleType, ModuleRootModel rootModel) {
-    if (moduleType.equals("JAVA_MODULE")) {
-      enableExtensionFor("java", rootModel);
-    }
-    else {
-      enableExtensionFor("java", rootModel);
-      enableExtensionFor("consulo-plugin", rootModel);
-    }
-  }
-
-  private static void enableExtensionFor(@NotNull String id, @NotNull ModuleRootModel rootModel) {
-    final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
-    if (provider == null) {
-      return;
-    }
-
-    final MutableModuleExtension extension = (MutableModuleExtension)rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
-
-    assert extension != null;
-
-    extension.setEnabled(true);
   }
 }

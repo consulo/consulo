@@ -16,6 +16,14 @@
 <idea-plugin version="2">
   <id>org.consulo.idea</id>
   <name>IDEA</name>
+  <depends optional="true" config-file="org.consulo.java.xml">org.consulo.java</depends>
+  <depends optional="true" config-file="org.consulo.devkit.xml">org.consulo.devkit</depends>
+
+  <extensionPoints>
+    <extensionPoint name="moduleTypeToModuleExtensionConverter" beanClass="org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP" >
+      <with attribute="implementationClass" implements="org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter"/>
+    </extensionPoint>
+  </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
     <projectImportProvider implementation="org.consulo.idea.util.projectWizard.IdeaProjectImportProvider"/>

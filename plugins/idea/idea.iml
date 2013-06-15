@@ -11,6 +11,8 @@
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="compiler-artifact-impl" />
     <orderEntry type="module" module-name="projectModel-impl" />
+    <orderEntry type="module" module-name="devkit" />
+    <orderEntry type="module" module-name="java" />
   </component>
 </module>
 
