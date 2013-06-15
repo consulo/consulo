@@ -39,7 +39,8 @@ public interface Project extends ComponentManager, AreaInstance {
   String getName();
 
   /**
-   * Returns a project base directory - a parent directory of a <code>.ipr</code> file or <code>.idea</code> directory.<br/>
+   * Returns a project base directory - a parent directory of a <code>.ipr</code> file or <code>.consulo</code> directory.<br/>
+   * Returns a project base directory - a parent directory of a <code>.ipr</code> file or <code>.consulo</code> directory.<br/>
    * Returns <code>null</code> for default project.
    *
    * @return project base directory, or <code>null</code> for default project
@@ -59,7 +60,7 @@ public interface Project extends ComponentManager, AreaInstance {
    * Returns project descriptor file:
    * <ul>
    *   <li><code>path/to/project/project.ipr</code> - for file-based projects</li>
-   *   <li><code>path/to/project/.idea/misc.xml</code> - for directory-based projects</li>
+   *   <li><code>path/to/project/.consulo/misc.xml</code> - for directory-based projects</li>
    * </ul>
    * Returns <code>null</code> for default project.
    *
@@ -94,7 +95,7 @@ public interface Project extends ComponentManager, AreaInstance {
    * <p>Returns a workspace file:
    * <ul>
    *   <li><code>path/to/project/project.iws</code> - for file-based projects</li>
-   *   <li><code>path/to/project/.idea/workspace.xml</code> - for directory-based ones</li>
+   *   <li><code>path/to/project/.consulo/workspace.xml</code> - for directory-based ones</li>
    * </ul>
    * Returns <code>null</code> for default project.
    *
