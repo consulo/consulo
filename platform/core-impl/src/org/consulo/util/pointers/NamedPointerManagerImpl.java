@@ -15,7 +15,6 @@
  */
 package org.consulo.util.pointers;
 
-import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,18 +30,9 @@ import java.util.Map;
 public abstract class NamedPointerManagerImpl<T extends Named> implements NamedPointerManager<T>  {
   private final Map<String, NamedPointerImpl<T>> myUnresolved = new HashMap<String, NamedPointerImpl<T>>();
   private final Map<T, NamedPointerImpl<T>> myPointers = new HashMap<T, NamedPointerImpl<T>>();
-  private final Project myProject;
-
-  public NamedPointerManagerImpl(Project project) {
-    myProject = project;
-
-    attachListeners(project);
-  }
-
-  public abstract void attachListeners(@NotNull Project project);
 
   @Nullable
-  public abstract T findByName(Project project, @NotNull String name);
+  public abstract T findByName(@NotNull String name);
 
   protected void updatePointers(T module) {
     NamedPointerImpl<T> pointer = myUnresolved.remove(module.getName());
@@ -84,7 +74,7 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   @NotNull
   @Override
   public NamedPointer<T> create(@NotNull String name) {
-    final T module = findByName(myProject, name);
+    final T module = findByName(name);
     if (module != null) {
       return create(module);
     }

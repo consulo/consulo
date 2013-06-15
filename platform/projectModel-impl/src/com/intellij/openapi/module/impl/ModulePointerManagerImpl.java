@@ -34,12 +34,10 @@ import java.util.List;
  * @author nik
  */
 public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> implements ModulePointerManager {
-  public ModulePointerManagerImpl(Project project) {
-    super(project);
-  }
+  private final Project myProject;
 
-  @Override
-  public void attachListeners(@NotNull Project project) {
+  public ModulePointerManagerImpl(Project project) {
+    myProject = project;
     project.getMessageBus().connect().subscribe(ProjectTopics.MODULES, new ModuleAdapter() {
       @Override
       public void beforeModuleRemoved(Project project, Module module) {
@@ -74,7 +72,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
 
   @Nullable
   @Override
-  public Module findByName(Project project, @NotNull String name) {
-    return ModuleManager.getInstance(project).findModuleByName(name);
+  public Module findByName(@NotNull String name) {
+    return ModuleManager.getInstance(myProject).findModuleByName(name);
   }
 }
