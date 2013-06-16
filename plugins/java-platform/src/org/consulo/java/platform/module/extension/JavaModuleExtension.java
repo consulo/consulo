@@ -45,8 +45,7 @@ public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleEx
 
   @NotNull
   public LanguageLevel getLanguageLevel() {
-    final LanguageLevel languageLevel = myLanguageLevel.get();
-    return languageLevel == null ? LanguageLevel.HIGHEST : languageLevel;
+    return myLanguageLevel.get();
   }
 
   @NotNull

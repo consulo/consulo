@@ -58,7 +58,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     if (myModulePointer != null) {
       final Module module = myModulePointer.get();
       if (module == null) {
-        return null;
+        return getDefaultValue();
       }
       return getItemFromModule(module);
     }
