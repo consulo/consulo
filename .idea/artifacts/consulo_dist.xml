@@ -348,6 +348,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="commander">
+          <element id="directory" name="lib">
+            <element id="archive" name="commander.jar">
+              <element id="module-output" name="commander" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
