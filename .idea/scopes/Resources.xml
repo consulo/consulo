@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Resources" pattern="src:*..*&amp;&amp;file:resources*..*||src[*resources*]:*..*" />
+</component>
