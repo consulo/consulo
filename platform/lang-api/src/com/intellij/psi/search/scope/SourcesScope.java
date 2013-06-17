@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,22 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import com.intellij.ui.Colored;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 18:19/17.06.13
  */
-public class ProjectProductionScope extends NamedScope {
-  public ProjectProductionScope() {
-    super(IdeBundle.message("predefined.scope.production.name"), new AbstractPackageSet("project:*..*") {
+@Colored(color = "dcf0ff", darkVariant = "2B3557")
+public class SourcesScope extends NamedScope {
+  public static final String NAME = IdeBundle.message("predefined.scope.sources.name");
+
+  public SourcesScope() {
+    super(NAME, new AbstractPackageSet("src:*..*") {
       @Override
       public boolean contains(VirtualFile file, NamedScopesHolder holder) {
         final ProjectFileIndex index = ProjectRootManager.getInstance(holder.getProject()).getFileIndex();
-        return file != null
-               && !index.isInTestSourceContent(file)
-               && !index.isInLibraryClasses(file)
-               && !index.isInLibrarySource(file);
+        return file != null && index.isInSource(file);
       }
     });
   }

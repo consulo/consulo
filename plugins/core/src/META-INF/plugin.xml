@@ -4992,6 +4992,8 @@
     <patternDialectProvider implementation="com.intellij.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.DefaultScopesProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.TestScopeProvider"/>
+    <customScopesProvider implementation="com.intellij.packageDependencies.ResourceScopeProvider"/>
+    <customScopesProvider implementation="com.intellij.packageDependencies.SourceScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
 
