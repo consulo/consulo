@@ -184,7 +184,7 @@ public class Java15APIUsageInspection extends BaseJavaBatchLocalInspectionTool {
       @Override
       public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
         if (value instanceof LanguageLevel) {
-          setText(((LanguageLevel)value).getPresentableText());
+          setText(((LanguageLevel)value).getDescription());
         }
       }
     });

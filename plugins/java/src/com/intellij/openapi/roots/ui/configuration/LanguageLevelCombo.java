@@ -38,7 +38,7 @@ public class LanguageLevelCombo extends ComboBox {
       @Override
       public void customize(final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
         if (value instanceof LanguageLevel) {
-          setText(((LanguageLevel)value).getPresentableText());
+          setText(((LanguageLevel)value).getDescription());
         }
         else if (value instanceof String) {
           setText((String)value);

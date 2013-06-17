@@ -29,23 +29,25 @@ import org.jetbrains.annotations.Nullable;
  * @author dsl
  */
 public enum LanguageLevel implements LanguageVersion, Named, NamedPointer<LanguageLevel> {
-  JDK_1_3(JavaCoreBundle.message("jdk.1.3.language.level.description")),
-  JDK_1_4(JavaCoreBundle.message("jdk.1.4.language.level.description")),
-  JDK_1_5(JavaCoreBundle.message("jdk.1.5.language.level.description")),
-  JDK_1_6(JavaCoreBundle.message("jdk.1.6.language.level.description")),
-  JDK_1_7(JavaCoreBundle.message("jdk.1.7.language.level.description")),
-  JDK_1_8(JavaCoreBundle.message("jdk.1.8.language.level.description"));
+  JDK_1_3("1.3", JavaCoreBundle.message("jdk.1.3.language.level.description")),
+  JDK_1_4("1.4", JavaCoreBundle.message("jdk.1.4.language.level.description")),
+  JDK_1_5("1.5", JavaCoreBundle.message("jdk.1.5.language.level.description")),
+  JDK_1_6("1.6", JavaCoreBundle.message("jdk.1.6.language.level.description")),
+  JDK_1_7("1.7", JavaCoreBundle.message("jdk.1.7.language.level.description")),
+  JDK_1_8("1.8", JavaCoreBundle.message("jdk.1.8.language.level.description"));
 
   public static final LanguageLevel HIGHEST = JDK_1_8;
   public static final Key<LanguageLevel> KEY = Key.create("LANGUAGE_LEVEL");
 
+  private final String myShortText;
   private final String myPresentableText;
 
-  LanguageLevel(final String presentableText) {
+  LanguageLevel(final String shortText, final String presentableText) {
+    myShortText = shortText;
     myPresentableText = presentableText;
   }
 
-  public String getPresentableText() {
+  public String getDescription() {
     return myPresentableText;
   }
 
@@ -79,5 +81,10 @@ public enum LanguageLevel implements LanguageVersion, Named, NamedPointer<Langua
     if ("1.8".equals(value)) return JDK_1_8;
 
     return null;
+  }
+
+  @NotNull
+  public String getShortText() {
+    return myShortText;
   }
 }

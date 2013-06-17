@@ -49,7 +49,7 @@ public class IncreaseLanguageLevelFix implements IntentionAction {
   @Override
   @NotNull
   public String getText() {
-    return CodeInsightBundle.message("set.language.level.to.0", myLevel.getPresentableText());
+    return CodeInsightBundle.message("set.language.level.to.0", myLevel.getDescription());
   }
 
   @Override

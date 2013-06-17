@@ -23,6 +23,7 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.consulo.module.extension.*;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
@@ -55,11 +56,20 @@ public class JavaModuleExtensionPanel extends JPanel {
       @Override
       protected void doCustomize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
         if (value instanceof LanguageLevel) {
-          append(((LanguageLevel)value).getPresentableText());
+          final LanguageLevel languageLevel = (LanguageLevel)value;
+          append(languageLevel.getShortText(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+          append(" ");
+          append(languageLevel.getDescription(), SimpleTextAttributes.GRAY_ATTRIBUTES);
         }
         else if(value instanceof Module) {
           setIcon(AllIcons.Nodes.Module);
           append(((Module)value).getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+
+          final JavaModuleExtension extension = ModuleUtilCore.getExtension((Module)value, JavaModuleExtension.class);
+          if(extension != null) {
+            final LanguageLevel languageLevel = extension.getLanguageLevel();
+            append("(" + languageLevel.getShortText() + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
+          }
         }
         else if (value instanceof String) {
           setIcon(AllIcons.Nodes.Module);
