@@ -32,10 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author spleaner
@@ -50,13 +48,13 @@ public class FileColorsModel implements Cloneable {
   private static final Map<String, String> globalScopes;
   private static Map<String, String> globalScopesColors;
   static {
-    globalScopes = new HashMap<String, String>();
+    globalScopes = new LinkedHashMap<String, String>(4);
     globalScopes.put(NonProjectFilesScope.NAME, "file.colors.enable.non.project");
     globalScopes.put(TestsScope.NAME, "file.colors.enable.tests");
     globalScopes.put(ResourcesScope.NAME, "file.colors.enable.resources");
     globalScopes.put(SourcesScope.NAME, "file.colors.enable.sources");
 
-    globalScopesColors = new HashMap<String, String>();
+    globalScopesColors = new LinkedHashMap<String, String>(4);
   }
 
   private final Project myProject;
