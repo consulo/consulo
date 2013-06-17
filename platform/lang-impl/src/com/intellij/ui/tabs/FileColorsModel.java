@@ -53,8 +53,8 @@ public class FileColorsModel implements Cloneable {
     globalScopes = new HashMap<String, String>();
     globalScopes.put(NonProjectFilesScope.NAME, "file.colors.enable.non.project");
     globalScopes.put(TestsScope.NAME, "file.colors.enable.tests");
-    globalScopes.put(SourcesScope.NAME, "file.colors.enable.sources");
     globalScopes.put(ResourcesScope.NAME, "file.colors.enable.resources");
+    globalScopes.put(SourcesScope.NAME, "file.colors.enable.sources");
 
     globalScopesColors = new HashMap<String, String>();
   }
