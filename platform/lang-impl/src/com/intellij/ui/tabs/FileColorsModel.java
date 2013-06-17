@@ -22,10 +22,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DefaultScopesProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
+import com.intellij.psi.search.scope.ResourcesScope;
+import com.intellij.psi.search.scope.SourcesScope;
 import com.intellij.psi.search.scope.TestsScope;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.PlatformUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,9 +52,9 @@ public class FileColorsModel implements Cloneable {
   static {
     globalScopes = new HashMap<String, String>();
     globalScopes.put(NonProjectFilesScope.NAME, "file.colors.enable.non.project");
-    if (PlatformUtils.isIntelliJ() || PlatformUtils.isRubyMine()) {
-      globalScopes.put(TestsScope.NAME, "file.colors.enable.tests");
-    }
+    globalScopes.put(TestsScope.NAME, "file.colors.enable.tests");
+    globalScopes.put(SourcesScope.NAME, "file.colors.enable.sources");
+    globalScopes.put(ResourcesScope.NAME, "file.colors.enable.resources");
 
     globalScopesColors = new HashMap<String, String>();
   }
@@ -107,11 +108,11 @@ public class FileColorsModel implements Cloneable {
     final List<FileColorConfiguration> configurations = shared ? mySharedConfigurations : myConfigurations;
     for (final FileColorConfiguration configuration : configurations) {
       final String name = configuration.getScopeName();
-      if (!shared && globalScopes.containsKey(name)) {
+      if (globalScopes.containsKey(name)) {
         PropertiesComponent.getInstance().setValue(name, configuration.getColorName());
-      } else {
-        configuration.save(e);
       }
+
+      configuration.save(e);
     }
   }
 
@@ -120,28 +121,21 @@ public class FileColorsModel implements Cloneable {
 
     configurations.clear();
 
-    final List<Element> list = (List<Element>)e.getChildren(FILE_COLOR);
-    final Map<String, String> global = new HashMap<String, String>(globalScopes);
+    final List<Element> list = e.getChildren(FILE_COLOR);
+
     for (Element child : list) {
       final FileColorConfiguration configuration = FileColorConfiguration.load(child);
       if (configuration != null) {
-        if (!shared) {
           final String name = configuration.getScopeName();
           if (globalScopes.get(name) != null) {
-            global.remove(name);
+            final PropertiesComponent properties = PropertiesComponent.getInstance();
+            final String colorName = properties.getValue(name);
+            if (colorName != null) {
+              configurations.add(new FileColorConfiguration(name, colorName));
+            }
+            continue;
           }
-        }
         configurations.add(configuration);
-      }
-    }
-
-    if (!shared) {
-      final PropertiesComponent properties = PropertiesComponent.getInstance();
-      for (String scope : global.keySet()) {
-        final String colorName = properties.getValue(scope);
-        if (colorName != null) {
-          configurations.add(new FileColorConfiguration(scope, colorName));
-        }
       }
     }
   }
