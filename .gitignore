@@ -3,3 +3,5 @@
 .idea/workspace.xml
 /out
 .DS_Store
+/plugins/idea/testData/testProject1/.idea/workspace.xml
+/plugins/idea/testData/testProject1/out

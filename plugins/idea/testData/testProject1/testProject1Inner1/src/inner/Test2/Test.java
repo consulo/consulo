@@ -13,22 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.idea.model.orderEnties;
-
-import org.consulo.idea.model.LibraryModel;
+package inner.Test2;
 
 /**
  * @author VISTALL
- * @since 10:17/16.06.13
+ * @since 16:58/18.06.13
  */
-public class ModuleLibraryOrderEntryModel extends OrderEntryModel {
-  private final LibraryModel myLibraryModel;
-
-  public ModuleLibraryOrderEntryModel(LibraryModel libraryModel) {
-    myLibraryModel = libraryModel;
-  }
-
-  public LibraryModel getLibraryModel() {
-    return myLibraryModel;
-  }
+public class Test
+{
 }

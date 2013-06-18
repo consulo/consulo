@@ -43,7 +43,7 @@ public class ProjectLibraryTableModel extends LibraryTableModel implements Parse
     final FilenameFilter filter = new FilenameFilter() {
       @Override
       public boolean accept(File dir, String name) {
-        return !dir.isDirectory() && FileUtilRt.getExtension(name).equalsIgnoreCase("xml");
+        return FileUtilRt.getExtension(name).equalsIgnoreCase("xml");
       }
     };
 
@@ -56,7 +56,7 @@ public class ProjectLibraryTableModel extends LibraryTableModel implements Parse
         final Element libraryElement = rootElement.getChild("library");
         if (libraryElement != null) {
           LibraryModel libraryModel = new LibraryModel();
-          libraryModel.load(libraryElement);
+          libraryModel.load(ideaProjectModel, rootElement);
           myLibraries.add(libraryModel);
         }
       }

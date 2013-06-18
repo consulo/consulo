@@ -15,10 +15,12 @@
  */
 package org.consulo.idea.model;
 
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.JDOMUtil;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,5 +49,15 @@ public class IdeaProjectModel extends HolderModel implements ParseableModel {
         ((ParseableModel)o).load(this, ideaProjectDir);
       }
     }
+  }
+
+  @Nullable
+  public OrderRootType findOrderRootType(String libraryEntryName) {
+    for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
+      if (orderRootType.name().equals(libraryEntryName)) {
+        return orderRootType;
+      }
+    }
+    return null;
   }
 }

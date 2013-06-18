@@ -30,25 +30,24 @@ public class LibraryModel {
   public LibraryModel() {
   }
 
-  public void load(Element element) {
+  public void load(IdeaProjectModel ideaProjectModel, Element element) {
     final Element libraryElement = element.getChild("library");
 
     myName = libraryElement.getAttributeValue("name");
-    for(Element libraryEntry : libraryElement.getChildren()) {
+    for (Element libraryEntry : libraryElement.getChildren()) {
       final String libraryEntryName = libraryEntry.getName();
 
-      for(OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-        if(orderRootType.name().equals(libraryEntryName)) {
-          parse(element, orderRootType);
-        }
+      OrderRootType orderRootType = ideaProjectModel.findOrderRootType(libraryEntryName);
+      if (orderRootType != null) {
+        parse(libraryEntry, orderRootType);
       }
     }
   }
 
   private void parse(Element element, OrderRootType orderRootType) {
-    for(Element child : element.getChildren()) {
+    for (Element child : element.getChildren()) {
       final String name = child.getName();
-      if("root".equals(name)) {
+      if ("root".equals(name)) {
         final String url = child.getAttributeValue("url");
 
         myOrderRoots.putValue(orderRootType, url);
