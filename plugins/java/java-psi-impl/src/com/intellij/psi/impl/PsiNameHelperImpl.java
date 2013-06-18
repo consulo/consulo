@@ -16,7 +16,6 @@
 package com.intellij.psi.impl;
 
 import com.intellij.lexer.JavaLexer;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.JavaPsiFacade;
@@ -25,10 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PsiNameHelperImpl extends PsiNameHelper {
-  private final LanguageLevelProjectExtension myLanguageLevelExtension;
 
   public PsiNameHelperImpl(JavaPsiFacade manager) {
-    myLanguageLevelExtension = LanguageLevelProjectExtension.getInstance(manager.getProject());
   }
 
   @Override
@@ -73,6 +70,5 @@ public class PsiNameHelperImpl extends PsiNameHelper {
   }
 
   private PsiNameHelperImpl() {
-    myLanguageLevelExtension = null;
   }
 }

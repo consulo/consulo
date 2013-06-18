@@ -17,7 +17,6 @@ package com.intellij.core;
 
 import com.intellij.mock.MockFileIndexFacade;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -48,7 +47,6 @@ public class JavaCoreProjectEnvironment  extends CoreProjectEnvironment {
     myProject.registerService(PsiElementFactory.class, new PsiElementFactoryImpl(myPsiManager));
     myProject.registerService(JavaPsiImplementationHelper.class, createJavaPsiImplementationHelper());
     myProject.registerService(PsiResolveHelper.class, new PsiResolveHelperImpl(myPsiManager));
-    myProject.registerService(LanguageLevelProjectExtension.class, new CoreLanguageLevelProjectExtension());
     myProject.registerService(JavaResolveCache.class, new JavaResolveCache(myMessageBus));
     myProject.registerService(JavaCodeStyleSettingsFacade.class, new CoreJavaCodeStyleSettingsFacade());
     myProject.registerService(JavaCodeStyleManager.class, new CoreJavaCodeStyleManager());

@@ -22,7 +22,6 @@ import com.intellij.lang.java.JavaLanguage;
 import com.intellij.lang.java.JavaParserDefinition;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
-import com.intellij.openapi.roots.impl.LanguageLevelProjectExtensionImpl;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
@@ -53,7 +52,7 @@ public abstract class JavaParsingTestCase extends ParsingTestCase {
   protected void setUp() throws Exception {
     super.setUp();
     myLanguageLevel = LanguageLevel.JDK_1_6;
-    getProject().registerService(LanguageLevelProjectExtension.class, new LanguageLevelProjectExtensionImpl(getProject()));
+
     addExplicitExtension(LanguageASTFactory.INSTANCE, JavaLanguage.INSTANCE, new JavaASTFactory());
   }
 
