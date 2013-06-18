@@ -1569,8 +1569,6 @@
     <liveTemplateContext implementation="com.intellij.codeInsight.template.SmartCompletionContextType"/>
     <statistics.usagesCollector implementation="com.intellij.openapi.roots.impl.LanguageLevelUsagesCollector"/>
 
-    <moduleExtension implementation="com.intellij.openapi.roots.impl.CompilerModuleExtensionImpl"/>
-
     <highlightUsagesHandlerFactory implementation="com.intellij.codeInsight.highlighting.HighlightExceptionsHandlerFactory"/>
     <highlightUsagesHandlerFactory implementation="com.intellij.codeInsight.highlighting.HighlightSuppressedWarningsFactory"/>
     <highlightUsagesHandlerFactory implementation="com.intellij.codeInsight.highlighting.HighlightExitPointsHandlerFactory"/>
