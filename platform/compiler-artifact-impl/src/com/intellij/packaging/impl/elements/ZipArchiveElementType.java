@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,57 +23,48 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.CompositePackagingElementType;
 import com.intellij.packaging.elements.PackagingElement;
+import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 16:04/18.06.13
  */
-class DirectoryElementType extends CompositePackagingElementType<DirectoryPackagingElement> {
-
-  DirectoryElementType() {
-    super("directory", CompilerBundle.message("element.type.name.directory"));
+public class ZipArchiveElementType extends CompositePackagingElementType<ZipArchivePackagingElement> {
+  ZipArchiveElementType() {
+    super("zip-archive", CompilerBundle.message("element.type.name.zip.archive"));
   }
 
   @Override
   public Icon getCreateElementIcon() {
-    return AllIcons.Actions.NewFolder;
+    return AllIcons.Nodes.PpJar;
   }
 
-  @Override
   @NotNull
-  public DirectoryPackagingElement createEmpty(@NotNull Project project) {
-    return new DirectoryPackagingElement();
+  @Override
+  public ZipArchivePackagingElement createEmpty(@NotNull Project project) {
+    return new ZipArchivePackagingElement();
   }
-
-  /*@Override
-  public PackagingElementPropertiesPanel createElementPropertiesPanel(@NotNull DirectoryPackagingElement element,
-                                                                      @NotNull ArtifactEditorContext context) {
-    if (JpsArtifactUtil.isArchiveName(element.getDirectoryName())) {
-      return new DirectoryElementPropertiesPanel(element, context);
-    }
-    return null;
-  }    */
 
   @Override
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
-                                                      String baseName,
+                                                      @Nullable String baseName,
                                                       @NotNull ArtifactEditorContext context) {
-    final String initialValue = PackagingElementFactoryImpl.suggestFileName(parent, baseName != null ? baseName : "folder", "");
-    String path = Messages
-      .showInputDialog(context.getProject(), "Enter directory name: ", "New Directory", null, initialValue, new FilePathValidator());
+    final String initialValue = PackagingElementFactoryImpl.suggestFileName(parent, baseName != null ? baseName : "archive", ".jar");
+    String path =
+      Messages.showInputDialog(context.getProject(), "Enter archive name: ", "New Archive", null, initialValue, new FilePathValidator());
     if (path == null) {
       return null;
     }
     path = FileUtil.toSystemIndependentName(path);
     final String parentPath = PathUtil.getParentPath(path);
     final String fileName = PathUtil.getFileName(path);
-    final PackagingElement<?> element = new DirectoryPackagingElement(fileName);
-    return (CompositePackagingElement<?>)PackagingElementFactoryImpl.getInstance().createParentDirectories(parentPath, element);
-
+    final PackagingElement<?> element = new ZipArchivePackagingElement(fileName);
+    return (CompositePackagingElement<?>)PackagingElementFactory.getInstance().createParentDirectories(parentPath, element);
   }
-
 }

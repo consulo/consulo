@@ -23,57 +23,62 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.CompositePackagingElementType;
 import com.intellij.packaging.elements.PackagingElement;
+import com.intellij.packaging.elements.PackagingElementFactory;
+import com.intellij.packaging.impl.ui.properties.JarArchiveElementPropertiesPanel;
 import com.intellij.packaging.ui.ArtifactEditorContext;
+import com.intellij.packaging.ui.PackagingElementPropertiesPanel;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.jps.incremental.artifacts.impl.JpsArtifactUtil;
 
 import javax.swing.*;
 
 /**
  * @author nik
  */
-class DirectoryElementType extends CompositePackagingElementType<DirectoryPackagingElement> {
+class JarArchiveElementType extends CompositePackagingElementType<JarArchivePackagingElement> {
+  public static final JarArchiveElementType INSTANCE = new JarArchiveElementType();
 
-  DirectoryElementType() {
-    super("directory", CompilerBundle.message("element.type.name.directory"));
+  JarArchiveElementType() {
+    super("jar-archive", CompilerBundle.message("element.type.name.jar.archive"));
   }
 
   @Override
   public Icon getCreateElementIcon() {
-    return AllIcons.Actions.NewFolder;
+    return AllIcons.Nodes.PpJar;
+  }
+
+  @NotNull
+  @Override
+  public JarArchivePackagingElement createEmpty(@NotNull Project project) {
+    return new JarArchivePackagingElement();
   }
 
   @Override
-  @NotNull
-  public DirectoryPackagingElement createEmpty(@NotNull Project project) {
-    return new DirectoryPackagingElement();
-  }
-
-  /*@Override
-  public PackagingElementPropertiesPanel createElementPropertiesPanel(@NotNull DirectoryPackagingElement element,
+  public PackagingElementPropertiesPanel createElementPropertiesPanel(@NotNull JarArchivePackagingElement element,
                                                                       @NotNull ArtifactEditorContext context) {
-    if (JpsArtifactUtil.isArchiveName(element.getDirectoryName())) {
-      return new DirectoryElementPropertiesPanel(element, context);
+    final String name = element.getArchiveFileName();
+    if (JpsArtifactUtil.isArchiveName(name)) {
+      return new JarArchiveElementPropertiesPanel(element, context);
     }
     return null;
-  }    */
+  }
 
   @Override
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
-                                                      String baseName,
+                                                      @Nullable String baseName,
                                                       @NotNull ArtifactEditorContext context) {
-    final String initialValue = PackagingElementFactoryImpl.suggestFileName(parent, baseName != null ? baseName : "folder", "");
-    String path = Messages
-      .showInputDialog(context.getProject(), "Enter directory name: ", "New Directory", null, initialValue, new FilePathValidator());
+    final String initialValue = PackagingElementFactoryImpl.suggestFileName(parent, baseName != null ? baseName : "archive", ".jar");
+    String path =
+      Messages.showInputDialog(context.getProject(), "Enter archive name: ", "New Archive", null, initialValue, new FilePathValidator());
     if (path == null) {
       return null;
     }
     path = FileUtil.toSystemIndependentName(path);
     final String parentPath = PathUtil.getParentPath(path);
     final String fileName = PathUtil.getFileName(path);
-    final PackagingElement<?> element = new DirectoryPackagingElement(fileName);
-    return (CompositePackagingElement<?>)PackagingElementFactoryImpl.getInstance().createParentDirectories(parentPath, element);
-
+    final PackagingElement<?> element = new JarArchivePackagingElement(fileName);
+    return (CompositePackagingElement<?>)PackagingElementFactory.getInstance().createParentDirectories(parentPath, element);
   }
-
 }

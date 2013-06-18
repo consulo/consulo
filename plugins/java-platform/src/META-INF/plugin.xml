@@ -34,9 +34,8 @@
     <extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
   </extensionPoints>
 
-
-
   <extensions defaultExtensionNs="com.intellij">
+    <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.JarArtifactType" order="after zip-artifact"/>
     <moduleExtensionProvider id="java" key="java" implementationClass="org.consulo.java.platform.module.extension.JavaModuleExtensionProvider" />
   </extensions>
 </idea-plugin>

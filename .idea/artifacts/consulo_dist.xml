@@ -91,6 +91,9 @@
             <element id="archive" name="java-rt.jar">
               <element id="module-output" name="java-rt" />
             </element>
+            <element id="archive" name="java-compiler-artifact-impl.jar">
+              <element id="module-output" name="java-compiler-artifact-impl" />
+            </element>
           </element>
         </element>
         <element id="directory" name="ant">

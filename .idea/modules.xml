@@ -58,6 +58,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java.iml" filepath="$PROJECT_DIR$/plugins/java/java.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" group="plugins/java" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-compiler-artifact-impl/java-compiler-artifact-impl.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-compiler-artifact-impl/java-compiler-artifact-impl.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-copyright/java-copyright.iml" filepath="$PROJECT_DIR$/plugins/java/java-copyright/java-copyright.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/debugger-api/java-debugger-api.iml" filepath="$PROJECT_DIR$/plugins/java/debugger-api/java-debugger-api.iml" group="plugins/java" />

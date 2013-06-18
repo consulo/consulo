@@ -28,7 +28,7 @@ public class TestPackagingElementBuilder {
   }
 
   public static TestPackagingElementBuilder archive(final Project project, String name) {
-    return new TestPackagingElementBuilder(project, PackagingElementFactory.getInstance().createArchive(name), null);
+    return new TestPackagingElementBuilder(project, PackagingElementFactory.getInstance().createZipArchive(name), null);
   }
 
   public CompositePackagingElement<?> build() {
@@ -82,7 +82,7 @@ public class TestPackagingElementBuilder {
   }
 
   public TestPackagingElementBuilder archive(String name) {
-    final CompositePackagingElement<?> archive = getFactory().createArchive(name);
+    final CompositePackagingElement<?> archive = getFactory().createZipArchive(name);
     return new TestPackagingElementBuilder(myProject, myElement.addOrFindChild(archive), this);
   }
 

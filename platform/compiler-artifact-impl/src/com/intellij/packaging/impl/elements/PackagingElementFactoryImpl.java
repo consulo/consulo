@@ -51,7 +51,7 @@ import java.util.List;
 public class PackagingElementFactoryImpl extends PackagingElementFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.elements.PackagingElementFactoryImpl");
   public static final PackagingElementType<DirectoryPackagingElement> DIRECTORY_ELEMENT_TYPE = new DirectoryElementType();
-  public static final PackagingElementType<ArchivePackagingElement> ARCHIVE_ELEMENT_TYPE = new ArchiveElementType();
+  public static final PackagingElementType<ZipArchivePackagingElement> ZIP_ARCHIVE_ELEMENT_TYPE = new ZipArchiveElementType();
   public static final PackagingElementType<FileCopyPackagingElement> FILE_COPY_ELEMENT_TYPE = new FileCopyElementType();
   public static final PackagingElementType<DirectoryCopyPackagingElement> DIRECTORY_COPY_ELEMENT_TYPE = new DirectoryCopyElementType();
   public static final PackagingElementType<ExtractedDirectoryPackagingElement> EXTRACTED_DIRECTORY_ELEMENT_TYPE = new ExtractedDirectoryElementType();
@@ -59,7 +59,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   private static final PackagingElementType[] STANDARD_TYPES =
     {
       DIRECTORY_ELEMENT_TYPE,
-      ARCHIVE_ELEMENT_TYPE,
+      ZIP_ARCHIVE_ELEMENT_TYPE,
       LibraryElementType.LIBRARY_ELEMENT_TYPE,
       ProductionModuleOutputElementType.ELEMENT_TYPE,
       ResourceModuleOutputElementType.ELEMENT_TYPE,
@@ -183,7 +183,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     String parentPath = index != -1 ? path.substring(0, index) : "";
 
     final CompositePackagingElement<?> parent = getOrCreateDirectoryOrArchive(root, parentPath, true);
-    final CompositePackagingElement<?> last = directory ? createDirectory(lastName) : createArchive(lastName);
+    final CompositePackagingElement<?> last = directory ? createDirectory(lastName) : createZipArchive(lastName);
     return parent.addOrFindChild(last);
   }
 
@@ -244,8 +244,8 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
 
   @Override
   @NotNull
-  public CompositePackagingElement<?> createArchive(@NotNull @NonNls String archiveFileName) {
-    return new ArchivePackagingElement(archiveFileName);
+  public CompositePackagingElement<?> createZipArchive(@NotNull @NonNls String archiveFileName) {
+    return new ZipArchivePackagingElement(archiveFileName);
   }
 
   @Nullable
@@ -331,14 +331,6 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     final CompositePackagingElement<?> last = getOrCreateDirectory(root, pathTail);
     last.addOrFindChildren(elements);
     return Collections.singletonList(root);
-  }
-
-  public static CompositePackagingElement<?> createDirectoryOrArchiveWithParents(@NotNull String path, final boolean archive) {
-    path = FileUtil.toSystemIndependentName(path);
-    final String parentPath = PathUtil.getParentPath(path);
-    final String fileName = PathUtil.getFileName(path);
-    final PackagingElement<?> element = archive ? new ArchivePackagingElement(fileName) : new DirectoryPackagingElement(fileName);
-    return (CompositePackagingElement<?>)getInstance().createParentDirectories(parentPath, element);
   }
 
   private static class ArtifactRootElementType extends PackagingElementType<ArtifactRootElement<?>> {

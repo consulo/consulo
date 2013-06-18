@@ -44,7 +44,7 @@ public abstract class PackagingElementFactory {
   public abstract CompositePackagingElement<?> createDirectory(@NotNull @NonNls String directoryName);
 
   @NotNull
-  public abstract CompositePackagingElement<?> createArchive(@NotNull @NonNls String archiveFileName);
+  public abstract CompositePackagingElement<?> createZipArchive(@NotNull @NonNls String archiveFileName);
 
   public abstract PackagingElement<?> createFileCopy(@NotNull String filePath, @Nullable String outputFileName);
 

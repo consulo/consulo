@@ -22,7 +22,7 @@ import com.intellij.packaging.artifacts.ArtifactPointerManager;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
-import com.intellij.packaging.impl.artifacts.JarArtifactType;
+import com.intellij.packaging.impl.artifacts.ZipArtifactType;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
@@ -69,7 +69,7 @@ public class ArtifactSourceItem extends PackagingSourceItem {
   @NotNull
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
-    return myArtifact.getArtifactType() instanceof JarArtifactType ? PackagingElementOutputKind.JAR_FILES : PackagingElementOutputKind.OTHER;
+    return myArtifact.getArtifactType() instanceof ZipArtifactType ? PackagingElementOutputKind.JAR_FILES : PackagingElementOutputKind.OTHER;
   }
 
   public Artifact getArtifact() {
