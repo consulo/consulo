@@ -25,7 +25,7 @@ import java.beans.PropertyChangeListener;
  * @author yole
  */
 public interface PaletteItemProvider {
-  ExtensionPointName<PaletteItemProvider> EP_NAME = ExtensionPointName.create("com.intellij.paletteItemProvider");
+  ExtensionPointName<PaletteItemProvider> EP_NAME = ExtensionPointName.create("org.consulo.java.paletteItemProvider");
 
   PaletteGroup[] getActiveGroups(VirtualFile virtualFile);
 

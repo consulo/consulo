@@ -30,6 +30,7 @@
     <i18nInspectionTool implementation="com.intellij.uiDesigner.i18n.I18nFormInspection"/>
     <java15InspectionTool implementation="com.intellij.uiDesigner.inspections.Java15FormInspection"/>
     <invalidPropertyKeyInspectionTool implementation="com.intellij.uiDesigner.i18n.InvalidPropertyKeyFormInspection"/>
+    <paletteItemProvider implementation="com.intellij.uiDesigner.palette.UIDesignerPaletteProvider"/>
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -138,7 +139,6 @@
 
     <refactoring.elementListenerProvider implementation="com.intellij.uiDesigner.palette.PaletteRefactoringListenerProvider"/>
     <refactoring.moveHandler implementation="com.intellij.uiDesigner.projectView.FormMoveProvider"/>
-    <paletteItemProvider implementation="com.intellij.uiDesigner.palette.UIDesignerPaletteProvider"/>
 
     <lang.foldingBuilder language="JAVA" implementationClass="com.intellij.uiDesigner.binding.GeneratedCodeFoldingBuilder"/>
     <gotoRelatedProvider implementation="com.intellij.uiDesigner.binding.FormRelatedFilesProvider"/>

@@ -3225,9 +3225,6 @@
     <extensionPoint name="compileServer.pathProvider" area="CONSULO_PROJECT"
                     interface="com.intellij.compiler.server.CompileServerPathProvider"/>
 
-
-    <extensionPoint name="paletteItemProvider" area="CONSULO_PROJECT" interface="com.intellij.ide.palette.PaletteItemProvider"/>
-
     <extensionPoint name="attachSourcesProvider" interface="com.intellij.codeInsight.AttachSourcesProvider"/>
 
 
