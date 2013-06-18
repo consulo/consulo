@@ -432,6 +432,12 @@
         <element id="archive" name="form_compiler.jar">
           <element id="module-output" name="forms-compiler" />
         </element>
+        <element id="archive" name="instrumentation-util.jar">
+          <element id="module-output" name="instrumentation-util" />
+        </element>
+        <element id="archive" name="javac2.jar">
+          <element id="module-output" name="javac2" />
+        </element>
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/build.txt" />
     </root>

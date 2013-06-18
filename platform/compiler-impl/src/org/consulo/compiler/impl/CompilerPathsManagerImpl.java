@@ -8,6 +8,7 @@ import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
+import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
@@ -167,7 +168,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
 
   private VirtualFilePointer createDefaultPointerForModule(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
     final VirtualFilePointerManager instance = VirtualFilePointerManager.getInstance();
-    return instance.create(myProject.getBaseDir() + DEFAULT_PATH + "/" + module.getName() + "/" + contentFolderType.name().toLowerCase() + "/", myProject, null);
+    return instance.create(myProject.getBaseDir() + DEFAULT_PATH + "/" + contentFolderType.name().toLowerCase() +  "/" + module.getName() + "/", myProject, null);
   }
 
   @Override
@@ -226,19 +227,12 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   @NotNull
   private Set<String> getRootsToWatch() {
     final Set<String> rootsToWatch = new HashSet<String>();
-  /*  Module[] modules = ModuleManager.getInstance(myProject).getModules();
-    for (Module module : modules) {
-      VirtualFilePointer temp = getOrCreateVirtualFilePointer(module, ContentFolderType.SOURCE);
-      rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(temp.getUrl()));
-
-      temp = getOrCreateVirtualFilePointer(module, ContentFolderType.TEST);
-      rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(temp.getUrl()));
+    for (CompileInfo compileInfo : myModulesToVirtualFilePoints.values()) {
+      for (VirtualFilePointer pointer : compileInfo.virtualFilePointers.values()) {
+        rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(pointer.getUrl()));
+      }
     }
-
-    if (myCompilerOutput != null) {
-      final String url = myCompilerOutput.getUrl();
-      rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(url));
-    }       */
+    rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(myProjectVirtualFilePointer.getUrl())) ;
     return rootsToWatch;
   }
 
