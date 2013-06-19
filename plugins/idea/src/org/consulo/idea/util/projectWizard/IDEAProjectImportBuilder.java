@@ -28,6 +28,7 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import org.consulo.idea.IdeaConstants;
@@ -130,7 +131,11 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
         continue;
       }
 
-      modules.add(loadModule(filepath, modifiableModuleModel, project));
+      final Module module = loadModule(filepath, modifiableModuleModel, project);
+      if(module == null) {
+        continue;
+      }
+      modules.add(module);
     }
 
     return modules;
@@ -139,13 +144,18 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
   private static Module loadModule(String moduleFilePath, ModifiableModuleModel originalModel, Project project) throws JDOMException, IOException {
     final boolean fromProjectStructure = originalModel != null;
 
-    final Document document = JDOMUtil.loadDocument(new File(moduleFilePath));
+    File file = new File(moduleFilePath);
+    if(!file.exists()) {
+      return null;
+    }
+
+    final Document document = JDOMUtil.loadDocument(file);
 
     final ModifiableModuleModel newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
 
 
     final Module module =
-      newModel.newModule("FIX IT", moduleFilePath);
+      newModel.newModule(FileUtil.getNameWithoutExtension(file), file.getParent());
 
     final Element rootElement = document.getRootElement();
 
