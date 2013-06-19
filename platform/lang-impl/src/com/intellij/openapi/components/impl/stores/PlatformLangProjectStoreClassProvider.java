@@ -24,6 +24,6 @@ import com.intellij.openapi.project.impl.ProjectStoreClassProvider;
 public class PlatformLangProjectStoreClassProvider implements ProjectStoreClassProvider {
   @Override
   public Class<? extends IComponentStore> getProjectStoreClass(final boolean isDefaultProject) {
-    return isDefaultProject ? DefaultProjectStoreImpl.class : ProjectWithModulesStoreImpl.class;
+    return isDefaultProject ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
   }
 }

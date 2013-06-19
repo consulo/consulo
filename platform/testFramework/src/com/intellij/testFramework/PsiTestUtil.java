@@ -349,7 +349,7 @@ public class PsiTestUtil {
       @Override
       protected void run(Result<Module> result) throws Throwable {
         final ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
-        String moduleName = moduleModel.newModule(root.getPath() + "/" + name + ".iml").getName();
+        String moduleName = moduleModel.newModule(name, root.getPath()).getName();
         moduleModel.commit();
 
         final Module dep = ModuleManager.getInstance(project).findModuleByName(moduleName);

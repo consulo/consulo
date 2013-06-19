@@ -25,25 +25,18 @@
 package com.intellij.openapi.application.ex;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.module.impl.ModuleManagerImpl;
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.TestRunnerUtil;
-import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
-import gnu.trove.THashSet;
 import junit.framework.TestCase;
-import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.JDomSerializationUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import static com.intellij.openapi.util.io.FileUtil.toSystemDependentName;
@@ -67,7 +60,6 @@ public class PathManagerEx {
   /** Caches test data lookup strategy by class. */
   private static final ConcurrentMap<Class, TestDataLookupStrategy> CLASS_STRATEGY_CACHE = new ConcurrentHashMap<Class, TestDataLookupStrategy>();
   private static final ConcurrentMap<String, Class> CLASS_CACHE = new ConcurrentHashMap<String, Class>();
-  private static Set<String> ourCommunityModules;
 
   private PathManagerEx() {
   }
@@ -370,44 +362,7 @@ public class PathManagerEx {
       //this means that clazz is located in a library, perhaps we should throw exception here
       return FileSystemLocation.ULTIMATE;
     }
-
-    String moduleName = root.getName();
-    String chunkPrefix = "ModuleChunk(";
-    if (moduleName.startsWith(chunkPrefix)) {
-      //todo[nik] this is temporary workaround to fix tests on TeamCity which compiles the whole modules cycle to a single output directory
-      moduleName = StringUtil.trimStart(moduleName, chunkPrefix);
-      moduleName = moduleName.substring(0, moduleName.indexOf(','));
-    }
-    return getCommunityModules().contains(moduleName) ? FileSystemLocation.COMMUNITY : FileSystemLocation.ULTIMATE;
-  }
-
-  private synchronized static Set<String> getCommunityModules() {
-    if (ourCommunityModules != null) {
-      return ourCommunityModules;
-    }
-
-    ourCommunityModules = new THashSet<String>();
-    File modulesXml = findFileUnderCommunityHome(".idea/modules.xml");
-    if (!modulesXml.exists()) {
-      throw new IllegalStateException("Cannot obtain test data path: " + modulesXml.getAbsolutePath() + " not found");
-    }
-
-    try {
-      Element componentRoot = JDomSerializationUtil
-        .findComponent(JDOMUtil.loadDocument(modulesXml).getRootElement(), ModuleManagerImpl.COMPONENT_NAME);
-      ModuleManagerImpl.ModulePath[] files = ModuleManagerImpl.getPathsToModuleFiles(componentRoot);
-      for (ModuleManagerImpl.ModulePath file : files) {
-        String name = FileUtil.getNameWithoutExtension(PathUtil.getFileName(file.getPath()));
-        ourCommunityModules.add(name);
-      }
-      return ourCommunityModules;
-    }
-    catch (JDOMException e) {
-      throw new RuntimeException("Cannot read modules from " + modulesXml.getAbsolutePath(), e);
-    }
-    catch (IOException e) {
-      throw new RuntimeException("Cannot read modules from " + modulesXml.getAbsolutePath(), e);
-    }
+    return FileSystemLocation.COMMUNITY;
   }
 
   /**

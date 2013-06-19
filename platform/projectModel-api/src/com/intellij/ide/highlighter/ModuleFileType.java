@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
+@Deprecated
 public class ModuleFileType implements InternalFileType {
   @NonNls public static final String DEFAULT_EXTENSION = "cxmf";
   @NonNls public static final String DOT_DEFAULT_EXTENSION = "." + DEFAULT_EXTENSION;

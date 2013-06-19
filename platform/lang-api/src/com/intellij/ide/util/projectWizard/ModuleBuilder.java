@@ -17,7 +17,6 @@ package com.intellij.ide.util.projectWizard;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.DefaultModuleBuilder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -58,7 +57,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.projectWizard.ModuleBuilder");
   protected Sdk myJdk;
   private String myName;
-  @NonNls private String myModuleFilePath;
+  @NonNls private String moduleDirPath;
   private String myContentEntryPath;
   private final Set<ModuleConfigurationUpdater> myUpdaters = new HashSet<ModuleConfigurationUpdater>();
   private final EventDispatcher<ModuleBuilderListener> myDispatcher = EventDispatcher.create(ModuleBuilderListener.class);
@@ -139,23 +138,19 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     myName = acceptParameter(name);
   }
 
-  public String getModuleFilePath() {
-    return myModuleFilePath;
-  }
-
   public void addModuleConfigurationUpdater(ModuleConfigurationUpdater updater) {
     myUpdaters.add(updater);
   }
 
   @Override
-  public void setModuleFilePath(@NonNls String path) {
-    myModuleFilePath = acceptParameter(path);
+  public void setModuleDirPath(@NonNls String path) {
+    moduleDirPath = acceptParameter(path);
   }
 
   @Nullable
   public String getContentEntryPath() {
     if (myContentEntryPath == null) {
-      final String directory = getModuleFileDirectory();
+      final String directory = getModuleDirPath();
       if (directory == null) {
         return null;
       }
@@ -194,26 +189,23 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   }
 
   @Nullable
-  public String getModuleFileDirectory() {
-    if (myModuleFilePath == null) {
+  public String getModuleDirPath() {
+    if (moduleDirPath == null) {
       return null;
     }
-    final String parent = new File(myModuleFilePath).getParent();
-    if (parent == null) {
-      return null;
-    }
-    return parent.replace(File.separatorChar, '/');
+
+    return moduleDirPath.replace(File.separatorChar, '/');
   }
 
   @NotNull
   public Module createModule(@NotNull ModifiableModuleModel moduleModel)
     throws InvalidDataException, IOException, ModuleWithNameAlreadyExists, JDOMException, ConfigurationException {
     LOG.assertTrue(myName != null);
-    LOG.assertTrue(myModuleFilePath != null);
+    LOG.assertTrue(moduleDirPath != null);
 
-    deleteModuleFile(myModuleFilePath);
+    FileUtil.createParentDirs(new File(moduleDirPath));
 
-    final Module module = moduleModel.newModule(myModuleFilePath);
+    final Module module = moduleModel.newModule(myName, getModuleDirPath());
     setupModule(module);
 
     return module;
@@ -286,8 +278,8 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
       if (myName == null) {
         myName = project.getName();
       }
-      if (myModuleFilePath == null) {
-        myModuleFilePath = project.getBaseDir().getPath() + File.separator + myName + ModuleFileType.DOT_DEFAULT_EXTENSION;
+      if (moduleDirPath == null) {
+        moduleDirPath = project.getBaseDir().getPath() + File.separator + myName;
       }
       try {
         return ApplicationManager.getApplication().runWriteAction(new ThrowableComputable<Module, Exception>() {
@@ -303,17 +295,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
       }
     }
     return null;
-  }
-
-  public static void deleteModuleFile(String moduleFilePath) {
-    final File moduleFile = new File(moduleFilePath);
-    if (moduleFile.exists()) {
-      FileUtil.delete(moduleFile);
-    }
-    final VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(moduleFile);
-    if (file != null) {
-      file.refresh(false, false);
-    }
   }
 
   public Icon getBigIcon() {
@@ -339,7 +320,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   public void updateFrom(ModuleBuilder from) {
     myName = from.getName();
     myContentEntryPath = from.getContentEntryPath();
-    myModuleFilePath = from.getModuleFilePath();
+    moduleDirPath = from.getModuleDirPath();
   }
 
   public void setModuleJdk(Sdk jdk) {

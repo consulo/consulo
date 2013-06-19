@@ -18,10 +18,7 @@ package com.intellij.openapi.components;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jdom.Attribute;
-import org.jdom.Comment;
-import org.jdom.Element;
-import org.jdom.Text;
+import org.jdom.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,10 +39,10 @@ public abstract class PathMacroMap {
 
   public final void substitute(Element e, boolean caseSensitive, final boolean recursively,
                                @Nullable PathMacroFilter filter) {
-    List content = e.getContent();
+    List<Content> content = e.getContent();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0, contentSize = content.size(); i < contentSize; i++) {
-      Object child = content.get(i);
+      Content child = content.get(i);
       if (child instanceof Element) {
         Element element = (Element)child;
         substitute(element, caseSensitive, recursively, filter);
@@ -63,11 +60,10 @@ public abstract class PathMacroMap {
       }
     }
 
-    List attributes = e.getAttributes();
+    List<Attribute> attributes = e.getAttributes();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
-      Object attribute1 = attributes.get(i);
-      Attribute attribute = (Attribute)attribute1;
+      Attribute attribute = attributes.get(i);
       if (filter == null || !filter.skipPathMacros(attribute)) {
         final String value = (recursively || (filter != null && filter.recursePathMacros(attribute)))
                              ? substituteRecursively(attribute.getValue(), caseSensitive)

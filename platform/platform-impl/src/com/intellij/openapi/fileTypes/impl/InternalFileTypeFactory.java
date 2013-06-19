@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.fileTypes.impl;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.highlighter.WorkspaceFileType;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
@@ -26,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
  * @author peter
  */
 public class InternalFileTypeFactory extends FileTypeFactory {
+  @Override
   public void createFileTypes(@NotNull final FileTypeConsumer consumer) {
     consumer.consume(new WorkspaceFileType(), WorkspaceFileType.DEFAULT_EXTENSION);
-    consumer.consume(new ModuleFileType(), ModuleFileType.DEFAULT_EXTENSION);
     consumer.consume(new ProjectFileType(), ProjectFileType.DEFAULT_EXTENSION);
   }
 }

@@ -22,7 +22,6 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.StorageScheme;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -31,13 +30,14 @@ import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.MessageHandler;
+import org.consulo.lombok.annotations.Logger;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
  * @author yole
  */
+@Logger
 @State(
   name = ModuleManagerImpl.COMPONENT_NAME,
   storages = {
@@ -46,7 +46,6 @@ import java.lang.reflect.Method;
     }
 )
 public class ModuleManagerComponent extends ModuleManagerImpl {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.module.impl.ModuleManagerComponent");
   private final ProgressManager myProgressManager;
   private final MessageBusConnection myConnection;
 
@@ -68,22 +67,15 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
         long t = System.currentTimeMillis();
         loadModules(myModuleModel);
         t = System.currentTimeMillis() - t;
-        LOG.info(myModuleModel.getModules().length + " module(s) loaded in " + t + " ms");
+        LOGGER.info(myModuleModel.getModules().length + " module(s) loaded in " + t + " ms");
       }
     });
 
   }
 
   @Override
-  protected ModuleEx createModule(String filePath) {
-    return new ModuleImpl(filePath, myProject);
-  }
-
-  @Override
-  protected ModuleEx createAndLoadModule(String filePath) throws IOException {
-    ModuleImpl module = new ModuleImpl(filePath, myProject);
-    module.getStateStore().load();
-    return module;
+  protected ModuleEx createModule(String name, String dirUrl) {
+    return new ModuleImpl(name, dirUrl, myProject);
   }
 
   @Override

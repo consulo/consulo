@@ -34,6 +34,24 @@ public class MockModule extends MockComponentManager implements Module {
   @Override
   @NotNull
   public String getModuleFilePath() {
+    return "" ;
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getModuleDir() {
+    throw new UnsupportedOperationException("Method getModuleDir is not yet implemented in " + getClass().getName());
+  }
+
+  @NotNull
+  @Override
+  public String getModuleDirPath() {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public String getModuleDirUrl() {
     return "";
   }
 

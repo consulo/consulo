@@ -50,7 +50,7 @@ public class ModuleRootsExternalizationTest extends ModuleTestCase {
     try {
       ModuleRootManagerImpl moduleRootManager = createTempModuleRootManager();
       Element root = new Element("root");
-      moduleRootManager.getState().writeExternal(root);
+      moduleRootManager.saveState().writeExternal(root);
       assertEquals(root.getText(), "");
     }
     catch (IOException e) {
@@ -104,7 +104,7 @@ public class ModuleRootsExternalizationTest extends ModuleTestCase {
     PsiTestUtil.setCompilerOutputPath(module, testClassesFile.getUrl(), true);
 
     final Element element = new Element("root");
-    moduleRootManager.getState().writeExternal(element);
+    moduleRootManager.saveState().writeExternal(element);
     assertElementEquals(element,
                         "<root inherit-compiler-output=\"false\">" +
                         "<output url=\"file://$MODULE_DIR$/classes\" />" +
@@ -160,7 +160,7 @@ public class ModuleRootsExternalizationTest extends ModuleTestCase {
       }
     });
     final Element element = new Element("root");
-    moduleRootManager.getState().writeExternal(element);
+    moduleRootManager.saveState().writeExternal(element);
     assertElementEquals(element,
                         "<root inherit-compiler-output=\"true\">" +
                         "<exclude-output />" +
@@ -196,7 +196,7 @@ public class ModuleRootsExternalizationTest extends ModuleTestCase {
       }
     });
     Element element = new Element("root");
-    moduleRootManager.getState().writeExternal(element);
+    moduleRootManager.saveState().writeExternal(element);
     assertElementEquals(element,
                         "<root inherit-compiler-output=\"true\">" +
                         "<exclude-output />" +

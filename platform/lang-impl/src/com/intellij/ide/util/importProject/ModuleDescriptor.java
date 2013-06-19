@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.util.importProject;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.importSources.DetectedProjectRoot;
 import com.intellij.openapi.module.Module;
@@ -26,7 +25,6 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -159,12 +157,11 @@ public class ModuleDescriptor {
     myLibraryFiles.clear();
   }
 
-  @NotNull
-  public String computeModuleFilePath() throws InvalidDataException {
+  public String computeModuleDir() throws InvalidDataException {
     final String name = getName();
     final Set<File> contentRoots = getContentRoots();
     if (contentRoots.size() > 0) {
-      return contentRoots.iterator().next().getPath() + File.separator + name + ModuleFileType.DOT_DEFAULT_EXTENSION;
+      return contentRoots.iterator().next().getPath();
     }
     else {
       throw new InvalidDataException("Module " + name + " has no content roots and will not be created.");

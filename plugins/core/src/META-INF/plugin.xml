@@ -2924,7 +2924,7 @@
   <module-components>
     <component>
       <interface-class>com.intellij.openapi.roots.ModuleRootManager</interface-class>
-      <implementation-class>com.intellij.openapi.roots.impl.ModuleRootManagerComponent</implementation-class>
+      <implementation-class>com.intellij.openapi.roots.impl.ModuleRootManagerImpl</implementation-class>
     </component>
 
     <component>
@@ -3119,7 +3119,6 @@
       <with attribute="implementationClass" implements="com.intellij.navigation.ItemPresentationProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="classpathStorageProvider" interface="com.intellij.openapi.roots.impl.storage.ClasspathStorageProvider"/>
     <extensionPoint name="fileTypeDetector" interface="com.intellij.openapi.fileTypes.FileTypeRegistry$FileTypeDetector"/>
 
     <extensionPoint name="projectAttachProcessor" interface="com.intellij.projectImport.ProjectAttachProcessor"/>

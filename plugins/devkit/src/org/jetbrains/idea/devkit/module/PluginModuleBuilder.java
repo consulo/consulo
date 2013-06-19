@@ -32,7 +32,7 @@ public class PluginModuleBuilder extends JavaModuleBuilder {
 
   public void setupRootModel(final ModifiableRootModel rootModel) throws ConfigurationException {
     super.setupRootModel(rootModel);
-    final String defaultPluginXMLLocation = getModuleFileDirectory() + '/' + META_INF + '/' + PLUGIN_XML;
+    final String defaultPluginXMLLocation = getModuleDirPath() + '/' + META_INF + '/' + PLUGIN_XML;
     final Module module = rootModel.getModule();
     StartupManager.getInstance(module.getProject()).runWhenProjectIsInitialized(new Runnable() {
       public void run() {

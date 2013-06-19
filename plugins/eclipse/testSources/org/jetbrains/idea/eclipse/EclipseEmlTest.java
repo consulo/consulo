@@ -38,7 +38,6 @@ import junit.framework.Assert;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.idea.eclipse.config.EclipseClasspathStorageProvider;
 import org.jetbrains.idea.eclipse.conversion.IdeaSpecificSettings;
 
 import java.io.File;

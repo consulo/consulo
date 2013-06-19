@@ -22,7 +22,6 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionProvider;
@@ -160,7 +159,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  public void writeExternal(@NotNull Element rootElement) throws WriteExternalException {
+  public void writeExternal(@NotNull Element rootElement) {
     final Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
     element.setAttribute(EXTENSION_ID_ATTRIBUTE, myModuleExtensionId);
     rootElement.addContent(element);

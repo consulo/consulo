@@ -53,13 +53,7 @@ public final class GotoModuleDirectory extends FileChooserAction {
     }
 
     if (module != null && !module.isDisposed()) {
-      final VirtualFile moduleFile = module.getModuleFile();
-      if (moduleFile != null && moduleFile.isValid()) {
-        final VirtualFile moduleDir = moduleFile.getParent();
-        if (moduleDir != null && moduleDir.isValid()) {
-          return moduleDir;
-        }
-      }
+      return module.getModuleDir();
     }
 
     return null;

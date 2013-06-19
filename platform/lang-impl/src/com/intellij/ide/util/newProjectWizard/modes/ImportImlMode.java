@@ -72,7 +72,7 @@ public class ImportImlMode extends WizardMode {
 
   public static ExistingModuleLoader setUpLoader(final String moduleFilePath) {
     final ExistingModuleLoader moduleLoader = new ExistingModuleLoader();
-    moduleLoader.setModuleFilePath(moduleFilePath);
+    moduleLoader.setModuleDirPath(moduleFilePath);
     final int startIndex = moduleFilePath.lastIndexOf('/');
     final int endIndex = moduleFilePath.lastIndexOf(".");
     if (startIndex >= 0 && endIndex > startIndex + 1) {

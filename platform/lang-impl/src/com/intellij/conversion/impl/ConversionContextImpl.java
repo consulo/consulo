@@ -150,11 +150,11 @@ public class ConversionContextImpl implements ConversionContext {
     final ExpandMacroToPathMap macros = createExpandMacroMap();
 
     List<File> files = new ArrayList<File>();
-    for (Element module : JDOMUtil.getChildren(modules, ModuleManagerImpl.ELEMENT_MODULE)) {
-      String filePath = module.getAttributeValue(ModuleManagerImpl.ATTRIBUTE_FILEPATH);
+   /* for (Element module : JDOMUtil.getChildren(modules, ModuleManagerImpl.ELEMENT_MODULE)) {
+      String filePath = module.getAttributeValue(ModuleManagerImpl.AT);
       filePath = macros.substitute(filePath, true);
       files.add(new File(FileUtil.toSystemDependentName(filePath)));
-    }
+    }  */
     return files.toArray(new File[files.size()]);
   }
 

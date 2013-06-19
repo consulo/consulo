@@ -23,7 +23,6 @@ import com.intellij.ide.util.importProject.ModuleInsight;
 import com.intellij.ide.util.importProject.ProjectDescriptor;
 import com.intellij.ide.util.newProjectWizard.modes.ImportImlMode;
 import com.intellij.ide.util.projectWizard.ExistingModuleLoader;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.ide.util.projectWizard.importSources.DetectedProjectRoot;
 import com.intellij.ide.util.projectWizard.importSources.ProjectFromSourcesBuilder;
@@ -217,7 +216,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
             final Module module;
             if (moduleDescriptor.isReuseExistingElement()) {
               final ExistingModuleLoader moduleLoader =
-                ImportImlMode.setUpLoader(FileUtil.toSystemIndependentName(moduleDescriptor.computeModuleFilePath()));
+                ImportImlMode.setUpLoader(FileUtil.toSystemIndependentName(moduleDescriptor.computeModuleDir()));
               module = moduleLoader.createModule(moduleModel);
             }
             else {
@@ -321,10 +320,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
                                      final Map<LibraryDescriptor, Library> projectLibs, final ModifiableModuleModel moduleModel)
     throws InvalidDataException, IOException, ModuleWithNameAlreadyExists, JDOMException, ConfigurationException {
 
-    final String moduleFilePath = descriptor.computeModuleFilePath();
-    ModuleBuilder.deleteModuleFile(moduleFilePath);
-
-    final Module module = moduleModel.newModule(moduleFilePath);
+    final Module module = moduleModel.newModule(descriptor.getName(), descriptor.computeModuleDir());
     final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
     setupRootModel(projectDescriptor, descriptor, modifiableModel, projectLibs);
     descriptor.updateModuleConfiguration(module, modifiableModel);

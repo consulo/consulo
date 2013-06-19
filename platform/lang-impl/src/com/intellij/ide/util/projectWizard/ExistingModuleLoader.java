@@ -46,6 +46,7 @@ import java.util.Set;
  * @author Eugene Zhuravlev
  *         Date: Sep 7, 2004
  */
+@Deprecated
 public class ExistingModuleLoader extends ModuleBuilder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.projectWizard.ExistingModuleLoader");
 
@@ -54,7 +55,7 @@ public class ExistingModuleLoader extends ModuleBuilder {
     throws InvalidDataException, IOException, ModuleWithNameAlreadyExists, JDOMException, ConfigurationException {
     LOG.assertTrue(getName() != null);
 
-    final String moduleFilePath = getModuleFilePath();
+    final String moduleFilePath = getModuleDirPath();
 
     LOG.assertTrue(moduleFilePath != null);
     LOG.assertTrue(new File(moduleFilePath).exists());
@@ -68,7 +69,7 @@ public class ExistingModuleLoader extends ModuleBuilder {
 
   public boolean validate(final Project current, final Project dest) {
     if (getName() == null) return false;
-    String moduleFilePath = getModuleFilePath();
+    String moduleFilePath = getModuleDirPath();
     if (moduleFilePath == null) return false;
     final File file = new File(moduleFilePath);
     if (file.exists()) {

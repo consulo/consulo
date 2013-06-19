@@ -36,7 +36,7 @@ public class ModulePathMacroManager extends BasePathMacroManager {
     final ExpandMacroToPathMap result = new ExpandMacroToPathMap();
 
     if (!myModule.isDisposed()) {
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, PathMacroUtil.getModuleDir(myModule.getModuleFilePath()));
+      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath());
     }
 
     result.putAll(super.getExpandMacroMap());
@@ -49,8 +49,8 @@ public class ModulePathMacroManager extends BasePathMacroManager {
     final ReplacePathToMacroMap result = super.getReplacePathMap();
 
     if (!myModule.isDisposed()) {
-      final String modulePath = PathMacroUtil.getModuleDir(myModule.getModuleFilePath());
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, modulePath, PathMacroUtil.getUserHomePath());
+
+      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil.getUserHomePath());
     }
 
     return result;

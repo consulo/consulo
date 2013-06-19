@@ -225,7 +225,7 @@ public class NameLocationStep extends ModuleWizardStep {
 
   public void updateDataModel() {
     myBuilder.setName(getModuleName());
-    myBuilder.setModuleFilePath(getModuleFilePath());
+    myBuilder.setModuleDirPath(getModuleFilePath());
     myBuilder.setContentEntryPath(getContentEntryPath());
   }
 

@@ -459,7 +459,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return e;
   }
 
-  public void writeExternal(@NotNull Element element) throws WriteExternalException {
+  public void writeExternal(@NotNull Element element) {
     for (ModuleExtension<?> extension : myExtensions) {
       final Element state = extension.getState();
       if(state == null) {
@@ -478,7 +478,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     for (OrderEntry orderEntry : getOrderEntries()) {
       if (orderEntry instanceof WritableOrderEntry) {
-        ((WritableOrderEntry)orderEntry).writeExternal(element);
+        try {
+          ((WritableOrderEntry)orderEntry).writeExternal(element);
+        }
+        catch (WriteExternalException e) {
+          LOG.error("Failed to write order entry: " + orderEntry, e);
+        }
       }
     }
   }

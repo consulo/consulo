@@ -17,22 +17,20 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.module.ModuleManager;
-import org.consulo.module.extension.ModuleExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import gnu.trove.THashMap;
+import org.consulo.lombok.annotations.Logger;
+import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,9 +40,8 @@ import java.util.Map;
 import java.util.Set;
 
 
+@Logger
 public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.ModuleRootManagerImpl");
-
   private final Module myModule;
   private final ProjectRootManagerImpl myProjectRootManager;
   private final VirtualFilePointerManager myFilePointerManager;
@@ -162,7 +159,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   void commitModel(RootModelImpl rootModel) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    LOG.assertTrue(rootModel.myModuleRootManager == this);
+    LOGGER.assertTrue(rootModel.myModuleRootManager == this);
 
     final Project project = myModule.getProject();
     final ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
@@ -234,7 +231,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   @Override
   public <R> R processOrder(RootPolicy<R> policy, R initialValue) {
-    LOG.assertTrue(!myIsDisposed);
+    LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.processOrder(policy, initialValue);
   }
 
@@ -263,28 +260,28 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @Override
   @NotNull
   public VirtualFile[] getContentRoots() {
-    LOG.assertTrue(!myIsDisposed);
+    LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentRoots();
   }
 
   @Override
   @NotNull
   public String[] getContentRootUrls() {
-    LOG.assertTrue(!myIsDisposed);
+    LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentRootUrls();
   }
 
   @Override
   @NotNull
   public String[] getExcludeRootUrls() {
-    LOG.assertTrue(!myIsDisposed);
+    LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRootUrls();
   }
 
   @Override
   @NotNull
   public VirtualFile[] getExcludeRoots() {
-    LOG.assertTrue(!myIsDisposed);
+    LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRoots();
   }
 
@@ -297,7 +294,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @NotNull
   @Override
   public String[] getSourceRootUrls(boolean includingTests) {
-    LOG.assertTrue(!myIsDisposed);
+    LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getSourceRootUrls(includingTests);
   }
 
@@ -310,7 +307,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @Override
   @NotNull
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
-    LOG.assertTrue(!myIsDisposed);
+    LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getSourceRoots(includingTests);
   }
 
@@ -332,17 +329,17 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     myOrderRootsCache.clearCache();
   }
 
-  public ModuleRootManagerState getState() {
-    return new ModuleRootManagerState(myRootModel);
+  public void saveState(Element parent) {
+    myRootModel.writeExternal(parent);
   }
 
-  public void loadState(ModuleRootManagerState object) {
-    loadState(object, myRootModel != null);
+  public void loadState(Element parent) {
+    loadState(parent, myRootModel != null);
   }
 
-  protected void loadState(ModuleRootManagerState object, boolean throwEvent) {
+  protected void loadState(Element element, boolean throwEvent) {
     try {
-      final RootModelImpl newModel = new RootModelImpl(object.getRootModelElement(), this, myProjectRootManager, myFilePointerManager);
+      final RootModelImpl newModel = new RootModelImpl(element, this, myProjectRootManager, myFilePointerManager);
 
       if (throwEvent) {
         makeRootsChange(new Runnable() {
@@ -359,33 +356,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
       assert !myRootModel.isOrderEntryDisposed();
     }
     catch (InvalidDataException e) {
-      LOG.error(e);
-    }
-  }
-
-  public static class ModuleRootManagerState implements JDOMExternalizable {
-    private RootModelImpl myRootModel;
-    private Element myRootModelElement = null;
-
-    public ModuleRootManagerState() {
-    }
-
-    public ModuleRootManagerState(final RootModelImpl rootModel) {
-      myRootModel = rootModel;
-    }
-
-    @Override
-    public void readExternal(Element element) throws InvalidDataException {
-      myRootModelElement = element;
-    }
-
-    @Override
-    public void writeExternal(Element element) throws WriteExternalException {
-      myRootModel.writeExternal(element);
-    }
-
-    public Element getRootModelElement() {
-      return myRootModelElement;
+      LOGGER.error(e);
     }
   }
 }

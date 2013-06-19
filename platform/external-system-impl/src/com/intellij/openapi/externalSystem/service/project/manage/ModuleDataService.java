@@ -101,7 +101,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
           private void importModule(@NotNull ModuleManager moduleManager, @NotNull DataNode<ModuleData> module) {
             ModuleData data = module.getData();
-            final Module created = moduleManager.newModule(data.getModuleFilePath());
+            final Module created = moduleManager.newModule(data.getName(), data.getModuleDirPath());
 
             // Ensure that the dependencies are clear (used to be not clear when manually removing the module and importing it via gradle)
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(created);
@@ -171,13 +171,13 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         for (DataNode<ModuleData> node : nodes) {
           // Remove existing '*.iml' file if necessary.
           ModuleData data = node.getData();
-          VirtualFile file = fileSystem.refreshAndFindFileByPath(data.getModuleFilePath());
+          VirtualFile file = fileSystem.refreshAndFindFileByPath(data.getModuleDirPath());
           if (file != null) {
             try {
               file.delete(this);
             }
             catch (IOException e) {
-              LOG.warn("Can't remove existing module config file at '" + data.getModuleFilePath() + "'");
+              LOG.warn("Can't remove existing module config file at '" + data.getModuleDirPath() + "'");
             }
           }
         }

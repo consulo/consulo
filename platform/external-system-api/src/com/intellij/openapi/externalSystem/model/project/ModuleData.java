@@ -1,6 +1,5 @@
 package com.intellij.openapi.externalSystem.model.project;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -21,7 +20,7 @@ public class ModuleData extends AbstractNamedData implements Named {
 
   @NotNull private final String myModuleTypeId;
   @NotNull private final String myExternalConfigPath;
-  @NotNull private String myModuleFilePath;
+  @NotNull private String myModuleDirPath;
   private boolean myInheritProjectCompileOutputPath = true;
 
   public ModuleData(@NotNull ProjectSystemId owner, @NotNull String name, @NotNull String moduleFileDirectoryPath, @NotNull String externalConfigPath)
@@ -29,7 +28,7 @@ public class ModuleData extends AbstractNamedData implements Named {
     super(owner, name);
     myModuleTypeId = "java";
     myExternalConfigPath = externalConfigPath;
-    setModuleFileDirectoryPath(moduleFileDirectoryPath);
+    setModuleDirectoryPath(moduleFileDirectoryPath);
   }
 
   @NotNull
@@ -43,12 +42,12 @@ public class ModuleData extends AbstractNamedData implements Named {
   }
 
   @NotNull
-  public String getModuleFilePath() {
-    return myModuleFilePath;
+  public String getModuleDirPath() {
+    return myModuleDirPath;
   }
 
-  public void setModuleFileDirectoryPath(@NotNull String path) {
-    myModuleFilePath = ExternalSystemApiUtil.toCanonicalPath(path + "/" + getName() + ModuleFileType.DOT_DEFAULT_EXTENSION);
+  public void setModuleDirectoryPath(@NotNull String path) {
+    myModuleDirPath = ExternalSystemApiUtil.toCanonicalPath(path);
   }
 
   public boolean isInheritProjectCompileOutputPath() {

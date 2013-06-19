@@ -310,7 +310,7 @@ public class MavenModuleBuilderTest extends MavenImportingTestCase {
 
   private void setModuleNameAndRoot(String name, String root) {
     myBuilder.setName(name);
-    myBuilder.setModuleFilePath(root + "/" + name + ".iml");
+    myBuilder.setModuleDirPath(root + "/" + name + ".iml");
     myBuilder.setContentEntryPath(root);
   }
 

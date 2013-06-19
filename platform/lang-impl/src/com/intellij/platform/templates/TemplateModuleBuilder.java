@@ -154,7 +154,7 @@ public class TemplateModuleBuilder extends ModuleBuilder {
   public Module createModule(@NotNull ModifiableModuleModel moduleModel)
     throws InvalidDataException, IOException, ModuleWithNameAlreadyExists, JDOMException, ConfigurationException {
     final String path = getContentEntryPath();
-    final ExistingModuleLoader loader = ImportImlMode.setUpLoader(getModuleFilePath());
+    final ExistingModuleLoader loader = ImportImlMode.setUpLoader(getModuleDirPath());
     unzip(loader.getName(), path, true);
     Module module = loader.createModule(moduleModel);
     if (myProjectMode) {
@@ -220,7 +220,7 @@ public class TemplateModuleBuilder extends ModuleBuilder {
       });
       if (moduleMode) {
         File from = new File(path, iml);
-        File to = new File(getModuleFilePath());
+        File to = new File(getModuleDirPath());
         if (!from.renameTo(to)) {
           throw new IOException("Can't rename " + from + " to " + to);
         }

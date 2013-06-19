@@ -37,6 +37,7 @@ public abstract class ModuleManager {
    * @param project the project for which the module manager is requested.
    * @return the module manager instance.
    */
+  @NotNull
   public static ModuleManager getInstance(@NotNull Project project) {
     return project.getComponent(ModuleManager.class);
   }
@@ -46,10 +47,12 @@ public abstract class ModuleManager {
    * to which the module manager is related.
    *
    *
-   * @param filePath the path at which the module is created.
+   * @param name the module name
+   * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  @NotNull public abstract Module newModule(@NotNull @NonNls String filePath);
+  @NotNull
+  public abstract Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
 
   /**
    * Loads a module from an .iml file with the specified path and adds it to the project.
@@ -61,7 +64,9 @@ public abstract class ModuleManager {
    * @throws JDOMException if the file contains invalid XML data.
    * @throws ModuleWithNameAlreadyExists if a module with such a name already exists in the project.
    */
-  @NotNull public abstract Module loadModule(@NotNull String filePath) throws InvalidDataException, IOException, JDOMException, ModuleWithNameAlreadyExists;
+  @NotNull
+  @Deprecated
+  public abstract Module loadModule(@NotNull String filePath) throws InvalidDataException, IOException, JDOMException, ModuleWithNameAlreadyExists;
 
   /**
    * Disposes of the specified module and removes it from the project.
@@ -75,7 +80,8 @@ public abstract class ModuleManager {
    *
    * @return the array of modules.
    */
-  @NotNull public abstract Module[] getModules();
+  @NotNull
+  public abstract Module[] getModules();
 
   /**
    * Returns the project module with the specified name.
@@ -83,7 +89,8 @@ public abstract class ModuleManager {
    * @param name the name of the module to find.
    * @return the module instance, or null if no module with such name exists.
    */
-  @Nullable public abstract Module findModuleByName(@NonNls @NotNull String name);
+  @Nullable
+  public abstract Module findModuleByName(@NonNls @NotNull String name);
 
   /**
    * Returns the list of modules sorted by dependency (the modules which do not depend
@@ -92,7 +99,8 @@ public abstract class ModuleManager {
    *
    * @return the sorted array of modules.
    */
-  @NotNull public abstract Module[] getSortedModules();
+  @NotNull
+  public abstract Module[] getSortedModules();
 
   /**
    * Returns the module comparator which can be used for sorting modules by dependency
@@ -101,7 +109,8 @@ public abstract class ModuleManager {
    *
    * @return the module comparator instance.
    */
-  @NotNull public abstract Comparator<Module> moduleDependencyComparator();
+  @NotNull
+  public abstract Comparator<Module> moduleDependencyComparator();
 
   /**
    * Returns the list of modules which directly depend on the specified module.
@@ -111,7 +120,8 @@ public abstract class ModuleManager {
    *
    * @see ModuleUtil#getAllDependentModules(Module)
    */
-  @NotNull public abstract List<Module> getModuleDependentModules(@NotNull Module module);
+  @NotNull
+  public abstract List<Module> getModuleDependentModules(@NotNull Module module);
 
   /**
    * Checks if one of the specified modules directly depends on the other module.
@@ -127,7 +137,8 @@ public abstract class ModuleManager {
    *
    * @return the module dependency graph.
    */
-  @NotNull public abstract Graph<Module> moduleGraph();
+  @NotNull
+  public abstract Graph<Module> moduleGraph();
 
   /**
    * Returns the graph of dependencies between modules in the project.
@@ -136,7 +147,8 @@ public abstract class ModuleManager {
    * @return the module dependency graph.
    * @since 11.0
    */
-  @NotNull public abstract Graph<Module> moduleGraph(boolean includeTests);
+  @NotNull
+  public abstract Graph<Module> moduleGraph(boolean includeTests);
 
   /**
    * Returns the model for the list of modules in the project, which can be used to add,
@@ -144,7 +156,8 @@ public abstract class ModuleManager {
    *
    * @return the modifiable model instance.
    */
-  @NotNull public abstract ModifiableModuleModel getModifiableModel();
+  @NotNull
+  public abstract ModifiableModuleModel getModifiableModel();
 
 
   /**
@@ -154,5 +167,6 @@ public abstract class ModuleManager {
    * @param module the module for which the path is requested.
    * @return the path to the group for the module, or null if the module does not belong to any group.
    */
-  @Nullable public abstract String[] getModuleGroupPath(@NotNull Module module);
+  @Nullable
+  public abstract String[] getModuleGroupPath(@NotNull Module module);
 }

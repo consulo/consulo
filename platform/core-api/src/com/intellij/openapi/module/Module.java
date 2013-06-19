@@ -43,6 +43,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    * @return the virtual file instance.
    */
   @Nullable
+  @Deprecated
   VirtualFile getModuleFile();
 
   /**
@@ -50,7 +51,32 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return the path to the .iml file.
    */
+  @Deprecated
   @NotNull String getModuleFilePath();
+
+  /**
+   * Returns the <code>VirtualFile</code> to the module dir
+   *
+   * @return the virtual file instance.
+   */
+  @Nullable
+  VirtualFile getModuleDir();
+
+  /**
+   * Returns the path to the module dir
+   *
+   * @return the path to the module dir
+   */
+  @NotNull
+  String getModuleDirPath();
+
+  /**
+   * Returns the path to the module url
+   *
+   * @return the path to the module url
+   */
+  @NotNull
+  String getModuleDirUrl();
 
   /**
    * Returns the project to which this module belongs.

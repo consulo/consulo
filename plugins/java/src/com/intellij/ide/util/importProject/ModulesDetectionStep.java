@@ -15,20 +15,18 @@
  */
 package com.intellij.ide.util.importProject;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.projectWizard.AbstractStepWithProgress;
 import com.intellij.ide.util.projectWizard.importSources.DetectedProjectRoot;
 import com.intellij.ide.util.projectWizard.importSources.ProjectFromSourcesBuilder;
 import com.intellij.ide.util.projectWizard.importSources.ProjectStructureDetector;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
@@ -114,34 +112,6 @@ public class ModulesDetectionStep extends AbstractStepWithProgress<List<ModuleDe
       return false;
     }
 
-    final List<ModuleDescriptor> modules = myModulesLayoutPanel.getChosenEntries();
-    final Map<String, ModuleDescriptor> errors = new LinkedHashMap<String, ModuleDescriptor>();
-    for (ModuleDescriptor module : modules) {
-      try {
-        final String moduleFilePath = module.computeModuleFilePath();
-        if (new File(moduleFilePath).exists()) {
-          errors.put(IdeBundle.message("warning.message.the.module.file.0.already.exist.and.will.be.overwritten", moduleFilePath), module);
-        }
-      }
-      catch (InvalidDataException e) {
-        errors.put(e.getMessage(), module);
-      }
-    }
-    if (!errors.isEmpty()) {
-      final int answer = Messages.showYesNoCancelDialog(getComponent(),
-                                                        IdeBundle.message("warning.text.0.do.you.want.to.overwrite.these.files",
-                                                                          StringUtil.join(errors.keySet(), "\n"), errors.size()),
-                                                        IdeBundle.message("title.file.already.exists"), "Overwrite", "Reuse", "Cancel", Messages.getQuestionIcon());
-      if (answer == 2) {
-        return false;
-      }
-
-      if (answer != 0) {
-        for (ModuleDescriptor moduleDescriptor : errors.values()) {
-          moduleDescriptor.reuseExisting(true);
-        }
-      }
-    }
     return true;
   }
 

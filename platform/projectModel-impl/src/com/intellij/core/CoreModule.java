@@ -15,7 +15,6 @@
  */
 package com.intellij.core;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.mock.MockComponentManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.PathMacros;
@@ -33,27 +32,30 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.PathUtil;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
 public class CoreModule extends MockComponentManager implements ModuleEx {
-  private final String myPath;
+  private final String myName;
+  private final String myDirUrl;
   @NotNull private final Disposable myLifetime;
   @NotNull private final Project myProject;
   @NotNull private final ModuleScopeProvider myModuleScopeProvider;
 
-  public CoreModule(@NotNull Disposable parentDisposable, @NotNull Project project, String moduleFilePath) {
+  public CoreModule(@NotNull Disposable parentDisposable, @NotNull Project project, String name, String dirUrl) {
     super(project.getPicoContainer(), parentDisposable);
     myLifetime = parentDisposable;
     myProject = project;
-    myPath = moduleFilePath;
+    myName = name;
+    myDirUrl = dirUrl;
 
     Extensions.instantiateArea(ExtensionAreas.IDEA_MODULE, this, null);
     Disposer.register(parentDisposable, new Disposable() {
@@ -70,7 +72,7 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
                                 ProjectRootManagerImpl.getInstanceImpl(project),
                                 VirtualFilePointerManager.getInstance()) {
         @Override
-        public void loadState(ModuleRootManagerState object) {
+        public void loadState(Element object) {
           loadState(object, false);
         }
       };
@@ -140,7 +142,25 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
   @NotNull
   @Override
   public String getModuleFilePath() {
-    return myPath;
+    throw new UnsupportedOperationException();
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getModuleDir() {
+    throw new UnsupportedOperationException();
+  }
+
+  @NotNull
+  @Override
+  public String getModuleDirPath() {
+    return VirtualFileManager.extractPath(getModuleDirUrl());
+  }
+
+  @NotNull
+  @Override
+  public String getModuleDirUrl() {
+    return myDirUrl;
   }
 
   @NotNull
@@ -152,7 +172,7 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
   @NotNull
   @Override
   public String getName() {
-    return StringUtil.trimEnd(PathUtil.getFileName(myPath), ModuleFileType.DOT_DEFAULT_EXTENSION);
+    return myName;
   }
 
   @Override

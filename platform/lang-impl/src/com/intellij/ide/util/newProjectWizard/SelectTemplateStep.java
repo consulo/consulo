@@ -16,7 +16,6 @@
 package com.intellij.ide.util.newProjectWizard;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.ide.util.DefaultModuleBuilder;
 import com.intellij.ide.util.projectWizard.*;
@@ -281,8 +280,8 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
     if (myModuleBuilder != null) {
       final String moduleName = getModuleName();
       myModuleBuilder.setName(moduleName);
-      myModuleBuilder.setModuleFilePath(
-        FileUtil.toSystemIndependentName(myModuleFileLocation.getText()) + "/" + moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION);
+      myModuleBuilder.setModuleDirPath(
+        FileUtil.toSystemIndependentName(myModuleFileLocation.getText()));
       myModuleBuilder.setContentEntryPath(FileUtil.toSystemIndependentName(getModuleContentRoot()));
       if (myModuleBuilder instanceof TemplateModuleBuilder) {
         myWizardContext.setProjectStorageFormat(StorageScheme.DIRECTORY_BASED);
@@ -477,16 +476,6 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
     if (!ProjectWizardUtil.createDirectoryIfNotExists(IdeBundle.message("directory.module.content.root"), myModuleContentRoot.getText(),
                                                       myContentRootChangedByUser)) {
       return false;
-    }
-
-    File moduleFile = new File(moduleFileDirectory, moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION);
-    if (moduleFile.exists()) {
-      int answer = Messages.showYesNoDialog(IdeBundle.message("prompt.overwrite.project.file", moduleFile.getAbsolutePath(),
-                                                              IdeBundle.message("project.new.wizard.module.identification")),
-                                            IdeBundle.message("title.file.already.exists"), Messages.getQuestionIcon());
-      if (answer != 0) {
-        return false;
-      }
     }
     return true;
   }

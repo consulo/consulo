@@ -37,6 +37,7 @@ public class PathMacroUtil {
   @NonNls public static final String USER_HOME_NAME = "USER_HOME";
 
   @Nullable
+  @Deprecated
   public static String getModuleDir(String moduleFilePath) {
     File moduleDirFile = new File(moduleFilePath).getParentFile();
     if (moduleDirFile == null) return null;

@@ -101,7 +101,7 @@ public class EclipseImlTest extends IdeaTestCase {
     });
 
     final Element actualImlElement = new Element("root");
-    ((ModuleRootManagerImpl)ModuleRootManager.getInstance(module)).getState().writeExternal(actualImlElement);
+    ((ModuleRootManagerImpl)ModuleRootManager.getInstance(module)).saveState(actualImlElement);
 
     PathMacros.getInstance().setMacro(JUNIT, communityAppDir);
     PathMacroManager.getInstance(module).collapsePaths(actualImlElement);

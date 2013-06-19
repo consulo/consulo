@@ -36,7 +36,7 @@ public abstract class AbstractModuleBuilder extends ProjectBuilder {
 
   public abstract void setName(String name);
 
-  public abstract void setModuleFilePath(@NonNls String path);
+  public abstract void setModuleDirPath(@NonNls String path);
 
   public abstract void setContentEntryPath(String moduleRootPath);
 }

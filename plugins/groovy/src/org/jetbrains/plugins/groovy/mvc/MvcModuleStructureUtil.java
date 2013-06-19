@@ -25,9 +25,9 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
@@ -53,7 +53,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -568,18 +567,8 @@ public class MvcModuleStructureUtil {
   public static Module createAuxiliaryModule(@NotNull Module appModule, final String moduleName, final MvcFramework framework) {
     ModuleManager moduleManager = ModuleManager.getInstance(appModule.getProject());
     final ModifiableModuleModel moduleModel = moduleManager.getModifiableModel();
-    final String moduleFilePath = new File(appModule.getModuleFilePath()).getParent() + "/" + moduleName + ".iml";
-    final VirtualFile existing = LocalFileSystem.getInstance().findFileByPath(moduleFilePath);
-    if (existing != null) {
-      try {
-        existing.delete("Grails/Griffon plugins maintenance");
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    }
 
-    moduleModel.newModule(moduleFilePath);
+    moduleModel.newModule(appModule.getName(), appModule.getModuleDirPath());
     moduleModel.commit();
 
     Module pluginsModule = moduleManager.findModuleByName(moduleName);

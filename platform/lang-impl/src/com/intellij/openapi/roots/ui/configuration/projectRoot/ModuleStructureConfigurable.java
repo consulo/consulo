@@ -19,7 +19,6 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.ModuleGroupUtil;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
@@ -28,7 +27,10 @@ import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.*;
+import com.intellij.openapi.module.ModifiableModuleModel;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleConfigurationEditor;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -897,7 +899,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
             }
           };
           builder.setName(component.getNameValue());
-          builder.setModuleFilePath(path + "/" + builder.getName() + ModuleFileType.DOT_DEFAULT_EXTENSION);
+          builder.setModuleDirPath(path);
           final Module module = myContext.myModulesConfigurator.addModule(builder);
           if (module != null) {
             addModuleNode(module);

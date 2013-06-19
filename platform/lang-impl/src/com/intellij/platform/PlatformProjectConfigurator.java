@@ -16,15 +16,10 @@
 
 package com.intellij.platform;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ide.highlighter.ModuleFileType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,25 +28,6 @@ import org.jetbrains.annotations.NotNull;
 public class PlatformProjectConfigurator implements DirectoryProjectConfigurator {
   @Override
   public void configureProject(final Project project, @NotNull final VirtualFile baseDir, final Ref<Module> moduleRef) {
-    final ModuleManager moduleManager = ModuleManager.getInstance(project);
-    final Module[] modules = moduleManager.getModules();
-    if (modules.length == 0) {
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          String moduleName = baseDir.getName().replace(":", "");     // correct module name when opening root of drive as project (RUBY-5181)
-          String imlName = baseDir.getPath() + "/.idea/" + moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION;
-          final Module module = moduleManager.newModule(imlName);
-          ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-          ModifiableRootModel rootModel = rootManager.getModifiableModel();
-          if (rootModel.getContentRoots().length == 0) {
-            rootModel.addContentEntry(baseDir);
-          }
-          //rootModel.inheritSdk();
-          rootModel.commit();
-          moduleRef.set(module);
-        }
-      });
-    }
+
   }
 }

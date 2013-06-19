@@ -16,7 +16,6 @@
 
 package com.intellij.testFramework.fixtures.impl;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -80,8 +79,9 @@ public abstract class ModuleFixtureBuilderImpl<T extends ModuleFixture> implemen
   protected Module createModule() {
     final Project project = myFixtureBuilder.getFixture().getProject();
     assert project != null;
-    final String moduleFilePath = new File(project.getProjectFilePath()).getParent() + File.separator + getNextIndex() + ModuleFileType.DOT_DEFAULT_EXTENSION;
-    return ModuleManager.getInstance(project).newModule(moduleFilePath);
+    String moduleName = String.valueOf(getNextIndex());
+    final String moduleFilePath = new File(project.getProjectFilePath()).getParent();
+    return ModuleManager.getInstance(project).newModule(moduleName, moduleFilePath);
   }
 
   private static int getNextIndex() {

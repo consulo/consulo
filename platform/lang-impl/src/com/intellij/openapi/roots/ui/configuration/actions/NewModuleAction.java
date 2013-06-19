@@ -75,8 +75,8 @@ public class NewModuleAction extends AnAction implements DumbAware {
       if (moduleBuilder.getName() == null) {
         moduleBuilder.setName(wizard.getProjectName());
       }
-      if (moduleBuilder.getModuleFilePath() == null) {
-        moduleBuilder.setModuleFilePath(wizard.getModuleFilePath());
+      if (moduleBuilder.getModuleDirPath() == null) {
+        moduleBuilder.setModuleDirPath(wizard.getModuleFilePath());
       }
     }
     if (!builder.validate(project, project)) {

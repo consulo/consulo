@@ -16,7 +16,6 @@
 package com.intellij.testFramework;
 
 import com.intellij.history.integration.LocalHistoryImpl;
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.idea.IdeaLogger;
@@ -297,19 +296,18 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     return doCreateRealModuleIn(moduleName, myProject);
   }
 
-  protected static Module doCreateRealModuleIn(String moduleName, final Project project) {
+  protected static Module doCreateRealModuleIn(final String moduleName, final Project project) {
     final VirtualFile baseDir = project.getBaseDir();
     assertNotNull(baseDir);
-    final File moduleFile = new File(baseDir.getPath().replace('/', File.separatorChar),
-                                     moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION);
+    final File moduleFile = new File(baseDir.getPath().replace('/', File.separatorChar), moduleName);
     FileUtil.createIfDoesntExist(moduleFile);
     myFilesToDelete.add(moduleFile);
     return new WriteAction<Module>() {
       @Override
       protected void run(Result<Module> result) throws Throwable {
         final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(moduleFile);
-        Module module = ModuleManager.getInstance(project).newModule(virtualFile.getPath());
-        module.getModuleFile();
+        Module module = ModuleManager.getInstance(project).newModule(moduleName, virtualFile.getPath());
+        module.getModuleDir();
         result.setResult(module);
       }
     }.execute().getResultObject();
@@ -397,8 +395,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
     try {
       Project project = getProject();
-      DirectoryIndexImpl directoryIndex =
-      project != null ? (DirectoryIndexImpl)DirectoryIndex.getInstance(project) : null;
+      DirectoryIndexImpl directoryIndex = project != null ? (DirectoryIndexImpl)DirectoryIndex.getInstance(project) : null;
       disposeProject(result);
 
       if (project != null) {
@@ -487,7 +484,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
               if (!projectsStillOpen.isEmpty()) {
                 Project project = projectsStillOpen.iterator().next();
                 projectsStillOpen.clear();
-                throw new AssertionError("Test project is not disposed: " + project+";\n created in: "+getCreationPlace(project));
+                throw new AssertionError("Test project is not disposed: " + project + ";\n created in: " + getCreationPlace(project));
               }
             }
           }
@@ -556,7 +553,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     // extra init for libraries
     sm.runPostStartupActivities();
   }
-
 
 
   @Nullable
@@ -760,7 +756,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
   }
 
-  public static VirtualFile createTempFile(@NonNls String ext, @Nullable byte[] bom, @NonNls String content, Charset charset) throws IOException {
+  public static VirtualFile createTempFile(@NonNls String ext, @Nullable byte[] bom, @NonNls String content, Charset charset)
+    throws IOException {
     File temp = FileUtil.createTempFile("copy", "." + ext);
     setContentOnDisk(temp, bom, content, charset);
 
