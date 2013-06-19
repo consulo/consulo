@@ -15,7 +15,6 @@
  */
 package org.consulo.idea.util.projectWizard;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
@@ -33,7 +32,6 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import org.consulo.idea.IdeaConstants;
 import org.consulo.idea.IdeaIcons;
-import org.consulo.idea.file.IdeaModuleFileType;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
@@ -145,8 +143,9 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
 
     final ModifiableModuleModel newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
 
+
     final Module module =
-      newModel.newModule(moduleFilePath.replace(IdeaModuleFileType.DEFAULT_EXTENSION, ModuleFileType.DEFAULT_EXTENSION));
+      newModel.newModule("FIX IT", moduleFilePath);
 
     final Element rootElement = document.getRootElement();
 

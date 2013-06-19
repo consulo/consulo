@@ -16,54 +16,44 @@
 
 package com.intellij.openapi.module.impl;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.ExtensionAreas;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
-import com.intellij.openapi.components.impl.stores.IComponentStore;
-import com.intellij.openapi.components.impl.stores.ModuleStoreImpl;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import org.consulo.lombok.annotations.Logger;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.MutablePicoContainer;
 
-import java.io.File;
 import java.util.*;
 
 /**
  * @author max
  */
 @Logger
-public class ModuleImpl extends ComponentManagerImpl implements ModuleEx, PersistentStateComponent<Element> {
+public class ModuleImpl extends ComponentManagerImpl implements ModuleEx {
   @NotNull
   private final Project myProject;
   private boolean isModuleAdded;
 
   @NonNls
   private static final String OPTION_WORKSPACE = "workspace";
-
-  public static final Object MODULE_RENAMING_REQUESTOR = new Object();
 
   private String myName;
 
@@ -82,15 +72,13 @@ public class ModuleImpl extends ComponentManagerImpl implements ModuleEx, Persis
     myModuleScopeProvider = new ModuleScopeProviderImpl(this);
 
     myDirVirtualFilePointer = VirtualFilePointerManager.getInstance().create(dirUrl, project, null);
-
-    VirtualFileManager.getInstance().addVirtualFileListener(new MyVirtualFileListener(), this);
   }
 
   @Override
   protected void bootstrapPicoContainer(@NotNull String name) {
     Extensions.instantiateArea(ExtensionAreas.IDEA_MODULE, this, (AreaInstance)getParentComponentManager());
     super.bootstrapPicoContainer(name);
-    getPicoContainer().registerComponentImplementation(IComponentStore.class, ModuleStoreImpl.class);
+
     getPicoContainer().registerComponentImplementation(ModulePathMacroManager.class);
   }
 
@@ -292,10 +280,6 @@ public class ModuleImpl extends ComponentManagerImpl implements ModuleEx, Persis
     return "Module: '" + getName() + "'";
   }
 
-  private static String moduleNameByFileName(@NotNull String fileName) {
-    return StringUtil.trimEnd(fileName, ModuleFileType.DOT_DEFAULT_EXTENSION);
-  }
-
   @Override
   public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
@@ -304,67 +288,6 @@ public class ModuleImpl extends ComponentManagerImpl implements ModuleEx, Persis
   @Override
   protected boolean logSlowComponents() {
     return super.logSlowComponents() || ApplicationInfoImpl.getShadowInstance().isEAP();
-  }
-
-  @Nullable
-  @Override
-  public Element getState() {
-    return null;
-  }
-
-  @Override
-  public void loadState(Element state) {
-  }
-
-  private class MyVirtualFileListener extends VirtualFileAdapter {
-    @Override
-    public void propertyChanged(VirtualFilePropertyEvent event) {
-      if (!isModuleAdded) return;
-      final Object requestor = event.getRequestor();
-      if (MODULE_RENAMING_REQUESTOR.equals(requestor)) return;
-      if (!VirtualFile.PROP_NAME.equals(event.getPropertyName())) return;
-
-      final VirtualFile parent = event.getParent();
-      if (parent != null) {
-        final String parentPath = parent.getPath();
-        final String ancestorPath = parentPath + "/" + event.getOldValue();
-        final String moduleFilePath = getModuleFilePath();
-        if (VfsUtilCore.isAncestor(new File(ancestorPath), new File(moduleFilePath), true)) {
-          final String newValue = (String)event.getNewValue();
-          final String relativePath = FileUtil.getRelativePath(ancestorPath, moduleFilePath, '/');
-          final String newFilePath = parentPath + "/" + newValue + "/" + relativePath;
-          setModuleFilePath(moduleFilePath, newFilePath);
-        }
-      }
-
-      final VirtualFile moduleFile = getModuleFile();
-      if (moduleFile == null) return;
-      if (moduleFile.equals(event.getFile())) {
-        myName = moduleNameByFileName(moduleFile.getName());
-        ModuleManagerImpl.getInstanceImpl(getProject()).fireModuleRenamedByVfsEvent(ModuleImpl.this);
-      }
-    }
-
-    private void setModuleFilePath(String moduleFilePath, String newFilePath) {
-      final ModifiableModuleModel modifiableModel = ModuleManagerImpl.getInstanceImpl(getProject()).getModifiableModel();
-      modifiableModel.setModuleFilePath(ModuleImpl.this, moduleFilePath, newFilePath);
-      modifiableModel.commit();
-
-      //TODO [VISTALL] getStateStore().setModuleFilePath(newFilePath);
-    }
-
-    @Override
-    public void fileMoved(VirtualFileMoveEvent event) {
-      final VirtualFile oldParent = event.getOldParent();
-      final VirtualFile newParent = event.getNewParent();
-      final String dirName = event.getFileName();
-      final String ancestorPath = oldParent.getPath() + "/" + dirName;
-      final String moduleFilePath = getModuleFilePath();
-      if (VfsUtilCore.isAncestor(new File(ancestorPath), new File(moduleFilePath), true)) {
-        final String relativePath = FileUtil.getRelativePath(ancestorPath, moduleFilePath, '/');
-        setModuleFilePath(moduleFilePath, newParent.getPath() + "/" + dirName + "/" + relativePath);
-      }
-    }
   }
 
   @Override
