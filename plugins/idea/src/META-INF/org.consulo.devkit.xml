@@ -15,6 +15,6 @@
   -->
 <idea-plugin version="2">
   <extensions defaultExtensionNs="org.consulo.idea">
-    <moduleTypeToModuleExtensionConverter key="PLUGIN_MODULE" implementationClass="org.consulo.idea.util.impl.PluginIdeaModuleTypeToModuleExtensionConverter" />
+    <moduleTypeToModuleExtensionConverter key="PLUGIN_MODULE" implementationClass="org.consulo.idea.util.impl.PluginIdeaModuleTypeToModuleExtensionConverter"  />
   </extensions>
 </idea-plugin>

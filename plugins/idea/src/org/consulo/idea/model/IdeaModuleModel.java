@@ -33,21 +33,34 @@ import java.util.Map;
  * @author VISTALL
  * @since 9:57/16.06.13
  */
-public class ModuleModel {
-  private final List<ContentEntryModel> myContentEntries = new ArrayList<ContentEntryModel>();
+public class IdeaModuleModel implements IdeaParseableModel{
+  private final List<IdeaContentEntryModel> myContentEntries = new ArrayList<IdeaContentEntryModel>();
   private final List<OrderEntryModel> myOrderEntries = new ArrayList<OrderEntryModel>();
+  private final Map<String, String> myComponentAttributes = new HashMap<String, String>();
+  private final String myFilePath;
   private String myModuleType;
 
-  private final Map<String, String> myComponentAttributes = new HashMap<String, String>();
+  public IdeaModuleModel(String filepath) {
+    myFilePath = filepath;
+  }
+
+  public List<IdeaContentEntryModel> getContentEntries() {
+    return myContentEntries;
+  }
+
+  public List<OrderEntryModel> getOrderEntries() {
+    return myOrderEntries;
+  }
+
+  public Map<String, String> getComponentAttributes() {
+    return myComponentAttributes;
+  }
 
   @SneakyThrows
-  public ModuleModel(IdeaProjectModel ideaProjectModel, String filepath) {
-    final Document document = ideaProjectModel.loadDocument(new File(filepath));
-
-    final Element rootElement = document.getRootElement();
-
-    myModuleType = rootElement.getAttributeValue("type");
-
+  @Override
+  public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir) {
+    final Document document = ideaProjectModel.loadDocument(new File(myFilePath));
+    myModuleType = document.getRootElement().getAttributeValue("type");
     XPath xpathExpression = XPath.newInstance("/module[@version='4']/component[@name='NewModuleRootManager']");
     final Element componentNode = (Element)xpathExpression.selectSingleNode(document);
     for(Attribute attribute : componentNode.getAttributes()) {
@@ -59,7 +72,7 @@ public class ModuleModel {
       if ("content".equals(name)) {
         final String url = element.getAttributeValue("url");
 
-        final ContentEntryModel contentEntryModel = new ContentEntryModel(url);
+        final IdeaContentEntryModel contentEntryModel = new IdeaContentEntryModel(url);
         myContentEntries.add(contentEntryModel);
 
         for (Element childOfContent : element.getChildren()) {
@@ -86,7 +99,7 @@ public class ModuleModel {
           myOrderEntries.add(new InheritedOrderEntryModel());
         }
         else if ("module-library".equals(type)) {
-          LibraryModel libraryModel = new LibraryModel();
+          IdeaLibraryModel libraryModel = new IdeaLibraryModel();
           libraryModel.load(ideaProjectModel, element);
 
           myOrderEntries.add(new ModuleLibraryOrderEntryModel(libraryModel));
@@ -103,20 +116,11 @@ public class ModuleModel {
       }
     }
   }
+ public String getModuleType() {
+   return myModuleType;
+ }
 
-  public List<ContentEntryModel> getContentEntries() {
-    return myContentEntries;
-  }
-
-  public List<OrderEntryModel> getOrderEntries() {
-    return myOrderEntries;
-  }
-
-  public String getModuleType() {
-    return myModuleType;
-  }
-
-  public Map<String, String> getComponentAttributes() {
-    return myComponentAttributes;
+  public String getFilePath() {
+    return myFilePath;
   }
 }

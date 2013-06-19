@@ -49,14 +49,14 @@ public class FormLayoutSerializer extends GridLayoutSerializer {
     for (Iterator iterator = rowSpecs.iterator(); iterator.hasNext();) {
       Element rowSpecElement = (Element) iterator.next();
       final String spec = LwXmlReader.getRequiredString(rowSpecElement, UIFormXmlConstants.ATTRIBUTE_VALUE);
-      layout.appendRow(new RowSpec(spec));
+      layout.appendRow(RowSpec.decode(spec));
     }
 
     final List colSpecs = element.getChildren(UIFormXmlConstants.ELEMENT_COLSPEC, element.getNamespace());
     for (Iterator iterator = colSpecs.iterator(); iterator.hasNext();) {
       Element colSpecElement = (Element) iterator.next();
       final String spec = LwXmlReader.getRequiredString(colSpecElement, UIFormXmlConstants.ATTRIBUTE_VALUE);
-      layout.appendColumn(new ColumnSpec(spec));
+      layout.appendColumn(ColumnSpec.decode(spec));
     }
 
     int[][] rowGroups = readGroups(element, UIFormXmlConstants.ELEMENT_ROWGROUP);

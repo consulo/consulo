@@ -60,13 +60,13 @@ public class FormFirstComponentInsertLocation extends FirstComponentInsertLocati
 
     FormLayout formLayout = (FormLayout) myContainer.getDelegee().getLayout();
     if (myXPart == 0) {
-      formLayout.setColumnSpec(1, new ColumnSpec("d"));
+      formLayout.setColumnSpec(1, ColumnSpec.decode("d"));
     }
     else if (myXPart == 2) {
       gridLayout.insertGridCells(myContainer, 0, false, true, true);
     }
     if (myYPart == 0) {
-      formLayout.setRowSpec(1, new RowSpec("d"));
+      formLayout.setRowSpec(1, RowSpec.decode("d"));
     }
     else if (myYPart == 2) {
       gridLayout.insertGridCells(myContainer, 0, true, true, true);

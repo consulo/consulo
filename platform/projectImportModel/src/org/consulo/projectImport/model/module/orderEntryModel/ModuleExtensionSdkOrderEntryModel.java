@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.idea.model.orderEnties;
-
-import org.consulo.idea.model.IdeaLibraryModel;
+package org.consulo.projectImport.model.module.orderEntryModel;
 
 /**
  * @author VISTALL
- * @since 10:17/16.06.13
+ * @since 17:32/19.06.13
  */
-public class ModuleLibraryOrderEntryModel extends OrderEntryModel {
-  private final IdeaLibraryModel myLibraryModel;
+public class ModuleExtensionSdkOrderEntryModel extends OrderEntryModel {
+  private final String myExtensionId;
 
-  public ModuleLibraryOrderEntryModel(IdeaLibraryModel libraryModel) {
-    myLibraryModel = libraryModel;
+  public ModuleExtensionSdkOrderEntryModel(String extensionId) {
+    myExtensionId = extensionId;
   }
 
-  public IdeaLibraryModel getLibraryModel() {
-    return myLibraryModel;
+  public String getExtensionId() {
+    return myExtensionId;
   }
 }

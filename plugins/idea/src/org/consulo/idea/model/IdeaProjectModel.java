@@ -29,10 +29,10 @@ import java.io.IOException;
  * @author VISTALL
  * @since 9:49/16.06.13
  */
-public class IdeaProjectModel extends HolderModel implements ParseableModel {
+public class IdeaProjectModel extends HolderModel implements IdeaParseableModel {
   public IdeaProjectModel(File ideaProjectDir) {
-    getInstance(ProjectLibraryTableModel.class);
-    getInstance(ModuleTableModel.class);
+    getInstance(IdeaProjectLibraryTableModel.class);
+    getInstance(IdeaModuleTableModel.class);
 
     load(this, ideaProjectDir);
   }
@@ -45,8 +45,8 @@ public class IdeaProjectModel extends HolderModel implements ParseableModel {
   @Override
   public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir) {
     for (Object o : myInstances.values()) {
-      if(o instanceof ParseableModel) {
-        ((ParseableModel)o).load(this, ideaProjectDir);
+      if(o instanceof IdeaParseableModel) {
+        ((IdeaParseableModel)o).load(this, ideaProjectDir);
       }
     }
   }

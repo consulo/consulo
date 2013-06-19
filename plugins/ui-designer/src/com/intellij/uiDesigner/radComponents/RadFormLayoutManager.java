@@ -38,7 +38,6 @@ import com.intellij.uiDesigner.propertyInspector.properties.VertAlignProperty;
 import com.intellij.uiDesigner.snapShooter.SnapshotContext;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.PlatformColors;
-import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -83,15 +82,15 @@ public class RadFormLayoutManager extends RadAbstractGridLayoutManager implement
     ColumnSpec[] colSpecs = new ColumnSpec [columnCountWithGaps];
 
     for(int i=0; i<rowCount; i++) {
-      rowSpecs [i*2] = canRowsGrow.get(i).booleanValue() ? new RowSpec(ENCODED_FORMSPEC_GROW) : new RowSpec(DEFAULT_NOGROW_SIZE);
+      rowSpecs [i*2] = canRowsGrow.get(i).booleanValue() ? RowSpec.decode(ENCODED_FORMSPEC_GROW) : new RowSpec(DEFAULT_NOGROW_SIZE);
       if (i*2+1 < rowSpecs.length) {
-        rowSpecs [i*2+1] = FormFactory.RELATED_GAP_ROWSPEC;
+        rowSpecs [i*2+1] = FormSpecs.RELATED_GAP_ROWSPEC;
       }
     }
     for(int i=0; i<columnCount; i++) {
-      colSpecs [i*2] = canColumnsGrow.get(i).booleanValue() ? new ColumnSpec(ENCODED_FORMSPEC_GROW) : new ColumnSpec(DEFAULT_NOGROW_SIZE);
+      colSpecs [i*2] = canColumnsGrow.get(i).booleanValue() ? ColumnSpec.decode(ENCODED_FORMSPEC_GROW) : new ColumnSpec(DEFAULT_NOGROW_SIZE);
       if (i*2+1 < colSpecs.length) {
-        colSpecs [i*2+1] = FormFactory.RELATED_GAP_COLSPEC;
+        colSpecs [i*2+1] = FormSpecs.RELATED_GAP_COLSPEC;
       }
     }
 
@@ -107,13 +106,13 @@ public class RadFormLayoutManager extends RadAbstractGridLayoutManager implement
     ColumnSpec[] colSpecs = new ColumnSpec [components.size() * 2 - 1];
     for(int i=0; i<components.size(); i++) {
       colSpecs [i*2] = components.get(i).getConstraints().getHSizePolicy() == maxSizePolicy
-                       ? new ColumnSpec(ENCODED_FORMSPEC_GROW)
-                       : FormFactory.DEFAULT_COLSPEC;
+                       ? ColumnSpec.decode(ENCODED_FORMSPEC_GROW)
+                       : FormSpecs.DEFAULT_COLSPEC;
       if (i*2+1 < colSpecs.length) {
-        colSpecs [i*2+1] = FormFactory.RELATED_GAP_COLSPEC;
+        colSpecs [i*2+1] = FormSpecs.RELATED_GAP_COLSPEC;
       }
     }
-    container.setLayoutManager(this, new FormLayout(colSpecs, new RowSpec[] { FormFactory.DEFAULT_ROWSPEC } ));
+    container.setLayoutManager(this, new FormLayout(colSpecs, new RowSpec[] { FormSpecs.DEFAULT_ROWSPEC } ));
   }
 
   @Override
@@ -441,10 +440,10 @@ public class RadFormLayoutManager extends RadAbstractGridLayoutManager implement
   public int insertGridCells(final RadContainer grid, final int cellIndex, final boolean isRow, final boolean isBefore, final boolean grow) {
     FormSpec formSpec;
     if (isRow) {
-      formSpec = grow ? new RowSpec(ENCODED_FORMSPEC_GROW) : new RowSpec(DEFAULT_NOGROW_SIZE);
+      formSpec = grow ? RowSpec.decode(ENCODED_FORMSPEC_GROW) : new RowSpec(DEFAULT_NOGROW_SIZE);
     }
     else {
-      formSpec = grow ? new ColumnSpec(ENCODED_FORMSPEC_GROW) : new ColumnSpec(DEFAULT_NOGROW_SIZE);
+      formSpec = grow ? ColumnSpec.decode(ENCODED_FORMSPEC_GROW) : new ColumnSpec(DEFAULT_NOGROW_SIZE);
     }
     insertGridCells(grid, cellIndex, isRow, isBefore, formSpec);
     return getGridCellCount(grid, isRow) == 1 ? 1 : 2;
@@ -455,10 +454,10 @@ public class RadFormLayoutManager extends RadAbstractGridLayoutManager implement
     FormLayout sourceLayout = getFormLayout(source);
     FormLayout destinationLayout = getFormLayout(destination);
     if (isRow) {
-      insertOrAppendRow(destinationLayout, targetIndex+1, FormFactory.RELATED_GAP_ROWSPEC);
+      insertOrAppendRow(destinationLayout, targetIndex+1, FormSpecs.RELATED_GAP_ROWSPEC);
     }
     else {
-      insertOrAppendColumn(destinationLayout, targetIndex+1, FormFactory.RELATED_GAP_COLSPEC);
+      insertOrAppendColumn(destinationLayout, targetIndex+1, FormSpecs.RELATED_GAP_COLSPEC);
     }
     targetIndex++;
     if (targetIndex < cellIndex) cellIndex++;
@@ -501,7 +500,7 @@ public class RadFormLayoutManager extends RadAbstractGridLayoutManager implement
 
   @Override
   public int getGapCellSize(final RadContainer container, boolean isRow) {
-    Size size = isRow ? FormFactory.RELATED_GAP_ROWSPEC.getSize() : FormFactory.RELATED_GAP_COLSPEC.getSize();
+    Size size = isRow ? FormSpecs.RELATED_GAP_ROWSPEC.getSize() : FormSpecs.RELATED_GAP_COLSPEC.getSize();
     if (size instanceof ConstantSize) {
       return ((ConstantSize) size).getPixelSize(container.getDelegee());
     }
@@ -535,14 +534,14 @@ public class RadFormLayoutManager extends RadAbstractGridLayoutManager implement
     int index = isBefore ? cellIndex+1 : cellIndex+2;
     if (isRow) {
       if (getGridCellCount(grid, true) > 0) {
-        insertOrAppendRow(formLayout, index, FormFactory.RELATED_GAP_ROWSPEC);
+        insertOrAppendRow(formLayout, index, FormSpecs.RELATED_GAP_ROWSPEC);
         if (!isBefore) index++;
       }
       insertOrAppendRow(formLayout, index, (RowSpec) formSpec);
     }
     else {
       if (getGridCellCount(grid, false) > 0) {
-        insertOrAppendColumn(formLayout, index, FormFactory.RELATED_GAP_COLSPEC);
+        insertOrAppendColumn(formLayout, index, FormSpecs.RELATED_GAP_COLSPEC);
         if (!isBefore) index++;
       }
       insertOrAppendColumn(formLayout, index, (ColumnSpec)formSpec);

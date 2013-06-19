@@ -31,24 +31,24 @@ public class ModuleLoaderTest extends ModuleLoaderTestCase {
   public void testProject1() {
     final IdeaProjectModel ideaProjectModel = getIdeaProjectModel();
 
-    final ProjectLibraryTableModel libraryTableModel = ideaProjectModel.getInstance(ProjectLibraryTableModel.class);
-    final List<LibraryModel> libraries = libraryTableModel.getLibraries();
+    final IdeaProjectLibraryTableModel libraryTableModel = ideaProjectModel.getInstance(IdeaProjectLibraryTableModel.class);
+    final List<IdeaLibraryModel> libraries = libraryTableModel.getLibraries();
     assertEquals(libraries.size(), 1);
     assertEquals(libraries.get(0).getName(), "concierge-1.0.0");
     assertEquals(libraries.get(0).getOrderRoots().get(OrderRootType.CLASSES).size(), 1);
 
-    final ModuleTableModel moduleTableModel = ideaProjectModel.getInstance(ModuleTableModel.class);
+    final IdeaModuleTableModel moduleTableModel = ideaProjectModel.getInstance(IdeaModuleTableModel.class);
     assertEquals(moduleTableModel.getModules().size(), 2);
 
     // test first module
-    final ModuleModel firstModule = moduleTableModel.getModules().get(0);
+    final IdeaModuleModel firstModule = moduleTableModel.getModules().get(0);
     assertEquals(firstModule.getModuleType(), "JAVA_MODULE");
     assertEquals(firstModule.getContentEntries().size(), 1);
     assertEquals(firstModule.getComponentAttributes().size(), 2);
     assertEquals(firstModule.getComponentAttributes().get("name"), "NewModuleRootManager");
     assertEquals(firstModule.getComponentAttributes().get("inherit-compiler-output"), "true");
 
-    ContentEntryModel contentEntryModel = firstModule.getContentEntries().get(0);
+    IdeaContentEntryModel contentEntryModel = firstModule.getContentEntries().get(0);
 
     assertEquals(contentEntryModel.getUrl(), "file://$MODULE_DIR$");
     assertEquals(contentEntryModel.getContentFolderTypes().size(), 2);
@@ -64,7 +64,7 @@ public class ModuleLoaderTest extends ModuleLoaderTestCase {
     assertEquals(firstModule.getOrderEntries().get(3).getClass(), ModuleLibraryOrderEntryModel.class);
     assertEquals(firstModule.getOrderEntries().get(4).getClass(), ProjectLibraryOrderEntryModel.class);
 
-    final ModuleModel secondModule = moduleTableModel.getModules().get(1);
+    final IdeaModuleModel secondModule = moduleTableModel.getModules().get(1);
     assertEquals(secondModule.getModuleType(), "JAVA_MODULE");
     assertEquals(secondModule.getContentEntries().size(), 1);
     assertEquals(secondModule.getComponentAttributes().size(), 3);

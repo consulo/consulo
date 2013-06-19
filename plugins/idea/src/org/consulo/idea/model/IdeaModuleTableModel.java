@@ -28,18 +28,18 @@ import java.util.List;
  * @author VISTALL
  * @since 9:57/16.06.13
  */
-public class ModuleTableModel implements ParseableModel {
-  private final List<ModuleModel> myModules = new ArrayList<ModuleModel>();
+public class IdeaModuleTableModel implements IdeaParseableModel {
+  private final List<IdeaModuleModel> myModules = new ArrayList<IdeaModuleModel>();
 
   @Override
   @SneakyThrows
   public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir) {
     File modulesFile = new File(ideaProjectDir, "modules.xml");
-    if(!modulesFile.exists())  {
-      return;    }
+    if (!modulesFile.exists()) {
+      return;
+    }
 
     final Document document = ideaProjectModel.loadDocument(modulesFile);
-
 
     XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*");
 
@@ -53,11 +53,13 @@ public class ModuleTableModel implements ParseableModel {
         continue;
       }
 
-      myModules.add(new ModuleModel(ideaProjectModel, filepath));
+      final IdeaModuleModel moduleModel = new IdeaModuleModel(filepath);
+      moduleModel.load(ideaProjectModel, ideaProjectDir);
+      myModules.add(moduleModel);
     }
   }
 
-  public List<ModuleModel> getModules() {
+  public List<IdeaModuleModel> getModules() {
     return myModules;
   }
 }

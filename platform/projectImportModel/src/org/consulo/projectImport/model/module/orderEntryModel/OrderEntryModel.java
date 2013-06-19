@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.idea.model;
-
-import java.io.File;
+package org.consulo.projectImport.model.module.orderEntryModel;
 
 /**
  * @author VISTALL
- * @since 9:54/16.06.13
+ * @since 17:32/19.06.13
  */
-public interface ParseableModel {
-  void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir);
+public class OrderEntryModel {
 }

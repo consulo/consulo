@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.idea.model.orderEnties;
+package org.consulo.projectImport.model;
 
-import org.consulo.idea.model.IdeaLibraryModel;
+import org.consulo.projectImport.model.ModelContainer;
+import org.consulo.projectImport.model.module.ModuleModel;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 10:17/16.06.13
+ * @since 17:16/19.06.13
  */
-public class ModuleLibraryOrderEntryModel extends OrderEntryModel {
-  private final IdeaLibraryModel myLibraryModel;
-
-  public ModuleLibraryOrderEntryModel(IdeaLibraryModel libraryModel) {
-    myLibraryModel = libraryModel;
-  }
-
-  public IdeaLibraryModel getLibraryModel() {
-    return myLibraryModel;
+public class ModuleTableModel extends ModelContainer {
+  @NotNull
+  public List<ModuleModel> getModules() {
+    return findChildren(ModuleModel.class);
   }
 }

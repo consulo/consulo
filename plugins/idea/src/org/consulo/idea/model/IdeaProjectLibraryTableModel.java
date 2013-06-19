@@ -29,8 +29,8 @@ import java.util.List;
  * @author VISTALL
  * @since 9:49/16.06.13
  */
-public class ProjectLibraryTableModel extends LibraryTableModel implements ParseableModel {
-  private final List<LibraryModel> myLibraries = new ArrayList<LibraryModel>();
+public class IdeaProjectLibraryTableModel extends IdeaLibraryTableModel implements IdeaParseableModel {
+  private final List<IdeaLibraryModel> myLibraries = new ArrayList<IdeaLibraryModel>();
 
   @Override
   @SneakyThrows
@@ -55,7 +55,7 @@ public class ProjectLibraryTableModel extends LibraryTableModel implements Parse
       if ("libraryTable".equals(attributeValue)) {
         final Element libraryElement = rootElement.getChild("library");
         if (libraryElement != null) {
-          LibraryModel libraryModel = new LibraryModel();
+          IdeaLibraryModel libraryModel = new IdeaLibraryModel();
           libraryModel.load(ideaProjectModel, rootElement);
           myLibraries.add(libraryModel);
         }
@@ -63,7 +63,7 @@ public class ProjectLibraryTableModel extends LibraryTableModel implements Parse
     }
   }
 
-  public List<LibraryModel> getLibraries() {
+  public List<IdeaLibraryModel> getLibraries() {
     return myLibraries;
   }
 }

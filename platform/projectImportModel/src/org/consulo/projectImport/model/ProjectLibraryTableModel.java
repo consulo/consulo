@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.idea.model;
+package org.consulo.projectImport.model;
 
+import org.consulo.projectImport.model.library.LibraryModel;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 10:07/16.06.13
+ * @since 17:43/19.06.13
  */
-public abstract class LibraryTableModel{
-  private final List<LibraryModel> myModels = new ArrayList<LibraryModel>();
+public class ProjectLibraryTableModel extends ModelContainer {
+  public void addLibrary(@NotNull LibraryModel libraryModel) {
+    addChild(libraryModel);
+  }
 
   @NotNull
-  public List<LibraryModel> getModels() {
-    return myModels;
+  public List<LibraryModel> getLibraries() {
+    return findChildren(LibraryModel.class);
   }
 }

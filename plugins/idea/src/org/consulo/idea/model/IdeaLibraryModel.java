@@ -23,11 +23,11 @@ import org.jdom.Element;
  * @author VISTALL
  * @since 9:47/16.06.13
  */
-public class LibraryModel {
+public class IdeaLibraryModel {
   private final MultiMap<OrderRootType, String> myOrderRoots = new MultiMap<OrderRootType, String>();
   private String myName;
 
-  public LibraryModel() {
+  public IdeaLibraryModel() {
   }
 
   public void load(IdeaProjectModel ideaProjectModel, Element element) {
