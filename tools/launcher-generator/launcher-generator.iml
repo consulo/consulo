@@ -7,11 +7,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="community-resources" />
-    <orderEntry type="library" name="jdom" level="project" />
-    <orderEntry type="library" name="sanselan-0.98-snapshot" level="project" />
     <orderEntry type="module" module-name="icons" />
-    <orderEntry type="library" name="guava" level="project" />
+    <orderEntry type="library" name="Guava" level="project" />
+    <orderEntry type="library" name="JDOM" level="project" />
+    <orderEntry type="library" name="Sanselan" level="project" />
   </component>
 </module>
 

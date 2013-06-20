@@ -1,6 +1,8 @@
 <component name="CopyrightManager">
   <settings default="apache 2 license">
-    <module2copyright />
+    <module2copyright>
+      <element module="launcher-generator" copyright="apache 2 productiveme" />
+    </module2copyright>
     <LanguageOptions name="__TEMPLATE__">
       <option name="addBlankAfter" value="false" />
     </LanguageOptions>

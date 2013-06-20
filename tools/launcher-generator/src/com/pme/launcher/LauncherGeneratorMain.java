@@ -74,6 +74,14 @@ public class LauncherGeneratorMain {
       splashUrl = splashUrl.substring(1);
     }
     InputStream splashStream = LauncherGeneratorMain.class.getClassLoader().getResourceAsStream(splashUrl);
+    if(splashStream == null) {
+      try
+      {
+        splashStream = new FileInputStream(new File(new File(appInfoFileName).getParentFile().getParent(), splashUrl));
+      }
+      catch (IOException e)
+      {}
+    }
     if (splashStream == null) {
       System.err.println("Splash screen image file file " + splashUrl + " not found");
       System.exit(5);

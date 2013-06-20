@@ -130,7 +130,7 @@ bool FindJVMInEnvVar(const char* envVarName, bool& result)
 			char buf[_MAX_PATH];
 			sprintf_s(buf, "The environment variable %s (with the value of %s) does not point to a valid JVM installation.",
 				envVarName, envVarValue);
-			MessageBoxA(NULL, buf, "Error Launching IntelliJ Platform", MB_OK);
+			MessageBoxA(NULL, buf, "Error Launching Consulo", MB_OK);
 			result = false;
 		}
 		return true;
@@ -206,7 +206,7 @@ bool LocateJVM()
 		return result;
 	}
 
-	MessageBoxA(NULL, "No JVM installation found. Please reinstall the product or install a JDK.", "Error Launching IntelliJ Platform", MB_OK);
+	MessageBoxA(NULL, "No JVM installation found. Please reinstall the product or install a JDK.", "Error Launching Consulo", MB_OK);
 	return false;
 }
 
@@ -365,7 +365,7 @@ bool LoadVMOptions()
 			return true;
 		}
 	}
-	MessageBox(NULL, _T("Cannot find VM options file"), _T("Error launching IntelliJ Platform"), MB_OK);
+	MessageBox(NULL, _T("Cannot find VM options file"), _T("Error launching Consulo"), MB_OK);
 	return false;
 }
 
@@ -391,7 +391,7 @@ bool LoadJVMLibrary()
 	{
 		char buf[_MAX_PATH];
 		sprintf(buf, "Failed to load JVM DLL %s", dllName.c_str());
-		MessageBoxA(NULL, buf, "Error Launching IntelliJ Platform", MB_OK);
+		MessageBoxA(NULL, buf, "Error Launching Consulo", MB_OK);
 		return false;
 	}
 	return true;
@@ -418,7 +418,7 @@ bool CreateJVM()
 	{
 		TCHAR buf[_MAX_PATH];
 		_stprintf_s(buf, _T("Failed to create JVM: error code %d"), result);
-		MessageBox(NULL, buf, _T("Error launching IntelliJ Platform"), MB_OK);
+		MessageBox(NULL, buf, _T("Error launching Consulo"), MB_OK);
 	}
 
 	return result == JNI_OK;
@@ -446,14 +446,14 @@ bool RunMainClass()
 	{
 		char buf[_MAX_PATH];
 		sprintf_s(buf, "Could not find main class %s", mainClassName.c_str());
-		MessageBoxA(NULL, buf, "Error Launching IntelliJ Platform", MB_OK);
+		MessageBoxA(NULL, buf, "Error Launching Consulo", MB_OK);
 		return false;
 	}
 
 	jmethodID mainMethod = env->GetStaticMethodID(mainClass, "main", "([Ljava/lang/String;)V");
 	if (!mainMethod)
 	{
-		MessageBoxA(NULL, "Could not find main method", "Error Launching IntelliJ Platform", MB_OK);
+		MessageBoxA(NULL, "Could not find main method", "Error Launching Consulo", MB_OK);
 		return false;
 	}
 
@@ -462,7 +462,7 @@ bool RunMainClass()
 	jthrowable exc = env->ExceptionOccurred();
 	if (exc)
 	{
-		MessageBox(NULL, _T("Error invoking main method"), _T("Error launching IntelliJ Platform"), MB_OK);
+		MessageBox(NULL, _T("Error invoking main method"), _T("Error launching Consulo"), MB_OK);
 	}
 
 	return true;
@@ -547,8 +547,8 @@ bool CheckSingleInstance()
 	{
 		if (*p == ':' || *p == '\\') *p = '_';
 	}
-	std::string mappingName = std::string("IntelliJLauncherMapping.") + moduleFileName;
-	std::string eventName = std::string("IntelliJLauncherEvent.") + moduleFileName;
+	std::string mappingName = std::string("ConsuloMapping.") + moduleFileName;
+	std::string eventName = std::string("ConsuloLauncherEvent.") + moduleFileName;
 
 	hEvent = CreateEventA(NULL, FALSE, FALSE, eventName.c_str());
 
