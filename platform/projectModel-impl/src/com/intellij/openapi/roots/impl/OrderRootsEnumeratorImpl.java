@@ -59,7 +59,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
   @NotNull
   @Override
   public VirtualFile[] getRoots() {
-    if (myUsingCache) {
+   /* if (myUsingCache) {
       checkCanUseCache();
       final OrderRootsCache cache = myOrderEnumerator.getCache();
       if (cache != null) {
@@ -73,7 +73,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
     }
-
+          */
     return VfsUtilCore.toVirtualFileArray(computeRoots());
   }
 
@@ -241,6 +241,11 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       else {
         if (includeProduction) {
           VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.SOURCE);
+          if(compilerOutput != null) {
+            result.add(compilerOutput);
+          }
+
+          compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.TEST);
           if(compilerOutput != null) {
             result.add(compilerOutput);
           }
