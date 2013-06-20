@@ -25,11 +25,6 @@
     <deadCode implementation="com.intellij.execution.junit2.inspection.JUnitEntryPoint"/>
   </extensions>
 
-  <extensionPoints>
-    <extensionPoint name="patcher"
-                    interface="com.intellij.execution.JavaTestPatcher"/>
-  </extensionPoints>
-
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <configurationProducer implementation="com.intellij.execution.junit.AllInDirectoryConfigurationProducer"/>
