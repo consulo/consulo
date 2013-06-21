@@ -37,8 +37,10 @@ const int FILE_MAPPING_SIZE = 16000;
 
 #ifdef _M_X64
 bool need64BitJRE = true;
+const wchar_t* optionFile = _T("consulo64.exe.vmproperties");
 #else
 bool need64BitJRE = false;
+const wchar_t* optionFile = _T("consulo.exe.vmproperties");
 #endif
 
 std::string LoadStdString(int id)
@@ -130,7 +132,7 @@ bool FindJVMInEnvVar(const char* envVarName, bool& result)
 			char buf[_MAX_PATH];
 			sprintf_s(buf, "The environment variable %s (with the value of %s) does not point to a valid JVM installation.",
 				envVarName, envVarValue);
-			MessageBoxA(NULL, buf, "Error Launching Consulo", MB_OK);
+			MessageBoxA(NULL, buf, "Consulo", MB_OK);
 			result = false;
 		}
 		return true;
@@ -206,7 +208,7 @@ bool LocateJVM()
 		return result;
 	}
 
-	MessageBoxA(NULL, "No JVM installation found. Please reinstall the product or install a JDK.", "Error Launching Consulo", MB_OK);
+	MessageBoxA(NULL, "No JVM installation found. Please reinstall the product or install a JDK.", "Consulo", MB_OK);
 	return false;
 }
 
@@ -336,36 +338,35 @@ void AddPredefinedVMOptions(std::vector<std::string>& vmOptionLines)
 
 bool LoadVMOptions()
 {
-	TCHAR optionsFileName[_MAX_PATH];
-	if (LoadString(hInst, IDS_VM_OPTIONS_PATH, optionsFileName, _MAX_PATH-1))
+	TCHAR fullOptionsFileName[_MAX_PATH];
+	ExpandEnvironmentStrings(optionFile, fullOptionsFileName, _MAX_PATH-1);
+		
+	if (GetFileAttributes(fullOptionsFileName) == INVALID_FILE_ATTRIBUTES)
 	{
-		TCHAR fullOptionsFileName[_MAX_PATH];
-		ExpandEnvironmentStrings(optionsFileName, fullOptionsFileName, _MAX_PATH-1);
-		
-		if (GetFileAttributes(fullOptionsFileName) == INVALID_FILE_ATTRIBUTES)
-		{
-			GetModuleFileName(NULL, fullOptionsFileName, _MAX_PATH-1);
-			_tcscat_s(fullOptionsFileName, _T(".vmoptions"));
-		}
-		
-		std::vector<std::string> vmOptionLines;
-		if (LoadVMOptionsFile(fullOptionsFileName, vmOptionLines))
-		{
-			if (!AddClassPathOptions(vmOptionLines)) return false;
-			AddPredefinedVMOptions(vmOptionLines);
-
-			vmOptionCount = vmOptionLines.size();
-			vmOptions = (JavaVMOption*) malloc(vmOptionCount * sizeof(JavaVMOption));
-			for(int i=0; i<vmOptionLines.size(); i++)
-			{
-				vmOptions[i].optionString = _strdup(vmOptionLines[i].c_str());
-				vmOptions[i].extraInfo = 0;
-			}
-
-			return true;
-		}
+		GetModuleFileName(NULL, fullOptionsFileName, _MAX_PATH-1);
+		_tcscat_s(fullOptionsFileName, _T(".vmoptions"));
 	}
-	MessageBox(NULL, _T("Cannot find VM options file"), _T("Error launching Consulo"), MB_OK);
+		
+	std::vector<std::string> vmOptionLines;
+	if (LoadVMOptionsFile(fullOptionsFileName, vmOptionLines))
+	{
+		if (!AddClassPathOptions(vmOptionLines)) return false;
+		AddPredefinedVMOptions(vmOptionLines);
+
+		vmOptionCount = vmOptionLines.size();
+		vmOptions = (JavaVMOption*) malloc(vmOptionCount * sizeof(JavaVMOption));
+		for(int i=0; i<vmOptionLines.size(); i++)
+		{
+			vmOptions[i].optionString = _strdup(vmOptionLines[i].c_str());
+			vmOptions[i].extraInfo = 0;
+		}
+
+		return true;
+	}
+	else
+	{
+		MessageBoxA(NULL, "Failed to load VM options", "Consulo", MB_OK);
+	}
 	return false;
 }
 
@@ -391,7 +392,7 @@ bool LoadJVMLibrary()
 	{
 		char buf[_MAX_PATH];
 		sprintf(buf, "Failed to load JVM DLL %s", dllName.c_str());
-		MessageBoxA(NULL, buf, "Error Launching Consulo", MB_OK);
+		MessageBoxA(NULL, buf, "Consulo", MB_OK);
 		return false;
 	}
 	return true;
@@ -418,7 +419,7 @@ bool CreateJVM()
 	{
 		TCHAR buf[_MAX_PATH];
 		_stprintf_s(buf, _T("Failed to create JVM: error code %d"), result);
-		MessageBox(NULL, buf, _T("Error launching Consulo"), MB_OK);
+		MessageBox(NULL, buf, _T("Consulo"), MB_OK);
 	}
 
 	return result == JNI_OK;
@@ -446,14 +447,14 @@ bool RunMainClass()
 	{
 		char buf[_MAX_PATH];
 		sprintf_s(buf, "Could not find main class %s", mainClassName.c_str());
-		MessageBoxA(NULL, buf, "Error Launching Consulo", MB_OK);
+		MessageBoxA(NULL, buf, "Consulo", MB_OK);
 		return false;
 	}
 
 	jmethodID mainMethod = env->GetStaticMethodID(mainClass, "main", "([Ljava/lang/String;)V");
 	if (!mainMethod)
 	{
-		MessageBoxA(NULL, "Could not find main method", "Error Launching Consulo", MB_OK);
+		MessageBoxA(NULL, "Could not find main method", "Consulo", MB_OK);
 		return false;
 	}
 
@@ -462,7 +463,21 @@ bool RunMainClass()
 	jthrowable exc = env->ExceptionOccurred();
 	if (exc)
 	{
-		MessageBox(NULL, _T("Error invoking main method"), _T("Error launching Consulo"), MB_OK);
+		env->ExceptionClear();
+
+		jclass throwable_class = env->FindClass("java/lang/Throwable");
+		jmethodID mid_frame_toString =
+			env->GetMethodID(throwable_class,
+							  "toString",
+							  "()Ljava/lang/String;");
+		
+
+		jstring toString = (jstring) env->CallObjectMethod(exc, mid_frame_toString);
+		
+		jboolean isCopy;
+		const char* toStringChars = env->GetStringUTFChars(toString, &isCopy);
+
+		MessageBoxA(NULL, toStringChars, "Consulo", MB_OK);
 	}
 
 	return true;
@@ -490,7 +505,7 @@ void CallCommandLineProcessor(const std::wstring& curDir, const std::wstring& ar
 			jthrowable exc = env->ExceptionOccurred();
 			if (exc)
 			{
-				MessageBox(NULL, _T("Error sending command line to existing instance"), _T("Error"), MB_OK);
+				MessageBox(NULL, _T("Error sending command line to existing instance"), _T("Consulo"), MB_OK);
 			}
 		}
 	}
@@ -594,7 +609,7 @@ LRESULT CALLBACK SplashScreenWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-const TCHAR splashClassName[] = _T("IntelliJLauncherSplash");
+const TCHAR splashClassName[] = _T("ConsuloLauncherSplash");
 
 void RegisterSplashScreenWndClass()
 {

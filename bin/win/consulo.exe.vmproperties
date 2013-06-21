@@ -1,0 +1,8 @@
+-Xms128m
+-Xmx512m
+-XX:MaxPermSize=250m
+-XX:ReservedCodeCacheSize=64m
+-XX:+UseCodeCacheFlushing
+-ea
+-Dsun.io.useCanonCaches=false
+-XX:+HeapDumpOnOutOfMemoryError
