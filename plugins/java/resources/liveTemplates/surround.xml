@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templateSet group="surround">
+<templateSet group="Java Surround">
   <template resource-bundle="messages.CodeInsightBundle" key="livetemplate.description.surround.braces"
             name="B" toReformat="true" toShortenFQNames="true" value="{$SELECTION$}">
     <variable alwaysStopAt="false" defaultValue="" expression="" name="SELECTION" />

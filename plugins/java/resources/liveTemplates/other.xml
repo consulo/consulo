@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templateSet group="other">
+<templateSet group="Java Other">
   <template resource-bundle="messages.CodeInsightBundle" key="livetemplate.description.inst"
             name="inst" toReformat="true" toShortenFQNames="true" value="if ($EXPR$ instanceof $TYPE$) {&#13;&#10;  $TYPE$ $VAR1$ = ($TYPE$)$EXPR$;&#13;&#10;  $END$&#13;&#10;}">
     <variable alwaysStopAt="true" defaultValue="expr" expression="variableOfType(&quot;Object&quot;)" name="EXPR" />

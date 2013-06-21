@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templateSet group="output">
+<templateSet group="Java Output">
   <template resource-bundle="messages.CodeInsightBundle" key="livetemplate.description.serr"
             name="serr" toReformat="true" toShortenFQNames="true" value="System.err.println(&quot;$END$&quot;);">
     <context>
