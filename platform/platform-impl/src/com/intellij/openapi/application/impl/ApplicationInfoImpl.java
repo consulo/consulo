@@ -415,7 +415,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     if (ourShadowInstance == null) {
       ourShadowInstance = new ApplicationInfoImpl();
       try {
-        Document doc = JDOMUtil.loadDocument(ApplicationInfoImpl.class, IDEA_PATH + ApplicationNamesInfo.getComponentName() + XML_EXTENSION);
+        Document doc = JDOMUtil.loadDocument(ApplicationInfoImpl.class, IDEA_PATH + ApplicationNamesInfo.COMPONENT_NAME + XML_EXTENSION);
         ourShadowInstance.readExternal(doc.getRootElement());
       }
       catch (FileNotFoundException e) {
@@ -695,7 +695,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
 
   @NotNull
   public String getComponentName() {
-    return ApplicationNamesInfo.getComponentName();
+    return ApplicationNamesInfo.COMPONENT_NAME;
   }
 
   private static class UpdateUrlsImpl implements UpdateUrls {

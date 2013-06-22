@@ -17,7 +17,6 @@ package com.intellij.openapi.application;
 
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PlatformUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.NonNls;
  * @author nik
  */
 public class ApplicationNamesInfo {
-  @NonNls private static final String COMPONENT_NAME = "ApplicationInfo";
+  @NonNls public static final String COMPONENT_NAME = "ConsuloApplicationInfo";
   @NonNls private static final String ELEMENT_NAMES = "names";
   @NonNls private static final String ATTRIBUTE_PRODUCT = "product";
   @NonNls private static final String ATTRIBUTE_FULL_NAME = "fullname";
@@ -49,7 +48,7 @@ public class ApplicationNamesInfo {
   private ApplicationNamesInfo() {
     try {
       //noinspection HardCodedStringLiteral
-      final Document doc = JDOMUtil.loadDocument(ApplicationNamesInfo.class.getResourceAsStream("/idea/" + getComponentName() + ".xml"));
+      final Document doc = JDOMUtil.loadDocument(ApplicationNamesInfo.class.getResourceAsStream("/idea/" + COMPONENT_NAME + ".xml"));
       readInfo(doc.getRootElement());
     }
     catch (Exception e) {
@@ -92,9 +91,5 @@ public class ApplicationNamesInfo {
    */
   public String getScriptName() {
     return myScriptName;
-  }
-
-  public static String getComponentName() {
-    return PlatformUtils.CONSULO_PREFIX + COMPONENT_NAME;
   }
 }
