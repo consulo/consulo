@@ -76,6 +76,7 @@ public class ImportOldConfigsPanel extends JDialog {
     myHomeLabel.setText(mySettings.getHomeLabel(productName));
 
     myRbImport.addChangeListener(new ChangeListener() {
+      @Override
       public void stateChanged(ChangeEvent e) {
         update();
       }
@@ -95,6 +96,7 @@ public class ImportOldConfigsPanel extends JDialog {
     }
 
     myPrevInstallation.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         JFileChooser fc = new JFileChooser();
         if (myLastSelection != null){
@@ -116,6 +118,7 @@ public class ImportOldConfigsPanel extends JDialog {
     });
 
     myOkButton.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         close();
       }
