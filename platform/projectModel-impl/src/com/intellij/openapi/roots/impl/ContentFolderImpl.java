@@ -132,10 +132,6 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
 
   @Override
   public int compareTo(@NotNull ContentFolderImpl folder) {
-    if(getType() == folder.getType() && getUrl().equals(folder.getUrl())) {
-      return 0;
-    }
-
     int typeCompare = getType().compareTo(folder.getType());
     if(typeCompare != 0) {
       return typeCompare;
