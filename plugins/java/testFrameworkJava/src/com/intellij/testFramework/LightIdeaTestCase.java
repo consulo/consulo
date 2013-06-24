@@ -28,16 +28,11 @@ import com.intellij.psi.impl.JavaPsiFacadeEx;
  * so it contains classes that is really needed in order to speed up tests startup.
  */
 public abstract class LightIdeaTestCase extends LightPlatformTestCase {
-  @SuppressWarnings({"JUnitTestCaseWithNonTrivialConstructors"})
-  public LightIdeaTestCase() {
-    IdeaTestCase.initPlatformPrefix();
-  }
 
   public static JavaPsiFacadeEx getJavaFacade() {
     return JavaPsiFacadeEx.getInstanceEx(ourProject);
   }
 
-  @Override
   protected Sdk getProjectJDK() {
     return IdeaTestUtil.getMockJdk17();
   }

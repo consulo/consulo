@@ -16,10 +16,13 @@
 
 package com.intellij.lang.ant;
 
-import com.intellij.lang.LanguageASTFactory;
-import com.intellij.lang.xml.XMLLanguage;
+import com.intellij.lang.ASTCompositeFactory;
+import com.intellij.lang.ASTLazyFactory;
+import com.intellij.lang.ASTLeafFactory;
 import com.intellij.lang.xml.XMLParserDefinition;
-import com.intellij.lang.xml.XmlASTFactory;
+import com.intellij.lang.xml.XmlASTCompositeFactory;
+import com.intellij.lang.xml.XmlASTLazyFactory;
+import com.intellij.lang.xml.XmlASTLeafFactory;
 import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.SystemInfo;
@@ -35,7 +38,10 @@ public class AntParsingTest extends ParsingTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    addExplicitExtension(LanguageASTFactory.INSTANCE, XMLLanguage.INSTANCE, new XmlASTFactory());
+    registerExtension(ASTLeafFactory.EP.getExtensionPointName(), new XmlASTLeafFactory());
+    registerExtension(ASTLazyFactory.EP.getExtensionPointName(), new XmlASTLazyFactory());
+    registerExtension(ASTCompositeFactory.EP.getExtensionPointName(), new XmlASTCompositeFactory());
+
     registerExtensionPoint(new ExtensionPointName<XmlChildRole.StartTagEndTokenProvider>("com.intellij.xml.startTagEndToken"),
                            XmlChildRole.StartTagEndTokenProvider.class);
   }

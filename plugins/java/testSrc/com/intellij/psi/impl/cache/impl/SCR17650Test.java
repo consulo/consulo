@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.testFramework.PsiTestUtil;
+import org.consulo.lombok.annotations.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.io.IOException;
 /**
  * @author max
  */
+@Logger
 public class SCR17650Test extends PsiTestCase {
   private static final String TEST_ROOT = PathManagerEx.getTestDataPath() + "/psi/repositoryUse/cls";
 
@@ -47,7 +49,7 @@ public class SCR17650Test extends PsiTestCase {
           ModuleRootModificationUtil.addModuleLibrary(myModule, myDir.getUrl());
         }
         catch (IOException e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     });

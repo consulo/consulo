@@ -50,13 +50,12 @@ public abstract class IdeaTestCase extends PlatformTestCase {
     return myJavaFacade;
   }
 
-  @Override
-  protected Sdk getTestProjectJdk() {
-    return IdeaTestUtil.getMockJdk17();
+  protected void setUpJdk() {
+
   }
 
-  public static void initPlatformPrefix() {
-    initPlatformPrefix("com.intellij.idea.IdeaUltimateApplication", "Idea");
+  protected Sdk getTestProjectJdk() {
+    return IdeaTestUtil.getMockJdk17();
   }
 
   protected static void sortClassesByName(final PsiClass[] classes) {

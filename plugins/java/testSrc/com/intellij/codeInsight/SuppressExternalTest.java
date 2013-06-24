@@ -16,7 +16,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.JavaPsiFacade;
-import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.*;
@@ -28,10 +27,6 @@ public class SuppressExternalTest extends UsefulTestCase {
   protected CodeInsightTestFixture myFixture;
 
   private LanguageLevel myLanguageLevel;
-
-  public SuppressExternalTest() {
-    IdeaTestCase.initPlatformPrefix();
-  }
 
   @Override
   public void setUp() throws Exception {

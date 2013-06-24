@@ -22,8 +22,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.impl.ModuleImpl;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
@@ -31,6 +29,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Logger
 public abstract class ModuleTestCase extends IdeaTestCase {
   protected final Collection<Module> myModulesToDispose = new ArrayList<Module>();
 
@@ -81,7 +81,7 @@ public abstract class ModuleTestCase extends IdeaTestCase {
       new Computable<Module>() {
         @Override
         public Module compute() {
-          return ModuleManager.getInstance(myProject).newModule(path);
+          return ModuleManager.getInstance(myProject).newModule(path, path);
         }
       }
     );
@@ -99,7 +99,7 @@ public abstract class ModuleTestCase extends IdeaTestCase {
             return ModuleManager.getInstance(myProject).loadModule(moduleFile.getAbsolutePath());
           }
           catch (Exception e) {
-            LOG.error(e);
+            LOGGER.error(e);
             return null;
           }
         }
@@ -139,8 +139,7 @@ public abstract class ModuleTestCase extends IdeaTestCase {
       public void run() {
         final ProjectImpl project = (ProjectImpl)myProject;
         project.setOptimiseTestLoadSpeed(false);
-        final ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(module);
-        module.getStateStore().initComponent(moduleRootManager, false);
+
         project.setOptimiseTestLoadSpeed(true);
       }
     });

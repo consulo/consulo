@@ -45,12 +45,14 @@ import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.util.*;
 
 @PlatformTestCase.WrapInCommand
+@Logger
 public class UpdateCacheTest extends PsiTestCase{
   @Override
   protected void setUp() throws Exception {
@@ -63,7 +65,7 @@ public class UpdateCacheTest extends PsiTestCase{
   @Override
   protected void setUpProject() throws Exception {
     myProjectManager = ProjectManagerEx.getInstanceEx();
-    LOG.assertTrue(myProjectManager != null, "Cannot instantiate ProjectManager component");
+    LOGGER.assertTrue(myProjectManager != null, "Cannot instantiate ProjectManager component");
 
     File projectFile = getIprFile();
     loadAndSetupProject(projectFile.getPath());
@@ -196,7 +198,7 @@ public class UpdateCacheTest extends PsiTestCase{
     VirtualFile root = ProjectRootManager.getInstance(myProject).getContentRoots()[0];
 
     String newFilePath = root.getPresentableUrl() + File.separatorChar + "dir" + File.separatorChar + "New.java";
-    LOG.assertTrue(new File(newFilePath).getParentFile().mkdir());
+    LOGGER.assertTrue(new File(newFilePath).getParentFile().mkdir());
     FileUtil.writeToFile(new File(newFilePath), "class A{ Object o;}".getBytes());
     VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(newFilePath.replace(File.separatorChar, '/'));
     assertNotNull(file);
@@ -337,7 +339,7 @@ public class UpdateCacheTest extends PsiTestCase{
     PsiTodoSearchHelper.SERVICE.getInstance(myProject).findFilesWithTodoItems(); // to update caches
 
     VirtualFile[] sourceRoots = ModuleRootManager.getInstance(myModule).getSourceRoots();
-    LOG.assertTrue(sourceRoots.length == 1);
+    LOGGER.assertTrue(sourceRoots.length == 1);
     PsiTestUtil.removeSourceRoot(myModule, sourceRoots[0]);
 
 

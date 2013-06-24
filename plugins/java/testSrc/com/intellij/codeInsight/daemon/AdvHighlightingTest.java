@@ -28,6 +28,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -42,6 +44,8 @@ import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PatternPackageSet;
 import com.intellij.testFramework.IdeaTestUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
@@ -241,13 +245,22 @@ public class AdvHighlightingTest extends DaemonAnalyzerTestCase {
     ModuleManager moduleManager = ModuleManager.getInstance(getProject());
     Module java4 = moduleManager.findModuleByName("java4");
     Module java5 = moduleManager.findModuleByName("java5");
-    ModuleRootModificationUtil.setModuleSdk(java4, IdeaTestUtil.getMockJdk17("java 1.4"));
-    ModuleRootModificationUtil.setModuleSdk(java5, IdeaTestUtil.getMockJdk17("java 1.5"));
+    setJdk(java4, IdeaTestUtil.getMockJdk17("java 1.4"));
+    setJdk(java5, IdeaTestUtil.getMockJdk17("java 1.5"));
     ModuleRootModificationUtil.addDependency(java5, java4);
 
     configureByExistingFile(root.findFileByRelativePath("moduleJava5/com/Java5.java"));
     Collection<HighlightInfo> infos = highlightErrors();
     assertEmpty(infos);
+  }
+
+  private void setJdk(Module module, Sdk sdk) {
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
+    JavaMutableModuleExtension javaModuleExtension = (JavaMutableModuleExtension)modifiableModel.getExtension(JavaModuleExtension.class);
+    assert javaModuleExtension != null;
+    javaModuleExtension.getInheritableSdk().set(null, sdk.getName());
+    modifiableModel.commit();
   }
 
   public void testSameFQNClasses() throws Exception {

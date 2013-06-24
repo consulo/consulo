@@ -229,7 +229,7 @@ public class ResolveClassTest extends ResolveTestCase {
       @Override
       public void run() {
         ModifiableModuleModel modifiableModel = ModuleManager.getInstance(getProject()).getModifiableModel();
-        Module module = modifiableModel.newModule("a.iml");
+        Module module = modifiableModel.newModule("a", "");
         modifiableModel.commit();
 
         VirtualFile root = LocalFileSystem.getInstance().refreshAndFindFileByPath(getTestDataPath() + "/class/dependentModule");

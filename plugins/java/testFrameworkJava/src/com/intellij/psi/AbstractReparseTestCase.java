@@ -9,11 +9,13 @@ import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.text.BlockSupport;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 
 /**
  * @author maxim
  */
+@Logger
 public abstract class AbstractReparseTestCase extends PsiTestCase {
   protected FileType myFileType;
   protected PsiFile myDummyFile;
@@ -37,7 +39,7 @@ public abstract class AbstractReparseTestCase extends PsiTestCase {
               doReparseAndCheck(s, expectedNewText, 0);
             }
             catch (IncorrectOperationException e) {
-              LOG.error(e);
+              LOGGER.error(e);
             }
             myInsertOffset += s.length();
           }
@@ -94,7 +96,7 @@ public abstract class AbstractReparseTestCase extends PsiTestCase {
               blockSupport.reparseRange(myDummyFile, myInsertOffset - length, myInsertOffset, s);
             }
             catch (IncorrectOperationException e) {
-              LOG.error(e);
+              LOGGER.error(e);
             }
           }
         });

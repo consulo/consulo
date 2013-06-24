@@ -1,17 +1,19 @@
 package com.intellij.psi;
 
 import com.intellij.JavaTestUtil;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.JavaConstantExpressionEvaluator;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.testFramework.PsiTestUtil;
+import org.consulo.lombok.annotations.Logger;
 
 import java.io.IOException;
 
+@Logger
 public class ConstantValuesTest extends PsiTestCase{
   private PsiClass myClass;
 
@@ -29,7 +31,7 @@ public class ConstantValuesTest extends PsiTestCase{
             ModuleRootModificationUtil.addModuleLibrary(myModule, root.getUrl());
           }
           catch(Exception e){
-            LOG.error(e);
+            LOGGER.error(e);
           }
         }
       }
@@ -37,7 +39,7 @@ public class ConstantValuesTest extends PsiTestCase{
 
     myClass = myJavaFacade.findClass("ClassWithConstants", GlobalSearchScope.allScope(getProject()));
     assertNotNull(myClass);
-    assertEquals(StdFileTypes.JAVA, myClass.getContainingFile().getVirtualFile().getFileType());
+    assertEquals(JavaFileType.INSTANCE, myClass.getContainingFile().getVirtualFile().getFileType());
   }
 
   @Override
@@ -53,16 +55,16 @@ public class ConstantValuesTest extends PsiTestCase{
             file.getVirtualFile().setBinaryContent(file.getVirtualFile().contentsToByteArray());
           }
           catch (IOException e) {
-            LOG.error(e);
+            LOGGER.error(e);
           }
         }
       }
     );
 
-    LOG.assertTrue(file.isValid());
+    LOGGER.assertTrue(file.isValid());
     myClass = file.getClasses()[0];
 
-    LOG.assertTrue(myClass.isValid());
+    LOGGER.assertTrue(myClass.isValid());
     super.invokeTestRunnable(runnable);
   }
 

@@ -16,15 +16,14 @@
 
 package com.intellij.testFramework.fixtures.impl;
 
-import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.MockJdkWrapper;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -35,7 +34,13 @@ import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.ModuleFixture;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
 import com.intellij.util.ArrayUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.sdk.SdkPointerManager;
+import org.consulo.util.pointers.NamedPointer;
+import org.consulo.util.pointers.NamedPointerImpl;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,13 +52,35 @@ import java.util.Map;
  * @author mike
  */
 abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends ModuleFixtureBuilderImpl<T> implements JavaModuleFixtureBuilder<T> {
+  private static class MockWrappedSdkPointerManager implements SdkPointerManager {
+    private Sdk mySdk;
+
+    private MockWrappedSdkPointerManager(Sdk sdk) {
+      mySdk = sdk;
+    }
+
+    @NotNull
+    @Override
+    public NamedPointer<Sdk> create(@NotNull String name) {
+      return new NamedPointerImpl<Sdk>(mySdk);
+    }
+
+    @NotNull
+    @Override
+    public NamedPointer<Sdk> create(@NotNull Sdk value) {
+      return new NamedPointerImpl<Sdk>(mySdk);
+    }
+  }
+
+  @NonNls
+  public static final String TESTS_EXTERNAL_COMPILER_HOME_PROPERTY_NAME = "tests.external.compiler.home";
   private final List<Lib> myLibraries = new ArrayList<Lib>();
   private String myJdk;
   private MockJdkLevel myMockJdkLevel = MockJdkLevel.jdk14;
   private LanguageLevel myLanguageLevel = null;
 
   public JavaModuleFixtureBuilderImpl(final TestFixtureBuilder<? extends IdeaProjectTestFixture> fixtureBuilder) {
-    super( fixtureBuilder);
+    super(fixtureBuilder);
   }
 
   @Override
@@ -142,17 +169,21 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
     else {
       jdk = IdeaTestUtil.getMockJdk17();
     }
-    if (jdk != null) {
-      model.setSdk(new MockJdkWrapper(CompilerConfigurationImpl.getTestsExternalCompilerHome(), jdk));
+
+    JavaMutableModuleExtension moduleExtension = (JavaMutableModuleExtension)model.getExtensionWithoutCheck(JavaModuleExtension.class);
+    assert moduleExtension != null;
+    moduleExtension.setEnabled(true);
+    /*if (jdk != null) {
+      moduleExtension.getInheritableSdk().set(new MockSdkWrapper(getTestsExternalCompilerHome(), jdk));
+    }   */
+
+    if (myMockJdkLevel == MockJdkLevel.jdk15) {
+      myLanguageLevel = LanguageLevel.JDK_1_5;
     }
 
-    if (myLanguageLevel != null) {
-      model.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(myLanguageLevel);
+    if(myLanguageLevel != null) {
+      moduleExtension.getInheritableLanguageLevel().set(null, myLanguageLevel.getName());
     }
-    else if (myMockJdkLevel == MockJdkLevel.jdk15) {
-      model.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(LanguageLevel.JDK_1_5);
-    }
-
     model.commit();
 
     for (OrderEntry entry : ModuleRootManager.getInstance(module).getOrderEntries()) {
@@ -184,6 +215,19 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
       rootModel.getModuleExtensionOld(CompilerModuleExtension.class).inheritCompilerOutputPath(false);
       rootModel.getModuleExtensionOld(CompilerModuleExtension.class).setExcludeOutput(false);
     }
+  }
+
+  public static String getTestsExternalCompilerHome() {
+    String compilerHome = System.getProperty(TESTS_EXTERNAL_COMPILER_HOME_PROPERTY_NAME, null);
+    if (compilerHome == null) {
+      if (SystemInfo.isMac) {
+        compilerHome = new File(System.getProperty("java.home")).getAbsolutePath();
+      }
+      else {
+        compilerHome = new File(System.getProperty("java.home")).getParentFile().getAbsolutePath();
+      }
+    }
+    return compilerHome;
   }
 
   protected void libraryCreated(Library library, Module module) {}

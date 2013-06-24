@@ -15,24 +15,24 @@
  */
 package com.intellij.lang.java.parser;
 
+import com.intellij.lang.ASTCompositeFactory;
+import com.intellij.lang.ASTLeafFactory;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageASTFactory;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.lang.java.JavaParserDefinition;
 import com.intellij.openapi.fileTypes.StdFileTypes;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.source.PsiJavaFileImpl;
+import com.intellij.psi.impl.source.tree.CoreJavaASTLeafFactory;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.impl.source.tree.JavaASTFactory;
+import com.intellij.psi.impl.source.tree.JavaASTCompositeFactory;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.util.PsiUtil;
-import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.testFramework.ParsingTestCase;
 import org.jetbrains.annotations.NonNls;
@@ -44,16 +44,15 @@ public abstract class JavaParsingTestCase extends ParsingTestCase {
 
   @SuppressWarnings({"JUnitTestCaseWithNonTrivialConstructors"})
   public JavaParsingTestCase(@NonNls final String dataPath) {
-    super("psi/"+dataPath, "java", new JavaParserDefinition());
-    IdeaTestCase.initPlatformPrefix();
+    super("psi/" + dataPath, "java", new JavaParserDefinition());
   }
 
   @Override
   protected void setUp() throws Exception {
     super.setUp();
     myLanguageLevel = LanguageLevel.JDK_1_6;
-
-    addExplicitExtension(LanguageASTFactory.INSTANCE, JavaLanguage.INSTANCE, new JavaASTFactory());
+    registerExtension(ASTLeafFactory.EP.getExtensionPointName(), new CoreJavaASTLeafFactory());
+    registerExtension(ASTCompositeFactory.EP.getExtensionPointName(), new JavaASTCompositeFactory());
   }
 
   @Override

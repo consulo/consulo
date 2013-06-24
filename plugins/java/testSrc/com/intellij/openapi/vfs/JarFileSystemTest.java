@@ -1,7 +1,7 @@
 package com.intellij.openapi.vfs;
 
+import com.intellij.JavaTestUtil;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.testFramework.IdeaTestCase;
 
@@ -9,7 +9,7 @@ import java.io.File;
 
 public class JarFileSystemTest extends IdeaTestCase{
   public void testFindFile() throws Exception{
-    Sdk jdk = ModuleRootManager.getInstance(myModule).getSdk();
+    Sdk jdk = JavaTestUtil.getSdk(myModule);
     VirtualFile jdkHome = jdk.getHomeDirectory();
     String rtJarPath = new File(jdkHome.getPath() + "/src.zip").getCanonicalPath().replace(File.separator, "/");
 
@@ -31,7 +31,7 @@ public class JarFileSystemTest extends IdeaTestCase{
   }
 
   public void testMetaInf() throws Exception{
-    Sdk jdk = ModuleRootManager.getInstance(myModule).getSdk();
+    Sdk jdk = JavaTestUtil.getSdk(myModule);
     VirtualFile jdkHome = jdk.getHomeDirectory();
     String rtJarPath = jdkHome.getPath() + "/jre/lib/rt.jar";
 

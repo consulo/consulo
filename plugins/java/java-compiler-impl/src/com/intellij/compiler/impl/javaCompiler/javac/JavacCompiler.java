@@ -30,7 +30,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.impl.MockJdkWrapper;
+import com.intellij.openapi.projectRoots.impl.MockSdkWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
@@ -445,7 +445,7 @@ public class JavacCompiler extends ExternalCompiler {
         throw new IllegalArgumentException("[TEST-MODE] Cannot determine home directory for JDK to use javac from");
       }
       // when running under Mock JDK use VM executable from the JDK on which the tests run
-      return new MockJdkWrapper(jdkHomePath, jdk);
+      return new MockSdkWrapper(jdkHomePath, jdk);
     }
     return jdk;
   }

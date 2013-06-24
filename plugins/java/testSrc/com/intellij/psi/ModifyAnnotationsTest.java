@@ -18,17 +18,18 @@ package com.intellij.psi;
 import com.intellij.JavaTestUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.lombok.annotations.Logger;
 
 /**
  * @author ven
  */
+@Logger
 public class ModifyAnnotationsTest extends PsiTestCase {
   @Override
   protected void setUp() throws Exception {
@@ -60,7 +61,7 @@ public class ModifyAnnotationsTest extends PsiTestCase {
               annotations[0].replace(newAnnotation);
             }
             catch (IncorrectOperationException e) {
-              LOG.error(e);
+              LOGGER.error(e);
             }
           }
         });

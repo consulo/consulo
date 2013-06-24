@@ -24,7 +24,6 @@ import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.introduce.inplace.AbstractInplaceIntroducer;
-import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightPlatformTestCase;
 import org.jetbrains.annotations.NotNull;
@@ -34,12 +33,6 @@ import org.jetbrains.annotations.Nullable;
  * User: anna
  */
 public abstract class AbstractJavaInplaceIntroduceTest extends AbstractInplaceIntroduceTest {
-
-  @Override
-  protected void setUp() throws Exception {
-    IdeaTestCase.initPlatformPrefix();
-    super.setUp();
-  }
 
   @Nullable
   protected static PsiExpression getExpressionFromEditor() {
@@ -57,7 +50,6 @@ public abstract class AbstractJavaInplaceIntroduceTest extends AbstractInplaceIn
     return localVariable;
   }
 
-  @Override
   protected Sdk getProjectJDK() {
     return IdeaTestUtil.getMockJdk17();
   }

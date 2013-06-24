@@ -35,62 +35,73 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 
 /**
- * used to override JdkHome location in order to provide correct paths
+ * used to override SdkHome location in order to provide correct paths
  */
-public final class MockJdkWrapper implements Sdk {
+public final class MockSdkWrapper implements Sdk {
   private final String myHomePath;
   private final Sdk myDelegate;
 
-  public MockJdkWrapper(String homePath, @NotNull Sdk delegate) {
+  public MockSdkWrapper(String homePath, @NotNull Sdk delegate) {
     myHomePath = homePath;
     myDelegate = delegate;
   }
 
+  @Override
   public VirtualFile getHomeDirectory() {
     return LocalFileSystem.getInstance().findFileByIoFile(new File(getHomePath()));
   }
 
+  @Override
   public String getHomePath() {
     final String homePath = FileUtil.toSystemDependentName(myHomePath == null ? myDelegate.getHomePath() : myHomePath);
     return StringUtil.trimEnd(homePath, File.separator);
   }
 
+  @Override
   @NotNull
   public SdkTypeId getSdkType() {
     return myDelegate.getSdkType();
   }
 
+  @Override
   @NotNull
   public String getName() {
     return myDelegate.getName();
   }
 
+  @Override
   public String getVersionString() {
     return myDelegate.getVersionString();
   }
 
+  @Override
   @NotNull
   public RootProvider getRootProvider() {
     return myDelegate.getRootProvider();
   }
 
+  @Override
   public <T> T getUserData(@NotNull Key<T> key) {
     return myDelegate.getUserData(key);
   }
 
+  @Override
   public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
     myDelegate.putUserData(key, value);
   }
 
+  @Override
   @NotNull
   public Object clone() throws CloneNotSupportedException {
     throw new CloneNotSupportedException();
   }
 
+  @Override
   public SdkAdditionalData getSdkAdditionalData() {
     return null;
   }
 
+  @Override
   @NotNull
   public SdkModificator getSdkModificator() {
     return null;

@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder;
@@ -50,10 +49,6 @@ public class AddAnnotationFixTest extends UsefulTestCase {
   private boolean myExpectedEventWasProduced = false;
   private boolean myUnexpectedEventWasProduced = false;
   private MessageBusConnection myBusConnection = null;
-
-  public AddAnnotationFixTest() {
-    IdeaTestCase.initPlatformPrefix();
-  }
 
   @Override
   public void setUp() throws Exception {

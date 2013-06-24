@@ -11,6 +11,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.testFramework.PsiTestUtil;
+import org.consulo.lombok.annotations.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.io.IOException;
 /**
  * @author max
  */
+@Logger
 public class SCR20733Test extends PsiTestCase {
   private VirtualFile myPrjDir1;
   private VirtualFile mySrcDir1;
@@ -49,7 +51,7 @@ public class SCR20733Test extends PsiTestCase {
           PsiTestUtil.addSourceRoot(myModule, mySrcDir1);
         }
         catch (IOException e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     });

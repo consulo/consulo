@@ -9,6 +9,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.testFramework.PsiTestUtil;
+import org.consulo.lombok.annotations.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 /**
  * @author max
  */
+@Logger
 public class SCR19174Test extends PsiTestCase {
   private VirtualFile myDir;
   private VirtualFile myVFile;
@@ -46,7 +48,7 @@ public class SCR19174Test extends PsiTestCase {
           PsiTestUtil.addSourceRoot(myModule, myDir);
         }
         catch (IOException e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     });

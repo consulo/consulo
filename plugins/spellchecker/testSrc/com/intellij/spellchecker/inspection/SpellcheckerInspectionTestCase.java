@@ -17,15 +17,9 @@ package com.intellij.spellchecker.inspection;
 
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.spellchecker.inspections.SpellCheckingInspection;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
 public abstract class SpellcheckerInspectionTestCase extends LightPlatformCodeInsightFixtureTestCase {
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  protected SpellcheckerInspectionTestCase() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
-
   @Override
   protected boolean isCommunity() {
     return true;

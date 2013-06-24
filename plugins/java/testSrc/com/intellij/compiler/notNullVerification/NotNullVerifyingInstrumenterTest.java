@@ -19,7 +19,6 @@ import com.intellij.JavaTestUtil;
 import com.intellij.compiler.PsiClassWriter;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.JavaTestFixtureFactory;
@@ -42,10 +41,6 @@ public class NotNullVerifyingInstrumenterTest extends UsefulTestCase {
   private boolean myJava6;
   private IdeaProjectTestFixture myFixture;
 
-  @SuppressWarnings({"JUnitTestCaseWithNonTrivialConstructors"})
-  public NotNullVerifyingInstrumenterTest() {
-    IdeaTestCase.initPlatformPrefix();
-  }
 
   @Override
   protected void setUp() throws Exception {

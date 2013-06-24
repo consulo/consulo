@@ -47,16 +47,6 @@ public abstract class LightCodeInsightFixtureTestCase extends UsefulTestCase{
   protected JavaCodeInsightTestFixture myFixture;
   protected Module myModule;
 
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  protected LightCodeInsightFixtureTestCase() {
-    IdeaTestCase.initPlatformPrefix();
-  }
-
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  public LightCodeInsightFixtureTestCase(String classToTest, String prefix) {
-    PlatformTestCase.initPlatformPrefix(classToTest, prefix);
-  }
-
   @Override
   protected void setUp() throws Exception {
     super.setUp();

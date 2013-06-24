@@ -29,11 +29,6 @@ public class SCR17094Test extends PsiTestCase {
     ModuleRootModificationUtil.addModuleLibrary(myModule, classesRoot.getUrl());
   }
 
-  @Override
-  protected void setUpJdk() {
-
-  }
-
   public void testSRC() throws Exception {
     setUpClasses("classes");
     final JavaPsiFacade psiManager = getJavaFacade();

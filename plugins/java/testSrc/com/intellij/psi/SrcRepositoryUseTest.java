@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
 import com.intellij.openapi.projectRoots.impl.ProjectRootUtil;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Key;
@@ -724,13 +723,13 @@ public class SrcRepositoryUseTest extends PsiTestCase{
             final ContentEntry[] content = rootModel.getContentEntries();
             boolean contentToChangeFound = false;
             for (ContentEntry contentEntry : content) {
-              final SourceFolder[] sourceFolders = contentEntry.getSourceFolders();
-              for (SourceFolder sourceFolder : sourceFolders) {
-                contentEntry.removeSourceFolder(sourceFolder);
+              final ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderType.SOURCE);
+              for (ContentFolder sourceFolder : sourceFolders) {
+                contentEntry.removeFolder(sourceFolder);
               }
               final VirtualFile contentRoot = contentEntry.getFile();
               if (contentRoot != null && VfsUtilCore.isAncestor(contentRoot, newSourceRoot, false)) {
-                contentEntry.addSourceFolder(newSourceRoot, false);
+                contentEntry.addFolder(newSourceRoot, ContentFolderType.SOURCE);
                 contentToChangeFound = true;
               }
             }

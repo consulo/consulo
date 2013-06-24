@@ -12,7 +12,6 @@ import com.intellij.codeInspection.nullable.NullableStuffInspection;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.InspectionTestCase;
@@ -59,7 +58,7 @@ public class NullableStuffInspectionTest extends InspectionTestCase {
     super.setupRootModel(testDir, sourceDir, sdkName);
 
     if (myExcludeAnnotations) {
-      final Sdk sdk = ModuleRootManager.getInstance(myModule).getSdk();
+      final Sdk sdk = JavaTestUtil.getSdk(myModule);
       assert sdk != null;
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override

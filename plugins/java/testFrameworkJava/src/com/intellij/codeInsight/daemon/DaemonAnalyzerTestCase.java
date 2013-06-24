@@ -77,6 +77,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.xml.XmlSchemaProvider;
 import gnu.trove.THashMap;
 import gnu.trove.TIntArrayList;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -91,6 +92,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Logger
 public abstract class DaemonAnalyzerTestCase extends CodeInsightTestCase {
   private final Map<String, InspectionToolWrapper> myAvailableTools = new THashMap<String, InspectionToolWrapper>();
   private final FileTreeAccessFilter myFileTreeAccessFilter = new FileTreeAccessFilter();
@@ -231,7 +233,7 @@ public abstract class DaemonAnalyzerTestCase extends CodeInsightTestCase {
           result.add((LocalInspectionTool)tool);
         }
         catch (Exception e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     }

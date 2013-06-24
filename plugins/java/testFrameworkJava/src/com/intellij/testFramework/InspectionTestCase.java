@@ -15,10 +15,10 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInspection.GlobalInspectionTool;
 import com.intellij.codeInspection.InspectionManager;
+import com.intellij.codeInspection.JavaExtensionPoints;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.deadCode.UnusedDeclarationInspection;
 import com.intellij.codeInspection.ex.*;

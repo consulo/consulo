@@ -19,8 +19,8 @@ import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
-import com.intellij.openapi.roots.ModuleRootModificationUtil;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -33,6 +33,8 @@ import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.testFramework.PsiTestUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 
 import java.io.File;
 
@@ -567,7 +569,12 @@ public class ClsRepositoryUseTest extends PsiTestCase {
   }
 
   private void disableJdk() {
-    ModuleRootModificationUtil.setModuleSdk(myModule, null);
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(myModule);
+    final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
+    JavaMutableModuleExtension javaModuleExtension = (JavaMutableModuleExtension)modifiableModel.getExtension(JavaModuleExtension.class);
+    assert javaModuleExtension != null;
+    javaModuleExtension.getInheritableSdk().set(null, null);
+    modifiableModel.commit();
   }
 
   public void testGenericReturnType() throws Exception {

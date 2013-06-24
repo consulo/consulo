@@ -18,11 +18,16 @@ package com.intellij;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.PathManagerEx;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.util.text.StringUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -65,5 +70,8 @@ public class JavaTestUtil {
     }
   }
 
-
+  @Nullable
+  public static Sdk getSdk(@NotNull Module module) {
+    return ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+  }
 }

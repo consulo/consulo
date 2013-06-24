@@ -38,6 +38,7 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
@@ -58,6 +59,7 @@ import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,6 +74,7 @@ import java.util.List;
 /**
  * @author Mike
  */
+@Logger
 public abstract class CodeInsightTestCase extends PsiTestCase {
   protected Editor myEditor;
 
@@ -255,7 +258,7 @@ public abstract class CodeInsightTestCase extends PsiTestCase {
             final ContentEntry contentEntry = rootModel.addContentEntry(toDir);
             if (isAddDirToSource()) {
               sourceRootAdded = true;
-              contentEntry.addSourceFolder(toDir, isAddDirToTests());
+              contentEntry.addFolder(toDir, isAddDirToTests() ? ContentFolderType.TEST : ContentFolderType.SOURCE);
             }
           }
           doCommitModel(rootModel);
@@ -266,7 +269,7 @@ public abstract class CodeInsightTestCase extends PsiTestCase {
           openEditorsAndActivateLast(editorInfos);
         }
         catch (IOException e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     });

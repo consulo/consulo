@@ -11,12 +11,14 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.lombok.annotations.Logger;
 
 import java.io.File;
 
 /**
  * @author dsl
  */
+@Logger
 public class BindToElementTest extends CodeInsightTestCase {
   public static final String TEST_ROOT = PathManagerEx.getTestDataPath() + "/psi/impl/bindToElementTest/".replace('/', File.separatorChar);
 
@@ -47,7 +49,7 @@ public class BindToElementTest extends CodeInsightTestCase {
           referenceElement.bindToElement(aClassA);
         }
         catch (IncorrectOperationException e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     });
@@ -67,7 +69,7 @@ public class BindToElementTest extends CodeInsightTestCase {
           typeElement.replace(factory.createTypeElement(type));
         }
         catch (IncorrectOperationException e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     });

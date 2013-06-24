@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import com.intellij.codeInspection.JavaExtensionPoints;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.accessStaticViaInstance.AccessStaticViaInstance;
 import com.intellij.codeInspection.deadCode.UnusedDeclarationInspection;

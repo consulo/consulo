@@ -28,7 +28,7 @@ import com.intellij.testFramework.LightProjectDescriptor;
 * @author peter
 */
 public class DefaultLightProjectDescriptor implements LightProjectDescriptor {
-  @Override
+
   public Sdk getSdk() {
     return IdeaTestUtil.getMockJdk17();
   }

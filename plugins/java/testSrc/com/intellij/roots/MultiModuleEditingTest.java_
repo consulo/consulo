@@ -21,6 +21,7 @@ import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
@@ -121,9 +122,9 @@ public class MultiModuleEditingTest extends ModuleTestCase {
       rootModelB.addModuleOrderEntry(moduleA);
 
       final ContentEntry contentEntryA = rootModelA.addContentEntry(getVirtualFileInTestData("a"));
-      contentEntryA.addSourceFolder(getVirtualFileInTestData("a/src"), false);
+      contentEntryA.addFolder(getVirtualFileInTestData("a/src"), ContentFolderType.SOURCE);
       final ContentEntry contentEntryB = rootModelB.addContentEntry(getVirtualFileInTestData("b"));
-      contentEntryB.addSourceFolder(getVirtualFileInTestData("b/src"), false);
+      contentEntryB.addFolder(getVirtualFileInTestData("b/src"), ContentFolderType.SOURCE);
 
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override

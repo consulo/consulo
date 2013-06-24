@@ -137,7 +137,7 @@ public class FindUsagesTest extends PsiTestCase{
         @Override
         protected void run(Result result) throws Throwable {
           final ModifiableModuleModel moduleModel = ModuleManager.getInstance(getProject()).getModifiableModel();
-          moduleModel.newModule("independent/independent.iml");
+          moduleModel.newModule("independent", "independent/");
           moduleModel.commit();
 
           tdf.createFile("plugin.xml", "<document>\n" +

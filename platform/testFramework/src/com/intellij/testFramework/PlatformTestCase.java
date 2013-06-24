@@ -42,7 +42,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.project.impl.TooManyProjectLeakedException;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryIndexImpl;
 import com.intellij.openapi.startup.StartupManager;
@@ -536,12 +535,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     sm.startCacheUpdate();
     // extra init for libraries
     sm.runPostStartupActivities();
-  }
-
-
-  @Nullable
-  protected Sdk getTestProjectJdk() {
-    return null;
   }
 
   @Override

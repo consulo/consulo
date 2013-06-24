@@ -79,8 +79,8 @@ public class RootsChangedTest extends ModuleTestCase {
 
 
   public void testModuleJdkEditing() throws Exception {
-    final Module moduleA = createModule("a.iml");
-    final Module moduleB = createModule("b.iml");
+    final Module moduleA = createModule("a");
+    final Module moduleB = createModule("b");
     assertEventsCount(2);
 
     final Sdk jdk = IdeaTestUtil.getMockJdk17();

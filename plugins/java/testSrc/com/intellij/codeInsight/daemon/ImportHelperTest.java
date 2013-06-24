@@ -23,12 +23,14 @@ import com.intellij.psi.codeStyle.*;
 import com.intellij.psi.impl.source.codeStyle.ImportHelper;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.util.List;
 
 @DaemonAnalyzerTestCase.CanChangeDocumentDuringHighlighting
+@Logger
 public class ImportHelperTest extends DaemonAnalyzerTestCase {
   @Override
   protected LocalInspectionTool[] configureLocalInspectionTools() {
@@ -87,7 +89,7 @@ public class ImportHelperTest extends DaemonAnalyzerTestCase {
                              CommonClassNames.JAVA_UTIL_MAP,"java.util.SortedMap", "java.util.TreeMap", "java.util.concurrent.atomic.AtomicBoolean");
             }
             catch (Throwable e) {
-              LOG.error(e);
+              LOGGER.error(e);
             }
           }
         });
@@ -144,7 +146,7 @@ public class ImportHelperTest extends DaemonAnalyzerTestCase {
 
               }
               catch (Throwable e) {
-                LOG.error(e);
+                LOGGER.error(e);
               }
             }
           });

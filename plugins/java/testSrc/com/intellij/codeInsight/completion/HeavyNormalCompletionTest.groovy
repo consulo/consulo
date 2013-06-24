@@ -11,6 +11,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ex.PathManagerEx
 
 import com.intellij.openapi.roots.ContentEntry
+import com.intellij.openapi.roots.ContentFolder
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ModuleRootManager
 
@@ -50,7 +51,7 @@ public class HeavyNormalCompletionTest extends JavaCodeInsightFixtureTestCase {
     ApplicationManager.application.runWriteAction {
       final ModifiableRootModel model = ModuleRootManager.getInstance(myFixture.getModule()).getModifiableModel();
       ContentEntry contentEntry = model.getContentEntries()[0];
-      SourceFolder sourceFolder = contentEntry.getSourceFolders()[0];
+      ContentFolder sourceFolder = contentEntry.getSourceFolders()[0];
       VirtualFile file = sourceFolder.getFile();
       contentEntry.removeSourceFolder(sourceFolder);
       contentEntry.addSourceFolder(file, true);

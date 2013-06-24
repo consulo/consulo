@@ -26,11 +26,6 @@ import com.intellij.psi.impl.JavaPsiFacadeEx;
 public abstract class LightCodeInsightTestCase extends LightPlatformCodeInsightTestCase {
   private LanguageLevel myOldLanguageLevel;
 
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  protected LightCodeInsightTestCase() {
-    IdeaTestCase.initPlatformPrefix();
-  }
-
   public static JavaPsiFacadeEx getJavaFacade() {
     return JavaPsiFacadeEx.getInstanceEx(ourProject);
   }
@@ -56,7 +51,6 @@ public abstract class LightCodeInsightTestCase extends LightPlatformCodeInsightT
     LanguageLevelProjectExtension.getInstance(getProject()).setLanguageLevel(level);
   }
 
-  @Override
   protected Sdk getProjectJDK() {
     return IdeaTestUtil.getMockJdk17();
   }

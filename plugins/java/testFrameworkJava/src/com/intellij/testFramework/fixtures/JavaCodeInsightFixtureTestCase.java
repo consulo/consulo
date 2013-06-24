@@ -21,7 +21,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiManager;
-import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder;
 import org.jetbrains.annotations.NonNls;
@@ -34,11 +33,6 @@ import java.io.File;
 public abstract class JavaCodeInsightFixtureTestCase extends UsefulTestCase{
   protected JavaCodeInsightTestFixture myFixture;
   protected Module myModule;
-
-  @SuppressWarnings({"JUnitTestCaseWithNonTrivialConstructors"})
-  protected JavaCodeInsightFixtureTestCase() {
-    IdeaTestCase.initPlatformPrefix();
-  }
 
   @Override
   protected void setUp() throws Exception {

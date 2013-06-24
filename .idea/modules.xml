@@ -125,6 +125,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/tasks/tasks-tests/tasks-tests.iml" filepath="$PROJECT_DIR$/plugins/tasks/tasks-tests/tasks-tests.iml" group="plugins/tasks" />
       <module fileurl="file://$PROJECT_DIR$/plugins/tasks/tasks-time-tracking/tasks-time-tracking.iml" filepath="$PROJECT_DIR$/plugins/tasks/tasks-time-tracking/tasks-time-tracking.iml" group="plugins/tasks" />
       <module fileurl="file://$PROJECT_DIR$/platform/testFramework/testFramework.iml" filepath="$PROJECT_DIR$/platform/testFramework/testFramework.iml" group="platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/testFrameworkJava/testFrameworkJava.iml" filepath="$PROJECT_DIR$/plugins/java/testFrameworkJava/testFrameworkJava.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/platform/testRunner/testRunner.iml" filepath="$PROJECT_DIR$/platform/testRunner/testRunner.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/testng/testng.iml" filepath="$PROJECT_DIR$/plugins/testng/testng.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/testng_rt/testng_rt.iml" filepath="$PROJECT_DIR$/plugins/testng_rt/testng_rt.iml" group="plugins" />

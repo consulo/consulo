@@ -21,7 +21,9 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.testFramework.PsiTestCase;
+import org.consulo.lombok.annotations.Logger;
 
+@Logger
 public class OptimizeImportsTest extends PsiTestCase{
   private static final String BASE_PATH = PathManagerEx.getTestDataPath() + "/psi/optimizeImports";
 
@@ -69,7 +71,7 @@ public class OptimizeImportsTest extends PsiTestCase{
               assertEquals(textAfter, fileText);
             }
             catch (Exception e) {
-              LOG.error(e);
+              LOGGER.error(e);
             }
           }
         });

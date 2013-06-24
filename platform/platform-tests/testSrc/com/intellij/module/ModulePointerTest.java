@@ -20,67 +20,68 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.*;
 import com.intellij.testFramework.PlatformTestCase;
+import org.consulo.util.pointers.NamedPointer;
 
 /**
  * @author nik
  */
 public class ModulePointerTest extends PlatformTestCase {
   public void testCreateByName() throws Exception {
-    final NamedPointer<Module> pointer = getPointerManager().create("m");
-    assertSame(pointer, getPointerManager().create("m"));
-    assertNull(pointer.getModule());
-    assertEquals("m", pointer.getModuleName());
+    final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(getProject(), "m");
+    assertSame(pointer, ModuleUtilCore.createPointer(getProject(), "m"));
+    assertNull(pointer.get());
+    assertEquals("m", pointer.getName());
 
     final Module module = addModule("m");
 
-    assertSame(module, pointer.getModule());
-    assertEquals("m", pointer.getModuleName());
+    assertSame(module, pointer.get());
+    assertEquals("m", pointer.getName());
   }
 
   public void testCreateByModule() throws Exception {
     final Module module = addModule("x");
-    final NamedPointer<Module> pointer = getPointerManager().create(module);
-    assertSame(pointer, getPointerManager().create(module));
-    assertSame(pointer, getPointerManager().create("x"));
-    assertSame(module, pointer.getModule());
-    assertEquals("x", pointer.getModuleName());
+    final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(module);
+    assertSame(pointer, ModuleUtilCore.createPointer(module));
+    assertSame(pointer, ModuleUtilCore.createPointer(getProject(), "x"));
+    assertSame(module, pointer.get());
+    assertEquals("x", pointer.getName());
 
     ModifiableModuleModel model = getModuleManager().getModifiableModel();
     model.disposeModule(module);
     commitModel(model);
 
-    assertNull(pointer.getModule());
-    assertEquals("x", pointer.getModuleName());
+    assertNull(pointer.get());
+    assertEquals("x", pointer.getName());
 
     final Module newModule = addModule("x");
-    assertSame(pointer, getPointerManager().create(newModule));
+    assertSame(pointer, ModuleUtilCore.createPointer(newModule));
   }
 
   public void testRenameModule() throws Exception {
-    final NamedPointer<Module> pointer = getPointerManager().create("abc");
+    final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(getProject(), "abc");
     final Module module = addModule("abc");
     ModifiableModuleModel model = getModuleManager().getModifiableModel();
     model.renameModule(module, "xyz");
     commitModel(model);
-    assertSame(module, pointer.getModule());
-    assertEquals("xyz", pointer.getModuleName());
+    assertSame(module, pointer.get());
+    assertEquals("xyz", pointer.getName());
   }
 
   public void testDisposePointerFromUncommitedModifiableModel() throws Exception {
-    final NamedPointer<Module> pointer = getPointerManager().create("xxx");
+    final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(getProject(), "xxx");
 
     final ModifiableModuleModel modifiableModel = getModuleManager().getModifiableModel();
-    final Module module = modifiableModel.newModule(myProject.getBaseDir().getPath() + "/xxx.iml");
-    assertSame(pointer, getPointerManager().create(module));
-    assertSame(pointer, getPointerManager().create("xxx"));
+    final Module module = modifiableModel.newModule("xxx", myProject.getBaseDir().getPath());
+    assertSame(pointer, ModuleUtilCore.createPointer(module));
+    assertSame(pointer, ModuleUtilCore.createPointer(getProject(), "xxx"));
 
-    assertSame(module, pointer.getModule());
-    assertEquals("xxx", pointer.getModuleName());
+    assertSame(module, pointer.get());
+    assertEquals("xxx", pointer.getName());
 
     modifiableModel.dispose();
 
-    assertNull(pointer.getModule());
-    assertEquals("xxx", pointer.getModuleName());
+    assertNull(pointer.get());
+    assertEquals("xxx", pointer.getName());
   }
 
   private ModuleManager getModuleManager() {
@@ -89,7 +90,7 @@ public class ModulePointerTest extends PlatformTestCase {
 
   private Module addModule(final String name) {
     final ModifiableModuleModel model = getModuleManager().getModifiableModel();
-    final Module module = model.newModule(myProject.getBaseDir().getPath() + "/" + name + ".iml");
+    final Module module = model.newModule(name, myProject.getBaseDir().getPath());
     commitModel(model);
     disposeOnTearDown(new Disposable() {
       @Override
@@ -109,9 +110,5 @@ public class ModulePointerTest extends PlatformTestCase {
         model.commit();
       }
     }.execute();
-  }
-
-  private ModulePointerManager getPointerManager() {
-    return ModulePointerManager.getInstance(myProject);
   }
 }

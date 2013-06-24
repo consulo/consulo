@@ -1,6 +1,5 @@
 package com.intellij.codeInsight.daemon.quickFix;
 
-import com.intellij.codeInsight.daemon.quickFix.LightQuickFix15TestCase;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.i18n.I18nInspection;
 import com.intellij.openapi.util.Comparing;
