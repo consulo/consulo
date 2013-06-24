@@ -24,6 +24,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
+import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
@@ -56,7 +57,6 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryIndexImpl;
@@ -108,6 +108,7 @@ import java.util.*;
 /**
  * @author yole
  */
+@Deprecated
 public abstract class LightPlatformTestCase extends UsefulTestCase implements DataProvider {
   public static final String PROFILE = "Configurable";
   private static IdeaTestApplication ourApplication;
@@ -319,7 +320,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     super.setUp();
     initApplication();
     ourApplication.setDataProvider(this);
-    doSetup(new SimpleLightProjectDescriptor(getProjectJDK()), configureLocalInspectionTools(), myAvailableInspectionTools);
+    doSetup(LightProjectDescriptor.EMPTY_PROJECT_DESCRIPTOR, configureLocalInspectionTools(), myAvailableInspectionTools);
     InjectedLanguageManagerImpl.pushInjectors(getProject());
 
     storeSettings();
@@ -337,6 +338,8 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     throws Exception {
     assertNull("Previous test " + ourTestCase + " hasn't called tearDown(). Probably overridden without super call.", ourTestCase);
     IdeaLogger.ourErrorsOccurred = null;
+
+    PsiTestExtensionUtil.registerExtensionPointIfNeed(ApplicationLoadListener.EP_NAME, ApplicationLoadListener.class);
 
     if (ourProject == null || !ourProjectDescriptor.equals(descriptor)) {
       initProject(descriptor);
@@ -702,10 +705,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     return null;
   }
 
-  protected Sdk getProjectJDK() {
-    return null;
-  }
-
   /**
    * Creates dummy source file. One is not placed under source root so some PSI functions like resolve to external classes
    * may not work. Though it works significantly faster and yet can be used if you need to create some PSI structures for
@@ -800,45 +799,5 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
         });
       }
     });
-  }
-
-  private static class SimpleLightProjectDescriptor implements LightProjectDescriptor {
-    private final Sdk mySdk;
-
-    SimpleLightProjectDescriptor(Sdk sdk) {
-      mySdk = sdk;
-    }
-
-    @Override
-    public Sdk getSdk() {
-      return mySdk;
-    }
-
-    @Override
-    public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      SimpleLightProjectDescriptor that = (SimpleLightProjectDescriptor)o;
-
-      return areJdksEqual(that.getSdk());
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    private boolean areJdksEqual(final Sdk newSdk) {
-      if (mySdk == null || newSdk == null) return mySdk == newSdk;
-
-      final String[] myUrls = mySdk.getRootProvider().getUrls(OrderRootType.CLASSES);
-      final String[] newUrls = newSdk.getRootProvider().getUrls(OrderRootType.CLASSES);
-      return ContainerUtil.newHashSet(myUrls).equals(ContainerUtil.newHashSet(newUrls));
-    }
   }
 }

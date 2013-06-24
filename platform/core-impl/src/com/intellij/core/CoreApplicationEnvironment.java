@@ -105,6 +105,7 @@ public class CoreApplicationEnvironment {
     myApplication.registerService(ReferenceProvidersRegistry.class, new MockReferenceProvidersRegistry());
     myApplication.registerService(StubTreeLoader.class, new CoreStubTreeLoader());
     myApplication.registerService(PsiReferenceService.class, new PsiReferenceServiceImpl());
+    //myApplication.registerService(CommandProcessor.class, new MockCommandProcessor());
 
     registerApplicationExtensionPoint(ContentBasedFileSubstitutor.EP_NAME, ContentBasedFileSubstitutor.class);
     registerExtensionPoint(Extensions.getRootArea(), BinaryFileStubBuilders.EP_NAME, FileTypeExtensionPoint.class);

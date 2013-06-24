@@ -86,14 +86,14 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
     registerExtensionPoint(area, name, (Class<T>)t.getClass());
 
 
-    PlatformTestUtil.registerExtension(area, name, t, myTestRootDisposable);
+    PsiTestExtensionUtil.registerExtension(area, name, t, myTestRootDisposable);
   }
 
   public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t, @NotNull LoadingOrder loadingOrder) {
     registerExtensionPoint(area, name, (Class<T>)t.getClass());
 
 
-    PlatformTestUtil.registerExtension(area, name, t, myTestRootDisposable, loadingOrder);
+    PsiTestExtensionUtil.registerExtension(area, name, t, myTestRootDisposable, loadingOrder);
   }
 
   protected <T> void registerExtensionPoint(final ExtensionPointName<T> extensionPointName, final Class<T> aClass) {

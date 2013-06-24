@@ -15,9 +15,12 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 public class RoamingTypeExtensionPointBean {
+  public static final ExtensionPointName<RoamingTypeExtensionPointBean> EP_NAME = ExtensionPointName.create("com.intellij.componentRoamingType");
+
   @Attribute("component")
   public String componentName;
   @Attribute("type")

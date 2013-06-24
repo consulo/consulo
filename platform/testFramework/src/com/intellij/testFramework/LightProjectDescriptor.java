@@ -16,7 +16,6 @@
 package com.intellij.testFramework;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -24,15 +23,9 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author yole
  */
 public interface LightProjectDescriptor {
-  Sdk getSdk();
   void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry);
 
   LightProjectDescriptor EMPTY_PROJECT_DESCRIPTOR = new LightProjectDescriptor() {
-    @Override
-    public Sdk getSdk() {
-      return null;
-    }
-
     @Override
     public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
     }

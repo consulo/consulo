@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CommandProcessor {
+  @NotNull
   public static CommandProcessor getInstance() {
     return ServiceManager.getService(CommandProcessor.class);
   }

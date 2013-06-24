@@ -25,6 +25,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
+import com.intellij.testFramework.PsiTestExtensionUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Document;
@@ -73,7 +74,7 @@ public class FileEditorManagerTest extends FileEditorManagerTestCase {
   }
 
   public void testOpenRecentEditorTab() throws Exception {
-    PlatformTestUtil.registerExtension(FileEditorProvider.EP_FILE_EDITOR_PROVIDER, new MyFileEditorProvider(), getTestRootDisposable());
+    PsiTestExtensionUtil.registerExtension(FileEditorProvider.EP_FILE_EDITOR_PROVIDER, new MyFileEditorProvider(), getTestRootDisposable());
 
     openFiles("  <component name=\"FileEditorManager\">\n" +
         "    <leaf>\n" +
@@ -95,7 +96,7 @@ public class FileEditorManagerTest extends FileEditorManagerTestCase {
   }
 
   public void testTrackSelectedEditor() throws Exception {
-    PlatformTestUtil.registerExtension(FileEditorProvider.EP_FILE_EDITOR_PROVIDER, new MyFileEditorProvider(), getTestRootDisposable());
+    PsiTestExtensionUtil.registerExtension(FileEditorProvider.EP_FILE_EDITOR_PROVIDER, new MyFileEditorProvider(), getTestRootDisposable());
     VirtualFile file = getFile("/src/1.txt");
     assertNotNull(file);
     FileEditor[] editors = myManager.openFile(file, true);

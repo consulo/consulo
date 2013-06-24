@@ -14,6 +14,7 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.semantic.SemService;
 import com.intellij.testFramework.PlatformTestUtil;
+import com.intellij.testFramework.PsiTestExtensionUtil;
 import com.intellij.testFramework.Timings;
 import com.intellij.util.xml.impl.DomFileElementImpl;
 import com.intellij.util.xml.reflect.DomExtender;
@@ -93,7 +94,7 @@ public class DomConcurrencyStressTest extends DomTestCase {
     final DomExtenderEP extenderEP = new DomExtenderEP();
     extenderEP.domClassName = elementClass.getName();
     extenderEP.extenderClassName = extenderClass.getName();
-    PlatformTestUtil.registerExtension(Extensions.getRootArea(), DomExtenderEP.EP_NAME, extenderEP, myTestRootDisposable);
+    PsiTestExtensionUtil.registerExtension(Extensions.getRootArea(), DomExtenderEP.EP_NAME, extenderEP, myTestRootDisposable);
   }
 
   private static void runThreads(int threadCount, final Runnable runnable) throws Throwable {

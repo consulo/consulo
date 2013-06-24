@@ -17,13 +17,13 @@ package com.intellij.lang.properties;
 
 import com.intellij.lang.properties.parsing.PropertiesLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.testFramework.LightPlatformTestCase;
+import com.intellij.testFramework.PlatformLiteFixture;
 import org.jetbrains.annotations.NonNls;
 
 /**
  * @author max
  */
-public class PropertiesLexerTest extends LightPlatformTestCase {
+public class PropertiesLexerTest extends PlatformLiteFixture {
 
   public PropertiesLexerTest() {
   }

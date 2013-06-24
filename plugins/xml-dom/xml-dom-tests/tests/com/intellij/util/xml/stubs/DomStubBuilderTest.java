@@ -5,7 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.stubs.ObjectStubTree;
 import com.intellij.psi.stubs.StubTreeLoader;
-import com.intellij.testFramework.PlatformTestUtil;
+import com.intellij.testFramework.PsiTestExtensionUtil;
 import com.intellij.util.xml.XmlName;
 import com.intellij.util.xml.reflect.DomExtender;
 import com.intellij.util.xml.reflect.DomExtenderEP;
@@ -44,7 +44,7 @@ public class DomStubBuilderTest extends DomStubTest {
     DomExtenderEP ep = new DomExtenderEP();
     ep.domClassName = Bar.class.getName();
     ep.extenderClassName = TestExtender.class.getName();
-    PlatformTestUtil.registerExtension(Extensions.getRootArea(), DomExtenderEP.EP_NAME, ep, myTestRootDisposable);
+    PsiTestExtensionUtil.registerExtension(Extensions.getRootArea(), DomExtenderEP.EP_NAME, ep, myTestRootDisposable);
 
     doBuilderTest("extender.xml", "File:foo\n" +
                                   "  Element:foo\n" +

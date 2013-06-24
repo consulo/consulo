@@ -33,7 +33,6 @@ import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.stores.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.PluginId;
@@ -579,10 +578,7 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
   }
 
   private static void loadComponentRoamingTypes() {
-    ExtensionPoint<RoamingTypeExtensionPointBean> point = Extensions.getRootArea().getExtensionPoint("com.intellij.ComponentRoamingType");
-    final RoamingTypeExtensionPointBean[] componentRoamingTypes = point.getExtensions();
-
-    for (RoamingTypeExtensionPointBean object : componentRoamingTypes) {
+    for (RoamingTypeExtensionPointBean object : RoamingTypeExtensionPointBean.EP_NAME.getExtensions()) {
 
       assert object.componentName != null;
       assert object.roamingType != null;

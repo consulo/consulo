@@ -15,6 +15,7 @@
  */
 package com.intellij.idea;
 
+import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -24,7 +25,9 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.components.impl.stores.RoamingTypeExtensionPointBean;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.testFramework.PsiTestExtensionUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class IdeaTestApplication extends CommandLineApplication implements Disposable {
@@ -32,6 +35,9 @@ public class IdeaTestApplication extends CommandLineApplication implements Dispo
 
   private IdeaTestApplication() {
     super(true, true, true);
+
+    PsiTestExtensionUtil.registerExtensionPointIfNeed(ApplicationLoadListener.EP_NAME, ApplicationLoadListener.class);
+    PsiTestExtensionUtil.registerExtensionPointIfNeed(RoamingTypeExtensionPointBean.EP_NAME, RoamingTypeExtensionPointBean.class);
   }
 
   public void setDataProvider(@Nullable DataProvider dataContext) {

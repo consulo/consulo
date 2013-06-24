@@ -4,8 +4,7 @@ import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.testFramework.PlatformTestCase;
-import com.intellij.testFramework.PlatformTestUtil;
+import com.intellij.testFramework.PsiTestExtensionUtil;
 
 /**
  * @author Dmitry Avdeev
@@ -14,11 +13,11 @@ import com.intellij.testFramework.PlatformTestUtil;
 public class NewDocumentHistoryTest extends HeavyFileEditorManagerTestCase {
 
   public NewDocumentHistoryTest() {
-    PlatformTestCase.initPlatformLangPrefix();
   }
 
   public void testBackNavigationBetweenEditors() throws Exception {
-    PlatformTestUtil.registerExtension(FileEditorProvider.EP_FILE_EDITOR_PROVIDER, new FileEditorManagerTest.MyFileEditorProvider(), getTestRootDisposable());
+    PsiTestExtensionUtil.registerExtension(FileEditorProvider.EP_FILE_EDITOR_PROVIDER, new FileEditorManagerTest.MyFileEditorProvider(),
+                                           getTestRootDisposable());
     VirtualFile file = getFile("/src/1.txt");
     assertNotNull(file);
     FileEditor[] editors = myManager.openFile(file, true);

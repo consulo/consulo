@@ -3039,7 +3039,7 @@
                     interface="com.intellij.platform.ProjectTemplatesFactory"/>
 
     <extensionPoint name="applicationLoadListener" interface="com.intellij.ide.ApplicationLoadListener"/>
-    <extensionPoint name="ComponentRoamingType" beanClass="com.intellij.openapi.components.impl.stores.RoamingTypeExtensionPointBean"/>
+    <extensionPoint name="componentRoamingType" beanClass="com.intellij.openapi.components.impl.stores.RoamingTypeExtensionPointBean"/>
 
     <extensionPoint name="editorTabTitleProvider" interface="com.intellij.openapi.fileEditor.impl.EditorTabTitleProvider"/>
     <extensionPoint name="editorTabColorProvider" interface="com.intellij.openapi.fileEditor.impl.EditorTabColorProvider"/>
@@ -4266,9 +4266,9 @@
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>
     <componentConfigurationMerger implementation="com.intellij.openapi.vcs.changes.shelf.ShelfManagerConfigurationMerger"/>
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.codeInsight.hint.EscapeHandler" id="hide-hints"/>
-    <ComponentRoamingType component="ChangeListManager" type="DISABLED"/>
-    <ComponentRoamingType component="RestoreUpdateTree" type="DISABLED"/>
-    <ComponentRoamingType component="PropertiesComponent" type="DISABLED"/>
+    <componentRoamingType component="ChangeListManager" type="DISABLED"/>
+    <componentRoamingType component="RestoreUpdateTree" type="DISABLED"/>
+    <componentRoamingType component="PropertiesComponent" type="DISABLED"/>
 
 
     <bundledKeymap file="/keymap/Keymap_Default.xml"/>
