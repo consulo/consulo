@@ -14,7 +14,8 @@ public class HeavySmartTypeCompletion15Test extends JavaCodeInsightFixtureTestCa
   }
 
   public void testGetInstance() throws Throwable {
-    myFixture.configureFromExistingVirtualFile(myFixture.copyFileToProject(BASE_PATH + "/foo/" + getTestName(false) + ".java", "foo/" + getTestName(false) + ".java"));
+    myFixture.configureFromExistingVirtualFile(
+      myFixture.copyFileToProject(BASE_PATH + "/foo/" + getTestName(false) + ".java", "foo/" + getTestName(false) + ".java"));
     myFixture.complete(CompletionType.SMART);
     myFixture.type("\n");
     myFixture.checkResultByFile(BASE_PATH + "/foo/" + getTestName(false) + "-out.java");
@@ -58,10 +59,11 @@ public class HeavySmartTypeCompletion15Test extends JavaCodeInsightFixtureTestCa
     myFixture.addClass("package foo; public class Bar extends bar.Intf {}");
 
     configure();
-    myFixture.type("\n"); checkResult();
+    myFixture.type("\n");
+    checkResult();
   }
 
-  public void testInaccessibleClassAfterNew() throws Exception{
+  public void testInaccessibleClassAfterNew() throws Exception {
     Module moduleA = PsiTestUtil.addModule(getProject(), "A", myFixture.getTempDirFixture().findOrCreateDir("a"));
     Module moduleB = PsiTestUtil.addModule(getProject(), "B", myFixture.getTempDirFixture().findOrCreateDir("b"));
 
@@ -72,7 +74,8 @@ public class HeavySmartTypeCompletion15Test extends JavaCodeInsightFixtureTestCa
     myFixture.addFileToProject("b/bar/Bar.java", "package bar; public class Bar { public static void accept(foo.Foo i) {}  }");
 
     configure();
-    myFixture.type("\n"); checkResult();
+    myFixture.type("\n");
+    checkResult();
   }
 
   private static final String BASE_PATH = "/codeInsight/completion/smartType";
