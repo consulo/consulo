@@ -20,7 +20,6 @@ import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.lang.properties.psi.Property;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.testFramework.LightPlatformTestCase;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 
@@ -31,10 +30,6 @@ import java.util.List;
  */
 public class PropertiesFileTest extends LightPlatformTestCase {
   private Property myPropertyToAdd;
-
-  public PropertiesFileTest() {
-    PlatformTestCase.initPlatformLangPrefix();    
-  }
 
   @Override
   protected void setUp() throws Exception {

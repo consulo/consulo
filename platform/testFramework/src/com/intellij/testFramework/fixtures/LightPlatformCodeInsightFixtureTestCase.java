@@ -26,7 +26,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.impl.LightTempDirTestFixtureImpl;
@@ -38,12 +37,6 @@ import java.io.File;
  * @author peter
  */
 public abstract class LightPlatformCodeInsightFixtureTestCase extends UsefulTestCase{
-
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  public LightPlatformCodeInsightFixtureTestCase() {
-    PlatformTestCase.autodetectPlatformPrefix();
-  }
-
   protected CodeInsightTestFixture myFixture;
   protected Module myModule;
 

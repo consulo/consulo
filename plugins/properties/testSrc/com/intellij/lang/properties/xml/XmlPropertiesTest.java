@@ -6,7 +6,6 @@ import com.intellij.lang.properties.PropertiesUtil;
 import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
 import java.util.List;
@@ -46,9 +45,5 @@ public class XmlPropertiesTest extends LightPlatformCodeInsightFixtureTestCase {
   @Override
   protected boolean isWriteActionRequired() {
     return false;
-  }
-
-  public XmlPropertiesTest() {
-    PlatformTestCase.initPlatformLangPrefix();
   }
 }

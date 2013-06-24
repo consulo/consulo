@@ -16,7 +16,6 @@
 package test;
 
 import com.intellij.openapi.application.PathManager;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase;
 import com.intellij.util.ArrayUtil;
 import org.intellij.lang.regexp.DefaultRegExpPropertiesProvider;
@@ -32,13 +31,6 @@ import java.util.Arrays;
  * Time: 15:10:10
  */
 public class RegExpCompletionTest extends CodeInsightFixtureTestCase {
-
-  @Override
-  protected void setUp() throws Exception {
-    PlatformTestCase.initPlatformLangPrefix();
-    super.setUp();
-  }
-
   // util methods
     private static String getInputDataFileName(String testName) {
         return Character.toUpperCase(testName.charAt(0)) + testName.substring(1) + ".regexp";

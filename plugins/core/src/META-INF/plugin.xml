@@ -3038,7 +3038,7 @@
     <extensionPoint name="projectTemplatesFactory"
                     interface="com.intellij.platform.ProjectTemplatesFactory"/>
 
-    <extensionPoint name="ApplicationLoadListener" interface="com.intellij.ide.ApplicationLoadListener"/>
+    <extensionPoint name="applicationLoadListener" interface="com.intellij.ide.ApplicationLoadListener"/>
     <extensionPoint name="ComponentRoamingType" beanClass="com.intellij.openapi.components.impl.stores.RoamingTypeExtensionPointBean"/>
 
     <extensionPoint name="editorTabTitleProvider" interface="com.intellij.openapi.fileEditor.impl.EditorTabTitleProvider"/>

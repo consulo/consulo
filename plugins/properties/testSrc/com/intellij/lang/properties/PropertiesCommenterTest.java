@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
-import com.intellij.testFramework.PlatformTestCase;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,10 +29,6 @@ import org.jetbrains.annotations.NotNull;
 public class PropertiesCommenterTest extends LightPlatformCodeInsightTestCase {
   public void testProp1() throws Exception { doTest(); }
   public void testUncomment() throws Exception { doTest(); }
-
-  public PropertiesCommenterTest() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
 
   @NotNull
   @Override

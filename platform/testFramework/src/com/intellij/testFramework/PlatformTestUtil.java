@@ -26,10 +26,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileTypes;
@@ -98,6 +95,16 @@ public class PlatformTestUtil {
     });
   }
 
+  public static <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t, final Disposable parentDisposable, LoadingOrder loadingOrder) {
+    final ExtensionPoint<T> extensionPoint = area.getExtensionPoint(name.getName());
+    extensionPoint.registerExtension(t, loadingOrder);
+    Disposer.register(parentDisposable, new Disposable() {
+      @Override
+      public void dispose() {
+        extensionPoint.unregisterExtension(t);
+      }
+    });
+  }
   @Nullable
   protected static String toString(@Nullable Object node, @Nullable Queryable.PrintInfo printInfo) {
     if (node instanceof AbstractTreeNode) {

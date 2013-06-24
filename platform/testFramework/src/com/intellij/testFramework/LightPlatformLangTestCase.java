@@ -16,8 +16,4 @@
 package com.intellij.testFramework;
 
 public abstract class LightPlatformLangTestCase extends LightPlatformTestCase {
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  protected LightPlatformLangTestCase() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
 }

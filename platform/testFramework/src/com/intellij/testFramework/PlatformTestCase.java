@@ -66,7 +66,6 @@ import com.intellij.psi.impl.DocumentCommitThread;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.util.PatchedWeakReference;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.indexing.IndexedRootsProvider;
 import com.intellij.util.ui.UIUtil;
@@ -85,7 +84,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashSet;
@@ -94,6 +92,7 @@ import java.util.Set;
 /**
  * @author yole
  */
+@org.consulo.lombok.annotations.Logger
 public abstract class PlatformTestCase extends UsefulTestCase implements DataProvider {
   public static final String TEST_DIR_PREFIX = "idea_test_";
 
@@ -103,7 +102,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   protected Module myModule;
   protected static final Collection<File> myFilesToDelete = new HashSet<File>();
   protected boolean myAssertionsInTestDetected;
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.testFramework.PlatformTestCase");
   public static Thread ourTestThread;
   private static TestCase ourTestCase = null;
   public static final long DEFAULT_TEST_TIME = 300L;
@@ -111,7 +109,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   private EditorListenerTracker myEditorListenerTracker;
   private ThreadTracker myThreadTracker;
 
-  protected static boolean ourPlatformPrefixInitialized;
   private static Set<VirtualFile> ourEternallyLivingFilesCache;
 
   static {
@@ -129,25 +126,12 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
   protected void initApplication() throws Exception {
     boolean firstTime = ourApplication == null;
-    autodetectPlatformPrefix();
+
     ourApplication = IdeaTestApplication.getInstance(getApplicationConfigDirPath());
     ourApplication.setDataProvider(this);
 
     if (firstTime) {
       cleanPersistedVFSContent();
-    }
-  }
-
-  public static void autodetectPlatformPrefix() {
-    if (ourPlatformPrefixInitialized) {
-      return;
-    }
-    URL resource = PlatformTestCase.class.getClassLoader().getResource("idea/ConsuloApplicationInfo.xml");
-    if (resource == null) {
-      throw new UnsupportedOperationException("Application config is not found.");
-    }
-    else {
-      initPlatformLangPrefix();
     }
   }
 
@@ -171,7 +155,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
     IdeaLogger.ourErrorsOccurred = null;
 
-    LOG.info(getClass().getName() + ".setUp()");
+    LOGGER.info(getClass().getName() + ".setUp()");
 
     initApplication();
 
@@ -525,7 +509,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       clearDeclaredFields(this, aClass);
     }
     catch (IllegalAccessException e) {
-      LOG.error(e);
+      LOGGER.error(e);
     }
 
     if (aClass == PlatformTestCase.class) return;
@@ -771,15 +755,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   protected PsiFile getPsiFile(final Document document) {
     return PsiDocumentManager.getInstance(getProject()).getPsiFile(document);
   }
-
-  public static void initPlatformLangPrefix() {
-    if (!ourPlatformPrefixInitialized) {
-      ourPlatformPrefixInitialized = true;
-
-      System.setProperty(PlatformUtils.PLATFORM_PREFIX_KEY, PlatformUtils.CONSULO_PREFIX);
-    }
-  }
-
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.METHOD, ElementType.TYPE})

@@ -15,12 +15,11 @@
  */
 package com.intellij.lang.properties;
 
-import com.intellij.lang.LanguageASTFactory;
+import com.intellij.lang.ASTLeafFactory;
 import com.intellij.lang.properties.parsing.PropertiesParserDefinition;
-import com.intellij.lang.properties.psi.impl.PropertiesASTFactory;
+import com.intellij.lang.properties.psi.impl.PropertiesASTLeafFactory;
 import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.testFramework.ParsingTestCase;
-import com.intellij.testFramework.PlatformTestCase;
 
 /**
  * @author max
@@ -29,13 +28,13 @@ public class PropertiesParsingTest extends ParsingTestCase {
 
   public PropertiesParsingTest() {
     super("", "properties", new PropertiesParserDefinition());
-    PlatformTestCase.initPlatformLangPrefix();
   }
 
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    addExplicitExtension(LanguageASTFactory.INSTANCE, PropertiesLanguage.INSTANCE, new PropertiesASTFactory());
+
+    registerExtension(ASTLeafFactory.EP.getExtensionPointName(), new PropertiesASTLeafFactory());
   }
 
   @Override

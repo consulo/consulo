@@ -19,10 +19,7 @@ import com.intellij.mock.MockApplicationEx;
 import com.intellij.mock.MockProjectEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Getter;
@@ -81,11 +78,22 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
     registerExtension(Extensions.getRootArea(), extensionPointName, t);
   }
 
+  protected <T> void registerExtension(final ExtensionPointName<T> extensionPointName, @NotNull final T t, @NotNull LoadingOrder loadingOrder) {
+    registerExtension(Extensions.getRootArea(), extensionPointName, t, loadingOrder);
+  }
+
   public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t) {
     registerExtensionPoint(area, name, (Class<T>)t.getClass());
 
 
     PlatformTestUtil.registerExtension(area, name, t, myTestRootDisposable);
+  }
+
+  public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t, @NotNull LoadingOrder loadingOrder) {
+    registerExtensionPoint(area, name, (Class<T>)t.getClass());
+
+
+    PlatformTestUtil.registerExtension(area, name, t, myTestRootDisposable, loadingOrder);
   }
 
   protected <T> void registerExtensionPoint(final ExtensionPointName<T> extensionPointName, final Class<T> aClass) {

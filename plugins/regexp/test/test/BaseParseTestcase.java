@@ -20,7 +20,6 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
@@ -32,11 +31,6 @@ import java.io.File;
 
 public abstract class BaseParseTestcase extends UsefulTestCase{
   protected CodeInsightTestFixture myFixture;
-
-  @SuppressWarnings({"JUnitTestCaseWithNonTrivialConstructors"})
-  public BaseParseTestcase() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
 
   @Override
   protected void setUp() throws Exception {

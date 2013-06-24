@@ -51,7 +51,7 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
         }
       }
       if (factory == null) {
-        throw new IllegalArgumentException("ElementType " + elementType + " is not handled in " + getClass().getName());
+        throw new IllegalArgumentException("ElementType " + elementType + " is not handled in " + myExtensionPointName);
       }
       myMap.put(elementType, factory);
       return factory;

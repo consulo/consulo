@@ -17,14 +17,16 @@ package com.intellij.testFramework;
 
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.lang.*;
-import com.intellij.lang.impl.PsiBuilderFactoryImpl;
+import com.intellij.lang.impl.*;
 import com.intellij.mock.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ex.PathManagerEx;
+import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
@@ -95,7 +97,7 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
         }
       });
     }
-    Extensions.registerAreaClass("CONSULO_PROJECT", null);
+    Extensions.registerAreaClass(ExtensionAreas.IDEA_PROJECT, null);
     myProject = new MockProjectEx(getTestRootDisposable());
     myPsiManager = new MockPsiManager(myProject);
     myFileFactory = new PsiFileFactoryImpl(myPsiManager);
@@ -119,6 +121,16 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
     myProject.registerService(PsiManager.class, myPsiManager);
     myProject.registerService(StartupManager.class, new StartupManagerImpl(myProject));
     registerExtensionPoint(FileTypeFactory.FILE_TYPE_FACTORY_EP, FileTypeFactory.class);
+
+    registerExtensionPoint(ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
+    registerExtensionPoint(ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
+    registerExtensionPoint(ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
+    registerExtensionPoint(PsiElementFactory.EP.getExtensionPointName(), PsiElementFactory.class);
+
+    registerExtension(ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory(), LoadingOrder.LAST);
+    registerExtension(ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory(), LoadingOrder.LAST);
+    registerExtension(ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory(), LoadingOrder.LAST);
+    registerExtension(PsiElementFactory.EP.getExtensionPointName(), new DefaultPsiElementFactory(), LoadingOrder.LAST);
 
     for (ParserDefinition definition : myDefinitions) {
       addExplicitExtension(LanguageParserDefinitions.INSTANCE, definition.getFileNodeType().getLanguage(), definition);

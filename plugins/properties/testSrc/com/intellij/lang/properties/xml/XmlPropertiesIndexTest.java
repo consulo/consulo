@@ -2,7 +2,6 @@ package com.intellij.lang.properties.xml;
 
 import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.indexing.FileContentImpl;
 
@@ -13,10 +12,6 @@ import java.util.Map;
  *         Date: 7/25/11
  */
 public class XmlPropertiesIndexTest extends LightPlatformCodeInsightFixtureTestCase {
-  public XmlPropertiesIndexTest() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
-
   public void testIndex() {
     final VirtualFile file = myFixture.configureByFile("foo.xml").getVirtualFile();
     Map<XmlPropertiesIndex.Key, String> map = new XmlPropertiesIndex().map(FileContentImpl.createByFile(file));
