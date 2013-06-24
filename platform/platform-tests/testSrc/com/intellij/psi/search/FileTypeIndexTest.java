@@ -20,7 +20,6 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FakeFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,11 +28,6 @@ import org.jetbrains.annotations.NotNull;
  *         Date: 7/24/12
  */
 public class FileTypeIndexTest extends LightPlatformCodeInsightFixtureTestCase {
-
-  public FileTypeIndexTest() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
-
   public void testAddFileType() throws Exception {
     FileType foo = new FakeFileType() {
       @Override

@@ -17,7 +17,6 @@ package com.intellij.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.*;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NonNls;
@@ -29,11 +28,6 @@ import java.util.Comparator;
 public class SmartTreeStructureTest extends LightPlatformCodeInsightFixtureTestCase {
   private final Queryable.PrintInfo myPrintInfo = new Queryable.PrintInfo();
   private TestTreeModel myModel;
-
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  public SmartTreeStructureTest() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
 
   @Override
   protected void setUp() throws Exception {

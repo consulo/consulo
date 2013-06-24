@@ -27,7 +27,6 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.ASTStructure;
 import com.intellij.psi.tree.*;
 import com.intellij.testFramework.LightPlatformTestCase;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.util.ThreeState;
 import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
@@ -56,11 +55,6 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
   private static final TokenSet WHITESPACE_SET = TokenSet.create(TokenType.WHITE_SPACE);
   private static final TokenSet COMMENT_SET = TokenSet.create(COMMENT);
-
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  public PsiBuilderQuickTest() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
 
   public void testPlain() {
     doTest("a<<b",
@@ -596,7 +590,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         return null;
       }
     };
-    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(project, null), null, text, null, null);
+    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(getProject(), Language.UNKNOWN_VERSION), null, text, null, null);
   }
 
   private interface Parser {
@@ -717,7 +711,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
             return null;
           }
         };
-        final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(parserDefinition, new MyTestLexer(),text);
+        final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(parserDefinition, new MyTestLexer(), Language.UNKNOWN_VERSION, text);
         builder.setDebugMode(true);
         parser.parse(builder);
         builder.getLightTree();

@@ -32,12 +32,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class PersistentFSTest extends PlatformTestCase {
-  @Override
-  public void setUp() throws Exception {
-    initPlatformLangPrefix();
-    super.setUp();
-  }
-
   public void testAccessingFileByID() throws Exception {
     File dir = createTempDirectory();
     File file = new File(dir, "test.txt");

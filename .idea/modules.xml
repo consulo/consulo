@@ -145,6 +145,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/xml-dom/xml-dom-impl/xml-dom-impl.iml" filepath="$PROJECT_DIR$/plugins/xml-dom/xml-dom-impl/xml-dom-impl.iml" group="plugins/xml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-impl/xml-impl.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-impl/xml-impl.iml" group="plugins/xml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-intellilang/xml-intellilang.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-intellilang/xml-intellilang.iml" group="plugins/xml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-tests/xml-tests.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-tests/xml-tests.iml" group="plugins/xml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xpath/xpath.iml" filepath="$PROJECT_DIR$/plugins/xpath/xpath.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xpath/xpath-intellilang/xpath-intellilang.iml" filepath="$PROJECT_DIR$/plugins/xpath/xpath-intellilang/xpath-intellilang.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xslt-debugger/xslt-debugger.iml" filepath="$PROJECT_DIR$/plugins/xslt-debugger/xslt-debugger.iml" group="plugins" />

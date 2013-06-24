@@ -99,6 +99,7 @@
     <orderEntry type="module" module-name="idea" />
     <orderEntry type="module" module-name="java-compiler-artifact-impl" />
     <orderEntry type="module" module-name="projectImportModel" />
+    <orderEntry type="module" module-name="platform-tests" />
   </component>
 </module>
 

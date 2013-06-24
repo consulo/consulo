@@ -27,6 +27,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Clock;
@@ -48,11 +49,6 @@ public abstract class IntegrationTestCase extends PlatformTestCase {
 
   protected VirtualFile myRoot;
   protected IdeaGateway myGateway;
-
-  @SuppressWarnings({"JUnitTestCaseWithNonTrivialConstructors"})
-  public IntegrationTestCase() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
 
   @Override
   public void setUp() throws Exception {
@@ -179,7 +175,7 @@ public abstract class IntegrationTestCase extends PlatformTestCase {
         ModifiableRootModel m = rm.getModifiableModel();
         for (ContentEntry e : m.getContentEntries()) {
           if (!Comparing.equal(e.getFile(), myRoot)) continue;
-          e.addExcludeFolder(VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(path)));
+          e.addFolder(VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(path)), ContentFolderType.EXCLUDED);
         }
         m.commit();
       }

@@ -23,7 +23,6 @@ import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.PsiTestExtensionUtil;
 import com.intellij.util.Function;
@@ -47,12 +46,6 @@ import java.util.concurrent.Future;
  *         Date: 4/16/13
  */
 public class FileEditorManagerTest extends FileEditorManagerTestCase {
-
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
-  public FileEditorManagerTest() {
-    PlatformTestCase.initPlatformLangPrefix();
-  }
-
   public void testTabOrder() throws Exception {
 
     openFiles(STRING);
