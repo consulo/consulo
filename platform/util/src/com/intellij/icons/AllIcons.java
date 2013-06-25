@@ -174,14 +174,7 @@ public class AllIcons {
     public static final Icon Verbose = IconLoader.getIcon("/ant/verbose.png"); // 16x16
 
   }
-  
-  public static class Css {
-    public static final Icon Atrule = IconLoader.getIcon("/css/atrule.png"); // 16x16
-    public static final Icon Property = IconLoader.getIcon("/css/property.png"); // 16x16
-    public static final Icon Pseudo_element = IconLoader.getIcon("/css/pseudo-element.png"); // 16x16
 
-  }
-  
   public static class Darcula {
     public static final Icon DoubleComboArrow = IconLoader.getIcon("/darcula/doubleComboArrow.png"); // 7x11
     public static final Icon TreeNodeCollapsed = IconLoader.getIcon("/darcula/treeNodeCollapsed.png"); // 9x9
@@ -317,7 +310,6 @@ public class AllIcons {
     public static final Icon Archive = IconLoader.getIcon("/fileTypes/archive.png"); // 16x16
     public static final Icon AS = IconLoader.getIcon("/fileTypes/as.png"); // 16x16
     public static final Icon Aspectj = IconLoader.getIcon("/fileTypes/aspectj.png"); // 16x16
-    public static final Icon Css = IconLoader.getIcon("/fileTypes/css.png"); // 16x16
     public static final Icon Custom = IconLoader.getIcon("/fileTypes/custom.png"); // 16x16
     public static final Icon Diagram = IconLoader.getIcon("/fileTypes/diagram.png"); // 16x16
     public static final Icon Dtd = IconLoader.getIcon("/fileTypes/dtd.png"); // 16x16
@@ -1106,9 +1098,6 @@ public class AllIcons {
       public static final Icon Safari16 = IconLoader.getIcon("/xml/browsers/safari16.png"); // 16x16
 
     }
-    public static final Icon Css_class = IconLoader.getIcon("/xml/css_class.png"); // 16x16
     public static final Icon Html5 = IconLoader.getIcon("/xml/html5.png"); // 16x16
-    public static final Icon Html_id = IconLoader.getIcon("/xml/html_id.png"); // 16x16
-
   }
 }
