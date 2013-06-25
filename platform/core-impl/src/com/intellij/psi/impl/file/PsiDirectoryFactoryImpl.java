@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.impl.PsiManagerImpl;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -48,12 +49,12 @@ public class PsiDirectoryFactoryImpl extends PsiDirectoryFactory {
 
   @Override
   public PsiDirectoryContainer getDirectoryContainer(@NotNull PsiDirectory directory) {
-    return null;
+    return PsiPackageManager.getInstance(myManager.getProject()).findAnyPackage(directory);
   }
 
   @Override
   public boolean isPackage(PsiDirectory directory) {
-    return false;
+    return PsiPackageManager.getInstance(myManager.getProject()).findAnyPackage(directory) != null;
   }
 
   @Override
