@@ -32,7 +32,7 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
     if(languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).createLexer(project);
     }
-    throw new IllegalArgumentException("'createLexer' need override");
+    throw new IllegalArgumentException("'createLexer' need override for language version '" + languageVersion.getName() + "'");
   }
 
   @NotNull
@@ -41,7 +41,7 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
     if(languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).createParser(project);
     }
-    throw new IllegalArgumentException("'createParser' need override");
+    throw new IllegalArgumentException("'createParser' need override for language version '" + languageVersion.getName() + "'");
   }
 
   @NotNull
@@ -50,7 +50,7 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
     if(languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getWhitespaceTokens();
     }
-    throw new IllegalArgumentException("'getWhitespaceTokens' need override");
+    throw new IllegalArgumentException("'getWhitespaceTokens' need override for language version '" + languageVersion.getName() + "'");
   }
 
   @NotNull
@@ -59,7 +59,7 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
     if(languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getCommentTokens();
     }
-    throw new IllegalArgumentException("'getCommentTokens' need override");
+    throw new IllegalArgumentException("'getCommentTokens' need override for language version '" + languageVersion.getName() + "'");
   }
 
   @NotNull
@@ -68,6 +68,6 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
     if(languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getStringLiteralElements();
     }
-    throw new IllegalArgumentException("'getStringLiteralElements' need override");
+    throw new IllegalArgumentException("'getStringLiteralElements' need override for language version '" + languageVersion.getName() + "'");
   }
 }
