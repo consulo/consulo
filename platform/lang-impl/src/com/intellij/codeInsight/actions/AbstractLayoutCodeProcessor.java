@@ -405,13 +405,6 @@ public abstract class AbstractLayoutCodeProcessor {
       result.add(workspaceFile);
     }
 
-    for (Module m : ModuleManager.getInstance(project).getModules()) {
-      VirtualFile moduleFile = m.getModuleFile();
-      if (moduleFile != null) {
-        result.add(moduleFile);
-      }
-    }
-
     return result;
   }
 
