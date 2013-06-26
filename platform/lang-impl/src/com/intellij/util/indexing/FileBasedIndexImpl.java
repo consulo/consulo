@@ -1514,7 +1514,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
     final long previousDocStamp = myLastIndexedDocStamps.getAndSet(document, requestedIndexId, currentDocStamp);
     if (currentDocStamp != previousDocStamp) {
       final String contentText = content.getText();
-      if (!isTooLarge(vFile, contentText.length()) && getInputFilter(requestedIndexId).acceptInput(vFile)) {
+      if (!isTooLarge(vFile, contentText.length()) && getInputFilter(requestedIndexId).acceptInput(project, vFile)) {
         // Reasonably attempt to use same file content when calculating indices as we can evaluate them several at once and store in file content
         WeakReference<FileContentImpl> previousContentRef = document.getUserData(ourFileContentKey);
         FileContentImpl previousContent = previousContentRef != null ? previousContentRef.get() : null;
@@ -1662,7 +1662,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
       PsiFile psiFile = null;
       FileContentImpl fc = null;
       for (final ID<?, ?> indexId : myIndices.keySet()) {
-        if (shouldIndexFile(file, indexId)) {
+        if (shouldIndexFile(project, file, indexId)) {
           if (fc == null) {
             byte[] currentBytes;
             try {
@@ -1874,7 +1874,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
           FileContent fileContent = null;
           // handle 'content-less' indices separately
           for (ID<?, ?> indexId : myNotRequiringContentIndices) {
-            if (getInputFilter(indexId).acceptInput(file)) {
+            if (getInputFilter(indexId).acceptInput(null, file)) {
               try {
                 if (fileContent == null) {
                   fileContent = new FileContentImpl(file);
@@ -1890,7 +1890,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
           // For 'normal indices' schedule the file for update and stop iteration if at least one index accepts it
           if (!isTooLarge(file)) {
             for (ID<?, ?> indexId : myIndices.keySet()) {
-              if (needsFileContentLoading(indexId) && getInputFilter(indexId).acceptInput(file)) {
+              if (needsFileContentLoading(indexId) && getInputFilter(indexId).acceptInput(null, file)) {
                 scheduleForUpdate(file);
                 break; // no need to iterate further, as the file is already marked
               }
@@ -1945,12 +1945,12 @@ public class FileBasedIndexImpl extends FileBasedIndex {
       for (final ID<?, ?> indexId : myIndices.keySet()) {
         try {
           if (!needsFileContentLoading(indexId)) {
-            if (shouldUpdateIndex(file, indexId)) {
+            if (shouldUpdateIndex(null, file, indexId)) {
               updateSingleIndex(indexId, file, null);
             }
           }
           else { // the index requires file content
-            if (shouldUpdateIndex(file, indexId)) {
+            if (shouldUpdateIndex(null, file, indexId)) {
               affectedIndices.add(indexId);
             }
           }
@@ -2139,7 +2139,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
           // on shutdown there is no need to re-index the file, just remove outdated data from indices
           final List<ID<?, ?>> affected = new ArrayList<ID<?, ?>>();
           for (final ID<?, ?> indexId : myRequiringContentIndices) {  // non requiring content indices should be flushed
-            if (getInputFilter(indexId).acceptInput(file)) {
+            if (getInputFilter(indexId).acceptInput(project, file)) {
               affected.add(indexId);
             }
           }
@@ -2186,7 +2186,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
             if (!isTooLarge(file)) {
               for (ID<?, ?> indexId : myIndices.keySet()) {
                 try {
-                  if (needsFileContentLoading(indexId) && shouldIndexFile(file, indexId)) {
+                  if (needsFileContentLoading(indexId) && shouldIndexFile(null, file, indexId)) {
                     myFiles.add(file);
                     oldStuff = false;
                     break;
@@ -2206,7 +2206,7 @@ public class FileBasedIndexImpl extends FileBasedIndex {
             }
             FileContent fileContent = null;
             for (ID<?, ?> indexId : myNotRequiringContentIndices) {
-              if (shouldIndexFile(file, indexId)) {
+              if (shouldIndexFile(null, file, indexId)) {
                 oldStuff = false;
                 try {
                   if (fileContent == null) {
@@ -2242,13 +2242,13 @@ public class FileBasedIndexImpl extends FileBasedIndex {
     }
   }
 
-  private boolean shouldUpdateIndex(final VirtualFile file, final ID<?, ?> indexId) {
-    return getInputFilter(indexId).acceptInput(file) &&
+  private boolean shouldUpdateIndex(Project project, final VirtualFile file, final ID<?, ?> indexId) {
+    return getInputFilter(indexId).acceptInput(project, file) &&
            (isMock(file) || IndexingStamp.isFileIndexed(file, indexId, IndexInfrastructure.getIndexCreationStamp(indexId)));
   }
 
-  private boolean shouldIndexFile(final VirtualFile file, final ID<?, ?> indexId) {
-    return getInputFilter(indexId).acceptInput(file) &&
+  private boolean shouldIndexFile(Project project, final VirtualFile file, final ID<?, ?> indexId) {
+    return getInputFilter(indexId).acceptInput(project, file) &&
            (isMock(file) || !IndexingStamp.isFileIndexed(file, indexId, IndexInfrastructure.getIndexCreationStamp(indexId)));
   }
 
@@ -2311,8 +2311,8 @@ public class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     @Override
-    public boolean acceptInput(final VirtualFile file) {
-      return file instanceof VirtualFileWithId && myDelegate.acceptInput(file);
+    public boolean acceptInput(Project project, final VirtualFile file) {
+      return file instanceof VirtualFileWithId && myDelegate.acceptInput(project, file);
     }
   }
 

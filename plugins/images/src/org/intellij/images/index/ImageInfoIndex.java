@@ -48,7 +48,7 @@ public class ImageInfoIndex extends SingleEntryFileBasedIndexExtension<ImageInfo
 
   private final FileBasedIndex.InputFilter myInputFilter = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(final VirtualFile file) {
+    public boolean acceptInput(Project project, final VirtualFile file) {
       return (file.getFileSystem() == LocalFileSystem.getInstance() || file.getFileSystem() instanceof TempFileSystem) &&
              file.getFileType() == ImageFileTypeManager.getInstance().getImageFileType() &&
              (file.getLength() / 1024) < ourMaxImageSize

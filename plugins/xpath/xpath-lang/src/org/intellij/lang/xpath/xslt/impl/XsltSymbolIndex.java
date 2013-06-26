@@ -146,7 +146,7 @@ public class XsltSymbolIndex extends FileBasedIndexExtension<String, XsltSymbolI
     public FileBasedIndex.InputFilter getInputFilter() {
         return new FileBasedIndex.InputFilter() {
             @Override
-            public boolean acceptInput(VirtualFile file) {
+            public boolean acceptInput(Project project, VirtualFile file) {
                 if (file.getFileSystem() instanceof JarFileSystem) {
                   return false; // there is lots and lots of custom XML inside zip files
                 }

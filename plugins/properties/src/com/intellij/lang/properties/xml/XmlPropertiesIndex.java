@@ -1,6 +1,7 @@
 package com.intellij.lang.properties.xml;
 
 import com.intellij.ide.highlighter.XmlFileType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -68,7 +69,7 @@ public class XmlPropertiesIndex extends FileBasedIndexExtension<XmlPropertiesInd
   }
 
   @Override
-  public boolean acceptInput(VirtualFile file) {
+  public boolean acceptInput(Project project, VirtualFile file) {
     return XmlFileType.INSTANCE == file.getFileType();
   }
 

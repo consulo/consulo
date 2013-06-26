@@ -513,7 +513,7 @@ public class GroovyDslFileIndex extends ScalarIndexExtension<String> {
 
   private static class MyInputFilter implements FileBasedIndex.InputFilter {
     @Override
-    public boolean acceptInput(final VirtualFile file) {
+    public boolean acceptInput(Project project, final VirtualFile file) {
       return "gdsl".equals(file.getExtension());
     }
   }

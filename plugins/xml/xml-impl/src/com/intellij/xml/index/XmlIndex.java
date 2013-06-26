@@ -42,7 +42,7 @@ public abstract class XmlIndex<V> extends FileBasedIndexExtension<String, V> {
   protected static final EnumeratorStringDescriptor KEY_DESCRIPTOR = new EnumeratorStringDescriptor();
 
   private static final FileBasedIndex.InputFilter INPUT_FILTER = new FileBasedIndex.InputFilter() {
-    public boolean acceptInput(final VirtualFile file) {
+    public boolean acceptInput(Project project, final VirtualFile file) {
       FileType fileType = file.getFileType();
       final String extension = file.getExtension();
       return XmlFileType.INSTANCE.equals(fileType) && "xsd".equals(extension) ||

@@ -134,6 +134,6 @@ public abstract class FileBasedIndex implements BaseComponent {
   * Author: dmitrylomov
   */
   public static interface InputFilter {
-    boolean acceptInput(VirtualFile file);
+    boolean acceptInput(Project project, VirtualFile file);
   }
 }

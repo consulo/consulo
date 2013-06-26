@@ -19,6 +19,7 @@
  */
 package com.intellij.find.ngrams;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.TrigramBuilder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.*;
@@ -38,13 +39,13 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> {
 
   private static final FileBasedIndex.InputFilter INPUT_FILTER = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(VirtualFile file) {
+    public boolean acceptInput(Project project, VirtualFile file) {
       return !file.getFileType().isBinary();
     }
   };
   private static final FileBasedIndex.InputFilter NO_FILES = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(VirtualFile file) {
+    public boolean acceptInput(Project project, VirtualFile file) {
       return false;
     }
   };

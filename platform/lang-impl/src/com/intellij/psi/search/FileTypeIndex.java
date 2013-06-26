@@ -3,6 +3,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.*;
@@ -74,7 +75,7 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
   }
 
   @Override
-  public boolean acceptInput(VirtualFile file) {
+  public boolean acceptInput(Project project, VirtualFile file) {
     return !file.isDirectory();
   }
 
