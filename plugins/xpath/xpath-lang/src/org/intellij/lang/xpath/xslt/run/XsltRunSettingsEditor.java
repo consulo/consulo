@@ -358,7 +358,6 @@ class XsltRunSettingsEditor extends SettingsEditor<XsltRunConfiguration> {
         if (fileType == StdFileTypes.CLASS ||
             fileType == StdFileTypes.IDEA_PROJECT ||
             fileType == StdFileTypes.IDEA_WORKSPACE ||
-            fileType == StdFileTypes.IDEA_MODULE ||
             fileType == StdFileTypes.GUI_DESIGNER_FORM) {
           continue;
         }

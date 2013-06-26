@@ -201,7 +201,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
           }
 
           private boolean canContainCopyright(VirtualFile file) {
-            return !file.isDirectory() && (file.getFileType() == StdFileTypes.IDEA_MODULE || file.getFileType() == StdFileTypes.XML);
+            return !file.isDirectory() && file.getFileType() == StdFileTypes.XML;
           }
         };
         descriptor.setTitle("Choose file containing copyright notice");

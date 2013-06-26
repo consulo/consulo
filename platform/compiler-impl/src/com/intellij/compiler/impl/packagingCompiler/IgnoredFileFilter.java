@@ -32,7 +32,6 @@ public class IgnoredFileFilter implements FileFilter {
       final String name = file.getName();
       return !fileTypeManager.isFileIgnored(name)
         && fileTypeManager.getFileTypeByFileName(name) != StdFileTypes.IDEA_PROJECT
-        && fileTypeManager.getFileTypeByFileName(name) != StdFileTypes.IDEA_MODULE
         && fileTypeManager.getFileTypeByFileName(name) != StdFileTypes.IDEA_WORKSPACE
         ;
     }

@@ -244,11 +244,9 @@ public abstract class PlatformIdTableBuilding {
     IdTableBuilding.registerIdIndexer(FileTypes.PLAIN_TEXT, new IdTableBuilding.PlainTextIndexer());
     registerTodoIndexer(FileTypes.PLAIN_TEXT, new PlainTextTodoIndexer());
 
-    IdTableBuilding.registerIdIndexer(StdFileTypes.IDEA_MODULE, null);
     IdTableBuilding.registerIdIndexer(StdFileTypes.IDEA_WORKSPACE, null);
     IdTableBuilding.registerIdIndexer(StdFileTypes.IDEA_PROJECT, null);
 
-    registerTodoIndexer(StdFileTypes.IDEA_MODULE, null);
     registerTodoIndexer(StdFileTypes.IDEA_WORKSPACE, null);
     registerTodoIndexer(StdFileTypes.IDEA_PROJECT, null);
   }
