@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
@@ -52,15 +53,16 @@ public class SkipAutopopupInStrings extends CompletionConfidence {
       return false;
     }
 
-    return isStringLiteral(element, definition) || isStringLiteral(element.getParent(), definition) ||
-            isStringLiteralWithError(element, definition) || isStringLiteralWithError(element.getParent(), definition);
+    final LanguageVersion languageVersion = element.getLanguageVersion();
+    return isStringLiteral(element, definition, languageVersion) || isStringLiteral(element.getParent(), definition, languageVersion) ||
+            isStringLiteralWithError(element, definition, languageVersion) || isStringLiteralWithError(element.getParent(), definition, languageVersion);
   }
 
-  private static boolean isStringLiteral(PsiElement element, ParserDefinition definition) {
-    return PlatformPatterns.psiElement().withElementType(definition.getStringLiteralElements()).accepts(element);
+  private static boolean isStringLiteral(PsiElement element, ParserDefinition definition, LanguageVersion languageVersion) {
+    return PlatformPatterns.psiElement().withElementType(definition.getStringLiteralElements(languageVersion)).accepts(element);
   }
 
-  private static boolean isStringLiteralWithError(PsiElement element, ParserDefinition definition) {
-    return isStringLiteral(element, definition) && PsiTreeUtil.nextLeaf(element) instanceof PsiErrorElement;
+  private static boolean isStringLiteralWithError(PsiElement element, ParserDefinition definition, LanguageVersion languageVersion) {
+    return isStringLiteral(element, definition, languageVersion) && PsiTreeUtil.nextLeaf(element) instanceof PsiErrorElement;
   }
 }

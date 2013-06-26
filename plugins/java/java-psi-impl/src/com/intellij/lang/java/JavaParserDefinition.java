@@ -64,7 +64,7 @@ public class JavaParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getStringLiteralElements() {
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TokenSet.create(JavaElementType.LITERAL_EXPRESSION);
   }
 

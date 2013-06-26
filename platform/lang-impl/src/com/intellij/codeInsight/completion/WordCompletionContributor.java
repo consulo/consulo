@@ -82,7 +82,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
     if (definition == null) {
       return;
     }
-    final ElementPattern<PsiElement> pattern = psiElement().withElementType(definition.getStringLiteralElements());
+    final ElementPattern<PsiElement> pattern = psiElement().withElementType(definition.getStringLiteralElements(position.getLanguageVersion()));
     final PsiElement localString = PsiTreeUtil.findFirstParent(position, false, new Condition<PsiElement>() {
       @Override
       public boolean value(PsiElement element) {

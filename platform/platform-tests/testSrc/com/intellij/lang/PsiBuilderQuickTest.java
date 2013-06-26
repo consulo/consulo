@@ -570,7 +570,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
       @NotNull
       @Override
-      public TokenSet getStringLiteralElements() {
+      public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
         return null;
       }
 
@@ -691,7 +691,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
           @NotNull
           @Override
-          public TokenSet getStringLiteralElements() {
+          public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
             return null;
           }
 

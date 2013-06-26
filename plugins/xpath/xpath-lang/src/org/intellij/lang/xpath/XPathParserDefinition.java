@@ -56,7 +56,7 @@ public class XPathParserDefinition implements ParserDefinition {
     }
 
     @NotNull
-    public TokenSet getStringLiteralElements() {
+    public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
         return TokenSet.create(XPathTokenTypes.STRING_LITERAL);
     }
 

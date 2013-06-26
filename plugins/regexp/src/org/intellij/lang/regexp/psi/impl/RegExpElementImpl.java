@@ -91,6 +91,6 @@ public abstract class RegExpElementImpl extends ASTWrapperPsiElement implements 
     }
     final IElementType elementType = astNode.getElementType();
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(context.getLanguage());
-    return parserDefinition.getStringLiteralElements().contains(elementType);
+    return parserDefinition.getStringLiteralElements(context.getLanguageVersion()).contains(elementType);
   }
 }

@@ -26,6 +26,7 @@ import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.find.impl.livePreview.SearchResults;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lexer.Lexer;
 import com.intellij.navigation.NavigationItem;
@@ -566,8 +567,10 @@ public class FindManagerImpl extends FindManager implements PersistentStateCompo
   private static TokenSet addTokenTypesForLanguage(FindModel model, Language lang, TokenSet tokensOfInterest) {
     ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
     if (definition != null) {
-      tokensOfInterest = TokenSet.orSet(tokensOfInterest, model.isInCommentsOnly() ? definition.getCommentTokens(): TokenSet.EMPTY);
-      tokensOfInterest = TokenSet.orSet(tokensOfInterest, model.isInStringLiteralsOnly() ? definition.getStringLiteralElements() : TokenSet.EMPTY);
+      for(LanguageVersion languageVersion : lang.getVersions()) {
+        tokensOfInterest = TokenSet.orSet(tokensOfInterest, model.isInCommentsOnly() ? definition.getCommentTokens(): TokenSet.EMPTY);
+        tokensOfInterest = TokenSet.orSet(tokensOfInterest, model.isInStringLiteralsOnly() ? definition.getStringLiteralElements(languageVersion) : TokenSet.EMPTY);
+      }
     }
     return tokensOfInterest;
   }

@@ -87,9 +87,10 @@ public interface ParserDefinition {
    * option in refactorings is applied to the contents of such tokens.
    *
    * @return the set of string literal element types.
+   * @param languageVersion
    */
   @NotNull
-  TokenSet getStringLiteralElements();
+  TokenSet getStringLiteralElements(LanguageVersion languageVersion);
 
   /**
    * Creates a PSI element for the specified AST node. The AST tree is a simple, semantic-free

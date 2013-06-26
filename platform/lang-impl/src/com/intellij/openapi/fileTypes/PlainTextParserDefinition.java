@@ -74,7 +74,7 @@ public class PlainTextParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getStringLiteralElements() {
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 

@@ -72,7 +72,7 @@ public class RncParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getStringLiteralElements() {
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TokenSet.create(RncTokenTypes.LITERAL);
   }
 

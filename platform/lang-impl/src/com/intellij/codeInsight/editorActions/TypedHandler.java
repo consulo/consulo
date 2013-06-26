@@ -260,7 +260,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     if (element == null) return false;
     final ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(element.getLanguage());
     if (definition != null) {
-      final TokenSet stringLiteralElements = definition.getStringLiteralElements();
+      final TokenSet stringLiteralElements = definition.getStringLiteralElements(element.getLanguageVersion());
       final ASTNode node = element.getNode();
       if (node == null) return false;
       final IElementType elementType = node.getElementType();

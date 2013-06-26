@@ -69,7 +69,7 @@ public class GroovyParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getStringLiteralElements() {
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TokenSets.STRING_LITERALS;
   }
 

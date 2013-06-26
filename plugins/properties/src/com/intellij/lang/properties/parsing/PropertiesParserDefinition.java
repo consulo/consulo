@@ -61,7 +61,7 @@ public class PropertiesParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getStringLiteralElements() {
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 

@@ -91,7 +91,7 @@ public class XmlWrongClosingTagNameInspection implements Annotator {
       ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(context.getLanguage());
       if (parserDefinition != null) {
         ASTNode contextNode = context.getNode();
-        if (contextNode != null && contextNode.getChildren(parserDefinition.getStringLiteralElements()) != null) {
+        if (contextNode != null && contextNode.getChildren(parserDefinition.getStringLiteralElements(context.getLanguageVersion())) != null) {
           // TODO: we should check for concatenations here
           return;
         }

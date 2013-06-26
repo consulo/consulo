@@ -119,7 +119,7 @@ public class SpellCheckingInspection extends LocalInspectionTool implements Batc
 
         // Handle selected options
         if (parserDefinition != null) {
-          if (parserDefinition.getStringLiteralElements().contains(elementType)) {
+          if (parserDefinition.getStringLiteralElements(element.getLanguageVersion()).contains(elementType)) {
             if (!processLiterals) {
               return;
             }
