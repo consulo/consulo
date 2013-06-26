@@ -18,6 +18,7 @@ import junit.framework.AssertionFailedError;
 
 /**
  * Date: Jan 21, 2005
+ *
  * @author max
  */
 public class PsiBuilderTest extends LightIdeaTestCase {
@@ -59,14 +60,15 @@ public class PsiBuilderTest extends LightIdeaTestCase {
   }
 
   private static PsiBuilderImpl createBuilder(final String text) {
-    return createBuilder(text,null);
+    return createBuilder(text, null);
   }
+
   private static PsiBuilderImpl createBuilder(final String text, ASTNode originalTree) {
     final Language lang = StdFileTypes.JAVA.getLanguage();
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
     assertNotNull(parserDefinition);
     PsiFile psiFile = createFile("x.java", text);
-    return new PsiBuilderImpl(getProject(), psiFile, parserDefinition, new JavaLexer(LanguageLevel.JDK_1_5),
+    return new PsiBuilderImpl(getProject(), psiFile, parserDefinition, new JavaLexer(LanguageLevel.JDK_1_5), LanguageLevel.JDK_1_5,
                               SharedImplUtil.findCharTableByTree(psiFile.getNode()), text, originalTree, null);
   }
 
@@ -142,7 +144,7 @@ public class PsiBuilderTest extends LightIdeaTestCase {
 
   public void testAdvanceBeyondEof() {
     myBuilder = createBuilder("package");
-    for(int i=0; i<20; i++) {
+    for (int i = 0; i < 20; i++) {
       myBuilder.eof();
       myBuilder.advanceLexer();
     }
@@ -218,7 +220,8 @@ public class PsiBuilderTest extends LightIdeaTestCase {
       myBuilder.getTokenType();
       myBuilder.mark().done(JavaStubElementTypes.TYPE_PARAMETER_LIST);
       backup.done(JavaStubElementTypes.ANNOTATION_METHOD);
-    } else {
+    }
+    else {
       backup.rollbackTo();
     }
     composite.done(JavaStubElementTypes.ANONYMOUS_CLASS);

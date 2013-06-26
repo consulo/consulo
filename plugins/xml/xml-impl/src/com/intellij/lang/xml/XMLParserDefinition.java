@@ -50,7 +50,7 @@ public class XMLParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getWhitespaceTokens() {
+  public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
     return XmlTokenType.WHITESPACES;
   }
 

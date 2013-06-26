@@ -144,11 +144,12 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
                         PsiFile containingFile,
                         @NotNull ParserDefinition parserDefinition,
                         @NotNull Lexer lexer,
+                        @NotNull LanguageVersion languageVersion,
                         CharTable charTable,
                         @NotNull final CharSequence text,
                         @Nullable ASTNode originalTree,
                         @Nullable MyTreeStructure parentLightTree) {
-    this(project, containingFile, parserDefinition.getWhitespaceTokens(), parserDefinition.getCommentTokens(), lexer, charTable, text,
+    this(project, containingFile, parserDefinition.getWhitespaceTokens(languageVersion), parserDefinition.getCommentTokens(), lexer, charTable, text,
          originalTree, parentLightTree);
   }
 
@@ -180,18 +181,20 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
   public PsiBuilderImpl(@NotNull final Project project,
                         @NotNull final ParserDefinition parserDefinition,
                         @NotNull final Lexer lexer,
+                        @NotNull final LanguageVersion languageVersion,
                         @NotNull final ASTNode chameleon,
                         @NotNull final CharSequence text) {
-    this(project, SharedImplUtil.getContainingFile(chameleon), parserDefinition, lexer, SharedImplUtil.findCharTableByTree(chameleon), text,
+    this(project, SharedImplUtil.getContainingFile(chameleon), parserDefinition, lexer, languageVersion, SharedImplUtil.findCharTableByTree(chameleon), text,
          chameleon.getUserData(BlockSupport.TREE_TO_BE_REPARSED), null);
   }
 
   public PsiBuilderImpl(@NotNull final Project project,
                         @NotNull final ParserDefinition parserDefinition,
                         @NotNull final Lexer lexer,
+                        @NotNull final LanguageVersion languageVersion,
                         @NotNull final LighterLazyParseableNode chameleon,
                         @NotNull final CharSequence text) {
-    this(project, chameleon.getContainingFile(), parserDefinition, lexer, chameleon.getCharTable(), text,
+    this(project, chameleon.getContainingFile(), parserDefinition, lexer, languageVersion, chameleon.getCharTable(), text,
          null, ((LazyParseableToken)chameleon).myParent);
   }
 

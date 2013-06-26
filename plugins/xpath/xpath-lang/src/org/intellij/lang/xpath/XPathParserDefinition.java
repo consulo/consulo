@@ -46,7 +46,7 @@ public class XPathParserDefinition implements ParserDefinition {
     }
 
     @NotNull
-    public TokenSet getWhitespaceTokens() {
+    public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
         return TokenSet.create(XPathTokenTypes.WHITESPACE);
     }
 

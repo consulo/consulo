@@ -62,7 +62,7 @@ public class RncParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getWhitespaceTokens() {
+  public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
     return TokenSet.create(TokenType.WHITE_SPACE);
   }
 

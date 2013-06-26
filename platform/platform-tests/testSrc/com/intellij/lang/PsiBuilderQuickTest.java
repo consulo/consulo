@@ -558,7 +558,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
       @NotNull
       @Override
-      public TokenSet getWhitespaceTokens() {
+      public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
         return WHITESPACE_SET;
       }
 
@@ -590,7 +590,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         return null;
       }
     };
-    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(getProject(), Language.UNKNOWN_VERSION), null, text, null, null);
+    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(getProject(), Language.UNKNOWN_VERSION), Language.UNKNOWN_VERSION, null, text, null, null);
   }
 
   private interface Parser {
@@ -679,7 +679,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
           @NotNull
           @Override
-          public TokenSet getWhitespaceTokens() {
+          public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
             return TokenSet.EMPTY;
           }
 

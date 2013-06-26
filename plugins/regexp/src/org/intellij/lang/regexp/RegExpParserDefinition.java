@@ -53,7 +53,7 @@ public class RegExpParserDefinition implements ParserDefinition {
     }
 
     @NotNull
-    public TokenSet getWhitespaceTokens() {
+    public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
         // trick to hide quote tokens from parser... should actually go into the lexer
         return TokenSet.create(RegExpTT.QUOTE_BEGIN, RegExpTT.QUOTE_END, TokenType.WHITE_SPACE);
     }

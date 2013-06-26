@@ -67,9 +67,10 @@ public interface ParserDefinition {
    * which is suitable for all the languages unless you really need to use special whitespace token</strong>
    *
    * @return the set of whitespace token types.
+   * @param languageVersion
    */
   @NotNull
-  TokenSet getWhitespaceTokens();
+  TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion);
 
   /**
    * Returns the set of token types which are treated as comments by the PSI builder.

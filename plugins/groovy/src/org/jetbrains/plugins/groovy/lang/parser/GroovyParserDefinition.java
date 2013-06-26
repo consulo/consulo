@@ -59,7 +59,7 @@ public class GroovyParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getWhitespaceTokens() {
+  public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
     return TokenSets.WHITE_SPACE_TOKEN_SET;
   }
 

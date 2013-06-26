@@ -38,7 +38,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
     final Language language = chameleon.getTokenType().getLanguage();
     ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
     assert parserDefinition != null;
-    return new PsiBuilderImpl(project, parserDefinition, parserDefinition.createLexer(project, languageVersion), chameleon, chameleon.getText());
+    return new PsiBuilderImpl(project, parserDefinition, parserDefinition.createLexer(project, languageVersion), languageVersion, chameleon, chameleon.getText());
   }
 
   @NotNull
@@ -53,7 +53,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
     if(lexer == null) {
       assert parserDefinition != null;
     }
-    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : parserDefinition.createLexer(project, languageVersion), chameleon, seq);
+    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : parserDefinition.createLexer(project, languageVersion), languageVersion, chameleon, seq);
   }
 
   @NotNull
@@ -69,7 +69,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
     if(lexer == null) {
       assert parserDefinition != null;
     }
-    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : parserDefinition.createLexer(project, languageVersion), chameleon, seq);
+    return new PsiBuilderImpl(project, parserDefinition, lexer != null ? lexer : parserDefinition.createLexer(project, languageVersion), languageVersion, chameleon, seq);
   }
 
   @NotNull
@@ -78,6 +78,6 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
                                   @NotNull final Lexer lexer,
                                   @NotNull LanguageVersion languageVersion,
                                   @NotNull final CharSequence seq) {
-    return new PsiBuilderImpl(null, null, parserDefinition.getWhitespaceTokens(), parserDefinition.getCommentTokens(), lexer, null, seq, null, null);
+    return new PsiBuilderImpl(null, null, parserDefinition.getWhitespaceTokens(languageVersion), parserDefinition.getCommentTokens(), lexer, null, seq, null, null);
   }
 }

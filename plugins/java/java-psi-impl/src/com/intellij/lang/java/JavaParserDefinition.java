@@ -52,7 +52,7 @@ public class JavaParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getWhitespaceTokens() {
+  public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
     return ElementType.JAVA_WHITESPACE_BIT_SET;
   }
 

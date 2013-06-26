@@ -51,7 +51,7 @@ public class PropertiesParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getWhitespaceTokens() {
+  public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
     return PropertiesTokenTypes.WHITESPACES;
   }
 
