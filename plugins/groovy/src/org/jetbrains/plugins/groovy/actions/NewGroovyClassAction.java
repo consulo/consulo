@@ -38,11 +38,14 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import icons.JetgroovyIcons;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyBundle;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefinition;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 
 public class NewGroovyClassAction extends JavaCreateTemplateInPackageAction<GrTypeDefinition> implements DumbAware {
 
@@ -103,6 +106,7 @@ public class NewGroovyClassAction extends JavaCreateTemplateInPackageAction<GrTy
     }
   }
 
+  @Override
   protected final GrTypeDefinition doCreate(PsiDirectory dir, String className, String templateName) throws IncorrectOperationException {
     final String fileName = className + NewGroovyActionBase.GROOVY_EXTENSION;
     final PsiFile fromTemplate = GroovyTemplatesFactory.createFromTemplate(dir, className, fileName, templateName);
@@ -114,4 +118,9 @@ public class NewGroovyClassAction extends JavaCreateTemplateInPackageAction<GrTy
     throw new IncorrectOperationException(GroovyBundle.message("groovy.file.extension.is.not.mapped.to.groovy.file.type", description));
   }
 
+  @Nullable
+  @Override
+  protected Class<? extends ModuleExtension> getModuleExtensionClass() {
+    return GroovyModuleExtension.class;
+  }
 }

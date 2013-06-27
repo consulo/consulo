@@ -25,10 +25,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import icons.JetgroovyIcons;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyBundle;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 
 public class NewScriptAction extends JavaCreateTemplateInPackageAction<GroovyFile> implements DumbAware {
 
@@ -55,6 +58,7 @@ public class NewScriptAction extends JavaCreateTemplateInPackageAction<GroovyFil
     return createdFile.getLastChild();
   }
 
+  @Override
   @NotNull
   protected GroovyFile doCreate(PsiDirectory directory, String newName, String templateName) throws IncorrectOperationException {
     String fileName = newName + "." + extractExtension(templateName);
@@ -69,5 +73,11 @@ public class NewScriptAction extends JavaCreateTemplateInPackageAction<GroovyFil
       return "gdsl";
     }
     return GroovyFileType.DEFAULT_EXTENSION;
+  }
+
+  @Nullable
+  @Override
+  protected Class<? extends ModuleExtension> getModuleExtensionClass() {
+    return GroovyModuleExtension.class;
   }
 }

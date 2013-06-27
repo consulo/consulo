@@ -20,6 +20,8 @@ import com.intellij.ide.IdeView;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -27,6 +29,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +46,11 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     myInSourceOnly = inSourceOnly;
   }
 
+  @Nullable
+  protected Class<? extends ModuleExtension> getModuleExtensionClass() {
+    return null;
+  }
+
   @Override
   @Nullable
   protected T createFile(String name, String templateName, PsiDirectory dir) {
@@ -57,6 +65,16 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
     final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
     if (project == null || view == null || view.getDirectories().length == 0) {
+      return false;
+    }
+
+    final Module module = LangDataKeys.MODULE.getData(dataContext);
+    if(module == null) {
+      return false;
+    }
+
+    final Class<? extends ModuleExtension> moduleExtensionClass = getModuleExtensionClass();
+    if(moduleExtensionClass != null && ModuleUtilCore.getExtension(module, moduleExtensionClass) == null) {
       return false;
     }
 

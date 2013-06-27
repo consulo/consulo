@@ -33,7 +33,9 @@ import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -90,6 +92,12 @@ public class CreateClassAction extends JavaCreateTemplateInPackageAction<PsiClas
         return !StringUtil.isEmptyOrSpaces(inputString) && getErrorText(inputString) == null;
       }
     });
+  }
+
+  @Nullable
+  @Override
+  protected Class<? extends ModuleExtension> getModuleExtensionClass() {
+    return JavaModuleExtension.class;
   }
 
   @Override
