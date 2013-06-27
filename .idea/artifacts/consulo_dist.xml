@@ -116,6 +116,7 @@
               <element id="module-output" name="java-indexing-impl" />
               <element id="module-output" name="java-compiler-impl" />
               <element id="module-output" name="java-execution-impl" />
+              <element id="module-output" name="testFrameworkJava" />
             </element>
             <element id="archive" name="java-debugger-api.jar">
               <element id="module-output" name="java-debugger-api" />
@@ -392,6 +393,7 @@
           <element id="module-output" name="compiler-artifact-impl" />
           <element id="module-output" name="smRunner" />
           <element id="module-output" name="projectImportModel" />
+          <element id="module-output" name="testFramework" />
         </element>
         <element id="archive" name="boot.jar">
           <element id="module-output" name="boot" />

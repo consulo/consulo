@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.java;
+package org.consulo.fileTypes;
 
-import com.intellij.ide.highlighter.JavaFileHighlighter;
 import com.intellij.lang.LanguageVersion;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
+import com.intellij.lexer.Lexer;
+import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import org.jetbrains.annotations.NotNull;
 
-public class JavaSyntaxHighlighterFactory extends LanguageVersionableSyntaxHighlighterFactory {
-  public JavaSyntaxHighlighterFactory() {
-    super(JavaLanguage.INSTANCE);
+/**
+ * @author VISTALL
+ * @since 21:11/24.06.13
+ */
+public abstract class LanguageVersionableSyntaxHighlighter extends SyntaxHighlighterBase {
+  private final LanguageVersion myLanguageVersion;
+
+  public LanguageVersionableSyntaxHighlighter(LanguageVersion languageVersion) {
+    myLanguageVersion = languageVersion;
   }
 
   @NotNull
   @Override
-  public SyntaxHighlighter getSyntaxHighlighter(@NotNull LanguageVersion languageVersion) {
-    return new JavaFileHighlighter(languageVersion);
+  public Lexer getHighlightingLexer() {
+    return getHighlightingLexer(myLanguageVersion);
   }
+
+  public abstract Lexer getHighlightingLexer(LanguageVersion languageVersion);
 }

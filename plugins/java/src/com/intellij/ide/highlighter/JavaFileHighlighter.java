@@ -15,12 +15,11 @@
  */
 package com.intellij.ide.highlighter;
 
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lexer.JavaHighlightingLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.JavaDocTokenType;
 import com.intellij.psi.JavaTokenType;
@@ -30,32 +29,31 @@ import com.intellij.psi.impl.source.tree.ElementType;
 import com.intellij.psi.impl.source.tree.JavaDocElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlTokenType;
+import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class JavaFileHighlighter extends SyntaxHighlighterBase {
+public class JavaFileHighlighter extends LanguageVersionableSyntaxHighlighter {
   private static final Map<IElementType, TextAttributesKey> ourMap1;
   private static final Map<IElementType, TextAttributesKey> ourMap2;
 
-  private final LanguageLevel myLanguageLevel;
-
   public JavaFileHighlighter() {
-    this(LanguageLevel.HIGHEST);
+    super(LanguageLevel.HIGHEST);
   }
 
-  public JavaFileHighlighter(LanguageLevel languageLevel) {
-    myLanguageLevel = languageLevel;
+  public JavaFileHighlighter(LanguageVersion languageVersion) {
+    super(languageVersion);
   }
 
   static {
     ourMap1 = new HashMap<IElementType, TextAttributesKey>();
     ourMap2 = new HashMap<IElementType, TextAttributesKey>();
 
-    fillMap(ourMap1, ElementType.KEYWORD_BIT_SET, JavaHighlightingColors .KEYWORD);
-    fillMap(ourMap1, ElementType.LITERAL_BIT_SET, JavaHighlightingColors.KEYWORD);
-    fillMap(ourMap1, ElementType.OPERATION_BIT_SET, JavaHighlightingColors.OPERATION_SIGN);
+    safeMap(ourMap1, ElementType.KEYWORD_BIT_SET, JavaHighlightingColors .KEYWORD);
+    safeMap(ourMap1, ElementType.LITERAL_BIT_SET, JavaHighlightingColors.KEYWORD);
+    safeMap(ourMap1, ElementType.OPERATION_BIT_SET, JavaHighlightingColors.OPERATION_SIGN);
 
     for (IElementType type : JavaDocTokenType.ALL_JAVADOC_TOKENS.getTypes()) {
       ourMap1.put(type, JavaHighlightingColors.DOC_COMMENT);
@@ -115,11 +113,12 @@ public class JavaFileHighlighter extends SyntaxHighlighterBase {
     }
   }
 
-  @NotNull
-  public Lexer getHighlightingLexer() {
-    return new JavaHighlightingLexer(myLanguageLevel);
+  @Override
+  public Lexer getHighlightingLexer(LanguageVersion languageVersion) {
+    return new JavaHighlightingLexer((LanguageLevel) languageVersion);
   }
 
+  @Override
   @NotNull
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     return pack(ourMap1.get(tokenType), ourMap2.get(tokenType));
