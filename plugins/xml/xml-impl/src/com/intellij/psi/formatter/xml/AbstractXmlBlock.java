@@ -423,7 +423,7 @@ public abstract class AbstractXmlBlock extends AbstractBlock {
     if (psiElement instanceof PsiComment) return true;
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(psiElement.getLanguage());
     if (parserDefinition == null) return false;
-    final TokenSet commentTokens = parserDefinition.getCommentTokens();
+    final TokenSet commentTokens = parserDefinition.getCommentTokens(psiElement.getLanguageVersion());
     return commentTokens.contains(node.getElementType());
   }
 

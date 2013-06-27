@@ -58,7 +58,7 @@ public class JavaParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return ElementType.JAVA_COMMENT_BIT_SET;
   }
 

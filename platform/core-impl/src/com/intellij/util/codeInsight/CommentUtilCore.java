@@ -19,18 +19,20 @@ import com.intellij.lang.*;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.Nullable;
 
 public class CommentUtilCore {
   public static boolean isComment(@Nullable final PsiElement element) {
-    return element != null && isComment(element.getNode());
+    return element != null && isCommentToken(element.getNode().getElementType(), element.getLanguageVersion());
   }
 
   public static boolean isComment(@Nullable final ASTNode node) {
-    if (node == null) return false;
-    final IElementType type = node.getElementType();
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(type.getLanguage());
-    return parserDefinition != null && parserDefinition.getCommentTokens().contains(type);
+    if (node == null) {
+      return false;
+    }
+    final PsiElement psi = node.getPsi();
+    return psi != null && isComment(psi);
   }
 
   public static boolean isCommentTextElement(final PsiElement element) {
@@ -42,5 +44,21 @@ public class CommentUtilCore {
     }
 
     return isComment(element);
+  }
+
+  public static boolean isCommentToken(final IElementType tokenType, final LanguageVersion languageVersion) {
+    final Language language = tokenType.getLanguage();
+    boolean inComments = false;
+
+    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+
+    if (parserDefinition != null) {
+      final TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);
+
+      if (commentTokens.contains(tokenType)) {
+        inComments = true;
+      }
+    }
+    return inComments;
   }
 }

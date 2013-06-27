@@ -15,16 +15,19 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.lang.*;
+import com.intellij.lang.ASTFactory;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
+import com.intellij.lang.LanguageTokenSeparatorGenerators;
 import com.intellij.openapi.command.AbnormalCommandTerminationException;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.NotNullFunction;
+import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +73,7 @@ public class CodeEditUtil {
       current = current.getTreeNext();
     }
 
-    if (anchorBefore != null && isComment(anchorBefore.getElementType())) {
+    if (anchorBefore != null && CommentUtilCore.isComment(anchorBefore)) {
       final ASTNode anchorPrev = anchorBefore.getTreePrev();
       if (anchorPrev != null && anchorPrev.getElementType() == TokenType.WHITE_SPACE) {
         anchorBefore = anchorPrev;
@@ -96,11 +99,6 @@ public class CodeEditUtil {
       makePlaceHolderBetweenTokens(prevLeaf, TreeUtil.nextLeaf(last), isFormattingRequired(prevLeaf, first), false);
     }
     return result;
-  }
-
-  private static boolean isComment(IElementType type) {
-    final ParserDefinition def = LanguageParserDefinitions.INSTANCE.forLanguage(type.getLanguage());
-    return def != null && def.getCommentTokens().contains(type);
   }
 
   private static boolean isFormattingRequired(ASTNode prevLeaf, ASTNode first) {

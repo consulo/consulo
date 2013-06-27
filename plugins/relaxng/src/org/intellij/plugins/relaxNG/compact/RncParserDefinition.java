@@ -67,7 +67,7 @@ public class RncParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return myCommentTypes;
   }
 

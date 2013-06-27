@@ -547,7 +547,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       if (comments == null) {
         ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
         if (definition != null) {
-          comments = definition.getCommentTokens();
+          comments = definition.getCommentTokens(myFile.getLanguageVersion());
         }
         if (comments == null) {
           return fallbackColumn;

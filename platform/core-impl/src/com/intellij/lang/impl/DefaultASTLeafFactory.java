@@ -38,7 +38,7 @@ public class DefaultASTLeafFactory implements ASTLeafFactory {
   public LeafElement createLeaf(IElementType type, CharSequence text) {
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(type.getLanguage());
     if(parserDefinition != null) {
-      if(parserDefinition.getCommentTokens().contains(type)) {
+      if(parserDefinition.getCommentTokens(type.getLanguageVersion()).contains(type)) {
         return new PsiCoreCommentImpl(type, text);
       }
     }

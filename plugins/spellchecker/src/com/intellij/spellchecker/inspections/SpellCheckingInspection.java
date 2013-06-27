@@ -124,7 +124,7 @@ public class SpellCheckingInspection extends LocalInspectionTool implements Batc
               return;
             }
           }
-          else if (parserDefinition.getCommentTokens().contains(elementType)) {
+          else if (parserDefinition.getCommentTokens(element.getLanguageVersion()).contains(elementType)) {
             if (!processComments) {
               return;
             }

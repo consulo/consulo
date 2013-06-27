@@ -54,7 +54,7 @@ public class XPath2ParserDefinition extends XPathParserDefinition {
 
   @NotNull
   @Override
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return TokenSet.create(XPath2TokenTypes.COMMENT);
   }
 

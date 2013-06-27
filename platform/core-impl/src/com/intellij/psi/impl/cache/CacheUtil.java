@@ -17,9 +17,6 @@
 package com.intellij.psi.impl.cache;
 
 import com.intellij.ide.caches.FileContent;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
@@ -27,8 +24,6 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 
 import java.io.IOException;
 
@@ -69,21 +64,5 @@ public class CacheUtil {
     catch (IOException e) {
       return "";
     }
-  }
-
-  public static boolean isInComments(final IElementType tokenType) {
-    final Language language = tokenType.getLanguage();
-    boolean inComments = false;
-
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
-
-    if (parserDefinition != null) {
-      final TokenSet commentTokens = parserDefinition.getCommentTokens();
-
-      if (commentTokens.contains(tokenType)) {
-        inComments = true;
-      }
-    }
-    return inComments;
   }
 }

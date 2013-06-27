@@ -29,6 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.KeyDescriptor;
@@ -103,7 +104,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
     public Map<TodoIndexEntry,Integer> map(final FileContent inputData) {
       final VirtualFile file = inputData.getFile();
       final DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = PlatformIdTableBuilding
-        .getTodoIndexer(inputData.getFileType(), file);
+        .getTodoIndexer(inputData.getFileType(), inputData.getProject(), file);
       if (indexer != null) {
         return indexer.map(inputData);
       }
@@ -126,7 +127,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
       if (fileType instanceof LanguageFileType) {
         final Language lang = ((LanguageFileType)fileType).getLanguage();
         final ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-        final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens() : null;
+        final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(LanguageVersionUtil.findLanguageVersion(lang, project, file)) : null;
         return commentTokens != null;
       }
       

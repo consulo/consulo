@@ -78,9 +78,10 @@ public interface ParserDefinition {
    * are searched in the text of tokens of those types.
    *
    * @return the set of comment token types.
+   * @param languageVersion
    */
   @NotNull
-  TokenSet getCommentTokens();
+  TokenSet getCommentTokens(LanguageVersion languageVersion);
 
   /**
    * Returns the set of element types which are treated as string literals. "Search in strings"

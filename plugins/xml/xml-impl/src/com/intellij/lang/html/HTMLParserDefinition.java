@@ -56,7 +56,7 @@ public class HTMLParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return XmlTokenType.COMMENTS;
   }
 

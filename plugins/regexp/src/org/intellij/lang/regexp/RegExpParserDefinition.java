@@ -64,7 +64,7 @@ public class RegExpParserDefinition implements ParserDefinition {
     }
 
     @NotNull
-    public TokenSet getCommentTokens() {
+    public TokenSet getCommentTokens(LanguageVersion languageVersion) {
         return COMMENT_TOKENS;
     }
 

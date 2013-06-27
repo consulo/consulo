@@ -56,7 +56,7 @@ public class PropertiesParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return PropertiesTokenTypes.COMMENTS;
   }
 

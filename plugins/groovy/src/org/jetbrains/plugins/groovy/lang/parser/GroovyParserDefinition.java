@@ -64,7 +64,7 @@ public class GroovyParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return TokenSets.COMMENTS_TOKEN_SET;
   }
 

@@ -16,6 +16,8 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
+import com.intellij.lang.LanguageVersionResolvers;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -56,8 +58,12 @@ public class IElementType {
   private static final List<IElementType> ourRegistry = new ArrayList<IElementType>(700);
 
   private final short myIndex;
-  @NotNull private final String myDebugName;
-  @NotNull private final Language myLanguage;
+  @NotNull
+  private final String myDebugName;
+  @NotNull
+  private final Language myLanguage;
+  @NotNull
+  private final LanguageVersion myLanguageVersion;
 
   /**
    * Creates and registers a new element type for the specified language.
@@ -72,6 +78,7 @@ public class IElementType {
   protected IElementType(@NotNull @NonNls String debugName, @Nullable Language language, boolean register) {
     myDebugName = debugName;
     myLanguage = language == null ? Language.ANY : language;
+    myLanguageVersion = LanguageVersionResolvers.INSTANCE.forLanguage(myLanguage).getLanguageVersion(myLanguage, null, null);
     if (register) {
       //noinspection AssignmentToStaticFieldFromInstanceMethod
       myIndex = ourCounter++;
@@ -147,6 +154,10 @@ public class IElementType {
       if (idx >= ourRegistry.size() + FIRST_TOKEN_INDEX) return null;
       return ourRegistry.get(idx - FIRST_TOKEN_INDEX);
     }
+  }
+
+  public LanguageVersion getLanguageVersion() {
+    return myLanguageVersion;
   }
 
   /**

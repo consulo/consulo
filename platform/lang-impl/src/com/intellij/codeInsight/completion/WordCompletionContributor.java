@@ -160,7 +160,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
     ASTNode textContainer = element != null ? element.getNode() : null;
     while (textContainer != null) {
       final IElementType elementType = textContainer.getElementType();
-      if (LanguageWordCompletion.INSTANCE.isEnabledIn(elementType) || elementType == PlainTextTokenTypes.PLAIN_TEXT) {
+      if (LanguageWordCompletion.INSTANCE.isEnabledIn(textContainer) || elementType == PlainTextTokenTypes.PLAIN_TEXT) {
         return true;
       }
       textContainer = textContainer.getTreeParent();

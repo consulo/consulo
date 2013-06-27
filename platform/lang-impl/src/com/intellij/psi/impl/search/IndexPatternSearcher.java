@@ -18,6 +18,7 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.extensions.Extensions;
@@ -113,7 +114,7 @@ public class IndexPatternSearcher implements QueryExecutor<IndexPatternOccurrenc
       FileType fType = file.getFileType();
       if (fType instanceof CustomSyntaxTableFileType) {
         Lexer lexer = SyntaxHighlighterFactory.getSyntaxHighlighter(fType, file.getProject(), file.getVirtualFile()).getHighlightingLexer();
-        findComments(lexer, chars, range, COMMENT_TOKENS, commentStarts, commentEnds, null);
+        findComments(lexer, chars, range, COMMENT_TOKENS, commentStarts, commentEnds, null, file.getLanguageVersion());
       }
       else {
         commentStarts.add(0);
@@ -143,12 +144,12 @@ public class IndexPatternSearcher implements QueryExecutor<IndexPatternOccurrenc
         if (builderForFile == null) {
           final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
           if (parserDefinition != null) {
-            commentTokens = parserDefinition.getCommentTokens();
+            commentTokens = parserDefinition.getCommentTokens(file.getLanguageVersion());
           }
         }
 
         if (commentTokens != null) {
-          findComments(lexer, chars, range, commentTokens, commentStartsList, commentEndsList, builderForFile);
+          findComments(lexer, chars, range, commentTokens, commentStartsList, commentEndsList, builderForFile, file.getLanguageVersion());
           mergeCommentLists(commentStarts, commentEnds, commentStartsList, commentEndsList);
         }
       }
@@ -174,7 +175,7 @@ public class IndexPatternSearcher implements QueryExecutor<IndexPatternOccurrenc
                                    final TokenSet commentTokens,
                                    final TIntArrayList commentStarts,
                                    final TIntArrayList commentEnds,
-                                   final IndexPatternBuilder builderForFile) {
+                                   final IndexPatternBuilder builderForFile, LanguageVersion languageVersion) {
     for (lexer.start(chars); ; lexer.advance()) {
       IElementType tokenType = lexer.getTokenType();
       if (tokenType == null) break;
@@ -189,7 +190,7 @@ public class IndexPatternSearcher implements QueryExecutor<IndexPatternOccurrenc
         final Language commentLang = tokenType.getLanguage();
         final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(commentLang);
         if (parserDefinition != null) {
-          final TokenSet langCommentTokens = parserDefinition.getCommentTokens();
+          final TokenSet langCommentTokens = parserDefinition.getCommentTokens(languageVersion);
           isComment = langCommentTokens.contains(tokenType);
         }
       }

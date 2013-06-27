@@ -51,7 +51,7 @@ public class XPathParserDefinition implements ParserDefinition {
     }
 
     @NotNull
-    public TokenSet getCommentTokens() {
+    public TokenSet getCommentTokens(LanguageVersion languageVersion) {
         return TokenSet.EMPTY;
     }
 

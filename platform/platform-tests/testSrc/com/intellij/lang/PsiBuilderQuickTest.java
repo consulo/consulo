@@ -564,7 +564,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
       @NotNull
       @Override
-      public TokenSet getCommentTokens() {
+      public TokenSet getCommentTokens(LanguageVersion languageVersion) {
         return COMMENT_SET;
       }
 
@@ -685,7 +685,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
           @NotNull
           @Override
-          public TokenSet getCommentTokens() {
+          public TokenSet getCommentTokens(LanguageVersion languageVersion) {
             return TokenSet.EMPTY;
           }
 

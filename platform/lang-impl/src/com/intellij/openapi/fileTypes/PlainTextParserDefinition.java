@@ -68,7 +68,7 @@ public class PlainTextParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 

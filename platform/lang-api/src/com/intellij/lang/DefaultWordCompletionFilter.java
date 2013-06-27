@@ -19,14 +19,12 @@
  */
 package com.intellij.lang;
 
-import com.intellij.codeInsight.completion.CompletionProcess;
-import com.intellij.codeInsight.completion.CompletionService;
 import com.intellij.psi.tree.IElementType;
 
 public class DefaultWordCompletionFilter implements WordCompletionElementFilter {
   @Override
-  public boolean isWordCompletionEnabledIn(final IElementType element) {
+  public boolean isWordCompletionEnabledIn(final IElementType element, LanguageVersion languageVersion) {
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(element.getLanguage());
-    return parserDefinition != null && parserDefinition.getCommentTokens().contains(element);
+    return parserDefinition != null && parserDefinition.getCommentTokens(languageVersion).contains(element);
   }
 }
