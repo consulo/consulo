@@ -72,13 +72,22 @@ public class IElementType {
    * @param language  the language with which the element type is associated.
    */
   public IElementType(@NotNull @NonNls String debugName, @Nullable Language language) {
-    this(debugName, language, true);
+    this(debugName, language, null, true);
   }
 
-  protected IElementType(@NotNull @NonNls String debugName, @Nullable Language language, boolean register) {
+  public IElementType(@NotNull @NonNls String debugName, @Nullable Language language, @Nullable LanguageVersion languageVersion) {
+    this(debugName, language, languageVersion, true);
+  }
+
+  protected IElementType(@NotNull @NonNls String debugName,
+                         @Nullable Language language,
+                         @Nullable LanguageVersion languageVersion,
+                         boolean register) {
     myDebugName = debugName;
     myLanguage = language == null ? Language.ANY : language;
-    myLanguageVersion = LanguageVersionResolvers.INSTANCE.forLanguage(myLanguage).getLanguageVersion(myLanguage, null, null);
+    myLanguageVersion = languageVersion == null
+                        ? LanguageVersionResolvers.INSTANCE.forLanguage(myLanguage).getLanguageVersion(myLanguage, null, null)
+                        : languageVersion;
     if (register) {
       //noinspection AssignmentToStaticFieldFromInstanceMethod
       myIndex = ourCounter++;
@@ -135,6 +144,7 @@ public class IElementType {
    *  [next_element]
    * </pre>
    * <p>See com.intellij.lang.impl.PsiBuilderImpl.prepareLightTree() for details.
+   *
    * @return true if empty elements of this type should be bound to the left.
    */
   public boolean isLeftBound() {
@@ -150,7 +160,9 @@ public class IElementType {
    */
   public static IElementType find(short idx) {
     synchronized (ourRegistry) {
-      if (idx == 0) return ourRegistry.get(0); // We've changed FIRST_TOKEN_INDEX from 0 to 1. This is just for old plugins to avoid crashes.
+      if (idx == 0) {
+        return ourRegistry.get(0); // We've changed FIRST_TOKEN_INDEX from 0 to 1. This is just for old plugins to avoid crashes.
+      }
       if (idx >= ourRegistry.size() + FIRST_TOKEN_INDEX) return null;
       return ourRegistry.get(idx - FIRST_TOKEN_INDEX);
     }

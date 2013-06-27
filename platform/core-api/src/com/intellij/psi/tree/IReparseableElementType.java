@@ -20,24 +20,34 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class IReparseableElementType extends ILazyParseableElementType {
-  public IReparseableElementType(@NonNls String debugName) {
+  public IReparseableElementType(@NotNull @NonNls String debugName) {
     super(debugName);
   }
 
-  public IReparseableElementType(@NonNls String debugName, Language language) {
+  public IReparseableElementType(@NotNull @NonNls String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 
-  public IReparseableElementType(@NonNls String debugName, Language language, boolean register) {
-    super(debugName, language, register);
+  public IReparseableElementType(@NotNull @NonNls String debugName,
+                                 @Nullable Language language,
+                                 @Nullable LanguageVersion languageVersion,
+                                 boolean register) {
+    super(debugName, language, languageVersion, register);
   }
 
+  public IReparseableElementType(@NotNull @NonNls String debugName,
+                                 @Nullable Language language,
+                                 @Nullable LanguageVersion languageVersion) {
+    super(debugName, language, languageVersion);
+  }
 
   /**
    * Checks if the specified character sequence can be parsed as a valid content of the

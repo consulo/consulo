@@ -26,7 +26,7 @@ public class TokenWrapper extends IElementType {
   private final String myValue;
 
   public TokenWrapper(IElementType delegate, CharSequence value) {
-    super("Wrapper", delegate.getLanguage(), false);
+    super("Wrapper", delegate.getLanguage(), null, false);
     myDelegate = delegate;
     myValue = value.toString();
   }
