@@ -39,6 +39,7 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import junit.framework.Assert;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -364,22 +365,12 @@ public class PsiTestUtil {
   }
 
   public static void setCompilerOutputPath(Module module, String url, boolean forTests) {
-    final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    final CompilerModuleExtension extension = model.getModuleExtensionOld(CompilerModuleExtension.class);
-    extension.inheritCompilerOutputPath(false);
-    if (forTests) {
-      extension.setCompilerOutputPathForTests(url);
-    }
-    else {
-      extension.setCompilerOutputPath(url);
-    }
-    commitModel(model);
+    CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
+    manager.setCompilerOutputUrl(module, forTests ? ContentFolderType.TEST : ContentFolderType.SOURCE, url);
   }
 
   public static void setExcludeCompileOutput(Module module, boolean exclude) {
-    final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    final CompilerModuleExtension extension = model.getModuleExtensionOld(CompilerModuleExtension.class);
-    extension.setExcludeOutput(exclude);
-    commitModel(model);
+    CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
+    manager.setExcludeOutput(module, exclude);
   }
 }

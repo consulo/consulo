@@ -330,9 +330,6 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
 
   private static void setupRootModel(ProjectDescriptor projectDescriptor, final ModuleDescriptor descriptor,
                                      final ModifiableRootModel rootModel, final Map<LibraryDescriptor, Library> projectLibs) {
-    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
-    compilerModuleExtension.setExcludeOutput(true);
-    //rootModel.inheritSdk();
 
     final Set<File> contentRoots = descriptor.getContentRoots();
     for (File contentRoot : contentRoots) {
@@ -350,7 +347,7 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
         }
       }
     }
-    compilerModuleExtension.inheritCompilerOutputPath(true);
+
     final LibraryTable moduleLibraryTable = rootModel.getModuleLibraryTable();
     for (LibraryDescriptor libDescriptor : ModuleInsight.getLibraryDependencies(descriptor, projectDescriptor.getLibraries())) {
       final Library projectLib = projectLibs.get(libDescriptor);

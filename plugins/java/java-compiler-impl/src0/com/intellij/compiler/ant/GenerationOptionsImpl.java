@@ -24,7 +24,6 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectSdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Chunk;
@@ -35,7 +34,6 @@ import com.intellij.util.graph.GraphGenerator;
 
 import javax.naming.OperationNotSupportedException;
 import java.io.File;
-import java.util.*;
 
 /**
  * Implementation class for Ant generation options

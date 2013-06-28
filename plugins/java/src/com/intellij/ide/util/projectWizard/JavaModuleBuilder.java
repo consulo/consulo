@@ -19,7 +19,10 @@ package com.intellij.ide.util.projectWizard;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Pair;
@@ -75,15 +78,8 @@ public class JavaModuleBuilder extends ModuleBuilder implements SourcePathsBuild
   }
 
   public void setupRootModel(ModifiableRootModel rootModel) throws ConfigurationException {
-    final CompilerModuleExtension compilerModuleExtension = rootModel.getModuleExtensionOld(CompilerModuleExtension.class);
-    compilerModuleExtension.setExcludeOutput(true);
-   /* if (myJdk != null){
-      rootModel.setSdk(myJdk);
-    } else {
-      rootModel.inheritSdk();
-    }   */
-
     ContentEntry contentEntry = doAddContentEntry(rootModel);
+
     if (contentEntry != null) {
       final List<Pair<String,String>> sourcePaths = getSourcePaths();
 
@@ -109,11 +105,11 @@ public class JavaModuleBuilder extends ModuleBuilder implements SourcePathsBuild
       catch (IOException e) {
         canonicalPath = myCompilerOutputPath;
       }
-      compilerModuleExtension
-        .setCompilerOutputPath(VfsUtil.pathToUrl(FileUtil.toSystemIndependentName(canonicalPath)));
+     // compilerModuleExtension
+     //   .setCompilerOutputPath(VfsUtil.pathToUrl(FileUtil.toSystemIndependentName(canonicalPath)));
     }
     else {
-      compilerModuleExtension.inheritCompilerOutputPath(true);
+     // compilerModuleExtension.inheritCompilerOutputPath(true);
     }
 
     LibraryTable libraryTable = rootModel.getModuleLibraryTable();

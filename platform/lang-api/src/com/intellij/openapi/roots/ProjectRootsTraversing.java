@@ -26,8 +26,8 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * @deprecated use {@link com.intellij.openapi.roots.OrderEnumerator} instead
@@ -155,7 +155,7 @@ public class ProjectRootsTraversing {
       for (String url : urls) addUrl(url);
     }
 
-    public void addAllUrls(List<String> urls) {
+    public void addAllUrls(Collection<String> urls) {
       for (String url : urls) {
         addUrl(url);
       }

@@ -196,7 +196,7 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
 
   @Override
   protected void setupRootModel(ModifiableRootModel rootModel) {
-    if (myOutputPath != null) {
+   /* if (myOutputPath != null) {
       final File pathFile = new File(myOutputPath);
       if (!pathFile.mkdirs()) {
         assert pathFile.exists() : "unable to create: " + myOutputPath;
@@ -214,7 +214,7 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
       rootModel.getModuleExtensionOld(CompilerModuleExtension.class).setCompilerOutputPathForTests(virtualFile);
       rootModel.getModuleExtensionOld(CompilerModuleExtension.class).inheritCompilerOutputPath(false);
       rootModel.getModuleExtensionOld(CompilerModuleExtension.class).setExcludeOutput(false);
-    }
+    } */
   }
 
   public static String getTestsExternalCompilerHome() {

@@ -19,11 +19,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,14 +38,17 @@ public class DummyCompileContext implements CompileContext {
     return OUR_INSTANCE;
   }
 
+  @Override
   public Project getProject() {
     return null;
   }
 
+  @Override
   public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
   }
 
 
+  @Override
   public void addMessage(CompilerMessageCategory category,
                          String message,
                          @Nullable String url,
@@ -53,68 +57,80 @@ public class DummyCompileContext implements CompileContext {
                          Navigatable navigatable) {
   }
 
+  @Override
   public CompilerMessage[] getMessages(CompilerMessageCategory category) {
     return CompilerMessage.EMPTY_ARRAY;
   }
 
+  @Override
   public int getMessageCount(CompilerMessageCategory category) {
     return 0;
   }
 
+  @Override
   public ProgressIndicator getProgressIndicator() {
     return null;
   }
 
+  @Override
   public CompileScope getCompileScope() {
     return null;
   }
 
+  @Override
   public CompileScope getProjectCompileScope() {
     return null;
   }
 
+  @Override
   public void requestRebuildNextTime(String message) {
   }
 
+  @Override
   public Module getModuleByFile(VirtualFile file) {
     return null;
   }
 
-  public boolean isAnnotationProcessorsEnabled() {
-    return false;
-  }
-
+  @Override
   public VirtualFile[] getSourceRoots(Module module) {
     return VirtualFile.EMPTY_ARRAY;
   }
 
+  @Override
   public VirtualFile[] getAllOutputDirectories() {
     return VirtualFile.EMPTY_ARRAY;
   }
 
+  @Override
   public VirtualFile getModuleOutputDirectory(final Module module) {
     return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
+      @Override
       public VirtualFile compute() {
-        return CompilerModuleExtension.getInstance(module).getCompilerOutputPath();
+        return CompilerPathsManager.getInstance(module.getProject()).getCompilerOutput(module, ContentFolderType.SOURCE);
       }
     });
   }
 
+  @Override
   public VirtualFile getModuleOutputDirectoryForTests(Module module) {
     return null;
   }
 
+  @Override
   public <T> T getUserData(@NotNull Key<T> key) {
     return null;
   }
 
+  @Override
   public <T> void putUserData(@NotNull Key<T> key, T value) {
   }
 
+  @Override
   public boolean isMake() {
     return false; // stub implementation
   }
 
+  @Override
   public boolean isRebuild() {
     return false;
   }

@@ -17,9 +17,10 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartList;
+import org.consulo.compiler.CompilerPathsManager;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -79,16 +80,19 @@ public class ProjectClasspathTraversing {
       traverseState.addAllUrls(getOutputs(traverseState.getCurrentModuleManager().getModule()));
     }
 
-    public List<String> getOutputs(Module module) {
+    public Collection<String> getOutputs(Module module) {
       List<String> outputs = new SmartList<String>();
-      final CompilerModuleExtension compilerModuleExtension = CompilerModuleExtension.getInstance(module);
-      if (compilerModuleExtension != null) {
-        String testOutput = compilerModuleExtension.getCompilerOutputUrlForTests();
-        if (myIncludeTests && testOutput != null) outputs.add(testOutput);
-        String output = compilerModuleExtension.getCompilerOutputUrl();
-        if ((!Comparing.equal(output, testOutput) || !myIncludeTests) && output != null) {
-          outputs.add(output);
+      CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(module.getProject());
+      if(myIncludeTests) {
+        final String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.TEST);
+        if(compilerOutputUrl != null) {
+          outputs.add(compilerOutputUrl);
         }
+      }
+
+      final String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.SOURCE);
+      if(compilerOutputUrl != null) {
+        outputs.add(compilerOutputUrl);
       }
       return outputs;
     }

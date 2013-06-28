@@ -17,7 +17,8 @@ package com.intellij.compiler.ant;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -74,12 +75,12 @@ public class ModuleChunk {
 
   @Nullable
   public String getOutputDirUrl() {
-    return CompilerModuleExtension.getInstance(myMainModule).getCompilerOutputUrl();
+    return CompilerPathsManager.getInstance(myMainModule.getProject()).getCompilerOutputUrl(myMainModule, ContentFolderType.SOURCE);
   }
 
   @Nullable
   public String getTestsOutputDirUrl() {
-    return CompilerModuleExtension.getInstance(myMainModule).getCompilerOutputUrlForTests();
+    return CompilerPathsManager.getInstance(myMainModule.getProject()).getCompilerOutputUrl(myMainModule, ContentFolderType.TEST);
   }
 
   public ModuleChunk[] getDependentChunks() {

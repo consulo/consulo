@@ -20,21 +20,17 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.cls.ClsUtil;
-import com.sun.org.apache.bcel.internal.classfile.ConstantValue;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -206,19 +202,5 @@ public class MakeUtil {
 
   public static boolean isInterface(int flags) {
     return (ClsUtil.ACC_INTERFACE & flags) != 0;
-  }
-
-
-  public static String getModuleOutputDirPath(final Module module) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
-      public String compute() {
-        final String url = CompilerModuleExtension.getInstance(module).getCompilerOutputUrl();
-        if (url == null) {
-          return null;
-        }
-        return VfsUtil.urlToPath(url);
-      }
-    });
   }
 }

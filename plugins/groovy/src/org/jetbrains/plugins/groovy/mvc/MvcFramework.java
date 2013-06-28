@@ -58,6 +58,7 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.compiler.CompilerPathsManager;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -308,9 +309,10 @@ public abstract class MvcFramework {
   }
 
   private static void removeModuleOutput(Module module, List<VirtualFile> from) {
-    final CompilerModuleExtension extension = ModuleRootManager.getInstance(module).getModuleExtensionOld(CompilerModuleExtension.class);
-    from.remove(extension.getCompilerOutputPath());
-    from.remove(extension.getCompilerOutputPathForTests());
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(module.getProject());
+    for(ContentFolderType contentFolderType : ContentFolderType.SOURCE_FOLDER_TYPES) {
+      from.remove(compilerPathsManager.getCompilerOutput(module, contentFolderType));
+    }
   }
 
   public abstract JavaParameters createJavaParameters(@NotNull Module module,

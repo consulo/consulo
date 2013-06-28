@@ -22,11 +22,12 @@ import com.intellij.openapi.compiler.ex.CompilerPathsEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import org.consulo.compiler.CompilerPathsManager;
 
 import java.io.File;
 
@@ -51,8 +52,7 @@ public final class OutputPathMacro extends Macro {
       Module module = projectFileIndex.getModuleForFile(file);
       if (module != null){
         boolean isTest = projectFileIndex.isInTestSourceContent(file);
-        String outputPathUrl = isTest ? CompilerModuleExtension.getInstance(module).getCompilerOutputUrlForTests() 
-                               : CompilerModuleExtension.getInstance(module).getCompilerOutputUrl();
+        String outputPathUrl = CompilerPathsManager.getInstance(project).getCompilerOutputUrl(module, isTest ? ContentFolderType.TEST : ContentFolderType.SOURCE);
         if (outputPathUrl == null) return null;
         return VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar);
       }
