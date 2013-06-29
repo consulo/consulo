@@ -39,7 +39,9 @@ public class PsiClassReferenceType extends PsiClassType {
     this(reference, langLevel, collectAnnotations(reference));
   }
 
-  public PsiClassReferenceType(@NotNull PsiJavaCodeReferenceElement reference, LanguageLevel langLevel, @NotNull PsiAnnotation[] annotations) {
+  public PsiClassReferenceType(@NotNull PsiJavaCodeReferenceElement reference,
+                               LanguageLevel langLevel,
+                               @NotNull PsiAnnotation[] annotations) {
     super(langLevel, annotations);
     myReference = reference;
   }
@@ -156,7 +158,12 @@ public class PsiClassReferenceType extends PsiClassType {
     }
     String qualifiedName = myReference.getQualifiedName();
     String name = myReference.getReferenceName();
-    if (name == null) name = "";
+    if (name == null) {
+      name = "";
+    }
+    if (qualifiedName == null) {
+      qualifiedName = "";
+    }
     LightClassReference reference = new LightClassReference(myReference.getManager(), name, qualifiedName, myReference.getResolveScope());
     return new PsiClassReferenceType(reference, null, getAnnotations());
   }
