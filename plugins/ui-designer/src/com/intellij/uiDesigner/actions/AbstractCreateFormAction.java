@@ -22,6 +22,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -31,6 +33,7 @@ import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.uiDesigner.UIDesignerBundle;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,18 +49,22 @@ public abstract class AbstractCreateFormAction extends CreateElementActionBase i
     super(text, description, icon);
   }
 
+  @Override
   public void update(final AnActionEvent e) {
     super.update(e);
     final Project project = e.getData(PlatformDataKeys.PROJECT);
     final Presentation presentation = e.getPresentation();
     if (presentation.isEnabled()) {
-      final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
-      if (view != null) {
-        final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-        final PsiDirectory[] dirs = view.getDirectories();
-        for (final PsiDirectory dir : dirs) {
-          if (projectFileIndex.isInSourceContent(dir.getVirtualFile()) && JavaDirectoryService.getInstance().getPackage(dir) != null) {
-            return;
+      final Module module = e.getData(LangDataKeys.MODULE);
+      if (module != null && ModuleUtilCore.getExtension(module, JavaModuleExtension.class) != null) {
+        final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
+        if (view != null) {
+          final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+          final PsiDirectory[] dirs = view.getDirectories();
+          for (final PsiDirectory dir : dirs) {
+            if (projectFileIndex.isInSourceContent(dir.getVirtualFile()) && JavaDirectoryService.getInstance().getPackage(dir) != null) {
+              return;
+            }
           }
         }
       }
@@ -67,19 +74,19 @@ public abstract class AbstractCreateFormAction extends CreateElementActionBase i
     }
   }
 
-  protected String createFormBody(@Nullable final String fullQualifiedClassName, @NonNls final String formName,
-                                  final String layoutManager) throws IncorrectOperationException {
+  protected String createFormBody(@Nullable final String fullQualifiedClassName, @NonNls final String formName, final String layoutManager)
+    throws IncorrectOperationException {
 
     final InputStream inputStream = getClass().getResourceAsStream(formName);
 
     final StringBuffer buffer = new StringBuffer();
     try {
-      for (int ch; (ch = inputStream.read()) != -1;) {
+      for (int ch; (ch = inputStream.read()) != -1; ) {
         buffer.append((char)ch);
       }
     }
     catch (IOException e) {
-      throw new IncorrectOperationException(UIDesignerBundle.message("error.cannot.read", formName),e);
+      throw new IncorrectOperationException(UIDesignerBundle.message("error.cannot.read", formName), e);
     }
 
     String s = buffer.toString();
@@ -97,6 +104,7 @@ public abstract class AbstractCreateFormAction extends CreateElementActionBase i
   }
 
   protected String getActionName(final PsiDirectory directory, final String newName) {
-    return UIDesignerBundle.message("progress.creating.class", JavaDirectoryService.getInstance().getPackage(directory).getQualifiedName(), newName);
+    return UIDesignerBundle
+      .message("progress.creating.class", JavaDirectoryService.getInstance().getPackage(directory).getQualifiedName(), newName);
   }
 }
