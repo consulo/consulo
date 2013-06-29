@@ -75,6 +75,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     return myArtifactType;
   }
 
+  @NotNull
   public String getName() {
     return myName;
   }

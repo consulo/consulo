@@ -25,6 +25,8 @@ import java.util.Map;
 
 /**
  * @author nik
+ *
+ * TODO [VISTALL] rewrite using {@link org.consulo.util.pointers.NamedPointerManagerImpl}
  */
 public class ArtifactPointerManagerImpl extends ArtifactPointerManager {
   private final Map<String, ArtifactPointerImpl> myUnresolvedPointers = new HashMap<String, ArtifactPointerImpl>();
@@ -73,6 +75,8 @@ public class ArtifactPointerManagerImpl extends ArtifactPointerManager {
     }
   }
 
+  @NotNull
+  @Override
   public ArtifactPointer createPointer(@NotNull String name) {
     if (myArtifactManager != null) {
       final Artifact artifact = myArtifactManager.findArtifact(name);
@@ -89,6 +93,8 @@ public class ArtifactPointerManagerImpl extends ArtifactPointerManager {
     return pointer;
   }
 
+  @NotNull
+  @Override
   public ArtifactPointer createPointer(@NotNull Artifact artifact) {
     ArtifactPointerImpl pointer = myPointers.get(artifact);
     if (pointer == null) {
@@ -104,6 +110,7 @@ public class ArtifactPointerManagerImpl extends ArtifactPointerManager {
     return pointer;
   }
 
+  @NotNull
   @Override
   public ArtifactPointer createPointer(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel) {
     return createPointer(artifactModel.getOriginalArtifact(artifact));
@@ -113,5 +120,23 @@ public class ArtifactPointerManagerImpl extends ArtifactPointerManager {
     for (Artifact artifact : artifacts) {
       disposePointer(artifact);
     }
+  }
+
+  @NotNull
+  @Override
+  public ArtifactPointer create(@NotNull String name) {
+    return createPointer(name);
+  }
+
+  @NotNull
+  @Override
+  public ArtifactPointer create(@NotNull Artifact value) {
+    return createPointer(value);
+  }
+
+  @NotNull
+  @Override
+  public ArtifactPointer create(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel) {
+    return createPointer(artifact, artifactModel);
   }
 }

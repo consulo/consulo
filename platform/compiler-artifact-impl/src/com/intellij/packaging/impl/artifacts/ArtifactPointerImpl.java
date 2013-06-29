@@ -36,15 +36,18 @@ public class ArtifactPointerImpl implements ArtifactPointer {
     myName = artifact.getName();
   }
 
+  @Override
   @NotNull
   public String getArtifactName() {
-    return myName;
+    return getName();
   }
 
+  @Override
   public Artifact getArtifact() {
-    return myArtifact;
+    return get();
   }
 
+  @Override
   @NotNull
   public String getArtifactName(@NotNull ArtifactModel artifactModel) {
     if (myArtifact != null) {
@@ -53,6 +56,7 @@ public class ArtifactPointerImpl implements ArtifactPointer {
     return myName;
   }
 
+  @Override
   public Artifact findArtifact(@NotNull ArtifactModel artifactModel) {
     if (myArtifact != null) {
       return artifactModel.getArtifactByOriginal(myArtifact);
@@ -66,5 +70,16 @@ public class ArtifactPointerImpl implements ArtifactPointer {
 
   void setName(String name) {
     myName = name;
+  }
+
+  @NotNull
+  @Override
+  public String getName() {
+    return myName;
+  }
+
+  @Override
+  public Artifact get() {
+    return myArtifact;
   }
 }

@@ -15,18 +15,21 @@
  */
 package com.intellij.packaging.artifacts;
 
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
  */
-public interface ArtifactPointer {
+public interface ArtifactPointer extends NamedPointer<Artifact> {
 
   @NotNull
+  @Deprecated
   String getArtifactName();
 
   @Nullable
+  @Deprecated
   Artifact getArtifact();
 
   @NotNull
