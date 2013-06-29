@@ -24,9 +24,11 @@ package com.intellij.compiler.impl.javaCompiler;
 import com.intellij.compiler.CompilerException;
 import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.make.CacheCorruptedException;
+import com.intellij.ide.highlighter.JavaClassFileType;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -80,6 +82,18 @@ public class JavaCompiler implements TranslatingCompiler {
       LOGGER.info(e);
       context.requestRebuildNextTime(e.getMessage());
     }
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getInputFileTypes() {
+    return new FileType[] {JavaFileType.INSTANCE};
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getOutputFileTypes() {
+    return new FileType[] {JavaClassFileType.INSTANCE};
   }
 
   @Override

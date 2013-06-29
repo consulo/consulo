@@ -64,8 +64,12 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     }
   }
 
-  private final List<Compiler> myCompilers = new ArrayList<Compiler>();
   private final Project myProject;
+
+  private final List<Compiler> myCompilers = new ArrayList<Compiler>();
+  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerInputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
+  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
+
   private final CompilationStatusListener myEventPublisher;
   private final Set<LocalFileSystem.WatchRequest> myWatchRoots;
   private final List<CompileTask> myBeforeTasks = new ArrayList<CompileTask>();
@@ -82,6 +86,13 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
       compiler.init(this);
 
       myCompilers.add(compiler);
+
+      if(compiler instanceof TranslatingCompiler) {
+        final TranslatingCompiler translatingCompiler = (TranslatingCompiler)compiler;
+
+        myTranslatingCompilerInputFileTypes.put(translatingCompiler, Arrays.asList(translatingCompiler.getInputFileTypes()));
+        myTranslatingCompilerOutputFileTypes.put(translatingCompiler, Arrays.asList(translatingCompiler.getOutputFileTypes()));
+      }
     }
 
     final File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
@@ -102,14 +113,16 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @NotNull
   @Override
-  public Set<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler) {
-    return Collections.emptySet();
+  public Collection<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler) {
+    final Collection<FileType> fileTypes = myTranslatingCompilerInputFileTypes.get(compiler);
+    return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
   }
 
   @NotNull
   @Override
-  public Set<FileType> getRegisteredOutputTypes(@NotNull TranslatingCompiler compiler) {
-    return Collections.emptySet();
+  public Collection<FileType> getRegisteredOutputTypes(@NotNull TranslatingCompiler compiler) {
+    final Collection<FileType> fileTypes = myTranslatingCompilerOutputFileTypes.get(compiler);
+    return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
   }
 
   @NotNull
@@ -258,7 +271,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   public boolean isExcludedFromCompilation(@NotNull VirtualFile file) {
-    return false;
+    return false;    //TODO [VISTALL] !!
   }
 
   @Override
@@ -305,7 +318,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Nullable
   @Override
   public Element getState() {
-    return new Element("test");
+    return new Element("state");
   }
 
   @Override

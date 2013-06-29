@@ -31,6 +31,7 @@ import com.intellij.openapi.compiler.CompilerPaths;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -106,6 +107,18 @@ public class GroovycStubGenerator extends GroovyCompilerBase {
     //long l = System.currentTimeMillis();
     super.compile(compileContext, moduleChunk, VfsUtil.toVirtualFileArray(total), sink);
     //System.out.println("Stub generation took " + (System.currentTimeMillis() - l));
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getInputFileTypes() {
+    return new FileType[] {JavaFileType.INSTANCE, GroovyFileType.GROOVY_FILE_TYPE};
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getOutputFileTypes() {
+    return new FileType[] {JavaFileType.INSTANCE};
   }
 
   private static boolean containsJavaSources(Module module, boolean inTests) {

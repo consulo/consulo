@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.compiler;
 
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -78,4 +80,10 @@ public interface TranslatingCompiler extends Compiler {
    * @param sink storage that accepts compiler output results
    */
   void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink);
+
+  @NotNull
+  FileType[] getInputFileTypes();
+
+  @NotNull
+  FileType[] getOutputFileTypes();
 }

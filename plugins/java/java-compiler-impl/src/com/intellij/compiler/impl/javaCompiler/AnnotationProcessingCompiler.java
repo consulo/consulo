@@ -27,9 +27,12 @@ import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.impl.CompileContextExProxy;
 import com.intellij.compiler.impl.javaCompiler.javac.JavacCompiler;
 import com.intellij.compiler.make.CacheCorruptedException;
+import com.intellij.ide.highlighter.JavaClassFileType;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -123,6 +126,18 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
         root.refresh(false, true);
       }
     }
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getInputFileTypes() {
+    return new FileType[] {JavaFileType.INSTANCE};
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getOutputFileTypes() {
+    return new FileType[] {JavaFileType.INSTANCE, JavaClassFileType.INSTANCE};
   }
 
   private boolean isExcludedFromAnnotationProcessing(VirtualFile file, CompileContext context) {

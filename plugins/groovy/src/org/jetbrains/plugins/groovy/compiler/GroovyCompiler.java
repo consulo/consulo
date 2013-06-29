@@ -16,10 +16,12 @@
 
 package org.jetbrains.plugins.groovy.compiler;
 
+import com.intellij.ide.highlighter.JavaClassFileType;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -164,4 +166,15 @@ public class GroovyCompiler extends GroovyCompilerBase {
     return false;
   }
 
+  @NotNull
+  @Override
+  public FileType[] getInputFileTypes() {
+    return new FileType[] {GroovyFileType.GROOVY_FILE_TYPE, JavaClassFileType.INSTANCE};
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getOutputFileTypes() {
+    return new FileType[] {JavaClassFileType.INSTANCE};
+  }
 }

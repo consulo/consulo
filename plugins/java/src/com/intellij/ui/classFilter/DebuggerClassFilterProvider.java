@@ -24,7 +24,7 @@ import java.util.List;
  *         Date: Oct 22, 2008
  */
 public interface DebuggerClassFilterProvider {
-  ExtensionPointName<DebuggerClassFilterProvider> EP_NAME = new ExtensionPointName<DebuggerClassFilterProvider>("org.consulo.java.debugger.ClassFilterProvider");
+  ExtensionPointName<DebuggerClassFilterProvider> EP_NAME = new ExtensionPointName<DebuggerClassFilterProvider>("org.consulo.java.debuggerClassFilterProvider");
 
   List<ClassFilter> getFilters();
 }

@@ -23,10 +23,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * A "root" class in compiler subsystem - allows one to register a custom compiler or a compilation task, register/unregister a compilation listener
@@ -49,10 +50,12 @@ public abstract class CompilerManager {
   public abstract boolean isCompilationActive();
   
   @NotNull
-  public abstract Set<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler);
+  @Immutable
+  public abstract Collection<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler);
   
   @NotNull
-  public abstract Set<FileType> getRegisteredOutputTypes(@NotNull TranslatingCompiler compiler);
+  @Immutable
+  public abstract Collection<FileType> getRegisteredOutputTypes(@NotNull TranslatingCompiler compiler);
   
   @NotNull
   public abstract Compiler[] getAllCompilers();

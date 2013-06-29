@@ -480,7 +480,7 @@
     <extensionPoint name="clsStubBuilderFactory" interface="com.intellij.psi.impl.compiled.ClsStubBuilderFactory"/>
     <extensionPoint name="mainMethodProvider" interface="com.intellij.codeInsight.runner.JavaMainMethodProvider"/>
 
-    <extensionPoint name="debugger.ClassFilterProvider" interface="com.intellij.ui.classFilter.DebuggerClassFilterProvider"/>
+    <extensionPoint name="debuggerClassFilterProvider" interface="com.intellij.ui.classFilter.DebuggerClassFilterProvider"/>
     <extensionPoint name="topLevelClassProvider" interface="com.intellij.debugger.engine.TopLevelParentClassProvider"/>
 
     <extensionPoint name="debuggerEditorTextProvider" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -647,7 +647,8 @@
     <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerConfiguration"
                     serviceImplementation="com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerConfiguration"/>
 
-    <compiler implementation="com.intellij.compiler.impl.javaCompiler.JavaCompiler"/>
+    <compiler implementation="com.intellij.compiler.impl.javaCompiler.AnnotationProcessingCompiler" id="java-annotation-processor" order="before java-compiler" />
+    <compiler implementation="com.intellij.compiler.impl.javaCompiler.JavaCompiler" id="java-compiler"/>
 
     <projectConfigurable id="project.propCompiler.java" bundle="messages.JavaCoreBundle" key="java" parentId="project.propCompiler"
                          instance="com.intellij.compiler.impl.javaCompiler.JavaCompilerConfigurable"/>

@@ -22,6 +22,7 @@ import com.intellij.compiler.make.MakeUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -163,6 +164,18 @@ public class ResourceCompiler implements TranslatingCompiler {
       it.remove(); // to free memory
     }
     context.getProgressIndicator().popState();
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getInputFileTypes() {
+    return FileType.EMPTY_ARRAY;
+  }
+
+  @NotNull
+  @Override
+  public FileType[] getOutputFileTypes() {
+    return FileType.EMPTY_ARRAY;
   }
 
   private boolean skipStandardResourceCompiler(final Module module) {

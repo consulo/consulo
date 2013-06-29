@@ -23,7 +23,7 @@ import com.intellij.psi.JavaCodeFragment;
 import com.intellij.psi.PsiElement;
 
 public abstract class CodeFragmentFactory {
-  public static final ExtensionPointName<CodeFragmentFactory> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.debugger.codeFragmentFactory");
+  public static final ExtensionPointName<CodeFragmentFactory> EXTENSION_POINT_NAME = ExtensionPointName.create("org.consulo.java.debugger.codeFragmentFactory");
 
   public abstract JavaCodeFragment createCodeFragment(TextWithImports item, PsiElement context, Project project);
 
