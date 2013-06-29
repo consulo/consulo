@@ -15,50 +15,53 @@
  */
 package org.jetbrains.idea.devkit.run;
 
-import com.intellij.execution.CantRunException;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PlatformUtils;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import com.intellij.packaging.artifacts.Artifact;
+import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import com.intellij.packaging.impl.artifacts.ArtifactUtil;
+import org.consulo.sdk.SdkPointerManager;
+import org.consulo.sdk.SdkUtil;
+import org.consulo.util.pointers.Named;
+import org.consulo.util.pointers.NamedPointer;
+import org.consulo.util.pointers.NamedPointerManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.devkit.DevKitBundle;
-import org.jetbrains.idea.devkit.module.extension.PluginModuleExtension;
-import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
 import org.jetbrains.idea.devkit.sdk.Sandbox;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
 
-public class PluginRunConfiguration extends RunConfigurationBase implements ModuleRunConfiguration {
-  private Module myModule;
-  private String myModuleName;
+public class PluginRunConfiguration extends RunConfigurationBase implements ModuleRunConfiguration{
+  private static final String JAVA_SDK = "java-sdk";
+  private static final String CONSULO_SDK = "consulo-sdk";
+  private static final String ARTIFACT = "artifact";
+
+  private static final String NAME = "name";
+
+  private NamedPointer<Sdk> myJavaSdkPointer;
+  private NamedPointer<Sdk> myConsuloSdkPointer;
+  private NamedPointer<Artifact> myArtifactPointer;
 
   public String VM_PARAMETERS;
   public String PROGRAM_PARAMETERS;
-  @NonNls private static final String NAME = "name";
-  @NonNls private static final String MODULE = "module";
-  @NonNls private static final String ALTERNATIVE_PATH_ELEMENT = "alternative-path";
-  @NonNls private static final String PATH = "path";
-  @NonNls private static final String ALTERNATIVE_PATH_ENABLED_ATTR = "alternative-path-enabled";
-  private String ALTERNATIVE_JRE_PATH = null;
-  private boolean ALTERNATIVE_JRE_PATH_ENABLED = false;
 
   public PluginRunConfiguration(final Project project, final ConfigurationFactory factory, final String name) {
     super(project, factory, name);
@@ -66,7 +69,7 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
 
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new PluginRunConfigurationEditor(this);
+    return new PluginRunConfigurationEditor(getProject());
   }
 
   @Override
@@ -81,28 +84,19 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
 
   @Override
   public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
-    final Module module = getModule();
-    if (module == null) {
-      throw new ExecutionException(DevKitBundle.message("run.configuration.no.module.specified"));
-    }
-
-    final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-    JavaModuleExtension javaModuleExtension = rootManager.getExtension(JavaModuleExtension.class);
-    if (javaModuleExtension == null) {
-      throw CantRunException.noModuleExtension(module, JavaModuleExtension.class);
-    }
-    final Sdk javaSdk = javaModuleExtension.getSdk();
+    final Sdk javaSdk = myJavaSdkPointer == null ? null : myJavaSdkPointer.get();
     if (javaSdk == null) {
-      throw CantRunException.noSdkForModuleExtension(javaModuleExtension);
+      throw new ExecutionException(DevKitBundle.message("run.configuration.no.java.sdk"));
     }
 
-    PluginModuleExtension pluginModuleExtension = rootManager.getExtension(PluginModuleExtension.class);
-    if (pluginModuleExtension == null) {
-      throw CantRunException.noModuleExtension(module, PluginModuleExtension.class);
-    }
-    final Sdk consuloSdk = pluginModuleExtension.getSdk();
+    final Sdk consuloSdk = myConsuloSdkPointer == null ? null : myConsuloSdkPointer.get();
     if (consuloSdk == null) {
-      throw CantRunException.noSdkForModuleExtension(pluginModuleExtension);
+      throw new ExecutionException(DevKitBundle.message("run.configuration.no.consulo.sdk"));
+    }
+
+    final Artifact artifact = myArtifactPointer == null ? null : myArtifactPointer.get();
+    if(artifact == null) {
+      throw new ExecutionException(DevKitBundle.message("run.configuration.no.plugin.artifact"));
     }
 
     String sandboxHome = ((Sandbox)consuloSdk.getSdkAdditionalData()).getSandboxHome();
@@ -131,23 +125,12 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
         fillParameterList(vm, VM_PARAMETERS);
         fillParameterList(params.getProgramParametersList(), PROGRAM_PARAMETERS);
 
-       /* if (isAlternativeJreEnabled() && !StringUtil.isEmptyOrSpaces(getAlternativeJrePath())) {
-          try {
-            usedIdeaJdk = (Sdk)usedIdeaJdk.clone();
-          }
-          catch (CloneNotSupportedException e) {
-            throw new ExecutionException(e.getMessage());
-          }
-          final SdkModificator sdkToSetUp = usedIdeaJdk.getSdkModificator();
-          sdkToSetUp.setHomePath(getAlternativeJrePath());
-          sdkToSetUp.commitChanges();
-        }  */
         @NonNls String libPath = consuloSdk.getHomePath() + File.separator + "lib";
         vm.add("-Xbootclasspath/a:" + libPath + File.separator + "boot.jar");
 
-        vm.defineProperty("idea.config.path", canonicalSandbox + File.separator + "config");
-        vm.defineProperty("idea.system.path", canonicalSandbox + File.separator + "system");
-        vm.defineProperty("idea.plugins.path", canonicalSandbox + File.separator + "plugins");
+        vm.defineProperty(PathManager.PROPERTY_CONFIG_PATH, canonicalSandbox + File.separator + "config");
+        vm.defineProperty(PathManager.PROPERTY_SYSTEM_PATH, canonicalSandbox + File.separator + "system");
+        vm.defineProperty(PathManager.PROPERTY_PLUGINS_PATH, artifact.getOutputPath());
 
         if (SystemInfo.isMac) {
           vm.defineProperty("idea.smooth.progress", "false");
@@ -158,15 +141,8 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
           if (VM_PARAMETERS == null || !VM_PARAMETERS.contains("-Dsun.awt.disablegrab")) {
             vm.defineProperty("sun.awt.disablegrab", "true"); // See http://devnet.jetbrains.net/docs/DOC-1142
           }
-        }
 
-        if (!vm.hasProperty(PlatformUtils.PLATFORM_PREFIX_KEY)) {
-          String buildNumber = ConsuloSdkType.getBuildNumber(consuloSdk.getHomePath());
-          if (buildNumber != null) {
-            vm.defineProperty(PlatformUtils.PLATFORM_PREFIX_KEY, PlatformUtils.CONSULO_PREFIX);
-          }
         }
-
         params.setWorkingDirectory(consuloSdk.getHomePath() + File.separator + "bin" + File.separator);
 
         params.setJdk(javaSdk);
@@ -190,22 +166,6 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
     return state;
   }
 
-  public String getAlternativeJrePath() {
-    return ALTERNATIVE_JRE_PATH;
-  }
-
-  public void setAlternativeJrePath(String ALTERNATIVE_JRE_PATH) {
-    this.ALTERNATIVE_JRE_PATH = ALTERNATIVE_JRE_PATH;
-  }
-
-  public boolean isAlternativeJreEnabled() {
-    return ALTERNATIVE_JRE_PATH_ENABLED;
-  }
-
-  public void setAlternativeJreEnabled(boolean ALTERNATIVE_JRE_PATH_ENABLED) {
-    this.ALTERNATIVE_JRE_PATH_ENABLED = ALTERNATIVE_JRE_PATH_ENABLED;
-  }
-
   private static void fillParameterList(ParametersList list, @Nullable String value) {
     if (value == null) return;
 
@@ -218,86 +178,111 @@ public class PluginRunConfiguration extends RunConfigurationBase implements Modu
 
   @Override
   public void checkConfiguration() throws RuntimeConfigurationException {
-    if (getModule() == null) {
-      throw new RuntimeConfigurationException(DevKitBundle.message("run.configuration.no.module.specified"));
-    }
-    String moduleName = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
-      public String compute() {
-        return getModule().getName();
-      }
-    });
-    if (ModuleManager.getInstance(getProject()).findModuleByName(moduleName) == null) {
-      throw new RuntimeConfigurationException(DevKitBundle.message("run.configuration.no.module.specified"));
-    }
-    /*final ModuleRootManager rootManager = ModuleRootManager.getInstance(getModule());
-    final Sdk jdk = rootManager.getSdk();
-    if (jdk == null) {
-      throw new RuntimeConfigurationException(DevKitBundle.message("jdk.no.specified", moduleName));
-    }
-    if (ConsuloSdkType.findIdeaJdk(jdk) == null) {
-      throw new RuntimeConfigurationException(DevKitBundle.message("jdk.type.incorrect", moduleName));
-    }  */
-  }
-
-
-  @Override
-  @NotNull
-  public Module[] getModules() {
-    final Module module = getModule();
-    return module != null ? new Module[]{module} : Module.EMPTY_ARRAY;
   }
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    Element module = element.getChild(MODULE);
-    if (module != null) {
-      myModuleName = module.getAttributeValue(NAME);
-    }
     DefaultJDOMExternalizer.readExternal(this, element);
-    final Element altElement = element.getChild(ALTERNATIVE_PATH_ELEMENT);
-    if (altElement != null) {
-      ALTERNATIVE_JRE_PATH = altElement.getAttributeValue(PATH);
-      final String enabledAttr = altElement.getAttributeValue(ALTERNATIVE_PATH_ENABLED_ATTR);
-      ALTERNATIVE_JRE_PATH_ENABLED = enabledAttr != null && Boolean.parseBoolean(enabledAttr);
-    }
+
+    myJavaSdkPointer = readPointer(JAVA_SDK, element, new NotNullFactory<NamedPointerManager<Sdk>>() {
+      @NotNull
+      @Override
+      public NamedPointerManager<Sdk> create() {
+        return ServiceManager.getService(SdkPointerManager.class);
+      }
+    });
+
+    myConsuloSdkPointer = readPointer(CONSULO_SDK, element, new NotNullFactory<NamedPointerManager<Sdk>>() {
+      @NotNull
+      @Override
+      public NamedPointerManager<Sdk> create() {
+        return ServiceManager.getService(SdkPointerManager.class);
+      }
+    });
+
+    myArtifactPointer = readPointer(ARTIFACT, element, new NotNullFactory<NamedPointerManager<Artifact>>() {
+      @NotNull
+      @Override
+      public NamedPointerManager<Artifact> create() {
+        return ArtifactPointerManager.getInstance(getProject());
+      }
+    });
+
     super.readExternal(element);
   }
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    Element moduleElement = new Element(MODULE);
-    moduleElement.setAttribute(NAME, ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
-      public String compute() {
-        final Module module = getModule();
-        return module != null ? module.getName() : myModuleName != null ? myModuleName : "";
-      }
-    }));
-    element.addContent(moduleElement);
     DefaultJDOMExternalizer.writeExternal(this, element);
-    if (!StringUtil.isEmptyOrSpaces(ALTERNATIVE_JRE_PATH)) {
-      Element altElement = new Element(ALTERNATIVE_PATH_ELEMENT);
-      altElement.setAttribute(PATH, ALTERNATIVE_JRE_PATH);
-      altElement.setAttribute(ALTERNATIVE_PATH_ENABLED_ATTR, String.valueOf(ALTERNATIVE_JRE_PATH_ENABLED));
-      element.addContent(altElement);
-    }
+
+    writePointer(JAVA_SDK, element, myJavaSdkPointer);
+    writePointer(CONSULO_SDK, element, myConsuloSdkPointer);
+    writePointer(ARTIFACT, element, myArtifactPointer);
+
     super.writeExternal(element);
   }
 
   @Nullable
-  public Module getModule() {
-    if (myModule == null && myModuleName != null) {
-      myModule = ModuleManager.getInstance(getProject()).findModuleByName(myModuleName);
-    }
-    if (myModule != null && myModule.isDisposed()) {
-      myModule = null;
-    }
+  private static <T extends Named> NamedPointer<T> readPointer(String childName, Element parent, NotNullFactory<NamedPointerManager<T>> fun) {
+    final NamedPointerManager<T> namedPointerManager = fun.create();
 
-    return myModule;
+    Element child = parent.getChild(childName);
+    if(child != null) {
+      final String attributeValue = child.getAttributeValue(NAME);
+      if(attributeValue != null) {
+        return namedPointerManager.create(attributeValue);
+      }
+    }
+    return null;
   }
 
-  public void setModule(Module module) {
-    myModule = module;
+  private static void writePointer(String childName, Element parent, NamedPointer<?> pointer) {
+    if(pointer == null) {
+      return;
+    }
+    Element element = new Element(childName);
+    element.setAttribute(NAME, pointer.getName());
+
+    parent.addContent(element);
+  }
+
+  @Nullable
+  public String getArtifactName() {
+    return myArtifactPointer == null ? null : myArtifactPointer.getName();
+  }
+
+  public void setArtifactName(@Nullable String name) {
+    myArtifactPointer = name == null ? null : ArtifactPointerManager.getInstance(getProject()).create(name);
+  }
+
+  @Nullable
+  public String getJavaSdkName() {
+    return myJavaSdkPointer == null ? null : myJavaSdkPointer.getName();
+  }
+
+  public void setJavaSdkName(@Nullable String name) {
+    myJavaSdkPointer = name == null ? null :SdkUtil.createPointer(name);
+  }
+
+  public void setConsuloSdkName(@Nullable String name) {
+    myConsuloSdkPointer = name == null ? null : SdkUtil.createPointer(name);
+  }
+
+  @Nullable
+  public String getConsuloSdkName() {
+    return myConsuloSdkPointer == null ? null : myConsuloSdkPointer.getName();
+  }
+
+  @NotNull
+  @Override
+  public Module[] getModules() {
+    Artifact artifact = myArtifactPointer == null ? null : myArtifactPointer.get();
+    if(artifact == null) {
+      return Module.EMPTY_ARRAY;
+    }
+    final Set<Module> modules =
+      ArtifactUtil.getModulesIncludedInArtifacts(Collections.singletonList(artifact), getProject());
+
+    return modules.isEmpty() ? Module.EMPTY_ARRAY : modules.toArray(new Module[modules.size()]);
   }
 }

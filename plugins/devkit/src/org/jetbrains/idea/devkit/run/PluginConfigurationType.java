@@ -21,12 +21,10 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.devkit.DevKitBundle;
-import org.jetbrains.idea.devkit.util.PluginModuleUtil;
 
 import javax.swing.*;
 import java.io.File;
@@ -38,6 +36,7 @@ public class PluginConfigurationType implements ConfigurationType {
 
   PluginConfigurationType() {
     myFactory = new ConfigurationFactory(this) {
+      @Override
       public RunConfiguration createTemplateConfiguration(Project project) {
         final PluginRunConfiguration runConfiguration = new PluginRunConfiguration(project, this, "");
         if (runConfiguration.VM_PARAMETERS == null) {
@@ -48,36 +47,30 @@ public class PluginConfigurationType implements ConfigurationType {
         }
         return runConfiguration;
       }
-
-      public RunConfiguration createConfiguration(String name, RunConfiguration template) {
-        final PluginRunConfiguration pluginRunConfiguration = (PluginRunConfiguration)template;
-        if (pluginRunConfiguration.getModule() == null) {
-          final Module[] modules = PluginModuleUtil.getAllPluginModules(pluginRunConfiguration.getProject());
-          if (modules.length > 0) {
-            pluginRunConfiguration.setModule(modules[0]);
-          }
-        }
-        return super.createConfiguration(name, pluginRunConfiguration);
-      }
     };
   }
 
+  @Override
   public String getDisplayName() {
     return DevKitBundle.message("run.configuration.title");
   }
 
+  @Override
   public String getConfigurationTypeDescription() {
     return DevKitBundle.message("run.configuration.type.description");
   }
 
+  @Override
   public Icon getIcon() {
     return AllIcons.Nodes.Plugin;
   }
 
+  @Override
   public ConfigurationFactory[] getConfigurationFactories() {
     return new ConfigurationFactory[]{myFactory};
   }
 
+  @Override
   @NotNull
   public String getId() {
     return "#org.jetbrains.idea.devkit.run.PluginConfigurationType";

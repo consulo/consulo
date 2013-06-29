@@ -23,9 +23,7 @@
     <compiler.buildTargetScopeProvider implementation="org.jetbrains.idea.devkit.build.PluginModuleBuildScopeProvider"/>
     <useScopeEnlarger implementation="org.jetbrains.idea.devkit.DevKitUseScopeEnlarger"/>
 
-    <compiler implementation="org.jetbrains.idea.devkit.compiler.CopyArtifactCompiler" order="after artifactsCompiler" />
     <configurationType implementation="org.jetbrains.idea.devkit.run.PluginConfigurationType"/>
-    <stepsBeforeRunProvider implementation="org.jetbrains.idea.devkit.run.stepBefore.CopyArtifactsBeforeRunTaskProvider" order="after compileBeforeRunNoErrorCheck"/>
 
     <sdkType implementation="org.jetbrains.idea.devkit.sdk.ConsuloSdkType"/>
     <compileServer.plugin classpath="jps/devkit-jps-plugin.jar"/>

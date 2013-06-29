@@ -111,7 +111,7 @@ public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
     if (additionalData != null) {
       additionalData.cleanupWatchedRoots();
     }
-    Sandbox sandbox = new Sandbox(mySandboxHome.getText(), myIdeaJdk);
+    Sandbox sandbox = new Sandbox(mySandboxHome.getText());
     final SdkModificator modificator = myIdeaJdk.getSdkModificator();
     modificator.setSdkAdditionalData(sandbox);
     ApplicationManager.getApplication().runWriteAction(new Runnable() {

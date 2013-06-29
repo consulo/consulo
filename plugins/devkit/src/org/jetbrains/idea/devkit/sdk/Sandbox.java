@@ -15,9 +15,7 @@
  */
 package org.jetbrains.idea.devkit.sdk;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.ValidatableSdkAdditionalData;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
@@ -25,6 +23,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.idea.devkit.DevKitBundle;
 
@@ -32,51 +31,50 @@ import org.jetbrains.idea.devkit.DevKitBundle;
  * User: anna
  * Date: Nov 22, 2004
  */
+@Logger
 public class Sandbox implements ValidatableSdkAdditionalData, JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance("#org.jetbrains.idea.devkit.sdk.Sandbox");
-
   @SuppressWarnings({"WeakerAccess"})
   public String mySandboxHome;
-  private final Sdk myCurrentJdk;
 
   private LocalFileSystem.WatchRequest mySandboxRoot = null;
 
-  public Sandbox(String sandboxHome, Sdk currentJdk) {
+  public Sandbox(String sandboxHome) {
     mySandboxHome = sandboxHome;
-    myCurrentJdk = currentJdk;
     if (mySandboxHome != null) {
       mySandboxRoot = LocalFileSystem.getInstance().addRootToWatch(mySandboxHome, true);
     }
   }
 
-  //readExternal()
-  public Sandbox(Sdk currentSdk) {
-    myCurrentJdk = currentSdk;
+  public Sandbox() {
   }
 
   public String getSandboxHome() {
     return mySandboxHome;
   }
 
+  @Override
   public Object clone() throws CloneNotSupportedException {
-    return new Sandbox(mySandboxHome, myCurrentJdk);
+    return new Sandbox(mySandboxHome);
   }
 
+  @Override
   public void checkValid(SdkModel sdkModel) throws ConfigurationException {
     if (mySandboxHome == null || mySandboxHome.length() == 0) {
       throw new ConfigurationException(DevKitBundle.message("sandbox.specification"));
     }
   }
 
+  @Override
   public void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
-    LOG.assertTrue(mySandboxRoot == null);
+    LOGGER.assertTrue(mySandboxRoot == null);
 
     if (mySandboxHome != null) {
       mySandboxRoot = LocalFileSystem.getInstance().addRootToWatch(mySandboxHome, true);
     }
   }
 
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     DefaultJDOMExternalizer.writeExternal(this, element);
   }

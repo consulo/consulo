@@ -158,7 +158,7 @@ public class ConsuloSdkType extends SdkType {
     }
     addSources(new File(sdkHome), sdkModificator);
 
-    sdkModificator.setSdkAdditionalData(new Sandbox(getDefaultSandbox(), sdk));
+    sdkModificator.setSdkAdditionalData(new Sandbox(getDefaultSandbox()));
     sdkModificator.commitChanges();
   }
 
@@ -213,7 +213,7 @@ public class ConsuloSdkType extends SdkType {
   }
 
   public SdkAdditionalData loadAdditionalData(Sdk sdk, Element additional) {
-    Sandbox sandbox = new Sandbox(sdk);
+    Sandbox sandbox = new Sandbox();
     try {
       sandbox.readExternal(additional);
     }
