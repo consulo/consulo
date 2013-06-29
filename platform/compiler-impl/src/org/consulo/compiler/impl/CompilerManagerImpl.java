@@ -72,12 +72,16 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final List<CompileTask> myAfterTasks = new ArrayList<CompileTask>();
   private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
 
+  private final List<FileType> myCompilableFileTypes = new ArrayList<FileType>();
+
   public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
     myProject = project;
     myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
-    for (Compiler extension : Compiler.EP_NAME.getExtensions(project)) {
-      myCompilers.add(extension);
+    for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {
+      compiler.init(this);
+
+      myCompilers.add(compiler);
     }
 
     final File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
@@ -135,17 +139,17 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   public void addCompilableFileType(@NotNull FileType type) {
-
+    myCompilableFileTypes.add(type);
   }
 
   @Override
   public void removeCompilableFileType(@NotNull FileType type) {
-
+    myCompilableFileTypes.remove(type);
   }
 
   @Override
   public boolean isCompilableFileType(@NotNull FileType type) {
-    return false;
+    return myCompilableFileTypes.contains(type);
   }
 
   @Override

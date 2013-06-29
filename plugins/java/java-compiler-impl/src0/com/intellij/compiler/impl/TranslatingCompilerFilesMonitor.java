@@ -16,7 +16,6 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.make.MakeUtil;

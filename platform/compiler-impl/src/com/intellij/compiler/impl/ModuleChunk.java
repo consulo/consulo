@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
@@ -154,7 +153,6 @@ public class ModuleChunk extends Chunk<Module> {
 
   private VirtualFile[] filterRoots(VirtualFile[] roots, Project project, final int sourcesFilter) {
     final List<VirtualFile> filteredRoots = new ArrayList<VirtualFile>(roots.length);
-    final CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(project);
     for (final VirtualFile root : roots) {
       if (sourcesFilter != ALL_SOURCES) {
         if (myContext.isInTestSourceContent(root)) {

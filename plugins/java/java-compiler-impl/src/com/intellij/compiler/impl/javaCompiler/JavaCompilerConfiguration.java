@@ -48,6 +48,15 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
     myProject = project;
   }
 
+  @Nullable
+  public String getBytecodeTargetLevel(Module module) {
+    return null; //TODO [VISTALL]
+  }
+
+  public boolean isAddNotNullAssertions() {
+    return false;//TODO [VISTALL]
+  }
+
   @NotNull
   public BackendCompiler getActiveCompiler() {
     if(myBackendCompilerCache == null) {

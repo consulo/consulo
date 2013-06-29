@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.CompilerPaths;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
@@ -51,6 +52,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.compiler.GroovyCompilerBase;
 import org.jetbrains.plugins.groovy.compiler.GroovyCompilerConfiguration;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
@@ -223,6 +225,11 @@ public class GroovycStubGenerator extends GroovyCompilerBase {
 
   public boolean validateConfiguration(CompileScope scope) {
     return true;
+  }
+
+  @Override
+  public void init(@NotNull CompilerManager compilerManager) {
+
   }
 
   public static Collection<VirtualFile> generateItems(final GroovyToJavaGenerator generator,

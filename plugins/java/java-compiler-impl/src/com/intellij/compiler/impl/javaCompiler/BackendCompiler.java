@@ -20,20 +20,17 @@ import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.Set;
 
 public interface BackendCompiler {
   ExtensionPointName<BackendCompilerEP> EP_NAME = ExtensionPointName.create("org.consulo.java.backendCompiler");
 
   @NotNull String getPresentableName();
   @NotNull Configurable createConfigurable();
-  @NotNull Set<FileType> getCompilableFileTypes();
   @Nullable OutputParser createErrorParser(@NotNull String outputDir, Process process);
   @Nullable OutputParser createOutputParser(@NotNull String outputDir);
 
@@ -45,5 +42,4 @@ public interface BackendCompiler {
     @NotNull CompileContext compileContext) throws IOException;
 
   void compileFinished();
-
 }

@@ -15,7 +15,6 @@
  */
 package org.jetbrains.idea.maven.importing.configurers;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;

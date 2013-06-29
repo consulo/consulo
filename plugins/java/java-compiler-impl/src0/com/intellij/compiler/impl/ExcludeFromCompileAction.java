@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorTreeNodeDescriptor;

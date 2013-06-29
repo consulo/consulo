@@ -16,6 +16,7 @@
 package com.intellij.compiler;
 
 import com.intellij.compiler.impl.ModuleChunk;
+import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -35,13 +36,11 @@ import java.util.List;
 public class JavaCompilerUtil {
   public static void addTargetCommandLineSwitch(final ModuleChunk chunk, final List<String> commandLine) {
     String optionValue = null;
-    CompilerConfigurationOld config = null;
+
+    JavaCompilerConfiguration compilerConfiguration = JavaCompilerConfiguration.getInstance(chunk.getProject());
     final Module[] modules = chunk.getModules();
     for (Module module : modules) {
-      if (config == null) {
-        config = CompilerConfigurationOld.getInstance(module.getProject());
-      }
-      final String moduleTarget = config.getBytecodeTargetLevel(module);
+      final String moduleTarget = compilerConfiguration.getBytecodeTargetLevel(module);
       if (moduleTarget == null) {
         continue;
       }

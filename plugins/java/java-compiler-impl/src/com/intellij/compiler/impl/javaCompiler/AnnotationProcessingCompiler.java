@@ -169,6 +169,10 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
     }
   }
 
+  @Override
+  public void init(@NotNull CompilerManager compilerManager) {
+  }
+
   private void showCyclesNotSupportedForAnnotationProcessors(Module[] modulesInChunk) {
     LOGGER.assertTrue(modulesInChunk.length > 0);
     String moduleNameToSelect = modulesInChunk[0].getName();

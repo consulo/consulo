@@ -16,9 +16,9 @@
 
 package org.jetbrains.plugins.groovy.compiler
 
-import com.intellij.compiler.CompilerConfigurationOld
+
 import com.intellij.compiler.CompilerConfigurationImpl
-import com.intellij.compiler.CompilerConfigurationOld;
+
 import com.intellij.compiler.server.BuildManager
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VfsUtil

@@ -42,4 +42,6 @@ public interface Compiler {
    * @return true if everything is ok, false otherwise
    */
   boolean validateConfiguration(CompileScope scope);
+
+  void init(@NotNull CompilerManager compilerManager);
 }

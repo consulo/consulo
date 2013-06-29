@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.module.Module;

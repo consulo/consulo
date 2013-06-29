@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.impl.javaCompiler.jikes;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.OutputParser;
 import com.intellij.compiler.impl.CompilerUtil;

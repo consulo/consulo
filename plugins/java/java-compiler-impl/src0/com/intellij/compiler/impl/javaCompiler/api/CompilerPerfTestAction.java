@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.impl.javaCompiler.api;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.impl.javaCompiler.BackendCompiler;
 import com.intellij.openapi.actionSystem.AnAction;

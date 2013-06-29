@@ -24,6 +24,7 @@ package com.intellij.compiler.impl.javaCompiler;
 import com.intellij.compiler.CompilerException;
 import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.make.CacheCorruptedException;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.module.Module;
@@ -51,11 +52,7 @@ public class JavaCompiler implements TranslatingCompiler {
 
   @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
-    final BackendCompiler backEndCompiler = getBackEndCompiler();
-    if (backEndCompiler instanceof ExternalCompiler) {
-      return ((ExternalCompiler)backEndCompiler).isCompilableFile(file, context);
-    }
-    return backEndCompiler.getCompilableFileTypes().contains(file.getFileType());
+    return file.getFileType() == JavaFileType.INSTANCE;
   }
 
   @Override
@@ -88,6 +85,11 @@ public class JavaCompiler implements TranslatingCompiler {
   @Override
   public boolean validateConfiguration(CompileScope scope) {
     return getBackEndCompiler().checkCompiler(scope);
+  }
+
+  @Override
+  public void init(@NotNull CompilerManager compilerManager) {
+    compilerManager.addCompilableFileType(JavaFileType.INSTANCE);
   }
 
   private BackendCompiler getBackEndCompiler() {

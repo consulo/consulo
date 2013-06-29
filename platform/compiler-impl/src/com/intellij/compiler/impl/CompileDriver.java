@@ -17,7 +17,6 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.ModuleCompilerUtil;
@@ -1480,23 +1479,21 @@ public class CompileDriver {
           }
           while (!dependentFiles.isEmpty() && context.getMessageCount(CompilerMessageCategory.ERROR) == 0);
 
-          if (CompilerConfigurationOld.MAKE_ENABLED) {
-            if (!context.getProgressIndicator().isCanceled()) {
-              // when cancelled pretend nothing was compiled and next compile will compile everything from the scratch
-              final ProgressIndicator indicator = context.getProgressIndicator();
-              final DependencyCache cache = context.getDependencyCache();
+          if (!context.getProgressIndicator().isCanceled()) {
+            // when cancelled pretend nothing was compiled and next compile will compile everything from the scratch
+            final ProgressIndicator indicator = context.getProgressIndicator();
+            final DependencyCache cache = context.getDependencyCache();
 
-              indicator.pushState();
-              indicator.setText(CompilerBundle.message("progress.updating.caches"));
-              indicator.setText2("");
+            indicator.pushState();
+            indicator.setText(CompilerBundle.message("progress.updating.caches"));
+            indicator.setText2("");
 
-              cache.update();
+            cache.update();
 
-              indicator.setText(CompilerBundle.message("progress.saving.caches"));
-              cache.resetState();
-              processedModules.addAll(currentChunk.getNodes());
-              indicator.popState();
-            }
+            indicator.setText(CompilerBundle.message("progress.saving.caches"));
+            cache.resetState();
+            processedModules.addAll(currentChunk.getNodes());
+            indicator.popState();
           }
 
           if (context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {

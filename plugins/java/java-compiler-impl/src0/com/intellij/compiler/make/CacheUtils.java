@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.make;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.SymbolTable;
 import com.intellij.compiler.classParsing.MethodInfo;

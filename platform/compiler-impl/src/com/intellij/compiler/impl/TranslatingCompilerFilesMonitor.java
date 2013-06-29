@@ -16,7 +16,6 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.make.MakeUtil;
@@ -252,7 +251,6 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
                            Collection<Trinity<File, String, Boolean>> toDelete) {
     final Project project = context.getProject();
     final int projectId = getProjectId(project);
-    final CompilerConfigurationOld configuration = CompilerConfigurationOld.getInstance(project);
     final boolean _forceCompile = forceCompile || isRebuild;
     final Set<VirtualFile> selectedForRecompilation = new HashSet<VirtualFile>();
     synchronized (myDataLock) {

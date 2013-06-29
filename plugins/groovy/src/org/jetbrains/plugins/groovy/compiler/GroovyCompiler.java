@@ -149,6 +149,11 @@ public class GroovyCompiler extends GroovyCompilerBase {
     return true;
   }
 
+  @Override
+  public void init(@NotNull CompilerManager compilerManager) {
+    compilerManager.addCompilableFileType(GroovyFileType.GROOVY_FILE_TYPE);
+  }
+
   private boolean needTransformCopying(CompileScope compileScope) {
     final ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
     for (VirtualFile file : FilenameIndex.getVirtualFilesByName(myProject, AST_TRANSFORM_FILE_NAME, GlobalSearchScope.projectScope(myProject))) {

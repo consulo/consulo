@@ -13,6 +13,7 @@
     <orderEntry type="module" module-name="java-rt" />
     <orderEntry type="library" name="asm4" level="project" />
     <orderEntry type="module" module-name="jps-model-impl" />
+    <orderEntry type="module" module-name="java-psi-impl" />
   </component>
 </module>
 

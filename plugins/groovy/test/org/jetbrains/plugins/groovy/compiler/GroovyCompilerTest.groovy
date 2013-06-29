@@ -15,9 +15,9 @@
  */
 
 package org.jetbrains.plugins.groovy.compiler
-import com.intellij.compiler.CompilerConfigurationOld
+
 import com.intellij.compiler.CompilerConfigurationImpl
-import com.intellij.compiler.CompilerConfigurationOld
+
 import com.intellij.compiler.server.BuildManager
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.PathManager

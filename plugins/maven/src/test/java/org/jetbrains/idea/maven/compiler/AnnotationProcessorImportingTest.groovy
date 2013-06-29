@@ -15,9 +15,9 @@
  */
 package org.jetbrains.idea.maven.compiler
 
-import com.intellij.compiler.CompilerConfigurationOld
+
 import com.intellij.compiler.CompilerConfigurationImpl
-import com.intellij.compiler.CompilerConfigurationOld
+
 import org.jetbrains.idea.maven.MavenImportingTestCase
 import org.jetbrains.idea.maven.importing.configurers.MavenAnnotationProcessorConfigurer
 

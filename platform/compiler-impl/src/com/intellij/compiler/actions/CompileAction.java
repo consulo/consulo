@@ -15,13 +15,11 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.compiler.CompilerConfigurationOld;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -74,7 +72,6 @@ public class CompileAction extends CompileActionBase {
       return;
     }
 
-    CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(project);
     final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
 
     final VirtualFile[] files = getCompilableFiles(project, PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext));
@@ -162,8 +159,6 @@ public class CompileAction extends CompileActionBase {
       return VirtualFile.EMPTY_ARRAY;
     }
     final PsiManager psiManager = PsiManager.getInstance(project);
-    final CompilerConfigurationOld compilerConfiguration = CompilerConfigurationOld.getInstance(project);
-    final FileTypeManager typeManager = FileTypeManager.getInstance();
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final CompilerManager compilerManager = CompilerManager.getInstance(project);
     final List<VirtualFile> filesToCompile = new ArrayList<VirtualFile>();
