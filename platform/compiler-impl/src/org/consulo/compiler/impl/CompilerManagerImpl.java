@@ -83,7 +83,12 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
     for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {
-      compiler.init(this);
+      try {
+        compiler.init(this);
+      }
+      catch (Error e) {
+        System.out.println(compiler.getClass().getName());
+      }
 
       myCompilers.add(compiler);
 

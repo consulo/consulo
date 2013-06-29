@@ -2543,6 +2543,7 @@ public class CompileDriver {
         final Compiler[] allCompilers = compilerManager.getCompilers(Compiler.class);
         for (Compiler compiler : allCompilers) {
           if (!compiler.validateConfiguration(scope)) {
+            LOG.info("Validation with compiler " + compiler.getDescription() + " is failed.");
             return false;
           }
         }

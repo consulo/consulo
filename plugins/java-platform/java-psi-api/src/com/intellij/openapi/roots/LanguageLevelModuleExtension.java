@@ -29,6 +29,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
 public class LanguageLevelModuleExtension extends ModuleExtension0<LanguageLevelModuleExtension> {
   @NonNls private static final String LANGUAGE_LEVEL_ELEMENT_NAME = "LANGUAGE_LEVEL";
   private Module myModule;

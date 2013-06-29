@@ -53,6 +53,10 @@ public final class Form2SourceCompiler implements SourceInstrumentingCompiler{
     return true;
   }
 
+  @Override
+  public void init(@NotNull CompilerManager compilerManager) {
+  }
+
   @NotNull
   public ProcessingItem[] getProcessingItems(final CompileContext context) {
     final Project project = context.getProject();

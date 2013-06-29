@@ -11,16 +11,16 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.LanguageLevelModuleExtension;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.PathUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileTypeLoader;
 import org.jetbrains.plugins.groovy.debugger.filters.GroovyDebuggerSettings;
@@ -99,14 +99,11 @@ public class GroovyHotSwapper extends JavaProgramPatcher {
       return;
     }
 
-    if (!LanguageLevelProjectExtension.getInstance(project).getLanguageLevel().isAtLeast(LanguageLevel.JDK_1_5)) {
-      return;
-    }
-
     if (configuration instanceof ModuleBasedConfiguration) {
       final Module module = ((ModuleBasedConfiguration)configuration).getConfigurationModule().getModule();
       if (module != null) {
-        final LanguageLevel level = LanguageLevelModuleExtension.getInstance(module).getLanguageLevel();
+        final JavaModuleExtension extension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
+        final LanguageLevel level = extension == null ? null : extension.getLanguageLevel();
         if (level != null && !level.isAtLeast(LanguageLevel.JDK_1_5)) {
           return;
         }
