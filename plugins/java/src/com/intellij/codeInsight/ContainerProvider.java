@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Max Medvedev
  */
 public interface ContainerProvider {
-  ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create("com.intellij.codeInsight.containerProvider");
+  ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create("org.consulo.java.codeInsight.containerProvider");
 
   @Nullable
   PsiElement getContainer(@NotNull PsiElement item);
