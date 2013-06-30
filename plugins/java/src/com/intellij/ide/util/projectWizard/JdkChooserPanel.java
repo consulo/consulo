@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.ui.ProjectJdksEditor;
@@ -159,7 +159,7 @@ public class JdkChooserPanel extends JPanel {
     myListModel.clear();
     final Sdk[] jdks;
     if (myProject == null || myProject.isDefault()) {
-      final Sdk[] allJdks = globalSdks != null ? globalSdks : ProjectSdkTable.getInstance().getAllSdks();
+      final Sdk[] allJdks = globalSdks != null ? globalSdks : SdkTable.getInstance().getAllSdks();
       jdks = getCompatibleJdks(type, Arrays.asList(allJdks));
     }
     else {

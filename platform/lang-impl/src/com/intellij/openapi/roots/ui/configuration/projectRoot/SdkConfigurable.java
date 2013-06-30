@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.SdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
@@ -39,23 +39,23 @@ import javax.swing.*;
  * Date: 05-Jun-2006
  */
 public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> implements Place.Navigator {
-  private final ProjectJdkImpl myProjectJdk;
+  private final SdkImpl myProjectSdk;
   private final SdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public SdkConfigurable(final ProjectJdkImpl projectJdk,
+  public SdkConfigurable(final SdkImpl projectSdk,
                          final ProjectSdksModel sdksModel,
                          final Runnable updateTree,
                          @NotNull History history,
                          Project project) {
     super(true, updateTree);
-    myProjectJdk = projectJdk;
-    mySdkEditor = createSdkEditor(sdksModel, history, myProjectJdk);
+    myProjectSdk = projectSdk;
+    mySdkEditor = createSdkEditor(sdksModel, history, myProjectSdk);
     final StructureConfigurableContext context = ModuleStructureConfigurable.getInstance(project).getContext();
-    myProjectStructureElement = new SdkProjectStructureElement(context, myProjectJdk);
+    myProjectStructureElement = new SdkProjectStructureElement(context, myProjectSdk);
   }
 
-  protected SdkEditor createSdkEditor(ProjectSdksModel sdksModel, History history, ProjectJdkImpl projectJdk) {
+  protected SdkEditor createSdkEditor(ProjectSdksModel sdksModel, History history, SdkImpl projectJdk) {
     return new SdkEditor(sdksModel, history, projectJdk);
   }
 
@@ -66,34 +66,34 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
 
   @Override
   public void setDisplayName(final String name) {
-    myProjectJdk.setName(name);
+    myProjectSdk.setName(name);
   }
 
   @Override
   public Sdk getEditableObject() {
-    return myProjectJdk;
+    return myProjectSdk;
   }
 
   @Override
   public String getBannerSlogan() {
-    return ProjectBundle.message("project.roots.jdk.banner.text", myProjectJdk.getName());
+    return ProjectBundle.message("project.roots.jdk.banner.text", myProjectSdk.getName());
   }
 
   @Override
   public String getDisplayName() {
-    return myProjectJdk.getName();
+    return myProjectSdk.getName();
   }
 
   @Override
   public Icon getIcon(boolean open) {
-    return ((SdkType) myProjectJdk.getSdkType()).getIcon();
+    return ((SdkType) myProjectSdk.getSdkType()).getIcon();
   }
 
   @Override
   @Nullable
   @NonNls
   public String getHelpTopic() {
-    return ((SdkType) myProjectJdk.getSdkType()).getHelpTopic();
+    return ((SdkType) myProjectSdk.getSdkType()).getHelpTopic();
   }
 
 

@@ -451,7 +451,7 @@ public class JavaSdkImpl extends JavaSdk {
 
   @Override
   public Sdk createJdk(@NotNull String jdkName, @NotNull String home, boolean isJre) {
-    ProjectJdkImpl jdk = new ProjectJdkImpl(jdkName, this);
+    SdkImpl jdk = new SdkImpl(jdkName, this);
     SdkModificator sdkModificator = jdk.getSdkModificator();
 
     String path = home.replace(File.separatorChar, '/');

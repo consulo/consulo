@@ -29,7 +29,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.MasterDetailsComponent;
@@ -99,10 +99,10 @@ public class ProjectSdksConfigurable extends MasterDetailsComponent {
     final Map<Sdk, Sdk> sdks = myProjectSdksModel.getProjectSdks();
     for (Sdk sdk : sdks.keySet()) {
       final SdkConfigurable
-        configurable = new SdkConfigurable((ProjectJdkImpl)sdks.get(sdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject);
+        configurable = new SdkConfigurable((SdkImpl)sdks.get(sdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject);
       addNode(new MyNode(configurable), myRoot);
     }
-    selectJdk(myProjectSdksModel.getProjectSdk()); //restore selection
+
     final String value = PropertiesComponent.getInstance().getValue(SPLITTER_PROPORTION);
     if (value != null) {
       try {
@@ -139,7 +139,6 @@ public class ProjectSdksConfigurable extends MasterDetailsComponent {
     }
 
     if (myProjectSdksModel.isModified() || modifiedJdks) myProjectSdksModel.apply(this);
-    myProjectSdksModel.setProjectSdk(getSelectedJdk());
  }
 
 
@@ -169,7 +168,7 @@ public class ProjectSdksConfigurable extends MasterDetailsComponent {
       @Override
       public void consume(final Sdk projectJdk) {
         addNode(
-          new MyNode(new SdkConfigurable(((ProjectJdkImpl)projectJdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject), false),
+          new MyNode(new SdkConfigurable(((SdkImpl)projectJdk), myProjectSdksModel, TREE_UPDATER, myHistory, myProject), false),
           myRoot);
         selectNodeInTree(findNodeByObject(myRoot, projectJdk));
       }

@@ -16,7 +16,7 @@
 package org.consulo.sdk.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import org.consulo.sdk.SdkPointerManager;
 import org.consulo.util.pointers.NamedPointerManagerImpl;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implements SdkPointerManager {
   public SdkPointerManagerImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(ProjectSdkTable.SDK_TABLE_TOPIC, new ProjectSdkTable.Listener() {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTable.Listener() {
       @Override
       public void sdkAdded(Sdk sdk) {
         updatePointers(sdk);
@@ -50,6 +50,6 @@ public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implemen
   @Nullable
   @Override
   public Sdk findByName(@NotNull String name) {
-    return ProjectSdkTable.getInstance().findSdk(name);
+    return SdkTable.getInstance().findSdk(name);
   }
 }

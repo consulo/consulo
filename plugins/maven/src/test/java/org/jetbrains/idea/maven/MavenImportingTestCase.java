@@ -16,7 +16,6 @@
 
 package org.jetbrains.idea.maven;
 
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.CompilerTestUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;

@@ -15,13 +15,13 @@
  */
 package com.intellij.execution.configurations;
 
+import com.intellij.JavaTestUtil;
 import com.intellij.execution.CantRunException;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.DefaultJavaProcessHandler;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import com.intellij.testFramework.LightIdeaTestCase;
 import junit.framework.Assert;
 
@@ -53,7 +53,7 @@ public class JavaCommandLineTest extends LightIdeaTestCase {
     String commandLineString;
 
     javaParameters = new JavaParameters();
-    final Sdk internalJdk = JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk();
+    final Sdk internalJdk = JavaTestUtil.getTestJdk();
     javaParameters.setJdk(internalJdk);
     javaParameters.setMainClass("Main");
     commandLineString = CommandLineBuilder.createFromJavaParameters(javaParameters).getCommandLineString();

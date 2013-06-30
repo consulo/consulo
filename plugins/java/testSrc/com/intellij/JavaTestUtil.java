@@ -15,15 +15,13 @@
  */
 package com.intellij;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
@@ -45,29 +43,17 @@ public class JavaTestUtil {
   }
 
   public static void setupTestJDK() {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        Sdk jdk = ProjectSdkTable.getInstance().findSdk("JDK");
-        if (jdk != null) {
-          ProjectSdkTable.getInstance().removeSdk(jdk);
-        }
 
-        ProjectSdkTable.getInstance().addSdk(getTestJdk());
-      }
-    });
   }
 
-  private static Sdk getTestJdk() {
-    try {
-      ProjectJdkImpl jdk = (ProjectJdkImpl)JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk().clone();
-      jdk.setName("JDK");
-      return jdk;
+  public static Sdk getTestJdk() {
+    SdkTable sdkTable = SdkTable.getInstance();
+    for (Sdk sdk : sdkTable.getAllSdks()) {
+      if (sdk.isBundled() && sdk.getSdkType() instanceof JavaSdk) {
+        return sdk;
+      }
     }
-    catch (CloneNotSupportedException e) {
-      //LOG.error(e);
-      return null;
-    }
+    return null;
   }
 
   @Nullable

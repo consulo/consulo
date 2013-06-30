@@ -3698,6 +3698,7 @@
     <extensionPoint name="elementsToHighlightFilter" interface="com.intellij.openapi.util.Condition"/>
 
     <extensionPoint name="sdkType" interface="com.intellij.openapi.projectRoots.SdkType"/>
+    <extensionPoint name="bundledSdkProvider" interface="com.intellij.openapi.projectRoots.BundledSdkProvider"/>
 
     <extensionPoint name="library.presentationProvider" interface="com.intellij.openapi.roots.libraries.LibraryPresentationProvider"/>
     <extensionPoint name="library.type" interface="com.intellij.openapi.roots.libraries.LibraryType"/>
@@ -4458,7 +4459,7 @@
                     serviceImplementation="com.intellij.compiler.impl.rmiCompiler.RmicConfiguration"/>
     <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.jikes.JikesConfiguration"
                     serviceImplementation="com.intellij.compiler.impl.javaCompiler.jikes.JikesConfiguration"/>
-                    serviceImplementation="com.intellij.compiler.impl.javaCompiler.jikes.JikesConfiguration"/>
+    serviceImplementation="com.intellij.compiler.impl.javaCompiler.jikes.JikesConfiguration"/>
 
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.FrameTitleBuilder"
                         serviceImplementation="com.intellij.openapi.wm.IdeaFrameTitleBuilder"/>
@@ -5395,8 +5396,8 @@
     <!--Platform-->
     <applicationService serviceInterface="com.intellij.packageDependencies.DependenciesVisitorFactory"
                         serviceImplementation="com.intellij.packageDependencies.DependenciesVisitorFactory"/>
-    <applicationService serviceInterface="com.intellij.openapi.projectRoots.ProjectSdkTable"
-                        serviceImplementation="com.intellij.openapi.projectRoots.impl.ProjectSdkTableImpl"/>
+    <applicationService serviceInterface="com.intellij.openapi.projectRoots.SdkTable"
+                        serviceImplementation="com.intellij.openapi.projectRoots.impl.SdkTableImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.TargetElementUtilBase"
                         serviceImplementation="com.intellij.codeInsight.TargetElementUtilBase"/>
     <applicationService serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"
@@ -5404,7 +5405,7 @@
     <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
     <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
 
-    <exportable serviceInterface="com.intellij.openapi.projectRoots.ProjectSdkTable"/>
+    <exportable serviceInterface="com.intellij.openapi.projectRoots.SdkTable"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleDefaultVcsRootPolicy"/>

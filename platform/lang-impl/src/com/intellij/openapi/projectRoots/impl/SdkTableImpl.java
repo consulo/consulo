@@ -19,7 +19,6 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
@@ -28,7 +27,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.impl.MessageListenerList;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -36,33 +35,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @State(
-  name="ProjectSdkTable",
+  name = "SdkTable",
   roamingType = RoamingType.DISABLED,
-  storages= {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/sdk.table.xml"
-    )}
-)
-public class ProjectSdkTableImpl extends ProjectSdkTable implements PersistentStateComponent<Element>, ExportableComponent {
-  private static final Logger LOG = Logger.getInstance(ProjectSdkTableImpl.class);
+  storages = {@Storage(
+    file = StoragePathMacros.APP_CONFIG + "/sdk.table.xml")})
+@Logger
+public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element>, ExportableComponent {
+  @NonNls
+  public static final String ELEMENT_SDK = "sdk";
 
   private final List<Sdk> mySdks = new ArrayList<Sdk>();
 
-  private final MessageListenerList<Listener> myListenerList;
-
-  @NonNls public static final String ELEMENT_SDK = "sdk";
-
-  private final Map<String, ProjectJdkImpl> myCachedProjectJdks = new HashMap<String, ProjectJdkImpl>();
   private final MessageBus myMessageBus;
 
-  public ProjectSdkTableImpl() {
+  public SdkTableImpl() {
     myMessageBus = ApplicationManager.getApplication().getMessageBus();
-    myListenerList = new MessageListenerList<Listener>(myMessageBus, SDK_TABLE_TOPIC);
     // support external changes to sdk libraries (Endorsed Standards Override)
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
       @Override
@@ -106,48 +96,12 @@ public class ProjectSdkTableImpl extends ProjectSdkTable implements PersistentSt
   @Override
   @Nullable
   public Sdk findSdk(String name) {
-    for (Sdk jdk : mySdks) {
-      if (Comparing.strEqual(name, jdk.getName())) {
-        return jdk;
+    for (Sdk sdk : mySdks) {
+      if (Comparing.strEqual(name, sdk.getName())) {
+        return sdk;
       }
     }
     return null;
-  }
-
-  @Override
-  @Nullable
-  public Sdk findSdk(String name, String type) {
-    Sdk projectJdk = findSdk(name);
-    if (projectJdk != null){
-      return projectJdk;
-    }
-    final String sdkTypeName = getSdkTypeName(type);
-    final String uniqueName = sdkTypeName + "." + name;
-    projectJdk = myCachedProjectJdks.get(uniqueName);
-    if (projectJdk != null) return projectJdk;
-
-    @NonNls final String jdkPrefix = "sdk.";
-    final String jdkPath = System.getProperty(jdkPrefix + name);
-    if (jdkPath == null) return null;
-
-    final SdkType[] sdkTypes = SdkType.EP_NAME.getExtensions();
-    for (SdkType sdkType : sdkTypes) {
-      if (Comparing.strEqual(sdkTypeName, sdkType.getName())){
-        if (sdkType.isValidSdkHome(jdkPath)) {
-          ProjectJdkImpl projectJdkImpl = new ProjectJdkImpl(name, sdkType);
-          projectJdkImpl.setHomePath(jdkPath);
-          sdkType.setupSdkPaths(projectJdkImpl);
-          myCachedProjectJdks.put(uniqueName, projectJdkImpl);
-          return projectJdkImpl;
-        }
-        break;
-      }
-    }
-    return null;
-  }
-
-  protected String getSdkTypeName(final String type) {
-    return type;
   }
 
   @Override
@@ -159,7 +113,7 @@ public class ProjectSdkTableImpl extends ProjectSdkTable implements PersistentSt
   public List<Sdk> getSdksOfType(final SdkTypeId type) {
     List<Sdk> result = new ArrayList<Sdk>();
     final Sdk[] sdks = getAllSdks();
-    for(Sdk sdk: sdks) {
+    for (Sdk sdk : sdks) {
       if (sdk.getSdkType() == type) {
         result.add(sdk);
       }
@@ -168,17 +122,17 @@ public class ProjectSdkTableImpl extends ProjectSdkTable implements PersistentSt
   }
 
   @Override
-  public void addSdk(Sdk jdk) {
+  public void addSdk(Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    mySdks.add(jdk);
-    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkAdded(jdk);
+    mySdks.add(sdk);
+    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkAdded(sdk);
   }
 
   @Override
-  public void removeSdk(Sdk jdk) {
+  public void removeSdk(Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(jdk);
-    mySdks.remove(jdk);
+    myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
+    mySdks.remove(sdk);
   }
 
   @Override
@@ -186,22 +140,12 @@ public class ProjectSdkTableImpl extends ProjectSdkTable implements PersistentSt
     final String previousName = originalJdk.getName();
     final String newName = modifiedJdk.getName();
 
-    ((ProjectJdkImpl)modifiedJdk).copyTo((ProjectJdkImpl)originalJdk);
+    ((SdkImpl)modifiedJdk).copyTo((SdkImpl)originalJdk);
 
     if (!previousName.equals(newName)) {
-      // fire changes because after renaming JDK its name may match the associated jdk name of modules/project
+      // fire changes because after renaming JDK its name may match the associated sdk name of modules/project
       myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalJdk, previousName);
     }
-  }
-
-  @Override
-  public void addListener(Listener listener) {
-    myListenerList.add(listener);
-  }
-
-  @Override
-  public void removeListener(Listener listener) {
-    myListenerList.remove(listener);
   }
 
   @Override
@@ -226,39 +170,51 @@ public class ProjectSdkTableImpl extends ProjectSdkTable implements PersistentSt
 
   @Override
   public Sdk createSdk(final String name, final SdkTypeId sdkType) {
-    return new ProjectJdkImpl(name, sdkType);
+    return new SdkImpl(name, sdkType);
   }
 
   @Override
   public void loadState(Element element) {
     mySdks.clear();
 
-    final List children = element.getChildren(ELEMENT_SDK);
-    for (final Object aChildren : children) {
-      final Element e = (Element)aChildren;
-      final ProjectJdkImpl jdk = new ProjectJdkImpl(null, null);
+    final List<Element> children = element.getChildren(ELEMENT_SDK);
+    for (final Element child : children) {
+      final SdkImpl sdk = new SdkImpl(null, null);
       try {
-        jdk.readExternal(e);
+        sdk.readExternal(child);
       }
       catch (InvalidDataException ex) {
-        LOG.error(ex);
+        SdkTableImpl.LOGGER.error(ex);
       }
-      mySdks.add(jdk);
+      mySdks.add(sdk);
+    }
+
+    for (BundledSdkProvider bundledSdkProvider : BundledSdkProvider.EP_NAME.getExtensions()) {
+      final Sdk bundledSdk = bundledSdkProvider.createBundledSdk();
+      if(bundledSdk == null) {
+        continue;
+      }
+      if(bundledSdk instanceof SdkImpl) {
+        ((SdkImpl)bundledSdk).setBundled();
+      }
+      mySdks.add(bundledSdk);
     }
   }
 
   @Override
   public Element getState() {
-    Element element = new Element("ProjectSdkTableImpl");
-    for (Sdk jdk : mySdks) {
-      final Element e = new Element(ELEMENT_SDK);
-      try {
-        ((ProjectJdkImpl)jdk).writeExternal(e);
-      }
-      catch (WriteExternalException e1) {
+    Element element = new Element("ProjectSdkTable");
+    for (Sdk sdk : mySdks) {
+      if (sdk.isBundled()) {
         continue;
       }
-      element.addContent(e);
+      final Element e = new Element(ELEMENT_SDK);
+      try {
+        ((SdkImpl)sdk).writeExternal(e);
+        element.addContent(e);
+      }
+      catch (WriteExternalException e1) {
+      }
     }
     return element;
   }

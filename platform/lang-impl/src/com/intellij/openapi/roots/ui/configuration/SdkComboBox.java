@@ -24,7 +24,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
@@ -297,8 +297,8 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
   public void setSelectedSdk(@Nullable String name) {
     if (name != null) {
-      ProjectSdkTable projectSdkTable = ProjectSdkTable.getInstance();
-      final Sdk sdk = projectSdkTable.findSdk(name);
+      SdkTable sdkTable = SdkTable.getInstance();
+      final Sdk sdk = sdkTable.findSdk(name);
       if (sdk != null) {
         setSelectedSdk(sdk);
       }

@@ -22,7 +22,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
@@ -84,7 +84,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
 
   private final Disposable myDisposable = Disposer.newDisposable();
 
-  public SdkEditor(SdkModel sdkModel, History history, final ProjectJdkImpl sdk) {
+  public SdkEditor(SdkModel sdkModel, History history, final SdkImpl sdk) {
     mySdkModel = sdkModel;
     myHistory = history;
     mySdk = sdk;
@@ -309,7 +309,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
     setHomePathValue(homePath.replace('/', File.separatorChar));
 
     final String newSdkName = suggestSdkName(homePath);
-    ((ProjectJdkImpl)mySdk).setName(newSdkName);
+    ((SdkImpl)mySdk).setName(newSdkName);
 
     try {
       final Sdk dummySdk = (Sdk)mySdk.clone();
@@ -396,7 +396,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
 
     @Override
     public void setName(String name) {
-      ((ProjectJdkImpl)mySdk).setName(name);
+      ((SdkImpl)mySdk).setName(name);
     }
 
     @Override

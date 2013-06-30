@@ -18,7 +18,6 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.ex.ProjectRoot;
 import com.intellij.openapi.projectRoots.ex.ProjectRootContainer;
@@ -32,6 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -40,17 +40,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternalizable, Sdk, SdkModificator {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectJdkImpl");
+@Logger
+public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, Sdk, SdkModificator {
   private final ProjectRootContainerImpl myRootContainer;
   private String myName;
   private String myVersionString;
   private boolean myVersionDefined = false;
   private String myHomePath = "";
   private final MyRootProvider myRootProvider = new MyRootProvider();
-  private ProjectJdkImpl myOrigin = null;
+  private SdkImpl myOrigin = null;
   private SdkAdditionalData myAdditionalData = null;
   private SdkTypeId mySdkType;
+  private boolean myIsBundled;
   @NonNls public static final String ELEMENT_NAME = "name";
   @NonNls public static final String ATTRIBUTE_VALUE = "value";
   @NonNls public static final String ELEMENT_TYPE = "type";
@@ -63,14 +64,14 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
   @NonNls public static final String ELEMENT_HOMEPATH = "homePath";
   @NonNls private static final String ELEMENT_ADDITIONAL = "additional";
 
-  public ProjectJdkImpl(String name, SdkTypeId sdkType) {
+  public SdkImpl(String name, SdkTypeId sdkType) {
     mySdkType = sdkType;
     myRootContainer = new ProjectRootContainerImpl(true);
     myName = name;
     myRootContainer.addProjectRootContainerListener(myRootProvider);
   }
 
-  public ProjectJdkImpl(String name, SdkTypeId sdkType, String homePath, String version) {
+  public SdkImpl(String name, SdkTypeId sdkType, String homePath, String version) {
     this(name, sdkType);
     myHomePath = homePath;
     myVersionString = version;
@@ -80,9 +81,14 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
   @NotNull
   public SdkTypeId getSdkType() {
     if (mySdkType == null) {
-      mySdkType = ProjectSdkTable.getInstance().getDefaultSdkType();
+      mySdkType = SdkTable.getInstance().getDefaultSdkType();
     }
     return mySdkType;
+  }
+
+  @Override
+  public boolean isBundled() {
+    return myIsBundled;
   }
 
   @Override
@@ -131,13 +137,13 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
     return StandardFileSystems.local().findFileByPath(myHomePath);
   }
 
-   @Override
-   public void readExternal(Element element) throws InvalidDataException {
+  @Override
+  public void readExternal(Element element) throws InvalidDataException {
     myName = element.getChild(ELEMENT_NAME).getAttributeValue(ATTRIBUTE_VALUE);
     final Element typeChild = element.getChild(ELEMENT_TYPE);
-    final String sdkTypeName = typeChild != null? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
+    final String sdkTypeName = typeChild != null ? typeChild.getAttributeValue(ATTRIBUTE_VALUE) : null;
     if (sdkTypeName != null) {
-      mySdkType = ProjectSdkTable.getInstance().getSdkTypeByName(sdkTypeName);
+      mySdkType = SdkTable.getInstance().getSdkTypeByName(sdkTypeName);
     }
     final Element version = element.getChild(ELEMENT_VERSION);
 
@@ -171,13 +177,13 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
     }
 
     final Element additional = element.getChild(ELEMENT_ADDITIONAL);
-     if (additional != null) {
-       LOG.assertTrue(mySdkType != null);
-       myAdditionalData = mySdkType.loadAdditionalData(this, additional);
-     }
-     else {
-       myAdditionalData = null;
-     }
+    if (additional != null) {
+      SdkImpl.LOGGER.assertTrue(mySdkType != null);
+      myAdditionalData = mySdkType.loadAdditionalData(this, additional);
+    }
+    else {
+      myAdditionalData = null;
+    }
   }
 
   @Override
@@ -210,7 +216,7 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
 
     Element additional = new Element(ELEMENT_ADDITIONAL);
     if (myAdditionalData != null) {
-      LOG.assertTrue(mySdkType != null);
+      SdkImpl.LOGGER.assertTrue(mySdkType != null);
       mySdkType.saveAdditionalData(myAdditionalData, additional);
     }
     element.addContent(additional);
@@ -218,7 +224,7 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
 
   @Override
   public void setHomePath(String path) {
-    final boolean changes = myHomePath == null? path != null : !myHomePath.equals(path);
+    final boolean changes = myHomePath == null ? path != null : !myHomePath.equals(path);
     myHomePath = path;
     if (changes) {
       myVersionString = null; // clear cached value if home path changed
@@ -229,7 +235,7 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
   @Override
   @NotNull
   public Object clone() {
-    ProjectJdkImpl newJdk = new ProjectJdkImpl("", mySdkType);
+    SdkImpl newJdk = new SdkImpl("", mySdkType);
     copyTo(newJdk);
     return newJdk;
   }
@@ -240,10 +246,17 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
     return myRootProvider;
   }
 
-  public void copyTo(ProjectJdkImpl dest) {
+  public void setBundled() {
+    myIsBundled = true;
+  }
+
+  public void copyTo(SdkImpl dest) {
     final String name = getName();
     dest.setName(name);
     dest.setHomePath(getHomePath());
+    if(isBundled()) {
+      dest.setBundled();
+    }
     if (myVersionDefined) {
       dest.setVersionString(getVersionString());
     }
@@ -253,13 +266,13 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
     dest.setSdkAdditionalData(getSdkAdditionalData());
     dest.myRootContainer.startChange();
     dest.myRootContainer.removeAllRoots();
-    for(OrderRootType rootType: OrderRootType.getAllTypes()) {
+    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
       copyRoots(myRootContainer, dest.myRootContainer, rootType);
     }
     dest.myRootContainer.finishChange();
   }
 
-  private static void copyRoots(ProjectRootContainer srcContainer, ProjectRootContainer destContainer, OrderRootType type){
+  private static void copyRoots(ProjectRootContainer srcContainer, ProjectRootContainer destContainer, OrderRootType type) {
     final ProjectRoot[] newRoots = srcContainer.getRoots(type);
     for (ProjectRoot newRoot : newRoots) {
       destContainer.addRoot(newRoot, type);
@@ -328,7 +341,7 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
   @Override
   @NotNull
   public SdkModificator getSdkModificator() {
-    ProjectJdkImpl sdk = (ProjectJdkImpl)clone();
+    SdkImpl sdk = (SdkImpl)clone();
     sdk.myOrigin = this;
     sdk.myRootContainer.startChange();
     sdk.update();
@@ -337,7 +350,7 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
 
   @Override
   public void commitChanges() {
-    LOG.assertTrue(isWritable());
+    SdkImpl.LOGGER.assertTrue(isWritable());
     myRootContainer.finishChange();
     copyTo(myOrigin);
     myOrigin = null;
@@ -394,6 +407,6 @@ public class ProjectJdkImpl extends UserDataHolderBase implements JDOMExternaliz
 
   @Override
   public String toString() {
-    return getName() + ": "+ getVersionString() + " ("+getHomePath()+")";
+    return getName() + ": " + getVersionString() + " (" + getHomePath() + ")";
   }
 }

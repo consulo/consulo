@@ -27,8 +27,12 @@ import org.jetbrains.annotations.Nullable;
  *         Date: Sep 23, 2004
  */
 public interface Sdk extends UserDataHolder, Named {
+  Sdk[] EMPTY_ARRAY = new Sdk[0];
+
   @NotNull
   SdkTypeId getSdkType();
+
+  boolean isBundled();
 
   @NotNull
   @Override

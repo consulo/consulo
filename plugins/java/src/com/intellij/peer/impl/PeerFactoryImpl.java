@@ -29,7 +29,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.ui.DialogWrapperPeerFactory;
 import com.intellij.openapi.ui.PackageChooser;
 import com.intellij.openapi.ui.SplitterProportionsData;
@@ -220,7 +220,7 @@ public class PeerFactoryImpl extends PeerFactory {
   }
 
   public Sdk createProjectJdk(final String name, final String version, final String homePath, final SdkType sdkType) {
-    final ProjectJdkImpl projectJdk = new ProjectJdkImpl(name, sdkType);
+    final SdkImpl projectJdk = new SdkImpl(name, sdkType);
     projectJdk.setHomePath(homePath);
     projectJdk.setVersionString(version);
     return projectJdk;

@@ -32,9 +32,8 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectSdkTableImpl;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.util.io.FileUtil;
@@ -283,7 +282,7 @@ public class MavenExternalParameters {
       }
 
       if (project == null) {
-        Sdk recent = ProjectSdkTable.getInstance().findMostRecentSdkOfType(JavaSdk.getInstance());
+        Sdk recent = SdkTable.getInstance().findMostRecentSdkOfType(JavaSdk.getInstance());
         if (recent != null) return recent;
         return JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk();
       }
@@ -303,7 +302,7 @@ public class MavenExternalParameters {
       return jdk;
     }
 
-    for (Sdk projectJdk : ProjectSdkTable.getInstance().getAllSdks()) {
+    for (Sdk projectJdk : SdkTable.getInstance().getAllSdks()) {
       if (projectJdk.getName().equals(name)) {
         return projectJdk;
       }

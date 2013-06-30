@@ -19,7 +19,7 @@ package com.intellij.testFramework.fixtures.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
@@ -164,7 +164,7 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
     final Sdk jdk;
     if (myJdk != null) {
       jdk = JavaSdk.getInstance().createJdk(module.getName() + "_jdk", myJdk, false);
-      ((ProjectJdkImpl)jdk).setVersionString("java 1.5");
+      ((SdkImpl)jdk).setVersionString("java 1.5");
     }
     else {
       jdk = IdeaTestUtil.getMockJdk17();

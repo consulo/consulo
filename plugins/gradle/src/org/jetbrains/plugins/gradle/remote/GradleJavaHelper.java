@@ -2,7 +2,7 @@ package org.jetbrains.plugins.gradle.remote;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JdkUtil;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -45,7 +45,7 @@ public class GradleJavaHelper {
       }
     }
 
-    Sdk[] sdks = ProjectSdkTable.getInstance().getAllSdks();
+    Sdk[] sdks = SdkTable.getInstance().getAllSdks();
     if (sdks != null) {
       for (Sdk sdk : sdks) {
         String path = sdk.getHomePath();

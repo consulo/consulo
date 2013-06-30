@@ -15,7 +15,7 @@
  */
 package com.intellij.core;
 
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author yole
  */
-public class CoreProjectSdkTable extends ProjectSdkTable {
+public class CoreSdkTable extends SdkTable {
   private final List<Sdk> mySdks = new ArrayList<Sdk>();
 
   @Override
@@ -39,11 +39,6 @@ public class CoreProjectSdkTable extends ProjectSdkTable {
       }
     }
     return null;
-  }
-
-  @Override
-  public Sdk findSdk(String name, String type) {
-    return findSdk(name);
   }
 
   @Override
@@ -83,14 +78,6 @@ public class CoreProjectSdkTable extends ProjectSdkTable {
   @Override
   public void updateSdk(Sdk originalJdk, Sdk modifiedJdk) {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addListener(Listener listener) {
-  }
-
-  @Override
-  public void removeListener(Listener listener) {
   }
 
   @Override

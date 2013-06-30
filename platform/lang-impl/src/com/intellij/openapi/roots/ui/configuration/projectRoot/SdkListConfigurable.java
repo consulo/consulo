@@ -25,8 +25,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
@@ -146,7 +145,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       addNode(groupNode, myRoot);
 
       for(Sdk sdk : value) {
-        final SdkConfigurable configurable = new SdkConfigurable((ProjectJdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory,
+        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory,
                                                                  myProject);
 
         addNode(new MyNode(configurable), groupNode);
@@ -173,7 +172,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     if (!myUiDisposed) {
       myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(myContext, sdk));
 
-      MyNode newSdkNode = new MyNode(new SdkConfigurable((ProjectJdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory, myProject));
+      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory, myProject));
  
       final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
       if(groupNode != null) {
@@ -192,6 +191,16 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       return true;
     }
     return false;
+  }
+
+  @Override
+  protected boolean canBeRemoved(Object[] editableObjects) {
+    for (Object editableObject : editableObjects) {
+      if(editableObject instanceof Sdk && ((Sdk)editableObject).isBundled()) {
+        return false;
+      }
+    }
+    return super.canBeRemoved(editableObjects);
   }
 
   @Override
@@ -240,7 +249,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     }
 
     if (mySdksTreeModel.isModified() || modifiedJdks) mySdksTreeModel.apply(this);
-    mySdksTreeModel.setProjectSdk(ProjectRootManager.getInstance(myProject).getProjectSdk());
   }
 
   @Override

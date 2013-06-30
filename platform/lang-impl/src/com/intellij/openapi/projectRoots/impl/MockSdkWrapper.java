@@ -64,6 +64,11 @@ public final class MockSdkWrapper implements Sdk {
   }
 
   @Override
+  public boolean isBundled() {
+    return myDelegate.isBundled();
+  }
+
+  @Override
   @NotNull
   public String getName() {
     return myDelegate.getName();

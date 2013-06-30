@@ -35,7 +35,7 @@ import com.intellij.ide.wizard.Step;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectSdkTable;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -316,7 +316,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
   public static Sdk getMostRecentSuitableSdk(final WizardContext context) {
     if (context.getProject() == null) {
       @Nullable final ProjectBuilder projectBuilder = context.getProjectBuilder();
-      return ProjectSdkTable.getInstance().findMostRecentSdk(new Condition<Sdk>() {
+      return SdkTable.getInstance().findMostRecentSdk(new Condition<Sdk>() {
         public boolean value(Sdk sdk) {
           return projectBuilder == null || projectBuilder.isSuitableSdkType(sdk.getSdkType());
         }

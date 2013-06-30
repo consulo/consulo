@@ -15,29 +15,29 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import org.consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
 import java.util.List;
 
-public abstract class ProjectSdkTable {
+@ApplicationService
+public abstract class SdkTable {
   public static Topic<Listener> SDK_TABLE_TOPIC = Topic.create("Project SDK table", Listener.class);
 
-  @NotNull
-  public static ProjectSdkTable getInstance() {
-    return ServiceManager.getService(ProjectSdkTable.class);
+  public interface Listener extends EventListener {
+    void sdkAdded(Sdk sdk);
+
+    void sdkRemoved(Sdk sdk);
+
+    void sdkNameChanged(Sdk sdk, String previousName);
   }
 
   @Nullable
   public abstract Sdk findSdk(String name);
-
-  @Nullable
-  public abstract Sdk findSdk(String name, String type);
 
   public abstract Sdk[] getAllSdks();
 
@@ -72,24 +72,6 @@ public abstract class ProjectSdkTable {
   public abstract void removeSdk(Sdk sdk);
 
   public abstract void updateSdk(Sdk originalSdk, Sdk modifiedSdk);
-
-  public interface Listener extends EventListener {
-    void sdkAdded(Sdk sdk);
-
-    void sdkRemoved(Sdk sdk);
-
-    void sdkNameChanged(Sdk sdk, String previousName);
-  }
-
-  /**
-   * @deprecated use {@link ProjectSdkTable#SDK_TABLE_TOPIC} instead
-   */
-  public abstract void addListener(Listener listener);
-
-  /**
-   * @deprecated use {@link ProjectSdkTable#SDK_TABLE_TOPIC} instead
-   */
-  public abstract void removeListener(Listener listener);
 
   public abstract SdkTypeId getDefaultSdkType();
 

@@ -24,7 +24,7 @@ import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
@@ -119,7 +119,7 @@ public class IdeaJdkConfigurable implements AdditionalDataConfigurable {
         modificator.commitChanges();
       }
     });
-    ((ProjectJdkImpl)myIdeaJdk).resetVersionString();
+    ((SdkImpl)myIdeaJdk).resetVersionString();
     myModified = false;
   }
 

@@ -20,6 +20,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -74,18 +75,6 @@ public class UnknownSdkType extends SdkType{
     return null;
   }
 
-  public String getBinPath(Sdk sdk) {
-    return null;
-  }
-
-  public String getToolsPath(Sdk sdk) {
-    return null;
-  }
-
-  public String getVMExecutablePath(Sdk sdk) {
-    return null;
-  }
-
   @Override
   public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
   }
@@ -99,5 +88,11 @@ public class UnknownSdkType extends SdkType{
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.UnknownJdk;
+  }
+
+  @Nullable
+  @Override
+  public Icon getGroupIcon() {
+    return getIcon();
   }
 }

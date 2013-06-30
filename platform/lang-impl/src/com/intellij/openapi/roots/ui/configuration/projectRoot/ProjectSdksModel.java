@@ -26,7 +26,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
@@ -87,7 +87,7 @@ public class ProjectSdksModel implements SdkModel {
 
   public void reset(@Nullable Project project) {
     myProjectSdks.clear();
-    final Sdk[] projectSdks = ProjectSdkTable.getInstance().getAllSdks();
+    final Sdk[] projectSdks = SdkTable.getInstance().getAllSdks();
     for (Sdk sdk : projectSdks) {
       try {
         myProjectSdks.put(sdk, (Sdk)sdk.clone());
@@ -126,13 +126,13 @@ public class ProjectSdksModel implements SdkModel {
     if (!canApply(errorString, configurable, addedOnly)) {
       throw new ConfigurationException(errorString[0]);
     }
-    final Sdk[] allFromTable = ProjectSdkTable.getInstance().getAllSdks();
+    final Sdk[] allFromTable = SdkTable.getInstance().getAllSdks();
     final ArrayList<Sdk> itemsInTable = new ArrayList<Sdk>();
     // Delete removed and fill itemsInTable
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        final ProjectSdkTable jdkTable = ProjectSdkTable.getInstance();
+        final SdkTable jdkTable = SdkTable.getInstance();
         for (final Sdk tableItem : allFromTable) {
           if (myProjectSdks.containsKey(tableItem)) {
             itemsInTable.add(tableItem);
@@ -147,7 +147,7 @@ public class ProjectSdksModel implements SdkModel {
       @Override
       public void run() {
         // Now all removed items are deleted from table, itemsInTable contains all items in table
-        final ProjectSdkTable jdkTable = ProjectSdkTable.getInstance();
+        final SdkTable jdkTable = SdkTable.getInstance();
         for (Sdk originalJdk : itemsInTable) {
           final Sdk modifiedJdk = myProjectSdks.get(originalJdk);
           LOG.assertTrue(modifiedJdk != null);
@@ -170,7 +170,7 @@ public class ProjectSdksModel implements SdkModel {
 
     LinkedHashMap<Sdk, Sdk> sdks = new LinkedHashMap<Sdk, Sdk>(myProjectSdks);
     if (addedOnly) {
-      Sdk[] allJdks = ProjectSdkTable.getInstance().getAllSdks();
+      Sdk[] allJdks = SdkTable.getInstance().getAllSdks();
       for (Sdk jdk : allJdks) {
         sdks.remove(jdk);
       }
@@ -267,7 +267,7 @@ public class ProjectSdksModel implements SdkModel {
         @Override
         public void consume(final String home) {
           String newSdkName = SdkConfigurationUtil.createUniqueSdkName(type, home, myProjectSdks.values());
-          final ProjectJdkImpl newJdk = new ProjectJdkImpl(newSdkName, type);
+          final SdkImpl newJdk = new SdkImpl(newSdkName, type);
           newJdk.setHomePath(home);
           setupSdk(newJdk, callback);
         }
@@ -308,17 +308,6 @@ public class ProjectSdksModel implements SdkModel {
       if (Comparing.equal(myProjectSdks.get(jdk), modelJdk)) return jdk;
     }
     return null;
-  }
-
-  @Nullable
-  @Deprecated
-  public Sdk getProjectSdk() {
-    return null;
-  }
-
-  @Deprecated
-  public void setProjectSdk(final Sdk projectSdk) {
-
   }
 
   public boolean isInitialized() {

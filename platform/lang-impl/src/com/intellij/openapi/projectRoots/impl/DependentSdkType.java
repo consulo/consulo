@@ -87,7 +87,7 @@ public abstract class DependentSdkType extends SdkType {
       @Override
       public void consume(final String home) {
         String newSdkName = SdkConfigurationUtil.createUniqueSdkName(sdkType, home, Arrays.asList(sdkModel.getSdks()));
-        final ProjectJdkImpl newJdk = new ProjectJdkImpl(newSdkName, sdkType);
+        final SdkImpl newJdk = new SdkImpl(newSdkName, sdkType);
         newJdk.setHomePath(home);
 
         sdkCreatedCallback.consume(newJdk);
