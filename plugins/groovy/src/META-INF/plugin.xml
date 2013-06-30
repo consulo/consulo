@@ -244,6 +244,7 @@
     <compiler implementation="org.jetbrains.plugins.groovy.compiler.GroovyCompiler" id="groovy-compiler" order="after groovy-stub-generator"/>
 
     <moduleExtensionProvider key="groovy" parent-key="java" implementationClass="org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtensionProvider" />
+    <moduleExtensionProvider key="griffon" parent-key="groovy" implementationClass="org.jetbrains.plugins.groovy.griffon.module.extension.GriffonModuleExtensionProvider" />
 
     <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.geb.GebContentDeclarationSearcher"/>
 

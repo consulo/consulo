@@ -76,6 +76,7 @@ import java.util.regex.Pattern;
 /**
  * @author peter
  */
+@Deprecated //TODO [VISTALL] rewrit it using ModuleExtensions
 public abstract class MvcFramework {
   protected static final ExtensionPointName<MvcFramework> EP_NAME = ExtensionPointName.create("org.intellij.groovy.mvc.framework");
 
