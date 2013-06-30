@@ -66,7 +66,7 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
       return true;
     }
 
-    if(!myLanguageLevel.equals(myModuleExtension)) {
+    if(!myLanguageLevel.equals(myModuleExtension.getInheritableLanguageLevel())) {
       return true;
     }
     return false;
