@@ -74,6 +74,7 @@ import org.jetbrains.plugins.groovy.config.GroovyConfigUtils;
 import org.jetbrains.plugins.groovy.extensions.GroovyScriptType;
 import org.jetbrains.plugins.groovy.extensions.GroovyScriptTypeDetector;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -287,6 +288,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
   protected Set<VirtualFile> enumerateGroovyFiles(final Module module) {
     final Set<VirtualFile> moduleClasses = new THashSet<VirtualFile>();
     ModuleRootManager.getInstance(module).getFileIndex().iterateContent(new ContentIterator() {
+      @Override
       public boolean processFile(final VirtualFile vfile) {
         if (!vfile.isDirectory() &&
             GroovyFileType.GROOVY_FILE_TYPE.equals(vfile.getFileType())) {
@@ -345,6 +347,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
     return new ModuleChunk((CompileContextEx)context, new Chunk<Module>(module), Collections.<Module, List<VirtualFile>>emptyMap());
   }
 
+  @Override
   public void compile(final CompileContext compileContext, Chunk<Module> moduleChunk, final VirtualFile[] virtualFiles, OutputSink sink) {
     Map<Module, List<VirtualFile>> mapModulesToVirtualFiles;
     if (moduleChunk.getNodes().size() == 1) {
@@ -354,6 +357,11 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
       mapModulesToVirtualFiles = CompilerUtil.buildModuleToFilesMap(compileContext, virtualFiles);
     }
     for (final Module module : moduleChunk.getNodes()) {
+      final GroovyModuleExtension extension = ModuleUtilCore.getExtension(module, GroovyModuleExtension.class);
+      if(extension == null)  {
+        continue;
+      }
+
       final List<VirtualFile> moduleFiles = mapModulesToVirtualFiles.get(module);
       if (moduleFiles == null) {
         continue;
@@ -409,6 +417,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
   protected abstract void compileFiles(CompileContext compileContext, Module module,
                                        List<VirtualFile> toCompile, OutputSink sink, boolean tests);
 
+  @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
     final boolean result = GroovyFileType.GROOVY_FILE_TYPE.equals(file.getFileType());
     if (result && LOG.isDebugEnabled()) {

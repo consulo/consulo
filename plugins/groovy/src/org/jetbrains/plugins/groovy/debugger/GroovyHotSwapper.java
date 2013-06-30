@@ -24,6 +24,7 @@ import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileTypeLoader;
 import org.jetbrains.plugins.groovy.debugger.filters.GroovyDebuggerSettings;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,6 +106,10 @@ public class GroovyHotSwapper extends JavaProgramPatcher {
         final JavaModuleExtension extension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
         final LanguageLevel level = extension == null ? null : extension.getLanguageLevel();
         if (level != null && !level.isAtLeast(LanguageLevel.JDK_1_5)) {
+          return;
+        }
+
+        if(ModuleUtilCore.getExtension(module, GroovyModuleExtension.class) == null) {
           return;
         }
       }
