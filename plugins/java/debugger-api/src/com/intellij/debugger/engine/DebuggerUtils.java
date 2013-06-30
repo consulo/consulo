@@ -560,7 +560,7 @@ public abstract class DebuggerUtils {
   public abstract PsiClass chooseClassDialog(String title, Project project);
 
   public static boolean supportsJVMDebugging(FileType type) {
-    return type instanceof LanguageFileType && ((LanguageFileType)type).isJVMDebuggingSupported();
+    return type instanceof FileTypeWithJvmDebugging;
   }
 
   public static boolean supportsJVMDebugging(PsiFile file) {

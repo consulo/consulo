@@ -62,10 +62,6 @@ public abstract class LanguageFileType implements FileType{
     return null;
   }
 
-  public boolean isJVMDebuggingSupported() {
-    return false;
-  }
-
   public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @NotNull String content) {
     return null;
   }

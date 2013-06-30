@@ -16,6 +16,7 @@
 
 package org.jetbrains.plugins.groovy;
 
+import com.intellij.debugger.engine.FileTypeWithJvmDebugging;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
@@ -38,7 +39,7 @@ import javax.swing.*;
  *
  * @author ilyas
  */
-public class GroovyFileType extends LanguageFileType {
+public class GroovyFileType extends LanguageFileType implements FileTypeWithJvmDebugging {
 
   public static final GroovyFileType GROOVY_FILE_TYPE = new GroovyFileType();
   public static final Language GROOVY_LANGUAGE = GROOVY_FILE_TYPE.getLanguage();
@@ -76,9 +77,5 @@ public class GroovyFileType extends LanguageFileType {
 
   public Icon getIcon() {
     return JetgroovyIcons.Groovy.Groovy_16x16;
-  }
-
-  public boolean isJVMDebuggingSupported() {
-    return true;
   }
 }
