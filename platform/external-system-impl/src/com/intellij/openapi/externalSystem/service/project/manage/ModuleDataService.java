@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -106,7 +107,11 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
             // Ensure that the dependencies are clear (used to be not clear when manually removing the module and importing it via gradle)
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(created);
             final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
-            //moduleRootModel.inheritSdk();
+
+            final MutableModuleExtension extension = (MutableModuleExtension)moduleRootModel.getExtension(data.getModuleExtensionClass());
+            if(extension != null) {
+              extension.setEnabled(true);
+            }
             created.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY, data.getOwner().toString());
             ProjectData projectData = module.getData(ProjectKeys.PROJECT);
             if (projectData != null) {

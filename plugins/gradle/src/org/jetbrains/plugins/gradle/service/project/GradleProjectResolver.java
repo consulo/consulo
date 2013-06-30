@@ -17,6 +17,7 @@ import com.intellij.util.BooleanFunction;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.gradle.tooling.ModelBuilder;
 import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.model.DomainObjectSet;
@@ -73,7 +74,7 @@ public class GradleProjectResolver implements ExternalSystemProjectResolver<Grad
         }
       }
     }
-    
+
     return myHelper.execute(projectPath, settings, new Function<ProjectConnection, DataNode<ProjectData>>() {
       @Override
       public DataNode<ProjectData> fun(ProjectConnection connection) {
@@ -144,6 +145,7 @@ public class GradleProjectResolver implements ExternalSystemProjectResolver<Grad
       ProjectData projectData = ideProject.getData();
       ModuleData ideModule = new ModuleData(GradleConstants.SYSTEM_ID, moduleName,
                                             projectData.getIdeProjectFileDirectoryPath(),
+                                            JavaModuleExtension.class,
                                             gradleModule.getGradleProject().getPath());
       Pair<DataNode<ModuleData>, IdeaModule> previouslyParsedModule = result.get(moduleName);
       if (previouslyParsedModule != null) {
@@ -214,12 +216,12 @@ public class GradleProjectResolver implements ExternalSystemProjectResolver<Grad
   }
 
   /**
-   * Stores information about given directories at the given content root 
+   * Stores information about given directories at the given content root
    *
    * @param contentRoot  target paths info holder
    * @param type         type of data located at the given directories
    * @param dirs         directories which paths should be stored at the given content root
-   * @throws IllegalArgumentException   if specified by {@link ContentRootData#storePath(ExternalSystemSourceType, String)} 
+   * @throws IllegalArgumentException   if specified by {@link ContentRootData#storePath(ExternalSystemSourceType, String)}
    */
   private static void populateContentRoot(@NotNull ContentRootData contentRoot,
                                           @NotNull ExternalSystemSourceType type,

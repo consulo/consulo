@@ -3,6 +3,7 @@ package com.intellij.openapi.externalSystem.model.project;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,24 +17,31 @@ public class ModuleData extends AbstractNamedData implements Named {
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = ContainerUtilRt.newHashMap();
+  @NotNull
+  private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = ContainerUtilRt.newHashMap();
 
-  @NotNull private final String myModuleTypeId;
-  @NotNull private final String myExternalConfigPath;
-  @NotNull private String myModuleDirPath;
+  @NotNull
+  private Class<? extends ModuleExtension> myModuleExtensionClass;
+  @NotNull
+  private final String myExternalConfigPath;
+  @NotNull
+  private String myModuleDirPath;
   private boolean myInheritProjectCompileOutputPath = true;
 
-  public ModuleData(@NotNull ProjectSystemId owner, @NotNull String name, @NotNull String moduleFileDirectoryPath, @NotNull String externalConfigPath)
-  {
+  public ModuleData(@NotNull ProjectSystemId owner,
+                    @NotNull String name,
+                    @NotNull String moduleFileDirectoryPath,
+                    @NotNull Class<? extends ModuleExtension> moduleExtensionClass,
+                    @NotNull String externalConfigPath) {
     super(owner, name);
-    myModuleTypeId = "java";
+    myModuleExtensionClass = moduleExtensionClass;
     myExternalConfigPath = externalConfigPath;
     setModuleDirectoryPath(moduleFileDirectoryPath);
   }
 
   @NotNull
-  public String getModuleTypeId() {
-    return myModuleTypeId;
+  public Class<? extends ModuleExtension> getModuleExtensionClass() {
+    return myModuleExtensionClass;
   }
 
   @NotNull
@@ -61,10 +69,10 @@ public class ModuleData extends AbstractNamedData implements Named {
   /**
    * Allows to get file system path of the compile output of the source of the target type.
    *
-   * @param type  target source type
-   * @return      file system path to use for compile output for the target source type;
-   *              {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
-   *              doesn't provide specific compile output path
+   * @param type target source type
+   * @return file system path to use for compile output for the target source type;
+   *         {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
+   *         doesn't provide specific compile output path
    */
   @Nullable
   public String getCompileOutputPath(@NotNull ExternalSystemSourceType type) {
@@ -81,7 +89,7 @@ public class ModuleData extends AbstractNamedData implements Named {
 
   @Override
   public int hashCode() {
-    return 31 * super.hashCode() + myModuleTypeId.hashCode();
+    return 31 * super.hashCode() + myModuleExtensionClass.hashCode();
   }
 
   @Override
@@ -89,7 +97,7 @@ public class ModuleData extends AbstractNamedData implements Named {
     if (!super.equals(o)) {
       return false;
     }
-    return myModuleTypeId.equals(((ModuleData)o).myModuleTypeId);
+    return myModuleExtensionClass.equals(((ModuleData)o).myModuleExtensionClass);
   }
 
   @Override
