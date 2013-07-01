@@ -16,6 +16,7 @@
 package org.intellij.plugins.intelliLang.pattern.compiler.impl;
 
 import com.intellij.codeInsight.AnnotationUtil;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.JavaPsiFacade;
@@ -103,5 +104,9 @@ public class PatternValidationCompiler extends AnnotationBasedInstrumentingCompi
   @NotNull
   public String getDescription() {
     return "Pattern Validation";
+  }
+
+  @Override
+  public void init(@NotNull CompilerManager compilerManager) {
   }
 }
