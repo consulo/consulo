@@ -16,9 +16,8 @@
 package com.intellij.ide.structureView.impl.xml;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.xml.XmlStructureViewElementProvider;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.ide.structureView.xml.XmlStructureViewElementProvider;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Function;
@@ -32,8 +31,7 @@ public abstract class AbstractXmlTagTreeElement<T extends XmlElement> extends Ps
   }
 
   protected static Collection<StructureViewTreeElement> getStructureViewTreeElements(XmlTag[] subTags) {
-    final XmlStructureViewElementProvider[] providers =
-      (XmlStructureViewElementProvider[])Extensions.getExtensions(XmlStructureViewElementProvider.EXTENSION_POINT_NAME);
+    final XmlStructureViewElementProvider[] providers = XmlStructureViewElementProvider.EP_NAME.getExtensions();
 
     return ContainerUtil.map2List(subTags, new Function<XmlTag, StructureViewTreeElement>() {
       public StructureViewTreeElement fun(final XmlTag xmlTag) {
