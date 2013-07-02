@@ -453,7 +453,7 @@ public class GitBranchUtil {
     Set<VirtualFile> libraryRoots = new HashSet<VirtualFile>();
     for (OrderEntry entry : entries) {
       if (entry instanceof LibraryOrderEntry || entry instanceof SdkOrderEntry) {
-        VirtualFile moduleRoot = vcsManager.getVcsRootFor(entry.getOwnerModule().getModuleFile());
+        VirtualFile moduleRoot = vcsManager.getVcsRootFor(entry.getOwnerModule().getModuleDir());
         if (moduleRoot != null) {
           libraryRoots.add(moduleRoot);
         }
