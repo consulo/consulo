@@ -81,7 +81,7 @@ public interface ParserDefinition {
    * @param languageVersion
    */
   @NotNull
-  TokenSet getCommentTokens(LanguageVersion languageVersion);
+  TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion);
 
   /**
    * Returns the set of element types which are treated as string literals. "Search in strings"
@@ -91,7 +91,7 @@ public interface ParserDefinition {
    * @param languageVersion
    */
   @NotNull
-  TokenSet getStringLiteralElements(LanguageVersion languageVersion);
+  TokenSet getStringLiteralElements(@NotNull LanguageVersion languageVersion);
 
   /**
    * Creates a PSI element for the specified AST node. The AST tree is a simple, semantic-free
