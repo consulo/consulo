@@ -23,7 +23,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,17 +60,7 @@ public class ProjectRootsUtil {
 
   public static boolean isSourceOrTestRoot(@NotNull VirtualFile virtualFile, final Project project) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final Module module = projectFileIndex.getModuleForFile(virtualFile);
-    if (module == null) return false;
-    final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
-    for (ContentEntry contentEntry : contentEntries) {
-      final ContentFolder[] contentFolders = ArrayUtil.mergeArrays(contentEntry.getFolders(ContentFolderType.SOURCE),
-                                                                   contentEntry.getFolders(ContentFolderType.TEST));
-      for (ContentFolder sourceFolder : contentFolders) {
-        if (Comparing.equal(virtualFile, sourceFolder.getFile())) return true;
-      }
-    }
-    return false;
+    return projectFileIndex.isInSource(virtualFile);
   }
 
   @Nullable
