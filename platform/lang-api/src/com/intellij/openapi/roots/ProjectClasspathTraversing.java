@@ -90,7 +90,12 @@ public class ProjectClasspathTraversing {
         }
       }
 
-      final String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.SOURCE);
+      String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.SOURCE);
+      if(compilerOutputUrl != null) {
+        outputs.add(compilerOutputUrl);
+      }
+
+      compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.RESOURCE);
       if(compilerOutputUrl != null) {
         outputs.add(compilerOutputUrl);
       }

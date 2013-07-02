@@ -205,9 +205,10 @@ public class ModuleDependenciesAnalyzer {
                   final OrderPath p = new OrderPath(myStack);
 
                   addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.SOURCE));
+                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.RESOURCE));
                   boolean includeTests = !myCompile ? !myProduction : level > 0 && !myProduction;
                   if(includeTests) {
-                    addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.RESOURCE));
+                    addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.TEST));
                   }
                   addEntryPath(orderEntry, p);
                 }

@@ -29,4 +29,5 @@ public enum ContentFolderType {
 
   @Immutable
   public static final ContentFolderType[] SOURCE_FOLDER_TYPES = new ContentFolderType[] {SOURCE, TEST, RESOURCE};
+  public static final ContentFolderType[] ONLY_SOURCE_ROOTS = new ContentFolderType[] {SOURCE, RESOURCE};
 }
