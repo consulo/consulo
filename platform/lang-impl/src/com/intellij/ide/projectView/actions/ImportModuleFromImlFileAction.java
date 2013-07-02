@@ -38,6 +38,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@Deprecated
 public class ImportModuleFromImlFileAction extends AnAction {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.projectView.actions.ImportModuleFromImlFileAction");
 
