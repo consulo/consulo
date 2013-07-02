@@ -2177,9 +2177,8 @@
     </group>
 
     <group>
-      <action id="CreateLibraryFromFile" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <!--com.intellij.ide.projectView.actions.MarkLibraryRootAction-->
-      <action id="ImportModuleFromImlFile" class="com.intellij.ide.projectView.actions.ImportModuleFromImlFileAction"/>
+      <action id="CreateLibraryFromFile" class="com.intellij.openapi.actionSystem.EmptyAction"/>     <!--com.intellij.ide.projectView.actions.MarkLibraryRootAction-->
+      <!--<action id="ImportModuleFromImlFile" class="com.intellij.ide.projectView.actions.ImportModuleFromImlFileAction"/> -->
       <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" relative-to-action="MarkRootGroup" anchor="after"/>
     </group>
 
