@@ -503,7 +503,7 @@ public class RefManagerImpl extends RefManager {
     return null;
   }
 
-  protected RefElement getFromRefTable(final PsiElement element) {
+  public RefElement getFromRefTable(final PsiElement element) {
     myLock.readLock().lock();
     try {
       return getRefTable().get(ApplicationManager.getApplication().runReadAction(
@@ -520,7 +520,7 @@ public class RefManagerImpl extends RefManager {
     }
   }
 
-  protected void putToRefTable(final PsiElement element, final RefElement ref) {
+  public void putToRefTable(final PsiElement element, final RefElement ref) {
     myLock.writeLock().lock();
     try {
       getRefTable().put(ApplicationManager.getApplication().runReadAction(
