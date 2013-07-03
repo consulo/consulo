@@ -104,7 +104,7 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
 
   public abstract void computeUsages(List<T> targets);
 
-  protected void addOccurrence(@NotNull PsiElement element) {
+  public void addOccurrence(@NotNull PsiElement element) {
     TextRange range = element.getTextRange();
     range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);
     myReadUsages.add(range);
