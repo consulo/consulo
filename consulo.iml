@@ -47,7 +47,6 @@
     <orderEntry type="module" module-name="java-platform" />
     <orderEntry type="module" module-name="java-psi-api" />
     <orderEntry type="module" module-name="java-psi-impl" />
-    <orderEntry type="module" module-name="devkit" />
     <orderEntry type="module" module-name="properties" />
     <orderEntry type="module" module-name="groovy" />
     <orderEntry type="module" module-name="groovy-copyright" />

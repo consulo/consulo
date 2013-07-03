@@ -1,3 +1,0 @@
-<extensionPoints>
-  <extensionPoint name="extension" beanClass="foo.Bar"/>
-</extensionPoints>
