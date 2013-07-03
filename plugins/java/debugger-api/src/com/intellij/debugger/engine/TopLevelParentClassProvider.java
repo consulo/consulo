@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class TopLevelParentClassProvider {
   private static final ExtensionPointName<TopLevelParentClassProvider> EP_NAME =
-    ExtensionPointName.create("com.intellij.topLevelClassProvider");
+    ExtensionPointName.create("org.consulo.java.topLevelClassProvider");
 
   public static PsiClass getTopLevelParentClass(PsiClass psiClass) {
     for (TopLevelParentClassProvider provider : EP_NAME.getExtensions()) {
