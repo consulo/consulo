@@ -51,7 +51,7 @@ public class ResourceFileUtil {
 
   @Nullable
   public static VirtualFile findResourceFileInDependents(final Module searchFromModule, final String fileName) {
-    return findResourceFileInScope(fileName, searchFromModule.getProject(), searchFromModule.getModuleWithDependenciesScope());
+    return findResourceFileInScope(fileName, searchFromModule.getProject(), searchFromModule.getModuleWithDependenciesAndLibrariesScope(true));
   }
 
   @Nullable
@@ -68,7 +68,7 @@ public class ResourceFileUtil {
     final String fileName = index >= 0 ? resourceName.substring(index+1) : resourceName;
 
     final VirtualFile dir = new FilteredQuery<VirtualFile>(
-      DirectoryIndex.getInstance(project).getDirectoriesByPackageName(packageName, false), new Condition<VirtualFile>() {
+      DirectoryIndex.getInstance(project).getDirectoriesByPackageName(packageName, true), new Condition<VirtualFile>() {
       @Override
       public boolean value(final VirtualFile file) {
         final VirtualFile child = file.findChild(fileName);

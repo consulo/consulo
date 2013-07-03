@@ -14,7 +14,6 @@
       <entry name=".+\.(gif|png|jpeg|jpg)" />
     </resourceExtensions>
     <wildcardResourcePatterns>
-      <entry name="!*.form" />
       <entry name="!*.java" />
       <entry name="!*.class" />
       <entry name="!*.groovy" />

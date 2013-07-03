@@ -443,6 +443,9 @@
         </element>
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/build.txt" />
+      <element id="archive" name="src.zip">
+        <element id="dir-copy" path="$PROJECT_DIR$/platform/lang-impl/src" />
+      </element>
     </root>
   </artifact>
 </component>
