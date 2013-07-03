@@ -195,7 +195,7 @@ public class JavaChangeSignatureDialog extends ChangeSignatureDialogBase<Paramet
     final JPanel panel = ToolbarDecorator.createDecorator(table).addExtraAction(myPropExceptionsButton).createPanel();
     panel.setBorder(IdeBorderFactory.createEmptyBorder(0));
 
-    myExceptionsModel.addTableModelListener(mySignatureUpdater);
+    myExceptionsModel.addTableModelListener(getSignatureUpdater());
 
     final ArrayList<Pair<String, JPanel>> result = new ArrayList<Pair<String, JPanel>>();
     final String message = RefactoringBundle.message("changeSignature.exceptions.panel.border.title");
@@ -330,7 +330,7 @@ public class JavaChangeSignatureDialog extends ChangeSignatureDialogBase<Paramet
         final JPanel typePanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 4, 2, true, false));
         final Document document = PsiDocumentManager.getInstance(getProject()).getDocument(item.typeCodeFragment);
         myTypeEditor = new EditorTextField(document, getProject(), getFileType());
-        myTypeEditor.addDocumentListener(mySignatureUpdater);
+        myTypeEditor.addDocumentListener(getSignatureUpdater());
         final JBLabel typeLabel = new JBLabel("Type:", UIUtil.ComponentStyle.SMALL);
         IJSwingUtilities.adjustComponentsOnMac(typeLabel, myTypeEditor);
         typePanel.add(typeLabel);
@@ -341,7 +341,7 @@ public class JavaChangeSignatureDialog extends ChangeSignatureDialogBase<Paramet
 
         final JPanel namePanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 4, 2, true, false));
         myNameEditor = new EditorTextField(item.parameter.getName(), getProject(), getFileType());
-        myNameEditor.addDocumentListener(mySignatureUpdater);
+        myNameEditor.addDocumentListener(getSignatureUpdater());
         myNameEditor.addDocumentListener(new MyDocumentListener(1));
         final JBLabel nameLabel = new JBLabel("Name:", UIUtil.ComponentStyle.SMALL);
         IJSwingUtilities.adjustComponentsOnMac(nameLabel, myNameEditor);
