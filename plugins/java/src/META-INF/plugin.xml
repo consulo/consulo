@@ -399,6 +399,8 @@
   </project-components>
 
   <extensionPoints>
+    <extensionPoint name="variableTypeCalculator" interface="com.intellij.codeInsight.template.macro.VariableTypeCalculator"/>
+
     <extensionPoint name="paletteItemProvider" area="CONSULO_PROJECT" interface="com.intellij.ide.palette.PaletteItemProvider"/>
 
     <extensionPoint name="testPatcher" interface="com.intellij.execution.JavaTestPatcher"/>

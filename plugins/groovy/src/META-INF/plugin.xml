@@ -220,6 +220,8 @@
     <debugger.positionManagerFactory order="after groovyPositionManager"
                                      implementation="org.jetbrains.plugins.groovy.springloaded.SpringLoadedPositionManagerFactory"/>
     <debugger.codeFragmentFactory implementation="org.jetbrains.plugins.groovy.debugger.GroovyCodeFragmentFactory"/>
+    <variableTypeCalculator implementation="org.jetbrains.plugins.groovy.template.GroovyVariableTypeCalculator"/>
+
   </extensions>
 
   <extensions defaultExtensionNs="org.consulo.java.platform">
@@ -341,7 +343,6 @@
     <defaultLiveTemplatesProvider implementation="org.jetbrains.plugins.groovy.template.GroovyTemplatesProvider"/>
 
     <liveTemplateOptionalProcessor implementation="org.jetbrains.plugins.groovy.template.GroovyShortenFQNamesProcessor"/>
-    <variableTypeCalculator implementation="org.jetbrains.plugins.groovy.template.GroovyVariableTypeCalculator"/>
 
     <gotoSymbolContributor implementation="org.jetbrains.plugins.groovy.gotoclass.GroovyGoToSymbolContributor"/>
     <lang.refactoringSupport language="Groovy"

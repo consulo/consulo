@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 */
 public abstract class VariableTypeCalculator {
   public static final ExtensionPointName<VariableTypeCalculator> EP_NAME =
-    ExtensionPointName.create("com.intellij.variableTypeCalculator");
+    ExtensionPointName.create("org.consulo.java.variableTypeCalculator");
 
   @Nullable
   public abstract PsiType inferVarTypeAt(@NotNull PsiVariable var, @NotNull PsiElement place);
