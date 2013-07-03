@@ -31,6 +31,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.intellij.lang.regexp.psi.impl.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -38,7 +39,7 @@ public class RegExpParserDefinition implements ParserDefinition {
   private static final TokenSet COMMENT_TOKENS = TokenSet.create(RegExpTT.COMMENT);
 
     @NotNull
-    public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+    public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion) {
         return new RegExpLexer(EnumSet.of(RegExpCapability.NESTED_CHARACTER_CLASSES));
     }
 
