@@ -362,7 +362,7 @@ public class JavacCompiler extends ExternalCompiler {
 
     commandLine.add("-verbose");
 
-    final String cp = chunk.getCompilationClasspath();
+    final String cp = chunk.getCompilationClasspath(JavaSdk.getInstance());
     final String bootCp = chunk.getCompilationBootClasspath();
 
     final String classPath;

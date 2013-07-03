@@ -40,10 +40,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.JavaSdkType;
-import com.intellij.openapi.projectRoots.JdkUtil;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTypeId;
+import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleFileIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -118,7 +115,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
     }
 
     classPathBuilder.addVirtualFiles(chunk.getCompilationBootClasspathFiles(false));
-    classPathBuilder.addVirtualFiles(chunk.getCompilationClasspathFiles(false));
+    classPathBuilder.addVirtualFiles(chunk.getCompilationClasspathFiles(JavaSdk.getInstance(), false));
     appendOutputPath(module, classPathBuilder, false);
     if (tests) {
       appendOutputPath(module, classPathBuilder, true);

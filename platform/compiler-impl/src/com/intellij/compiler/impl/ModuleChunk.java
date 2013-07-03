@@ -20,6 +20,8 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.SdkOrderEntry;
@@ -183,22 +185,22 @@ public class ModuleChunk extends Chunk<Module> {
     return VfsUtil.toVirtualFileArray(roots);
   }
 
-  public String getCompilationClasspath() {
-    final OrderedSet<VirtualFile> cpFiles = getCompilationClasspathFiles();
+  public String getCompilationClasspath(SdkType sdkType) {
+    final OrderedSet<VirtualFile> cpFiles = getCompilationClasspathFiles(sdkType);
     return convertToStringPath(cpFiles);
 
   }
 
-  public OrderedSet<VirtualFile> getCompilationClasspathFiles() {
-    return getCompilationClasspathFiles(true);
+  public OrderedSet<VirtualFile> getCompilationClasspathFiles(SdkType sdkType) {
+    return getCompilationClasspathFiles(sdkType, true);
   }
 
-  public OrderedSet<VirtualFile> getCompilationClasspathFiles(final boolean exportedOnly) {
+  public OrderedSet<VirtualFile> getCompilationClasspathFiles(SdkType sdkType, final boolean exportedOnly) {
     final Set<Module> modules = getNodes();
 
     OrderedSet<VirtualFile> cpFiles = new OrderedSet<VirtualFile>();
     for (final Module module : modules) {
-      Collections.addAll(cpFiles, orderEnumerator(module, exportedOnly, new AfterJdkOrderEntryCondition()).getClassesRoots());
+      Collections.addAll(cpFiles, orderEnumerator(module, exportedOnly, new AfterSdkOrderEntryCondition(sdkType)).getClassesRoots());
     }
     return cpFiles;
   }
@@ -313,16 +315,26 @@ public class ModuleChunk extends Chunk<Module> {
     }
   }
 
-  private static class AfterJdkOrderEntryCondition implements Condition<OrderEntry> {
-    private boolean myJdkFound;
+  private static class AfterSdkOrderEntryCondition implements Condition<OrderEntry> {
+    private final SdkType mySdkType;
+    private boolean mySdkFound;
+
+    public AfterSdkOrderEntryCondition(SdkType sdkType) {
+      mySdkType = sdkType;
+    }
 
     @Override
     public boolean value(OrderEntry orderEntry) {
       if (orderEntry instanceof SdkOrderEntry) {
-        myJdkFound = true;
+        final Sdk sdk = ((SdkOrderEntry)orderEntry).getSdk();
+        if(sdk == null || sdk.getSdkType() != mySdkType) {
+          return true;
+        }
+
+        mySdkFound = true;
         return false;
       }
-      return myJdkFound;
+      return mySdkFound;
     }
   }
 }
