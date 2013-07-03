@@ -59,7 +59,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
   @NotNull
   @Override
   public VirtualFile[] getRoots() {
-   /* if (myUsingCache) {
+    if (myUsingCache) {
       checkCanUseCache();
       final OrderRootsCache cache = myOrderEnumerator.getCache();
       if (cache != null) {
@@ -73,7 +73,6 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
     }
-          */
     return VfsUtilCore.toVirtualFileArray(computeRoots());
   }
 
