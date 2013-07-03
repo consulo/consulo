@@ -5502,7 +5502,7 @@
     <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
-    <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler"/>
+    <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
     <compiler implementation="com.intellij.compiler.impl.resourceCompiler.ResourceCompiler" id="resourceCompiler"/>
     <projectService serviceInterface="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"
                     serviceImplementation="org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration"/>
