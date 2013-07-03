@@ -12,6 +12,12 @@
 
   </actions>
 
+  <application-components>
+    <component>
+      <implementation-class>com.intellij.spellchecker.vcs.SpellCheckerCustomizationImpl</implementation-class>
+    </component>
+  </application-components>
+
   <extensionPoints>
     <extensionPoint name="support" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.spellchecker.tokenizer.SpellcheckingStrategy"/>
@@ -34,14 +40,17 @@
     <projectService serviceInterface="com.intellij.spellchecker.SpellCheckerManager"
                     serviceImplementation="com.intellij.spellchecker.SpellCheckerManager"/>
     <editorCustomization implementation="com.intellij.spellchecker.ui.SpellCheckingEditorCustomization"/>
-    <projectConfigurable instance="com.intellij.spellchecker.settings.SpellCheckerSettingsManager" id="reference.settings.ide.settings.spelling" key="spelling" bundle="com.intellij.spellchecker.util.SpellCheckerBundle" />
+    <projectConfigurable instance="com.intellij.spellchecker.settings.SpellCheckerSettingsManager"
+                         id="reference.settings.ide.settings.spelling" key="spelling"
+                         bundle="com.intellij.spellchecker.util.SpellCheckerBundle"/>
 
 
     <localInspection shortName="SpellCheckingInspection" bundle="com.intellij.spellchecker.util.SpellCheckerBundle"
                      key="spellchecking.inspection.name" groupKey="spelling" enabledByDefault="true" level="TYPO"
                      implementationClass="com.intellij.spellchecker.inspections.SpellCheckingInspection"/>
 
-    <nameSuggestionProvider id="DictionarySuggestionProvider" implementation="com.intellij.spellchecker.quickfixes.DictionarySuggestionProvider" order="first"/>
+    <nameSuggestionProvider id="DictionarySuggestionProvider"
+                            implementation="com.intellij.spellchecker.quickfixes.DictionarySuggestionProvider" order="first"/>
     <severitiesProvider implementation="com.intellij.spellchecker.SpellCheckerSeveritiesProvider"/>
 
     <projectService serviceImplementation="com.intellij.spellchecker.state.ProjectDictionaryState"/>

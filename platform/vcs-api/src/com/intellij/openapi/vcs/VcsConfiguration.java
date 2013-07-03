@@ -75,6 +75,7 @@ public final class VcsConfiguration implements PersistentStateComponent<Element>
   public VcsShowConfirmationOption.Value REMOVE_EMPTY_INACTIVE_CHANGELISTS = VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
   public int CHANGED_ON_SERVER_INTERVAL = 60;
   public boolean SHOW_ONLY_CHANGED_IN_SELECTION_DIFF = true;
+  //TODO [VISTALL] move to spellchecker
   public boolean CHECK_COMMIT_MESSAGE_SPELLING = true;
   public String DEFAULT_PATCH_EXTENSION = PATCH;
   public boolean SHORT_DIFF_HORIZONTALLY = true;

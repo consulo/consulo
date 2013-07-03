@@ -25,7 +25,6 @@ import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.*;
-import com.intellij.spellchecker.ui.SpellCheckingEditorCustomization;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Nullable;
@@ -115,14 +114,19 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
   public static EditorTextField createCommitTextEditor(final Project project, boolean forceSpellCheckOn) {
     Set<EditorCustomization> features = new HashSet<EditorCustomization>();
 
+    final SpellCheckerCustomization spellChecker = SpellCheckerCustomization.getInstance();
     VcsConfiguration configuration = VcsConfiguration.getInstance(project);
     if (configuration != null) {
       boolean enableSpellChecking = forceSpellCheckOn || configuration.CHECK_COMMIT_MESSAGE_SPELLING;
-      features.add(SpellCheckingEditorCustomization.getInstance(enableSpellChecking));
+      if(spellChecker.isEnabled()) {
+        features.add(spellChecker.getCustomization(enableSpellChecking));
+      }
       features.add(new RightMarginEditorCustomization(configuration.USE_COMMIT_MESSAGE_MARGIN, configuration.COMMIT_MESSAGE_MARGIN_SIZE));
       features.add(WrapWhenTypingReachesRightMarginCustomization.getInstance(configuration.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN));
     } else {
-      features.add(SpellCheckingEditorCustomization.ENABLED);
+      if(spellChecker.isEnabled()) {
+        features.add(spellChecker.getCustomization(true));
+      }
       features.add(new RightMarginEditorCustomization(false, -1));
     }
 
@@ -176,7 +180,11 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
       return;
     }
     EditorEx editorEx = (EditorEx)editor;
-    SpellCheckingEditorCustomization.getInstance(check).customize(editorEx);
+
+    SpellCheckerCustomization spellCheckerCustomization = SpellCheckerCustomization.getInstance();
+    if(spellCheckerCustomization.isEnabled()) {
+      spellCheckerCustomization.getCustomization(check).customize(editorEx);
+    }
   }
 
   public void dispose() {
