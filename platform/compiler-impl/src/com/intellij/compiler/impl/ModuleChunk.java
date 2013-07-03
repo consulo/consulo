@@ -214,20 +214,20 @@ public class ModuleChunk extends Chunk<Module> {
     return exportedOnly ? enumerator.exportedOnly() : enumerator;
   }
 
-  public String getCompilationBootClasspath() {
-    return convertToStringPath(getCompilationBootClasspathFiles());
+  public String getCompilationBootClasspath(SdkType sdkType) {
+    return convertToStringPath(getCompilationBootClasspathFiles(sdkType));
   }
 
-  public OrderedSet<VirtualFile> getCompilationBootClasspathFiles() {
-    return getCompilationBootClasspathFiles(true);
+  public OrderedSet<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType) {
+    return getCompilationBootClasspathFiles(sdkType, true);
   }
 
-  public OrderedSet<VirtualFile> getCompilationBootClasspathFiles(final boolean exportedOnly) {
+  public OrderedSet<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType, final boolean exportedOnly) {
     final Set<Module> modules = getNodes();
     final OrderedSet<VirtualFile> cpFiles = new OrderedSet<VirtualFile>();
     final OrderedSet<VirtualFile> jdkFiles = new OrderedSet<VirtualFile>();
     for (final Module module : modules) {
-      Collections.addAll(cpFiles, orderEnumerator(module, exportedOnly, new BeforeJdkOrderEntryCondition(module)).getClassesRoots());
+      Collections.addAll(cpFiles, orderEnumerator(module, exportedOnly, new BeforeSdkOrderEntryCondition(sdkType, module)).getClassesRoots());
       Collections.addAll(jdkFiles, OrderEnumerator.orderEntries(module).sdkOnly().getClassesRoots());
     }
     cpFiles.addAll(jdkFiles);
@@ -298,17 +298,24 @@ public class ModuleChunk extends Chunk<Module> {
     return myContext.getProject();
   }
 
-  private static class BeforeJdkOrderEntryCondition implements Condition<OrderEntry> {
+  private static class BeforeSdkOrderEntryCondition implements Condition<OrderEntry> {
     private boolean myJdkFound;
+    private final SdkType mySdkType;
     private final Module myOwnerModule;
 
-    private BeforeJdkOrderEntryCondition(Module ownerModule) {
+    private BeforeSdkOrderEntryCondition(SdkType sdkType, Module ownerModule) {
+      mySdkType = sdkType;
       myOwnerModule = ownerModule;
     }
 
     @Override
     public boolean value(OrderEntry orderEntry) {
       if (orderEntry instanceof SdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
+        final Sdk sdk = ((SdkOrderEntry)orderEntry).getSdk();
+        if(sdk == null || sdk.getSdkType() != mySdkType) {
+          return true;
+        }
+
         myJdkFound = true;
       }
       return !myJdkFound;
