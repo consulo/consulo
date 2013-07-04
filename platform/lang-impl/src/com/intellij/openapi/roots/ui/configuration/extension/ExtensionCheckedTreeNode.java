@@ -87,7 +87,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
   @Override
   public boolean isEnabled() {
-    if (myExtension == null) {
+    if (myExtension == null || myProviderEP != null && myProviderEP.allowMixin) {
       return true;
     }
 

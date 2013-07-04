@@ -35,6 +35,9 @@ public class ModuleExtensionProviderEP extends KeyedLazyInstanceEP<ModuleExtensi
   @Attribute("parent-key")
   public String parentKey;
 
+  @Attribute("allow-mixin")
+  public boolean allowMixin;
+
   @NotNull
   public static List<ModuleExtensionProvider> getProviders() {
     final ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();
