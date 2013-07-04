@@ -313,7 +313,7 @@ public class ModuleChunk extends Chunk<Module> {
       if (orderEntry instanceof SdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
         final Sdk sdk = ((SdkOrderEntry)orderEntry).getSdk();
         if(sdk == null || sdk.getSdkType() != mySdkType) {
-          return true;
+          return !myJdkFound;
         }
 
         myJdkFound = true;
@@ -335,7 +335,7 @@ public class ModuleChunk extends Chunk<Module> {
       if (orderEntry instanceof SdkOrderEntry) {
         final Sdk sdk = ((SdkOrderEntry)orderEntry).getSdk();
         if(sdk == null || sdk.getSdkType() != mySdkType) {
-          return true;
+          return mySdkFound;
         }
 
         mySdkFound = true;
