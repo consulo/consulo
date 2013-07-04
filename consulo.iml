@@ -99,6 +99,13 @@
     <orderEntry type="module" module-name="java-compiler-artifact-impl" />
     <orderEntry type="module" module-name="projectImportModel" />
     <orderEntry type="module" module-name="platform-tests" />
+    <orderEntry type="module" module-name="maven" />
+    <orderEntry type="module" module-name="maven-artifact-resolver-m2" />
+    <orderEntry type="module" module-name="maven-artifact-resolver-m3" />
+    <orderEntry type="module" module-name="maven-jps-plugin" />
+    <orderEntry type="module" module-name="maven-server-api" />
+    <orderEntry type="module" module-name="maven2-server-impl" />
+    <orderEntry type="module" module-name="maven3-server-impl" />
   </component>
 </module>
 

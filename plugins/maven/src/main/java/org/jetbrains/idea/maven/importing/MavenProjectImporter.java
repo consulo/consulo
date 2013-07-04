@@ -15,7 +15,7 @@
  */
 package org.jetbrains.idea.maven.importing;
 
-import com.intellij.compiler.impl.javaCompiler.javac.JavacConfiguration;
+import com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerConfiguration;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -39,14 +39,12 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.importing.configurers.MavenModuleConfigurer;
 import org.jetbrains.idea.maven.model.MavenArtifact;
 import org.jetbrains.idea.maven.project.*;
-import org.jetbrains.idea.maven.utils.MavenLog;
 import org.jetbrains.idea.maven.utils.MavenProcessCanceledException;
 import org.jetbrains.idea.maven.utils.MavenProgressIndicator;
 import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class MavenProjectImporter {
@@ -266,7 +264,7 @@ public class MavenProjectImporter {
       Module module = myFileToModuleMapping.get(each.getFile());
       if (module == null) continue;
 
-      if (shouldCreateModuleFor(each) && !(ModuleType.get(module).equals(each.getModuleType()))) {
+      if (shouldCreateModuleFor(each)) {
         (manager.isMavenizedModule(module) ? incompatibleMavenized : incompatibleNotMavenized).add(Pair.create(each, module));
       }
     }
@@ -278,9 +276,7 @@ public class MavenProjectImporter {
         public String fun(Pair<MavenProject, Module> each) {
           MavenProject project = each.first;
           Module module = each.second;
-          return ModuleType.get(module).getName() +
-                 " '" +
-                 module.getName() +
+          return module.getName() +
                  "' for Maven project " +
                  project.getMavenId().getDisplayString();
         }
@@ -393,7 +389,7 @@ public class MavenProjectImporter {
   private void removeOutdatedCompilerConfigSettings() {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
-    final JpsJavaCompilerOptions javacOptions = JavacConfiguration.getOptions(myProject, JavacConfiguration.class);
+    final JpsJavaCompilerOptions javacOptions = JavacCompilerConfiguration.getInstance(myProject);
     String options = javacOptions.ADDITIONAL_OPTIONS_STRING;
     options = options.replaceFirst("(-target (\\S+))", ""); // Old IDEAs saved
     javacOptions.ADDITIONAL_OPTIONS_STRING = options;
@@ -457,30 +453,15 @@ public class MavenProjectImporter {
     if (myMavenProjectToModule.get(project) != null) return false;
 
     final String path = myMavenProjectToModulePath.get(project);
+    final String name = myMavenProjectToModuleName.get(project);
 
-    // for some reason newModule opens the existing iml file, so we
-    // have to remove it beforehand.
-    deleteExistingImlFile(path);
 
-    final Module module = myModuleModel.newModule(path);
+    final Module module = myModuleModel.newModule(name, path);
     myMavenProjectToModule.put(project, module);
     myCreatedModules.add(module);
     return true;
   }
 
-  private void deleteExistingImlFile(final String path) {
-    MavenUtil.invokeAndWaitWriteAction(myProject, new Runnable() {
-      public void run() {
-        try {
-          VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-          if (file != null) file.delete(this);
-        }
-        catch (IOException e) {
-          MavenLog.LOG.warn("Cannot delete existing iml file: " + path, e);
-        }
-      }
-    });
-  }
 
   private MavenModuleImporter createModuleImporter(Module module, MavenProject mavenProject, @Nullable MavenProjectChanges changes) {
     return new MavenModuleImporter(module,

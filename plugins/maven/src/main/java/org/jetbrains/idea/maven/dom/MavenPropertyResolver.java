@@ -16,11 +16,12 @@
 package org.jetbrains.idea.maven.dom;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.dom.model.MavenDomProfile;
@@ -36,7 +37,10 @@ import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.jps.maven.compiler.MavenEscapeWindowsCharacterUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -238,7 +242,7 @@ public class MavenPropertyResolver {
     if ("java.home".equals(propName)) {
       Module module = projectsManager.findModule(mavenProject);
       if (module != null) {
-        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+        Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
         if (sdk != null) {
           VirtualFile homeDirectory = sdk.getHomeDirectory();
           if (homeDirectory != null) {

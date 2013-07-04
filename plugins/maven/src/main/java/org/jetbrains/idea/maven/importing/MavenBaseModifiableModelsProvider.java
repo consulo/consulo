@@ -15,10 +15,6 @@
  */
 package org.jetbrains.idea.maven.importing;
 
-import com.intellij.facet.Facet;
-import com.intellij.facet.FacetModel;
-import com.intellij.facet.FacetTypeId;
-import com.intellij.facet.ModifiableFacetModel;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -28,7 +24,6 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactModel;
@@ -39,14 +34,12 @@ import com.intellij.packaging.impl.artifacts.DefaultManifestFileProvider;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
 public abstract class MavenBaseModifiableModelsProvider implements MavenModifiableModelsProvider {
   protected ModifiableModuleModel myModuleModel;
   protected Map<Module, ModifiableRootModel> myRootModels = new THashMap<Module, ModifiableRootModel>();
-  protected Map<Module, ModifiableFacetModel> myFacetModels = new THashMap<Module, ModifiableFacetModel>();
   protected Map<Library, Library.ModifiableModel> myLibraryModels = new IdentityHashMap<Library, Library.ModifiableModel>();
   protected ModifiableArtifactModel myArtifactModel;
   protected final Project myProject;
@@ -70,15 +63,6 @@ public abstract class MavenBaseModifiableModelsProvider implements MavenModifiab
     if (result == null) {
       result = doGetRootModel(module);
       myRootModels.put(module, result);
-    }
-    return result;
-  }
-
-  public ModifiableFacetModel getFacetModel(Module module) {
-    ModifiableFacetModel result = myFacetModels.get(module);
-    if (result == null) {
-      result = doGetFacetModel(module);
-      myFacetModels.put(module, result);
     }
     return result;
   }
@@ -126,8 +110,6 @@ public abstract class MavenBaseModifiableModelsProvider implements MavenModifiab
 
   protected abstract ModifiableRootModel doGetRootModel(Module module);
 
-  protected abstract ModifiableFacetModel doGetFacetModel(Module module);
-
   protected abstract Library.ModifiableModel doGetLibraryModel(Library library);
 
   public Module[] getModules() {
@@ -144,7 +126,6 @@ public abstract class MavenBaseModifiableModelsProvider implements MavenModifiab
 
   private class MyPackagingElementResolvingContext implements PackagingElementResolvingContext {
     private final ModulesProvider myModulesProvider = new MavenModulesProvider();
-    private final MavenFacetsProvider myFacetsProvider = new MavenFacetsProvider();
     private final DefaultManifestFileProvider myManifestFileProvider = new DefaultManifestFileProvider(this);
 
     @NotNull
@@ -160,11 +141,6 @@ public abstract class MavenBaseModifiableModelsProvider implements MavenModifiab
     @NotNull
     public ModulesProvider getModulesProvider() {
       return myModulesProvider;
-    }
-
-    @NotNull
-    public FacetsProvider getFacetsProvider() {
-      return myFacetsProvider;
     }
 
     public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
@@ -194,26 +170,6 @@ public abstract class MavenBaseModifiableModelsProvider implements MavenModifiab
 
     public ModuleRootModel getRootModel(@NotNull Module module) {
       return MavenBaseModifiableModelsProvider.this.getRootModel(module);
-    }
-
-    public FacetModel getFacetModel(@NotNull Module module) {
-      return MavenBaseModifiableModelsProvider.this.getFacetModel(module);
-    }
-  }
-
-  private class MavenFacetsProvider implements FacetsProvider {
-    @NotNull
-    public Facet[] getAllFacets(Module module) {
-      return getFacetModel(module).getAllFacets();
-    }
-
-    @NotNull
-    public <F extends Facet> Collection<F> getFacetsByType(Module module, FacetTypeId<F> type) {
-      return getFacetModel(module).getFacetsByType(type);
-    }
-
-    public <F extends Facet> F findFacet(Module module, FacetTypeId<F> type, String name) {
-      return getFacetModel(module).findFacet(type, name);
     }
   }
 }

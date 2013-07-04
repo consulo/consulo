@@ -15,7 +15,6 @@
  */
 package org.jetbrains.idea.maven.importing;
 
-import com.intellij.facet.ModifiableFacetModel;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -27,7 +26,6 @@ import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import org.jetbrains.idea.maven.utils.MavenUtil;
 
 public class MavenUIModifiableModelsProvider extends MavenBaseModifiableModelsProvider {
   private final ModifiableModuleModel myModel;
@@ -61,11 +59,6 @@ public class MavenUIModifiableModelsProvider extends MavenBaseModifiableModelsPr
   @Override
   protected ModifiableRootModel doGetRootModel(Module module) {
     return myModulesConfigurator.getOrCreateModuleEditor(module).getModifiableRootModel();
-  }
-
-  @Override
-  protected ModifiableFacetModel doGetFacetModel(Module module) {
-    return (ModifiableFacetModel)myModulesConfigurator.getFacetModel(module);
   }
 
   @Override

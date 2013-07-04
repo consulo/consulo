@@ -15,8 +15,8 @@
  */
 package org.jetbrains.idea.maven.compiler;
 
-import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.compiler.CompilerIOUtil;
+import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ReadAction;
@@ -72,7 +72,7 @@ public class MavenResourceCompiler implements ClassPostProcessingCompiler {
     try {
       DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
       try {
-        if (in.readInt() != CompilerConfigurationImpl.DEPENDENCY_FORMAT_VERSION) return;
+        if (in.readInt() != CompileDriver.DEPENDENCY_FORMAT_VERSION) return;
         int modulesSize = in.readInt();
         Map<String, Set<String>> temp = new THashMap<String, Set<String>>();
         while (modulesSize-- > 0) {
@@ -105,7 +105,7 @@ public class MavenResourceCompiler implements ClassPostProcessingCompiler {
     try {
       DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
       try {
-        out.writeInt(CompilerConfigurationImpl.DEPENDENCY_FORMAT_VERSION);
+        out.writeInt(CompileDriver.DEPENDENCY_FORMAT_VERSION);
         out.writeInt(myOutputItemsCache.size());
         for (Map.Entry<String, Set<String>> eachEntry : myOutputItemsCache.entrySet()) {
           String module = eachEntry.getKey();
@@ -133,6 +133,10 @@ public class MavenResourceCompiler implements ClassPostProcessingCompiler {
 
   public boolean validateConfiguration(CompileScope scope) {
     return true;
+  }
+
+  @Override
+  public void init(@NotNull CompilerManager compilerManager) {
   }
 
   @NotNull

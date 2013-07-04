@@ -359,6 +359,35 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="maven">
+          <element id="directory" name="lib">
+            <element id="archive" name="maven.jar">
+              <element id="module-output" name="maven" />
+            </element>
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/lib/wadl-core.jar" />
+            <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven-server-api/lib/lucene-core-2.4.1.jar" />
+            <element id="directory" name="maven2">
+              <element id="library" level="module" name="Maven" module-name="maven2-server-impl" />
+            </element>
+            <element id="directory" name="maven3">
+              <element id="library" level="module" name="Maven3" module-name="maven3-server-impl" />
+            </element>
+            <element id="archive" name="maven2-server-impl.jar">
+              <element id="module-output" name="maven2-server-impl" />
+              <element id="module-output" name="maven-artifact-resolver-m2" />
+            </element>
+            <element id="archive" name="maven3-server-impl.jar">
+              <element id="module-output" name="maven3-server-impl" />
+              <element id="module-output" name="maven-artifact-resolver-m3" />
+            </element>
+            <element id="archive" name="maven-jps-plugin.jar">
+              <element id="module-output" name="maven-jps-plugin" />
+            </element>
+            <element id="archive" name="maven-server-api.jar">
+              <element id="module-output" name="maven-server-api" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />

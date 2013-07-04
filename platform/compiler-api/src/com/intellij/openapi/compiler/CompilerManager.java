@@ -17,6 +17,7 @@ package com.intellij.openapi.compiler;
 
 import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -36,6 +37,7 @@ import java.util.Collection;
 public abstract class CompilerManager {
   public static final Key<Key> CONTENT_ID_KEY = Key.create("COMPILATION_CONTENT_ID_CUSTOM_KEY");
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.logOnlyGroup("Compiler");
+  private ExcludedEntriesConfiguration myExcludedEntriesConfiguration;
 
   /**
    * Returns the compiler manager instance for the specified project.
@@ -252,6 +254,7 @@ public abstract class CompilerManager {
    */
   public abstract boolean isExcludedFromCompilation(@NotNull VirtualFile file);
 
+  public abstract ExcludedEntriesConfiguration getExcludedEntriesConfiguration();
   /*
    * Convetience methods for creating frequently-used compile scopes
    */

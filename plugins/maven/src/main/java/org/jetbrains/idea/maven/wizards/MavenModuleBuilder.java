@@ -20,8 +20,6 @@ import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.module.JavaModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -68,7 +66,7 @@ public class MavenModuleBuilder extends ModuleBuilder implements SourcePathsBuil
     final VirtualFile root = createAndGetContentEntry();
     rootModel.addContentEntry(root);
 
-    rootModel.inheritSdk();
+    //rootModel.inheritSdk();
 
     MavenUtil.runWhenInitialized(project, new DumbAwareRunnable() {
       public void run() {
@@ -82,10 +80,6 @@ public class MavenModuleBuilder extends ModuleBuilder implements SourcePathsBuil
     });
   }
 
-  @Override
-  public String getBuilderId() {
-    return getClass().getName();
-  }
 
   @Override
   public String getPresentableName() {
@@ -106,10 +100,6 @@ public class MavenModuleBuilder extends ModuleBuilder implements SourcePathsBuil
   @Override
   public Icon getNodeIcon() {
     return MavenIcons.MavenLogo;
-  }
-
-  public ModuleType getModuleType() {
-    return StdModuleTypes.JAVA;
   }
 
   @Override
@@ -215,6 +205,6 @@ public class MavenModuleBuilder extends ModuleBuilder implements SourcePathsBuil
 
   @Override
   public String getGroupName() {
-    return JavaModuleType.JAVA_GROUP;
+    return "Java";
   }
 }

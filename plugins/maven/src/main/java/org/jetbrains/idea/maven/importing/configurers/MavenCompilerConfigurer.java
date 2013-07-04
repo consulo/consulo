@@ -15,7 +15,8 @@
  */
 package org.jetbrains.idea.maven.importing.configurers;
 
-import com.intellij.compiler.CompilerConfigurationImpl;
+import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.options.ExcludeEntryDescription;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.module.Module;
@@ -34,10 +35,11 @@ public class MavenCompilerConfigurer extends MavenModuleConfigurer {
   public void configure(@NotNull MavenProject mavenProject, @NotNull Project project, @Nullable Module module) {
     if (module == null) return;
 
+    CompilerManager compilerManager = CompilerManager.getInstance(project);
+    JavaCompilerConfiguration javaCompilerConfiguration = JavaCompilerConfiguration.getInstance(project);
     String targetLevel = mavenProject.getTargetLevel();
     if (targetLevel != null) {
-      CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
-      configuration.setBytecodeTargetLevel(module, targetLevel);
+      javaCompilerConfiguration.setBytecodeTargetLevel(module, targetLevel);
     }
 
     VirtualFile directoryFile = mavenProject.getDirectoryFile();
@@ -46,10 +48,9 @@ public class MavenCompilerConfigurer extends MavenModuleConfigurer {
     VirtualFile archetypeResourcesDir = VfsUtil.findRelativeFile(directoryFile, "src", "main", "resources", "archetype-resources");
 
     if (archetypeResourcesDir != null) {
-      CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
 
-      if (!compilerConfiguration.isExcludedFromCompilation(archetypeResourcesDir)) {
-        ExcludedEntriesConfiguration cfg = compilerConfiguration.getExcludedEntriesConfiguration();
+      if (!compilerManager.isExcludedFromCompilation(archetypeResourcesDir)) {
+        ExcludedEntriesConfiguration cfg = compilerManager.getExcludedEntriesConfiguration();
 
         cfg.addExcludeEntryDescription(new ExcludeEntryDescription(archetypeResourcesDir, true, false, project));
       }

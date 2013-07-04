@@ -15,6 +15,7 @@
  */
 package org.jetbrains.idea.maven.navigator;
 
+import com.intellij.ProjectTopics;
 import com.intellij.execution.RunManagerAdapter;
 import com.intellij.execution.RunManagerEx;
 import com.intellij.ide.util.treeView.TreeState;
@@ -24,7 +25,10 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAwareRunnable;
+import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
@@ -36,7 +40,9 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.messages.MessageBusConnection;
 import icons.MavenIcons;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.idea.maven.execution.MavenRunner;
@@ -155,9 +161,21 @@ public class MavenProjectsNavigator extends MavenSimpleProjectComponent implemen
   private void doInit() {
     listenForProjectsChanges();
     if (isUnitTestMode()) return;
-    MavenUtil.runWhenInitialized(myProject, new DumbAwareRunnable() {
-      public void run() {
-        initToolWindow();
+
+    final MessageBusConnection connect = myProject.getMessageBus().connect();
+
+    connect.subscribe(ProjectTopics.MODULES, new ModuleAdapter() {
+      @Override
+      public void moduleAdded(Project project, Module module) {
+        if (ModuleUtilCore.getExtension(module, JavaModuleExtension.class) != null) {
+          MavenUtil.runWhenInitialized(myProject, new DumbAwareRunnable() {
+            @Override
+            public void run() {
+              initToolWindow();
+            }
+          });
+          connect.disconnect();
+        }
       }
     });
   }

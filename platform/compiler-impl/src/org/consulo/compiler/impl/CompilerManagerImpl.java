@@ -20,6 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
+import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -277,6 +278,11 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   public boolean isExcludedFromCompilation(@NotNull VirtualFile file) {
     return false;    //TODO [VISTALL] !!
+  }
+
+  @Override
+  public ExcludedEntriesConfiguration getExcludedEntriesConfiguration() {
+    return null;
   }
 
   @Override

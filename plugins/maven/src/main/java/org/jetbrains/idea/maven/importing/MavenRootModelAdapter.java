@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.util.Processor;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenArtifact;
@@ -60,12 +61,14 @@ public class MavenRootModelAdapter {
   }
 
   private void setupInitialValues(boolean newlyCreatedModule) {
+    /*
+    //TODO [VISTALL] something new ?
     if (newlyCreatedModule || myRootModel.getSdk() == null) {
       myRootModel.inheritSdk();
     }
     if (newlyCreatedModule) {
       getCompilerExtension().setExcludeOutput(true);
-    }
+    } */
   }
 
   private void initContentRoots() {
@@ -105,7 +108,7 @@ public class MavenRootModelAdapter {
 
   public void clearSourceFolders() {
     for (ContentEntry each : myRootModel.getContentEntries()) {
-      each.clearSourceFolders();
+      each.clearFolders(ContentFolderType.SOURCE);
     }
   }
 
@@ -127,7 +130,7 @@ public class MavenRootModelAdapter {
     if (e == null) return;
     unregisterAll(path, true, true);
     unregisterAll(path, false, true);
-    e.addSourceFolder(url.getUrl(), testSource);
+    e.addFolder(url.getUrl(), testSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
   }
 
   public void addSourceFolderSoft(String path, boolean testSource) {
@@ -138,14 +141,14 @@ public class MavenRootModelAdapter {
     if (e == null) return;
 
     if (!hasCollision(path)) {
-      e.addSourceFolder(url.getUrl(), testSource);
+      e.addFolder(url.getUrl(), testSource ? ContentFolderType.SOURCE : ContentFolderType.TEST);
     }
   }
 
   public boolean hasRegisteredSourceSubfolder(File f) {
     String url = toUrl(f.getPath()).getUrl();
     for (ContentEntry eachEntry : myRootModel.getContentEntries()) {
-      for (SourceFolder eachFolder : eachEntry.getSourceFolders()) {
+      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.SOURCE)) {
         if (isEqualOrAncestor(url, eachFolder.getUrl())) return true;
       }
     }
@@ -155,7 +158,7 @@ public class MavenRootModelAdapter {
   public boolean isAlreadyExcluded(File f) {
     String url = toUrl(f.getPath()).getUrl();
     for (ContentEntry eachEntry : myRootModel.getContentEntries()) {
-      for (ExcludeFolder eachFolder : eachEntry.getExcludeFolders()) {
+      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.EXCLUDED)) {
         if (isEqualOrAncestor(eachFolder.getUrl(), url)) return true;
       }
     }
@@ -176,7 +179,7 @@ public class MavenRootModelAdapter {
     ContentEntry e = getContentRootFor(url);
     if (e == null) return;
     if (e.getUrl().equals(url.getUrl())) return;
-    e.addExcludeFolder(url.getUrl());
+    e.addFolder(url.getUrl(), ContentFolderType.EXCLUDED);
   }
 
   public void unregisterAll(String path, boolean under, boolean unregisterSources) {
@@ -184,25 +187,26 @@ public class MavenRootModelAdapter {
 
     for (ContentEntry eachEntry : myRootModel.getContentEntries()) {
       if (unregisterSources) {
-        for (SourceFolder eachFolder : eachEntry.getSourceFolders()) {
+        for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.SOURCE)) {
           String ancestor = under ? url.getUrl() : eachFolder.getUrl();
           String child = under ? eachFolder.getUrl() : url.getUrl();
           if (isEqualOrAncestor(ancestor, child)) {
-            eachEntry.removeSourceFolder(eachFolder);
+            eachEntry.removeFolder(eachFolder);
           }
         }
       }
 
-      for (ExcludeFolder eachFolder : eachEntry.getExcludeFolders()) {
+      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.EXCLUDED)) {
         String ancestor = under ? url.getUrl() : eachFolder.getUrl();
         String child = under ? eachFolder.getUrl() : url.getUrl();
 
         if (isEqualOrAncestor(ancestor, child)) {
           if (eachFolder.isSynthetic()) {
-            getCompilerExtension().setExcludeOutput(false);
+            CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myRootModel.getProject());
+            compilerPathsManager.setExcludeOutput(getModule(), false);
           }
           else {
-            eachEntry.removeExcludeFolder(eachFolder);
+            eachEntry.removeFolder(eachFolder);
           }
         }
       }
@@ -213,7 +217,7 @@ public class MavenRootModelAdapter {
     Url url = toUrl(sourceRootPath);
 
     for (ContentEntry eachEntry : myRootModel.getContentEntries()) {
-      for (SourceFolder eachFolder : eachEntry.getSourceFolders()) {
+      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.SOURCE)) {
         String ancestor = url.getUrl();
         String child = eachFolder.getUrl();
         if (isEqualOrAncestor(ancestor, child) || isEqualOrAncestor(child, ancestor)) {
@@ -221,7 +225,7 @@ public class MavenRootModelAdapter {
         }
       }
 
-      for (ExcludeFolder eachFolder : eachEntry.getExcludeFolders()) {
+      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.EXCLUDED)) {
         String ancestor = url.getUrl();
         String child = eachFolder.getUrl();
 
@@ -235,13 +239,12 @@ public class MavenRootModelAdapter {
   }
 
   public void useModuleOutput(String production, String test) {
-    getCompilerExtension().inheritCompilerOutputPath(false);
-    getCompilerExtension().setCompilerOutputPath(toUrl(production).getUrl());
-    getCompilerExtension().setCompilerOutputPathForTests(toUrl(test).getUrl());
-  }
+    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myRootModel.getProject());
 
-  private CompilerModuleExtension getCompilerExtension() {
-    return myRootModel.getModuleExtensionOld(CompilerModuleExtension.class);
+    compilerPathsManager.setInheritedCompilerOutput(getModule(), false);
+    compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.SOURCE, toUrl(production).getUrl());
+    compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.TEST, toUrl(test).getUrl());
+    compilerPathsManager.setInheritedCompilerOutput(getModule(), false);
   }
 
   private Url toUrl(String path) {

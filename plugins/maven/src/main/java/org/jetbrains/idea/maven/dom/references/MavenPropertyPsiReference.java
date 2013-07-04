@@ -21,8 +21,8 @@ import com.intellij.lang.properties.IProperty;
 import com.intellij.lang.properties.PropertiesLanguage;
 import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -40,6 +40,7 @@ import com.intellij.util.xml.DomUtil;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.XmlNSDescriptor;
 import gnu.trove.THashSet;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.dom.MavenDomProjectProcessorUtils;
@@ -240,7 +241,7 @@ public class MavenPropertyPsiReference extends MavenPsiReference {
     Module module = myProjectsManager.findModule(mavenProject);
     if (module == null) return null;
 
-    Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
     if (sdk == null) return null;
 
     VirtualFile homeDirectory = sdk.getHomeDirectory();

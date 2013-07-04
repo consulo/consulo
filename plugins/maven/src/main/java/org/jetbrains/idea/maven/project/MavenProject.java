@@ -16,7 +16,6 @@
 package org.jetbrains.idea.maven.project;
 
 import com.intellij.execution.configurations.ParametersList;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -992,14 +991,6 @@ public class MavenProject {
   public List<MavenImporter> getSuitableImporters() {
     return MavenImporter.getSuitableImporters(this);
   }
-
-  @NotNull
-  public ModuleType getModuleType() {
-    final List<MavenImporter> importers = getSuitableImporters();
-    // getSuitableImporters() guarantees that all returned importers require the same module type
-    return importers.size() > 0 ? importers.get(0).getModuleType() : StdModuleTypes.JAVA;
-  }
-
   @NotNull
   public Pair<String, String> getClassifierAndExtension(@NotNull MavenArtifact artifact, @NotNull MavenExtraArtifactType type) {
     for (MavenImporter each : getSuitableImporters()) {

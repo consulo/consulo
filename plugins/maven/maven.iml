@@ -53,6 +53,7 @@
     <orderEntry type="module" module-name="compiler-artifact-impl" />
     <orderEntry type="library" name="Groovy" level="project" />
     <orderEntry type="module" module-name="groovy" />
+    <orderEntry type="module" module-name="java-compiler-impl" />
   </component>
   <component name="copyright">
     <Base>

@@ -15,12 +15,13 @@
  */
 package org.jetbrains.idea.maven.importing.configurers;
 
-import com.intellij.compiler.CompilerConfigurationImpl;
+import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -45,7 +46,7 @@ public class MavenAnnotationProcessorConfigurer extends MavenModuleConfigurer {
   public void configure(@NotNull MavenProject mavenProject, @NotNull Project project, @Nullable Module module) {
     if (module == null) return;
 
-    Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
     if (sdk != null) {
       String versionString = sdk.getVersionString();
       if (versionString != null) {
@@ -55,7 +56,7 @@ public class MavenAnnotationProcessorConfigurer extends MavenModuleConfigurer {
       }
     }
 
-    CompilerConfigurationImpl compilerConfiguration = (CompilerConfigurationImpl)CompilerConfigurationOld.getInstance(project);
+    JavaCompilerConfiguration compilerConfiguration = JavaCompilerConfiguration.getInstance(project);
 
     ProcessorConfigProfile currentProfile = compilerConfiguration.getAnnotationProcessingConfiguration(module);
 

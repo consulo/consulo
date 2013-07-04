@@ -15,7 +15,6 @@
  */
 package org.jetbrains.idea.maven.importing;
 
-import com.intellij.facet.ModifiableFacetModel;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -32,8 +31,6 @@ public interface MavenModifiableModelsProvider extends MavenModelsProvider {
   ModifiableModuleModel getModuleModel();
 
   ModifiableRootModel getRootModel(Module module);
-
-  ModifiableFacetModel getFacetModel(Module module);
 
   ModifiableArtifactModel getArtifactModel();
 

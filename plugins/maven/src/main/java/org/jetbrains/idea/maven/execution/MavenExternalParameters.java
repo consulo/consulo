@@ -268,9 +268,17 @@ public class MavenExternalParameters {
 
   @NotNull
   private static Sdk getJdk(@Nullable Project project, MavenRunnerSettings runnerSettings, boolean isGlobalRunnerSettings) throws ExecutionException {
+    Sdk internal = null;
+    for (Sdk sdk : SdkTable.getInstance().getAllSdks()) {
+      if(sdk.isBundled() && sdk.getSdkType() == JavaSdk.getInstance()) {
+        internal = sdk;
+        break;
+      }
+    }
+
     String name = runnerSettings.getJreName();
     if (name.equals(MavenRunnerSettings.USE_INTERNAL_JAVA)) {
-      return JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk();
+      return internal;
     }
 
     if (name.equals(MavenRunnerSettings.USE_PROJECT_JDK)) {
@@ -284,7 +292,7 @@ public class MavenExternalParameters {
       if (project == null) {
         Sdk recent = SdkTable.getInstance().findMostRecentSdkOfType(JavaSdk.getInstance());
         if (recent != null) return recent;
-        return JavaAwareProjectSdkTableImpl.getInstanceEx().getInternalJdk();
+        return internal;
       }
 
       throw new ProjectJdkSettingsOpenerExecutionException("Project JDK is not specified. <a href='#'>Configure</a>", project);

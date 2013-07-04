@@ -84,8 +84,6 @@ public class MavenModuleImporter {
       public void run() {
         if (myModule.isDisposed()) return;
 
-        final ModuleType moduleType = ModuleType.get(myModule);
-
         for (final MavenImporter importer : getSuitableImporters()) {
           final MavenProjectChanges changes;
           if (myMavenProjectChanges == null) {
@@ -96,9 +94,7 @@ public class MavenModuleImporter {
             changes = myMavenProjectChanges;
           }
 
-          if (importer.getModuleType() == moduleType) {
-            importer.preProcess(myModule, myMavenProject, changes, myModifiableModelsProvider);
-          }
+          importer.preProcess(myModule, myMavenProject, changes, myModifiableModelsProvider);
         }
       }
     });
@@ -109,8 +105,6 @@ public class MavenModuleImporter {
       public void run() {
         if (myModule.isDisposed()) return;
 
-        final ModuleType moduleType = ModuleType.get(myModule);
-
         for (final MavenImporter importer : getSuitableImporters()) {
           final MavenProjectChanges changes;
           if (myMavenProjectChanges == null) {
@@ -121,16 +115,14 @@ public class MavenModuleImporter {
             changes = myMavenProjectChanges;
           }
 
-          if (importer.getModuleType() == moduleType) {
-            importer.process(myModifiableModelsProvider,
-                             myModule,
-                             myRootModelAdapter,
-                             myMavenTree,
-                             myMavenProject,
-                             changes,
-                             myMavenProjectToModuleName,
-                             postTasks);
-          }
+          importer.process(myModifiableModelsProvider,
+                           myModule,
+                           myRootModelAdapter,
+                           myMavenTree,
+                           myMavenProject,
+                           changes,
+                           myMavenProjectToModuleName,
+                           postTasks);
         }
       }
     });

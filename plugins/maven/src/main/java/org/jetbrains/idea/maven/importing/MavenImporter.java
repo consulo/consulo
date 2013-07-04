@@ -17,14 +17,9 @@ package org.jetbrains.idea.maven.importing;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenArtifact;
 import org.jetbrains.idea.maven.project.*;
@@ -33,7 +28,10 @@ import org.jetbrains.idea.maven.server.NativeMavenProjectHolder;
 import org.jetbrains.idea.maven.utils.MavenJDOMUtil;
 import org.jetbrains.idea.maven.utils.MavenProcessCanceledException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class MavenImporter {
   public static ExtensionPointName<MavenImporter> EXTENSION_POINT_NAME = ExtensionPointName.create("org.jetbrains.idea.maven.importer");
@@ -47,46 +45,16 @@ public abstract class MavenImporter {
 
   public static List<MavenImporter> getSuitableImporters(MavenProject p) {
     final List<MavenImporter> result = new ArrayList<MavenImporter>();
-    final Set<ModuleType> moduleTypes = new THashSet<ModuleType>();
     for (MavenImporter importer : EXTENSION_POINT_NAME.getExtensions()) {
       if (importer.isApplicable(p)) {
         result.add(importer);
-        moduleTypes.add(importer.getModuleType());
       }
     }
-
-    if (moduleTypes.size() <= 1) {
-      return result;
-    }
-
-    // This code is reached when several importers say that they are applicable but they want to have different module types.
-    // Now we select one module type and return only those importers that are ok with it.
-    // If possible - return at least one importer that explicitly supports packaging of the given maven project.
-    ModuleType moduleType = result.get(0).getModuleType();
-    for (MavenImporter importer : result) {
-      final List<String> supportedPackagings = new ArrayList<String>();
-      importer.getSupportedPackagings(supportedPackagings);
-      if (supportedPackagings.contains(p.getPackaging())) {
-        moduleType = importer.getModuleType();
-        break;
-      }
-    }
-
-    final ModuleType finalModuleType = moduleType;
-    return ContainerUtil.filter(result, new Condition<MavenImporter>() {
-      public boolean value(final MavenImporter importer) {
-        return importer.getModuleType() == finalModuleType;
-      }
-    });
+    return result;
   }
 
   public boolean isApplicable(MavenProject mavenProject) {
     return mavenProject.findPlugin(myPluginGroupID, myPluginArtifactID) != null;
-  }
-
-  @NotNull
-  public ModuleType getModuleType() {
-    return StdModuleTypes.JAVA;
   }
 
   public void getSupportedPackagings(Collection<String> result) {

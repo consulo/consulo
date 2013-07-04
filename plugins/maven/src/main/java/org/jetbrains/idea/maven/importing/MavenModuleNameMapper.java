@@ -15,14 +15,12 @@
  */
 package org.jetbrains.idea.maven.importing;
 
-import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenId;
 import org.jetbrains.idea.maven.project.MavenProject;
 
-import java.io.File;
 import java.util.*;
 
 public class MavenModuleNameMapper {
@@ -171,21 +169,15 @@ public class MavenModuleNameMapper {
     for (MavenProject each : projects) {
       Module module = mavenProjectToModule.get(each);
       String path = module != null
-                    ? module.getModuleFilePath()
-                    : generateModulePath(each,
-                                         mavenProjectToModuleName,
-                                         dedicatedModuleDir);
+                    ? module.getModuleDirPath()
+                    : generateModulePath(each, dedicatedModuleDir);
       mavenProjectToModulePath.put(each, path);
     }
   }
 
-  private static String generateModulePath(MavenProject project,
-                                           Map<MavenProject, String> mavenProjectToModuleName,
-                                           String dedicatedModuleDir) {
-    String dir = StringUtil.isEmptyOrSpaces(dedicatedModuleDir)
+  private static String generateModulePath(MavenProject project, String dedicatedModuleDir) {
+    return StringUtil.isEmptyOrSpaces(dedicatedModuleDir)
                  ? project.getDirectory()
                  : dedicatedModuleDir;
-    String fileName = mavenProjectToModuleName.get(project) + ModuleFileType.DOT_DEFAULT_EXTENSION;
-    return new File(dir, fileName).getPath();
   }
 }

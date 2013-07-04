@@ -15,6 +15,8 @@
  */
 package com.intellij.compiler.server;
 
+import com.intellij.openapi.project.Project;
+
 import java.io.File;
 import java.util.Collection;
 
@@ -35,5 +37,16 @@ public class BuildManager {
 
   public void notifyFilesChanged(Collection<File> paths) {
 
+  }
+
+  public File getProjectSystemDirectory(Project project) {
+    return null;
+  }
+
+  public void clearState(Project project) {
+
+  }
+  public void runCommand(Runnable runnable) {
+    runnable.run();
   }
 }

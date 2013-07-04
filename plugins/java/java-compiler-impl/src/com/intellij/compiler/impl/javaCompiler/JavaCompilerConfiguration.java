@@ -53,6 +53,10 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
     return null; //TODO [VISTALL]
   }
 
+  public void setBytecodeTargetLevel(Module module, String level) {
+
+  }
+
   public boolean isAddNotNullAssertions() {
     return false;//TODO [VISTALL]
   }
@@ -270,5 +274,26 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
       }
     }
     return false;
+  }
+
+  public void removeModuleProcessorProfile(ProcessorConfigProfile profile) {
+    myModuleProcessorProfiles.remove(profile);
+    myProcessorsProfilesMap = null; // clear cache
+  }
+
+  public void addModuleProcessorProfile(@NotNull ProcessorConfigProfile profile) {
+    myModuleProcessorProfiles.add(profile);
+    myProcessorsProfilesMap = null; // clear cache
+  }
+
+  @Nullable
+  public ProcessorConfigProfile findModuleProcessorProfile(@NotNull String name) {
+    for (ProcessorConfigProfile profile : myModuleProcessorProfiles) {
+      if (name.equals(profile.getName())) {
+        return profile;
+      }
+    }
+
+    return null;
   }
 }
