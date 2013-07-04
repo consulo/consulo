@@ -686,8 +686,8 @@ public class ImportHelper{
   private static Collection<Pair<String,Boolean>> collectNamesToImport(@NotNull PsiJavaFile file, List<PsiElement> comments){
     Set<Pair<String,Boolean>> names = new THashSet<Pair<String,Boolean>>();
 
+    collectNamesToImport(names, comments, file, null);
     //final JspFile jspFile = JspPsiUtil.getJspFile(file);
-    //collectNamesToImport(names, comments, file, jspFile);
    /* if (jspFile != null) {
       PsiFile[] files = ArrayUtil.mergeArrays(JspSpiUtil.getIncludingFiles(jspFile), JspSpiUtil.getIncludedFiles(jspFile));
       for (PsiFile includingFile : files) {
