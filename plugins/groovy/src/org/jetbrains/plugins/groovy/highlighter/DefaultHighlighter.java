@@ -44,8 +44,6 @@ public class DefaultHighlighter {
   @NonNls
   static final String DOC_COMMENT_TAG_ID = "Groovydoc tag";
   @NonNls
-  static final String KEYWORD_ID = "Keyword";
-  @NonNls
   static final String NUMBER_ID = "Number";
   @NonNls
   static final String GSTRING_ID = "GString";
@@ -146,26 +144,13 @@ public class DefaultHighlighter {
   public static final TextAttributesKey TYPE_PARAMETER = 
     TextAttributesKey.createTextAttributesKey(TYPE_PARAMETER_ID, CodeInsightColors.TYPE_PARAMETER_NAME_ATTRIBUTES);
 
-  public static final TextAttributes INSTANCE_PROPERTY_REFERENCE_ATTRIBUTES = INSTANCE_FIELD.getDefaultAttributes().clone();
-  public static final TextAttributes STATIC_PROPERTY_REFERENCE_ATTRIBUTES = STATIC_FIELD.getDefaultAttributes().clone();
-  static {
-    INSTANCE_PROPERTY_REFERENCE_ATTRIBUTES.setFontType(Font.PLAIN);
-    STATIC_PROPERTY_REFERENCE_ATTRIBUTES.setFontType(Font.ITALIC);
-  }
-
   public static final TextAttributesKey INSTANCE_PROPERTY_REFERENCE =
-    TextAttributesKey.createTextAttributesKey(INSTANCE_PROPERTY_REFERENCE_ID, INSTANCE_PROPERTY_REFERENCE_ATTRIBUTES);
+    TextAttributesKey.createTextAttributesKey(INSTANCE_PROPERTY_REFERENCE_ID, DefaultLanguageHighlighterColors.INSTANCE_FIELD);
 
   public static final TextAttributesKey STATIC_PROPERTY_REFERENCE =
-    TextAttributesKey.createTextAttributesKey(STATIC_PROPERTY_REFERENCE_ID, STATIC_PROPERTY_REFERENCE_ATTRIBUTES);
+    TextAttributesKey.createTextAttributesKey(STATIC_PROPERTY_REFERENCE_ID, DefaultLanguageHighlighterColors.STATIC_FIELD);
 
-  public static final TextAttributes KEYWORD_ATTRIBUTES = JavaHighlightingColors.KEYWORD.getDefaultAttributes().clone();
-
-  public static final TextAttributesKey KEYWORD = TextAttributesKey.createTextAttributesKey("GROOVY_" + KEYWORD_ID.toUpperCase(), KEYWORD_ATTRIBUTES);
-  static {
-    KEYWORD_ATTRIBUTES.setForegroundColor(new JBColor(new Color(0, 0, 67), new Color(0, 0, 67)));
-    KEYWORD_ATTRIBUTES.setFontType(Font.BOLD);
-  }
+  public static final TextAttributesKey KEYWORD = TextAttributesKey.createTextAttributesKey("GROOVY_KEYWORD", JavaHighlightingColors.KEYWORD);
 
   public static final TextAttributesKey NUMBER = TextAttributesKey.createTextAttributesKey(NUMBER_ID, JavaHighlightingColors.NUMBER);
 
