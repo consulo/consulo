@@ -29,7 +29,10 @@ import org.jetbrains.annotations.NotNull;
  * @since 10:02/19.05.13
  */
 public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleExtension> {
+  private static final String SPECIAL_DIR_LOCATION = "special-dir-location";
+
   protected LanguageLevelModuleInheritableNamedPointerImpl myLanguageLevel;
+  protected SpecialDirLocation mySpecialDirLocation = SpecialDirLocation.MODULE_DIR;
 
   public JavaModuleExtension(@NotNull String id, @NotNull Module module) {
     super(id, module);
@@ -41,11 +44,17 @@ public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleEx
     super.commit(mutableModuleExtension);
 
     myLanguageLevel.set(mutableModuleExtension.getInheritableLanguageLevel());
+    mySpecialDirLocation = mutableModuleExtension.getSpecialDirLocation();
   }
 
   @NotNull
   public LanguageLevel getLanguageLevel() {
     return myLanguageLevel.get();
+  }
+
+  @NotNull
+  public SpecialDirLocation getSpecialDirLocation() {
+    return mySpecialDirLocation;
   }
 
   @NotNull
@@ -63,6 +72,7 @@ public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleEx
     super.getStateImpl(element);
 
     myLanguageLevel.toXml(element);
+    element.setAttribute(SPECIAL_DIR_LOCATION, mySpecialDirLocation.name());
   }
 
   @Override
@@ -70,5 +80,6 @@ public class JavaModuleExtension extends ModuleExtensionWithSdkImpl<JavaModuleEx
     super.loadStateImpl(element);
 
     myLanguageLevel.fromXml(element);
+    mySpecialDirLocation = SpecialDirLocation.valueOf(element.getAttributeValue(SPECIAL_DIR_LOCATION, SpecialDirLocation.MODULE_DIR.name()));
   }
 }

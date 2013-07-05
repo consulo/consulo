@@ -60,6 +60,10 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
     return myLanguageLevel;
   }
 
+  public void setSpecialDirLocation(SpecialDirLocation specialDirLocation) {
+    mySpecialDirLocation = specialDirLocation;
+  }
+
   @Override
   public boolean isModified() {
     if(isModifiedImpl(myModuleExtension)) {
@@ -67,6 +71,10 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
     }
 
     if(!myLanguageLevel.equals(myModuleExtension.getInheritableLanguageLevel())) {
+      return true;
+    }
+
+    if(!mySpecialDirLocation.equals(myModuleExtension.getSpecialDirLocation())) {
       return true;
     }
     return false;

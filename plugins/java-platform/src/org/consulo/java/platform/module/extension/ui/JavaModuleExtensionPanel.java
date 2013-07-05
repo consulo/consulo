@@ -25,10 +25,13 @@ import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.SpecialDirLocation;
 import org.consulo.module.extension.*;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -42,10 +45,31 @@ public class JavaModuleExtensionPanel extends JPanel {
   private ComboBox myLanguageLevelComboBox;
   private ModuleExtensionWithSdkPanel myModuleExtensionWithSdkPanel;
   private JPanel myRoot;
+  private JRadioButton myModuleDirRadioButton;
+  private JRadioButton mySourceDirRadioButton;
 
   public JavaModuleExtensionPanel(JavaMutableModuleExtension mutableModuleExtension, Runnable classpathStateUpdater) {
     myMutableModuleExtension = mutableModuleExtension;
     myClasspathStateUpdater = classpathStateUpdater;
+
+    final JRadioButton radioButton =
+      myMutableModuleExtension.getSpecialDirLocation() == SpecialDirLocation.MODULE_DIR ? myModuleDirRadioButton : mySourceDirRadioButton;
+    radioButton.setSelected(true);
+
+    ChangeListener changeListener = new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        if (mySourceDirRadioButton.isSelected()) {
+          myMutableModuleExtension.setSpecialDirLocation(SpecialDirLocation.SOURCE_DIR);
+        }
+        else if (myModuleDirRadioButton.isSelected()) {
+          myMutableModuleExtension.setSpecialDirLocation(SpecialDirLocation.MODULE_DIR);
+        }
+      }
+    };
+
+    myModuleDirRadioButton.addChangeListener(changeListener);
+    mySourceDirRadioButton.addChangeListener(changeListener);
   }
 
   private void createUIComponents() {
@@ -61,12 +85,12 @@ public class JavaModuleExtensionPanel extends JPanel {
           append(" ");
           append(languageLevel.getDescription(), SimpleTextAttributes.GRAY_ATTRIBUTES);
         }
-        else if(value instanceof Module) {
+        else if (value instanceof Module) {
           setIcon(AllIcons.Nodes.Module);
           append(((Module)value).getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
 
           final JavaModuleExtension extension = ModuleUtilCore.getExtension((Module)value, JavaModuleExtension.class);
-          if(extension != null) {
+          if (extension != null) {
             final LanguageLevel languageLevel = extension.getLanguageLevel();
             append("(" + languageLevel.getShortText() + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
           }
@@ -78,17 +102,18 @@ public class JavaModuleExtensionPanel extends JPanel {
       }
     });
 
-    for(LanguageLevel languageLevel : LanguageLevel.values()) {
+    for (LanguageLevel languageLevel : LanguageLevel.values()) {
       myLanguageLevelComboBox.addItem(languageLevel);
     }
-    insertModuleItems() ;
+    insertModuleItems();
 
-    final MutableModuleInheritableNamedPointer<LanguageLevel> inheritableLanguageLevel = myMutableModuleExtension.getInheritableLanguageLevel();
+    final MutableModuleInheritableNamedPointer<LanguageLevel> inheritableLanguageLevel =
+      myMutableModuleExtension.getInheritableLanguageLevel();
 
     final String moduleName = inheritableLanguageLevel.getModuleName();
-    if(moduleName != null) {
+    if (moduleName != null) {
       final Module module = inheritableLanguageLevel.getModule();
-      if(module != null) {
+      if (module != null) {
         myLanguageLevelComboBox.setSelectedItem(module);
       }
       else {
@@ -103,10 +128,10 @@ public class JavaModuleExtensionPanel extends JPanel {
       @Override
       public void itemStateChanged(ItemEvent e) {
         final Object selectedItem = myLanguageLevelComboBox.getSelectedItem();
-        if(selectedItem instanceof Module) {
+        if (selectedItem instanceof Module) {
           inheritableLanguageLevel.set(((Module)selectedItem).getName(), null);
         }
-        else if(selectedItem instanceof LanguageLevel) {
+        else if (selectedItem instanceof LanguageLevel) {
           inheritableLanguageLevel.set(null, ((LanguageLevel)selectedItem).getName());
         }
         else {
@@ -118,21 +143,21 @@ public class JavaModuleExtensionPanel extends JPanel {
 
   public void insertModuleItems() {
     final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(myMutableModuleExtension.getId());
-    if(provider == null) {
+    if (provider == null) {
       return;
     }
 
-    for(Module module : ModuleManager.getInstance(myMutableModuleExtension.getModule().getProject()).getModules()) {
+    for (Module module : ModuleManager.getInstance(myMutableModuleExtension.getModule().getProject()).getModules()) {
       // dont add self module
-      if(module == myMutableModuleExtension.getModule()) {
+      if (module == myMutableModuleExtension.getModule()) {
         continue;
       }
 
       final ModuleExtension extension = ModuleUtilCore.getExtension(module, provider.getImmutableClass());
-      if(extension instanceof ModuleExtensionWithSdk) {
+      if (extension instanceof ModuleExtensionWithSdk) {
         final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
         // recursive depend
-        if(sdkExtension.getInheritableSdk().getModule() == myMutableModuleExtension.getModule())  {
+        if (sdkExtension.getInheritableSdk().getModule() == myMutableModuleExtension.getModule()) {
           continue;
         }
         myLanguageLevelComboBox.addItem(sdkExtension.getModule());
