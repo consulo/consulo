@@ -202,7 +202,7 @@ public class CompilerPaths {
   public static String getGenerationOutputPath(IntermediateOutputCompiler compiler, Module module, final boolean forTestSources) {
     final String generatedCompilerDirectoryPath = getGeneratedDataDirectory(module.getProject(), compiler).getPath();
     //noinspection HardCodedStringLiteral
-    final String moduleDir = module.getName().replaceAll("\\s+", "_") + "." + Integer.toHexString(module.getModuleFilePath().hashCode());
+    final String moduleDir = module.getName().replaceAll("\\s+", "_") + "." + Integer.toHexString(module.getModuleDirPath().hashCode());
     return generatedCompilerDirectoryPath.replace(File.separatorChar, '/') +
            "/" +
            moduleDir +
