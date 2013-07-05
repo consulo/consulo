@@ -83,7 +83,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     final PsiFile templateFile = createTemplateFile(file, language, chars, viewProvider);
 
     final TreeElement parsed = ((PsiFileImpl)templateFile).calcTreeElement();
-    Lexer langLexer = LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(file.getProject(), Language.UNKNOWN_VERSION);
+    Lexer langLexer = LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(file.getProject(), templateFile.getLanguageVersion());
     final Lexer lexer = new MergingLexerAdapter(
       new TemplateBlackAndWhiteLexer(createBaseLexer(viewProvider), langLexer, myTemplateElementType, myOuterElementType),
       TokenSet.create(myTemplateElementType, myOuterElementType));
