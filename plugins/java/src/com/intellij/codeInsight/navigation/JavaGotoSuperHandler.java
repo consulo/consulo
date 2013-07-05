@@ -15,12 +15,12 @@
  */
 package com.intellij.codeInsight.navigation;
 
+import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.codeInsight.navigation.actions.GotoSuperAction;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.util.MethodCellRenderer;
-import com.intellij.lang.LanguageCodeInsightActionHandler;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -33,7 +33,7 @@ import com.intellij.psi.util.PsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class JavaGotoSuperHandler implements LanguageCodeInsightActionHandler {
+public class JavaGotoSuperHandler implements CodeInsightActionHandler {
   @Override
   public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed(GotoSuperAction.FEATURE_ID);
@@ -64,15 +64,21 @@ public class JavaGotoSuperHandler implements LanguageCodeInsightActionHandler {
   }
 
   @Nullable
-  private static PsiElement[] findSuperElements(PsiFile file, int offset) {
+  private PsiElement[] findSuperElements(PsiFile file, int offset) {
+    PsiNameIdentifierOwner parent = getElement(file, offset);
+    if (parent == null) return null;
+
+    return FindSuperElementsHelper.findSuperElements(parent);
+  }
+
+  protected PsiNameIdentifierOwner getElement(PsiFile file, int offset) {
     PsiElement element = file.findElementAt(offset);
     if (element == null) return null;
 
     PsiNameIdentifierOwner parent = PsiTreeUtil.getParentOfType(element, PsiMethod.class, PsiClass.class);
     if (parent == null)
       return null;
-
-    return FindSuperElementsHelper.findSuperElements(parent);
+    return parent;
   }
 
   @Override
@@ -80,8 +86,5 @@ public class JavaGotoSuperHandler implements LanguageCodeInsightActionHandler {
     return false;
   }
 
-  @Override
-  public boolean isValidFor(Editor editor, PsiFile file) {
-    return true;
-  }
+
 }

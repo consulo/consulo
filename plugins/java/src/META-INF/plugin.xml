@@ -565,6 +565,7 @@
     </extensionPoint>
     <extensionPoint name="runConfigurationExtension" interface="com.intellij.execution.RunConfigurationExtension"/>
     <extensionPoint name="jreProvider" interface="com.intellij.execution.ui.JreProvider"/>
+    <extensionPoint name="vetoSPICondition" interface="com.intellij.openapi.util.Condition"/>
   </extensionPoints>
 
   <!--TODO [VISTALL] move to platform-->
@@ -1867,6 +1868,13 @@
 
     <applicationService serviceInterface="com.intellij.execution.runners.ProcessProxyFactory"
                         serviceImplementation="com.intellij.execution.runners.ProcessProxyFactoryImpl"/>
+
+    <!--Java SPI-->
+    <codeInsight.gotoSuper language="JAVA-SPI" implementationClass="com.intellij.spi.SPIGotoSuperHandler"/>
+    <lang.parserDefinition language="JAVA-SPI" implementationClass="com.intellij.spi.parsing.SPIParserDefinition"/>
+    <lang.commenter language="JAVA-SPI" implementationClass="com.intellij.spi.SPICommenter"/>
+    <annotator language="JAVA-SPI" implementationClass="com.intellij.spi.SPIAnnotator"/>
+    <lang.substitutor language="TEXT" implementationClass="com.intellij.spi.SPILanguageSubstitutor" />
   </extensions>
 
 
