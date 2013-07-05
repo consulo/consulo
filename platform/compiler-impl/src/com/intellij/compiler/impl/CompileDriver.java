@@ -2095,6 +2095,11 @@ public class CompileDriver {
         }
       }
 
+      CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
+      final VirtualFile compilerOutput = compilerPathsManager.getCompilerOutput();
+      if(compilerOutput != null) {
+        compilerOutput.refresh(false, true);
+      }
       if ((wereFilesDeleted[0] || !toCompile.isEmpty()) && context.getMessageCount(CompilerMessageCategory.ERROR) == 0) {
         compiler.compile(context, moduleChunk, VfsUtilCore.toVirtualFileArray(toCompile), sink);
       }
