@@ -165,7 +165,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     artifact = getOriginalArtifact(artifact);
     ArtifactEditorImpl artifactEditor = myArtifactEditors.get(artifact);
     if (artifactEditor == null) {
-      final ArtifactEditorSettings settings = myEditorSettings.get(ArtifactPointerManager.getInstance(myProject).createPointer(artifact, getArtifactModel()));
+      final ArtifactEditorSettings settings = myEditorSettings.get(ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifact, getArtifactModel()));
       artifactEditor = new ArtifactEditorImpl(this, artifact, settings != null ? settings : myDefaultSettings);
       myArtifactEditors.put(artifact, artifactEditor);
     }
@@ -244,7 +244,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   public void saveEditorSettings() {
     myEditorSettings.clear();
     for (ArtifactEditorImpl artifactEditor : myArtifactEditors.values()) {
-      final ArtifactPointer pointer = ArtifactPointerManager.getInstance(myProject).createPointer(artifactEditor.getArtifact(), getArtifactModel());
+      final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifactEditor.getArtifact(), getArtifactModel());
       myEditorSettings.put(pointer, artifactEditor.createSettings());
     }
   }

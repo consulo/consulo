@@ -15,39 +15,33 @@
  */
 package com.intellij.packaging.artifacts;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
 import org.consulo.util.pointers.NamedPointerManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
  */
-public abstract class ArtifactPointerManager implements NamedPointerManager<Artifact> {
-  public static ArtifactPointerManager getInstance(@NotNull Project project) {
-    return ServiceManager.getService(project, ArtifactPointerManager.class);
-  }
+public interface ArtifactPointerManager extends NamedPointerManager<Artifact> {
+  @NotNull
+  @Override
+  ArtifactPointer create(@NotNull String name);
 
   @NotNull
   @Override
-  public abstract ArtifactPointer create(@NotNull String name);
+  ArtifactPointer create(@NotNull Artifact value);
 
   @NotNull
-  @Override
-  public abstract ArtifactPointer create(@NotNull Artifact value);
-
-  @NotNull
-  public abstract ArtifactPointer create(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
+  ArtifactPointer create(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
 
   @Deprecated
   @NotNull
-  public abstract ArtifactPointer createPointer(@NotNull String name);
+  ArtifactPointer createPointer(@NotNull String name);
 
   @Deprecated
   @NotNull
-  public abstract ArtifactPointer createPointer(@NotNull Artifact artifact);
+  ArtifactPointer createPointer(@NotNull Artifact artifact);
 
   @Deprecated
   @NotNull
-  public abstract ArtifactPointer createPointer(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
+  ArtifactPointer createPointer(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
 }

@@ -96,7 +96,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     final Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
     Set<ArtifactPointer> pointers = new THashSet<ArtifactPointer>();
     for (Artifact artifact : artifacts) {
-      pointers.add(ArtifactPointerManager.getInstance(myProject).createPointer(artifact));
+      pointers.add(ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifact));
     }
     pointers.addAll(task.getArtifactPointers());
     ArtifactChooser chooser = new ArtifactChooser(new ArrayList<ArtifactPointer>(pointers));

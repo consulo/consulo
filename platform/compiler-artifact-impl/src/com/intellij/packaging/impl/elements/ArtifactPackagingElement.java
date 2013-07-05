@@ -21,10 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
-import com.intellij.packaging.artifacts.ArtifactType;
+import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ArtifactElementPresentation;
 import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
@@ -150,7 +147,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
 
   public void loadState(ArtifactPackagingElementState state) {
     final String name = state.getArtifactName();
-    myArtifactPointer = name != null ? ArtifactPointerManager.getInstance(myProject).createPointer(name) : null;
+    myArtifactPointer = name != null ? ArtifactPointerUtil.getPointerManager(myProject).createPointer(name) : null;
   }
 
   @Override

@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.packaging.elements.CompositePackagingElement;
@@ -82,7 +82,7 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
         for (PackagingElement element : selectedElements) {
           parent.removeChild(element);
         }
-        parent.addOrFindChild(new ArtifactPackagingElement(project, ArtifactPointerManager.getInstance(project).createPointer(artifact, myArtifactEditor.getContext().getArtifactModel())));
+        parent.addOrFindChild(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).createPointer(artifact, myArtifactEditor.getContext().getArtifactModel())));
       }
     });
     treeComponent.rebuildTree();

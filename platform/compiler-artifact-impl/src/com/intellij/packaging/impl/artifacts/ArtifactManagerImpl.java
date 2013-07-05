@@ -75,7 +75,6 @@ public class ArtifactManagerImpl extends ArtifactManager implements ProjectCompo
     myProject = project;
     myModel = new ArtifactManagerModel();
     myResolvingContext = new DefaultPackagingElementResolvingContext(myProject);
-    ((ArtifactPointerManagerImpl)ArtifactPointerManager.getInstance(project)).setArtifactManager(this);
   }
 
   @NotNull

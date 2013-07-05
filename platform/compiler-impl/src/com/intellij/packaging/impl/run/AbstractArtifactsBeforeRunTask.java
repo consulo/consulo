@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +48,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   public void readExternal(Element element) {
     super.readExternal(element);
     final List<Element> children = element.getChildren(ARTIFACT_ELEMENT);
-    final ArtifactPointerManager pointerManager = ArtifactPointerManager.getInstance(myProject);
+    final ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(myProject);
     for (Element child : children) {
       myArtifactPointers.add(pointerManager.createPointer(child.getAttributeValue(NAME_ATTRIBUTE)));
     }
@@ -82,14 +83,14 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   }
 
   public void addArtifact(Artifact artifact) {
-    final ArtifactPointer pointer = ArtifactPointerManager.getInstance(myProject).createPointer(artifact);
+    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifact);
     if (!myArtifactPointers.contains(pointer)) {
       myArtifactPointers.add(pointer);
     }
   }
 
   public void removeArtifact(@NotNull Artifact artifact) {
-    removeArtifact(ArtifactPointerManager.getInstance(myProject).createPointer(artifact));
+    removeArtifact(ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifact));
   }
 
   public void removeArtifact(final @NotNull ArtifactPointer pointer) {

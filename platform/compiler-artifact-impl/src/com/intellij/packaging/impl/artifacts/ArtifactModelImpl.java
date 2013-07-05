@@ -160,7 +160,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
         artifacts.add(artifact);
       }
     }
-    ((ArtifactPointerManagerImpl)ArtifactPointerManager.getInstance(myArtifactManager.getProject())).disposePointers(artifacts);
+    ((ArtifactPointerManagerImpl)ArtifactPointerUtil.getPointerManager(myArtifactManager.getProject())).unregisterPointers(artifacts);
   }
 
   @Nullable

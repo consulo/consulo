@@ -18,22 +18,19 @@ package com.intellij.packaging.impl.artifacts;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import com.intellij.packaging.artifacts.ArtifactPointer;
+import org.consulo.util.pointers.NamedPointerImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
  */
-public class ArtifactPointerImpl implements ArtifactPointer {
-  private String myName;
-  private Artifact myArtifact;
-
-  public ArtifactPointerImpl(@NotNull String name) {
-    myName = name;
+public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements ArtifactPointer {
+  public ArtifactPointerImpl(Artifact value) {
+    super(value);
   }
 
-  public ArtifactPointerImpl(@NotNull Artifact artifact) {
-    myArtifact = artifact;
-    myName = artifact.getName();
+  public ArtifactPointerImpl(@NotNull String name) {
+    super(name);
   }
 
   @Override
@@ -50,36 +47,19 @@ public class ArtifactPointerImpl implements ArtifactPointer {
   @Override
   @NotNull
   public String getArtifactName(@NotNull ArtifactModel artifactModel) {
-    if (myArtifact != null) {
-      return artifactModel.getArtifactByOriginal(myArtifact).getName();
+    final Artifact artifact = get();
+    if (artifact != null) {
+      return artifactModel.getArtifactByOriginal(artifact).getName();
     }
-    return myName;
+    return getName();
   }
 
   @Override
   public Artifact findArtifact(@NotNull ArtifactModel artifactModel) {
-    if (myArtifact != null) {
-      return artifactModel.getArtifactByOriginal(myArtifact);
+    final Artifact artifact = get();
+    if (artifact != null) {
+      return artifactModel.getArtifactByOriginal(artifact);
     }
-    return artifactModel.findArtifact(myName);
-  }
-
-  void setArtifact(Artifact artifact) {
-    myArtifact = artifact;
-  }
-
-  void setName(String name) {
-    myName = name;
-  }
-
-  @NotNull
-  @Override
-  public String getName() {
-    return myName;
-  }
-
-  @Override
-  public Artifact get() {
-    return myArtifact;
+    return artifactModel.findArtifact(getName());
   }
 }

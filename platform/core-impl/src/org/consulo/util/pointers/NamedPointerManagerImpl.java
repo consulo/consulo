@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,6 +47,12 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     myPointers.put(value, pointer);
   }
 
+  protected void unregisterPointers(List<? extends T> value) {
+    for (T t : value) {
+      unregisterPointer(t);
+    }
+  }
+
   protected void unregisterPointer(T value) {
     final NamedPointerImpl<T> pointer = myPointers.remove(value);
     if (pointer != null) {
@@ -61,7 +68,7 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     if (pointer == null) {
       pointer = myUnresolved.get(value.getName());
       if (pointer == null) {
-        pointer = new NamedPointerImpl<T>(value);
+        pointer = createImpl(value);
       }
       else {
         pointer.setValue(value);
@@ -81,9 +88,17 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
 
     NamedPointerImpl<T> pointer = myUnresolved.get(name);
     if (pointer == null) {
-      pointer = new NamedPointerImpl<T>(name);
+      pointer = createImpl(name);
       myUnresolved.put(name, pointer);
     }
     return pointer;
+  }
+
+  public NamedPointerImpl<T> createImpl(String name) {
+    return new NamedPointerImpl<T>(name);
+  }
+
+  public NamedPointerImpl<T> createImpl(T t) {
+    return new NamedPointerImpl<T>(t);
   }
 }

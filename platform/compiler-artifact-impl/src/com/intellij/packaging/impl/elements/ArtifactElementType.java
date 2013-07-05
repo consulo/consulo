@@ -20,7 +20,7 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.ComplexPackagingElementType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
@@ -58,7 +58,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     List<Artifact> artifacts = context.chooseArtifacts(getAvailableArtifacts(context, artifact, false), CompilerBundle.message("dialog.title.choose.artifacts"));
     final List<ArtifactPackagingElement> elements = new ArrayList<ArtifactPackagingElement>();
     for (Artifact selected : artifacts) {
-      elements.add(new ArtifactPackagingElement(project, ArtifactPointerManager.getInstance(project).createPointer(selected, context.getArtifactModel())));
+      elements.add(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).createPointer(selected, context.getArtifactModel())));
     }
     return elements;
   }

@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.ArrayUtil;
@@ -129,7 +129,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @NotNull
   @Override
   public PackagingElement<?> createArtifactElement(@NotNull Artifact artifact, @NotNull Project project) {
-    return new ArtifactPackagingElement(project, ArtifactPointerManager.getInstance(project).createPointer(artifact));
+    return new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).createPointer(artifact));
   }
 
   @Override

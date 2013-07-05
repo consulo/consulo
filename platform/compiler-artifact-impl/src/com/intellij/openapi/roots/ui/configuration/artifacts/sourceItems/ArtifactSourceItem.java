@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
-import com.intellij.packaging.artifacts.ArtifactPointerManager;
+import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
@@ -45,7 +45,7 @@ public class ArtifactSourceItem extends PackagingSourceItem {
 
   @Override
   public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
-    final ArtifactPointer pointer = ArtifactPointerManager.getInstance(context.getProject()).createPointer(myArtifact, context.getArtifactModel());
+    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(context.getProject()).create(myArtifact, context.getArtifactModel());
     return new DelegatedSourceItemPresentation(new ArtifactElementPresentation(pointer, context)) {
       @Override
       public int getWeight() {
@@ -58,7 +58,7 @@ public class ArtifactSourceItem extends PackagingSourceItem {
   @NotNull
   public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
     final Project project = context.getProject();
-    final ArtifactPointer pointer = ArtifactPointerManager.getInstance(project).createPointer(myArtifact, context.getArtifactModel());
+    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(project).create(myArtifact, context.getArtifactModel());
     return Collections.singletonList(PackagingElementFactory.getInstance().createArtifactElement(pointer, project));
   }
 
