@@ -21,7 +21,6 @@ package com.intellij.compiler.impl.packagingCompiler;
 
 import com.intellij.openapi.compiler.make.BuildInstruction;
 import com.intellij.openapi.compiler.make.BuildInstructionVisitor;
-import com.intellij.openapi.compiler.make.BuildRecipe;
 import com.intellij.openapi.deployment.DeploymentUtil;
 import org.jetbrains.annotations.NotNull;
 

@@ -18,7 +18,6 @@ package com.intellij.packaging.impl.util;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.compiler.make.BuildRecipe;
 import com.intellij.openapi.deployment.DeploymentUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
@@ -113,13 +112,4 @@ public class DeploymentUtilImpl extends DeploymentUtil {
     return CompilerBundle.message("message.text.error.copying.file.to.file", FileUtil.toSystemDependentName(fromFile.getPath()),
                                   FileUtil.toSystemDependentName(toFile.getPath()));
   }
-
-  public final boolean addItemsRecursively(@NotNull BuildRecipe items, @NotNull File root, String outputRelativePath) {
-    if (outputRelativePath == null) outputRelativePath = "";
-    outputRelativePath = trimForwardSlashes(outputRelativePath);
-
-    items.addFileCopyInstruction(root, true, outputRelativePath);
-    return true;
-  }
-
 }

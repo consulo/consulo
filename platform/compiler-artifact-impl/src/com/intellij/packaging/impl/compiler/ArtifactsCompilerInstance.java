@@ -27,11 +27,7 @@ import com.intellij.openapi.compiler.generic.GenericCompilerCacheState;
 import com.intellij.openapi.compiler.generic.GenericCompilerInstance;
 import com.intellij.openapi.compiler.generic.GenericCompilerProcessingItem;
 import com.intellij.openapi.compiler.generic.VirtualFilePersistentState;
-import com.intellij.openapi.compiler.make.BuildParticipant;
-import com.intellij.openapi.compiler.make.BuildParticipantProvider;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Pair;
@@ -102,19 +98,6 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
           Artifact artifact = artifactsMap.get(name);
           if (artifact != null) {
             targets.add(new ArtifactBuildTarget(artifact));
-          }
-        }
-
-        for (BuildParticipantProvider provider : BuildParticipantProvider.EXTENSION_POINT_NAME.getExtensions()) {
-          for (Module module : ModuleManager.getInstance(getProject()).getModules()) {
-            final Collection<? extends BuildParticipant> participants = provider.getParticipants(module);
-            for (BuildParticipant participant : participants) {
-              Artifact artifact = participant.createArtifact(myContext);
-              if (artifact != null) {
-                LOG.debug("additional artifact to build: " + artifact);
-                targets.add(new ArtifactBuildTarget(artifact));
-              }
-            }
           }
         }
       }

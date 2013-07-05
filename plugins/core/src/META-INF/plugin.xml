@@ -3184,9 +3184,6 @@
     <extensionPoint name="antCustomCompiler"
                     interface="com.intellij.compiler.ant.ChunkCustomCompilerExtension"/>
 
-    <extensionPoint name="compiler.buildParticipantProvider"
-                    interface="com.intellij.openapi.compiler.make.BuildParticipantProvider"/>
-
     <extensionPoint name="compiler.additionalCompileScopeProvider"
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 

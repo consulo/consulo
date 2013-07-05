@@ -37,7 +37,6 @@ import java.util.Collection;
 public abstract class CompilerManager {
   public static final Key<Key> CONTENT_ID_KEY = Key.create("COMPILATION_CONTENT_ID_CUSTOM_KEY");
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.logOnlyGroup("Compiler");
-  private ExcludedEntriesConfiguration myExcludedEntriesConfiguration;
 
   /**
    * Returns the compiler manager instance for the specified project.
@@ -268,7 +267,6 @@ public abstract class CompilerManager {
   public abstract CompileScope createModuleGroupCompileScope(@NotNull Project project, @NotNull Module[] modules, final boolean includeDependentModules);
   @NotNull
   public abstract CompileScope createProjectCompileScope(@NotNull Project project);
-
 
   public abstract boolean isValidationEnabled(Module moduleType);
 }
