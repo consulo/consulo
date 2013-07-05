@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.impl.stores.BatchUpdateListener;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -241,7 +240,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
       }
     }
 
-    for (WatchedRootsProvider extension : Extensions.getExtensions(WatchedRootsProvider.EP_NAME, myProject)) {
+    for (WatchedRootsProvider extension : WatchedRootsProvider.EP_NAME.getExtensions(myProject)) {
       recursive.addAll(extension.getRootsToWatch());
     }
 
@@ -253,7 +252,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
       if (includeSourceRoots) {
         addRootsToTrack(moduleRootManager.getSourceRootUrls(), recursive, flat);
       }
-      flat.add(module.getModuleFilePath());
 
       final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
       for (OrderEntry entry : orderEntries) {
