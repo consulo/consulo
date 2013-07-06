@@ -117,9 +117,8 @@ public abstract class Language extends UserDataHolderBase {
   /**
    * @return collection of all languages registered so far.
    */
-  @Immutable
   public static Collection<Language> getRegisteredLanguages() {
-    return ourRegisteredLanguages.values();
+    return new ArrayList<Language>(ourRegisteredLanguages.values());
   }
 
   /**
@@ -139,7 +138,7 @@ public abstract class Language extends UserDataHolderBase {
   @Immutable
   public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
     List<Language> result = mimeType != null ? ourRegisteredMimeTypes.get(mimeType) : null;
-    return result != null ? result : Collections.<Language>emptyList();
+    return result != null ? Collections.unmodifiableList(result) : Collections.<Language>emptyList();
   }
 
   @Override
