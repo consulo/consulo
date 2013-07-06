@@ -30,6 +30,8 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   private final String myId;
   private final Module myModule;
 
+  private boolean isCommited;
+
   public ModuleExtensionImpl(@NotNull String id, @NotNull Module module) {
     myId = id;
     myModule = module;
@@ -43,6 +45,9 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
 
   @Override
   public boolean isEnabled() {
+    if(getClass().getSimpleName().contains("Mutable") && !isCommited) {
+      throw new IllegalArgumentException("Module extension with id " + myId + " is not commited original extension");
+    }
     return myIsEnabled;
   }
 
@@ -54,6 +59,8 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
 
   @Override
   public void commit(@NotNull T mutableModuleExtension) {
+    isCommited = true;
+
     myIsEnabled = mutableModuleExtension.isEnabled();
   }
 
