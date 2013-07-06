@@ -19,20 +19,33 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ExtensionEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckedTreeNode;
 import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Vector;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 11:42/19.05.13
  */
 public class ExtensionCheckedTreeNode extends CheckedTreeNode {
+  private static class ExtensionProviderEPComparator implements Comparator<ExtensionCheckedTreeNode> {
+    private static final Comparator<ExtensionCheckedTreeNode> INSTANCE = new ExtensionProviderEPComparator();
+
+    @Override
+    public int compare(ExtensionCheckedTreeNode o1, ExtensionCheckedTreeNode o2) {
+      final ModuleExtensionProvider i1 = o1.myProviderEP.getInstance();
+      final ModuleExtensionProvider i2 = o2.myProviderEP.getInstance();
+      return StringUtil.compare(i1.getName(), i2.getName(), true);
+    }
+  }
+
   private final ModuleExtensionProviderEP myProviderEP;
   @NotNull private final ModuleConfigurationState myState;
   private final ExtensionEditor myExtensionEditor;
@@ -57,7 +70,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     }
 
     setAllowsChildren(true);
-    Vector<ExtensionCheckedTreeNode> child = new Vector<ExtensionCheckedTreeNode>();
+    List<ExtensionCheckedTreeNode> child = new ArrayList<ExtensionCheckedTreeNode>();
     for (ModuleExtensionProviderEP ep : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       if (Comparing.equal(ep.parentKey, parentKey)) {
         final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myExtensionEditor);
@@ -66,9 +79,9 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
         child.add(e);
       }
     }
-
+    Collections.sort(child, ExtensionProviderEPComparator.INSTANCE);
     setUserObject(myExtension);
-    children = child.isEmpty() ? null : child;
+    children = child.isEmpty() ? null : new Vector<ExtensionCheckedTreeNode>(child);
   }
 
   @Override
