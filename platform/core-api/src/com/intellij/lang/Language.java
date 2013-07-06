@@ -22,7 +22,6 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
@@ -51,7 +50,7 @@ public abstract class Language extends UserDataHolderBase {
   private final Language myBaseLanguage;
   private final String myID;
   private final String[] myMimeTypes;
-  private final List<Language> myDialects = ContainerUtil.createLockFreeCopyOnWriteList();
+
   public static final Language ANY = new Language("") {
     @Override
     public String toString() {
@@ -113,17 +112,14 @@ public abstract class Language extends UserDataHolderBase {
       }
       languagesByMimeType.add(this);
     }
-    if (baseLanguage != null) {
-      baseLanguage.myDialects.add(this);
-    }
   }
 
   /**
    * @return collection of all languages registered so far.
    */
+  @Immutable
   public static Collection<Language> getRegisteredLanguages() {
-    final Collection<Language> languages = ourRegisteredLanguages.values();
-    return Collections.unmodifiableCollection(new ArrayList<Language>(languages));
+    return ourRegisteredLanguages.values();
   }
 
   /**
@@ -140,12 +136,13 @@ public abstract class Language extends UserDataHolderBase {
    * @return collection of all languages for the given <code>mimeType</code>.
    */
   @NotNull
+  @Immutable
   public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
     List<Language> result = mimeType != null ? ourRegisteredMimeTypes.get(mimeType) : null;
-    return result != null ? Collections.unmodifiableCollection(result) : Collections.<Language>emptyList();
+    return result != null ? result : Collections.<Language>emptyList();
   }
 
-
+  @Override
   public String toString() {
     //noinspection HardCodedStringLiteral
     return "Language: " + myID;
@@ -222,7 +219,7 @@ public abstract class Language extends UserDataHolderBase {
 
   @Deprecated
   public List<Language> getDialects() {
-    return myDialects;
+    return Collections.emptyList();
   }
 
   @Nullable
