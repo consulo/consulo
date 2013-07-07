@@ -48,8 +48,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +90,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   @Override
   protected PsiElement getPSIElement(@Nullable final Object element) {
     if (element instanceof PackageElement) {
-      PsiJavaPackage aPackage = ((PackageElement)element).getPackage();
+      PsiPackage aPackage = ((PackageElement)element).getPackage();
       return aPackage != null && aPackage.isValid() ? aPackage : null;
     }
     return super.getPSIElement(element);
@@ -143,7 +143,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     final PackageElement packageElement = getSelectedPackageElement();
     if (packageElement != null) {
       final Module module = packageElement.getModule();
-      final PsiJavaPackage aPackage = packageElement.getPackage();
+      final PsiPackage aPackage = packageElement.getPackage();
       if (module != null && aPackage != null) {
         return aPackage.getDirectories(GlobalSearchScope.moduleScope(module));
       }

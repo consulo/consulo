@@ -31,6 +31,8 @@ import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +40,7 @@ import java.util.*;
 
 public class PackageUtil {
   @NotNull
-  public static PsiJavaPackage[] getSubpackages(@NotNull PsiJavaPackage aPackage,
+  public static PsiJavaPackage[] getSubpackages(@NotNull PsiPackage aPackage,
                                             @Nullable Module module,
                                             @NotNull Project project,
                                             final boolean searchInLibraries) {
@@ -62,7 +64,7 @@ public class PackageUtil {
   }
 
   public static void addPackageAsChild(@NotNull Collection<AbstractTreeNode> children,
-                                       @NotNull PsiJavaPackage aPackage,
+                                       @NotNull PsiPackage aPackage,
                                        @Nullable Module module,
                                        @NotNull ViewSettings settings,
                                        final boolean inLibrary) {
@@ -79,14 +81,14 @@ public class PackageUtil {
     }
   }
 
-  public static boolean isPackageEmpty(@NotNull PsiJavaPackage aPackage,
+  public static boolean isPackageEmpty(@NotNull PsiPackage aPackage,
                                        @Nullable Module module,
                                        boolean strictlyEmpty,
                                        final boolean inLibrary) {
     final Project project = aPackage.getProject();
     final PsiDirectory[] dirs = getDirectories(aPackage, project, module, inLibrary);
     for (final PsiDirectory dir : dirs) {
-      if (!TreeViewUtil.isEmptyMiddlePackage(dir, strictlyEmpty)) {
+      if (!TreeViewUtil.isEmptyMiddlePackage(dir, JavaModuleExtension.class, strictlyEmpty)) {
         return false;
       }
     }
@@ -94,7 +96,7 @@ public class PackageUtil {
   }
 
   @NotNull
-  public static PsiDirectory[] getDirectories(@NotNull PsiJavaPackage aPackage,
+  public static PsiDirectory[] getDirectories(@NotNull PsiPackage aPackage,
                                               @NotNull Project project,
                                               @Nullable Module module,
                                               boolean inLibrary) {
@@ -151,7 +153,7 @@ public class PackageUtil {
           }
         }
         // add non-dir items
-        children.addAll(ProjectViewDirectoryHelper.getInstance(project).getDirectoryChildren(directory, settings, false));
+        children.addAll(BaseProjectViewDirectoryHelper.getInstance(project).getDirectoryChildren(directory, settings, false));
       }
       else {
         topLevelPackages.add(directoryPackage);
@@ -163,39 +165,6 @@ public class PackageUtil {
     }
 
     return children;
-  }
-
-  @NotNull
-  public static String getNodeName(@NotNull ViewSettings settings,
-                                   PsiJavaPackage aPackage,
-                                   final PsiJavaPackage parentPackageInTree,
-                                   @NotNull String defaultShortName,
-                                   boolean isFQNameShown) {
-    final String name;
-    if (isFQNameShown) {
-      name = settings.isAbbreviatePackageNames() ?
-             aPackage == null ? defaultShortName : TreeViewUtil.calcAbbreviatedPackageFQName(aPackage) :
-             aPackage == null ? defaultShortName : aPackage.getQualifiedName();
-    }
-    else if (parentPackageInTree != null || aPackage != null && aPackage.getParentPackage() != null) {
-      PsiJavaPackage parentPackage = aPackage.getParentPackage();
-      final StringBuilder buf = new StringBuilder();
-      buf.append(aPackage.getName());
-      while (parentPackage != null && (parentPackageInTree == null || !parentPackage.equals(parentPackageInTree))) {
-        final String parentPackageName = parentPackage.getName();
-        if (parentPackageName == null || parentPackageName.isEmpty()) {
-          break; // reached default package
-        }
-        buf.insert(0, ".");
-        buf.insert(0, parentPackageName);
-        parentPackage = parentPackage.getParentPackage();
-      }
-      name = buf.toString();
-    }
-    else {
-      name = defaultShortName;
-    }
-    return name;
   }
 
   private static class ModuleLibrariesSearchScope extends GlobalSearchScope {

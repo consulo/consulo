@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper;
+import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -248,7 +248,7 @@ public class DirectoryNode extends PackageDependenciesNode {
     if (myVDirectory != null && myVDirectory.isValid() && !myProject.isDisposed()) {
       final PsiDirectory directory = getPsiDirectory();
       if (directory != null) {
-        return ProjectViewDirectoryHelper.getInstance(myProject).getLocationString(directory);
+        return BaseProjectViewDirectoryHelper.getInstance(myProject).getLocationString(directory);
       }
     }
     return super.getComment();

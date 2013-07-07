@@ -42,6 +42,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
         }
       };
       final PackageElement packageElement = (PackageElement)element;
-      final PsiJavaPackage aPackage = packageElement.getPackage();
+      final PsiPackage aPackage = packageElement.getPackage();
       final Project project = aPackage.getProject();
       final GlobalSearchScope scope = packageElement.getModule() != null
                                       ? GlobalSearchScope.moduleScope(packageElement.getModule())
@@ -172,7 +173,7 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
   public String getElementUrl(final Object element) {
     if (element instanceof PackageElement) {
       PackageElement packageElement = (PackageElement)element;
-      PsiJavaPackage aPackage = packageElement.getPackage();
+      PsiPackage aPackage = packageElement.getPackage();
       if (aPackage == null) return null;
       return aPackage.getQualifiedName();
     }

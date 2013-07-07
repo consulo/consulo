@@ -20,6 +20,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.ide.util.treeView.TreeViewUtil;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.module.Module;
@@ -30,6 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.PlatformIcons;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,7 +85,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     if (value == null) return Collections.emptyList();
     final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     final Module module = value.getModule();
-    final PsiJavaPackage aPackage = value.getPackage();
+    final PsiPackage aPackage = value.getPackage();
 
     if (!getSettings().isFlattenPackages()) {
 
@@ -95,7 +97,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     // process only files in package's directories
     final PsiDirectory[] dirs = PackageUtil.getDirectories(aPackage, myProject, module, isLibraryElement());
     for (final PsiDirectory dir : dirs) {
-      children.addAll(ProjectViewDirectoryHelper.getInstance(myProject).getDirectoryChildren(dir, getSettings(), false));
+      children.addAll(BaseProjectViewDirectoryHelper.getInstance(myProject).getDirectoryChildren(dir, getSettings(), false));
     }
     return children;
   }
@@ -113,7 +115,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
 
   private void updateValidData(final PresentationData presentation) {
     final PackageElement value = getValue();
-    final PsiJavaPackage aPackage = value.getPackage();
+    final PsiPackage aPackage = value.getPackage();
 
     if (!getSettings().isFlattenPackages()
         && getSettings().isHideEmptyMiddlePackages()
@@ -122,7 +124,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
       return;
     }
 
-    PsiJavaPackage parentPackage;
+    PsiPackage parentPackage;
     Object parentValue = getParentValue();
     if (parentValue instanceof PackageElement) {
       parentPackage = ((PackageElement)parentValue).getPackage();
@@ -131,7 +133,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
       parentPackage = null;
     }
     String qName = aPackage.getQualifiedName();
-    String name = PackageUtil.getNodeName(getSettings(), aPackage,parentPackage, qName, showFQName(aPackage));
+    String name = TreeViewUtil.getNodeName(getSettings(), aPackage, parentPackage, qName, showFQName(aPackage));
     presentation.setPresentableText(name);
 
     presentation.setIcon(PlatformIcons.PACKAGE_ICON);
@@ -141,7 +143,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     }
   }
 
-  private boolean showFQName(final PsiJavaPackage aPackage) {
+  private boolean showFQName(final PsiPackage aPackage) {
     return getSettings().isFlattenPackages() && !aPackage.getQualifiedName().isEmpty();
   }
 

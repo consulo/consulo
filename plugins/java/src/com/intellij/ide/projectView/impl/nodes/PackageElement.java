@@ -15,19 +15,15 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.ide.projectView.RootsProvider;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiJavaPackage;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,71 +31,19 @@ import java.util.Set;
  * Date: Sep 19, 2003
  * Time: 3:51:02 PM
  */
-public final class PackageElement implements Queryable, RootsProvider {
-  public static final DataKey<PackageElement> DATA_KEY =  DataKey.create("package.element");
+public final class PackageElement extends AbstractPackageElement {
 
-  @Nullable private final Module myModule;
-  @NotNull private final PsiJavaPackage myElement;
-  private final boolean myIsLibraryElement;
-
-  public PackageElement(@Nullable Module module, @NotNull PsiJavaPackage element, boolean isLibraryElement) {
-    myModule = module;
-    myElement = element;
-    myIsLibraryElement = isLibraryElement;
-  }
-
-  @Nullable
-  public Module getModule() {
-    return myModule;
-  }
-
-  @NotNull
-  public PsiJavaPackage getPackage() {
-    return myElement;
+  public PackageElement(@Nullable Module module, @NotNull PsiPackage element, boolean isLibraryElement) {
+    super(module, element, isLibraryElement);
   }
 
   @Override
   public Collection<VirtualFile> getRoots() {
     Set<VirtualFile> roots= new HashSet<VirtualFile>();
-    final PsiDirectory[] dirs = PackageUtil.getDirectories(getPackage(), myElement.getProject(), myModule, isLibraryElement());
+    final PsiDirectory[] dirs = PackageUtil.getDirectories(getPackage(), getPackage().getProject(), getModule(), isLibraryElement());
     for (PsiDirectory each : dirs) {
       roots.add(each.getVirtualFile());
     }
     return roots;
-  }
-
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof PackageElement)) return false;
-
-    final PackageElement packageElement = (PackageElement)o;
-
-    if (myIsLibraryElement != packageElement.myIsLibraryElement) return false;
-    if (!myElement.equals(packageElement.myElement)) return false;
-    if (myModule != null ? !myModule.equals(packageElement.myModule) : packageElement.myModule != null) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    int result;
-    result = (myModule != null ? myModule.hashCode() : 0);
-    result = 29 * result + (myElement.hashCode());
-    result = 29 * result + (myIsLibraryElement ? 1 : 0);
-    return result;
-  }
-
-  public boolean isLibraryElement() {
-    return myIsLibraryElement;
-  }
-
-
-
-  @Override
-  public void putInfo(@NotNull Map<String, String> info) {
-    PsiJavaPackage pkg = getPackage();
-    if (pkg instanceof Queryable) {
-      ((Queryable)pkg).putInfo(info);
-    }
   }
 }

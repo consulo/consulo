@@ -24,7 +24,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.impl.ProjectPaneSelectInTarget;
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper;
+import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -121,7 +121,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
         PsiDirectory dirToUpdateFrom = dir;
         if (!treeStructure.isFlattenPackages() && treeStructure.isHideEmptyMiddlePackages()) {
           // optimization: this check makes sense only if flattenPackages == false && HideEmptyMiddle == true
-          while (dirToUpdateFrom != null && ProjectViewDirectoryHelper.getInstance(myProject).isEmptyMiddleDirectory(dirToUpdateFrom, true)) {
+          while (dirToUpdateFrom != null && BaseProjectViewDirectoryHelper.getInstance(myProject).isEmptyMiddleDirectory(dirToUpdateFrom, true)) {
             dirToUpdateFrom = dirToUpdateFrom.getParentDirectory();
           }
         }

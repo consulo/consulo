@@ -42,6 +42,7 @@ import com.intellij.ui.HighlightedRegion;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.ArrayUtil;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +68,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
     myBuilder = builder;
     myHighlightedRegions = new ArrayList<HighlightedRegion>(2);
     if (element != null && name == null){
-      final PsiJavaPackage aPackage = element.getPackage();
+      final PsiPackage aPackage = element.getPackage();
       myPresentationName = aPackage.getName();
     }
     else {
@@ -98,7 +99,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
         return;
       }
 
-      PsiJavaPackage aPackage = packageElement.getPackage();
+      PsiPackage aPackage = packageElement.getPackage();
       String newName;
       if (getStructure().areFlattenPackages()) {
         newName = aPackage.getQualifiedName();
@@ -143,7 +144,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   private int getFileCount(final PackageElement packageElement) {
     int count = 0;
     if (getSettings().isFlattenPackages()) {
-      final PsiJavaPackage aPackage = packageElement.getPackage();
+      final PsiPackage aPackage = packageElement.getPackage();
       final Module module = packageElement.getModule();
       final GlobalSearchScope scope =
         module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(aPackage.getProject());
@@ -171,7 +172,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   public int getTodoItemCount(PackageElement packageElement) {
     int count = 0;
     if (getSettings().isFlattenPackages()){
-        final PsiJavaPackage aPackage = packageElement.getPackage();
+        final PsiPackage aPackage = packageElement.getPackage();
         final Module module = packageElement.getModule();
         GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(aPackage.getProject());
         final PsiDirectory[] directories = aPackage.getDirectories(scope);
@@ -202,7 +203,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
     ArrayList<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     final Project project = getProject();
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final PsiJavaPackage psiPackage = getValue().getPackage();
+    final PsiPackage psiPackage = getValue().getPackage();
     final Module module = getValue().getModule();
     if (!getStructure().getIsFlattenPackages() || psiPackage == null) {
       final Iterator<PsiFile> iterator = getFiles(getValue());

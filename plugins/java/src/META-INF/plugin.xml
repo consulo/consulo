@@ -907,6 +907,13 @@
     <lang.foldingBuilder language="JAVA" implementationClass="com.intellij.codeInsight.daemon.impl.actions.SuppressWarningsFoldingBuilder"/>
 
     <externalProjectDataService implementation="com.intellij.externalSystem.JavaProjectDataService"/>
+    <daemon.highlightInfoFilter implementation="com.intellij.debugger.engine.evaluation.DebuggerHighlightFilter"/>
+
+
+    <editorNotificationProvider implementation="com.intellij.codeInsight.daemon.impl.AttachSourcesNotificationProvider"/>
+    <editorNotificationProvider implementation="com.intellij.codeInsight.daemon.impl.SetupSDKNotificationProvider"/>
+    <programRunner id="defaultRunRunner" implementation="com.intellij.execution.impl.DefaultJavaProgramRunner"/>
+
 
     <specialTool shortName="UnusedDeclaration" displayName="Unused declaration" groupBundle="messages.InspectionsBundle"
                  groupKey="group.names.declaration.redundancy" enabledByDefault="true" level="WARNING"
@@ -1600,11 +1607,10 @@
     <favoriteNodeProvider implementation="com.intellij.ide.favoritesTreeView.PsiMethodFavoriteNodeProvider"/>
     <favoriteNodeProvider implementation="com.intellij.ide.favoritesTreeView.PsiPackageFavoriteNodeProvider"/>
     <favoriteNodeProvider implementation="com.intellij.ide.favoritesTreeView.UsageFavoriteNodeProvider"/>
-    <!--TODO [VISTALL] execution
-       <configurationType implementation="com.intellij.execution.applet.AppletConfigurationType"/>
-       <configurationProducer implementation="com.intellij.execution.applet.AppletConfigurationProducer"/>
+     <configurationType implementation="com.intellij.execution.applet.AppletConfigurationType"/>
+     <configurationProducer implementation="com.intellij.execution.applet.AppletConfigurationProducer"/>
 
-       <configurationType implementation="com.intellij.execution.remote.RemoteConfigurationType"/>     -->
+     <configurationType implementation="com.intellij.execution.remote.RemoteConfigurationType"/>
 
     <!--TODO [VISTALL] core depend?? <applicationService serviceInterface="com.intellij.packageDependencies.DependenciesVisitorFactory"
                          serviceImplementation="com.intellij.packageDependencies.JavaDependenciesVisitorFactory"/> -->
@@ -1641,8 +1647,6 @@
 
     <refactoring.helper implementation="com.intellij.refactoring.OptimizeImportsRefactoringHelper"/>
 
-    <!--TODO [VISTALL] core depend <projectService serviceInterface="com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper"
-                    serviceImplementation="com.intellij.ide.projectView.impl.JavaProjectViewDirectoryHelper"/> -->
 
     <elementDescriptionProvider implementation="com.intellij.refactoring.util.JavaRefactoringElementDescriptionProvider"/>
     <elementDescriptionProvider implementation="com.intellij.refactoring.util.JavaNonCodeSearchElementDescriptionProvider"/>

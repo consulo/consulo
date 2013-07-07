@@ -48,17 +48,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class ProjectViewDirectoryHelper {
-  protected static final Logger LOG = Logger.getInstance("#" + ProjectViewDirectoryHelper.class.getName());
+public class BaseProjectViewDirectoryHelper {
+  protected static final Logger LOG = Logger.getInstance("#" + BaseProjectViewDirectoryHelper.class.getName());
 
   private final Project myProject;
   private final DirectoryIndex myIndex;
 
-  public static ProjectViewDirectoryHelper getInstance(Project project) {
-    return ServiceManager.getService(project, ProjectViewDirectoryHelper.class);
+  public static BaseProjectViewDirectoryHelper getInstance(Project project) {
+    return ServiceManager.getService(project, BaseProjectViewDirectoryHelper.class);
   }
 
-  public ProjectViewDirectoryHelper(Project project, DirectoryIndex index) {
+  public BaseProjectViewDirectoryHelper(Project project, DirectoryIndex index) {
     myProject = project;
     myIndex = index;
   }

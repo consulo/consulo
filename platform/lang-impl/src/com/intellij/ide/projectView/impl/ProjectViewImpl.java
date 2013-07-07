@@ -622,7 +622,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
 
   private void createToolbarActions() {
     myActionGroup.removeAll();
-    if (ProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
+    if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
       myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"),
                                              IdeBundle.message("action.flatten.packages"), PlatformIcons.FLATTEN_PACKAGES_ICON,
                                              ourFlattenPackagesDefaults) {
@@ -654,10 +654,10 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
         presentation.setVisible(isFlattenPackages(myCurrentViewId));
       }
     }
-    if (ProjectViewDirectoryHelper.getInstance(myProject).supportsHideEmptyMiddlePackages()) {
+    if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsHideEmptyMiddlePackages()) {
       myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
     }
-    if (ProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
+    if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
       myActionGroup.addAction(new FlattenPackagesDependableAction(myAbbreviatePackageNames,
                                                             IdeBundle.message("action.abbreviate.qualified.package.names"),
                                                             IdeBundle.message("action.abbreviate.qualified.package.names"),
@@ -933,7 +933,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
         final PsiElement element = elements[idx];
         if (element instanceof PsiDirectory) {
           PsiDirectory directory = (PsiDirectory)element;
-          final ProjectViewDirectoryHelper directoryHelper = ProjectViewDirectoryHelper.getInstance(myProject);
+          final BaseProjectViewDirectoryHelper directoryHelper = BaseProjectViewDirectoryHelper.getInstance(myProject);
           if (isHideEmptyMiddlePackages(viewPane.getId()) && directory.getChildren().length == 0 && !directoryHelper.skipDirectory(directory)) {
             while (true) {
               PsiDirectory parent = directory.getParentDirectory();

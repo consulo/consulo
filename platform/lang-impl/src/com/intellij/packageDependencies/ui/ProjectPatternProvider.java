@@ -22,7 +22,7 @@ package com.intellij.packageDependencies.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper;
+import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
@@ -73,7 +73,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
 
   @Override
   public AnAction[] createActions(Project project, final Runnable update) {
-    if (ProjectViewDirectoryHelper.getInstance(project).supportsHideEmptyMiddlePackages()) {
+    if (BaseProjectViewDirectoryHelper.getInstance(project).supportsHideEmptyMiddlePackages()) {
       return new AnAction[]{new CompactEmptyMiddlePackagesAction(update)};
     }
     return AnAction.EMPTY_ARRAY;

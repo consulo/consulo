@@ -21,30 +21,27 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.PackageElement;
-import com.intellij.ide.projectView.impl.nodes.PackageUtil;
-import com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper;
+import com.intellij.ide.projectView.impl.nodes.AbstractPackageElement;
+import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiJavaPackage;
-import org.consulo.java.platform.util.JavaProjectRootsUtil;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
-  public JavaProjectViewDirectoryHelper(Project project, DirectoryIndex index) {
+public class DefaultProjectViewDirectoryHelper extends BaseProjectViewDirectoryHelper {
+  public DefaultProjectViewDirectoryHelper(Project project, DirectoryIndex index) {
     super(project, index);
   }
 
   @Override
   public String getLocationString(@NotNull final PsiDirectory directory) {
-    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiPackage aPackage = PsiPackageManager.getInstance(getProject()).findAnyPackage(directory);
     if (ProjectRootsUtil.isSourceRoot(directory) && aPackage != null) {   //package prefix
       return aPackage.getQualifiedName();
     }
@@ -53,11 +50,11 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
 
   @Override
   public boolean isShowFQName(final ViewSettings settings, final Object parentValue, final PsiDirectory value) {
-    PsiJavaPackage aPackage;
+    PsiPackage aPackage;
         return value != null
                && !(parentValue instanceof Project)
                && settings.isFlattenPackages()
-               && (aPackage = JavaDirectoryService.getInstance().getPackage(value)) != null
+               && (aPackage = PsiPackageManager.getInstance(getProject()).findAnyPackage(value)) != null
                && !aPackage.getQualifiedName().isEmpty();
 
   }
@@ -65,13 +62,13 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
   @Nullable
   @Override
   public String getNodeName(final ViewSettings settings, final Object parentValue, final PsiDirectory directory) {
-    PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
+    PsiPackage aPackage = PsiPackageManager.getInstance(getProject()).findAnyPackage(directory);
 
-    PsiJavaPackage parentPackage;
+    PsiPackage parentPackage;
     if (!ProjectRootsUtil.isSourceRoot(directory) && aPackage != null && !aPackage.getQualifiedName().isEmpty() &&
                               parentValue instanceof PsiDirectory) {
 
-      parentPackage = JavaDirectoryService.getInstance().getPackage(((PsiDirectory)parentValue));
+      parentPackage = PsiPackageManager.getInstance(getProject()).findAnyPackage(((PsiDirectory)parentValue));
     }
     else if (ProjectRootsUtil.isSourceRoot(directory) && aPackage != null) {   //package prefix
       aPackage = null;
@@ -81,23 +78,17 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
       parentPackage = null;
     }
 
-    return PackageUtil.getNodeName(settings, aPackage, parentPackage, directory.getName(), isShowFQName(settings, parentValue, directory));
-
+    return TreeViewUtil.getNodeName(settings, aPackage, parentPackage, directory.getName(), isShowFQName(settings, parentValue, directory));
   }
 
   @Override
   public boolean skipDirectory(final PsiDirectory directory) {
-    return JavaDirectoryService.getInstance().getPackage(directory) == null;
-  }
-
-  @Override
-  public boolean showFileInLibClasses(final VirtualFile vFile) {
-    return !JavaProjectRootsUtil.isJavaSourceFile(getProject(), vFile, false);
+    return PsiPackageManager.getInstance(getProject()).findAnyPackage(directory) == null;
   }
 
   @Override
   public boolean isEmptyMiddleDirectory(final PsiDirectory directory, final boolean strictlyEmpty) {
-    return JavaDirectoryService.getInstance().getPackage(directory) != null && TreeViewUtil.isEmptyMiddlePackage(directory, strictlyEmpty);
+    return PsiPackageManager.getInstance(getProject()).findAnyPackage(directory) != null && TreeViewUtil.isEmptyMiddlePackage(directory, null, strictlyEmpty);
   }
 
   @Override
@@ -113,8 +104,8 @@ public class JavaProjectViewDirectoryHelper extends ProjectViewDirectoryHelper {
   @Override
   public boolean canRepresent(final Object element, final PsiDirectory directory) {
     if (super.canRepresent(element, directory)) return true;
-    if (element instanceof PackageElement) {
-      final PackageElement packageElement = (PackageElement)element;
+    if (element instanceof AbstractPackageElement) {
+      final AbstractPackageElement packageElement = (AbstractPackageElement)element;
       return Arrays.asList(packageElement.getPackage().getDirectories()).contains(directory);
     }
     return false;

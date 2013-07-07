@@ -25,9 +25,9 @@ import com.intellij.ide.favoritesTreeView.actions.*;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.ModuleGroup;
+import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
-import com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
@@ -594,7 +594,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     window.setTitleActions(collapseAction);
 
     final DefaultActionGroup group = new DefaultActionGroup();
-    final ProjectViewDirectoryHelper helper = ProjectViewDirectoryHelper.getInstance(myProject);
+    final BaseProjectViewDirectoryHelper helper = BaseProjectViewDirectoryHelper.getInstance(myProject);
 
     if (helper.supportsFlattenPackages()) {
       group.add(new FavoritesFlattenPackagesAction(myProject, myBuilder));

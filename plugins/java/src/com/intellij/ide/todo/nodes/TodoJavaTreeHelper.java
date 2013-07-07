@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -115,7 +116,7 @@ public class TodoJavaTreeHelper extends TodoTreeHelper {
         packages.add(aPackage);
       }
     }
-    for (PsiJavaPackage psiPackage : packages) {
+    for (PsiPackage psiPackage : packages) {
       if (!builder.getTodoTreeStructure().getIsFlattenPackages()) {
         PackageElement element = new PackageElement(module, psiPackage, false);
         TodoPackageNode packageNode = new TodoPackageNode(project, element, builder, psiPackage.getQualifiedName());
@@ -123,9 +124,9 @@ public class TodoJavaTreeHelper extends TodoTreeHelper {
           children.add(packageNode);
         }
       } else {
-        Set<PsiJavaPackage> allPackages = new HashSet<PsiJavaPackage>();
+        Set<PsiPackage> allPackages = new HashSet<PsiPackage>();
         traverseSubPackages(psiPackage, module, builder, project, allPackages);
-        for (PsiJavaPackage aPackage : allPackages) {
+        for (PsiPackage aPackage : allPackages) {
           TodoPackageNode packageNode = new TodoPackageNode(project, new PackageElement(module, aPackage, false), builder);
           if (!children.contains(packageNode)) {
             children.add(packageNode);
@@ -166,20 +167,20 @@ public class TodoJavaTreeHelper extends TodoTreeHelper {
     return suggestedNonEmptyPackage;
   }
 
-  private static void traverseSubPackages(PsiJavaPackage psiPackage, Module module, TodoTreeBuilder builder, Project project, Set<PsiJavaPackage> packages){
+  private static void traverseSubPackages(PsiPackage psiPackage, Module module, TodoTreeBuilder builder, Project project, Set<PsiPackage> packages){
     if (!isPackageEmpty(new PackageElement(module, psiPackage,  false), builder, project)){
       packages.add(psiPackage);
     }
     GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(project);
-    final PsiJavaPackage[] subPackages = psiPackage.getSubPackages(scope);
-    for (PsiJavaPackage subPackage : subPackages) {
+    final PsiPackage[] subPackages = psiPackage.getSubPackages(scope);
+    for (PsiPackage subPackage : subPackages) {
       traverseSubPackages(subPackage, module, builder, project, packages);
     }
   }
 
   private static boolean isPackageEmpty(PackageElement packageElement, TodoTreeBuilder builder, Project project) {
     if (packageElement == null) return true;
-    final PsiJavaPackage psiPackage = packageElement.getPackage();
+    final PsiPackage psiPackage = packageElement.getPackage();
     final Module module = packageElement.getModule();
     GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(project);
     final PsiDirectory[] directories = psiPackage.getDirectories(scope);

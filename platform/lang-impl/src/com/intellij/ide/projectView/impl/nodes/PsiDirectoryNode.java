@@ -107,7 +107,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
     final String name = parentValue instanceof Project
                         ? psiDirectory.getVirtualFile().getPresentableUrl()
-                        : ProjectViewDirectoryHelper.getInstance(psiDirectory.getProject()).getNodeName(getSettings(), parentValue, psiDirectory);
+                        : BaseProjectViewDirectoryHelper.getInstance(psiDirectory.getProject()).getNodeName(getSettings(), parentValue, psiDirectory);
     if (name == null) {
       setValue(null);
       return;
@@ -118,7 +118,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
       data.setLocationString("library home");
     }
     else {
-      data.setLocationString(ProjectViewDirectoryHelper.getInstance(project).getLocationString(psiDirectory));
+      data.setLocationString(BaseProjectViewDirectoryHelper.getInstance(project).getLocationString(psiDirectory));
     }
 
     setupIcon(data, psiDirectory);
@@ -145,7 +145,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
   @Override
   public Collection<AbstractTreeNode> getChildrenImpl() {
-    return ProjectViewDirectoryHelper.getInstance(myProject).getDirectoryChildren(getValue(), getSettings(), true);
+    return BaseProjectViewDirectoryHelper.getInstance(myProject).getDirectoryChildren(getValue(), getSettings(), true);
   }
 
   @Override
@@ -155,7 +155,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   }
 
   public boolean isFQNameShown() {
-    return ProjectViewDirectoryHelper.getInstance(getProject()).isShowFQName(getSettings(), getParentValue(), getValue());
+    return BaseProjectViewDirectoryHelper.getInstance(getProject()).isShowFQName(getSettings(), getParentValue(), getValue());
   }
 
   @Override
@@ -191,7 +191,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     if (super.canRepresent(element)) return true;
     PsiDirectory directory = getValue();
     if (directory == null) return false;
-    return ProjectViewDirectoryHelper.getInstance(getProject()).canRepresent(element, directory);
+    return BaseProjectViewDirectoryHelper.getInstance(getProject()).canRepresent(element, directory);
   }
 
   @Override
