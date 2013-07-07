@@ -337,7 +337,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     }
     DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
     Object userObject = node.getUserObject();
-    final PsiElement selectedElement = TodoTreeHelper.getInstance(myProject).getSelectedElement(userObject);
+    final PsiElement selectedElement = TodoTreeHelper.getSelectedElement(userObject);
     if (selectedElement != null) return selectedElement;
     return getSelectedFile();
   }

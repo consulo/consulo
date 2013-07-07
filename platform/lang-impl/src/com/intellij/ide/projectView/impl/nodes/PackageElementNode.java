@@ -29,7 +29,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.PlatformIcons;
 import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
@@ -89,13 +88,13 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
 
     if (!getSettings().isFlattenPackages()) {
 
-      final PsiJavaPackage[] subpackages = PackageUtil.getSubpackages(aPackage, module, myProject, isLibraryElement());
-      for (PsiJavaPackage subpackage : subpackages) {
-        PackageUtil.addPackageAsChild(children, subpackage, module, getSettings(), isLibraryElement());
+      final PsiPackage[] subpackages = PackageNodeUtil.getSubpackages(aPackage, module, myProject, isLibraryElement());
+      for (PsiPackage subpackage : subpackages) {
+        PackageNodeUtil.addPackageAsChild(children, subpackage, module, getSettings(), isLibraryElement());
       }
     }
     // process only files in package's directories
-    final PsiDirectory[] dirs = PackageUtil.getDirectories(aPackage, myProject, module, isLibraryElement());
+    final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(aPackage, myProject, module, isLibraryElement());
     for (final PsiDirectory dir : dirs) {
       children.addAll(BaseProjectViewDirectoryHelper.getInstance(myProject).getDirectoryChildren(dir, getSettings(), false));
     }
@@ -119,7 +118,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
 
     if (!getSettings().isFlattenPackages()
         && getSettings().isHideEmptyMiddlePackages()
-        && PackageUtil.isPackageEmpty(aPackage, value.getModule(), true, isLibraryElement())) {
+        && PackageNodeUtil.isPackageEmpty(aPackage, value.getModule(), true, isLibraryElement())) {
       setValue(null);
       return;
     }
@@ -165,7 +164,8 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     if (value == null) {
       return VirtualFile.EMPTY_ARRAY;
     }
-    final PsiDirectory[] directories = PackageUtil.getDirectories(value.getPackage(), getProject(), value.getModule(), isLibraryElement());
+    final PsiDirectory[] directories = PackageNodeUtil
+      .getDirectories(value.getPackage(), getProject(), value.getModule(), isLibraryElement());
     final VirtualFile[] result = new VirtualFile[directories.length];
     for (int i = 0; i < directories.length; i++) {
       PsiDirectory directory = directories[i];

@@ -62,7 +62,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement>{
     else {
       addModuleLibraryRoots(ModuleRootManager.getInstance(myModule), roots);
     }
-    return PackageUtil.createPackageViewChildrenOnFiles(roots, getProject(), getSettings(), null, true);
+    return PackageNodeUtil.createPackageViewChildrenOnFiles(roots, getProject(), getSettings(), null, true);
   }
 
 

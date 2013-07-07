@@ -28,8 +28,8 @@ import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.impl.PackagesPaneSelectInTarget;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ViewSettings;
+import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
 import com.intellij.ide.projectView.impl.nodes.PackageElement;
-import com.intellij.ide.projectView.impl.nodes.PackageUtil;
 import com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
@@ -43,13 +43,12 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtilCore;
 import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -211,6 +210,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   @Override
   protected ProjectViewTree createTree(DefaultTreeModel treeModel) {
     return new ProjectViewTree(myProject, treeModel) {
+      @Override
       public String toString() {
         return getTitle() + " " + super.toString();
       }
@@ -242,7 +242,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
       // should convert PsiDirectories into PackageElements
       if (element instanceof PsiDirectory) {
         PsiDirectory dir = (PsiDirectory)element;
-        final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(dir);
+        final PsiPackage aPackage = PsiPackageManager.getInstance(dir.getProject()).findAnyPackage(dir);
         if (ProjectView.getInstance(myProject).isShowModules(getId())) {
           Module[] modules = getModulesFor(dir);
           boolean rv = false;
@@ -259,12 +259,13 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
       return super.addSubtreeToUpdateByElement(element);
     }
 
-    private boolean addPackageElementToUpdate(final PsiJavaPackage aPackage, Module module) {
+    private boolean addPackageElementToUpdate(final PsiPackage aPackage, Module module) {
       final ProjectTreeStructure packageTreeStructure = (ProjectTreeStructure)myTreeStructure;
-      PsiJavaPackage packageToUpdateFrom = aPackage;
+      PsiPackage packageToUpdateFrom = aPackage;
       if (!packageTreeStructure.isFlattenPackages() && packageTreeStructure.isHideEmptyMiddlePackages()) {
         // optimization: this check makes sense only if flattenPackages == false && HideEmptyMiddle == true
-        while (packageToUpdateFrom != null && packageToUpdateFrom.isValid() && PackageUtil.isPackageEmpty(packageToUpdateFrom, module, true, false)) {
+        while (packageToUpdateFrom != null && packageToUpdateFrom.isValid() && PackageNodeUtil
+          .isPackageEmpty(packageToUpdateFrom, module, true, false)) {
           packageToUpdateFrom = packageToUpdateFrom.getParentPackage();
         }
       }
@@ -278,7 +279,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
       return addedOk;
     }
 
-    private Object getTreeElementToUpdateFrom(PsiJavaPackage packageToUpdateFrom, Module module) {
+    private Object getTreeElementToUpdateFrom(PsiPackage packageToUpdateFrom, Module module) {
       if (packageToUpdateFrom == null || !packageToUpdateFrom.isValid() || "".equals(packageToUpdateFrom.getQualifiedName())) {
         return module == null ? myTreeStructure.getRootElement() : module;
       }

@@ -114,7 +114,7 @@ public final class TodoDirNode extends PsiDirectoryNode implements HighlightedRe
 
   @Override
   public Collection<AbstractTreeNode> getChildrenImpl() {
-    return TodoTreeHelper.getInstance(getProject()).getDirectoryChildren(getValue(), myBuilder, getSettings().isFlattenPackages());
+    return TodoTreeHelper.getDirectoryChildren(getValue(), myBuilder, getSettings().isFlattenPackages());
   }
 
   public int getFileCount(PsiDirectory directory) {
@@ -135,7 +135,7 @@ public final class TodoDirNode extends PsiDirectoryNode implements HighlightedRe
   }
 
   public int getTodoItemCount(PsiDirectory directory) {
-    if (TodoTreeHelper.getInstance(getProject()).skipDirectory(directory)) {
+    if (TodoTreeHelper.skipDirectory(directory)) {
       return 0;
     }
     int count = 0;

@@ -73,7 +73,7 @@ public class SummaryNode extends BaseToDoNode<ToDoSummary> {
             children.add(new TodoFileNode(myProject, (PsiFile)allFiles.next(), myBuilder, false));
           }
         } else {
-          TodoTreeHelper.getInstance(getProject()).addPackagesToChildren(children, null, myBuilder);
+          TodoTreeHelper.addPackagesToChildren(getProject(), children, null, myBuilder);
         }
       }
       else {

@@ -1594,8 +1594,6 @@
 
     <liveTemplateOptionalProcessor implementation="com.intellij.codeInsight.template.impl.ShortenToStaticImportProcessor"/>
     <liveTemplateOptionalProcessor implementation="com.intellij.codeInsight.template.impl.ShortenFQNamesProcessor"/>
-    <!--TODO [VISTALL] core depend <projectService serviceInterface="com.intellij.ide.todo.nodes.TodoTreeHelper"
-                    serviceImplementation="com.intellij.ide.todo.nodes.TodoJavaTreeHelper"/>  -->
 
     <createFromTemplateHandler implementation="com.intellij.ide.fileTemplates.JavaCreateFromTemplateHandler"/>
     <defaultTemplatePropertiesProvider implementation="com.intellij.ide.fileTemplates.TemplatePackagePropertyProvider"/>
@@ -1778,8 +1776,6 @@
     <problemFileHighlightFilter implementation="com.intellij.codeInsight.problems.DefaultProblemFileHighlightFilter"/>
 
     <problemHighlightFilter implementation="com.intellij.codeInsight.daemon.JavaProblemHighlightFilter"/>
-
-    <projectViewPane implementation="com.intellij.ide.projectView.impl.PackageViewPane"/>
 
     <inlineActionHandler implementation="com.intellij.refactoring.inline.InlineParameterHandler"/>
     <inlineActionHandler implementation="com.intellij.refactoring.inline.InlineToAnonymousClassHandler"/>

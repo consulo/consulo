@@ -4381,6 +4381,7 @@
 
     <!--Rich-->
     <projectViewPane implementation="com.intellij.ide.projectView.impl.ProjectViewPane"/>
+    <projectViewPane implementation="com.intellij.ide.projectView.impl.PackageViewPane"/>
 
     <appStarter implementation="com.intellij.compiler.ant.GenerateAntMain"/>
 
@@ -5399,8 +5400,6 @@
 
     <projectService serviceInterface="com.intellij.psi.impl.file.PsiDirectoryFactory"
                     serviceImplementation="com.intellij.psi.impl.file.PsiDirectoryFactoryImpl"/>
-    <projectService serviceInterface="com.intellij.ide.todo.nodes.TodoTreeHelper"
-                    serviceImplementation="com.intellij.ide.todo.nodes.TodoTreeHelper"/>
 
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.IdeaProjectSettingsService"/>

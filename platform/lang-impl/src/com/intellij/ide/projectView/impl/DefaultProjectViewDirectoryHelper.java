@@ -21,7 +21,8 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.AbstractPackageElement;
+import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
+import com.intellij.ide.projectView.impl.nodes.PackageElement;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import com.intellij.openapi.project.Project;
@@ -88,7 +89,8 @@ public class DefaultProjectViewDirectoryHelper extends BaseProjectViewDirectoryH
 
   @Override
   public boolean isEmptyMiddleDirectory(final PsiDirectory directory, final boolean strictlyEmpty) {
-    return PsiPackageManager.getInstance(getProject()).findAnyPackage(directory) != null && TreeViewUtil.isEmptyMiddlePackage(directory, null, strictlyEmpty);
+    return PsiPackageManager.getInstance(getProject()).findAnyPackage(directory) != null && PackageNodeUtil
+      .isEmptyMiddlePackage(directory, null, strictlyEmpty);
   }
 
   @Override
@@ -104,8 +106,8 @@ public class DefaultProjectViewDirectoryHelper extends BaseProjectViewDirectoryH
   @Override
   public boolean canRepresent(final Object element, final PsiDirectory directory) {
     if (super.canRepresent(element, directory)) return true;
-    if (element instanceof AbstractPackageElement) {
-      final AbstractPackageElement packageElement = (AbstractPackageElement)element;
+    if (element instanceof PackageElement) {
+      final PackageElement packageElement = (PackageElement)element;
       return Arrays.asList(packageElement.getPackage().getDirectories()).contains(directory);
     }
     return false;

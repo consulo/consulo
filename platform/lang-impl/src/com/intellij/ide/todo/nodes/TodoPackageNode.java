@@ -17,6 +17,7 @@ package com.intellij.ide.todo.nodes;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.PresentationData;
+import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PackageElement;
 import com.intellij.ide.projectView.impl.nodes.PackageElementNode;
@@ -33,16 +34,15 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.HighlightedRegion;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.ArrayUtil;
 import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -130,7 +130,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
       data.setPresentableText(newName);
     }
     catch (IndexNotReadyException e) {
-      LOG.info(e);
+      ProjectViewNode.LOG.info(e);
       data.setPresentableText("N/A");
     }
   }
@@ -226,10 +226,10 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
         while (_dir != null) {
           final PsiDirectory parentDirectory = _dir.getParentDirectory();
           if (parentDirectory != null){
-            PsiJavaPackage _package = JavaDirectoryService.getInstance().getPackage(_dir);
+            PsiPackage _package = PsiPackageManager.getInstance(_dir.getProject()).findAnyPackage(_dir);
             if (_package != null && _package.getParentPackage() != null && psiPackage.equals(_package.getParentPackage())) {
               final GlobalSearchScope scope = module != null ? GlobalSearchScope.moduleScope(module) : GlobalSearchScope.projectScope(project);
-              _package = TodoJavaTreeHelper.findNonEmptyPackage(_package, module, project, myBuilder, scope); //compact empty middle packages
+              _package = TodoTreeHelper.findNonEmptyPackage(_package, module, project, myBuilder, scope); //compact empty middle packages
               final String name = _package.getParentPackage().equals(psiPackage)
                                   ? null //non compacted
                                   : _package.getQualifiedName().substring(psiPackage.getQualifiedName().length() + 1);

@@ -39,7 +39,9 @@ public class PackageViewModuleNode extends AbstractModuleNode{
   @Override
   @NotNull
   public Collection<AbstractTreeNode> getChildren() {
-    final Collection<AbstractTreeNode> result = PackageUtil.createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getSourceRoots()), myProject, getSettings(), getValue(), false);
+    final Collection<AbstractTreeNode> result = PackageNodeUtil
+      .createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getSourceRoots()), myProject, getSettings(),
+                                        getValue(), false);
     if (getSettings().isShowLibraryContents()) {
       result.add(new PackageViewLibrariesNode(getProject(), getValue(),getSettings()));
     }

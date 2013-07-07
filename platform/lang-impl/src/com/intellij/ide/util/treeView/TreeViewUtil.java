@@ -97,45 +97,6 @@ public class TreeViewUtil {
     return name.toString();
   }
 
-  /**
-   * a directory is considered "empty" if it has at least one child and all its children are only directories
-   *
-   * @param strictlyEmpty if true, the package is considered empty if it has only 1 child and this child  is a directory
-   *                      otherwise the package is considered as empty if all direct children that it has are directories
-   */
-  public static boolean isEmptyMiddlePackage(@NotNull PsiDirectory dir,
-                                             @Nullable Class<? extends ModuleExtension> moduleExtensionClass,
-                                             boolean strictlyEmpty) {
-    final VirtualFile[] files = dir.getVirtualFile().getChildren();
-    if (files.length == 0) {
-      return false;
-    }
-    PsiManager manager = dir.getManager();
-    int subpackagesCount = 0;
-    int directoriesCount = 0;
-    for (VirtualFile file : files) {
-      if (FileTypeManager.getInstance().isFileIgnored(file)) continue;
-      if (!file.isDirectory()) return false;
-      PsiDirectory childDir = manager.findDirectory(file);
-      if (childDir != null) {
-        directoriesCount++;
-        if (strictlyEmpty && directoriesCount > 1) return false;
-
-        final PsiPackageManager psiPackageManager = PsiPackageManager.getInstance(dir.getProject());
-        PsiPackage tempPackage = moduleExtensionClass == null
-                                 ? psiPackageManager.findAnyPackage(childDir)
-                                 : psiPackageManager.findPackage(dir, moduleExtensionClass);
-        if (tempPackage != null) {
-          subpackagesCount++;
-        }
-      }
-    }
-    if (strictlyEmpty) {
-      return directoriesCount == subpackagesCount && directoriesCount == 1;
-    }
-    return directoriesCount == subpackagesCount && directoriesCount > 0;
-  }
-
   @NotNull
   public static String getNodeName(@NotNull ViewSettings settings,
                                    PsiPackage aPackage,

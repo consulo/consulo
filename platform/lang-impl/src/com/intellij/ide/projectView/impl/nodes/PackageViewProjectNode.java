@@ -24,11 +24,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiJavaPackage;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
@@ -61,20 +61,20 @@ public class PackageViewProjectNode extends AbstractProjectNode {
 
       final PsiManager psiManager = PsiManager.getInstance(myProject);
       final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
-      final Set<PsiJavaPackage> topLevelPackages = new HashSet<PsiJavaPackage>();
+      final Set<PsiPackage> topLevelPackages = new HashSet<PsiPackage>();
 
       for (final VirtualFile root : sourceRoots) {
         final PsiDirectory directory = psiManager.findDirectory(root);
         if (directory == null) {
           continue;
         }
-        final PsiJavaPackage directoryPackage = JavaDirectoryService.getInstance().getPackage(directory);
-        if (directoryPackage == null || PackageUtil.isPackageDefault(directoryPackage)) {
+        final PsiPackage directoryPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(directory);
+        if (directoryPackage == null || PackageNodeUtil.isPackageDefault(directoryPackage)) {
           // add subpackages
           final PsiDirectory[] subdirectories = directory.getSubdirectories();
           for (PsiDirectory subdirectory : subdirectories) {
-            final PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(subdirectory);
-            if (aPackage != null && !PackageUtil.isPackageDefault(aPackage)) {
+            final PsiPackage aPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(subdirectory);
+            if (aPackage != null && !PackageNodeUtil.isPackageDefault(aPackage)) {
               topLevelPackages.add(aPackage);
             }
           }
@@ -87,8 +87,8 @@ public class PackageViewProjectNode extends AbstractProjectNode {
         }
       }
 
-      for (final PsiJavaPackage psiPackage : topLevelPackages) {
-        PackageUtil.addPackageAsChild(children, psiPackage, null, getSettings(), false);
+      for (final PsiPackage psiPackage : topLevelPackages) {
+        PackageNodeUtil.addPackageAsChild(children, psiPackage, null, getSettings(), false);
       }
 
       if (getSettings().isShowLibraryContents()) {
@@ -97,8 +97,6 @@ public class PackageViewProjectNode extends AbstractProjectNode {
 
       return children;
     }
-
-
   }
 
   @Override

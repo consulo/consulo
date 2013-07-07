@@ -19,19 +19,23 @@ import com.intellij.ide.projectView.RootsProvider;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.Queryable;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
 import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.lang.model.element.PackageElement;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 13:58/07.07.13
  */
-public abstract class AbstractPackageElement implements Queryable, RootsProvider {
-  public static final DataKey<PackageElement> DATA_KEY =  DataKey.create("package.element");
+public class PackageElement implements Queryable, RootsProvider {
+  public static final DataKey<javax.lang.model.element.PackageElement> DATA_KEY =  DataKey.create("package.element");
 
   @Nullable
   private final Module myModule;
@@ -39,10 +43,20 @@ public abstract class AbstractPackageElement implements Queryable, RootsProvider
   private final PsiPackage myElement;
   private final boolean myIsLibraryElement;
 
-  public AbstractPackageElement(@Nullable Module module, @NotNull PsiPackage element, boolean isLibraryElement) {
+  public PackageElement(@Nullable Module module, @NotNull PsiPackage element, boolean isLibraryElement) {
     myModule = module;
     myElement = element;
     myIsLibraryElement = isLibraryElement;
+  }
+
+  @Override
+  public Collection<VirtualFile> getRoots() {
+    Set<VirtualFile> roots= new HashSet<VirtualFile>();
+    final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(getPackage(), getPackage().getProject(), getModule(), isLibraryElement());
+    for (PsiDirectory each : dirs) {
+      roots.add(each.getVirtualFile());
+    }
+    return roots;
   }
 
   @Nullable
@@ -59,7 +73,7 @@ public abstract class AbstractPackageElement implements Queryable, RootsProvider
     if (this == o) return true;
     if (o == null || o.getClass() != getClass()) return false;
 
-    final AbstractPackageElement packageElement = (AbstractPackageElement)o;
+    final PackageElement packageElement = (PackageElement)o;
 
     if (myIsLibraryElement != packageElement.myIsLibraryElement) return false;
     if (!myElement.equals(packageElement.myElement)) return false;

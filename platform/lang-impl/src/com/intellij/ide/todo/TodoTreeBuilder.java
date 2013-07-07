@@ -271,7 +271,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
         PsiFile psiFile = psiManager.findFile(file);
         if (psiFile != null) {
           final PsiDirectory directory = psiFile.getContainingDirectory();
-          if (directory == null || !skip || !TodoTreeHelper.getInstance(myProject).skipDirectory(directory)) {
+          if (directory == null || !skip || !TodoTreeHelper.skipDirectory(directory)) {
             psiFileList.add(psiFile);
           }
         }

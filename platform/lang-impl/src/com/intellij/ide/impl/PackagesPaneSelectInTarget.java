@@ -31,10 +31,12 @@ public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
     super(project);
   }
 
+  @Override
   public String toString() {
     return SelectInManager.PACKAGES;
   }
 
+  @Override
   public boolean canSelect(PsiFileSystemItem file) {
     if (!super.canSelect(file)) return false;
     final VirtualFile vFile = PsiUtilBase.getVirtualFile(file);
@@ -52,6 +54,7 @@ public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
     }
   }
 
+  @Override
   public boolean isSubIdSelectable(String subId, SelectInContext context) {
     return canSelect(context);
   }
@@ -64,14 +67,17 @@ public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
     return (projectFileIndex.isInLibraryClasses(vFile) || projectFileIndex.isInLibrarySource(vFile)) && !projectFileIndex.isInSourceContent(vFile);
   }
 
+  @Override
   public String getMinorViewId() {
     return PackageViewPane.ID;
   }
 
+  @Override
   public float getWeight() {
     return StandardTargetWeights.PACKAGES_WEIGHT;
   }
 
+  @Override
   protected boolean canWorkWithCustomObjects() {
     return false;
   }
