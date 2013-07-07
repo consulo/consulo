@@ -53,7 +53,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
       rules.add(new ModuleGroupingRule());
     }
     if (UsageViewSettings.getInstance().GROUP_BY_PACKAGE) {
-      rules.add(DirectoryGroupingRule.getInstance(project));
+      rules.add(new DirectoryGroupingRule(project));
     }
     if (UsageViewSettings.getInstance().GROUP_BY_FILE_STRUCTURE) {
       FileStructureGroupRuleProvider[] providers = Extensions.getExtensions(FileStructureGroupRuleProvider.EP_NAME);

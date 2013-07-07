@@ -875,9 +875,6 @@
                      serviceImplementation="com.intellij.psi.impl.file.PsiJavaDirectoryFactory"/> -->
 
 
-    <!--TODO [VISTALL] core depend  <projectService serviceInterface="com.intellij.usages.impl.rules.DirectoryGroupingRule"
-                     serviceImplementation="com.intellij.usages.impl.rules.PackageGroupingRule"/> -->
-
     <projectService serviceInterface="com.intellij.slicer.SliceToolwindowSettings"
                     serviceImplementation="com.intellij.slicer.SliceToolwindowSettings"/>
     <projectService serviceInterface="com.intellij.slicer.SliceManager"

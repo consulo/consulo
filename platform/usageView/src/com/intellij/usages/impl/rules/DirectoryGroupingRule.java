@@ -15,9 +15,9 @@
  */
 package com.intellij.usages.impl.rules;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -29,7 +29,8 @@ import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
-import com.intellij.util.PlatformIcons;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,10 +40,6 @@ import javax.swing.*;
  * @author yole
  */
 public class DirectoryGroupingRule implements UsageGroupingRule {
-  public static DirectoryGroupingRule getInstance(Project project) {
-    return ServiceManager.getService(project, DirectoryGroupingRule.class);
-  }
-
   protected final Project myProject;
 
   public DirectoryGroupingRule(Project project) {
@@ -67,7 +64,14 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     return null;
   }
 
-  protected UsageGroup getGroupForFile(VirtualFile dir) {
+  protected UsageGroup getGroupForFile(final VirtualFile dir) {
+    PsiDirectory psiDirectory = PsiManager.getInstance(myProject).findDirectory(dir);
+    if (psiDirectory != null) {
+      PsiPackage aPackage = PsiPackageManager.getInstance(myProject).findAnyPackage(psiDirectory);
+      if (aPackage != null) {
+        return new PackageGroup(aPackage);
+      }
+    }
     return new DirectoryGroup(dir);
   }
 
@@ -84,7 +88,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
 
     @Override
     public Icon getIcon(boolean isOpen) {
-      return PlatformIcons.DIRECTORY_CLOSED_ICON;
+      return AllIcons.Nodes.TreeClosed;
     }
 
     @Override
@@ -115,6 +119,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     private PsiDirectory getDirectory() {
       return myDir.isValid() ? PsiManager.getInstance(myProject).findDirectory(myDir) : null;
     }
+
     @Override
     public boolean canNavigate() {
       final PsiDirectory directory = getDirectory();
@@ -131,12 +136,14 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
       return getText(null).compareToIgnoreCase(usageGroup.getText(null));
     }
 
+    @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof DirectoryGroup)) return false;
       return myDir.equals(((DirectoryGroup)o).myDir);
     }
 
+    @Override
     public int hashCode() {
       return myDir.hashCode();
     }
@@ -149,6 +156,84 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
       }
       if (LangDataKeys.PSI_ELEMENT == key) {
         sink.put(LangDataKeys.PSI_ELEMENT, getDirectory());
+      }
+    }
+  }
+
+  private class PackageGroup implements UsageGroup, TypeSafeDataProvider {
+    private final PsiPackage myPackage;
+
+    private PackageGroup(PsiPackage aPackage) {
+      myPackage = aPackage;
+      update();
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public Icon getIcon(boolean isOpen) {
+      return AllIcons.Nodes.Package;
+    }
+
+    @Override
+    @NotNull
+    public String getText(UsageView view) {
+      return myPackage.getQualifiedName();
+    }
+
+    @Override
+    public FileStatus getFileStatus() {
+      if (!isValid()) return null;
+      PsiDirectory[] dirs = myPackage.getDirectories();
+      return dirs.length == 1 ? FileStatusManager.getInstance(myProject).getStatus(dirs[0].getVirtualFile()) : null;
+    }
+
+    @Override
+    public boolean isValid() {
+      return myPackage.isValid();
+    }
+
+    @Override
+    public void navigate(boolean focus) throws UnsupportedOperationException {
+      myPackage.navigate(focus);
+    }
+
+    @Override
+    public boolean canNavigate() {
+      return myPackage.canNavigate();
+    }
+
+    @Override
+    public boolean canNavigateToSource() {
+      return false;
+    }
+
+    @Override
+    public int compareTo(UsageGroup usageGroup) {
+      return getText(null).compareToIgnoreCase(usageGroup.getText(null));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof PackageGroup)) return false;
+
+      return myPackage.equals(((PackageGroup)o).myPackage);
+    }
+
+    @Override
+    public int hashCode() {
+      return myPackage.hashCode();
+    }
+
+    @Override
+    public void calcData(final DataKey key, final DataSink sink) {
+      if (!isValid()) return;
+      if (LangDataKeys.PSI_ELEMENT == key) {
+        sink.put(LangDataKeys.PSI_ELEMENT, myPackage);
       }
     }
   }

@@ -15,7 +15,6 @@
  */
 package com.intellij.psi;
 
-import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
@@ -27,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a Java package.
  */
-public interface PsiJavaPackage extends PsiCheckedRenameElement, NavigationItem, PsiModifierListOwner, PsiPackage {
+public interface PsiJavaPackage extends PsiModifierListOwner, PsiPackage {
   @NonNls String PACKAGE_INFO_CLASS = "package-info";
   @NonNls String PACKAGE_INFO_FILE = PACKAGE_INFO_CLASS + ".java";
 

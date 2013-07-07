@@ -15,6 +15,8 @@
  */
 package org.consulo.psi;
 
+import com.intellij.navigation.NavigationItem;
+import com.intellij.psi.PsiCheckedRenameElement;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.PsiQualifiedNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -27,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 7:50/20.05.13
  */
-public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElement {
+public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElement, PsiCheckedRenameElement, NavigationItem {
   PsiPackage[] EMPTY_ARRAY = new PsiPackage[0];
 
   ArrayFactory<PsiPackage> ARRAY_FACTORY = new ArrayFactory<PsiPackage>() {
