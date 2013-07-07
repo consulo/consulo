@@ -1979,8 +1979,7 @@
       <add-to-group group-id="ProjectViewPopupMenuRunGroup" anchor="first"/>
     </group>
 
-    <action id="PackageFile" class="com.intellij.openapi.actionSystem.EmptyAction"
-            use-shortcut-of="Compile"> <!--TODO [VISTALL] com.intellij.packaging.impl.ui.actions.PackageFileAction-->
+    <action id="PackageFile" class="com.intellij.packaging.impl.ui.actions.PackageFileAction" use-shortcut-of="Compile">
       <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Compile"/>
       <add-to-group group-id="ProjectViewPopupMenu" anchor="before" relative-to-action="MakeModule"/>
       <add-to-group group-id="FavoritesViewPopupMenu" anchor="before" relative-to-action="MakeModule"/>
@@ -4546,8 +4545,6 @@
     <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
 
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
-
-    <!--TODO [VISTALL] Java <moduleExtension implementation="com.intellij.openapi.roots.impl.JavaModuleExternalPathsImpl"/> -->
 
     <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/>
     <orderRootType implementation="com.intellij.openapi.roots.JavadocOrderRootType"/>
