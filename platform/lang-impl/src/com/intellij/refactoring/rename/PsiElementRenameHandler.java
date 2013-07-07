@@ -97,7 +97,7 @@ public class PsiElementRenameHandler implements RenameHandler {
     rename(element, project, nameSuggestionContext, editor);
   }
 
-  static boolean canRename(Project project, Editor editor, PsiElement element) throws CommonRefactoringUtil.RefactoringErrorHintException {
+  public static boolean canRename(Project project, Editor editor, PsiElement element) throws CommonRefactoringUtil.RefactoringErrorHintException {
     String message = renameabilityStatus(project, element);
     if (message != null) {
       if (!message.isEmpty()) showErrorMessage(project, editor, message);
@@ -108,7 +108,7 @@ public class PsiElementRenameHandler implements RenameHandler {
   }
 
   @Nullable
-  static String renameabilityStatus(Project project, PsiElement element) {
+  public static String renameabilityStatus(Project project, PsiElement element) {
     if (element == null) return "";
 
     boolean hasRenameProcessor = RenamePsiElementProcessor.forElement(element) != RenamePsiElementProcessor.DEFAULT;
@@ -137,7 +137,7 @@ public class PsiElementRenameHandler implements RenameHandler {
     return null;
   }
 
-  static void showErrorMessage(Project project, @Nullable Editor editor, String message) {
+  public static void showErrorMessage(Project project, @Nullable Editor editor, String message) {
     CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringBundle.message("rename.title"), null);
   }
 
