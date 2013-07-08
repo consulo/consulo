@@ -15,10 +15,7 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageExtension;
-import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.*;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.openapi.diagnostic.Logger;
@@ -60,8 +57,11 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     myOuterElementType = outerElementType;
   }
 
-  protected Lexer createBaseLexer(TemplateLanguageFileViewProvider viewProvider) {
-    return LanguageParserDefinitions.INSTANCE.forLanguage(viewProvider.getBaseLanguage()).createLexer(null, Language.UNKNOWN_VERSION);
+  protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider) {
+    final Language baseLanguage = viewProvider.getBaseLanguage();
+    final LanguageVersion languageVersion =
+      LanguageVersionResolvers.INSTANCE.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
+    return LanguageParserDefinitions.INSTANCE.forLanguage(baseLanguage).createLexer(null, languageVersion);
   }
 
   protected LanguageFileType createTemplateFakeFileType(final Language language) {
@@ -85,7 +85,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     final TreeElement parsed = ((PsiFileImpl)templateFile).calcTreeElement();
     Lexer langLexer = LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(file.getProject(), templateFile.getLanguageVersion());
     final Lexer lexer = new MergingLexerAdapter(
-      new TemplateBlackAndWhiteLexer(createBaseLexer(viewProvider), langLexer, myTemplateElementType, myOuterElementType),
+      new TemplateBlackAndWhiteLexer(createBaseLexer(templateFile, viewProvider), langLexer, myTemplateElementType, myOuterElementType),
       TokenSet.create(myTemplateElementType, myOuterElementType));
     lexer.start(chars);
     insertOuters(parsed, lexer, table);
@@ -114,7 +114,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
                                      final Language language,
                                      final CharSequence chars,
                                      final TemplateLanguageFileViewProvider viewProvider) {
-    final Lexer baseLexer = createBaseLexer(viewProvider);
+    final Lexer baseLexer = createBaseLexer(file, viewProvider);
     final CharSequence templateText = createTemplateText(chars, baseLexer);
     return createFromText(language, templateText, file.getManager());
   }
