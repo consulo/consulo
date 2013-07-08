@@ -23,8 +23,6 @@ import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -62,8 +60,6 @@ import java.util.*;
  * @author Dmitry Avdeev
  */
 public class AttachSourcesNotificationProvider extends EditorNotifications.Provider<EditorNotificationPanel> {
-  private static final ExtensionPointName<AttachSourcesProvider> EXTENSION_POINT_NAME
-    = new ExtensionPointName<AttachSourcesProvider>("com.intellij.attachSourcesProvider");
 
   private static final Key<EditorNotificationPanel> KEY = Key.create("add sources to class");
 
@@ -110,7 +106,7 @@ public class AttachSourcesNotificationProvider extends EditorNotifications.Provi
 
     boolean hasNonLightAction = false;
 
-    for (AttachSourcesProvider each : Extensions.getExtensions(EXTENSION_POINT_NAME)) {
+    for (AttachSourcesProvider each : AttachSourcesProvider.EP_NAME.getExtensions()) {
       for (AttachSourcesProvider.AttachSourcesAction action : each.getActions(libraries, psiFile)) {
         if (hasNonLightAction) {
           if (action instanceof AttachSourcesProvider.LightAttachSourcesAction) {

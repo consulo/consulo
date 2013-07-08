@@ -399,6 +399,8 @@
   </project-components>
 
   <extensionPoints>
+    <extensionPoint name="attachSourcesProvider" interface="com.intellij.codeInsight.AttachSourcesProvider"/>
+
     <extensionPoint name="variableTypeCalculator" interface="com.intellij.codeInsight.template.macro.VariableTypeCalculator"/>
 
     <extensionPoint name="paletteItemProvider" area="CONSULO_PROJECT" interface="com.intellij.ide.palette.PaletteItemProvider"/>

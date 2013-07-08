@@ -3221,8 +3221,6 @@
     <extensionPoint name="compileServer.pathProvider" area="CONSULO_PROJECT"
                     interface="com.intellij.compiler.server.CompileServerPathProvider"/>
 
-    <extensionPoint name="attachSourcesProvider" interface="com.intellij.codeInsight.AttachSourcesProvider"/>
-
 
     <extensionPoint name="configuration.ModuleStructureExtension"
                     interface="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureExtension"/>
