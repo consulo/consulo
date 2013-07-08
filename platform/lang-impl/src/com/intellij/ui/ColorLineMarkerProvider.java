@@ -26,8 +26,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ElementColorProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.ui.ColorIcon;
@@ -76,7 +76,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
               public void navigate(MouseEvent e, PsiElement elt) {
                 if (!elt.isWritable()) return;
 
-                final Editor editor = PsiUtilBase.findEditor(element);
+                final Editor editor = FileEditorManager.getInstance(element.getProject()).getSelectedTextEditor();
                 assert editor != null;
                 final Color c = ColorChooser.chooseColor(editor.getComponent(), "Choose color", color, true);
                 if (c != null) {
