@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.psi.impl.source.tree;
 
-/*
- * User: anna
- * Date: 20-Dec-2007
+import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author VISTALL
+ * @since 21:13/09.07.13
  */
-package com.intellij.codeInspection.reference;
+public class JavaASTLeafFactory extends CoreJavaASTLeafFactory {
+  @Override
+  @NotNull
+  public LeafElement createLeaf(final IElementType type, final CharSequence text) {
+    if (type == C_STYLE_COMMENT || type == END_OF_LINE_COMMENT) {
+      return new PsiCommentImpl(type, text);
+    }
 
-import com.intellij.psi.PsiJavaFile;
-
-public class RefJavaFileImpl extends RefFileImpl {
-  public RefJavaFileImpl(PsiJavaFile elem, RefManager manager) {
-    super(elem, manager);
-    ((RefPackageImpl)getRefManager().getExtension(RefJavaManager.MANAGER).getPackage(elem.getPackageName())).add(this);
+    return super.createLeaf(type, text);
   }
 }

@@ -1397,7 +1397,7 @@
 
     <lang.psiStructureViewFactory language="JAVA" implementationClass="com.intellij.lang.java.JavaStructureViewBuilderFactory"/>
 
-    <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.CoreJavaASTLeafFactory"/>
+    <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.JavaASTLeafFactory"/>
     <lang.ast.compositeFactory implementation="com.intellij.psi.impl.source.tree.JavaASTCompositeFactory"/>
 
     <lang.literalEscaper language="JAVA" implementationClass="com.intellij.lang.java.JavaLiteralEscaper"/>
