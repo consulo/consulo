@@ -4482,6 +4482,10 @@
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"
                          key="compiler.configurable.display.name" bundle="messages.CompilerBundle" order="after project"/>
 
+    <projectConfigurable id="project.propCompiler.excluded" bundle="messages.CompilerBundle" key="actions.exclude.from.compile.text"
+                         parentId="project.propCompiler"
+                         instance="com.intellij.compiler.options.CompilerExcludedConfigurable"/>
+
     <projectConfigurable instance="com.intellij.psi.templateLanguages.TemplateDataLanguageConfigurable" id="Template Data Languages"
                          key="template.data.language.configurable" bundle="messages.LangBundle"/>
 

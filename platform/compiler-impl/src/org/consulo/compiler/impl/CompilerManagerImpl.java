@@ -67,6 +67,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   private final Project myProject;
 
+  private final ExcludedEntriesConfiguration myExcludedEntriesConfiguration = new ExcludedEntriesConfiguration();
   private final List<Compiler> myCompilers = new ArrayList<Compiler>();
   private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerInputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
   private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
@@ -277,12 +278,12 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   public boolean isExcludedFromCompilation(@NotNull VirtualFile file) {
-    return false;    //TODO [VISTALL] !!
+    return myExcludedEntriesConfiguration.isExcluded(file);
   }
 
   @Override
   public ExcludedEntriesConfiguration getExcludedEntriesConfiguration() {
-    return null;
+    return myExcludedEntriesConfiguration;
   }
 
   @Override
@@ -329,12 +330,21 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Nullable
   @Override
   public Element getState() {
-    return new Element("state");
+    final Element state = new Element("state");
+    if(!myExcludedEntriesConfiguration.isEmpty()) {
+      Element element = new Element("exclude-from-compilation");
+      myExcludedEntriesConfiguration.writeExternal(element);
+      state.addContent(element);
+    }
+    return state;
   }
 
   @Override
   public void loadState(Element state) {
-
+    Element exclude = state.getChild("exclude-from-compilation");
+    if(exclude != null) {
+      myExcludedEntriesConfiguration.readExternal(exclude);
+    }
   }
 
   public Semaphore getCompilationSemaphore() {

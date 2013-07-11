@@ -39,6 +39,10 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
   private final Collection<ExcludeEntryDescription> myExcludeEntryDescriptions = new LinkedHashSet<ExcludeEntryDescription>();
   private ExcludeEntryDescription[] myCachedDescriptions = null;
 
+  public synchronized boolean isEmpty() {
+    return myExcludeEntryDescriptions.isEmpty();
+  }
+
   public synchronized ExcludeEntryDescription[] getExcludeEntryDescriptions() {
     if (myCachedDescriptions == null) {
       myCachedDescriptions = myExcludeEntryDescriptions.toArray(new ExcludeEntryDescription[myExcludeEntryDescriptions.size()]);
@@ -65,9 +69,9 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
     return myExcludeEntryDescriptions.contains(description);
   }
 
+  @Override
   public void readExternal(final Element node) {
-    for (final Object o : node.getChildren()) {
-      Element element = (Element)o;
+    for (final Element element : node.getChildren()) {
       String url = element.getAttributeValue(URL);
       if (url == null) continue;
       if (FILE.equals(element.getName())) {
@@ -82,6 +86,7 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
     }
   }
 
+  @Override
   public void writeExternal(final Element element) {
     for (final ExcludeEntryDescription description : getExcludeEntryDescriptions()) {
       if (description.isFile()) {
