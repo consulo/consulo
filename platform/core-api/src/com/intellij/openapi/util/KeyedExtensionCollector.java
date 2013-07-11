@@ -207,6 +207,9 @@ public class KeyedExtensionCollector<T, KeyT> {
 
         myPoint.addExtensionPointListener(myListener);
       }
+      else {
+        LOG.error("Extension is not registered with name: " + myEpName);
+      }
     }
     return myPoint;
   }

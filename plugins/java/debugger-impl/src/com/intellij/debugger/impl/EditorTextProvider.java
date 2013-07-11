@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Maxim.Medvedev
  */
 public interface EditorTextProvider {
-  LanguageExtension<EditorTextProvider> EP = new LanguageExtension<EditorTextProvider>("com.intellij.debuggerEditorTextProvider");
+  LanguageExtension<EditorTextProvider> EP = new LanguageExtension<EditorTextProvider>("org.consulo.java.debuggerEditorTextProvider");
 
   @Nullable
   TextWithImports getEditorText(PsiElement elementAtCaret);
