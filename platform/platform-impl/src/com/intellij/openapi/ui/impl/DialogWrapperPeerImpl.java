@@ -371,8 +371,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
   }
 
   @Override
-  public void isResizable() {
-    myDialog.isResizable();
+  public boolean isResizable() {
+    return myDialog.isResizable();
   }
 
   @Override

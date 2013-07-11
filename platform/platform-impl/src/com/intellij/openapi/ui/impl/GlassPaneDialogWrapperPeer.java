@@ -241,8 +241,8 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     throw new UnsupportedOperationException("Not implemented in " + getClass().getCanonicalName());
   }
 
-  // TODO: WTF?! VOID?!!!
-  public void isResizable() {
+  public boolean isResizable() {
+    return false;
   }
 
   public void setResizable(final boolean resizable) {
