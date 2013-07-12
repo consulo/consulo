@@ -138,7 +138,7 @@ public class CompileAction extends CompileActionBase {
   }
 
   private static String createPresentationText(String elementDescription) {
-    StringBuffer buffer = new StringBuffer(40);
+    StringBuilder buffer = new StringBuilder(40);
     buffer.append(ActionsBundle.actionText(IdeActions.ACTION_COMPILE)).append(" ");
     int length = elementDescription.length();
     if (length > 23) {
