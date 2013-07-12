@@ -73,7 +73,7 @@ public class LocateLibraryDialog extends DialogWrapper {
                                           QuickFixBundle.message("add.library.description.locate.library"), myProject,
                                           new FileChooserDescriptor(false,false,true,false,false,false));
 
-    myCopyToDir.setText(new File (module.getModuleFilePath()).getParent());
+    myCopyToDir.setText(module.getModuleDirPath());
     myCopyToDir.addBrowseFolderListener(QuickFixBundle.message("add.library.title.choose.folder"),
                                         QuickFixBundle.message("add.library.description.choose.folder"), myProject,
                                         FileChooserDescriptorFactory.createSingleFolderDescriptor());

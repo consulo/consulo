@@ -394,7 +394,7 @@ public abstract class MvcFramework {
     }
 
     final VirtualFile root = findAppRoot(module);
-    final File ioRoot = root != null ? VfsUtilCore.virtualToIoFile(root) : new File(module.getModuleFilePath()).getParentFile();
+    final File ioRoot = root != null ? VfsUtilCore.virtualToIoFile(root) : new File(module.getModuleDirPath());
     commandLine.setWorkDirectory(forCreation ? ioRoot.getParentFile() : ioRoot);
 
     return commandLine;

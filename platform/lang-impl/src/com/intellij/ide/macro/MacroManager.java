@@ -69,8 +69,7 @@ public final class MacroManager {
     registerMacro(new ProjectNameMacro());
     registerMacro(new ProjectPathMacro());
 
-    registerMacro(new ModuleFilePathMacro());
-    registerMacro(new ModuleFileDirMacro());
+    registerMacro(new ModuleDirMacro());
     registerMacro(new ModuleNameMacro());
     registerMacro(new ModulePathMacro());
     //TODO [VISTALL] new api registerMacro(new ModuleSdkPathMacro());

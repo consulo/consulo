@@ -21,12 +21,10 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 
-import java.io.File;
-
-public final class ModuleFileDirMacro extends Macro {
+public final class ModuleDirMacro extends Macro {
   @Override
   public String getName() {
-    return "ModuleFileDir";
+    return "ModuleDir";
   }
 
   @Override
@@ -37,14 +35,9 @@ public final class ModuleFileDirMacro extends Macro {
   @Override
   public String expand(DataContext dataContext) {
     final Module module = LangDataKeys.MODULE.getData(dataContext);
-    final String path = module != null ? module.getModuleFilePath() : null;
-    if (path == null) {
+    if(module == null) {
       return null;
     }
-    final File fileDir = new File(path).getParentFile();
-    if (fileDir == null) {
-      return null;
-    }
-    return fileDir.getPath();
+    return module.getModuleDirPath();
   }
 }

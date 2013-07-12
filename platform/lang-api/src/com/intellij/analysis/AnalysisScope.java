@@ -31,7 +31,6 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -49,7 +48,6 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -437,13 +435,13 @@ public class AnalysisScope {
         return myScope.getDisplayName();
 
       case MODULE:
-        return AnalysisScopeBundle.message("scope.option.module", pathToName(myModule.getModuleFilePath()));
+        return AnalysisScopeBundle.message("scope.option.module", myModule.getName());
 
       case MODULES:
         String modules = StringUtil.join(myModules, new Function<Module, String>() {
           @Override
           public String fun(@NotNull final Module module) {
-            return pathToName(module.getModuleFilePath());
+            return myModule.getName();
           }
         }, ", ");
 
@@ -516,12 +514,6 @@ public class AnalysisScope {
       return null;
     }
     return relativePath;
-  }
-
-  @NotNull
-  private static String pathToName(@NotNull String path) {
-    File file = new File(path);
-    return FileUtil.getNameWithoutExtension(file);
   }
 
   public int getFileCount() {

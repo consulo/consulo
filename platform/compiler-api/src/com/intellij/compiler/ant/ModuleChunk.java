@@ -95,7 +95,7 @@ public class ModuleChunk {
     if (myBaseDir != null) {
       return myBaseDir;
     }
-    return new File(myMainModule.getModuleFilePath()).getParentFile();
+    return new File(myMainModule.getModuleDirPath());
   }
 
   public void setBaseDir(File baseDir) {

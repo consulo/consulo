@@ -25,7 +25,6 @@ import com.intellij.util.ui.UIUtil;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -200,15 +199,8 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
       public void run() {
         for (Module module : modules) {
           ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
-          String path = module.getModuleFilePath();
+
           moduleManager.disposeModule(module);
-          File file = new File(path);
-          if (file.isFile()) {
-            boolean success = file.delete();
-            if (!success) {
-              LOG.warn("Can't remove module file at '" + path + "'");
-            }
-          }
         }
       }
     });
