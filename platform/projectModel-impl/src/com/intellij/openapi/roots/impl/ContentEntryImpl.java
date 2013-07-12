@@ -29,6 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -115,7 +116,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
     for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
-      list.add(contentFolder.getFile());
+      ContainerUtil.addIfNotNull(contentFolder.getFile(), list);
     }
     return VfsUtilCore.toVirtualFileArray(list);
   }
@@ -125,7 +126,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   public VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
     for (ContentFolder contentFolder : getFolders0(contentFolderTypes)) {
-      list.add(contentFolder.getFile());
+      ContainerUtil.addIfNotNull(contentFolder.getFile(), list);
     }
     return VfsUtilCore.toVirtualFileArray(list);
   }
