@@ -12,7 +12,7 @@ import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 import java.util.List;
 import java.util.Map;
 
-public abstract class GroovyImporter extends MavenImporter {
+public abstract class GroovyImporter extends MavenImporterFromBuildPlugin {
   public GroovyImporter(String pluginGroupID, String pluginArtifactID) {
     super(pluginGroupID, pluginArtifactID);
   }

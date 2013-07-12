@@ -22,13 +22,11 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Pair;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.MutableModuleExtension;
-import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenArtifact;
 import org.jetbrains.idea.maven.project.*;
 import org.jetbrains.idea.maven.server.MavenEmbedderWrapper;
 import org.jetbrains.idea.maven.server.NativeMavenProjectHolder;
-import org.jetbrains.idea.maven.utils.MavenJDOMUtil;
 import org.jetbrains.idea.maven.utils.MavenProcessCanceledException;
 
 import java.util.ArrayList;
@@ -38,13 +36,7 @@ import java.util.Map;
 
 public abstract class MavenImporter {
   public static ExtensionPointName<MavenImporter> EXTENSION_POINT_NAME = ExtensionPointName.create("org.jetbrains.idea.maven.importer");
-  protected final String myPluginGroupID;
-  protected final String myPluginArtifactID;
 
-  public MavenImporter(String pluginGroupID, String pluginArtifactID) {
-    myPluginGroupID = pluginGroupID;
-    myPluginArtifactID = pluginArtifactID;
-  }
 
   public static List<MavenImporter> getSuitableImporters(MavenProject p) {
     final List<MavenImporter> result = new ArrayList<MavenImporter>();
@@ -56,11 +48,9 @@ public abstract class MavenImporter {
     return result;
   }
 
-  public boolean isApplicable(MavenProject mavenProject) {
-    return mavenProject.findPlugin(myPluginGroupID, myPluginArtifactID) != null;
-  }
+  public abstract boolean isApplicable(MavenProject mavenProject);
 
-  public void getSupportedPackagings(Collection<String> result) {
+  public void getSupportedPackagings(Collection <String> result) {
   }
 
   public void getSupportedDependencyTypes(Collection<String> result, SupportedRequestType type) {
@@ -118,35 +108,5 @@ public abstract class MavenImporter {
   }
 
   public void collectExcludedFolders(MavenProject mavenProject, List<String> result) {
-  }
-
-  @Nullable
-  protected Element getConfig(MavenProject p) {
-    return p.getPluginConfiguration(myPluginGroupID, myPluginArtifactID);
-  }
-
-  @Nullable
-  protected Element getConfig(MavenProject p, String path) {
-    return MavenJDOMUtil.findChildByPath(getConfig(p), path);
-  }
-
-  @Nullable
-  protected String findConfigValue(MavenProject p, String path) {
-    return MavenJDOMUtil.findChildValueByPath(getConfig(p), path);
-  }
-
-  @Nullable
-  protected String findConfigValue(MavenProject p, String path, String defaultValue) {
-    return MavenJDOMUtil.findChildValueByPath(getConfig(p), path, defaultValue);
-  }
-
-  @Nullable
-  protected Element getGoalConfig(MavenProject p, String goal) {
-    return p.getPluginGoalConfiguration(myPluginGroupID, myPluginArtifactID, goal);
-  }
-
-  @Nullable
-  protected String findGoalConfigValue(MavenProject p, String goal, String path) {
-    return MavenJDOMUtil.findChildValueByPath(getGoalConfig(p, goal), path);
   }
 }
