@@ -31,6 +31,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.util.Processor;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenArtifact;
@@ -446,7 +447,12 @@ public class MavenRootModelAdapter {
 
   public void setLanguageLevel(LanguageLevel level) {
     try {
-      myRootModel.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(level);
+      if(level == null) {
+        return;
+      }
+      final JavaMutableModuleExtension extension = myRootModel.getExtension(JavaMutableModuleExtension.class);
+      assert extension != null;
+      extension.getInheritableLanguageLevel().set(null, level.name());
     }
     catch (IllegalArgumentException e) {
       //bad value was stored

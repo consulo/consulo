@@ -27,6 +27,7 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -44,6 +45,7 @@ import com.intellij.util.ui.update.Update;
 import com.intellij.util.xmlb.XmlSerializer;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import org.consulo.maven.module.extension.MavenModuleExtension;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -447,30 +449,15 @@ public class MavenProjectsManager extends MavenSimpleProjectComponent
     return isInitialized();
   }
 
-  public boolean isMavenizedModule(final Module m) {
+  public boolean isMavenizedModule(@NotNull final Module m) {
     AccessToken accessToken = ApplicationManager.getApplication().acquireReadActionLock();
     try {
-      return "true".equals(m.getOptionValue(getMavenizedModuleOptionName()));
+      final MavenModuleExtension extension = ModuleUtilCore.getExtension(m, MavenModuleExtension.class);
+      return extension != null;
     }
     finally {
       accessToken.finish();
     }
-  }
-
-  public void setMavenizedModules(Collection<Module> modules, boolean mavenized) {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    for (Module m : modules) {
-      if (mavenized) {
-        m.setOption(getMavenizedModuleOptionName(), "true");
-      }
-      else {
-        m.clearOption(getMavenizedModuleOptionName());
-      }
-    }
-  }
-
-  private static String getMavenizedModuleOptionName() {
-    return "org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule";
   }
 
   @TestOnly

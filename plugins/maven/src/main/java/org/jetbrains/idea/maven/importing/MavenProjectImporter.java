@@ -20,10 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
@@ -35,6 +32,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.Stack;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.maven.module.extension.MavenMutableModuleExtension;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.importing.configurers.MavenModuleConfigurer;
 import org.jetbrains.idea.maven.model.MavenArtifact;
@@ -189,7 +188,7 @@ public class MavenProjectImporter {
   private Set<MavenProject> selectProjectsToImport(Collection<MavenProject> originalProjects) {
     Set<MavenProject> result = new THashSet<MavenProject>();
     for (MavenProject each : originalProjects) {
-      if (!shouldCreateModuleFor(each)) continue;
+     /// if (!shouldCreateModuleFor(each)) continue;   //TODO [VISTALL] maven - search why it return true
       result.add(each);
     }
     return result;
@@ -443,8 +442,18 @@ public class MavenProjectImporter {
 
   private void setMavenizedModules(final Collection<Module> modules, final boolean mavenized) {
     MavenUtil.invokeAndWaitWriteAction(myProject, new Runnable() {
+      @Override
       public void run() {
-        MavenProjectsManager.getInstance(myProject).setMavenizedModules(modules, mavenized);
+        for (Module module : modules) {
+          final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+
+          final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
+          //noinspection ConstantConditions
+          modifiableModel.getExtensionWithoutCheck(JavaMutableModuleExtension.class).setEnabled(true);
+          //noinspection ConstantConditions
+          modifiableModel.getExtensionWithoutCheck(MavenMutableModuleExtension.class).setEnabled(mavenized);
+          modifiableModel.commit();
+        }
       }
     });
   }

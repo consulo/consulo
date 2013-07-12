@@ -24,6 +24,8 @@ import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.maven.module.extension.MavenMutableModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,6 +75,10 @@ public class MavenModuleImporter {
   public void config(boolean isNewlyCreatedModule) {
     myRootModelAdapter = new MavenRootModelAdapter(myMavenProject, myModule, myModifiableModelsProvider);
     myRootModelAdapter.init(isNewlyCreatedModule);
+
+    final ModifiableRootModel rootModel = myModifiableModelsProvider.getRootModel(myModule);
+    rootModel.getExtensionWithoutCheck(JavaMutableModuleExtension.class).setEnabled(true);
+    rootModel.getExtensionWithoutCheck(MavenMutableModuleExtension.class).setEnabled(true);
 
     configFolders();
     configDependencies();

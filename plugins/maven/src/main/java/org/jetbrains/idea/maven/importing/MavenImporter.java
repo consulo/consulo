@@ -18,7 +18,10 @@ package org.jetbrains.idea.maven.importing;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Pair;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenArtifact;
@@ -74,8 +77,7 @@ public abstract class MavenImporter {
   public void resolve(Project project,
                       MavenProject mavenProject,
                       NativeMavenProjectHolder nativeMavenProject,
-                      MavenEmbedderWrapper embedder)
-    throws MavenProcessCanceledException {
+                      MavenEmbedderWrapper embedder) throws MavenProcessCanceledException {
   }
 
   public abstract void preProcess(Module module,
@@ -91,6 +93,19 @@ public abstract class MavenImporter {
                                MavenProjectChanges changes,
                                Map<MavenProject, String> mavenProjectToModuleName,
                                List<MavenProjectsProcessorTask> postTasks);
+
+  @SuppressWarnings("unchecked")
+  public <T extends ModuleExtension<T>> T enableModuleExtension(Module module,
+                                                                MavenModifiableModelsProvider modelsProvider,
+                                                                Class<T> clazz) {
+    final ModifiableRootModel rootModel = modelsProvider.getRootModel(module);
+
+    final MutableModuleExtension<T> extensionWithoutCheck = (MutableModuleExtension<T>) rootModel.getExtensionWithoutCheck(clazz);
+
+    extensionWithoutCheck.setEnabled(true);
+
+    return (T)extensionWithoutCheck;
+  }
 
   public boolean processChangedModulesOnly() {
     return true;
