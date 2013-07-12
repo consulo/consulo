@@ -78,6 +78,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 1. corresponding source file has been scheduled for recompilation (see above)
  * 2. corresponding source file has been deleted
  */
+@Deprecated
 public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
