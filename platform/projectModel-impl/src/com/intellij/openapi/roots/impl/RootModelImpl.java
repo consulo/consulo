@@ -767,16 +767,17 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return null;
   }
 
+  @Nullable
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
     final T extensionWithoutCheck = getExtensionWithoutCheck(clazz);
-    if (extensionWithoutCheck != null && extensionWithoutCheck.isEnabled()) {
+    if (extensionWithoutCheck.isEnabled()) {
       return extensionWithoutCheck;
     }
     return null;
   }
 
-  @Nullable
+  @NotNull
   @Override
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
     for (ModuleExtension<?> extension : myExtensions) {
@@ -785,7 +786,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         return (T)extension;
       }
     }
-    return null;
+    throw new IllegalArgumentException("Trying to search in module " + getModule().getName() + " extension with class: " + clazz.getName());
   }
 
   @NotNull

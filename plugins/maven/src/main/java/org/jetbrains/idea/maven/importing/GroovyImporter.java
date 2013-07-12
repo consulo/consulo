@@ -7,6 +7,7 @@ import org.jetbrains.idea.maven.project.MavenProjectChanges;
 import org.jetbrains.idea.maven.project.MavenProjectsProcessorTask;
 import org.jetbrains.idea.maven.project.MavenProjectsTree;
 import org.jetbrains.idea.maven.utils.MavenJDOMUtil;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,8 @@ public abstract class GroovyImporter extends MavenImporter {
                       MavenProjectChanges changes,
                       Map<MavenProject, String> mavenProjectToModuleName,
                       List<MavenProjectsProcessorTask> postTasks) {
+
+    enableModuleExtension(module, modifiableModelsProvider, GroovyModuleExtension.class);
   }
 
   @Override

@@ -38,6 +38,9 @@ public class ModuleExtensionProviderEP extends KeyedLazyInstanceEP<ModuleExtensi
   @Attribute("allow-mixin")
   public boolean allowMixin;
 
+  @Attribute("system-only")
+  public boolean systemOnly;
+
   @NotNull
   public static List<ModuleExtensionProvider> getProviders() {
     final ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();

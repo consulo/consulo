@@ -104,6 +104,10 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       return true;
     }
 
+    if(myProviderEP != null && myProviderEP.systemOnly) {
+      return false;
+    }
+
     final ModifiableRootModel rootModel = myState.getRootModel();
     if (rootModel == null) {
       return false;
