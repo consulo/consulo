@@ -368,9 +368,19 @@
             <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven-server-api/lib/lucene-core-2.4.1.jar" />
             <element id="directory" name="maven2">
               <element id="library" level="module" name="Maven" module-name="maven2-server-impl" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven2-server-impl/lib/activation-1.1.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven2-server-impl/lib/classworlds-1.1.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven2-server-impl/lib/commons-beanutils.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven2-server-impl/lib/plexus-utils-1.5.5.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven2-server-impl/lib/nexus-indexer-1.2.3.jar" />
             </element>
             <element id="directory" name="maven3">
               <element id="library" level="module" name="Maven3" module-name="maven3-server-impl" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven3-server-impl/lib/archetype-common-2.2.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven3-server-impl/lib/nexus-indexer-3.0.4.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven3-server-impl/lib/archetype-catalog-2.2.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven3-server-impl/lib/nexus-indexer-artifact-1.0.1.jar" />
+              <element id="file-copy" path="$PROJECT_DIR$/plugins/maven/maven3-server-impl/lib/maven-dependency-tree-1.2.jar" />
             </element>
             <element id="archive" name="maven2-server-impl.jar">
               <element id="module-output" name="maven2-server-impl" />
