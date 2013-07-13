@@ -43,7 +43,10 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -54,7 +57,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
 
 import static com.intellij.util.containers.ContainerUtil.newSmartList;
 import static com.intellij.util.containers.ContainerUtilRt.newArrayList;
@@ -400,33 +402,6 @@ public class BrowserUtil {
       LOG.warn(e);
       Messages.showErrorDialog("Cannot extract files: " + e.getMessage(), "Error");
       return null;
-    }
-  }
-
-  public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir) throws IOException {
-    extractEntry(entry, inputStream, outputDir, true);
-  }
-
-  public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir, boolean overwrite) throws IOException {
-    final boolean isDirectory = entry.isDirectory();
-    final String relativeName = entry.getName();
-    final File file = new File(outputDir, relativeName);
-    if (file.exists() && !overwrite) return;
-
-    FileUtil.createParentDirs(file);
-    if (isDirectory) {
-      file.mkdir();
-    }
-    else {
-      final BufferedInputStream is = new BufferedInputStream(inputStream);
-      final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-      try {
-        FileUtil.copy(is, os);
-      }
-      finally {
-        os.close();
-        is.close();
-      }
     }
   }
 
