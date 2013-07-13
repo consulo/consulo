@@ -30,9 +30,9 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
@@ -282,7 +282,7 @@ public class PsiUtilBase extends PsiUtilCore {
       return null;
     }
 
-    VirtualFileSystem fileSystem = virtualFile.getFileSystem();
+    IVirtualFileSystem fileSystem = virtualFile.getFileSystem();
     if (fileSystem instanceof LocalFileSystem) {
       // Try to find editor for the real file.
       final FileEditor[] editors = FileEditorManager.getInstance(psiFile.getProject()).getEditors(virtualFile);

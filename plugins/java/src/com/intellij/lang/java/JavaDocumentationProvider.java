@@ -38,9 +38,9 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.beanProperties.BeanPropertyElement;
 import com.intellij.psi.impl.source.javadoc.PsiDocParamRef;
@@ -664,7 +664,7 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     Module module = fileIndex.getModuleForFile(virtualFile);
     if (module == null) {
-      final VirtualFileSystem fs = virtualFile.getFileSystem();
+      final IVirtualFileSystem fs = virtualFile.getFileSystem();
       if (fs instanceof JarFileSystem) {
         final VirtualFile jar = ((JarFileSystem)fs).getVirtualFileForJar(virtualFile);
         if (jar != null) {

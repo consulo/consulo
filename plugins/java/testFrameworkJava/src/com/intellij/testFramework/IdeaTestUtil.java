@@ -23,9 +23,9 @@ import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.pom.java.LanguageLevel;
 import org.jetbrains.annotations.NotNull;
 
@@ -105,7 +105,7 @@ public class IdeaTestUtil extends PlatformTestUtil {
     String path = PathManager.getHomePath() + '/' + name;
     VirtualFile file = LocalFileSystem.getInstance().findFileByPath(path);
     assert file != null : "not found: " + path;
-    VirtualFile jar = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+    VirtualFile jar = ArchiveVfsUtil.getJarRootForLocalFile(file);
     assert jar != null : "no .jar for: " + path;
     return jar;
   }

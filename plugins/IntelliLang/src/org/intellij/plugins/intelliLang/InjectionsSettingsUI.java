@@ -18,6 +18,7 @@ package org.intellij.plugins.intelliLang;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.*;
@@ -779,7 +780,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, NonD
       @Override
       public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
         return super.isFileVisible(file, showHiddenFiles) &&
-               (file.isDirectory() || "xml".equals(file.getExtension()) || file.getFileType() == FileTypes.ARCHIVE);
+               (file.isDirectory() || "xml".equals(file.getExtension()) || file.getFileType() instanceof ArchiveFileType);
       }
 
       @Override

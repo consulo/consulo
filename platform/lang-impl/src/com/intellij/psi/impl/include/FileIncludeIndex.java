@@ -18,7 +18,7 @@ package com.intellij.psi.impl.include;
 
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.FactoryMap;
@@ -164,7 +164,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
     return new FileBasedIndex.InputFilter() {
       @Override
       public boolean acceptInput(Project project, VirtualFile file) {
-        if (file.getFileSystem() == JarFileSystem.getInstance()) {
+        if (file.getFileSystem() instanceof ArchiveFileSystem) {
           return false;
         }
         for (FileIncludeProvider provider : myProviders) {

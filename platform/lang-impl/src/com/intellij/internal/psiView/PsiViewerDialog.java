@@ -21,6 +21,7 @@ import com.intellij.formatting.ASTBlock;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeBuilder;
@@ -313,7 +314,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
       if (fileType != StdFileTypes.GUI_DESIGNER_FORM &&
           fileType != StdFileTypes.IDEA_PROJECT &&
           fileType != StdFileTypes.IDEA_WORKSPACE &&
-          fileType != FileTypes.ARCHIVE &&
+          !(fileType instanceof ArchiveFileType) &
           fileType != FileTypes.UNKNOWN &&
           fileType != FileTypes.PLAIN_TEXT &&
           !(fileType instanceof AbstractFileType) &&

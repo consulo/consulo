@@ -25,10 +25,7 @@ import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.codeInspection.java15api.Java15APIUsageInspection;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
+import com.intellij.openapi.vfs.*;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
@@ -93,7 +90,7 @@ public class JavaAPIUsagesInspectionTest extends InspectionTestCase {
         return true;
       }
     };
-    final VirtualFile srcFile = JarFileSystem.getInstance().findFileByPath("c:/program files/java/jdk1.6.0_12/src.zip!/");
+    final VirtualFile srcFile = StandardFileSystems.jar().findFileByPath("c:/program files/java/jdk1.6.0_12/src.zip!/");
     assert srcFile != null;
     VfsUtilCore.iterateChildrenRecursively(srcFile, VirtualFileFilter.ALL, contentIterator);
   }

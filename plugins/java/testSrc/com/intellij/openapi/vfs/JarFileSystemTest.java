@@ -35,7 +35,7 @@ public class JarFileSystemTest extends IdeaTestCase{
     VirtualFile jdkHome = jdk.getHomeDirectory();
     String rtJarPath = jdkHome.getPath() + "/jre/lib/rt.jar";
 
-    VirtualFile jarRoot = JarFileSystem.getInstance().findFileByPath(rtJarPath + JarFileSystem.JAR_SEPARATOR);
+    VirtualFile jarRoot = StandardFileSystems.jar().findFileByPath(rtJarPath + JarFileSystem.JAR_SEPARATOR);
     assertNotNull(jarRoot);
 
     VirtualFile metaInf = jarRoot.findChild("META-INF");
@@ -46,7 +46,7 @@ public class JarFileSystemTest extends IdeaTestCase{
   }
 
   private static VirtualFile findByPath(String path) {
-    VirtualFile file = JarFileSystem.getInstance().findFileByPath(path);
+    VirtualFile file = StandardFileSystems.jar().findFileByPath(path);
     assertNotNull(file);
     final String filePath = file.getPath();
     final String message = "paths are not equal, path1 = " + path + " found: " + filePath;

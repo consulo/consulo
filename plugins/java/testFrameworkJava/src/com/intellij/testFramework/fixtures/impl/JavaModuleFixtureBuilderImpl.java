@@ -24,8 +24,8 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
@@ -150,7 +150,7 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
         for (String root : roots) {
           VirtualFile vRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(root);
           if (vRoot != null && OrderRootType.CLASSES.equals(rootType) && !vRoot.isDirectory()) {
-            final VirtualFile jar = JarFileSystem.getInstance().refreshAndFindFileByPath(root + "!/");
+            final VirtualFile jar = StandardFileSystems.jar().refreshAndFindFileByPath(root + "!/");
             if (jar != null) vRoot = jar;
           }
           if (vRoot != null) {

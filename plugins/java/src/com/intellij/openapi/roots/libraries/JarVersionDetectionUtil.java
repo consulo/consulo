@@ -21,6 +21,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.vfs.ArchiveEntry;
+import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +34,6 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.zip.ZipEntry;
 
 public class JarVersionDetectionUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.libraries.JarVersionDetectionUtil");
@@ -75,12 +76,12 @@ public class JarVersionDetectionUtil {
   }
 
   @Nullable
-  public static String detectJarVersion(com.intellij.openapi.vfs.JarFile zipFile) {
+  public static String detectJarVersion(ArchiveFile zipFile) {
     if (zipFile == null) {
       return null;
     }
     try {
-      final com.intellij.openapi.vfs.JarFile.JarEntry zipEntry = zipFile.getEntry(JarFile.MANIFEST_NAME);
+      final ArchiveEntry zipEntry = zipFile.getEntry(JarFile.MANIFEST_NAME);
       if (zipEntry == null) {
         return null;
       }
@@ -95,12 +96,12 @@ public class JarVersionDetectionUtil {
   }
 
   @Nullable
-  private static com.intellij.openapi.vfs.JarFile getDetectionJar(final String detectionClass, Module module) throws IOException {
+  private static ArchiveFile getDetectionJar(final String detectionClass, Module module) throws IOException {
       for (OrderEntry library : ModuleRootManager.getInstance(module).getOrderEntries()) {
         if (library instanceof LibraryOrderEntry) {
           VirtualFile file = LibrariesHelper.getInstance().findJarByClass(((LibraryOrderEntry)library).getLibrary(), detectionClass);
           if (file != null && file.getFileSystem() instanceof JarFileSystem) {
-            return JarFileSystem.getInstance().getJarFile(file);
+            return ((JarFileSystem)file.getFileSystem()).getJarFile(file);
           }
         }
       }

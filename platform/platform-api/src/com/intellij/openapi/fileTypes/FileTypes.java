@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
+import com.intellij.ide.highlighter.JarArchiveFileType;
 
 /**
  * @author max
@@ -23,7 +23,7 @@ import com.intellij.ide.highlighter.ArchiveFileType;
 public class FileTypes {
   protected FileTypes() { }
 
-  public static final FileType ARCHIVE = ArchiveFileType.INSTANCE;
+  public static final FileType ARCHIVE = JarArchiveFileType.INSTANCE;
   public static final FileType UNKNOWN = UnknownFileType.INSTANCE;
   public static final LanguageFileType PLAIN_TEXT = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("PLAIN_TEXT");
 }

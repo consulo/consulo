@@ -20,9 +20,9 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.pom.java.LanguageLevel;
 import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.consulo.maven.module.extension.MavenMutableModuleExtension;
@@ -230,7 +230,7 @@ public class MavenModuleImporter {
         VirtualFile file = VfsUtil.findRelativeFile(filePath, mavenProject.getDirectoryFile());
         if (file == null) continue;
 
-        file = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+        file = ArchiveVfsUtil.getJarRootForLocalFile(file);
         if (file == null) continue;
 
         if (libraryModel == null) {

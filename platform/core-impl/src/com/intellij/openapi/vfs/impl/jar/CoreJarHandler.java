@@ -16,6 +16,7 @@
 package com.intellij.openapi.vfs.impl.jar;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.impl.archive.ArchiveHandlerEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +26,7 @@ import java.util.Map;
 /**
  * @author yole
  */
-public class CoreJarHandler extends JarHandlerBase {
+public class CoreJarHandler extends CoreJarHandlerBase {
 
   private final CoreJarFileSystem myFileSystem;
   private final VirtualFile myRoot;
@@ -34,22 +35,22 @@ public class CoreJarHandler extends JarHandlerBase {
     super(path);
     myFileSystem = fileSystem;
 
-    Map<EntryInfo, CoreJarVirtualFile> entries = new HashMap<EntryInfo, CoreJarVirtualFile>();
+    Map<ArchiveHandlerEntry, CoreJarVirtualFile> entries = new HashMap<ArchiveHandlerEntry, CoreJarVirtualFile>();
 
-    final Map<String, EntryInfo> entriesMap = getEntriesMap();
-    for (EntryInfo info : entriesMap.values()) {
+    final Map<String, ArchiveHandlerEntry> entriesMap = getEntriesMap();
+    for (ArchiveHandlerEntry info : entriesMap.values()) {
       getOrCreateFile(info, entries);
     }
 
-    EntryInfo rootInfo = getEntryInfo("");
+    ArchiveHandlerEntry rootInfo = getEntryInfo("");
     myRoot = rootInfo != null ? getOrCreateFile(rootInfo, entries) : null;
   }
 
   @NotNull
-  private CoreJarVirtualFile getOrCreateFile(@NotNull EntryInfo info, @NotNull Map<EntryInfo, CoreJarVirtualFile> entries) {
+  private CoreJarVirtualFile getOrCreateFile(@NotNull ArchiveHandlerEntry info, @NotNull Map<ArchiveHandlerEntry, CoreJarVirtualFile> entries) {
     CoreJarVirtualFile answer = entries.get(info);
     if (answer == null) {
-      EntryInfo parentEntry = info.parent;
+      ArchiveHandlerEntry parentEntry = info.getParent();
       answer = new CoreJarVirtualFile(this, info, parentEntry != null ? getOrCreateFile(parentEntry, entries) : null);
       entries.put(info, answer);
     }

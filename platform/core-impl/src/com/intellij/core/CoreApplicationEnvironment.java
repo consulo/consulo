@@ -32,8 +32,8 @@ import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.StaticGetter;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.openapi.vfs.impl.CoreVirtualFilePointerManager;
 import com.intellij.openapi.vfs.impl.VirtualFileManagerImpl;
@@ -68,7 +68,7 @@ public class CoreApplicationEnvironment {
   private final CoreEncodingRegistry myEncodingRegistry;
   protected final MockApplication myApplication;
   private final CoreLocalFileSystem myLocalFileSystem;
-  protected final VirtualFileSystem myJarFileSystem;
+  protected final IVirtualFileSystem myJarFileSystem;
   private final Disposable myParentDisposable;
 
   public CoreApplicationEnvironment(Disposable parentDisposable) {
@@ -96,7 +96,7 @@ public class CoreApplicationEnvironment {
       }
     }, null));
 
-    VirtualFileSystem[] fs = {myLocalFileSystem, myJarFileSystem};
+    IVirtualFileSystem[] fs = {myLocalFileSystem, myJarFileSystem};
     VirtualFileManagerImpl virtualFileManager = new VirtualFileManagerImpl(fs, new MessageBusImpl(myApplication, null));
     registerComponentInstance(appContainer, VirtualFileManager.class, virtualFileManager);
 
@@ -219,7 +219,7 @@ public class CoreApplicationEnvironment {
     };
   }
 
-  protected VirtualFileSystem createJarFileSystem() {
+  protected IVirtualFileSystem createJarFileSystem() {
     return new CoreJarFileSystem();
   }
 
@@ -316,7 +316,7 @@ public class CoreApplicationEnvironment {
     return myLocalFileSystem;
   }
 
-  public VirtualFileSystem getJarFileSystem() {
+  public IVirtualFileSystem getJarFileSystem() {
     return myJarFileSystem;
   }
 }

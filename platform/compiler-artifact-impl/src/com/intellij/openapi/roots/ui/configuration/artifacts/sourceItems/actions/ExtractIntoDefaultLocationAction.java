@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
@@ -80,7 +80,7 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
             if (element instanceof FileCopyPackagingElement) {
               final VirtualFile file = ((FileCopyPackagingElement)element).findFile();
               if (file != null) {
-                final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+                final VirtualFile jarRoot = ArchiveVfsUtil.getVirtualFileForJar(file);
                 if (jarRoot != null) {
                   extracted.add(PackagingElementFactory.getInstance().createExtractedDirectory(jarRoot));
                 }

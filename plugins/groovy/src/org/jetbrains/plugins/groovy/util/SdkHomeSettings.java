@@ -19,9 +19,9 @@ package org.jetbrains.plugins.groovy.util;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.util.containers.ContainerUtil;
@@ -87,7 +87,7 @@ public abstract class SdkHomeSettings implements PersistentStateComponent<SdkHom
     final ArrayList<VirtualFile> result = new ArrayList<VirtualFile>();
     for (VirtualFile file : lib.getChildren()) {
       if ("jar".equals(file.getExtension())) {
-        ContainerUtil.addIfNotNull(JarFileSystem.getInstance().getJarRootForLocalFile(file), result);
+        ContainerUtil.addIfNotNull(ArchiveVfsUtil.getJarRootForLocalFile(file), result);
       }
     }
     return result;

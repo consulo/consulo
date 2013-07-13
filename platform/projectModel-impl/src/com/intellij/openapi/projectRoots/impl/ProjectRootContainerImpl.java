@@ -208,9 +208,9 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
       String url = ((SimpleProjectRoot)root).getUrl();
       if (StandardFileSystems.JAR_PROTOCOL.equals(VirtualFileManager.extractProtocol(url))) {
         String path = VirtualFileManager.extractPath(url);
-        final VirtualFileSystem fileSystem = StandardFileSystems.jar();
-        if (fileSystem instanceof JarCopyingFileSystem) {
-          ((JarCopyingFileSystem)fileSystem).setNoCopyJarForPath(path);
+        final IVirtualFileSystem fileSystem = StandardFileSystems.jar();
+        if (fileSystem instanceof ArchiveCopyingFileSystem) {
+          ((ArchiveCopyingFileSystem)fileSystem).setNoCopyJarForPath(path);
         }
       }
     }

@@ -316,7 +316,7 @@ public class PsiTestUtil {
       final String path = libPath + jar;
       VirtualFile root;
       if (path.endsWith(".jar")) {
-        root = JarFileSystem.getInstance().refreshAndFindFileByPath(path + "!/");
+        root = StandardFileSystems.jar().refreshAndFindFileByPath(path + "!/");
       }
       else {
         root = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);

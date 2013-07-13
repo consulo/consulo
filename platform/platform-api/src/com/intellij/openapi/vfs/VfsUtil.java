@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.vfs;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
@@ -97,7 +98,7 @@ public class VfsUtil extends VfsUtilCore {
   /**
    * Copies content of resource to the given file
    *
-   * @param file to copy to
+   * @param file        to copy to
    * @param resourceUrl url of the resource to be copied
    * @throws java.io.IOException if resource not found or copying failed
    */
@@ -109,7 +110,8 @@ public class VfsUtil extends VfsUtilCore {
     try {
       byte[] bytes = FileUtil.adaptiveLoadBytes(out);
       file.setBinaryContent(bytes);
-    } finally {
+    }
+    finally {
       out.close();
     }
   }
@@ -146,7 +148,7 @@ public class VfsUtil extends VfsUtilCore {
   @NotNull
   public static VirtualFile[] getCommonAncestors(@NotNull VirtualFile[] files) {
     // Separate files by first component in the path.
-    HashMap<VirtualFile,Set<VirtualFile>> map = new HashMap<VirtualFile, Set<VirtualFile>>();
+    HashMap<VirtualFile, Set<VirtualFile>> map = new HashMap<VirtualFile, Set<VirtualFile>>();
     for (VirtualFile aFile : files) {
       VirtualFile directory = aFile.isDirectory() ? aFile : aFile.getParent();
       if (directory == null) return VirtualFile.EMPTY_ARRAY;
@@ -249,7 +251,7 @@ public class VfsUtil extends VfsUtilCore {
   }
 
   @Nullable
-  public static VirtualFile findRelativeFile(@Nullable VirtualFile base, String ... path) {
+  public static VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
     VirtualFile file = base;
 
     for (String pathElement : path) {
@@ -269,7 +271,7 @@ public class VfsUtil extends VfsUtilCore {
   @Nullable
   public static VirtualFile findRelativeFile(@NotNull String uri, @Nullable VirtualFile base) {
     if (base != null) {
-      if (!base.isValid()){
+      if (!base.isValid()) {
         LOG.error("Invalid file name: " + base.getName() + ", url: " + uri);
       }
     }
@@ -305,7 +307,7 @@ public class VfsUtil extends VfsUtilCore {
     }
 
     if (file == null && uri.contains(JarFileSystem.JAR_SEPARATOR)) {
-      file = JarFileSystem.getInstance().findFileByPath(uri);
+      file = StandardFileSystems.jar().findFileByPath(uri);
       if (file == null && base == null) {
         file = VirtualFileManager.getInstance().findFileByUrl(uri);
       }
@@ -369,7 +371,7 @@ public class VfsUtil extends VfsUtilCore {
     // [stathik] for supporting mail URLs in Plugin Manager
     if (vfsUrl.startsWith(MAILTO)) {
       try {
-        return new URL (vfsUrl);
+        return new URL(vfsUrl);
       }
       catch (MalformedURLException e) {
         return null;
@@ -433,8 +435,11 @@ public class VfsUtil extends VfsUtilCore {
     return FileSystem.FILE_SYSTEM.createFile(PathUtil.toPresentableUrl(file.getUrl()));
   }
 
-  public static VirtualFile copyFileRelative(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile toDir, @NotNull String relativePath) throws IOException {
-    StringTokenizer tokenizer = new StringTokenizer(relativePath,"/");
+  public static VirtualFile copyFileRelative(Object requestor,
+                                             @NotNull VirtualFile file,
+                                             @NotNull VirtualFile toDir,
+                                             @NotNull String relativePath) throws IOException {
+    StringTokenizer tokenizer = new StringTokenizer(relativePath, "/");
     VirtualFile curDir = toDir;
 
     while (true) {
@@ -453,16 +458,16 @@ public class VfsUtil extends VfsUtilCore {
   }
 
   @NotNull
-  public static String fixIDEAUrl(@NotNull String ideaUrl ) {
+  public static String fixIDEAUrl(@NotNull String ideaUrl) {
     int idx = ideaUrl.indexOf("://");
-    if( idx >= 0 ) {
+    if (idx >= 0) {
       String s = ideaUrl.substring(0, idx);
 
       if (s.equals(JarFileSystem.PROTOCOL)) {
         //noinspection HardCodedStringLiteral
         s = "jar:file";
       }
-      ideaUrl = s+":/"+ideaUrl.substring(idx+3);
+      ideaUrl = s + ":/" + ideaUrl.substring(idx + 3);
     }
     return ideaUrl;
   }
@@ -500,7 +505,9 @@ public class VfsUtil extends VfsUtilCore {
         return prefix + ":///" + suffix;
       }
     }
-    else if (url.charAt(index + 3) == '/' && SystemInfoRt.isWindows && url.regionMatches(0, LocalFileSystem.PROTOCOL_PREFIX, 0, LocalFileSystem.PROTOCOL_PREFIX.length())) {
+    else if (url.charAt(index + 3) == '/' &&
+             SystemInfoRt.isWindows &&
+             url.regionMatches(0, LocalFileSystem.PROTOCOL_PREFIX, 0, LocalFileSystem.PROTOCOL_PREFIX.length())) {
       // file:///C:/test/file.js -> file://C:/test/file.js
       for (int i = index + 4; i < url.length(); i++) {
         char c = url.charAt(i);
@@ -556,6 +563,7 @@ public class VfsUtil extends VfsUtilCore {
   /**
    * uri - may be incorrect (escaping or missed "/" before disk name under windows), may be not fully encoded,
    * may contains query and fragment
+   *
    * @return correct URI, must be used only for external communication
    */
   @Nullable
@@ -628,15 +636,22 @@ public class VfsUtil extends VfsUtilCore {
 
   public static String getUrlForLibraryRoot(@NotNull File libraryRoot) {
     String path = FileUtil.toSystemIndependentName(libraryRoot.getAbsolutePath());
-    if (FileTypeManager.getInstance().getFileTypeByFileName(libraryRoot.getName()) == FileTypes.ARCHIVE) {
-      return VirtualFileManager.constructUrl(JarFileSystem.getInstance().getProtocol(), path + JarFileSystem.JAR_SEPARATOR);
+    final FileType fileTypeByFileName = FileTypeManager.getInstance().getFileTypeByFileName(libraryRoot.getName());
+    if (fileTypeByFileName instanceof ArchiveFileType) {
+
+      final String protocol = ((ArchiveFileType)fileTypeByFileName).getProtocol();
+
+      return VirtualFileManager.constructUrl(protocol, path + ArchiveFileSystem.ARCHIVE_SEPARATOR);
     }
     else {
       return VirtualFileManager.constructUrl(LocalFileSystem.getInstance().getProtocol(), path);
     }
   }
 
-  public static VirtualFile createChildSequent(Object requestor, @NotNull VirtualFile dir, @NotNull String prefix, @NotNull String extension) throws IOException {
+  public static VirtualFile createChildSequent(Object requestor,
+                                               @NotNull VirtualFile dir,
+                                               @NotNull String prefix,
+                                               @NotNull String extension) throws IOException {
     String fileName = prefix + "." + extension;
     int i = 1;
     while (dir.findChild(fileName) != null) {
@@ -707,16 +722,18 @@ public class VfsUtil extends VfsUtilCore {
     return file;
   }
 
-  public static void processFileRecursivelyWithoutIgnored(@NotNull final VirtualFile root, @NotNull final Processor<VirtualFile> processor) {
+  public static void processFileRecursivelyWithoutIgnored(@NotNull final VirtualFile root,
+                                                          @NotNull final Processor<VirtualFile> processor) {
     final FileTypeManager ftm = FileTypeManager.getInstance();
     processFilesRecursively(root, processor, new Convertor<VirtualFile, Boolean>() {
       public Boolean convert(final VirtualFile vf) {
-        return ! ftm.isFileIgnored(vf);
+        return !ftm.isFileIgnored(vf);
       }
     });
   }
 
-  public static void processFilesRecursively(@NotNull VirtualFile root, @NotNull Processor<VirtualFile> processor,
+  public static void processFilesRecursively(@NotNull VirtualFile root,
+                                             @NotNull Processor<VirtualFile> processor,
                                              @NotNull Convertor<VirtualFile, Boolean> directoryFilter) {
     if (!processor.process(root)) return;
 
@@ -734,7 +751,8 @@ public class VfsUtil extends VfsUtilCore {
             queue.add(file.getChildren());
           }
         }
-      } while (!queue.isEmpty());
+      }
+      while (!queue.isEmpty());
     }
   }
 
@@ -755,7 +773,8 @@ public class VfsUtil extends VfsUtilCore {
             queue.add(file.getChildren());
           }
         }
-      } while (!queue.isEmpty());
+      }
+      while (!queue.isEmpty());
     }
 
     return true;
@@ -770,7 +789,8 @@ public class VfsUtil extends VfsUtilCore {
     }
     catch (IOException e) {
       LOG.error(e);
-    } finally {
+    }
+    finally {
       try {
         if (stream != null) {
           stream.close();
@@ -830,7 +850,7 @@ public class VfsUtil extends VfsUtilCore {
       return null;
     }
     final int index = urlOrPath.lastIndexOf(VFS_PATH_SEPARATOR);
-    return index < 0 ? null : urlOrPath.substring(index+1);
+    return index < 0 ? null : urlOrPath.substring(index + 1);
   }
 
   @NotNull

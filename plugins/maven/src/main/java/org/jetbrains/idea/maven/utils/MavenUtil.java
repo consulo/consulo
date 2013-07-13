@@ -44,10 +44,10 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.Function;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
@@ -721,7 +721,7 @@ public class MavenUtil {
           VirtualFile libraryVirtualFile = LocalFileSystem.getInstance().findFileByIoFile(library);
           if (libraryVirtualFile == null) continue;
 
-          VirtualFile root = JarFileSystem.getInstance().getJarRootForLocalFile(libraryVirtualFile);
+          VirtualFile root = ArchiveVfsUtil.getJarRootForLocalFile(libraryVirtualFile);
           if (root == null) continue;
 
           VirtualFile pomFile = root.findFileByRelativePath(path.second);

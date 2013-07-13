@@ -41,6 +41,7 @@ import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import gnu.trove.TIntArrayList;
@@ -208,7 +209,7 @@ public class GriffonFramework extends MvcFramework {
     final VirtualFile[] classRoots = ModuleRootManager.getInstance(module).orderEntries().librariesOnly().getClassesRoots();
     for (VirtualFile file : classRoots) {
       if (GriffonLibraryPresentationProvider.isGriffonCoreJar(file)) {
-        final VirtualFile localFile = JarFileSystem.getInstance().getVirtualFileForJar(file);
+        final VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForJar(file);
         if (localFile != null) {
           final VirtualFile parent = localFile.getParent();
           if (parent != null) {

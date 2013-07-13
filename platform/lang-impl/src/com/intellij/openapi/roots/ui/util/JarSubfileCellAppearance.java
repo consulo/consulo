@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.util;
 
-import com.intellij.openapi.fileTypes.FileTypes;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import javax.swing.*;
@@ -28,12 +28,12 @@ public class JarSubfileCellAppearance extends ValidFileCellAppearance {
 
   @Override
   protected Icon getIcon() {
-    return FileTypes.ARCHIVE.getIcon();
+    return AllIcons.FileTypes.Archive;
   }
 
   @Override
   protected int getSplitUrlIndex(String url) {
-    int jarNameEnd = url.lastIndexOf(JarFileSystem.JAR_SEPARATOR.charAt(0));
+    int jarNameEnd = url.lastIndexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR.charAt(0));
     String jarUrl = jarNameEnd >= 0 ? url.substring(0, jarNameEnd) : url;
     return super.getSplitUrlIndex(jarUrl);
   }

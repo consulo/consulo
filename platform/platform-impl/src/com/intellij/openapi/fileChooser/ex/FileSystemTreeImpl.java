@@ -36,12 +36,10 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Function;
@@ -262,8 +260,8 @@ public class FileSystemTreeImpl implements FileSystemTree {
   private static FileElement getFileElementFor(@NotNull VirtualFile file) {
     VirtualFile selectFile;
 
-    if ((file.getFileSystem() instanceof JarFileSystem) && file.getParent() == null) {
-      selectFile = JarFileSystem.getInstance().getVirtualFileForJar(file);
+    if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
+      selectFile = ArchiveVfsUtil.getVirtualFileForJar(file);
       if (selectFile == null) {
         return null;
       }

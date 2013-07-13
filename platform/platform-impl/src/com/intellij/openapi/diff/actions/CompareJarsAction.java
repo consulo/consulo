@@ -19,7 +19,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.diff.DirDiffSettings;
 import com.intellij.ide.diff.JarFileDiffElement;
 import com.intellij.ide.diff.VirtualFileDiffElement;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import com.intellij.ide.highlighter.JarArchiveFileType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -83,6 +83,6 @@ public class CompareJarsAction extends AnAction {
   }
 
   private static boolean isArchive(VirtualFile file) {
-    return file.getFileType() instanceof ArchiveFileType;
+    return file.getFileType() instanceof JarArchiveFileType;
   }
 }

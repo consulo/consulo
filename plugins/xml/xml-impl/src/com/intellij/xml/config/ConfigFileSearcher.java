@@ -3,8 +3,8 @@ package com.intellij.xml.config;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.MultiMap;
@@ -32,7 +32,7 @@ public abstract class ConfigFileSearcher {
 
     PsiManager psiManager = PsiManager.getInstance(myProject);
     for (PsiFile file : search(myModule, myProject)) {
-      VirtualFile jar = JarFileSystem.getInstance().getVirtualFileForJar(file.getVirtualFile());
+      VirtualFile jar = ArchiveVfsUtil.getVirtualFileForJar(file.getVirtualFile());
       if (jar != null) {
         myJars.putValue(jar, file);
       }

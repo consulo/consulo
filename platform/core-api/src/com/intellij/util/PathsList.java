@@ -59,8 +59,8 @@ public class PathsList  {
       final VirtualFile localFile = PATH_TO_LOCAL_VFILE.fun(s);
       if (localFile == null) return null;
 
-      if (ArchiveFileType.INSTANCE.equals(fileType) && !localFile.isDirectory()) {
-        return StandardFileSystems.getJarRootForLocalFile(localFile);
+      if (fileType instanceof ArchiveFileType && !localFile.isDirectory()) {
+        return ((ArchiveFileType)fileType).getFileSystem().findByPathWithSeparator(localFile);
       }
       return localFile;
     }

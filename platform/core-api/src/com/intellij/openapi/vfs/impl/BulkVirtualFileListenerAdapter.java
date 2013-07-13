@@ -29,13 +29,13 @@ import java.util.List;
 
 public class BulkVirtualFileListenerAdapter implements BulkFileListener {
   private final VirtualFileListener myAdapted;
-  private final VirtualFileSystem myFileSystem;
+  private final IVirtualFileSystem myFileSystem;
 
   public BulkVirtualFileListenerAdapter(@NotNull VirtualFileListener adapted) {
     this(adapted, null);
   }
 
-  public BulkVirtualFileListenerAdapter(@NotNull VirtualFileListener adapted, @Nullable VirtualFileSystem fileSystem) {
+  public BulkVirtualFileListenerAdapter(@NotNull VirtualFileListener adapted, @Nullable IVirtualFileSystem fileSystem) {
     myAdapted = adapted;
     myFileSystem = fileSystem;
   }

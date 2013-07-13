@@ -16,10 +16,10 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.util.Comparing;
@@ -61,7 +61,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
       }
 
       private void updateSdks(VirtualFile file) {
-        if (file.isDirectory() || !FileTypes.ARCHIVE.equals(file.getFileType())) {
+        if (file.isDirectory() || !(file.getFileType() instanceof ArchiveFileType)) {
           // consider only archive files that may contain libraries
           return;
         }

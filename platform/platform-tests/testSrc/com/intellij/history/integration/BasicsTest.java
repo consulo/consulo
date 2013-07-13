@@ -21,9 +21,10 @@ import com.intellij.history.LocalHistory;
 import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.utils.RunnableAdapter;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -145,7 +146,7 @@ public class BasicsTest extends IntegrationTestCase {
     VirtualFile vfile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(f);
     assertNotNull(vfile);
 
-    VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(vfile);
+    VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(vfile);
     assertEquals(1, jarRoot.findChild("file.txt").contentsToByteArray()[0]);
 
     assertEquals(2, getRevisionsFor(myRoot).size());
@@ -161,8 +162,8 @@ public class BasicsTest extends IntegrationTestCase {
     f.setLastModified(f.lastModified() + 10000);
 
     LocalFileSystem.getInstance().refreshWithoutFileWatcher(false);
-    JarFileSystem.getInstance().refreshWithoutFileWatcher(false);
-    jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(vfile);
+    StandardFileSystems.jar().refreshWithoutFileWatcher(false);
+    jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(vfile);
     assertEquals(2, jarRoot.findChild("file.txt").contentsToByteArray()[0]);
 
     assertEquals(2, getRevisionsFor(myRoot).size());

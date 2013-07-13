@@ -31,7 +31,6 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.Function;
-import com.intellij.util.SmartFMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashMap;
@@ -163,7 +162,7 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
                                     @NotNull final Disposable parentDisposable,
                                     @Nullable VirtualFilePointerListener listener) {
     String protocol;
-    VirtualFileSystem fileSystem;
+    IVirtualFileSystem fileSystem;
     if (file == null) {
       protocol = VirtualFileManager.extractProtocol(url);
       fileSystem = myVirtualFileManager.getFileSystem(protocol);

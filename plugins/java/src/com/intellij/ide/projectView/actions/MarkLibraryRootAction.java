@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.DefaultLibraryRootsComponentDescriptor;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class MarkLibraryRootAction extends AnAction {
         roots.add(file);
       }
       else {
-        final VirtualFile root = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+        final VirtualFile root = ArchiveVfsUtil.getJarRootForLocalFile(file);
         if (root != null) {
           roots.add(root);
         }
@@ -83,7 +83,7 @@ public class MarkLibraryRootAction extends AnAction {
         }
         if (root.isInLocalFileSystem() && root.isDirectory()) {
           for (VirtualFile child : root.getChildren()) {
-            final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(child);
+            final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(child);
             if (jarRoot != null && !fileIndex.isInLibraryClasses(child)) {
               visible = true;
               break;

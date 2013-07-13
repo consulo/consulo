@@ -14,8 +14,8 @@ import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.NetUtils;
@@ -41,7 +41,7 @@ public abstract class AbstractAttachSourceProvider implements AttachSourcesProvi
     VirtualFile virtualFile = psiFile.getVirtualFile();
     if (virtualFile == null) return null;
 
-    VirtualFile jar = JarFileSystem.getInstance().getVirtualFileForJar(psiFile.getVirtualFile());
+    VirtualFile jar = ArchiveVfsUtil.getVirtualFileForJar(psiFile.getVirtualFile());
 
     if (jar == null || !jar.getName().endsWith(".jar")) return null;
 

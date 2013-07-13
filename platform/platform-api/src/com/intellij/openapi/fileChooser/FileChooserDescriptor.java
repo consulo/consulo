@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.fileChooser;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
@@ -201,7 +201,7 @@ public class FileChooserDescriptor implements Cloneable {
     if (file.isDirectory() && (myChooseFolders || isFileSelectable(file))) {
       return file;
     }
-    boolean isJar = file.getFileType() == FileTypes.ARCHIVE;
+    boolean isJar = file.getFileType() instanceof ArchiveFileType;
     if (!isJar) {
       return acceptAsGeneralFile(file) ? file : null;
     }
@@ -212,7 +212,7 @@ public class FileChooserDescriptor implements Cloneable {
       return null;
     }
     String path = file.getPath();
-    return JarFileSystem.getInstance().findFileByPath(path + JarFileSystem.JAR_SEPARATOR);
+    return ((ArchiveFileSystem)file.getFileSystem()).findLocalVirtualFileByPath(path);
   }
 
   public final void setHideIgnored(boolean hideIgnored) {

@@ -33,8 +33,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.net.NetUtils;
@@ -224,7 +224,7 @@ public class XsltDebuggerExtension extends XsltRunnerExtension {
     final List<VirtualFile> files = parameters.getClassPath().getVirtualFiles();
     for (VirtualFile file : files) {
       if (file.getName().matches(".*xalan.*\\.jar")) {
-        final VirtualFile root = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+        final VirtualFile root = ArchiveVfsUtil.getJarRootForLocalFile(file);
         final VirtualFile manifestFile = root != null ? root.findFileByRelativePath("META-INF/MANIFEST.MF") : null;
         if (manifestFile != null) {
           try {

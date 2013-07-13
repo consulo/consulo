@@ -37,8 +37,8 @@ import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.FileSystemInterface;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.testFramework.LightVirtualFile;
@@ -361,7 +361,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
       final long length = file.getLength();
       if (length == 0) return UnknownFileType.INSTANCE;
 
-      final VirtualFileSystem fileSystem = file.getFileSystem();
+      final IVirtualFileSystem fileSystem = file.getFileSystem();
       if (!(fileSystem instanceof FileSystemInterface)) return UnknownFileType.INSTANCE;
 
       if (SingleRootFileViewProvider.isTooLargeForContentLoading(file)) {

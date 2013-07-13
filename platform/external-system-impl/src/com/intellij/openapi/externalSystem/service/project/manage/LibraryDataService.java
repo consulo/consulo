@@ -17,9 +17,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -139,10 +139,10 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
           model.addRoot(virtualFile, entry.getKey());
         }
         else {
-          VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(virtualFile);
+          VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(virtualFile);
           if (jarRoot == null) {
             LOG.warn(String.format(
-              "Can't parse contents of the jar file at path '%s' for the library '%s''", file.getAbsolutePath(), libraryName
+              "Can't parse contents of the archive file at path '%s' for the library '%s''", file.getAbsolutePath(), libraryName
             ));
             continue;
           }

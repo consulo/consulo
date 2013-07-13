@@ -19,12 +19,11 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.IoTestUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.testFramework.PlatformTestCase;
 
 import java.io.File;
@@ -82,13 +81,13 @@ public class PersistentFSTest extends PlatformTestCase {
     LocalFileSystem lfs = LocalFileSystem.getInstance();
     VirtualFile vx = lfs.refreshAndFindFileByIoFile(x);
     assertNotNull(vx);
-    JarFileSystem jfs = JarFileSystem.getInstance();
-    VirtualFile root = jfs.getJarRootForLocalFile(vx);
+    ArchiveFileSystem jfs = StandardFileSystems.jar();
+    VirtualFile root = ArchiveVfsUtil.getJarRootForLocalFile(vx);
 
     PersistentFS fs = PersistentFS.getInstance();
 
     String path = vx.getPath() + "/../" + vx.getName() + JarFileSystem.JAR_SEPARATOR;
-    NewVirtualFile root1 = fs.findRoot(path, jfs);
+    NewVirtualFile root1 = fs.findRoot(path, (NewVirtualFileSystem)jfs);
 
     assertSame(root1, root);
   }

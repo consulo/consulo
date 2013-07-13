@@ -20,8 +20,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.UIUtil;
@@ -118,9 +118,9 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer{
     }
 
     myText = myText.substring(myText.lastIndexOf(File.separatorChar) + 1);
-    VirtualFile jar = JarFileSystem.getInstance().getVirtualFileForJar(vFile);
-    if (jar != null && !myText.equals(jar.getName())) {
-      myText += " (" + jar.getName() + ")";
+    VirtualFile archiveFile = ArchiveVfsUtil.getVirtualFileForJar(vFile);
+    if (archiveFile != null && !myText.equals(archiveFile.getName())) {
+      myText += " (" + archiveFile.getName() + ")";
     }
   }
 

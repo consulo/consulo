@@ -9,8 +9,8 @@ import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
@@ -78,7 +78,7 @@ public class IvyAttachSourceProvider extends AbstractAttachSourceProvider {
       VirtualFile srcFile = sources.findChild(sourceFileName);
       if (srcFile != null) {
         // File already downloaded.
-        VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(srcFile);
+        VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(srcFile);
         if (jarRoot == null || ArrayUtil.contains(jarRoot, library.getFiles(OrderRootType.SOURCES))) {
           return Collections.emptyList(); // Sources already attached.
         }
@@ -105,7 +105,7 @@ public class IvyAttachSourceProvider extends AbstractAttachSourceProvider {
           VirtualFile srcFile = existingSourcesFolder.createChildData(this, sourceFileName);
           srcFile.setBinaryContent(content);
 
-          addSourceFile(JarFileSystem.getInstance().getJarRootForLocalFile(srcFile), library);
+          addSourceFile(ArchiveVfsUtil.getJarRootForLocalFile(srcFile), library);
         }
         catch (IOException e) {
           new Notification(myMessageGroupId,

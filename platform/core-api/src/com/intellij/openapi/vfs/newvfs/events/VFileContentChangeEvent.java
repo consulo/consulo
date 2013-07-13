@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.vfs.newvfs.events;
 
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +67,7 @@ public class VFileContentChangeEvent extends VFileEvent {
 
   @NotNull
   @Override
-  public VirtualFileSystem getFileSystem() {
+  public IVirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
   }
 

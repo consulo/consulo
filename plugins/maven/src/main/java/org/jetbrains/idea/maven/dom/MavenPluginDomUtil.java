@@ -16,9 +16,9 @@
 package org.jetbrains.idea.maven.dom;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -78,7 +78,7 @@ public class MavenPluginDomUtil {
     VirtualFile pluginFile = LocalFileSystem.getInstance().findFileByIoFile(file);
     if (pluginFile == null) return null;
 
-    VirtualFile pluginJarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(pluginFile);
+    VirtualFile pluginJarRoot = ArchiveVfsUtil.getJarRootForLocalFile(pluginFile);
     if (pluginJarRoot == null) return null;
     return pluginJarRoot.findFileByRelativePath(MavenArtifactUtil.MAVEN_PLUGIN_DESCRIPTOR);
   }

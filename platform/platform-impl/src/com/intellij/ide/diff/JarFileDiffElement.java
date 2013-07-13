@@ -16,8 +16,10 @@
 package com.intellij.ide.diff;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,12 +28,12 @@ import org.jetbrains.annotations.NotNull;
 public class JarFileDiffElement extends VirtualFileDiffElement {
   @SuppressWarnings({"ConstantConditions"})
   public JarFileDiffElement(@NotNull VirtualFile file) {
-    super(file.getFileSystem() == JarFileSystem.getInstance()
-          ? file : JarFileSystem.getInstance().getJarRootForLocalFile(file));
+    super(file.getFileSystem() instanceof ArchiveFileSystem
+          ? file : ArchiveVfsUtil.getJarRootForLocalFile(file));
   }
 
   protected VirtualFileDiffElement createElement(VirtualFile file) {
-    final VirtualFile jar = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+    final VirtualFile jar = ArchiveVfsUtil.getJarRootForLocalFile(file);
     return jar == null ? null : new JarFileDiffElement(file);
   }
 

@@ -15,9 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,36 +26,9 @@ import java.io.IOException;
  * @see VirtualFile
  * @see VirtualFileManager
  */
-public abstract class VirtualFileSystem {
+public abstract class VirtualFileSystem implements IVirtualFileSystem {
   protected VirtualFileSystem() {
   }
-
-  /**
-   * Gets the protocol for this file system. Protocols should differ for all file systems.
-   * Should be the same as corresponding {@link com.intellij.util.KeyedLazyInstanceEP#key}.
-   *
-   * @return String representing the protocol
-   * @see VirtualFile#getUrl
-   * @see VirtualFileManager#getFileSystem
-   */
-  @NonNls
-  @NotNull
-  public abstract String getProtocol();
-
-  /**
-   * Searches for the file specified by given path. Path is a string which uniquely identifies file within given
-   * <code>{@link VirtualFileSystem}</code>. Format of the path depends on the concrete file system.
-   * For <code>LocalFileSystem</code> it is an absolute file path with file separator characters (File.separatorChar)
-   * replaced to the forward slash ('/').<p>
-   * <p/>
-   * Example: to find a <code>{@link VirtualFile}</code> corresponding to the physical file with the specified path one
-   * can use the following code: <code>LocalFileSystem.getInstance().findFileByPath(path.replace(File.separatorChar, '/'));</code>
-   *
-   * @param path the path to find file by
-   * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
-   */
-  @Nullable
-  public abstract VirtualFile findFileByPath(@NotNull @NonNls String path);
 
   /**
    * Fetches presentable URL of file with the given path in this file system.
@@ -66,57 +37,13 @@ public abstract class VirtualFileSystem {
    * @return presentable URL
    * @see VirtualFile#getPresentableUrl
    */
+  @Override
   @NotNull
   public String extractPresentableUrl(@NotNull String path) {
     return path.replace('/', File.separatorChar);
   }
 
-  /**
-   * Refreshes the cached information for all files in this file system from the physical file system.<p>
-   * <p/>
-   * If <code>asynchronous</code> is <code>false</code> this method should be only called within write-action.
-   * See {@link com.intellij.openapi.application.Application#runWriteAction}.
-   *
-   * @param asynchronous if <code>true</code> then the operation will be performed in a separate thread,
-   *                     otherwise will be performed immediately
-   * @see VirtualFile#refresh
-   * @see VirtualFileManager#syncRefresh
-   * @see VirtualFileManager#asyncRefresh
-   */
-  public abstract void refresh(boolean asynchronous);
-
-  /**
-   * Refreshes only the part of the file system needed for searching the file by the given path and finds file
-   * by the given path.<br>
-   * <p/>
-   * This method is useful when the file was created externally and you need to find <code>{@link VirtualFile}</code>
-   * corresponding to it.<p>
-   * <p/>
-   * This method should be only called within write-action.
-   * See {@link com.intellij.openapi.application.Application#runWriteAction}.
-   *
-   * @param path the path
-   * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
-   */
-  @Nullable
-  public abstract VirtualFile refreshAndFindFileByPath(@NotNull String path);
-
-  /**
-   * Adds listener to the file system. Normally one should use {@link VirtualFileManager#addVirtualFileListener}.
-   *
-   * @param listener the listener
-   * @see VirtualFileListener
-   * @see VirtualFileManager#addVirtualFileListener
-   */
-  public abstract void addVirtualFileListener(@NotNull VirtualFileListener listener);
-
-  /**
-   * Removes listener form the file system.
-   *
-   * @param listener the listener
-   */
-  public abstract void removeVirtualFileListener(@NotNull VirtualFileListener listener);
-
+  @Override
   @Deprecated
   /**
    * Deprecated. Current implementation blindly calls plain refresh against the file passed
@@ -171,5 +98,4 @@ public abstract class VirtualFileSystem {
                                           @NotNull VirtualFile newParent,
                                           @NotNull String copyName) throws IOException;
 
-  public abstract boolean isReadOnly();
 }

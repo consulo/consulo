@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.vfs.newvfs.events;
 
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +54,7 @@ public abstract class VFileEvent {
   public abstract VirtualFile getFile();
 
   @NotNull
-  public abstract VirtualFileSystem getFileSystem();
+  public abstract IVirtualFileSystem getFileSystem();
 
   public abstract boolean isValid();
 

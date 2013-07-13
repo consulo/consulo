@@ -461,7 +461,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Appl
   }
 
   private static boolean needsRefresh(final VirtualFile file) {
-    final VirtualFileSystem fs = file.getFileSystem();
+    final IVirtualFileSystem fs = file.getFileSystem();
     return fs instanceof NewVirtualFileSystem && file.getTimeStamp() != ((NewVirtualFileSystem)fs).getTimeStamp(file);
   }
 

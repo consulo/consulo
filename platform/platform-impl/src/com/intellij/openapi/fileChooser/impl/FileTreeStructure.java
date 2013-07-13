@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.fileChooser.impl;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
@@ -93,7 +94,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
     if (element.isArchive() && myChooserDescriptor.isChooseJarContents()) {
       String path = file.getPath();
       if (!(file.getFileSystem() instanceof JarFileSystem)) {
-        file = JarFileSystem.getInstance().findFileByPath(path + JarFileSystem.JAR_SEPARATOR);
+        file = ((ArchiveFileType)file.getFileType()).getFileSystem().findLocalVirtualFileByPath(path);
       }
       if (file != null) {
         children = file.getChildren();

@@ -26,16 +26,14 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
@@ -276,7 +274,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         application.isUnitTestMode() &&
         application instanceof ApplicationImpl &&
         ((ApplicationImpl)application).isComponentsCreated()) {
-      if (delegate != LocalFileSystem.getInstance() && delegate != JarFileSystem.getInstance()) {
+      if (delegate != LocalFileSystem.getInstance() && !(delegate instanceof ArchiveFileSystem)) {
         return;
       }
       // root' children are loaded always
@@ -286,8 +284,8 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
       boolean isUnder = allowed == null;
       if (!isUnder) {
         String childPath = child.getPath();
-        if (delegate == JarFileSystem.getInstance()) {
-          VirtualFile local = JarFileSystem.getInstance().getVirtualFileForJar(child);
+        if (delegate instanceof ArchiveFileSystem) {
+          VirtualFile local = ArchiveVfsUtil.getVirtualFileForJar(child);
           assert local != null : child;
           childPath = local.getPath();
         }

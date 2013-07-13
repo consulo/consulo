@@ -48,6 +48,7 @@ import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.CachedValueProvider;
@@ -292,7 +293,7 @@ public abstract class MvcFramework {
   private static void retainOnlyJarsAndDirectories(List<VirtualFile> woSdk) {
     for (Iterator<VirtualFile> iterator = woSdk.iterator(); iterator.hasNext();) {
       VirtualFile file = iterator.next();
-      final VirtualFile local = JarFileSystem.getInstance().getVirtualFileForJar(file);
+      final VirtualFile local = ArchiveVfsUtil.getVirtualFileForJar(file);
       final boolean dir = file.isDirectory();
       final String name = file.getName();
       if (LOG.isDebugEnabled()) {

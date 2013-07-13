@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -22,7 +23,6 @@ import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.Key;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.OrderRootType;
@@ -30,7 +30,6 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.PathUtil;
@@ -169,8 +168,8 @@ public class ExternalSystemApiUtil {
 
   @NotNull
   public static String getLocalFileSystemPath(@NotNull VirtualFile file) {
-    if (file.getFileType() == FileTypes.ARCHIVE) {
-      final VirtualFile jar = JarFileSystem.getInstance().getVirtualFileForJar(file);
+    if (file.getFileType() instanceof ArchiveFileType) {
+      final VirtualFile jar = ((ArchiveFileType)file.getFileType()).getFileSystem().getVirtualFileForJar(file);
       if (jar != null) {
         return jar.getPath();
       }

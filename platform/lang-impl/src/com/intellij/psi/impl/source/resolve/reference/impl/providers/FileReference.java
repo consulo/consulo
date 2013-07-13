@@ -30,9 +30,9 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
@@ -237,7 +237,7 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
   }
 
   private static boolean caseSensitivityApplies(PsiDirectory context, boolean caseSensitive) {
-    VirtualFileSystem fs = context.getVirtualFile().getFileSystem();
+    IVirtualFileSystem fs = context.getVirtualFile().getFileSystem();
     return fs instanceof NewVirtualFileSystem && ((NewVirtualFileSystem)fs).isCaseSensitive() == caseSensitive;
   }
 

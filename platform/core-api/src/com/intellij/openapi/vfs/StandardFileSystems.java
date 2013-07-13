@@ -15,60 +15,41 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
 public class StandardFileSystems {
   public static String FILE_PROTOCOL = "file";
+  @Deprecated
   public static String JAR_PROTOCOL = "jar";
   public static String JAR_SEPARATOR = "!/";
   public static String HTTP_PROTOCOL = "http";
 
-  private static final NotNullLazyValue<VirtualFileSystem> ourLocal = new NotNullLazyValue<VirtualFileSystem>() {
+  private static final NotNullLazyValue<IVirtualFileSystem> ourLocal = new NotNullLazyValue<IVirtualFileSystem>() {
     @NotNull
     @Override
-    protected VirtualFileSystem compute() {
+    protected IVirtualFileSystem compute() {
       return VirtualFileManager.getInstance().getFileSystem(FILE_PROTOCOL);
     }
   };
 
-  private static final NotNullLazyValue<VirtualFileSystem> ourJar = new NotNullLazyValue<VirtualFileSystem>() {
+  private static final NotNullLazyValue<ArchiveFileSystem> ourJar = new NotNullLazyValue<ArchiveFileSystem>() {
     @NotNull
     @Override
-    protected VirtualFileSystem compute() {
-      return VirtualFileManager.getInstance().getFileSystem(JAR_PROTOCOL);
+    protected ArchiveFileSystem compute() {
+      return (ArchiveFileSystem)VirtualFileManager.getInstance().getFileSystem(JAR_PROTOCOL);
     }
   };
 
-  public static VirtualFileSystem local() {
+  public static IVirtualFileSystem local() {
     return ourLocal.getValue();
   }
 
-  public static VirtualFileSystem jar() {
+  @Deprecated
+  public static ArchiveFileSystem jar() {
     return ourJar.getValue();
-  }
-
-  @Nullable
-  public static VirtualFile getJarRootForLocalFile(@NotNull VirtualFile virtualFile) {
-    if (virtualFile.getFileType() != ArchiveFileType.INSTANCE) return null;
-
-    final String path = virtualFile.getPath() + JAR_SEPARATOR;
-    return jar().findFileByPath(path);
-  }
-
-  @Nullable
-  public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile) {
-    if (entryVFile == null) return null;
-    final String path = entryVFile.getPath();
-    final int separatorIndex = path.indexOf(JAR_SEPARATOR);
-    if (separatorIndex < 0) return null;
-
-    String localPath = path.substring(0, separatorIndex);
-    return local().findFileByPath(localPath);
   }
 }

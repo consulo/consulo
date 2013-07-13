@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
+import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.impl.archive.ArchiveHandlerEntry;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -31,9 +33,9 @@ public class CoreJarVirtualFile extends VirtualFile {
   private final CoreJarHandler myHandler;
   private final VirtualFile myParent;
   private final ArrayList<VirtualFile> myChildren = new ArrayList<VirtualFile>();
-  private final JarHandlerBase.EntryInfo myEntry;
+  private final ArchiveHandlerEntry myEntry;
 
-  public CoreJarVirtualFile(CoreJarHandler handler, JarHandlerBase.EntryInfo entry, CoreJarVirtualFile parent) {
+  public CoreJarVirtualFile(CoreJarHandler handler, ArchiveHandlerEntry entry, CoreJarVirtualFile parent) {
     myHandler = handler;
     myParent = parent;
     myEntry = entry;
@@ -46,7 +48,7 @@ public class CoreJarVirtualFile extends VirtualFile {
   @NotNull
   @Override
   public String getName() {
-    return myEntry.shortName;
+    return myEntry.getShortName();
   }
 
   @NotNull
@@ -57,15 +59,15 @@ public class CoreJarVirtualFile extends VirtualFile {
 
   @Override
   public String getPath() {
-    if (myParent == null) return myHandler.myBasePath + "!/";
+    if (myParent == null) return myHandler.getBasePath() + StandardFileSystems.JAR_SEPARATOR;
 
     String parentPath = myParent.getPath();
-    StringBuilder answer = new StringBuilder(parentPath.length() + 1 + myEntry.shortName.length());
+    StringBuilder answer = new StringBuilder(parentPath.length() + 1 + myEntry.getShortName().length());
     answer.append(parentPath);
     if (answer.charAt(answer.length() - 1) != '/') {
       answer.append('/');
     }
-    answer.append(myEntry.shortName);
+    answer.append(myEntry.getShortName());
     
     return answer.toString();
   }
@@ -77,7 +79,7 @@ public class CoreJarVirtualFile extends VirtualFile {
 
   @Override
   public boolean isDirectory() {
-    return myEntry.isDirectory;
+    return myEntry.isDirectory();
   }
 
   @Override

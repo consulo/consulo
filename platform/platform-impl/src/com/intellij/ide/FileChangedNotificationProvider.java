@@ -20,9 +20,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileAttributes;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
@@ -59,7 +59,7 @@ public class FileChangedNotificationProvider extends EditorNotifications.Provide
   @Override
   public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {
     if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
-      VirtualFileSystem fs = file.getFileSystem();
+      IVirtualFileSystem fs = file.getFileSystem();
       if (fs instanceof LocalFileSystem) {
         FileAttributes attributes = ((LocalFileSystem)fs).getAttributes(file);
         if (attributes == null || file.getTimeStamp() != attributes.lastModified || file.getLength() != attributes.length) {

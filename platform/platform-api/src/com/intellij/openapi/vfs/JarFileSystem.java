@@ -15,45 +15,14 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-
-public abstract class JarFileSystem extends NewVirtualFileSystem implements JarCopyingFileSystem, LocalFileProvider {
-  @NonNls public static final String PROTOCOL = StandardFileSystems.JAR_PROTOCOL;
-  @NonNls public static final String PROTOCOL_PREFIX = "jar://";
-  @NonNls public static final String JAR_SEPARATOR = StandardFileSystems.JAR_SEPARATOR;
-
-  public static JarFileSystem getInstance(){
-    return (JarFileSystem)VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
-  }
-
-  @Nullable
-  public abstract VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile);
-  @Nullable
-  public abstract JarFile getJarFile(@NotNull VirtualFile entryVFile) throws IOException;
-
-  @SuppressWarnings("MethodMayBeStatic")
-  @Nullable
-  public VirtualFile getJarRootForLocalFile(@NotNull VirtualFile virtualFile) {
-    return StandardFileSystems.getJarRootForLocalFile(virtualFile);
-  }
-
-  @Nullable
-  @Override
-  public VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile) {
-    return getVirtualFileForJar(entryVFile);
-  }
-
-  @Nullable
-  @Override
-  public VirtualFile findLocalVirtualFileByPath(@NotNull String path) {
-    if (!path.contains(JAR_SEPARATOR)) {
-      path += JAR_SEPARATOR;
-    }
-    return findFileByPath(path);
-  }
+public interface JarFileSystem extends ArchiveFileSystem {
+  @NonNls
+  String PROTOCOL = "jar";
+  @NonNls
+  String PROTOCOL_PREFIX = "jar://";
+  @NonNls
+  @Deprecated
+  String JAR_SEPARATOR = ARCHIVE_SEPARATOR;
 }

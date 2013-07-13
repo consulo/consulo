@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.roots.libraries.ui;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,8 +46,8 @@ public class FileTypeBasedRootFilter extends RootFilter {
         return false;
       }
       for (VirtualFile child : rootCandidate.getChildren()) {
-        if (!child.isDirectory() && child.getFileType().equals(FileTypes.ARCHIVE)) {
-          final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(child);
+        if (!child.isDirectory() && child.getFileType() instanceof ArchiveFileType) {
+          final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(child);
           if (jarRoot != null && containsFileOfType(jarRoot, progressIndicator)) {
             return true;
           }

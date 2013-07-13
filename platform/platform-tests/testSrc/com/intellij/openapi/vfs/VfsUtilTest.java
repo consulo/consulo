@@ -26,6 +26,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.IoTestUtil;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.testFramework.PlatformLangTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.UsefulTestCase;
@@ -397,8 +398,8 @@ public class VfsUtilTest extends PlatformLangTestCase {
     VirtualFile jar = vDir.findChild("x.jar");
     assertNotNull(jar);
 
-    NewVirtualFile root1 = ManagingFS.getInstance().findRoot(jar.getPath()+"!/", JarFileSystem.getInstance());
-    NewVirtualFile root2 = ManagingFS.getInstance().findRoot(jar.getParent().getPath() + "//"+ jar.getName()+"!/", JarFileSystem.getInstance());
+    NewVirtualFile root1 = ManagingFS.getInstance().findRoot(jar.getPath()+"!/", (NewVirtualFileSystem)StandardFileSystems.jar());
+    NewVirtualFile root2 = ManagingFS.getInstance().findRoot(jar.getParent().getPath() + "//"+ jar.getName()+"!/", (NewVirtualFileSystem)StandardFileSystems.jar());
     assertNotNull(root1);
     assertSame(root1, root2);
   }
@@ -416,12 +417,12 @@ public class VfsUtilTest extends PlatformLangTestCase {
     final VirtualFile jar = vDir.findChild("x.jar");
     assertNotNull(jar);
 
-    final NewVirtualFile root = ManagingFS.getInstance().findRoot(jar.getPath()+"!/", JarFileSystem.getInstance());
+    final NewVirtualFile root = ManagingFS.getInstance().findRoot(jar.getPath()+"!/", (NewVirtualFileSystem)StandardFileSystems.jar());
     PlatformTestUtil.startPerformanceTest("find root is slow", 500, new ThrowableRunnable() {
       @Override
       public void run() throws Throwable {
         final String path = jar.getPath() + "!/";
-        final JarFileSystem fileSystem = JarFileSystem.getInstance();
+        final NewVirtualFileSystem fileSystem = (NewVirtualFileSystem)StandardFileSystems.jar();
         JobLauncher.getInstance().invokeConcurrentlyUnderProgress(Collections.nCopies(500, null), null, false, new Processor<Object>() {
           @Override
           public boolean process(Object o) {

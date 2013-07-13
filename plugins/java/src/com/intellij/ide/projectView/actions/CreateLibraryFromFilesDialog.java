@@ -31,8 +31,8 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryNameAndL
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainerFactory;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ui.FormBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -110,7 +110,7 @@ public class CreateLibraryFromFilesDialog extends DialogWrapper {
   private Module findModule(List<OrderRoot> roots) {
     for (OrderRoot root : roots) {
       Module module = null;
-      final VirtualFile local = JarFileSystem.getInstance().getVirtualFileForJar(root.getFile());
+      final VirtualFile local = ArchiveVfsUtil.getVirtualFileForJar(root.getFile());
       if (local != null) {
         module = ModuleUtil.findModuleForFile(local, myProject);
       }

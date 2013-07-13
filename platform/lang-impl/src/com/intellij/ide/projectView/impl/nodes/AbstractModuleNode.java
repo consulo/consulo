@@ -73,7 +73,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
 
     final VirtualFile testee;
     if (file.getFileSystem() instanceof JarFileSystem) {
-      testee = JarFileSystem.getInstance().getVirtualFileForJar(file);
+      testee = ((JarFileSystem)file.getFileSystem()).getVirtualFileForJar(file);
       if (testee == null) return false;
     }
     else {

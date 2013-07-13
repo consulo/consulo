@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,49 +19,69 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class ArchiveFileType implements FileType {
+/**
+ * @author VISTALL
+ * @since 19:19/13.07.13
+ */
+public abstract class ArchiveFileType implements FileType {
   private static final NotNullLazyValue<Icon> ICON = new NotNullLazyValue<Icon>() {
-      @NotNull
-      @Override
-      protected Icon compute() {
-        return AllIcons.FileTypes.Archive;
-      }
-    };
+    @NotNull
+    @Override
+    protected Icon compute() {
+      return AllIcons.FileTypes.Archive;
+    }
+  };
 
-  public static final ArchiveFileType INSTANCE = new ArchiveFileType();
+  private final NotNullLazyValue<ArchiveFileSystem> myFileSystemLazyValue = new NotNullLazyValue<ArchiveFileSystem>() {
+    @NotNull
+    @Override
+    protected ArchiveFileSystem compute() {
+      return (ArchiveFileSystem)VirtualFileManager.getInstance().getFileSystem(getProtocol());
+    }
+  };
+
+  public abstract String getProtocol();
 
   @NotNull
-  public String getName() {
-    return "ARCHIVE";
+  public ArchiveFileSystem getFileSystem() {
+    return myFileSystemLazyValue.getValue();
   }
 
+  @Override
   @NotNull
   public String getDescription() {
     return IdeBundle.message("filetype.description.archive.files");
   }
 
+  @Override
   @NotNull
   public String getDefaultExtension() {
     return "";
   }
 
+  @Override
   public Icon getIcon() {
     return ICON.getValue();
   }
 
+  @Override
   public boolean isBinary() {
     return true;
   }
 
+  @Override
   public boolean isReadOnly() {
     return false;
   }
 
+  @Override
   public String getCharset(@NotNull VirtualFile file, final byte[] content) {
     return null;
   }

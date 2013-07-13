@@ -19,9 +19,9 @@ import com.intellij.JavaTestUtil;
 import com.intellij.codeInspection.inferNullity.NullityInferrer;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 
 /**
  * User: anna
@@ -93,7 +93,7 @@ public class NullityInferrerTest extends CodeInsightTestCase {
     final String nullityPath = "/codeInsight/nullityinferrer";
     final VirtualFile aLib = LocalFileSystem.getInstance().findFileByPath(getTestDataPath() + nullityPath + "/lib/annotations.jar");
     if (aLib != null) {
-      final VirtualFile file = JarFileSystem.getInstance().getJarRootForLocalFile(aLib);
+      final VirtualFile file = ArchiveVfsUtil.getJarRootForLocalFile(aLib);
       if (file != null) {
         ModuleRootModificationUtil.addModuleLibrary(myModule, file.getUrl());
       }

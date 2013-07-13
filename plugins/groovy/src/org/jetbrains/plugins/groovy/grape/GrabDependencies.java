@@ -49,9 +49,9 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -263,7 +263,7 @@ public class GrabDependencies implements IntentionAction {
       final ModifiableRootModel model = ModuleRootManager.getInstance(myModule).getModifiableModel();
       final LibraryTable.ModifiableModel tableModel = model.getModuleLibraryTable().getModifiableModel();
       for (VirtualFile jar : jars) {
-        final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(jar);
+        final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(jar);
         if (jarRoot != null) {
           OrderRootType rootType = OrderRootType.CLASSES;
           String libName = "Grab:" + jar.getName();

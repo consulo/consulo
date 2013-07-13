@@ -17,6 +17,7 @@ package com.intellij.openapi.projectRoots.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
@@ -24,7 +25,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.JarFileSystem;
@@ -331,7 +331,7 @@ public class PathEditor {
           tempFile = LocalFileSystem.getInstance().findFileByPath(path);
         }
         if (tempFile != null && !tempFile.isDirectory()) {
-          return Boolean.valueOf(tempFile.getFileType().equals(FileTypes.ARCHIVE));
+          return Boolean.valueOf(tempFile.getFileType() instanceof ArchiveFileType);
         }
         return Boolean.FALSE;
       }

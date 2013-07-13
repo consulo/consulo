@@ -40,9 +40,11 @@ import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.EmptyIcon;
 import org.jetbrains.annotations.NotNull;
@@ -172,8 +174,8 @@ public class ShowFilePathAction extends AnAction {
       final int index = files.size() == 0 ? 0 : files.size();
       files.add(index, eachParent);
       fileUrls.add(index, getPresentableUrl(eachParent));
-      if (eachParent.getParent() == null && eachParent.getFileSystem() instanceof JarFileSystem) {
-        eachParent = JarFileSystem.getInstance().getVirtualFileForJar(eachParent);
+      if (eachParent.getParent() == null && eachParent.getFileSystem() instanceof ArchiveFileSystem) {
+        eachParent = ArchiveVfsUtil.getVirtualFileForJar(eachParent);
         if (eachParent == null) break;
       }
       eachParent = eachParent.getParent();
@@ -401,7 +403,7 @@ public class ShowFilePathAction extends AnAction {
       return file;
     }
 
-    VirtualFileSystem fs = file.getFileSystem();
+    IVirtualFileSystem fs = file.getFileSystem();
     if (fs instanceof JarFileSystem && file.getParent() == null) {
       return  ((JarFileSystem)fs).getLocalVirtualFileFor(file);
     }

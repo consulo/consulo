@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser;
 
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -111,7 +111,7 @@ public class FileElement {
     if (file == null) return false;
     if (isArchiveFileSystem(file) && file.getParent() == null) return true;
     return !file.isDirectory() &&
-           file.getFileType() == FileTypes.ARCHIVE &&
+           file.getFileType() instanceof ArchiveFileType &&
            !isArchiveFileSystem(file.getParent());
   }
 

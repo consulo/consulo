@@ -50,7 +50,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @return {@link VirtualFileSystem}
    * @see VirtualFileSystem#getProtocol
    */
-  public abstract VirtualFileSystem getFileSystem(String protocol);
+  public abstract IVirtualFileSystem getFileSystem(String protocol);
 
   /**
    * <p>Refreshes the cached file systems information from the physical file systems synchronously.<p/>

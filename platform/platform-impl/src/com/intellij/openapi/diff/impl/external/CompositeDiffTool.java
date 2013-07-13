@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.external;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
+import com.intellij.ide.highlighter.JarArchiveFileType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.*;
@@ -66,7 +66,7 @@ class CompositeDiffTool implements DiffTool {
       }
 
       //todo[kb] register or not this instance in common diff tools ?
-      if (type1 == type2 && type1 instanceof ArchiveFileType) {
+      if (type1 == type2 && type1 instanceof JarArchiveFileType) {
         return ArchiveDiffTool.INSTANCE;
       }
     }

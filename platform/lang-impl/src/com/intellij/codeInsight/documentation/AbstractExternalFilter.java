@@ -155,18 +155,18 @@ public abstract class AbstractExternalFilter {
           boolean referenceUnpackedImage = true;
           if (!unpackedImage.isFile()) {
             referenceUnpackedImage = false;
-            JarFileSystem jarFileSystem = JarFileSystem.getInstance();
+            ArchiveFileSystem jarFileSystem = StandardFileSystems.jar();
             try {
-              JarFile jarFile = jarFileSystem.getJarFile(jarFileSystem.findFileByPath(jarPath + StandardFileSystems.JAR_SEPARATOR));
-              if (jarFile != null) {
-                JarFile.JarEntry entry = jarFile.getEntry(imgPath);
+              ArchiveFile archiveFile = jarFileSystem.getJarFile(jarFileSystem.findLocalVirtualFileByPath(jarPath));
+              if (archiveFile != null) {
+                ArchiveEntry entry = archiveFile.getEntry(imgPath);
                 if (entry != null) {
                   FileUtilRt.createIfNotExists(unpackedImage);
                   FileOutputStream fOut = new FileOutputStream(unpackedImage);
                   try {
                     // Don't bother with wrapping file output stream into buffered stream in assumption that FileUtil operates
                     // on NIO channels.
-                    FileUtilRt.copy(jarFile.getInputStream(entry), fOut);
+                    FileUtilRt.copy(archiveFile.getInputStream(entry), fOut);
                     referenceUnpackedImage = true;
                   }
                   finally {

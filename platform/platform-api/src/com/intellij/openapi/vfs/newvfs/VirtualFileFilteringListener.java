@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class VirtualFileFilteringListener implements VirtualFileListener {
   private final VirtualFileListener myDelegate;
-  private final VirtualFileSystem myFilter;
+  private final IVirtualFileSystem myFilter;
 
-  public VirtualFileFilteringListener(@NotNull VirtualFileListener delegate, @NotNull VirtualFileSystem filter) {
+  public VirtualFileFilteringListener(@NotNull VirtualFileListener delegate, @NotNull IVirtualFileSystem filter) {
     myDelegate = delegate;
     myFilter = filter;
   }

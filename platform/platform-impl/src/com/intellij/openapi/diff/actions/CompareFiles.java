@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.actions;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
+import com.intellij.ide.highlighter.JarArchiveFileType;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffManager;
@@ -74,8 +74,8 @@ public class CompareFiles extends BaseDiffAction {
   private static DiffRequest getDiffRequest(Project project, VirtualFile[] files) {
     if (files == null || files.length != 2) return null;
     if (files[0].isDirectory() || files[1].isDirectory()
-        || files[0].getFileType() instanceof ArchiveFileType
-        || files[1].getFileType() instanceof ArchiveFileType) {
+        || files[0].getFileType() instanceof JarArchiveFileType
+        || files[1].getFileType() instanceof JarArchiveFileType) {
       return null;
     }
     String title = DiffBundle.message("diff.element.qualified.name.vs.element.qualified.name.dialog.title",

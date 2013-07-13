@@ -19,23 +19,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.zip.ZipFile;
 
 /**
  * Encapsulates operations with .jar file
  */
-public interface JarFile {
-  interface JarEntry {
-    String getName();
-    long getSize();
-    long getTime();
-    boolean isDirectory();
-  }
+public interface ArchiveFile {
+  ArchiveEntry getEntry(String name);
 
-  JarEntry getEntry(String name);
-  InputStream getInputStream(JarEntry entry) throws IOException;
-  Enumeration<? extends JarEntry> entries();
+  InputStream getInputStream(ArchiveEntry entry) throws IOException;
 
-  @Nullable ZipFile getZipFile();
+  Iterator<? extends ArchiveEntry> entries();
+
+  @Nullable
+  ZipFile getZipFile();
 }

@@ -7,8 +7,8 @@ import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.testFramework.ModuleTestCase;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.util.PathsList;
@@ -57,7 +57,7 @@ public abstract class ModuleRootManagerTestCase extends ModuleTestCase {
   protected VirtualFile getJarFromLibDir(final String name) {
     final VirtualFile file = getVirtualFile(PathManager.findFileInLibDirectory(name));
     assertNotNull(name + " not found", file);
-    final VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+    final VirtualFile jarFile = ArchiveVfsUtil.getJarRootForLocalFile(file);
     assertNotNull(name + " is not jar", jarFile);
     return jarFile;
   }

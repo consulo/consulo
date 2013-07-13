@@ -17,10 +17,7 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -72,7 +69,7 @@ public class IntroducePropertyAction extends BaseRefactoringAction {
     VirtualFile virtualFile = file.getVirtualFile();
     return MavenDomUtil.isMavenFile(file)
            && virtualFile != null
-           && virtualFile.getFileSystem() != JarFileSystem.getInstance();
+           && !(virtualFile.getFileSystem() instanceof ArchiveFileSystem);
   }
 
   @Override

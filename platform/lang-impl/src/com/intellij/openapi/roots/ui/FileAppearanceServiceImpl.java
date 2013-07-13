@@ -18,9 +18,9 @@ package com.intellij.openapi.roots.ui;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.roots.ui.util.*;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
@@ -55,7 +55,7 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
       return forInvalidUrl(file.getPresentableUrl());
     }
 
-    final VirtualFileSystem fileSystem = file.getFileSystem();
+    final IVirtualFileSystem fileSystem = file.getFileSystem();
     if (fileSystem.getProtocol().equals(JarFileSystem.PROTOCOL)) {
       return new JarSubfileCellAppearance(file);
     }

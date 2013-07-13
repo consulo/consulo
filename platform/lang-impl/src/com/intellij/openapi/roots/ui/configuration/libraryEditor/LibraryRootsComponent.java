@@ -41,7 +41,7 @@ import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
@@ -238,8 +238,8 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
       final VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType);
       if (existingRoots.length > 0) {
         VirtualFile existingRoot = existingRoots[0];
-        if (existingRoot.getFileSystem() instanceof JarFileSystem) {
-          existingRoot = JarFileSystem.getInstance().getVirtualFileForJar(existingRoot);
+        if (existingRoot.getFileSystem() instanceof ArchiveFileSystem) {
+          existingRoot = ((ArchiveFileSystem)existingRoot.getFileSystem()).getVirtualFileForJar(existingRoot);
         }
         if (existingRoot != null) {
           if (existingRoot.isDirectory()) {

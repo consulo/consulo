@@ -21,9 +21,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.ui.AddEditRemovePanel;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ArrayUtil;
@@ -286,11 +284,16 @@ public class ExternalResourceConfigurable extends BaseConfigurable
       final Component rendererComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       if (value != null) {
         String loc = value.toString().replace('\\', '/');
-        final int jarDelimIndex = loc.indexOf(JarFileSystem.JAR_SEPARATOR);
-        final VirtualFile path;
+        final int jarDelimIndex = loc.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
+        VirtualFile path = null;
 
         if (jarDelimIndex != -1) {
-          path = JarFileSystem.getInstance().findFileByPath(loc);
+          final String protocol = VirtualFileManager.extractProtocol(loc);
+          final IVirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);
+
+          if(fileSystem instanceof ArchiveFileSystem) {
+            path = fileSystem.findFileByPath(loc);
+          }
         } else {
           path = LocalFileSystem.getInstance().findFileByPath(loc);
         }

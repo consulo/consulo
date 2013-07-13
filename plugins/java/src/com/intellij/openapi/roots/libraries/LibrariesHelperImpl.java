@@ -17,6 +17,7 @@ package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.text.StringTokenizer;
@@ -57,7 +58,7 @@ public class LibrariesHelperImpl extends LibrariesHelper {
       VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
       if (file == null) continue;
       if (!(file.getFileSystem() instanceof JarFileSystem) && !file.isDirectory()) {
-        file = JarFileSystem.getInstance().findFileByPath(file.getPath() + JarFileSystem.JAR_SEPARATOR);
+        file = StandardFileSystems.jar().findFileByPath(file.getPath() + JarFileSystem.JAR_SEPARATOR);
       }
       if (file == null) continue;
       if (findInFile(file, new StringTokenizer(fqn, "."))) return true;

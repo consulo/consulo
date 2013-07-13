@@ -23,8 +23,8 @@ import com.intellij.compiler.ant.taskdefs.PatternSet;
 import com.intellij.compiler.ant.taskdefs.Unzip;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.ExtractedDirectoryPresentation;
@@ -73,7 +73,7 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
     final VirtualFile jarFile = super.findFile();
     if (jarFile == null) return null;
 
-    final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(jarFile);
+    final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(jarFile);
     if ("/".equals(myPathInJar)) return jarRoot;
     return jarRoot != null ? jarRoot.findFileByRelativePath(myPathInJar) : null;
   }

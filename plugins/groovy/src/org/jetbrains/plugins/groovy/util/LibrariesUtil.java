@@ -25,9 +25,10 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -113,7 +114,7 @@ public class LibrariesUtil {
   public static VirtualFile findJarWithClass(@NotNull Module module, final String classQName) {
     GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module);
     for (PsiClass psiClass : JavaPsiFacade.getInstance(module.getProject()).findClasses(classQName, scope)) {
-      final VirtualFile local = JarFileSystem.getInstance().getVirtualFileForJar(psiClass.getContainingFile().getVirtualFile());
+      final VirtualFile local = ArchiveVfsUtil.getVirtualFileForJar(psiClass.getContainingFile().getVirtualFile());
       if (local != null) {
         return local;
       }
@@ -198,9 +199,9 @@ public class LibrariesUtil {
 
   @NotNull
   public static VirtualFile getLocalFile(@NotNull VirtualFile libFile) {
-    final VirtualFileSystem system = libFile.getFileSystem();
-    if (system instanceof JarFileSystem) {
-      final VirtualFile local = JarFileSystem.getInstance().getVirtualFileForJar(libFile);
+    final IVirtualFileSystem system = libFile.getFileSystem();
+    if (system instanceof ArchiveFileSystem) {
+      final VirtualFile local = ArchiveVfsUtil.getVirtualFileForJar(libFile);
       if (local != null) {
         return local;
       }

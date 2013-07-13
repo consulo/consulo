@@ -16,7 +16,7 @@
 package com.intellij.core;
 
 import com.intellij.codeInsight.runner.JavaMainMethodProvider;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import com.intellij.ide.highlighter.JarArchiveFileType;
 import com.intellij.ide.highlighter.JavaClassFileType;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.lang.LanguageParserDefinitions;
@@ -49,8 +49,8 @@ public class JavaCoreApplicationEnvironment extends CoreApplicationEnvironment {
 
     registerFileType(JavaClassFileType.INSTANCE, "class");
     registerFileType(JavaFileType.INSTANCE, "java");
-    registerFileType(ArchiveFileType.INSTANCE, "jar");
-    registerFileType(ArchiveFileType.INSTANCE, "zip");
+    registerFileType(JarArchiveFileType.INSTANCE, "jar");
+    registerFileType(JarArchiveFileType.INSTANCE, "zip");
 
     addExplicitExtension(FileTypeFileViewProviders.INSTANCE, JavaClassFileType.INSTANCE,  new ClassFileViewProviderFactory());
     addExplicitExtension(BinaryFileStubBuilders.INSTANCE, JavaClassFileType.INSTANCE, new ClassFileStubBuilder());

@@ -29,6 +29,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
@@ -70,9 +71,9 @@ public class TestNGUtil
       final VirtualFile testngjar = LocalFileSystem.getInstance().findFileByPath(testngJarPath);
       if (testngjar != null ) {
         try {
-          final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(testngjar);
+          final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(testngjar);
           if (jarRoot != null) {
-            final JarFile zipFile = JarFileSystem.getInstance().getJarFile(jarRoot);
+            final ArchiveFile zipFile = ((ArchiveFileSystem)jarRoot.getFileSystem()).getJarFile(jarRoot);
             final String version = JarVersionDetectionUtil.detectJarVersion(zipFile);
             if (version != null && version.compareTo("5.12") > 0) {
               return false;

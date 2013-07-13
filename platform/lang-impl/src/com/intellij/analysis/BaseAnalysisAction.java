@@ -16,7 +16,7 @@
 
 package com.intellij.analysis;
 
-import com.intellij.ide.highlighter.ArchiveFileType;
+import com.intellij.ide.highlighter.JarArchiveFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -28,10 +28,10 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -152,8 +152,8 @@ public abstract class BaseAnalysisAction extends AnAction {
     final PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
     if (psiFile != null && psiFile.getManager().isInProject(psiFile)) {
       final VirtualFile file = psiFile.getVirtualFile();
-      if (file != null && file.isValid() && file.getFileType() instanceof ArchiveFileType && acceptNonProjectDirectories()) {
-        final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(file);
+      if (file != null && file.isValid() && file.getFileType() instanceof JarArchiveFileType && acceptNonProjectDirectories()) {
+        final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(file);
         if (jarRoot != null) {
           PsiDirectory psiDirectory = psiFile.getManager().findDirectory(jarRoot);
           if (psiDirectory != null) {

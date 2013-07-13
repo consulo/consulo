@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   @NotNull private final ManagingFS myManagingFS;
 
-  public PlatformVirtualFileManager(@NotNull VirtualFileSystem[] fileSystems, @NotNull MessageBus bus, @NotNull ManagingFS managingFS) {
+  public PlatformVirtualFileManager(@NotNull IVirtualFileSystem[] fileSystems, @NotNull MessageBus bus, @NotNull ManagingFS managingFS) {
     super(fileSystems, bus);
     myManagingFS = managingFS;
   }

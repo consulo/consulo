@@ -23,10 +23,7 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl;
 import com.intellij.uiDesigner.core.Spacer;
 import com.intellij.util.PathUtil;
@@ -108,7 +105,7 @@ public final class LoaderFactory {
   private static ClassLoader createClassLoader(final String runClasspath, final String moduleName) {
     final ArrayList<URL> urls = new ArrayList<URL>();
     final VirtualFileManager manager = VirtualFileManager.getInstance();
-    final JarFileSystemImpl fileSystem = (JarFileSystemImpl)JarFileSystem.getInstance();
+    final JarFileSystemImpl fileSystem = (JarFileSystemImpl)StandardFileSystems.jar();
     final StringTokenizer tokenizer = new StringTokenizer(runClasspath, File.pathSeparator);
     while (tokenizer.hasMoreTokens()) {
       final String s = tokenizer.nextToken();

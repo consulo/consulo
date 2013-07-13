@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.impl.libraries;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -28,7 +29,6 @@ import com.intellij.openapi.roots.impl.RootModelImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
@@ -179,10 +179,12 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     VfsUtilCore.visitChildrenRecursively(dir, new VirtualFileVisitor(SKIP_ROOT, (recursively ? null : ONE_LEVEL_DEEP)) {
       @Override
       public boolean visitFile(@NotNull VirtualFile file) {
-        final VirtualFile jarRoot = StandardFileSystems.getJarRootForLocalFile(file);
-        if (jarRoot != null) {
-          container.add(jarRoot);
-          return false;
+        if(file.getFileType() instanceof ArchiveFileType) {
+          final VirtualFile jarRoot = ((ArchiveFileType)file.getFileType()).getFileSystem().findByPathWithSeparator(file);
+          if (jarRoot != null) {
+            container.add(jarRoot);
+            return false;
+          }
         }
         return true;
       }

@@ -7,9 +7,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -398,13 +398,12 @@ public class GradleInstallationManager {
         continue;
       }
       final LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-      final JarFileSystem jarFileSystem = JarFileSystem.getInstance();
       List<VirtualFile> result = new ArrayList<VirtualFile>();
       for (File file : libraries) {
         if (ANY_GRADLE_JAR_FILE_PATTERN.matcher(file.getName()).matches() || GroovyConfigUtils.matchesGroovyAll(file.getName())) {
           final VirtualFile virtualFile = localFileSystem.refreshAndFindFileByIoFile(file);
           if (virtualFile != null) {
-            ContainerUtil.addIfNotNull(result, jarFileSystem.getJarRootForLocalFile(virtualFile));
+            ContainerUtil.addIfNotNull(result, ArchiveVfsUtil.getJarRootForLocalFile(virtualFile));
           }
         }
       }
