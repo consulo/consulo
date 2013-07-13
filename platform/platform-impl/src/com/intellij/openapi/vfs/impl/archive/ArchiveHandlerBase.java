@@ -48,14 +48,14 @@ import java.security.NoSuchAlgorithmException;
  * @since 20:38/13.07.13
  */
 @Logger
-public abstract class BaseArchiveHandler extends CoreArchiveHandler {
+public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
   @NonNls
   private static final String JARS_FOLDER = "jars";
   private static final int FS_TIME_RESOLUTION = 2000;
 
   private final ArchiveFileSystem myFileSystem;
 
-  public BaseArchiveHandler(@NotNull ArchiveFileSystem fileSystem, @NotNull String path) {
+  public ArchiveHandlerBase(@NotNull ArchiveFileSystem fileSystem, @NotNull String path) {
     super(path);
     myFileSystem = fileSystem;
   }
@@ -316,7 +316,7 @@ public abstract class BaseArchiveHandler extends CoreArchiveHandler {
   };
 
   private void reportIOErrorWithJars(File original, File mirror, IOException e) {
-    LOGGER.warn(e);
+    ArchiveHandlerBase.LOGGER.warn(e);
     final String path = original.getPath();
     final String message = VfsBundle.message("jar.copy.error.message", path, mirror.getPath(), e.getMessage());
 
