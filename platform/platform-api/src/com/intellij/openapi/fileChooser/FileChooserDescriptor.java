@@ -19,7 +19,6 @@ import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
@@ -212,7 +211,7 @@ public class FileChooserDescriptor implements Cloneable {
       return null;
     }
     String path = file.getPath();
-    return ((ArchiveFileSystem)file.getFileSystem()).findLocalVirtualFileByPath(path);
+    return ((ArchiveFileType)file.getFileType()).getFileSystem().findLocalVirtualFileByPath(path);
   }
 
   public final void setHideIgnored(boolean hideIgnored) {

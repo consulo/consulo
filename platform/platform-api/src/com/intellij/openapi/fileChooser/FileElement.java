@@ -17,7 +17,7 @@ package com.intellij.openapi.fileChooser;
 
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -116,6 +116,6 @@ public class FileElement {
   }
 
   private static boolean isArchiveFileSystem(VirtualFile file) {
-    return file.getFileSystem() instanceof JarFileSystem;
+    return file.getFileSystem() instanceof ArchiveFileSystem;
   }
 }
