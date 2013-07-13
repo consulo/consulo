@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.impl.jar;
 
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +49,7 @@ public class JarArchiveFile implements ArchiveFile {
     return myZipFile.getInputStream(((JarArchiveEntry)entry).getEntry());
   }
 
+  @NotNull
   @Override
   public Iterator<? extends ArchiveEntry> entries() {
     final Enumeration<? extends ZipEntry> entries = myZipFile.entries();
@@ -71,9 +72,8 @@ public class JarArchiveFile implements ArchiveFile {
     };
   }
 
-  @Nullable
   @Override
-  public ZipFile getZipFile() {
-    return myZipFile;
+  public int getSize() {
+    return myZipFile.size();
   }
 }

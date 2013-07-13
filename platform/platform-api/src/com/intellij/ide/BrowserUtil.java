@@ -34,8 +34,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.ui.GuiUtils;
-import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.OptionsDialog;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -43,10 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -58,7 +55,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import static com.intellij.util.containers.ContainerUtil.newSmartList;
 import static com.intellij.util.containers.ContainerUtilRt.newArrayList;
@@ -346,13 +342,13 @@ public class BrowserUtil {
         if (!extract.get()) return null;
 
         @SuppressWarnings("ConstantConditions")
-        final ZipFile zipFile = jarFileSystem.getJarFile(file).getZipFile();
+        final ArchiveFile zipFile = jarFileSystem.getJarFile(file);
         if (zipFile == null) return null;
-        ZipEntry entry = zipFile.getEntry(targetFileRelativePath);
+        ArchiveEntry entry = zipFile.getEntry(targetFileRelativePath);
         if (entry == null) return null;
         InputStream is = zipFile.getInputStream(entry);
         try {
-          ZipUtil.extractEntry(entry, is, outputDir);
+          ArchiveVfsUtil.extractEntry(entry, is, outputDir);
         }
         finally {
           is.close();
@@ -362,7 +358,7 @@ public class BrowserUtil {
           public void run() {
             new Task.Backgroundable(null, "Extracting files...", true) {
               public void run(@NotNull final ProgressIndicator indicator) {
-                final int size = zipFile.size();
+                final int size = zipFile.getSize();
                 final int[] counter = new int[]{0};
 
                 class MyFilter implements FilenameFilter {
@@ -386,8 +382,8 @@ public class BrowserUtil {
                 }
 
                 try {
-                  ZipUtil.extract(zipFile, outputDir, new MyFilter(true));
-                  ZipUtil.extract(zipFile, outputDir, new MyFilter(false));
+                  ArchiveVfsUtil.extract(zipFile, outputDir, new MyFilter(true));
+                  ArchiveVfsUtil.extract(zipFile, outputDir, new MyFilter(false));
                   FileUtil.writeToFile(timestampFile, currentTimestamp.getBytes());
                 }
                 catch (IOException ignore) {
@@ -404,6 +400,33 @@ public class BrowserUtil {
       LOG.warn(e);
       Messages.showErrorDialog("Cannot extract files: " + e.getMessage(), "Error");
       return null;
+    }
+  }
+
+  public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir) throws IOException {
+    extractEntry(entry, inputStream, outputDir, true);
+  }
+
+  public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir, boolean overwrite) throws IOException {
+    final boolean isDirectory = entry.isDirectory();
+    final String relativeName = entry.getName();
+    final File file = new File(outputDir, relativeName);
+    if (file.exists() && !overwrite) return;
+
+    FileUtil.createParentDirs(file);
+    if (isDirectory) {
+      file.mkdir();
+    }
+    else {
+      final BufferedInputStream is = new BufferedInputStream(inputStream);
+      final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+      try {
+        FileUtil.copy(is, os);
+      }
+      finally {
+        os.close();
+        is.close();
+      }
     }
   }
 

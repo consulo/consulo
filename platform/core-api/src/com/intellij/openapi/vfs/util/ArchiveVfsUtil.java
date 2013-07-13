@@ -17,9 +17,16 @@ package com.intellij.openapi.vfs.util;
 
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.ArchiveEntry;
+import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.*;
+import java.util.Iterator;
 
 /**
  * @author VISTALL
@@ -58,5 +65,52 @@ public class ArchiveVfsUtil {
       return ((ArchiveFileSystem)virtualFile.getFileSystem()).getVirtualFileForJar(virtualFile);
     }
     return null;
+  }
+
+  public static void extract(final @NotNull ArchiveFile zipFile,
+                             @NotNull File outputDir,
+                             @Nullable FilenameFilter filenameFilter) throws IOException {
+    extract(zipFile, outputDir, filenameFilter, true);
+  }
+
+  public static void extract(final @NotNull ArchiveFile zipFile,
+                             @NotNull File outputDir,
+                             @Nullable FilenameFilter filenameFilter,
+                             boolean overwrite) throws IOException {
+    final Iterator<? extends ArchiveEntry> entries = zipFile.entries();
+    while (entries.hasNext()) {
+      ArchiveEntry entry = entries.next();
+      final File file = new File(outputDir, entry.getName());
+      if (filenameFilter == null || filenameFilter.accept(file.getParentFile(), file.getName())) {
+        extractEntry(entry, zipFile.getInputStream(entry), outputDir, overwrite);
+      }
+    }
+  }
+
+  public static void extractEntry(ArchiveEntry entry, final InputStream inputStream, File outputDir) throws IOException {
+    extractEntry(entry, inputStream, outputDir, true);
+  }
+
+  public static void extractEntry(ArchiveEntry entry, final InputStream inputStream, File outputDir, boolean overwrite) throws IOException {
+    final boolean isDirectory = entry.isDirectory();
+    final String relativeName = entry.getName();
+    final File file = new File(outputDir, relativeName);
+    if (file.exists() && !overwrite) return;
+
+    FileUtil.createParentDirs(file);
+    if (isDirectory) {
+      file.mkdir();
+    }
+    else {
+      final BufferedInputStream is = new BufferedInputStream(inputStream);
+      final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+      try {
+        FileUtil.copy(is, os);
+      }
+      finally {
+        os.close();
+        is.close();
+      }
+    }
   }
 }

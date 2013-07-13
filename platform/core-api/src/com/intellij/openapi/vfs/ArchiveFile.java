@@ -15,23 +15,25 @@
  */
 package com.intellij.openapi.vfs;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.zip.ZipFile;
 
 /**
- * Encapsulates operations with .jar file
+ * Encapsulates operations with archive file
  */
 public interface ArchiveFile {
+  @Nullable
   ArchiveEntry getEntry(String name);
 
+  @Nullable
   InputStream getInputStream(ArchiveEntry entry) throws IOException;
 
+  @NotNull
   Iterator<? extends ArchiveEntry> entries();
 
-  @Nullable
-  ZipFile getZipFile();
+  int getSize();
 }
