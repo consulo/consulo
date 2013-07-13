@@ -27,10 +27,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
@@ -324,10 +321,10 @@ public class PathEditor {
       @Override
       public Boolean compute() {
         VirtualFile tempFile = file;
-        if ((file.getFileSystem() instanceof JarFileSystem) && file.getParent() == null) {
+        if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
           //[myakovlev] It was bug - directories with *.jar extensions was saved as files of JarFileSystem.
           //    so we can not just return true, we should filter such directories.
-          String path = file.getPath().substring(0, file.getPath().length() - JarFileSystem.JAR_SEPARATOR.length());
+          String path = file.getPath().substring(0, file.getPath().length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
           tempFile = LocalFileSystem.getInstance().findFileByPath(path);
         }
         if (tempFile != null && !tempFile.isDirectory()) {

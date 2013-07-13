@@ -32,10 +32,7 @@ import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.*;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
@@ -100,19 +97,19 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
     final String name = library.getName();
     if (name != null) {
-      return normalOrRedWaved(name, (icon != null ? icon : PlatformIcons.LIBRARY_ICON), hasInvalidRoots);
+      return normalOrRedWaved(name, (icon != null ? icon :  AllIcons.Nodes.PpLib), hasInvalidRoots);
     }
 
     final String[] files = library.getUrls(OrderRootType.CLASSES);
     if (files.length == 0) {
-      return SimpleTextCellAppearance.invalid(ProjectBundle.message("library.empty.library.item"), PlatformIcons.LIBRARY_ICON);
+      return SimpleTextCellAppearance.invalid(ProjectBundle.message("library.empty.library.item"),  AllIcons.Nodes.PpLib);
     }
     else if (files.length == 1) {
       return forVirtualFilePointer(new LightFilePointer(files[0]));
     }
 
-    final String url = StringUtil.trimEnd(files[0], JarFileSystem.JAR_SEPARATOR);
-    return SimpleTextCellAppearance.regular(PathUtil.getFileName(url), PlatformIcons.LIBRARY_ICON);
+    final String url = StringUtil.trimEnd(files[0], ArchiveFileSystem.ARCHIVE_SEPARATOR);
+    return SimpleTextCellAppearance.regular(PathUtil.getFileName(url),  AllIcons.Nodes.PpLib);
   }
 
   @NotNull

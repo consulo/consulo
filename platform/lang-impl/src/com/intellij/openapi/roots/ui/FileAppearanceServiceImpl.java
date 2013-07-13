@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.roots.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.roots.ui.util.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.IVirtualFileSystem;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.HtmlListCellRenderer;
@@ -56,14 +57,14 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     }
 
     final IVirtualFileSystem fileSystem = file.getFileSystem();
-    if (fileSystem.getProtocol().equals(JarFileSystem.PROTOCOL)) {
+    if (fileSystem instanceof ArchiveFileSystem) {
       return new JarSubfileCellAppearance(file);
     }
     if (fileSystem instanceof HttpFileSystem) {
       return new HttpUrlCellAppearance(file);
     }
     if (file.isDirectory()) {
-      return SimpleTextCellAppearance.regular(file.getPresentableUrl(), PlatformIcons.FOLDER_ICON);
+      return SimpleTextCellAppearance.regular(file.getPresentableUrl(), AllIcons.Nodes.Folder);
     }
     return new ValidFileCellAppearance(file);
   }
@@ -77,7 +78,7 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     }
 
     if (file.isDirectory()) {
-      return SimpleTextCellAppearance.regular(absolutePath, PlatformIcons.FOLDER_ICON);
+      return SimpleTextCellAppearance.regular(absolutePath, AllIcons.Nodes.Folder);
     }
 
     final String name = file.getName();
