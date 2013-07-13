@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +76,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement>{
   private static void addModuleLibraryRoots(ModuleRootManager moduleRootManager, List<VirtualFile> roots) {
     final VirtualFile[] files = moduleRootManager.orderEntries().withoutModuleSourceEntries().withoutDepModules().classes().getRoots();
     for (final VirtualFile file : files) {
-      if (file.getFileSystem() instanceof JarFileSystem && file.getParent() != null) {
+      if (file.getFileSystem() instanceof ArchiveFileSystem && file.getParent() != null) {
         // skip entries inside jars
         continue;
       }

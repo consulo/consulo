@@ -294,14 +294,14 @@ public class BrowserUtil {
       }
 
       VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(url);
-      if (file == null || !(file.getFileSystem() instanceof JarFileSystem)) return null;
+      if (file == null || !(file.getFileSystem() instanceof ArchiveFileSystem)) return null;
 
-      JarFileSystem jarFileSystem = (JarFileSystem)file.getFileSystem();
+      ArchiveFileSystem jarFileSystem = (ArchiveFileSystem)file.getFileSystem();
       VirtualFile jarVirtualFile = jarFileSystem.getVirtualFileForJar(file);
       if (jarVirtualFile == null) return null;
 
       String targetFilePath = file.getPath();
-      String targetFileRelativePath = StringUtil.substringAfter(targetFilePath, JarFileSystem.JAR_SEPARATOR);
+      String targetFileRelativePath = StringUtil.substringAfter(targetFilePath, ArchiveFileSystem.ARCHIVE_SEPARATOR);
       LOG.assertTrue(targetFileRelativePath != null);
 
       String jarVirtualFileLocationHash = jarVirtualFile.getName() + Integer.toHexString(jarVirtualFile.getUrl().hashCode());

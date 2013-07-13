@@ -22,7 +22,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -45,7 +45,7 @@ public class DefaultIconProvider extends IconProvider implements DumbAware {
       final PsiDirectory psiDirectory = (PsiDirectory)element;
       final VirtualFile vFile = psiDirectory.getVirtualFile();
       final Project project = psiDirectory.getProject();
-      boolean isJarRoot = vFile.getParent() == null && vFile.getFileSystem() instanceof JarFileSystem;
+      boolean isJarRoot = vFile.getParent() == null && vFile.getFileSystem() instanceof ArchiveFileSystem;
       boolean isContentRoot = ProjectRootsUtil.isModuleContentRoot(vFile, project);
       ContentFolder contentFolder = ProjectRootsUtil.findContentRoot(vFile, project);
 

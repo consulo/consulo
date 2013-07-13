@@ -23,7 +23,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
@@ -72,8 +72,8 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
     if (module == null || module.isDisposed()) return false;
 
     final VirtualFile testee;
-    if (file.getFileSystem() instanceof JarFileSystem) {
-      testee = ((JarFileSystem)file.getFileSystem()).getVirtualFileForJar(file);
+    if (file.getFileSystem() instanceof ArchiveFileSystem) {
+      testee = ((ArchiveFileSystem)file.getFileSystem()).getVirtualFileForJar(file);
       if (testee == null) return false;
     }
     else {

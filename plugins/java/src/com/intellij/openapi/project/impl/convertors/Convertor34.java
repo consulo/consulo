@@ -23,10 +23,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.ProjectRootUtil;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.*;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -323,8 +320,8 @@ public class Convertor34 {
   @SuppressWarnings({"HardCodedStringLiteral"})
   private static Element createLibraryEntry(VirtualFile file, Element module, VirtualFile moduleDirectory) {
     String path = file.getPath().substring(moduleDirectory.getPath().length() + 1);
-    if(file.getFileSystem() instanceof JarFileSystem) {
-      path = path + "!/";
+    if(file.getFileSystem() instanceof ArchiveFileSystem) {
+      path = path + ArchiveFileSystem.ARCHIVE_SEPARATOR;
     }
 
     Element orderEntry = new Element("orderEntry");

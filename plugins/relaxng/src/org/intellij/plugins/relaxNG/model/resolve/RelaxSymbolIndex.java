@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -140,7 +140,7 @@ public class RelaxSymbolIndex extends ScalarIndexExtension<String> {
     return new FileBasedIndex.InputFilter() {
       @Override
       public boolean acceptInput(Project project, VirtualFile file) {
-        if (file.getFileSystem() instanceof JarFileSystem) {
+        if (file.getFileSystem() instanceof ArchiveFileSystem) {
           return false; // there is lots and lots of custom XML inside zip files
         }
         final FileType fileType = file.getFileType();

@@ -42,7 +42,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.IVirtualFileSystem;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.ui.awt.RelativePoint;
@@ -404,8 +403,8 @@ public class ShowFilePathAction extends AnAction {
     }
 
     IVirtualFileSystem fs = file.getFileSystem();
-    if (fs instanceof JarFileSystem && file.getParent() == null) {
-      return  ((JarFileSystem)fs).getLocalVirtualFileFor(file);
+    if (fs instanceof ArchiveFileSystem && file.getParent() == null) {
+      return  ((ArchiveFileSystem)fs).getLocalVirtualFileFor(file);
     }
 
     return null;

@@ -119,7 +119,7 @@ public class CommonRefactoringUtil {
       if (element instanceof PsiDirectory) {
         final PsiDirectory dir = (PsiDirectory)element;
         final VirtualFile vFile = dir.getVirtualFile();
-        if (vFile.getFileSystem() instanceof JarFileSystem) {
+        if (vFile.getFileSystem() instanceof ArchiveFileSystem) {
           failed.add(vFile);
         }
         else {
@@ -136,7 +136,7 @@ public class CommonRefactoringUtil {
         for (PsiDirectory directory : directories) {
           VirtualFile virtualFile = directory.getVirtualFile();
           if (recursively) {
-            if (virtualFile.getFileSystem() instanceof JarFileSystem) {
+            if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
               failed.add(virtualFile);
             }
             else {
@@ -144,7 +144,7 @@ public class CommonRefactoringUtil {
             }
           }
           else {
-            if (virtualFile.getFileSystem() instanceof JarFileSystem) {
+            if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
               failed.add(virtualFile);
             }
             else {
@@ -186,7 +186,7 @@ public class CommonRefactoringUtil {
         final String subj = virtualFile.isDirectory()
                             ? RefactoringBundle.message("directory.description", presentableUrl)
                             : RefactoringBundle.message("file.description", presentableUrl);
-        if (virtualFile.getFileSystem() instanceof JarFileSystem) {
+        if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
           message.append(RefactoringBundle.message("0.is.located.in.a.jar.file", subj));
         }
         else {

@@ -26,10 +26,7 @@ import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import com.intellij.openapi.fileChooser.ex.RootFileElement;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +90,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
 
     if (element.isArchive() && myChooserDescriptor.isChooseJarContents()) {
       String path = file.getPath();
-      if (!(file.getFileSystem() instanceof JarFileSystem)) {
+      if (!(file.getFileSystem() instanceof ArchiveFileSystem)) {
         file = ((ArchiveFileType)file.getFileType()).getFileSystem().findLocalVirtualFileByPath(path);
       }
       if (file != null) {
@@ -141,10 +138,10 @@ public class FileTreeStructure extends AbstractTreeStructure {
       VirtualFile file = fileElement.getFile();
       if (file == null) return null;
       VirtualFile parent = file.getParent();
-      if (parent != null && parent.getFileSystem() instanceof JarFileSystem && parent.getParent() == null) {
+      if (parent != null && parent.getFileSystem() instanceof ArchiveFileSystem && parent.getParent() == null) {
         // parent of jar contents should be local jar file
         String localPath = parent.getPath().substring(0,
-                                                      parent.getPath().length() - JarFileSystem.JAR_SEPARATOR.length());
+                                                      parent.getPath().length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
         parent = LocalFileSystem.getInstance().findFileByPath(localPath);
       }
 

@@ -19,7 +19,7 @@ package org.intellij.lang.xpath.xslt.impl;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -29,7 +29,10 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.indexing.*;
-import com.intellij.util.io.*;
+import com.intellij.util.io.DataExternalizer;
+import com.intellij.util.io.EnumDataDescriptor;
+import com.intellij.util.io.EnumeratorStringDescriptor;
+import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.xml.NanoXmlUtil;
 import org.intellij.lang.xpath.xslt.XsltSupport;
@@ -147,7 +150,7 @@ public class XsltSymbolIndex extends FileBasedIndexExtension<String, XsltSymbolI
         return new FileBasedIndex.InputFilter() {
             @Override
             public boolean acceptInput(Project project, VirtualFile file) {
-                if (file.getFileSystem() instanceof JarFileSystem) {
+                if (file.getFileSystem() instanceof ArchiveFileSystem) {
                   return false; // there is lots and lots of custom XML inside zip files
                 }
                 return file.getFileType() == StdFileTypes.XML;

@@ -28,7 +28,7 @@ import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFilePathWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -86,8 +86,8 @@ public class ProjectUtil {
         }
       }
 
-      if (SystemInfo.isMac && file.getFileSystem() instanceof JarFileSystem) {
-        final VirtualFile fileForJar = ((JarFileSystem)file.getFileSystem()).getVirtualFileForJar(file);
+      if (SystemInfo.isMac && file.getFileSystem() instanceof ArchiveFileSystem) {
+        final VirtualFile fileForJar = ((ArchiveFileSystem)file.getFileSystem()).getVirtualFileForJar(file);
         if (fileForJar != null) {
           final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
           if (libraryEntry != null) {

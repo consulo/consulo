@@ -44,10 +44,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -531,7 +528,7 @@ public abstract class MvcFramework {
         PsiFile psiFile = aClass.getContainingFile();
         if (psiFile != null) {
           VirtualFile file = psiFile.getVirtualFile();
-          if (file != null && file.getFileSystem() instanceof JarFileSystem) {
+          if (file != null && file.getFileSystem() instanceof ArchiveFileSystem) {
             VirtualFile parent = file.getParent();
             if (parent != null && parent.findChild("Console.class") != null) {
               scriptRoot = parent;

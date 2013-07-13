@@ -44,9 +44,8 @@ import java.util.*;
 
 public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager implements ApplicationComponent, ModificationTracker, BulkFileListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl");
-  private final TempFileSystem TEMP_FILE_SYSTEM;
-  private final LocalFileSystem LOCAL_FILE_SYSTEM;
-  private final JarFileSystem JAR_FILE_SYSTEM;
+  private final TempFileSystem myTempFileSystem;
+  private final LocalFileSystem myLocalFileSystem;
   private volatile long myVfsModificationCounter;
   // guarded by this
   private final Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = new LinkedHashMap<VirtualFilePointerListener, FilePointerPartNode>();
@@ -71,14 +70,12 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
   VirtualFilePointerManagerImpl(@NotNull VirtualFileManager virtualFileManager,
                                 @NotNull MessageBus bus,
                                 @NotNull TempFileSystem tempFileSystem,
-                                @NotNull LocalFileSystem localFileSystem,
-                                @NotNull JarFileSystem jarFileSystem) {
+                                @NotNull LocalFileSystem localFileSystem) {
     myVirtualFileManager = virtualFileManager;
     myBus = bus;
     bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
-    TEMP_FILE_SYSTEM = tempFileSystem;
-    LOCAL_FILE_SYSTEM = localFileSystem;
-    JAR_FILE_SYSTEM = jarFileSystem;
+    myTempFileSystem = tempFileSystem;
+    myLocalFileSystem = localFileSystem;
   }
 
 
@@ -171,12 +168,12 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
       protocol = null;
       fileSystem = file.getFileSystem();
     }
-    if (fileSystem == TEMP_FILE_SYSTEM) {
+    if (fileSystem == myTempFileSystem) {
       // for tests, recreate always
       VirtualFile found = file == null ? VirtualFileManager.getInstance().findFileByUrl(url) : file;
       return new IdentityVirtualFilePointer(found, url);
     }
-    if (fileSystem != LOCAL_FILE_SYSTEM && fileSystem != JAR_FILE_SYSTEM) {
+    if (fileSystem != myLocalFileSystem && !(fileSystem instanceof ArchiveFileSystem)) {
       // we are unable to track alien file systems for now
       VirtualFile found = fileSystem == null ? null : file != null ? file : VirtualFileManager.getInstance().findFileByUrl(url);
       // if file is null, this pointer will never be alive
