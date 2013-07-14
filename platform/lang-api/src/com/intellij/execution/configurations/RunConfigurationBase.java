@@ -19,8 +19,10 @@ import com.intellij.diagnostic.logging.LogConsole;
 import com.intellij.execution.ExecutionTarget;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ProgramRunner;
+import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
@@ -276,6 +278,18 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
 
   public boolean excludeCompileBeforeLaunchOption() {
     return false;
+  }
+
+  @Nullable
+  @Override
+  public SettingsEditor<JDOMExternalizable> getRunnerSettingsEditor(ProgramRunner runner) {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public JDOMExternalizable createRunnerSettings(ConfigurationInfoProvider provider) {
+    return null;
   }
 
   @Override
