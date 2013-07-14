@@ -111,6 +111,8 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/properties/properties-copyright/properties-copyright.iml" filepath="$PROJECT_DIR$/plugins/properties/properties-copyright/properties-copyright.iml" group="plugins/properties" />
       <module fileurl="file://$PROJECT_DIR$/plugins/regexp/regexp.iml" filepath="$PROJECT_DIR$/plugins/regexp/regexp.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/relaxng/relaxng.iml" filepath="$PROJECT_DIR$/plugins/relaxng/relaxng.iml" group="plugins" />
+      <module fileurl="file://$PROJECT_DIR$/platform/remote-servers-api/remote-servers-api.iml" filepath="$PROJECT_DIR$/platform/remote-servers-api/remote-servers-api.iml" group="platform" />
+      <module fileurl="file://$PROJECT_DIR$/platform/remote-servers-impl/remote-servers-impl.iml" filepath="$PROJECT_DIR$/platform/remote-servers-impl/remote-servers-impl.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/resources/resources.iml" filepath="$PROJECT_DIR$/resources/resources.iml" />
       <module fileurl="file://$PROJECT_DIR$/resources-en/resources-en.iml" filepath="$PROJECT_DIR$/resources-en/resources-en.iml" />
       <module fileurl="file://$PROJECT_DIR$/platform/smRunner/smRunner.iml" filepath="$PROJECT_DIR$/platform/smRunner/smRunner.iml" group="platform" />

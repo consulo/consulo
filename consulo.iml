@@ -107,6 +107,8 @@
     <orderEntry type="module" module-name="maven2-server-impl" />
     <orderEntry type="module" module-name="maven3-server-impl" />
     <orderEntry type="module" module-name="jvm-bytecode-viewer" />
+    <orderEntry type="module" module-name="remote-servers-api" />
+    <orderEntry type="module" module-name="remote-servers-impl" />
   </component>
 </module>
 
