@@ -203,7 +203,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   public Element getState() {
-    Element element = new Element("ProjectSdkTable");
+    Element element = new Element("SdkTable");
     for (Sdk sdk : mySdks) {
       if (sdk.isBundled()) {
         continue;
