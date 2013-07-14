@@ -2254,6 +2254,10 @@
     </component>
 
     <component>
+      <implementation-class>com.intellij.openapi.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
+    </component>
+
+    <component>
       <implementation-class>com.intellij.openapi.vfs.ex.temp.TempFileSystem</implementation-class>
     </component>
 

@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.external;
 
 import com.intellij.ide.diff.DirDiffSettings;
 import com.intellij.ide.diff.JarFileDiffElement;
-import com.intellij.ide.highlighter.JarArchiveFileType;
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.*;
 import com.intellij.openapi.fileTypes.FileType;
@@ -61,7 +61,7 @@ public class ArchiveDiffTool implements DiffTool {
       if (file1 != null && file2 != null) {
         final FileType type1 = contents[0].getContentType();
         final FileType type2 = contents[1].getContentType();
-        return type1 == type2 && type1 instanceof JarArchiveFileType;
+        return type1 == type2 && type1 instanceof ArchiveFileType;
       }
     }
     return false;

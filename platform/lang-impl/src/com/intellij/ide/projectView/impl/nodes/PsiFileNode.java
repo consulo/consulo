@@ -16,7 +16,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.highlighter.JarArchiveFileType;
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
@@ -64,7 +64,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
 
   private boolean isArchive() {
     VirtualFile file = getVirtualFile();
-    return file != null && file.isValid() && file.getFileType() instanceof JarArchiveFileType;
+    return file != null && file.isValid() && file.getFileType() instanceof ArchiveFileType;
   }
 
   @Override

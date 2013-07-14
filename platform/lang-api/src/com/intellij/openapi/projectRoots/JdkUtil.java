@@ -79,7 +79,7 @@ public class JdkUtil {
       }
       return versionString;
     }
-    VirtualFile rtJarFileContent = StandardFileSystems.jar().findFileByPath(rtJar.getPath() + JarFileSystem.JAR_SEPARATOR);
+    VirtualFile rtJarFileContent = StandardFileSystems.jar().findFileByPath(rtJar.getPath() + ArchiveFileSystem.ARCHIVE_SEPARATOR);
     if (rtJarFileContent == null) {
       return null;
     }

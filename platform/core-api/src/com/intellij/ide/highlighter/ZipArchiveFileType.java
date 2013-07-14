@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileTypes.impl;
+package com.intellij.ide.highlighter;
 
-import com.intellij.ide.highlighter.*;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
 import org.jetbrains.annotations.NotNull;
 
-public class JavaFileTypeFactory extends FileTypeFactory {
+/**
+ * @author VISTALL
+ * @since 16:39/14.07.13
+ */
+public class ZipArchiveFileType extends ArchiveFileType {
+  public static final String PROTOCOL = "zip";
+  public static final ArchiveFileType INSTANCE = new ZipArchiveFileType();
+
   @Override
-  public void createFileTypes(@NotNull final FileTypeConsumer consumer) {
-    consumer.consume(JarArchiveFileType.INSTANCE, "jar;war;apk");
-    consumer.consume(JavaClassFileType.INSTANCE, "class");
-    consumer.consume(JavaFileType.INSTANCE, "java");
+  public String getProtocol() {
+    return PROTOCOL;
+  }
+
+  @NotNull
+  @Override
+  public String getName() {
+    return "ZIP_ARCHIVE";
   }
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes.impl;
 
-import com.intellij.ide.highlighter.JarArchiveFileType;
+import com.intellij.ide.highlighter.ZipArchiveFileType;
 import com.intellij.openapi.fileTypes.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,8 +23,9 @@ import org.jetbrains.annotations.NotNull;
  * @author yole
  */
 public class PlatformFileTypeFactory extends FileTypeFactory {
+  @Override
   public void createFileTypes(@NotNull final FileTypeConsumer consumer) {
-    consumer.consume(JarArchiveFileType.INSTANCE, "zip;jar;war;ear;swc;ane;egg;apk");
+    consumer.consume(ZipArchiveFileType.INSTANCE, "zip;ear;swc;ane;egg");
     consumer.consume(PlainTextFileType.INSTANCE, "txt;sh;bat;cmd;policy;log;cgi;MF;jad;jam;htaccess");
     consumer.consume(NativeFileType.INSTANCE, "doc;docx;xls;xlsx;ppt;pptx;mdb;vsd;pdf;hlp;chm;odt");
     consumer.consume(UnknownFileType.INSTANCE);

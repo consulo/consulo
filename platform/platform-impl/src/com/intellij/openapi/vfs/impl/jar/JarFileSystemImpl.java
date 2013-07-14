@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.archive.ArchiveHandler;
+import com.intellij.openapi.vfs.impl.zip.ZipHandler;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.messages.MessageBus;
@@ -45,7 +46,7 @@ public class JarFileSystemImpl extends ArchiveFileSystemBase implements JarFileS
 
   @Override
   public ArchiveHandler createHandler(ArchiveFileSystem fileSystem, String path) {
-    return new JarHandler(fileSystem, path);
+    return new ZipHandler(fileSystem, path);
   }
 
   @Override

@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package com.intellij.openapi.vfs.impl.jar;
+package com.intellij.openapi.vfs.impl.zip;
 
 import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.util.zip.ZipFile;
 
 @Logger
-public class JarHandler extends ArchiveHandlerBase {
+public class ZipHandler extends ArchiveHandlerBase {
 
-  public JarHandler(@NotNull ArchiveFileSystem fileSystem, @NotNull String path) {
+  public ZipHandler(@NotNull ArchiveFileSystem fileSystem, @NotNull String path) {
     super(fileSystem, path);
   }
 
@@ -45,10 +45,10 @@ public class JarHandler extends ArchiveHandlerBase {
       @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
       final ZipFile zipFile = new ZipFile(getMirrorFile(originalFile));
 
-      return new JarArchiveFile(zipFile);
+      return new ZipArchiveFile(zipFile);
     }
     catch (IOException e) {
-      LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
+      ZipHandler.LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
       return null;
     }
   }

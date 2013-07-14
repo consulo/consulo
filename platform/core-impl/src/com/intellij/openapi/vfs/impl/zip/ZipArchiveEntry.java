@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.impl.jar;
+package com.intellij.openapi.vfs.impl.zip;
 
 import com.intellij.openapi.vfs.ArchiveEntry;
 
@@ -25,10 +25,10 @@ import java.util.zip.ZipEntry;
  *
  * Class extracted from JarHandler base - due common api ill used in PHP and others plugins
  */
-public class JarArchiveEntry implements ArchiveEntry {
+public class ZipArchiveEntry implements ArchiveEntry {
   private final ZipEntry myEntry;
 
-  public JarArchiveEntry(ZipEntry entry) {
+  public ZipArchiveEntry(ZipEntry entry) {
     myEntry = entry;
   }
 

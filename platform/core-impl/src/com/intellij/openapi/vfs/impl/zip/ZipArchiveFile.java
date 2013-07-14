@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.impl.jar;
+package com.intellij.openapi.vfs.impl.zip;
 
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
@@ -30,10 +30,10 @@ import java.util.zip.ZipFile;
  * @author VISTALL
  * @since 18:40/13.07.13
  */
-public class JarArchiveFile implements ArchiveFile {
+public class ZipArchiveFile implements ArchiveFile {
   private final ZipFile myZipFile;
 
-  public JarArchiveFile(ZipFile zipFile) {
+  public ZipArchiveFile(ZipFile zipFile) {
     myZipFile = zipFile;
   }
 
@@ -41,12 +41,12 @@ public class JarArchiveFile implements ArchiveFile {
   public ArchiveEntry getEntry(String name) {
     ZipEntry entry = myZipFile.getEntry(name);
     if (entry == null) return null;
-    return new JarArchiveEntry(entry);
+    return new ZipArchiveEntry(entry);
   }
 
   @Override
   public InputStream getInputStream(ArchiveEntry entry) throws IOException {
-    return myZipFile.getInputStream(((JarArchiveEntry)entry).getEntry());
+    return myZipFile.getInputStream(((ZipArchiveEntry)entry).getEntry());
   }
 
   @NotNull
@@ -63,7 +63,7 @@ public class JarArchiveFile implements ArchiveFile {
       public ArchiveEntry next() {
         ZipEntry entry = entries.nextElement();
         if (entry == null) return null;
-        return new JarArchiveEntry(entry);
+        return new ZipArchiveEntry(entry);
       }
 
       @Override

@@ -18,6 +18,7 @@ package com.intellij.openapi.vfs.impl.jar;
 import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.archive.CoreArchiveHandler;
+import com.intellij.openapi.vfs.impl.zip.ZipArchiveFile;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +45,7 @@ public class CoreJarHandlerBase extends CoreArchiveHandler {
       @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
       final ZipFile zipFile = new ZipFile(getMirrorFile(originalFile));
 
-      return new JarArchiveFile(zipFile);
+      return new ZipArchiveFile(zipFile);
     }
     catch (IOException e) {
       CoreJarHandlerBase.LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);

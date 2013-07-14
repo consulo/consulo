@@ -16,6 +16,7 @@
 package com.intellij.core;
 
 import com.intellij.concurrency.*;
+import com.intellij.ide.highlighter.ZipArchiveFileType;
 import com.intellij.lang.*;
 import com.intellij.lang.impl.*;
 import com.intellij.mock.MockApplication;
@@ -119,6 +120,8 @@ public class CoreApplicationEnvironment {
     addExtension(ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory(), LoadingOrder.LAST);
     addExtension(ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory(), LoadingOrder.LAST);
     addExtension(PsiElementFactory.EP.getExtensionPointName(), new DefaultPsiElementFactory(), LoadingOrder.LAST);
+
+    registerFileType(ZipArchiveFileType.INSTANCE, "zip");
 
     ProgressIndicatorProvider.ourInstance = createProgressIndicatorProvider();
 
