@@ -2494,6 +2494,10 @@
       <interface-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
       <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</implementation-class>
     </component>
+
+    <component>
+      <implementation-class>com.intellij.remoteServer.run.DeployToServerConfigurationTypesRegistrar</implementation-class>
+    </component>
   </application-components>
 
   <project-components>
@@ -4020,6 +4024,9 @@
     <extensionPoint name="externalSystemManager" interface="com.intellij.openapi.externalSystem.ExternalSystemManager"/>
     <extensionPoint name="externalProjectDataService"
                     interface="com.intellij.openapi.externalSystem.service.project.manage.ProjectDataService"/>
+
+    <!--Remote servers-->
+    <extensionPoint name="remoteServer.type" interface="com.intellij.remoteServer.ServerType"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -5529,5 +5536,13 @@
     <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.task.ToolWindowProjectService"/>
     <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.task.ToolWindowModuleService"/>
     <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.task.ToolWindowTaskService"/>
+
+    <!--Remote servers-->
+    <applicationService serviceInterface="com.intellij.remoteServer.configuration.RemoteServersManager"
+                        serviceImplementation="com.intellij.remoteServer.configuration.impl.RemoteServersManagerImpl"/>
+    <applicationService serviceInterface="com.intellij.remoteServer.deployment.DeploymentSourceUtil"
+                        serviceImplementation="com.intellij.remoteServer.deployment.impl.DeploymentSourceUtilImpl"/>
+    <applicationConfigurable instance="com.intellij.remoteServer.configuration.impl.RemoteServerListConfigurable"/>
+    <programRunner implementation="com.intellij.remoteServer.run.DeployToServerRunner"/>
   </extensions>
 </idea-plugin>
