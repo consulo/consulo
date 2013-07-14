@@ -17,7 +17,6 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.JavadocOrderRootType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
@@ -71,7 +70,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     if (libraryName == null || !libraryName.startsWith("Maven: ")) {
       reportInvalidRoots(problemsHolder, library, OrderRootType.SOURCES, "sources",
                          ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
-      reportInvalidRoots(problemsHolder, library, JavadocOrderRootType.getInstance(), "javadoc",
+      reportInvalidRoots(problemsHolder, library, OrderRootType.DOCUMENTATION, "javadoc",
                          ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
     }
   }

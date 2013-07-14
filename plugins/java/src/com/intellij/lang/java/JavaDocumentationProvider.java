@@ -34,8 +34,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.JavadocOrderRootType;
 import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Pair;
@@ -688,7 +688,7 @@ public class JavaDocumentationProvider implements CodeDocumentationProvider, Ext
 
     final List<OrderEntry> orderEntries = fileIndex.getOrderEntriesForFile(virtualFile);
     for (OrderEntry orderEntry : orderEntries) {
-      final String[] files = JavadocOrderRootType.getUrls(orderEntry);
+      final String[] files = orderEntry.getUrls(OrderRootType.DOCUMENTATION);
       final List<String> httpRoot = PlatformDocumentationUtil.getHttpRoots(files, relPath);
       if (httpRoot != null) return httpRoot;
     }

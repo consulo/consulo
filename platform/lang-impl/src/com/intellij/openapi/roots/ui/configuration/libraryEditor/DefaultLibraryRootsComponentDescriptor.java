@@ -20,7 +20,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.ui.Util;
-import com.intellij.openapi.roots.JavadocOrderRootType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.*;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
@@ -69,7 +68,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
 
   private static class JavadocRootDetector extends RootDetector {
     private JavadocRootDetector() {
-      super(JavadocOrderRootType.getInstance(), false, "JavaDocs");
+      super(OrderRootType.DOCUMENTATION, false, "JavaDocs");
     }
 
     @NotNull
@@ -108,7 +107,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
 
   private static class AttachUrlJavadocDescriptor extends AttachRootButtonDescriptor {
     private AttachUrlJavadocDescriptor() {
-      super(JavadocOrderRootType.getInstance(), ProjectBundle.message("module.libraries.javadoc.url.button"));
+      super(OrderRootType.DOCUMENTATION, ProjectBundle.message("module.libraries.javadoc.url.button"));
     }
 
     @Override

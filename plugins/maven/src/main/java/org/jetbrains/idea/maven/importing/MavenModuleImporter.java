@@ -221,7 +221,7 @@ public class MavenModuleImporter {
           rootType = OrderRootType.SOURCES;
         }
         else if ("javadoc".equals(classifier)) {
-          rootType = JavadocOrderRootType.getInstance();
+          rootType = OrderRootType.DOCUMENTATION;
         }
 
         String filePath = artifactElement.getChildTextTrim("file");

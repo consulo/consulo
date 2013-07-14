@@ -44,7 +44,7 @@ public class OrderRootType {
    * <li>  classes roots for libraries and jdk
    * <li>  recursively for module dependencies: only exported items
    */
-  public static final OrderRootType CLASSES = new PersistentOrderRootType("CLASSES", "classPath", null, "classPathEntry");
+  public static final OrderRootType CLASSES = new PersistentOrderRootType("CLASSES", "classPath");
 
   /**
    * Sources.
@@ -53,33 +53,13 @@ public class OrderRootType {
    * <li>  source roots for libraries and jdk
    * <li>  recursively for module dependencies: only exported items
    */
-  public static final OrderRootType SOURCES = new PersistentOrderRootType("SOURCES", "sourcePath", null, "sourcePathEntry");
+  public static final OrderRootType SOURCES = new PersistentOrderRootType("SOURCES", "sourcePath");
 
   /**
    * Documentation.
    * Generic documentation order root type
    */
-  public static final OrderRootType DOCUMENTATION = new DocumentationRootType();
-
-  /**
-   * A temporary solution to exclude DOCUMENTATION from getAllTypes() and handle it only in special
-   * cases if supported by LibraryType.
-   */
-  public static class DocumentationRootType extends OrderRootType {
-    
-    public DocumentationRootType() {
-      super("DOCUMENTATION");
-    }
-    
-    @Override
-    public boolean skipWriteIfEmpty() {
-      return true;
-    }
-    
-    public String getSdkRootName() {
-      return "documentation";
-    }
-  }
+  public static final OrderRootType DOCUMENTATION = new PersistentOrderRootType("DOCUMENTATION", "documentationPath");
 
   public String name() {
     return myName;

@@ -27,24 +27,14 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
   @Override
   public SdkPathEditor createPathEditor(final Sdk sdk) {
-    return new SdkPathEditor(ProjectBundle.message("sdk.configure.sourcepath.tab"), OrderRootType.SOURCES, new FileChooserDescriptor(true, true, true, false, true, true)) {
-      @Override
-      protected VirtualFile[] adjustAddedFileSet(final Component component, final VirtualFile[] files) {
-       /* if (sdk.getSdkType() instanceof JavaSdkType) {
-          return PathUIUtils.scanAndSelectDetectedJavaSourceRoots(component, files);
-        }      */
-        return super.adjustAddedFileSet(component, files);
-      }
-    };
+    return new SdkPathEditor(ProjectBundle.message("sdk.configure.sourcepath.tab"), OrderRootType.SOURCES, new FileChooserDescriptor(true, true, true, false, true, true));
   }
 
   @Override

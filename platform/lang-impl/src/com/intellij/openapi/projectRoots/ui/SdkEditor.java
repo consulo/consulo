@@ -17,13 +17,12 @@ package com.intellij.openapi.projectRoots.ui;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.ui.Messages;
@@ -38,6 +37,7 @@ import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,8 +58,8 @@ import java.util.Set;
  * @author: MYakovlev
  * @since Aug 15, 2002
  */
+@Logger
 public class SdkEditor implements Configurable, Place.Navigator {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.ui.SdkEditor");
   @NonNls private static final String SDK_TAB = "sdkTab";
 
   private Sdk mySdk;
@@ -67,7 +67,8 @@ public class SdkEditor implements Configurable, Place.Navigator {
 
   private TextFieldWithBrowseButton myHomeComponent;
   private final Map<SdkType, AdditionalDataConfigurable> myAdditionalDataConfigurables = new HashMap<SdkType, AdditionalDataConfigurable>();
-  private final Map<AdditionalDataConfigurable, JComponent> myAdditionalDataComponents = new HashMap<AdditionalDataConfigurable, JComponent>();
+  private final Map<AdditionalDataConfigurable, JComponent> myAdditionalDataComponents =
+    new HashMap<AdditionalDataConfigurable, JComponent>();
   private JPanel myAdditionalDataPanel;
   private final SdkModificator myEditedSdkModificator = new EditedSdkModificator();
 
@@ -92,12 +93,13 @@ public class SdkEditor implements Configurable, Place.Navigator {
     initSdk(sdk);
   }
 
-  private void initSdk(Sdk sdk){
+  private void initSdk(Sdk sdk) {
     mySdk = sdk;
     if (mySdk != null) {
       myInitialName = mySdk.getName();
       myInitialPath = mySdk.getHomePath();
-    } else {
+    }
+    else {
       myInitialName = "";
       myInitialPath = "";
     }
@@ -105,33 +107,38 @@ public class SdkEditor implements Configurable, Place.Navigator {
     if (additionalDataConfigurable != null) {
       additionalDataConfigurable.setSdk(sdk);
     }
-    if (myMainPanel != null){
+    if (myMainPanel != null) {
       reset();
     }
   }
 
   @Override
-  public String getDisplayName(){
+  public String getDisplayName() {
     return ProjectBundle.message("sdk.configure.editor.title");
   }
 
   @Override
-  public String getHelpTopic(){
+  public String getHelpTopic() {
     return null;
   }
 
   @Override
-  public JComponent createComponent(){
+  public JComponent createComponent() {
     return myMainPanel;
   }
 
-  private void createMainPanel(){
+  private void createMainPanel() {
     myMainPanel = new JPanel(new GridBagLayout());
 
     myTabbedPane = new TabbedPaneWrapper(myDisposable);
     for (OrderRootType type : OrderRootType.getAllTypes()) {
       if (mySdk == null || showTabForType(type)) {
-        final SdkPathEditor pathEditor = OrderRootTypeUIFactory.FACTORY.getByKey(type).createPathEditor(mySdk);
+        final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.FACTORY.getByKey(type);
+        if(factory == null) {
+          LOGGER.error("OrderRootTypeUIFactory is not defined for order root type: " + type);
+          continue;
+        }
+        final SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
         if (pathEditor != null) {
           pathEditor.setAddBaseDir(mySdk.getHomeDirectory());
           myTabbedPane.addTab(pathEditor.getDisplayName(), pathEditor.createComponent());
@@ -151,13 +158,19 @@ public class SdkEditor implements Configurable, Place.Navigator {
     myHomeComponent.getTextField().setEditable(false);
 
     myHomeFieldLabel = new JLabel(getHomeFieldLabelValue());
-    myMainPanel.add(myHomeFieldLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 0, 2, 2), 0, 0));
-    myMainPanel.add(myHomeComponent, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 0), 0, 0));
+    myMainPanel.add(myHomeFieldLabel,
+                    new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                                           new Insets(2, 0, 2, 2), 0, 0));
+    myMainPanel.add(myHomeComponent, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+                                                            GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 0), 0, 0));
 
     myAdditionalDataPanel = new JPanel(new BorderLayout());
-    myMainPanel.add(myAdditionalDataPanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 0, 0, 0), 0, 0));
+    myMainPanel.add(myAdditionalDataPanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+                                                                  GridBagConstraints.BOTH, new Insets(2, 0, 0, 0), 0, 0));
 
-    myMainPanel.add(myTabbedPane.getComponent(), new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 0, 0, 0), 0, 0));
+    myMainPanel.add(myTabbedPane.getComponent(),
+                    new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+                                           GridBagConstraints.BOTH, new Insets(2, 0, 0, 0), 0, 0));
   }
 
   protected TextFieldWithBrowseButton createHomeComponent() {
@@ -170,20 +183,21 @@ public class SdkEditor implements Configurable, Place.Navigator {
   }
 
   protected boolean showTabForType(OrderRootType type) {
-    return ((SdkType) mySdk.getSdkType()).isRootTypeApplicable(type);
+    return ((SdkType)mySdk.getSdkType()).isRootTypeApplicable(type);
   }
 
   private String getHomeFieldLabelValue() {
     if (mySdk != null) {
-      return ((SdkType) mySdk.getSdkType()).getHomeFieldLabel();
+      return ((SdkType)mySdk.getSdkType()).getHomeFieldLabel();
     }
     return ProjectBundle.message("sdk.configure.general.home.path");
   }
 
   @Override
-  public boolean isModified(){
-    boolean isModified = !Comparing.equal(mySdk == null? null : mySdk.getName(), myInitialName);
-    isModified = isModified || !Comparing.equal(FileUtil.toSystemIndependentName(getHomeValue()), FileUtil.toSystemIndependentName(myInitialPath));
+  public boolean isModified() {
+    boolean isModified = !Comparing.equal(mySdk == null ? null : mySdk.getName(), myInitialName);
+    isModified =
+      isModified || !Comparing.equal(FileUtil.toSystemIndependentName(getHomeValue()), FileUtil.toSystemIndependentName(myInitialPath));
     for (PathEditor pathEditor : myPathEditors.values()) {
       isModified = isModified || pathEditor.isModified();
     }
@@ -195,13 +209,13 @@ public class SdkEditor implements Configurable, Place.Navigator {
   }
 
   @Override
-  public void apply() throws ConfigurationException{
-    if(!Comparing.equal(myInitialName, mySdk == null ? "" : mySdk.getName())){
-      if(mySdk == null || mySdk.getName().isEmpty()){
+  public void apply() throws ConfigurationException {
+    if (!Comparing.equal(myInitialName, mySdk == null ? "" : mySdk.getName())) {
+      if (mySdk == null || mySdk.getName().isEmpty()) {
         throw new ConfigurationException(ProjectBundle.message("sdk.list.name.required.error"));
       }
     }
-    if (mySdk != null){
+    if (mySdk != null) {
       myInitialName = mySdk.getName();
       myInitialPath = mySdk.getHomePath();
       final SdkModificator sdkModificator = mySdk.getSdkModificator();
@@ -223,14 +237,14 @@ public class SdkEditor implements Configurable, Place.Navigator {
   }
 
   @Override
-  public void reset(){
-    if (mySdk == null){
+  public void reset() {
+    if (mySdk == null) {
       setHomePathValue("");
       for (SdkPathEditor pathEditor : myPathEditors.values()) {
         pathEditor.reset(null);
       }
     }
-    else{
+    else {
       final SdkModificator sdkModificator = mySdk.getSdkModificator();
       for (OrderRootType type : myPathEditors.keySet()) {
         myPathEditors.get(type).reset(sdkModificator);
@@ -248,13 +262,13 @@ public class SdkEditor implements Configurable, Place.Navigator {
 
     myHomeComponent.setEnabled(mySdk != null);
 
-    for(int i = 0; i < myTabbedPane.getTabCount(); i++){
+    for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
       myTabbedPane.setEnabledAt(i, mySdk != null);
     }
   }
 
   @Override
-  public void disposeUIResources(){
+  public void disposeUIResources() {
     for (final SdkType sdkType : myAdditionalDataConfigurables.keySet()) {
       final AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
       configurable.disposeUIResources();
@@ -269,8 +283,8 @@ public class SdkEditor implements Configurable, Place.Navigator {
     return myHomeComponent.getText().trim();
   }
 
-  private void clearAllPaths(){
-    for(PathEditor editor: myPathEditors.values()) {
+  private void clearAllPaths() {
+    for (PathEditor editor : myPathEditors.values()) {
       editor.clearList();
     }
   }
@@ -280,10 +294,8 @@ public class SdkEditor implements Configurable, Place.Navigator {
     final Color fg;
     if (absolutePath != null && !absolutePath.isEmpty()) {
       final File homeDir = new File(absolutePath);
-      boolean homeMustBeDirectory = mySdk == null || ((SdkType) mySdk.getSdkType()).getHomeChooserDescriptor().isChooseFolders();
-      fg = homeDir.exists() && homeDir.isDirectory() == homeMustBeDirectory
-           ? UIUtil.getFieldForegroundColor() 
-           : PathEditor.INVALID_COLOR;
+      boolean homeMustBeDirectory = mySdk == null || ((SdkType)mySdk.getSdkType()).getHomeChooserDescriptor().isChooseFolders();
+      fg = homeDir.exists() && homeDir.isDirectory() == homeMustBeDirectory ? UIUtil.getFieldForegroundColor() : PathEditor.INVALID_COLOR;
     }
     else {
       fg = UIUtil.getFieldForegroundColor();
@@ -291,7 +303,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
     myHomeComponent.getTextField().setForeground(fg);
   }
 
-  private void doSelectHomePath(){
+  private void doSelectHomePath() {
     final SdkType sdkType = (SdkType)mySdk.getSdkType();
     SdkConfigurationUtil.selectSdkHome(sdkType, new Consumer<String>() {
       @Override
@@ -303,7 +315,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
   }
 
   private void doSetHomePath(final String homePath, final SdkType sdkType) {
-    if (homePath == null){
+    if (homePath == null) {
       return;
     }
     setHomePathValue(homePath.replace('/', File.separatorChar));
@@ -323,8 +335,9 @@ public class SdkEditor implements Configurable, Place.Navigator {
       clearAllPaths();
       myVersionString = dummySdk.getVersionString();
       if (myVersionString == null) {
-        Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", homePath),
-                                 ProjectBundle.message("sdk.java.corrupt.title"), Messages.getErrorIcon());
+        Messages
+          .showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", homePath), ProjectBundle.message("sdk.java.corrupt.title"),
+                             Messages.getErrorIcon());
       }
       sdkModificator = dummySdk.getSdkModificator();
       for (OrderRootType type : myPathEditors.keySet()) {
@@ -333,13 +346,13 @@ public class SdkEditor implements Configurable, Place.Navigator {
       mySdkModel.getMulticaster().sdkHomeSelected(dummySdk, homePath);
     }
     catch (CloneNotSupportedException e) {
-      LOG.error(e); // should not happen in normal program
+      LOGGER.error(e); // should not happen in normal program
     }
   }
 
   private String suggestSdkName(final String homePath) {
     final String currentName = mySdk.getName();
-    final String suggestedName = ((SdkType) mySdk.getSdkType()).suggestSdkName(currentName , homePath);
+    final String suggestedName = ((SdkType)mySdk.getSdkType()).suggestSdkName(currentName, homePath);
     if (Comparing.equal(currentName, suggestedName)) return currentName;
     String newSdkName = suggestedName;
     final Set<String> allNames = new HashSet<String>();
@@ -348,7 +361,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
       allNames.add(sdk.getName());
     }
     int i = 0;
-    while(allNames.contains(newSdkName)){
+    while (allNames.contains(newSdkName)) {
       newSdkName = suggestedName + " (" + ++i + ")";
     }
     return newSdkName;
@@ -362,7 +375,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
       if (component == null) {
         component = configurable.createComponent();
         myAdditionalDataComponents.put(configurable, component);
-      }      
+      }
       myAdditionalDataPanel.add(component, BorderLayout.CENTER);
     }
   }
@@ -411,7 +424,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
 
     @Override
     public String getVersionString() {
-      return myVersionString != null? myVersionString : mySdk.getVersionString();
+      return myVersionString != null ? myVersionString : mySdk.getVersionString();
     }
 
     @Override
@@ -455,7 +468,7 @@ public class SdkEditor implements Configurable, Place.Navigator {
 
     @Override
     public void removeAllRoots() {
-      for(PathEditor editor: myPathEditors.values()) {
+      for (PathEditor editor : myPathEditors.values()) {
         editor.clearList();
       }
     }

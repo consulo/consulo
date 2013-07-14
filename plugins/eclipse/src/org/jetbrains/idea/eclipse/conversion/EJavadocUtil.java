@@ -28,6 +28,7 @@ import com.intellij.openapi.roots.JavadocOrderRootType;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
@@ -74,7 +75,7 @@ public class EJavadocUtil {
         if (!SystemInfo.isWindows) {
           javadocPath = javadocPath.replaceFirst(FILE_PROTOCOL, FILE_PROTOCOL + "/");
         }
-        modifiableModel.addRoot(toIdeaJavadocUrl(model, javadocPath, currentRoots), JavadocOrderRootType.getInstance());
+        modifiableModel.addRoot(toIdeaJavadocUrl(model, javadocPath, currentRoots), OrderRootType.DOCUMENTATION);
       }
     }
   }

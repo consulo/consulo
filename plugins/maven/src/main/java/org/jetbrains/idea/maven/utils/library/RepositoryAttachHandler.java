@@ -26,7 +26,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.JavadocOrderRootType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
@@ -153,7 +152,7 @@ public class RepositoryAttachHandler {
         if (file != null) {
           OrderRootType rootType;
           if (MavenExtraArtifactType.DOCS.getDefaultClassifier().equals(each.getClassifier())) {
-            rootType = JavadocOrderRootType.getInstance();
+            rootType = OrderRootType.DOCUMENTATION;
           }
           else if (MavenExtraArtifactType.SOURCES.getDefaultClassifier().equals(each.getClassifier())) {
             rootType = OrderRootType.SOURCES;

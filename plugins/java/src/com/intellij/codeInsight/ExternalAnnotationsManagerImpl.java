@@ -142,7 +142,7 @@ public class ExternalAnnotationsManagerImpl extends ReadableExternalAnnotationsM
     }
     for (final OrderEntry entry : entries) {
       if (entry instanceof ModuleOrderEntry) continue;
-      VirtualFile[] roots = AnnotationOrderRootType.getFiles(entry);
+      VirtualFile[] roots = entry.getFiles(AnnotationOrderRootType.getInstance());
       roots = filterByReadOnliness(roots);
 
       if (roots.length > 0) {
@@ -438,7 +438,7 @@ public class ExternalAnnotationsManagerImpl extends ReadableExternalAnnotationsM
     if (!entries.isEmpty()) {
       for (OrderEntry entry : entries) {
         if (!(entry instanceof ModuleOrderEntry)) {
-          if (AnnotationOrderRootType.getUrls(entry).length > 0) {
+          if (entry.getFiles(AnnotationOrderRootType.getInstance()).length > 0) {
             return AnnotationPlace.EXTERNAL;
           }
           break;

@@ -40,7 +40,7 @@ public class ReadableExternalAnnotationsManager extends BaseExternalAnnotationsM
       final Module[] modules = ModuleManager.getInstance(myPsiManager.getProject()).getModules();
       for (Module module : modules) {
         for (OrderEntry entry : ModuleRootManager.getInstance(module).getOrderEntries()) {
-          final String[] urls = AnnotationOrderRootType.getUrls(entry);
+          final String[] urls = entry.getUrls(AnnotationOrderRootType.getInstance());
           if (urls.length > 0) {
             myHasAnyAnnotationsRoots = ThreeState.YES;
             return true;
@@ -63,7 +63,7 @@ public class ReadableExternalAnnotationsManager extends BaseExternalAnnotationsM
       if (entry instanceof ModuleOrderEntry) {
         continue;
       }
-      final String[] externalUrls = AnnotationOrderRootType.getUrls(entry);
+      final String[] externalUrls = entry.getUrls(AnnotationOrderRootType.getInstance());
       for (String url : externalUrls) {
         VirtualFile root = vfManager.findFileByUrl(url);
         if (root != null) {

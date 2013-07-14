@@ -24,7 +24,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.AnnotationOrderRootType;
-import com.intellij.openapi.roots.JavadocOrderRootType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -338,7 +337,7 @@ public class JavaSdkImpl extends JavaSdk {
       sdkModificator.addRoot(sources, OrderRootType.SOURCES);
     }
     if(docs != null){
-      sdkModificator.addRoot(docs, JavadocOrderRootType.getInstance());
+      sdkModificator.addRoot(docs, OrderRootType.DOCUMENTATION);
     }
     else if (SystemInfo.isMac) {
       VirtualFile commonDocs = findDocs(jdkHome, "docs");
@@ -349,7 +348,7 @@ public class JavaSdkImpl extends JavaSdk {
         }
       }
       if (commonDocs != null) {
-        sdkModificator.addRoot(commonDocs, JavadocOrderRootType.getInstance());
+        sdkModificator.addRoot(commonDocs, OrderRootType.DOCUMENTATION);
       }
 
       VirtualFile appleDocs = findDocs(jdkHome, "appledocs");
@@ -357,13 +356,13 @@ public class JavaSdkImpl extends JavaSdk {
         appleDocs = findInJar(new File(jdkHome, "appledocs.jar"), "appledoc/api");
       }
       if (appleDocs != null) {
-        sdkModificator.addRoot(appleDocs, JavadocOrderRootType.getInstance());
+        sdkModificator.addRoot(appleDocs, OrderRootType.DOCUMENTATION);
       }
 
       if (commonDocs == null && appleDocs == null && sources == null) {
         String url = getDefaultDocumentationUrl(sdk);
         if (url != null) {
-          sdkModificator.addRoot(VirtualFileManager.getInstance().findFileByUrl(url), JavadocOrderRootType.getInstance());
+          sdkModificator.addRoot(VirtualFileManager.getInstance().findFileByUrl(url), OrderRootType.DOCUMENTATION);
         }
       }
     }
@@ -522,7 +521,7 @@ public class JavaSdkImpl extends JavaSdk {
   private static void addDocs(File file, SdkModificator rootContainer) {
     VirtualFile vFile = findDocs(file, "docs/api");
     if (vFile != null) {
-      rootContainer.addRoot(vFile, JavadocOrderRootType.getInstance());
+      rootContainer.addRoot(vFile, OrderRootType.DOCUMENTATION);
     }
   }
 
@@ -546,7 +545,7 @@ public class JavaSdkImpl extends JavaSdk {
   public boolean isRootTypeApplicable(OrderRootType type) {
     return type == OrderRootType.CLASSES ||
            type == OrderRootType.SOURCES ||
-           type == JavadocOrderRootType.getInstance() ||
+           type == OrderRootType.DOCUMENTATION ||
            type == AnnotationOrderRootType.getInstance();
   }
 }

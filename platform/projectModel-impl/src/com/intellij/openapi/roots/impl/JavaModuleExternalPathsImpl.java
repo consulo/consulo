@@ -60,32 +60,30 @@ public class JavaModuleExternalPathsImpl extends JavaModuleExternalPaths {
   @NotNull
   @Override
   public String[] getJavadocUrls() {
-    final VirtualFilePointerContainer container = myOrderRootPointerContainers.get(JavadocOrderRootType.getInstance());
+    final VirtualFilePointerContainer container = myOrderRootPointerContainers.get(OrderRootType.DOCUMENTATION);
     return container != null ? container.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
   @NotNull
   @Override
   public VirtualFile[] getExternalAnnotationsRoots() {
-    final VirtualFilePointerContainer container = myOrderRootPointerContainers.get(AnnotationOrderRootType.getInstance());
-    return container != null ? container.getFiles() : VirtualFile.EMPTY_ARRAY;
+   return VirtualFile.EMPTY_ARRAY;
   }
 
   @NotNull
   @Override
   public String[] getExternalAnnotationsUrls() {
-    final VirtualFilePointerContainer container = myOrderRootPointerContainers.get(AnnotationOrderRootType.getInstance());
-    return container != null ? container.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
+    return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
   @Override
   public void setJavadocUrls(@NotNull String[] urls) {
-    setRootUrls(JavadocOrderRootType.getInstance(), urls);
+    setRootUrls(OrderRootType.DOCUMENTATION, urls);
   }
 
   @Override
   public void setExternalAnnotationUrls(@NotNull String[] urls) {
-    setRootUrls(AnnotationOrderRootType.getInstance(), urls);
+
   }
 
   private void setRootUrls(final OrderRootType orderRootType, @NotNull final String[] urls) {
@@ -102,29 +100,12 @@ public class JavaModuleExternalPathsImpl extends JavaModuleExternalPaths {
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    for (PersistentOrderRootType orderRootType : OrderRootType.getAllPersistentTypes()) {
-      String paths = orderRootType.getModulePathsName();
-      if (paths != null) {
-        final Element pathsElement = element.getChild(paths);
-        if (pathsElement != null) {
-          VirtualFilePointerContainer container = VirtualFilePointerManager.getInstance().createContainer(this, null);
-          myOrderRootPointerContainers.put(orderRootType, container);
-          container.readExternal(pathsElement, ROOT_ELEMENT);
-        }
-      }
-    }
+
   }
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    for (OrderRootType orderRootType : myOrderRootPointerContainers.keySet()) {
-      VirtualFilePointerContainer container = myOrderRootPointerContainers.get(orderRootType);
-      if (container != null && container.size() > 0) {
-        final Element javaDocPaths = new Element(((PersistentOrderRootType)orderRootType).getModulePathsName());
-        container.writeExternal(javaDocPaths, ROOT_ELEMENT);
-        element.addContent(javaDocPaths);
-      }
-    }
+
   }
 
   private void copyContainersFrom(@NotNull JavaModuleExternalPathsImpl paths) {

@@ -37,5 +37,9 @@
   <extensions defaultExtensionNs="com.intellij">
     <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.JarArtifactType" order="after zip-artifact"/>
     <moduleExtensionProvider id="java" key="java" implementationClass="org.consulo.java.platform.module.extension.JavaModuleExtensionProvider" />
+    <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/>
+    <orderRootTypeEditor key="JAVA_ANNOTATIONS"
+                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.AnnotationsOrderRootTypeUIFactory"/>
+
   </extensions>
 </idea-plugin>

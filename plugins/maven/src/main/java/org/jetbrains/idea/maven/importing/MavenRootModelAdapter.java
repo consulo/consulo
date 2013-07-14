@@ -324,7 +324,7 @@ public class MavenRootModelAdapter {
 
     updateUrl(libraryModel, OrderRootType.CLASSES, artifact, null, null, true);
     updateUrl(libraryModel, OrderRootType.SOURCES, artifact, MavenExtraArtifactType.SOURCES, project, false);
-    updateUrl(libraryModel, JavadocOrderRootType.getInstance(), artifact, MavenExtraArtifactType.DOCS, project, false);
+    updateUrl(libraryModel, OrderRootType.DOCUMENTATION, artifact, MavenExtraArtifactType.DOCS, project, false);
 
     LibraryOrderEntry e = myRootModel.addLibraryEntry(library);
     e.setScope(scope);
@@ -383,7 +383,7 @@ public class MavenRootModelAdapter {
     String pathToJar = classes.substring(0, dotPos);
 
     if (hasUserPaths(OrderRootType.SOURCES, library, pathToJar)) return true;
-    if (hasUserPaths(JavadocOrderRootType.getInstance(), library, pathToJar)) return true;
+    if (hasUserPaths(OrderRootType.DOCUMENTATION, library, pathToJar)) return true;
 
     return false;
   }

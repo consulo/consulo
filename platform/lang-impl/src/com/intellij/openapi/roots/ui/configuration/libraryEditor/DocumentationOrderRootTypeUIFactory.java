@@ -29,7 +29,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.projectRoots.ui.Util;
-import com.intellij.openapi.roots.JavadocOrderRootType;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -40,11 +40,11 @@ import com.intellij.util.IconUtil;
 
 import javax.swing.*;
 
-public class JavadocOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
+public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
   @Override
   public SdkPathEditor createPathEditor(Sdk sdk) {
-    return new JavadocPathsEditor(sdk);
+    return new DocumentationPathsEditor(sdk);
   }
 
   @Override
@@ -57,12 +57,11 @@ public class JavadocOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
     return ProjectBundle.message("library.javadocs.node");
   }
 
-  static class JavadocPathsEditor extends SdkPathEditor {
+  static class DocumentationPathsEditor extends SdkPathEditor {
     private final Sdk mySdk;
 
-    public JavadocPathsEditor(Sdk sdk) {
-      super(ProjectBundle.message("sdk.configure.javadoc.tab"),
-            JavadocOrderRootType.getInstance(),
+    public DocumentationPathsEditor(Sdk sdk) {
+      super(ProjectBundle.message("sdk.configure.javadoc.tab"), OrderRootType.DOCUMENTATION,
             FileChooserDescriptorFactory.createMultipleJavaPathDescriptor());
       mySdk = sdk;
     }

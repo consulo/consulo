@@ -3198,8 +3198,10 @@
 
     <extensionPoint name="compiler.additionalOutputDirectoriesProvider"
                     interface="com.intellij.compiler.impl.AdditionalOutputDirectoriesProvider"/>
-    <extensionPoint name="OrderRootTypeUI"
-                    beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean"/>
+    <extensionPoint name="orderRootTypeEditor"
+                    beanClass="com.intellij.openapi.extensions.KeyedFactoryEPBean">
+      <with attribute="implementationClass" implements="com.intellij.openapi.roots.ui.OrderRootTypeUIFactory"/>
+    </extensionPoint>
 
     <extensionPoint name="packaging.elementType" interface="com.intellij.packaging.elements.PackagingElementType"/>
     <extensionPoint name="packaging.artifactPropertiesProvider" interface="com.intellij.packaging.artifacts.ArtifactPropertiesProvider"/>
@@ -4528,16 +4530,12 @@
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
 
-    <OrderRootTypeUI key="JAVADOC"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.JavadocOrderRootTypeUIFactory"/>
-    <OrderRootTypeUI key="ANNOTATIONS"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.AnnotationsOrderRootTypeUIFactory"/>
-    <OrderRootTypeUI key="CLASSES"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
-    <OrderRootTypeUI key="SOURCES"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
-    <OrderRootTypeUI key="DOCUMENTATION"
+    <orderRootTypeEditor key="DOCUMENTATION"
                      implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
+    <orderRootTypeEditor key="CLASSES"
+                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
+    <orderRootTypeEditor key="SOURCES"
+                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
     <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
@@ -4545,9 +4543,6 @@
     <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
 
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
-
-    <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/>
-    <orderRootType implementation="com.intellij.openapi.roots.JavadocOrderRootType"/>
 
 
     <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRun" id="compileBeforeRun"/>

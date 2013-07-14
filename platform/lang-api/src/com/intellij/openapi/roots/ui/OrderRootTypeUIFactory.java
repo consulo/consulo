@@ -28,12 +28,13 @@ import com.intellij.openapi.util.KeyedExtensionFactory;
 import javax.swing.*;
 
 public interface OrderRootTypeUIFactory {
-  KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType> FACTORY = new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, "com.intellij.OrderRootTypeUI") {
-    @Override
-    public String getKey(final OrderRootType key) {
-      return key.name();
-    }
-  };
+  KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType> FACTORY =
+    new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, "com.intellij.orderRootTypeEditor") {
+      @Override
+      public String getKey(final OrderRootType key) {
+        return key.name();
+      }
+    };
 
   SdkPathEditor createPathEditor(Sdk sdk);
 

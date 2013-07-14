@@ -243,34 +243,4 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
       e.addContent(root);
     }
   }
-
-
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  void readOldVersion(Element child) {
-    for (final Object o : child.getChildren("root")) {
-      Element root = (Element)o;
-      String url = root.getAttributeValue("file");
-      SimpleProjectRoot projectRoot = new SimpleProjectRoot(url);
-      String type = root.getChild("property").getAttributeValue("value");
-
-      for (PersistentOrderRootType rootType : OrderRootType.getAllPersistentTypes()) {
-        if (type.equals(rootType.getOldSdkRootName())) {
-          addRoot(projectRoot, rootType);
-          break;
-        }
-      }
-    }
-
-    myFiles = new HashMap<OrderRootType, VirtualFile[]>();
-    for (OrderRootType rootType : myRoots.keySet()) {
-      myFiles.put(rootType, myRoots.get(rootType).getVirtualFiles());
-    }
-    for (OrderRootType type : OrderRootType.getAllTypes()) {
-      final VirtualFile[] oldRoots = VirtualFile.EMPTY_ARRAY;
-      final VirtualFile[] newRoots = getRootFiles(type);
-      if (!Comparing.equal(oldRoots, newRoots)) {
-        fireRootsChanged();
-      }
-    }
-  }
 }

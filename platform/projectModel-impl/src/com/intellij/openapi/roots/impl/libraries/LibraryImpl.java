@@ -311,9 +311,6 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     if (orderRootType instanceof PersistentOrderRootType) {
       return ((PersistentOrderRootType)orderRootType).getSdkRootName();
     }
-    if (orderRootType instanceof OrderRootType.DocumentationRootType) {
-      return ((OrderRootType.DocumentationRootType)orderRootType).getSdkRootName();
-    }
     return "";
   }
 

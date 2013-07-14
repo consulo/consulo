@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.openapi.roots;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.util.ArrayUtil;
 
 /**
  * @author yole
  */
-public class PersistentOrderRootType extends OrderRootType {
-  private final String mySdkRootName;
-
-  protected PersistentOrderRootType(@NonNls String name, @NonNls String sdkRootName) {
-    super(name);
-    mySdkRootName = sdkRootName;
-    //noinspection AssignmentToStaticFieldFromInstanceMethod
-    ourPersistentOrderRootTypes = ArrayUtil.append(ourPersistentOrderRootTypes, this);
+public class AnnotationOrderRootType extends PersistentOrderRootType {
+  /**
+   * @return External annotations path
+   */
+  public static OrderRootType getInstance() {
+    return getOrderRootType(AnnotationOrderRootType.class);
   }
 
-  /**
-   * @return Element name used for storing roots of this type in JDK and library definitions.
-   */
-  public String getSdkRootName() {
-    return mySdkRootName;
+  public AnnotationOrderRootType() {
+    super("JAVA_ANNOTATIONS", "javaAnnotationsPath");
+  }
+
+  @Override
+  public boolean skipWriteIfEmpty() {
+    return true;
   }
 }
