@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.projectRoots;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import org.jetbrains.annotations.NonNls;
@@ -30,7 +29,7 @@ public abstract class JavaSdk extends SdkType implements JavaSdkType, Applicatio
   }
 
   public static JavaSdk getInstance() {
-    return ApplicationManager.getApplication().getComponent(JavaSdk.class);
+    return findInstance(JavaSdk.class);
   }
 
   public final Sdk createJdk(@NotNull String jdkName, @NotNull String jreHome) {
