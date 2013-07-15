@@ -15,21 +15,22 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
-import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author yole
  */
-public class CoreJarFileSystem extends DeprecatedVirtualFileSystem {
+public class CoreJarFileSystem extends DeprecatedVirtualFileSystem implements ArchiveFileSystem {
   private final Map<String, CoreJarHandler> myHandlers = new HashMap<String, CoreJarHandler>();
 
   @NotNull
@@ -71,37 +72,150 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem {
     return findFileByPath(path);
   }
 
+  @Nullable
   @Override
-  protected void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
-    throw new UnsupportedOperationException("JarFileSystem is read-only");
+  public VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile) {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile findByPathWithSeparator(@Nullable VirtualFile entryVFile) {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public ArchiveFile getJarFile(@NotNull VirtualFile entryVFile) throws IOException {
+    return null;
   }
 
   @Override
-  protected void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
-    throw new UnsupportedOperationException("JarFileSystem is read-only");
+  public boolean isMakeCopyOfJar(File originalFile) {
+    return false;
   }
 
   @Override
-  protected void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
-    throw new UnsupportedOperationException("JarFileSystem is read-only");
+  public void setNoCopyJarForPath(String pathInJar) {
   }
 
   @Override
-  protected VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
-    throw new UnsupportedOperationException("JarFileSystem is read-only");
+  public void refreshWithoutFileWatcher(boolean asynchronous) {
+  }
+
+  @Override
+  public boolean exists(@NotNull VirtualFile file) {
+    return false;
   }
 
   @NotNull
   @Override
-  protected VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
-    throw new UnsupportedOperationException("JarFileSystem is read-only");
+  public String[] list(@NotNull VirtualFile file) {
+    return new String[0];
   }
 
   @Override
-  protected VirtualFile copyFile(Object requestor,
+  public boolean isDirectory(@NotNull VirtualFile file) {
+    return false;
+  }
+
+  @Override
+  public long getTimeStamp(@NotNull VirtualFile file) {
+    return 0;
+  }
+
+  @Override
+  public void setTimeStamp(@NotNull VirtualFile file, long timeStamp) throws IOException {
+  }
+
+  @Override
+  public boolean isWritable(@NotNull VirtualFile file) {
+    return false;
+  }
+
+  @Override
+  public void setWritable(@NotNull VirtualFile file, boolean writableFlag) throws IOException {
+  }
+
+  @Override
+  public boolean isSymLink(@NotNull VirtualFile file) {
+    return false;
+  }
+
+  @Nullable
+  @Override
+  public String resolveSymLink(@NotNull VirtualFile file) {
+    return null;
+  }
+
+  @Override
+  public boolean isSpecialFile(@NotNull VirtualFile file) {
+    return false;
+  }
+
+  @NotNull
+  @Override
+  public byte[] contentsToByteArray(@NotNull VirtualFile file) throws IOException {
+    return new byte[0];
+  }
+
+  @NotNull
+  @Override
+  public InputStream getInputStream(@NotNull VirtualFile file) throws IOException {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public OutputStream getOutputStream(@NotNull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
+    return null;
+  }
+
+  @Override
+  public long getLength(@NotNull VirtualFile file) {
+    return 0;
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile) {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile findLocalVirtualFileByPath(@NotNull String path) {
+    return null;
+  }
+
+  @Override
+  public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
+  }
+
+  @Override
+  public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
+  }
+
+  @Override
+  public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
+  }
+
+  @Override
+  public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
+    return null;
+  }
+
+  @Override
+  public VirtualFile copyFile(Object requestor,
                                  @NotNull VirtualFile virtualFile,
                                  @NotNull VirtualFile newParent,
                                  @NotNull String copyName) throws IOException {
-    throw new UnsupportedOperationException("JarFileSystem is read-only");
+    return null;
   }
 }
