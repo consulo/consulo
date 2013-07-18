@@ -50,8 +50,11 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
 
   @Override
   @NotNull
-  public PsiFile createFileFromText(@NotNull String name, @NotNull FileType fileType, @NotNull CharSequence text,
-                                    long modificationStamp, final boolean physical) {
+  public PsiFile createFileFromText(@NotNull String name,
+                                    @NotNull FileType fileType,
+                                    @NotNull CharSequence text,
+                                    long modificationStamp,
+                                    final boolean physical) {
     return createFileFromText(name, fileType, text, modificationStamp, physical, true);
   }
 
@@ -61,7 +64,18 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   }
 
   @Override
-  public PsiFile createFileFromText(@NotNull String name, @NotNull Language language, @NotNull CharSequence text, boolean physical,
+  public PsiFile createFileFromText(@NotNull String name,
+                                    @NotNull Language language,
+                                    @NotNull LanguageVersion languageVersion,
+                                    @NotNull CharSequence text) {
+    return createFileFromText(name, language, languageVersion, text, true, true, false);
+  }
+
+  @Override
+  public PsiFile createFileFromText(@NotNull String name,
+                                    @NotNull Language language,
+                                    @NotNull CharSequence text,
+                                    boolean physical,
                                     final boolean markAsCopy) {
     return createFileFromText(name, language, text, physical, markAsCopy, false);
   }
@@ -73,7 +87,20 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                                     boolean physical,
                                     boolean markAsCopy,
                                     boolean noSizeLimit) {
+    return createFileFromText(name, language, LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null),
+                              text, physical, markAsCopy, noSizeLimit);
+  }
+
+  @Override
+  public PsiFile createFileFromText(@NotNull String name,
+                                    @NotNull Language language,
+                                    @NotNull LanguageVersion languageVersion,
+                                    @NotNull CharSequence text,
+                                    boolean physical,
+                                    boolean markAsCopy,
+                                    boolean noSizeLimit) {
     LightVirtualFile virtualFile = new LightVirtualFile(name, language, text);
+    virtualFile.putUserData(LanguageVersion.KEY, languageVersion);
     if (noSizeLimit) {
       SingleRootFileViewProvider.doNotCheckFileSizeLimit(virtualFile);
     }
@@ -89,22 +116,23 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                                     final boolean physical,
                                     boolean markAsCopy) {
     final LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
-    if(fileType instanceof LanguageFileType){
+    if (fileType instanceof LanguageFileType) {
       final Language language =
-          LanguageSubstitutors.INSTANCE.substituteLanguage(((LanguageFileType)fileType).getLanguage(), virtualFile, myManager.getProject());
+        LanguageSubstitutors.INSTANCE.substituteLanguage(((LanguageFileType)fileType).getLanguage(), virtualFile, myManager.getProject());
       final PsiFile file = trySetupPsiForFile(virtualFile, language, physical, markAsCopy);
       if (file != null) return file;
     }
-    final SingleRootFileViewProvider singleRootFileViewProvider =
-      new SingleRootFileViewProvider(myManager, virtualFile, physical);
+    final SingleRootFileViewProvider singleRootFileViewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
     final PsiPlainTextFileImpl plainTextFile = new PsiPlainTextFileImpl(singleRootFileViewProvider);
-    if(markAsCopy) CodeEditUtil.setNodeGenerated(plainTextFile.getNode(), true);
+    if (markAsCopy) CodeEditUtil.setNodeGenerated(plainTextFile.getNode(), true);
     return plainTextFile;
   }
 
   @Nullable
-  public PsiFile trySetupPsiForFile(final LightVirtualFile virtualFile, Language language,
-                                    final boolean physical, final boolean markAsCopy) {
+  public PsiFile trySetupPsiForFile(final LightVirtualFile virtualFile,
+                                    Language language,
+                                    final boolean physical,
+                                    final boolean markAsCopy) {
     final FileViewProviderFactory factory = LanguageFileViewProviders.INSTANCE.forLanguage(language);
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
@@ -125,7 +153,10 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
 
   @NotNull
   public PsiFile createFileFromText(@NotNull String name,
-                                    @NotNull FileType fileType, final Language language, @NotNull Language targetLanguage, @NotNull CharSequence text,
+                                    @NotNull FileType fileType,
+                                    final Language language,
+                                    @NotNull Language targetLanguage,
+                                    @NotNull CharSequence text,
                                     long modificationStamp,
                                     final boolean physical,
                                     boolean markAsCopy) {
@@ -136,20 +167,19 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
 
-    if (parserDefinition != null){
+    if (parserDefinition != null) {
       final PsiFile psiFile = viewProvider.getPsi(targetLanguage);
       if (psiFile != null) {
-        if(markAsCopy) {
+        if (markAsCopy) {
           markGenerated(psiFile);
         }
         return psiFile;
       }
     }
 
-    final SingleRootFileViewProvider singleRootFileViewProvider =
-        new SingleRootFileViewProvider(myManager, virtualFile, physical);
+    final SingleRootFileViewProvider singleRootFileViewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
     final PsiPlainTextFileImpl plainTextFile = new PsiPlainTextFileImpl(singleRootFileViewProvider);
-    if(markAsCopy) CodeEditUtil.setNodeGenerated(plainTextFile.getNode(), true);
+    if (markAsCopy) CodeEditUtil.setNodeGenerated(plainTextFile.getNode(), true);
     return plainTextFile;
   }
 
@@ -161,7 +191,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
 
   @Override
   @NotNull
-  public PsiFile createFileFromText(@NotNull String name, @NotNull String text){
+  public PsiFile createFileFromText(@NotNull String name, @NotNull String text) {
     FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(name);
     if (type.isBinary()) {
       throw new RuntimeException("Cannot create binary files from text: name " + name + ", file type " + type);
@@ -173,7 +203,8 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   @Override
   public PsiFile createFileFromText(FileType fileType, final String fileName, CharSequence chars, int startOffset, int endOffset) {
     LOG.assertTrue(!fileType.isBinary());
-    final CharSequence text = startOffset == 0 && endOffset == chars.length()?chars:new CharSequenceSubSequence(chars, startOffset, endOffset);
+    final CharSequence text =
+      startOffset == 0 && endOffset == chars.length() ? chars : new CharSequenceSubSequence(chars, startOffset, endOffset);
     return createFileFromText(fileName, fileType, text);
   }
 

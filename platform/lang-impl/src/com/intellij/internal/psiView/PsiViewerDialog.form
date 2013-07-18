@@ -216,7 +216,7 @@
                 <constraints border-constraint="West"/>
                 <properties>
                   <labelFor value="91e46"/>
-                  <text value="&amp;Dialect:"/>
+                  <text value="&amp;Version:"/>
                 </properties>
               </component>
               <component id="91e46" class="javax.swing.JComboBox" binding="myDialectComboBox">

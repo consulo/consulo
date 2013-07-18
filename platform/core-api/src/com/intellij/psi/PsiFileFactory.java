@@ -16,6 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -54,20 +55,47 @@ public abstract class PsiFileFactory {
   public abstract PsiFile createFileFromText(@NonNls @NotNull String fileName, @NotNull FileType fileType, @NotNull CharSequence text);
 
   @NotNull
-  public abstract PsiFile createFileFromText(@NonNls @NotNull String name, @NotNull FileType fileType, @NotNull CharSequence text,
-                                             long modificationStamp, boolean physical);
+  public abstract PsiFile createFileFromText(@NonNls @NotNull String name,
+                                             @NotNull FileType fileType,
+                                             @NotNull CharSequence text,
+                                             long modificationStamp,
+                                             boolean physical);
 
   @NotNull
-  public abstract PsiFile createFileFromText(@NonNls @NotNull String name, @NotNull FileType fileType, @NotNull CharSequence text,
-                                             long modificationStamp, boolean physical, boolean markAsCopy);
+  public abstract PsiFile createFileFromText(@NonNls @NotNull String name,
+                                             @NotNull FileType fileType,
+                                             @NotNull CharSequence text,
+                                             long modificationStamp,
+                                             boolean physical,
+                                             boolean markAsCopy);
 
   public abstract PsiFile createFileFromText(@NotNull String name, @NotNull Language language, @NotNull CharSequence text);
 
-  public abstract PsiFile createFileFromText(@NotNull String name, @NotNull Language language, @NotNull CharSequence text,
-                                             boolean physical, boolean markAsCopy);
+  public abstract PsiFile createFileFromText(@NotNull String name,
+                                             @NotNull Language language,
+                                             @NotNull LanguageVersion languageVersion,
+                                             @NotNull CharSequence text);
 
-  public abstract PsiFile createFileFromText(@NotNull String name, @NotNull Language language, @NotNull CharSequence text,
-                                             boolean physical, boolean markAsCopy, boolean noSizeLimit);
+  public abstract PsiFile createFileFromText(@NotNull String name,
+                                             @NotNull Language language,
+                                             @NotNull CharSequence text,
+                                             boolean physical,
+                                             boolean markAsCopy);
+
+  public abstract PsiFile createFileFromText(@NotNull String name,
+                                             @NotNull Language language,
+                                             @NotNull CharSequence text,
+                                             boolean physical,
+                                             boolean markAsCopy,
+                                             boolean noSizeLimit);
+
+  public abstract PsiFile createFileFromText(@NotNull String name,
+                                             @NotNull Language language,
+                                             @NotNull LanguageVersion languageVersion,
+                                             @NotNull CharSequence text,
+                                             boolean physical,
+                                             boolean markAsCopy,
+                                             boolean noSizeLimit);
 
   public abstract PsiFile createFileFromText(FileType fileType, String fileName, CharSequence chars, int startOffset, int endOffset);
 

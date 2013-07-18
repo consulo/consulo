@@ -43,22 +43,6 @@ public class PsiViewerAction extends AnAction implements DumbAware {
       return;
     }
 
-    if (ApplicationManagerEx.getApplicationEx().isInternal()) {
-      p.setVisible(true);
-      p.setEnabled(true);
-      return;
-    }
-
-   /* final Module[] modules = ModuleManager.getInstance(project).getModules();
-    for (Module module : modules) {
-      if ("PLUGIN_MODULE".equals(ModuleType.get(module).getId())) {  */
-        p.setVisible(true);
-        p.setEnabled(true);
-    /*    return;
-      }
-    }
-    
-    p.setVisible(false);
-    p.setEnabled(false); */
+    p.setEnabledAndVisible(ApplicationManagerEx.getApplicationEx().isInternal());
   }
 }

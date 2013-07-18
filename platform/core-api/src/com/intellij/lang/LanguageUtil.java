@@ -52,6 +52,7 @@ public final class LanguageUtil {
   }
 
   @NotNull
+  @Deprecated
   public static Language[] getLanguageDialects(final Language base) {
     final List<Language> list = ContainerUtil.findAll(Language.getRegisteredLanguages(), new Condition<Language>() {
       @Override

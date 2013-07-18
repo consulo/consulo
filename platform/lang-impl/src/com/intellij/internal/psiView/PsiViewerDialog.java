@@ -30,7 +30,7 @@ import com.intellij.internal.psiView.formattingblocks.BlockTreeStructure;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageFormatting;
-import com.intellij.lang.LanguageUtil;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -76,7 +76,6 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -364,10 +363,10 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
       myFileTypeComboBox.setSelectedIndex(0);
     }
 
-    myDialectComboBox.setRenderer(new ListCellRendererWrapper<Language>() {
+    myDialectComboBox.setRenderer(new ListCellRendererWrapper<LanguageVersion>() {
       @Override
-      public void customize(final JList list, final Language value, final int index, final boolean selected, final boolean hasFocus) {
-        setText(value != null ? value.getDisplayName() : "<default>");
+      public void customize(final JList list, final LanguageVersion value, final int index, final boolean selected, final boolean hasFocus) {
+        setText(value != null ? value.getName() : "<default>");
       }
     });
     myDialectComboBox.addFocusListener(new AutoExpandFocusListener(myDialectComboBox));
@@ -588,13 +587,12 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
   private void updateDialectsCombo(@Nullable final String lastUsed) {
     final Object source = getSource();
-    ArrayList<Language> items = new ArrayList<Language>(); 
+    List<LanguageVersion> items = new ArrayList<LanguageVersion>();
     if (source instanceof LanguageFileType) {
       final Language baseLang = ((LanguageFileType)source).getLanguage();
-      items.add(baseLang);
-      Language[] dialects = LanguageUtil.getLanguageDialects(baseLang);
-      Arrays.sort(dialects, LanguageUtil.LANGUAGE_COMPARATOR);
-      items.addAll(Arrays.asList(dialects));
+      LanguageVersion[] versions = baseLang.getVersions();
+
+      Collections.addAll(items, versions);
     }
     myDialectComboBox.setModel(new CollectionComboBoxModel(items));
 
@@ -603,7 +601,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     myDialectLabel.setVisible(visible);
     myDialectComboBox.setVisible(visible);
     if (visible && (myCurrentFile != null || lastUsed != null)) {
-      String curLanguage = myCurrentFile != null ? myCurrentFile.getLanguage().toString() : lastUsed;
+      String curLanguage = myCurrentFile != null ? myCurrentFile.getLanguageVersion().getName() : lastUsed;
       for (int i = 0; i < size; ++i) {
         if (curLanguage.equals(items.get(i).toString())) {
           myDialectComboBox.setSelectedIndex(i);
@@ -767,8 +765,8 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
         }
         if (type instanceof LanguageFileType) {
           final Language language = ((LanguageFileType)type).getLanguage();
-          final Language dialect = (Language)myDialectComboBox.getSelectedItem();
-          return PsiFileFactory.getInstance(myProject).createFileFromText("Dummy." + ext, dialect == null ? language : dialect, text);
+          final LanguageVersion languageVersion = (LanguageVersion)myDialectComboBox.getSelectedItem();
+          return PsiFileFactory.getInstance(myProject).createFileFromText("Dummy." + ext, language, languageVersion, text);
         }
         return PsiFileFactory.getInstance(myProject).createFileFromText("Dummy." + ext, type, text);
       }
@@ -1196,8 +1194,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
       lightFile = new LightVirtualFile(fileName, ((PsiViewerExtension)source).getDefaultFileType(), "");
     }
     else if (source instanceof LanguageFileType) {
-      lightFile = new LightVirtualFile(fileName, ObjectUtils
-        .chooseNotNull((Language)myDialectComboBox.getSelectedItem(), ((LanguageFileType)source).getLanguage()), "");
+      lightFile = new LightVirtualFile(fileName, ((LanguageFileType)source).getLanguage(), "");
     }
     else if (source instanceof FileType) {
       lightFile = new LightVirtualFile(fileName, (FileType)source, "");

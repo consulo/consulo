@@ -16,6 +16,9 @@
 package com.intellij.lang.java;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
+import com.intellij.pom.java.LanguageLevel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author max
@@ -31,6 +34,12 @@ public class JavaLanguage extends Language {
   @Override
   public String getDisplayName() {
     return "Java";
+  }
+
+  @NotNull
+  @Override
+  public LanguageVersion[] getVersions() {
+    return LanguageLevel.values();
   }
 
   @Override
