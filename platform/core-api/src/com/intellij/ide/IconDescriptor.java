@@ -51,6 +51,14 @@ public class IconDescriptor {
     myLayerIcons.add(icon);
   }
 
+  public void removeLayerIcon(@NotNull Icon icon) {
+    myLayerIcons.remove(icon);
+  }
+
+  public void clearLayerIcons() {
+    myLayerIcons.clear();
+  }
+
   @Nullable
   public Icon getRightIcon() {
     return myRightIcon;
