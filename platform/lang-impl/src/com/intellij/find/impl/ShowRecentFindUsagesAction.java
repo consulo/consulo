@@ -19,6 +19,7 @@ package com.intellij.find.impl;
 import com.intellij.find.FindBundle;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -78,7 +79,7 @@ public class ShowRecentFindUsagesAction extends AnAction {
           }
           PsiElement psiElement = data.myElements[0].getElement();
           if (psiElement == null) return null;
-          return psiElement.getIcon(0);
+          return IconDescriptorUpdaters.getIcon(psiElement, 0);
         }
 
         @Override

@@ -16,6 +16,7 @@
 package com.intellij.refactoring.encapsulateFields;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
@@ -637,7 +638,7 @@ public String getAccessorsVisibility() {
       switch (modelColumn) {
         case FIELD_COLUMN:
           {
-            Icon icon = field.getIcon(Iconable.ICON_FLAG_VISIBILITY);
+            Icon icon = IconDescriptorUpdaters.getIcon(field, Iconable.ICON_FLAG_VISIBILITY);
             MyTableRenderer.this.setIcon(icon);
             MyTableRenderer.this.setDisabledIcon(icon);
             configureColors(isSelected, table, hasFocus, row, column);
@@ -657,7 +658,7 @@ public String getAccessorsVisibility() {
 
               PsiMethod existing = myClass.findMethodBySignature(prototype, false);
               if (existing != null) {
-                methodIcon = existing.getIcon(Iconable.ICON_FLAG_VISIBILITY);
+                methodIcon = IconDescriptorUpdaters.getIcon(existing, Iconable.ICON_FLAG_VISIBILITY);
               }
 
               PsiMethod[] superMethods = prototype.findSuperMethods(myClass);

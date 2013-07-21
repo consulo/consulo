@@ -81,7 +81,7 @@
 
     <selectInTarget implementation="org.jetbrains.idea.maven.navigator.SelectInMavenNavigatorTarget"/>
 
-    <fileIconProvider implementation="org.jetbrains.idea.maven.utils.MavenIconProvider"/>
+    <iconDescriptorUpdater implementation="org.jetbrains.idea.maven.utils.MavenIconDescriptorUpdater" order="after xml" />
     <editorTabTitleProvider implementation="org.jetbrains.idea.maven.utils.MavenEditorTabTitleProvider"/>
 
     <problemFileHighlightFilter implementation="org.jetbrains.idea.maven.utils.MavenProblemFileHighlighter"/>

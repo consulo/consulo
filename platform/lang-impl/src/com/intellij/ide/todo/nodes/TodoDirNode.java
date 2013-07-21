@@ -16,6 +16,7 @@
 
 package com.intellij.ide.todo.nodes;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
@@ -35,7 +36,6 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.DefaultIconProvider;
 import com.intellij.ui.HighlightedRegion;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
@@ -102,7 +102,7 @@ public final class TodoDirNode extends PsiDirectoryNode implements HighlightedRe
   protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
     if (ProjectRootsUtil.isModuleContentRoot(virtualFile, psiDirectory.getProject())) {
-      data.setIcon(patchIcon(DefaultIconProvider.INSTANCE.getIcon(psiDirectory, 0), virtualFile));
+      data.setIcon(patchIcon(IconDescriptorUpdaters.getIcon(psiDirectory, 0), virtualFile));
     } else {
       super.setupIcon(data, psiDirectory);
     }

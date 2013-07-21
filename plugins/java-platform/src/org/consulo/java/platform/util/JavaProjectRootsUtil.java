@@ -26,21 +26,23 @@ public class JavaProjectRootsUtil extends ProjectRootsUtil {
     if (file.isDirectory()) {
       return false;
     }
-    if (file.getFileType() != StdFileTypes.JAVA) {
+    if (file.getFileType() != StdFileTypes.JAVA && !withLibrary) {
       return false;
     }
     if (fileTypeManager.isFileIgnored(file)) {
       return false;
     }
 
-    Module module = ModuleUtilCore.findModuleForFile(file, project);
-    if (module == null) {
-      return false;
-    }
+    if(!withLibrary) {
+      Module module = ModuleUtilCore.findModuleForFile(file, project);
+      if (module == null) {
+        return false;
+      }
 
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    if (moduleRootManager.getExtension(JavaModuleExtension.class) == null) {
-      return false;
+      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+      if (moduleRootManager.getExtension(JavaModuleExtension.class) == null) {
+        return false;
+      }
     }
 
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();

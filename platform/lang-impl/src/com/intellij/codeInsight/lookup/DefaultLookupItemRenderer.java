@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.lookup;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.meta.PsiMetaData;
@@ -76,7 +77,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
     final PsiElement element = item.getPsiElement();
     if (element != null && element.isValid()) {
-      return element.getIcon(Iconable.ICON_FLAG_VISIBILITY);
+      return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY);
     }
     return null;
   }

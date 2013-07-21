@@ -256,7 +256,7 @@ public class ClsFileImpl extends ClsRepositoryPsiElement<PsiClassHolderFileStub>
   @Override
   @NotNull
   public PsiElement getNavigationElement() {
-    for (ClsCustomNavigationPolicy customNavigationPolicy : Extensions.getExtensions(ClsCustomNavigationPolicy.EP_NAME)) {
+    for (ClsCustomNavigationPolicy customNavigationPolicy : ClsCustomNavigationPolicy.EP_NAME.getExtensions()) {
       if (customNavigationPolicy instanceof ClsCustomNavigationPolicyEx) {
         PsiFile navigationElement = ((ClsCustomNavigationPolicyEx)customNavigationPolicy).getFileNavigationElement(this);
         if (navigationElement != null) {

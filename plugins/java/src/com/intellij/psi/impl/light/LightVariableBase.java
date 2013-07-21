@@ -20,15 +20,10 @@ import com.intellij.lang.Language;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiImplUtil;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author ven
@@ -143,16 +138,7 @@ public abstract class LightVariableBase extends LightElement implements PsiVaria
   public boolean isWritable() {
     return myWritable;
   }
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
 
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(PlatformIcons.VARIABLE_ICON, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
   @Override
   public PsiType getTypeNoResolve() {
     return getType();

@@ -29,7 +29,7 @@ public class IconUtilEx {
 
   public static Icon getIcon(Object object, @Iconable.IconFlags int flags, Project project) {
     if (object instanceof PsiElement) {
-      return ((PsiElement)object).getIcon(flags);
+      return IconDescriptorUpdaters.getIcon(((PsiElement)object), flags);
     }
     if (object instanceof Module) {
       return AllIcons.Nodes.Module;
@@ -39,6 +39,5 @@ public class IconUtilEx {
       return IconUtil.getIcon(file, flags, project);
     }
     return null;
-    //TODO [VISTALL] return ElementPresentationManager.getIcon(object);
   }
 }

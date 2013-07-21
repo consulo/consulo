@@ -16,6 +16,8 @@
 
 package com.intellij.packageDependencies.ui;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.openapi.project.Project;
@@ -29,9 +31,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.DefaultIconProvider;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -204,9 +204,9 @@ public class DirectoryNode extends PackageDependenciesNode {
   @Override
   public Icon getIcon() {
     if (myDirectory != null) {
-      return DefaultIconProvider.INSTANCE.getIcon(myDirectory, 0);
+      return IconDescriptorUpdaters.getIcon(myDirectory, 0);
     }
-    return PlatformIcons.PACKAGE_ICON;
+    return AllIcons.Nodes.TreeOpen;
   }
 
   public void setCompactedDirNode(final DirectoryNode compactedDirNode) {

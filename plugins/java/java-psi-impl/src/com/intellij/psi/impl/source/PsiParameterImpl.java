@@ -21,7 +21,6 @@ import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.cache.TypeInfo;
 import com.intellij.psi.impl.java.stubs.JavaStubElementTypes;
@@ -33,12 +32,9 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.Arrays;
 
 public class PsiParameterImpl extends JavaStubPsiElement<PsiParameterStub> implements PsiParameter {
@@ -259,16 +255,6 @@ public class PsiParameterImpl extends JavaStubPsiElement<PsiParameterStub> imple
   @Override
   public ItemPresentation getPresentation() {
     return ItemPresentationProviders.getItemPresentation(this);
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = createLayeredIcon(this, PlatformIcons.PARAMETER_ICON, 0);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 
   @Override

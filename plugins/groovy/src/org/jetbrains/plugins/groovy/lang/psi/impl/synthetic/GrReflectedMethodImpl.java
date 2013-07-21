@@ -40,7 +40,6 @@ import org.jetbrains.plugins.groovy.lang.psi.api.types.GrTypeElement;
 import org.jetbrains.plugins.groovy.lang.psi.util.GdkMethodUtil;
 import org.jetbrains.plugins.groovy.lang.psi.util.PsiUtil;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -238,11 +237,6 @@ public class GrReflectedMethodImpl extends LightMethodBuilder implements GrRefle
   @Override
   public GrModifierList getModifierList() {
     return (GrModifierList)super.getModifierList();
-  }
-
-  @Override
-  public Icon getIcon(int flags) {
-    return myBaseMethod.getIcon(flags);
   }
 
   @Override

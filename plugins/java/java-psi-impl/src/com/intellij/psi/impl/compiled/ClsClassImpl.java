@@ -527,11 +527,6 @@ public class ClsClassImpl extends ClsMemberImpl<PsiClassStub<?>> implements PsiE
   }
 
   @Override
-  public Icon getElementIcon(final int flags) {
-    return PsiClassImplUtil.getClassIcon(flags, this);
-  }
-
-  @Override
   public boolean isEquivalentTo(final PsiElement another) {
     return PsiClassImplUtil.isClassEquivalentTo(this, another);
   }
@@ -553,10 +548,5 @@ public class ClsClassImpl extends ClsMemberImpl<PsiClassStub<?>> implements PsiE
   @Override
   public void putInfo(@NotNull Map<String, String> info) {
     PsiClassImpl.putInfo(this, info);
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 }

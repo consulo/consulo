@@ -17,7 +17,6 @@
 package org.jetbrains.plugins.groovy.lang.psi.api.auxiliary;
 
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.PsiArrayInitializerMemberValue;
 import com.intellij.psi.PsiElement;
@@ -28,7 +27,7 @@ import org.jetbrains.plugins.groovy.lang.psi.api.util.GrNamedArgumentsOwner;
 /**
  * @author ilyas
  */
-public interface GrListOrMap extends UserDataHolderEx, Cloneable, Iconable, PsiElement, NavigationItem, GrExpression,
+public interface GrListOrMap extends UserDataHolderEx, Cloneable, PsiElement, NavigationItem, GrExpression,
                                      PsiArrayInitializerMemberValue, GrNamedArgumentsOwner {
   /*
    * Use for list

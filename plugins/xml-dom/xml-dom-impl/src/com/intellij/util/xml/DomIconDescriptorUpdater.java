@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package com.intellij.util.xml;
 
-import com.intellij.ide.IconProvider;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.ide.IconDescriptor;
+import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlFile;
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +24,20 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * @author Dmitry Avdeev
+ * @author VISTALL
+ * @since 1:16/19.07.13
  */
-public class DomFileIconProvider extends IconProvider implements DumbAware {
+public class DomIconDescriptorUpdater implements IconDescriptorUpdater {
   @Override
-  public Icon getIcon(@NotNull PsiElement element, int flags) {
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     if (element instanceof XmlFile) {
       DomFileDescription<?> description = DomManager.getDomManager(element.getProject()).getDomFileDescription((XmlFile)element);
-      return description == null ? null : description.getFileIcon(flags);
+      if(description != null) {
+        final Icon fileIcon = description.getFileIcon(flags);
+        if(fileIcon != null) {
+          iconDescriptor.setMainIcon(fileIcon);
+        }
+      }
     }
-    return null;
   }
 }

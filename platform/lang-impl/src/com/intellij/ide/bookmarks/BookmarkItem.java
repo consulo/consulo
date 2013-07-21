@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.bookmarks;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
@@ -64,7 +65,7 @@ public class BookmarkItem extends ItemWrapper {
 
     PsiElement fileOrDir = file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
     if (fileOrDir != null) {
-      renderer.setIcon(fileOrDir.getIcon(0));
+      renderer.setIcon(IconDescriptorUpdaters.getIcon(fileOrDir, 0));
     }
 
     String description = bookmark.getDescription();

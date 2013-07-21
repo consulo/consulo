@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.favoritesTreeView.smartPointerPsiNodes;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
@@ -98,7 +99,7 @@ public abstract class BaseSmartPointerPsiNode <Type extends SmartPsiElementPoint
 
     LOG.assertTrue(value.isValid());
 
-    Icon icon = value.getIcon(flags);
+    Icon icon = IconDescriptorUpdaters.getIcon(value, flags);
     data.setIcon(icon);
     data.setPresentableText(myName);
     if (isDeprecated()) {

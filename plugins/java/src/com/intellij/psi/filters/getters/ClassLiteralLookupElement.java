@@ -19,6 +19,7 @@ import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.codeInsight.lookup.TypedLookupItem;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -51,7 +52,7 @@ public class ClassLiteralLookupElement extends LookupElement implements TypedLoo
   @Override
   public void renderElement(LookupElementPresentation presentation) {
     presentation.setItemText(getLookupString());
-    presentation.setIcon(myExpr.getIcon(0));
+    presentation.setIcon(IconDescriptorUpdaters.getIcon(myExpr, 0));
     String pkg = StringUtil.getPackageName(myCanonicalText);
     if (StringUtil.isNotEmpty(pkg)) {
       presentation.setTailText(" (" + pkg + ")", true);

@@ -28,7 +28,6 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -321,11 +320,6 @@ public class MigrationClassImpl extends LightElement implements PsiClass{
 
   public PsiMetaData getMetaData() {
     return null;
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    return PsiClassImplUtil.getClassIcon(flags, this);
   }
 
   @Override

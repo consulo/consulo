@@ -16,6 +16,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -47,7 +48,7 @@ public class FQNameCellRenderer extends SimpleColoredComponent implements ListCe
 
     if (value instanceof PsiClass) {
       PsiClass aClass = (PsiClass)value;
-      setIcon(aClass.getIcon(0));
+      setIcon(IconDescriptorUpdaters.getIcon(aClass, 0));
       if (aClass.getQualifiedName() != null) {
         SimpleTextAttributes attributes;
         if (aClass.isDeprecated()) {

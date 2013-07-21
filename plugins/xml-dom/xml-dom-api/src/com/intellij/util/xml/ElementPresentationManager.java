@@ -15,10 +15,8 @@
  */
 package com.intellij.util.xml;
 
-import com.intellij.ide.IconProvider;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Iconable;
@@ -34,7 +32,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author peter
@@ -193,23 +193,6 @@ public abstract class ElementPresentationManager {
       final Icon icon = function.fun(o);
       if (icon != null) {
         return icon;
-      }
-    }
-    if (o instanceof DomElement) {
-      final DomElement domElement = (DomElement)o;
-      final boolean dumb = DumbService.getInstance(domElement.getManager().getProject()).isDumb();
-
-      for (final IconProvider provider : IconProvider.EXTENSION_POINT_NAME.getExtensions()) {
-        if (provider instanceof DomIconProvider) {
-          if (dumb && !DumbService.isDumbAware(provider)) {
-            continue;
-          }
-
-          final Icon icon = ((DomIconProvider)provider).getIcon(domElement, 0);
-          if (icon != null) {
-            return icon;
-          }
-        }
       }
     }
 

@@ -16,6 +16,7 @@
 
 package com.intellij.refactoring.ui;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -396,7 +397,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   }
 
   protected Icon getMemberIcon(M memberInfo, @Iconable.IconFlags int flags) {
-    return memberInfo.getMember().getIcon(flags);
+    return IconDescriptorUpdaters.getIcon(memberInfo.getMember(), flags);
   }
 
   private static class MyBooleanRenderer<T extends PsiElement, M extends MemberInfoBase<T>> extends BooleanTableCellRenderer {

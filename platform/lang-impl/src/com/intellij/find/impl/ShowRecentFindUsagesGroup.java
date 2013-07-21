@@ -19,6 +19,7 @@ package com.intellij.find.impl;
 import com.intellij.find.FindBundle;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -68,7 +69,7 @@ public class ShowRecentFindUsagesGroup extends ActionGroup {
       String text = FindBundle.message("recent.find.usages.action.popup", StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
                                        UsageViewUtil.getDescriptiveName(psiElement),
                                        scopeString == null ? ProjectScope.getAllScope(psiElement.getProject()).getDisplayName() : scopeString);
-      AnAction action = new AnAction(text, description, psiElement.getIcon(0)) {
+      AnAction action = new AnAction(text, description, IconDescriptorUpdaters.getIcon(psiElement, 0)) {
         @Override
         public void actionPerformed(final AnActionEvent e) {
           findUsagesManager.rerunAndRecallFromHistory(data);

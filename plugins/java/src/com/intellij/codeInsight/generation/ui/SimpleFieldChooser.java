@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.generation.ui;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.PsiField;
@@ -75,7 +76,7 @@ public class SimpleFieldChooser extends DialogWrapper {
       Icon icon = null;
       if (value instanceof PsiField) {
         PsiField field = (PsiField)value;
-        icon = field.getIcon(0);
+        icon = IconDescriptorUpdaters.getIcon(field, 0);
         final String text = PsiFormatUtil.formatVariable(field, PsiFormatUtilBase.SHOW_NAME | PsiFormatUtilBase.SHOW_TYPE, PsiSubstitutor.EMPTY);
         setText(text);
       }

@@ -15,6 +15,7 @@
  */
 package com.intellij.peer.impl;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.components.ServiceManager;
@@ -150,7 +151,7 @@ public class PeerFactoryImpl extends PeerFactory {
       return new ColoredTableCellRenderer() {
         protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
           append(getPsiElementText(psiElement), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-          setIcon(psiElement.getIcon(0));
+          setIcon(IconDescriptorUpdaters.getIcon(psiElement, 0));
         }
       };
 

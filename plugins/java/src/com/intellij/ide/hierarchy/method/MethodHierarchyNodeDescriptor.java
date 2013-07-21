@@ -16,6 +16,7 @@
 package com.intellij.ide.hierarchy.method;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.ide.hierarchy.JavaHierarchyUtil;
@@ -98,7 +99,7 @@ public final class MethodHierarchyNodeDescriptor extends HierarchyNodeDescriptor
       return true;
     }
 
-    final Icon newRawIcon = psiClass.getIcon(flags);
+    final Icon newRawIcon = IconDescriptorUpdaters.getIcon(psiClass, flags);
     final Icon newStateIcon = calculateState(psiClass);
 
     if (changes || newRawIcon != myRawIcon || newStateIcon != myStateIcon) {

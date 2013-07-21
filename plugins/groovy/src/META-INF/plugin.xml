@@ -491,7 +491,7 @@
 
     <project.converterProvider implementation="org.jetbrains.plugins.groovy.config.GroovyRunConfigurationConverterProvider"/>
 
-    <iconProvider implementation="org.jetbrains.plugins.groovy.GroovyIconProvider"/>
+    <iconDescriptorUpdater implementation="org.jetbrains.plugins.groovy.GroovyIconDescriptorUpdater" order="after java" id="groovy" />
 
     <projectService serviceInterface="org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory"
                     serviceImplementation="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyPsiElementFactoryImpl"/>

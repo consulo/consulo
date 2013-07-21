@@ -20,7 +20,6 @@ import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiType;
 import com.intellij.util.IncorrectOperationException;
-import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.lang.psi.*;
@@ -30,8 +29,6 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpres
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrReferenceExpression;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefinition;
 import org.jetbrains.plugins.groovy.lang.psi.api.types.GrTypeElement;
-
-import javax.swing.*;
 
 /**
  * @author Max Medvedev
@@ -49,12 +46,6 @@ public class GrBindingVariable extends GrLightVariable implements GrVariable {
   @Override
   public PsiElement getContext() {
     return myFile;
-  }
-
-  @Nullable
-  @Override
-  public Icon getIcon(int flags) {
-    return JetgroovyIcons.Groovy.Variable;
   }
 
   @Nullable

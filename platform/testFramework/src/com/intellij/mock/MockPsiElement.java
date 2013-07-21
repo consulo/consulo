@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -371,11 +370,6 @@ public class MockPsiElement extends UserDataHolderBase implements PsiElement, Na
   @NotNull
   public char[] textToCharArray() {
     throw new UnsupportedOperationException("Method textToCharArray is not yet implemented in " + getClass().getName());
-  }
-
-  @Override
-  public Icon getIcon(final int flags) {
-    return null;
   }
 
   @Override

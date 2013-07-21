@@ -25,6 +25,7 @@ import com.intellij.codeInsight.actions.OptimizeImportsProcessor;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.QuickFixBundle;
 import com.intellij.codeInsight.hint.QuestionAction;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -153,7 +154,7 @@ public class AddImportAction implements QuestionAction {
 
         @Override
         public Icon getIconFor(PsiClass aValue) {
-          return aValue.getIcon(0);
+          return IconDescriptorUpdaters.getIcon(aValue, 0);
         }
       };
     JBPopupFactory.getInstance().createListPopup(step).showInBestPositionFor(myEditor);

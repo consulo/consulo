@@ -15,6 +15,7 @@
  */
 package com.intellij.usages.impl.rules;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.openapi.actionSystem.DataKey;
@@ -97,7 +98,7 @@ public class MethodGroupingRule implements UsageGroupingRule {
     }
 
     private static Icon getIconImpl(PsiMethod psiMethod) {
-      return psiMethod.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
+      return IconDescriptorUpdaters.getIcon(psiMethod, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
     }
 
     public int hashCode() {

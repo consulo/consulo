@@ -16,6 +16,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.CommonBundle;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
@@ -71,7 +72,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
   protected void updateImpl(PresentationData data) {
     PsiFile value = getValue();
     data.setPresentableText(value.getName());
-    data.setIcon(value.getIcon(Iconable.ICON_FLAG_READ_STATUS));
+    data.setIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_READ_STATUS));
 
     VirtualFile file = getVirtualFile();
     if (file != null && file.isSymLink()) {

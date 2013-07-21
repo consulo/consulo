@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.ui;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiSubstitutor;
@@ -42,7 +43,7 @@ public class MethodCellRenderer extends DefaultListCellRenderer {
               PsiFormatUtil.SHOW_TYPE);
     setText(text);
 
-    Icon icon = method.getIcon(Iconable.ICON_FLAG_VISIBILITY);
+    Icon icon = IconDescriptorUpdaters.getIcon(method, Iconable.ICON_FLAG_VISIBILITY);
     if(icon != null) setIcon(icon);
     return this;
   }

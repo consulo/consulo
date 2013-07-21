@@ -16,6 +16,7 @@
 package com.intellij.debugger.actions;
 
 import com.intellij.debugger.DebuggerBundle;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiSubstitutor;
@@ -55,7 +56,7 @@ class PsiMethodListPopupStep implements ListPopupStep {
   public Icon getIconFor(Object aValue) {
     if (aValue instanceof PsiMethod) {
       PsiMethod method = (PsiMethod)aValue;
-      return method.getIcon(0);
+      return IconDescriptorUpdaters.getIcon(method, 0);
     }
     return null;
   }

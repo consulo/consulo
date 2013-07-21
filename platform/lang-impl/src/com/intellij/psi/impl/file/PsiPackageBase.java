@@ -25,12 +25,10 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiElementBase;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
-import com.intellij.util.containers.*;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
@@ -38,7 +36,10 @@ import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class PsiPackageBase extends PsiElementBase implements PsiPackage, Queryable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.PsiPackageBase");
@@ -95,10 +96,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     return result == null ? PsiDirectory.EMPTY_ARRAY : result.toArray(new PsiDirectory[result.size()]);
   }
 
-  @Override
-  public RowIcon getElementIcon(final int elementFlags) {
-    return createLayeredIcon(this, PlatformIcons.PACKAGE_ICON, elementFlags);
-  }
 
   @Override
   public String getName() {

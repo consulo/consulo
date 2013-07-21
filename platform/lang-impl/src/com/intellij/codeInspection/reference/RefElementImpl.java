@@ -25,6 +25,7 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.codeInspection.SuppressionUtil;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -107,7 +108,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   public Icon getIcon(final boolean expanded) {
     final PsiElement element = getElement();
     if (element != null && element.isValid()) {
-      return element.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
+      return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
     }
     return null;
   }

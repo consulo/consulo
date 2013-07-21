@@ -15,20 +15,20 @@
  */
 package com.intellij.util;
 
-import com.intellij.ide.FileIconPatcher;
-import com.intellij.ide.FileIconProvider;
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptor;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.WritingAccessProvider;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import com.intellij.ui.IconDeferrer;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
@@ -126,40 +126,27 @@ public class IconUtil {
 
         if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
 
-        final Icon providersIcon = getProvidersIcon(file, flags, project);
-        Icon icon = providersIcon == null ? VirtualFilePresentation.getIcon(file) : providersIcon;
-
-        final boolean dumb = project != null && DumbService.getInstance(project).isDumb();
-        for (FileIconPatcher patcher : getPatchers()) {
-          if (dumb && !DumbService.isDumbAware(patcher)) {
-            continue;
+        final Icon nativeIcon = NativeFileIconUtil.INSTANCE.getIcon(file);
+        IconDescriptor iconDescriptor = new IconDescriptor(nativeIcon == null ? base : nativeIcon);
+        if(project != null) {
+          PsiManager manager = PsiManager.getInstance(project);
+          final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
+          if(element != null) {
+            IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
           }
-
-          icon = patcher.patchIcon(icon, file, flags, project);
         }
 
-        if ((flags & Iconable.ICON_FLAG_READ_STATUS) != 0 &&
-            (!file.isWritable() || !WritingAccessProvider.isPotentiallyWritable(file, project))) {
-          icon = new LayeredIcon(icon, PlatformIcons.LOCKED_ICON);
-        }
         if (file.isSymLink()) {
-          icon = new LayeredIcon(icon, PlatformIcons.SYMLINK_ICON);
+          iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
         }
+
+        final Icon icon = iconDescriptor.toIcon();
 
         Iconable.LastComputedIcon.put(file, icon, flags);
 
         return icon;
       }
     });
-  }
-
-  @Nullable
-  private static Icon getProvidersIcon(@NotNull VirtualFile file, @Iconable.IconFlags int flags, Project project) {
-    for (FileIconProvider provider : getProviders()) {
-      final Icon icon = provider.getIcon(file, flags, project);
-      if (icon != null) return icon;
-    }
-    return null;
   }
 
   @NotNull
@@ -179,22 +166,6 @@ public class IconUtil {
       return EmptyIcon.ICON_16;
     }
     return new EmptyIcon(baseIcon.getIconWidth(), baseIcon.getIconHeight());
-  }
-
-  private static class FileIconProviderHolder {
-    private static final FileIconProvider[] myProviders = Extensions.getExtensions(FileIconProvider.EP_NAME);
-  }
-
-  private static FileIconProvider[] getProviders() {
-    return FileIconProviderHolder.myProviders;
-  }
-
-  private static class FileIconPatcherHolder {
-    private static final FileIconPatcher[] ourPatchers = Extensions.getExtensions(FileIconPatcher.EP_NAME);
-  }
-
-  private static FileIconPatcher[] getPatchers() {
-    return FileIconPatcherHolder.ourPatchers;
   }
 
   public static Image toImage(@NotNull Icon icon) {

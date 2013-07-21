@@ -24,21 +24,20 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocCommentOwner;
 import com.intellij.psi.PsiModifierListOwner;
-import com.intellij.psi.impl.ElementPresentationUtil;
 
 public abstract class BasePsiMemberNode<T extends PsiModifierListOwner> extends BasePsiNode<T>{
   protected BasePsiMemberNode(Project project, T value, ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 
-  @Override
+ /* @Override
   protected String calcTooltip() {
     T t = getValue();
     if (t != null && t.isValid()) {
       return ElementPresentationUtil.getDescription(t);
     }
     return super.calcTooltip();
-  }
+  }     */
 
   @Override
   protected boolean isDeprecated() {

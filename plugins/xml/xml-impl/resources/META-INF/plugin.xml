@@ -402,7 +402,7 @@
     <lang.smartEnterProcessor language="HTML" implementationClass="com.intellij.codeInsight.completion.XmlSmartEnterProcessor"/>
     <lang.smartEnterProcessor language="XHTML" implementationClass="com.intellij.codeInsight.completion.XmlSmartEnterProcessor"/>
 
-    <iconProvider implementation="com.intellij.xml.util.XmlIconProvider"/>
+    <iconDescriptorUpdater implementation="com.intellij.xml.util.XmlIconDescriptorUpdater" id="xml"/>
 
     <localInspection language="XML" shortName="CheckTagEmptyBody" bundle="messages.XmlBundle" key="xml.inspections.check.tag.empty.body"
                      groupKey="xml.inspections.group.name" enabledByDefault="true" level="WARNING"

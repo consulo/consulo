@@ -139,16 +139,6 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
   }
 
   @Override
-  public final Icon getIcon(final int flags) {
-    return super.getIcon(flags);
-  }
-
-  @Override
-  protected final Icon getElementIcon(final int flags) {
-    return super.getElementIcon(flags);
-  }
-
-  @Override
   @Nullable
   public Icon getIcon(boolean open) {
     return null;

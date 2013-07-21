@@ -20,7 +20,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.PsiSuperMethodImplUtil;
 import com.intellij.psi.presentation.java.JavaPresentationUtil;
@@ -28,13 +27,11 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.util.*;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,7 +72,6 @@ import org.jetbrains.plugins.groovy.lang.psi.util.PsiUtil;
 import org.jetbrains.plugins.groovy.lang.resolve.MethodTypeInferencer;
 import org.jetbrains.plugins.groovy.lang.resolve.ResolveUtil;
 
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -283,17 +279,6 @@ public abstract class GrMethodBaseImpl extends GrStubElementBase<GrMethodStub> i
       }
     });
     return newTypeElement;
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
-  @Override
-  public Icon getIcon(int flags) {
-    RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(JetgroovyIcons.Groovy.Method, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
   }
 
   @Override

@@ -5,8 +5,6 @@ import com.intellij.lang.Language;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NonNls;
@@ -111,16 +109,6 @@ public class LightVariableBuilder<T extends LightVariableBuilder> extends LightE
   @Override
   public PsiType getTypeNoResolve() {
     return getType();
-  }
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(myBaseIcon, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
   }
 
   public T setBaseIcon(Icon baseIcon) {

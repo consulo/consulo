@@ -20,19 +20,15 @@ import com.intellij.lang.java.JavaLanguage;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.MethodSignature;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -229,18 +225,6 @@ public class LightMethod extends LightElement implements PsiMethod {
 
   public String toString() {
     return "PsiMethod:" + getName();
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    Icon methodIcon = hasModifierProperty(PsiModifier.ABSTRACT) ? PlatformIcons.ABSTRACT_METHOD_ICON : PlatformIcons.METHOD_ICON;
-    RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(methodIcon, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
   }
 
   @Override

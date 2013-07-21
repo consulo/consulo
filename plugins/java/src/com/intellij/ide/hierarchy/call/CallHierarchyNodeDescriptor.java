@@ -17,6 +17,7 @@ package com.intellij.ide.hierarchy.call;
 
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
 import com.intellij.openapi.editor.Editor;
@@ -106,7 +107,7 @@ public final class CallHierarchyNodeDescriptor extends HierarchyNodeDescriptor i
       return true;
     }
 
-    Icon newIcon = enclosingElement.getIcon(flags);
+    Icon newIcon = IconDescriptorUpdaters.getIcon(enclosingElement, flags);
     if (changes && myIsBase) {
       final LayeredIcon icon = new LayeredIcon(2);
       icon.setIcon(newIcon, 0);

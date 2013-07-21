@@ -17,6 +17,7 @@
 package com.intellij.psi.impl.source;
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.caches.FileContent;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.lang.*;
@@ -909,7 +910,7 @@ public abstract class PsiFileImpl extends ElementBase implements PsiFileEx, PsiF
 
       @Override
       public Icon getIcon(final boolean open) {
-        return PsiFileImpl.this.getIcon(0);
+        return IconDescriptorUpdaters.getIcon(PsiFileImpl.this, 0);
       }
     };
   }

@@ -19,7 +19,6 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.codeStyle.VariableKind;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.cache.TypeInfo;
 import com.intellij.psi.impl.java.stubs.JavaStubElementTypes;
 import com.intellij.psi.impl.java.stubs.PsiParameterStub;
@@ -29,13 +28,9 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 public class ClsParameterImpl extends ClsRepositoryPsiElement<PsiParameterStub> implements PsiParameter {
   private PsiTypeElement myType = null;
@@ -250,17 +245,6 @@ public class ClsParameterImpl extends ClsRepositoryPsiElement<PsiParameterStub> 
     final PsiParameterList paramList = (PsiParameterList)getParent();
     final PsiMethod method = (PsiMethod)paramList.getParent();
     return method.isVarArgs() && getIndex() == paramList.getParametersCount() - 1;
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = createLayeredIcon(this, PlatformIcons.PARAMETER_ICON, 0);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
   }
 
   @Override

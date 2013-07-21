@@ -20,7 +20,6 @@ import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.PsiSuperMethodImplUtil;
@@ -35,12 +34,9 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.MethodSignature;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
 import com.intellij.psi.util.MethodSignatureUtil;
-import com.intellij.ui.RowIcon;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 public class ClsMethodImpl extends ClsMemberImpl<PsiMethodStub> implements PsiAnnotationMethod {
@@ -315,13 +311,6 @@ public class ClsMethodImpl extends ClsMemberImpl<PsiMethodStub> implements PsiAn
   }
 
   @Override
-  public Icon getElementIcon(final int flags) {
-    Icon methodIcon = hasModifierProperty(PsiModifier.ABSTRACT) ? PlatformIcons.ABSTRACT_METHOD_ICON : PlatformIcons.METHOD_ICON;
-    RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(methodIcon, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-
-  @Override
   public boolean isEquivalentTo(final PsiElement another) {
     return PsiClassImplUtil.isMethodEquivalentTo(this, another);
   }
@@ -335,11 +324,6 @@ public class ClsMethodImpl extends ClsMemberImpl<PsiMethodStub> implements PsiAn
   @Override
   public PsiType getReturnTypeNoResolve() {
     return getReturnType();
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 
   @Override

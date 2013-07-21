@@ -16,6 +16,7 @@
 package org.intellij.lang.xpath.completion;
 
 import com.intellij.codeInsight.completion.CompletionInitializationContext;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.*;
@@ -152,7 +153,7 @@ public class CompletionLists {
             type = "";
           }
           final String name = ((PsiNamedElement)o).getName();
-          lookups.add(new VariableLookup("$" + name, type, ((PsiNamedElement)o).getIcon(0), (PsiElement)o));
+          lookups.add(new VariableLookup("$" + name, type, IconDescriptorUpdaters.getIcon(((PsiNamedElement)o), 0), (PsiElement)o));
         } else {
           lookups.add(new VariableLookup("$" + String.valueOf(o), PlatformIcons.VARIABLE_ICON));
         }

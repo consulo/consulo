@@ -34,13 +34,10 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -246,12 +243,6 @@ public class PsiFieldImpl extends JavaStubPsiElement<PsiFieldStub> implements Ps
     return getInitializer() != null;
   }
 
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(PlatformIcons.FIELD_ICON, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-
   private static class OurConstValueComputer implements JavaResolveCache.ConstValueComputer {
     private static final OurConstValueComputer INSTANCE = new OurConstValueComputer();
 
@@ -445,10 +436,4 @@ public class PsiFieldImpl extends JavaStubPsiElement<PsiFieldStub> implements Ps
   public void putInfo(@NotNull Map<String, String> info) {
     info.put("fieldName", getName());
   }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
 }

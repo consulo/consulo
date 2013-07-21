@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +16,38 @@
 package com.intellij.xml.util;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconProvider;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.ide.IconDescriptor;
+import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.ElementBase;
 import com.intellij.psi.xml.XmlFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
- * @author peter
+ * @author VISTALL
+ * @since 22:47/19.07.13
  */
-public class XmlIconProvider extends IconProvider implements DumbAware {
-  @NonNls private static final String XSD_FILE_EXTENSION = "xsd";
-  @NonNls private static final String WSDL_FILE_EXTENSION = "wsdl";
+public class XmlIconDescriptorUpdater implements IconDescriptorUpdater {
+  @NonNls
+  private static final String XSD_FILE_EXTENSION = "xsd";
+  @NonNls
+  private static final String WSDL_FILE_EXTENSION = "wsdl";
 
-  @Nullable
-  public Icon getIcon(@NotNull final PsiElement element, final int _flags) {
+  @Override
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     if (element instanceof XmlFile) {
       final VirtualFile vf = ((XmlFile)element).getVirtualFile();
       if (vf != null) {
         final String extension = vf.getExtension();
-        
+
         if (XSD_FILE_EXTENSION.equals(extension)) {
-          return ElementBase.createLayeredIcon(element, AllIcons.FileTypes.XsdFile, ElementBase.transformFlags(element, _flags));
+          iconDescriptor.setMainIcon(AllIcons.FileTypes.XsdFile);
         }
         if (WSDL_FILE_EXTENSION.equals(extension)) {
-          return ElementBase.createLayeredIcon(element, AllIcons.FileTypes.WsdlFile, ElementBase.transformFlags(element, _flags));
+          iconDescriptor.setMainIcon(AllIcons.FileTypes.WsdlFile);
         }
       }
     }
-    return null;
   }
-
 }

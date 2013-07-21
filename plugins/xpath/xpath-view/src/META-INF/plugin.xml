@@ -142,7 +142,7 @@
     <applicationConfigurable instance="org.intellij.lang.xpath.xslt.impl.XsltConfigImpl$UIImpl" id="settings.xslt"
                              displayName="XSLT"/>
 
-    <fileIconPatcher implementation="org.intellij.lang.xpath.xslt.impl.XsltIconProvider"/>
+    <iconDescriptorUpdater implementation="org.intellij.lang.xpath.xslt.impl.XsltIconDescriptorUpdater" />
     <gotoSymbolContributor implementation="org.intellij.lang.xpath.xslt.impl.XsltChooseByNameContributor"/>
     <annotator language="XPath" implementationClass="org.intellij.lang.xpath.xslt.validation.XsltAnnotator"/>
     <annotator language="XML" implementationClass="org.intellij.lang.xpath.xslt.validation.XsltXmlAnnotator"/>

@@ -17,7 +17,6 @@ package org.intellij.lang.xpath.xslt.psi.impl;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlTag;
-import icons.XpathIcons;
 import org.intellij.lang.xpath.psi.XPathExpression;
 import org.intellij.lang.xpath.psi.impl.ResolveUtil;
 import org.intellij.lang.xpath.xslt.XsltSupport;
@@ -29,18 +28,12 @@ import org.intellij.lang.xpath.xslt.util.XsltCodeInsightUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import javax.xml.namespace.QName;
 
 public class XsltTemplateImpl extends XsltElementImpl implements XsltTemplate {
 
     XsltTemplateImpl(XmlTag target) {
         super(target);
-    }
-
-    @Override
-    public Icon getIcon(int flags) {
-        return XpathIcons.Template;
     }
 
     @Override

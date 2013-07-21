@@ -1,5 +1,6 @@
 package com.intellij.usages;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.openapi.actionSystem.DataKey;
@@ -33,7 +34,7 @@ public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & Navigatio
   }
 
   public PsiNamedElementUsageGroupBase(@NotNull T element) {
-    this(element, element.getIcon(0));
+    this(element, IconDescriptorUpdaters.getIcon(element, 0));
   }
 
   @Override

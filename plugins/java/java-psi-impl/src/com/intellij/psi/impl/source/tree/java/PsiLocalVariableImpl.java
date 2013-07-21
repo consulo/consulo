@@ -32,14 +32,11 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.ChildRoleBase;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.CharTable;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -321,16 +318,6 @@ public class PsiLocalVariableImpl extends CompositePsiElement implements PsiLoca
     else {
       return ResolveScopeManager.getElementUseScope(this);
     }
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(PlatformIcons.VARIABLE_ICON, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 
   @Override

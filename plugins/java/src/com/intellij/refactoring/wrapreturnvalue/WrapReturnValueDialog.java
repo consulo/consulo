@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.wrapreturnvalue;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ide.util.TreeClassChooser;
 import com.intellij.ide.util.TreeClassChooserFactory;
@@ -205,7 +206,7 @@ class WrapReturnValueDialog extends RefactoringDialog {
         if (value instanceof PsiField) {
           final PsiField field = (PsiField)value;
           setText(field.getName());
-          setIcon(field.getIcon(Iconable.ICON_FLAG_VISIBILITY));
+          setIcon(IconDescriptorUpdaters.getIcon(field, Iconable.ICON_FLAG_VISIBILITY));
         }
       }
     });

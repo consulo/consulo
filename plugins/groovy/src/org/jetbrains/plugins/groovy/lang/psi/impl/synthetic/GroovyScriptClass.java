@@ -15,13 +15,17 @@
  */
 package org.jetbrains.plugins.groovy.lang.psi.impl.synthetic;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.*;
+import com.intellij.psi.impl.InheritanceImplUtil;
+import com.intellij.psi.impl.PsiClassImplUtil;
+import com.intellij.psi.impl.PsiSuperMethodImplUtil;
 import com.intellij.psi.impl.light.LightElement;
 import com.intellij.psi.impl.light.LightMethodBuilder;
 import com.intellij.psi.impl.light.LightModifierList;
@@ -29,7 +33,6 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -391,7 +394,7 @@ public class GroovyScriptClass extends LightElement implements PsiClass, Synthet
       }
 
       public Icon getIcon(boolean open) {
-        return GroovyScriptClass.this.getIcon(ICON_FLAG_VISIBILITY | ICON_FLAG_READ_STATUS);
+        return IconDescriptorUpdaters.getIcon(GroovyScriptClass.this, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
       }
     };
   }
@@ -399,18 +402,6 @@ public class GroovyScriptClass extends LightElement implements PsiClass, Synthet
   @Nullable
   public PsiElement getOriginalElement() {
     return PsiImplUtil.getOriginalElement(this, myFile);
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
-  @Nullable
-  public Icon getIcon(int flags) {
-    final Icon icon = myFile.getIcon(flags);
-    RowIcon baseIcon = ElementBase.createLayeredIcon(this, icon, 0);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
   }
 
   public void checkDelete() throws IncorrectOperationException {

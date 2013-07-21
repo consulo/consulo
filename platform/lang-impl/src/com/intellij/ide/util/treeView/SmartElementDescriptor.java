@@ -16,6 +16,7 @@
 
 package com.intellij.ide.util.treeView;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -66,7 +67,7 @@ public class SmartElementDescriptor extends NodeDescriptor{
     }
     Icon icon = null;
     try {
-      icon = myElement.getIcon(flags);
+      icon = IconDescriptorUpdaters.getIcon(myElement, flags);
     }
     catch (IndexNotReadyException e) {
     }

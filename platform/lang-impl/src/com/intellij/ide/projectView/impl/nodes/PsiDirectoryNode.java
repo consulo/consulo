@@ -16,7 +16,6 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.ide.IconProvider;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.projectView.PresentationData;
@@ -25,7 +24,6 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.ProjectViewImpl;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -49,7 +47,6 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IconUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PlatformIcons;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -126,21 +123,8 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
   protected void setupIcon(PresentationData data, PsiDirectory psiDirectory) {
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
-    if (PlatformUtils.isAppCode()) {
-      final Icon icon = IconUtil.getIcon(virtualFile, 0, myProject);
-      if (icon != null) {
-        data.setIcon(patchIcon(icon, virtualFile));
-      }
-    }
-    else {
-      for (final IconProvider provider : Extensions.getExtensions(IconProvider.EXTENSION_POINT_NAME)) {
-        final Icon icon = provider.getIcon(psiDirectory, 0);
-        if (icon != null) {
-          data.setIcon(patchIcon(icon, virtualFile));
-          return;
-        }
-      }
-    }
+    final Icon icon = IconUtil.getIcon(virtualFile, 0, myProject);
+    data.setIcon(patchIcon(icon, virtualFile));
   }
 
   @Override

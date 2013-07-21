@@ -45,7 +45,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -660,11 +659,6 @@ public class PsiClassImpl extends JavaStubPsiElement<PsiClassStub<?>> implements
   }
 
   @Override
-  public Icon getElementIcon(final int flags) {
-    return PsiClassImplUtil.getClassIcon(flags, this);
-  }
-
-  @Override
   public boolean isEquivalentTo(final PsiElement another) {
     return PsiClassImplUtil.isClassEquivalentTo(this, another);
   }
@@ -696,11 +690,6 @@ public class PsiClassImpl extends JavaStubPsiElement<PsiClassStub<?>> implements
     if (file instanceof Queryable) {
       ((Queryable)file).putInfo(info);
     }
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 
   @Nullable

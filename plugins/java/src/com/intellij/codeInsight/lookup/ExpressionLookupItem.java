@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.lookup;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.psi.*;
 import com.intellij.util.PlatformIcons;
 
@@ -29,7 +30,7 @@ public class ExpressionLookupItem extends LookupItem<PsiExpression> implements T
       final PsiReferenceExpression referenceExpression = (PsiReferenceExpression)expression;
       final PsiElement element = referenceExpression.resolve();
       if (element != null) {
-        setIcon(element.getIcon(0));
+        setIcon(IconDescriptorUpdaters.getIcon(element, 0));
       }
     }
     if (expression instanceof PsiMethodCallExpression) {

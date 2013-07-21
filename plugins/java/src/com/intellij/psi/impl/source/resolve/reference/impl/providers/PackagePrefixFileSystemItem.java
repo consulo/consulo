@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -241,11 +240,5 @@ class PackagePrefixFileSystemItem extends PsiElementBase implements PsiFileSyste
     else {
       return null;
     }
-  }
-
-  @Override
-  @Nullable
-  public Icon getIcon(final int flags) {
-    return myDirectory.getIcon(flags);
   }
 }

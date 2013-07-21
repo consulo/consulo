@@ -16,6 +16,7 @@
 package com.intellij.xml.config;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -180,7 +181,7 @@ public class ConfigFilesTreeBuilder {
     }
     else if (object instanceof PsiFile) {
       final PsiFile psiFile = (PsiFile)object;
-      final Icon icon = psiFile.getIcon(0);
+      final Icon icon = IconDescriptorUpdaters.getIcon(psiFile, 0);
       renderer.setIcon(icon);
       final String fileName = psiFile.getName();
       renderer.append(fileName, SimpleTextAttributes.REGULAR_ATTRIBUTES);

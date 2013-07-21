@@ -22,6 +22,7 @@ import com.intellij.codeInsight.daemon.QuickFixBundle;
 import com.intellij.codeInsight.daemon.impl.actions.AddImportAction;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.AddSingleMemberStaticImportAction;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.util.MethodCellRenderer;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -335,7 +336,7 @@ public class StaticImportMethodFix implements IntentionAction {
 
         @Override
         public Icon getIconFor(PsiMethod aValue) {
-          return aValue.getIcon(0);
+          return IconDescriptorUpdaters.getIcon(aValue, 0);
         }
       };
 

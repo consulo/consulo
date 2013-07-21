@@ -22,6 +22,7 @@ import com.intellij.codeInsight.generation.PsiGenerationInfo;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.*;
 import com.intellij.psi.infos.CandidateInfo;
@@ -98,7 +99,7 @@ public class JavaOverrideCompletionContributor {
     };
 
     RowIcon icon = new RowIcon(2);
-    icon.setIcon(baseMethod.getIcon(0), 0);
+    icon.setIcon(IconDescriptorUpdaters.getIcon(baseMethod, 0), 0);
     icon.setIcon(implemented ? AllIcons.Gutter.ImplementingMethod : AllIcons.Gutter.OverridingMethod, 1);
 
     LookupElementBuilder element = LookupElementBuilder.create(baseMethod, signature).withLookupString(methodName).

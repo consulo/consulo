@@ -18,6 +18,7 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.generation.ClassMember;
 import com.intellij.codeInsight.generation.MemberChooserObject;
 import com.intellij.codeInsight.generation.PsiMethodMember;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.ui.SimpleColoredComponent;
@@ -45,7 +46,7 @@ public class ParameterClassMember implements ClassMember {
   @Override
   public void renderTreeNode(SimpleColoredComponent component, JTree tree) {
     SpeedSearchUtil.appendFragmentsForSpeedSearch(tree, getText(), SimpleTextAttributes.REGULAR_ATTRIBUTES, false, component);
-    component.setIcon(myParameter.getIcon(0));
+    component.setIcon(IconDescriptorUpdaters.getIcon(myParameter, 0));
   }
 
   @Override

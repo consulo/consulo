@@ -20,6 +20,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
@@ -131,7 +132,7 @@ public class ResolvingElementQuickFix implements LocalQuickFix, IntentionAction 
           }
 
           public Icon getIconFor(final DomElement aValue) {
-            return DomUtil.getFile(aValue).getIcon(0);
+            return IconDescriptorUpdaters.getIcon(DomUtil.getFile(aValue), 0);
           }
 
           @NotNull

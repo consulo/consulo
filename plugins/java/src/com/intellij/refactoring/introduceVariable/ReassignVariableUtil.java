@@ -17,6 +17,7 @@ package com.intellij.refactoring.introduceVariable;
 
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -72,7 +73,7 @@ public class ReassignVariableUtil {
           public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
             if (value instanceof PsiVariable) {
               setText(((PsiVariable)value).getName());
-              setIcon(((PsiVariable)value).getIcon(0));
+              setIcon(IconDescriptorUpdaters.getIcon(((PsiVariable)value), 0));
             }
           }
         });

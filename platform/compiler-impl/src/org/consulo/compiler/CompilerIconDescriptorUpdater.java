@@ -15,44 +15,31 @@
  */
 package org.consulo.compiler;
 
-import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconLayerProvider;
+import com.intellij.ide.IconDescriptor;
+import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 /**
  * @author VISTALL
- * @since 20:18/25.05.13
+ * @since 1:20/19.07.13
  */
-public class CompilerIconLayerProvider implements IconLayerProvider {
+public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
   @Override
-  public Icon getLayerIcon(@NotNull Iconable element, boolean isLocked) {
-    VirtualFile vFile = null;
-    Project project = null;
-    if (element instanceof PsiElement) {
-      project = ((PsiElement)element).getProject();
-      final PsiFile containingFile = ((PsiElement)element).getContainingFile();
-      vFile = containingFile == null ? null : containingFile.getVirtualFile();
-    }
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    Project project = element.getProject();
+    final PsiFile containingFile = element.getContainingFile();
+    VirtualFile vFile = containingFile == null ? null : containingFile.getVirtualFile();
 
     if (vFile != null && isExcluded(vFile, project)) {
-      return AllIcons.Nodes.ExcludedFromCompile;
+      iconDescriptor.addLayerIcon(AllIcons.Nodes.ExcludedFromCompile);
     }
-    return null;
-  }
-
-  @Override
-  public String getLayerDescription() {
-    return CodeInsightBundle.message("node.excluded.flag.tooltip");
   }
 
   public static boolean isExcluded(final VirtualFile vFile, final Project project) {

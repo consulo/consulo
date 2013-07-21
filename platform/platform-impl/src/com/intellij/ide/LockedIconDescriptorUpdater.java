@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,21 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 1:10/19.07.13
  */
-public interface IconLayerProvider {
-  ExtensionPointName<IconLayerProvider> EP_NAME = ExtensionPointName.create("com.intellij.iconLayerProvider");
-
-  @Nullable
-  Icon getLayerIcon(@NotNull Iconable element, boolean isLocked);
-
-  @Nullable
-  String getLayerDescription();
+public class LockedIconDescriptorUpdater implements IconDescriptorUpdater {
+  @Override
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    final boolean isLocked = (flags & Iconable.ICON_FLAG_READ_STATUS) != 0 && !element.isWritable();
+    if(isLocked) {
+      iconDescriptor.addLayerIcon(AllIcons.Nodes.Locked);
+    }
+  }
 }

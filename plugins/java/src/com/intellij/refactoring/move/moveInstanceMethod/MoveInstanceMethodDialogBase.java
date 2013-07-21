@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.move.moveInstanceMethod;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
@@ -143,7 +144,7 @@ public abstract class MoveInstanceMethodDialogBase extends RefactoringDialog {
       final String text = PsiFormatUtil.formatVariable(psiVariable,
                                                        PsiFormatUtil.SHOW_NAME | PsiFormatUtil.SHOW_TYPE,
                                                        PsiSubstitutor.EMPTY);
-      setIcon(psiVariable.getIcon(0));
+      setIcon(IconDescriptorUpdaters.getIcon(psiVariable, 0));
       setText(text);
       return this;
     }

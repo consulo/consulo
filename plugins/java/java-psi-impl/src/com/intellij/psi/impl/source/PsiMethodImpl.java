@@ -23,7 +23,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.PsiSuperMethodImplUtil;
@@ -41,12 +40,9 @@ import com.intellij.psi.util.MethodSignature;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
@@ -338,13 +334,6 @@ public class PsiMethodImpl extends JavaStubPsiElement<PsiMethodStub> implements 
   }
 
   @Override
-  public Icon getElementIcon(final int flags) {
-    Icon methodIcon = hasModifierProperty(PsiModifier.ABSTRACT) ? PlatformIcons.ABSTRACT_METHOD_ICON : PlatformIcons.METHOD_ICON;
-    RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(methodIcon, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-
-  @Override
   public boolean isEquivalentTo(final PsiElement another) {
     return PsiClassImplUtil.isMethodEquivalentTo(this, another);
   }
@@ -363,10 +352,5 @@ public class PsiMethodImpl extends JavaStubPsiElement<PsiMethodStub> implements 
   @Override
   public void putInfo(@NotNull Map<String, String> info) {
     info.put("methodName", getName());
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 }

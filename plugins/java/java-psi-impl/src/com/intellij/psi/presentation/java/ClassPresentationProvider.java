@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.presentation.java;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
@@ -61,7 +62,7 @@ public class ClassPresentationProvider implements ItemPresentationProvider<PsiCl
 
       @Override
       public Icon getIcon(boolean open) {
-        return psiClass.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
+        return IconDescriptorUpdaters.getIcon(psiClass, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
       }
     };
   }

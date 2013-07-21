@@ -17,7 +17,6 @@ package com.intellij.psi.impl.source;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.java.stubs.JavaStubElementTypes;
 import com.intellij.psi.impl.java.stubs.PsiClassInitializerStub;
 import com.intellij.psi.impl.source.tree.ChildRole;
@@ -25,10 +24,7 @@ import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.scope.util.PsiScopesUtil;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 public class PsiClassInitializerImpl extends JavaStubPsiElement<PsiClassInitializerStub> implements PsiClassInitializer {
   public PsiClassInitializerImpl(final PsiClassInitializerStub stub) {
@@ -85,10 +81,5 @@ public class PsiClassInitializerImpl extends JavaStubPsiElement<PsiClassInitiali
   public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
     processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
     return lastParent == null || PsiScopesUtil.walkChildrenScopes(this, processor, state, lastParent, place);
-  }
-
-  @Override
-  public Icon getElementIcon(int flags) {
-    return ElementPresentationUtil.createLayeredIcon(PlatformIcons.CLASS_INITIALIZER, this, false);
   }
 }

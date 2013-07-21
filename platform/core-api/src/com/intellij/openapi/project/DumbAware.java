@@ -25,7 +25,6 @@ package com.intellij.openapi.project;
  * <li> post-startup activities ({@link com.intellij.openapi.startup.StartupManager#registerPostStartupActivity(Runnable)})
  * <li> Stacktrace {@link com.intellij.execution.filters.Filter}s
  * <li> {@link com.intellij.ide.SelectInTarget}s
- * <li> {@link com.intellij.ide.IconProvider}s
  * <li> {@link com.intellij.codeInsight.completion.CompletionContributor}s
  * <li> {@link com.intellij.lang.annotation.Annotator}s
  * <li> {@link com.intellij.codeInsight.daemon.LineMarkerProvider}s

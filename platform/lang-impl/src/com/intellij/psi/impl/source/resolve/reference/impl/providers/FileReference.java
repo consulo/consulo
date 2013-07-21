@@ -22,6 +22,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.LocalQuickFixProvider;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.LangBundle;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -310,7 +311,7 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
         final String encoded = encode(name, psiElement);
         if (encoded == null) continue;
         if (!encoded.equals(name)) {
-          final Icon icon = psiElement.getIcon(Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
+          final Icon icon = IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
           LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, icon);
           encodedVariants.add(item.withTailText(" (" + name + ")"));
         }

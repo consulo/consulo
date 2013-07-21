@@ -15,6 +15,7 @@
  */
 package org.jetbrains.plugins.groovy.findUsages;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
 import com.intellij.navigation.ItemPresentationProviders;
@@ -42,7 +43,7 @@ public class GrFileItemPresentationProvider implements ItemPresentationProvider<
 
       @Override
       public Icon getIcon(boolean unused) {
-        return file.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
+        return IconDescriptorUpdaters.getIcon(file, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
       }
     };
   }

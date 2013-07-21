@@ -22,7 +22,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.PsiSuperMethodImplUtil;
@@ -30,9 +29,7 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.MethodSignature;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -337,19 +334,6 @@ public class LightMethodBuilder extends LightElement implements PsiMethod, Origi
 
   public String toString() {
     return myMethodKind + ":" + getName();
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    Icon methodIcon = myBaseIcon != null ? myBaseIcon :
-                      hasModifierProperty(PsiModifier.ABSTRACT) ? PlatformIcons.ABSTRACT_METHOD_ICON : PlatformIcons.METHOD_ICON;
-    RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(methodIcon, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 
   public LightMethodBuilder setBaseIcon(Icon baseIcon) {

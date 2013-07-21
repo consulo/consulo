@@ -18,17 +18,12 @@ package com.intellij.psi.impl.source.tree.java;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementBase;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.source.Constants;
 import com.intellij.psi.impl.source.tree.ChildRole;
 import com.intellij.psi.tree.ChildRoleBase;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.ui.RowIcon;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 public class PsiClassObjectAccessExpressionImpl extends ExpressionPsiElement implements PsiClassObjectAccessExpression, Constants {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.java.PsiClassObjectAccessExpressionImpl");
@@ -96,19 +91,6 @@ public class PsiClassObjectAccessExpressionImpl extends ExpressionPsiElement imp
 
   public String toString() {
     return "PsiClassObjectAccessExpression:" + getText();
-  }
-
-  @Override
-  protected Icon computeBaseIcon(int flags) {
-    return getElementIcon(flags);
-  }
-
-  @Override
-  @NotNull
-  public Icon getElementIcon(final int flags) {
-    final RowIcon rowIcon = ElementBase.createLayeredIcon(this, PlatformIcons.FIELD_ICON, 0);
-    rowIcon.setIcon(PlatformIcons.PUBLIC_ICON, 1);
-    return rowIcon;
   }
 }
 

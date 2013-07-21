@@ -1,5 +1,6 @@
 package org.jetbrains.plugins.groovy.mvc.projectView;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
@@ -49,6 +50,6 @@ public class FileNode extends AbstractMvcPsiNodeDescriptor {
     final PsiFile value = extractPsiFromValue();
     assert value != null;
     data.setPresentableText(value.getName());
-    data.setIcon(value.getIcon(Iconable.ICON_FLAG_READ_STATUS));
+    data.setIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_READ_STATUS));
   }
 }

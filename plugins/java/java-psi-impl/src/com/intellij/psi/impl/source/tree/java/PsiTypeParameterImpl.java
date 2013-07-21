@@ -368,11 +368,6 @@ public class PsiTypeParameterImpl extends JavaStubPsiElement<PsiTypeParameterStu
   }
 
   @Override
-  public Icon getElementIcon(final int flags) {
-    return PsiClassImplUtil.getClassIcon(flags, this);
-  }
-
-  @Override
   public boolean isEquivalentTo(final PsiElement another) {
     return PsiClassImplUtil.isClassEquivalentTo(this, another);
   }

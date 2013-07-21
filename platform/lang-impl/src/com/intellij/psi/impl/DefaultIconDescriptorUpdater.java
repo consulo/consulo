@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,11 @@
 package com.intellij.psi.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconProvider;
+import com.intellij.ide.IconDescriptor;
+import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
@@ -26,31 +28,29 @@ import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 0:28/19.07.13
  */
-public class DefaultIconProvider extends IconProvider implements DumbAware {
-  public static final DefaultIconProvider INSTANCE = new DefaultIconProvider();
-
+public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
   @Override
-  @Nullable
-  public Icon getIcon(@NotNull final PsiElement element, final int flags) {
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     if (element instanceof PsiDirectory) {
       final PsiDirectory psiDirectory = (PsiDirectory)element;
       final VirtualFile vFile = psiDirectory.getVirtualFile();
       final Project project = psiDirectory.getProject();
-      boolean isJarRoot = vFile.getParent() == null && vFile.getFileSystem() instanceof ArchiveFileSystem;
+      boolean isArhiveSystem = vFile.getParent() == null && vFile.getFileSystem() instanceof ArchiveFileSystem;
       boolean isContentRoot = ProjectRootsUtil.isModuleContentRoot(vFile, project);
       ContentFolder contentFolder = ProjectRootsUtil.findContentRoot(vFile, project);
 
       Icon symbolIcon;
-      if (isJarRoot) {
+      if (isArhiveSystem) {
         symbolIcon = AllIcons.Nodes.PpJar;
       }
       else if (isContentRoot) {
@@ -65,8 +65,19 @@ public class DefaultIconProvider extends IconProvider implements DumbAware {
       else {
         symbolIcon = AllIcons.Nodes.TreeClosed;
       }
-      return ElementBase.createLayeredIcon(element, symbolIcon, 0);
+
+      iconDescriptor.setMainIcon(symbolIcon);
     }
-    return null;
+    else if(element instanceof PsiFile && iconDescriptor.getMainIcon() == null) {
+      final VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
+      if(virtualFile != null) {
+        iconDescriptor.setMainIcon(NativeFileIconUtil.INSTANCE.getIcon(virtualFile));
+      }
+
+      if(iconDescriptor.getMainIcon() == null) {
+        final FileType fileType = ((PsiFile)element).getFileType();
+        iconDescriptor.setMainIcon(fileType.getIcon());
+      }
+    }
   }
 }

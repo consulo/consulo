@@ -19,7 +19,6 @@ import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.PlatformIcons;
 import org.intellij.lang.xpath.psi.XPathElementVisitor;
 import org.intellij.lang.xpath.psi.XPathExpression;
 import org.intellij.lang.xpath.psi.XPathType;
@@ -31,17 +30,10 @@ import org.intellij.lang.xpath.xslt.util.XsltCodeInsightUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-
 public class XsltVariableImpl extends XsltElementImpl implements XsltVariable {
 
     XsltVariableImpl(XmlTag target) {
         super(target);
-    }
-
-    @Override
-    public Icon getIcon(int i) {
-        return PlatformIcons.VARIABLE_ICON;
     }
 
     @NotNull

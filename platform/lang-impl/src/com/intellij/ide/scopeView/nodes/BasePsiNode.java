@@ -16,6 +16,7 @@
 
 package com.intellij.ide.scopeView.nodes;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -59,7 +60,8 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   public Icon getIcon() {
     final PsiElement element = getPsiElement();
     if (myIcon == null) {
-      myIcon = element != null && element.isValid() ? element.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS) : null;
+      myIcon = element != null && element.isValid() ? IconDescriptorUpdaters
+        .getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS) : null;
     }
     return myIcon;
   }
@@ -87,7 +89,7 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   }
 
   public boolean equals(Object o) {
-    if (isEquals()){
+    if (isEquals()) {
       return super.equals(o);
     }
     if (this == o) return true;

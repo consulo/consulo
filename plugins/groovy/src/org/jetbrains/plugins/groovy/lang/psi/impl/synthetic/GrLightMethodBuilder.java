@@ -18,7 +18,6 @@ package org.jetbrains.plugins.groovy.lang.psi.impl.synthetic;
 import com.intellij.codeInsight.completion.originInfo.OriginInfoAwareElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.PsiSuperMethodImplUtil;
@@ -29,9 +28,7 @@ import com.intellij.psi.presentation.java.JavaPresentationUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.*;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
@@ -381,19 +378,6 @@ public class GrLightMethodBuilder  extends LightElement implements GrMethod, Ori
   @Override
   public String toString() {
     return myMethodKind + ":" + getName();
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    Icon methodIcon = myBaseIcon != null ? myBaseIcon :
-                      hasModifierProperty(PsiModifier.ABSTRACT) ? PlatformIcons.ABSTRACT_METHOD_ICON : PlatformIcons.METHOD_ICON;
-    RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(methodIcon, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
   }
 
   public GrLightMethodBuilder setBaseIcon(Icon baseIcon) {

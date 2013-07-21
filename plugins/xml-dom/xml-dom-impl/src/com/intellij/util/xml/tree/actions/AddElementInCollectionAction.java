@@ -16,6 +16,7 @@
 
 package com.intellij.util.xml.tree.actions;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -164,7 +165,7 @@ public class AddElementInCollectionAction extends AddDomElementAction {
 
       for (DomElement implementation : implementations) {
         final XmlFile xmlFile = DomUtil.getFile(implementation);
-        actionGroup.add(new MyDefaultAddAction(implementation, xmlFile.getName(), xmlFile.getIcon(0), e, type, description));
+        actionGroup.add(new MyDefaultAddAction(implementation, xmlFile.getName(), IconDescriptorUpdaters.getIcon(xmlFile, 0), e, type, description));
       }
       return actionGroup;
     }

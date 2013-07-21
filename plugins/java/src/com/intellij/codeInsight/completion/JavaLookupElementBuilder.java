@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
@@ -39,7 +40,7 @@ public class JavaLookupElementBuilder {
                                               final String lookupString,
                                               final @Nullable PsiClass qualifierClass) {
     final LookupElementBuilder builder = LookupElementBuilder.create(field, lookupString).withIcon(
-      field.getIcon(Iconable.ICON_FLAG_VISIBILITY));
+      IconDescriptorUpdaters.getIcon(field, Iconable.ICON_FLAG_VISIBILITY));
     return setBoldIfInClass(field, qualifierClass, builder);
   }
 
@@ -51,7 +52,7 @@ public class JavaLookupElementBuilder {
                                                @NotNull String lookupString, final @NotNull PsiSubstitutor substitutor,
                                                @Nullable PsiClass qualifierClass) {
     LookupElementBuilder builder = LookupElementBuilder.create(method, lookupString)
-      .withIcon(method.getIcon(Iconable.ICON_FLAG_VISIBILITY))
+      .withIcon(IconDescriptorUpdaters.getIcon(method, Iconable.ICON_FLAG_VISIBILITY))
       .withPresentableText(method.getName())
       .withTailText(PsiFormatUtil.formatMethod(method, substitutor,
                                                PsiFormatUtilBase.SHOW_PARAMETERS,
@@ -84,7 +85,7 @@ public class JavaLookupElementBuilder {
                                               final String lookupString,
                                               final boolean withLocation) {
     LookupElementBuilder builder =
-      LookupElementBuilder.create(psiClass, lookupString).withIcon(psiClass.getIcon(Iconable.ICON_FLAG_VISIBILITY));
+      LookupElementBuilder.create(psiClass, lookupString).withIcon(IconDescriptorUpdaters.getIcon(psiClass, Iconable.ICON_FLAG_VISIBILITY));
     String name = psiClass.getName();
     if (StringUtil.isNotEmpty(name)) {
       builder = builder.withLookupString(name);

@@ -35,13 +35,10 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.VisibilityIcons;
 import com.intellij.util.containers.ContainerUtil;
-import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,10 +72,8 @@ import org.jetbrains.plugins.groovy.lang.psi.stubs.GrTypeDefinitionStub;
 import org.jetbrains.plugins.groovy.lang.psi.util.GrClassImplUtil;
 import org.jetbrains.plugins.groovy.lang.psi.util.PsiUtil;
 import org.jetbrains.plugins.groovy.lang.resolve.ast.AstTransformContributor;
-import org.jetbrains.plugins.groovy.runner.GroovyRunnerUtil;
 import org.jetbrains.plugins.groovy.util.LightCacheKey;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -670,39 +665,6 @@ public abstract class GrTypeDefinitionImpl extends GrStubElementBase<GrTypeDefin
     }
 
     return GrTypeParameter.EMPTY_ARRAY;
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
-  }
-
-  @Nullable
-  public Icon getIcon(int flags) {
-    Icon icon = getIconInner();
-    final boolean isLocked = (flags & ICON_FLAG_READ_STATUS) != 0 && !isWritable();
-    RowIcon rowIcon = createLayeredIcon(this, icon, ElementPresentationUtil.getFlags(this, isLocked) | getFlagsInner());
-    if ((flags & ICON_FLAG_VISIBILITY) != 0) {
-      VisibilityIcons.setVisibilityIcon(getModifierList(), rowIcon);
-    }
-    return rowIcon;
-  }
-
-  //hack to get runnable icon for all classes that can be run by Groovy
-  private int getFlagsInner() {
-    return GroovyRunnerUtil.isRunnable(this) ? ElementPresentationUtil.FLAGS_RUNNABLE : 0;
-  }
-
-  private Icon getIconInner() {
-    if (isAnnotationType()) return JetgroovyIcons.Groovy.AnnotationType;
-
-    if (isInterface()) return JetgroovyIcons.Groovy.Interface;
-
-    if (isEnum()) return JetgroovyIcons.Groovy.Enum;
-
-    if (hasModifierProperty(PsiModifier.ABSTRACT)) return JetgroovyIcons.Groovy.AbstractClass;
-
-    return JetgroovyIcons.Groovy.Class;
   }
 
   private boolean isRenameFileOnClassRenaming() {

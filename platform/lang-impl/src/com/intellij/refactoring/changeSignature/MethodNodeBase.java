@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
@@ -100,7 +101,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
   public void customizeRenderer(ColoredTreeCellRenderer renderer) {
     if (myMethod == null) return;
     int flags = Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS;
-    renderer.setIcon(myMethod.getIcon(flags));
+    renderer.setIcon(IconDescriptorUpdaters.getIcon(myMethod, flags));
 
     customizeRendererText(renderer);
   }

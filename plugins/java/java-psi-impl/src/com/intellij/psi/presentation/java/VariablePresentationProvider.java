@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.presentation.java;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
 import com.intellij.navigation.NavigationItem;
@@ -42,7 +43,7 @@ public class VariablePresentationProvider<T extends PsiVariable & NavigationItem
 
       @Override
       public Icon getIcon(boolean open) {
-        return variable.getIcon(0);
+        return IconDescriptorUpdaters.getIcon(variable, 0);
       }
     };
   }

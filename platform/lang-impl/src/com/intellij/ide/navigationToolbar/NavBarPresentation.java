@@ -16,6 +16,7 @@
 package com.intellij.ide.navigationToolbar;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.application.ApplicationManager;
@@ -71,7 +72,7 @@ public class NavBarPresentation {
         Icon icon = ApplicationManager.getApplication().runReadAction(new Computable<Icon>() {
           @Override
           public Icon compute() {
-            return ((PsiElement)object).isValid() ? ((PsiElement)object).getIcon(0) : null;
+            return ((PsiElement)object).isValid() ? IconDescriptorUpdaters.getIcon(((PsiElement)object), 0) : null;
           }
         });
 

@@ -19,7 +19,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolder;
@@ -38,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
  * for high-level overview.
  */
-public interface PsiElement extends UserDataHolder, Iconable {
+public interface PsiElement extends UserDataHolder {
   /**
    * The empty array of PSI elements which can be reused to avoid unnecessary allocations.
    */

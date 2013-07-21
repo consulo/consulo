@@ -18,6 +18,7 @@ package com.intellij.codeInsight.completion.util;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiPrimitiveType;
@@ -101,7 +102,7 @@ public class PsiTypeCanonicalLookupElement extends LookupElement {
   public void renderElement(LookupElementPresentation presentation) {
     final PsiClass psiClass = getPsiClass();
     if (psiClass != null) {
-      presentation.setIcon(presentation.isReal() ? psiClass.getIcon(Iconable.ICON_FLAG_VISIBILITY) : EMPTY_ICON);
+      presentation.setIcon(presentation.isReal() ? IconDescriptorUpdaters.getIcon(psiClass, Iconable.ICON_FLAG_VISIBILITY) : EMPTY_ICON);
       presentation.setTailText(" (" + PsiFormatUtil.getPackageDisplayName(psiClass) + ")", true);
     }
     final PsiType type = getPsiType();

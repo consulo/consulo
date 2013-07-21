@@ -372,11 +372,6 @@ public class DynamicMemberUtils {
     }
 
     @Override
-    public Icon getIcon(int flags) {
-      return myMethod.getIcon(flags);
-    }
-
-    @Override
     public String getSource() {
       return mySource;
     }

@@ -17,6 +17,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
@@ -141,7 +142,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         int flags = getIconableFlags();
 
         try {
-          Icon icon = value.getIcon(flags);
+          Icon icon = IconDescriptorUpdaters.getIcon(value, flags);
           data.setIcon(icon);
         }
         catch (IndexNotReadyException ignored) {

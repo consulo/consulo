@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.generation;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDocCommentOwner;
@@ -34,7 +35,7 @@ public abstract class PsiElementClassMember<T extends PsiDocCommentOwner> extend
   }
 
   protected PsiElementClassMember(final T psiMember, final PsiSubstitutor substitutor, String text) {
-    super(psiMember, text, psiMember.getIcon(Iconable.ICON_FLAG_VISIBILITY));
+    super(psiMember, text, IconDescriptorUpdaters.getIcon(psiMember, Iconable.ICON_FLAG_VISIBILITY));
     myPsiMember = psiMember;
     mySubstitutor = substitutor;
   }
@@ -56,7 +57,7 @@ public abstract class PsiElementClassMember<T extends PsiDocCommentOwner> extend
   public MemberChooserObject getParentNodeDelegate() {
     final PsiClass psiClass = getContainingClass();
     final String text = PsiFormatUtil.formatClass(psiClass, PsiFormatUtilBase.SHOW_NAME | PsiFormatUtilBase.SHOW_FQ_NAME);
-    return new PsiDocCommentOwnerMemberChooserObject(psiClass, text, psiClass.getIcon(0));
+    return new PsiDocCommentOwnerMemberChooserObject(psiClass, text, IconDescriptorUpdaters.getIcon(psiClass, 0));
   }
 
   protected PsiClass getContainingClass() {

@@ -26,6 +26,7 @@ import com.intellij.codeInsight.completion.originInfo.OriginInfoProvider;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupItem;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
@@ -334,7 +335,7 @@ public class GroovyCompletionUtil {
                                                          PsiSubstitutor substitutor,
                                                          LookupElementBuilder builder,
                                                          @Nullable PsiElement position) {
-    builder = builder.withIcon(element.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS))
+    builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS))
       .withInsertHandler(GroovyInsertHandler.INSTANCE);
     builder = setTailText(element, builder, substitutor);
     builder = setTypeText(element, builder, substitutor, position);

@@ -21,7 +21,6 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import icons.XpathIcons;
 import org.intellij.lang.xpath.context.functions.Function;
 import org.intellij.lang.xpath.context.functions.FunctionImpl;
 import org.intellij.lang.xpath.context.functions.Parameter;
@@ -35,7 +34,6 @@ import org.intellij.lang.xpath.xslt.util.XsltCodeInsightUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import javax.xml.namespace.QName;
 
 /*
@@ -75,11 +73,6 @@ public class XsltFunctionImpl extends XsltElementImpl implements XsltFunction, I
     final String name = getTag().getAttributeValue("name");
     assert name != null;
     return QNameUtil.createQName(name, getTag());
-  }
-
-  @Override
-  public Icon getIcon(boolean open) {
-    return XpathIcons.Function;
   }
 
   @Override

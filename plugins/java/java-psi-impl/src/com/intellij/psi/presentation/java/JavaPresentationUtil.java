@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.presentation.java;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
@@ -57,7 +58,7 @@ public class JavaPresentationUtil {
 
       @Override
       public Icon getIcon(boolean open) {
-        return psiMethod.getIcon(Iconable.ICON_FLAG_VISIBILITY);
+        return IconDescriptorUpdaters.getIcon(psiMethod, Iconable.ICON_FLAG_VISIBILITY);
       }
     };
   }
@@ -84,7 +85,7 @@ public class JavaPresentationUtil {
 
       @Override
       public Icon getIcon(boolean open) {
-        return psiField.getIcon(Iconable.ICON_FLAG_VISIBILITY);
+        return IconDescriptorUpdaters.getIcon(psiField, Iconable.ICON_FLAG_VISIBILITY);
       }
     };
   }

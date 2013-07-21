@@ -49,10 +49,8 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -604,11 +602,6 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
   @Override
   public void navigate(boolean requestFocus) {
     PsiNavigationSupport.getInstance().navigateToDirectory(this, requestFocus);
-  }
-
-  @Override
-  protected Icon getElementIcon(final int flags) {
-    return PlatformIcons.DIRECTORY_CLOSED_ICON;
   }
 
   @Override

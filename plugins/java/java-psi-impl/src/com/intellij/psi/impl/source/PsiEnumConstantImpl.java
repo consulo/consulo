@@ -21,7 +21,6 @@ import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementPresentationUtil;
 import com.intellij.psi.impl.PsiClassImplUtil;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.java.stubs.JavaStubElementTypes;
@@ -29,13 +28,9 @@ import com.intellij.psi.impl.java.stubs.PsiFieldStub;
 import com.intellij.psi.impl.source.tree.ChildRole;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 /**
  * @author dsl
@@ -212,17 +207,6 @@ public class PsiEnumConstantImpl extends JavaStubPsiElement<PsiFieldStub> implem
   @Override
   public PsiMethod resolveConstructor() {
     return resolveMethod();
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(PlatformIcons.FIELD_ICON, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 
   private class MyReference implements PsiJavaReference {

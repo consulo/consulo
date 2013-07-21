@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.ui;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiClass;
@@ -46,7 +47,7 @@ public class ClassCellRenderer extends ListCellRendererWrapper<PsiClass> {
       if (myShowReadOnly) {
         flags |= Iconable.ICON_FLAG_READ_STATUS;
       }
-      Icon icon = aClass.getIcon(flags);
+      Icon icon = IconDescriptorUpdaters.getIcon(aClass, flags);
       if (icon != null) {
         setIcon(icon);
       }

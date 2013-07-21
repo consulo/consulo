@@ -15,11 +15,14 @@
  */
 package com.intellij.psi.impl;
 
-import com.intellij.ide.IconProvider;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.TypePresentationService;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
-import com.intellij.pom.*;
+import com.intellij.pom.PomNamedTarget;
+import com.intellij.pom.PomRenameableTarget;
+import com.intellij.pom.PomTarget;
+import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiTarget;
@@ -85,20 +88,11 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
 
   @Override
   public Icon getIcon() {
-    for (IconProvider iconProvider : IconProvider.EXTENSION_POINT_NAME.getExtensions()) {
-      if (iconProvider instanceof PomIconProvider) {
-        final Icon icon = ((PomIconProvider)iconProvider).getIcon(myTarget, 0);
-        if (icon != null) {
-          return icon;
-        }
-      }
-    }
-
     Icon icon = TypePresentationService.getService().getIcon(myTarget);
     if (icon != null) return icon;
 
     if (myTarget instanceof PsiTarget) {
-      return ((PsiTarget)myTarget).getNavigationElement().getIcon(0);
+      return IconDescriptorUpdaters.getIcon(((PsiTarget)myTarget).getNavigationElement(), 0);
     }
     return null;
   }

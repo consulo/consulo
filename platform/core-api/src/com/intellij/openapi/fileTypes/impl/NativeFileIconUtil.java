@@ -16,14 +16,15 @@
 
 package com.intellij.openapi.fileTypes.impl;
 
-import com.intellij.ide.FileIconProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.INativeFileType;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.impl.ElementBase;
-import com.intellij.ui.DeferredIconImpl;
+import com.intellij.ui.IconDeferrer;
 import com.intellij.util.Function;
+import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.update.ComparableObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +36,9 @@ import java.util.*;
 /**
  * @author yole
  */
-public class NativeFileIconProvider implements FileIconProvider {
+public class NativeFileIconUtil {
+  public static final NativeFileIconUtil INSTANCE = new NativeFileIconUtil();
+
   private final Map<Ext, Icon> myIconCache = new HashMap<Ext, Icon>();
   // on Windows .exe and .ico files provide their own icons which can differ for each file, cache them by full file path
   private final Set<Ext> myCustomIconExtensions =
@@ -44,13 +47,12 @@ public class NativeFileIconProvider implements FileIconProvider {
 
   private static final Ext NO_EXT = new Ext(null);
 
-  private static final Ext CLOSED_DIR = new Ext(null, 0);
+  private static final Ext CLOSED_DIR = new Ext(null);
 
-  @Override
-  public Icon getIcon(@NotNull VirtualFile file, final int flags, @Nullable Project project) {
+  public Icon getIcon(@NotNull VirtualFile file) {
     if (!isNativeFileType(file)) return null;
 
-    final Ext ext = getExtension(file, flags);
+    final Ext ext = getExtension(file);
     final String filePath = file.getPath();
 
     Icon icon;
@@ -65,7 +67,7 @@ public class NativeFileIconProvider implements FileIconProvider {
     if (icon != null) {
       return icon;
     }
-    return new DeferredIconImpl<VirtualFile>(ElementBase.ICON_PLACEHOLDER.getValue(), file, false, new Function<VirtualFile, Icon>() {
+    return IconDeferrer.getInstance().defer(EmptyIcon.ICON_16, file, new Function<VirtualFile, Icon>() {
       @Override
       public Icon fun(VirtualFile virtualFile) {
         final File f = new File(filePath);
@@ -100,12 +102,13 @@ public class NativeFileIconProvider implements FileIconProvider {
     return file == null ? null : SwingComponentHolder.ourFileChooser.getIcon(file);
   }
 
-  private static Ext getExtension(final VirtualFile file, final int flags) {
+  private static Ext getExtension(final VirtualFile file) {
     if (file.isDirectory()) {
       if (file.getExtension() == null) {
         return CLOSED_DIR;
-      } else {
-        return new Ext(file.getExtension(), flags);
+      }
+      else {
+        return new Ext(file.getExtension());
       }
     }
 
@@ -116,19 +119,19 @@ public class NativeFileIconProvider implements FileIconProvider {
     private static final JFileChooser ourFileChooser = new JFileChooser();
   }
 
-  protected boolean isNativeFileType(VirtualFile file) {
-    return ElementBase.isNativeFileType(file.getFileType());
+  public static boolean isNativeFileType(VirtualFile file) {
+    return isNativeFileType(file.getFileType());
+  }
+
+  public static boolean isNativeFileType(FileType fileType) {
+    return fileType instanceof INativeFileType && ((INativeFileType)fileType).useNativeIcon() || fileType instanceof UnknownFileType;
   }
 
   private static class Ext extends ComparableObject.Impl {
     private final Object[] myText;
 
     private Ext(@Nullable String text) {
-      myText = new Object[] {text};
-    }
-
-    private Ext(@Nullable String text, final int flags) {
-      myText = new Object[] {text, flags};
+      myText = new Object[]{text};
     }
 
     @Override

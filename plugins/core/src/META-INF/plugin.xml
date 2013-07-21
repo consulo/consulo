@@ -3091,9 +3091,7 @@
     <extensionPoint name="statisticsService" interface="com.intellij.internal.statistic.connect.StatisticsService"/>
     <extensionPoint name="productivityFeaturesProvider" interface="com.intellij.featureStatistics.ProductivityFeaturesProvider"/>
 
-    <extensionPoint name="fileIconProvider" interface="com.intellij.ide.FileIconProvider"/>
-    <extensionPoint name="fileIconPatcher" interface="com.intellij.ide.FileIconPatcher"/>
-    <extensionPoint name="iconLayerProvider" interface="com.intellij.ide.IconLayerProvider"/>
+    <extensionPoint name="iconDescriptorUpdater" interface="com.intellij.ide.IconDescriptorUpdater"/>
 
     <extensionPoint name="customizableActionGroupProvider" interface="com.intellij.ide.ui.customization.CustomizableActionGroupProvider"/>
 
@@ -3553,8 +3551,6 @@
 
     <extensionPoint name="fileTemplateGroup"
                     interface="com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory"/>
-    <extensionPoint name="iconProvider"
-                    interface="com.intellij.ide.IconProvider"/>
     <extensionPoint name="colorProvider"
                     interface="com.intellij.openapi.editor.ElementColorProvider"/>
     <extensionPoint name="createFromTemplateHandler"
@@ -4327,7 +4323,7 @@
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
 
-    <iconLayerProvider implementation="com.intellij.ide.LockedIconLayerProvider"/>
+    <iconDescriptorUpdater implementation="com.intellij.ide.LockedIconDescriptorUpdater" />
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.LargeFileEditorProvider"/>
     <frameEditorComponentProvider implementation="com.intellij.openapi.wm.ex.DefaultFrameEditorComponentProvider"/>
@@ -5302,8 +5298,6 @@
     <projectViewPane implementation="com.intellij.ide.favoritesTreeView.FavoritesProjectViewPane"/>
     <projectViewPane implementation="com.intellij.ide.scopeView.ScopeViewPane"/>
 
-    <fileIconProvider implementation="com.intellij.openapi.fileTypes.impl.NativeFileIconProvider"/>
-    <fileIconProvider implementation="com.intellij.ide.FileIconPatcherImpl"/>
     <renameHandler implementation="com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler"/>
     <renameHandler implementation="com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler"/>
     <completion.contributor language="any"
@@ -5485,7 +5479,7 @@
     <bundledColorScheme path="/colorSchemes/vibrant_ink.xml"/>
     <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
 
-    <iconProvider implementation="com.intellij.psi.impl.DefaultIconProvider" id="defaultIconProvider" order="last"/>
+    <iconDescriptorUpdater implementation="com.intellij.psi.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
     <psi.packageResolver implementation="org.consulo.psi.impl.DefaultPsiPackageResolver"/>
     <psi.packageResolver implementation="org.consulo.psi.impl.LibraryPsiPackageResolver"/>
 
@@ -5493,7 +5487,7 @@
     <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>
     <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last"/>
     <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last"/>
-    <iconLayerProvider implementation="org.consulo.compiler.CompilerIconLayerProvider"/>
+    <iconDescriptorUpdater implementation="org.consulo.compiler.CompilerIconDescriptorUpdater" />
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
     <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
@@ -5544,5 +5538,7 @@
                         serviceImplementation="com.intellij.remoteServer.deployment.impl.DeploymentSourceUtilImpl"/>
     <applicationConfigurable instance="com.intellij.remoteServer.configuration.impl.RemoteServerListConfigurable"/>
     <programRunner implementation="com.intellij.remoteServer.run.DeployToServerRunner"/>
+
+    <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
   </extensions>
 </idea-plugin>

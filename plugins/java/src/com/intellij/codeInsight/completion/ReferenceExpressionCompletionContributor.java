@@ -19,6 +19,7 @@ import com.intellij.codeInsight.lookup.ExpressionLookupItem;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
 import com.intellij.featureStatistics.FeatureUsageTracker;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -254,7 +255,7 @@ public class ReferenceExpressionCompletionContributor {
           final String text = variable.getName() + "[0]";
           final PsiExpression conversion = createExpression(text, element);
           ExpressionLookupItem result = new ExpressionLookupItem(conversion);
-          result.setIcon(variable.getIcon(Iconable.ICON_FLAG_VISIBILITY));
+          result.setIcon(IconDescriptorUpdaters.getIcon(variable, Iconable.ICON_FLAG_VISIBILITY));
           return result;
         }
       }
@@ -313,7 +314,7 @@ public class ReferenceExpressionCompletionContributor {
       item.setLookupString(prefix);
       item.setPresentableText(presentable);
       item.addLookupStrings(prefix);
-      item.setIcon(object.getIcon(Iconable.ICON_FLAG_VISIBILITY));
+      item.setIcon(IconDescriptorUpdaters.getIcon(object, Iconable.ICON_FLAG_VISIBILITY));
       item.setInsertHandler(new InsertHandler<LookupElement>() {
         @Override
         public void handleInsert(InsertionContext context, LookupElement item) {

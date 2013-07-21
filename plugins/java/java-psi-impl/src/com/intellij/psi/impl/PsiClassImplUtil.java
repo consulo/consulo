@@ -312,37 +312,6 @@ public class PsiClassImplUtil {
     }
   }
 
-  private static final Function<ClassIconRequest, Icon> FULL_ICON_EVALUATOR = new NullableFunction<ClassIconRequest, Icon>() {
-    @Override
-    public Icon fun(ClassIconRequest r) {
-      if (!r.psiClass.isValid() || r.psiClass.getProject().isDisposed()) return null;
-
-      final boolean isLocked = (r.flags & Iconable.ICON_FLAG_READ_STATUS) != 0 && !r.psiClass.isWritable();
-      Icon symbolIcon = r.symbolIcon != null
-                        ? r.symbolIcon
-                        : ElementPresentationUtil.getClassIconOfKind(r.psiClass, ElementPresentationUtil.getClassKind(r.psiClass));
-      RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(symbolIcon, r.psiClass, isLocked);
-      return ElementPresentationUtil.addVisibilityIcon(r.psiClass, r.flags, baseIcon);
-    }
-  };
-
-  public static Icon getClassIcon(final int flags, @NotNull PsiClass aClass) {
-    return getClassIcon(flags, aClass, null);
-  }
-
-  public static Icon getClassIcon(int flags, @NotNull PsiClass aClass, @Nullable Icon symbolIcon) {
-    Icon base = Iconable.LastComputedIcon.get(aClass, flags);
-    if (base == null) {
-      if (symbolIcon == null) {
-        symbolIcon = ElementPresentationUtil.getClassIconOfKind(aClass, ElementPresentationUtil.getBasicClassKind(aClass));
-      }
-      RowIcon baseIcon = ElementBase.createLayeredIcon(aClass, symbolIcon, 0);
-      base = ElementPresentationUtil.addVisibilityIcon(aClass, flags, baseIcon);
-    }
-
-    return IconDeferrer.getInstance().defer(base, new ClassIconRequest(aClass, flags, symbolIcon), FULL_ICON_EVALUATOR);
-  }
-
   @NotNull
   public static SearchScope getClassUseScope(@NotNull PsiClass aClass) {
     if (aClass instanceof PsiAnonymousClass) {

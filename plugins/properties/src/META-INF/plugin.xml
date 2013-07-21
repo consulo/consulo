@@ -79,7 +79,7 @@
     <fileEditorProvider implementation="com.intellij.lang.properties.editor.ResourceBundleEditorProvider"/>
     <fileBasedIndex implementation="com.intellij.lang.properties.xml.XmlPropertiesIndex"/>
 
-    <iconProvider implementation="com.intellij.lang.properties.xml.XmlPropertiesIconProvider"/>
+    <iconDescriptorUpdater implementation="com.intellij.lang.properties.xml.XmlPropertiesIconDescriptorUpdater" order="after xml"/>
     <psi.referenceContributor language="XML" implementation="com.intellij.lang.properties.xml.XmlPropertiesReferenceContributor"/>
     <lang.foldingBuilder language="Properties" implementationClass="com.intellij.lang.properties.editor.PropertiesFoldingBuilder" />
   </extensions>

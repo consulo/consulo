@@ -34,7 +34,6 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -348,11 +347,6 @@ public class ClsTypeParameterImpl extends ClsRepositoryPsiElement<PsiTypeParamet
 
   public PsiMetaData getMetaData() {
     return MetaRegistry.getMeta(this);
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    return PsiClassImplUtil.getClassIcon(flags, this);
   }
 
   @Override

@@ -32,7 +32,6 @@ import com.intellij.psi.search.SearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -318,11 +317,6 @@ public class PsiUtilCore {
 
     @Override
     public <T> void putUserData(@NotNull Key<T> key, T value) {
-      throw createException();
-    }
-
-    @Override
-    public Icon getIcon(int flags) {
       throw createException();
     }
 

@@ -18,7 +18,6 @@ package org.jetbrains.plugins.groovy.util.dynamicMembers;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.light.LightElement;
 import com.intellij.util.IncorrectOperationException;
-import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +30,6 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpres
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.members.GrAccessorMethod;
 import org.jetbrains.plugins.groovy.lang.psi.api.types.GrTypeElement;
 
-import javax.swing.*;
 import java.util.Map;
 
 /**
@@ -74,15 +72,9 @@ public class GrDynamicPropertyImpl extends LightElement implements GrField {
   }
 
   @Override
-  public Icon getIcon(int flags) {
-    return JetgroovyIcons.Groovy.Property;
-  }
-
-  @Override
   public PsiFile getContainingFile() {
     return myContainingClass != null ? myContainingClass.getContainingFile() : null;
   }
-
 
   @Override
   public String toString() {

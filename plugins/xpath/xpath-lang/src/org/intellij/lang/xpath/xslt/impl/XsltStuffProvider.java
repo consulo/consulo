@@ -17,6 +17,7 @@
 package org.intellij.lang.xpath.xslt.impl;
 
 import com.intellij.codeInspection.LocalInspectionTool;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
@@ -79,7 +80,7 @@ public class XsltStuffProvider implements UsageGroupingRuleProvider {
         }
 
         public Icon getIcon(boolean isOpen) {
-            return myTemplate.getIcon(0);
+            return IconDescriptorUpdaters.getIcon(myTemplate, 0);
         }
 
         @NotNull

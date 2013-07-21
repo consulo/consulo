@@ -15,6 +15,7 @@
  */
 package org.jetbrains.plugins.groovy.refactoring.ui;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -100,8 +101,7 @@ public class MethodOrClosureScopeChooser {
                                             PsiFormatUtilBase.SHOW_NAME |
                                             PsiFormatUtilBase.SHOW_PARAMETERS,
                                             PsiFormatUtilBase.SHOW_TYPE);
-          final int flags = Iconable.ICON_FLAG_VISIBILITY;
-          final Icon icon = method.getIcon(flags);
+          final Icon icon = IconDescriptorUpdaters.getIcon(method, Iconable.ICON_FLAG_VISIBILITY);
           if (icon != null) setIcon(icon);
         }
         else {

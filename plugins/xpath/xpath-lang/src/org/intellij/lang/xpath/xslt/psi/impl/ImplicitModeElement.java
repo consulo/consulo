@@ -1,5 +1,6 @@
 package org.intellij.lang.xpath.xslt.psi.impl;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.TextRange;
@@ -14,7 +15,6 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.IncorrectOperationException;
-import icons.XpathIcons;
 import org.intellij.lang.xpath.completion.CompletionLists;
 import org.intellij.lang.xpath.xslt.context.XsltNamespaceContext;
 import org.intellij.lang.xpath.xslt.impl.references.PrefixReference;
@@ -52,11 +52,6 @@ public class ImplicitModeElement extends LightElement implements PsiNamedElement
     @Nullable
     private String getPrefix() {
         return hasPrefix() ? PrefixReference.getPrefixRange(myAttribute).substring(myAttribute.getValue()) : null;
-    }
-
-    @Override
-    public Icon getIcon(int i) {
-        return XpathIcons.Template;
     }
 
     public String getName() {
@@ -134,7 +129,7 @@ public class ImplicitModeElement extends LightElement implements PsiNamedElement
 
     @Nullable
     public Icon getIcon(boolean open) {
-        return getIcon(0);
+        return IconDescriptorUpdaters.getIcon(this, 0);
     }
 
     @Nullable

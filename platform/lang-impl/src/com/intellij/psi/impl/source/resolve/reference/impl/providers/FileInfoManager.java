@@ -17,6 +17,7 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -58,7 +59,7 @@ public class FileInfoManager implements Disposable {
     }
 
     final PsiFile file = (PsiFile)psiElement;
-    return getFileInfoManager()._getLookupItem(file, file.getName(), file.getIcon(0));
+    return getFileInfoManager()._getLookupItem(file, file.getName(), IconDescriptorUpdaters.getIcon(file, 0));
   }
 
   @Nullable

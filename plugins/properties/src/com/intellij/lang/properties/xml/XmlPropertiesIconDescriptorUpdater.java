@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.pom;
+package com.intellij.lang.properties.xml;
 
-import com.intellij.ide.IconProvider;
+import com.intellij.ide.IconDescriptor;
+import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.xml.XmlFile;
+import icons.PropertiesIcons;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
- * @author peter
+ * @author VISTALL
+ * @since 14:59/20.07.13
  */
-public abstract class PomIconProvider extends IconProvider {
+public class XmlPropertiesIconDescriptorUpdater implements IconDescriptorUpdater {
   @Override
-  public Icon getIcon(@NotNull PsiElement element, int flags) {
-    if (element instanceof PomTargetPsiElement) {
-      return getIcon(((PomTargetPsiElement)element).getTarget(), flags);
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    if(element instanceof XmlFile && XmlPropertiesFile.getPropertiesFile((XmlFile)element) != null) {
+       iconDescriptor.setMainIcon(PropertiesIcons.XmlProperties);
     }
-    return null;
   }
-
-  @Nullable
-  public abstract Icon getIcon(@NotNull PomTarget target, int flags);
 }

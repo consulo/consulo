@@ -1,10 +1,9 @@
 package org.jetbrains.plugins.groovy.mvc.projectView;
 
-import com.intellij.ide.IconProvider;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -20,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefinition;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -121,14 +119,7 @@ public class AbstractFolderNode extends AbstractMvcPsiNodeDescriptor {
     final PsiDirectory psiDirectory = getPsiDirectory();
 
     data.setPresentableText(myPresentableText);
-
-    for (final IconProvider provider : Extensions.getExtensions(IconProvider.EXTENSION_POINT_NAME)) {
-      final Icon icon = provider.getIcon(psiDirectory, 0);
-      if (icon != null) {
-        data.setIcon(icon);
-        return;
-      }
-    }
+    data.setIcon(IconDescriptorUpdaters.getIcon(psiDirectory, 0));
   }
 
   @Override

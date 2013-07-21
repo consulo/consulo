@@ -20,21 +20,21 @@ import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.*;
+import com.intellij.psi.impl.PsiClassImplUtil;
+import com.intellij.psi.impl.PsiConstantEvaluationHelperImpl;
+import com.intellij.psi.impl.PsiImplUtil;
+import com.intellij.psi.impl.PsiVariableEx;
 import com.intellij.psi.impl.cache.TypeInfo;
 import com.intellij.psi.impl.java.stubs.JavaStubElementTypes;
 import com.intellij.psi.impl.java.stubs.PsiFieldStub;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.search.SearchScope;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.PlatformIcons;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.Set;
 
 public class ClsFieldImpl extends ClsMemberImpl<PsiFieldStub> implements PsiField, PsiVariableEx, ClsModifierListOwner {
@@ -208,12 +208,6 @@ public class ClsFieldImpl extends ClsMemberImpl<PsiFieldStub> implements PsiFiel
   }
 
   @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon baseIcon = ElementPresentationUtil.createLayeredIcon(PlatformIcons.FIELD_ICON, this, false);
-    return ElementPresentationUtil.addVisibilityIcon(this, flags, baseIcon);
-  }
-
-  @Override
   public boolean isEquivalentTo(final PsiElement another) {
     return PsiClassImplUtil.isFieldEquivalentTo(this, another);
   }
@@ -227,11 +221,6 @@ public class ClsFieldImpl extends ClsMemberImpl<PsiFieldStub> implements PsiFiel
   @Override
   public PsiType getTypeNoResolve() {
     return getType(); //todo?
-  }
-
-  @Override
-  protected boolean isVisibilitySupported() {
-    return true;
   }
 
   @Override

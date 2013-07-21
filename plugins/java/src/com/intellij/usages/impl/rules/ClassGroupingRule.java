@@ -15,6 +15,7 @@
  */
 package com.intellij.usages.impl.rules;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.openapi.actionSystem.DataKey;
@@ -108,7 +109,7 @@ public class ClassGroupingRule implements UsageGroupingRule {
       myQName = aClass.getQualifiedName();
       myText = createText(aClass);
       myClassPointer = SmartPointerManager.getInstance(aClass.getProject()).createSmartPsiElementPointer(aClass);
-      myIcon = aClass.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
+      myIcon = IconDescriptorUpdaters.getIcon(aClass, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
     }
 
     @Override

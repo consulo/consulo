@@ -15,6 +15,7 @@
  */
 package com.intellij.usages;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.SelectInEditorManager;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.DataKey;
@@ -474,7 +475,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
     Icon icon = myIcon;
     if (icon == null) {
       PsiElement psiElement = getElement();
-      myIcon = icon = psiElement != null && psiElement.isValid() ? psiElement.getIcon(0) : null;
+      myIcon = icon = psiElement != null && psiElement.isValid() ? IconDescriptorUpdaters.getIcon(psiElement, 0) : null;
     }
     return icon;
   }

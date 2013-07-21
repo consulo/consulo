@@ -16,15 +16,10 @@
 package com.intellij.psi.impl.compiled;
 
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementBase;
 import com.intellij.psi.impl.PsiImplUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.ui.RowIcon;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 /**
  * @author ven
@@ -87,12 +82,5 @@ public class ClsClassObjectAccessExpressionImpl extends ClsElementImpl implement
     final StringBuilder buffer = new StringBuilder();
     appendMirrorText(0, buffer);
     return buffer.toString();
-  }
-
-  @Override
-  public Icon getElementIcon(final int flags) {
-    final RowIcon rowIcon = ElementBase.createLayeredIcon(this, PlatformIcons.FIELD_ICON, 0);
-    rowIcon.setIcon(PlatformIcons.PUBLIC_ICON, 1);
-    return rowIcon;
   }
 }

@@ -16,6 +16,7 @@
 
 package com.intellij.ide.util;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
@@ -218,7 +219,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
   protected abstract int getIconFlags();
 
   protected Icon getIcon(PsiElement element) {
-    return element.getIcon(getIconFlags());
+    return IconDescriptorUpdaters.getIcon(element, getIconFlags());
   }
 
   public Comparator<T> getComparator() {

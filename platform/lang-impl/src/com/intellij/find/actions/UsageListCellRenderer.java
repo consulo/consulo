@@ -22,6 +22,7 @@
  */
 package com.intellij.find.actions;
 
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -58,7 +59,7 @@ public class UsageListCellRenderer extends ColoredListCellRenderer {
       setIcon(virtualFile.getFileType().getIcon());
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
       if (psiFile != null) {
-        setIcon(psiFile.getIcon(0));
+        setIcon(IconDescriptorUpdaters.getIcon(psiFile, 0));
       }
     }
 
