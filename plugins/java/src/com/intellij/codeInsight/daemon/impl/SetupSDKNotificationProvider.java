@@ -18,17 +18,22 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.ide.highlighter.JavaClassFileType;
 import com.intellij.lang.java.JavaLanguage;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -66,34 +71,42 @@ public class SetupSDKNotificationProvider extends EditorNotifications.Provider<E
       return null;
     }
 
-   /* if (ProjectRootManager.getInstance(myProject).getProjectSdk() != null) {
+    final Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(psiFile);
+    if(moduleForPsiElement == null) {
+      return null;
+    }
+    final JavaModuleExtension extension = ModuleUtilCore.getExtension(moduleForPsiElement, JavaModuleExtension.class);
+    if(extension == null) {
       return null;
     }
 
-    return createPanel(myProject, psiFile);  */
+    if(extension.getInheritableSdk().isNull()) {
+      return createPanel(myProject, psiFile);
+    }
     return null;
   }
 
   @NotNull
   private static EditorNotificationPanel createPanel(final @NotNull Project project, final @NotNull PsiFile file) {
     final EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(ProjectBundle.message("project.sdk.not.defined"));
-    panel.createActionLabel(ProjectBundle.message("project.sdk.setup"), new Runnable() {
+    panel.setText(ProjectBundle.message("module.sdk.not.defined"));
+    panel.createActionLabel(ProjectBundle.message("module.sdk.setup"), new Runnable() {
       @Override
       public void run() {
-        /*
-        TODO [VISTALL] move it to module settings
-        final Sdk projectSdk = ProjectSettingsService.getInstance(project).chooseAndSetSdk();
-        if (projectSdk == null) return;
+        final Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(file);
+        if(moduleForPsiElement == null) {
+          return;
+        }
+
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
           public void run() {
             final Module module = ModuleUtilCore.findModuleForPsiElement(file);
             if (module != null) {
-              ModuleRootModificationUtil.setSdkInherited(module);
+              ProjectSettingsService.getInstance(project).openModuleSettings(module);
             }
           }
-        }); */
+        });
       }
     });
     return panel;
