@@ -398,6 +398,13 @@
             </element>
           </element>
         </element>
+        <element id="directory" name="tasks-time-tracking">
+          <element id="directory" name="lib">
+            <element id="archive" name="tasks-time-tracking.jar">
+              <element id="module-output" name="tasks-time-tracking" />
+            </element>
+          </element>
+        </element>
       </element>
       <element id="directory" name="lib">
         <element id="dir-copy" path="$PROJECT_DIR$/lib" />
