@@ -48,11 +48,11 @@ public class GroovyIconDescriptorUpdater implements IconDescriptorUpdater {
       if(psiClass.isEnum()) {
         iconDescriptor.setMainIcon(JetgroovyIcons.Groovy.Enum);
       }
-      else if(psiClass.isInterface()) {
-        iconDescriptor.setMainIcon(JetgroovyIcons.Groovy.Interface);
-      }
       else if(psiClass.isAnnotationType()) {
         iconDescriptor.setMainIcon(JetgroovyIcons.Groovy.AnnotationType);
+      }
+      else if(psiClass.isInterface()) {
+        iconDescriptor.setMainIcon(JetgroovyIcons.Groovy.Interface);
       }
       else {
         final boolean abst = psiClass.hasModifierProperty(PsiModifier.ABSTRACT);

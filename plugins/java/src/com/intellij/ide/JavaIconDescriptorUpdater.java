@@ -46,11 +46,11 @@ public class JavaIconDescriptorUpdater implements IconDescriptorUpdater {
       if(psiClass.isEnum()) {
         iconDescriptor.setMainIcon(AllIcons.Nodes.Enum);
       }
-      else if(psiClass.isInterface()) {
-        iconDescriptor.setMainIcon(AllIcons.Nodes.Interface);
-      }
       else if(psiClass.isAnnotationType()) {
         iconDescriptor.setMainIcon(AllIcons.Nodes.Annotationtype);
+      }
+      else if(psiClass.isInterface()) {
+        iconDescriptor.setMainIcon(AllIcons.Nodes.Interface);
       }
       else if(psiClass instanceof PsiAnonymousClass) {
         iconDescriptor.setMainIcon(AllIcons.Nodes.AnonymousClass);
