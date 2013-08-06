@@ -1396,8 +1396,6 @@
     <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.JavaASTLeafFactory"/>
     <lang.ast.compositeFactory implementation="com.intellij.psi.impl.source.tree.JavaASTCompositeFactory"/>
 
-    <lang.literalEscaper language="JAVA" implementationClass="com.intellij.lang.java.JavaLiteralEscaper"/>
-
     <lang.smartEnterProcessor language="JAVA"
                               implementationClass="com.intellij.codeInsight.editorActions.smartEnter.JavaSmartEnterProcessor"/>
     <lang.smartEnterProcessor language="JSPX" implementationClass="com.intellij.codeInsight.completion.XmlSmartEnterProcessor"/>
