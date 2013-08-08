@@ -48,6 +48,10 @@ public class StandardFileSystems {
     return ourLocal.getValue();
   }
 
+  /**
+   * @deprecated use JarArchiveFileType.INSTANCE.getFileSystem()
+   * @return
+   */
   @Deprecated
   public static ArchiveFileSystem jar() {
     return ourJar.getValue();
