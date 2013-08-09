@@ -149,6 +149,7 @@ public class ModuleImpl extends ComponentManagerImpl implements ModuleEx {
   @Override
   public synchronized void dispose() {
     isModuleAdded = false;
+//    myDirVirtualFilePointer.dispose();
     disposeComponents();
     Extensions.disposeArea(this);
     super.dispose();

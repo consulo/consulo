@@ -489,6 +489,9 @@
         <element id="archive" name="javac2.jar">
           <element id="module-output" name="javac2" />
         </element>
+        <element id="archive" name="compiler-server.jar">
+          <element id="module-output" name="compiler-server-impl" />
+        </element>
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/build.txt" />
     </root>

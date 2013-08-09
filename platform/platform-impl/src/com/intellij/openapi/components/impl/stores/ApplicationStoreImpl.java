@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
+public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.impl.stores.ApplicationStoreImpl");
 
   private static final String XML_EXTENSION = ".xml";

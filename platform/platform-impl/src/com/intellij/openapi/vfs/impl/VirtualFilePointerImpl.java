@@ -99,6 +99,7 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
     return getUrlNoUpdate();
   }
 
+  @Override
   public void dispose() {
     checkDisposed();
     if (myNode.incrementUsageCount(-1) == 0) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package org.consulo.compiler.server;
 
-public class StoresFactory {
-  private StoresFactory() {
+import com.intellij.idea.CommandLineApplication;
+
+/**
+ * @author VISTALL
+ * @since 5:50/09.08.13
+ */
+public class CompilerServerApplication extends CommandLineApplication {
+  private CompilerServerApplication() {
+    super(true, false, true);
   }
 
-  public static Class getProjectStoreClass(final boolean aDefault) {
-    return aDefault ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
-  }
+  public static synchronized CompilerServerApplication getInstance() {
+    if (ourInstance == null) {
 
-  public static Class getApplicationStoreClass() {
-    return ApplicationStoreImpl.class;
+      new CompilerServerApplication();
+    }
+    return (CompilerServerApplication)ourInstance;
   }
 }

@@ -192,7 +192,7 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
   @Override
   protected void bootstrapPicoContainer(@NotNull String name) {
     super.bootstrapPicoContainer(name);
-    getPicoContainer().registerComponentImplementation(IComponentStore.class, StoresFactory.getApplicationStoreClass());
+    getPicoContainer().registerComponentImplementation(IComponentStore.class, ApplicationStoreImpl.class);
     getPicoContainer().registerComponentImplementation(ApplicationPathMacroManager.class);
   }
 
@@ -1112,7 +1112,7 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
 
   private static void assertIsDispatchThread(String message) {
     final Thread currentThread = Thread.currentThread();
-    if (ourDispatchThread == currentThread) return;
+    if (ourDispatchThread == currentThread || ApplicationManager.getApplication().isHeadlessEnvironment()) return;
 
     if (EventQueue.isDispatchThread()) {
       ourDispatchThread = currentThread;
@@ -1366,13 +1366,16 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
 
   @Override
   public void assertWriteAccessAllowed() {
+    if(myHeadlessMode) {
+      return;
+    }
     LOG.assertTrue(isWriteAccessAllowed(),
                    "Write access is allowed inside write-action only (see com.intellij.openapi.application.Application.runWriteAction())");
   }
 
   @Override
   public boolean isWriteAccessAllowed() {
-    return myLock.writeLock().isHeldByCurrentThread();
+    return myHeadlessMode || myLock.writeLock().isHeldByCurrentThread();
   }
 
   public void editorPaintStart() {

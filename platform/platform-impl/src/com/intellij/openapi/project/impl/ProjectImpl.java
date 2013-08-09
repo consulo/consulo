@@ -33,10 +33,7 @@ import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.components.impl.stores.IComponentStore;
-import com.intellij.openapi.components.impl.stores.IProjectStore;
-import com.intellij.openapi.components.impl.stores.StoreUtil;
-import com.intellij.openapi.components.impl.stores.UnknownMacroNotification;
+import com.intellij.openapi.components.impl.stores.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
@@ -140,18 +137,14 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
     super.bootstrapPicoContainer(name);
     final MutablePicoContainer picoContainer = getPicoContainer();
 
-    final ProjectStoreClassProvider projectStoreClassProvider = (ProjectStoreClassProvider)picoContainer.getComponentInstanceOfType(ProjectStoreClassProvider.class);
-
-
     picoContainer.registerComponentImplementation(ProjectPathMacroManager.class);
     picoContainer.registerComponent(new ComponentAdapter() {
       ComponentAdapter myDelegate;
 
-
       public ComponentAdapter getDelegate() {
         if (myDelegate == null) {
 
-          final Class storeClass = projectStoreClassProvider.getProjectStoreClass(isDefault());
+          final Class storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
           myDelegate = new CachingComponentAdapter(
             new ConstructorInjectionComponentAdapter(storeClass, storeClass, null, true));
         }

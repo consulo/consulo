@@ -54,7 +54,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
+public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.impl.stores.ProjectStoreImpl");
 
   @NonNls private static final String OLD_PROJECT_SUFFIX = "_old.";
