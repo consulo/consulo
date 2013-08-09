@@ -3084,8 +3084,6 @@
       <with attribute="factoryClass" implements="com.intellij.openapi.wm.ToolWindowFactory"/>
       <with attribute="conditionClass" implements="com.intellij.openapi.util.Condition"/>
     </extensionPoint>
-    <extensionPoint name="welcomeScreen" interface="com.intellij.openapi.wm.WelcomeScreenProvider"/>
-    <extensionPoint name="welcomeFrameProvider" interface="com.intellij.openapi.wm.WelcomeFrameProvider"/>
     <extensionPoint name="frameEditorComponentProvider" interface="com.intellij.openapi.wm.ex.FrameEditorComponentProvider"/>
 
     <extensionPoint name="statisticsService" interface="com.intellij.internal.statistic.connect.StatisticsService"/>
@@ -4338,8 +4336,6 @@
     <localInspection shortName="InconsistentLineSeparators" bundle="messages.InspectionsBundle" key="inconsistent.line.separators"
                      groupKey="group.names.portability.issues" enabledByDefault="false" level="WARNING"
                      implementationClass="com.intellij.codeStyle.InconsistentLineSeparatorsInspection"/>
-
-    <welcomeScreen implementation="com.intellij.ide.ui.laf.darcula.DarculaWelcomeScreenProvider"/>
 
     <!--VCS-->
     <applicationService serviceInterface="com.intellij.openapi.vcs.actions.VcsContextFactory"

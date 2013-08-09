@@ -25,7 +25,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -50,7 +49,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 public class WelcomeFrame extends JFrame implements IdeFrame {
-  public static final ExtensionPointName<WelcomeFrameProvider> EP = ExtensionPointName.create("com.intellij.welcomeFrameProvider");
   static final String DIMENSION_KEY = "WELCOME_SCREEN";
   private static IdeFrame ourInstance;
   private final WelcomeScreen myScreen;
@@ -58,7 +56,7 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
 
   public WelcomeFrame() {
     JRootPane rootPane = getRootPane();
-    final WelcomeScreen screen = createScreen(rootPane);
+    final WelcomeScreen screen = new NewWelcomeScreen();
 
     final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
     setGlassPane(glassPane);
@@ -140,25 +138,9 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
     }
   }
 
-  private static WelcomeScreen createScreen(JRootPane rootPane) {
-    WelcomeScreen screen = null;
-    for (WelcomeScreenProvider provider : WelcomeScreenProvider.EP_NAME.getExtensions()) {
-      if (!provider.isAvailable()) continue;
-      screen = provider.createWelcomeScreen(rootPane);
-      if (screen != null) break;
-    }
-    if (screen == null) {
-      //screen = new DefaultWelcomeScreen(rootPane);
-      screen = new NewWelcomeScreen();
-    }
-    return screen;
-  }
-
-
   public static void showNow() {
     if (ourInstance == null) {
-      IdeFrame frame = EP.getExtensions().length == 0
-                           ? new WelcomeFrame() : EP.getExtensions()[0].createFrame();
+      IdeFrame frame = new WelcomeFrame();
       ((JFrame)frame).setVisible(true);
       ourInstance = frame;
     }
