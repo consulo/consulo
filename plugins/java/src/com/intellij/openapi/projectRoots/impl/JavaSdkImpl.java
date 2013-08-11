@@ -379,7 +379,7 @@ public class JavaSdkImpl extends JavaSdk {
       root = VirtualFileManager.getInstance().findFileByUrl("jar://"+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/lib/jdk-annotations.jar!/");
     }
     if (root == null) {
-      LOG.error("jdk annotations not found in: "+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/lib/jdkAnnotations.jar!/");
+      LOG.error("jdk annotations not found in: "+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/lib/jdk-annotations.jar!/");
       return;
     }
 
