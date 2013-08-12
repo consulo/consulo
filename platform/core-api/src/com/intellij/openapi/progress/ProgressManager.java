@@ -31,7 +31,6 @@ public abstract class ProgressManager {
   static {
     if (ProgressIndicatorProvider.ourInstance == null) {
       ProgressIndicatorProvider.ourInstance = new ProgressIndicatorProvider() {
-        @NotNull
         @Override
         public ProgressIndicator getProgressIndicator() {
           return ProgressManager.ourInstance.getProgressIndicator();

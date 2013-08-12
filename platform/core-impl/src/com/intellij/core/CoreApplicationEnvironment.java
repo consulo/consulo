@@ -175,7 +175,6 @@ public class CoreApplicationEnvironment {
 
   protected ProgressIndicatorProvider createProgressIndicatorProvider() {
     return new ProgressIndicatorProvider() {
-      @NotNull
       @Override
       public ProgressIndicator getProgressIndicator() {
         return new EmptyProgressIndicator();

@@ -90,7 +90,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   private static ProgressIndicatorProvider createProgressIndicatorProvider() {
     return new ProgressIndicatorProvider() {
-      @NotNull
       @Override
       public ProgressIndicator getProgressIndicator() {
         return new EmptyProgressIndicator();
