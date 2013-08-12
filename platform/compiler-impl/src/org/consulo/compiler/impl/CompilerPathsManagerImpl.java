@@ -104,7 +104,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   }
 
   private void createDefaults() {
-    myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance().create(myProject.getBaseDir() + DEFAULT_PATH, myProject, null);
+    myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance().create(myProject.getBaseDir().getUrl() + DEFAULT_PATH, myProject, null);
     ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     for (Module module : moduleManager.getModules()) {
       if (!myModulesToVirtualFilePoints.containsKey(module)) {
@@ -168,7 +168,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
 
   private VirtualFilePointer createDefaultPointerForModule(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
     final VirtualFilePointerManager instance = VirtualFilePointerManager.getInstance();
-    return instance.create(myProject.getBaseDir() + DEFAULT_PATH + "/" + contentFolderType.name().toLowerCase() +  "/" + module.getName() + "/", myProject, null);
+    return instance.create(myProject.getBaseDir().getUrl() + DEFAULT_PATH + "/" + contentFolderType.name().toLowerCase() +  "/" + module.getName() + "/", myProject, null);
   }
 
   @Override
