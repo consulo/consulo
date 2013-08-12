@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
@@ -41,13 +41,13 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
                                                                                                       final SchemeProcessor<E> processor,
                                                                                                       final RoamingType roamingType) {
     final Application application = ApplicationManager.getApplication();
-    if (!(application instanceof ApplicationImpl)) return null;
-    String baseDirPath = ((ApplicationImpl)application).getStateStore().getStateStorageManager().expandMacros(fileSpec);
+    if (!(application instanceof ApplicationEx2)) return null;
+    String baseDirPath = ((ApplicationEx2)application).getStateStore().getStateStorageManager().expandMacros(fileSpec);
 
     if (baseDirPath != null) {
 
       StreamProvider[] providers =
-        ((ApplicationImpl)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProviders(roamingType);
+        ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProviders(roamingType);
       SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<T, E>(fileSpec, processor, roamingType, providers, new File(baseDirPath));
       myRegisteredManagers.add(manager);
       return manager;

@@ -58,8 +58,4 @@ class IdentityVirtualFilePointer implements VirtualFilePointer {
   public boolean isValid() {
     return myFile == null || myFile.isValid();
   }
-
-  @Override
-  public void dispose() {
-  }
 }

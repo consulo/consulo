@@ -301,7 +301,7 @@ public class ProgressManagerImpl extends ProgressManager implements Disposable{
         .runProcessWithProgressSynchronously(new TaskContainer(task) {
           @Override
           public void run() {
-            new TaskRunnable(task, ProgressManager.getInstance().getProgressIndicator()).run();
+            new TaskRunnable(task, ProgressIndicatorProvider.getInstance().getProgressIndicator()).run();
           }
         }, task.getTitle(), task.isCancellable(), task.getProject(), parentComponent, task.getCancelText());
     if (result) {

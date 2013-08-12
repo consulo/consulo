@@ -100,8 +100,4 @@ public class LightFilePointer implements VirtualFilePointer {
   public int hashCode() {
     return myUrl.hashCode();
   }
-
-  @Override
-  public void dispose() {
-  }
 }

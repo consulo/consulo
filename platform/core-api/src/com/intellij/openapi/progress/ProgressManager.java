@@ -29,24 +29,28 @@ public abstract class ProgressManager {
   private static final ProgressManager ourInstance = ServiceManager.getService(ProgressManager.class);
 
   static {
-    ProgressIndicatorProvider.ourInstance = new ProgressIndicatorProvider() {
-      @Override
-      public ProgressIndicator getProgressIndicator() {
-        return ProgressManager.ourInstance.getProgressIndicator();
-      }
+    if (ProgressIndicatorProvider.ourInstance == null) {
+      ProgressIndicatorProvider.ourInstance = new ProgressIndicatorProvider() {
+        @NotNull
+        @Override
+        public ProgressIndicator getProgressIndicator() {
+          return ProgressManager.ourInstance.getProgressIndicator();
+        }
 
-      @Override
-      protected void doCheckCanceled() throws ProcessCanceledException {
-        ProgressManager.ourInstance.doCheckCanceled();
-      }
+        @Override
+        protected void doCheckCanceled() throws ProcessCanceledException {
+          ProgressManager.ourInstance.doCheckCanceled();
+        }
 
-      @Override
-      public NonCancelableSection startNonCancelableSection() {
-        return ProgressManager.ourInstance.startNonCancelableSection();
-      }
-    };
+        @Override
+        public NonCancelableSection startNonCancelableSection() {
+          return ProgressManager.ourInstance.startNonCancelableSection();
+        }
+      };
+    }
   }
 
+  @NotNull
   public static ProgressManager getInstance() {
     return ourInstance;
   }

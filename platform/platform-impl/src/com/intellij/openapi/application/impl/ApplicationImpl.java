@@ -25,6 +25,7 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.RoamingType;
@@ -83,7 +84,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
-public class ApplicationImpl extends ComponentManagerImpl implements ApplicationEx {
+public class ApplicationImpl extends ComponentManagerImpl implements ApplicationEx2 {
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.impl.ApplicationImpl");
   private final ModalityState MODALITY_STATE_NONE = ModalityState.NON_MODAL;
 
@@ -197,6 +198,7 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
   }
 
   @NotNull
+  @Override
   public synchronized IApplicationStore getStateStore() {
     if (myComponentStore == null) {
       myComponentStore = (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
@@ -441,6 +443,11 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
   @Override
   public boolean isHeadlessEnvironment() {
     return myHeadlessMode;
+  }
+
+  @Override
+  public boolean isCompilerServerMode() {
+    return false;
   }
 
   @Override

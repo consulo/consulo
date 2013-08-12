@@ -17,12 +17,12 @@ package org.consulo.compiler.server;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.InvalidDataException;
+import org.consulo.compiler.application.CompilerServerApplication;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
@@ -33,12 +33,11 @@ import java.io.IOException;
  */
 public class Main {
   public static void main(String[] args) {
-    System.setProperty(PathManager.PROPERTY_CONFIG_PATH, "C:\\Users\\VISTALL\\.Consulo\\config");
+    System.setProperty(PathManager.PROPERTY_CONFIG_PATH, "C:\\Users\\VISTALL\\.ConsuloData\\config");
     System.setProperty(PathManager.PROPERTY_HOME_PATH, "F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
 
-    CompilerServerApplication.getInstance();
+    ApplicationEx app = CompilerServerApplication.createApplication();
 
-    ApplicationEx app = ApplicationManagerEx.getApplicationEx();
     try {
       app.load(PathManager.getOptionsPath());
     }
@@ -58,7 +57,7 @@ public class Main {
         System.out.println(module.getName());
       }
 
-      project.dispose();
+
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -69,6 +68,7 @@ public class Main {
     catch (InvalidDataException e) {
       e.printStackTrace();
     }
-    app.dispose();
+
+    System.exit(0);
   }
 }

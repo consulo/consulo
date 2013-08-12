@@ -17,7 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.NamedJDOMExternalizable;
@@ -39,13 +39,13 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private static final String CONFIG_MACRO = "ROOT_CONFIG";
   private static final String ROOT_ELEMENT_NAME = "application";
 
-  private final ApplicationImpl myApplication;
+  private final ApplicationEx2 myApplication;
   private final StateStorageManager myStateStorageManager;
   private final DefaultsStateStorage myDefaultsStateStorage;
 
   // created from PicoContainer
   @SuppressWarnings({"UnusedDeclaration"})
-  public ApplicationStoreImpl(final ApplicationImpl application, PathMacroManager pathMacroManager) {
+  public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
     myApplication = application;
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
       @Override

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.StreamProvider;
@@ -44,7 +44,7 @@ public class CompoundShelfFileProcessor {
 
   public CompoundShelfFileProcessor(final String subdirName) {
     mySubdirName = subdirName;
-    myServerStreamProviders = ((ApplicationImpl)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProviders(PER_USER);
+    myServerStreamProviders = ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProviders(PER_USER);
 
     FILE_SPEC = "$ROOT_CONFIG$/" + subdirName + "/";
     myShelfPath = PathManager.getConfigPath() + File.separator + mySubdirName;

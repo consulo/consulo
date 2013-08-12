@@ -2246,6 +2246,7 @@
     <component>
       <interface-class>com.intellij.openapi.vfs.LocalFileSystem</interface-class>
       <implementation-class>com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.fileSystem.CompilerServerLocalFileSystem</compiler-server-implementation-class>
     </component>
 
     <component>

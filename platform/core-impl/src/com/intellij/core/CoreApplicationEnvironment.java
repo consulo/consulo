@@ -48,6 +48,7 @@ import com.intellij.psi.stubs.BinaryFileStubBuilders;
 import com.intellij.psi.stubs.CoreStubTreeLoader;
 import com.intellij.psi.stubs.StubTreeLoader;
 import com.intellij.util.Consumer;
+import com.intellij.util.EmptyFuture;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.impl.MessageBusImpl;
@@ -56,10 +57,7 @@ import org.picocontainer.MutablePicoContainer;
 
 import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @author yole
@@ -169,32 +167,7 @@ public class CoreApplicationEnvironment {
       public Job<Void> submitToJobThread(int priority, @NotNull Runnable action, Consumer<Future> onDoneCallback) {
         action.run();
         if (onDoneCallback != null)
-          onDoneCallback.consume(new Future() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
-              return false;
-            }
-
-            @Override
-            public boolean isCancelled() {
-              return false;
-            }
-
-            @Override
-            public boolean isDone() {
-              return true;
-            }
-
-            @Override
-            public Object get() throws InterruptedException, ExecutionException {
-              return null;
-            }
-
-            @Override
-            public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-              return null;
-            }
-          });
+          onDoneCallback.consume(EmptyFuture.getInstance());
         return null;
       }
     };
@@ -202,6 +175,7 @@ public class CoreApplicationEnvironment {
 
   protected ProgressIndicatorProvider createProgressIndicatorProvider() {
     return new ProgressIndicatorProvider() {
+      @NotNull
       @Override
       public ProgressIndicator getProgressIndicator() {
         return new EmptyProgressIndicator();

@@ -62,9 +62,9 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
 
   @Override
   public void refreshLocalFileForJar() {
-    NewVirtualFile localJarFile = (NewVirtualFile)LocalFileSystem.getInstance().refreshAndFindFileByPath(myBasePath);
-    if (localJarFile != null) {
-      localJarFile.markDirty();
+    VirtualFile localJarFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(myBasePath);
+    if (localJarFile instanceof NewVirtualFile) {
+      ((NewVirtualFile)localJarFile).markDirty();
     }
   }
 

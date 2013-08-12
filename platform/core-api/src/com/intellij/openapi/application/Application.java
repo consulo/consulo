@@ -316,6 +316,14 @@ public interface Application extends ComponentManager {
   boolean isHeadlessEnvironment();
 
   /**
+   * Checks if IDEA is running as a compiler server
+   * No UI should be shown when IDEA is running in this mode.
+   *
+   * @return true if IDEA is running in compiler server, false otherwise
+   */
+  boolean isCompilerServerMode();
+
+  /**
    * Checks if IDEA is running as a command line applet or in unit test mode.
    * UI can be shown (e.g. diff frame)
    *

@@ -29,12 +29,12 @@ import java.util.List;
  * @author yole
  */
 public class CoreLocalVirtualFile extends VirtualFile {
-  private final CoreLocalFileSystem myFileSystem;
+  private final VirtualFileSystem myFileSystem;
   private final File myIoFile;
   private VirtualFile[] myChildren;
   private final boolean isDirectory;
 
-  public CoreLocalVirtualFile(@NotNull CoreLocalFileSystem fileSystem, @NotNull File ioFile) {
+  public CoreLocalVirtualFile(@NotNull VirtualFileSystem fileSystem, @NotNull File ioFile) {
     myFileSystem = fileSystem;
     myIoFile = ioFile;
     isDirectory = ioFile.isDirectory();

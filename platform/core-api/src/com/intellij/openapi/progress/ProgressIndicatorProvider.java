@@ -29,7 +29,8 @@ public abstract class ProgressIndicatorProvider {
   public static ProgressIndicatorProvider getInstance() {
     return ourInstance;
   }
-  
+
+  @NotNull
   public abstract ProgressIndicator getProgressIndicator();
 
   protected abstract void doCheckCanceled() throws ProcessCanceledException;

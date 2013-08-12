@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
@@ -38,9 +38,9 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   private final Alarm mySyncAlarm;
 
   private final BusyObject.Impl myActive;
-  private final ApplicationImpl myApp;
+  private final ApplicationEx2 myApp;
 
-  public FrameStateManagerImpl(final ApplicationImpl app) {
+  public FrameStateManagerImpl(final ApplicationEx2 app) {
     myApp = app;
     myActive = new BusyObject.Impl() {
       @Override

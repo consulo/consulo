@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.compiler.server;
+package com.intellij.openapi.application.ex;
 
-import com.intellij.idea.CommandLineApplication;
+import com.intellij.openapi.components.ComponentConfig;
+import com.intellij.openapi.components.impl.stores.IApplicationStore;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 5:50/09.08.13
+ * @since 12:05/12.08.13
  */
-public class CompilerServerApplication extends CommandLineApplication {
-  private CompilerServerApplication() {
-    super(true, false, true);
-  }
+public interface ApplicationEx2 extends ApplicationEx {
+  void initComponents();
 
-  public static synchronized CompilerServerApplication getInstance() {
-    if (ourInstance == null) {
+  @NotNull
+  ComponentConfig[] getComponentConfigurations();
 
-      new CompilerServerApplication();
-    }
-    return (CompilerServerApplication)ourInstance;
-  }
+  IApplicationStore getStateStore();
 }

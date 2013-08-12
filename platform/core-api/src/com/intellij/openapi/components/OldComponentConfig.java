@@ -28,9 +28,14 @@ public class OldComponentConfig extends ComponentConfig {
 
   @Tag("headless-implementation-class")
   @Override
-  public void setHeadlessImplementationClass(String headlessImplementationClass) {
-    super.setHeadlessImplementationClass(
-      headlessImplementationClass);
+  public void setHeadlessImplementationClass(String clazz) {
+    super.setHeadlessImplementationClass(clazz);
+  }
+
+  @Tag("compiler-server-implementation-class")
+  @Override
+  public void setCompilerServerImplementationClass(String clazz) {
+    super.setCompilerServerImplementationClass(clazz);
   }
 
   @Tag(value = "loadForDefaultProject", textIfEmpty="true")

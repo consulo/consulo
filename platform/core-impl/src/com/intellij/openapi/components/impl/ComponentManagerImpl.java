@@ -68,6 +68,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private final ComponentManagerConfigurator myConfigurator = new ComponentManagerConfigurator(this);
   private final ComponentManager myParentComponentManager;
   private Boolean myHeadless;
+  private Boolean myCompilerServer;
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final Condition myDisposedCondition = new Condition() {
     @Override
@@ -253,7 +254,9 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
   public synchronized void registerComponent(final ComponentConfig config, final PluginDescriptor pluginDescriptor) {
-    if (!config.prepareClasses(isHeadless())) return;
+    if (!config.prepareClasses(isHeadless(), isCompilerServer())) {
+      return;
+    }
 
     config.pluginDescriptor =  pluginDescriptor;
     myComponentsRegistry.registerComponent(config);
@@ -381,6 +384,14 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
 
     return myHeadless.booleanValue();
+  }
+
+  private boolean isCompilerServer() {
+    if (myCompilerServer == null) {
+      myCompilerServer = ApplicationManager.getApplication().isCompilerServerMode();
+    }
+
+    return myCompilerServer.booleanValue();
   }
 
 

@@ -43,7 +43,7 @@ public class MemoryIndexStorage<Key, Value> implements IndexStorage<Key, Value> 
     void memoryStorageCleared();
   }
 
-  public MemoryIndexStorage(IndexStorage<Key, Value> backend) {
+  public MemoryIndexStorage(@NotNull IndexStorage<Key, Value> backend) {
     myBackendStorage = backend;
   }
 
