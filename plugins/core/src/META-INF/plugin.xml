@@ -2246,7 +2246,13 @@
     <component>
       <interface-class>com.intellij.openapi.vfs.LocalFileSystem</interface-class>
       <implementation-class>com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl</implementation-class>
-      <compiler-server-implementation-class>org.consulo.compiler.fileSystem.CompilerServerLocalFileSystem</compiler-server-implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerLocalFileSystemImpl</compiler-server-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>org.consulo.compiler.server.rmi.CompilerSwapperManager</interface-class>
+      <implementation-class>org.consulo.compiler.server.rmi.impl.LocalCompilerSwapperManagerImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.rmi.impl.RemoteCompilerSwapperManagerImpl</compiler-server-implementation-class>
     </component>
 
     <component>
@@ -2442,10 +2448,12 @@
     <component>
       <interface-class>com.intellij.util.indexing.FileBasedIndex</interface-class>
       <implementation-class>com.intellij.util.indexing.FileBasedIndexImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerFileBasedIndexImpl</compiler-server-implementation-class>
     </component>
     <component>
       <interface-class>com.intellij.psi.stubs.StubIndex</interface-class>
       <implementation-class>com.intellij.psi.stubs.StubIndexImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.index.CompilerServerStubIndexImpl</compiler-server-implementation-class>
     </component>
 
     <component>
@@ -2603,6 +2611,7 @@
     <component>
       <interface-class>com.intellij.openapi.roots.impl.DirectoryIndex</interface-class>
       <implementation-class>com.intellij.openapi.roots.impl.DirectoryIndexImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.roots.impl.CompilerServerDirectoryIndex</compiler-server-implementation-class>
       <loadForDefaultProject/>
     </component>
 
@@ -2739,6 +2748,7 @@
 
     <component>
       <implementation-class>com.intellij.util.indexing.FileBasedIndexProjectHandler</implementation-class>
+      <compiler-server-implementation-class></compiler-server-implementation-class>
     </component>
 
     <component>
@@ -4075,7 +4085,8 @@
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
-                        serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"/>
+                        serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"
+                        serviceImplementationForCompilerServer="org.consulo.compiler.server.fileSystem.CompilerServerRefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory"
                         serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>
@@ -4295,6 +4306,10 @@
     <toolWindow id="Event Log" anchor="bottom" secondary="true"
                 icon="AllIcons.Ide.NoNotifications13"
                 factoryClass="com.intellij.notification.EventLogToolWindowFactory"/>
+
+    <toolWindow id="Compiler Messages" anchor="bottom"
+                icon="AllIcons.Toolwindows.ToolWindowMessages"
+                factoryClass="com.intellij.compiler.toolwindow.MessagesToolWindowFactory" />
 
     <projectService serviceInterface="com.intellij.openapi.wm.impl.ProjectFrameBounds"
                     serviceImplementation="com.intellij.openapi.wm.impl.ProjectFrameBounds"/>

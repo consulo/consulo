@@ -84,6 +84,7 @@ public class ComponentConfig {
    */
   public boolean prepareClasses(boolean headless, boolean compilerServer) {
     if (compilerServer && compilerServerImplementationClass != null) {
+      if (StringUtil.isEmpty(compilerServerImplementationClass)) return false;
       setImplementationClass(compilerServerImplementationClass);
     }
     else if (headless && headlessImplementationClass != null) {

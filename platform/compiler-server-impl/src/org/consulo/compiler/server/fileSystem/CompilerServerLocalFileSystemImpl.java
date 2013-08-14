@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.compiler.fileSystem;
+package org.consulo.compiler.server.fileSystem;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileAttributes;
@@ -43,7 +43,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 1:44/11.08.13
  */
-public class CompilerServerLocalFileSystem extends LocalFileSystem {
+public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
   private static final FileAttributes FAKE_ROOT_ATTRIBUTES =
     new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false);
 

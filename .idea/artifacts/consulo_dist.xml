@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact name="consulo-dist">
+  <artifact build-on-make="true" name="consulo-dist">
     <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
     <root id="root">
       <element id="directory" name="bin">

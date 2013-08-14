@@ -21,9 +21,7 @@
  */
 package com.intellij.compiler.progress;
 
-import org.consulo.compiler.impl.CompilerManagerImpl;
 import com.intellij.compiler.CompilerMessageImpl;
-import com.intellij.compiler.impl.CompilerErrorTreeView;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.impl.ProjectUtil;
@@ -58,10 +56,10 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.MessageCategory;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.compiler.impl.CompilerManagerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -379,7 +377,7 @@ public class CompilerTask extends Task.Backgroundable {
 
   // error tree view initialization must be invoked from event dispatch thread
   private void openMessageView() {
-    if (isHeadlessMode()) {
+    /*if (isHeadlessMode()) {
       return;
     }
     if (myIndicator.isCanceled()) {
@@ -414,7 +412,7 @@ public class CompilerTask extends Task.Backgroundable {
     messageView.getContentManager().addContent(content);
     myCloseListener.setContent(content, messageView.getContentManager());
     removeAllContents(myProject, content);
-    messageView.getContentManager().setSelectedContent(content);
+    messageView.getContentManager().setSelectedContent(content);     */
   }
 
   public void showCompilerContent() {
@@ -433,7 +431,7 @@ public class CompilerTask extends Task.Backgroundable {
   }
 
   private void removeAllContents(Project project, Content notRemove) {
-    final MessageView messageView = MessageView.SERVICE.getInstance(project);
+    /*final MessageView messageView = MessageView.SERVICE.getInstance(project);
     Content[] contents = messageView.getContentManager().getContents();
     for (Content content : contents) {
       if (content.isPinned()) {
@@ -445,7 +443,7 @@ public class CompilerTask extends Task.Backgroundable {
       if (content.getUserData(myContentIdKey) != null) { // the content was added by me
         messageView.getContentManager().removeContent(content, true);
       }
-    }
+    }*/
   }
 
   private void activateMessageView() {

@@ -285,7 +285,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public void addMessage(CompilerMessage msg) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    /*if (ApplicationManager.getApplication().isUnitTestMode()) */{
       LOG.info("addMessage: " + msg + " this=" + this);
     }
 

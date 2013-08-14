@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.compiler.application;
+package org.consulo.compiler.server.application;
 
 import com.intellij.core.CoreEncodingRegistry;
 import com.intellij.core.CoreFileTypeRegistry;
@@ -39,7 +39,9 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import org.apache.log4j.Level;
 import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.MutablePicoContainer;
@@ -71,6 +73,65 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   public static CompilerServerApplication createApplication() {
+    com.intellij.openapi.diagnostic.Logger.setFactory(new com.intellij.openapi.diagnostic.Logger.Factory() {
+      @Override
+      public com.intellij.openapi.diagnostic.Logger getLoggerInstance(String category) {
+        return new com.intellij.openapi.diagnostic.Logger() {
+          @Override
+          public boolean isDebugEnabled() {
+            return false;
+          }
+
+          @Override
+          public void debug(@NonNls String message) {
+
+          }
+
+          @Override
+          public void debug(@Nullable Throwable t) {
+
+          }
+
+          @Override
+          public void debug(@NonNls String message, @Nullable Throwable t) {
+
+          }
+
+          @Override
+          public void error(@NonNls String message, @Nullable Throwable t, @NonNls String... details) {
+            System.out.println(message);
+            if(t != null) {
+              t.printStackTrace();
+            }
+          }
+
+          @Override
+          public void info(@NonNls String message) {
+            System.out.println(message);
+          }
+
+          @Override
+          public void info(@NonNls String message, @Nullable Throwable t) {
+            System.out.println(message);
+            if(t != null) {
+              t.printStackTrace();
+            }
+          }
+
+          @Override
+          public void warn(@NonNls String message, @Nullable Throwable t) {
+            System.out.println(message);
+            if(t != null) {
+              t.printStackTrace();
+            }
+          }
+
+          @Override
+          public void setLevel(Level level) {
+          }
+        };
+      }
+    });
     ProgressIndicatorProvider.ourInstance = createProgressIndicatorProvider();
     final CompilerServerApplication app = new CompilerServerApplication();
     ApplicationManager.setApplication(app, new Getter<FileTypeRegistry>() {

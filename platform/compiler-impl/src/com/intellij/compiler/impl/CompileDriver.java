@@ -809,6 +809,7 @@ public class CompileDriver {
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         throw new RuntimeException(ex);
       }
+      ex.printStackTrace();
       wereExceptions = true;
       final PluginId pluginId = IdeErrorsDialog.findPluginId(ex);
 
@@ -2431,7 +2432,7 @@ public class CompileDriver {
         else {
           if (outputPath != null) {
             if (!useOutOfProcessBuild) {
-              final File file = new File(outputPath.replace('/', File.separatorChar));
+              final File file = new File(FileUtil.toSystemDependentName(outputPath));
               if (!file.exists()) {
                 nonExistingOutputPaths.add(file);
               }
@@ -2444,7 +2445,7 @@ public class CompileDriver {
           }
           if (testsOutputPath != null) {
             if (!useOutOfProcessBuild) {
-              final File f = new File(testsOutputPath.replace('/', File.separatorChar));
+              final File f = new File(FileUtil.toSystemDependentName(testsOutputPath));
               if (!f.exists()) {
                 nonExistingOutputPaths.add(f);
               }

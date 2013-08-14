@@ -98,6 +98,11 @@ public class CoreLocalVirtualFile extends VirtualFile {
     return answer;
   }
 
+  @Override
+  public boolean isInLocalFileSystem() {
+    return true;
+  }
+
   @NotNull
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {

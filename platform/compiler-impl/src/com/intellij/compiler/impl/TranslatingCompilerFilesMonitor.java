@@ -18,14 +18,12 @@ package com.intellij.compiler.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.compiler.make.MakeUtil;
 import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -54,7 +52,6 @@ import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IndexInfrastructure;
 import com.intellij.util.io.*;
-import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.*;
 import org.consulo.compiler.CompilerPathsManager;
@@ -62,6 +59,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.io.DataOutputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -250,137 +248,27 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
                            final boolean isRebuild,
                            Collection<VirtualFile> toCompile,
                            Collection<Trinity<File, String, Boolean>> toDelete) {
+
     final Project project = context.getProject();
-    final int projectId = getProjectId(project);
-    final boolean _forceCompile = forceCompile || isRebuild;
-    final Set<VirtualFile> selectedForRecompilation = new HashSet<VirtualFile>();
-    synchronized (myDataLock) {
-      final TIntHashSet pathsToRecompile = mySourcesToRecompile.get(projectId);
-      if (_forceCompile || pathsToRecompile != null && !pathsToRecompile.isEmpty()) {
-        if (ourDebugMode) {
-          System.out.println("Analysing potentially recompilable files for " + compiler.getDescription());
-        }
-        while (scopeSrcIterator.hasNext()) {
-          final VirtualFile file = scopeSrcIterator.next();
-          if (!file.isValid()) {
-            if (LOG.isDebugEnabled() || ourDebugMode) {
-              LOG.debug("Skipping invalid file " + file.getPresentableUrl());
-              if (ourDebugMode) {
-                System.out.println("\t SKIPPED(INVALID) " + file.getPresentableUrl());
-              }
-            }
-            continue;
-          }
-          final int fileId = getFileId(file);
-          if (_forceCompile) {
-            if (compiler.isCompilableFile(file, context) && !CompilerManager.getInstance(project).isExcludedFromCompilation(file)) {
-              toCompile.add(file);
-              if (ourDebugMode) {
-                System.out.println("\t INCLUDED " + file.getPresentableUrl());
-              }
-              selectedForRecompilation.add(file);
-              if (pathsToRecompile == null || !pathsToRecompile.contains(fileId)) {
-                loadInfoAndAddSourceForRecompilation(projectId, file);
-              }
-            }
-            else {
-              if (ourDebugMode) {
-                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
-              }
-            }
-          }
-          else if (pathsToRecompile.contains(fileId)) {
-            if (compiler.isCompilableFile(file, context) && !CompilerManager.getInstance(project).isExcludedFromCompilation(file)) {
-              toCompile.add(file);
-              if (ourDebugMode) {
-                System.out.println("\t INCLUDED " + file.getPresentableUrl());
-              }
-              selectedForRecompilation.add(file);
-            }
-            else {
-              if (ourDebugMode) {
-                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
-              }
-            }
-          }
-          else {
-            if (ourDebugMode) {
-              System.out.println("\t NOT INCLUDED " + file.getPresentableUrl());
-            }
+    if (ourDebugMode) {
+      System.out.println("Analysing potentially recompilable files for " + compiler.getDescription());
+    }
+    while (scopeSrcIterator.hasNext()) {
+      final VirtualFile file = scopeSrcIterator.next();
+      if (!file.isValid()) {
+        if (LOG.isDebugEnabled() || ourDebugMode) {
+          LOG.debug("Skipping invalid file " + file.getPresentableUrl());
+          if (ourDebugMode) {
+            System.out.println("\t SKIPPED(INVALID) " + file.getPresentableUrl());
           }
         }
+        continue;
       }
-      // it is important that files to delete are collected after the files to compile (see what happens if forceCompile == true)
-      if (!isRebuild) {
-        final Outputs outputs = myOutputsToDelete.get(projectId);
-        try {
-          final VirtualFileManager vfm = VirtualFileManager.getInstance();
-          final LocalFileSystem lfs = LocalFileSystem.getInstance();
-          final List<String> zombieEntries = new ArrayList<String>();
-          final Map<String, VirtualFile> srcFileCache = getFileCache(context);
-          for (Map.Entry<String, SourceUrlClassNamePair> entry : outputs.getEntries()) {
-            final String outputPath = entry.getKey();
-            final SourceUrlClassNamePair classNamePair = entry.getValue();
-            final String sourceUrl = classNamePair.getSourceUrl();
-
-            final VirtualFile srcFile;
-            if (srcFileCache.containsKey(sourceUrl)) {
-              srcFile = srcFileCache.get(sourceUrl);
-            }
-            else {
-              srcFile = vfm.findFileByUrl(sourceUrl);
-              srcFileCache.put(sourceUrl, srcFile);
-            }
-
-            final boolean sourcePresent = srcFile != null;
-            if (sourcePresent) {
-              if (!compiler.isCompilableFile(srcFile, context)) {
-                continue; // do not collect files that were compiled by another compiler
-              }
-              if (!selectedForRecompilation.contains(srcFile)) {
-                if (!isMarkedForRecompilation(projectId, getFileId(srcFile))) {
-                  if (LOG.isDebugEnabled() || ourDebugMode) {
-                    final String message = "Found zombie entry (output is marked, but source is present and up-to-date): " + outputPath;
-                    LOG.debug(message);
-                    if (ourDebugMode) {
-                      System.out.println(message);
-                    }
-                  }
-                  zombieEntries.add(outputPath);
-                }
-                continue;
-              }
-            }
-            if (lfs.findFileByPath(outputPath) != null) {
-              //noinspection UnnecessaryBoxing
-              final File file = new File(outputPath);
-              toDelete.add(new Trinity<File, String, Boolean>(file, classNamePair.getClassName(), Boolean.valueOf(sourcePresent)));
-              if (LOG.isDebugEnabled() || ourDebugMode) {
-                final String message = "Found file to delete: " + file;
-                LOG.debug(message);
-                if (ourDebugMode) {
-                  System.out.println(message);
-                }
-              }
-            }
-            else {
-              if (LOG.isDebugEnabled() || ourDebugMode) {
-                final String message = "Found zombie entry marked for deletion: " + outputPath;
-                LOG.debug(message);
-                if (ourDebugMode) {
-                  System.out.println(message);
-                }
-              }
-              // must be gagbage entry, should cleanup
-              zombieEntries.add(outputPath);
-            }
-          }
-          for (String path : zombieEntries) {
-            unmarkOutputPathForDeletion(projectId, path);
-          }
-        }
-        finally {
-          outputs.release();
+    
+      if (compiler.isCompilableFile(file, context) && !CompilerManager.getInstance(project).isExcludedFromCompilation(file)) {
+        toCompile.add(file);
+        if (ourDebugMode) {
+          System.out.println("\t INCLUDED " + file.getPresentableUrl());
         }
       }
     }
@@ -404,7 +292,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
 
   public void update(final CompileContext context, @Nullable final String outputRoot, final Collection<TranslatingCompiler.OutputItem> successfullyCompiled, final VirtualFile[] filesToRecompile)
     throws IOException {
-    final Project project = context.getProject();
+    /*final Project project = context.getProject();
     final int projectId = getProjectId(project);
     if (!successfullyCompiled.isEmpty()) {
       final LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -503,15 +391,15 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
           }
         }
       });
-    }
+    }  */
   }
 
   public void updateOutputRootsLayout(Project project) {
-    final TIntObjectHashMap<Pair<Integer, Integer>> map = buildOutputRootsLayout(new ProjectRef(project));
+  /*  final TIntObjectHashMap<Pair<Integer, Integer>> map = buildOutputRootsLayout(new ProjectRef(project));
     final int projectId = getProjectId(project);
     synchronized (myProjectOutputRoots) {
       myProjectOutputRoots.put(projectId, map);
-    }
+    } */
   }
 
   @Override
