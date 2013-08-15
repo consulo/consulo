@@ -125,7 +125,7 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
   @Nullable
   @Override
   public VirtualFile findFileByPathIfCached(@NotNull @NonNls String path) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @NotNull
@@ -251,7 +251,9 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
 
   @Override
   public void deleteFile(Object requestor, @NotNull VirtualFile file) throws IOException {
-    throw new UnsupportedOperationException();
+    assert file instanceof CoreLocalVirtualFile;
+
+    FileUtil.delete(new File(file.getPath()));
   }
 
   @Override

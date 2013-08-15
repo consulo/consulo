@@ -25,6 +25,9 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TestDialog;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.impl.PsiManagerEx;
+import com.intellij.psi.impl.file.impl.FileManagerImpl;
 import org.consulo.compiler.server.application.CompilerServerApplication;
 import org.consulo.compiler.server.rmi.CompilerSwapper;
 import org.consulo.compiler.server.rmi.CompilerSwapperClient;
@@ -60,6 +63,7 @@ public class Main {
 
     final Project project = ProjectManagerEx.getInstanceEx().loadProject("G:\\consuloTest");
 
+    ((FileManagerImpl) ((PsiManagerEx)PsiManager.getInstance(project)).getFileManager()).markInitialized();
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
 
 
