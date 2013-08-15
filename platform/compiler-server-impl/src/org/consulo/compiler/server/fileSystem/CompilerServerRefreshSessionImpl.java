@@ -27,6 +27,11 @@ import java.util.Collection;
  */
 public class CompilerServerRefreshSessionImpl extends RefreshSession {
   @Override
+  public long getId() {
+    return 0;
+  }
+
+  @Override
   public boolean isAsynchronous() {
     return false;
   }

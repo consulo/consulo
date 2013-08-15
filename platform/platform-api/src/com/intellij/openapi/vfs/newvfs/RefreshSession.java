@@ -25,9 +25,7 @@ import java.util.Collection;
  * @author max
  */
 public abstract class RefreshSession {
-  public long getId() {
-    return 0;
-  }
+  public abstract long getId();
 
   public abstract boolean isAsynchronous();
 
