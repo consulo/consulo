@@ -1,6 +1,7 @@
 package org.consulo.compiler.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -9,16 +10,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.HashSet;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +32,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 17:14/26.05.13
  */
+@Logger
 @State(
   name = "CompilerPathsManager",
   storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
@@ -304,6 +310,31 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
     for (Module module : moduleManager.getModules()) {
       if (!myModulesToVirtualFilePoints.containsKey(module)) {
         createDefaultForModule(module);
+      }
+    }
+
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      @Override
+      public void run() {
+        createIfNotExists();
+      }
+    });
+  }
+
+  private void createIfNotExists() {
+    for (CompileInfo compileInfo : myModulesToVirtualFilePoints.values()) {
+      for (VirtualFilePointer virtualFilePointer : compileInfo.virtualFilePointers.values()) {
+        String url = virtualFilePointer.getUrl();
+        String path = PathUtil.toPresentableUrl(url);
+
+        try {
+          VfsUtil.createDirectoryIfMissing(path);
+        }
+        catch (IOException e) {
+          if(ApplicationManager.getApplication().isInternal()) {
+            LOGGER.error(e);
+          }
+        }
       }
     }
   }

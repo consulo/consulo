@@ -15,7 +15,6 @@
  */
 package org.consulo.compiler.server.rmi.impl;
 
-import com.intellij.compiler.impl.ProjectCompileScope;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileStatusNotification;
 import com.intellij.openapi.compiler.CompilerManager;
@@ -55,7 +54,7 @@ public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements 
 
       CompilerClientConnector.getInstance(project).setClientConnection(client);
 
-      CompilerManager.getInstance(project).make(new ProjectCompileScope(project), new CompileStatusNotification() {
+      CompilerManager.getInstance(project).rebuild(new CompileStatusNotification() {
         @Override
         public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
           project.dispose();

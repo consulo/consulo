@@ -2236,6 +2236,7 @@
     <component>
       <interface-class>com.intellij.openapi.vfs.pointers.VirtualFilePointerManager</interface-class>
       <implementation-class>com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerVirtualFilePointerManager</compiler-server-implementation-class>
     </component>
 
     <component>

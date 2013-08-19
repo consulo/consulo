@@ -241,7 +241,9 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
   @NotNull
   @Override
   public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile parent, @NotNull String dir) throws IOException {
-    throw new UnsupportedOperationException();
+    File file = new File(parent.getPath(), dir);
+    FileUtil.createDirectory(file);
+    return findFileByIoFile(file);
   }
 
   @Override
