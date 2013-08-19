@@ -15,8 +15,9 @@
  */
 package com.intellij.compiler.impl;
 
+import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanel {
@@ -33,23 +34,22 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanel {
 
   protected void addExtraPopupMenuActions(DefaultActionGroup group) {
     group.add(new ExcludeFromCompileAction(myProject, this));
-    // todo: do we need compiler's popup actions here?
-    //ActionGroup popupGroup = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);
-    //if (popupGroup != null) {
-    //  for (AnAction action : popupGroup.getChildren(null)) {
-    //    group.add(action);
-    //  }
-    //}
+
+    ActionGroup popupGroup = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);
+    if (popupGroup != null) {
+      for (AnAction action : popupGroup.getChildren(null)) {
+        group.add(action);
+      }
+    }
   }
 
   @Override
   protected boolean shouldShowFirstErrorInEditor() {
-    return false;
+    return CompilerWorkspaceConfiguration.getInstance(myProject).AUTO_SHOW_ERRORS_IN_EDITOR;
   }
 
   @Override
   protected boolean canHideWarnings() {
-    return false;
+    return true;
   }
-
 }

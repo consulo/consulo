@@ -1,0 +1,75 @@
+/*
+ * Copyright 2013 Consulo.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.consulo.compiler.server.rmi.impl;
+
+import com.intellij.compiler.impl.ProjectCompileScope;
+import com.intellij.openapi.compiler.CompileContext;
+import com.intellij.openapi.compiler.CompileStatusNotification;
+import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ex.ProjectManagerEx;
+import com.intellij.openapi.util.InvalidDataException;
+import org.consulo.compiler.server.rmi.CompilerClientConnector;
+import org.consulo.compiler.server.rmi.CompilerClientInterface;
+import org.consulo.compiler.server.rmi.CompilerServerInterface;
+import org.consulo.lombok.annotations.Logger;
+import org.jdom.JDOMException;
+
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+/**
+ * @author VISTALL
+ * @since 11:14/13.08.13
+ */
+@Logger
+public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements CompilerServerInterface {
+  public CompilerServerInterfaceImpl() throws RemoteException {
+  }
+
+  @Override
+  public void notify(boolean connected) throws RemoteException {
+    LOGGER.info("Client connected");
+  }
+
+  @Override
+  public void compile(CompilerClientInterface client) throws RemoteException {
+    try {
+      final Project project = ProjectManagerEx.getInstanceEx().loadProject(client.getProjectDir());
+
+      assert project != null;
+
+      CompilerClientConnector.getInstance(project).setClientConnection(client);
+
+      CompilerManager.getInstance(project).make(new ProjectCompileScope(project), new CompileStatusNotification() {
+        @Override
+        public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
+          project.dispose();
+        }
+      });
+    }
+    catch (IOException e) {
+      throw new RemoteException(e.getMessage(), e);
+    }
+    catch (JDOMException e) {
+      throw new RemoteException(e.getMessage(), e);
+    }
+    catch (InvalidDataException e) {
+      throw new RemoteException(e.getMessage(), e);
+    }
+  }
+}

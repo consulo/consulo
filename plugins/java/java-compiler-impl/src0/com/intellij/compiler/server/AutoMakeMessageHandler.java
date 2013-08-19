@@ -104,7 +104,7 @@ class AutoMakeMessageHandler extends DefaultMessageHandler {
       final VirtualFile vFile = sourceFilePath != null? LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(sourceFilePath)) : null;
       final long line = message.hasLine() ? message.getLine() : -1;
       final long column = message.hasColumn() ? message.getColumn() : -1;
-      ProblemsView.SERVICE.getInstance(myProject).addMessage(new CompilerMessageImpl(myProject, CompilerMessageCategory.ERROR, message.getText(), vFile, (int)line, (int)column, null), sessionId);
+      ProblemsView.SERVICE.getInstance(myProject).addMessage(new CompilerMessageImpl(myProject, CompilerMessageCategory.ERROR, message.getText(), vFile, (int)line, (int)column, null));
     }
   }
 
@@ -119,7 +119,7 @@ class AutoMakeMessageHandler extends DefaultMessageHandler {
     }
     final String msg = "Auto make failure: " + descr;
     CompilerManager.NOTIFICATION_GROUP.createNotification(msg, MessageType.INFO);
-    ProblemsView.SERVICE.getInstance(myProject).addMessage(new CompilerMessageImpl(myProject, CompilerMessageCategory.ERROR, msg), sessionId);
+    ProblemsView.SERVICE.getInstance(myProject).addMessage(new CompilerMessageImpl(myProject, CompilerMessageCategory.ERROR, msg));
   }
 
   @Override
@@ -156,7 +156,7 @@ class AutoMakeMessageHandler extends DefaultMessageHandler {
     if (!myProject.isDisposed()) {
       final ProblemsView view = ProblemsView.SERVICE.getInstance(myProject);
       view.clearProgress();
-      view.clearOldMessages(null, sessionId);
+      view.clearOldMessages(null);
     }
   }
 

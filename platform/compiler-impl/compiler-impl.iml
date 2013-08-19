@@ -18,6 +18,7 @@
     <orderEntry type="library" name="OroMatcher" level="project" />
     <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
     <orderEntry type="module" module-name="compiler-artifact-impl" />
+    <orderEntry type="module" module-name="compiler-bridge-impl" />
   </component>
 </module>
 

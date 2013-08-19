@@ -442,6 +442,7 @@
           <element id="module-output" name="testFramework" />
           <element id="module-output" name="remote-servers-api" />
           <element id="module-output" name="remote-servers-impl" />
+          <element id="module-output" name="compiler-bridge-impl" />
         </element>
         <element id="archive" name="boot.jar">
           <element id="module-output" name="boot" />

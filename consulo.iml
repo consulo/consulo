@@ -109,6 +109,8 @@
     <orderEntry type="module" module-name="jvm-bytecode-viewer" />
     <orderEntry type="module" module-name="remote-servers-api" />
     <orderEntry type="module" module-name="remote-servers-impl" />
+    <orderEntry type="module" module-name="compiler-bridge-impl" />
+    <orderEntry type="module" module-name="compiler-server-impl" />
   </component>
 </module>
 

@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.compiler.server.rmi.impl;
+package org.consulo.compiler.server.rmi;
 
-import org.consulo.compiler.server.rmi.CompilerSwapperClient;
-import org.jetbrains.annotations.NotNull;
-
+import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
 /**
  * @author VISTALL
- * @since 11:41/13.08.13
+ * @since 11:12/13.08.13
  */
-public class RemoteCompilerSwapperClientImpl extends UnicastRemoteObject implements CompilerSwapperClient {
-  public RemoteCompilerSwapperClientImpl() throws RemoteException {
-  }
+public interface CompilerServerInterface extends Remote {
+  String LOOKUP_ID = "//localhost/ConsuloCompilerServer";
 
-  @Override
-  public void addMessage(@NotNull String message) throws RemoteException{
-    System.out.println("Message: " + message);
-  }
+  void notify(boolean connected) throws RemoteException;
+
+  void compile(final CompilerClientInterface client) throws RemoteException;
 }

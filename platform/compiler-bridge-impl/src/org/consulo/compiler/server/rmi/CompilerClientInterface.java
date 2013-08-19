@@ -15,13 +15,19 @@
  */
 package org.consulo.compiler.server.rmi;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.compiler.CompilerMessageCategory;
+import org.jetbrains.annotations.NotNull;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  * @author VISTALL
- * @since 11:16/13.08.13
+ * @since 11:14/13.08.13
  */
-@ApplicationService
-public abstract class CompilerSwapperManager {
-  public abstract void connect();
+public interface CompilerClientInterface extends Remote {
+  void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) throws RemoteException;
+
+  @NotNull
+  String getProjectDir();
 }

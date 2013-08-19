@@ -52,6 +52,7 @@ import com.intellij.util.containers.OrderedSet;
 import com.intellij.util.indexing.FileBasedIndex;
 import gnu.trove.TIntHashSet;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -285,7 +286,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public void addMessage(CompilerMessage msg) {
-    /*if (ApplicationManager.getApplication().isUnitTestMode()) */{
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
       LOG.info("addMessage: " + msg + " this=" + this);
     }
 
@@ -297,8 +298,12 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     if (messages.add(msg)) {
       myTask.addMessage(msg);
     }
-    if (myShouldUpdateProblemsView && msg.getCategory() == CompilerMessageCategory.ERROR) {
-      //TODO [VISTALL] ProblemsViewImpl.SERVICE.getInstance(myProject).addMessage(msg, mySessionId);
+
+    if (ApplicationManager.getApplication().isCompilerServerMode()) {
+      CompilerClientConnector.getInstance(myProject).addMessage(msg.getCategory(), msg.getMessage(), null, msg.getLine(), msg.getColumn());
+    }
+    else {
+      ProblemsViewImpl.SERVICE.getInstance(myProject).addMessage(msg);
     }
   }
 

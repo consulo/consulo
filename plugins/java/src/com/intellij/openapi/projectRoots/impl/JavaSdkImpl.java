@@ -17,6 +17,7 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.highlighter.JarArchiveFileType;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -371,21 +372,17 @@ public class JavaSdkImpl extends JavaSdk {
   }
 
   public static void attachJdkAnnotations(@NotNull SdkModificator modificator) {
-    LocalFileSystem lfs = LocalFileSystem.getInstance();
-    // community idea under idea
-    VirtualFile root = lfs.findFileByPath(FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/jdkAnnotations");
+    String path = FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/lib/jdk-annotations.jar";
+    VirtualFile jarFile = JarArchiveFileType.INSTANCE.getFileSystem().findLocalVirtualFileByPath(path);
 
-    if (root == null) { // build
-      root = VirtualFileManager.getInstance().findFileByUrl("jar://"+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/lib/jdk-annotations.jar!/");
-    }
-    if (root == null) {
-      LOG.error("jdk annotations not found in: "+ FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/lib/jdk-annotations.jar!/");
+    if (jarFile == null) {
+      LOG.error("jdk annotations not found in: "+ path);
       return;
     }
 
     OrderRootType annoType = AnnotationOrderRootType.getInstance();
-    modificator.removeRoot(root, annoType);
-    modificator.addRoot(root, annoType);
+    modificator.removeRoot(jarFile, annoType);
+    modificator.addRoot(jarFile, annoType);
   }
 
   private final Map<String, String> myCachedVersionStrings = new HashMap<String, String>();

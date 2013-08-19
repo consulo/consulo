@@ -31,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.UUID;
 
 /**
  * @author Eugene Zhuravlev
@@ -54,11 +53,16 @@ public abstract class ProblemsView {
     myProject = project;
   }
 
-  public abstract void clearOldMessages(CompileScope scope, UUID currentSessionId);
+  public abstract void clearOldMessages(CompileScope scope);
 
-  public abstract void addMessage(int type, @NotNull String[] text, @Nullable String groupName, @Nullable Navigatable navigatable, @Nullable String exportTextPrefix, @Nullable String rendererTextPrefix, @NotNull UUID sessionId);
+  public abstract void addMessage(int type,
+                                  @NotNull String[] text,
+                                  @Nullable String groupName,
+                                  @Nullable Navigatable navigatable,
+                                  @Nullable String exportTextPrefix,
+                                  @Nullable String rendererTextPrefix);
 
-  public final void addMessage(CompilerMessage message, @NotNull UUID sessionId) {
+  public final void addMessage(CompilerMessage message) {
     final VirtualFile file = message.getVirtualFile();
     Navigatable navigatable = message.getNavigatable();
     if (navigatable == null && file != null) {
@@ -66,9 +70,9 @@ public abstract class ProblemsView {
     }
     final CompilerMessageCategory category = message.getCategory();
     final int type = CompilerTask.translateCategory(category);
-    final String[] text = convertMessage(message);
+    final String[] text = convertMessage(message.getMessage());
     final String groupName = file != null? file.getPresentableUrl() : category.getPresentableText();
-    addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix(), sessionId);
+    addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
   }
 
   public abstract void setProgress(String text, float fraction);
@@ -77,8 +81,7 @@ public abstract class ProblemsView {
 
   public abstract void clearProgress();
 
-  private static String[] convertMessage(final CompilerMessage message) {
-    String text = message.getMessage();
+  public static String[] convertMessage(final String text) {
     if (!text.contains("\n")) {
       return new String[]{text};
     }

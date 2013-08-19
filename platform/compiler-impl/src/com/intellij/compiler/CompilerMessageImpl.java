@@ -54,14 +54,17 @@ public final class CompilerMessageImpl implements CompilerMessage {
     myFile = file;
   }
 
+  @Override
   public CompilerMessageCategory getCategory() {
     return myCategory;
   }
 
+  @Override
   public String getMessage() {
     return myMessage;
   }
 
+  @Override
   public Navigatable getNavigatable() {
     if (myNavigatable != null) {
       return myNavigatable;
@@ -76,10 +79,12 @@ public final class CompilerMessageImpl implements CompilerMessage {
     return null;
   }
 
+  @Override
   public VirtualFile getVirtualFile() {
     return myFile;
   }
 
+  @Override
   public String getExportTextPrefix() {
     if (getLine() >= 0) {
       return CompilerBundle.message("compiler.results.export.text.prefix", getLine());
@@ -87,6 +92,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
     return "";
   }
 
+  @Override
   public String getRenderTextPrefix() {
     if (getLine() >= 0) {
       return "(" + getLine() + ", " + getColumn() + ")";
@@ -94,14 +100,17 @@ public final class CompilerMessageImpl implements CompilerMessage {
     return "";
   }
 
+  @Override
   public int getLine() {
     return myRow;
   }
 
+  @Override
   public int getColumn() {
     return myColumn;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof CompilerMessage)) return false;
@@ -117,6 +126,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
     return true;
   }
 
+  @Override
   public int hashCode() {
     int result;
     result = myCategory.hashCode();
@@ -127,6 +137,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
     return result;
   }
 
+  @Override
   public String toString() {
     return myMessage;
   }

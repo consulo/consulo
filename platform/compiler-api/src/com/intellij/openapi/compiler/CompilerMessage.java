@@ -72,4 +72,8 @@ public interface CompilerMessage {
    * @return location prefix prepended to message while rendering compilation results in UI.
    */
   String getRenderTextPrefix();
+
+  int getLine();
+
+  int getColumn();
 }

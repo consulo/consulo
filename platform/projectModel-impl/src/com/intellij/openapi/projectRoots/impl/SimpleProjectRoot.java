@@ -21,10 +21,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.PathUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -121,20 +119,7 @@ public class SimpleProjectRoot implements ProjectRoot, JDOMExternalizable {
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    String url = element.getAttributeValue(ATTRIBUTE_URL);
-    myUrl = migrateJdkAnnotationsToCommunityForDevIdea(url);
-  }
-
-  // hack to migrate internal IDEA jdk annos dir from IDEA_PROJECT_HOME/jdkAnnotations to IDEA_PROJECT_HOME/community/java/jdkAnnotations
-  private static String migrateJdkAnnotationsToCommunityForDevIdea(String url) {
-    File root = new File(VfsUtilCore.urlToPath(url) + "/..");
-    boolean isOldJdkAnnotations = new File(root, "community/java/jdkAnnotations").exists()
-                && new File(root, "idea.iml").exists()
-                && new File(root, "testData").exists();
-    if (isOldJdkAnnotations) {
-      return VfsUtilCore.pathToUrl(PathUtil.getCanonicalPath(VfsUtilCore.urlToPath(url + "/../community/java/jdkAnnotations")));
-    }
-    return url;
+    myUrl = element.getAttributeValue(ATTRIBUTE_URL);
   }
 
   @Override

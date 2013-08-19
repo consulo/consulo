@@ -43,6 +43,7 @@ import org.jetbrains.plugins.groovy.GroovyBundle;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.GroovyFileTypeLoader;
 import org.jetbrains.plugins.groovy.config.GroovyConfigUtils;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 import org.jetbrains.plugins.groovy.util.LibrariesUtil;
 
 import java.util.HashSet;
@@ -91,7 +92,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
 
       ProjectRootManager rootManager = ProjectRootManager.getInstance(myProject);
       Module module = rootManager.getFileIndex().getModuleForFile(file);
-      if (module != null) {
+      if (module != null && ModuleUtilCore.getExtension(module, GroovyModuleExtension.class) != null) {
         modules.add(module);
       }
     }

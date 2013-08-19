@@ -37,7 +37,6 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
 import java.util.concurrent.Executor;
 
 /**
@@ -86,17 +85,17 @@ public class ProblemsViewImpl extends ProblemsView{
   }
 
   @Override
-  public void clearOldMessages(@Nullable final CompileScope scope, @NotNull final UUID currentSessionId) {
+  public void clearOldMessages(@Nullable final CompileScope scope) {
     myViewUpdater.execute(new Runnable() {
       @Override
       public void run() {
-        cleanupChildrenRecursively(myPanel.getErrorViewStructure().getRootElement(), scope, currentSessionId);
+        cleanupChildrenRecursively(myPanel.getErrorViewStructure().getRootElement(), scope);
         myPanel.reload();
       }
     });
   }
 
-  private void cleanupChildrenRecursively(@NotNull final Object fromElement, final @Nullable CompileScope scope, @NotNull UUID currentSessionId) {
+  private void cleanupChildrenRecursively(@NotNull final Object fromElement, final @Nullable CompileScope scope) {
     final ErrorViewStructure structure = myPanel.getErrorViewStructure();
     for (ErrorTreeElement element : structure.getChildElements(fromElement)) {
       if (element instanceof GroupingElement) {
@@ -106,18 +105,18 @@ public class ProblemsViewImpl extends ProblemsView{
             continue; 
           }
         }
+        /*if (!currentSessionId.equals(element.getData())) {
+          structure.removeElement(element);
+        }
+        else*/ {
+          cleanupChildrenRecursively(element, scope);
+        }
+      }
+     /* else {
         if (!currentSessionId.equals(element.getData())) {
           structure.removeElement(element);
         }
-        else {
-          cleanupChildrenRecursively(element, scope, currentSessionId);
-        }
-      }
-      else {
-        if (!currentSessionId.equals(element.getData())) {
-          structure.removeElement(element);
-        }
-      }
+      }  */
     }
   }
 
@@ -126,21 +125,21 @@ public class ProblemsViewImpl extends ProblemsView{
                          @NotNull final String[] text,
                          @Nullable final String groupName,
                          @Nullable final Navigatable navigatable,
-                         @Nullable final String exportTextPrefix, @Nullable final String rendererTextPrefix, @Nullable final UUID sessionId) {
+                         @Nullable final String exportTextPrefix, @Nullable final String rendererTextPrefix) {
 
     myViewUpdater.execute(new Runnable() {
       @Override
       public void run() {
         final ErrorViewStructure structure = myPanel.getErrorViewStructure();
         final GroupingElement group = structure.lookupGroupingElement(groupName);
-        if (group != null && !sessionId.equals(group.getData())) {
+        /*if (group != null && !sessionId.equals(group.getData())) {
           structure.removeElement(group);
-        }
+        }   */
         if (navigatable != null) {
-          myPanel.addMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix, sessionId);
+          myPanel.addMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix, null);
         }
         else {
-          myPanel.addMessage(type, text, null, -1, -1, sessionId);
+          myPanel.addMessage(type, text, null, -1, -1, null);
         }
       }
     });

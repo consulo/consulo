@@ -55,7 +55,6 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -88,7 +87,10 @@ import org.jetbrains.jps.api.RequestFuture;
 import org.jetbrains.jps.incremental.Utils;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -230,7 +232,7 @@ public class CompileDriver {
     final CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
 
     if (!useOutOfProcessBuild()) {
-      checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
+      //checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
       if (compileContext.isRebuildRequested()) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("Rebuild requested, up-to-date=false");
@@ -344,7 +346,7 @@ public class CompileDriver {
     }
   }
 
-  private CompileStatus readStatus() {
+ /* private CompileStatus readStatus() {
     final boolean isInProgress = getLockFile().exists();
     int version = -1;
     long vfsStamp = -1L;
@@ -371,9 +373,9 @@ public class CompileDriver {
       return null;
     }
     return new CompileStatus(version, isInProgress, vfsStamp);
-  }
+  }    */
 
-  private void writeStatus(CompileStatus status, CompileContext context) {
+ /* private void writeStatus(CompileStatus status, CompileContext context) {
     final File statusFile = new File(myCachesDirectoryPath, VERSION_FILE_NAME);
 
     final File lockFile = getLockFile();
@@ -397,7 +399,7 @@ public class CompileDriver {
     catch (IOException e) {
       context.addMessage(CompilerMessageCategory.ERROR, CompilerBundle.message("compiler.error.exception", e.getMessage()), null, -1, -1);
     }
-  }
+  }    */
 
   private File getLockFile() {
     return new File(CompilerPaths.getCompilerSystemDirectory(myProject), LOCK_FILE_NAME);
@@ -750,7 +752,7 @@ public class CompileDriver {
             if (message != null) {
               compileContext.addMessage(message);
             }
-            TranslatingCompilerFilesMonitor.getInstance().ensureInitializationCompleted(myProject, compileContext.getProgressIndicator());
+
             doCompile(compileContext, isRebuild, forceCompile, callback, checkCachesVersion);
           }
           finally {
@@ -789,15 +791,8 @@ public class CompileDriver {
                          final boolean checkCachesVersion) {
     ExitStatus status = ExitStatus.ERRORS;
     boolean wereExceptions = false;
-    final long vfsTimestamp = (ManagingFS.getInstance()).getCreationTimestamp();
+
     try {
-      if (checkCachesVersion) {
-        checkCachesVersion(compileContext, vfsTimestamp);
-        if (compileContext.isRebuildRequested()) {
-          return;
-        }
-      }
-      writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, true, vfsTimestamp), compileContext);
       if (compileContext.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
         return;
       }
@@ -841,7 +836,7 @@ public class CompileDriver {
       }
       else {
         if (!myProject.isDisposed()) {
-          writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, wereExceptions, vfsTimestamp), compileContext);
+          //writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, wereExceptions, vfsTimestamp), compileContext);
         }
         final long duration = notifyCompilationCompleted(compileContext, callback, status, false);
         CompilerUtil.logDuration("\tCOMPILATION FINISHED; Errors: " +
@@ -918,28 +913,6 @@ public class CompileDriver {
       }
     });
     return duration;
-  }
-
-  private void checkCachesVersion(final CompileContextImpl compileContext, final long currentVFSTimestamp) {
-    if (CompilerPaths.getRebuildMarkerFile(compileContext.getProject()).exists()) {
-      compileContext.requestRebuildNextTime("Compiler caches are out of date, project rebuild is required");
-      return;
-    }
-    final CompileStatus compileStatus = readStatus();
-    if (compileStatus == null) {
-      compileContext.requestRebuildNextTime(CompilerBundle.message("error.compiler.caches.corrupted"));
-    }
-    else if (compileStatus.CACHE_FORMAT_VERSION != -1 && compileStatus.CACHE_FORMAT_VERSION != DEPENDENCY_FORMAT_VERSION) {
-      compileContext.requestRebuildNextTime(CompilerBundle.message("error.caches.old.format"));
-    }
-    else if (compileStatus.COMPILATION_IN_PROGRESS) {
-      compileContext.requestRebuildNextTime(CompilerBundle.message("error.previous.compilation.failed"));
-    }
-    else if (compileStatus.VFS_CREATION_STAMP >= 0L) {
-      if (currentVFSTimestamp != compileStatus.VFS_CREATION_STAMP) {
-        compileContext.requestRebuildNextTime(CompilerBundle.message("error.vfs.was.rebuilt"));
-      }
-    }
   }
 
   private static String createStatusMessage(final ExitStatus status, final int warningCount, final int errorCount, long duration) {

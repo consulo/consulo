@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.compiler.toolwindow;
+package org.consulo.compiler.server.rmi;
 
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.compiler.CompilerMessageCategory;
+import org.consulo.lombok.annotations.ProjectService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 11:24/14.08.13
+ * @since 15:50/19.08.13
  */
-public class CompilerErrorTreeView2 extends NewErrorTreeViewPanel {
-  public CompilerErrorTreeView2(Project project) {
-    super(project, "compiler.help", false, true);
-  }
+@ProjectService
+public abstract class CompilerClientConnector {
+  public abstract void setClientConnection(@Nullable CompilerClientInterface clientConnection);
+
+  public abstract void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum);
 }

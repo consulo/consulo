@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.compiler.server.rmi.impl;
+package org.consulo.compiler.server.rmi;
 
-import org.consulo.compiler.server.rmi.CompilerSwapperManager;
+import org.consulo.lombok.annotations.ApplicationService;
 
 /**
  * @author VISTALL
  * @since 11:16/13.08.13
  */
-public class RemoteCompilerSwapperManagerImpl extends CompilerSwapperManager {
-
-  @Override
-  public void connect() {
-  }
+@ApplicationService
+public abstract class CompilerServerConnector {
+  public abstract boolean isConnected();
 }

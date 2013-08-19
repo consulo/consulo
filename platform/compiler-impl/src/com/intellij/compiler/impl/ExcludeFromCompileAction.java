@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.CompilerConfigurationImpl;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorTreeNodeDescriptor;
 import com.intellij.ide.errorTreeView.GroupingElement;
@@ -25,6 +24,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.compiler.CompilerBundle;
+import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.options.ExcludeEntryDescription;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -45,12 +45,13 @@ class ExcludeFromCompileAction extends AnAction {
     myErrorTreeView = errorTreeView;
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     VirtualFile file = getSelectedFile();
 
     if (file != null && file.isValid()) {
       ExcludeEntryDescription description = new ExcludeEntryDescription(file, false, true, myProject);
-      ((CompilerConfigurationImpl) CompilerConfigurationOld.getInstance(myProject)).getExcludedEntriesConfiguration().addExcludeEntryDescription(description);
+      CompilerManager.getInstance(myProject).getExcludedEntriesConfiguration().addExcludeEntryDescription(description);
       FileStatusManager.getInstance(myProject).fileStatusesChanged();
     }
   }

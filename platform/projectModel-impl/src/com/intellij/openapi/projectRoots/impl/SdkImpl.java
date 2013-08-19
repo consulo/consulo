@@ -158,11 +158,9 @@ public class SdkImpl extends UserDataHolderBase implements JDOMExternalizable, S
 
     if (element.getAttribute(ELEMENT_VERSION) == null || !"2".equals(element.getAttributeValue(ELEMENT_VERSION))) {
       myRootContainer.startChange();
-      final List children = element.getChild(ELEMENT_ROOTS).getChildren(ELEMENT_ROOT);
-      for (final Object aChildren : children) {
-        Element root = (Element)aChildren;
-        for (final Object o : root.getChildren(ELEMENT_PROPERTY)) {
-          Element prop = (Element)o;
+      final List<Element> children = element.getChild(ELEMENT_ROOTS).getChildren(ELEMENT_ROOT);
+      for (final Element root : children) {
+        for (final Element prop : root.getChildren(ELEMENT_PROPERTY)) {
           if (ELEMENT_TYPE.equals(prop.getAttributeValue(ELEMENT_NAME)) && VALUE_JDKHOME.equals(prop.getAttributeValue(ATTRIBUTE_VALUE))) {
             myHomePath = VirtualFileManager.extractPath(root.getAttributeValue(ATTRIBUTE_FILE));
           }

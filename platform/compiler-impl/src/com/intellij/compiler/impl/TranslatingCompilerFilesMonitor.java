@@ -1026,21 +1026,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   }
 
   public void ensureInitializationCompleted(Project project, ProgressIndicator indicator) {
-    final int id = getProjectId(project);
-    synchronized (myAsyncScanLock) {
-      while (myInitInProgress.containsKey(id)) {
-        if (!project.isOpen() || project.isDisposed() || (indicator != null && indicator.isCanceled())) {
-          // makes no sense to continue waiting
-          break;
-        }
-        try {
-          myAsyncScanLock.wait(500);
-        }
-        catch (InterruptedException ignored) {
-          break;
-        }
-      }
-    }
+
   }
 
   private void markOldOutputRoots(final ProjectRef projRef, final TIntObjectHashMap<Pair<Integer, Integer>> currentLayout) {
