@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInsight.template.emmet.nodes;
 
-import com.google.common.base.Joiner;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.emmet.ZenCodingUtil;
 import com.intellij.codeInsight.template.emmet.generators.ZenCodingGenerator;
@@ -33,7 +32,6 @@ import java.util.List;
  * @author Eugene.Kudelevsky
  */
 public class TemplateNode extends ZenCodingNode {
-  private static final Joiner JOINER = Joiner.on(",");
   private final TemplateToken myTemplateToken;
   @Nullable private final ZenCodingGenerator myGenerator;
 
@@ -80,7 +78,7 @@ public class TemplateNode extends ZenCodingNode {
     String result = myTemplateToken.getKey();
     List<Pair<String, String>> attributes = myTemplateToken.getAttribute2Value();
     if (!attributes.isEmpty()) {
-      result += "[" + JOINER.join(myTemplateToken.getAttribute2Value()) + "]";
+      result += "[" + StringUtil.join(myTemplateToken.getAttribute2Value(), ",") + "]";
     }
     return "Template(" + result + ")";
   }

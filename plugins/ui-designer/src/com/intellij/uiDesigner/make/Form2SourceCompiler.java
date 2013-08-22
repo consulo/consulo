@@ -32,7 +32,6 @@ import com.intellij.uiDesigner.UIDesignerBundle;
 import com.intellij.uiDesigner.compiler.AlienFormFileException;
 import com.intellij.uiDesigner.compiler.FormErrorInfo;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.incremental.java.CopyResourcesUtil;
 
 import java.io.DataInput;
 import java.io.File;

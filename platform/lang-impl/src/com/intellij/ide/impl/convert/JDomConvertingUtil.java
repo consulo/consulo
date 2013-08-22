@@ -17,17 +17,13 @@
 package com.intellij.ide.impl.convert;
 
 import com.intellij.conversion.CannotConvertException;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.JDOMExternalizerUtil;
-import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.*;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.JDomSerializationUtil;
 
 import java.io.File;
 import java.io.IOException;

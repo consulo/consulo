@@ -21,7 +21,6 @@
     <orderEntry type="library" exported="" name="asm4" level="project" />
     <orderEntry type="module" module-name="external-system-impl" exported="" />
     <orderEntry type="module" module-name="regexp" />
-    <orderEntry type="module" module-name="jps-model-impl" />
     <orderEntry type="library" name="OroMatcher" level="project" />
     <orderEntry type="library" name="jcip" level="project" />
     <orderEntry type="module" module-name="compiler-artifact-api" />

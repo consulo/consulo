@@ -25,7 +25,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.java.compiler.JpsJavaCompilerConfigurationSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +41,11 @@ import java.util.StringTokenizer;
   storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
     @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
+  public static final String RESOURCE_EXTENSIONS = "resourceExtensions";
+  public static final String WILDCARD_RESOURCE_PATTERNS = "wildcardResourcePatterns";
+  public static final String ENTRY = "entry";
+  public static final String NAME = "name";
+
   private static class CompiledPattern {
     @NotNull final Pattern fileName;
     @Nullable final Pattern dir;
@@ -379,16 +383,16 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   @Override
   public Element getState() {
     Element parentNode = new Element("state");
-    final Element newChild = addChild(parentNode, JpsJavaCompilerConfigurationSerializer.RESOURCE_EXTENSIONS);
+    final Element newChild = addChild(parentNode, RESOURCE_EXTENSIONS);
     for (final String pattern : getRegexpPatterns()) {
-      addChild(newChild, JpsJavaCompilerConfigurationSerializer.ENTRY).setAttribute(JpsJavaCompilerConfigurationSerializer.NAME, pattern);
+      addChild(newChild, ENTRY).setAttribute(NAME, pattern);
     }
 
     if (myWildcardPatternsInitialized || !myWildcardPatterns.isEmpty()) {
-      final Element wildcardPatterns = addChild(parentNode, JpsJavaCompilerConfigurationSerializer.WILDCARD_RESOURCE_PATTERNS);
+      final Element wildcardPatterns = addChild(parentNode, WILDCARD_RESOURCE_PATTERNS);
       for (final String wildcardPattern : myWildcardPatterns) {
-        addChild(wildcardPatterns, JpsJavaCompilerConfigurationSerializer.ENTRY)
-          .setAttribute(JpsJavaCompilerConfigurationSerializer.NAME, wildcardPattern);
+        addChild(wildcardPatterns, ENTRY)
+          .setAttribute(NAME, wildcardPattern);
       }
     }
     return parentNode;
@@ -420,11 +424,11 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
 
     try {
       removeRegexpPatterns();
-      Element node = parentNode.getChild(JpsJavaCompilerConfigurationSerializer.RESOURCE_EXTENSIONS);
+      Element node = parentNode.getChild(RESOURCE_EXTENSIONS);
       if (node != null) {
-        for (final Object o : node.getChildren(JpsJavaCompilerConfigurationSerializer.ENTRY)) {
+        for (final Object o : node.getChildren(ENTRY)) {
           Element element = (Element)o;
-          String pattern = element.getAttributeValue(JpsJavaCompilerConfigurationSerializer.NAME);
+          String pattern = element.getAttributeValue(NAME);
           if (!StringUtil.isEmpty(pattern)) {
             addRegexpPattern(pattern);
           }
@@ -432,12 +436,12 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
       }
 
       removeWildcardPatterns();
-      node = parentNode.getChild(JpsJavaCompilerConfigurationSerializer.WILDCARD_RESOURCE_PATTERNS);
+      node = parentNode.getChild(WILDCARD_RESOURCE_PATTERNS);
       if (node != null) {
         myWildcardPatternsInitialized = true;
-        for (final Object o : node.getChildren(JpsJavaCompilerConfigurationSerializer.ENTRY)) {
+        for (final Object o : node.getChildren(ENTRY)) {
           final Element element = (Element)o;
-          String pattern = element.getAttributeValue(JpsJavaCompilerConfigurationSerializer.NAME);
+          String pattern = element.getAttributeValue(NAME);
           if (!StringUtil.isEmpty(pattern)) {
             addWildcardResourcePattern(pattern);
           }

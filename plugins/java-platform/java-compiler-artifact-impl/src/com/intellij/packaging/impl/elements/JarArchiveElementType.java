@@ -30,7 +30,6 @@ import com.intellij.packaging.ui.PackagingElementPropertiesPanel;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.incremental.artifacts.impl.JpsArtifactUtil;
 
 import javax.swing.*;
 
@@ -58,11 +57,7 @@ class JarArchiveElementType extends CompositePackagingElementType<JarArchivePack
   @Override
   public PackagingElementPropertiesPanel createElementPropertiesPanel(@NotNull JarArchivePackagingElement element,
                                                                       @NotNull ArtifactEditorContext context) {
-    final String name = element.getArchiveFileName();
-    if (JpsArtifactUtil.isArchiveName(name)) {
-      return new JarArchiveElementPropertiesPanel(element, context);
-    }
-    return null;
+    return new JarArchiveElementPropertiesPanel(element, context);
   }
 
   @Override

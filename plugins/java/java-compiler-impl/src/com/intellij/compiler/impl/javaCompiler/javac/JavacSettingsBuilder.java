@@ -19,7 +19,6 @@ import com.intellij.compiler.CompilerEncodingService;
 import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.Chunk;
-import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;

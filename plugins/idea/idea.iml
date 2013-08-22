@@ -14,6 +14,7 @@
     <orderEntry type="module" module-name="projectModel-impl" />
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="projectImportModel" />
+    <orderEntry type="library" scope="TEST" name="JUnit4" level="project" />
   </component>
 </module>
 

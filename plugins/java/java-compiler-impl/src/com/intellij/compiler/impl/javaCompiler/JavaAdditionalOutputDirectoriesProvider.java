@@ -16,6 +16,7 @@
 package com.intellij.compiler.impl.javaCompiler;
 
 import com.intellij.compiler.impl.AdditionalOutputDirectoriesProvider;
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.AnnotationProcessingConfiguration;
 import com.intellij.openapi.compiler.CompilerPaths;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -25,7 +26,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
 
 import java.util.Arrays;
 

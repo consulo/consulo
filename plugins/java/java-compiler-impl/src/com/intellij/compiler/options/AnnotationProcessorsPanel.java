@@ -15,6 +15,8 @@
  */
 package com.intellij.compiler.options;
 
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.ProcessorConfigProfile;
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.impl.ProcessorConfigProfileImpl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -38,8 +40,6 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.EditableTreeModel;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.jps.model.java.compiler.ProcessorConfigProfile;
-import org.jetbrains.jps.model.java.impl.compiler.ProcessorConfigProfileImpl;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;

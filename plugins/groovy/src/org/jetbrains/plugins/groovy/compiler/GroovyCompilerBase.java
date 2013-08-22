@@ -62,16 +62,16 @@ import gnu.trove.THashSet;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.groovy.compiler.rt.CompilerMessage;
+import org.jetbrains.groovy.compiler.rt.GroovyCompilerMessageCategories;
 import org.jetbrains.groovy.compiler.rt.GroovycRunner;
-import org.jetbrains.jps.incremental.groovy.GroovycOSProcessHandler;
-import org.jetbrains.jps.incremental.messages.BuildMessage;
-import org.jetbrains.jps.incremental.messages.CompilerMessage;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.config.GroovyConfigUtils;
 import org.jetbrains.plugins.groovy.extensions.GroovyScriptType;
 import org.jetbrains.plugins.groovy.extensions.GroovyScriptTypeDetector;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
+import org.jetbrains.plugins.groovy.runner.GroovycOSProcessHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -220,11 +220,11 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
       }
 
       for (CompilerMessage compilerMessage : processHandler.getCompilerMessages(module.getName())) {
-        final String url = compilerMessage.getSourcePath();
-        compileContext.addMessage(getMessageCategory(compilerMessage), compilerMessage.getMessageText(),
+        final String url = compilerMessage.getUrl();
+        compileContext.addMessage(getMessageCategory(compilerMessage), compilerMessage.getMessage(),
                                   url == null ? null : VfsUtil.pathToUrl(FileUtil.toSystemIndependentName(url)),
-                                  (int)compilerMessage.getLine(),
-                                  (int)compilerMessage.getColumn());
+                                  (int)compilerMessage.getLineNum(),
+                                  (int)compilerMessage.getColumnNum());
       }
 
       List<GroovycOSProcessHandler.OutputItem> outputItems = processHandler.getSuccessfullyCompiled();
@@ -324,11 +324,12 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
   }
 
   private static CompilerMessageCategory getMessageCategory(CompilerMessage compilerMessage) {
-    BuildMessage.Kind category = compilerMessage.getKind();
+    String category = compilerMessage.getCategory();
 
-    if (BuildMessage.Kind.ERROR.equals(category)) return CompilerMessageCategory.ERROR;
-    if (BuildMessage.Kind.INFO.equals(category)) return CompilerMessageCategory.INFORMATION;
-    if (BuildMessage.Kind.WARNING.equals(category)) return CompilerMessageCategory.WARNING;
+    if (category.equals(GroovyCompilerMessageCategories.ERROR)) return CompilerMessageCategory.ERROR;
+    if (category.equals(GroovyCompilerMessageCategories.INFORMATION)) return CompilerMessageCategory.INFORMATION;
+    if (category.equals(GroovyCompilerMessageCategories.WARNING)) return CompilerMessageCategory.WARNING;
+    if (category.equals(GroovyCompilerMessageCategories.STATISTICS)) return CompilerMessageCategory.STATISTICS;
 
     return CompilerMessageCategory.ERROR;
   }

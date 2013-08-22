@@ -18,11 +18,10 @@ package com.intellij.openapi.roots.impl.storage;
 import com.intellij.openapi.module.Module;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.serialization.JpsProjectLoader;
 
 public class ClassPathStorageUtil {
   @NonNls public static final String DEFAULT_STORAGE = "default";
-  @NonNls public static final String CLASSPATH_OPTION = JpsProjectLoader.CLASSPATH_ATTRIBUTE;
+  @NonNls public static final String CLASSPATH_OPTION = "classpath";
 
   public static boolean isDefaultStorage(@NotNull Module module) {
     final String storageType = getStorageType(module);

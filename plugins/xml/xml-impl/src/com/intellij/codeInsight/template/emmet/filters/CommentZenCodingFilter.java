@@ -17,13 +17,12 @@ package com.intellij.codeInsight.template.emmet.filters;
 
 import com.intellij.codeInsight.template.emmet.tokens.TemplateToken;
 import com.intellij.lang.xml.XMLLanguage;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * @author Eugene.Kudelevsky
@@ -31,10 +30,10 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class CommentZenCodingFilter extends ZenCodingFilter {
   private static String buildCommentString(@Nullable String classAttr, @Nullable String idAttr) {
     StringBuilder builder = new StringBuilder();
-    if (!isNullOrEmpty(idAttr)) {
+    if (!StringUtil.isEmpty(idAttr)) {
       builder.append('#').append(idAttr);
     }
-    if (!isNullOrEmpty(classAttr)) {
+    if (!StringUtil.isEmpty(classAttr)) {
       builder.append('.').append(classAttr);
     }
     return builder.toString();
@@ -49,7 +48,7 @@ public class CommentZenCodingFilter extends ZenCodingFilter {
       if (tag != null) {
         String classAttr = tag.getAttributeValue("class");
         String idAttr = tag.getAttributeValue("id");
-        if (!isNullOrEmpty(classAttr) || !isNullOrEmpty(idAttr)) {
+        if (!StringUtil.isEmpty(classAttr) || !StringUtil.isEmpty(idAttr)) {
           String commentString = buildCommentString(classAttr, idAttr);
           return text + "\n<!-- /" + commentString + " -->";
         }

@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import com.intellij.spellchecker.ui.SpellCheckingEditorCustomization;
+import com.intellij.openapi.vcs.ui.SpellCheckerCustomization;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
@@ -164,7 +164,10 @@ public abstract class NewEditChangelistPanel extends JPanel {
     final EditorTextField editorField;
 
     final Set<EditorCustomization> editorFeatures = ContainerUtil.newHashSet();
-    editorFeatures.add(SpellCheckingEditorCustomization.ENABLED);
+    final SpellCheckerCustomization spellChecker = SpellCheckerCustomization.getInstance();
+    if(spellChecker.isEnabled())  {
+      editorFeatures.add(spellChecker.getCustomization(true));
+    }
 
     if (defaultLines == 1) {
       editorFeatures.add(HorizontalScrollBarEditorCustomization.DISABLED);

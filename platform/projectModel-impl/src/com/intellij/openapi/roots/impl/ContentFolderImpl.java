@@ -27,16 +27,15 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 
 /**
  * @author dsl
  */
 public class ContentFolderImpl extends RootModelComponentBase implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
   @NonNls
-  public static final String URL_ATTRIBUTE = JpsModuleRootModelSerializer.URL_ATTRIBUTE;
+  public static final String URL_ATTRIBUTE = "url";
   @NonNls
-  public static final String TYPE_ATTRIBUTE = JpsModuleRootModelSerializer.TYPE_ATTRIBUTE;
+  public static final String TYPE_ATTRIBUTE = "type";
   @NonNls
   public static final String ELEMENT_NAME = "content-folder";
 

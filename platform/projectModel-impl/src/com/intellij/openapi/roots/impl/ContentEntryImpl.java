@@ -34,7 +34,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 
 import java.util.*;
 
@@ -46,12 +45,12 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @NotNull
   private final VirtualFilePointer myRoot;
   @NonNls
-  public static final String ELEMENT_NAME = JpsModuleRootModelSerializer.CONTENT_TAG;
+  public static final String ELEMENT_NAME = "content";
 
   private final Set<ContentFolder> myContentFolders = new LinkedHashSet<ContentFolder>();
 
   @NonNls
-  public static final String URL_ATTRIBUTE = JpsModuleRootModelSerializer.URL_ATTRIBUTE;
+  public static final String URL_ATTRIBUTE = "url";
 
   ContentEntryImpl(@NotNull VirtualFile file, @NotNull RootModelImpl m) {
     this(file.getUrl(), m);

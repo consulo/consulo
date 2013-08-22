@@ -15,11 +15,15 @@
  */
 package com.intellij.compiler.impl.javaCompiler.javac;
 
-import com.intellij.compiler.*;
+import com.intellij.compiler.CompilerIOUtil;
+import com.intellij.compiler.JavaCompilerUtil;
+import com.intellij.compiler.JavaSdkUtil;
+import com.intellij.compiler.OutputParser;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.ModuleChunk;
 import com.intellij.compiler.impl.javaCompiler.ExternalCompiler;
 import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.AnnotationProcessingConfiguration;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
@@ -42,8 +46,6 @@ import com.intellij.rt.compiler.JavacRunner;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.java.compiler.AnnotationProcessingConfiguration;
-import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
 import java.io.*;
 import java.util.*;

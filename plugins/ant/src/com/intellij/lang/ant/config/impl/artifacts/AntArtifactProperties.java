@@ -31,10 +31,9 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactProperties;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.ArtifactPropertiesEditor;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.ant.model.impl.artifacts.AntArtifactExtensionProperties;
-import org.jetbrains.jps.ant.model.impl.artifacts.JpsAntArtifactExtensionImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +42,9 @@ import java.util.List;
 * @author nik
 */
 public class AntArtifactProperties extends ArtifactProperties<AntArtifactExtensionProperties> {
+  @NonNls
+  public static final String ARTIFACT_OUTPUT_PATH_PROPERTY = "artifact.output.path";
+
   private AntArtifactExtensionProperties myExtensionProperties = new AntArtifactExtensionProperties();
   private boolean myPostProcessing;
 
@@ -142,12 +144,12 @@ public class AntArtifactProperties extends ArtifactProperties<AntArtifactExtensi
 
   public List<BuildFileProperty> getAllProperties(@NotNull Artifact artifact) {
     final List<BuildFileProperty> properties = new ArrayList<BuildFileProperty>();
-    properties.add(new BuildFileProperty(JpsAntArtifactExtensionImpl.ARTIFACT_OUTPUT_PATH_PROPERTY, artifact.getOutputPath()));
+    properties.add(new BuildFileProperty(ARTIFACT_OUTPUT_PATH_PROPERTY, artifact.getOutputPath()));
     properties.addAll(myExtensionProperties.myUserProperties);
     return properties;
   }
 
   public static boolean isPredefinedProperty(String propertyName) {
-    return JpsAntArtifactExtensionImpl.ARTIFACT_OUTPUT_PATH_PROPERTY.equals(propertyName);
+    return ARTIFACT_OUTPUT_PATH_PROPERTY.equals(propertyName);
   }
 }

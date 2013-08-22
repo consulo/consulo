@@ -25,7 +25,6 @@ import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.fileTypes.FileNameMatcherFactory;
 
 import java.util.ArrayList;
 import java.util.List;

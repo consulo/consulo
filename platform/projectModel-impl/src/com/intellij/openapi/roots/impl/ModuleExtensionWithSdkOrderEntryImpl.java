@@ -31,16 +31,15 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 
 /**
  * @author dsl
  */
 public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl
   implements WritableOrderEntry, ClonableOrderEntry, ModuleExtensionWithSdkOrderEntry {
-  @NonNls public static final String ENTRY_TYPE = JpsModuleRootModelSerializer.MODULE_EXTENSION_SDK;
+  @NonNls public static final String ENTRY_TYPE = "module-extension-sdk";
 
-  @NonNls public static final String EXTENSION_ID_ATTRIBUTE = JpsModuleRootModelSerializer.EXTENSION_ID_ATTRIBUTE;
+  @NonNls public static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
 
   private String myModuleExtensionId;
   @Nullable

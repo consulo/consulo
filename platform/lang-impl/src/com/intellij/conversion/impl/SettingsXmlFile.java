@@ -19,12 +19,12 @@ package com.intellij.conversion.impl;
 import com.intellij.conversion.CannotConvertException;
 import com.intellij.ide.impl.convert.JDomConvertingUtil;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.JDomSerializationUtil;
 import com.intellij.util.SystemProperties;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.JDomSerializationUtil;
 
 import java.io.File;
 import java.io.IOException;

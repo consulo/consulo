@@ -23,7 +23,6 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.jps.incremental.groovy.JpsGroovySettings;
 
 /**
  * @author peter

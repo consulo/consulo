@@ -20,8 +20,8 @@ import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
+import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.openapi.module.Module;
-import org.jetbrains.jps.model.serialization.PathMacroUtil;
 
 public class ModulePathMacroManager extends BasePathMacroManager {
   private final Module myModule;
@@ -50,7 +50,8 @@ public class ModulePathMacroManager extends BasePathMacroManager {
 
     if (!myModule.isDisposed()) {
 
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil.getUserHomePath());
+      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil
+        .getUserHomePath());
     }
 
     return result;

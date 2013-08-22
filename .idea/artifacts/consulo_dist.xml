@@ -468,13 +468,6 @@
         <element id="archive" name="form_rt.jar">
           <element id="module-output" name="forms_rt" />
         </element>
-        <element id="archive" name="jps-server.jar">
-          <element id="module-output" name="jps-model-api" />
-          <element id="module-output" name="jps-standalone-builder" />
-          <element id="module-output" name="jps-model-serialization" />
-          <element id="module-output" name="jps-model-impl" />
-          <element id="module-output" name="jps-builders" />
-        </element>
         <element id="archive" name="annotations.jar">
           <element id="module-output" name="annotations" />
         </element>

@@ -38,8 +38,6 @@ import com.intellij.util.containers.MultiMap;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.api.CmdlineRemoteProto.Message.ControllerMessage.ParametersMessage.TargetTypeBuildScope;
-import org.jetbrains.jps.incremental.artifacts.ArtifactBuildTargetType;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -121,16 +119,6 @@ public class ArtifactCompilerUtil {
     }
     return affectedOutputPaths;
   }
-
-  public static boolean containsArtifacts(List<TargetTypeBuildScope> scopes) {
-    for (TargetTypeBuildScope scope : scopes) {
-      if (ArtifactBuildTargetType.INSTANCE.getTypeId().equals(scope.getTypeId())) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public static MultiMap<String, Artifact> createOutputToArtifactMap(final Project project) {
     final MultiMap<String, Artifact> result = new MultiMap<String, Artifact>() {
       @Override

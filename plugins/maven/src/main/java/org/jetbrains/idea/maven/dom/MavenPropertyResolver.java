@@ -24,6 +24,7 @@ import com.intellij.psi.xml.XmlTag;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.idea.maven.compiler.MavenEscapeWindowsCharacterUtils;
 import org.jetbrains.idea.maven.dom.model.MavenDomProfile;
 import org.jetbrains.idea.maven.dom.model.MavenDomProjectModel;
 import org.jetbrains.idea.maven.dom.model.MavenDomProperties;
@@ -34,7 +35,6 @@ import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.idea.maven.server.MavenServerUtil;
 import org.jetbrains.idea.maven.utils.MavenJDOMUtil;
 import org.jetbrains.idea.maven.utils.MavenUtil;
-import org.jetbrains.jps.maven.compiler.MavenEscapeWindowsCharacterUtils;
 
 import java.io.IOException;
 import java.util.Collection;

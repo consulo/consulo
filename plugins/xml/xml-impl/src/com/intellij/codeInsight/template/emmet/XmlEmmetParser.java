@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInsight.template.emmet;
 
-import com.google.common.base.Strings;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.emmet.generators.ZenCodingGenerator;
 import com.intellij.codeInsight.template.emmet.nodes.*;
@@ -157,7 +156,7 @@ public class XmlEmmetParser extends EmmetParser {
   protected ZenCodingNode parseMoreOperation(@NotNull ZenCodingNode leftPart) {
     String parentTag = getParentTag(leftPart);
     boolean hasParent = false;
-    if (!Strings.isNullOrEmpty(parentTag)) {
+    if (!StringUtil.isEmpty(parentTag)) {
       hasParent = true;
       tagLevel.push(parentTag);
     }

@@ -16,6 +16,8 @@
 package org.jetbrains.idea.maven.importing.configurers;
 
 import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.ProcessorConfigProfile;
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.impl.ProcessorConfigProfileImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -25,8 +27,6 @@ import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenProject;
-import org.jetbrains.jps.model.java.compiler.ProcessorConfigProfile;
-import org.jetbrains.jps.model.java.impl.compiler.ProcessorConfigProfileImpl;
 
 import java.io.File;
 import java.util.List;

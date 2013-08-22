@@ -1,5 +1,7 @@
 package com.intellij.compiler.impl.javaCompiler;
 
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.ProcessorConfigProfile;
+import com.intellij.compiler.impl.javaCompiler.annotationProcessing.impl.ProcessorConfigProfileImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -9,10 +11,6 @@ import org.consulo.lombok.annotations.ProjectService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.compiler.ProcessorConfigProfile;
-import org.jetbrains.jps.model.java.impl.compiler.ProcessorConfigProfileImpl;
-import org.jetbrains.jps.model.serialization.java.compiler.AnnotationProcessorProfileSerializer;
-import org.jetbrains.jps.model.serialization.java.compiler.JpsJavaCompilerConfigurationSerializer;
 
 import java.io.File;
 import java.util.*;
@@ -30,6 +28,18 @@ import java.util.*;
   }
 )
 public class JavaCompilerConfiguration implements PersistentStateComponent<Element> {
+
+  public static final String EXCLUDE_FROM_COMPILE = "excludeFromCompile";
+  public static final String RESOURCE_EXTENSIONS = "resourceExtensions";
+  public static final String ANNOTATION_PROCESSING = "annotationProcessing";
+  public static final String BYTECODE_TARGET_LEVEL = "bytecodeTargetLevel";
+  public static final String WILDCARD_RESOURCE_PATTERNS = "wildcardResourcePatterns";
+  public static final String ADD_NOTNULL_ASSERTIONS = "addNotNullAssertions";
+  public static final String ENTRY = "entry";
+  public static final String NAME = "name";
+  public static final String ENABLED = "enabled";
+  public static final String MODULE = "module";
+  public static final String TARGET_ATTRIBUTE = "target";
 
   public static final String DEFAULT_COMPILER = "JavacCompiler";
 
@@ -88,7 +98,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
   public Element getState() {
     Element parentNode = new Element("state");
 
-    final Element annotationProcessingSettings = addChild(parentNode, JpsJavaCompilerConfigurationSerializer.ANNOTATION_PROCESSING);
+    final Element annotationProcessingSettings = addChild(parentNode, ANNOTATION_PROCESSING);
     final Element defaultProfileElem = addChild(annotationProcessingSettings, "profile").setAttribute("default", "true");
     AnnotationProcessorProfileSerializer.writeExternal(myDefaultProcessorsProfile, defaultProfileElem);
     for (ProcessorConfigProfile profile : myModuleProcessorProfiles) {
@@ -110,7 +120,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
   public void loadState(Element parentNode) {
     myBackendCompilerCache = findCompiler(parentNode.getAttributeValue("compiler"));
 
-    final Element annotationProcessingSettings = parentNode.getChild(JpsJavaCompilerConfigurationSerializer.ANNOTATION_PROCESSING);
+    final Element annotationProcessingSettings = parentNode.getChild(ANNOTATION_PROCESSING);
     if (annotationProcessingSettings != null) {
       final List profiles = annotationProcessingSettings.getChildren("profile");
       if (!profiles.isEmpty()) {
@@ -136,7 +146,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
 
   private void loadProfilesFromOldFormat(Element processing) {
     // collect data
-    final boolean isEnabled = Boolean.parseBoolean(processing.getAttributeValue(JpsJavaCompilerConfigurationSerializer.ENABLED, "false"));
+    final boolean isEnabled = Boolean.parseBoolean(processing.getAttributeValue(ENABLED, "false"));
     final boolean isUseClasspath = Boolean.parseBoolean(processing.getAttributeValue("useClasspath", "true"));
     final StringBuilder processorPath = new StringBuilder();
     final Set<String> optionPairs = new HashSet<String>();
@@ -156,7 +166,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
 
     for (Object child : processing.getChildren("processor")) {
       final Element processorElement = (Element)child;
-      final String proc = processorElement.getAttributeValue(JpsJavaCompilerConfigurationSerializer.NAME, (String)null);
+      final String proc = processorElement.getAttributeValue(NAME, (String)null);
       if (proc != null) {
         processors.add(proc);
       }
@@ -169,7 +179,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
 
     for (Object child : processing.getChildren("processModule")) {
       final Element moduleElement = (Element)child;
-      final String name = moduleElement.getAttributeValue(JpsJavaCompilerConfigurationSerializer.NAME, (String)null);
+      final String name = moduleElement.getAttributeValue(NAME, (String)null);
       if (name == null) {
         continue;
       }

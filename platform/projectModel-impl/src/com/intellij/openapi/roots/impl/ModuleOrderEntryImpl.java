@@ -29,16 +29,14 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.java.JpsJavaModelSerializerExtension;
-import org.jetbrains.jps.model.serialization.module.JpsModuleRootModelSerializer;
 
 /**
  * @author dsl
  */
 public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOrderEntry, WritableOrderEntry, ClonableOrderEntry {
-  @NonNls public static final String ENTRY_TYPE = JpsModuleRootModelSerializer.MODULE_TYPE;
-  @NonNls public static final String MODULE_NAME_ATTR = JpsModuleRootModelSerializer.MODULE_NAME_ATTRIBUTE;
-  @NonNls private static final String EXPORTED_ATTR = JpsJavaModelSerializerExtension.EXPORTED_ATTRIBUTE;
+  @NonNls public static final String ENTRY_TYPE = "module";
+  @NonNls public static final String MODULE_NAME_ATTR = "module-name";
+  @NonNls private static final String EXPORTED_ATTR = "exported";
   @NonNls private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
 
   private final NamedPointer<Module> myModulePointer;

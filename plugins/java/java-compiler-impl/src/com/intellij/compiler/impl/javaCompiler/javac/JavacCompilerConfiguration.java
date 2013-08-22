@@ -19,7 +19,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.java.compiler.JpsJavaCompilerOptions;
 
 @State(
   name = "JavacCompilerConfiguration",

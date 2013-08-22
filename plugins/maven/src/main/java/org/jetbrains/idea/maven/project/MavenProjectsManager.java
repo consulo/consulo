@@ -57,12 +57,12 @@ import org.jetbrains.idea.maven.importing.MavenFoldersImporter;
 import org.jetbrains.idea.maven.importing.MavenModifiableModelsProvider;
 import org.jetbrains.idea.maven.importing.MavenProjectImporter;
 import org.jetbrains.idea.maven.model.*;
+import org.jetbrains.idea.maven.model.impl.MavenIdBean;
+import org.jetbrains.idea.maven.model.impl.MavenModuleResourceConfiguration;
+import org.jetbrains.idea.maven.model.impl.MavenProjectConfiguration;
+import org.jetbrains.idea.maven.model.impl.ResourceRootConfiguration;
 import org.jetbrains.idea.maven.server.NativeMavenProjectHolder;
 import org.jetbrains.idea.maven.utils.*;
-import org.jetbrains.jps.maven.model.impl.MavenIdBean;
-import org.jetbrains.jps.maven.model.impl.MavenModuleResourceConfiguration;
-import org.jetbrains.jps.maven.model.impl.MavenProjectConfiguration;
-import org.jetbrains.jps.maven.model.impl.ResourceRootConfiguration;
 
 import java.io.*;
 import java.util.*;

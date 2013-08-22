@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInsight.template.emmet.nodes;
 
-import com.google.common.base.Strings;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.LiveTemplateBuilder;
 import com.intellij.codeInsight.template.emmet.ZenCodingUtil;
@@ -50,14 +49,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 /**
  * @author Eugene.Kudelevsky
  */
 public class GenerationNode extends UserDataHolderBase {
   private final TemplateToken myTemplateToken;
-  private final List<GenerationNode> myChildren = newArrayList();
+  private final List<GenerationNode> myChildren = new ArrayList<GenerationNode>();
   private final int myNumberInIteration;
   private final int myTotalIterations;
   private String mySurroundedText;
@@ -260,7 +257,7 @@ public class GenerationNode extends UserDataHolderBase {
     if (document != null) {
       final XmlTag tag = document.getRootTag();
       for (Pair<String, String> pair : attr2value) {
-        if (Strings.isNullOrEmpty(pair.second)) {
+        if (StringUtil.isEmpty(pair.second)) {
           template.addVariable(pair.first, "", "", true);
         }
       }
@@ -392,7 +389,7 @@ public class GenerationNode extends UserDataHolderBase {
           myContainsSurroundedTextMarker = true;
         }
         tag.setAttribute(pair.first,
-                         Strings.isNullOrEmpty(pair.second)
+                         StringUtil.isEmpty(pair.second)
                          ? "$" + pair.first + "$"
                          : ZenCodingUtil.getValue(pair.second, myNumberInIteration, myTotalIterations, mySurroundedText));
         iterator.remove();

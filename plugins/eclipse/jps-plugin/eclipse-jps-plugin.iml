@@ -8,8 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="util" />
-    <orderEntry type="module" module-name="jps-model-api" />
-    <orderEntry type="module" module-name="jps-model-serialization" />
     <orderEntry type="module" module-name="common-eclipse-util" />
   </component>
 </module>

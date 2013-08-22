@@ -29,6 +29,9 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.*;
+import com.intellij.packaging.impl.artifacts.state.ArtifactManagerState;
+import com.intellij.packaging.impl.artifacts.state.ArtifactPropertiesState;
+import com.intellij.packaging.impl.artifacts.state.ArtifactState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -37,9 +40,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.serialization.artifact.ArtifactManagerState;
-import org.jetbrains.jps.model.serialization.artifact.ArtifactPropertiesState;
-import org.jetbrains.jps.model.serialization.artifact.ArtifactState;
 
 import java.util.*;
 

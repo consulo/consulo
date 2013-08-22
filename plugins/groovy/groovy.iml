@@ -13,12 +13,11 @@
     <orderEntry type="module" module-name="java-compiler-impl" />
     <orderEntry type="module" module-name="java-debugger-impl" />
     <orderEntry type="module" module-name="ant" />
-    <orderEntry type="module" module-name="groovy-jps-plugin" />
     <orderEntry type="library" name="Groovy" level="project" />
     <orderEntry type="module" module-name="properties" />
     <orderEntry type="library" name="Guava" level="project" />
     <orderEntry type="module" module-name="groovy-rt" />
-    <orderEntry type="module" module-name="jps-builders" />
+    <orderEntry type="module" module-name="groovy-rt-constants" />
   </component>
 </module>
 

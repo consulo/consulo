@@ -51,14 +51,11 @@
     <orderEntry type="module" module-name="groovy" />
     <orderEntry type="module" module-name="groovy-copyright" />
     <orderEntry type="module" module-name="groovy-intellilang" />
-    <orderEntry type="module" module-name="groovy-jps-plugin" />
     <orderEntry type="module" module-name="groovy-rt" />
     <orderEntry type="module" module-name="groovy-rt-constants" />
     <orderEntry type="module" module-name="groovy-spellchecker" />
     <orderEntry type="module" module-name="ant" />
-    <orderEntry type="module" module-name="ant-jps-plugin" />
     <orderEntry type="module" module-name="IntelliLang" />
-    <orderEntry type="module" module-name="intellilang-jps-plugin" />
     <orderEntry type="module" module-name="java-compiler-impl" />
     <orderEntry type="module" module-name="java-copyright" />
     <orderEntry type="module" module-name="java-debugger-api" />
@@ -102,7 +99,6 @@
     <orderEntry type="module" module-name="maven" />
     <orderEntry type="module" module-name="maven-artifact-resolver-m2" />
     <orderEntry type="module" module-name="maven-artifact-resolver-m3" />
-    <orderEntry type="module" module-name="maven-jps-plugin" />
     <orderEntry type="module" module-name="maven-server-api" />
     <orderEntry type="module" module-name="maven2-server-impl" />
     <orderEntry type="module" module-name="maven3-server-impl" />

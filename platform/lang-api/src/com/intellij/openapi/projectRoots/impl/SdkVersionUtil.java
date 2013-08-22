@@ -23,16 +23,18 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.util.NotNullFunction;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.JdkVersionDetector;
 
 import java.util.concurrent.Future;
 
 public class SdkVersionUtil {
-  private static final JdkVersionDetector.ActionRunner ACTION_RUNNER = new JdkVersionDetector.ActionRunner() {
+  private static final NotNullFunction<Runnable, Future<?>> ACTION_RUNNER = new NotNullFunction<Runnable, Future<?>>() {
     @Override
-    public Future<?> run(Runnable runnable) {
+    @NotNull
+    public Future<?> fun(Runnable runnable) {
       return ApplicationManager.getApplication().executeOnPooledThread(runnable);
     }
   };

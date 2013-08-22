@@ -10,7 +10,6 @@
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="testFramework" />
     <orderEntry type="module" module-name="compiler-artifact-impl" />
-    <orderEntry type="module" module-name="jps-builders" />
     <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="compiler-bridge-impl" />
   </component>
