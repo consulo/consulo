@@ -131,9 +131,6 @@
     <extensionPoint name="implicitNamespaceDescriptorProvider"
                     interface="com.intellij.javaee.ImplicitNamespaceDescriptorProvider"/>
 
-    <extensionPoint name="zenCodingGenerator" interface="com.intellij.codeInsight.template.emmet.generators.ZenCodingGenerator"/>
-    <extensionPoint name="zenCodingFilter" interface="com.intellij.codeInsight.template.emmet.filters.ZenCodingFilter"/>
-
     <extensionPoint name="relatedToHtmlFilesContributor" interface="com.intellij.navigation.RelatedToHtmlFilesContributor"/>
 
     <extensionPoint name="tagRuleProvider" interface="com.intellij.xml.XmlTagRuleProvider"/>
@@ -215,11 +212,6 @@
                         serviceImplementation="com.intellij.application.options.editor.WebEditorOptions"/>
     <exportable serviceInterface="com.intellij.application.options.editor.WebEditorOptions"/>
 
-    <applicationConfigurable provider="com.intellij.application.options.emmet.EmmetConfigurableProvider"/>
-    <applicationService serviceInterface="com.intellij.application.options.emmet.EmmetOptions"
-                        serviceImplementation="com.intellij.application.options.emmet.EmmetOptions"/>
-    <exportable serviceInterface="com.intellij.application.options.emmet.EmmetOptions"/>
-
 
     <applicationService serviceInterface="com.intellij.application.options.editor.XmlFoldingSettings"
                         serviceImplementation="com.intellij.application.options.editor.XmlFoldingSettings"/>
@@ -237,8 +229,6 @@
                     serviceImplementation="com.intellij.psi.XmlElementFactoryImpl"/>
 
     <highlightVisitor implementation="com.intellij.codeInsight.daemon.impl.analysis.XmlHighlightVisitor"/>
-
-    <customLiveTemplate implementation="com.intellij.codeInsight.template.emmet.ZenCodingTemplate"/>
 
     <externalAnnotator language="XML" implementationClass="com.intellij.lang.xml.XMLExternalAnnotator"/>
     <externalAnnotator language="HTML" implementationClass="com.intellij.lang.xml.XMLExternalAnnotator"/>

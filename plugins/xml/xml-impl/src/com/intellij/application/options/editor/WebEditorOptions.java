@@ -15,7 +15,6 @@
  */
 package com.intellij.application.options.editor;
 
-import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
@@ -46,8 +45,6 @@ public class WebEditorOptions implements PersistentStateComponent<WebEditorOptio
   private boolean myAutomaticallyInsertRequiredAttributes = true;
   private boolean myAutomaticallyInsertRequiredSubTags = true;
   private boolean myAutomaticallyStartAttribute = true;
-  private boolean myZenCodingEnabled = true;
-  private int myZenCodingExpandShortcut = TemplateSettings.TAB_CHAR;
 
   private boolean myTagTreeHighlightingEnabled = true;
   private int myTagTreeHighlightingLevelCount = 6;
@@ -109,24 +106,8 @@ public class WebEditorOptions implements PersistentStateComponent<WebEditorOptio
     myAutomaticallyInsertRequiredAttributes = automaticallyInsertRequiredAttributes;
   }
 
-  /**
-   * @deprecated use {@link com.intellij.application.options.emmet.EmmetOptions#getEmmetExpandShortcut()}
-   */
-  @Deprecated
-  public int getZenCodingExpandShortcut() {
-    return myZenCodingExpandShortcut;
-  }
-
   public boolean isAutomaticallyStartAttribute() {
     return myAutomaticallyStartAttribute;
-  }
-
-  /**
-   * @deprecated use {@link com.intellij.application.options.emmet.EmmetOptions#isEmmetEnabled()}
-   */
-  @Deprecated
-  public boolean isZenCodingEnabled() {
-    return myZenCodingEnabled;
   }
 
   public void setAutomaticallyStartAttribute(final boolean automaticallyStartAttribute) {
