@@ -51,7 +51,7 @@ import java.util.Map;
  * @author max
  */
 public abstract class HTMLComposerImpl extends HTMLComposer {
-  protected HTMLExporter myExporter;
+  public HTMLExporter myExporter;
   private final int[] myListStack;
   private int myListStackTop;
   private final Map<Key, HTMLComposerExtension> myExtensions = new HashMap<Key, HTMLComposerExtension>();
@@ -144,7 +144,7 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
     }
   }
 
-  protected void appendQualifiedName(StringBuffer buf, RefEntity refEntity) {
+  public void appendQualifiedName(StringBuffer buf, RefEntity refEntity) {
     if (refEntity == null) return;
     String qName = "";
 
