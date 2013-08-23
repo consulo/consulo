@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: 08-Aug-2008
  */
 public abstract class TypeConversionRule {
-  public static final ExtensionPointName<TypeConversionRule> EP_NAME = ExtensionPointName.create("com.intellij.conversion.rule");
+  public static final ExtensionPointName<TypeConversionRule> EP_NAME = ExtensionPointName.create("org.consulo.java.conversion.rule");
   @Nullable
   public abstract TypeConversionDescriptorBase findConversion(final PsiType from,
                                                               final PsiType to,
