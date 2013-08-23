@@ -103,6 +103,10 @@ public class JavaIconDescriptorUpdater implements IconDescriptorUpdater {
       iconDescriptor.setMainIcon(AllIcons.Nodes.Variable);
       processModifierList(element, iconDescriptor, flags);
     }
+    else if(element instanceof PsiParameter) {
+      iconDescriptor.setMainIcon(AllIcons.Nodes.Parameter);
+      processModifierList(element, iconDescriptor, flags);
+    }
   }
 
   public static void processModifierList(PsiElement element, IconDescriptor iconDescriptor, int flags) {
