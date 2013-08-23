@@ -455,6 +455,8 @@ public class CompileDriver {
                        final boolean checkCachesVersion) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
+    ProblemsViewImpl.SERVICE.getInstance(myProject).clearOldMessages(null);
+
     final boolean useExtProcessBuild = useOutOfProcessBuild();
 
     final String contentName =

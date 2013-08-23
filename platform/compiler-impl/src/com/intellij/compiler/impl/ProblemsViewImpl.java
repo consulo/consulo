@@ -105,18 +105,11 @@ public class ProblemsViewImpl extends ProblemsView{
             continue; 
           }
         }
-        /*if (!currentSessionId.equals(element.getData())) {
-          structure.removeElement(element);
-        }
-        else*/ {
-          cleanupChildrenRecursively(element, scope);
-        }
+        cleanupChildrenRecursively(element, scope);
       }
-     /* else {
-        if (!currentSessionId.equals(element.getData())) {
-          structure.removeElement(element);
-        }
-      }  */
+      else {
+        structure.removeElement(element);
+      }
     }
   }
 

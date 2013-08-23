@@ -220,6 +220,9 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   private static void openFileFromCommandLine(final Project project, final VirtualFile virtualFile, final int line) {
     StartupManager.getInstance(project).registerPostStartupActivity(new DumbAwareRunnable() {
       public void run() {
+        if(project.isDisposed()) {
+          return;
+        }
         ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
           public void run() {
             ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
