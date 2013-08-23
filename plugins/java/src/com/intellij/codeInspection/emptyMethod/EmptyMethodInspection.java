@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInspection.emptyMethod;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.daemon.GroupNames;
@@ -25,7 +24,7 @@ import com.intellij.codeInspection.reference.*;
 import com.intellij.codeInspection.util.SpecialAnnotationsUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.psi.*;
@@ -51,6 +50,8 @@ import java.util.List;
  * @author max
  */
 public class EmptyMethodInspection extends GlobalJavaInspectionTool {
+  private static final ExtensionPointName<Condition<RefMethod>> EP_NAME = ExtensionPointName.create("org.consulo.java.canBeEmpty");
+
   private static final String DISPLAY_NAME = InspectionsBundle.message("inspection.empty.method.display.name");
   @NonNls private static final String SHORT_NAME = "EmptyMethod";
 
@@ -165,8 +166,8 @@ public class EmptyMethodInspection extends GlobalJavaInspectionTool {
     if (AnnotationUtil.isAnnotated(owner, EXCLUDE_ANNOS)) {
       return false;
     }
-    for (final Object extension : Extensions.getExtensions(ExtensionPoints.EMPTY_METHOD_TOOL)) {
-      if (((Condition<RefMethod>) extension).value(refMethod)) {
+    for (final Condition<RefMethod> extension : EP_NAME.getExtensions()) {
+      if (extension.value(refMethod)) {
         return false;
       }
     }

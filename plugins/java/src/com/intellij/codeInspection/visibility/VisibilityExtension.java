@@ -17,7 +17,10 @@ package com.intellij.codeInspection.visibility;
 
 import com.intellij.codeInspection.ProblemDescriptionsProcessor;
 import com.intellij.codeInspection.reference.RefManager;
+import com.intellij.openapi.extensions.ExtensionPointName;
 
 public interface VisibilityExtension {
+  ExtensionPointName<VisibilityExtension> EP_NAME = ExtensionPointName.create("org.consulo.java.visibility");
+
   void fillIgnoreList(RefManager refManager, ProblemDescriptionsProcessor processor);
 }

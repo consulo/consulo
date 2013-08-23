@@ -83,9 +83,7 @@ public interface ExtensionPoints extends ToolExtensionPoints {
 
   @NonNls String JAVADOC_LOCAL = "com.intellij.javaDocNotNecessary";
 
-  @NonNls String VISIBLITY_TOOL = "com.intellij.visibility";
 
-  @NonNls String EMPTY_METHOD_TOOL = "com.intellij.canBeEmpty";
 
   @NonNls String ANT_BUILD_GEN = "com.intellij.antBuildGen";
 

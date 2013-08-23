@@ -24,7 +24,6 @@
  */
 package com.intellij.codeInspection.visibility;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.daemon.GroupNames;
@@ -33,8 +32,6 @@ import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.EntryPointsManager;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -410,8 +407,7 @@ public class VisibilityInspection extends GlobalJavaInspectionTool {
       ignoreElement(processor, entryPoint);
     }
 
-    ExtensionPoint<VisibilityExtension> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.VISIBLITY_TOOL);
-    for (VisibilityExtension addin : point.getExtensions()) {
+    for (VisibilityExtension addin : VisibilityExtension.EP_NAME.getExtensions()) {
       addin.fillIgnoreList(manager, processor);
     }
     manager.iterate(new RefJavaVisitor() {
