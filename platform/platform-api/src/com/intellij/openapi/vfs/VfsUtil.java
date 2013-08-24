@@ -706,7 +706,14 @@ public class VfsUtil extends VfsUtilCore {
 
   @Nullable
   public static VirtualFile createDirectoryIfMissing(@NotNull String directoryPath) throws IOException {
-    return doCreateDirectoriesIfMissing(FileUtil.toSystemIndependentName(directoryPath));
+    directoryPath = FileUtil.toSystemIndependentName(directoryPath);
+    // Remove last slash in C:/Path/
+    // If not remove it - code `parent.createChildDirectory(LocalFileSystem.getInstance(), dirName);`
+    // ill throw IOException - name is empty
+    if(StringUtil.endsWith(directoryPath, "/")) {
+      directoryPath = directoryPath.substring(0, directoryPath.length() - 1);
+    }
+    return doCreateDirectoriesIfMissing(directoryPath);
   }
 
   private static VirtualFile doCreateDirectoriesIfMissing(String dir) throws IOException {
