@@ -47,7 +47,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   @Override
   @SuppressWarnings({"unchecked"})
   public void readExternal(final Element element) throws InvalidDataException {
-    final List<Element> modules = (List<Element>)element.getChildren(ELEMENT);
+    final List<Element> modules = element.getChildren(ELEMENT);
     LOG.assertTrue(modules.size() <= 1);
     if (modules.size() == 1) {
       final Element module = modules.get(0);
@@ -114,9 +114,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   public void checkForWarning() throws RuntimeConfigurationException {
     final Module module = getModule();
     if (module != null) {
-      /*if (ModuleRootManager.getInstance(module).getSdk() == null) {
-        throw new RuntimeConfigurationWarning(ExecutionBundle.message("no.jdk.specified.for.module.warning.text", module.getName()));
-      }*/
+
     }
     else {
       if (myModuleName != null) {

@@ -27,11 +27,11 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
-    <configurationProducer implementation="com.intellij.execution.junit.AllInDirectoryConfigurationProducer"/>
-    <configurationProducer implementation="com.intellij.execution.junit.AllInPackageConfigurationProducer"/>
-    <configurationProducer implementation="com.intellij.execution.junit.PatternConfigurationProducer"/>
-    <configurationProducer implementation="com.intellij.execution.junit.TestClassConfigurationProducer"/>
-    <configurationProducer implementation="com.intellij.execution.junit.TestMethodConfigurationProducer"/>
+    <runConfigurationProducer implementation="com.intellij.execution.junit.AllInDirectoryConfigurationProducer"/>
+    <runConfigurationProducer implementation="com.intellij.execution.junit.AllInPackageConfigurationProducer"/>
+    <runConfigurationProducer implementation="com.intellij.execution.junit.PatternConfigurationProducer"/>
+    <runConfigurationProducer implementation="com.intellij.execution.junit.TestClassConfigurationProducer"/>
+    <runConfigurationProducer implementation="com.intellij.execution.junit.TestMethodConfigurationProducer"/>
     <cantBeStatic implementation="com.intellij.execution.junit2.inspection.JUnitCantBeStaticExtension" />
     <testFramework implementation="com.intellij.execution.junit.JUnit3Framework"/>
     <testFramework implementation="com.intellij.execution.junit.JUnit4Framework"/>

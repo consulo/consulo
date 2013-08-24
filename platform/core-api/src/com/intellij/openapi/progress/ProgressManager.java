@@ -49,7 +49,6 @@ public abstract class ProgressManager {
     }
   }
 
-  @NotNull
   public static ProgressManager getInstance() {
     return ourInstance;
   }
@@ -96,7 +95,7 @@ public abstract class ProgressManager {
   protected abstract void doCheckCanceled() throws ProcessCanceledException;
 
   public abstract void executeNonCancelableSection(@NotNull Runnable runnable);
-  public abstract NonCancelableSection startNonCancelableSection(); 
+  public abstract NonCancelableSection startNonCancelableSection();
 
   public abstract void setCancelButtonText(String cancelButtonText);
 
@@ -128,9 +127,9 @@ public abstract class ProgressManager {
    * @throws E exception thrown by process
    */
   public abstract <T, E extends Exception> T runProcessWithProgressSynchronously(@NotNull ThrowableComputable<T, E> process,
-                                                              @NotNull @Nls String progressTitle,
-                                                              boolean canBeCanceled,
-                                                              @Nullable Project project) throws E;
+                                                                                 @NotNull @Nls String progressTitle,
+                                                                                 boolean canBeCanceled,
+                                                                                 @Nullable Project project) throws E;
 
   /**
    * Runs the specified operation in a background thread and shows a modal progress dialog in the
@@ -194,4 +193,25 @@ public abstract class ProgressManager {
    */
   public abstract void run(@NotNull Task task);
 
+  public abstract void runProcessWithProgressAsynchronously(@NotNull Task.Backgroundable task, @NotNull ProgressIndicator progressIndicator);
+
+  protected static final ThreadLocal<ProgressIndicator> myThreadIndicator = new ThreadLocal<ProgressIndicator>();
+
+  public void executeProcessUnderProgress(@NotNull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
+    ProgressIndicator oldIndicator = null;
+
+    boolean set = progress != null && progress != (oldIndicator = myThreadIndicator.get());
+    if (set) {
+      myThreadIndicator.set(progress);
+    }
+
+    try {
+      process.run();
+    }
+    finally {
+      if (set) {
+        myThreadIndicator.set(oldIndicator);
+      }
+    }
+  }
 }

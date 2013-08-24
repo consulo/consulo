@@ -36,7 +36,6 @@ import org.jetbrains.ide.PooledThreadExecutor;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.jboss.netty.channel.Channels.pipeline;
@@ -56,8 +55,7 @@ public class WebServer implements Disposable {
   private final NioServerSocketChannelFactory channelFactory;
 
   public WebServer() {
-    Executor pooledThreadExecutor = new PooledThreadExecutor();
-    channelFactory = new NioServerSocketChannelFactory(pooledThreadExecutor, pooledThreadExecutor, 1);
+    channelFactory = new NioServerSocketChannelFactory(PooledThreadExecutor.INSTANCE, PooledThreadExecutor.INSTANCE, 1);
   }
 
   public boolean isRunning() {
@@ -80,7 +78,7 @@ public class WebServer implements Disposable {
   }
 
   private static boolean checkPort(final InetSocketAddress remoteAddress) {
-    final ClientBootstrap bootstrap = new ClientBootstrap(new OioClientSocketChannelFactory(new PooledThreadExecutor()));
+    final ClientBootstrap bootstrap = new ClientBootstrap(new OioClientSocketChannelFactory(PooledThreadExecutor.INSTANCE));
     bootstrap.setOption("child.tcpNoDelay", true);
 
     final AtomicBoolean result = new AtomicBoolean(false);

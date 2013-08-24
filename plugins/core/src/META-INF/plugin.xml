@@ -2496,13 +2496,14 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.remoteServer.run.DeployToServerConfigurationTypesRegistrar</implementation-class>
-    </component>
-
-    <component>
       <interface-class>org.consulo.compiler.server.rmi.CompilerServerConnector</interface-class>
       <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
       <compiler-server-implementation-class></compiler-server-implementation-class>
+    </component>
+
+    <!--Remote servers-->
+    <component>
+      <implementation-class>com.intellij.remoteServer.impl.configuration.deployment.DeployToServerConfigurationTypesRegistrar</implementation-class>
     </component>
   </application-components>
 
@@ -3650,6 +3651,8 @@
     <extensionPoint name="configurationProducer"
                     interface="com.intellij.execution.junit.RuntimeConfigurationProducer"/>
 
+    <extensionPoint name="runConfigurationProducer" interface="com.intellij.execution.actions.RunConfigurationProducer" />
+
     <extensionPoint name="hectorComponentProvider" interface="com.intellij.openapi.editor.HectorComponentPanelsProvider"
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="CONSULO_PROJECT"/>
@@ -4026,6 +4029,7 @@
 
     <!--Remote servers-->
     <extensionPoint name="remoteServer.type" interface="com.intellij.remoteServer.ServerType"/>
+    <extensionPoint name="remoteServer.deploymentSource.type" interface="com.intellij.remoteServer.configuration.deployment.DeploymentSourceType"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -5541,11 +5545,14 @@
 
     <!--Remote servers-->
     <applicationService serviceInterface="com.intellij.remoteServer.configuration.RemoteServersManager"
-                        serviceImplementation="com.intellij.remoteServer.configuration.impl.RemoteServersManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.remoteServer.deployment.DeploymentSourceUtil"
-                        serviceImplementation="com.intellij.remoteServer.deployment.impl.DeploymentSourceUtilImpl"/>
-    <applicationConfigurable instance="com.intellij.remoteServer.configuration.impl.RemoteServerListConfigurable"/>
-    <programRunner implementation="com.intellij.remoteServer.run.DeployToServerRunner"/>
+                        serviceImplementation="com.intellij.remoteServer.impl.configuration.RemoteServersManagerImpl"/>
+    <applicationService serviceInterface="com.intellij.remoteServer.runtime.ServerConnectionManager"
+                        serviceImplementation="com.intellij.remoteServer.impl.runtime.ServerConnectionManagerImpl"/>
+    <applicationConfigurable instance="com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
+    <programRunner implementation="com.intellij.remoteServer.impl.runtime.DeployToServerRunner"/>
+    <projectService serviceInterface="com.intellij.remoteServer.runtime.ui.RemoteServersView"
+                    serviceImplementation="com.intellij.remoteServer.runtime.ui.RemoteServersView"/>
+    <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deployment.ModuleDeploymentSourceType"/>
 
     <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
   </extensions>

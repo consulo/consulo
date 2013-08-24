@@ -53,7 +53,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   @Nullable
   XStackFrame getCurrentStackFrame();
-  
+
   XSuspendContext getSuspendContext();
 
   @Nullable
@@ -132,16 +132,20 @@ public interface XDebugSession extends AbstractDebuggerSession {
   @NotNull
   RunContentDescriptor getRunContentDescriptor();
 
-  @Nullable  
+  @Nullable
   RunProfile getRunProfile();
 
   void setPauseActionSupported(boolean isSupported);
+
+  void setAutoInitBreakpoints(boolean value);
 
   void rebuildViews();
 
   <V extends XSmartStepIntoVariant> void smartStepInto(XSmartStepIntoHandler<V> handler, V variant);
 
   void updateExecutionPosition();
+
+  void initBreakpoints();
 
   ConsoleView getConsoleView();
 

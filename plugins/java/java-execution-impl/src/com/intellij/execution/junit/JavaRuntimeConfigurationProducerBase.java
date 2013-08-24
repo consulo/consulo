@@ -65,15 +65,22 @@ public abstract class JavaRuntimeConfigurationProducerBase extends RuntimeConfig
         return JavaDirectoryService.getInstance().getPackage(directory);
       }
     }
-    else {
-      return null;
-    }
+
     return null;
   }
 
   private static boolean isSource(final PsiDirectory directory, final ProjectFileIndex fileIndex) {
     final VirtualFile virtualFile = directory.getVirtualFile();
     return fileIndex.getSourceRootForFile(virtualFile) != null;
+  }
+
+  protected TestSearchScope setupPackageConfiguration(ConfigurationContext context, Project project, ModuleBasedConfiguration configuration, TestSearchScope scope) {
+    if (scope != TestSearchScope.WHOLE_PROJECT) {
+      if (!setupConfigurationModule(context, configuration)) {
+        return TestSearchScope.WHOLE_PROJECT;
+      }
+    }
+    return scope;
   }
 
   protected boolean setupConfigurationModule(@Nullable ConfigurationContext context, ModuleBasedConfiguration configuration) {
@@ -95,15 +102,6 @@ public abstract class JavaRuntimeConfigurationProducerBase extends RuntimeConfig
     return false;
   }
 
-  protected TestSearchScope setupPackageConfiguration(ConfigurationContext context, Project project, ModuleBasedConfiguration configuration, TestSearchScope scope) {
-    if (scope != TestSearchScope.WHOLE_PROJECT) {
-      if (!setupConfigurationModule(context, configuration)) {
-        return TestSearchScope.WHOLE_PROJECT;
-      }
-    }
-    return scope;
-  }
-  
   protected Module findModule(ModuleBasedConfiguration configuration, Module contextModule) {
     if (configuration.getConfigurationModule().getModule() == null && contextModule != null) {
       return contextModule;

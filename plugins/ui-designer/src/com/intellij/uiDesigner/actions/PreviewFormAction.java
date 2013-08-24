@@ -22,7 +22,6 @@ import com.intellij.compiler.instrumentation.InstrumentationClassFinder;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -127,8 +126,8 @@ public final class PreviewFormAction extends AnAction{
 
     final PathsList sources = OrderEnumerator.orderEntries(module).withoutSdk().withoutLibraries().withoutDepModules().getSourcePathsList();
     final String classPath = OrderEnumerator.orderEntries(module).recursively().getPathsList().getPathsString() + File.pathSeparator +
-      sources.getPathsString() + File.pathSeparator + /* resources bundles */
-      tempPath;
+                             sources.getPathsString() + File.pathSeparator + /* resources bundles */
+                             tempPath;
     final InstrumentationClassFinder finder = Form2ByteCodeCompiler.createClassFinder(classPath);
 
     try {
@@ -300,8 +299,8 @@ public final class PreviewFormAction extends AnAction{
                                                   UIDesignerBundle.message("progress.preview.started", formFile.getPresentableUrl()));
       ProgramRunner defaultRunner = RunnerRegistry.getInstance().getRunner(DefaultRunExecutor.EXECUTOR_ID, profile);
       LOG.assertTrue(defaultRunner != null);
-      defaultRunner.execute(DefaultRunExecutor.getRunExecutorInstance(), new ExecutionEnvironment(profile, module.getProject(), null, null,
-                                                                                                  null));
+      Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+      defaultRunner.execute(new ExecutionEnvironment(profile, executor, module.getProject(), null));
     }
     catch (ExecutionException e) {
       Messages.showErrorDialog(
@@ -330,7 +329,7 @@ public final class PreviewFormAction extends AnAction{
     }
 
     public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
-      final JavaCommandLineState state = new JavaCommandLineState(env) {
+      return new JavaCommandLineState(env) {
         protected JavaParameters createJavaParameters() {
           return myParams;
         }
@@ -356,15 +355,10 @@ public final class PreviewFormAction extends AnAction{
           }
         }
       };
-      state.setConsoleBuilder(TextConsoleBuilderFactory.getInstance().createBuilder(myModule.getProject()));
-      return state;
     }
 
     public String getName() {
       return UIDesignerBundle.message("title.form.preview");
-    }
-
-    public void checkConfiguration() throws RuntimeConfigurationException {
     }
 
     @NotNull

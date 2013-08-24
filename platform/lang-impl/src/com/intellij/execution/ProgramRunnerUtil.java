@@ -16,6 +16,7 @@
 
 package com.intellij.execution;
 
+import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.impl.RunDialog;
@@ -48,8 +49,8 @@ public class ProgramRunnerUtil {
   }
 
   @Nullable
-  public static ProgramRunner getRunner(final String executorId, final RunnerAndConfigurationSettings configuration) {
-    return RunnerRegistry.getInstance().getRunner(executorId, configuration.getConfiguration());
+  public static ProgramRunner getRunner(@NotNull final String executorId, final RunnerAndConfigurationSettings configuration) {
+    return configuration == null ? null : RunnerRegistry.getInstance().getRunner(executorId, configuration.getConfiguration());
   }
 
   public static void executeConfiguration(@NotNull final Project project,
@@ -97,8 +98,8 @@ public class ProgramRunnerUtil {
     }
 
     try {
-      runner.execute(executor, new ExecutionEnvironmentBuilder().setRunnerAndSettings(runner, configuration).setTarget(target)
-        .setContentToReuse(contentToReuse).setProject(project).assignNewId().build());
+      runner.execute(new ExecutionEnvironmentBuilder(project, executor).setRunnerAndSettings(runner, configuration).setTarget(target)
+                       .setContentToReuse(contentToReuse).assignNewId().build());
     }
     catch (ExecutionException e) {
       ExecutionUtil.handleExecutionError(project, executor.getToolWindowId(), configuration.getConfiguration(), e);
@@ -112,19 +113,14 @@ public class ProgramRunnerUtil {
     executeConfiguration(project, configuration, executor, ExecutionTargetManager.getActiveTarget(project), null, true);
   }
 
-  public static Icon getConfigurationIcon(final Project project, final RunnerAndConfigurationSettings settings, final boolean invalid) {
-    final RunManager runManager = RunManager.getInstance(project);
-    return getConfigurationIcon(settings, invalid, runManager.isTemporary(settings.getConfiguration()));
-  }
-
   public static Icon getConfigurationIcon(final RunnerAndConfigurationSettings settings,
-                                          final boolean invalid,
-                                          boolean isTemporary) {
+                                          final boolean invalid) {
     RunConfiguration configuration = settings.getConfiguration();
-    final Icon icon = settings.getFactory().getIcon(configuration);
-    LOG.assertTrue(icon != null, "Icon should not be null!");
+    ConfigurationFactory factory = settings.getFactory();
+    Icon icon =  factory != null ? factory.getIcon(configuration) : null;
+    if (icon == null) icon = AllIcons.RunConfigurations.Unknown;
 
-    final Icon configurationIcon = isTemporary ? IconLoader.getTransparentIcon(icon, 0.3f) : icon;
+    final Icon configurationIcon = settings.isTemporary() ? IconLoader.getTransparentIcon(icon, 0.3f) : icon;
     if (invalid) {
       return LayeredIcon.create(configurationIcon, AllIcons.RunConfigurations.InvalidConfigurationLayer);
     }

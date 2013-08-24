@@ -1,5 +1,6 @@
 package com.intellij.diagnostic.errordialog;
 
+import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.table.TableView;

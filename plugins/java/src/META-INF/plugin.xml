@@ -1843,7 +1843,7 @@
     <!--  <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>  -->
 
     <configurationType implementation="com.intellij.execution.application.ApplicationConfigurationType"/>
-    <configurationProducer implementation="com.intellij.execution.application.ApplicationConfigurationProducer"/>
+    <runConfigurationProducer implementation="com.intellij.execution.application.ApplicationConfigurationProducer"/>
 
     <psi.packageSupportProvider implementation="org.consulo.java.platform.psi.impl.JavaPsiPackageSupportProvider"/>
     <customPropertyScopeProvider implementation="com.intellij.psi.impl.search.SimpleAccessorScopeProvider"/>

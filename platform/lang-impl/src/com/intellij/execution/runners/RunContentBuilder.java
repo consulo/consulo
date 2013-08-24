@@ -60,15 +60,24 @@ public class RunContentBuilder extends LogConsoleManagerBase {
   private RunnerLayoutUi myUi;
   private final Executor myExecutor;
 
+  /**
+   * @deprecated use {@link #RunContentBuilder(ProgramRunner, com.intellij.execution.ExecutionResult, ExecutionEnvironment)}
+   */
   public RunContentBuilder(@NotNull Project project,
                            ProgramRunner runner,
                            Executor executor,
                            ExecutionResult executionResult,
                            @NotNull ExecutionEnvironment environment) {
-    super(project, createSearchScope(project, environment.getRunProfile()));
+    this(runner, executionResult, environment);
+  }
+
+  public RunContentBuilder(ProgramRunner runner,
+                           ExecutionResult executionResult,
+                           @NotNull ExecutionEnvironment environment) {
+    super(environment.getProject(), createSearchScope(environment.getProject(), environment.getRunProfile()));
     myRunner = runner;
-    myExecutor = executor;
-    myManager = new LogFilesManager(project, this, this);
+    myExecutor = environment.getExecutor();
+    myManager = new LogFilesManager(environment.getProject(), this, this);
     myExecutionResult = executionResult;
     setEnvironment(environment);
   }
@@ -183,7 +192,7 @@ public class RunContentBuilder extends LogConsoleManagerBase {
   public static void buildConsoleUiDefault(RunnerLayoutUi ui, final ExecutionConsole console) {
     final Content consoleContent = ui.createContent(ExecutionConsole.CONSOLE_CONTENT_ID, console.getComponent(), "Console",
                                                     AllIcons.Debugger.Console,
-                                                      console.getPreferredFocusableComponent());
+                                                    console.getPreferredFocusableComponent());
 
     consoleContent.setCloseable(false);
     addAdditionalConsoleEditorActions(console, consoleContent);
@@ -205,8 +214,7 @@ public class RunContentBuilder extends LogConsoleManagerBase {
   private ActionGroup createActionToolbar(final RunContentDescriptor contentDescriptor, final JComponent component) {
     final DefaultActionGroup actionGroup = new DefaultActionGroup();
 
-    final RestartAction restartAction = new RestartAction(myExecutor, myRunner, getProcessHandler(),
-                                                          contentDescriptor, getEnvironment());
+    final RestartAction restartAction = new RestartAction(myExecutor, myRunner, contentDescriptor, getEnvironment());
     restartAction.registerShortcut(component);
     actionGroup.add(restartAction);
     contentDescriptor.setRestarter(new Runnable() {

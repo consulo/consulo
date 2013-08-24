@@ -17,7 +17,6 @@
 package com.intellij.execution;
 
 import com.intellij.execution.actions.RunContextAction;
-import com.intellij.execution.configurations.ConfigurationPerRunnerSettings;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
@@ -174,8 +173,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   }
 
   private static Trinity<Project, String, String> createExecutionId(String executorId, ExecutionEnvironment env, Project project) {
-    final ConfigurationPerRunnerSettings settings = env.getConfigurationSettings();
-    return new Trinity<Project, String, String>(project, executorId, settings != null? settings.getRunnerId() : null);
+    return new Trinity<Project, String, String>(project, executorId, env.getRunnerId());
   }
 
   @Override
@@ -201,14 +199,12 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     private final Executor myExecutor;
 
     private ExecutorAction(@NotNull final Executor executor) {
-      super(executor.getStartActionText(), executor.getActionName(), executor.getIcon());
+      super(executor.getStartActionText(), executor.getDescription(), executor.getIcon());
       myExecutor = executor;
     }
 
     @Override
     public void update(final AnActionEvent e) {
-      super.update(e);
-
       final Presentation presentation = e.getPresentation();
       final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
 

@@ -25,33 +25,34 @@ package com.theoryinpractice.testng.configuration;
 import com.intellij.debugger.engine.DebuggerUtils;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
+import com.intellij.execution.junit.RuntimeConfigurationProducer;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.testframework.*;
+import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
+import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
+import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
+import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.util.JavaParametersUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
-import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ex.JavaSdkUtil;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -62,6 +63,7 @@ import com.theoryinpractice.testng.model.*;
 import com.theoryinpractice.testng.ui.TestNGConsoleView;
 import com.theoryinpractice.testng.ui.TestNGResults;
 import com.theoryinpractice.testng.ui.actions.RerunFailedTestsAction;
+import jetbrains.buildServer.messages.serviceMessages.ServiceMessageTypes;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +73,6 @@ import org.testng.RemoteTestNGStarter;
 import org.testng.annotations.AfterClass;
 import org.testng.remote.RemoteArgs;
 import org.testng.remote.RemoteTestNG;
-import org.testng.remote.strprotocol.MessageHelper;
 import org.testng.remote.strprotocol.SerializedMessageSender;
 
 import javax.swing.*;
@@ -83,7 +84,7 @@ import java.net.UnknownHostException;
 
 public class TestNGRunnableState extends JavaCommandLineState {
   private static final Logger LOG = Logger.getInstance("TestNG Runner");
-  private final ConfigurationPerRunnerSettings myConfigurationPerRunnerSettings;
+  private static final String TESTNG_TEST_FRAMEWORK_NAME = "TestNG";
   private final TestNGConfiguration config;
   private final RunnerSettings runnerSettings;
   protected final IDEARemoteTestRunnerClient client;
@@ -96,14 +97,13 @@ public class TestNGRunnableState extends JavaCommandLineState {
   public TestNGRunnableState(ExecutionEnvironment environment, TestNGConfiguration config) {
     super(environment);
     this.runnerSettings = environment.getRunnerSettings();
-    myConfigurationPerRunnerSettings = environment.getConfigurationSettings();
     this.config = config;
     //TODO need to narrow this down a bit
     //setModulesToCompile(ModuleManager.getInstance(config.getProject()).getModules());
     client = new IDEARemoteTestRunnerClient();
     // Want debugging?
-    if (runnerSettings.getData() instanceof DebuggingRunnerData) {
-      DebuggingRunnerData debuggingRunnerData = ((DebuggingRunnerData)runnerSettings.getData());
+    if (runnerSettings instanceof DebuggingRunnerData) {
+      DebuggingRunnerData debuggingRunnerData = ((DebuggingRunnerData)runnerSettings);
       debugPort = debuggingRunnerData.getDebugPort();
       if (debugPort.length() == 0) {
         try {
@@ -120,10 +120,13 @@ public class TestNGRunnableState extends JavaCommandLineState {
 
   @Override
   public ExecutionResult execute(@NotNull final Executor executor, @NotNull final ProgramRunner runner) throws ExecutionException {
+    final boolean smRunner = Registry.is("testng_sm_runner", false);
+    if (smRunner) {
+      return startSMRunner(executor);
+    }
     OSProcessHandler processHandler = startProcess();
     final TreeRootNode unboundOutputRoot = new TreeRootNode();
-    final TestNGConsoleView console = new TestNGConsoleView(config, runnerSettings, myConfigurationPerRunnerSettings, unboundOutputRoot,
-                                                            executor);
+    final TestNGConsoleView console = new TestNGConsoleView(config, getEnvironment(), unboundOutputRoot, executor);
     console.initUI();
     unboundOutputRoot.setPrinter(console.getPrinter());
     Disposer.register(console, unboundOutputRoot);
@@ -131,7 +134,7 @@ public class TestNGRunnableState extends JavaCommandLineState {
     final SearchingForTestsTask task = createSearchingForTestsTask(myServerSocket, config, myTempFile);
     processHandler.addProcessListener(new ProcessAdapter() {
       private boolean myStarted = false;
-      
+
       @Override
       public void processTerminated(final ProcessEvent event) {
         unboundOutputRoot.flush();
@@ -147,25 +150,8 @@ public class TestNGRunnableState extends JavaCommandLineState {
 
             final TestConsoleProperties consoleProperties = console.getProperties();
             if (consoleProperties == null) return;
-            final String testRunDebugId = consoleProperties.isDebug() ? ToolWindowId.DEBUG : ToolWindowId.RUN;
             final TestNGResults resultsView = console.getResultsView();
-            final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            if (!Comparing.strEqual(toolWindowManager.getActiveToolWindowId(), testRunDebugId)) {
-              final MessageType type = resultsView == null || resultsView.getStatus() == MessageHelper.SKIPPED_TEST
-                                       ? MessageType.WARNING
-                                       : (resultsView.getStatus() == MessageHelper.FAILED_TEST
-                                          ? MessageType.ERROR
-                                          : MessageType.INFO);
-              final String message;
-              if (resultsView == null) {
-                message = myStarted ? "Tests were interrupted" : "Tests were not started";
-              }
-              else {
-                message = resultsView.getStatusLine();
-              }
-              toolWindowManager.notifyByBalloon(testRunDebugId, type, message, null, null);
-              TestsUIUtil.NOTIFICATION_GROUP.createNotification(message, type).notify(project);
-            }
+            TestsUIUtil.notifyByBalloon(project, myStarted, console.getResultsView().getRoot(), consoleProperties, "in " + resultsView.getTime());
           }
         };
         SwingUtilities.invokeLater(notificationRunnable);
@@ -180,7 +166,7 @@ public class TestNGRunnableState extends JavaCommandLineState {
         client.prepareListening(listener, port);
         myStarted = true;
         mySearchForTestIndicator = new BackgroundableProcessIndicator(task);
-        ProgressManagerImpl.runProcessWithProgressAsynchronously(task, mySearchForTestIndicator);
+        ProgressManager.getInstance().runProcessWithProgressAsynchronously(task, mySearchForTestIndicator);
       }
 
       @Override
@@ -223,6 +209,61 @@ public class TestNGRunnableState extends JavaCommandLineState {
 
     final DefaultExecutionResult result = new DefaultExecutionResult(console, processHandler);
     result.setRestartActions(rerunFailedTestsAction);
+    return result;
+  }
+
+  private ExecutionResult startSMRunner(Executor executor) throws ExecutionException {
+    getJavaParameters().getVMParametersList().add("-Didea.testng.sm_runner");
+    getJavaParameters().getClassPath().add(PathUtil.getJarPathForClass(ServiceMessageTypes.class));
+
+    OSProcessHandler handler = startProcess();
+    TestConsoleProperties testConsoleProperties = new SMTRunnerConsoleProperties(
+      new RuntimeConfigurationProducer.DelegatingRuntimeConfiguration<TestNGConfiguration>(
+        (TestNGConfiguration)getEnvironment().getRunProfile()),
+      TESTNG_TEST_FRAMEWORK_NAME,
+      executor
+    );
+
+    testConsoleProperties.setIfUndefined(TestConsoleProperties.HIDE_PASSED_TESTS, false);
+
+    final BaseTestsOutputConsoleView smtConsoleView = SMTestRunnerConnectionUtil.createConsoleWithCustomLocator(
+      TESTNG_TEST_FRAMEWORK_NAME,
+      testConsoleProperties,
+      getEnvironment(), null);
+
+
+    Disposer.register(getEnvironment().getProject(), smtConsoleView);
+    smtConsoleView.attachToProcess(handler);
+    final RerunFailedTestsAction rerunFailedTestsAction = new RerunFailedTestsAction(smtConsoleView);
+    rerunFailedTestsAction.init(testConsoleProperties, getEnvironment());
+    rerunFailedTestsAction.setModelProvider(new Getter<TestFrameworkRunningModel>() {
+      @Override
+      public TestFrameworkRunningModel get() {
+        return ((SMTRunnerConsoleView)smtConsoleView).getResultsViewer();
+      }
+    });
+
+    final DefaultExecutionResult result = new DefaultExecutionResult(smtConsoleView, handler);
+    result.setRestartActions(rerunFailedTestsAction);
+
+    JavaRunConfigurationExtensionManager.getInstance().attachExtensionsToProcess(config, handler, runnerSettings);
+    final SearchingForTestsTask task = createSearchingForTestsTask(myServerSocket, config, myTempFile);
+    handler.addProcessListener(new ProcessAdapter() {
+      @Override
+      public void processTerminated(final ProcessEvent event) {
+
+        if (mySearchForTestIndicator != null && !mySearchForTestIndicator.isCanceled()) {
+          task.finish();
+        }
+      }
+
+      @Override
+      public void startNotified(final ProcessEvent event) {
+        mySearchForTestIndicator = new BackgroundableProcessIndicator(task);
+        ProgressManager.getInstance().runProcessWithProgressAsynchronously(task, mySearchForTestIndicator);
+      }
+    });
+
     return result;
   }
 
@@ -354,7 +395,7 @@ public class TestNGRunnableState extends JavaCommandLineState {
       LOG.error(e);
     }
     // Configure for debugging
-    if (runnerSettings.getData() instanceof DebuggingRunnerData) {
+    if (runnerSettings instanceof DebuggingRunnerData) {
       ParametersList params = javaParameters.getVMParametersList();
 
       String hostname = "localhost";

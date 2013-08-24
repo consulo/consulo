@@ -16,6 +16,7 @@
     <orderEntry type="module" module-name="xml-impl" />
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="java-debugger-api" />
+    <orderEntry type="module" module-name="smRunner" />
   </component>
   <component name="copyright">
     <Base>

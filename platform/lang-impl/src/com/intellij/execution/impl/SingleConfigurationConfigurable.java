@@ -42,7 +42,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class SingleConfigurationConfigurable<Config extends RunConfiguration>
-    extends SettingsEditorConfigurable<RunnerAndConfigurationSettings> {
+  extends SettingsEditorConfigurable<RunnerAndConfigurationSettings> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.impl.SingleConfigurationConfigurable");
   private final PlainDocument myNameDocument = new PlainDocument();
   @Nullable private Executor myExecutor;
@@ -56,6 +56,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   private boolean myStoreProjectConfiguration;
   private boolean mySingleton;
   private String myFolderName;
+  private boolean myChangingNameFromCode;
 
 
   private SingleConfigurationConfigurable(RunnerAndConfigurationSettings settings, @Nullable Executor executor) {
@@ -74,6 +75,12 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
       @Override
       public void textChanged(DocumentEvent event) {
         setModified(true);
+        if (!myChangingNameFromCode) {
+          RunConfiguration runConfiguration = getSettings().getConfiguration();
+          if (runConfiguration instanceof LocatableConfigurationBase) {
+            ((LocatableConfigurationBase) runConfiguration).setNameChangedByUser(true);
+          }
+        }
       }
     });
 
@@ -97,7 +104,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     RunnerAndConfigurationSettings settings = getSettings();
     RunConfiguration runConfiguration = settings.getConfiguration();
     final RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(runConfiguration.getProject());
-    runManager.shareConfiguration(runConfiguration, myStoreProjectConfiguration);
+    runManager.shareConfiguration(settings, myStoreProjectConfiguration);
     settings.setName(getNameText());
     settings.setSingleton(mySingleton);
     settings.setFolderName(myFolderName);
@@ -151,7 +158,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
       }
       catch (RuntimeConfigurationException exception) {
         myLastValidationResult =
-            exception != null ? new ValidationResult(exception.getLocalizedMessage(), exception.getTitle(), exception.getQuickFix()) : null;
+          exception != null ? new ValidationResult(exception.getLocalizedMessage(), exception.getTitle(), exception.getQuickFix()) : null;
       }
       catch (ConfigurationException e) {
         myLastValidationResult = new ValidationResult(e.getLocalizedMessage(), ExecutionBundle.message("invalid.data.dialog.title"), null);
@@ -163,7 +170,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   }
 
   private static void checkConfiguration(final ProgramRunner runner, final RunnerAndConfigurationSettings snapshot)
-      throws RuntimeConfigurationException {
+    throws RuntimeConfigurationException {
     final RunnerSettings runnerSettings = snapshot.getRunnerSettings(runner);
     final ConfigurationPerRunnerSettings configurationSettings = snapshot.getConfigurationSettings(runner);
     try {
@@ -199,13 +206,19 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
   }
 
   public final void setNameText(final String name) {
+    myChangingNameFromCode = true;
     try {
-      if (!myNameDocument.getText(0, myNameDocument.getLength()).equals(name)) {
-        myNameDocument.replace(0, myNameDocument.getLength(), name, null);
+      try {
+        if (!myNameDocument.getText(0, myNameDocument.getLength()).equals(name)) {
+          myNameDocument.replace(0, myNameDocument.getLength(), name, null);
+        }
+      }
+      catch (BadLocationException e) {
+        LOG.error(e);
       }
     }
-    catch (BadLocationException e) {
-      LOG.error(e);
+    finally {
+      myChangingNameFromCode = false;
     }
   }
 

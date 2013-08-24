@@ -31,18 +31,20 @@ import com.intellij.util.PlatformUtils;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.List;
 
 /**
  * @author yole
  */
 public class AppUIUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.AppUIUtil");
   private static final String VENDOR_PREFIX = "jetbrains-";
 
   public static void updateWindowIcon(@NotNull Window window) {
@@ -88,9 +90,26 @@ public class AppUIUtil {
       application.invokeLater(runnable, new Condition() {
         @Override
         public boolean value(Object o) {
-          return (!project.isOpen()) || project.isDisposed();
+          return !project.isOpen() || project.isDisposed();
         }
       });
+    }
+  }
+
+  public static void invokeOnEdt(Runnable runnable) {
+    invokeOnEdt(runnable, null);
+  }
+
+  public static void invokeOnEdt(Runnable runnable, @Nullable Condition condition) {
+    Application application = ApplicationManager.getApplication();
+    if (application.isDispatchThread()) {
+      runnable.run();
+    }
+    else if (condition == null) {
+      application.invokeLater(runnable);
+    }
+    else {
+      application.invokeLater(runnable, condition);
     }
   }
 
@@ -124,7 +143,12 @@ public class AppUIUtil {
 
   private static void registerFont(@NonNls String name) {
     try {
-      InputStream is = AppUIUtil.class.getResourceAsStream(name);
+      URL url = AppUIUtil.class.getResource(name);
+      if (url == null) {
+        throw new IOException("Resource missing: " + name);
+      }
+
+      InputStream is = url.openStream();
       try {
         Font font = Font.createFont(Font.TRUETYPE_FONT, is);
         GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
@@ -134,7 +158,7 @@ public class AppUIUtil {
       }
     }
     catch (Exception e) {
-      LOG.error("Cannot register font: " + name, e);
+      Logger.getInstance(AppUIUtil.class).error("Cannot register font: " + name, e);
     }
   }
 

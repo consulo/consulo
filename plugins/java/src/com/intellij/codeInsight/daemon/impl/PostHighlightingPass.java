@@ -39,8 +39,8 @@ import com.intellij.codeInspection.unusedImport.UnusedImportLocalInspection;
 import com.intellij.codeInspection.unusedParameters.UnusedParametersInspection;
 import com.intellij.codeInspection.unusedSymbol.UnusedSymbolLocalInspection;
 import com.intellij.codeInspection.util.SpecialAnnotationsUtil;
+import com.intellij.diagnostic.AttachmentFactory;
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.diagnostic.errordialog.Attachment;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.*;
 import com.intellij.find.impl.FindManagerImpl;
@@ -211,7 +211,7 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
           String afterText = file.getText();
           if (Comparing.strEqual(beforeText, afterText)) {
             LOG.error(LogMessageEx.createEvent("Import optimizer  hasn't optimized any imports", file.getViewProvider().getVirtualFile().getPath(),
-                                               new Attachment(file.getViewProvider().getVirtualFile())));
+                                               AttachmentFactory.createAttachment(file.getViewProvider().getVirtualFile())));
           }
         }
       }
@@ -559,7 +559,8 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
     SpecialAnnotationsUtil.createAddToSpecialAnnotationFixes(method, new Processor<String>() {
       @Override
       public boolean process(final String annoName) {
-        QuickFixAction.registerQuickFixAction(highlightInfo, UnusedSymbolLocalInspection.createQuickFix(annoName, "methods", method.getProject()));
+        QuickFixAction.registerQuickFixAction(highlightInfo,
+                                              UnusedSymbolLocalInspection.createQuickFix(annoName, "methods", method.getProject()));
         return true;
       }
     });
@@ -622,9 +623,13 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
         useScope = GlobalSearchScope.projectScope(project).uniteWith((GlobalSearchScope)useScope);
       }
 
-      PsiSearchHelper.SearchCostResult cheapEnough = PsiSearchHelper.SERVICE.getInstance(project).isCheapEnoughToSearch(name, (GlobalSearchScope)useScope,
-                                                                                                                        helper.isCurrentFileAlreadyChecked() ? member.getContainingFile() : null,
-                                                                                                                        progress);
+      PsiSearchHelper.SearchCostResult cheapEnough = PsiSearchHelper.SERVICE.getInstance(project).isCheapEnoughToSearch(name,
+                                                                                                                        (GlobalSearchScope)useScope,
+                                                                                                                        helper
+                                                                                                                          .isCurrentFileAlreadyChecked()
+                                                                                                                        ? member
+                                                                                                                          .getContainingFile()
+                                                                                                                        : null, progress);
       if (cheapEnough == PsiSearchHelper.SearchCostResult.TOO_MANY_OCCURRENCES) return false;
 
       //search usages if it cheap
@@ -727,7 +732,8 @@ public class PostHighlightingPass extends TextEditorHighlightingPass {
     SpecialAnnotationsUtil.createAddToSpecialAnnotationFixes((PsiModifierListOwner)aClass, new Processor<String>() {
       @Override
       public boolean process(final String annoName) {
-        QuickFixAction.registerQuickFixAction(highlightInfo, UnusedSymbolLocalInspection.createQuickFix(annoName, element, aClass.getProject()));
+        QuickFixAction.registerQuickFixAction(highlightInfo,
+                                              UnusedSymbolLocalInspection.createQuickFix(annoName, element, aClass.getProject()));
         return true;
       }
     });

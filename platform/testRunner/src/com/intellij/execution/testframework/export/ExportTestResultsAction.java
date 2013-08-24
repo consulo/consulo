@@ -16,9 +16,8 @@
 package com.intellij.execution.testframework.export;
 
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.diagnostic.errordialog.Attachment;
 import com.intellij.execution.ExecutionBundle;
-import com.intellij.execution.configurations.RuntimeConfiguration;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -27,6 +26,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
@@ -74,9 +74,9 @@ public class ExportTestResultsAction extends DumbAwareAction {
 
   private TestFrameworkRunningModel myModel;
   private String myToolWindowId;
-  private RuntimeConfiguration myRunConfiguration;
+  private RunConfiguration myRunConfiguration;
 
-  public static ExportTestResultsAction create(String toolWindowId, RuntimeConfiguration runtimeConfiguration) {
+  public static ExportTestResultsAction create(String toolWindowId, RunConfiguration runtimeConfiguration) {
     ExportTestResultsAction action = new ExportTestResultsAction();
     action.copyFrom(ActionManager.getInstance().getAction(ID));
     action.myToolWindowId = toolWindowId;
@@ -122,12 +122,12 @@ public class ExportTestResultsAction extends DumbAwareAction {
       }
       filename = d.getFileName();
       showDialog = getOutputFile(config, project, filename).exists()
-          && Messages.showOkCancelDialog(
-               project,
-               ExecutionBundle.message("export.test.results.file.exists.message", filename),
-               ExecutionBundle.message("export.test.results.file.exists.title"),
-               Messages.getQuestionIcon()
-             ) != DialogWrapper.OK_EXIT_CODE;
+                   && Messages.showOkCancelDialog(
+        project,
+        ExecutionBundle.message("export.test.results.file.exists.message", filename),
+        ExecutionBundle.message("export.test.results.file.exists.title"),
+        Messages.getQuestionIcon()
+      ) != DialogWrapper.OK_EXIT_CODE;
     }
 
     final String filename_ = filename;

@@ -21,50 +21,39 @@
 package com.theoryinpractice.testng.configuration;
 
 import com.intellij.execution.JavaExecutionUtil;
-import com.intellij.execution.JavaRunConfigurationExtensionManager;
-import com.intellij.execution.Location;
-import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.junit.JUnitUtil;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.*;
 import com.theoryinpractice.testng.model.TestData;
 import com.theoryinpractice.testng.model.TestType;
 import com.theoryinpractice.testng.util.TestNGUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TestNGPatternConfigurationProducer extends TestNGConfigurationProducer{
 
-  private PsiElement[] myElements;
-  
-
-  public int compareTo(Object o) {
-    return PREFERED;
-  }
-
-  protected RunnerAndConfigurationSettings createConfigurationByElement(final Location location, final ConfigurationContext context) {
-    final Project project = location.getProject();
+  @Override
+  protected boolean setupConfigurationFromContext(TestNGConfiguration configuration,
+                                                  ConfigurationContext context,
+                                                  Ref<PsiElement> sourceElement) {
     final LinkedHashSet<String> classes = new LinkedHashSet<String>();
-    myElements = collectPatternElements(context, classes);
-    if (classes.size() <= 1) return null;
-    RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(project, context);
-    final TestNGConfiguration configuration = (TestNGConfiguration)settings.getConfiguration();
+    PsiElement[] elements = collectPatternElements(context, classes);
+    if (classes.size() <= 1) return false;
     final TestData data = configuration.getPersistantData();
-    data.getPatterns().addAll(classes);
+    data.setPatterns(classes);
     data.TEST_OBJECT = TestType.PATTERN.getType();
-    data.setScope(setupPackageConfiguration(context, project, configuration, data.getScope()));
+    data.setScope(setupPackageConfiguration(context, configuration, data.getScope()));
     configuration.setGeneratedName();
-    JavaRunConfigurationExtensionManager.getInstance().extendCreatedConfiguration(configuration, location);
-    return settings;
+    sourceElement.set(elements[0]);
+    return true;
   }
 
   static Set<PsiMember> collectTestMembers(PsiElement[] psiElements) {
@@ -114,13 +103,9 @@ public class TestNGPatternConfigurationProducer extends TestNGConfigurationProdu
     return null;
   }
 
-  public PsiElement getSourceElement() {
-    return myElements[0];
-  }
-
   @Override
-  protected Module findModule(ModuleBasedConfiguration configuration, Module contextModule) {
-    final Set<String> patterns = ((TestNGConfiguration)configuration).data.getPatterns();
+  protected Module findModule(TestNGConfiguration configuration, Module contextModule) {
+    final Set<String> patterns = configuration.data.getPatterns();
     return findModule(configuration, contextModule, patterns);
   }
 
@@ -134,20 +119,14 @@ public class TestNGPatternConfigurationProducer extends TestNGConfigurationProdu
   }
 
   @Override
-  protected RunnerAndConfigurationSettings findExistingByElement(@NotNull Location location,
-                                                                 @NotNull RunnerAndConfigurationSettings[] existingConfigurations,
-                                                                 ConfigurationContext context) {
+  public boolean isConfigurationFromContext(TestNGConfiguration testNGConfiguration, ConfigurationContext context) {
     final LinkedHashSet<String> classes = new LinkedHashSet<String>();
     collectPatternElements(context, classes);
-    for (RunnerAndConfigurationSettings existingConfiguration : existingConfigurations) {
-      final TestNGConfiguration unitConfiguration = (TestNGConfiguration)existingConfiguration.getConfiguration();
-      final String type = unitConfiguration.getPersistantData().TEST_OBJECT;
-      if (Comparing.equal(type, TestType.PATTERN.getType())) {
-        if (Comparing.equal(classes, unitConfiguration.getPersistantData().getPatterns())) {
-          return existingConfiguration;
-        }
-      }
+    final String type = testNGConfiguration.getPersistantData().TEST_OBJECT;
+    if (Comparing.equal(type, TestType.PATTERN.getType()) &&
+        Comparing.equal(classes, testNGConfiguration.getPersistantData().getPatterns())) {
+      return true;
     }
-    return null;
+    return false;
   }
 }

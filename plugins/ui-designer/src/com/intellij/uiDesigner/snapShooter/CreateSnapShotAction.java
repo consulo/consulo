@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,7 @@
 
 package com.intellij.uiDesigner.snapShooter;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.RunManagerEx;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.RunnerRegistry;
+import com.intellij.execution.*;
 import com.intellij.execution.application.ApplicationConfiguration;
 import com.intellij.execution.application.ApplicationConfigurationType;
 import com.intellij.execution.executors.DefaultRunExecutor;
@@ -28,16 +25,17 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.util.JreVersionDetector;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeView;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.ide.highlighter.JavaHighlightingColors;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -61,7 +59,6 @@ import com.intellij.uiDesigner.radComponents.RadComponentFactory;
 import com.intellij.uiDesigner.radComponents.RadContainer;
 import com.intellij.util.IncorrectOperationException;
 import icons.UIDesignerIcons;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,31 +82,23 @@ public class CreateSnapShotAction extends AnAction {
   private static final Logger LOG = Logger.getInstance("com.intellij.uiDesigner.snapShooter.CreateSnapShotAction");
 
   @Override
-  public void update(final AnActionEvent e) {
-    super.update(e);
+  public void update(AnActionEvent e) {
     final Project project = e.getData(PlatformDataKeys.PROJECT);
-    final Presentation presentation = e.getPresentation();
-    if (presentation.isEnabled()) {
-      final Module module = e.getData(LangDataKeys.MODULE);
-      if (module != null && ModuleUtilCore.getExtension(module, JavaModuleExtension.class) != null) {
-        final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
-        if (view != null) {
-          final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-          final PsiDirectory[] dirs = view.getDirectories();
-          for (final PsiDirectory dir : dirs) {
-            if (projectFileIndex.isInSourceContent(dir.getVirtualFile()) && JavaDirectoryService.getInstance().getPackage(dir) != null) {
-              return;
-            }
-          }
-        }
-      }
-
-      presentation.setEnabled(false);
-      presentation.setVisible(false);
-    }
+    final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
+    e.getPresentation().setVisible(project != null && view != null && hasDirectoryInPackage(project, view));
   }
 
-  @Override
+  private static boolean hasDirectoryInPackage(final Project project, final IdeView view) {
+    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    PsiDirectory[] dirs = view.getDirectories();
+    for (PsiDirectory dir : dirs) {
+      if (projectFileIndex.isInSourceContent(dir.getVirtualFile()) && JavaDirectoryService.getInstance().getPackage(dir) != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(PlatformDataKeys.PROJECT);
     final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
@@ -126,7 +115,7 @@ public class CreateSnapShotAction extends AnAction {
     boolean connected = false;
 
     ApplicationConfigurationType cfgType = ApplicationConfigurationType.getInstance();
-    RunnerAndConfigurationSettings[] racsi = RunManagerEx.getInstanceEx(project).getConfigurationSettings(cfgType);
+    List<RunnerAndConfigurationSettings> racsi = RunManager.getInstance(project).getConfigurationSettingsList(cfgType);
 
     for(RunnerAndConfigurationSettings config: racsi) {
       if (config.getConfiguration() instanceof ApplicationConfiguration) {
@@ -179,12 +168,13 @@ public class CreateSnapShotAction extends AnAction {
           });
         }
       });
-               
+
       try {
         final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(DefaultRunExecutor.EXECUTOR_ID, appConfig);
         LOG.assertTrue(runner != null, "Runner MUST not be null!");
-        runner.execute(DefaultRunExecutor.getRunExecutorInstance(),
-                       new ExecutionEnvironment(runner, snapshotConfiguration, project));
+        Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+        runner.execute(
+          new ExecutionEnvironment(executor, runner, snapshotConfiguration, project));
       }
       catch (ExecutionException ex) {
         Messages.showMessageDialog(project, UIDesignerBundle.message("snapshot.run.error", ex.getMessage()),
@@ -270,7 +260,7 @@ public class CreateSnapShotAction extends AnAction {
 
   @Nullable
   private static RunnerAndConfigurationSettings promptForSnapshotConfiguration(final Project project,
-                                                                                   final List<RunnerAndConfigurationSettings> configurations) {
+                                                                               final List<RunnerAndConfigurationSettings> configurations) {
     if (configurations.isEmpty()) {
       Messages.showMessageDialog(project, UIDesignerBundle.message("snapshot.no.configuration.error"),
                                  UIDesignerBundle.message("snapshot.title"), Messages.getInformationIcon());
@@ -357,7 +347,7 @@ public class CreateSnapShotAction extends AnAction {
       myFormNameTextField.setText(suggestFormName());
 
       final EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
-      final TextAttributes attributes = globalScheme.getAttributes(SyntaxHighlighterColors.STRING);
+      final TextAttributes attributes = globalScheme.getAttributes(JavaHighlightingColors.STRING);
       final SimpleTextAttributes titleAttributes =
         new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, attributes.getForegroundColor());
 

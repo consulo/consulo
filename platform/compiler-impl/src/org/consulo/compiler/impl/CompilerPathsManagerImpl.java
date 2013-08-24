@@ -326,7 +326,9 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
       for (VirtualFilePointer virtualFilePointer : compileInfo.virtualFilePointers.values()) {
         String url = virtualFilePointer.getUrl();
         String path = PathUtil.toPresentableUrl(url);
-
+        if(path.isEmpty()) {
+          continue;
+        }
         try {
           VfsUtil.createDirectoryIfMissing(path);
         }

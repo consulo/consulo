@@ -22,7 +22,6 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
@@ -35,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Standard base class for run configuration implementations.
+ *
  * @author dyoma
  */
 public abstract class RunConfigurationBase extends UserDataHolderBase implements RunConfiguration, TargetAwareRunProfile {
@@ -180,7 +181,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   //invoke before run/debug tabs are shown.
-  //Should be overriden to add additional tabs for run/debug toolwindow
+  //Should be overridden to add additional tabs for run/debug toolwindow
   public void createAdditionalTabComponents(AdditionalTabComponentManager manager, ProcessHandler startedProcess) {
   }
 
@@ -280,20 +281,19 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return false;
   }
 
-  @Nullable
-  @Override
-  public SettingsEditor<JDOMExternalizable> getRunnerSettingsEditor(ProgramRunner runner) {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public JDOMExternalizable createRunnerSettings(ConfigurationInfoProvider provider) {
-    return null;
-  }
-
   @Override
   public String toString() {
     return getType().getDisplayName() + ": " + getName();
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider) {
+    return null;
+  }
+
+  @Override
+  public SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner) {
+    return null;
   }
 }

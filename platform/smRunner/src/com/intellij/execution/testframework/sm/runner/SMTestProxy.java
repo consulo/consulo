@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.pom.Navigatable;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testIntegration.TestLocationProvider;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.NotNull;
@@ -161,7 +162,7 @@ public class SMTestProxy extends AbstractTestProxy {
   public boolean isPassed() {
     return myState.getMagnitude() == TestStateInfo.Magnitude.SKIPPED_INDEX ||
            myState.getMagnitude() == TestStateInfo.Magnitude.COMPLETE_INDEX ||
-           myState.getMagnitude() == TestStateInfo.Magnitude.PASSED_INDEX; 
+           myState.getMagnitude() == TestStateInfo.Magnitude.PASSED_INDEX;
   }
 
   public void addChild(final SMTestProxy child) {
@@ -207,7 +208,7 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
   @Nullable
-  public Location getLocation(final Project project) {
+  public Location getLocation(final Project project, GlobalSearchScope searchScope) {
     //determines location of test proxy
 
     //TODO multiresolve support
@@ -585,8 +586,8 @@ public class SMTestProxy extends AbstractTestProxy {
           // if suite contains failed tests - all suite should be
           // consider as failed
           state = containsFailedTests()
-                   ? SuiteFinishedState.FAILED_SUITE
-                   : SuiteFinishedState.WITH_IGNORED_TESTS_SUITE;
+                  ? SuiteFinishedState.FAILED_SUITE
+                  : SuiteFinishedState.WITH_IGNORED_TESTS_SUITE;
         }
       } else {
         state = SuiteFinishedState.PASSED_SUITE;
