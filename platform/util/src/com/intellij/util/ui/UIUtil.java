@@ -49,6 +49,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
@@ -219,13 +221,31 @@ public class UIUtil {
       if (ourRetina.isNull()) {
         ourRetina.set(false); // in case HiDPIScaledImage.drawIntoImage is not called for some reason
 
-        String vendor = SystemProperties.getJavaVmVendor();
-        if (SystemInfo.isJavaVersionAtLeast("1.6.0_33") && vendor != null && StringUtil.containsIgnoreCase(vendor, "Apple")) {
+        if (SystemInfo.isJavaVersionAtLeast("1.6.0_33") && SystemInfo.isAppleJvm) {
           if (!"false".equals(System.getProperty("ide.mac.retina"))) {
             ourRetina.set(IsRetina.isRetina());
+            return ourRetina.get();
+          }
+        } else if (SystemInfo.isJavaVersionAtLeast("1.7.0_40") && SystemInfo.isOracleJvm) {
+          GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+          final GraphicsDevice device = env.getDefaultScreenDevice();
+          try {
+            Field field = device.getClass().getDeclaredField("scale");
+            if (field != null) {
+              field.setAccessible(true);
+              Object scale = field.get(device);
+              if (scale instanceof Integer && ((Integer)scale).intValue() == 2) {
+                ourRetina.set(true);
+                return true;
+              }
+            }
+          }
+          catch (Exception ignore) {
           }
         }
+        ourRetina.set(false);
       }
+
       return ourRetina.get();
     }
   }
@@ -933,8 +953,15 @@ public class UIUtil {
     return UIManager.getColor("OptionPane.background");
   }
 
+  /**
+   * @deprecated Quaqua is gone (to remove in IDEA 13)
+   */
+  @SuppressWarnings("UnusedDeclaration")
+  public static boolean isUnderQuaquaLookAndFeel() {
+    return false;
+  }
+
   @SuppressWarnings({"HardCodedStringLiteral"})
-  @Deprecated
   public static boolean isUnderAlloyLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Alloy");
   }
@@ -1474,6 +1501,39 @@ public class UIUtil {
     //noinspection UndesirableClassUsage
     return new BufferedImage(width, height, type);
   }
+
+  public static void drawImage(Graphics g, Image image, int x, int y, ImageObserver observer) {
+    if (image instanceof JBHiDPIScaledImage) {
+      final Graphics2D newG = (Graphics2D)g.create(x, y, image.getWidth(observer), image.getHeight(observer));
+      newG.scale(0.5, 0.5);
+      Image img = ((JBHiDPIScaledImage)image).getDelegate();
+      if (img == null) {
+        img = image;
+      }
+      newG.drawImage(img, 0, 0, observer);
+      newG.scale(1, 1);
+      newG.dispose();
+    } else {
+      g.drawImage(image, x, y, observer);
+    }
+  }
+
+  public static void drawImage(Graphics g, BufferedImage image, BufferedImageOp op, int x, int y) {
+    if (image instanceof JBHiDPIScaledImage) {
+      final Graphics2D newG = (Graphics2D)g.create(x, y, image.getWidth(null), image.getHeight(null));
+      newG.scale(0.5, 0.5);
+      Image img = ((JBHiDPIScaledImage)image).getDelegate();
+      if (img == null) {
+        img = image;
+      }
+      newG.drawImage((BufferedImage)img, op, 0, 0);
+      newG.scale(1, 1);
+      newG.dispose();
+    } else {
+      ((Graphics2D)g).drawImage(image, op, x, y);
+    }
+  }
+
 
   public static void paintWithXorOnRetina(@NotNull Dimension size, @NotNull Graphics g, Consumer<Graphics2D> paintRoutine) {
     paintWithXorOnRetina(size, g, true, paintRoutine);
@@ -2587,11 +2647,10 @@ public class UIUtil {
     }
   }
 
-  private static final Color DECORATED_ROW_BG_COLOR = new Color(242, 245, 249);
-  private static final Color DECORATED_ROW_BG_COLOR_DARK = Gray._75;
+  private static final Color DECORATED_ROW_BG_COLOR = new JBColor(new Color(242, 245, 249), new Color(79, 83, 84));
 
   public static Color getDecoratedRowColor() {
-    return isUnderDarcula() ? DECORATED_ROW_BG_COLOR_DARK : DECORATED_ROW_BG_COLOR;
+    return DECORATED_ROW_BG_COLOR;
   }
 
   @NotNull
@@ -2618,4 +2677,12 @@ public class UIUtil {
     return null;
   }
 
+  @NotNull
+  public static Window getActiveWindow() {
+    Window[] windows = Window.getWindows();
+    for (Window each : windows) {
+      if (each.isVisible() && each.isActive()) return each;
+    }
+    return JOptionPane.getRootFrame();
+  }
 }

@@ -25,9 +25,14 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandAdapter;
+import com.intellij.openapi.command.CommandEvent;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
@@ -79,6 +84,7 @@ public abstract class CompletionPhase implements Disposable {
     private final Editor myEditor;
     private final Expirable focusStamp;
     private final Project myProject;
+    private boolean ignoreDocumentChanges;
 
     public CommittingDocuments(@Nullable CompletionProgressIndicator prevIndicator, Editor editor) {
       super(prevIndicator);
@@ -91,6 +97,29 @@ public abstract class CompletionPhase implements Disposable {
           actionsHappened = true;
         }
       }, this);
+      myEditor.getDocument().addDocumentListener(new DocumentAdapter() {
+        @Override
+        public void documentChanged(DocumentEvent e) {
+          if (!ignoreDocumentChanges) {
+            actionsHappened = true;
+          }
+        }
+      }, this);
+    }
+
+    public void ignoreCurrentDocumentChange() {
+      ignoreDocumentChanges = true;
+      CommandProcessor.getInstance().addCommandListener(new CommandAdapter() {
+        @Override
+        public void commandFinished(CommandEvent event) {
+          CommandProcessor.getInstance().removeCommandListener(this);
+          ignoreDocumentChanges = false;
+        }
+      });
+    }
+
+    public boolean isRestartingCompletion() {
+      return indicator != null;
     }
 
     public boolean checkExpired() {
@@ -106,16 +135,6 @@ public abstract class CompletionPhase implements Disposable {
       }
 
       return false;
-    }
-
-    public boolean restartCompletion() {
-      if (indicator != null) {
-        replaced = true;
-        indicator.scheduleRestart();
-        assert this != CompletionServiceImpl.getCompletionPhase();
-        CompletionServiceImpl.assertPhase(CommittingDocuments.class);
-      }
-      return replaced;
     }
 
     @Override
@@ -160,6 +179,19 @@ public abstract class CompletionPhase implements Disposable {
           }
         }
       }, this);
+      if (indicator.isAutopopupCompletion()) {
+        // lookup is not visible, we have to check ourselves if editor retains focus
+        ((EditorEx)indicator.getEditor()).addFocusListener(new FocusChangeListener() {
+          @Override
+          public void focusGained(Editor editor) {
+          }
+
+          @Override
+          public void focusLost(Editor editor) {
+            indicator.closeAndFinish(true);
+          }
+        }, this);
+      }
     }
 
     @Override
@@ -286,14 +318,12 @@ public abstract class CompletionPhase implements Disposable {
     private final Project project;
     private final EditorMouseAdapter mouseListener;
     private final CaretListener caretListener;
-    private final DocumentAdapter documentListener;
-    private final PropertyChangeListener lookupListener;
     private final SelectionListener selectionListener;
 
     public EmptyAutoPopup(CompletionProgressIndicator indicator) {
       super(indicator);
-      this.editor = indicator.getEditor();
-      this.project = indicator.getProject();
+      editor = indicator.getEditor();
+      project = indicator.getProject();
       MessageBusConnection connection = project.getMessageBus().connect(this);
       connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
         @Override
@@ -323,26 +353,24 @@ public abstract class CompletionPhase implements Disposable {
           stopAutoPopup();
         }
       };
-      documentListener = new DocumentAdapter() {
+
+      editor.addEditorMouseListener(mouseListener);
+      editor.getCaretModel().addCaretListener(caretListener);
+      editor.getDocument().addDocumentListener(new DocumentAdapter() {
         @Override
         public void documentChanged(DocumentEvent e) {
           if (!TypedAction.isTypedActionInProgress()) {
             stopAutoPopup();
           }
         }
-      };
-      lookupListener = new PropertyChangeListener() {
+      }, this);
+      editor.getSelectionModel().addSelectionListener(selectionListener);
+      LookupManager.getInstance(project).addPropertyChangeListener(new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
           stopAutoPopup();
         }
-      };
-
-      editor.addEditorMouseListener(mouseListener);
-      editor.getCaretModel().addCaretListener(caretListener);
-      editor.getDocument().addDocumentListener(documentListener);
-      editor.getSelectionModel().addSelectionListener(selectionListener);
-      LookupManager.getInstance(project).addPropertyChangeListener(lookupListener);
+      }, this);
     }
 
     @Override
@@ -350,8 +378,6 @@ public abstract class CompletionPhase implements Disposable {
       editor.removeEditorMouseListener(mouseListener);
       editor.getCaretModel().removeCaretListener(caretListener);
       editor.getSelectionModel().removeSelectionListener(selectionListener);
-      editor.getDocument().removeDocumentListener(documentListener);
-      LookupManager.getInstance(project).removePropertyChangeListener(lookupListener);
     }
 
     private static void stopAutoPopup() {
