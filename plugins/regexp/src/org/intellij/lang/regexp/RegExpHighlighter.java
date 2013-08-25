@@ -15,7 +15,6 @@
  */
 package org.intellij.lang.regexp;
 
-import com.intellij.lang.Language;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
@@ -26,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -112,7 +112,7 @@ public class RegExpHighlighter extends SyntaxHighlighterBase {
   @Override
   @NotNull
   public Lexer getHighlightingLexer() {
-    return myParserDefinition.createLexer(myProject, Language.UNKNOWN_VERSION);
+    return myParserDefinition.createLexer(myProject, LanguageVersionUtil.findDefaultVersion(RegExpLanguage.INSTANCE));
   }
 
   @Override

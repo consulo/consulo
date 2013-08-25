@@ -28,6 +28,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlElementType;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.SmartList;
 import org.intellij.lang.xpath.XPathTokenTypes;
 import org.intellij.lang.xpath.xslt.XsltSupport;
@@ -90,8 +91,9 @@ public class XPathLanguageInjector implements MultiHostInjector {
         Lexer lexer = null;
         while ((i = XsltSupport.getAVTOffset(value, j)) != -1) {
           if (lexer == null) {
-            lexer = LanguageParserDefinitions.INSTANCE.forLanguage(languageLevel.getXPathVersion().getLanguage())
-              .createLexer(null, Language.UNKNOWN_VERSION);
+            Language language = languageLevel.getXPathVersion().getLanguage();
+            lexer = LanguageParserDefinitions.INSTANCE.forLanguage(language)
+              .createLexer(null,  LanguageVersionUtil.findDefaultVersion(language));
           }
 
           // "A right curly brace inside a Literal in an expression is not recognized as terminating the expression."

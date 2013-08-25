@@ -31,6 +31,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.xml.XmlElementType;
 import com.intellij.psi.xml.XmlEntityDecl;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.xml.XmlBundle;
 
 /**
@@ -66,7 +67,7 @@ public class DtdParsing extends XmlParsing implements XmlElementType {
           public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
             super.start(buffer, startOffset, endOffset, myInitialState);
           }
-        }, Language.UNKNOWN_VERSION, chars
+        }, LanguageVersionUtil.findDefaultVersion(DTDLanguage.INSTANCE), chars
       )
     );
     if (contextFile != null) myBuilder.putUserDataUnprotected(FileContextUtil.CONTAINING_FILE_KEY, contextFile);

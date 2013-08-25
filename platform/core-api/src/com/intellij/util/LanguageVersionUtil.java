@@ -40,4 +40,8 @@ public class LanguageVersionUtil {
       return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, project, virtualFile);
     }
   }
+
+  public static LanguageVersion findDefaultVersion(@NotNull Language language) {
+    return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null, null);
+  }
 }

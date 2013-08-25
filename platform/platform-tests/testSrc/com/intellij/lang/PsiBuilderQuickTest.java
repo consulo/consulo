@@ -18,6 +18,7 @@ package com.intellij.lang;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerBase;
+import com.intellij.mock.MockPsiFile;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -49,7 +50,9 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
   private static final IElementType COLLAPSED = new IElementType("COLLAPSED", Language.ANY);
   private static final IElementType LEFT_BOUND = new IElementType("LEFT_BOUND", Language.ANY) {
     @Override
-    public boolean isLeftBound() { return true; }
+    public boolean isLeftBound() {
+      return true;
+    }
   };
   private static final IElementType COMMENT = new IElementType("COMMENT", Language.ANY);
 
@@ -57,326 +60,298 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
   private static final TokenSet COMMENT_SET = TokenSet.create(COMMENT);
 
   public void testPlain() {
-    doTest("a<<b",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               while (builder.getTokenType() != null) {
-                 builder.advanceLexer();
-               }
-             }
-           },
-           "Element(ROOT)\n" +
-           "  PsiElement(LETTER)('a')\n" +
-           "  PsiElement(OTHER)('<')\n" +
-           "  PsiElement(OTHER)('<')\n" +
-           "  PsiElement(LETTER)('b')\n"
-    );
+    doTest("a<<b", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        while (builder.getTokenType() != null) {
+          builder.advanceLexer();
+        }
+      }
+    }, "Element(ROOT)\n" +
+       "  PsiElement(LETTER)('a')\n" +
+       "  PsiElement(OTHER)('<')\n" +
+       "  PsiElement(OTHER)('<')\n" +
+       "  PsiElement(LETTER)('b')\n");
   }
 
   public void testComposites() {
-    doTest("1(a(b)c)2(d)3",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               PsiBuilderUtil.advance(builder, 1);
-               final PsiBuilder.Marker marker1 = builder.mark();
-               PsiBuilderUtil.advance(builder, 2);
-               final PsiBuilder.Marker marker2 = builder.mark();
-               PsiBuilderUtil.advance(builder, 3);
-               marker2.done(OTHER);
-               PsiBuilderUtil.advance(builder, 2);
-               marker1.done(OTHER);
-               PsiBuilderUtil.advance(builder, 1);
-               final PsiBuilder.Marker marker3 = builder.mark();
-               PsiBuilderUtil.advance(builder, 1);
-               builder.mark().done(OTHER);
-               PsiBuilderUtil.advance(builder, 2);
-               marker3.done(OTHER);
-               PsiBuilderUtil.advance(builder, 1);
-             }
-           },
-           "Element(ROOT)\n" +
-           "  PsiElement(DIGIT)('1')\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(OTHER)('(')\n" +
-           "    PsiElement(LETTER)('a')\n" +
-           "    Element(OTHER)\n" +
-           "      PsiElement(OTHER)('(')\n" +
-           "      PsiElement(LETTER)('b')\n" +
-           "      PsiElement(OTHER)(')')\n" +
-           "    PsiElement(LETTER)('c')\n" +
-           "    PsiElement(OTHER)(')')\n" +
-           "  PsiElement(DIGIT)('2')\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(OTHER)('(')\n" +
-           "    Element(OTHER)\n" +
-           "      <empty list>\n" +
-           "    PsiElement(LETTER)('d')\n" +
-           "    PsiElement(OTHER)(')')\n" +
-           "  PsiElement(DIGIT)('3')\n"
-    );
+    doTest("1(a(b)c)2(d)3", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        PsiBuilderUtil.advance(builder, 1);
+        final PsiBuilder.Marker marker1 = builder.mark();
+        PsiBuilderUtil.advance(builder, 2);
+        final PsiBuilder.Marker marker2 = builder.mark();
+        PsiBuilderUtil.advance(builder, 3);
+        marker2.done(OTHER);
+        PsiBuilderUtil.advance(builder, 2);
+        marker1.done(OTHER);
+        PsiBuilderUtil.advance(builder, 1);
+        final PsiBuilder.Marker marker3 = builder.mark();
+        PsiBuilderUtil.advance(builder, 1);
+        builder.mark().done(OTHER);
+        PsiBuilderUtil.advance(builder, 2);
+        marker3.done(OTHER);
+        PsiBuilderUtil.advance(builder, 1);
+      }
+    }, "Element(ROOT)\n" +
+       "  PsiElement(DIGIT)('1')\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(OTHER)('(')\n" +
+       "    PsiElement(LETTER)('a')\n" +
+       "    Element(OTHER)\n" +
+       "      PsiElement(OTHER)('(')\n" +
+       "      PsiElement(LETTER)('b')\n" +
+       "      PsiElement(OTHER)(')')\n" +
+       "    PsiElement(LETTER)('c')\n" +
+       "    PsiElement(OTHER)(')')\n" +
+       "  PsiElement(DIGIT)('2')\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(OTHER)('(')\n" +
+       "    Element(OTHER)\n" +
+       "      <empty list>\n" +
+       "    PsiElement(LETTER)('d')\n" +
+       "    PsiElement(OTHER)(')')\n" +
+       "  PsiElement(DIGIT)('3')\n");
   }
 
   public void testCollapse() {
-    doTest("a<<>>b",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               PsiBuilderUtil.advance(builder, 1);
-               final PsiBuilder.Marker marker1 = builder.mark();
-               PsiBuilderUtil.advance(builder, 2);
-               marker1.collapse(COLLAPSED);
-               final PsiBuilder.Marker marker2 = builder.mark();
-               PsiBuilderUtil.advance(builder, 2);
-               marker2.collapse(COLLAPSED);
-               PsiBuilderUtil.advance(builder, 1);
-             }
-           },
-           "Element(ROOT)\n" +
-           "  PsiElement(LETTER)('a')\n" +
-           "  PsiElement(COLLAPSED)('<<')\n" +
-           "  PsiElement(COLLAPSED)('>>')\n" +
-           "  PsiElement(LETTER)('b')\n"
-    );
+    doTest("a<<>>b", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        PsiBuilderUtil.advance(builder, 1);
+        final PsiBuilder.Marker marker1 = builder.mark();
+        PsiBuilderUtil.advance(builder, 2);
+        marker1.collapse(COLLAPSED);
+        final PsiBuilder.Marker marker2 = builder.mark();
+        PsiBuilderUtil.advance(builder, 2);
+        marker2.collapse(COLLAPSED);
+        PsiBuilderUtil.advance(builder, 1);
+      }
+    }, "Element(ROOT)\n" +
+       "  PsiElement(LETTER)('a')\n" +
+       "  PsiElement(COLLAPSED)('<<')\n" +
+       "  PsiElement(COLLAPSED)('>>')\n" +
+       "  PsiElement(LETTER)('b')\n");
   }
 
   public void testDoneAndError() {
-    doTest("a2b",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               IElementType tokenType;
-               while ((tokenType = builder.getTokenType()) != null) {
-                 final PsiBuilder.Marker marker = builder.mark();
-                 builder.advanceLexer();
-                 if (tokenType == DIGIT) marker.error("no digits allowed"); else marker.done(tokenType);
-               }
-             }
-           },
-           "Element(ROOT)\n" +
-           "  Element(LETTER)\n" +
-           "    PsiElement(LETTER)('a')\n" +
-           "  PsiErrorElement:no digits allowed\n" +
-           "    PsiElement(DIGIT)('2')\n" +
-           "  Element(LETTER)\n" +
-           "    PsiElement(LETTER)('b')\n");
+    doTest("a2b", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        IElementType tokenType;
+        while ((tokenType = builder.getTokenType()) != null) {
+          final PsiBuilder.Marker marker = builder.mark();
+          builder.advanceLexer();
+          if (tokenType == DIGIT) {
+            marker.error("no digits allowed");
+          }
+          else {
+            marker.done(tokenType);
+          }
+        }
+      }
+    }, "Element(ROOT)\n" +
+       "  Element(LETTER)\n" +
+       "    PsiElement(LETTER)('a')\n" +
+       "  PsiErrorElement:no digits allowed\n" +
+       "    PsiElement(DIGIT)('2')\n" +
+       "  Element(LETTER)\n" +
+       "    PsiElement(LETTER)('b')\n");
   }
 
   public void testPrecedeAndDoneBefore() {
-    doTest("ab",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               final PsiBuilder.Marker marker1 = builder.mark();
-               builder.advanceLexer();
-               final PsiBuilder.Marker marker2 = builder.mark();
-               builder.advanceLexer();
-               marker2.done(OTHER);
-               marker2.precede().doneBefore(COLLAPSED, marker2);
-               marker1.doneBefore(COLLAPSED, marker2, "with error");
-             }
-           },
-           "Element(ROOT)\n" +
-           "  Element(COLLAPSED)\n" +
-           "    PsiElement(LETTER)('a')\n" +
-           "    Element(COLLAPSED)\n" +
-           "      <empty list>\n" +
-           "    PsiErrorElement:with error\n" +
-           "      <empty list>\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(LETTER)('b')\n");
+    doTest("ab", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        final PsiBuilder.Marker marker1 = builder.mark();
+        builder.advanceLexer();
+        final PsiBuilder.Marker marker2 = builder.mark();
+        builder.advanceLexer();
+        marker2.done(OTHER);
+        marker2.precede().doneBefore(COLLAPSED, marker2);
+        marker1.doneBefore(COLLAPSED, marker2, "with error");
+      }
+    }, "Element(ROOT)\n" +
+       "  Element(COLLAPSED)\n" +
+       "    PsiElement(LETTER)('a')\n" +
+       "    Element(COLLAPSED)\n" +
+       "      <empty list>\n" +
+       "    PsiErrorElement:with error\n" +
+       "      <empty list>\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(LETTER)('b')\n");
   }
 
   public void testErrorBefore() {
-    doTest("a1",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               final PsiBuilder.Marker letter = builder.mark();
-               builder.advanceLexer();
-               letter.done(LETTER);
-               final PsiBuilder.Marker digit = builder.mark();
-               builder.advanceLexer();
-               digit.done(DIGIT);
-               digit.precede().errorBefore("something lost", digit);
-             }
-           },
-           "Element(ROOT)\n" +
-           "  Element(LETTER)\n" +
-           "    PsiElement(LETTER)('a')\n" +
-           "  PsiErrorElement:something lost\n" +
-           "    <empty list>\n" +
-           "  Element(DIGIT)\n" +
-           "    PsiElement(DIGIT)('1')\n");
+    doTest("a1", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        final PsiBuilder.Marker letter = builder.mark();
+        builder.advanceLexer();
+        letter.done(LETTER);
+        final PsiBuilder.Marker digit = builder.mark();
+        builder.advanceLexer();
+        digit.done(DIGIT);
+        digit.precede().errorBefore("something lost", digit);
+      }
+    }, "Element(ROOT)\n" +
+       "  Element(LETTER)\n" +
+       "    PsiElement(LETTER)('a')\n" +
+       "  PsiErrorElement:something lost\n" +
+       "    <empty list>\n" +
+       "  Element(DIGIT)\n" +
+       "    PsiElement(DIGIT)('1')\n");
   }
 
   public void testValidityChecksOnDone() {
-    doFailTest("a",
-               new Parser() {
-                 @Override
-                 public void parse(PsiBuilder builder) {
-                   final PsiBuilder.Marker first = builder.mark();
-                   builder.advanceLexer();
-                   builder.mark();
-                   first.done(LETTER);
-                 }
-               },
-               "Another not done marker added after this one. Must be done before this.");
+    doFailTest("a", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        final PsiBuilder.Marker first = builder.mark();
+        builder.advanceLexer();
+        builder.mark();
+        first.done(LETTER);
+      }
+    }, "Another not done marker added after this one. Must be done before this.");
   }
 
   public void testValidityChecksOnDoneBefore1() {
-    doFailTest("a",
-               new Parser() {
-                 @Override
-                 public void parse(PsiBuilder builder) {
-                   final PsiBuilder.Marker first = builder.mark();
-                   builder.advanceLexer();
-                   final PsiBuilder.Marker second = builder.mark();
-                   second.precede();
-                   first.doneBefore(LETTER, second);
-                 }
-               },
-               "Another not done marker added after this one. Must be done before this.");
+    doFailTest("a", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        final PsiBuilder.Marker first = builder.mark();
+        builder.advanceLexer();
+        final PsiBuilder.Marker second = builder.mark();
+        second.precede();
+        first.doneBefore(LETTER, second);
+      }
+    }, "Another not done marker added after this one. Must be done before this.");
   }
 
   public void testValidityChecksOnDoneBefore2() {
-    doFailTest("a",
-               new Parser() {
-                 @Override
-                 public void parse(PsiBuilder builder) {
-                   final PsiBuilder.Marker first = builder.mark();
-                   builder.advanceLexer();
-                   final PsiBuilder.Marker second = builder.mark();
-                   second.doneBefore(LETTER, first);
-                 }
-               },
-               "'Before' marker precedes this one.");
+    doFailTest("a", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        final PsiBuilder.Marker first = builder.mark();
+        builder.advanceLexer();
+        final PsiBuilder.Marker second = builder.mark();
+        second.doneBefore(LETTER, first);
+      }
+    }, "'Before' marker precedes this one.");
   }
 
   public void testValidityChecksOnTreeBuild1() {
-    doFailTest("aa",
-               new Parser() {
-                 @Override
-                 public void parse(PsiBuilder builder) {
-                   while(!builder.eof()) builder.advanceLexer();
-                 }
-               },
-               "Parser produced no markers. Text:\naa");
+    doFailTest("aa", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        while (!builder.eof()) builder.advanceLexer();
+      }
+    }, "Parser produced no markers. Text:\naa");
   }
 
   public void testValidityChecksOnTreeBuild2() {
-    doFailTest("aa",
-               new Parser() {
-                 @Override
-                 public void parse(PsiBuilder builder) {
-                   final PsiBuilder.Marker marker = builder.mark();
-                   builder.advanceLexer();
-                   marker.done(LETTER);
-                 }
-               },
-               "Tokens [LETTER] were not inserted into the tree. Text:\naa");
+    doFailTest("aa", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        builder.advanceLexer();
+        marker.done(LETTER);
+      }
+    }, "Tokens [LETTER] were not inserted into the tree. Text:\naa");
   }
 
   public void testValidityChecksOnTreeBuild3() {
-    doFailTest("a ",
-               new Parser() {
-                 @Override
-                 public void parse(PsiBuilder builder) {
-                   final PsiBuilder.Marker marker = builder.mark();
-                   builder.advanceLexer();
-                   marker.done(LETTER);
-                   while(!builder.eof()) builder.advanceLexer();
-                 }
-               },
-               "Tokens [WHITE_SPACE] are outside of root element \"LETTER\". Text:\na ");
+    doFailTest("a ", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        builder.advanceLexer();
+        marker.done(LETTER);
+        while (!builder.eof()) builder.advanceLexer();
+      }
+    }, "Tokens [WHITE_SPACE] are outside of root element \"LETTER\". Text:\na ");
   }
 
   public void testWhitespaceTrimming() {
-    doTest(" a b ",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               PsiBuilder.Marker marker = builder.mark();
-               builder.advanceLexer();
-               marker.done(OTHER);
-               marker = builder.mark();
-               builder.advanceLexer();
-               marker.done(OTHER);
-               builder.advanceLexer();
-             }
-           },
-           "Element(ROOT)\n" +
-           "  PsiWhiteSpace(' ')\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(LETTER)('a')\n" +
-           "  PsiWhiteSpace(' ')\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(LETTER)('b')\n" +
-           "  PsiWhiteSpace(' ')\n");
+    doTest(" a b ", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        builder.advanceLexer();
+        marker.done(OTHER);
+        marker = builder.mark();
+        builder.advanceLexer();
+        marker.done(OTHER);
+        builder.advanceLexer();
+      }
+    }, "Element(ROOT)\n" +
+       "  PsiWhiteSpace(' ')\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(LETTER)('a')\n" +
+       "  PsiWhiteSpace(' ')\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(LETTER)('b')\n" +
+       "  PsiWhiteSpace(' ')\n");
   }
 
   public void testWhitespaceBalancingByErrors() {
-    doTest("a b c",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               PsiBuilder.Marker marker = builder.mark();
-               builder.advanceLexer();
-               builder.error("error 1");
-               marker.done(OTHER);
-               marker = builder.mark();
-               builder.advanceLexer();
-               builder.mark().error("error 2");
-               marker.done(OTHER);
-               marker = builder.mark();
-               builder.advanceLexer();
-               marker.error("error 3");
-             }
-           },
-           "Element(ROOT)\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(LETTER)('a')\n" +
-           "    PsiErrorElement:error 1\n" +
-           "      <empty list>\n" +
-           "  PsiWhiteSpace(' ')\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(LETTER)('b')\n" +
-           "    PsiErrorElement:error 2\n" +
-           "      <empty list>\n" +
-           "  PsiWhiteSpace(' ')\n" +
-           "  PsiErrorElement:error 3\n" +
-           "    PsiElement(LETTER)('c')\n");
+    doTest("a b c", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        builder.advanceLexer();
+        builder.error("error 1");
+        marker.done(OTHER);
+        marker = builder.mark();
+        builder.advanceLexer();
+        builder.mark().error("error 2");
+        marker.done(OTHER);
+        marker = builder.mark();
+        builder.advanceLexer();
+        marker.error("error 3");
+      }
+    }, "Element(ROOT)\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(LETTER)('a')\n" +
+       "    PsiErrorElement:error 1\n" +
+       "      <empty list>\n" +
+       "  PsiWhiteSpace(' ')\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(LETTER)('b')\n" +
+       "    PsiErrorElement:error 2\n" +
+       "      <empty list>\n" +
+       "  PsiWhiteSpace(' ')\n" +
+       "  PsiErrorElement:error 3\n" +
+       "    PsiElement(LETTER)('c')\n");
   }
 
   public void testWhitespaceBalancingByEmptyComposites() {
-    doTest("a b c",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               PsiBuilder.Marker marker = builder.mark();
-               builder.advanceLexer();
-               builder.mark().done(OTHER);
-               marker.done(OTHER);
-               marker = builder.mark();
-               builder.advanceLexer();
-               builder.mark().done(LEFT_BOUND);
-               marker.done(OTHER);
-               builder.advanceLexer();
-             }
-           },
-           "Element(ROOT)\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(LETTER)('a')\n" +
-           "    PsiWhiteSpace(' ')\n" +
-           "    Element(OTHER)\n" +
-           "      <empty list>\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(LETTER)('b')\n" +
-           "    Element(LEFT_BOUND)\n" +
-           "      <empty list>\n" +
-           "  PsiWhiteSpace(' ')\n" +
-           "  PsiElement(LETTER)('c')\n");
+    doTest("a b c", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        builder.advanceLexer();
+        builder.mark().done(OTHER);
+        marker.done(OTHER);
+        marker = builder.mark();
+        builder.advanceLexer();
+        builder.mark().done(LEFT_BOUND);
+        marker.done(OTHER);
+        builder.advanceLexer();
+      }
+    }, "Element(ROOT)\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(LETTER)('a')\n" +
+       "    PsiWhiteSpace(' ')\n" +
+       "    Element(OTHER)\n" +
+       "      <empty list>\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(LETTER)('b')\n" +
+       "    Element(LEFT_BOUND)\n" +
+       "      <empty list>\n" +
+       "  PsiWhiteSpace(' ')\n" +
+       "  PsiElement(LETTER)('c')\n");
   }
 
   public void testCustomEdgeProcessors() {
@@ -392,34 +367,32 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
       @Override
       public int getEdgePosition(List<IElementType> tokens, boolean atStreamEdge, TokenTextGetter getter) {
         int pos = 0;
-        while (tokens.get(pos) != COMMENT && pos < tokens.size()-1) pos++;
+        while (tokens.get(pos) != COMMENT && pos < tokens.size() - 1) pos++;
         return pos + 1;
       }
     };
 
-    doTest("{ # i # }",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               while (builder.getTokenType() != LETTER) builder.advanceLexer();
-               final PsiBuilder.Marker marker = builder.mark();
-               builder.advanceLexer();
-               marker.done(OTHER);
-               marker.setCustomEdgeTokenBinders(leftEdgeProcessor, rightEdgeProcessor);
-               while (builder.getTokenType() != null) builder.advanceLexer();
-             }
-           },
-           "Element(ROOT)\n" +
-           "  PsiElement(OTHER)('{')\n" +
-           "  PsiWhiteSpace(' ')\n" +
-           "  Element(OTHER)\n" +
-           "    PsiElement(COMMENT)('#')\n" +
-           "    PsiWhiteSpace(' ')\n" +
-           "    PsiElement(LETTER)('i')\n" +
-           "    PsiWhiteSpace(' ')\n" +
-           "    PsiElement(COMMENT)('#')\n" +
-           "  PsiWhiteSpace(' ')\n" +
-           "  PsiElement(OTHER)('}')\n");
+    doTest("{ # i # }", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        while (builder.getTokenType() != LETTER) builder.advanceLexer();
+        final PsiBuilder.Marker marker = builder.mark();
+        builder.advanceLexer();
+        marker.done(OTHER);
+        marker.setCustomEdgeTokenBinders(leftEdgeProcessor, rightEdgeProcessor);
+        while (builder.getTokenType() != null) builder.advanceLexer();
+      }
+    }, "Element(ROOT)\n" +
+       "  PsiElement(OTHER)('{')\n" +
+       "  PsiWhiteSpace(' ')\n" +
+       "  Element(OTHER)\n" +
+       "    PsiElement(COMMENT)('#')\n" +
+       "    PsiWhiteSpace(' ')\n" +
+       "    PsiElement(LETTER)('i')\n" +
+       "    PsiWhiteSpace(' ')\n" +
+       "    PsiElement(COMMENT)('#')\n" +
+       "  PsiWhiteSpace(' ')\n" +
+       "  PsiElement(OTHER)('}')\n");
   }
 
   private abstract static class MyLazyElementType extends ILazyParseableElementType implements ILightLazyParseableElementType {
@@ -496,43 +469,41 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
       }
     };
 
-    doTest("ab{12[.?]}cd{x}",
-           new Parser() {
-             @Override
-             public void parse(PsiBuilder builder) {
-               PsiBuilderUtil.advance(builder, 2);
-               PsiBuilder.Marker chameleon = builder.mark();
-               PsiBuilderUtil.advance(builder, 8);
-               chameleon.collapse(CHAMELEON_1);
-               PsiBuilderUtil.advance(builder, 2);
-               chameleon = builder.mark();
-               PsiBuilderUtil.advance(builder, 3);
-               chameleon.collapse(CHAMELEON_1);
-             }
-           },
-           "Element(ROOT)\n" +
-           "  PsiElement(LETTER)('a')\n" +
-           "  PsiElement(LETTER)('b')\n" +
-           "  Element(CHAMELEON_1)\n" +
-           "    PsiElement(OTHER)('{')\n" +
-           "    PsiElement(DIGIT)('1')\n" +
-           "    PsiElement(DIGIT)('2')\n" +
-           "    Element(OTHER)\n" +
-           "      Element(CHAMELEON_2)\n" +
-           "        PsiElement(OTHER)('[')\n" +
-           "        PsiElement(OTHER)('.')\n" +
-           "        PsiErrorElement:test error 2\n" +
-           "          PsiElement(OTHER)('?')\n" +
-           "        PsiElement(OTHER)(']')\n" +
-           "    PsiErrorElement:test error 1\n" +
-           "      <empty list>\n" +
-           "    PsiElement(OTHER)('}')\n" +
-           "  PsiElement(LETTER)('c')\n" +
-           "  PsiElement(LETTER)('d')\n" +
-           "  Element(CHAMELEON_1)\n" +
-           "    PsiElement(OTHER)('{')\n" +
-           "    PsiElement(LETTER)('x')\n" +
-           "    PsiElement(OTHER)('}')\n");
+    doTest("ab{12[.?]}cd{x}", new Parser() {
+      @Override
+      public void parse(PsiBuilder builder) {
+        PsiBuilderUtil.advance(builder, 2);
+        PsiBuilder.Marker chameleon = builder.mark();
+        PsiBuilderUtil.advance(builder, 8);
+        chameleon.collapse(CHAMELEON_1);
+        PsiBuilderUtil.advance(builder, 2);
+        chameleon = builder.mark();
+        PsiBuilderUtil.advance(builder, 3);
+        chameleon.collapse(CHAMELEON_1);
+      }
+    }, "Element(ROOT)\n" +
+       "  PsiElement(LETTER)('a')\n" +
+       "  PsiElement(LETTER)('b')\n" +
+       "  Element(CHAMELEON_1)\n" +
+       "    PsiElement(OTHER)('{')\n" +
+       "    PsiElement(DIGIT)('1')\n" +
+       "    PsiElement(DIGIT)('2')\n" +
+       "    Element(OTHER)\n" +
+       "      Element(CHAMELEON_2)\n" +
+       "        PsiElement(OTHER)('[')\n" +
+       "        PsiElement(OTHER)('.')\n" +
+       "        PsiErrorElement:test error 2\n" +
+       "          PsiElement(OTHER)('?')\n" +
+       "        PsiElement(OTHER)(']')\n" +
+       "    PsiErrorElement:test error 1\n" +
+       "      <empty list>\n" +
+       "    PsiElement(OTHER)('}')\n" +
+       "  PsiElement(LETTER)('c')\n" +
+       "  PsiElement(LETTER)('d')\n" +
+       "  Element(CHAMELEON_1)\n" +
+       "    PsiElement(OTHER)('{')\n" +
+       "    PsiElement(LETTER)('x')\n" +
+       "    PsiElement(OTHER)('}')\n");
   }
 
   @SuppressWarnings("ConstantConditions")
@@ -590,7 +561,9 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         return null;
       }
     };
-    return new PsiBuilderImpl(getProject(), null, parserDefinition, parserDefinition.createLexer(getProject(), Language.UNKNOWN_VERSION), Language.UNKNOWN_VERSION, null, text, null, null);
+    return new PsiBuilderImpl(getProject(), null, parserDefinition,
+                              parserDefinition.createLexer(getProject(), MockPsiFile.DUMMY_LANG_VERSION), MockPsiFile.DUMMY_LANG_VERSION,
+                              null, text, null, null);
   }
 
   private interface Parser {
@@ -619,36 +592,37 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
     final PsiBuilder.Marker rootMarker2 = builder2.mark();
     parser.parse(builder2);
     rootMarker2.done(ROOT);
-    DiffTree.diff(
-      new ASTStructure(root), builder2.getLightTree(),
-      new ShallowNodeComparator<ASTNode, LighterASTNode>() {
-        @Override
-        public ThreeState deepEqual(ASTNode oldNode, LighterASTNode newNode) {
-          return ThreeState.UNSURE;
-  }
-        @Override
-        public boolean typesEqual(ASTNode oldNode, LighterASTNode newNode) {
-          return true;
-        }
-        @Override
-        public boolean hashCodesEqual(ASTNode oldNode, LighterASTNode newNode) {
-          return true;
-        }
-      },
-      new DiffTreeChangeBuilder<ASTNode, LighterASTNode>() {
-        @Override
-        public void nodeReplaced(@NotNull ASTNode oldChild, @NotNull LighterASTNode newChild) {
-          fail("replaced(" + oldChild + "," + newChild.getTokenType() + ")");
-        }
-        @Override
-        public void nodeDeleted(@NotNull ASTNode oldParent, @NotNull ASTNode oldNode) {
-          fail("deleted(" + oldParent + "," + oldNode + ")");
-        }
-        @Override
-        public void nodeInserted(@NotNull ASTNode oldParent, @NotNull LighterASTNode newNode, int pos) {
-          fail("inserted(" + oldParent + "," + newNode.getTokenType() + ")");
-        }
-      }
+    DiffTree.diff(new ASTStructure(root), builder2.getLightTree(), new ShallowNodeComparator<ASTNode, LighterASTNode>() {
+                    @Override
+                    public ThreeState deepEqual(ASTNode oldNode, LighterASTNode newNode) {
+                      return ThreeState.UNSURE;
+                    }
+
+                    @Override
+                    public boolean typesEqual(ASTNode oldNode, LighterASTNode newNode) {
+                      return true;
+                    }
+
+                    @Override
+                    public boolean hashCodesEqual(ASTNode oldNode, LighterASTNode newNode) {
+                      return true;
+                    }
+                  }, new DiffTreeChangeBuilder<ASTNode, LighterASTNode>() {
+                    @Override
+                    public void nodeReplaced(@NotNull ASTNode oldChild, @NotNull LighterASTNode newChild) {
+                      fail("replaced(" + oldChild + "," + newChild.getTokenType() + ")");
+                    }
+
+                    @Override
+                    public void nodeDeleted(@NotNull ASTNode oldParent, @NotNull ASTNode oldNode) {
+                      fail("deleted(" + oldParent + "," + oldNode + ")");
+                    }
+
+                    @Override
+                    public void nodeInserted(@NotNull ASTNode oldParent, @NotNull LighterASTNode newNode, int pos) {
+                      fail("inserted(" + oldParent + "," + newNode.getTokenType() + ")");
+                    }
+                  }
     );
   }
 
@@ -711,7 +685,8 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
             return null;
           }
         };
-        final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(parserDefinition, new MyTestLexer(), Language.UNKNOWN_VERSION, text);
+        final PsiBuilder builder =
+          PsiBuilderFactory.getInstance().createBuilder(parserDefinition, new MyTestLexer(), MockPsiFile.DUMMY_LANG_VERSION, text);
         builder.setDebugMode(true);
         parser.parse(builder);
         builder.getLightTree();
@@ -745,12 +720,24 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
     @Override
     public IElementType getTokenType() {
-      if (myIndex >= myBufferEnd) return null;
-      else if (Character.isLetter(myBuffer.charAt(myIndex))) return LETTER;
-      else if (Character.isDigit(myBuffer.charAt(myIndex))) return DIGIT;
-      else if (Character.isWhitespace(myBuffer.charAt(myIndex))) return TokenType.WHITE_SPACE;
-      else if (myBuffer.charAt(myIndex) == '#') return COMMENT;
-      else return OTHER;
+      if (myIndex >= myBufferEnd) {
+        return null;
+      }
+      else if (Character.isLetter(myBuffer.charAt(myIndex))) {
+        return LETTER;
+      }
+      else if (Character.isDigit(myBuffer.charAt(myIndex))) {
+        return DIGIT;
+      }
+      else if (Character.isWhitespace(myBuffer.charAt(myIndex))) {
+        return TokenType.WHITE_SPACE;
+      }
+      else if (myBuffer.charAt(myIndex) == '#') {
+        return COMMENT;
+      }
+      else {
+        return OTHER;
+      }
     }
 
     @Override
@@ -781,6 +768,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
 
   private static class NullStream extends OutputStream {
     @Override
-    public void write(final int b) throws IOException { }
+    public void write(final int b) throws IOException {
+    }
   }
 }

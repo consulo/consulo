@@ -29,6 +29,7 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlElementType;
 import com.intellij.psi.xml.XmlTokenType;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.xml.util.XmlUtil;
@@ -137,7 +138,9 @@ public class XmlBuilderDriver {
     final ParserDefinition xmlParserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(XMLLanguage.INSTANCE);
     assert xmlParserDefinition != null;
 
-    PsiBuilder b = PsiBuilderFactory.getInstance().createBuilder(xmlParserDefinition, xmlParserDefinition.createLexer(null, Language.UNKNOWN_VERSION), Language.UNKNOWN_VERSION, myText);
+    LanguageVersion defaultVersion = LanguageVersionUtil.findDefaultVersion(XMLLanguage.INSTANCE);
+    PsiBuilder b = PsiBuilderFactory.getInstance().createBuilder(xmlParserDefinition, xmlParserDefinition.createLexer(null, defaultVersion),
+                                                                 defaultVersion, myText);
     new XmlParsing(b).parseDocument();
     return b;
   }

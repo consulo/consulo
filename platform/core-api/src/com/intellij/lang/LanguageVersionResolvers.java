@@ -8,6 +8,6 @@ public class LanguageVersionResolvers extends LanguageExtension<LanguageVersionR
   public static final LanguageVersionResolvers INSTANCE = new LanguageVersionResolvers();
 
   private LanguageVersionResolvers() {
-    super("com.intellij.lang.versionResolver", LanguageVersionResolver.EMPTY);
+    super("com.intellij.lang.versionResolver", LanguageVersionResolver.DEFAULT);
   }
 }

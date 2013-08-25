@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.ILazyParseableElementType;
+import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.lang.groovydoc.lexer.GroovyDocElementType;
@@ -47,10 +48,13 @@ public interface GroovyDocElementTypes extends GroovyDocTokenTypes {
       final PsiElement parentElement = chameleon.getTreeParent().getPsi();
       final Project project = JavaPsiFacade.getInstance(parentElement.getProject()).getProject();
 
-      final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new GroovyDocLexer(), getLanguage(), Language.UNKNOWN_VERSION, chameleon.getText());
+      LanguageVersion defaultVersion = LanguageVersionUtil.findDefaultVersion(getLanguage());
+
+      final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new GroovyDocLexer(), getLanguage(),
+                                                                               defaultVersion, chameleon.getText());
       final PsiParser parser = new GroovyDocParser();
 
-      return parser.parse(this, builder, Language.UNKNOWN_VERSION).getFirstChildNode();
+      return parser.parse(this, builder, defaultVersion).getFirstChildNode();
     }
 
     @Override

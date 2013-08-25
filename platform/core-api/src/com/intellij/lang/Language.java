@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
@@ -59,20 +60,17 @@ public abstract class Language extends UserDataHolderBase {
     }
   };
 
-  public static LanguageVersion UNKNOWN_VERSION = new LanguageVersion() {
+  private NotNullLazyValue<LanguageVersion[]> myVersions = new NotNullLazyValue<LanguageVersion[]>() {
     @NotNull
     @Override
-    public String getName() {
-      return "LanguageVersion: UNKNOWN";
-    }
-
-    @Override
-    public Language getLanguage() {
-      return ANY;
+    protected LanguageVersion[] compute() {
+      LanguageVersion[] versions = findVersions();
+      if(versions.length == 0) {
+        throw new IllegalArgumentException("Language version is empty for language: " + Language.this);
+      }
+      return versions;
     }
   };
-
-  private static LanguageVersion[] ourLanguageVersions = new LanguageVersion[] {UNKNOWN_VERSION};
 
   protected Language(@NotNull @NonNls String id) {
     this(id, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -141,6 +139,16 @@ public abstract class Language extends UserDataHolderBase {
     return result != null ? Collections.unmodifiableList(result) : Collections.<Language>emptyList();
   }
 
+  @NotNull
+  protected LanguageVersion[] findVersions() {
+    List<LanguageVersion> languageVersion = LanguageVersionDefines.INSTANCE.allForLanguage(this);
+    if(languageVersion.isEmpty()) {
+      return new LanguageVersion[] {new BaseLanguageVersion("DEFAULT", this)};
+    }
+    Collections.reverse(languageVersion);
+    return languageVersion.toArray(new LanguageVersion[languageVersion.size()]);
+  }
+
   @Override
   public String toString() {
     //noinspection HardCodedStringLiteral
@@ -191,8 +199,8 @@ public abstract class Language extends UserDataHolderBase {
 
   @NotNull
   @Immutable
-  public LanguageVersion[] getVersions() {
-    return ourLanguageVersions;
+  public final LanguageVersion[] getVersions() {
+    return myVersions.getValue();
   }
 
   public String getDisplayName() {

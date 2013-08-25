@@ -29,6 +29,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.psi.xml.XmlElementType;
 import com.intellij.psi.xml.XmlTokenType;
+import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +86,7 @@ public class HTMLParserDefinition implements ParserDefinition {
 
   @Override
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(null, Language.UNKNOWN_VERSION);
+    final Lexer lexer = createLexer(null, LanguageVersionUtil.findDefaultVersion(HTMLLanguage.INSTANCE));
     return XMLParserDefinition.canStickTokensTogetherByLexerInXml(left, right, lexer, 0);
   }
 }

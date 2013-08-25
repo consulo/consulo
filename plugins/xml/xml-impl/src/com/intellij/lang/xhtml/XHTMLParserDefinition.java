@@ -16,7 +16,6 @@
 package com.intellij.lang.xhtml;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.xml.XMLParserDefinition;
 import com.intellij.lexer.Lexer;
@@ -26,6 +25,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.xml.XmlFileImpl;
 import com.intellij.psi.xml.XmlElementType;
+import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ public class XHTMLParserDefinition extends XMLParserDefinition {
 
   @Override
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(null, Language.UNKNOWN_VERSION);
+    final Lexer lexer = createLexer(null, LanguageVersionUtil.findDefaultVersion(XHTMLLanguage.INSTANCE));
     return canStickTokensTogetherByLexerInXml(left, right, lexer, 0);
   }
 

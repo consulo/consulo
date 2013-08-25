@@ -8,6 +8,7 @@ import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
+import com.intellij.mock.MockPsiFile;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.text.StringUtil;
@@ -45,8 +46,8 @@ public class IElementTypeTest extends LightPlatformCodeInsightFixtureTestCase {
         languageMap.put(language.getBaseLanguage(), key);
       }
       try {
-        Lexer lexer = definition.createLexer(null, Language.UNKNOWN_VERSION);
-        PsiParser parser = definition.createParser(null, Language.UNKNOWN_VERSION);
+        Lexer lexer = definition.createLexer(null, MockPsiFile.DUMMY_LANG_VERSION);
+        PsiParser parser = definition.createParser(null, MockPsiFile.DUMMY_LANG_VERSION);
       }
       catch (UnsupportedOperationException e1) {
       }

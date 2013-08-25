@@ -3443,6 +3443,10 @@
       <with attribute="implementationClass" implements="com.intellij.lang.LanguageVersionResolver"/>
     </extensionPoint>
 
+    <extensionPoint name="lang.defineVersion" beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.lang.LanguageVersion"/>
+    </extensionPoint>
+
     <extensionPoint name="lang.treePatcher" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.templateLanguages.TreePatcher"/>
     </extensionPoint>

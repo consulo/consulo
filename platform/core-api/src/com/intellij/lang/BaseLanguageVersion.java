@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,37 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.java;
+package com.intellij.lang;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
-import com.intellij.pom.java.LanguageLevel;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 13:23/25.08.13
  */
-public class JavaLanguage extends Language {
+public class BaseLanguageVersion implements LanguageVersion {
+  private final String myName;
+  private final Language myLanguage;
 
-  public static final JavaLanguage INSTANCE = new JavaLanguage();
-
-  private JavaLanguage() {
-    super("JAVA", "text/java", "application/x-java", "text/x-java");
-  }
-
-  @Override
-  public String getDisplayName() {
-    return "Java";
+  public BaseLanguageVersion(String name, Language language) {
+    myName = name;
+    myLanguage = language;
   }
 
   @NotNull
   @Override
-  public LanguageVersion[] findVersions() {
-    return LanguageLevel.values();
+  public String getName() {
+    return myName;
   }
 
   @Override
-  public boolean isCaseSensitive() {
-    return true;
+  public Language getLanguage() {
+    return myLanguage;
   }
 }

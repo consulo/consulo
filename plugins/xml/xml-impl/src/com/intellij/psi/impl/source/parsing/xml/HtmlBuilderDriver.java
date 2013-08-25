@@ -22,6 +22,7 @@ package com.intellij.psi.impl.source.parsing.xml;
 import com.intellij.lang.*;
 import com.intellij.lang.html.HTMLLanguage;
 import com.intellij.lang.html.HtmlParsing;
+import com.intellij.util.LanguageVersionUtil;
 
 public class HtmlBuilderDriver extends XmlBuilderDriver {
   public HtmlBuilderDriver(final CharSequence text) {
@@ -33,7 +34,9 @@ public class HtmlBuilderDriver extends XmlBuilderDriver {
     final ParserDefinition htmlParserDef = LanguageParserDefinitions.INSTANCE.forLanguage(HTMLLanguage.INSTANCE);
     assert htmlParserDef != null;
 
-    PsiBuilder b = PsiBuilderFactory.getInstance().createBuilder(htmlParserDef, htmlParserDef.createLexer(null, Language.UNKNOWN_VERSION), Language.UNKNOWN_VERSION, getText());
+    LanguageVersion defaultVersion = LanguageVersionUtil.findDefaultVersion(HTMLLanguage.INSTANCE);
+    PsiBuilder b = PsiBuilderFactory.getInstance()
+      .createBuilder(htmlParserDef, htmlParserDef.createLexer(null, defaultVersion), defaultVersion, getText());
     new HtmlParsing(b).parseDocument();
     return b;
   }

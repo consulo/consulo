@@ -1,5 +1,6 @@
 package com.intellij.mock;
 
+import com.intellij.lang.BaseLanguageVersion;
 import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
@@ -23,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MockPsiFile extends MockPsiElement implements PsiFile {
+  public static final LanguageVersion DUMMY_LANG_VERSION = new BaseLanguageVersion("DUMMY_LANG_VERSION", Language.ANY);
+
   private final long myModStamp = LocalTimeCounter.currentTime();
   private VirtualFile myVirtualFile = null;
   public boolean valid = true;
@@ -116,7 +119,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   @NotNull
   @Override
   public LanguageVersion getLanguageVersion() {
-    return Language.UNKNOWN_VERSION;
+    return DUMMY_LANG_VERSION;
   }
 
   @Override

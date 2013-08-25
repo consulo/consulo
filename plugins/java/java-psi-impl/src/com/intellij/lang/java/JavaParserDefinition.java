@@ -38,9 +38,6 @@ public class JavaParserDefinition implements ParserDefinition {
   @Override
   @NotNull
   public Lexer createLexer(Project project, @NotNull LanguageVersion languageVersion) {
-    if(languageVersion == Language.UNKNOWN_VERSION) {
-      throw new IllegalArgumentException("Cant find language version");
-    }
     return new JavaLexer((LanguageLevel)languageVersion);
   }
 
