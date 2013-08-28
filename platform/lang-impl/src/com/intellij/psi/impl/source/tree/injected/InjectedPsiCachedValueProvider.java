@@ -79,7 +79,7 @@ class InjectedPsiCachedValueProvider implements ParameterizedCachedValueProvider
       if (hostRegistrar == null) {
         hostRegistrar = new MultiHostRegistrarImpl(myProject, myHostPsiFile, element);
       }
-      injector.getLanguagesToInject(hostRegistrar, element);
+      injector.injectLanguages(hostRegistrar, element);
       List<Pair<Place,PsiFile>> result = hostRegistrar.getResult();
       return result == null;
     }

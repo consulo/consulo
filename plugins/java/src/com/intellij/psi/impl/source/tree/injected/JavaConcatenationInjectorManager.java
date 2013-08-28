@@ -32,7 +32,6 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -138,7 +137,7 @@ public class JavaConcatenationInjectorManager implements ModificationTracker {
     }
 
     @Override
-    public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+    public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
       if (myManager.myConcatenationInjectors.isEmpty()) return;
 
       Project project = context.getProject();
@@ -188,13 +187,6 @@ public class JavaConcatenationInjectorManager implements ModificationTracker {
         anchor.putUserData(NO_CONCAT_INJECTION_TIMESTAMP, (int)modificationCount);
       }
     }
-
-    @Override
-    @NotNull
-    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-      return LITERALS;
-    }
-    private static final List<Class<PsiLiteralExpression>> LITERALS = Arrays.asList(PsiLiteralExpression.class);
   }
 
   private final List<ConcatenationAwareInjector> myConcatenationInjectors = ContainerUtil.createEmptyCOWList();

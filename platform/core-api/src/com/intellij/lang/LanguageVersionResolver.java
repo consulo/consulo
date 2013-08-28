@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 18:05/30.05.13
  */
-public interface LanguageVersionResolver {
+public interface LanguageVersionResolver<T extends Language> {
   LanguageVersionResolver DEFAULT = new LanguageVersionResolver() {
     @NotNull
     @Override
@@ -36,7 +36,7 @@ public interface LanguageVersionResolver {
     }
   };
   @NotNull
-  LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable PsiElement element);
+  LanguageVersion<T> getLanguageVersion(@NotNull Language language, @Nullable PsiElement element);
 
-  LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile);
+  LanguageVersion<T> getLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile);
 }

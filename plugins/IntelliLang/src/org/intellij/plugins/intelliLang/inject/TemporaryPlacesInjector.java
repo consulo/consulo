@@ -19,7 +19,6 @@ package org.intellij.plugins.intelliLang.inject;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.ElementManipulator;
@@ -35,21 +34,14 @@ import java.util.List;
  * @author Gregory.Shrago
  */
 public class TemporaryPlacesInjector implements MultiHostInjector {
-
-  public static final Logger LOG = Logger.getInstance("org.intellij.plugins.intelliLang.inject.TemporaryPlacesInjector");
-  
   private final TemporaryPlacesRegistry myRegistry;
 
   public TemporaryPlacesInjector(TemporaryPlacesRegistry registry) {
     myRegistry = registry;
   }
 
-  @NotNull
-  public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Collections.singletonList(PsiLanguageInjectionHost.class);
-  }
-
-  public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
+  @Override
+  public void injectLanguages(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
     PsiLanguageInjectionHost host = (PsiLanguageInjectionHost)context;
     InjectedLanguage injectedLanguage = myRegistry.getLanguageFor(host);
     Language language = injectedLanguage != null ? injectedLanguage.getLanguage() : null;

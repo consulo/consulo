@@ -26,6 +26,7 @@ import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.injection.MultiHostInjector;
+import com.intellij.lang.injection.MultiHostInjectorExtensionPoint;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -74,20 +75,20 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     return (InjectedLanguageManagerImpl)InjectedLanguageManager.getInstance(project);
   }
 
-  public InjectedLanguageManagerImpl(Project project, DumbService dumbService) {
+  public InjectedLanguageManagerImpl(final Project project, DumbService dumbService) {
     myProject = project;
     myDumbService = dumbService;
 
-    final ExtensionPoint<MultiHostInjector> multiPoint = Extensions.getArea(project).getExtensionPoint(MultiHostInjector.MULTIHOST_INJECTOR_EP_NAME);
-    multiPoint.addExtensionPointListener(new ExtensionPointListener<MultiHostInjector>() {
+    final ExtensionPoint<MultiHostInjectorExtensionPoint> multiPoint = Extensions.getArea(project).getExtensionPoint(MultiHostInjector.EP_NAME);
+    multiPoint.addExtensionPointListener(new ExtensionPointListener<MultiHostInjectorExtensionPoint>() {
       @Override
-      public void extensionAdded(@NotNull MultiHostInjector injector, @Nullable PluginDescriptor pluginDescriptor) {
-        registerMultiHostInjector(injector);
+      public void extensionAdded(@NotNull MultiHostInjectorExtensionPoint ep, @Nullable PluginDescriptor pluginDescriptor) {
+        registerMultiHostInjector(ep.getInstance(project), ep.getKey());
       }
 
       @Override
-      public void extensionRemoved(@NotNull MultiHostInjector injector, @Nullable PluginDescriptor pluginDescriptor) {
-        unregisterMultiHostInjector(injector);
+      public void extensionRemoved(@NotNull MultiHostInjectorExtensionPoint ep, @Nullable PluginDescriptor pluginDescriptor) {
+        unregisterMultiHostInjector(ep.getInstance(project));
       }
     },this);
     final ExtensionPointListener<LanguageInjector> myListener = new ExtensionPointListener<LanguageInjector>() {
@@ -215,7 +216,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     else {
       PsiManagerRegisteredInjectorsAdapter adapter = new PsiManagerRegisteredInjectorsAdapter();
       if (myPsiManagerRegisteredInjectorsAdapter.compareAndSet(null, adapter)) {
-        registerMultiHostInjector(adapter);
+        registerMultiHostInjector(adapter, PsiLanguageInjectionHost.class);
       }
     }
   }
@@ -258,8 +259,8 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   private final ClassMapCachingNulls<MultiHostInjector> cachedInjectors = new ClassMapCachingNulls<MultiHostInjector>(injectors, new MultiHostInjector[0]);
 
   @Override
-  public void registerMultiHostInjector(@NotNull MultiHostInjector injector) {
-    for (Class<? extends PsiElement> place : injector.elementsToInjectIn()) {
+  public void registerMultiHostInjector(@NotNull MultiHostInjector injector,  @NotNull Class<? extends PsiElement>... elements) {
+    for (Class<? extends PsiElement> place : elements) {
       LOG.assertTrue(place != null, injector);
       while (true) {
         MultiHostInjector[] injectors = this.injectors.get(place);
@@ -461,7 +462,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
 
   private static class PsiManagerRegisteredInjectorsAdapter implements MultiHostInjector {
     @Override
-    public void getLanguagesToInject(@NotNull final MultiHostRegistrar injectionPlacesRegistrar, @NotNull PsiElement context) {
+    public void injectLanguages(@NotNull final MultiHostRegistrar injectionPlacesRegistrar, @NotNull PsiElement context) {
       final PsiLanguageInjectionHost host = (PsiLanguageInjectionHost)context;
       InjectedLanguagePlaces placesRegistrar = new InjectedLanguagePlaces() {
         @Override
@@ -476,12 +477,6 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
       for (LanguageInjector injector : Extensions.getExtensions(LanguageInjector.EXTENSION_POINT_NAME)) {
         injector.getLanguagesToInject(host, placesRegistrar);
       }
-    }
-
-    @Override
-    @NotNull
-    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-      return Arrays.asList(PsiLanguageInjectionHost.class);
     }
   }
 }

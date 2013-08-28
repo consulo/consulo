@@ -35,107 +35,106 @@ import org.intellij.lang.xpath.xslt.XsltSupport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class XPathLanguageInjector implements MultiHostInjector {
-    private static final Key<Pair<String, TextRange[]>> CACHED_FILES = Key.create("CACHED_FILES");
-    private static final TextRange[] EMPTY_ARRAY = new TextRange[0];
+  private static final Key<Pair<String, TextRange[]>> CACHED_FILES = Key.create("CACHED_FILES");
+  private static final TextRange[] EMPTY_ARRAY = new TextRange[0];
 
-    public XPathLanguageInjector() {
-    }
-
-    @Nullable
-    private static TextRange[] getCachedRanges(XmlAttribute attribute) {
-        Pair<String, TextRange[]> pair;
-        if ((pair = attribute.getUserData(CACHED_FILES)) != null) {
-            if (!attribute.getValue().equals(pair.getFirst())) {
-                attribute.putUserData(CACHED_FILES, null);
-                return null;
-            }
-        } else {
-            return null;
-        }
-        return pair.getSecond();
-    }
-
-    static final class AVTRange extends TextRange {
-        final boolean myComplete;
-
-        private AVTRange(int startOffset, int endOffset, boolean iscomplete) {
-            super(startOffset, endOffset);
-            myComplete = iscomplete;
-        }
-
-        public static AVTRange create(XmlAttribute attribute, int startOffset, int endOffset, boolean iscomplete) {
-            return new AVTRange(attribute.displayToPhysical(startOffset), attribute.displayToPhysical(endOffset), iscomplete);
-        }
-    }
-
-    @NotNull
-    private synchronized TextRange[] getInjectionRanges(final XmlAttribute attribute, XsltChecker.LanguageLevel languageLevel) {
-      final TextRange[] cachedFiles = getCachedRanges(attribute);
-      if (cachedFiles != null) {
-        return cachedFiles;
-      }
-
-      final String value = attribute.getDisplayValue();
-      if (value == null) return EMPTY_ARRAY;
-
-      final TextRange[] ranges;
-      if (XsltSupport.mayBeAVT(attribute)) {
-        final List<TextRange> avtRanges = new SmartList<TextRange>();
-
-        int i;
-        int j = 0;
-        Lexer lexer = null;
-        while ((i = XsltSupport.getAVTOffset(value, j)) != -1) {
-          if (lexer == null) {
-            Language language = languageLevel.getXPathVersion().getLanguage();
-            lexer = LanguageParserDefinitions.INSTANCE.forLanguage(language)
-              .createLexer(null,  LanguageVersionUtil.findDefaultVersion(language));
-          }
-
-          // "A right curly brace inside a Literal in an expression is not recognized as terminating the expression."
-          lexer.start(value, i, value.length());
-          j = -1;
-          while (lexer.getTokenType() != null) {
-            if (lexer.getTokenType() == XPathTokenTypes.RBRACE) {
-              j = lexer.getTokenStart();
-              break;
-            }
-            lexer.advance();
-          }
-
-          if (j != -1) {
-            avtRanges.add(AVTRange.create(attribute, i, j + 1, j > i + 1));
-          } else {
-            // missing '}' error will be flagged by xpath parser
-            avtRanges.add(AVTRange.create(attribute, i, value.length(), false));
-            break;
-          }
-        }
-
-        if (avtRanges.size() > 0) {
-          ranges = avtRanges.toArray(new TextRange[avtRanges.size()]);
-        } else {
-          ranges = EMPTY_ARRAY;
-        }
-      } else {
-        ranges = new TextRange[]{ attribute.getValueTextRange() };
-      }
-
-      attribute.putUserData(CACHED_FILES, Pair.create(attribute.getValue(), ranges));
-
-      return ranges;
-    }
-
-  @NotNull
-  public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Arrays.asList(XmlAttribute.class);
+  public XPathLanguageInjector() {
   }
 
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+  @Nullable
+  private static TextRange[] getCachedRanges(XmlAttribute attribute) {
+    Pair<String, TextRange[]> pair;
+    if ((pair = attribute.getUserData(CACHED_FILES)) != null) {
+      if (!attribute.getValue().equals(pair.getFirst())) {
+        attribute.putUserData(CACHED_FILES, null);
+        return null;
+      }
+    }
+    else {
+      return null;
+    }
+    return pair.getSecond();
+  }
+
+  static final class AVTRange extends TextRange {
+    final boolean myComplete;
+
+    private AVTRange(int startOffset, int endOffset, boolean iscomplete) {
+      super(startOffset, endOffset);
+      myComplete = iscomplete;
+    }
+
+    public static AVTRange create(XmlAttribute attribute, int startOffset, int endOffset, boolean iscomplete) {
+      return new AVTRange(attribute.displayToPhysical(startOffset), attribute.displayToPhysical(endOffset), iscomplete);
+    }
+  }
+
+  @NotNull
+  private synchronized TextRange[] getInjectionRanges(final XmlAttribute attribute, XsltChecker.LanguageLevel languageLevel) {
+    final TextRange[] cachedFiles = getCachedRanges(attribute);
+    if (cachedFiles != null) {
+      return cachedFiles;
+    }
+
+    final String value = attribute.getDisplayValue();
+    if (value == null) return EMPTY_ARRAY;
+
+    final TextRange[] ranges;
+    if (XsltSupport.mayBeAVT(attribute)) {
+      final List<TextRange> avtRanges = new SmartList<TextRange>();
+
+      int i;
+      int j = 0;
+      Lexer lexer = null;
+      while ((i = XsltSupport.getAVTOffset(value, j)) != -1) {
+        if (lexer == null) {
+          Language language = languageLevel.getXPathVersion().getLanguage();
+          lexer =
+            LanguageParserDefinitions.INSTANCE.forLanguage(language).createLexer(null, LanguageVersionUtil.findDefaultVersion(language));
+        }
+
+        // "A right curly brace inside a Literal in an expression is not recognized as terminating the expression."
+        lexer.start(value, i, value.length());
+        j = -1;
+        while (lexer.getTokenType() != null) {
+          if (lexer.getTokenType() == XPathTokenTypes.RBRACE) {
+            j = lexer.getTokenStart();
+            break;
+          }
+          lexer.advance();
+        }
+
+        if (j != -1) {
+          avtRanges.add(AVTRange.create(attribute, i, j + 1, j > i + 1));
+        }
+        else {
+          // missing '}' error will be flagged by xpath parser
+          avtRanges.add(AVTRange.create(attribute, i, value.length(), false));
+          break;
+        }
+      }
+
+      if (avtRanges.size() > 0) {
+        ranges = avtRanges.toArray(new TextRange[avtRanges.size()]);
+      }
+      else {
+        ranges = EMPTY_ARRAY;
+      }
+    }
+    else {
+      ranges = new TextRange[]{attribute.getValueTextRange()};
+    }
+
+    attribute.putUserData(CACHED_FILES, Pair.create(attribute.getValue(), ranges));
+
+    return ranges;
+  }
+
+  @Override
+  public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
     final XmlAttribute attribute = (XmlAttribute)context;
     if (!XsltSupport.isXPathAttribute(attribute)) return;
 
@@ -166,9 +165,8 @@ public class XPathLanguageInjector implements MultiHostInjector {
         prefix = "";
       }
       if (value.getTextRange().contains(rangeInsideHost.shiftRight(value.getTextRange().getStartOffset()))) {
-        registrar.startInjecting(languageLevel.getXPathVersion().getLanguage())
-                .addPlace(prefix, "", value, rangeInsideHost)
-                .doneInjecting();
+        registrar.startInjecting(languageLevel.getXPathVersion().getLanguage()).addPlace(prefix, "", value, rangeInsideHost)
+          .doneInjecting();
       }
     }
   }

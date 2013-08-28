@@ -27,21 +27,22 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 14:09/27.06.13
  */
+@SuppressWarnings("unchecked")
 public class LanguageVersionUtil {
-  public static LanguageVersion findLanguageVersion(@NotNull Language language,
+  public static <T extends Language> LanguageVersion<T> findLanguageVersion(@NotNull T language,
                                                     @Nullable Project project,
                                                     @Nullable VirtualFile virtualFile) {
 
-    final LanguageVersion languageVersion = LanguageVersion.KEY.get(virtualFile);
+    final LanguageVersion<? extends Language> languageVersion = LanguageVersion.KEY.get(virtualFile);
     if(languageVersion != null) {
-      return languageVersion;
+      return (LanguageVersion<T>)languageVersion;
     }
     else {
-      return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, project, virtualFile);
+      return (LanguageVersion<T>)LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, project, virtualFile);
     }
   }
 
-  public static LanguageVersion findDefaultVersion(@NotNull Language language) {
-    return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null, null);
+  public static <T extends Language> LanguageVersion<T> findDefaultVersion(@NotNull T language) {
+    return (LanguageVersion<T>)LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null, null);
   }
 }

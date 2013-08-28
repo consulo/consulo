@@ -854,7 +854,8 @@
                     serviceImplementation="com.intellij.psi.impl.source.tree.injected.JavaConcatenationInjectorManager"/>
 
     <multiHostInjector
-        implementation="com.intellij.psi.impl.source.tree.injected.JavaConcatenationInjectorManager$Concatenation2InjectorAdapter"
+        forClass="com.intellij.psi.PsiLiteralExpression"
+        implementationClass="com.intellij.psi.impl.source.tree.injected.JavaConcatenationInjectorManager$Concatenation2InjectorAdapter"
         order="last"/>
 
     <projectService serviceInterface="com.intellij.psi.SmartTypePointerManager"

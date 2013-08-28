@@ -468,8 +468,10 @@
 
     <browserSettingsProvider instance="com.intellij.ide.browsers.impl.BrowserSettingsProviderImpl"/>
 
-    <multiHostInjector implementation="com.intellij.psi.impl.source.html.HtmlConditionalCommentInjector"/>
-    <multiHostInjector implementation="com.intellij.psi.impl.source.html.HtmlScriptLanguageInjector"/>
+    <multiHostInjector forClass="com.intellij.psi.PsiComment"
+                       implementationClass="com.intellij.psi.impl.source.html.HtmlConditionalCommentInjector"/>
+    <multiHostInjector forClass="com.intellij.psi.xml.XmlText"
+                       implementationClass="com.intellij.psi.impl.source.html.HtmlScriptLanguageInjector"/>
 
     <gotoRelatedProvider implementation="com.intellij.navigation.HtmlGotoRelatedProvider"/>
 

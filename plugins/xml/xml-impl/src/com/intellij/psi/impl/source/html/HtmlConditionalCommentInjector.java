@@ -21,7 +21,6 @@ import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.tree.TokenSet;
@@ -29,9 +28,6 @@ import com.intellij.psi.xml.XmlComment;
 import com.intellij.psi.xml.XmlTokenType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author spleaner
@@ -76,8 +72,9 @@ public class HtmlConditionalCommentInjector implements MultiHostInjector {
     final ASTNode endOfEnd = comment.findChildByType(TokenSet.create(XmlTokenType.XML_CONDITIONAL_COMMENT_END));
     return endOfEnd == null ? null : new Pair<ASTNode, ASTNode>(conditionalStart, conditionalEnd);
   }
-  
-  public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement host) {
+
+  @Override
+  public void injectLanguages(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement host) {
     Pair<ASTNode, ASTNode> pair = parseConditionalCommentBoundaries(host);
     if (pair == null) {
       return;
@@ -91,10 +88,5 @@ public class HtmlConditionalCommentInjector implements MultiHostInjector {
     if (range.getStartOffset() < range.getEndOffset()) {
       registrar.startInjecting(language).addPlace(null, null, (PsiLanguageInjectionHost)host, range).doneInjecting();
     }
-  }
-
-  @NotNull
-  public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Arrays.asList(PsiComment.class);
   }
 }

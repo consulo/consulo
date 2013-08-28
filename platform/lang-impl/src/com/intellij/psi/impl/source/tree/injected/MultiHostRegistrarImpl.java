@@ -21,10 +21,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.DocumentWindowImpl;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.injected.editor.VirtualFileWindowImpl;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
+import com.intellij.lang.*;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.RangeMarker;
@@ -53,6 +50,7 @@ import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -68,6 +66,7 @@ import java.util.Map;
 public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationTracker {
   private List<Pair<Place, PsiFile>> result;
   private Language myLanguage;
+  private LanguageVersion<? extends Language> myLanguageVersion;
   private List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers;
   private List<PsiLanguageInjectionHost.Shred> shreds;
   private StringBuilder outChars;
@@ -105,6 +104,12 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   @Override
   @NotNull
   public MultiHostRegistrar startInjecting(@NotNull Language language) {
+    return startInjecting(LanguageVersionUtil.findDefaultVersion(language));
+  }
+
+  @Override
+  @NotNull
+  public MultiHostRegistrar startInjecting(@NotNull LanguageVersion<? extends Language> languageVersion) {
     escapers = new SmartList<LiteralTextEscaper<? extends PsiLanguageInjectionHost>>();
     shreds = new SmartList<PsiLanguageInjectionHost.Shred>();
     outChars = new StringBuilder();
@@ -114,10 +119,12 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
       throw new IllegalStateException("Seems you haven't called doneInjecting()");
     }
 
+    Language language = languageVersion.getLanguage();
     if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) {
       throw new UnsupportedOperationException("Cannot inject language '" + language + "' since its getParserDefinition() returns null");
     }
     myLanguage = language;
+    myLanguageVersion = languageVersion;
 
     return this;
   }
@@ -199,6 +206,8 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
       Place place = new Place(shreds);
       DocumentWindowImpl documentWindow = new DocumentWindowImpl(myHostDocument, isOneLineEditor, place);
       VirtualFileWindowImpl virtualFile = new VirtualFileWindowImpl(myHostVirtualFile, documentWindow, myLanguage, outChars);
+      virtualFile.putUserData(LanguageVersion.KEY, myLanguageVersion);
+
       Language forcedLanguage = myContextElement.getUserData(InjectedFileViewProvider.LANGUAGE_FOR_INJECTED_COPY_KEY);
       myLanguage = forcedLanguage == null ? LanguageSubstitutors.INSTANCE.substituteLanguage(myLanguage, virtualFile, myProject) : forcedLanguage;
 

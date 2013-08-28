@@ -22,15 +22,23 @@
  */
 package com.intellij.lang.injection;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.Language;
-import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiLanguageInjectionHost;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface MultiHostRegistrar {
-  @NotNull /*this*/ MultiHostRegistrar startInjecting(@NotNull Language language);
-  @NotNull /*this*/ MultiHostRegistrar addPlace(@NonNls @Nullable String prefix, @NonNls @Nullable String suffix, @NotNull PsiLanguageInjectionHost host, @NotNull TextRange rangeInsideHost);
+  @NotNull
+  MultiHostRegistrar startInjecting(@NotNull Language language);
+
+  @NotNull
+  MultiHostRegistrar startInjecting(@NotNull LanguageVersion<? extends Language> languageVersion);
+
+  @NotNull
+  MultiHostRegistrar addPlace(@NonNls @Nullable String prefix, @NonNls @Nullable String suffix, @NotNull PsiLanguageInjectionHost host, @NotNull TextRange rangeInsideHost);
+
   void doneInjecting();
 }

@@ -4,7 +4,7 @@ package com.intellij.lang;
  * @author VISTALL
  * @since 18:04/30.05.13
  */
-public class LanguageVersionResolvers extends LanguageExtension<LanguageVersionResolver> {
+public class LanguageVersionResolvers extends LanguageExtension<LanguageVersionResolver<? extends Language>> {
   public static final LanguageVersionResolvers INSTANCE = new LanguageVersionResolvers();
 
   private LanguageVersionResolvers() {

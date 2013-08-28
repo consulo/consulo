@@ -23,7 +23,6 @@
 package com.intellij.lang.injection;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.openapi.util.Pair;
@@ -33,15 +32,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 
 public abstract class InjectedLanguageManager {
-
-  /** @see com.intellij.lang.injection.MultiHostInjector#MULTIHOST_INJECTOR_EP_NAME */
-  @Deprecated
-  public static final ExtensionPointName<MultiHostInjector> MULTIHOST_INJECTOR_EP_NAME = MultiHostInjector.MULTIHOST_INJECTOR_EP_NAME;
-
   protected static final NotNullLazyKey<InjectedLanguageManager, Project> INSTANCE_CACHE = ServiceManager.createLazyKey(InjectedLanguageManager.class);
 
   public static InjectedLanguageManager getInstance(Project project) {
@@ -57,16 +52,16 @@ public abstract class InjectedLanguageManager {
 
   /**
    * Test-only method.
-   * @see com.intellij.lang.injection.MultiHostInjector#MULTIHOST_INJECTOR_EP_NAME
+   * @see com.intellij.lang.injection.MultiHostInjector#EP_NAME
    */
-  @Deprecated
-  public abstract void registerMultiHostInjector(@NotNull MultiHostInjector injector);
+  @TestOnly
+  public abstract void registerMultiHostInjector(@NotNull MultiHostInjector injector, @NotNull Class<? extends PsiElement>... elements);
 
   /**
    * Test-only method.
-   * @see com.intellij.lang.injection.MultiHostInjector#MULTIHOST_INJECTOR_EP_NAME
+   * @see com.intellij.lang.injection.MultiHostInjector#EP_NAME
    */
-  @Deprecated
+  @TestOnly
   public abstract boolean unregisterMultiHostInjector(@NotNull MultiHostInjector injector);
 
   public abstract String getUnescapedText(@NotNull PsiElement injectedNode);

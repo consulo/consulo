@@ -27,12 +27,10 @@ import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class HtmlScriptLanguageInjector implements MultiHostInjector {
   @Override
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
+  public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
     if (!(host instanceof XmlText)) {
       return;
     }
@@ -49,11 +47,5 @@ public class HtmlScriptLanguageInjector implements MultiHostInjector {
         .addPlace(null, null, (PsiLanguageInjectionHost)host, TextRange.create(0, host.getTextLength()))
         .doneInjecting();
     }
-  }
-
-  @NotNull
-  @Override
-  public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Collections.singletonList(XmlText.class);
   }
 }

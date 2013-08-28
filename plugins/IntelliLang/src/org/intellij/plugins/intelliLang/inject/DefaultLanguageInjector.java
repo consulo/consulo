@@ -29,7 +29,6 @@ import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class DefaultLanguageInjector implements MultiHostInjector {
@@ -42,12 +41,8 @@ public final class DefaultLanguageInjector implements MultiHostInjector {
     mySupports = ArrayUtil.toObjectArray(InjectorUtils.getActiveInjectionSupports(), LanguageInjectionSupport.class);
   }
 
-  @NotNull
-  public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Collections.singletonList(PsiLanguageInjectionHost.class);
-  }
-
-  public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement host) {
+  @Override
+  public void injectLanguages(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement host) {
     for (LanguageInjectionSupport support : mySupports) {
       if (!support.useDefaultInjector(host)) continue;
       for (BaseInjection injection : myInjectionConfiguration.getInjections(support.getId())) {

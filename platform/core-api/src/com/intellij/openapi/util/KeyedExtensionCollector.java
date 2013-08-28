@@ -214,6 +214,11 @@ public class KeyedExtensionCollector<T, KeyT> {
     return myPoint;
   }
 
+  @NotNull
+  public Map<String, List<T>> getInstancesForKeys() {
+    return myCache;
+  }
+
   public boolean hasAnyExtensions() {
     synchronized (lock) {
       if (!myExplicitExtensions.isEmpty()) return true;

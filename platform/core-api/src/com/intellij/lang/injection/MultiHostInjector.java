@@ -22,20 +22,15 @@
  */
 package com.intellij.lang.injection;
 
-import com.intellij.psi.PsiElement;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * @see com.intellij.psi.PsiLanguageInjectionHost
  */
 public interface MultiHostInjector {
+  ExtensionPointName<MultiHostInjectorExtensionPoint> EP_NAME = ExtensionPointName.create("com.intellij.multiHostInjector");
 
-  ExtensionPointName<MultiHostInjector> MULTIHOST_INJECTOR_EP_NAME = ExtensionPointName.create("com.intellij.multiHostInjector");
-
-  void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context);
-  @NotNull
-  List<? extends Class<? extends PsiElement>> elementsToInjectIn();
+  void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context);
 }

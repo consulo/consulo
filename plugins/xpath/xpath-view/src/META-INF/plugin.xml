@@ -153,7 +153,8 @@
     <!--
     <daemon.changeLocalityDetector implementation="org.intellij.lang.xpath.xslt.impl.XsltChangeLocalityDetector" />
     -->
-    <multiHostInjector implementation="org.intellij.lang.xpath.xslt.impl.XPathLanguageInjector"/>
+    <multiHostInjector forClass="com.intellij.psi.xml.XmlAttribute"
+                       implementationClass="org.intellij.lang.xpath.xslt.impl.XPathLanguageInjector"/>
 
     <treeStructureProvider implementation="org.intellij.lang.xpath.xslt.impl.XsltTreeStructureProvider"/>
 

@@ -11,19 +11,13 @@ import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author gregsh
  */
 public class CommentLanguageInjector implements MultiHostInjector {
-
-  @NotNull
-  public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Collections.singletonList(PsiLanguageInjectionHost.class);
-  }
-
-  public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
+  @Override
+  public void injectLanguages(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
     PsiLanguageInjectionHost host = (PsiLanguageInjectionHost)context;
     final ElementManipulator<PsiLanguageInjectionHost> manipulator = ElementManipulators.getManipulator(host);
     if (manipulator == null) return;

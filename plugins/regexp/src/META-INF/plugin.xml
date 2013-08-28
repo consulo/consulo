@@ -4,7 +4,10 @@
   <depends>com.intellij.xml</depends>
 
   <extensionPoints>
-    <extensionPoint name="languageHost" beanClass="com.intellij.openapi.util.ClassExtensionPoint"/>
+    <extensionPoint name="languageHost" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
+      <with attribute="forClass" implements="com.intellij.psi.PsiElement"/>
+      <with attribute="implementationClass" implements="org.intellij.lang.regexp.RegExpLanguageHost"/>
+    </extensionPoint>
     <!--<extensionPoint name="propertiesProvider" beanClass="com.intellij.lang.LanguageExtensionPoint"/> -->
   </extensionPoints>
 

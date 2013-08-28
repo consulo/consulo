@@ -3234,11 +3234,6 @@
 
     <extensionPoint name="compiler" area="CONSULO_PROJECT" interface="com.intellij.openapi.compiler.Compiler"/>
 
-    <extensionPoint name="compileServer.plugin" beanClass="com.intellij.compiler.server.CompileServerPlugin"/>
-    <extensionPoint name="compileServer.pathProvider" area="CONSULO_PROJECT"
-                    interface="com.intellij.compiler.server.CompileServerPathProvider"/>
-
-
     <extensionPoint name="configuration.ModuleStructureExtension"
                     interface="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureExtension"/>
 
@@ -3342,8 +3337,11 @@
                     interface="com.intellij.lang.injection.ConcatenationAwareInjector"
                     area="CONSULO_PROJECT"/>
     <extensionPoint name="multiHostInjector"
-                    interface="com.intellij.lang.injection.MultiHostInjector"
-                    area="CONSULO_PROJECT"/>
+                    beanClass="com.intellij.lang.injection.MultiHostInjectorExtensionPoint"
+                    area="CONSULO_PROJECT">
+      <with attribute="forClass" implements="com.intellij.psi.PsiElement"/>
+      <with attribute="implementationClass" implements="com.intellij.lang.injection.MultiHostInjector"/>
+    </extensionPoint>
 
     <extensionPoint name="annotator"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">

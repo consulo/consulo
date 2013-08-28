@@ -26,7 +26,6 @@
     <antBuildGen implementation="com.intellij.lang.ant.config.impl.artifacts.AntArtifactBuildExtension"/>
     <packaging.artifactPropertiesProvider implementation="com.intellij.lang.ant.config.impl.artifacts.AntArtifactPostprocessingPropertiesProvider"/>
     <packaging.artifactPropertiesProvider implementation="com.intellij.lang.ant.config.impl.artifacts.AntArtifactPreProcessingPropertiesProvider"/>
-    <compileServer.plugin classpath="ant-jps-plugin.jar"/>
 
     <keymapExtension implementation="com.intellij.lang.ant.config.impl.AntKeymapExtension"/>
     <highlightRangeExtension implementation="com.intellij.lang.ant.AntHighlightRangeExtension"/>

@@ -46,9 +46,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class MyTestInjector {
   private final PsiManager myPsiManager;
 
@@ -165,7 +162,7 @@ public class MyTestInjector {
 
     final MultiHostInjector myMultiHostInjector = new MultiHostInjector() {
       @Override
-      public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+      public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
         XmlAttributeValue value = (XmlAttributeValue)context;
         PsiElement parent = value.getParent();
         if (parent instanceof XmlAttribute) {
@@ -184,14 +181,8 @@ public class MyTestInjector {
           }
         }
       }
-
-      @Override
-      @NotNull
-      public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-        return Arrays.asList(XmlAttributeValue.class);
-      }
     };
-    InjectedLanguageManager.getInstance(psiManager.getProject()).registerMultiHostInjector(myMultiHostInjector);
+    InjectedLanguageManager.getInstance(psiManager.getProject()).registerMultiHostInjector(myMultiHostInjector, XmlAttributeValue.class);
     Disposer.register(parent, new Disposable() {
       @Override
       public void dispose() {
