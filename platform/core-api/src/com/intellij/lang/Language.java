@@ -203,6 +203,17 @@ public abstract class Language extends UserDataHolderBase {
     return myVersions.getValue();
   }
 
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public <T extends LanguageVersion> T findVersionByClass(@NotNull Class<T> clazz) {
+    for (LanguageVersion languageVersion : getVersions()) {
+      if(languageVersion.getClass() == clazz) {
+        return (T)languageVersion;
+      }
+    }
+    return null;
+  }
+
   public String getDisplayName() {
     return getID();
   }
