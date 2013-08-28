@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 13:23/25.08.13
  */
-public class BaseLanguageVersion implements LanguageVersion {
+public class BaseLanguageVersion<T extends Language> implements LanguageVersion<T> {
   private final String myName;
-  private final Language myLanguage;
+  private final T myLanguage;
 
-  public BaseLanguageVersion(String name, Language language) {
+  public BaseLanguageVersion(String name, T language) {
     myName = name;
     myLanguage = language;
   }
@@ -37,7 +37,7 @@ public class BaseLanguageVersion implements LanguageVersion {
   }
 
   @Override
-  public Language getLanguage() {
+  public T getLanguage() {
     return myLanguage;
   }
 }

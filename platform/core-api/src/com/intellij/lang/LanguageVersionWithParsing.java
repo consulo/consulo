@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 19:51/24.06.13
  */
-public interface LanguageVersionWithParsing extends LanguageVersion {
+public interface LanguageVersionWithParsing<T extends Language> extends LanguageVersion<T> {
   @NotNull
   Lexer createLexer(@Nullable Project project);
 

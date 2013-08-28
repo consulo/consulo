@@ -143,7 +143,7 @@ public abstract class Language extends UserDataHolderBase {
   protected LanguageVersion[] findVersions() {
     List<LanguageVersion> languageVersion = LanguageVersionDefines.INSTANCE.allForLanguage(this);
     if(languageVersion.isEmpty()) {
-      return new LanguageVersion[] {new BaseLanguageVersion("DEFAULT", this)};
+      return new LanguageVersion[] {new BaseLanguageVersion<Language>("DEFAULT", this)};
     }
     Collections.reverse(languageVersion);
     return languageVersion.toArray(new LanguageVersion[languageVersion.size()]);

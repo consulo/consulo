@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 13:37/25.08.13
  */
-public interface LanguageVersionWithDefinition extends LanguageVersion{
+public interface LanguageVersionWithDefinition<T extends Language> extends LanguageVersion<T>{
   boolean isMyElement(@Nullable PsiElement element);
 
   boolean isMyFile(@Nullable Project project, @Nullable VirtualFile virtualFile);

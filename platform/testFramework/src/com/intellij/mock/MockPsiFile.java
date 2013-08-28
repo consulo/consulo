@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MockPsiFile extends MockPsiElement implements PsiFile {
-  public static final LanguageVersion DUMMY_LANG_VERSION = new BaseLanguageVersion("DUMMY_LANG_VERSION", Language.ANY);
+  public static final LanguageVersion<Language> DUMMY_LANG_VERSION = new BaseLanguageVersion<Language>("DUMMY_LANG_VERSION", Language.ANY);
 
   private final long myModStamp = LocalTimeCounter.currentTime();
   private VirtualFile myVirtualFile = null;
