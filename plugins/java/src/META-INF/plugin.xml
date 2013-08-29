@@ -782,9 +782,9 @@
     <applicationService serviceInterface="com.intellij.codeInsight.intention.QuickFixFactory"
                         serviceImplementation="com.intellij.codeInsight.intention.impl.config.QuickFixFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.psi.impl.source.codeStyle.IndentHelper"
+    <!--<applicationService serviceInterface="com.intellij.psi.impl.source.codeStyle.IndentHelper"
                         serviceImplementation="com.intellij.psi.impl.source.codeStyle.JavaIndentHelper"
-                        overrides="true"/>
+                        overrides="true"/>     -->
 
     <applicationService serviceInterface="com.intellij.codeInsight.TestFrameworks"
                         serviceImplementation="com.intellij.codeInsight.TestFrameworksImpl"/>

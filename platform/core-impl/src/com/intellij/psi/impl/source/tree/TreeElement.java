@@ -19,10 +19,10 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLock;
 import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.impl.ElementBase;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.CharTable;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class TreeElement extends ElementBase implements ASTNode, Cloneable {
+public abstract class TreeElement extends UserDataHolderBase implements ASTNode, Cloneable {
   public static final TreeElement[] EMPTY_ARRAY = new TreeElement[0];
   private TreeElement myNextSibling = null;
   private TreeElement myPrevSibling = null;

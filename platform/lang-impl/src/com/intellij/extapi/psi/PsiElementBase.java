@@ -22,9 +22,9 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.ElementBase;
 import com.intellij.psi.impl.ResolveScopeManager;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -40,7 +40,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PsiElementBase extends ElementBase implements NavigatablePsiElement {
+public abstract class PsiElementBase extends UserDataHolderBase implements NavigatablePsiElement {
   private static final Logger LOG = Logger.getInstance("#com.intellij.extapi.psi.PsiElementBase");
 
   @Override

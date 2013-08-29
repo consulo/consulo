@@ -17,50 +17,19 @@ package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.Nullable;
 
 public class PsiBuilderUtil {
-  private PsiBuilderUtil() { }
-
-  /**
-   * @deprecated use {@linkplain PsiBuilder#lookAhead(int)} (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  @Nullable
-  public static IElementType nextTokenType(final PsiBuilder builder) {
-    return builder.lookAhead(1);
-  }
-
-  /**
-   * @deprecated use {@linkplain PsiBuilder#lookAhead(int)} (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean lookAhead(final PsiBuilder builder, final IElementType... tokenTypes) {
-    if (tokenTypes.length == 0) return true;
-
-    if (!tokenTypes[0].equals(builder.getTokenType())) return false;
-
-    if (tokenTypes.length == 1) return true;
-
-    final PsiBuilder.Marker rb = builder.mark();
-    builder.advanceLexer();
-    int i = 1;
-    while (!builder.eof() && i < tokenTypes.length && tokenTypes[i].equals(builder.getTokenType())) {
-      builder.advanceLexer();
-      i++;
-    }
-    rb.rollbackTo();
-    return i == tokenTypes.length;
+  private PsiBuilderUtil() {
   }
 
   /**
    * Advances lexer by given number of tokens (but not beyond the end of token stream).
    *
    * @param builder PSI builder to operate on.
-   * @param count number of tokens to skip.
+   * @param count   number of tokens to skip.
    */
   public static void advance(final PsiBuilder builder, final int count) {
-    for (int i=0; i<count && !builder.eof(); i++) {
+    for (int i = 0; i < count && !builder.eof(); i++) {
       builder.getTokenType();
       builder.advanceLexer();
     }
@@ -69,7 +38,7 @@ public class PsiBuilderUtil {
   /**
    * Advances lexer if current token is of expected type, does nothing otherwise.
    *
-   * @param builder PSI builder to operate on.
+   * @param builder      PSI builder to operate on.
    * @param expectedType expected token.
    * @return true if token matches, false otherwise.
    */
@@ -84,7 +53,7 @@ public class PsiBuilderUtil {
   /**
    * Advances lexer if current token is of expected type, does nothing otherwise.
    *
-   * @param builder PSI builder to operate on.
+   * @param builder       PSI builder to operate on.
    * @param expectedTypes expected token types.
    * @return true if token matches, false otherwise.
    */
