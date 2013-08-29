@@ -226,6 +226,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
       ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(myLanguage);
       assert parserDefinition != null : "Parser definition for language "+myLanguage+" is null";
       PsiFile psiFile = parserDefinition.createFile(viewProvider);
+      psiFile.putUserData(LanguageVersion.KEY, myLanguageVersion);
 
       SmartPsiElementPointer<PsiLanguageInjectionHost> pointer = ((ShredImpl)shreds.get(0)).getSmartPointer();
 
