@@ -39,7 +39,6 @@ import java.util.List;
 
 public class XPathLanguageInjector implements MultiHostInjector {
   private static final Key<Pair<String, TextRange[]>> CACHED_FILES = Key.create("CACHED_FILES");
-  private static final TextRange[] EMPTY_ARRAY = new TextRange[0];
 
   public XPathLanguageInjector() {
   }
@@ -80,7 +79,7 @@ public class XPathLanguageInjector implements MultiHostInjector {
     }
 
     final String value = attribute.getDisplayValue();
-    if (value == null) return EMPTY_ARRAY;
+    if (value == null) return TextRange.EMPTY_ARRAY;
 
     final TextRange[] ranges;
     if (XsltSupport.mayBeAVT(attribute)) {
@@ -121,7 +120,7 @@ public class XPathLanguageInjector implements MultiHostInjector {
         ranges = avtRanges.toArray(new TextRange[avtRanges.size()]);
       }
       else {
-        ranges = EMPTY_ARRAY;
+        ranges = TextRange.EMPTY_ARRAY;
       }
     }
     else {

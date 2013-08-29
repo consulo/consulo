@@ -18,11 +18,9 @@ package com.intellij.openapi.editor.event;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 
-import java.util.Arrays;
 import java.util.EventObject;
 
 public class SelectionEvent extends EventObject {
-  private static final TextRange[] EMPTY_RANGES = new TextRange[0];
   private TextRange[] myOldRanges;
   private TextRange[] myNewRanges;
 
@@ -70,7 +68,7 @@ public class SelectionEvent extends EventObject {
 
   private static TextRange[] getRanges(int[] starts, int[] ends) {
     if (starts.length == 0) {
-      return EMPTY_RANGES;
+      return TextRange.EMPTY_ARRAY;
     }
     final TextRange[] ranges = new TextRange[starts.length];
     for (int i = 0; i < starts.length; ++i) {
