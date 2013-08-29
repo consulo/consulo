@@ -174,7 +174,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
 
   private VirtualFilePointer createDefaultPointerForModule(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
     final VirtualFilePointerManager instance = VirtualFilePointerManager.getInstance();
-    return instance.create(myProject.getBaseDir().getUrl() + DEFAULT_PATH + "/" + contentFolderType.name().toLowerCase() +  "/" + module.getName() + "/", myProject, null);
+    return instance.create(myProject.getBaseDir().getUrl() + DEFAULT_PATH + "/" + contentFolderType.name().toLowerCase() +  "/" + module.getName() + "/", module, null);
   }
 
   @Override
@@ -298,7 +298,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
         for (Element child2 : child.getChildren()) {
           final String moduleUrl = child2.getAttributeValue(URL);
           final ContentFolderType type = ContentFolderType.valueOf(child2.getAttributeValue(TYPE));
-          compileInfo.virtualFilePointers.put(type, VirtualFilePointerManager.getInstance().create(moduleUrl, myProject, null));
+          compileInfo.virtualFilePointers.put(type, VirtualFilePointerManager.getInstance().create(moduleUrl, module, null));
         }
 
         myModulesToVirtualFilePoints.put(module, compileInfo);
