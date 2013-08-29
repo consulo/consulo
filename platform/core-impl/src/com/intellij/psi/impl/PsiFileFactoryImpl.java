@@ -105,7 +105,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     if (noSizeLimit) {
       SingleRootFileViewProvider.doNotCheckFileSizeLimit(virtualFile);
     }
-    return trySetupPsiForFile(virtualFile, language, physical, markAsCopy);
+    return trySetupPsiForFile(virtualFile, language, languageVersion, physical, markAsCopy);
   }
 
   @Override
@@ -120,7 +120,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     if (fileType instanceof LanguageFileType) {
       final Language language =
         LanguageSubstitutors.INSTANCE.substituteLanguage(((LanguageFileType)fileType).getLanguage(), virtualFile, myManager.getProject());
-      final PsiFile file = trySetupPsiForFile(virtualFile, language, physical, markAsCopy);
+      final PsiFile file = trySetupPsiForFile(virtualFile, language, LanguageVersionUtil.findDefaultVersion(language), physical, markAsCopy);
       if (file != null) return file;
     }
     final SingleRootFileViewProvider singleRootFileViewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
@@ -132,6 +132,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
   @Nullable
   public PsiFile trySetupPsiForFile(final LightVirtualFile virtualFile,
                                     Language language,
+                                    LanguageVersion<? extends Language> languageVersion,
                                     final boolean physical,
                                     final boolean markAsCopy) {
     final FileViewProviderFactory factory = LanguageFileViewProviders.INSTANCE.forLanguage(language);
@@ -143,6 +144,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     if (parserDefinition != null) {
       final PsiFile psiFile = viewProvider.getPsi(language);
       if (psiFile != null) {
+        psiFile.putUserData(LanguageVersion.KEY, languageVersion);
         if (markAsCopy) {
           markGenerated(psiFile);
         }

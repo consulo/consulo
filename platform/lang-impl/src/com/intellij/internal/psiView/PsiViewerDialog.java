@@ -15,8 +15,6 @@
  */
 package com.intellij.internal.psiView;
 
-import com.intellij.diagnostic.AttachmentFactory;
-import com.intellij.diagnostic.LogMessageEx;
 import com.intellij.formatting.ASTBlock;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingModel;
@@ -738,9 +736,9 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     BlockTreeNode blockNode = myPsiToBlockMap.get(rootPsi);
 
     if (blockNode == null) {
-      LOG.error(LogMessageEx
-                  .createEvent("PsiViewer: rootNode not found", "Current language: " + rootElement.getContainingFile().getLanguage(),
-                               AttachmentFactory.createAttachment(rootElement.getContainingFile().getOriginalFile().getVirtualFile())));
+      //LOG.error(LogMessageEx
+      //            .createEvent("PsiViewer: rootNode not found", "Current language: " + rootElement.getContainingFile().getLanguage(),
+      //                         AttachmentFactory.createAttachment(rootElement.getContainingFile().getOriginalFile().getVirtualFile())));
       blockNode = findBlockNode(rootPsi);
     }
 

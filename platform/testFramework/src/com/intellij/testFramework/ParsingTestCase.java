@@ -51,6 +51,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.CachedValuesManagerImpl;
 import com.intellij.util.FileComparisonFailure;
 import com.intellij.util.Function;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
 import org.jetbrains.annotations.NonNls;
@@ -250,7 +251,7 @@ public abstract class ParsingTestCase extends PlatformLiteFixture {
   }
 
   protected PsiFile createFile(LightVirtualFile virtualFile) {
-    return myFileFactory.trySetupPsiForFile(virtualFile, myLanguage, true, false);
+    return myFileFactory.trySetupPsiForFile(virtualFile, myLanguage, LanguageVersionUtil.findDefaultVersion(myLanguage), true, false);
   }
 
   protected void checkResult(@NonNls @TestDataFile String targetDataName, final PsiFile file) throws IOException {
