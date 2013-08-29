@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.fileTypes.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.INativeFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
@@ -30,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.util.*;
 
@@ -75,8 +75,7 @@ public class NativeFileIconUtil {
           return null;
         }
         Icon icon;
-        try { // VM will ensure lock to init -static final field--, note we should have no read access here, to avoid deadlock with EDT needed to init component
-          assert SwingComponentHolder.ourFileChooser != null || !ApplicationManager.getApplication().isReadAccessAllowed();
+        try {
           icon = getNativeIcon(f);
         }
         catch (Exception e) {      // see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4854174
@@ -99,7 +98,7 @@ public class NativeFileIconUtil {
 
   @Nullable
   public static Icon getNativeIcon(@Nullable File file) {
-    return file == null ? null : SwingComponentHolder.ourFileChooser.getIcon(file);
+    return file == null || file.isDirectory() ? null : FileSystemView.getFileSystemView().getSystemIcon(file);
   }
 
   private static Ext getExtension(final VirtualFile file) {
@@ -113,10 +112,6 @@ public class NativeFileIconUtil {
     }
 
     return file.getExtension() != null ? new Ext(file.getExtension()) : NO_EXT;
-  }
-
-  static class SwingComponentHolder {
-    private static final JFileChooser ourFileChooser = new JFileChooser();
   }
 
   public static boolean isNativeFileType(VirtualFile file) {
