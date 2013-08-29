@@ -59,8 +59,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
 
   protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider) {
     final Language baseLanguage = viewProvider.getBaseLanguage();
-    final LanguageVersion languageVersion =
-      LanguageVersionResolvers.INSTANCE.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
+    final LanguageVersion languageVersion = file.getLanguageVersion();
     return LanguageParserDefinitions.INSTANCE.forLanguage(baseLanguage).createLexer(null, languageVersion);
   }
 

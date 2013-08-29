@@ -35,6 +35,7 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharSequenceSubSequence;
 import org.jetbrains.annotations.NotNull;
@@ -87,7 +88,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                                     boolean physical,
                                     boolean markAsCopy,
                                     boolean noSizeLimit) {
-    return createFileFromText(name, language, LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null),
+    return createFileFromText(name, language, LanguageVersionUtil.findDefaultVersion(language),
                               text, physical, markAsCopy, noSizeLimit);
   }
 

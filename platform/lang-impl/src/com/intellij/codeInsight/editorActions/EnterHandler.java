@@ -194,7 +194,7 @@ public class EnterHandler extends BaseEnterHandler {
     if (parserDefinition == null) {
       return true;
     }
-    final LanguageVersion languageVersion = LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, comment);
+    final LanguageVersion languageVersion = comment.getLanguageVersion();
     Lexer lexer = parserDefinition.createLexer(null, languageVersion);
     final String commentPrefix = docComment? commenter.getDocumentationCommentPrefix() : commenter.getBlockCommentPrefix();
     lexer.start(commentText, commentPrefix == null? 0 : commentPrefix.length(), commentText.length());

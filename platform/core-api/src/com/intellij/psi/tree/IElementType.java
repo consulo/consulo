@@ -17,8 +17,8 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.LanguageVersionResolvers;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,9 +85,7 @@ public class IElementType {
                          boolean register) {
     myDebugName = debugName;
     myLanguage = language == null ? Language.ANY : language;
-    myLanguageVersion = languageVersion == null
-                        ? LanguageVersionResolvers.INSTANCE.forLanguage(myLanguage).getLanguageVersion(myLanguage, null, null)
-                        : languageVersion;
+    myLanguageVersion = languageVersion == null ? LanguageVersionUtil.findDefaultVersion(myLanguage) : languageVersion;
     if (register) {
       //noinspection AssignmentToStaticFieldFromInstanceMethod
       myIndex = ourCounter++;
