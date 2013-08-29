@@ -40,4 +40,9 @@ public class BaseLanguageVersion<T extends Language> implements LanguageVersion<
   public T getLanguage() {
     return myLanguage;
   }
+
+  @Override
+  public String toString() {
+    return "LanguageVersion: " + getName() + " for language: " + getLanguage();
+  }
 }
