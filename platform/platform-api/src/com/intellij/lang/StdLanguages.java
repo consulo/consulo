@@ -15,7 +15,6 @@
  */
 package com.intellij.lang;
 
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 
 /**
@@ -23,6 +22,7 @@ import com.intellij.openapi.fileTypes.StdFileTypes;
  *
  * @author max
  */
+@Deprecated
 public class StdLanguages {
   /**
    * The definition for the Java language.
@@ -30,11 +30,6 @@ public class StdLanguages {
    * @deprecated use {@linkplain com.intellij.lang.java.JavaLanguage#INSTANCE} instead.
    */
   public static Language JAVA = StdFileTypes.JAVA.getLanguage();
-
-  /**
-   * The definition for the DTD language.
-   */
-  public static Language DTD = StdFileTypes.DTD.getLanguage();
 
   /**
    * The definition for the JSP language.
@@ -45,11 +40,6 @@ public class StdLanguages {
    * The definition for the XML language.
    */
   public static Language XML = StdFileTypes.XML.getLanguage();
-
-  /**
-   * The definition for the ANT language.
-   */
-  public static Language ANT;
 
   /**
    * The definition for the HTML language.
@@ -65,22 +55,6 @@ public class StdLanguages {
    * The definition for the JSP language (JSP with XML syntax).
    */
   public static Language JSPX = StdFileTypes.JSPX.getLanguage();
-
-  /**
-   * The definition for the Text language.
-   */
-  public static Language TEXT = FileTypes.PLAIN_TEXT.getLanguage();
-
-  /**
-   * The definition for the Properties language.
-   */
-  public static Language PROPERTIES = StdFileTypes.PROPERTIES.getLanguage();
-
-  /**
-   * @deprecated use CssSupportLoader
-   */
-  @Deprecated
-  public static Language CSS;
 
   private StdLanguages() { }
 }

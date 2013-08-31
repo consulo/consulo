@@ -33,8 +33,7 @@ public class AntLikePropertySelectionHandler implements ExtendWordSelectionHandl
   public boolean canSelect(PsiElement e) {
     Language l = e.getLanguage();
     if (!(l.equals(StdLanguages.JAVA)
-          || l.equals(StdLanguages.XML)
-          || l.equals(StdLanguages.ANT))) {
+          || l.equals(StdLanguages.XML))) {
       return false;
     }
 
