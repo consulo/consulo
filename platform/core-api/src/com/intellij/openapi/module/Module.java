@@ -38,23 +38,6 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
   Module[] EMPTY_ARRAY = new Module[0];
 
   /**
-   * Returns the <code>VirtualFile</code> for the module .iml file.
-   *
-   * @return the virtual file instance.
-   */
-  @Nullable
-  @Deprecated
-  VirtualFile getModuleFile();
-
-  /**
-   * Returns the path to the module .iml file.
-   *
-   * @return the path to the .iml file.
-   */
-  @Deprecated
-  @NotNull String getModuleFilePath();
-
-  /**
    * Returns the <code>VirtualFile</code> to the module dir
    *
    * @return the virtual file instance.

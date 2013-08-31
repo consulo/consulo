@@ -131,7 +131,7 @@ public class PathMacroManagerTest {
       allowing(myPathMacros).addMacroReplacements(with(any(ReplacePathToMacroMap.class)));
 
       allowing(myProject).getBaseDir(); will(returnValue(projectFile));
-      allowing(myModule).getModuleFilePath(); will(returnValue(moduleFilePath));
+      allowing(myModule).getModuleDir(); will(returnValue(moduleFilePath));
       allowing(myModule).getProject(); will(returnValue(myProject));
     }});
   }

@@ -88,9 +88,9 @@ class ChangeLibraryLevelInClasspathAction extends ChangeLibraryLevelActionBase {
       if (roots.length > 0) {
         return roots[0];
       }
-      final VirtualFile moduleFile = myPanel.getRootModel().getModule().getModuleFile();
-      if (moduleFile != null) {
-        return moduleFile.getParent();
+      final VirtualFile moduleDir = myPanel.getRootModel().getModule().getModuleDir();
+      if (moduleDir != null) {
+        return moduleDir;
       }
     }
     return super.getBaseDir();

@@ -104,7 +104,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       if (projectContext != null || moduleContext != null) {
         final String text;
         if (moduleContext != null) {
-          text = CodeInsightBundle.message("process.scope.module", moduleContext.getModuleFilePath());
+          text = CodeInsightBundle.message("process.scope.module", moduleContext.getModuleDirPath());
         }
         else {
           text = CodeInsightBundle.message("process.scope.project", project.getPresentableUrl());

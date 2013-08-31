@@ -25,7 +25,6 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -102,11 +101,6 @@ public class ImportModuleFromImlFileAction extends AnAction {
       }
 
       modulesFiles.add(file);
-    }
-
-    final ModuleManager moduleManager = ModuleManager.getInstance(project);
-    for (Module module : moduleManager.getModules()) {
-      modulesFiles.remove(module.getModuleFile());
     }
     return modulesFiles;
   }

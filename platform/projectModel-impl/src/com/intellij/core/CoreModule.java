@@ -134,17 +134,6 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
     myModuleScopeProvider.clearCache();
   }
 
-  @Override
-  public VirtualFile getModuleFile() {
-    throw new UnsupportedOperationException();
-  }
-
-  @NotNull
-  @Override
-  public String getModuleFilePath() {
-    throw new UnsupportedOperationException();
-  }
-
   @Nullable
   @Override
   public VirtualFile getModuleDir() {

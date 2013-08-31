@@ -270,9 +270,9 @@ public class SaveProjectAsTemplateAction extends AnAction {
       return project.getBaseDir();
     }
     else {
-      VirtualFile moduleFile = module.getModuleFile();
+      VirtualFile moduleFile = module.getModuleDir();
       assert moduleFile != null;
-      return moduleFile.getParent();
+      return moduleFile;
     }
   }
 

@@ -22,9 +22,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -132,8 +130,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     {
       return false;
     }
-    Module module = FileIndexFacade.getInstance(project).getModuleForFile(file);
-    return module == null || !file.equals(module.getModuleFile());
+    return true;
   }
 
   public static void changeLineSeparators(@NotNull final Project project,

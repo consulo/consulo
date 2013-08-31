@@ -78,7 +78,7 @@ public class ProgramParametersConfigurator {
     if (workingDir == null) {
       throw new RuntimeConfigurationWarning("Working directory is null for "+
                                             "project '" + project.getName() + "' ("+project.getBasePath()+")"
-                                            + ", module '" + module.getName() + "' (" + module.getModuleFilePath() + ")");
+                                            + ", module '" + module.getName() + "' (" + module.getModuleDirPath() + ")");
     }
     if (!new File(workingDir).exists()) {
       throw new RuntimeConfigurationWarning("Working directory '" + workingDir + "' doesn't exist");

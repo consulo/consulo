@@ -112,20 +112,8 @@ public class ModuleImpl extends ComponentManagerImpl implements ModuleEx {
   }
 
   @Override
-  @Nullable
-  public VirtualFile getModuleFile() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void rename(String newName) {
     myName = newName;
-  }
-
-  @Override
-  @NotNull
-  public String getModuleFilePath() {
-    return getModuleDirPath();
   }
 
   @Nullable

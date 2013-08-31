@@ -71,7 +71,6 @@ public class SCR20733Test extends PsiTestCase {
         assertEquals(myModule, ModuleUtil.findModuleForFile(file, myProject));
 
         Module anotherModule = createModule("another");
-        myFilesToDelete.add(new File(anotherModule.getModuleFilePath()));
 
         PsiTestUtil.addSourceRoot(anotherModule, mySrcDir1);
 

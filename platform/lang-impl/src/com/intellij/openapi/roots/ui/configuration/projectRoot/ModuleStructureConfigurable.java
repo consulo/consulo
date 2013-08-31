@@ -61,7 +61,6 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import com.intellij.util.PathUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -836,7 +835,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
                                                                     false);
           final Module originalModule = moduleEditor.getModule();
           if (originalModule != null) {
-            component.setPath(FileUtil.toSystemDependentName(PathUtil.getParentPath(originalModule.getModuleFilePath())));
+            component.setPath(FileUtil.toSystemDependentName(originalModule.getModuleDirPath()));
           }
 
           final DialogBuilder dialogBuilder = new DialogBuilder(myTree);

@@ -311,7 +311,7 @@ public abstract class AbstractLayoutCodeProcessor {
   private void runProcessOnModule(final Module module) {
     final ArrayList<PsiFile> array = new ArrayList<PsiFile>();
     collectFilesInModule(module, array);
-    String where = CodeInsightBundle.message("process.scope.module", module.getModuleFilePath());
+    String where = CodeInsightBundle.message("process.scope.module", module.getModuleDirPath());
     runProcessOnFiles(where, array);
   }
 
