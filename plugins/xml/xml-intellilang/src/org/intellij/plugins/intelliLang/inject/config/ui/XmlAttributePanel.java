@@ -71,7 +71,7 @@ public class XmlAttributePanel extends AbstractInjectionPanel<XmlAttributeInject
     myTagPanel = new TagPanel(myProject, myOrigInjection);
     myAdvancedPanel = new AdvancedXmlPanel(myProject, myOrigInjection);
 
-    myLocalName = new LanguageTextField(RegExpLanguageDelegate.INSTANCE, myProject, myOrigInjection.getAttributeName());
+    myLocalName = new LanguageTextField(RegExpLanguageDelegate.RegExp.get(), myProject, myOrigInjection.getAttributeName());
 
     myNamespace = new ComboBox(200);
   }

@@ -25,6 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.THashMap;
 import org.consulo.annotations.Immutable;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +41,7 @@ import java.util.*;
  * with {@link #findInstance(Class)}.
  * For the list of standard languages, see {@link com.intellij.lang.StdLanguages}.
  */
-public abstract class Language extends UserDataHolderBase {
+public abstract class Language extends UserDataHolderBase implements Named {
   private static final Logger LOG = Logger.getInstance("#com.intellij.lang.Language");
 
   private static final Map<Class<? extends Language>, Language> ourRegisteredLanguages =
@@ -174,6 +175,12 @@ public abstract class Language extends UserDataHolderBase {
   @NotNull
   public String getID() {
     return myID;
+  }
+
+  @NotNull
+  @Override
+  public String getName() {
+    return getID();
   }
 
   @Nullable

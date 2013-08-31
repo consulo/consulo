@@ -13,18 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.intellij.plugins.intelliLang.inject.config.ui;
+package com.intellij.lang.impl;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguagePointerUtil;
+import com.intellij.openapi.util.NullableLazyValue;
 import org.consulo.util.pointers.NamedPointer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 7:54/31.05.13
- *
- * IDE can be without org.intellij.lang.regexp.RegExpLanguage class, and it ill produce ClassNotFoundException
+ * @since 18:32/31.08.13
  */
-public class RegExpLanguageDelegate {
-  public static final NamedPointer<Language> RegExp = LanguagePointerUtil.createPointer("RegExp");
+public class LanguagePointerImpl implements NamedPointer<Language> {
+  private String myId;
+
+  private NullableLazyValue<Language> myValue = new NullableLazyValue<Language>() {
+    @Nullable
+    @Override
+    protected Language compute() {
+      return Language.findLanguageByID(myId);
+    }
+  };
+
+  public LanguagePointerImpl(String id) {
+    myId = id;
+  }
+
+  @NotNull
+  @Override
+  public String getName() {
+    return myId;
+  }
+
+  @Override
+  public Language get() {
+    return myValue.getValue();
+  }
 }

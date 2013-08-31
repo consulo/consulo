@@ -16,13 +16,10 @@
 package org.consulo.util.pointers;
 
 import com.intellij.openapi.util.Getter;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 17:17/15.06.13
  */
-public interface NamedPointer<T extends Named> extends Getter<T> {
-  @NotNull
-  String getName();
+public interface NamedPointer<T extends Named> extends Getter<T>, Named {
 }

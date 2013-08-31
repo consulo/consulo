@@ -56,7 +56,7 @@ public class AdvancedXmlPanel extends AbstractInjectionPanel<AbstractTagInjectio
   }
 
   private void createUIComponents() {
-    myValuePattern = new LanguageTextField(RegExpLanguageDelegate.INSTANCE, myProject, myOrigInjection.getValuePattern(), new LanguageTextField.SimpleDocumentCreator() {
+    myValuePattern = new LanguageTextField(RegExpLanguageDelegate.RegExp.get(), myProject, myOrigInjection.getValuePattern(), new LanguageTextField.SimpleDocumentCreator() {
       public void customizePsiFile(PsiFile psiFile) {
         psiFile.putCopyableUserData(ValueRegExpAnnotator.KEY, Boolean.TRUE);
       }
