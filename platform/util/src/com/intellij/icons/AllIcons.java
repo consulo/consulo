@@ -696,16 +696,6 @@ public class AllIcons {
     public static final Icon Sources = IconLoader.getIcon("/modules/sources.png"); // 16x16
     public static final Icon Split = IconLoader.getIcon("/modules/split.png"); // 16x16
     public static final Icon TestRoot = IconLoader.getIcon("/modules/testRoot.png"); // 16x16
-
-    public static class Types {
-      public static final Icon EjbModule = IconLoader.getIcon("/modules/types/ejbModule.png"); // 24x24
-      public static final Icon EmptyProjectType = IconLoader.getIcon("/modules/types/emptyProjectType.png"); // 24x24
-      public static final Icon JavaeeAppModule = IconLoader.getIcon("/modules/types/JavaeeAppModule.png"); // 24x24
-      public static final Icon JavaModule = IconLoader.getIcon("/modules/types/javaModule.png"); // 24x24
-      public static final Icon PluginModule = IconLoader.getIcon("/modules/types/pluginModule.png"); // 24x24
-      public static final Icon WebModule = IconLoader.getIcon("/modules/types/webModule.png"); // 24x24
-
-    }
     public static final Icon UnmarkWebroot = IconLoader.getIcon("/modules/unmarkWebroot.png"); // 16x16
     public static final Icon WebRoot = IconLoader.getIcon("/modules/webRoot.png"); // 16x16
 
