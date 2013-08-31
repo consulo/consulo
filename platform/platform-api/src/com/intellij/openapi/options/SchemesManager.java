@@ -16,6 +16,7 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.util.WriteExternalException;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,74 +26,91 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public interface SchemesManager <T extends Scheme, E extends ExternalizableScheme>{
+public interface SchemesManager <T extends Named, E extends ExternalizableScheme>{
   SchemesManager EMPTY = new SchemesManager(){
+    @Override
     @NotNull
     public Collection loadSchemes() {
       return Collections.emptySet();
     }
 
+    @Override
     @NotNull
     public Collection loadSharedSchemes() {
       return Collections.emptySet();
     }
 
+    @Override
     public void exportScheme(final ExternalizableScheme scheme, final String name, final String description) {
     }
 
+    @Override
     public boolean isImportAvailable() {
       return false;
     }
 
+    @Override
     public boolean isExportAvailable() {
       return false;
     }
 
-    public boolean isShared(final Scheme scheme) {
+    @Override
+    public boolean isShared(final Named scheme) {
       return false;
     }
 
-    public void addNewScheme(@NotNull final Scheme scheme, final boolean replaceExisting) {
+    @Override
+    public void addNewScheme(@NotNull final Named scheme, final boolean replaceExisting) {
 
     }
 
+    @Override
     public void clearAllSchemes() {
     }
 
+    @Override
     @NotNull
     public List getAllSchemes() {
       return Collections.emptyList();
     }
 
-    public Scheme findSchemeByName(final String schemeName) {
+    @Override
+    public Named findSchemeByName(final String schemeName) {
       return null;
     }
 
+    @Override
     public void save() {
     }
 
+    @Override
     public void setCurrentSchemeName(final String schemeName) {
 
     }
 
-    public Scheme getCurrentScheme() {
+    @Override
+    public Named getCurrentScheme() {
       return null;
     }
 
-    public void removeScheme(final Scheme scheme) {
+    @Override
+    public void removeScheme(final Named scheme) {
 
     }
 
+    @Override
     @NotNull
     public Collection getAllSchemeNames() {
       return Collections.emptySet();
     }
 
+    @Override
     @NotNull
     public Collection loadSharedSchemes(final Collection currentSchemeList) {
       return loadSharedSchemes();
     }
 
+    @Override
     public File getRootDirectory() {
       return null;
     }
@@ -109,7 +127,7 @@ public interface SchemesManager <T extends Scheme, E extends ExternalizableSchem
 
   boolean isExportAvailable();
 
-  boolean isShared(final Scheme scheme);
+  boolean isShared(final Named scheme);
 
   void addNewScheme(@NotNull T scheme, final boolean replaceExisting);
 

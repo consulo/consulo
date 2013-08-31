@@ -17,14 +17,14 @@ package com.intellij.openapi.editor.colors;
 
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.FontSize;
-import com.intellij.openapi.options.Scheme;
 import com.intellij.openapi.util.JDOMExternalizable;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public interface EditorColorsScheme extends Cloneable, JDOMExternalizable, Scheme {
+public interface EditorColorsScheme extends Cloneable, JDOMExternalizable, Named {
   @NonNls String DEFAULT_SCHEME_NAME = "Default";
 
   void setName(String name);

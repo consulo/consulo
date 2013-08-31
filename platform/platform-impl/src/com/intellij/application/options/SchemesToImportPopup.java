@@ -16,20 +16,20 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.options.ExternalizableScheme;
-import com.intellij.openapi.options.Scheme;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SharedScheme;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.util.pointers.Named;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
 
-public abstract class SchemesToImportPopup<T extends Scheme, E extends ExternalizableScheme> {
+public abstract class SchemesToImportPopup<T extends Named, E extends ExternalizableScheme> {
 
   private final Component myParent;
 

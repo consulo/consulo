@@ -388,7 +388,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Name
       return new Document(root);
     }
 
-    public void renameScheme(final String name, final EditorColorsScheme scheme) {
+    public void renameScheme(final String name, final EditorColorsSchemeImpl scheme) {
       scheme.setName(name);
     }
 
@@ -398,7 +398,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Name
     }
 
     @Override
-    public void onCurrentSchemeChanged(final Scheme newCurrentScheme) {
+    public void onCurrentSchemeChanged(final EditorColorsSchemeImpl newCurrentScheme) {
       fireChanges(mySchemesManager.getCurrentScheme());
     }
 

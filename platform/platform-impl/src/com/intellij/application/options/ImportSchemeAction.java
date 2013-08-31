@@ -19,15 +19,15 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.options.ExternalizableScheme;
-import com.intellij.openapi.options.Scheme;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.util.PlatformIcons;
+import org.consulo.util.pointers.Named;
 
 import java.awt.*;
 import java.util.Collection;
 
 
-public abstract class ImportSchemeAction<T extends Scheme, E extends ExternalizableScheme> extends AnAction {
+public abstract class ImportSchemeAction<T extends Named, E extends ExternalizableScheme> extends AnAction {
   protected final SchemesManager<T,E> mySchemesManager;
 
 

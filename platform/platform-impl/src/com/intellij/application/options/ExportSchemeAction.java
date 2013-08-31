@@ -20,14 +20,14 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.options.ExternalizableScheme;
-import com.intellij.openapi.options.Scheme;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.WriteExternalException;
+import org.consulo.util.pointers.Named;
 
 import java.io.IOException;
 
-public abstract class ExportSchemeAction<T extends Scheme, E extends ExternalizableScheme> extends AnAction {
+public abstract class ExportSchemeAction<T extends Named, E extends ExternalizableScheme> extends AnAction {
   protected final SchemesManager<T, E> mySchemesManager;
 
   public ExportSchemeAction(SchemesManager<T, E> manager) {
@@ -52,7 +52,7 @@ public abstract class ExportSchemeAction<T extends Scheme, E extends Externaliza
     doExport(getSelectedScheme(), mySchemesManager);
   }
 
-  public static <T extends Scheme, E extends ExternalizableScheme> void doExport(final E scheme, SchemesManager<T,E> manager) {
+  public static <T extends Named, E extends ExternalizableScheme> void doExport(final E scheme, SchemesManager<T,E> manager) {
     if (scheme != null) {
       try {
         ShareSchemeDialog dialog = new ShareSchemeDialog();

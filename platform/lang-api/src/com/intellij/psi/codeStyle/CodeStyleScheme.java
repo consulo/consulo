@@ -15,15 +15,14 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.openapi.options.Scheme;
+import org.consulo.util.pointers.Named;
 
 /**
  * @author MYakovlev
  * Date: Jul 19, 2002
  */
-public interface CodeStyleScheme extends Scheme {
-  @Override
-  String getName();
+public interface CodeStyleScheme extends Named {
   boolean isDefault();
+
   CodeStyleSettings getCodeStyleSettings();
 }

@@ -15,8 +15,8 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.openapi.options.Scheme;
 import com.intellij.openapi.ui.DialogWrapper;
+import org.consulo.util.pointers.Named;
 
 import javax.swing.*;
 
@@ -30,7 +30,7 @@ public class ShareSchemeDialog extends DialogWrapper {
     init();
   }
 
-  public void init(Scheme scheme){
+  public void init(Named scheme){
     myShareSchemePanel.setName(scheme.getName());
   }
 

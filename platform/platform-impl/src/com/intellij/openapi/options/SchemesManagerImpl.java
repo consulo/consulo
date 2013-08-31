@@ -36,6 +36,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.UniqueFileNamesProvider;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.text.UniqueNameGenerator;
+import org.consulo.util.pointers.Named;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -47,7 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class SchemesManagerImpl<T extends Scheme, E extends ExternalizableScheme> extends AbstractSchemesManager<T, E> {
+public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme> extends AbstractSchemesManager<T, E> {
   private static final Logger LOG = Logger.getInstance("#" + SchemesManagerFactoryImpl.class.getName());
 
   @NonNls private static final String DEFAULT_EXT = ".xml";
@@ -196,7 +197,7 @@ public class SchemesManagerImpl<T extends Scheme, E extends ExternalizableScheme
           }
 
           if (oldCurrentScheme != newCurrentScheme) {
-            myProcessor.onCurrentSchemeChanged(oldCurrentScheme);
+            myProcessor.onCurrentSchemeChanged((E)oldCurrentScheme);
           }
 
         }
@@ -238,7 +239,7 @@ public class SchemesManagerImpl<T extends Scheme, E extends ExternalizableScheme
         }
 
         if (oldCurrentScheme != newCurrentScheme) {
-          myProcessor.onCurrentSchemeChanged(oldCurrentScheme);
+          myProcessor.onCurrentSchemeChanged((E)oldCurrentScheme);
         }
       }
     }
@@ -359,7 +360,7 @@ public class SchemesManagerImpl<T extends Scheme, E extends ExternalizableScheme
   }
 
   private String checkFileNameIsFree(final String subpath, final String schemeName) {
-    for (Scheme scheme : mySchemes) {
+    for (Named scheme : mySchemes) {
       if (scheme instanceof ExternalizableScheme) {
         ExternalInfo externalInfo = ((ExternalizableScheme)scheme).getExternalInfo();
         String name = externalInfo.getCurrentFileName();
@@ -737,7 +738,7 @@ public class SchemesManagerImpl<T extends Scheme, E extends ExternalizableScheme
     return EXPORT_IS_AVAILABLE;
   }
 
-  public boolean isShared(final Scheme scheme) {
+  public boolean isShared(final Named scheme) {
     return scheme instanceof ExternalizableScheme && ((ExternalizableScheme)scheme).getExternalInfo().isIsImported();
   }
 
@@ -970,7 +971,7 @@ public class SchemesManagerImpl<T extends Scheme, E extends ExternalizableScheme
     return result;
   }
 
-  protected void onSchemeDeleted(final Scheme toDelete) {
+  protected void onSchemeDeleted(final Named toDelete) {
     if (toDelete instanceof ExternalizableScheme) {
       ExternalInfo info = ((ExternalizableScheme)toDelete).getExternalInfo();
       String previouslyUsedName = info.getPreviouslySavedName();

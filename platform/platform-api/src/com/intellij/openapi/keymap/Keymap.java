@@ -18,14 +18,14 @@ package com.intellij.openapi.keymap;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.MouseShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
-import com.intellij.openapi.options.Scheme;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface Keymap extends Scheme {
+public interface Keymap extends Named {
   //think about name
   String getName();
 

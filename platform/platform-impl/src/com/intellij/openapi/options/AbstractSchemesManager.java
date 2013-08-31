@@ -21,13 +21,14 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.UniqueFileNamesProvider;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.text.UniqueNameGenerator;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 
-public abstract class AbstractSchemesManager<T extends Scheme, E extends ExternalizableScheme> implements SchemesManager<T,E> {
+public abstract class AbstractSchemesManager<T extends Named, E extends ExternalizableScheme> implements SchemesManager<T,E> {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.AbstractSchemesManager");
 
@@ -63,7 +64,7 @@ public abstract class AbstractSchemesManager<T extends Scheme, E extends Externa
     checkCurrentScheme(scheme);
   }
 
-  protected void checkCurrentScheme(final Scheme scheme) {
+  protected void checkCurrentScheme(final Named scheme) {
     if (myCurrentScheme == null && myCurrentSchemeName != null && myCurrentSchemeName.equals(scheme.getName())) {
       myCurrentScheme = (T)scheme;
     }
@@ -128,7 +129,7 @@ public abstract class AbstractSchemesManager<T extends Scheme, E extends Externa
   @Override
   public void removeScheme(final T scheme) {
     String schemeName = scheme.getName();
-    Scheme toDelete = findSchemeToDelete(schemeName);
+    Named toDelete = findSchemeToDelete(schemeName);
 
     mySchemes.remove(toDelete);
     if (myCurrentScheme == toDelete) {
@@ -138,9 +139,9 @@ public abstract class AbstractSchemesManager<T extends Scheme, E extends Externa
     onSchemeDeleted(toDelete);
   }
 
-  protected abstract void onSchemeDeleted(final Scheme toDelete);
+  protected abstract void onSchemeDeleted(final Named toDelete);
 
-  private Scheme findSchemeToDelete(final String schemeName) {
+  private Named findSchemeToDelete(final String schemeName) {
     for (T scheme : mySchemes) {
       if (Comparing.equal(schemeName,scheme.getName())) return scheme;
     }

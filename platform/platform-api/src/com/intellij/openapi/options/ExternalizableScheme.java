@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.options;
 
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
-public interface ExternalizableScheme extends Scheme{
+public interface ExternalizableScheme extends Named {
   @NotNull
   ExternalInfo getExternalInfo();
 

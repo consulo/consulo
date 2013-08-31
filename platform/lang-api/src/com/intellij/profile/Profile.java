@@ -15,15 +15,15 @@
  */
 package com.intellij.profile;
 
-import com.intellij.openapi.options.Scheme;
 import com.intellij.openapi.util.JDOMExternalizable;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * User: anna
  * Date: 20-Nov-2005
  */
-public interface Profile extends JDOMExternalizable, Comparable, Scheme {
+public interface Profile extends JDOMExternalizable, Comparable, Named {
 
   void copyFrom(@NotNull Profile profile);
 

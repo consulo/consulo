@@ -19,11 +19,12 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import org.consulo.util.pointers.Named;
 
 public abstract class SchemesManagerFactory {
   public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("com.intellij.schemeOwner");  
 
-  public abstract <T extends Scheme, E extends ExternalizableScheme> SchemesManager<T,E> createSchemesManager(String fileSpec, SchemeProcessor<E> processor,
+  public abstract <T extends Named, E extends ExternalizableScheme> SchemesManager<T,E> createSchemesManager(String fileSpec, SchemeProcessor<E> processor,
                                                                             RoamingType roamingType);
 
   public static SchemesManagerFactory getInstance(){

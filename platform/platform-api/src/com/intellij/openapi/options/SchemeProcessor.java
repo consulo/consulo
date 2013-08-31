@@ -32,5 +32,5 @@ public interface SchemeProcessor<T extends ExternalizableScheme> {
   void onSchemeAdded(T scheme);
   void onSchemeDeleted(T scheme);
 
-  void onCurrentSchemeChanged(final Scheme oldCurrentScheme);
+  void onCurrentSchemeChanged(final T oldCurrentScheme);
 }

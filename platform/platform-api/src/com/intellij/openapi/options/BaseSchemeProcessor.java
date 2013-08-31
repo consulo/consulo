@@ -28,6 +28,6 @@ public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implem
   public void onSchemeDeleted(final T scheme) {
   }
 
-  public void onCurrentSchemeChanged(final Scheme newCurrentScheme) {
+  public void onCurrentSchemeChanged(final T newCurrentScheme) {
   }
 }

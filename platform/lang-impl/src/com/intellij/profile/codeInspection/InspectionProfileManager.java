@@ -29,7 +29,10 @@ import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.*;
+import com.intellij.openapi.options.BaseSchemeProcessor;
+import com.intellij.openapi.options.SchemeProcessor;
+import com.intellij.openapi.options.SchemesManager;
+import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.*;
@@ -113,10 +116,10 @@ public class InspectionProfileManager extends ApplicationProfileManager implemen
       }
 
       @Override
-      public void onCurrentSchemeChanged(final Scheme oldCurrentScheme) {
+      public void onCurrentSchemeChanged(final InspectionProfileImpl oldCurrentScheme) {
         Profile current = mySchemesManager.getCurrentScheme();
         if (current != null) {
-          fireProfileChanged((Profile)oldCurrentScheme, current, null);
+          fireProfileChanged(oldCurrentScheme, current, null);
         }
         onProfilesChanged();
       }

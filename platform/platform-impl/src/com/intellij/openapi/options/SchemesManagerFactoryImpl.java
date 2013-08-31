@@ -23,6 +23,7 @@ import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
   private final List<SchemesManagerImpl> myRegisteredManagers = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Override
-  public <T extends Scheme, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec,
+  public <T extends Named, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec,
                                                                                                       final SchemeProcessor<E> processor,
                                                                                                       final RoamingType roamingType) {
     final Application application = ApplicationManager.getApplication();
@@ -76,7 +77,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
         }
 
         @Override
-        public boolean isShared(final Scheme scheme) {
+        public boolean isShared(final Named scheme) {
           return false;
         }
 
@@ -85,7 +86,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
         }
 
         @Override
-        protected void onSchemeDeleted(final Scheme toDelete) {
+        protected void onSchemeDeleted(final Named toDelete) {
         }
 
         @Override
