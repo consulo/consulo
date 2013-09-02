@@ -51,6 +51,10 @@ public class CompilerClientInterfaceImpl extends UnicastRemoteObject implements 
     ProblemsView.SERVICE.getInstance(myProject).addMessage(type, text, groupName, null, null, null);
   }
 
+  @Override
+  public void compilationFinished(boolean aborted, int errors, int warnings) throws RemoteException {
+  }
+
   @NotNull
   @Override
   public String getProjectDir() {

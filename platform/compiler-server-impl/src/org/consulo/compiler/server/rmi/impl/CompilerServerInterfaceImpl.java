@@ -46,7 +46,7 @@ public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements 
   }
 
   @Override
-  public void compile(CompilerClientInterface client) throws RemoteException {
+  public void compile(final CompilerClientInterface client) throws RemoteException {
     try {
       final Project project = ProjectManagerEx.getInstanceEx().loadProject(client.getProjectDir());
 
@@ -57,6 +57,13 @@ public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements 
       CompilerManager.getInstance(project).rebuild(new CompileStatusNotification() {
         @Override
         public void finished(boolean aborted, int errors, int warnings, CompileContext compileContext) {
+          try {
+            client.compilationFinished(aborted, errors, warnings);
+          }
+          catch (RemoteException e) {
+            //
+          }
+
           project.dispose();
         }
       });
@@ -70,5 +77,10 @@ public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements 
     catch (InvalidDataException e) {
       throw new RemoteException(e.getMessage(), e);
     }
+  }
+
+  @Override
+  public void shutdown() throws RemoteException {
+    System.exit(0);
   }
 }

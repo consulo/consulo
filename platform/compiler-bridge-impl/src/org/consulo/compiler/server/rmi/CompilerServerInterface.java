@@ -28,4 +28,6 @@ public interface CompilerServerInterface extends Remote {
   void notify(boolean connected) throws RemoteException;
 
   void compile(final CompilerClientInterface client) throws RemoteException;
+
+  void shutdown() throws RemoteException;
 }

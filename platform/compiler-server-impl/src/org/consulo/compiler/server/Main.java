@@ -69,6 +69,10 @@ public class Main {
         System.out.println(category + ": " + message);
       }
 
+      @Override
+      public void compilationFinished(boolean aborted, int errors, int warnings) throws RemoteException {
+      }
+
       @NotNull
       @Override
       public String getProjectDir() {

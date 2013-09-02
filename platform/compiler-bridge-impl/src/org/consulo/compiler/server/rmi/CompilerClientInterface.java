@@ -28,6 +28,8 @@ import java.rmi.RemoteException;
 public interface CompilerClientInterface extends Remote {
   void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) throws RemoteException;
 
+  void compilationFinished(boolean aborted, int errors, int warnings) throws RemoteException;
+
   @NotNull
-  String getProjectDir();
+  String getProjectDir() throws RemoteException;
 }
