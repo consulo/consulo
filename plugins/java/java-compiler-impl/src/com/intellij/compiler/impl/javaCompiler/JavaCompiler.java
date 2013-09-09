@@ -33,6 +33,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
+import com.intellij.util.ExceptionUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,7 +73,7 @@ public class JavaCompiler implements TranslatingCompiler {
       if (CompileDriver.ourDebugMode) {
         e.printStackTrace();
       }
-      context.addMessage(CompilerMessageCategory.ERROR, e.getMessage(), null, -1, -1);
+      context.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
       LOGGER.info(e);
     }
     catch (CacheCorruptedException e) {

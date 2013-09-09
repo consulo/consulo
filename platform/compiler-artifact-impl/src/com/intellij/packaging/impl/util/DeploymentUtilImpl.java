@@ -22,6 +22,7 @@ import com.intellij.openapi.deployment.DeploymentUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +92,7 @@ public class DeploymentUtilImpl extends DeploymentUtil {
       FileUtil.copy(fromFile, toFile);
     }
     catch (IOException e) {
-      context.addMessage(CompilerMessageCategory.ERROR, createCopyErrorMessage(fromFile, toFile) + ": "+e.getLocalizedMessage(), null, -1, -1);
+      context.addMessage(CompilerMessageCategory.ERROR, createCopyErrorMessage(fromFile, toFile) + ": "+ ExceptionUtil.getThrowableText(e), null, -1, -1);
     }
   }
 

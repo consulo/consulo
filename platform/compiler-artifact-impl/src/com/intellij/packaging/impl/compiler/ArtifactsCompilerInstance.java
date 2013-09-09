@@ -45,6 +45,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.artifacts.ArtifactSortingUtil;
 import com.intellij.packaging.impl.util.DeploymentUtilImpl;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
@@ -251,7 +252,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     }
     catch (Exception e) {
       LOG.info(e);
-      myContext.addMessage(CompilerMessageCategory.ERROR, e.getLocalizedMessage(), null, -1, -1);
+      myContext.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
       return false;
     }
     return true;

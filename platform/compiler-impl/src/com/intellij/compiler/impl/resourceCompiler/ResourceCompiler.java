@@ -31,6 +31,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Chunk;
+import com.intellij.util.ExceptionUtil;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -148,7 +149,7 @@ public class ResourceCompiler implements TranslatingCompiler {
       }
       catch (IOException e) {
         context.addMessage(CompilerMessageCategory.ERROR,
-                           CompilerBundle.message("error.copying", command.getFromPath(), command.getToPath(), e.getMessage()),
+                           CompilerBundle.message("error.copying", command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e)),
                            command.getSourceFileUrl(), -1, -1);
       }
     }

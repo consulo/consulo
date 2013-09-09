@@ -32,6 +32,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.CommonProcessors;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.io.KeyDescriptor;
@@ -87,7 +88,7 @@ public class GenericCompilerRunner {
     }
     catch (Exception e) {
       LOG.info(e);
-      myContext.addMessage(CompilerMessageCategory.ERROR, CompilerBundle.message("compiler.error.exception", e.getMessage()), null, -1, -1);
+      myContext.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
     }
     return didSomething;
   }

@@ -44,6 +44,7 @@ import com.intellij.uiDesigner.compiler.FormErrorInfo;
 import com.intellij.uiDesigner.compiler.Utils;
 import com.intellij.uiDesigner.lw.CompiledClassPropertiesProvider;
 import com.intellij.uiDesigner.lw.LwRootContainer;
+import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -131,7 +132,7 @@ public final class Form2ByteCodeCompiler implements ClassInstrumentingCompiler {
                 continue;
               }
               catch (Exception e) {
-                addMessage(context, UIDesignerBundle.message("error.cannot.process.form.file", e), formFile, CompilerMessageCategory.ERROR);
+                addMessage(context, UIDesignerBundle.message("error.cannot.process.form.file", ExceptionUtil.getThrowableText(e)), formFile, CompilerMessageCategory.ERROR);
                 continue;
               }
 
@@ -295,7 +296,7 @@ public final class Form2ByteCodeCompiler implements ClassInstrumentingCompiler {
           catch (IOException e) {
             addMessage(
               context,
-              UIDesignerBundle.message("error.cannot.copy.gui.designer.form.runtime", module.getName(), e.toString()),
+              UIDesignerBundle.message("error.cannot.copy.gui.designer.form.runtime", module.getName(), ExceptionUtil.getThrowableText(e)),
               null, CompilerMessageCategory.ERROR);
           }
         }
@@ -327,7 +328,7 @@ public final class Form2ByteCodeCompiler implements ClassInstrumentingCompiler {
             rootContainer = Utils.getRootContainer(text, new CompiledClassPropertiesProvider(finder.getLoader()));
           }
           catch (Exception e) {
-            addMessage(context, UIDesignerBundle.message("error.cannot.process.form.file", e), formFile, CompilerMessageCategory.ERROR);
+            addMessage(context, UIDesignerBundle.message("error.cannot.process.form.file", ExceptionUtil.getThrowableText(e)), formFile, CompilerMessageCategory.ERROR);
             continue;
           }
 

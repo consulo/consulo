@@ -217,7 +217,7 @@ public class AsmCodeGenerator {
       throw new CodeGenerationException(null, "Unsupported class version error: " + className);
     }
     catch (IOException e) {
-      throw new CodeGenerationException(null, e.getMessage(), e);
+      throw new CodeGenerationException(null, getThrowableText(e), e);
     }
   }
 
@@ -347,7 +347,7 @@ public class AsmCodeGenerator {
         generateButtonGroups(myRootContainer, generator);
       }
       catch (CodeGenerationException e) {
-        myErrors.add(new FormErrorInfo(e.getComponentId(), e.getMessage()));
+        myErrors.add(new FormErrorInfo(e.getComponentId(), getThrowableText(e)));
       }
       generator.returnValue();
       generator.endMethod();
@@ -368,7 +368,7 @@ public class AsmCodeGenerator {
           nestedFormContainer = myFormLoader.loadForm(nestedForm.getFormFileName());
         }
         catch (Exception e) {
-          throw new CodeGenerationException(lwComponent.getId(), e.getMessage());
+          throw new CodeGenerationException(lwComponent.getId(), getThrowableText(e));
         }
         // if nested form is empty, ignore
         if (nestedFormContainer.getComponentCount() == 0) {
@@ -413,10 +413,10 @@ public class AsmCodeGenerator {
           }
         }
         catch (ClassNotFoundException e) {
-          throw new CodeGenerationException(lwComponent.getId(), e.getMessage(), e);
+          throw new CodeGenerationException(lwComponent.getId(), getThrowableText(e), e);
         }
         catch (IOException e) {
-          throw new CodeGenerationException(lwComponent.getId(), e.getMessage(), e);
+          throw new CodeGenerationException(lwComponent.getId(), getThrowableText(e), e);
         }
       }
 
@@ -562,10 +562,10 @@ public class AsmCodeGenerator {
           }
         }
         catch (IOException e) {
-          throw new CodeGenerationException(lwComponent.getId(), e.getMessage(), e);
+          throw new CodeGenerationException(lwComponent.getId(), getThrowableText(e), e);
         }
         catch (ClassNotFoundException e) {
-          throw new CodeGenerationException(lwComponent.getId(), e.getMessage(), e);
+          throw new CodeGenerationException(lwComponent.getId(), getThrowableText(e), e);
         }
 
         generator.loadLocal(componentLocal);
@@ -748,10 +748,10 @@ public class AsmCodeGenerator {
           }
         }
         catch (IOException e) {
-          throw new CodeGenerationException(rootContainer.getId(), e.getMessage(), e);
+          throw new CodeGenerationException(rootContainer.getId(), getThrowableText(e), e);
         }
         catch (ClassNotFoundException e) {
-          throw new CodeGenerationException(rootContainer.getId(), e.getMessage(), e);
+          throw new CodeGenerationException(rootContainer.getId(), getThrowableText(e), e);
         }
       }
     }
@@ -807,7 +807,7 @@ public class AsmCodeGenerator {
         throw new CodeGenerationException(componentId, "Class not found: " + fieldType.getClassName());
       }
       catch (IOException e) {
-        throw new CodeGenerationException(componentId, e.getMessage(), e);
+        throw new CodeGenerationException(componentId, getThrowableText(e), e);
       }
     }
 
@@ -892,6 +892,13 @@ public class AsmCodeGenerator {
         pushPropValue(generator, Color.class.getName(), container.getBorderTitleColor());
       }
     }
+  }
+ 
+  private static String getThrowableText(Throwable aThrowable) {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    aThrowable.printStackTrace(writer);
+    return stringWriter.getBuffer().toString();
   }
 
   private class FormConstructorVisitor extends MethodVisitor {

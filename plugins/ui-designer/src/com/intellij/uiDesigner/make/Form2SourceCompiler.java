@@ -31,6 +31,7 @@ import com.intellij.uiDesigner.GuiDesignerConfiguration;
 import com.intellij.uiDesigner.UIDesignerBundle;
 import com.intellij.uiDesigner.compiler.AlienFormFileException;
 import com.intellij.uiDesigner.compiler.FormErrorInfo;
+import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
@@ -174,7 +175,7 @@ public final class Form2SourceCompiler implements SourceInstrumentingCompiler{
                 addError(
                   context,
                   new FormErrorInfo(null, UIDesignerBundle.message("error.cannot.copy.gui.designer.form.runtime",
-                                           module.getName(), e.toString())),
+                                           module.getName(), ExceptionUtil.getThrowableText(e))),
                   null
                 );
               }
@@ -217,7 +218,7 @@ public final class Form2SourceCompiler implements SourceInstrumentingCompiler{
     if (formFile != null) {
       FormElementNavigatable navigatable = new FormElementNavigatable(context.getProject(), formFile, e.getComponentId());
       context.addMessage(CompilerMessageCategory.ERROR,
-                         formFile.getPresentableUrl() + ": " + e.getErrorMessage(), 
+                         formFile.getPresentableUrl() + ": " + e.getErrorMessage(),
                          formFile.getUrl(), -1, -1, navigatable);
     }
     else {

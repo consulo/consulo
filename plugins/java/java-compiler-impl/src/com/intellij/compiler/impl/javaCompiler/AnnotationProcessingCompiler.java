@@ -42,6 +42,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.StringBuilderSpinAllocator;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -102,7 +103,7 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
       wrapper.compile();
     }
     catch (CompilerException e) {
-      _context.addMessage(CompilerMessageCategory.ERROR, e.getMessage(), null, -1, -1);
+      _context.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
     }
     catch (CacheCorruptedException e) {
       LOGGER.info(e);
