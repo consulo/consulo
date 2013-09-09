@@ -648,6 +648,9 @@
     <projectService serviceInterface="com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerConfiguration"
                     serviceImplementation="com.intellij.compiler.impl.javaCompiler.javac.JavacCompilerConfiguration"/>
 
+    <projectService serviceInterface="com.intellij.debugger.ui.DebuggerRecents"
+                    serviceImplementation="com.intellij.debugger.ui.DebuggerRecents"/>
+
     <compiler implementation="com.intellij.compiler.impl.javaCompiler.AnnotationProcessingCompiler" id="java-annotation-processor" order="before java-compiler" />
     <compiler implementation="com.intellij.compiler.impl.javaCompiler.JavaCompiler" id="java-compiler"/>
 
