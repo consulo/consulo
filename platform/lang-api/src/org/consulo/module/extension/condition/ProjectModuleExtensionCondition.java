@@ -23,19 +23,12 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.text.StringUtil;
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionProvider;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2:26/10.09.13
  */
-@SuppressWarnings("unchecked")
 public class ProjectModuleExtensionCondition implements Condition<Project> {
-  private static final Class<? extends ModuleExtension<?>>[] EMPTY_CLASS_ARRAY = new Class[0];
 
   public static Condition<Project> create(String ids) {
     return StringUtil.isEmptyOrSpaces(ids) ? Conditions.<Project>alwaysTrue() : new ProjectModuleExtensionCondition(ids);
@@ -44,18 +37,7 @@ public class ProjectModuleExtensionCondition implements Condition<Project> {
   private Class<? extends ModuleExtension<?>>[] myExtensionClasses;
 
   private ProjectModuleExtensionCondition(String ids) {
-    List<String> split = StringUtil.split(ids, ",");
-
-    List<Class<? extends ModuleExtension<?>>> list = new ArrayList<Class<? extends ModuleExtension<?>>>();
-
-    for (String id : split) {
-      ModuleExtensionProvider  provider = ModuleExtensionProviderEP.findProvider(id);
-      if(provider != null) {
-        list.add(provider.getImmutableClass());
-      }
-    }
-
-    myExtensionClasses = list.isEmpty() ? EMPTY_CLASS_ARRAY : list.toArray(new Class[list.size()]);
+    myExtensionClasses = ModuleExtensionConvertUtil.toModuleExtensionClassArray(ids);
   }
 
   @Override
