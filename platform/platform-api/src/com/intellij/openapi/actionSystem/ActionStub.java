@@ -25,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Vladimir Kondratyev
  */
-public class ActionStub extends AnAction{
-  private static final Logger LOG=Logger.getInstance("#com.intellij.openapi.actionSystem.ActionStub");
+public class ActionStub extends AnAction {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.actionSystem.ActionStub");
 
   private final String myClassName;
   private final String myId;
@@ -35,26 +35,30 @@ public class ActionStub extends AnAction{
   private final PluginId myPluginId;
   private final String myIconPath;
 
-  public ActionStub(@NotNull String actionClass, @NotNull String id, @NotNull String text, ClassLoader loader, PluginId pluginId,
+  public ActionStub(@NotNull String actionClass,
+                    @NotNull String id,
+                    @NotNull String text,
+                    ClassLoader loader,
+                    PluginId pluginId,
                     String iconPath) {
     myLoader = loader;
-    myClassName=actionClass;
-    LOG.assertTrue(id.length()>0);
-    myId=id;
-    myText=text;
+    myClassName = actionClass;
+    LOG.assertTrue(id.length() > 0);
+    myId = id;
+    myText = text;
     myPluginId = pluginId;
     myIconPath = iconPath;
   }
 
-  public String getClassName(){
+  public String getClassName() {
     return myClassName;
   }
 
-  public String getId(){
+  public String getId() {
     return myId;
   }
 
-  public String getText(){
+  public String getText() {
     return myText;
   }
 
@@ -71,7 +75,7 @@ public class ActionStub extends AnAction{
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e){
+  public void actionPerformed(AnActionEvent e) {
     throw new UnsupportedOperationException();
   }
 
@@ -93,6 +97,8 @@ public class ActionStub extends AnAction{
       targetPresentation.setDescription(sourcePresentation.getDescription());
     }
     targetAction.setShortcutSet(getShortcutSet());
+    targetAction.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
+    targetAction.setModuleExtensionClasses(getModuleExtensionClasses());
   }
 
 }

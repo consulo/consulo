@@ -55,4 +55,10 @@ public class ActionBean {
 
   @Attribute(ActionManagerImpl.KEYMAP_ATTR_NAME)
   public String keymap;
+
+  @Attribute(ActionManagerImpl.CAN_USE_PROJECT_AS_DEFAULT)
+  public boolean canUseProjectAsDefault;
+
+  @Attribute(ActionManagerImpl.REQUIRE_MODULE_EXTENSIONS)
+  public String requireModuleExtensions;
 }

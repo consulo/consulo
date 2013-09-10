@@ -22,6 +22,8 @@ import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.condition.ModuleExtensionConvertUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -76,6 +78,8 @@ public abstract class AnAction implements PossiblyDumbAware {
   private boolean myIsDefaultIcon = true;
   private boolean myWorksInInjected;
 
+  private boolean myCanUseProjectAsDefault;
+  private Class<? extends ModuleExtension<?>>[] myModuleExtensionClasses = ModuleExtensionConvertUtil.EMPTY_CLASS_ARRAY;
 
   /**
    * Creates a new action with its text, description and icon set to <code>null</code>.
@@ -315,6 +319,23 @@ public abstract class AnAction implements PossiblyDumbAware {
   @Override
   public boolean isDumbAware() {
     return this instanceof DumbAware;
+  }
+
+  public boolean isCanUseProjectAsDefault() {
+    return myCanUseProjectAsDefault;
+  }
+
+  public void setCanUseProjectAsDefault(boolean canUseProjectAsDefault) {
+    myCanUseProjectAsDefault = canUseProjectAsDefault;
+  }
+
+  @NotNull
+  public Class<? extends ModuleExtension<?>>[] getModuleExtensionClasses() {
+    return myModuleExtensionClasses;
+  }
+
+  public void setModuleExtensionClasses(@NotNull Class<? extends ModuleExtension<?>>[] moduleExtensionClasses) {
+    myModuleExtensionClasses = moduleExtensionClasses;
   }
 
   public interface TransparentUpdate {

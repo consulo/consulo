@@ -38,7 +38,10 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -50,6 +53,8 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.condition.ModuleExtensionConvertUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +97,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   @NonNls public static final String ID_ATTR_NAME = "id";
   @NonNls public static final String INTERNAL_ATTR_NAME = "internal";
   @NonNls public static final String ICON_ATTR_NAME = "icon";
+  @NonNls public static final String REQUIRE_MODULE_EXTENSIONS = "requireModuleExtensions";
+  @NonNls public static final String CAN_USE_PROJECT_AS_DEFAULT = "canUseProjectAsDefault";
   @NonNls public static final String ADD_TO_GROUP_ELEMENT_NAME = "add-to-group";
   @NonNls public static final String SHORTCUT_ELEMENT_NAME = "keyboard-shortcut";
   @NonNls public static final String MOUSE_SHORTCUT_ELEMENT_NAME = "mouse-shortcut";
@@ -364,8 +371,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     presentation.setText(text);
 
     // description
-
     presentation.setDescription(loadDescriptionForElement(element, bundle, id, ACTION_ELEMENT_NAME));
+
+    processModuleExtensionOptions(element, stub);
 
     // process all links and key bindings if any
     for (final Object o : element.getChildren()) {
@@ -391,6 +399,16 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     // register action
     registerAction(id, stub, pluginId);
     return stub;
+  }
+
+  private static void processModuleExtensionOptions(Element element, AnAction action) {
+    String canUseProjectAsDefaultText = element.getAttributeValue(CAN_USE_PROJECT_AS_DEFAULT);
+    boolean canUseProjectAsDefault = !StringUtil.isEmpty(canUseProjectAsDefaultText) && Boolean.parseBoolean(canUseProjectAsDefaultText);
+    Class<? extends ModuleExtension<?>>[] moduleExtensionClasses = ModuleExtensionConvertUtil
+      .toModuleExtensionClassArray(element.getAttributeValue(REQUIRE_MODULE_EXTENSIONS));
+
+    action.setCanUseProjectAsDefault(canUseProjectAsDefault);
+    action.setModuleExtensionClasses(moduleExtensionClasses);
   }
 
   @Nullable
@@ -529,6 +547,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       if (!StringUtil.isEmpty(description) || presentation.getDescription() == null) {
         presentation.setDescription(description);
       }
+
+      processModuleExtensionOptions(element, group);
 
       // icon
       setIcon(element.getAttributeValue(ICON_ATTR_NAME), className, loader, presentation, pluginId);

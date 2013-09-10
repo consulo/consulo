@@ -99,7 +99,7 @@
       <add-to-group group-id="EditorTabPopupMenuEx" anchor="after" relative-to-action="AddAllToFavorites"/>
     </action>
 
-    <group id="RefactoringMenu4">
+    <group id="RefactoringMenu4" requireModuleExtensions="java" canUseProjectAsDefault="true">
       <action id="TurnRefsToSuper" class="com.intellij.refactoring.actions.TurnRefsToSuperAction"/>
       <action id="InheritanceToDelegation" class="com.intellij.refactoring.actions.InheritanceToDelegationAction"/>
       <action id="RemoveMiddleman" class="com.intellij.refactoring.actions.RemoveMiddlemanAction"/>

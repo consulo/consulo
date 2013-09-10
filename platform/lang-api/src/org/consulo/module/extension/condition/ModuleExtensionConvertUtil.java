@@ -19,6 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,12 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class ModuleExtensionConvertUtil {
-  private static final Class<? extends ModuleExtension<?>>[] EMPTY_CLASS_ARRAY = new Class[0];
+  public static final Class<? extends ModuleExtension<?>>[] EMPTY_CLASS_ARRAY = new Class[0];
 
-  public static Class<? extends ModuleExtension<?>>[] toModuleExtensionClassArray(String ids) {
+  public static Class<? extends ModuleExtension<?>>[] toModuleExtensionClassArray(@Nullable String ids) {
+    if(ids == null) {
+      return EMPTY_CLASS_ARRAY;
+    }
     List<String> split = StringUtil.split(ids, ",");
 
     List<Class<? extends ModuleExtension<?>>> list = new ArrayList<Class<? extends ModuleExtension<?>>>();
