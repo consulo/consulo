@@ -26,6 +26,7 @@ import org.consulo.module.extension.ModuleExtension;
  * @author VISTALL
  * @since 16:40/12.06.13
  */
+@Deprecated
 public class ToolWindowModuleExtensionCondition implements Condition<Project> {
   private final Class<? extends ModuleExtension> myExtensionClass;
 

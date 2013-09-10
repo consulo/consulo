@@ -96,17 +96,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     RootModelImpl originalRootModel = moduleRootManager.getRootModel();
 
-    for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
-      final ModuleExtensionProvider provider = providerEP.getInstance();
-
-      final ModuleExtension<?> originalExtension = originalRootModel.getExtensionWithoutCheck(provider.getImmutableClass());
-
-      assert originalExtension != null;
-
-      originalExtension.loadState(element);
-
-      myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
-    }
+    createMutableExtensions(originalRootModel, element);
 
     final List<Element> contentChildren = element.getChildren(ContentEntryImpl.ELEMENT_NAME);
     for (Element child : contentChildren) {
@@ -118,7 +108,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     boolean moduleSourceAdded = false;
     for (Element child : orderElements) {
       final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this, myProjectRootManager);
-      if(orderEntry == null) {
+      if (orderEntry == null) {
         continue;
       }
       if (orderEntry instanceof ModuleSourceOrderEntry) {
@@ -163,17 +153,26 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
+    createMutableExtensions(rootModel, null);
+
+    setOrderEntriesFrom(rootModel);
+  }
+
+  private void createMutableExtensions(RootModelImpl rootModel, @Nullable Element state) {
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       final ModuleExtensionProvider provider = providerEP.getInstance();
 
-      final ModuleExtension<?> originalExtension = moduleRootManager.getExtensionWithoutCheck(provider.getImmutableClass());
+      final ModuleExtension<?> originalExtension = rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
 
-      assert originalExtension != null;
+      if(state != null) {
+        originalExtension.loadState(state);
+      }
+      MutableModuleExtension mutable = provider.createMutable(providerEP.getKey(), rootModel.getModule(), originalExtension);
 
-      myExtensions.add(provider.createMutable(providerEP.getKey(), moduleRootManager.getModule(), originalExtension));
+      mutable.commit(originalExtension);
+
+      myExtensions.add(mutable);
     }
-
-    setOrderEntriesFrom(rootModel);
   }
 
   private void addSourceOrderEntries() {
@@ -258,18 +257,18 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     int sourcePosition = -1, sdkPosition = -1;
     for (int j = 0; j < myOrderEntries.size(); j++) {
       OrderEntry orderEntry = myOrderEntries.get(j);
-      if(orderEntry instanceof ModuleSourceOrderEntry) {
+      if (orderEntry instanceof ModuleSourceOrderEntry) {
         sourcePosition = j;
       }
-      else if(orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+      else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
         sdkPosition = j;
       }
     }
 
-    if(sdkPosition >= 0) {
+    if (sdkPosition >= 0) {
       myOrderEntries.add(sdkPosition + 1, moduleSdkOrderEntry);
     }
-    else if(sourcePosition >= 0) {
+    else if (sourcePosition >= 0) {
       myOrderEntries.add(sourcePosition, moduleSdkOrderEntry);
     }
     else {
@@ -415,7 +414,18 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (ModuleExtension<?> extension : myExtensions) {
       MutableModuleExtension<?> mutableExtension = (MutableModuleExtension)extension;
       if (mutableExtension.isModified()) {
+        ModuleExtension originalExtension =
+          getSourceModel().getExtensionWithoutCheck(ModuleExtensionProviderEP.findProvider(extension.getId()).getImmutableClass());
+
+        boolean enabled = originalExtension.isEnabled();
+
         mutableExtension.commit();
+
+
+        if (enabled != mutableExtension.isEnabled()) {
+          originalExtension.getModule().getProject().getMessageBus().syncPublisher(ModuleExtension.ENABLE_TOPIC)
+            .extensionEnableChanged(originalExtension, mutableExtension.isEnabled());
+        }
       }
     }
   }
@@ -462,7 +472,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public void writeExternal(@NotNull Element element) {
     for (ModuleExtension<?> extension : myExtensions) {
       final Element state = extension.getState();
-      if(state == null) {
+      if (state == null) {
         continue;
       }
       element.addContent(state);
@@ -792,12 +802,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @NotNull
   @Override
   public ModuleExtension[] getExtensions() {
-    if(myExtensions.isEmpty()) {
+    if (myExtensions.isEmpty()) {
       return ModuleExtension.EMPTY_ARRAY;
     }
     List<ModuleExtension> list = new ArrayList<ModuleExtension>(myExtensions.size());
     for (ModuleExtension<?> extension : myExtensions) {
-      if(extension.isEnabled()) {
+      if (extension.isEnabled()) {
         list.add(extension);
       }
     }

@@ -18,17 +18,17 @@ package com.intellij.openapi.wm;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.xmlb.annotations.Attribute;
+import org.consulo.module.extension.condition.ExtensionPointBeanWithModuleExtensionCondition;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
-public class ToolWindowEP extends AbstractExtensionPointBean {
+public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.ToolWindowEP");
 
   public static final ExtensionPointName<ToolWindowEP> EP_NAME = ExtensionPointName.create("com.intellij.toolWindow");

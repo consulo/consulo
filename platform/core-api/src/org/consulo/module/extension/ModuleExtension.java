@@ -17,6 +17,7 @@ package org.consulo.module.extension;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
+import com.intellij.util.messages.Topic;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ModuleExtension<T extends ModuleExtension> extends PersistentStateComponent<Element> {
   ModuleExtension[] EMPTY_ARRAY = new ModuleExtension[0];
+
+  Topic<ModuleExtensionEnableListener> ENABLE_TOPIC = Topic.create("module extension enable topic", ModuleExtensionEnableListener.class);
 
   @NotNull
   String getId();

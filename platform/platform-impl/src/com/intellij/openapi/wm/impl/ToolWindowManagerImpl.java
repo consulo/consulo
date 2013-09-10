@@ -62,6 +62,8 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionEnableListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -466,11 +468,33 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   private void registerToolWindowsFromBeans() {
     ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
     for (final ToolWindowEP bean : beans) {
-      final Condition<Project> condition = bean.getCondition();
-      if (condition == null || condition.value(myProject)) {
+      Condition<Project> mergedCond = Conditions.and(bean.getCondition(), bean.getModuleExtensionCondition());
+      if (mergedCond.value(myProject)) {
         initToolWindow(bean);
       }
     }
+
+    myProject.getMessageBus().connect().subscribe(ModuleExtension.ENABLE_TOPIC, new ModuleExtensionEnableListener() {
+      @Override
+      public void extensionEnableChanged(@NotNull ModuleExtension<?> extension, boolean extensionVal) {
+        ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
+
+        for (final ToolWindowEP bean : beans) {
+          Condition<Project> mergedCond = Conditions.and(bean.getCondition(), bean.getModuleExtensionCondition());
+          boolean value = mergedCond.value(myProject);
+
+          if(extensionVal && value) {
+             if(isToolWindowRegistered(bean.id)) {
+               continue;
+             }
+            initToolWindow(bean);
+          }
+          else if(!extensionVal && !value) {
+            unregisterToolWindow(bean.id);
+          }
+        }
+      }
+    });
   }
 
   @Override

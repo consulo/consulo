@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.ant.config.impl;
+package org.consulo.module.extension;
 
-import com.intellij.openapi.wm.ToolWindowModuleExtensionCondition;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 16:36/12.06.13
+ * @since 2:20/10.09.13
  */
-public class AntToolWindowCondition extends ToolWindowModuleExtensionCondition {
-  public AntToolWindowCondition() {
-    super(JavaModuleExtension.class);
-  }
+public interface ModuleExtensionEnableListener extends EventListener {
+  void extensionEnableChanged(@NotNull ModuleExtension<?> extension, boolean val);
 }

@@ -18,6 +18,8 @@ package com.intellij.openapi.util;
 
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ArrayUtilRt;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -52,17 +54,21 @@ public class Conditions {
     };
   }
 
-  public static <T> Condition<T> not(Condition<T> c) {
+  public static <T> Condition<T> not(@NotNull Condition<T> c) {
     return new Not<T>(c);
   }
-  public static <T> Condition<T> and(Condition<T> c1, Condition<T> c2) {
-    return new And<T>(c1, c2);
+  public static <T> Condition<T> and(@Nullable Condition<T> c1, @Nullable Condition<T> c2) {
+    return new And<T>(nullAsTrue(c1), nullAsTrue(c2));
   }
-  public static <T> Condition<T> or(Condition<T> c1, Condition<T> c2) {
-    return new Or<T>(c1, c2);
+  public static <T> Condition<T> or(@Nullable Condition<T> c1, @Nullable Condition<T> c2) {
+    return new Or<T>(nullAsTrue(c1), nullAsTrue(c2));
   }
   public static <T> Condition<T> cached(Condition<T> c) {
     return new SoftRefCache<T>(c);
+  }
+
+  public static <T> Condition<T> nullAsTrue(@Nullable Condition<T> cond) {
+    return cond == null ? Conditions.<T>alwaysTrue() : cond;
   }
 
   private static class Not<T> implements Condition<T> {
@@ -72,6 +78,7 @@ public class Conditions {
       myCondition = condition;
     }
 
+    @Override
     public boolean value(T value) {
       return !myCondition.value(value);
     }
@@ -80,11 +87,12 @@ public class Conditions {
     private final Condition<T> t1;
     private final Condition<T> t2;
 
-    public And(final Condition<T> t1, final Condition<T> t2) {
+    public And(@NotNull final Condition<T> t1, @NotNull final Condition<T> t2) {
       this.t1 = t1;
       this.t2 = t2;
     }
 
+    @Override
     public boolean value(final T object) {
       return t1.value(object) && t2.value(object);
     }
@@ -93,22 +101,25 @@ public class Conditions {
     private final Condition<T> t1;
     private final Condition<T> t2;
 
-    public Or(final Condition<T> t1, final Condition<T> t2) {
+    public Or(@NotNull final Condition<T> t1, @NotNull final Condition<T> t2) {
       this.t1 = t1;
       this.t2 = t2;
     }
 
+    @Override
     public boolean value(final T object) {
       return t1.value(object) || t2.value(object);
     }
   }
 
   public static Condition<Object> TRUE = new Condition<Object>() {
+    @Override
     public boolean value(final Object object) {
       return true;
     }
   };
   public static Condition<Object> FALSE = new Condition<Object>() {
+    @Override
     public boolean value(final Object object) {
       return false;
     }

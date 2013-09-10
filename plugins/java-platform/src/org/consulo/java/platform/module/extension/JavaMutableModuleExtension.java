@@ -39,8 +39,6 @@ public class JavaMutableModuleExtension extends JavaModuleExtension implements M
   public JavaMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull JavaModuleExtension moduleExtension) {
     super(id, module);
     myModuleExtension = moduleExtension;
-
-    commit(myModuleExtension);
   }
 
   @Nullable
