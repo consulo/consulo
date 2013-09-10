@@ -23,6 +23,6 @@ import java.util.EventListener;
  * @author VISTALL
  * @since 2:20/10.09.13
  */
-public interface ModuleExtensionEnableListener extends EventListener {
-  void extensionEnableChanged(@NotNull ModuleExtension<?> extension, boolean val);
+public interface ModuleExtensionChangeListener extends EventListener {
+  void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension);
 }

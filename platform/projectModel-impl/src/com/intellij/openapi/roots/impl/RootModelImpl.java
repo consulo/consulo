@@ -164,7 +164,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
       final ModuleExtension<?> originalExtension = rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
 
-      if(state != null) {
+      if (state != null) {
         originalExtension.loadState(state);
       }
       MutableModuleExtension mutable = provider.createMutable(providerEP.getKey(), rootModel.getModule(), originalExtension);
@@ -417,15 +417,9 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         ModuleExtension originalExtension =
           getSourceModel().getExtensionWithoutCheck(ModuleExtensionProviderEP.findProvider(extension.getId()).getImmutableClass());
 
-        boolean enabled = originalExtension.isEnabled();
+        getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC).extensionChanged(originalExtension, mutableExtension);
 
         mutableExtension.commit();
-
-
-        if (enabled != mutableExtension.isEnabled()) {
-          originalExtension.getModule().getProject().getMessageBus().syncPublisher(ModuleExtension.ENABLE_TOPIC)
-            .extensionEnableChanged(originalExtension, mutableExtension.isEnabled());
-        }
       }
     }
   }
@@ -768,13 +762,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private RootModelImpl getSourceModel() {
     assertWritable();
     return myModuleRootManager.getRootModel();
-  }
-
-  @Nullable
-  @Override
-  public <T> T getModuleExtensionOld(@NotNull final Class<T> klass) {
-
-    return null;
   }
 
   @Nullable

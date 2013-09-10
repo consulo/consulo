@@ -124,7 +124,7 @@ public class SCR14423Test extends PsiTestCase {
         final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
         JavaMutableModuleExtension javaModuleExtension = (JavaMutableModuleExtension)modifiableModel.getExtension(JavaModuleExtension.class);
         assert javaModuleExtension != null;
-        javaModuleExtension.getInheritableSdk().set(null, null);
+        javaModuleExtension.getInheritableSdk().set((String) null, null);
         modifiableModel.commit();
 
         psiClass = myJavaFacade.findClass("p.A");

@@ -118,6 +118,12 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     myTargetPointer = name == null ? null : getPointer(myProject, name);
   }
 
+  @Override
+  public void set(@Nullable Module module, @Nullable T named) {
+    myModulePointer = module == null ? null : ModuleUtilCore.createPointer(module);
+    myTargetPointer = named == null ? null : getPointer(myProject, named.getName());
+  }
+
   public void toXml(Element element) {
     element.setAttribute(myXmlPrefix + "-module-name", StringUtil.notNullize(myModulePointer == null ? null : myModulePointer.getName()));
     element.setAttribute(myXmlPrefix + "-name", StringUtil.notNullize(myTargetPointer == null ? null : myTargetPointer.getName()));

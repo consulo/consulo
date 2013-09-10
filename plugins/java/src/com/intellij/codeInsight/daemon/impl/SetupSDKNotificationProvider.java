@@ -34,6 +34,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -46,8 +48,15 @@ public class SetupSDKNotificationProvider extends EditorNotifications.Provider<E
 
   public SetupSDKNotificationProvider(Project project, final EditorNotifications notifications) {
     myProject = project;
-    myProject.getMessageBus().connect(project).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    myProject.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+      @Override
       public void rootsChanged(ModuleRootEvent event) {
+        notifications.updateAllNotifications();
+      }
+    });
+    myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
+      @Override
+      public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
         notifications.updateAllNotifications();
       }
     });

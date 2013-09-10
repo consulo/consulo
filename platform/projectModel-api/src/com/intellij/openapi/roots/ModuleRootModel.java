@@ -152,9 +152,6 @@ public interface ModuleRootModel {
    */
   @NotNull String[] getDependencyModuleNames();
 
-  @Deprecated
-  <T> T getModuleExtensionOld(Class<T> klass);
-
   @Nullable
   <T extends ModuleExtension> T getExtension(Class<T> clazz);
 

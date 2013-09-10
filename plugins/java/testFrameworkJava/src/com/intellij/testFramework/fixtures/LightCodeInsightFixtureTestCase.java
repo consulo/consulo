@@ -20,12 +20,14 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
-import com.intellij.testFramework.*;
+import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.PlatformTestUtil;
+import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.impl.LightTempDirTestFixtureImpl;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +40,7 @@ public abstract class LightCodeInsightFixtureTestCase extends UsefulTestCase{
   public static final LightProjectDescriptor JAVA_1_6 = new DefaultLightProjectDescriptor() {
     @Override
     public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
-      model.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(LanguageLevel.JDK_1_6);
+      model.getExtensionWithoutCheck(JavaMutableModuleExtension.class).getInheritableLanguageLevel().set(null, LanguageLevel.JDK_1_6);
     }
   };
   public static final LightProjectDescriptor JAVA_LATEST = new DefaultLightProjectDescriptor();

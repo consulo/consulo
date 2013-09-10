@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public interface ModuleExtension<T extends ModuleExtension> extends PersistentStateComponent<Element> {
   ModuleExtension[] EMPTY_ARRAY = new ModuleExtension[0];
 
-  Topic<ModuleExtensionEnableListener> ENABLE_TOPIC = Topic.create("module extension enable topic", ModuleExtensionEnableListener.class);
+  Topic<ModuleExtensionChangeListener> CHANGE_TOPIC = Topic.create("module extension change topic", ModuleExtensionChangeListener.class);
 
   @NotNull
   String getId();

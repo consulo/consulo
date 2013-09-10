@@ -39,6 +39,8 @@ import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -587,7 +589,7 @@ public class PsiVFSListener extends VirtualFileAdapter {
     return newPsiFile != null && !FileUtilRt.extensionEquals(oldFileName, FileUtilRt.getExtension(newPsiFile.getName()));
   }
 
-  private class MyModuleRootListener implements ModuleRootListener {
+  private class MyModuleRootListener implements ModuleRootListener, ModuleExtensionChangeListener {
     private VirtualFile[] myOldContentRoots = null;
     private volatile int depthCounter = 0;
     @Override
@@ -614,11 +616,16 @@ public class PsiVFSListener extends VirtualFileAdapter {
     }
 
     @Override
+    public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+      rootsChanged(null);
+    }
+
+    @Override
     public void rootsChanged(final ModuleRootEvent event) {
       myFileManager.dispatchPendingEvents();
 
       if (!myFileManager.isInitialized()) return;
-      if (event.isCausedByFileTypesChange()) return;
+      if (event != null && event.isCausedByFileTypesChange()) return;
       ApplicationManager.getApplication().runWriteAction(
         new ExternalChangeAction() {
           @Override

@@ -21,9 +21,6 @@ import com.intellij.openapi.fileTypes.INativeFileType;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.IconDeferrer;
-import com.intellij.util.Function;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.update.ComparableObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +64,28 @@ public class NativeFileIconUtil {
     if (icon != null) {
       return icon;
     }
-    return IconDeferrer.getInstance().defer(EmptyIcon.ICON_16, file, new Function<VirtualFile, Icon>() {
+    final File f = new File(filePath);
+    if (!f.exists()) {
+      return null;
+    }
+    try {
+      icon = getNativeIcon(f);
+    }
+    catch (Exception e) {      // see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4854174
+      return null;
+    }
+    if (ext != null) {
+      synchronized (myIconCache) {
+        if (!myCustomIconExtensions.contains(ext)) {
+          myIconCache.put(ext, icon);
+        }
+        else if (filePath != null) {
+          myCustomIconCache.put(filePath, icon);
+        }
+      }
+    }
+    return icon;
+   /* return IconDeferrer.getInstance().defer(EmptyIcon.ICON_16, file, new Function<VirtualFile, Icon>() {
       @Override
       public Icon fun(VirtualFile virtualFile) {
         final File f = new File(filePath);
@@ -93,7 +111,7 @@ public class NativeFileIconUtil {
         }
         return icon;
       }
-    });
+    }); */
   }
 
   @Nullable

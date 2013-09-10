@@ -73,6 +73,8 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -262,6 +264,13 @@ public class DaemonListeners implements Disposable {
             }
           }
         }, ModalityState.stateForComponent(editors[0].getComponent()));
+      }
+    });
+
+    connection.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
+      @Override
+      public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+        stopDaemonAndRestartAllFiles();
       }
     });
 

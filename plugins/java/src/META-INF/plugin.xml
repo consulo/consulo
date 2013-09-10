@@ -354,6 +354,10 @@
     </component>
 
     <component>
+      <implementation-class>org.consulo.java.roots.LanguageVersionKeyDropper</implementation-class>
+    </component>
+
+    <component>
       <interface-class>com.intellij.pom.java.PomJavaAspect</interface-class>
       <implementation-class>com.intellij.pom.java.impl.PomJavaAspectImpl</implementation-class>
       <loadForDefaultProject/>

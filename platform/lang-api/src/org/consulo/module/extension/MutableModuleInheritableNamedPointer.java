@@ -15,6 +15,7 @@
  */
 package org.consulo.module.extension;
 
+import com.intellij.openapi.module.Module;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,4 +27,6 @@ public interface MutableModuleInheritableNamedPointer<T extends Named> extends M
   void set(ModuleInheritableNamedPointer<T> value);
 
   void set(@Nullable String moduleName, @Nullable String name);
+
+  void set(@Nullable Module module, @Nullable T named);
 }

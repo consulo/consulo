@@ -17,16 +17,19 @@ package com.intellij.testFramework;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.roots.LanguageLevelModuleExtension;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.pom.java.LanguageLevel;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -42,25 +45,20 @@ public class IdeaTestUtil extends PlatformTestUtil {
   }
 
   public static void withLevel(final Module module, final LanguageLevel level, final Runnable r) {
-    final LanguageLevelProjectExtension projectExt = LanguageLevelProjectExtension.getInstance(module.getProject());
-
-    final LanguageLevel projectLevel = projectExt.getLanguageLevel();
-    final LanguageLevel moduleLevel = LanguageLevelModuleExtension.getInstance(module).getLanguageLevel();
+    final LanguageLevel moduleLevel = ModuleUtilCore.getExtension(module, JavaModuleExtension.class).getLanguageLevel();
     try {
-      projectExt.setLanguageLevel(level);
       setModuleLanguageLevel(module, level);
       r.run();
     }
     finally {
       setModuleLanguageLevel(module, moduleLevel);
-      projectExt.setLanguageLevel(projectLevel);
     }
   }
 
   public static void setModuleLanguageLevel(Module module, final LanguageLevel level) {
-    final LanguageLevelModuleExtension modifiable = (LanguageLevelModuleExtension)LanguageLevelModuleExtension.getInstance(module).getModifiableModel(true);
-    modifiable.setLanguageLevel(level);
-    modifiable.commit();
+    ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+    modifiableModel.getExtension(JavaMutableModuleExtension.class).getInheritableLanguageLevel().set(null, level);
+    modifiableModel.commit();
   }
 
   public static Sdk getMockJdk17() {

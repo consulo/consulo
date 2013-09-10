@@ -207,11 +207,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getDependencyModuleNames();
   }
 
-   @Override
-  public <T> T getModuleExtensionOld(final Class<T> klass) {
-    return myRootModel.getModuleExtensionOld(klass);
-  }
-
   @Nullable
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {

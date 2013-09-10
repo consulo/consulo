@@ -27,6 +27,4 @@ public abstract class PomJavaAspect implements PomModelAspect {
   public static PomJavaAspect getInstance(PomModel model) {
     return model.getModelAspect(PomJavaAspect.class);
   }
-
-  public abstract LanguageLevel getLanguageLevel();
 }

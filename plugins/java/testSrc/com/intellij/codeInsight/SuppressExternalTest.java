@@ -9,7 +9,6 @@ import com.intellij.codeInspection.sillyAssignment.SillyAssignmentInspection;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.JavaModuleExternalPaths;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -57,7 +56,7 @@ public class SuppressExternalTest extends UsefulTestCase {
         final Module module = myFixture.getModule();
         final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
         final String url = VfsUtilCore.pathToUrl(myFixture.getTempDirPath() + "/content/anno");
-        model.getModuleExtensionOld(JavaModuleExternalPaths.class).setExternalAnnotationUrls(new String[]{url});
+        //model.getModuleExtensionOld(JavaModuleExternalPaths.class).setExternalAnnotationUrls(new String[]{url});
         model.commit();
       }
     });

@@ -18,11 +18,11 @@ package com.intellij.testFramework.fixtures;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 
 /**
 * @author peter
@@ -35,9 +35,6 @@ public class DefaultLightProjectDescriptor implements LightProjectDescriptor {
 
   @Override
   public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
-    LanguageLevelModuleExtension extension = model.getModuleExtensionOld(LanguageLevelModuleExtension.class);
-    if (extension != null) {
-      extension.setLanguageLevel(LanguageLevel.HIGHEST);
-    }
+    model.getExtensionWithoutCheck(JavaMutableModuleExtension.class).getInheritableLanguageLevel().set(null, LanguageLevel.HIGHEST);
   }
 }

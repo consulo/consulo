@@ -26,14 +26,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.LanguageLevelModuleExtension;
-import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,13 +71,21 @@ public class IncreaseLanguageLevelFix implements IntentionAction {
   @Override
   public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file) {
     final VirtualFile virtualFile = file.getVirtualFile();
-    if (virtualFile == null) return false;
+    if (virtualFile == null) {
+      return false;
+    }
+
     final Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
-    return isLanguageLevelAcceptable(project, module, myLevel);
+    if (module == null) {
+      return false;
+    }
+
+    return true;
+//    return isLanguageLevelAcceptable(module, myLevel);
   }
 
-  public static boolean isLanguageLevelAcceptable(final Project project, Module module, final LanguageLevel level) {
-    return isJdkSupportsLevel(getRelevantJdk(project, module), level);
+  public static boolean isLanguageLevelAcceptable(Module module, final LanguageLevel level) {
+    return isJdkSupportsLevel(ModuleUtilCore.getSdk(module, JavaModuleExtension.class), level);
   }
 
   @Override
@@ -85,30 +93,28 @@ public class IncreaseLanguageLevelFix implements IntentionAction {
     final VirtualFile virtualFile = file.getVirtualFile();
     LOG.assertTrue(virtualFile != null);
     final Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
-    final LanguageLevel moduleLevel = module == null ? null : LanguageLevelModuleExtension.getInstance(module).getLanguageLevel();
-    if (moduleLevel != null && isLanguageLevelAcceptable(project, module, myLevel)) {
-      final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
-      rootModel.getModuleExtensionOld(LanguageLevelModuleExtension.class).setLanguageLevel(myLevel);
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          rootModel.commit();
-        }
-      });
+    if (module == null) {
+      return;
     }
-    else {
-      LanguageLevelProjectExtension.getInstance(project).setLanguageLevel(myLevel);
-    }
-  }
 
-  @Nullable
-  private static Sdk getRelevantJdk(final Project project, @Nullable Module module) {
-   /*
-    TODO [VISTALL]
-    Sdk projectJdk = ProjectRootManager.getInstance(project).getProjectSdk();
-    Sdk moduleJdk = module == null ? null : ModuleRootManager.getInstance(module).getSdk();
-    return moduleJdk == null ? projectJdk : moduleJdk;                              */
-    return null;
+    JavaModuleExtension extension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
+    if (extension == null) {
+      return;
+    }
+
+    final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
+    JavaMutableModuleExtension mutableModuleExtension = rootModel.getExtension(JavaMutableModuleExtension.class);
+
+    assert mutableModuleExtension != null;
+
+    mutableModuleExtension.getInheritableLanguageLevel().set(null, myLevel.getName());
+
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      @Override
+      public void run() {
+        rootModel.commit();
+      }
+    });
   }
 
   @Override

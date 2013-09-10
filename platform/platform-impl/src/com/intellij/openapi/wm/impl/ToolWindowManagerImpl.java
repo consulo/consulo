@@ -63,7 +63,7 @@ import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionEnableListener;
+import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -474,11 +474,15 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       }
     }
 
-    myProject.getMessageBus().connect().subscribe(ModuleExtension.ENABLE_TOPIC, new ModuleExtensionEnableListener() {
+    myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
       @Override
-      public void extensionEnableChanged(@NotNull ModuleExtension<?> extension, boolean extensionVal) {
+      public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+        if(oldExtension.isEnabled() == newExtension.isEnabled()) {
+          return;
+        }
         ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
 
+        boolean extensionVal = newExtension.isEnabled();
         for (final ToolWindowEP bean : beans) {
           Condition<Project> mergedCond = Conditions.and(bean.getCondition(), bean.getModuleExtensionCondition());
           boolean value = mergedCond.value(myProject);
