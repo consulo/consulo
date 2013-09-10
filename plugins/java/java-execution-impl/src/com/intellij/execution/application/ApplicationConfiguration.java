@@ -64,7 +64,7 @@ public class ApplicationConfiguration extends ModuleBasedConfiguration<JavaRunCo
   private Map<String, String> myEnvs = new LinkedHashMap<String, String>();
   public boolean PASS_PARENT_ENVS = true;
 
-  public ApplicationConfiguration(final String name, final Project project, ApplicationConfigurationType applicationConfigurationType) {
+  public ApplicationConfiguration(final String name, final Project project, ConfigurationType applicationConfigurationType) {
     this(name, project, applicationConfigurationType.getConfigurationFactories()[0]);
   }
 
