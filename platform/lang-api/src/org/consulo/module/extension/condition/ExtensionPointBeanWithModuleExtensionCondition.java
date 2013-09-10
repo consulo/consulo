@@ -27,14 +27,14 @@ import org.jetbrains.annotations.NotNull;
  * @since 2:39/10.09.13
  */
 public class ExtensionPointBeanWithModuleExtensionCondition extends AbstractExtensionPointBean {
-  @Attribute("moduleExtensionList")
-  public String moduleExtensionList;
+  @Attribute("requireModuleExtensions")
+  public String requireModuleExtensions;
 
   private NotNullLazyValue<Condition<Project>> myModuleExtensionCondition = new NotNullLazyValue<Condition<Project>>() {
     @NotNull
     @Override
     protected Condition<Project> compute() {
-      return ProjectModuleExtensionCondition.create(moduleExtensionList);
+      return ProjectModuleExtensionCondition.create(requireModuleExtensions);
     }
   };
 
