@@ -112,7 +112,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
 
   @Nullable
   private PsiPackage createPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass) {
-    Query<VirtualFile> dirs = myDirectoryIndex.getDirectoriesByPackageName(qualifiedName, false);
+    Query<VirtualFile> dirs = myDirectoryIndex.getDirectoriesByPackageName(qualifiedName, true);
     if (dirs.findFirst() == null) {
       return null;
     }

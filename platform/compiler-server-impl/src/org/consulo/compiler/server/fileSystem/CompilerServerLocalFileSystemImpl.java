@@ -189,7 +189,7 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
   @NotNull
   @Override
   public InputStream getInputStream(@NotNull VirtualFile file) throws IOException {
-    throw new UnsupportedOperationException();
+    return file.getInputStream();
   }
 
   @NotNull

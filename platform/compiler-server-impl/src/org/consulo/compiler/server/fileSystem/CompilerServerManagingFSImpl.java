@@ -15,6 +15,7 @@
  */
 package org.consulo.compiler.server.fileSystem;
 
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
@@ -24,6 +25,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.PathUtil;
+import org.consulo.compiler.server.fileSystem.archive.ArchiveNewVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -269,7 +271,13 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
     String p = PathUtil.toPresentableUrl(basePath);
     VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(p);
 
-    return fileByPath != null ? new CompilerServerNewVirtualFileImpl(fileByPath, fs) : null;
+    if (fileByPath != null) {
+      if (fs instanceof ArchiveFileSystem) {
+        return new ArchiveNewVirtualFile(fileByPath, (ArchiveFileSystem) fs);
+      }
+      return new CompilerServerNewVirtualFileImpl(fileByPath, fs);
+    }
+    return null;
   }
 
   @NotNull

@@ -17,47 +17,38 @@ package org.consulo.compiler.server;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TestDialog;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import org.apache.log4j.Level;
 import org.consulo.compiler.server.application.CompilerServerApplication;
-import org.consulo.compiler.server.rmi.CompilerClientInterface;
-import org.consulo.compiler.server.rmi.CompilerServerInterface;
-import org.consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 /**
  * @author VISTALL
- * @since 5:48/09.08.13
+ * @since 0:53/11.09.13
  */
 @org.consulo.lombok.annotations.Logger
-public class Main {
+public class MainTest {
   public static void main(String[] args) throws Exception{
     File t = FileUtil.createTempDirectory("consulo", "data");
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, t.getAbsolutePath() + "/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, t.getAbsolutePath() + "/system");
-
-    System.setProperty(PathManager.PROPERTY_PLUGINS_PATH, "G:\\consulo-ext-plugins");
+    //System.setProperty(PathManager.PROPERTY_CONFIG_PATH, "C:\\Users\\VISTALL\\.ConsuloData\\config");
+   // System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, "C:\\Users\\VISTALL\\.ConsuloData\\system");
     System.setProperty(PathManager.PROPERTY_HOME_PATH, "F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
     System.setProperty(FileWatcher.PROPERTY_WATCHER_DISABLED, "true");
 
     initLogger();
-
-    CompilerServerInterfaceImpl server = createServer();
 
     ApplicationEx app = CompilerServerApplication.createApplication();
     Messages.setTestDialog(new TestDialog() {
@@ -70,43 +61,38 @@ public class Main {
 
     app.load(PathManager.getOptionsPath());
 
-    setupSdk("JDK",  "1.6", "I:\\Programs\\jdk6");
-    setupSdk("Consulo Plugin SDK", "Consulo 1.SNAPSHOT", "F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
+    System.out.println("---------------------------------------------------------------------------------------------------------");
 
-    server.compile(new CompilerClientInterface() {
-      @Override
-      public void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum)
-        throws RemoteException {
-        System.out.println(category + ": " + message);
-      }
+   /* File file = new File("../../../platform/compiler-server-impl/testData/zip1.zip");
 
-      @Override
-      public void compilationFinished(boolean aborted, int errors, int warnings) throws RemoteException {
-      }
+    VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
 
-      @NotNull
-      @Override
-      public String getProjectDir() {
-        return "F:\\heroku.com\\naco-ws\\repos\\consulo-devkit";
-      }
-    });
+    VirtualFile jarRootForLocalFile = ArchiveVfsUtil.getJarRootForLocalFile(virtualFile);
+
+
+    StringBuilder builder = new StringBuilder();
+    printTree(jarRootForLocalFile, 0, builder);
+    System.out.println(builder);    */
+
+    File file = new File("F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist\\lib\\idea.jar");
+
+    VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
+
+    VirtualFile jarRootForLocalFile = ArchiveVfsUtil.getJarRootForLocalFile(virtualFile);
+
+    System.out.println(jarRootForLocalFile.findFileByRelativePath("org/consulo/module/extension/ui"));
   }
 
-  private static void setupSdk(String sdkTypeName, String name, String home) {
-    SdkType sdkType = null;
-    for (SdkType temp : SdkType.EP_NAME.getExtensions()) {
-      if(temp.getName().equals(sdkTypeName)) {
-        sdkType = temp;
-        break;
-      }
+  private static void printTree(VirtualFile virtualFile, int indent, StringBuilder builder) {
+    builder.append("|");
+    builder.append(StringUtil.repeat("-", indent));
+    builder.append(" ");
+    builder.append(virtualFile.getUrl());
+    builder.append("\n");
+
+    for (VirtualFile file : virtualFile.getChildren()) {
+      printTree(file, indent + 1, builder);
     }
-
-    assert sdkType != null;
-    SdkImpl sdk = new SdkImpl(name, sdkType, home, sdkType.getVersionString(home));
-
-    sdkType.setupSdkPaths(sdk);
-
-    SdkTable.getInstance().addSdk(sdk);
   }
 
   private static void initLogger() {
@@ -137,7 +123,7 @@ public class Main {
           @Override
           public void error(@NonNls String message, @Nullable Throwable t, @NonNls String... details) {
             System.out.println(message);
-            if(t != null) {
+            if (t != null) {
               t.printStackTrace();
             }
           }
@@ -150,7 +136,7 @@ public class Main {
           @Override
           public void info(@NonNls String message, @Nullable Throwable t) {
             System.out.println(message);
-            if(t != null) {
+            if (t != null) {
               t.printStackTrace();
             }
           }
@@ -158,7 +144,7 @@ public class Main {
           @Override
           public void warn(@NonNls String message, @Nullable Throwable t) {
             System.out.println(message);
-            if(t != null) {
+            if (t != null) {
               t.printStackTrace();
             }
           }
@@ -170,14 +156,5 @@ public class Main {
       }
     });
   }
-
-  private static CompilerServerInterfaceImpl createServer() throws Exception {
-    final Registry registry = LocateRegistry.createRegistry(5433);
-
-    CompilerServerInterfaceImpl compilerSwapper = new CompilerServerInterfaceImpl();
-
-    registry.rebind(CompilerServerInterface.LOOKUP_ID, compilerSwapper);
-
-    return compilerSwapper;
-  }
 }
+

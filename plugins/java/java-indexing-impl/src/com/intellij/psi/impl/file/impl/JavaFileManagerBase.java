@@ -18,6 +18,7 @@ package com.intellij.psi.impl.file.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.ide.highlighter.JavaClassFileType;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
@@ -99,6 +100,10 @@ public abstract class JavaFileManagerBase implements JavaFileManager, Disposable
     });
 
     Disposer.register(myManager.getProject(), this);
+
+    if(ApplicationManager.getApplication().isCompilerServerMode()) {
+      myInitialized = true;
+    }
   }
 
   @Override

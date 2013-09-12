@@ -18,17 +18,27 @@ package org.consulo.compiler.server.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
+import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
+import com.intellij.util.AbstractQuery;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Processor;
 import com.intellij.util.Query;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.HashSet;
+import org.consulo.compiler.server.fileSystem.archive.ChildArchiveNewVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -39,8 +49,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   private final Project myProject;
   private final ModuleManager myModuleManager;
 
-  public CompilerServerDirectoryIndex(@NotNull Project project,
-                                      @NotNull ModuleManager moduleManager) {
+  public CompilerServerDirectoryIndex(@NotNull Project project, @NotNull ModuleManager moduleManager) {
     myProject = project;
     myModuleManager = moduleManager;
   }
@@ -55,17 +64,18 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
     Module module = null;
     VirtualFile contentRoot = null;
     VirtualFile sourceRoot = null;
+    VirtualFile libraryRoot = null;
     byte flags = 0;
 
     for (Module moduleIter : myModuleManager.getModules()) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleIter);
       for (ContentEntry contentEntry : moduleRootManager.getContentEntries()) {
-        if(VfsUtilCore.isAncestor(contentEntry.getFile(), fileForInfo, false)) {
+        if (VfsUtilCore.isAncestor(contentEntry.getFile(), fileForInfo, false)) {
           contentRoot = contentEntry.getFile();
           module = moduleIter;
 
           for (ContentFolder contentFolder : contentEntry.getFolders()) {
-            if(VfsUtilCore.isAncestor(contentFolder.getFile(), fileForInfo, false)) {
+            if (VfsUtilCore.isAncestor(contentFolder.getFile(), fileForInfo, false)) {
               sourceRoot = contentFolder.getFile();
 
               flags |= DirectoryInfo.MODULE_SOURCE_FLAG;
@@ -84,8 +94,29 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
         }
       }
     }
+
+    VirtualFile original =
+      fileForInfo instanceof ChildArchiveNewVirtualFile ? ((ChildArchiveNewVirtualFile)fileForInfo).getArchiveFile() : fileForInfo;
+    loop: for (Module moduleIter : myModuleManager.getModules()) {
+      final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleIter);
+      for (OrderEntry contentEntry : moduleRootManager.getOrderEntries()) {
+        if (contentEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+          VirtualFile[] files =
+            ArrayUtil.mergeArrays(contentEntry.getFiles(OrderRootType.CLASSES), contentEntry.getFiles(OrderRootType.SOURCES));
+
+          for (VirtualFile file : files) {
+            if (file.equals(original)) {
+              module = moduleIter;
+              libraryRoot = original;
+              break loop;
+            }
+          }
+        }
+      }
+    }
+
     DirectoryInfo directoryInfo = DirectoryInfo.createNew();
-    directoryInfo = directoryInfo.with(module, contentRoot, sourceRoot, null, flags, OrderEntry.EMPTY_ARRAY);
+    directoryInfo = directoryInfo.with(module, contentRoot, sourceRoot, libraryRoot, flags, OrderEntry.EMPTY_ARRAY);
     return directoryInfo;
   }
 
@@ -97,7 +128,76 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   @NotNull
   @Override
   public Query<VirtualFile> getDirectoriesByPackageName(@NotNull String packageName, boolean includeLibrarySources) {
-    return null;
+    final List<VirtualFile> dirs = new ArrayList<VirtualFile>();
+
+    String relatPath = packageName.replace(".", "/");
+    for (Module moduleIter : myModuleManager.getModules()) {
+      final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleIter);
+      for (ContentEntry contentEntry : moduleRootManager.getContentEntries()) {
+        VirtualFile file = contentEntry.getFile();
+        if (file == null) {
+          continue;
+        }
+        VirtualFile fileByRelativePath = file.findFileByRelativePath(relatPath);
+        if (fileByRelativePath != null) {
+          dirs.add(file);
+        }
+      }
+    }
+
+    if (includeLibrarySources) {
+      VirtualFile[] libraryRoots = getLibraryRoots(ModuleManager.getInstance(myProject).getModules());
+      for (VirtualFile libraryRoot : libraryRoots) {
+        VirtualFile virtualFileForJar = ArchiveVfsUtil.getJarRootForLocalFile(libraryRoot);
+        if (virtualFileForJar == null) {
+          continue;
+        }
+        VirtualFile child = virtualFileForJar.findFileByRelativePath(relatPath);
+        if (child != null) {
+          dirs.add(child);
+        }
+      }
+    }
+
+    return new AbstractQuery<VirtualFile>() {
+      @Override
+      protected boolean processResults(@NotNull Processor<VirtualFile> consumer) {
+        for (VirtualFile dir : dirs) {
+          if (!consumer.process(dir)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    };
+  }
+
+  public static VirtualFile[] getLibraryRoots(final Module[] modules) {
+    Set<VirtualFile> roots = new HashSet<VirtualFile>();
+    for (Module module : modules) {
+      final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+      final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
+      for (OrderEntry entry : orderEntries) {
+        if (entry instanceof LibraryOrderEntry) {
+          final Library library = ((LibraryOrderEntry)entry).getLibrary();
+          if (library != null) {
+            VirtualFile[] files = library.getFiles(OrderRootType.SOURCES);
+            ContainerUtil.addAll(roots, files);
+
+            files = library.getFiles(OrderRootType.CLASSES);
+            ContainerUtil.addAll(roots, files);
+          }
+        }
+        else if (entry instanceof SdkOrderEntry) {
+          VirtualFile[] files = entry.getFiles(OrderRootType.SOURCES);
+          ContainerUtil.addAll(roots, files);
+
+          files = entry.getFiles(OrderRootType.CLASSES);
+          ContainerUtil.addAll(roots, files);
+        }
+      }
+    }
+    return VfsUtil.toVirtualFileArray(roots);
   }
 
   @Nullable
