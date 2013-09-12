@@ -23,7 +23,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
 import com.intellij.codeInsight.lookup.TailTypeDecorator;
 import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.PsiJavaElementPattern;
+import com.intellij.patterns.PsiElementPattern;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
 import com.intellij.psi.filters.*;
@@ -45,7 +45,7 @@ public class JavaCompletionData extends JavaAwareCompletionData {
 
   public static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".");
 
-  public static final PsiJavaElementPattern.Capture<PsiElement> VARIABLE_AFTER_FINAL =
+  public static final PsiElementPattern.Capture<PsiElement> VARIABLE_AFTER_FINAL =
     psiElement().afterLeaf(PsiKeyword.FINAL).inside(PsiDeclarationStatement.class);
 
   public static final LeftNeighbour AFTER_TRY_BLOCK = new LeftNeighbour(new AndFilter(
@@ -55,7 +55,7 @@ public class JavaCompletionData extends JavaAwareCompletionData {
       new ParentElementFilter(new ClassFilter(PsiTryStatement.class)))
     )));
 
-  private static final PsiJavaElementPattern.Capture<PsiElement> INSIDE_PARAMETER_LIST =
+  private static final PsiElementPattern.Capture<PsiElement> INSIDE_PARAMETER_LIST =
     psiElement().withParent(
       psiElement(PsiJavaCodeReferenceElement.class).insideStarting(
         psiElement().withTreeParent(
@@ -138,7 +138,7 @@ public class JavaCompletionData extends JavaAwareCompletionData {
   public static final ElementPattern<PsiElement> START_FOR =
     psiElement().afterLeaf(psiElement().withText("(").afterLeaf("for")).withParents(PsiJavaCodeReferenceElement.class,
                                                                                     PsiExpressionStatement.class, PsiForStatement.class);
-  private static final PsiJavaElementPattern.Capture<PsiElement> CLASS_REFERENCE =
+  private static final PsiElementPattern.Capture<PsiElement> CLASS_REFERENCE =
     psiElement().withParent(psiReferenceExpression().referencing(psiClass()));
 
   private static final ElementPattern<PsiElement> EXPR_KEYWORDS = and(

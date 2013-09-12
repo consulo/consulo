@@ -37,19 +37,19 @@ public class PsiJavaPatterns extends StandardPatterns{
     return PlatformPatterns.virtualFile();
   }
 
-  public static PsiJavaElementPattern.Capture<PsiElement> psiElement() {
+  public static PsiJavaElementPattern.Capture<PsiElement> psiJavaElement() {
     return new PsiJavaElementPattern.Capture<PsiElement>(PsiElement.class);
   }
 
-  public static PsiJavaElementPattern.Capture<PsiElement> psiElement(IElementType type) {
-    return psiElement().withElementType(type);
+  public static PsiJavaElementPattern.Capture<PsiElement> psiJavaElement(IElementType type) {
+    return psiJavaElement().withElementType(type);
   }
 
-  public static <T extends PsiElement> PsiJavaElementPattern.Capture<T> psiElement(final Class<T> aClass) {
+  public static <T extends PsiElement> PsiJavaElementPattern.Capture<T> psiJavaElement(final Class<T> aClass) {
     return new PsiJavaElementPattern.Capture<T>(aClass);
   }
 
-  public static PsiJavaElementPattern.Capture<PsiElement> psiElement(final Class<? extends PsiElement>... classAlternatives) {
+  public static PsiJavaElementPattern.Capture<PsiElement> psiJavaElement(final Class<? extends PsiElement>... classAlternatives) {
     return new PsiJavaElementPattern.Capture<PsiElement>(new InitialPatternCondition<PsiElement>(PsiElement.class) {
       @Override
       public boolean accepts(@Nullable Object o, ProcessingContext context) {
@@ -168,7 +168,7 @@ public class PsiJavaPatterns extends StandardPatterns{
   }
 
   public static PsiJavaElementPattern.Capture<PsiReferenceExpression> psiReferenceExpression() {
-    return psiElement(PsiReferenceExpression.class);
+    return psiJavaElement(PsiReferenceExpression.class);
   }
 
   public static PsiStatementPattern.Capture<PsiExpressionStatement> psiExpressionStatement() {

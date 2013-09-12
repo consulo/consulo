@@ -84,7 +84,7 @@ public class JavaMemberNameCompletionContributor extends CompletionContributor {
       completeFieldName(lookupSet, variable, result.getPrefixMatcher(), parameters.getInvocationCount() >= 1);
     }
 
-    if (PsiJavaPatterns.psiElement().nameIdentifierOf(PsiJavaPatterns.psiMethod().withParent(PsiClass.class)).accepts(position)) {
+    if (PsiJavaPatterns.psiJavaElement().nameIdentifierOf(PsiJavaPatterns.psiMethod().withParent(PsiClass.class)).accepts(position)) {
       completeMethodName(lookupSet, parameters.getPosition().getParent(), result.getPrefixMatcher());
     }
 

@@ -17,6 +17,8 @@ package com.intellij.patterns;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -174,6 +176,31 @@ public class StandardPatterns {
       public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
         pattern.getCondition().accepts(o, context);
         return true;
+      }
+    });
+  }
+  public static PsiElementPattern.Capture<PsiElement> psiElement() {
+    return new PsiElementPattern.Capture<PsiElement>(PsiElement.class);
+  }
+
+  public static PsiElementPattern.Capture<PsiElement> psiElement(IElementType type) {
+    return psiElement().withElementType(type);
+  }
+
+  public static <T extends PsiElement> PsiElementPattern.Capture<T> psiElement(final Class<T> aClass) {
+    return new PsiElementPattern.Capture<T>(aClass);
+  }
+
+  public static PsiElementPattern.Capture<PsiElement> psiElement(final Class<? extends PsiElement>... classAlternatives) {
+    return new PsiElementPattern.Capture<PsiElement>(new InitialPatternCondition<PsiElement>(PsiElement.class) {
+      @Override
+      public boolean accepts(@Nullable Object o, ProcessingContext context) {
+        for (Class<? extends PsiElement> classAlternative : classAlternatives) {
+          if (classAlternative.isInstance(o)) {
+            return true;
+          }
+        }
+        return false;
       }
     });
   }
