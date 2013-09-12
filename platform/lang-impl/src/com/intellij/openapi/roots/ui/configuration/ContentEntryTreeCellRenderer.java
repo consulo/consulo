@@ -20,12 +20,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.module.extension.ModuleExtension;
@@ -84,14 +81,9 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
           case SOURCE:
           case RESOURCE:
           case TEST:
-            final Module moduleForFile = ModuleUtilCore.findModuleForFile(file, myTreeEditor.getProject());
-            if (moduleForFile == null) {
-              continue;
-            }
-            ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForFile);
-            for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
+            for (ModuleExtension moduleExtension : myTreeEditor.getContentEntryEditor().getModel().getExtensions()) {
               for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
-                if (supportProvider.getSupportedModuleExtensionClass() == moduleExtension.getClass()) {
+                if (supportProvider.getSupportedModuleExtensionClass().isAssignableFrom(moduleExtension.getClass())) {
                   icon = contentFolder.getType() == ContentFolderType.TEST ? AllIcons.Nodes.TestPackage : AllIcons.Nodes.Package;
                 }
               }
