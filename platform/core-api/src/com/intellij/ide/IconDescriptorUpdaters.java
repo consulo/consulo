@@ -15,8 +15,16 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -26,9 +34,43 @@ import javax.swing.*;
  */
 public class IconDescriptorUpdaters {
   private static final IconDescriptorUpdater[] ourCache = IconDescriptorUpdater.EP_NAME.getExtensions();
+  private static final Key<CachedValue<IconKey>> KEY = Key.create("icon-key");
+
+  private static class IconKey implements ModificationTracker {
+    private PsiElement myElement;
+    private Icon myIcon;
+
+    private IconKey(PsiElement element, Icon icon) {
+      myElement = element;
+      myIcon = icon;
+    }
+
+    @Override
+    public long getModificationCount() {
+      return PsiModificationTracker.SERVICE.getInstance(myElement.getProject()).getJavaStructureModificationCount();
+    }
+  }
 
   @NotNull
-  public static Icon getIcon(@NotNull PsiElement element, int flags) {
+  public static Icon getIcon(@NotNull final PsiElement element, @Iconable.IconFlags final int flags) {
+    CachedValue<IconKey> cachedValue = element.getUserData(KEY);
+    if (cachedValue == null) {
+      cachedValue = CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<IconKey>() {
+        @Nullable
+        @Override
+        public Result<IconKey> compute() {
+          return Result.createSingleDependency(new IconKey(element, getIconWithoutCache(element, flags)),
+                                               PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
+        }
+      });
+      element.putUserData(KEY, cachedValue);
+    }
+    IconKey value = cachedValue.getValue();
+    return value.myIcon;
+  }
+
+  @NotNull
+  public static Icon getIconWithoutCache(@NotNull PsiElement element, int flags) {
     IconDescriptor iconDescriptor = new IconDescriptor(null);
     for (IconDescriptorUpdater iconDescriptorUpdater : ourCache) {
       iconDescriptorUpdater.updateIcon(iconDescriptor, element, flags);
