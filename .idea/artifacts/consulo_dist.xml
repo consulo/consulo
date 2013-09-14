@@ -101,8 +101,8 @@
             <element id="archive" name="ant.jar">
               <element id="module-output" name="ant" />
             </element>
-            <element id="archive" name="ant-jps-plugin.jar">
-              <element id="module-output" name="ant-jps-plugin" />
+            <element id="archive" name="ant-rt.jar">
+              <element id="module-output" name="ant-rt" />
             </element>
           </element>
         </element>
@@ -265,9 +265,6 @@
             </element>
             <element id="archive" name="groovy-copyright.jar">
               <element id="module-output" name="groovy-copyright" />
-            </element>
-            <element id="archive" name="groovy-jps-plugin.jar">
-              <element id="module-output" name="groovy-jps-plugin" />
             </element>
             <element id="archive" name="groovy-rt.jar">
               <element id="module-output" name="groovy-rt-constants" />

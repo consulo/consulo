@@ -23,6 +23,7 @@
     <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="java-compiler-impl" />
     <orderEntry type="module" module-name="testFrameworkJava" />
+    <orderEntry type="module" module-name="ant-rt" />
   </component>
   <component name="copyright">
     <Base>

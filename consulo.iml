@@ -107,6 +107,8 @@
     <orderEntry type="module" module-name="remote-servers-impl" />
     <orderEntry type="module" module-name="compiler-bridge-impl" />
     <orderEntry type="module" module-name="compiler-server-impl" />
+    <orderEntry type="module" module-name="ant-rt" />
+    <orderEntry type="module" module-name="ant-core" />
   </component>
 </module>
 

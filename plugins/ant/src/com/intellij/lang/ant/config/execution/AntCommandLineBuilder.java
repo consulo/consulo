@@ -122,6 +122,7 @@ public class AntCommandLineBuilder {
     myCommandLine.getClassPath().addAllFiles(AntBuildFileImpl.ALL_CLASS_PATH.get(container));
     
     myCommandLine.getClassPath().addAllFiles(AntBuildFileImpl.getUserHomeLibraries());
+    myCommandLine.getClassPath().add(PathUtil.getJarPathForClass(AntMain2.class));
 
     final SdkTypeId sdkType = jdk.getSdkType();
     if (sdkType instanceof JavaSdkType) {
