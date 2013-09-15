@@ -107,7 +107,8 @@ public class DebuggerSessionTab extends DebuggerSessionTabBase implements Dispos
 
               if (debuggerSettings.HIDE_DEBUGGER_ON_PROCESS_TERMINATION) {
                 try {
-                  ExecutionManager.getInstance(getProject()).getContentManager().hideRunContent(DefaultDebugExecutor.getDebugExecutorInstance(), myRunContentDescriptor);
+                  ExecutionManager.getInstance(getProject()).getContentManager().hideRunContent(
+                    DefaultDebugExecutor.getDebugExecutorInstance(), myRunContentDescriptor);
                 }
                 catch (NullPointerException e) {
                   //if we can get closeProcess after the project have been closed

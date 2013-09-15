@@ -17,10 +17,13 @@ package com.intellij.openapi.externalSystem.service.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.externalSystem.ExternalSystemUiAware;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.util.IconLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
 
 /**
  * This class is not singleton but offers single-point-of-usage field - {@link #INSTANCE}.
@@ -32,9 +35,27 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
 
   @NotNull public static final DefaultExternalSystemUiAware INSTANCE = new DefaultExternalSystemUiAware();
 
+  @NotNull
+  @Override
+  public String getProjectRepresentationName(@NotNull String targetProjectPath, @Nullable String rootProjectPath) {
+    return new File(targetProjectPath).getParentFile().getName();
+  }
+
   @Nullable
+  @Override
+  public FileChooserDescriptor getExternalProjectConfigDescriptor() {
+    return null;
+  }
+
+  @NotNull
   @Override
   public Icon getProjectIcon() {
     return AllIcons.Icon16;
+  }
+
+  @NotNull
+  @Override
+  public Icon getTaskIcon() {
+    return IconLoader.getIcon("/icons/task.png", getClass());
   }
 }

@@ -25,8 +25,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GradleProjectSettings extends ExternalProjectSettings {
 
-  @Nullable private String  myGradleHome;
-  private boolean myPreferLocalInstallationToWrapper;
+  @Nullable private String myGradleHome;
+  @NotNull  private DistributionType distributionType;
+
+  public GradleProjectSettings() {
+    this.distributionType = DistributionType.BUNDLED;
+  }
 
   @Nullable
   public String getGradleHome() {
@@ -37,12 +41,13 @@ public class GradleProjectSettings extends ExternalProjectSettings {
     myGradleHome = gradleHome;
   }
 
-  public boolean isPreferLocalInstallationToWrapper() {
-    return myPreferLocalInstallationToWrapper;
+  @NotNull
+  public DistributionType getDistributionType() {
+    return distributionType;
   }
 
-  public void setPreferLocalInstallationToWrapper(boolean preferLocalInstallationToWrapper) {
-    myPreferLocalInstallationToWrapper = preferLocalInstallationToWrapper;
+  public void setDistributionType(@NotNull DistributionType distributionType) {
+    this.distributionType = distributionType;
   }
 
   @NotNull
@@ -51,7 +56,7 @@ public class GradleProjectSettings extends ExternalProjectSettings {
     GradleProjectSettings result = new GradleProjectSettings();
     copyTo(result);
     result.myGradleHome = myGradleHome;
-    result.myPreferLocalInstallationToWrapper = myPreferLocalInstallationToWrapper;
+    result.distributionType = distributionType;
     return result;
   }
 }

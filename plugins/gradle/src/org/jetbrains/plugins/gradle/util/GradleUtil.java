@@ -1,10 +1,18 @@
 package org.jetbrains.plugins.gradle.util;
 
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
+import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
+import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileTypeDescriptor;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.containers.ContainerUtilRt;
+import com.intellij.util.containers.Stack;
+import org.gradle.tooling.model.GradleProject;
+import org.gradle.tooling.model.GradleScript;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +28,8 @@ import java.util.Properties;
  */
 public class GradleUtil {
 
-  private static final String  WRAPPER_VERSION_PROPERTY_KEY = "distributionUrl";
+  private static final String WRAPPER_VERSION_PROPERTY_KEY = "distributionUrl";
+  private static final String LAST_USED_GRADLE_HOME_KEY    = "last.used.gradle.home";
 
   private GradleUtil() {
   }
@@ -51,8 +60,8 @@ public class GradleUtil {
   /**
    * Tries to parse what gradle version should be used with gradle wrapper for the gradle project located at the given path. 
    *
-   * @param gradleProjectPath  target gradle project path
-   * @return gradle version should be used with gradle wrapper for the gradle project located at the given path
+   * @param gradleProjectPath  target gradle project config's (*.gradle) path or config file's directory path.
+   * @return                   gradle version should be used with gradle wrapper for the gradle project located at the given path
    *                           if any; <code>null</code> otherwise
    */
   @Nullable
@@ -61,11 +70,16 @@ public class GradleUtil {
       return null;
     }
     File file = new File(gradleProjectPath);
-    if (!file.isFile()) {
-      return null;
-    }
 
-    File gradleDir = new File(file.getParentFile(), "gradle");
+    // There is a possible case that given path points to a gradle script (*.gradle) but it's also possible that
+    // it references script's directory. We want to provide flexibility here.
+    File gradleDir;
+    if (file.isFile()) {
+      gradleDir = new File(file.getParentFile(), "gradle");
+    }
+    else {
+      gradleDir = new File(file, "gradle");
+    }
     if (!gradleDir.isDirectory()) {
       return null;
     }
@@ -133,7 +147,7 @@ public class GradleUtil {
     public static final FileChooserDescriptor GRADLE_BUILD_FILE_CHOOSER_DESCRIPTOR = new OpenProjectFileChooserDescriptor(true) {
       @Override
       public boolean isFileSelectable(VirtualFile file) {
-        return GradleConstants.DEFAULT_SCRIPT_NAME.equals(file.getName());
+        return file.getName().endsWith(GradleConstants.EXTENSION);
       }
 
       @Override
@@ -141,11 +155,64 @@ public class GradleUtil {
         if (!super.isFileVisible(file, showHiddenFiles)) {
           return false;
         }
-        return file.isDirectory() || GradleConstants.DEFAULT_SCRIPT_NAME.equals(file.getName());
+        return file.isDirectory() || file.getName().endsWith(GradleConstants.EXTENSION);
       }
     };
 
     public static final FileChooserDescriptor GRADLE_HOME_FILE_CHOOSER_DESCRIPTOR
       = new FileChooserDescriptor(false, true, false, false, false, false);
+  }
+
+  /**
+   * Allows to build file system path to the target gradle sub-project given the root project path.
+   *
+   * @param subProject       target sub-project which config path we're interested in
+   * @param rootProjectPath  path to root project's directory which contains 'build.gradle'
+   * @return                 path to the given sub-project's directory which contains 'build.gradle'
+   */
+  @NotNull
+  public static String getConfigPath(@NotNull GradleProject subProject, @NotNull String rootProjectPath) {
+    try {
+      GradleScript script = subProject.getBuildScript();
+      if (script != null) {
+        File file = script.getSourceFile();
+        if (file != null) {
+          if (file.isFile()) {
+            // The file points to 'build.gradle' at the moment but we keep it's parent dir path instead.
+            file = file.getParentFile();
+          }
+          return ExternalSystemApiUtil.toCanonicalPath(file.getCanonicalPath());
+        }
+      }
+    }
+    catch (Exception e) {
+      // As said by gradle team: 'One thing I'm interested in is whether you have any thoughts about how the tooling API should
+      // deal with missing details from the model - for example, when asking for details about the build scripts when using
+      // a version of Gradle that does not supply that information. Currently, you'll get a `UnsupportedOperationException`
+      // when you call the `getBuildScript()` method'.
+      //
+      // So, just ignore it and assume that the user didn't define any custom build file name.
+    }
+    File rootProjectParent = new File(rootProjectPath).getParentFile();
+    StringBuilder buffer = new StringBuilder(FileUtil.toCanonicalPath(rootProjectParent.getAbsolutePath()));
+    Stack<String> stack = ContainerUtilRt.newStack();
+    for (GradleProject p = subProject; p != null; p = p.getParent()) {
+      stack.push(p.getName());
+    }
+    while (!stack.isEmpty()) {
+      buffer.append(ExternalSystemConstants.PATH_SEPARATOR).append(stack.pop());
+    }
+    return buffer.toString();
+  }
+
+  @NotNull
+  public static String getLastUsedGradleHome() {
+    return PropertiesComponent.getInstance().getValue(LAST_USED_GRADLE_HOME_KEY, "");
+  }
+
+  public static void storeLastUsedGradleHome(@Nullable String gradleHomePath) {
+    if (gradleHomePath != null) {
+      PropertiesComponent.getInstance().setValue(LAST_USED_GRADLE_HOME_KEY, gradleHomePath);
+    }
   }
 }

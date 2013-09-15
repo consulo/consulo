@@ -20,23 +20,24 @@ import com.intellij.ide.browsers.Urls;
 import com.intellij.ide.browsers.WebBrowserService;
 import com.intellij.ide.browsers.WebBrowserUrlProvider;
 import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.xml.util.HtmlUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class WebBrowserServiceImpl extends WebBrowserService {
   @Override
   public boolean canOpenInBrowser(@NotNull PsiElement psiElement) {
-    final PsiFile psiFile = psiElement instanceof PsiFile ? (PsiFile)psiElement : psiElement.getContainingFile();
-    return psiFile != null && psiFile.getVirtualFile() != null &&
-           (HtmlUtil.isHtmlFile(psiFile) || getProvider(psiElement) != null);
+    PsiFile psiFile = psiElement instanceof PsiFile ? (PsiFile)psiElement : psiElement.getContainingFile();
+    VirtualFile virtualFile = psiFile == null ? null : psiFile.getVirtualFile();
+    return virtualFile != null &&
+           ((HtmlUtil.isHtmlFile(psiFile) && !(virtualFile instanceof LightVirtualFile)) || getProvider(psiElement, psiFile) != null);
   }
 
   @Override
@@ -55,11 +56,17 @@ public class WebBrowserServiceImpl extends WebBrowserService {
     }
 
     if (!(preferLocalUrl && HtmlUtil.isHtmlFile(psiFile))) {
-      WebBrowserUrlProvider provider = getProvider(psiElement);
+      Pair<WebBrowserUrlProvider, Url> provider = getProvider(psiElement);
       if (provider != null) {
+        if (provider.second != null) {
+          return provider.second;
+        }
+
         try {
-          // I (develar) don't want to change API right now, so, just wrap result
-          return Urls.newFromIdea(provider.getUrl(psiElement, psiFile, virtualFile));
+          Url url = provider.first.getUrl(psiElement, psiFile, virtualFile);
+          if (url != null) {
+            return url;
+          }
         }
         catch (WebBrowserUrlProvider.BrowserException e) {
           if (!HtmlUtil.isHtmlFile(psiFile)) {
@@ -68,32 +75,34 @@ public class WebBrowserServiceImpl extends WebBrowserService {
         }
       }
     }
-    return Urls.newFromVirtualFile(virtualFile);
+    return virtualFile instanceof LightVirtualFile ? null : Urls.newFromVirtualFile(virtualFile);
   }
 
+  @Override
   @Nullable
   public Url getUrlToOpen(@NotNull PsiElement psiElement) {
     try {
       return getUrlToOpen(psiElement, false);
     }
-    catch (WebBrowserUrlProvider.BrowserException e) {
+    catch (WebBrowserUrlProvider.BrowserException ignored) {
       return null;
     }
   }
 
   @Nullable
-  public static WebBrowserUrlProvider getProvider(@Nullable PsiElement element) {
-    if (element == null) {
-      return null;
-    }
+  public static Pair<WebBrowserUrlProvider, Url> getProvider(@Nullable PsiElement element) {
+    PsiFile psiFile = element == null ? null : element.getContainingFile();
+    return psiFile == null ? null : getProvider(element, psiFile);
+  }
 
-    final List<WebBrowserUrlProvider> allProviders = Arrays.asList(WebBrowserUrlProvider.EP_NAME.getExtensions());
-    for (WebBrowserUrlProvider urlProvider : DumbService.getInstance(element.getProject()).filterByDumbAwareness(allProviders)) {
-      if (urlProvider.canHandleElement(element)) {
-        return urlProvider;
+  private static Pair<WebBrowserUrlProvider, Url> getProvider(PsiElement element, PsiFile psiFile) {
+    Ref<Url> result = Ref.create();
+    DumbService dumbService = DumbService.getInstance(element.getProject());
+    for (WebBrowserUrlProvider urlProvider : WebBrowserUrlProvider.EP_NAME.getExtensions()) {
+      if ((!dumbService.isDumb() || DumbService.isDumbAware(urlProvider)) && urlProvider.canHandleElement(element, psiFile, result)) {
+        return Pair.create(urlProvider, result.get());
       }
     }
-
     return null;
   }
 }

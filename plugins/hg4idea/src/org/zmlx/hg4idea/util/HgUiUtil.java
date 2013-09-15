@@ -21,21 +21,25 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.zmlx.hg4idea.HgVcsMessages;
 import org.zmlx.hg4idea.action.HgCommandResultNotifier;
+import org.zmlx.hg4idea.command.HgTagBranch;
 import org.zmlx.hg4idea.command.HgTagBranchCommand;
 import org.zmlx.hg4idea.execution.HgCommandResult;
 
+import javax.swing.*;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Nadya Zabrodina
  */
 public class HgUiUtil {
 
-  public static void loadBranchesInBackgroundableAndExecuteAction(final Project project,
-                                                                  final Collection<VirtualFile> repos,
-                                                                  final Consumer<HgBranchesAndTags> successHandler) {
+  public static void loadBranchesInBackgroundableAndExecuteAction(@NotNull final Project project,
+                                                                  @NotNull final Collection<VirtualFile> repos,
+                                                                  @NotNull final Consumer<HgBranchesAndTags> successHandler) {
     final HgBranchesAndTags branchTagInfo = new HgBranchesAndTags();
     new Task.Backgroundable(project, "Collecting information...") {
       @Override
@@ -54,6 +58,13 @@ public class HgUiUtil {
             return;
           }
           branchTagInfo.addTags(repo, HgTagBranchCommand.parseResult(result));
+
+          result = tagBranchCommand.collectBookmarks();
+          if (result == null) {
+            indicator.cancel();
+            return;
+          }
+          branchTagInfo.addBookmarks(repo, HgTagBranchCommand.parseResult(result));
         }
       }
 
@@ -68,5 +79,11 @@ public class HgUiUtil {
         successHandler.consume(branchTagInfo);
       }
     }.queue();
+  }
+
+  public static void loadContentToDialog(@Nullable VirtualFile root, @NotNull Map<VirtualFile, Collection<HgTagBranch>> contentMap,
+                                         @NotNull JComboBox selector) {
+    assert contentMap.get(root) != null : "No information about root " + root;
+    selector.setModel(new DefaultComboBoxModel(contentMap.get(root).toArray()));
   }
 }

@@ -18,17 +18,22 @@ package com.intellij.openapi.ui;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.mac.MacMessages;
+import com.intellij.ui.mac.foundation.MacUtil;
+import com.intellij.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.PairFunction;
 import com.intellij.util.execution.ParametersListUtil;
@@ -44,8 +49,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Messages {
   public static final int OK = 0;
@@ -53,14 +60,15 @@ public class Messages {
   public static final int NO = 1;
   public static final int CANCEL = 2;
 
+  public static final String OK_BUTTON = CommonBundle.getOkButtonText();
+  public static final String YES_BUTTON = CommonBundle.getYesButtonText();
+  public static final String NO_BUTTON = CommonBundle.getNoButtonText();
+  public static final String CANCEL_BUTTON = CommonBundle.getCancelButtonText();
+
   private static TestDialog ourTestImplementation = TestDialog.DEFAULT;
   private static TestInputDialog ourTestInputImplementation = TestInputDialog.DEFAULT;
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.Messages");
-  protected static final String OK_BUTTON = CommonBundle.getOkButtonText();
-  protected static final String YES_BUTTON = CommonBundle.getYesButtonText();
-  protected static final String NO_BUTTON = CommonBundle.getNoButtonText();
-  protected static final String CANCEL_BUTTON = CommonBundle.getCancelButtonText();
 
   @TestOnly
   public static TestDialog setTestDialog(TestDialog newValue) {
@@ -136,6 +144,10 @@ public class Messages {
            && !isApplicationInUnitTestOrHeadless()
            && Registry.is("ide.mac.message.dialogs.as.sheets")
            && !DialogWrapper.isMultipleModalDialogs();
+  }
+
+  public static boolean isMacSheetEmulation() {
+    return SystemInfo.isMac && Registry.is("ide.mac.message.dialogs.as.sheets") && Registry.is("ide.mac.message.sheets.java.emulation");
   }
 
   public static int showDialog(Project project, String message, String title, String moreInfo, String[] options, int defaultOptionIndex, int focusedOptionIndex, Icon icon) {
@@ -331,7 +343,7 @@ public class Messages {
                                        DialogWrapper.DoNotAskOption doNotAskOption) {
     if (canShowMacSheetPanel()) {
       return MacMessages.getInstance().showYesNoDialog(title, message, okText, cancelText, WindowManager.getInstance().suggestParentWindow(project),
-                                         doNotAskOption);
+                                                       doNotAskOption);
     }
 
     return showDialog(project, message, title, new String[]{okText, cancelText}, 0, icon, doNotAskOption);
@@ -397,7 +409,7 @@ public class Messages {
   }
 
   public static int showCheckboxOkCancelDialog(String message, String title, String checkboxText, final boolean checked,
-                                                  final int defaultOptionIndex, final int focusedOptionIndex, Icon icon) {
+                                               final int defaultOptionIndex, final int focusedOptionIndex, Icon icon) {
     return showCheckboxMessageDialog(message, title, new String[]{OK_BUTTON, CANCEL_BUTTON}, checkboxText, checked, defaultOptionIndex,
                                      focusedOptionIndex, icon,
                                      new PairFunction<Integer, JCheckBox, Integer>() {
@@ -409,8 +421,8 @@ public class Messages {
   }
 
   public static int showCheckboxMessageDialog(String message, String title, String[] options, String checkboxText, final boolean checked,
-                                                  final int defaultOptionIndex, final int focusedOptionIndex, Icon icon,
-                                                  @Nullable final PairFunction<Integer, JCheckBox, Integer> exitFunc) {
+                                              final int defaultOptionIndex, final int focusedOptionIndex, Icon icon,
+                                              @Nullable final PairFunction<Integer, JCheckBox, Integer> exitFunc) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestImplementation.show(message);
     }
@@ -469,7 +481,7 @@ public class Messages {
     showDialog(message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
   }
 
-  public static void showWarningDialog(Project project, String message, String title) {
+  public static void showWarningDialog(@Nullable Project project, String message, String title) {
     if (canShowMacSheetPanel()) {
       MacMessages.getInstance().showErrorDialog(CommonBundle.getWarningTitle(), message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
       return;
@@ -505,7 +517,7 @@ public class Messages {
   public static int showYesNoCancelDialog(Project project, String message, String title, String yes, String no, String cancel, @Nullable Icon icon) {
     if (canShowMacSheetPanel()) {
       return MacMessages.getInstance().showYesNoCancelDialog(title, message, yes, no, cancel,
-                                               WindowManager.getInstance().suggestParentWindow(project), null);
+                                                             WindowManager.getInstance().suggestParentWindow(project), null);
     }
 
     return showDialog(project, message, title, new String[]{yes, no, cancel}, 0, icon);
@@ -519,7 +531,7 @@ public class Messages {
   public static int showYesNoCancelDialog(Component parent, String message, String title, String yes, String no, String cancel, Icon icon) {
     if (canShowMacSheetPanel()) {
       return MacMessages.getInstance().showYesNoCancelDialog(title, message, yes, no, cancel,
-                                               SwingUtilities.getWindowAncestor(parent), null);
+                                                             SwingUtilities.getWindowAncestor(parent), null);
     }
 
     return showDialog(parent, message, title, new String[]{yes, no, cancel}, 0, icon);
@@ -732,13 +744,13 @@ public class Messages {
 
   @NotNull
   public static Pair<String, Boolean> showInputDialogWithCheckBox(String message,
-                                                   String title,
-                                                   String checkboxText,
-                                                   boolean checked,
-                                                   boolean checkboxEnabled,
-                                                   @Nullable Icon icon,
-                                                   @NonNls String initialValue,
-                                                   @Nullable InputValidator validator) {
+                                                                  String title,
+                                                                  String checkboxText,
+                                                                  boolean checked,
+                                                                  boolean checkboxEnabled,
+                                                                  @Nullable Icon icon,
+                                                                  @NonNls String initialValue,
+                                                                  @Nullable InputValidator validator) {
     if (isApplicationInUnitTestOrHeadless()) {
       return new Pair<String, Boolean>(ourTestInputImplementation.show(message), checked);
     }
@@ -898,7 +910,7 @@ public class Messages {
     showTextAreaDialog(textField, title, dimensionServiceKey, ParametersListUtil.DEFAULT_LINE_PARSER, ParametersListUtil.DEFAULT_LINE_JOINER);
   }
 
-    private static class MoreInfoMessageDialog extends MessageDialog {
+  private static class MoreInfoMessageDialog extends MessageDialog {
     private final String myInfoText;
 
     public MoreInfoMessageDialog(Project project,
@@ -944,6 +956,7 @@ public class Messages {
     protected int myDefaultOptionIndex;
     protected int myFocusedOptionIndex;
     protected Icon myIcon;
+    private MyBorderLayout myLayout;
 
     public MessageDialog(@Nullable Project project, String message, String title, String[] options, int defaultOptionIndex, @Nullable Icon icon, boolean canBeParent) {
       this(project, message, title, options, defaultOptionIndex, -1, icon, canBeParent);
@@ -1003,6 +1016,9 @@ public class Messages {
 
     protected void _init(String title, String message, String[] options, int defaultOptionIndex, int focusedOptionIndex, @Nullable Icon icon, @Nullable DoNotAskOption doNotAskOption) {
       setTitle(title);
+      if (isMacSheetEmulation()) {
+        setUndecorated(true);
+      }
       myMessage = message;
       myOptions = options;
       myDefaultOptionIndex = defaultOptionIndex;
@@ -1011,6 +1027,7 @@ public class Messages {
       setButtonsAlignment(SwingConstants.CENTER);
       setDoNotAskOption(doNotAskOption);
       init();
+      MacUtil.adjustFocusTraversal(myDisposable);
     }
 
     @NotNull
@@ -1061,6 +1078,90 @@ public class Messages {
       return doCreateCenterPanel();
     }
 
+    @Override
+    LayoutManager createRootLayout() {
+      return isMacSheetEmulation() ? myLayout = new MyBorderLayout() : super.createRootLayout();
+    }
+
+    @Override
+    protected void dispose() {
+      if (isMacSheetEmulation()) {
+        animate();
+      } else {
+        super.dispose();
+      }
+    }
+
+    @Override
+    public void show() {
+      if (isMacSheetEmulation()) {
+        setInitialLocationCallback(new Computable<Point>() {
+          @Override
+          public Point compute() {
+            JRootPane rootPane = SwingUtilities.getRootPane(getWindow().getParent());
+            if (rootPane == null) {
+              rootPane = SwingUtilities.getRootPane(getWindow().getOwner());
+            }
+
+            Point p = rootPane.getLocationOnScreen();
+            p.x += (rootPane.getWidth() - getWindow().getWidth()) / 2;
+            return p;
+          }
+        });
+        animate();
+        if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+          try {
+            Method method = Class.forName("java.awt.Window").getDeclaredMethod("setOpacity", float.class);
+            if (method != null) method.invoke(getPeer().getWindow(), .8f);
+          }
+          catch (Exception ignored) {
+          }
+        }
+        setAutoAdjustable(false);
+        setSize(getPreferredSize().width, 0);//initial state before animation, zero height
+      }
+      super.show();
+    }
+
+    private void animate() {
+      final int height = getPreferredSize().height;
+      final int frameCount = 10;
+      final boolean toClose = isShowing();
+
+
+      final AtomicInteger i = new AtomicInteger(-1);
+      final Alarm animator = new Alarm(myDisposable);
+      final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+          int state = i.addAndGet(1);
+
+          double linearProgress = (double)state / frameCount;
+          if (toClose) {
+            linearProgress = 1 - linearProgress;
+          }
+          myLayout.myPhase = (1 - Math.cos(Math.PI * linearProgress)) / 2;
+          Window window = getPeer().getWindow();
+          Rectangle bounds = window.getBounds();
+          bounds.height = (int)(height * myLayout.myPhase);
+
+          window.setBounds(bounds);
+
+          if (state == 0 && !toClose && window.getOwner() instanceof IdeFrame) {
+            WindowManager.getInstance().requestUserAttention((IdeFrame)window.getOwner(), true);
+          }
+
+          if (state < frameCount) {
+            animator.addRequest(this, 10);
+          }
+          else if (toClose) {
+            MessageDialog.super.dispose();
+          }
+        }
+      };
+      animator.addRequest(runnable, 10, ModalityState.stateForComponent(getRootPane()));
+    }
+
     protected JComponent doCreateCenterPanel() {
       JPanel panel = new JPanel(new BorderLayout(15, 0));
       if (myIcon != null) {
@@ -1102,6 +1203,33 @@ public class Messages {
     @Override
     protected void doHelpAction() {
       // do nothing
+    }
+  }
+
+  private static class MyBorderLayout extends BorderLayout {
+    private double myPhase = 0;//it varies from 0 (hidden state) to 1 (fully visible)
+
+    private MyBorderLayout() {
+    }
+
+    @Override
+    public void layoutContainer(Container target) {
+      final Dimension realSize = target.getSize();
+      target.setSize(target.getPreferredSize());
+
+      super.layoutContainer(target);
+
+      target.setSize(realSize);
+
+      synchronized (target.getTreeLock()) {
+        int yShift = (int)((1 - myPhase) * target.getPreferredSize().height);
+        Component[] components = target.getComponents();
+        for (Component component : components) {
+          Point point = component.getLocation();
+          point.y -= yShift;
+          component.setLocation(point);
+        }
+      }
     }
   }
 

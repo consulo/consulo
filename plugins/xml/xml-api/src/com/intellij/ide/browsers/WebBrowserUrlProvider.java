@@ -16,6 +16,7 @@
 package com.intellij.ide.browsers;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class WebBrowserUrlProvider {
-  public static ExtensionPointName<WebBrowserUrlProvider> EP_NAME = ExtensionPointName.create("com.intellij.xml.webBrowserUrlProvider");
+  public static ExtensionPointName<WebBrowserUrlProvider> EP_NAME = ExtensionPointName.create("com.intellij.webBrowserUrlProvider");
 
   /**
    * Browser exceptions are printed in Error Dialog when user presses any browser button.
@@ -34,16 +35,27 @@ public abstract class WebBrowserUrlProvider {
     }
   }
 
-  @NotNull
-  /**
-   * URL must not be encoded (space as is)
-   */
-  public abstract String getUrl(@NotNull PsiElement element, @NotNull PsiFile psiFile, @NotNull VirtualFile virtualFile) throws BrowserException;
+  public boolean canHandleElement(@NotNull PsiElement element, @NotNull PsiFile psiFile, @NotNull Ref<Url> result) {
+    VirtualFile file = psiFile.getVirtualFile();
+    if (file == null) {
+      return false;
+    }
 
-  /**
-   * Invariant: element has not null containing psi file with not null virtual file
-   */
-  public abstract boolean canHandleElement(@NotNull final PsiElement element);
+    try {
+      Url url = getUrl(element, psiFile, file);
+      if (url != null) {
+        result.set(url);
+        return true;
+      }
+    }
+    catch (BrowserException ignored) {
+    }
+
+    return false;
+  }
+
+  @Nullable
+  public abstract Url getUrl(@NotNull PsiElement element, @NotNull PsiFile psiFile, @NotNull VirtualFile virtualFile) throws BrowserException;
 
   @Nullable
   public String getOpenInBrowserActionText(@NotNull PsiFile file) {

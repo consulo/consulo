@@ -18,6 +18,7 @@ package com.intellij.openapi.externalSystem.settings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Defines callback for external system settings change.
@@ -26,12 +27,21 @@ import java.util.Collection;
  * 
  * @author Denis Zhdanov
  * @since 4/3/13 4:13 PM
+ * @param <S>  target project setting type
  */
 public interface ExternalSystemSettingsListener<S extends ExternalProjectSettings> {
+
+  /**
+   * This method is present here only because IJ platform doesn't has corresponding messaging set up for 'project rename' event.
+   * 
+   * @param oldName  old project name
+   * @param newName  new project name
+   */
+  void onProjectRenamed(@NotNull String oldName, @NotNull String newName);
   
   void onProjectsLinked(@NotNull Collection<S> settings);
 
-  void onProjectsUnlinked(@NotNull Collection<String> linkedProjectPaths);
+  void onProjectsUnlinked(@NotNull Set<String> linkedProjectPaths);
   
   void onUseAutoImportChange(boolean currentValue, @NotNull String linkedProjectPath);
 

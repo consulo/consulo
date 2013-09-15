@@ -15,23 +15,26 @@
  */
 package com.intellij.openapi.externalSystem.service.task;
 
+import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.Key;
 import com.intellij.openapi.externalSystem.model.ProjectKeys;
+import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.project.ModuleData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
+import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
+import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.externalSystem.util.Order;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Ensures that all external system sub-projects are correctly represented at the external system tool window.
@@ -43,10 +46,11 @@ import java.util.Map;
 public class ToolWindowModuleService extends AbstractToolWindowService<ModuleData> {
 
   @NotNull
-  public static final Function<DataNode<ModuleData>, ModuleData> MAPPER = new Function<DataNode<ModuleData>, ModuleData>() {
+  public static final Function<DataNode<ModuleData>, ExternalProjectPojo> MAPPER
+    = new Function<DataNode<ModuleData>, ExternalProjectPojo>() {
     @Override
-    public ModuleData fun(DataNode<ModuleData> node) {
-      return node.getData();
+    public ExternalProjectPojo fun(DataNode<ModuleData> node) {
+      return ExternalProjectPojo.from(node.getData());
     }
   };
 
@@ -57,15 +61,58 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
   }
 
   @Override
-  protected void processData(@NotNull final Collection<DataNode<ModuleData>> nodes, @NotNull final ExternalSystemTasksTreeModel model) {
+  protected void processData(@NotNull final Collection<DataNode<ModuleData>> nodes,
+                             @NotNull Project project,
+                             @Nullable final ExternalSystemTasksTreeModel model)
+  {
+    if (nodes.isEmpty()) {
+      return;
+    }
+    ProjectSystemId externalSystemId = nodes.iterator().next().getData().getOwner();
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
+    assert manager != null;
+
     final Map<DataNode<ProjectData>, List<DataNode<ModuleData>>> grouped = ExternalSystemApiUtil.groupBy(nodes, ProjectKeys.PROJECT);
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        for (Map.Entry<DataNode<ProjectData>, List<DataNode<ModuleData>>> entry : grouped.entrySet()) {
-          model.ensureSubProjectsStructure(entry.getKey().getData(), ContainerUtilRt.map2List(entry.getValue(), MAPPER));
-        } 
+    Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> data = ContainerUtilRt.newHashMap();
+    for (Map.Entry<DataNode<ProjectData>, List<DataNode<ModuleData>>> entry : grouped.entrySet()) {
+      data.put(ExternalProjectPojo.from(entry.getKey().getData()), ContainerUtilRt.map2List(entry.getValue(), MAPPER));
+    }
+
+    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
+    Set<String> pathsToForget = detectRenamedProjects(data, settings.getAvailableProjects());
+    if (!pathsToForget.isEmpty()) {
+      settings.forgetExternalProjects(pathsToForget);
+    }
+    Map<ExternalProjectPojo,Collection<ExternalProjectPojo>> projects = ContainerUtilRt.newHashMap(settings.getAvailableProjects());
+    projects.putAll(data);
+    settings.setAvailableProjects(projects);
+  }
+  
+  @NotNull
+  private static Set<String> detectRenamedProjects(@NotNull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> currentInfo,
+                                                   @NotNull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> oldInfo)
+  {
+    Map<String/* external config path */, String/* project name */> map = ContainerUtilRt.newHashMap();
+    for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : currentInfo.entrySet()) {
+      map.put(entry.getKey().getPath(), entry.getKey().getName());
+      for (ExternalProjectPojo pojo : entry.getValue()) {
+        map.put(pojo.getPath(), pojo.getName());
       }
-    });
+    }
+
+    Set<String> result = ContainerUtilRt.newHashSet();
+    for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : oldInfo.entrySet()) {
+      String newName = map.get(entry.getKey().getPath());
+      if (newName != null && !newName.equals(entry.getKey().getName())) {
+        result.add(entry.getKey().getPath());
+      }
+      for (ExternalProjectPojo pojo : entry.getValue()) {
+        newName = map.get(pojo.getPath());
+        if (newName != null && !newName.equals(pojo.getName())) {
+          result.add(pojo.getPath());
+        }
+      }
+    }
+    return result;
   }
 }

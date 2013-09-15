@@ -16,9 +16,12 @@
 package org.jetbrains.plugins.gradle.settings;
 
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.plugins.gradle.service.project.GradleProjectResolverExtension;
 
 import java.util.List;
 
@@ -32,18 +35,29 @@ public class GradleExecutionSettings extends ExternalSystemExecutionSettings {
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull private final List<String> myResolverExtensions = ContainerUtilRt.newArrayList();
+  @NotNull private final List<ClassHolder<? extends GradleProjectResolverExtension>> myResolverExtensions = ContainerUtilRt.newArrayList();
   @Nullable private final String myGradleHome;
   @Nullable private final String myServiceDirectory;
 
-  private final boolean myUseWrapper;
+  @Nullable private final String myDaemonVmOptions;
+
+  @NotNull final DistributionType myDistributionType;
+  @Nullable private String wrapperPropertyFile;
 
   @Nullable private String myJavaHome;
 
-  public GradleExecutionSettings(@Nullable String gradleHome, @Nullable String serviceDirectory, boolean wrapper) {
+  public GradleExecutionSettings(@Nullable String gradleHome,
+                                 @Nullable String serviceDirectory,
+                                 @NotNull DistributionType distributionType,
+                                 @Nullable String daemonVmOptions)
+  {
     myGradleHome = gradleHome;
     myServiceDirectory = serviceDirectory;
-    myUseWrapper = wrapper;
+    myDistributionType = distributionType;
+    if (daemonVmOptions != null && !daemonVmOptions.contains("-Xmx")) {
+      daemonVmOptions += String.format(" -Xmx%dm", SystemInfo.is32Bit ? 512 : 1024);
+    }
+    myDaemonVmOptions = daemonVmOptions;
     setVerboseProcessing(USE_VERBOSE_GRADLE_API_BY_DEFAULT);
   }
 
@@ -57,10 +71,6 @@ public class GradleExecutionSettings extends ExternalSystemExecutionSettings {
     return myServiceDirectory;
   }
 
-  public boolean isUseWrapper() {
-    return myUseWrapper;
-  }
-
   @Nullable
   public String getJavaHome() {
     return myJavaHome;
@@ -71,12 +81,34 @@ public class GradleExecutionSettings extends ExternalSystemExecutionSettings {
   }
 
   @NotNull
-  public List<String> getResolverExtensions() {
+  public List<ClassHolder<? extends GradleProjectResolverExtension>> getResolverExtensions() {
     return myResolverExtensions;
   }
 
-  public void addResolverExtensionClass(@NotNull String className) {
-    myResolverExtensions.add(className);
+  public void addResolverExtensionClass(@NotNull ClassHolder<? extends GradleProjectResolverExtension> holder) {
+    myResolverExtensions.add(holder);
+  }
+
+  /**
+   * @return  VM options to use for the gradle daemon process (if any)
+   */
+  @Nullable
+  public String getDaemonVmOptions() {
+    return myDaemonVmOptions;
+  }
+
+  @Nullable
+  public String getWrapperPropertyFile() {
+    return wrapperPropertyFile;
+  }
+
+  public void setWrapperPropertyFile(@Nullable String wrapperPropertyFile) {
+    this.wrapperPropertyFile = wrapperPropertyFile;
+  }
+
+  @NotNull
+  public DistributionType getDistributionType() {
+    return myDistributionType;
   }
 
   @Override
@@ -84,8 +116,9 @@ public class GradleExecutionSettings extends ExternalSystemExecutionSettings {
     int result = super.hashCode();
     result = 31 * result + (myGradleHome != null ? myGradleHome.hashCode() : 0);
     result = 31 * result + (myServiceDirectory != null ? myServiceDirectory.hashCode() : 0);
-    result = 31 * result + (myUseWrapper ? 1 : 0);
+    result = 31 * result + myDistributionType.hashCode();
     result = 31 * result + (myJavaHome != null ? myJavaHome.hashCode() : 0);
+    result = 31 * result + (myDaemonVmOptions == null ? 0 : myDaemonVmOptions.hashCode());
     return result;
   }
 
@@ -95,7 +128,8 @@ public class GradleExecutionSettings extends ExternalSystemExecutionSettings {
 
     GradleExecutionSettings that = (GradleExecutionSettings)o;
 
-    if (myUseWrapper != that.myUseWrapper) return false;
+    if (myDistributionType != that.myDistributionType) return false;
+    if (!Comparing.equal(myDaemonVmOptions, that.myDaemonVmOptions)) return false;
     if (myGradleHome != null ? !myGradleHome.equals(that.myGradleHome) : that.myGradleHome != null) return false;
     if (myJavaHome != null ? !myJavaHome.equals(that.myJavaHome) : that.myJavaHome != null) return false;
     if (myServiceDirectory != null ? !myServiceDirectory.equals(that.myServiceDirectory) : that.myServiceDirectory != null) {
@@ -107,6 +141,6 @@ public class GradleExecutionSettings extends ExternalSystemExecutionSettings {
 
   @Override
   public String toString() {
-    return "home: " + myGradleHome + ", use wrapper: " + myUseWrapper;
+    return "home: " + myGradleHome + ", distributionType: " + myDistributionType;
   }
 }

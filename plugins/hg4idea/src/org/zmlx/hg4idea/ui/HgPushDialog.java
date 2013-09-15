@@ -51,6 +51,7 @@ public class HgPushDialog extends DialogWrapper {
   private JCheckBox branchCheckBox;
   private JComboBox branchComboBox;
   private EditorComboBox myRepositoryURL;
+  private JCheckBox newBranchCheckBox;
   private String myCurrentRepositoryUrl;
 
   public HgPushDialog(Project project, Collection<VirtualFile> repos, List<HgTagBranch> branches, @Nullable VirtualFile selectedRepo) {
@@ -92,6 +93,13 @@ public class HgPushDialog extends DialogWrapper {
     });
   }
 
+  private void addPathsFromHgrc(VirtualFile repo) {
+    Collection<String> paths = HgUtil.getRepositoryPaths(myProject, repo);
+    for (String path : paths) {
+      myRepositoryURL.prependItem(path);
+    }
+  }
+
   public VirtualFile getRepository() {
     return hgRepositorySelectorComponent.getRepository();
   }
@@ -114,6 +122,10 @@ public class HgPushDialog extends DialogWrapper {
     return forceCheckBox.isSelected();
   }
 
+  public boolean isNewBranch() {
+      return newBranchCheckBox.isSelected();
+    }
+
   protected JComponent createCenterPanel() {
     return contentPanel;
   }
@@ -128,11 +140,12 @@ public class HgPushDialog extends DialogWrapper {
       @Override
       public void run() {
         final VirtualFile repo = hgRepositorySelectorComponent.getRepository();
-        final String defaultPath = HgPusher.getDefaultPushPath(myProject, repo);
+        final String defaultPath = HgUtil.getRepositoryDefaultPushPath(myProject, repo);
         final List<HgTagBranch> branches = HgPusher.getBranches(myProject, repo);
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
+            addPathsFromHgrc(repo);
             if (defaultPath != null) {
               updateRepositoryUrlText(HgUtil.removePasswordIfNeeded(defaultPath));
               myCurrentRepositoryUrl = defaultPath;
@@ -159,6 +172,7 @@ public class HgPushDialog extends DialogWrapper {
     setOKActionEnabled(validateOptions());
     revisionTxt.setEnabled(revisionCbx.isSelected());
     branchComboBox.setEnabled(branchCheckBox.isSelected());
+    newBranchCheckBox.setEnabled(branchCheckBox.isSelected());
   }
 
   private boolean validateOptions() {

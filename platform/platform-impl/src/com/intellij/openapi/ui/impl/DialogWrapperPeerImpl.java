@@ -23,6 +23,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
@@ -110,6 +112,15 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
           window = focusedWindow;
         }
       }
+      if (window == null) {
+        IdeFrame[] frames = myWindowManager.getAllProjectFrames();
+        for (IdeFrame frame : frames) {
+          if (frame instanceof IdeFrameImpl && ((IdeFrameImpl)frame).isActive()) {
+            window = (IdeFrameImpl)frame;
+            break;
+          }
+        }
+      }
     }
 
     Window owner;
@@ -170,14 +181,21 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     createDialog(owner, canBeParent);
   }
 
+  /** @see DialogWrapper#DialogWrapper(boolean, boolean)
+   */
+  @Deprecated
   public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
+    this(wrapper, null, canBeParent, applicationModalIfPossible);
+  }
+
+  public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper,final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
     myWrapper = wrapper;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
     if (application != null && application.hasComponent(WindowManager.class)) {
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
-    createDialog(null, canBeParent);
+    createDialog(owner, canBeParent);
     if (applicationModalIfPossible && !isHeadless()) {
       Dialog.ModalityType modalityType = Dialog.ModalityType.TOOLKIT_MODAL;
       if (Registry.is("ide.mac.modalDialogsOnFullscreen")) {
@@ -397,12 +415,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
   @Override
   public ActionCallback show() {
+    LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
     if (myTypeAheadCallback != null) {
       IdeFocusManager.getInstance(myProject).typeAheadUntil(myTypeAheadCallback);
-    }
+    }                         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
     final ActionCallback result = new ActionCallback();
-
-    LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
     final AnCancelAction anCancelAction = new AnCancelAction();
     final JRootPane rootPane = getRootPane();
@@ -639,32 +656,34 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       myFocusTrackback = new FocusTrackback(getDialogWrapper(), getParent(), true);
 
       final DialogWrapper dialogWrapper = getDialogWrapper();
-
-      pack();
-
-      Dimension packedSize = getSize();
-      Dimension minSize = getMinimumSize();
-      setSize(Math.max(packedSize.width, minSize.width), Math.max(packedSize.height, minSize.height));
-
-      setSize((int)(getWidth() * dialogWrapper.getHorizontalStretch()), (int)(getHeight() * dialogWrapper.getVerticalStretch()));
-
-      // Restore dialog's size and location
-
-      myDimensionServiceKey = dialogWrapper.getDimensionKey();
+      boolean isAutoAdjustable = dialogWrapper.isAutoAdjustable();
       Point location = null;
+      if (isAutoAdjustable) {
+        pack();
 
-      if (myDimensionServiceKey != null) {
-        final Project projectGuess = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this));
-        location = DimensionService.getInstance().getLocation(myDimensionServiceKey, projectGuess);
-        Dimension size = DimensionService.getInstance().getSize(myDimensionServiceKey, projectGuess);
-        if (size != null) {
-          myInitialSize = new Dimension(size);
-          _setSizeForLocation(myInitialSize.width, myInitialSize.height, location);
+        Dimension packedSize = getSize();
+        Dimension minSize = getMinimumSize();
+        setSize(Math.max(packedSize.width, minSize.width), Math.max(packedSize.height, minSize.height));
+
+        setSize((int)(getWidth() * dialogWrapper.getHorizontalStretch()), (int)(getHeight() * dialogWrapper.getVerticalStretch()));
+
+        // Restore dialog's size and location
+
+        myDimensionServiceKey = dialogWrapper.getDimensionKey();
+
+        if (myDimensionServiceKey != null) {
+          final Project projectGuess = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this));
+          location = DimensionService.getInstance().getLocation(myDimensionServiceKey, projectGuess);
+          Dimension size = DimensionService.getInstance().getSize(myDimensionServiceKey, projectGuess);
+          if (size != null) {
+            myInitialSize = new Dimension(size);
+            _setSizeForLocation(myInitialSize.width, myInitialSize.height, location);
+          }
         }
-      }
 
-      if (myInitialSize == null) {
-        myInitialSize = getSize();
+        if (myInitialSize == null) {
+          myInitialSize = getSize();
+        }
       }
 
       if (location == null) {
@@ -678,10 +697,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
         setLocationRelativeTo(getOwner());
       }
 
-      final Rectangle bounds = getBounds();
-      ScreenUtil.fitToScreen(bounds);
-      setBounds(bounds);
-
+      if (isAutoAdjustable) {
+        final Rectangle bounds = getBounds();
+        ScreenUtil.fitToScreen(bounds);
+        setBounds(bounds);
+      }
       addWindowListener(new WindowAdapter() {
         @Override
         public void windowActivated(WindowEvent e) {
@@ -753,6 +773,12 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
       setBackground(UIUtil.getPanelBackground());
 
+      final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+      if (app != null && !app.isLoaded() && Splash.BOUNDS != null) {
+        final Point loc = getLocation();
+        loc.y = Splash.BOUNDS.y + Splash.BOUNDS.height;
+        setLocation(loc);
+      }
       super.show();
     }
 
@@ -1037,7 +1063,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       @Override
       @SuppressWarnings({"RefusedBequest"})
       public void componentResized(ComponentEvent e) {
-        UIUtil.adjustWindowToMinimumSize(getWindow());
+        if (getDialogWrapper().isAutoAdjustable()) {
+          UIUtil.adjustWindowToMinimumSize(getWindow());
+        }
       }
     }
 

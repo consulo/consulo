@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.externalSystem.build.ExternalSystemTaskManager;
+import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.service.ParametersEnhancer;
@@ -10,6 +10,7 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalS
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.externalSystem.settings.ExternalSystemSettingsListener;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public interface ExternalSystemManager<
   ProjectSettings extends ExternalProjectSettings,
   SettingsListener extends ExternalSystemSettingsListener<ProjectSettings>,
-  Settings extends AbstractExternalSystemSettings<ProjectSettings, SettingsListener>,
+  Settings extends AbstractExternalSystemSettings<Settings, ProjectSettings, SettingsListener>,
   LocalSettings extends AbstractExternalSystemLocalSettings,
   ExecutionSettings extends ExternalSystemExecutionSettings>
   extends ParametersEnhancer
@@ -79,4 +80,10 @@ public interface ExternalSystemManager<
    * @see #getProjectResolverClass()
    */
   Class<? extends ExternalSystemTaskManager<ExecutionSettings>> getTaskManagerClass();
+
+  /**
+   * @return    file chooser descriptor to use when adding new external project
+   */
+  @NotNull
+  FileChooserDescriptor getExternalProjectDescriptor();
 }

@@ -79,6 +79,12 @@ public class GitUtil {
       if (o2 == null) {
         return 1;
       }
+      if (o1.getPresentableUrl() == null) {
+        return -1;
+      }
+      if (o2.getPresentableUrl() == null) {
+        return 1;
+      }
       return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
     }
   };
@@ -679,15 +685,6 @@ public class GitUtil {
     return !manager.moreThanOneRoot();
   }
 
-  public static List<GitRepository> sortRepositories(@NotNull Collection<GitRepository> repositories) {
-    List<GitRepository> repos = new ArrayList<GitRepository>(repositories);
-    Collections.sort(repos, new Comparator<GitRepository>() {
-      @Override public int compare(GitRepository o1, GitRepository o2) {
-        return o1.getPresentableUrl().compareTo(o2.getPresentableUrl());
-      }
-    });
-    return repos;
-  }
 
   @Nullable
   public static GitRemote findRemoteByName(@NotNull GitRepository repository, @Nullable String name) {

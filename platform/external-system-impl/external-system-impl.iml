@@ -12,6 +12,8 @@
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="compiler-artifact-api" />
+    <orderEntry type="module" module-name="vcs-impl" />
+    <orderEntry type="module" module-name="xdebugger-impl" />
   </component>
 </module>
 

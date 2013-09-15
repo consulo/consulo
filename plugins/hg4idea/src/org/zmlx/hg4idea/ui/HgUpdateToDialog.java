@@ -15,9 +15,11 @@ package org.zmlx.hg4idea.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.zmlx.hg4idea.command.HgTagBranch;
 import org.zmlx.hg4idea.util.HgBranchesAndTags;
+import org.zmlx.hg4idea.util.HgUiUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -25,7 +27,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class HgUpdateToDialog extends DialogWrapper {
@@ -35,14 +36,17 @@ public class HgUpdateToDialog extends DialogWrapper {
   private JPanel contentPanel;
   private JRadioButton branchOption;
   private JRadioButton revisionOption;
+  private JRadioButton tagOption;
+  private JRadioButton bookmarkOption;
   private JTextField revisionTxt;
   private JCheckBox cleanCbx;
   private JComboBox branchSelector;
-  private JRadioButton tagOption;
   private JComboBox tagSelector;
+  private JComboBox bookmarkSelector;
   private HgRepositorySelectorComponent hgRepositorySelectorComponent;
-  private Map<VirtualFile, List<HgTagBranch>> branchesForRepos;
-  private Map<VirtualFile, List<HgTagBranch>> tagsForRepos;
+  @NotNull private Map<VirtualFile, Collection<HgTagBranch>> branchesForRepos;
+  @NotNull private Map<VirtualFile, Collection<HgTagBranch>> tagsForRepos;
+  @NotNull private Map<VirtualFile, Collection<HgTagBranch>> bookmarksForRepos;
 
   public HgUpdateToDialog(Project project) {
     super(project, false);
@@ -61,6 +65,7 @@ public class HgUpdateToDialog extends DialogWrapper {
     };
     branchOption.addChangeListener(changeListener);
     tagOption.addChangeListener(changeListener);
+    bookmarkOption.addChangeListener(changeListener);
     revisionOption.addChangeListener(changeListener);
 
     setTitle("Switch working directory");
@@ -72,6 +77,7 @@ public class HgUpdateToDialog extends DialogWrapper {
     hgRepositorySelectorComponent.setRoots(repos);
     branchesForRepos = branchesAndTags.getBranchesForRepos();
     tagsForRepos = branchesAndTags.getTagsForRepos();
+    bookmarksForRepos = branchesAndTags.getBookmarksForRepos();
     hgRepositorySelectorComponent.setSelectedRoot(selectedRepo);
     updateRepository();
   }
@@ -96,6 +102,14 @@ public class HgUpdateToDialog extends DialogWrapper {
     return branchOption.isSelected();
   }
 
+  public HgTagBranch getBookmark() {
+    return (HgTagBranch)bookmarkSelector.getSelectedItem();
+  }
+
+  public boolean isBookmarkSelected() {
+    return bookmarkOption.isSelected();
+  }
+
   public String getRevision() {
     return revisionTxt.getText();
   }
@@ -112,23 +126,15 @@ public class HgUpdateToDialog extends DialogWrapper {
     revisionTxt.setEnabled(revisionOption.isSelected());
     branchSelector.setEnabled(branchOption.isSelected());
     tagSelector.setEnabled(tagOption.isSelected());
+    bookmarkSelector.setEnabled(bookmarkOption.isSelected());
   }
 
   private void updateRepository() {
     VirtualFile repo = hgRepositorySelectorComponent.getRepository();
-    loadBranches(repo);
-    loadTags(repo);
+    HgUiUtil.loadContentToDialog(repo, branchesForRepos, branchSelector);
+    HgUiUtil.loadContentToDialog(repo, tagsForRepos, tagSelector);
+    HgUiUtil.loadContentToDialog(repo, bookmarksForRepos, bookmarkSelector);
     update();
-  }
-
-  private void loadBranches(VirtualFile root) {
-    assert branchesForRepos.get(root) != null : "No inforamtion about root " + root;
-    branchSelector.setModel(new DefaultComboBoxModel(branchesForRepos.get(root).toArray()));
-  }
-
-  private void loadTags(VirtualFile root) {
-    assert tagsForRepos.get(root) != null : "No inforamtion about root " + root;
-    tagSelector.setModel(new DefaultComboBoxModel(tagsForRepos.get(root).toArray()));
   }
 
   protected JComponent createCenterPanel() {

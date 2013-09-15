@@ -15,21 +15,34 @@
  */
 package com.intellij.openapi.externalSystem.service.task.ui;
 
+import com.intellij.openapi.externalSystem.model.ProjectSystemId;
+import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Alarm;
+import com.intellij.util.Producer;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.tree.TreeModelAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeWillExpandListener;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.*;
 
 /**
  * @author Denis Zhdanov
  * @since 5/13/13 4:18 PM
  */
-public class ExternalSystemTasksTree extends Tree {
+public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTaskExecutionInfo> {
 
   private static final int COLLAPSE_STATE_PROCESSING_DELAY_MILLIS = 200;
 
@@ -50,12 +63,30 @@ public class ExternalSystemTasksTree extends Tree {
   private boolean mySuppressCollapseTracking;
 
   public ExternalSystemTasksTree(@NotNull ExternalSystemTasksTreeModel model,
-                                 @NotNull Map<String/*tree path*/, Boolean/*expanded*/> expandedStateHolder)
+                                 @NotNull Map<String/*tree path*/, Boolean/*expanded*/> expandedStateHolder,
+                                 @NotNull final Project project,
+                                 @NotNull final ProjectSystemId externalSystemId)
   {
     super(model);
     myExpandedStateHolder = expandedStateHolder;
     setRootVisible(false);
 
+    addTreeWillExpandListener(new TreeWillExpandListener() {
+      @Override
+      public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+        if (!mySuppressCollapseTracking) {
+          myExpandedStateHolder.put(getPath(event.getPath()), true);
+        }
+      }
+
+      @Override
+      public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+        if (!mySuppressCollapseTracking) {
+          myExpandedStateHolder.put(getPath(event.getPath()), false);
+        }
+      }
+    });
+    
     model.addTreeModelListener(new TreeModelAdapter() {
       @Override
       public void treeStructureChanged(TreeModelEvent e) {
@@ -65,6 +96,19 @@ public class ExternalSystemTasksTree extends Tree {
       @Override
       public void treeNodesInserted(TreeModelEvent e) {
         scheduleCollapseStateAppliance(e.getTreePath());
+      }
+    });
+    new TreeSpeedSearch(this);
+
+    getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+    getActionMap().put("Enter", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        ExternalTaskExecutionInfo task = produce();
+        if (task == null) {
+          return;
+        }
+        ExternalSystemUtil.runTask(task.getSettings(), task.getExecutorId(), project, externalSystemId);
       }
     });
   }
@@ -86,7 +130,7 @@ public class ExternalSystemTasksTree extends Tree {
         // a chance.
         // Another thing is that we sort the paths in order to process the longest first. That is related to the JTree specifics
         // that it automatically expands parent paths on child path expansion.
-        List<TreePath> paths = new ArrayList<TreePath>(myPathsToProcessCollapseState);
+        List<TreePath> paths = ContainerUtilRt.newArrayList(myPathsToProcessCollapseState);
         myPathsToProcessCollapseState.clear();
         Collections.sort(paths, PATH_COMPARATOR);
         for (TreePath treePath : paths) {
@@ -136,4 +180,19 @@ public class ExternalSystemTasksTree extends Tree {
     return buffer.toString();
   }
 
+  @Nullable
+  @Override
+  public ExternalTaskExecutionInfo produce() {
+    TreePath selectionPath = getLeadSelectionPath();
+    if (selectionPath == null) {
+      return null;
+    }
+    Object component = selectionPath.getLastPathComponent();
+    if (!(component instanceof ExternalSystemNode)) {
+      return null;
+    }
+
+    Object element = ((ExternalSystemNode)component).getDescriptor().getElement();
+    return element instanceof ExternalTaskExecutionInfo ? ((ExternalTaskExecutionInfo)element) : null;
+  }
 }

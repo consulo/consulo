@@ -138,7 +138,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
     myActionManager = actionManager;
     myUiSettings = uiSettings;
     if (myDataManager instanceof DataManagerImpl) {
-        ((DataManagerImpl)myDataManager).setWindowManager(this);
+      ((DataManagerImpl)myDataManager).setWindowManager(this);
     }
 
     final Application application = ApplicationManager.getApplication();
@@ -539,8 +539,9 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
     }
 
     frame.setBounds(myFrameBounds);
-    frame.setVisible(true);
     frame.setExtendedState(myFrameExtendedState);
+    frame.setVisible(true);
+
   }
 
   public final IdeFrameImpl allocateFrame(final Project project) {
@@ -565,8 +566,8 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
       }
       frame.setProject(project);
       myProject2Frame.put(project, frame);
-      frame.setVisible(true);
       frame.setExtendedState(myFrameExtendedState);
+      frame.setVisible(true);
     }
 
     frame.addWindowListener(myActivationListener);
@@ -729,7 +730,10 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
       frameElement.setAttribute(Y_ATTR, Integer.toString(rectangle.y));
       frameElement.setAttribute(WIDTH_ATTR, Integer.toString(rectangle.width));
       frameElement.setAttribute(HEIGHT_ATTR, Integer.toString(rectangle.height));
-      frameElement.setAttribute(EXTENDED_STATE_ATTR, Integer.toString(extendedState));
+
+      if (!(frame.isInFullScreen() && SystemInfo.isAppleJvm)) {
+        frameElement.setAttribute(EXTENDED_STATE_ATTR, Integer.toString(extendedState));
+      }
 
       // Save default layout
       final Element layoutElement = new Element(DesktopLayout.TAG);

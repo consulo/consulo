@@ -13,7 +13,7 @@ import java.util.Map;
  * @author Denis Zhdanov
  * @since 8/8/11 12:11 PM
  */
-public class ModuleData extends AbstractNamedData implements Named {
+public class ModuleData extends AbstractNamedData implements Named, ExternalConfigPathAware {
 
   private static final long serialVersionUID = 1L;
 
@@ -42,6 +42,12 @@ public class ModuleData extends AbstractNamedData implements Named {
   @NotNull
   public Class<? extends ModuleExtension> getModuleExtensionClass() {
     return myModuleExtensionClass;
+  }
+
+  @NotNull
+  @Override
+  public String getLinkedExternalProjectPath() {
+    return myExternalConfigPath;
   }
 
   @NotNull

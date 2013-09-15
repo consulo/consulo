@@ -33,6 +33,7 @@ import com.intellij.openapi.vcs.checkin.CheckinEnvironment;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.GuiUtils;
+import com.intellij.ui.NonFocusableCheckBox;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.NullableFunction;
@@ -49,7 +50,7 @@ import git4idea.commands.GitSimpleHandler;
 import git4idea.config.GitConfigUtil;
 import git4idea.config.GitVcsSettings;
 import git4idea.history.NewGitUsersComponent;
-import git4idea.history.browser.GitCommit;
+import git4idea.history.browser.GitHeavyCommit;
 import git4idea.i18n.GitBundle;
 import git4idea.push.GitPusher;
 import git4idea.repo.GitRepositoryFiles;
@@ -658,7 +659,7 @@ public class GitCheckinEnvironment implements CheckinEnvironment {
       c.insets = insets;
       c.weightx = 1;
       c.fill = GridBagConstraints.HORIZONTAL;
-      myAmend = new JCheckBox(GitBundle.getString("commit.amend"));
+      myAmend = new NonFocusableCheckBox(GitBundle.getString("commit.amend"));
       myAmend.setMnemonic('m');
       myAmend.setSelected(false);
       myAmend.setToolTipText(GitBundle.getString("commit.amend.tooltip"));
@@ -712,8 +713,8 @@ public class GitCheckinEnvironment implements CheckinEnvironment {
     @Override
     public void onChangeListSelected(LocalChangeList list) {
       Object data = list.getData();
-      if (data instanceof GitCommit) {
-        GitCommit commit = (GitCommit)data;
+      if (data instanceof GitHeavyCommit) {
+        GitHeavyCommit commit = (GitHeavyCommit)data;
         String author = String.format("%s <%s>", commit.getAuthor(), commit.getAuthorEmail());
         myAuthor.getEditor().setItem(author);
         myAuthorDate = new Date(commit.getAuthorTime());

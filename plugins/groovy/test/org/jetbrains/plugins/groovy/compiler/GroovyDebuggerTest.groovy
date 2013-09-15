@@ -32,7 +32,7 @@ import com.intellij.debugger.ui.DebuggerPanelsManager
 import com.intellij.debugger.ui.impl.watch.WatchItemDescriptor
 import com.intellij.debugger.ui.tree.render.DescriptorLabelListener
 import com.intellij.execution.configurations.RunProfile
-import com.intellij.execution.executors.DefaultDebugExecutor
+
 import com.intellij.execution.process.OSProcessHandler
 import com.intellij.execution.process.OSProcessManager
 import com.intellij.execution.process.ProcessAdapter

@@ -15,6 +15,7 @@
  */
 package git4idea.branch;
 
+import com.intellij.dvcs.DvcsUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -26,6 +27,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ui.UIUtil;
 import git4idea.GitPlatformFacade;
 import git4idea.GitUtil;
 import git4idea.GitVcs;
@@ -35,7 +37,6 @@ import git4idea.merge.GitMergeCommittingConflictResolver;
 import git4idea.merge.GitMerger;
 import git4idea.repo.GitRepository;
 import git4idea.util.GitPreservingProcess;
-import git4idea.util.GitUIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
@@ -159,8 +160,13 @@ class GitMergeOperation extends GitBranchOperation {
     switch (myDeleteOnMerge) {
       case DELETE:
         super.notifySuccess(message);
-        GitBrancher brancher = ServiceManager.getService(myProject, GitBrancher.class);
-        brancher.deleteBranch(myBranchToMerge, new ArrayList<GitRepository>(getRepositories()));
+        UIUtil.invokeLaterIfNeeded(new Runnable() { // bg process needs to be started from the EDT
+          @Override
+          public void run() {
+            GitBrancher brancher = ServiceManager.getService(myProject, GitBrancher.class);
+            brancher.deleteBranch(myBranchToMerge, new ArrayList<GitRepository>(getRepositories()));
+          }
+        });
         break;
       case PROPOSE:
         String description = message + "<br/><a href='delete'>Delete " + myBranchToMerge + "</a>";
@@ -275,9 +281,9 @@ class GitMergeOperation extends GitBranchOperation {
       }
     }
 
-    LOG.info("for smart rollback: " + GitUIUtil.getShortNames(repositoriesForSmartRollback) +
-             "; for simple rollback: " + GitUIUtil.getShortNames(repositoriesForSimpleRollback) +
-             "; for merge rollback: " + GitUIUtil.getShortNames(repositoriesForMergeRollback));
+    LOG.info("for smart rollback: " + DvcsUtil.getShortNames(repositoriesForSmartRollback) +
+             "; for simple rollback: " + DvcsUtil.getShortNames(repositoriesForSimpleRollback) +
+             "; for merge rollback: " + DvcsUtil.getShortNames(repositoriesForMergeRollback));
 
     GitCompoundResult result = smartRollback(repositoriesForSmartRollback);
     for (GitRepository repository : repositoriesForSimpleRollback) {

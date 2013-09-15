@@ -35,6 +35,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -96,12 +97,6 @@ public class ImportModuleAction extends AnAction {
       FileChooserDescriptor myDelegate = new OpenProjectFileChooserDescriptor(true);
       @Override
       public Icon getIcon(VirtualFile file) {
-        for (ProjectImportProvider projectImportProvider : ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions()) {
-          final Icon iconForFile = projectImportProvider.getIconForFile(file);
-          if(iconForFile != null) {
-            return iconForFile;
-          }
-        }
         Icon icon = myDelegate.getIcon(file);
         return icon == null ? super.getIcon(file) : icon;
       }
@@ -112,6 +107,15 @@ public class ImportModuleAction extends AnAction {
     String description = getFileChooserDescription(project);
     descriptor.setDescription(description);
 
+    return selectFileAndCreateWizard(project, dialogParent, descriptor, providers);
+  }
+
+  @Nullable
+  public static AddModuleWizard selectFileAndCreateWizard(final Project project,
+                                                          @Nullable Component dialogParent,
+                                                          @NotNull FileChooserDescriptor descriptor,
+                                                          ProjectImportProvider[] providers)
+  {
     FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, dialogParent);
     VirtualFile toSelect = null;
     String lastLocation = PropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
@@ -156,8 +160,9 @@ public class ImportModuleAction extends AnAction {
     return builder.toString();
   }
 
+  @Nullable
   public static AddModuleWizard createImportWizard(final Project project,
-                                                   Component dialogParent,
+                                                   @Nullable Component dialogParent,
                                                    final VirtualFile file,
                                                    ProjectImportProvider... providers) {
     List<ProjectImportProvider> available = ContainerUtil.filter(providers, new Condition<ProjectImportProvider>() {

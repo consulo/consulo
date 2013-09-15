@@ -2,6 +2,7 @@ package com.intellij.ide.browsers;
 
 import com.google.common.base.CharMatcher;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -21,7 +22,7 @@ public final class Urls {
   public static final CharMatcher SLASH_MATCHER = CharMatcher.is('/');
 
   // about ";" see WEB-100359
-  private static final Pattern URI_PATTERN = Pattern.compile("^(?:([^:/?#]+)://)?([^/?#]*)([^?#;]*)(.*)");
+  private static final Pattern URI_PATTERN = Pattern.compile("^([^:/?#]+)://([^/?#]*)([^?#;]*)(.*)");
 
   @NotNull
   public static Url newFromEncoded(@NotNull String url) {
@@ -40,15 +41,32 @@ public final class Urls {
   }
 
   @Nullable
-  private static Url parseUrl(String url, boolean urlAsRaw) {
-    Matcher matcher = URI_PATTERN.matcher(url);
+  private static Url parseUrl(@NotNull String url, boolean urlAsRaw) {
+    String urlToParse;
+    if (url.startsWith("jar:file://")) {
+      urlToParse = url.substring("jar:".length());
+    }
+    else {
+      urlToParse = url;
+    }
+
+    Matcher matcher = URI_PATTERN.matcher(urlToParse);
     if (!matcher.matches()) {
       LOG.warn("Cannot parse url " + url);
       return null;
     }
     String scheme = matcher.group(1);
+    if (urlToParse != url) {
+      scheme = "jar:" + scheme;
+    }
+
     String authority = StringUtil.nullize(matcher.group(2));
+
     String path = StringUtil.nullize(matcher.group(3));
+    if (path != null) {
+      path = FileUtil.toCanonicalUriPath(path);
+    }
+
     String parameters = matcher.group(4);
     if (authority != null && StandardFileSystems.FILE_PROTOCOL.equals(scheme)) {
       path = path == null ? authority : (authority + path);
@@ -59,7 +77,7 @@ public final class Urls {
 
   // java.net.URI.create cannot parse "file:///Test Stuff" - but you don't need to worry about it - this method is aware
   public static Url newFromIdea(@NotNull String url) {
-    int index = url.indexOf("://");
+    int index = url.indexOf(URLUtil.SCHEME_SEPARATOR);
     if (index < 0) {
       // nodejs debug — files only in local filesystem
       return new LocalFileUrl(url);

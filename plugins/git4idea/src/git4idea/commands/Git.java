@@ -18,7 +18,8 @@ package git4idea.commands;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
-import git4idea.history.browser.GitCommit;
+import git4idea.GitCommit;
+import git4idea.history.browser.GitHeavyCommit;
 import git4idea.push.GitPushSpec;
 import git4idea.repo.GitRepository;
 import org.jetbrains.annotations.NotNull;
@@ -90,6 +91,10 @@ public interface Git {
 
   @NotNull
   GitCommandResult tip(@NotNull GitRepository repository, @NotNull String branchName);
+
+  @NotNull
+  GitCommandResult push(@NotNull GitRepository repository, @NotNull String remote, @NotNull String url, @NotNull String spec,
+                        boolean updateTracking, @NotNull GitLineHandlerListener... listeners);
 
   @NotNull
   GitCommandResult push(@NotNull GitRepository repository, @NotNull String remote, @NotNull String url, @NotNull String spec,

@@ -23,9 +23,9 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsFileUtil;
 import git4idea.GitBranch;
+import git4idea.GitCommit;
 import git4idea.GitExecutionException;
 import git4idea.history.GitHistoryUtils;
-import git4idea.history.browser.GitCommit;
 import git4idea.push.GitPushSpec;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
@@ -357,7 +357,7 @@ public class GitImpl implements Git {
   @Override
   @NotNull
   public GitCommandResult push(@NotNull GitRepository repository, @NotNull String remote, @NotNull String url, @NotNull String spec,
-                               @NotNull GitLineHandlerListener... listeners) {
+                               boolean updateTracking, @NotNull GitLineHandlerListener... listeners) {
     final GitLineHandlerPasswordRequestAware h = new GitLineHandlerPasswordRequestAware(repository.getProject(), repository.getRoot(),
                                                                                         GitCommand.PUSH);
     h.setUrl(url);
@@ -366,7 +366,17 @@ public class GitImpl implements Git {
     h.addProgressParameter();
     h.addParameters(remote);
     h.addParameters(spec);
+    if (updateTracking) {
+      h.addParameters("--set-upstream");
+    }
     return run(h);
+  }
+
+  @Override
+  @NotNull
+  public GitCommandResult push(@NotNull GitRepository repository, @NotNull String remote, @NotNull String url, @NotNull String spec,
+                               @NotNull GitLineHandlerListener... listeners) {
+    return push(repository, remote, url, spec, false, listeners);
   }
 
   @Override

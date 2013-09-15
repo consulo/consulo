@@ -41,6 +41,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,7 +79,7 @@ public class VcsUtil {
   }
 
   public static void markFileAsDirty(final Project project, final FilePath path) {
-      VcsDirtyScopeManager.getInstance(project).fileDirty(path);
+    VcsDirtyScopeManager.getInstance(project).fileDirty(path);
   }
 
   public static void markFileAsDirty(final Project project, final String path) {
@@ -617,5 +618,22 @@ public class VcsUtil {
 
   public static ScheduledThreadPoolExecutor createExecutor(final String name) {
     return ConcurrencyUtil.newSingleScheduledThreadExecutor(name, Thread.MIN_PRIORITY + 1);
+  }
+
+  @NotNull
+  public static Collection<VcsDirectoryMapping> findRoots(@NotNull VirtualFile rootDir, @NotNull Project project)
+    throws IllegalArgumentException
+  {
+    if (!rootDir.isDirectory()) {
+      throw new IllegalArgumentException(
+        "Can't find VCS at the target file system path. Reason: expected to find a directory there but it's not. The path: "
+        + rootDir.getParent()
+      );
+    }
+    Collection<VcsDirectoryMapping> result = ContainerUtilRt.newArrayList();
+    for (VcsRootFinder finder : VcsRootFinder.EP_NAME.getExtensions(project)) {
+      result.addAll(finder.findRoots(rootDir));
+    }
+    return result;
   }
 }

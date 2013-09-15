@@ -19,7 +19,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.Key;
 import com.intellij.openapi.externalSystem.model.ProjectKeys;
-import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.project.ModuleData;
 import com.intellij.openapi.externalSystem.model.project.ModuleDependencyData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
@@ -32,7 +31,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.util.BooleanFunction;
+import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -81,23 +82,31 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
         ));
         continue;
       }
-      importData(entry.getValue(), entry.getKey().getData().getOwner(), ideModule, synchronous);
+      importData(entry.getValue(), ideModule, synchronous);
     }
   }
 
   public void importData(@NotNull final Collection<DataNode<ModuleDependencyData>> toImport,
-                         @NotNull ProjectSystemId externalSystemId,
                          @NotNull final Module module,
                          final boolean synchronous)
   {
-    ExternalSystemApiUtil.executeProjectChangeAction(module.getProject(), externalSystemId, toImport, synchronous, new Runnable() {
+    ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new Runnable() {
       @Override
       public void run() {
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+        Map<String /* dependency module name */, ModuleOrderEntry> toRemove = ContainerUtilRt.newHashMap();
+        for (OrderEntry entry : moduleRootManager.getOrderEntries()) {
+          if (entry instanceof ModuleOrderEntry) {
+            ModuleOrderEntry e = (ModuleOrderEntry)entry;
+            toRemove.put(e.getModuleName(), e);
+          }
+        }
+        
         final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
         try {
           for (DataNode<ModuleDependencyData> dependencyNode : toImport) {
             final ModuleDependencyData dependencyData = dependencyNode.getData();
+            toRemove.remove(dependencyData.getName());
             final String moduleName = dependencyData.getName();
             Module ideDependencyModule = myProjectStructureHelper.findIdeModule(moduleName, module.getProject());
             if (ideDependencyModule == null) {
@@ -136,6 +145,10 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
         }
         finally {
           moduleRootModel.commit();
+        }
+
+        if (!toRemove.isEmpty()) {
+          removeData(toRemove.values(), module, synchronous);
         }
       }
     });

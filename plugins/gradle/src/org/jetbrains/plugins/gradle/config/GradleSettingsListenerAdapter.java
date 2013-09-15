@@ -1,24 +1,26 @@
 package org.jetbrains.plugins.gradle.config;
 
+import com.intellij.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.plugins.gradle.settings.DistributionType;
 import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
 import org.jetbrains.plugins.gradle.settings.GradleSettingsListener;
-
-import java.util.Collection;
 
 /**
  * @author Denis Zhdanov
  * @since 3/13/12 3:53 PM
  */
-public abstract class GradleSettingsListenerAdapter implements GradleSettingsListener {
+public abstract class GradleSettingsListenerAdapter extends ExternalSystemSettingsListenerAdapter<GradleProjectSettings>
+  implements GradleSettingsListener
+{
 
   @Override
   public void onGradleHomeChange(@Nullable String oldPath, @Nullable String newPath, @NotNull String linkedProjectPath) {
   }
 
   @Override
-  public void onPreferLocalGradleDistributionToWrapperChange(boolean currentValue, @NotNull String linkedProjectPath) {
+  public void onGradleDistributionTypeChange(DistributionType currentValue, @NotNull String linkedProjectPath) {
   }
 
   @Override
@@ -26,22 +28,6 @@ public abstract class GradleSettingsListenerAdapter implements GradleSettingsLis
   }
 
   @Override
-  public void onProjectsLinked(@NotNull Collection<GradleProjectSettings> settings) {
-  }
-
-  @Override
-  public void onProjectsUnlinked(@NotNull Collection<String> linkedProjectPaths) {
-  }
-
-  @Override
-  public void onUseAutoImportChange(boolean currentValue, @NotNull String linkedProjectPath) {
-  }
-
-  @Override
-  public void onBulkChangeStart() {
-  }
-
-  @Override
-  public void onBulkChangeEnd() {
+  public void onGradleVmOptionsChange(@Nullable String oldOptions, @Nullable String newOptions) {
   }
 }

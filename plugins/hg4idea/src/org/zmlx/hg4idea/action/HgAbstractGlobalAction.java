@@ -20,6 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.zmlx.hg4idea.HgVcs;
 import org.zmlx.hg4idea.util.HgUtil;
@@ -60,11 +61,17 @@ abstract class HgAbstractGlobalAction extends AnAction {
     e.getPresentation().setEnabled(enabled);
   }
 
-  protected abstract void execute(Project project, Collection<VirtualFile> repositories, @Nullable VirtualFile selectedRepo);
+  protected abstract void execute(@NotNull Project project,
+                                  @NotNull Collection<VirtualFile> repositories,
+                                  @Nullable VirtualFile selectedRepo);
 
-  protected static void handleException(Project project, Exception e) {
+  public static void handleException(@Nullable Project project, @NotNull Exception e) {
+    handleException(project, "Error", e);
+  }
+
+  public static void handleException(@Nullable Project project, @NotNull String title, @NotNull Exception e) {
     LOG.info(e);
-    new HgCommandResultNotifier(project).notifyError(null, "Error", e.getMessage());
+    new HgCommandResultNotifier(project).notifyError(null, title, e.getMessage());
   }
 
   protected void markDirtyAndHandleErrors(Project project, VirtualFile repository) {

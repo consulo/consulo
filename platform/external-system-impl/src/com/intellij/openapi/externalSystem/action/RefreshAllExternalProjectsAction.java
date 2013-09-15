@@ -23,6 +23,11 @@ import com.intellij.openapi.project.Project;
  */
 public class RefreshAllExternalProjectsAction extends AnAction implements DumbAware, AnAction.TransparentUpdate {
 
+  public RefreshAllExternalProjectsAction() {
+    getTemplatePresentation().setText(ExternalSystemBundle.message("action.refresh.all.projects.text", "external"));
+    getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.refresh.all.projects.description", "external"));
+  }
+
   @Override
   public void update(AnActionEvent e) {
     ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
@@ -60,6 +65,6 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
     // We save all documents because there is a possible case that there is an external system config file changed inside the ide.
     FileDocumentManager.getInstance().saveAllDocuments();
     
-    ExternalSystemUtil.refreshProjects(project, externalSystemId);
+    ExternalSystemUtil.refreshProjects(project, externalSystemId, true);
   }
 }
