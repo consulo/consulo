@@ -70,7 +70,7 @@ public class Main {
 
     app.load(PathManager.getOptionsPath());
 
-    setupSdk("JDK",  "1.6", "I:\\Programs\\jdk6");
+    setupSdk("JDK", "1.6", "I:\\Programs\\jdk6");
     setupSdk("Consulo Plugin SDK", "Consulo 1.SNAPSHOT", "F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
 
     server.compile(new CompilerClientInterface() {
@@ -87,7 +87,7 @@ public class Main {
       @NotNull
       @Override
       public String getProjectDir() {
-        return "F:\\heroku.com\\naco-ws\\repos\\consulo-devkit";
+        return "F:\\github.com\\consulo\\consulo-osgi";
       }
     });
   }

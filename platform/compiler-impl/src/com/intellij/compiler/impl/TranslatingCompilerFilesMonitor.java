@@ -15,14 +15,12 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -35,7 +33,10 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -46,7 +47,6 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
-import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.FileBasedIndex;
@@ -1192,7 +1192,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
 
     @Override
     public void projectOpened(final Project project) {
-      final MessageBusConnection conn = project.getMessageBus().connect();
+      /*final MessageBusConnection conn = project.getMessageBus().connect();
       myConnections.put(project, conn);
       final ProjectRef projRef = new ProjectRef(project);
       final int projectId = getProjectId(project);
@@ -1286,18 +1286,18 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
         }
       });
 
-      scanSourcesForCompilableFiles(project);
+      scanSourcesForCompilableFiles(project);    */
     }
 
     @Override
     public void projectClosed(final Project project) {
-      final int projectId = getProjectId(project);
+      /*final int projectId = getProjectId(project);
       terminateAsyncScan(projectId, true);
       myConnections.remove(project).disconnect();
       synchronized (myDataLock) {
         mySourcesToRecompile.remove(projectId);
         myOutputsToDelete.remove(projectId);  // drop cache to save memory
-      }
+      }   */
     }
   }
 

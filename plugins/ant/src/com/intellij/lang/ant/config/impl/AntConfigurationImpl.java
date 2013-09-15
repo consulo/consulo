@@ -637,7 +637,7 @@ public class AntConfigurationImpl extends AntConfigurationBase implements Persis
   }
 
   private boolean runTargetSynchronously(final DataContext dataContext, ExecutionEvent event) {
-    if (ApplicationManager.getApplication().isDispatchThread()) {
+    if (ApplicationManager.getApplication().isDispatchThread() && !ApplicationManager.getApplication().isCompilerServerMode()) {
       throw new IllegalStateException("Called in the event dispatch thread");
     }
     final AntBuildTarget target = getTargetForEvent(event);

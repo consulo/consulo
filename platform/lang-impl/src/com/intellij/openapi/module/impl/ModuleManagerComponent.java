@@ -80,6 +80,13 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
   @Override
   protected void fireModulesAdded() {
+    if(ApplicationManager.getApplication().isCompilerServerMode()) {
+      for (final Module module : myModuleModel.myPathToModule.values()) {
+        fireModuleAdded(module);
+      }
+      return;
+    }
+
     Runnable runnableWithProgress = new Runnable() {
       @Override
       public void run() {

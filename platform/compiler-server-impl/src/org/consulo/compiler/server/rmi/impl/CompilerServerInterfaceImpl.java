@@ -20,6 +20,7 @@ import com.intellij.openapi.compiler.CompileStatusNotification;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
+import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.consulo.compiler.server.rmi.CompilerClientInterface;
@@ -51,6 +52,8 @@ public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements 
       final Project project = ProjectManagerEx.getInstanceEx().loadProject(client.getProjectDir());
 
       assert project != null;
+
+      ((ProjectManagerImpl)ProjectManagerEx.getInstance()).fireProjectOpened(project);
 
       CompilerClientConnector.getInstance(project).setClientConnection(client);
 

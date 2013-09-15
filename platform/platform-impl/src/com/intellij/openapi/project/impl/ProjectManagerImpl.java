@@ -1030,7 +1030,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
     LOG.assertTrue(removed);
   }
 
-  private void fireProjectOpened(Project project) {
+  public void fireProjectOpened(Project project) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("projectOpened");
     }
