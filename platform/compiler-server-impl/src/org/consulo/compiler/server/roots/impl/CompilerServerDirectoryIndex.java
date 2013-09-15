@@ -31,6 +31,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import org.consulo.compiler.server.fileSystem.archive.ChildArchiveNewVirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,6 +50,8 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   @NotNull
   private final Project myProject;
   private final ModuleManager myModuleManager;
+
+  private Map<VirtualFile, DirectoryInfo> myInfoDirectoryCache = new HashMap<VirtualFile, DirectoryInfo>();
 
   public CompilerServerDirectoryIndex(@NotNull Project project, @NotNull ModuleManager moduleManager) {
     myProject = project;
@@ -60,7 +64,17 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
 
   @Override
   public DirectoryInfo getInfoForDirectory(@NotNull VirtualFile fileForInfo) {
+    DirectoryInfo directoryInfo = myInfoDirectoryCache.get(fileForInfo);
+    if(directoryInfo != null) {
+      return directoryInfo;
+    }
 
+    directoryInfo = getDirectoryInfo0(fileForInfo);
+    myInfoDirectoryCache.put(fileForInfo, directoryInfo);
+    return directoryInfo;
+  }
+
+  private DirectoryInfo getDirectoryInfo0(VirtualFile fileForInfo) {
     Module module = null;
     VirtualFile contentRoot = null;
     VirtualFile sourceRoot = null;
@@ -70,13 +84,15 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
     for (Module moduleIter : myModuleManager.getModules()) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleIter);
       for (ContentEntry contentEntry : moduleRootManager.getContentEntries()) {
-        if (VfsUtilCore.isAncestor(contentEntry.getFile(), fileForInfo, false)) {
-          contentRoot = contentEntry.getFile();
+        VirtualFile temp = contentEntry.getFile();
+        if (temp != null && VfsUtilCore.isAncestor(temp, fileForInfo, false)) {
+          contentRoot = temp;
           module = moduleIter;
 
           for (ContentFolder contentFolder : contentEntry.getFolders()) {
-            if (VfsUtilCore.isAncestor(contentFolder.getFile(), fileForInfo, false)) {
-              sourceRoot = contentFolder.getFile();
+            temp = contentFolder.getFile();
+            if (temp != null && VfsUtilCore.isAncestor(temp, fileForInfo, false)) {
+              sourceRoot = temp;
 
               flags |= DirectoryInfo.MODULE_SOURCE_FLAG;
               switch (contentFolder.getType()) {
