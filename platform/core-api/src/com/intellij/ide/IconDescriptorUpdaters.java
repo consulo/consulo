@@ -23,6 +23,7 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
+import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,11 +39,19 @@ public class IconDescriptorUpdaters {
 
   private static class IconKey implements ModificationTracker {
     private PsiElement myElement;
-    private Icon myIcon;
+    private TIntObjectHashMap<Icon> myIcons = new TIntObjectHashMap<Icon>(5);
 
-    private IconKey(PsiElement element, Icon icon) {
+    private IconKey(PsiElement element) {
       myElement = element;
-      myIcon = icon;
+    }
+
+    public Icon getIcon(int flags) {
+      Icon icon = myIcons.get(flags);
+      if(icon != null) {
+        return icon;
+      }
+      myIcons.put(flags, icon = getIconWithoutCache(myElement, flags));
+      return icon;
     }
 
     @Override
@@ -59,14 +68,14 @@ public class IconDescriptorUpdaters {
         @Nullable
         @Override
         public Result<IconKey> compute() {
-          return Result.createSingleDependency(new IconKey(element, getIconWithoutCache(element, flags)),
+          return Result.createSingleDependency(new IconKey(element),
                                                PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
         }
       });
       element.putUserData(KEY, cachedValue);
     }
     IconKey value = cachedValue.getValue();
-    return value.myIcon;
+    return value.getIcon(flags);
   }
 
   @NotNull
