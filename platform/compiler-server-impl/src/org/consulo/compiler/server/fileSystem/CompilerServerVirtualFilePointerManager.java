@@ -17,7 +17,6 @@ package org.consulo.compiler.server.fileSystem;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.VirtualFilePointerContainerImpl;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
@@ -34,7 +33,6 @@ public class CompilerServerVirtualFilePointerManager extends VirtualFilePointerM
   @NotNull
   @Override
   public VirtualFilePointer create(@NotNull String url, @NotNull Disposable parent, @Nullable VirtualFilePointerListener listener) {
-    VirtualFile vFile = VirtualFileManager.getInstance().findFileByUrl(url);
     return new CompilerServerVirtualFilePointer(url);
   }
 
