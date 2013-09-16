@@ -30,7 +30,7 @@ import java.io.File;
 public class InternalBundledSdkProvider implements BundledSdkProvider {
   @NotNull
   @Override
-  public Sdk createBundledSdk() {
+  public Sdk[] createBundledSdks() {
     String javaHome = SystemProperties.getJavaHome();
     File file = new File(javaHome);
     if(file.getName().equals("jre")) {
@@ -39,6 +39,6 @@ public class InternalBundledSdkProvider implements BundledSdkProvider {
 
     SdkImpl sdk = new SdkImpl("JDK (bundled)", JavaSdk.getInstance(), javaHome, SystemProperties.getJavaVersion());
     JavaSdk.getInstance().setupSdkPaths(sdk);
-    return sdk;
+    return new Sdk[] {sdk};
   }
 }

@@ -16,7 +16,7 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
@@ -28,6 +28,6 @@ public interface BundledSdkProvider {
   /**
    * @return pair of bundled sdk info. A - is sdk path, B - is sdk type
    */
-  @Nullable
-  Sdk createBundledSdk();
+  @NotNull
+  Sdk[] createBundledSdks();
 }
