@@ -91,7 +91,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public String[] getSourceRootUrls(boolean includingTests) {
     List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests ? contentEntry.getFolderUrls(ContentFolderType.SOURCE_FOLDER_TYPES) : contentEntry.getFolderUrls(ContentFolderType.ONLY_SOURCE_ROOTS));
+      Collections.addAll(result, includingTests ? contentEntry.getFolderUrls(ContentFolderType.ALL_SOURCE_ROOTS) : contentEntry.getFolderUrls(ContentFolderType.ONLY_PRODUCTION_ROOTS));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -107,7 +107,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
     List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-       Collections.addAll(result, includingTests ? contentEntry.getFolderFiles(ContentFolderType.SOURCE_FOLDER_TYPES) : contentEntry.getFolderFiles(ContentFolderType.ONLY_SOURCE_ROOTS));
+       Collections.addAll(result, includingTests ? contentEntry.getFolderFiles(ContentFolderType.ALL_SOURCE_ROOTS) : contentEntry.getFolderFiles(ContentFolderType.ONLY_PRODUCTION_ROOTS));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }

@@ -157,11 +157,11 @@ public class CompilerPaths {
         outPath = path;
       }
       else {
-        outPath = manager.getCompilerOutput(module, ContentFolderType.SOURCE);
+        outPath = manager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
       }
     }
     else {
-      outPath = manager.getCompilerOutput(module, ContentFolderType.SOURCE);
+      outPath = manager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
     }
     if (outPath == null) {
       return null;
@@ -184,13 +184,13 @@ public class CompilerPaths {
     final CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(module.getProject());
 
     if (application.isDispatchThread()) {
-      outPathUrl = pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+      outPathUrl = pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
     }
     else {
       outPathUrl = application.runReadAction(new Computable<String>() {
         @Override
         public String compute() {
-          return pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+          return pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
         }
       });
     }

@@ -59,7 +59,7 @@ public class ManagingContentRootFoldersTest extends IdeaTestCase {
     VirtualFile dir = root.createChildDirectory(null, "src");
     String url = dir.getUrl();
 
-    ContentFolder f = entry.addFolder(dir, ContentFolderType.SOURCE);
+    ContentFolder f = entry.addFolder(dir, ContentFolderType.PRODUCTION);
     assertEquals(dir, f.getFile());
     assertEquals(url, f.getUrl());
 
@@ -78,7 +78,7 @@ public class ManagingContentRootFoldersTest extends IdeaTestCase {
     String url = dir.getUrl();
     dir.delete(null);
 
-    ContentFolder f = entry.addFolder(url, ContentFolderType.SOURCE);
+    ContentFolder f = entry.addFolder(url, ContentFolderType.PRODUCTION);
     assertNull(f.getFile());
     assertEquals(url, f.getUrl());
 
@@ -91,7 +91,7 @@ public class ManagingContentRootFoldersTest extends IdeaTestCase {
     VirtualFile dir = root.createChildDirectory(null, "src");
     String url = dir.getUrl();
 
-    ContentFolder f = entry.addFolder(url, ContentFolderType.SOURCE);
+    ContentFolder f = entry.addFolder(url, ContentFolderType.PRODUCTION);
     assertEquals(dir, f.getFile());
     assertEquals(url, f.getUrl());
   }

@@ -909,7 +909,7 @@ public class CompileDriver {
       protected void run(final Result<List<File>> result) {
         final MultiMap<File, Module> outputToModulesMap = new MultiMap<File, Module>();
         for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-          final String outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.SOURCE);
+          final String outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.PRODUCTION);
           if (outputPathUrl != null) {
             final String path = VirtualFileManager.extractPath(outputPathUrl);
             outputToModulesMap.putValue(new File(path), module);
@@ -921,7 +921,7 @@ public class CompileDriver {
             outputToModulesMap.putValue(new File(path), module);
           }
 
-          final String outputPathForResourceUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.RESOURCE);
+          final String outputPathForResourceUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.PRODUCTION_RESOURCE);
           if (outputPathForResourceUrl != null) {
             final String path = VirtualFileManager.extractPath(outputPathForResourceUrl);
             outputToModulesMap.putValue(new File(path), module);
@@ -2329,7 +2329,7 @@ public class CompileDriver {
   private static boolean hasSources(Module module, boolean checkTestSources) {
     final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
     for (final ContentEntry contentEntry : contentEntries) {
-      final ContentFolder[] sourceFolders = contentEntry.getFolders(checkTestSources ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+      final ContentFolder[] sourceFolders = contentEntry.getFolders(checkTestSources ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
       if (sourceFolders.length > 0) {
         return true;
       }

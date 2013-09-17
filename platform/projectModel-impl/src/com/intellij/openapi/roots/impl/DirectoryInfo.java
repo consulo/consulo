@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
@@ -26,7 +27,6 @@ import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -37,27 +37,20 @@ import java.util.Comparator;
 import java.util.List;
 
 public final class DirectoryInfo {
-  private final Module module; // module to which content it belongs or null
-  private final VirtualFile libraryClassRoot; // class root in library
-  private final VirtualFile contentRoot;
-  private final VirtualFile sourceRoot;
+  public static final byte LIBRARY_SOURCE_FLAG     = 1 << 6; // set if it's a directory with sources of some library
 
-  public static final byte MODULE_TEST_FLAG       = 1 << 0; // (makes sense only if MODULE_SOURCE_FLAG is set)
-  public static final byte LIBRARY_SOURCE_FLAG     = 1 << 1; // set if it's a directory with sources of some library
-  public static final byte MODULE_SOURCE_FLAG      = 1 << 2; // set if files in this directory belongs to sources of the module (if field 'module' is not null)
-  public static final byte MODULE_RESOURCE_FLAG    = 1 << 3; // set if files in this directory belongs to resource of the module (if field 'module' is not null)
+  private final Module myModule; // module to which content it belongs or null
+  private final VirtualFile myLibraryClassRoot; // class root in library
+  private final VirtualFile myContentRoot;
+  private final VirtualFile mySourceRoot;
 
-  @MagicConstant(flags = {MODULE_TEST_FLAG, MODULE_RESOURCE_FLAG, LIBRARY_SOURCE_FLAG, MODULE_SOURCE_FLAG})
-  public @interface SourceFlag {}
-
-  @SourceFlag
-  private final byte sourceFlag;
+  private final byte myFlags;
 
   /**
    * orderEntry to (classes of) which a directory belongs
    * MUST BE SORTED WITH {@link #BY_OWNER_MODULE}
    */
-  private final OrderEntry[] orderEntries;
+  private final OrderEntry[] myOrderEntries;
 
   public static DirectoryInfo createNew() {
     return new DirectoryInfo(null, null, null, null, (byte)0, null);
@@ -67,14 +60,14 @@ public final class DirectoryInfo {
                         VirtualFile contentRoot,
                         VirtualFile sourceRoot,
                         VirtualFile libraryClassRoot,
-                        @SourceFlag byte sourceFlag,
+                        byte myFlags,
                         OrderEntry[] orderEntries) {
-    this.module = module;
-    this.libraryClassRoot = libraryClassRoot;
-    this.contentRoot = contentRoot;
-    this.sourceRoot = sourceRoot;
-    this.sourceFlag = sourceFlag;
-    this.orderEntries = orderEntries;
+    this.myModule = module;
+    this.myLibraryClassRoot = libraryClassRoot;
+    this.myContentRoot = contentRoot;
+    this.mySourceRoot = sourceRoot;
+    this.myFlags = myFlags;
+    this.myOrderEntries = orderEntries;
   }
 
   @Override
@@ -84,21 +77,21 @@ public final class DirectoryInfo {
 
     DirectoryInfo info = (DirectoryInfo)o;
 
-    return sourceFlag == info.sourceFlag &&
-           Comparing.equal(contentRoot, info.contentRoot) &&
-           Comparing.equal(libraryClassRoot, info.libraryClassRoot) &&
-           Comparing.equal(module, info.module) &&
-           Arrays.equals(orderEntries, info.orderEntries) &&
-           Comparing.equal(sourceRoot, info.sourceRoot);
+    return myFlags == info.myFlags &&
+           Comparing.equal(myContentRoot, info.myContentRoot) &&
+           Comparing.equal(myLibraryClassRoot, info.myLibraryClassRoot) &&
+           Comparing.equal(myModule, info.myModule) &&
+           Arrays.equals(myOrderEntries, info.myOrderEntries) &&
+           Comparing.equal(mySourceRoot, info.mySourceRoot);
   }
 
   @Override
   public int hashCode() {
-    int result = module != null ? module.hashCode() : 0;
-    result = 31 * result + (libraryClassRoot != null ? libraryClassRoot.hashCode() : 0);
-    result = 31 * result + (contentRoot != null ? contentRoot.hashCode() : 0);
-    result = 31 * result + (sourceRoot != null ? sourceRoot.hashCode() : 0);
-    result = 31 * result + (int)sourceFlag;
+    int result = myModule != null ? myModule.hashCode() : 0;
+    result = 31 * result + (myLibraryClassRoot != null ? myLibraryClassRoot.hashCode() : 0);
+    result = 31 * result + (myContentRoot != null ? myContentRoot.hashCode() : 0);
+    result = 31 * result + (mySourceRoot != null ? mySourceRoot.hashCode() : 0);
+    result = 31 * result + (int)myFlags;
     return result;
   }
 
@@ -106,10 +99,7 @@ public final class DirectoryInfo {
   public String toString() {
     return "DirectoryInfo{" +
            "module=" + getModule() +
-           ", isInModuleSource=" + isInModuleSource() +
-           ", isTestSource=" + isTestSource() +
-           ", isResource=" + isResource() +
-           ", isInLibrarySource=" + isInLibrarySource() +
+           ", sourceFlag=" + myFlags +
            ", libraryClassRoot=" + getLibraryClassRoot() +
            ", contentRoot=" + getContentRoot() +
            ", sourceRoot=" + getSourceRoot() +
@@ -118,13 +108,13 @@ public final class DirectoryInfo {
 
   @NotNull
   public OrderEntry[] getOrderEntries() {
-    OrderEntry[] entries = orderEntries;
+    OrderEntry[] entries = myOrderEntries;
     return entries == null ? OrderEntry.EMPTY_ARRAY : entries;
   }
 
   @Nullable
   OrderEntry findOrderEntryWithOwnerModule(@NotNull Module ownerModule) {
-    OrderEntry[] entries = orderEntries;
+    OrderEntry[] entries = myOrderEntries;
     if (entries == null) {
       return null;
     }
@@ -140,7 +130,7 @@ public final class DirectoryInfo {
 
   @NotNull
   List<OrderEntry> findAllOrderEntriesWithOwnerModule(@NotNull Module ownerModule) {
-    OrderEntry[] entries = orderEntries;
+    OrderEntry[] entries = myOrderEntries;
     if (entries == null) {
       return Collections.emptyList();
     }
@@ -222,11 +212,11 @@ public final class DirectoryInfo {
     if (orderEntries.length == 0) {
       newOrderEntries = null;
     }
-    else if (this.orderEntries == null) {
+    else if (this.myOrderEntries == null) {
       newOrderEntries = orderEntries;
     }
-    else if (parentInfo != null && oldParentEntries == this.orderEntries) {
-      newOrderEntries = parentInfo.orderEntries;
+    else if (parentInfo != null && oldParentEntries == this.myOrderEntries) {
+      newOrderEntries = parentInfo.myOrderEntries;
     }
     else {
       newOrderEntries = mergeWith(orderEntries);
@@ -237,7 +227,7 @@ public final class DirectoryInfo {
   // entries must be sorted BY_OWNER_MODULE
   @NotNull
   private OrderEntry[] mergeWith(@NotNull OrderEntry[] entries) {
-    OrderEntry[] orderEntries = this.orderEntries;
+    OrderEntry[] orderEntries = this.myOrderEntries;
     OrderEntry[] result = new OrderEntry[orderEntries.length + entries.length];
     int i=0;
     int j=0;
@@ -275,7 +265,7 @@ public final class DirectoryInfo {
   };
 
   public VirtualFile getSourceRoot() {
-    return sourceRoot;
+    return mySourceRoot;
   }
 
   public boolean hasSourceRoot() {
@@ -283,7 +273,7 @@ public final class DirectoryInfo {
   }
 
   public VirtualFile getLibraryClassRoot() {
-    return libraryClassRoot;
+    return myLibraryClassRoot;
   }
 
   public boolean hasLibraryClassRoot() {
@@ -291,27 +281,29 @@ public final class DirectoryInfo {
   }
 
   public VirtualFile getContentRoot() {
-    return contentRoot;
+    return myContentRoot;
   }
 
-  public boolean isInModuleSource() {
-    return BitUtil.isSet(sourceFlag, MODULE_SOURCE_FLAG);
+  public boolean hasContentFolderFlag(ContentFolderType folderType) {
+    return BitUtil.isSet(myFlags, 1 << folderType.ordinal());
   }
 
-  public boolean isResource() {
-    return BitUtil.isSet(sourceFlag, MODULE_RESOURCE_FLAG);
-  }
-
-  public boolean isTestSource() {
-    return BitUtil.isSet(sourceFlag, MODULE_TEST_FLAG);
+  @Nullable
+  public ContentFolderType findContentFolderType() {
+    for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+      if(hasContentFolderFlag(contentFolderType)) {
+        return contentFolderType;
+      }
+    }
+    return null;
   }
 
   public boolean isInLibrarySource() {
-    return BitUtil.isSet(sourceFlag, LIBRARY_SOURCE_FLAG);
+    return BitUtil.isSet(myFlags, LIBRARY_SOURCE_FLAG);
   }
 
   public Module getModule() {
-    return module;
+    return myModule;
   }
 
   private static <T> T iff(T value, T defaultValue) {
@@ -323,16 +315,16 @@ public final class DirectoryInfo {
                             VirtualFile contentRoot,
                             VirtualFile sourceRoot,
                             VirtualFile libraryClassRoot,
-                            @SourceFlag byte sourceFlag,
+                            byte sourceFlag,
                             OrderEntry[] orderEntries) {
-    return new DirectoryInfo(iff(module, this.module), iff(contentRoot, this.contentRoot), iff(sourceRoot, this.sourceRoot),
-                             iff(libraryClassRoot, this.libraryClassRoot), sourceFlag == 0 ? this.sourceFlag : sourceFlag,
-                             iff(orderEntries, this.orderEntries));
+    return new DirectoryInfo(iff(module, this.myModule), iff(contentRoot, this.myContentRoot), iff(sourceRoot, this.mySourceRoot),
+                             iff(libraryClassRoot, this.myLibraryClassRoot), sourceFlag == 0 ? this.myFlags : sourceFlag,
+                             iff(orderEntries, this.myOrderEntries));
   }
 
   @NotNull
   public DirectoryInfo withInternedEntries(@NotNull OrderEntry[] orderEntries) {
-    return new DirectoryInfo(module, contentRoot, sourceRoot, libraryClassRoot, sourceFlag, orderEntries);
+    return new DirectoryInfo(myModule, myContentRoot, mySourceRoot, myLibraryClassRoot, myFlags, orderEntries);
   }
 
   @TestOnly
@@ -343,8 +335,7 @@ public final class DirectoryInfo {
     }
   }
 
-  @SourceFlag
-  public int getSourceFlag() {
-    return sourceFlag;
+  public byte getFlags() {
+    return myFlags;
   }
 }

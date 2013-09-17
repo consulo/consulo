@@ -30,12 +30,14 @@ public class ContentFolderIconUtil {
 
   public static Icon getRootIcon(ContentFolderType contentFolderType) {
     switch (contentFolderType) {
-      case SOURCE:
+      case PRODUCTION:
         return AllIcons.Modules.SourceRoot;
       case TEST:
         return AllIcons.Modules.TestRoot;
-      case RESOURCE:
-        return AllIcons.Modules.ResourceRoot;
+      case PRODUCTION_RESOURCE:
+        return AllIcons.Modules.ResourcesRoot;
+      case TEST_RESOURCE:
+        return AllIcons.Modules.TestResourcesRoot;
       case EXCLUDED:
         return AllIcons.Modules.ExcludeRoot;
     }

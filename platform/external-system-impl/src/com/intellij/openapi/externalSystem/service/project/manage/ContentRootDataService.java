@@ -119,7 +119,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   private static void removeOutdatedContentFolders(@NotNull final ContentEntry entry, @NotNull final Set<String> retainedContentFolders) {
-    final List<ContentFolder> sourceFolders = ContainerUtilRt.newArrayList(entry.getFolders(ContentFolderType.SOURCE_FOLDER_TYPES));
+    final List<ContentFolder> sourceFolders = ContainerUtilRt.newArrayList(entry.getFolders(ContentFolderType.ALL_SOURCE_ROOTS));
     for(final ContentFolder sourceFolder : sourceFolders) {
       final String path = VirtualFileManager.extractPath(sourceFolder.getUrl());
       if(!retainedContentFolders.contains(path)) {
@@ -155,10 +155,10 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   private static void createSourceRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {
-    ContentFolder[] folders = entry.getFolders(ContentFolderType.SOURCE);
+    ContentFolder[] folders = entry.getFolders(ContentFolderType.PRODUCTION);
     if (folders.length == 0) {
       LOG.info(String.format("Importing source root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-      entry.addFolder(toVfsUrl(path), ContentFolderType.SOURCE);
+      entry.addFolder(toVfsUrl(path), ContentFolderType.PRODUCTION);
       return;
     }
     for (ContentFolder folder : folders) {
@@ -171,7 +171,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing source root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addFolder(toVfsUrl(path), ContentFolderType.SOURCE);
+    entry.addFolder(toVfsUrl(path), ContentFolderType.PRODUCTION);
   }
 
   private static void createExcludedRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {

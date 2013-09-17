@@ -480,7 +480,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(projRef.get());
     final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
     for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
-        final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ContentFolderType.SOURCE);
+        final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
         final int first = output != null? Math.abs(getFileId(output)) : -1;
         final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, ContentFolderType.TEST);
         final int second = testsOutput != null? Math.abs(getFileId(testsOutput)) : -1;

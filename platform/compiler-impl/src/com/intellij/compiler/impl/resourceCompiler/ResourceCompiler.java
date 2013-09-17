@@ -77,10 +77,17 @@ public class ResourceCompiler implements TranslatingCompiler {
   @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
     final Module module = context.getModuleByFile(file);
-    if (module != null && skipStandardResourceCompiler(module)) {
+    if (module == null) {
       return false;
     }
-    return myProjectFileIndex.isInResource(file) || myResourceCompilerConfiguration.isResourceFile(file);
+
+    if (myProjectFileIndex.isInResource(file) || myProjectFileIndex.isInTestResource(file)) {
+      return true;
+    }
+    if (skipStandardResourceCompiler(module)) {
+      return false;
+    }
+    return myResourceCompilerConfiguration.isResourceFile(file);
   }
 
   @Override
@@ -148,8 +155,8 @@ public class ResourceCompiler implements TranslatingCompiler {
         addToMap(processed, command.getOutputPath(), outputItem);
       }
       catch (IOException e) {
-        context.addMessage(CompilerMessageCategory.ERROR,
-                           CompilerBundle.message("error.copying", command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e)),
+        context.addMessage(CompilerMessageCategory.ERROR, CompilerBundle
+          .message("error.copying", command.getFromPath(), command.getToPath(), ExceptionUtil.getThrowableText(e)),
                            command.getSourceFileUrl(), -1, -1);
       }
     }

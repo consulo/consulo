@@ -80,8 +80,8 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
     for (Element contentRoot : getContentRootElements()) {
       for (Element sourceFolder : contentRoot.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
         ContentFolderType contentFolderType = ContentFolderType.valueOf(sourceFolder.getAttributeValue(ContentFolderImpl.TYPE_ATTRIBUTE));
-        if (includeTests && (contentFolderType == ContentFolderType.SOURCE || contentFolderType == ContentFolderType.TEST) ||
-            !includeTests && contentFolderType == ContentFolderType.SOURCE) {
+        if (includeTests && (contentFolderType == ContentFolderType.PRODUCTION || contentFolderType == ContentFolderType.TEST) ||
+            !includeTests && contentFolderType == ContentFolderType.PRODUCTION) {
           result.add(getFile(sourceFolder.getAttributeValue(ContentFolderImpl.URL_ATTRIBUTE)));
         }
       }

@@ -100,12 +100,21 @@ public abstract class ContentRootPanel extends JPanel {
   }
 
   protected void addFolderGroupComponents() {
-    ContentFolder[] contentFolders = getContentEntry().getFolders(ContentFolderType.SOURCE);
+    ContentFolder[] contentFolders = getContentEntry().getFolders(ContentFolderType.PRODUCTION);
     if (contentFolders.length != 0) {
       final JComponent sourcesComponent =
         createFolderGroupComponent(ProjectBundle.message("module.paths.sources.group"), contentFolders, SOURCES_COLOR);
       this.add(sourcesComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH,
                                                         GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
+    }
+
+    contentFolders = getContentEntry().getFolders(ContentFolderType.PRODUCTION_RESOURCE);
+    if (contentFolders.length != 0) {
+      final JComponent testSourcesComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.resources.group"),
+                                                                         contentFolders,
+                                                                         RESOURCES_COLOR);
+      this.add(testSourcesComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH,
+                                                            GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
     }
 
     contentFolders = getContentEntry().getFolders(ContentFolderType.TEST);
@@ -117,9 +126,9 @@ public abstract class ContentRootPanel extends JPanel {
                                                             GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
     }
 
-    contentFolders = getContentEntry().getFolders(ContentFolderType.RESOURCE);
+    contentFolders = getContentEntry().getFolders(ContentFolderType.TEST_RESOURCE);
     if (contentFolders.length != 0) {
-      final JComponent testSourcesComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.resources.group"),
+      final JComponent testSourcesComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.test.resources.group"),
                                                                          contentFolders,
                                                                          RESOURCES_COLOR);
       this.add(testSourcesComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH,
@@ -245,13 +254,13 @@ public abstract class ContentRootPanel extends JPanel {
     String tooltipText = "";
     if (folder.getFile() != null && getContentEntry().getFile() != null) {
       switch (folder.getType()) {
-        case SOURCE:
+        case PRODUCTION:
           tooltipText = ProjectBundle.message("module.paths.unmark.source.tooltip");
           break;
         case TEST:
           tooltipText = ProjectBundle.message("module.paths.unmark.tests.tooltip");
           break;
-        case RESOURCE:
+        case PRODUCTION_RESOURCE:
           break;
         case EXCLUDED:
           tooltipText = ProjectBundle.message("module.paths.include.excluded.tooltip");

@@ -258,7 +258,7 @@ public abstract class CodeInsightTestCase extends PsiTestCase {
             final ContentEntry contentEntry = rootModel.addContentEntry(toDir);
             if (isAddDirToSource()) {
               sourceRootAdded = true;
-              contentEntry.addFolder(toDir, isAddDirToTests() ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+              contentEntry.addFolder(toDir, isAddDirToTests() ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
             }
           }
           doCommitModel(rootModel);

@@ -52,7 +52,7 @@ public final class OutputPathMacro extends Macro {
       Module module = projectFileIndex.getModuleForFile(file);
       if (module != null){
         boolean isTest = projectFileIndex.isInTestSourceContent(file);
-        String outputPathUrl = CompilerPathsManager.getInstance(project).getCompilerOutputUrl(module, isTest ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+        String outputPathUrl = CompilerPathsManager.getInstance(project).getCompilerOutputUrl(module, isTest ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
         if (outputPathUrl == null) return null;
         return VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar);
       }

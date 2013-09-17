@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots;
+package com.intellij.ide.projectView.actions;
 
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.roots.ContentFolderType;
 
 /**
- * @author dsl
+ * @author VISTALL
+ * @since 21:19/17.09.13
  */
-public class SearchingPolicy extends RootPolicy<OrderEntry>{
-  private final Condition<OrderEntry> myCondition;
-
-  public SearchingPolicy(Condition<OrderEntry> condition) {
-    myCondition = condition;
-  }
-
-  @Override
-  public OrderEntry visitOrderEntry(OrderEntry orderEntry, OrderEntry found) {
-    if (found != null) return found;
-    if (myCondition.value(orderEntry)) return orderEntry;
-    return found;
+public class MarkTestResourceRootAction extends MarkRootAction {
+  public MarkTestResourceRootAction() {
+    super(ContentFolderType.TEST_RESOURCE);
   }
 }

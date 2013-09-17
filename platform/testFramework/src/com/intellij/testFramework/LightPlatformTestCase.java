@@ -266,7 +266,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
 
         final ContentEntry contentEntry = rootModel.addContentEntry(ourSourceRoot);
-        contentEntry.addFolder(ourSourceRoot, ContentFolderType.SOURCE);
+        contentEntry.addFolder(ourSourceRoot, ContentFolderType.PRODUCTION);
 
         descriptor.configureModule(ourModule, rootModel, contentEntry);
 

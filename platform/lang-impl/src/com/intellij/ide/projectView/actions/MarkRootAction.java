@@ -36,7 +36,7 @@ public class MarkRootAction extends DumbAwareAction {
   private final ContentFolderType myContentFolderType;
 
   public MarkRootAction() {
-    this(ContentFolderType.SOURCE);
+    this(ContentFolderType.PRODUCTION);
   }
 
   protected MarkRootAction(@Nullable ContentFolderType contentFolderType) {

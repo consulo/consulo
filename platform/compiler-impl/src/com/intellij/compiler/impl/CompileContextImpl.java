@@ -125,7 +125,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(getProject());
     for (Module module : allModules) {
-      final VirtualFile output = pathsManager.getCompilerOutput(module, ContentFolderType.SOURCE);
+      final VirtualFile output = pathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
       if (output != null && output.isValid()) {
         allDirs.add(output);
         productionOutputDirs.add(output);
@@ -483,7 +483,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public boolean isInTestSourceContent(@NotNull final VirtualFile fileOrDir) {
-    if (myProjectFileIndex.isInTestSourceContent(fileOrDir)) {
+    if (myProjectFileIndex.isInTestSourceContent(fileOrDir) || myProjectFileIndex.isInTestResource(fileOrDir)) {
       return true;
     }
     if (isUnderRoots(myGeneratedTestRoots, fileOrDir)) {
@@ -494,7 +494,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public boolean isInSourceContent(@NotNull final VirtualFile fileOrDir) {
-    if (myProjectFileIndex.isInSourceContent(fileOrDir)) {
+    if (myProjectFileIndex.isInSourceContent(fileOrDir) || myProjectFileIndex.isInResource(fileOrDir)) {
       return true;
     }
     if (isUnderRoots(myRootToModuleMap.keySet(), fileOrDir)) {

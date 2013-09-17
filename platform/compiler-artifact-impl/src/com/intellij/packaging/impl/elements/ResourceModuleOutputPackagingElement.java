@@ -42,7 +42,7 @@ public class ResourceModuleOutputPackagingElement extends ModuleOutputPackagingE
 
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.RESOURCE;
+    return ContentFolderType.PRODUCTION_RESOURCE;
   }
 
 }

@@ -109,7 +109,7 @@ public class MavenRootModelAdapter {
 
   public void clearSourceFolders() {
     for (ContentEntry each : myRootModel.getContentEntries()) {
-      each.clearFolders(ContentFolderType.SOURCE);
+      each.clearFolders(ContentFolderType.PRODUCTION);
     }
   }
 
@@ -131,7 +131,7 @@ public class MavenRootModelAdapter {
     if (e == null) return;
     unregisterAll(path, true, true);
     unregisterAll(path, false, true);
-    e.addFolder(url.getUrl(), testSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+    e.addFolder(url.getUrl(), testSource ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
   }
 
   public void addSourceFolderSoft(String path, boolean testSource) {
@@ -142,14 +142,14 @@ public class MavenRootModelAdapter {
     if (e == null) return;
 
     if (!hasCollision(path)) {
-      e.addFolder(url.getUrl(), testSource ? ContentFolderType.SOURCE : ContentFolderType.TEST);
+      e.addFolder(url.getUrl(), testSource ? ContentFolderType.PRODUCTION : ContentFolderType.TEST);
     }
   }
 
   public boolean hasRegisteredSourceSubfolder(File f) {
     String url = toUrl(f.getPath()).getUrl();
     for (ContentEntry eachEntry : myRootModel.getContentEntries()) {
-      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.SOURCE)) {
+      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.PRODUCTION)) {
         if (isEqualOrAncestor(url, eachFolder.getUrl())) return true;
       }
     }
@@ -188,7 +188,7 @@ public class MavenRootModelAdapter {
 
     for (ContentEntry eachEntry : myRootModel.getContentEntries()) {
       if (unregisterSources) {
-        for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.SOURCE)) {
+        for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.PRODUCTION)) {
           String ancestor = under ? url.getUrl() : eachFolder.getUrl();
           String child = under ? eachFolder.getUrl() : url.getUrl();
           if (isEqualOrAncestor(ancestor, child)) {
@@ -218,7 +218,7 @@ public class MavenRootModelAdapter {
     Url url = toUrl(sourceRootPath);
 
     for (ContentEntry eachEntry : myRootModel.getContentEntries()) {
-      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.SOURCE)) {
+      for (ContentFolder eachFolder : eachEntry.getFolders(ContentFolderType.PRODUCTION)) {
         String ancestor = url.getUrl();
         String child = eachFolder.getUrl();
         if (isEqualOrAncestor(ancestor, child) || isEqualOrAncestor(child, ancestor)) {
@@ -243,7 +243,7 @@ public class MavenRootModelAdapter {
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myRootModel.getProject());
 
     compilerPathsManager.setInheritedCompilerOutput(getModule(), false);
-    compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.SOURCE, toUrl(production).getUrl());
+    compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION, toUrl(production).getUrl());
     compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.TEST, toUrl(test).getUrl());
     compilerPathsManager.setInheritedCompilerOutput(getModule(), false);
   }

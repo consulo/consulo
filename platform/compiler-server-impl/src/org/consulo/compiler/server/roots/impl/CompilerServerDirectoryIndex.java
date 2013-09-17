@@ -94,15 +94,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
             if (temp != null && VfsUtilCore.isAncestor(temp, fileForInfo, false)) {
               sourceRoot = temp;
 
-              flags |= DirectoryInfo.MODULE_SOURCE_FLAG;
-              switch (contentFolder.getType()) {
-                case TEST:
-                  flags |= DirectoryInfo.MODULE_TEST_FLAG;
-                  break;
-                case RESOURCE:
-                  flags |= DirectoryInfo.MODULE_RESOURCE_FLAG;
-                  break;
-              }
+              flags |= 1 << contentFolder.getType().ordinal();
             }
           }
 

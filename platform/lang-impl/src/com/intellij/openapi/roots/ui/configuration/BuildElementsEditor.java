@@ -89,7 +89,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
         if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
           return;
         }
-        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.SOURCE, url);
+        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION, url);
       }
     });
     myTestsOutputPathPanel = createOutputPathPanel(ProjectBundle.message("module.paths.test.output.title"), new CommitPathRunnable() {
@@ -107,7 +107,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
         if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
           return;
         }
-        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.RESOURCE, url);
+        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION_RESOURCE, url);
       }
     });
 
@@ -174,12 +174,12 @@ public class BuildElementsEditor extends ModuleElementsEditor {
       final String baseUrl = ProjectStructureConfigurable.getInstance(myProject).getProjectConfig().getCompilerOutputUrl();
       moduleCompileOutputChanged(baseUrl, getModule().getName());
     } else {
-      final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.SOURCE);
+      final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.PRODUCTION);
       if (compilerOutputPath != null) {
         myOutputPathPanel.setText(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
       }
       else {
-        final String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.SOURCE);
+        final String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION);
         if (compilerOutputUrl != null) {
           myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerOutputUrl)));
         }
@@ -194,12 +194,12 @@ public class BuildElementsEditor extends ModuleElementsEditor {
           myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(testsOutputUrl)));
         }
       }
-      final VirtualFile resourcesOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.RESOURCE);
+      final VirtualFile resourcesOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.PRODUCTION_RESOURCE);
       if (resourcesOutputPath != null) {
         myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(resourcesOutputPath.getPath()));
       }
       else {
-        final String resourcesOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.RESOURCE);
+        final String resourcesOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION_RESOURCE);
         if (resourcesOutputUrl != null) {
           myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(resourcesOutputUrl)));
         }
@@ -290,9 +290,9 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
     if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
       if (baseUrl != null) {
-        myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.SOURCE))));
+        myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION))));
         myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.TEST))));
-        myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.RESOURCE))));
+        myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION_RESOURCE))));
       }
       else {
         myOutputPathPanel.setText(null);

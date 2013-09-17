@@ -121,6 +121,14 @@ public interface ProjectFileIndex extends FileIndex {
   boolean isInResource(@NotNull VirtualFile fileOrDir);
 
   /**
+   * Returns true if <code>fileOrDir</code> is a file or directory from the test resources.
+   *
+   * @param fileOrDir the file or directory to check.
+   * @return true if the file or directory belongs to resources, false otherwise.
+   */
+  boolean isInTestResource(@NotNull VirtualFile fileOrDir);
+
+  /**
    * Returns true if <code>fileOrDir</code> is a file or directory from library classes.
    *
    * @param fileOrDir the file or directory to check.

@@ -226,7 +226,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
           );
         }
 
-        final VirtualFile[] sourceAndTestFiles = ArrayUtil.mergeArrays(contentEntry.getFolderFiles(ContentFolderType.SOURCE),
+        final VirtualFile[] sourceAndTestFiles = ArrayUtil.mergeArrays(contentEntry.getFolderFiles(ContentFolderType.PRODUCTION),
                                                                  contentEntry.getFolderFiles(ContentFolderType.TEST));
         for (VirtualFile srcRoot : sourceAndTestFiles) {
           final VirtualFile anotherContentRoot = srcRootsToContentRootMap.put(srcRoot, contentRoot);

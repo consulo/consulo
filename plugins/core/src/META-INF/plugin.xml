@@ -2166,10 +2166,12 @@
 
     <group>
       <action id="MarkSourceRoot" class="com.intellij.ide.projectView.actions.MarkRootAction" icon="AllIcons.Modules.SourceRoot"/>
-      <action id="MarkResourceRoot" class="com.intellij.ide.projectView.actions.MarkResourceRootAction"
-              icon="AllIcons.Modules.ResourceRoot"/>
+      <action id="MarkResourceRoot" class="com.intellij.ide.projectView.actions.MarkProductionResourceRootAction"
+              icon="AllIcons.Modules.ResourcesRoot"/>
       <action id="MarkTestSourceRoot" class="com.intellij.ide.projectView.actions.MarkTestSourceRootAction"
               icon="AllIcons.Modules.TestRoot"/>
+      <action id="MarkTestResourceRoot" class="com.intellij.ide.projectView.actions.MarkTestResourceRootAction"
+              icon="AllIcons.Modules.TestResourcesRoot"/>
       <action id="MarkExcludeRoot" class="com.intellij.ide.projectView.actions.MarkExcludeRootAction" icon="AllIcons.Modules.ExcludeRoot"/>
       <action id="UnmarkRoot" class="com.intellij.ide.projectView.actions.UnmarkRootAction"/>
       <add-to-group group-id="MarkRootGroup"/>
@@ -4992,6 +4994,7 @@
     <customScopesProvider implementation="com.intellij.packageDependencies.DefaultScopesProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.TestScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.ResourceScopeProvider"/>
+    <customScopesProvider implementation="com.intellij.packageDependencies.TestResourceScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.SourceScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>

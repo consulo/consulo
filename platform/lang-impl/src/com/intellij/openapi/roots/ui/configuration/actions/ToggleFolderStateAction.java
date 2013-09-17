@@ -44,17 +44,21 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     final Presentation templatePresentation = getTemplatePresentation();
     switch (contentFolderType) {
 
-      case SOURCE:
+      case PRODUCTION:
         templatePresentation.setText(ProjectBundle.message("module.toggle.sources.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.sources.action.description"));
+        break;
+      case PRODUCTION_RESOURCE:
+        templatePresentation.setText(ProjectBundle.message("module.toggle.resources.action"));
+        templatePresentation.setDescription(ProjectBundle.message("module.toggle.resources.action.description"));
         break;
       case TEST:
         templatePresentation.setText(ProjectBundle.message("module.toggle.test.sources.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.test.sources.action.description"));
         break;
-      case RESOURCE:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.resources.action"));
-        templatePresentation.setDescription(ProjectBundle.message("module.toggle.resources.action.description"));
+      case TEST_RESOURCE:
+        templatePresentation.setText(ProjectBundle.message("module.toggle.test.resources.action"));
+        templatePresentation.setDescription(ProjectBundle.message("module.toggle.test.resources.action.description"));
         break;
       case EXCLUDED:
         templatePresentation.setText(ProjectBundle.message("module.toggle.excluded.action"));

@@ -181,7 +181,7 @@ public class ByteCodeViewerManager extends DockablePopupManager<ByteCodeViewerCo
         if (pathForTests == null) return null;
         classPath = pathForTests.getPath();
       } else {
-        final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(module, ContentFolderType.SOURCE);
+        final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
         if (compilerOutputPath == null) return null;
         classPath = compilerOutputPath.getPath();
       }

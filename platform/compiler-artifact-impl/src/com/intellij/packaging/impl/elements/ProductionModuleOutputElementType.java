@@ -41,7 +41,7 @@ public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBa
   @NotNull
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.SOURCE;
+    return ContentFolderType.PRODUCTION;
   }
 
   @Override

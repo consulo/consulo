@@ -92,13 +92,13 @@ public class ModuleElementPresentation extends TreeNodePresentation {
     String text;
     switch (myContentFolderType) {
 
-      case SOURCE:
+      case PRODUCTION:
         text = CompilerBundle.message("node.text.0.compile.output", moduleName);
         break;
       case TEST:
         text = CompilerBundle.message("node.text.0.test.compile.output", moduleName);
         break;
-      case RESOURCE:
+      case PRODUCTION_RESOURCE:
         text = CompilerBundle.message("node.text.0.resource.compile.output", moduleName);
         break;
       default:

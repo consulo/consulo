@@ -106,7 +106,7 @@ public class DummyCompileContext implements CompileContext {
     return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
       @Override
       public VirtualFile compute() {
-        return CompilerPathsManager.getInstance(module.getProject()).getCompilerOutput(module, ContentFolderType.SOURCE);
+        return CompilerPathsManager.getInstance(module.getProject()).getCompilerOutput(module, ContentFolderType.PRODUCTION);
       }
     });
   }

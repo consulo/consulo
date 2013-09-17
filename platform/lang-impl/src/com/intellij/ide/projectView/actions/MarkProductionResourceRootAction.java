@@ -21,8 +21,8 @@ import com.intellij.openapi.roots.ContentFolderType;
  * @author VISTALL
  * @since 13:21/22.05.13
  */
-public class MarkResourceRootAction extends MarkRootAction {
-  public MarkResourceRootAction() {
-    super(ContentFolderType.RESOURCE);
+public class MarkProductionResourceRootAction extends MarkRootAction {
+  public MarkProductionResourceRootAction() {
+    super(ContentFolderType.PRODUCTION_RESOURCE);
   }
 }

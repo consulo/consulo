@@ -98,16 +98,20 @@ public class ContentEntryTreeEditor {
   }
 
   protected void createEditingActions() {
-    ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, ContentFolderType.SOURCE);
+    ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, ContentFolderType.PRODUCTION);
     action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK)), myTree);
     myEditingActionsGroup.add(action);
 
-    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.RESOURCE);
+    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.PRODUCTION_RESOURCE);
     action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK)), myTree);
     myEditingActionsGroup.add(action);
 
     action = new ToggleFolderStateAction(myTree, this, ContentFolderType.TEST);
     action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_MASK)), myTree);
+    myEditingActionsGroup.add(action);
+
+    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.TEST_RESOURCE);
+    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_MASK)), myTree);
     myEditingActionsGroup.add(action);
 
     action = new ToggleFolderStateAction(myTree, this, ContentFolderType.EXCLUDED);

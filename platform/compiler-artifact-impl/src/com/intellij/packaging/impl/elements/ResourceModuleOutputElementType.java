@@ -47,6 +47,6 @@ public class ResourceModuleOutputElementType extends ModuleOutputElementTypeBase
   @NotNull
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.RESOURCE;
+    return ContentFolderType.PRODUCTION_RESOURCE;
   }
 }

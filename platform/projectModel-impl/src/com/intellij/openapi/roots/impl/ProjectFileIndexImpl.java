@@ -23,10 +23,7 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
@@ -192,7 +189,9 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   public boolean isInSource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
     if (info != null) {
-      return info.isInModuleSource() || info.isInLibrarySource();
+      return info.hasContentFolderFlag(ContentFolderType.PRODUCTION) ||
+             info.hasContentFolderFlag(ContentFolderType.TEST) ||
+             info.isInLibrarySource();
     }
     else {
       VirtualFile parent = fileOrDir.getParent();
@@ -204,7 +203,7 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   public boolean isInResource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
     if (info != null) {
-      return info.isResource();
+      return info.hasContentFolderFlag(ContentFolderType.PRODUCTION_RESOURCE);
     }
     else {
       VirtualFile parent = fileOrDir.getParent();
@@ -213,9 +212,21 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   }
 
   @Override
+  public boolean isInTestResource(@NotNull VirtualFile fileOrDir) {
+    DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
+    if (info != null) {
+      return info.hasContentFolderFlag(ContentFolderType.TEST_RESOURCE);
+    }
+    else {
+      VirtualFile parent = fileOrDir.getParent();
+      return parent != null && isInTestResource(parent);
+    }
+  }
+
+  @Override
   public boolean isInLibraryClasses(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    if (info != null) {     
+    if (info != null) {
       return info.hasLibraryClassRoot();
     }
     else {
@@ -245,13 +256,13 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   @Override
   public boolean isInSourceContent(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info != null && info.isInModuleSource();
+    return info != null && (info.hasContentFolderFlag(ContentFolderType.PRODUCTION) || info.hasContentFolderFlag(ContentFolderType.TEST));
   }
 
   @Override
   public boolean isInTestSourceContent(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info != null && info.isInModuleSource() && info.isTestSource();
+    return info != null && info.hasContentFolderFlag(ContentFolderType.TEST);
   }
 
   private class ContentFilter implements VirtualFileFilter {
@@ -262,8 +273,7 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
         return info != null && info.getModule() != null;
       }
       else {
-        return (myFileExclusionManager == null || !myFileExclusionManager.isExcluded(file))
-               && !myFileTypeRegistry.isFileIgnored(file);
+        return (myFileExclusionManager == null || !myFileExclusionManager.isExcluded(file)) && !myFileTypeRegistry.isFileIgnored(file);
       }
     }
   }

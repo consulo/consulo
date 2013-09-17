@@ -226,7 +226,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       CompilerPathsManager manager = CompilerPathsManager.getInstance(rootModel.getModule().getProject());
       if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
         if (includeTests && includeProduction) {
-          VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.SOURCE);
+          VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.PRODUCTION);
           if(compilerOutput != null) {
             result.add(compilerOutput);
           }
@@ -239,7 +239,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
       else {
         if (includeProduction) {
-          VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.SOURCE);
+          VirtualFile compilerOutput = manager.getCompilerOutput(rootModel.getModule(), ContentFolderType.PRODUCTION);
           if(compilerOutput != null) {
             result.add(compilerOutput);
           }
@@ -276,7 +276,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       CompilerPathsManager manager = CompilerPathsManager.getInstance(rootModel.getModule().getProject());
       if (myWithoutSelfModuleOutput && myOrderEnumerator.isRootModuleModel(rootModel)) {
         if (includeTests && includeProduction) {
-          String compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.SOURCE);
+          String compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.PRODUCTION);
           if(compilerOutput != null) {
             result.add(compilerOutput);
           }
@@ -289,7 +289,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
       else {
         if (includeProduction) {
-          String compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.SOURCE);
+          String compilerOutput = manager.getCompilerOutputUrl(rootModel.getModule(), ContentFolderType.PRODUCTION);
           if(compilerOutput != null) {
             result.add(compilerOutput);
           }

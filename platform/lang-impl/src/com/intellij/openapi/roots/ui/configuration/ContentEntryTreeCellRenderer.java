@@ -25,6 +25,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ArrayUtil;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
@@ -78,13 +79,16 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
           case EXCLUDED:
             icon = AllIcons.Modules.ExcludeRoot;
             break;
-          case SOURCE:
-          case RESOURCE:
+          case PRODUCTION:
+          case PRODUCTION_RESOURCE:
           case TEST:
+          case TEST_RESOURCE:
             for (ModuleExtension moduleExtension : myTreeEditor.getContentEntryEditor().getModel().getExtensions()) {
               for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
                 if (supportProvider.getSupportedModuleExtensionClass().isAssignableFrom(moduleExtension.getClass())) {
-                  icon = contentFolder.getType() == ContentFolderType.TEST ? AllIcons.Nodes.TestPackage : AllIcons.Nodes.Package;
+                  icon = ArrayUtil.contains(contentFolder.getType(), ContentFolderType.ONLY_TEST_ROOTS)
+                         ? AllIcons.Nodes.TestPackage
+                         : AllIcons.Nodes.Package;
                 }
               }
             }

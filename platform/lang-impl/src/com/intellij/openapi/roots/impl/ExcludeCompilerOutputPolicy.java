@@ -50,7 +50,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
     }
 
     for (Module m : ModuleManager.getInstance(myProject).getModules()) {
-      for (ContentFolderType contentFolderType : ContentFolderType.SOURCE_FOLDER_TYPES) {
+      for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
         if (isEqualWithFileOrUrl(file, manager.getCompilerOutput(m, contentFolderType),
                                  manager.getCompilerOutputUrl(m, contentFolderType))) {
           return true;
@@ -64,7 +64,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
   public boolean isExcludeRootForModule(@NotNull final Module module, final VirtualFile excludeRoot) {
     CompilerPathsManager manager = CompilerPathsManager.getInstance(myProject);
 
-    for (ContentFolderType contentFolderType : ContentFolderType.SOURCE_FOLDER_TYPES) {
+    for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
       if (Comparing.equal(manager.getCompilerOutputUrl(module, contentFolderType), excludeRoot)) {
         return true;
       }
@@ -102,7 +102,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
         return VirtualFilePointer.EMPTY_ARRAY;
       }
 
-      for (ContentFolderType contentFolderType : ContentFolderType.SOURCE_FOLDER_TYPES) {
+      for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
         result.add(manager.getCompilerOutputPointer(module, contentFolderType));
       }
     }

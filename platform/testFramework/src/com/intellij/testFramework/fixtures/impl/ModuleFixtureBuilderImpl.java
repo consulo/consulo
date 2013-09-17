@@ -137,7 +137,7 @@ public abstract class ModuleFixtureBuilderImpl<T extends ModuleFixture> implemen
         }
         //assert vf != null : "cannot find source root: " + sourceRoot;
         if (vf != null) {
-          contentEntry.addFolder(vf, ContentFolderType.SOURCE);
+          contentEntry.addFolder(vf, ContentFolderType.PRODUCTION);
         }
       }
     }

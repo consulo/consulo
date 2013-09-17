@@ -75,7 +75,7 @@ public class ModuleChunk {
 
   @Nullable
   public String getOutputDirUrl() {
-    return CompilerPathsManager.getInstance(myMainModule.getProject()).getCompilerOutputUrl(myMainModule, ContentFolderType.SOURCE);
+    return CompilerPathsManager.getInstance(myMainModule.getProject()).getCompilerOutputUrl(myMainModule, ContentFolderType.PRODUCTION);
   }
 
   @Nullable

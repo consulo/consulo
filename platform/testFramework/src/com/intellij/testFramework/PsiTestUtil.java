@@ -145,7 +145,7 @@ public class PsiTestUtil {
         final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
         final ContentEntry contentEntry = rootModel.addContentEntry(vDir);
-        contentEntry.addFolder(vDir, testSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+        contentEntry.addFolder(vDir, testSource ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
         rootModel.commit();
       }
     }.execute().throwException();
@@ -163,7 +163,7 @@ public class PsiTestUtil {
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
         ContentEntry entry = findContentEntry(rootModel, vDir);
         if (entry == null) entry = rootModel.addContentEntry(vDir);
-        entry.addFolder(vDir, isTestSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+        entry.addFolder(vDir, isTestSource ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
         rootModel.commit();
       }
     }.execute().throwException();
@@ -356,7 +356,7 @@ public class PsiTestUtil {
         final Module dep = ModuleManager.getInstance(project).findModuleByName(moduleName);
         final ModifiableRootModel model = ModuleRootManager.getInstance(dep).getModifiableModel();
         final ContentEntry entry = model.addContentEntry(root);
-        entry.addFolder(root, ContentFolderType.SOURCE);
+        entry.addFolder(root, ContentFolderType.PRODUCTION);
 
         model.commit();
         result.setResult(dep);
@@ -366,7 +366,7 @@ public class PsiTestUtil {
 
   public static void setCompilerOutputPath(Module module, String url, boolean forTests) {
     CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
-    manager.setCompilerOutputUrl(module, forTests ? ContentFolderType.TEST : ContentFolderType.SOURCE, url);
+    manager.setCompilerOutputUrl(module, forTests ? ContentFolderType.TEST : ContentFolderType.PRODUCTION, url);
   }
 
   public static void setExcludeCompileOutput(Module module, boolean exclude) {

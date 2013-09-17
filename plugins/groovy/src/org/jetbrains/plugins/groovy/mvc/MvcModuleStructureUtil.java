@@ -85,7 +85,7 @@ public class MvcModuleStructureUtil {
 
     Map<VirtualFile, Boolean> sourceRoots = new HashMap<VirtualFile, Boolean>();
     for (ContentEntry entry : moduleRootManager.getContentEntries()) {
-      for (ContentFolder folder : entry.getFolders(ContentFolderType.SOURCE, ContentFolderType.TEST)) {
+      for (ContentFolder folder : entry.getFolders(ContentFolderType.PRODUCTION, ContentFolderType.TEST)) {
         sourceRoots.put(folder.getFile(), folder.getType() == ContentFolderType.TEST);
       }
     }
@@ -232,7 +232,7 @@ public class MvcModuleStructureUtil {
 
     actions.add(new Consumer<ContentEntry>() {
       public void consume(ContentEntry contentEntry) {
-        contentEntry.addFolder(src, isTest ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+        contentEntry.addFolder(src, isTest ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
       }
     });
   }

@@ -26,18 +26,18 @@ import com.intellij.ui.Colored;
 
 /**
  * @author VISTALL
- * @since 18:03/17.06.13
+ * @since 23:40/19.09.13
  */
-@Colored(color = "dcf0ff", darkVariant = "2B3557")
-public class ResourcesScope extends NamedScope {
-  public static final String NAME = IdeBundle.message("predefined.scope.resources.name");
+@Colored(color = "e7fadb", darkVariant = "2A3B2C")
+public class TestResourcesScope extends NamedScope {
+  public static final String NAME = IdeBundle.message("predefined.scope.test.resources.name");
 
-  public ResourcesScope() {
-    super(NAME, new AbstractPackageSet("rsc:*..*") {
+  public TestResourcesScope() {
+    super(NAME, new AbstractPackageSet("test-rsc:*..*") {
       @Override
       public boolean contains(VirtualFile file, NamedScopesHolder holder) {
         final ProjectFileIndex index = ProjectRootManager.getInstance(holder.getProject()).getFileIndex();
-        return file != null && index.isInResource(file);
+        return file != null && index.isInTestResource(file);
       }
     });
   }

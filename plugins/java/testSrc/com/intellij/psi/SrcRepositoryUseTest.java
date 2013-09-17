@@ -723,13 +723,13 @@ public class SrcRepositoryUseTest extends PsiTestCase{
             final ContentEntry[] content = rootModel.getContentEntries();
             boolean contentToChangeFound = false;
             for (ContentEntry contentEntry : content) {
-              final ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderType.SOURCE);
+              final ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderType.PRODUCTION);
               for (ContentFolder sourceFolder : sourceFolders) {
                 contentEntry.removeFolder(sourceFolder);
               }
               final VirtualFile contentRoot = contentEntry.getFile();
               if (contentRoot != null && VfsUtilCore.isAncestor(contentRoot, newSourceRoot, false)) {
-                contentEntry.addFolder(newSourceRoot, ContentFolderType.SOURCE);
+                contentEntry.addFolder(newSourceRoot, ContentFolderType.PRODUCTION);
                 contentToChangeFound = true;
               }
             }

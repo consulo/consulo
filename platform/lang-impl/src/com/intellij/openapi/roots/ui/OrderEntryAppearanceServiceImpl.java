@@ -35,6 +35,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PlatformIcons;
 import org.consulo.module.extension.ModuleExtensionProvider;
@@ -152,8 +153,8 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @NotNull
   @Override
   public CellAppearanceEx forContentFolder(@NotNull final ContentFolder folder) {
-    if (folder.getType() ==ContentFolderType.SOURCE || folder.getType() == ContentFolderType.TEST || folder.getType() == ContentFolderType.RESOURCE) {
-      return formatRelativePath(folder, PlatformIcons.FOLDER_ICON);
+    if (ArrayUtil.contains(folder.getType(), ContentFolderType.ALL_SOURCE_ROOTS)) {
+      return formatRelativePath(folder, AllIcons.Nodes.Folder);
     }
     else if (folder.getType() == ContentFolderType.EXCLUDED) {
       return formatRelativePath(folder, EXCLUDE_FOLDER_ICON);

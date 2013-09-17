@@ -89,7 +89,16 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
     if (type == null) {
       throw new InvalidDataException();
     }
-    return ContentFolderType.valueOf(type);
+
+    //TODO [VISTALL] remove it after first beta
+    ContentFolderType contentFolderType = ContentFolderType.valueOf(type);
+    if(contentFolderType == ContentFolderType.SOURCE) {
+      contentFolderType = ContentFolderType.PRODUCTION;
+    }
+    else if(contentFolderType == ContentFolderType.RESOURCE) {
+      contentFolderType = ContentFolderType.PRODUCTION_RESOURCE;
+    }
+    return contentFolderType;
   }
 
   @Override

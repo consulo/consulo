@@ -81,7 +81,7 @@ public class IdeaModuleModel implements IdeaParseableModel{
             String url2 = childOfContent.getAttributeValue("url");
             boolean isTestSource = Boolean.valueOf(childOfContent.getAttributeValue("isTestSource"));
 
-            contentEntryModel.addFolder(url2, isTestSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+            contentEntryModel.addFolder(url2, isTestSource ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
           }
         }
       }

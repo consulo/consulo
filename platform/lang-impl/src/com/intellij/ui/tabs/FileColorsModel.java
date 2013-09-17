@@ -21,10 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DefaultScopesProvider;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.scope.NonProjectFilesScope;
-import com.intellij.psi.search.scope.ResourcesScope;
-import com.intellij.psi.search.scope.SourcesScope;
-import com.intellij.psi.search.scope.TestsScope;
+import com.intellij.psi.search.scope.*;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.ColorUtil;
 import org.jdom.Element;
@@ -51,7 +48,8 @@ public class FileColorsModel implements Cloneable {
     globalScopes = new LinkedHashMap<String, String>(4);
     globalScopes.put(NonProjectFilesScope.NAME, "file.colors.enable.non.project");
     globalScopes.put(TestsScope.NAME, "file.colors.enable.tests");
-    globalScopes.put(ResourcesScope.NAME, "file.colors.enable.resources");
+    globalScopes.put(TestResourcesScope.NAME, "file.colors.enable.tests");
+    globalScopes.put(ResourcesScope.NAME, "file.colors.enable.sources");
     globalScopes.put(SourcesScope.NAME, "file.colors.enable.sources");
 
     globalScopesColors = new LinkedHashMap<String, String>(4);

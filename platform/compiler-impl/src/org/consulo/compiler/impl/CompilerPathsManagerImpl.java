@@ -59,9 +59,9 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
     private Map<ContentFolderType, VirtualFilePointer> virtualFilePointers = new LinkedHashMap<ContentFolderType, VirtualFilePointer>();
 
     CompileInfo() {
-      virtualFilePointers.put(ContentFolderType.SOURCE, null);
-      virtualFilePointers.put(ContentFolderType.RESOURCE, null);
-      virtualFilePointers.put(ContentFolderType.TEST, null);
+      for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+        virtualFilePointers.put(contentFolderType, null);
+      }
     }
     //private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
   }

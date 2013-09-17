@@ -52,8 +52,8 @@ public class ModuleLoaderTest extends ModuleLoaderTestCase {
 
     assertEquals(contentEntryModel.getUrl(), "file://$MODULE_DIR$");
     assertEquals(contentEntryModel.getContentFolderTypes().size(), 2);
-    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.SOURCE).size(), 1);
-    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.SOURCE).iterator().next(), "file://$MODULE_DIR$/src");
+    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.PRODUCTION).size(), 1);
+    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.PRODUCTION).iterator().next(), "file://$MODULE_DIR$/src");
     assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.TEST).size(), 1);
     assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.TEST).iterator().next(), "file://$MODULE_DIR$/testSrc");
 
@@ -76,8 +76,8 @@ public class ModuleLoaderTest extends ModuleLoaderTestCase {
 
     assertEquals(contentEntryModel.getUrl(), "file://$MODULE_DIR$");
     assertEquals(contentEntryModel.getContentFolderTypes().size(), 1);
-    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.SOURCE).size(), 1);
-    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.SOURCE).iterator().next(), "file://$MODULE_DIR$/src");
+    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.PRODUCTION).size(), 1);
+    assertEquals(contentEntryModel.getContentFolderTypes().get(ContentFolderType.PRODUCTION).iterator().next(), "file://$MODULE_DIR$/src");
 
     assertEquals(secondModule.getOrderEntries().size(), 4);
     assertEquals(secondModule.getOrderEntries().get(0).getClass(), JdkSourceOrderEntryModel.class);

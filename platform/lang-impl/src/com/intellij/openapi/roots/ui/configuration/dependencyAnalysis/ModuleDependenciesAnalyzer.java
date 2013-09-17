@@ -204,8 +204,8 @@ public class ModuleDependenciesAnalyzer {
                   CompilerPathsManager e = CompilerPathsManager.getInstance(m.getProject());
                   final OrderPath p = new OrderPath(myStack);
 
-                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.SOURCE));
-                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.RESOURCE));
+                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.PRODUCTION));
+                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.PRODUCTION_RESOURCE));
                   boolean includeTests = !myCompile ? !myProduction : level > 0 && !myProduction;
                   if(includeTests) {
                     addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.TEST));

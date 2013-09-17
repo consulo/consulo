@@ -41,6 +41,6 @@ public class ProductionModuleOutputPackagingElement extends ModuleOutputPackagin
 
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.SOURCE;
+    return ContentFolderType.PRODUCTION;
   }
 }

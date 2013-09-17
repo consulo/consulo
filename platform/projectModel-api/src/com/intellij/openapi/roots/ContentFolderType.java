@@ -22,12 +22,21 @@ import org.consulo.annotations.Immutable;
 * @since 13:20/22.05.13
 */
 public enum ContentFolderType {
-  SOURCE,
+  @Deprecated
+  SOURCE,   //TODO [VISTALL] remove it after first beta
+  @Deprecated
+  RESOURCE, //TODO [VISTALL] remove it after first beta
+
+  PRODUCTION,
+  PRODUCTION_RESOURCE,
   TEST,
-  RESOURCE,
+  TEST_RESOURCE,
   EXCLUDED;
 
   @Immutable
-  public static final ContentFolderType[] SOURCE_FOLDER_TYPES = new ContentFolderType[] {SOURCE, TEST, RESOURCE};
-  public static final ContentFolderType[] ONLY_SOURCE_ROOTS = new ContentFolderType[] {SOURCE, RESOURCE};
+  public static final ContentFolderType[] ALL_SOURCE_ROOTS = new ContentFolderType[] {PRODUCTION, PRODUCTION_RESOURCE, TEST, TEST_RESOURCE};
+  @Immutable
+  public static final ContentFolderType[] ONLY_PRODUCTION_ROOTS = new ContentFolderType[] {PRODUCTION, PRODUCTION_RESOURCE};
+  @Immutable
+  public static final ContentFolderType[] ONLY_TEST_ROOTS = new ContentFolderType[] {TEST, TEST_RESOURCE};
 }

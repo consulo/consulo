@@ -19,10 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.file.exclude.ProjectFileExclusionManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.ModuleFileIndex;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
@@ -71,9 +68,7 @@ public class ModuleFileIndexImpl implements ModuleFileIndex {
 
   @Override
   public boolean isContentSourceFile(@NotNull VirtualFile file) {
-    return !file.isDirectory()
-           && !myFileTypeRegistry.isFileIgnored(file)
-           && isInSourceContent(file);
+    return !file.isDirectory() && !myFileTypeRegistry.isFileIgnored(file) && isInSourceContent(file);
   }
 
   @Override
@@ -86,7 +81,7 @@ public class ModuleFileIndexImpl implements ModuleFileIndex {
   public boolean isInSourceContent(@NotNull VirtualFile fileOrDir) {
     if (fileOrDir.isDirectory()) {
       DirectoryInfo info = myDirectoryIndex.getInfoForDirectory(fileOrDir);
-      return info != null && info.isInModuleSource() && myModule.equals(info.getModule());
+      return info != null && info.findContentFolderType() != null && myModule.equals(info.getModule());
     }
     else {
       VirtualFile parent = fileOrDir.getParent();
@@ -113,7 +108,9 @@ public class ModuleFileIndexImpl implements ModuleFileIndex {
   public boolean isInTestSourceContent(@NotNull VirtualFile fileOrDir) {
     if (fileOrDir.isDirectory()) {
       DirectoryInfo info = myDirectoryIndex.getInfoForDirectory(fileOrDir);
-      return info != null && info.isInModuleSource() && info.isTestSource() && myModule.equals(info.getModule());
+      return info != null &&
+             (info.hasContentFolderFlag(ContentFolderType.TEST) || info.hasContentFolderFlag(ContentFolderType.TEST_RESOURCE)) &&
+             myModule.equals(info.getModule());
     }
     else {
       VirtualFile parent = fileOrDir.getParent();
@@ -129,7 +126,7 @@ public class ModuleFileIndexImpl implements ModuleFileIndex {
         return info != null && myModule.equals(info.getModule());
       }
       else {
-        if(myExclusionManager != null && myExclusionManager.isExcluded(file)) return false;
+        if (myExclusionManager != null && myExclusionManager.isExcluded(file)) return false;
         return !myFileTypeRegistry.isFileIgnored(file);
       }
     }

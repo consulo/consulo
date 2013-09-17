@@ -97,21 +97,14 @@ public class CompilerPathsEx extends CompilerPaths {
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(modules[0].getProject());
     final Set<String> outputPaths = new OrderedSet<String>();
     for (Module module : modules) {
-      String outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.SOURCE);
-      if (outputPathUrl != null) {
-        outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
-      }
-
-      outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.TEST);
-      if (outputPathUrl != null) {
-        outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
-      }
-
-      outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.RESOURCE);
-      if (outputPathUrl != null) {
-        outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
+      for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+        String outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, contentFolderType);
+        if (outputPathUrl != null) {
+          outputPaths.add(VirtualFileManager.extractPath(outputPathUrl).replace('/', File.separatorChar));
+        }
       }
     }
+
     return ArrayUtil.toStringArray(outputPaths);
   }
 

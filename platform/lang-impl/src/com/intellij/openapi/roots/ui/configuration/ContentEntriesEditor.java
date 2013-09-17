@@ -156,7 +156,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     final Splitter splitter = new Splitter(false);
     splitter.setHonorComponentsMinimumSize(true);
-    splitter.setProportion(0.46f);
+    splitter.setProportion(0.42f);
     mainPanel.add(splitter, BorderLayout.CENTER);
 
     final JPanel editorsPanel = new JPanel(new GridBagLayout());

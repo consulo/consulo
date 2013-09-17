@@ -309,7 +309,7 @@ public abstract class MvcFramework {
 
   private static void removeModuleOutput(Module module, List<VirtualFile> from) {
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(module.getProject());
-    for(ContentFolderType contentFolderType : ContentFolderType.SOURCE_FOLDER_TYPES) {
+    for(ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
       from.remove(compilerPathsManager.getCompilerOutput(module, contentFolderType));
     }
   }

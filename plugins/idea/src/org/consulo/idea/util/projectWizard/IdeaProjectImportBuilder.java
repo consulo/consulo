@@ -186,7 +186,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object> {
           if("sourceFolder".equals(nameChildOfContent)) {
             String url2 = childOfContent.getAttributeValue("url");
             boolean isTestSource = Boolean.valueOf(childOfContent.getAttributeValue("isTestSource"));
-            contentEntry.addFolder(url2, isTestSource ? ContentFolderType.TEST : ContentFolderType.SOURCE);
+            contentEntry.addFolder(url2, isTestSource ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
           }
         }
       }

@@ -226,15 +226,10 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       String parentPackage = state.getPackageNameForDirectory(parent);
 
       if (module != null) {
-        if (parentInfo.isInModuleSource()) {
+        ContentFolderType contentFolderType = parentInfo.findContentFolderType();
+        if (contentFolderType != null) {
           String newDirPackageName = getPackageNameForSubdir(parentPackage, file.getName());
-          ContentFolderType contentFolderType = ContentFolderType.SOURCE;
-          if(parentInfo.isTestSource()) {
-            contentFolderType = ContentFolderType.TEST;
-          }
-          else if(parentInfo.isResource()) {
-            contentFolderType = ContentFolderType.RESOURCE;
-          }
+
           state.fillMapWithModuleSource(module, (NewVirtualFile)parentContentRoot, file, newDirPackageName, (NewVirtualFile)parentInfo.getSourceRoot(), contentFolderType, null);
         }
       }
@@ -358,7 +353,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
             DirectoryInfo info = stateAndDirs.first.myDirToInfoMap.get(((NewVirtualFile)dir).getId());
             assert info != null;
 
-            if (!info.isInLibrarySource() || info.isInModuleSource() || info.hasLibraryClassRoot()) {
+            if (!info.isInLibrarySource() || info.findContentFolderType() != null || info.hasLibraryClassRoot()) {
               if (!consumer.process(dir)) return false;
             }
           }
@@ -712,7 +707,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
         @Override
         protected void afterChildrenVisited(@NotNull VirtualFile file, @NotNull DirectoryInfo info) {
-          with(((NewVirtualFile)file).getId(), info, module, contentRoot, null, null, 0, null);
+          with(((NewVirtualFile)file).getId(), info, module, contentRoot, null, null, (byte) 0, null);
         }
       });
     }
@@ -724,7 +719,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
                                VirtualFile contentRoot,
                                VirtualFile sourceRoot,
                                VirtualFile libraryClassRoot,
-                               @DirectoryInfo.SourceFlag int sourceFlag,
+                               byte sourceFlag,
                                OrderEntry[] orderEntries) {
       if (contentRoot != null) {
         assertAncestor(info, contentRoot, id);
@@ -808,7 +803,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
       for (ContentEntry contentEntry : contentEntries) {
         VirtualFile contentRoot = contentEntry.getFile();
-        ContentFolder[] folders = contentEntry.getFolders(ContentFolderType.SOURCE_FOLDER_TYPES);
+        ContentFolder[] folders = contentEntry.getFolders(ContentFolderType.ALL_SOURCE_ROOTS);
         if (reverseAllSets) {
           folders = ArrayUtil.reverseArray(folders);
         }
@@ -845,15 +840,13 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           if (!module.equals(info.getModule())) return null;
           if (!contentRoot.equals(info.getContentRoot())) return null;
 
-          if (info.isInModuleSource()) { // module sources overlap
+          if (info.findContentFolderType() != null)  { // module sources overlap
             if (isAnotherRoot(id)) return null; // another source root starts here
           }
 
           assert VfsUtilCore.isAncestor(dir, file, false) : "dir: " + dir + " (" + dir.getFileSystem() + "); file: " + file + " (" + file.getFileSystem() + ")";
 
-          int flag = info.getSourceFlag() | DirectoryInfo.MODULE_SOURCE_FLAG;
-          flag = BitUtil.set(flag, DirectoryInfo.MODULE_TEST_FLAG, contentFolderType == ContentFolderType.TEST);
-          flag = BitUtil.set(flag, DirectoryInfo.MODULE_RESOURCE_FLAG, contentFolderType == ContentFolderType.RESOURCE);
+          int flag = info.getFlags() | 1 << contentFolderType.ordinal();
           info = with(id, info, null, null, sourceRoot, null, (byte)flag, null);
 
           String currentPackage = myPackages.isEmpty() ? packageName : getPackageNameForSubdir(myPackages.peek(), file.getName());
@@ -911,7 +904,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
             if (isAnotherRoot(dirId)) return false; // another library source root starts here
           }
 
-          int flag = info.getSourceFlag() | DirectoryInfo.LIBRARY_SOURCE_FLAG;
+          int flag = info.getFlags() | DirectoryInfo.LIBRARY_SOURCE_FLAG;
           with(dirId, info, null, null, sourceRoot, null, (byte)flag, null);
 
           final String packageName = getCurrentValue();
@@ -962,11 +955,11 @@ public class DirectoryIndexImpl extends DirectoryIndex {
             if (isAnotherRoot(dirId)) return false; // another library root starts here
           }
 
-          info = with(dirId, info, null, null, null, classRoot, 0, null);
+          info = with(dirId, info, null, null, null, classRoot, (byte)0, null);
 
           final String packageName = getCurrentValue();
           final String childPackageName = Comparing.equal(file, dir) ? packageName : getPackageNameForSubdir(packageName, file.getName());
-          if (!info.isInModuleSource() && !info.isInLibrarySource()) {
+          if (info.findContentFolderType() == null && !info.isInLibrarySource()) {
             setPackageName(dirId, internPackageName(childPackageName));
           }
           setValueForChildren(childPackageName);
@@ -1095,11 +1088,11 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
           if (module != null) {
             if (info.getModule() != module) return null;
-            if (!info.isInModuleSource()) return null;
+            if (info.findContentFolderType() == null) return null;
           }
           else if (libraryClassRoot != null) {
             if (!libraryClassRoot.equals(info.getLibraryClassRoot())) return null;
-            if (info.isInModuleSource()) return null;
+            if (info.findContentFolderType() != null) return null;
           }
           else if (librarySourceRoot != null) {
             if (!info.isInLibrarySource()) return null;
@@ -1112,7 +1105,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           myEntries.push(oldEntries);
 
           OrderEntry[] newOrderEntries = info.calcNewOrderEntries(orderEntries, parentInfo, oldParentEntries);
-          info = with(dirId, info, null, null, null, null, 0, newOrderEntries);
+          info = with(dirId, info, null, null, null, null,  (byte) 0, newOrderEntries);
 
           return info;
         }
