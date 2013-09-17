@@ -58,6 +58,15 @@ public class ProjectRootsUtil {
     return projectFileIndex.isInTestSourceContent(directoryFile);
   }
 
+  public static boolean isInTestResource(final PsiDirectory psiDirectory) {
+    return isInTestResource(psiDirectory.getVirtualFile(), psiDirectory.getProject());
+  }
+
+  public static boolean isInTestResource(final VirtualFile directoryFile, final Project project) {
+    final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    return projectFileIndex.isInTestResource(directoryFile);
+  }
+
   public static boolean isSourceOrTestRoot(@NotNull VirtualFile virtualFile, final Project project) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return projectFileIndex.isInSource(virtualFile);

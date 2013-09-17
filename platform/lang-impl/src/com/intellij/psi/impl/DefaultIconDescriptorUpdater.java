@@ -59,8 +59,10 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
       else if (contentFolder != null) {
         symbolIcon = ContentFolderIconUtil.getRootIcon(contentFolder.getType());
       }
-      else if(PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory) != null) {
-        symbolIcon = ProjectRootsUtil.isInTestSource(psiDirectory) ? AllIcons.Nodes.TestPackage : AllIcons.Nodes.Package;
+      else if (PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory) != null) {
+        symbolIcon = ProjectRootsUtil.isInTestSource(psiDirectory) || ProjectRootsUtil.isInTestResource(psiDirectory)
+                     ? AllIcons.Nodes.TestPackage
+                     : AllIcons.Nodes.Package;
       }
       else {
         symbolIcon = AllIcons.Nodes.TreeClosed;
@@ -68,13 +70,13 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
 
       iconDescriptor.setMainIcon(symbolIcon);
     }
-    else if(element instanceof PsiFile && iconDescriptor.getMainIcon() == null) {
+    else if (element instanceof PsiFile && iconDescriptor.getMainIcon() == null) {
       final VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
-      if(virtualFile != null) {
+      if (virtualFile != null) {
         iconDescriptor.setMainIcon(NativeFileIconUtil.INSTANCE.getIcon(virtualFile));
       }
 
-      if(iconDescriptor.getMainIcon() == null) {
+      if (iconDescriptor.getMainIcon() == null) {
         final FileType fileType = ((PsiFile)element).getFileType();
         iconDescriptor.setMainIcon(fileType.getIcon());
       }
