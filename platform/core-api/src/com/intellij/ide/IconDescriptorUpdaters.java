@@ -16,16 +16,8 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
-import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -35,47 +27,16 @@ import javax.swing.*;
  */
 public class IconDescriptorUpdaters {
   private static final IconDescriptorUpdater[] ourCache = IconDescriptorUpdater.EP_NAME.getExtensions();
-  private static final Key<CachedValue<IconKey>> KEY = Key.create("icon-key");
-
-  private static class IconKey implements ModificationTracker {
-    private PsiElement myElement;
-    private TIntObjectHashMap<Icon> myIcons = new TIntObjectHashMap<Icon>(5);
-
-    private IconKey(PsiElement element) {
-      myElement = element;
-    }
-
-    public Icon getIcon(int flags) {
-      Icon icon = myIcons.get(flags);
-      if(icon != null) {
-        return icon;
-      }
-      myIcons.put(flags, icon = getIconWithoutCache(myElement, flags));
-      return icon;
-    }
-
-    @Override
-    public long getModificationCount() {
-      return PsiModificationTracker.SERVICE.getInstance(myElement.getProject()).getJavaStructureModificationCount();
-    }
-  }
 
   @NotNull
   public static Icon getIcon(@NotNull final PsiElement element, @Iconable.IconFlags final int flags) {
-    CachedValue<IconKey> cachedValue = element.getUserData(KEY);
-    if (cachedValue == null) {
-      cachedValue = CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<IconKey>() {
-        @Nullable
-        @Override
-        public Result<IconKey> compute() {
-          return Result.createSingleDependency(new IconKey(element),
-                                               PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
-        }
-      });
-      element.putUserData(KEY, cachedValue);
+    Icon icon = Iconable.LastComputedIcon.get(element, flags);
+    if(icon == null) {
+      icon = getIconWithoutCache(element, flags);
+
+      Iconable.LastComputedIcon.put(element, icon, flags);
     }
-    IconKey value = cachedValue.getValue();
-    return value.getIcon(flags);
+    return icon;
   }
 
   @NotNull
