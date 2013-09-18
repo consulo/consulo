@@ -52,7 +52,6 @@ import java.util.Map;
  */
 public abstract class ContentRootPanel extends JPanel {
   protected static final Color SOURCES_COLOR = new JBColor(new Color(0x0A50A1), DarculaColors.BLUE);
-  protected static final Color RESOURCES_COLOR = new JBColor(new Color(0x8C2277), new Color(0xBC2BA0));
   protected static final Color TESTS_COLOR = new Color(0x008C2E);
   protected static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
   private static final Color SELECTED_HEADER_COLOR = new JBColor(new Color(0xDEF2FF), UIUtil.getPanelBackground().darker());
@@ -112,7 +111,7 @@ public abstract class ContentRootPanel extends JPanel {
     if (contentFolders.length != 0) {
       final JComponent testSourcesComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.resources.group"),
                                                                          contentFolders,
-                                                                         RESOURCES_COLOR);
+                                                                         SOURCES_COLOR);
       this.add(testSourcesComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH,
                                                             GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
     }
@@ -130,7 +129,7 @@ public abstract class ContentRootPanel extends JPanel {
     if (contentFolders.length != 0) {
       final JComponent testSourcesComponent = createFolderGroupComponent(ProjectBundle.message("module.paths.test.resources.group"),
                                                                          contentFolders,
-                                                                         RESOURCES_COLOR);
+                                                                         TESTS_COLOR);
       this.add(testSourcesComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH,
                                                             GridBagConstraints.HORIZONTAL, new Insets(0, 0, 10, 0), 0, 0));
     }

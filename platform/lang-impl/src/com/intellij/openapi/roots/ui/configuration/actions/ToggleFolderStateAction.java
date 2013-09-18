@@ -45,23 +45,23 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     switch (contentFolderType) {
 
       case PRODUCTION:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.sources.action"));
+        //templatePresentation.setText(ProjectBundle.message("module.toggle.sources.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.sources.action.description"));
         break;
       case PRODUCTION_RESOURCE:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.resources.action"));
+        //templatePresentation.setText(ProjectBundle.message("module.toggle.resources.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.resources.action.description"));
         break;
       case TEST:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.test.sources.action"));
+        //templatePresentation.setText(ProjectBundle.message("module.toggle.test.sources.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.test.sources.action.description"));
         break;
       case TEST_RESOURCE:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.test.resources.action"));
+        //templatePresentation.setText(ProjectBundle.message("module.toggle.test.resources.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.test.resources.action.description"));
         break;
       case EXCLUDED:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.excluded.action"));
+        //templatePresentation.setText(ProjectBundle.message("module.toggle.excluded.action"));
         templatePresentation.setDescription(ProjectBundle.message("module.toggle.excluded.action.description"));
         break;
     }
