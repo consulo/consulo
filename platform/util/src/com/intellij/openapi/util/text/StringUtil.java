@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,7 @@ public class StringUtil extends StringUtilRt {
 
   @NonNls private static final String VOWELS = "aeiouy";
   @NonNls private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
+  @NonNls private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
 
   public static final NotNullFunction<String, String> QUOTER = new NotNullFunction<String, String>() {
     @Override
@@ -247,7 +249,6 @@ public class StringUtil extends StringUtilRt {
     return html.replaceAll("<(.|\n)*?>", "");
   }
 
-  @Nullable
   public static String toLowerCase(@Nullable final String str) {
     //noinspection ConstantConditions
     return str == null ? null : str.toLowerCase();
@@ -535,10 +536,16 @@ public class StringUtil extends StringUtilRt {
   @NotNull
   public static String escapeStringCharacters(@NotNull String s) {
     StringBuilder buffer = new StringBuilder(s.length());
-    escapeStringCharacters(s.length(), s, buffer);
+    escapeStringCharacters(s.length(), s, "\"", buffer);
     return buffer.toString();
   }
 
+  @NotNull
+  public static String escapeCharCharacters(@NotNull String s) {
+    StringBuilder buffer = new StringBuilder(s.length());
+    escapeStringCharacters(s.length(), s, "\'", buffer);
+    return buffer.toString();
+  }
 
   @NotNull
   public static String unescapeStringCharacters(@NotNull String s) {
@@ -735,6 +742,7 @@ public class StringUtil extends StringUtilRt {
     return toUpperCase(s.charAt(0)) + s.substring(1);
   }
 
+  @Contract("null -> false")
   public static boolean isCapitalized(@Nullable String s) {
     return s != null && !s.isEmpty() && Character.isUpperCase(s.charAt(0));
   }
@@ -792,34 +800,33 @@ public class StringUtil extends StringUtilRt {
   }
 
   /**
-   * Equivalent to testee.startsWith(firstPrefix + secondPrefix) but avoids creating an object for concatenation.
-   *
-   * @param testee
-   * @param firstPrefix
-   * @param secondPrefix
-   * @return
+   * Equivalent to string.startsWith(prefixes[0] + prefixes[1] + ...) but avoids creating an object for concatenation.
    */
-  public static boolean startsWithConcatenationOf(@NotNull String testee, @NotNull String firstPrefix, @NotNull String secondPrefix) {
-    int l1 = firstPrefix.length();
-    int l2 = secondPrefix.length();
-    if (testee.length() < l1 + l2) return false;
-    return testee.startsWith(firstPrefix) && testee.regionMatches(l1, secondPrefix, 0, l2);
+  public static boolean startsWithConcatenation(@NotNull String string, @NotNull String... prefixes) {
+    int offset = 0;
+    for (String prefix : prefixes) {
+      int prefixLen = prefix.length();
+      if (!string.regionMatches(offset, prefix, 0, prefixLen)) {
+        return false;
+      }
+      offset += prefixLen;
+    }
+    return true;
   }
 
-  /**
-   * Equivalent to testee.startsWith(firstPrefix + secondPrefix + thirdPrefix) but avoids creating an object for concatenation.
-   */
-  public static boolean startsWithConcatenationOf(@NotNull String testee,
+  /** @deprecated use {@link #startsWithConcatenation(String, String...)} (to remove in IDEA 14). */
+  @SuppressWarnings("UnusedDeclaration")
+  public static boolean startsWithConcatenationOf(@NotNull String string, @NotNull String firstPrefix, @NotNull String secondPrefix) {
+    return startsWithConcatenation(string, firstPrefix, secondPrefix);
+  }
+
+  /** @deprecated use {@link #startsWithConcatenation(String, String...)} (to remove in IDEA 14). */
+  @SuppressWarnings("UnusedDeclaration")
+  public static boolean startsWithConcatenationOf(@NotNull String string,
                                                   @NotNull String firstPrefix,
                                                   @NotNull String secondPrefix,
                                                   @NotNull String thirdPrefix) {
-    int l1 = firstPrefix.length();
-    int l2 = secondPrefix.length();
-    int l3 = thirdPrefix.length();
-    if (testee.length() < l1 + l2 + l3) return false;
-    return testee.startsWith(firstPrefix)
-           && testee.regionMatches(l1, secondPrefix, 0, l2)
-           && testee.regionMatches(l1 + l2, thirdPrefix, 0, l3);
+    return startsWithConcatenation(string, firstPrefix, secondPrefix, thirdPrefix);
   }
 
   @NotNull
@@ -886,14 +893,17 @@ public class StringUtil extends StringUtilRt {
     }
   }
 
+  @Contract("null -> false")
   public static boolean isNotEmpty(@Nullable String s) {
     return s != null && !s.isEmpty();
   }
 
+  @Contract("null -> true")
   public static boolean isEmpty(@Nullable String s) {
     return s == null || s.isEmpty();
   }
 
+  @Contract("null -> true")
   public static boolean isEmpty(@Nullable CharSequence cs) {
     return cs == null || cs.length() == 0;
   }
@@ -928,6 +938,7 @@ public class StringUtil extends StringUtilRt {
     return s;
   }
 
+  @Contract("null -> true")
   public static boolean isEmptyOrSpaces(@Nullable final String s) {
     if(s == null || s.isEmpty()) {
       return true;
@@ -1213,15 +1224,25 @@ public class StringUtil extends StringUtilRt {
   }
 
   @NotNull
-  public static String join(@NotNull Collection<? extends String> strings, @NotNull final String separator) {
-    final StringBuilder result = new StringBuilder();
+  public static String join(@NotNull Collection<? extends String> strings, @NotNull String separator) {
+    StringBuilder result = new StringBuilder();
+    join(strings, separator, result);
+    return result.toString();
+  }
+
+  public static void join(@NotNull Collection<? extends String> strings, @NotNull String separator, @NotNull StringBuilder result) {
+    boolean isFirst = true;
     for (String string : strings) {
-      if (string != null && !string.isEmpty()) {
-        if (result.length() != 0) result.append(separator);
+      if (string != null) {
+        if (isFirst) {
+          isFirst = false;
+        }
+        else {
+          result.append(separator);
+        }
         result.append(string);
       }
     }
-    return result.toString();
   }
 
   @NotNull
@@ -1277,6 +1298,16 @@ public class StringUtil extends StringUtilRt {
     long mbytes = fileSize * 100 / 1024 / 1024;
     final String size = mbytes / 100 + "." + formatMinor(mbytes % 100);
     return CommonBundle.message("format.file.size.mbytes", size);
+  }
+
+  @NotNull
+  public static String formatDuration(long duration) {
+    final long minutes = duration / 60000;
+    final long seconds = ((duration + 500L) % 60000) / 1000;
+    if (minutes > 0L) {
+      return minutes + " min " + seconds + " sec";
+    }
+    return seconds + " sec";
   }
 
   @NotNull
@@ -1435,7 +1466,7 @@ public class StringUtil extends StringUtilRt {
    * @param filter search filter
    * @return position of the first character accepted or -1 if not found
    */
-  public static int findFirst(@NotNull final String s, @NotNull CharFilter filter) {
+  public static int findFirst(@NotNull final CharSequence s, @NotNull CharFilter filter) {
     for (int i = 0; i < s.length(); i++) {
       char ch = s.charAt(i);
       if (filter.accept(ch)) {
@@ -1993,11 +2024,22 @@ public class StringUtil extends StringUtilRt {
     if (part1.length == part2.length) {
       return 0;
     }
-    else if (part1.length > idx) {
-      return 1;
-    }
     else {
-      return -1;
+      boolean left = part1.length > idx;
+      String[] parts = left ? part1 : part2;
+
+      for (; idx < parts.length; idx++) {
+        String p = parts[idx];
+        int cmp;
+        if (p.matches("\\d+")) {
+          cmp = new Integer(p).compareTo(0);
+        }
+        else {
+          cmp = 1;
+        }
+        if (cmp != 0) return left ? cmp : -cmp;
+      }
+      return 0;
     }
   }
 
@@ -2108,7 +2150,19 @@ public class StringUtil extends StringUtilRt {
    */
   @NotNull
   public static String[] splitByLines(@NotNull String string) {
-    return EOL_SPLIT_PATTERN.split(string);
+    return splitByLines(string, true);
+  }
+
+  /**
+   * Splits string by lines. If several line separators are in a row corresponding empty lines
+   * are also added to result if {@code excludeEmptyStrings} is {@code false}.
+   *
+   * @param string String to split
+   * @return array of strings
+   */
+  @NotNull
+  public static String[] splitByLines(@NotNull String string, boolean excludeEmptyStrings) {
+    return (excludeEmptyStrings ? EOL_SPLIT_PATTERN : EOL_SPLIT_PATTERN_WITH_EMPTY).split(string);
   }
 
   @NotNull
@@ -2323,12 +2377,17 @@ public class StringUtil extends StringUtilRt {
 
   @NotNull
   public static String shortenTextWithEllipsis(@NotNull final String text, final int maxLength, final int suffixLength) {
+    return shortenTextWithEllipsis(text, maxLength, suffixLength, false);
+  }
+
+  @NotNull
+  public static String shortenTextWithEllipsis(@NotNull final String text, final int maxLength, final int suffixLength, boolean useEllipsisSymbol) {
     final int prefix_length = maxLength - suffixLength - 3;
     assert prefix_length > 0;
     String result;
     final int textLength = text.length();
     if (textLength > maxLength) {
-      result = text.substring(0, prefix_length) + "..." + text.substring(textLength - suffixLength);
+      result = text.substring(0, prefix_length) + (useEllipsisSymbol ? "\u2026" : "...") + text.substring(textLength - suffixLength);
     }
     else {
       result = text;
@@ -2337,8 +2396,13 @@ public class StringUtil extends StringUtilRt {
   }
 
   @NotNull
-  public static String shortenPathWithEllipsis(@NotNull final String path, final int max_length) {
-    return shortenTextWithEllipsis(path, max_length, (int)(max_length * 0.7));
+  public static String shortenPathWithEllipsis(@NotNull final String path, final int maxLength, boolean useEllipsisSymbol) {
+    return shortenTextWithEllipsis(path, maxLength, (int)(maxLength * 0.7), useEllipsisSymbol);
+  }
+
+  @NotNull
+  public static String shortenPathWithEllipsis(@NotNull final String path, final int maxLength) {
+    return shortenPathWithEllipsis(path, maxLength, false);
   }
 
   public static boolean charsEqual(char a, char b, boolean ignoreCase) {
@@ -2444,6 +2508,14 @@ public class StringUtil extends StringUtilRt {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Say smallPart = "op" and bigPart="open". Method returns true for "Ope" and false for "ops"
+   */
+  public static boolean isBetween(@NotNull String string, @NotNull String smallPart, @NotNull String bigPart) {
+    final String s = string.toLowerCase();
+    return s.startsWith(smallPart.toLowerCase()) && bigPart.toLowerCase().startsWith(s);
   }
 
   /**

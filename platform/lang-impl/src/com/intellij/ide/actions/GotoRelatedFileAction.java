@@ -99,7 +99,7 @@ public class GotoRelatedFileAction extends AnAction {
   }
 
   private static JBPopup getPsiElementPopup(final Object[] elements, final Map<PsiElement, GotoRelatedItem> itemsMap,
-                                           final String title, final Processor<Object> processor) {
+                                            final String title, final Processor<Object> processor) {
 
     final Ref<Boolean> hasMnemonic = Ref.create(false);
     final Ref<ListCellRenderer> rendererRef = Ref.create(null);
@@ -123,6 +123,11 @@ public class GotoRelatedFileAction extends AnAction {
 
       @Override
       public String getContainerText(PsiElement element, String name) {
+        String customContainerName = itemsMap.get(element).getCustomContainerName();
+
+        if (customContainerName != null) {
+          return customContainerName;
+        }
         PsiFile file = element.getContainingFile();
         return file != null && !getElementText(element).equals(file.getName())
                ? "(" + file.getName() + ")"
@@ -312,23 +317,23 @@ public class GotoRelatedFileAction extends AnAction {
                                            final ListPopupImpl listPopup,
                                            final Map<PsiElement, GotoRelatedItem> itemsMap,
                                            final Processor<Object> processor) {
-      return new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          for (final Object item : listPopup.getListStep().getValues()) {
-            if (getMnemonic(item, itemsMap) == mnemonic) {
-              listPopup.setFinalRunnable(new Runnable() {
-                @Override
-                public void run() {
-                  processor.process(item);
-                }
-              });
-              listPopup.closeOk(null);
-            }
+    return new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        for (final Object item : listPopup.getListStep().getValues()) {
+          if (getMnemonic(item, itemsMap) == mnemonic) {
+            listPopup.setFinalRunnable(new Runnable() {
+              @Override
+              public void run() {
+                processor.process(item);
+              }
+            });
+            listPopup.closeOk(null);
           }
         }
-      };
-    }
+      }
+    };
+  }
 
   private static int getMnemonic(Object item, Map<PsiElement, GotoRelatedItem> itemsMap) {
     return (item instanceof GotoRelatedItem ? (GotoRelatedItem)item : itemsMap.get((PsiElement)item)).getMnemonic();

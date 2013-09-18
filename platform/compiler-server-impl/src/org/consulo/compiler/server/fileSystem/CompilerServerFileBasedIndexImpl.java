@@ -50,6 +50,11 @@ public class CompilerServerFileBasedIndexImpl extends FileBasedIndex {
   public void removeIndexableSet(@NotNull IndexableFileSet set) {
   }
 
+  @Override
+  public VirtualFile findFileById(Project project, int id) {
+    return null;
+  }
+
   @NotNull
   @Override
   public <K, V> List<V> getValues(@NotNull ID<K, V> indexId, @NotNull K dataKey, @NotNull GlobalSearchScope filter) {

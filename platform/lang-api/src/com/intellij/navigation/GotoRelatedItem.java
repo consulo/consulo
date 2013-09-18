@@ -40,7 +40,7 @@ public class GotoRelatedItem {
     myGroup = group;
     myMnemonic = mnemonic;
   }
-  
+
   public GotoRelatedItem(@NotNull PsiElement element, String group) {
     this(element, group, -1);
   }
@@ -55,6 +55,11 @@ public class GotoRelatedItem {
 
   @Nullable
   public String getCustomName() {
+    return null;
+  }
+
+  @Nullable
+  public String getCustomContainerName() {
     return null;
   }
 

@@ -53,4 +53,9 @@ public class CompilerServerStubIndexImpl extends StubIndex {
   public <Key> Collection<Key> getAllKeys(@NotNull StubIndexKey<Key, ?> indexKey, @NotNull Project project) {
     return Collections.emptyList();
   }
+
+  @Override
+  public <K> boolean processAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Project project, Processor<K> processor) {
+    return false;
+  }
 }

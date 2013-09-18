@@ -26,17 +26,17 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IntInlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -46,9 +46,12 @@ import java.util.concurrent.Callable;
 public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtension<Integer, SerializedStubTree, FileContent> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.StubUpdatingIndex");
 
+  // todo remove once we don't need this for stub-ast mismatch debug info
+  private static final FileAttribute INDEXED_STAMP = new FileAttribute("stubIndexStamp", 0, false);
+
   public static final ID<Integer, SerializedStubTree> INDEX_ID = ID.create("Stubs");
 
-  private static final int VERSION = 21;
+  private static final int VERSION = 25;
 
   private static final DataExternalizer<SerializedStubTree> KEY_EXTERNALIZER = new DataExternalizer<SerializedStubTree>() {
     @Override
@@ -70,18 +73,26 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     }
   };
 
+  private final Map<FileType,Integer> myVersionMap = computeVersionMap();
+
   public static boolean canHaveStub(@NotNull VirtualFile file) {
     final FileType fileType = file.getFileType();
     if (fileType instanceof LanguageFileType) {
-      Language l = ((LanguageFileType)fileType).getLanguage();
-      ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(l);
-      if (parserDefinition == null) return false;
+      final Language l = ((LanguageFileType)fileType).getLanguage();
+      final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(l);
+      if (parserDefinition == null) {
+        return false;
+      }
 
       final IFileElementType elementType = parserDefinition.getFileNodeType();
-      if (elementType instanceof IStubFileElementType &&
-                  (((IStubFileElementType)elementType).shouldBuildStubFor(file) ||
-                   IndexingStamp.isFileIndexed(file, INDEX_ID, IndexInfrastructure.getIndexCreationStamp(INDEX_ID)))) {
-        return true;
+      if (elementType instanceof IStubFileElementType) {
+        if (((IStubFileElementType)elementType).shouldBuildStubFor(file)) {
+          return true;
+        }
+        final ID indexId = IndexInfrastructure.getStubId(INDEX_ID, file.getFileType());
+        if (IndexingStamp.isFileIndexed(file, indexId, IndexInfrastructure.getIndexCreationStamp(indexId))) {
+          return true;
+        }
       }
     }
     final BinaryFileStubBuilder builder = BinaryFileStubBuilders.INSTANCE.forFileType(fileType);
@@ -121,17 +132,50 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
             final Stub rootStub = StubTreeBuilder.buildStubTree(inputData);
             if (rootStub == null) return;
 
+            VirtualFile file = inputData.getFile();
+            int contentLength = file.getFileType().isBinary() ? -1 : inputData.getContentAsText().length();
+            rememberIndexingStamp(file, contentLength);
+
             final BufferExposingByteArrayOutputStream bytes = new BufferExposingByteArrayOutputStream();
             SerializationManagerEx.getInstanceEx().serialize(rootStub, bytes);
 
-            final int key = Math.abs(FileBasedIndex.getFileId(inputData.getFile()));
-            result.put(key, new SerializedStubTree(bytes.getInternalBuffer(), bytes.size(), rootStub));
+            final int key = Math.abs(FileBasedIndex.getFileId(file));
+            result.put(key, new SerializedStubTree(bytes.getInternalBuffer(), bytes.size(), rootStub, file.getLength(), contentLength));
           }
         });
 
         return result;
       }
     };
+  }
+
+  private static void rememberIndexingStamp(final VirtualFile file, long contentLength) {
+    try {
+      DataOutputStream stream = INDEXED_STAMP.writeAttribute(file);
+      stream.writeLong(file.getTimeStamp());
+      stream.writeLong(contentLength);
+      stream.close();
+    }
+    catch (IOException e) {
+      LOG.error(e);
+    }
+  }
+
+  public static String getIndexingStampInfo(VirtualFile file) {
+    try {
+      DataInputStream stream = INDEXED_STAMP.readAttribute(file);
+      if (stream == null) {
+        return "no data";
+      }
+
+      long stamp = stream.readLong();
+      long size = stream.readLong();
+      stream.close();
+      return "indexed at " + stamp + " with size " + size;
+    }
+    catch (IOException e) {
+      return ExceptionUtil.getThrowableText(e);
+    }
   }
 
   @NotNull
@@ -159,11 +203,15 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
 
   @Override
   public int getVersion() {
-    return getCumulativeVersion();
+    return VERSION;
   }
 
-  private static int getCumulativeVersion() {
-    int version = VERSION;
+  public Map<FileType, Integer> getVersionMap() {
+    return myVersionMap;
+  }
+
+  private static Map<FileType, Integer> computeVersionMap() {
+    Map<FileType, Integer> map = new HashMap<FileType, Integer>();
     for (final FileType fileType : FileTypeManager.getInstance().getRegisteredFileTypes()) {
       if (fileType instanceof LanguageFileType) {
         Language l = ((LanguageFileType)fileType).getLanguage();
@@ -171,16 +219,16 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
         if (parserDefinition != null) {
           final IFileElementType type = parserDefinition.getFileNodeType();
           if (type instanceof IStubFileElementType) {
-            version += ((IStubFileElementType)type).getStubVersion();
+            map.put(fileType, ((IStubFileElementType)type).getStubVersion());
           }
         }
       }
       final BinaryFileStubBuilder builder = BinaryFileStubBuilders.INSTANCE.forFileType(fileType);
       if (builder != null) {
-        version += builder.getStubVersion();
+        map.put(fileType, builder.getStubVersion());
       }
     }
-    return version;
+    return map;
   }
 
   @NotNull
@@ -229,7 +277,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     return allIndices;
   }
 
-  private static class MyIndex extends MapReduceIndex<Integer, SerializedStubTree, FileContent> {
+  private class MyIndex extends MapReduceIndex<Integer, SerializedStubTree, FileContent> {
     private StubIndexImpl myStubIndex;
 
     public MyIndex(final ID<Integer, SerializedStubTree> indexId, final IndexStorage<Integer, SerializedStubTree> storage, final DataIndexer<Integer, SerializedStubTree, FileContent> indexer) throws StorageException {
@@ -306,7 +354,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
       return index;
     }
 
-    private static void checkNameStorage() throws StorageException {
+    private void checkNameStorage() throws StorageException {
       final SerializationManagerEx serializationManager = SerializationManagerEx.getInstanceEx();
       if (serializationManager.isNameStorageCorrupted()) {
         serializationManager.repairNameStorage();
@@ -315,7 +363,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
       }
     }
 
-    private static Map<StubIndexKey, Map<Object, StubIdList>> getStubTree(@NotNull final Map<Integer, SerializedStubTree> data)
+    private Map<StubIndexKey, Map<Object, StubIdList>> getStubTree(@NotNull final Map<Integer, SerializedStubTree> data)
       throws SerializerNotFoundException {
       final Map<StubIndexKey, Map<Object, StubIdList>> stubTree;
       if (!data.isEmpty()) {
@@ -387,6 +435,20 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
         if (stubIndex != null) {
           stubIndex.clearAllIndices();
         }
+
+        Map<FileType, Integer> versionMap = getVersionMap();
+        for (Map.Entry<FileType, Integer> entry : versionMap.entrySet()) {
+          ID stubId = IndexInfrastructure.getStubId(INDEX_ID, entry.getKey());
+          try {
+            IndexInfrastructure.rewriteVersion(IndexInfrastructure.getVersionFile(stubId), entry.getValue());
+          }
+          catch (IOException e) {
+            LOG.error(e);
+          }
+        }
+
+        //File dir= IndexInfrastructure.getStubVersionsDirectory();
+        //if (dir.exists()) dir.delete();
         super.clear();
       }
       finally {

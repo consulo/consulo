@@ -23,8 +23,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class StandardFileSystems {
   public static String FILE_PROTOCOL = "file";
+  public static String FILE_PROTOCOL_PREFIX = "file://";
   @Deprecated
   public static String JAR_PROTOCOL = "jar";
+  @Deprecated
+  public static String JAR_PROTOCOL_PREFIX = "jar://";
+  @Deprecated
   public static String JAR_SEPARATOR = "!/";
   public static String HTTP_PROTOCOL = "http";
 
