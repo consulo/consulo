@@ -20,9 +20,10 @@
 package com.intellij.psi.impl.search;
 
 import com.intellij.ide.highlighter.JavaClassFileType;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.SdkResolveScopeProvider;
 import com.intellij.psi.search.DelegatingGlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,27 @@ public class JavaSourceFilterScope extends DelegatingGlobalSearchScope {
       return myIndex.isInLibraryClasses(file);
     }
 
-    return myIndex.isInSourceContent(file);
+    if (myIndex.isInSourceContent(file)) {
+      return true;
+    }
+    final Project project = getProject();
+
+    if (project != null) {
+      for (OrderEntry entry : myIndex.getOrderEntriesForFile(file)) {
+        if (entry instanceof SdkOrderEntry) {
+          final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)entry;
+
+          for (SdkResolveScopeProvider provider : SdkResolveScopeProvider.EP_NAME.getExtensions()) {
+            final GlobalSearchScope scope = provider.getScope(project, sdkOrderEntry);
+
+            if (scope != null && scope.contains(file)) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
   }
 
 }

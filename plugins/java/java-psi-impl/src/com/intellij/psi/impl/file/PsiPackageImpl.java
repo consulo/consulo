@@ -29,8 +29,10 @@ import com.intellij.psi.impl.source.tree.java.PsiCompositeModifierList;
 import com.intellij.psi.scope.ElementClassHint;
 import com.intellij.psi.scope.NameHint;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.search.DelegatingGlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
+import com.intellij.reference.SoftReference;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
@@ -50,8 +52,7 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiJavaPackage, Qu
   public static boolean DEBUG = false;
   private volatile CachedValue<PsiModifierList> myAnnotationList;
   private volatile CachedValue<Collection<PsiDirectory>> myDirectories;
-  private volatile Set<String> myPublicClassNamesCache;
-  private final Object myPublicClassNamesCacheLock = new Object();
+  private volatile SoftReference<Set<String>> myPublicClassNamesCache;
 
   public PsiPackageImpl(PsiManager manager,
                         PsiPackageManager packageManager,
@@ -164,14 +165,24 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiJavaPackage, Qu
   }
 
   private Set<String> getClassNamesCache() {
-    if (myPublicClassNamesCache == null) {
-      Set<String> classNames = getFacade().getClassNames(this, allScope());
-      synchronized (myPublicClassNamesCacheLock) {
-        myPublicClassNamesCache = classNames;
+    SoftReference<Set<String>> ref = myPublicClassNamesCache;
+    Set<String> cache = ref == null ? null : ref.get();
+    if (cache == null) {
+      GlobalSearchScope scope = allScope();
+
+      if (!scope.isForceSearchingInLibrarySources()) {
+        scope = new DelegatingGlobalSearchScope(scope) {
+          @Override
+          public boolean isForceSearchingInLibrarySources() {
+            return true;
+          }
+        };
       }
+      cache = getFacade().getClassNames(this, scope);
+      myPublicClassNamesCache = new SoftReference<Set<String>>(cache);
     }
 
-    return myPublicClassNamesCache;
+    return cache;
   }
 
   @NotNull

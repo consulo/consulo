@@ -2963,6 +2963,7 @@
 
   <extensionPoints>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
+    <extensionPoint name="sdkResolveScopeProvider" interface="com.intellij.psi.SdkResolveScopeProvider"/>
 
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
@@ -4031,7 +4032,8 @@
     <extensionPoint name="externalSystemManager" interface="com.intellij.openapi.externalSystem.ExternalSystemManager"/>
     <extensionPoint name="externalProjectDataService"
                     interface="com.intellij.openapi.externalSystem.service.project.manage.ProjectDataService"/>
-
+    <extensionPoint name="externalSystemNotificationExtension"
+                    interface="com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationExtension" />
     <!--Remote servers-->
     <extensionPoint name="remoteServer.type" interface="com.intellij.remoteServer.ServerType"/>
     <extensionPoint name="remoteServer.deploymentSource.type" interface="com.intellij.remoteServer.configuration.deployment.DeploymentSourceType"/>

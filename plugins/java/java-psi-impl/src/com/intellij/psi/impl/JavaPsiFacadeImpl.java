@@ -34,6 +34,7 @@ import com.intellij.psi.impl.source.JavaDummyHolderFactory;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StubTreeLoader;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
@@ -319,7 +320,11 @@ public class JavaPsiFacadeImpl extends JavaPsiFacadeEx {
         for (PsiFile file : dir.getFiles()) {
           if (file instanceof PsiClassOwner && file.getViewProvider().getLanguages().size() == 1) {
             VirtualFile vFile = file.getVirtualFile();
-            if (vFile != null && !facade.isInSourceContent(vFile) && !(file instanceof PsiCompiledElement)) {
+            if (vFile != null &&
+                !(file instanceof PsiCompiledElement) &&
+                !facade.isInSourceContent(vFile) &&
+                (!scope.isForceSearchingInLibrarySources() ||
+                 !StubTreeLoader.getInstance().canHaveStub(vFile))) {
               continue;
             }
 
@@ -334,6 +339,7 @@ public class JavaPsiFacadeImpl extends JavaPsiFacadeEx {
       }
       return names == null ? Collections.<String>emptySet() : names;
     }
+
 
     @Override
     public boolean processPackageDirectories(@NotNull PsiJavaPackage psiPackage, @NotNull final GlobalSearchScope scope, @NotNull final Processor<PsiDirectory> consumer) {

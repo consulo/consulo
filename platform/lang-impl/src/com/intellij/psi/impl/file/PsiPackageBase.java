@@ -49,13 +49,18 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   private final Class<? extends ModuleExtension> myExtensionClass;
   private final String myQualifiedName;
 
-  protected abstract Collection<PsiDirectory> getAllDirectories();
-
   public PsiPackageBase(PsiManager manager, PsiPackageManager packageManager, Class<? extends ModuleExtension> extensionClass, String qualifiedName) {
     myManager = manager;
     myPackageManager = packageManager;
     myExtensionClass = extensionClass;
     myQualifiedName = qualifiedName;
+  }
+
+  @Deprecated
+  protected abstract Collection<PsiDirectory> getAllDirectories();
+
+  protected Collection<PsiDirectory> getAllDirectories(boolean includeLibrarySources) {
+    return getAllDirectories();
   }
 
   @Override
@@ -78,7 +83,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   @Override
   @NotNull
   public PsiDirectory[] getDirectories() {
-    final Collection<PsiDirectory> collection = getAllDirectories();
+    final Collection<PsiDirectory> collection = getAllDirectories(false);
     return ContainerUtil.toArray(collection, new PsiDirectory[collection.size()]);
   }
 
@@ -86,7 +91,8 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   @NotNull
   public PsiDirectory[] getDirectories(@NotNull GlobalSearchScope scope) {
     List<PsiDirectory> result = null;
-    final Collection<PsiDirectory> directories = getAllDirectories();
+    final boolean includeLibrarySources = scope.isForceSearchingInLibrarySources();
+    final Collection<PsiDirectory> directories = getAllDirectories(includeLibrarySources);
     for (final PsiDirectory directory : directories) {
       if (scope.contains(directory.getVirtualFile())) {
         if (result == null) result = new ArrayList<PsiDirectory>();
@@ -95,7 +101,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
     return result == null ? PsiDirectory.EMPTY_ARRAY : result.toArray(new PsiDirectory[result.size()]);
   }
-
 
   @Override
   public String getName() {

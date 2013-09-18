@@ -32,6 +32,7 @@
     <extensionPoint name="overridingMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
     <extensionPoint name="superMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
     <extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
+    <extensionPoint name="importFilter" interface="com.intellij.codeInsight.ImportFilter"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
