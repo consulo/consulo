@@ -21,6 +21,7 @@ package com.intellij.extapi.psi;
 
 import com.intellij.lang.*;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -158,6 +159,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase {
   public abstract ASTNode getNode();
 
   public void subtreeChanged() {
+    putUserData(Iconable.LastComputedIcon.LAST_COMPUTED_ICON, null);
   }
 
   @Override

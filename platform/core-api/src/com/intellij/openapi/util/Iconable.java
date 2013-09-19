@@ -34,7 +34,7 @@ public interface Iconable {
   Icon getIcon(@IconFlags int flags);
 
   class LastComputedIcon {
-    private static final Key<TIntObjectHashMap<Icon>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
+    public static final Key<TIntObjectHashMap<Icon>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
 
     @Nullable
     public static Icon get(@NotNull UserDataHolder holder, int flags) {

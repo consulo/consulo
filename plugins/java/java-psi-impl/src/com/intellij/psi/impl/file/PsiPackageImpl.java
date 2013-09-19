@@ -18,8 +18,6 @@ package com.intellij.psi.impl.file;
 import com.intellij.codeInsight.completion.scope.JavaCompletionHints;
 import com.intellij.lang.Language;
 import com.intellij.lang.java.JavaLanguage;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -279,16 +277,6 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiJavaPackage, Qu
       if (!processor.execute(aClass, state)) return false;
     }
     return true;
-  }
-
-  @Override
-  public boolean canNavigate() {
-    return isValid();
-  }
-
-  @Override
-  public ItemPresentation getPresentation() {
-    return ItemPresentationProviders.getItemPresentation(this);
   }
 
   @Override
