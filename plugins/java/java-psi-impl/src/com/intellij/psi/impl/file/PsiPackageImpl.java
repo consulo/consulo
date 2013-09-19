@@ -60,7 +60,7 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiJavaPackage, Qu
   }
 
   @Override
-  protected Collection<PsiDirectory> getAllDirectories() {
+  protected Collection<PsiDirectory> getAllDirectories(boolean includeLibrarySource) {
     if (myDirectories == null) {
       myDirectories = CachedValuesManager.getManager(myManager.getProject()).createCachedValue(new CachedValueProvider<Collection<PsiDirectory>>() {
         @Override
@@ -99,7 +99,7 @@ public class PsiPackageImpl extends PsiPackageBase implements PsiJavaPackage, Qu
 
   @Override
   public boolean isValid() {
-    return PsiPackageImplementationHelper.getInstance().packagePrefixExists(this) || !getAllDirectories().isEmpty();
+    return PsiPackageImplementationHelper.getInstance().packagePrefixExists(this) || !getAllDirectories(true).isEmpty();
   }
 
   @Override

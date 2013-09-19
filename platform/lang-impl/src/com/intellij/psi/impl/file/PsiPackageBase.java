@@ -61,11 +61,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     myQualifiedName = qualifiedName;
   }
 
-  @Deprecated
-  protected Collection<PsiDirectory> getAllDirectories() {
-    return Collections.emptyList();
-  }
-
   protected Collection<PsiDirectory> getAllDirectories(boolean inLibrarySources) {
     List<PsiDirectory> directories = new ArrayList<PsiDirectory>();
     PsiManager manager = PsiManager.getInstance(getProject());
