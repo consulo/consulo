@@ -748,9 +748,12 @@ public class AllIcons {
     public static final Icon FinalMark = IconLoader.getIcon("/nodes/finalMark.png"); // 16x16
     public static final Icon Folder = IconLoader.getIcon("/nodes/folder.png"); // 16x16
     public static final Icon Function = IconLoader.getIcon("/nodes/function.png"); // 16x16
+    public static final Icon Lambda = IconLoader.getIcon("/nodes/lambda.png"); // 16x16
     public static final Icon HomeFolder = IconLoader.getIcon("/nodes/homeFolder.png"); // 16x16
     public static final Icon InspectionResults = IconLoader.getIcon("/nodes/inspectionResults.png"); // 16x16
     public static final Icon Interface = IconLoader.getIcon("/nodes/interface.png"); // 16x16
+    public static final Icon Trait = IconLoader.getIcon("/nodes/trait.png"); // 16x16
+    public static final Icon TypeAlias = IconLoader.getIcon("/nodes/type_alias.png"); // 16x16
     public static final Icon J2eeParameter = IconLoader.getIcon("/nodes/j2eeParameter.png"); // 16x16
     public static final Icon JarDirectory = IconLoader.getIcon("/nodes/jarDirectory.png"); // 16x16
     public static final Icon JavaDocFolder = IconLoader.getIcon("/nodes/javaDocFolder.png"); // 16x16
@@ -828,6 +831,7 @@ public class AllIcons {
     public static final Icon UpFolder = IconLoader.getIcon("/nodes/upFolder.png"); // 16x16
     public static final Icon UpLevel = IconLoader.getIcon("/nodes/upLevel.png"); // 16x16
     public static final Icon Variable = IconLoader.getIcon("/nodes/variable.png"); // 16x16
+    public static final Icon Value = IconLoader.getIcon("/nodes/value.png"); // 16x16
     public static final Icon WarningIntroduction = IconLoader.getIcon("/nodes/warningIntroduction.png"); // 16x16
     public static final Icon WebFolder = IconLoader.getIcon("/nodes/webFolder.png"); // 16x16
     public static final Icon Weblistener = IconLoader.getIcon("/nodes/weblistener.png"); // 16x16
