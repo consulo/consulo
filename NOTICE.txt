@@ -1,0 +1,1 @@
+Some icons from Kotlin repo - license Apache 2.
