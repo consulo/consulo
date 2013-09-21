@@ -17,8 +17,11 @@ package com.intellij.core;
 
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,14 +65,14 @@ public class CoreSdkTable extends SdkTable {
   }
 
   @Override
-  public void addSdk(Sdk jdk) {
+  public void addSdk(@NotNull Sdk jdk) {
     synchronized (mySdks) {
       mySdks.add(jdk);
     }
   }
 
   @Override
-  public void removeSdk(Sdk jdk) {
+  public void removeSdk(@NotNull Sdk jdk) {
     synchronized (mySdks) {
       mySdks.remove(jdk);
     }
@@ -88,6 +91,22 @@ public class CoreSdkTable extends SdkTable {
   @Override
   public SdkTypeId getSdkTypeByName(String name) {
     return CoreSdkType.INSTANCE;
+  }
+
+  @Nullable
+  @Override
+  public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
+    SdkType sdkType = SdkType.findInstance(sdkTypeClass);
+    if(sdkType == null) {
+      return null;
+    }
+
+    for (Sdk sdk : mySdks) {
+      if(sdk.isBundled() && sdk.getSdkType() == sdkType) {
+        return sdk;
+      }
+    }
+    return null;
   }
 
   @Override

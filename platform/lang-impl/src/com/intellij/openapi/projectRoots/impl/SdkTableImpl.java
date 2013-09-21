@@ -121,15 +121,31 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     return result;
   }
 
+  @Nullable
   @Override
-  public void addSdk(Sdk sdk) {
+  public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
+    SdkType sdkType = SdkType.findInstance(sdkTypeClass);
+    if(sdkType == null) {
+      return null;
+    }
+
+    for (Sdk sdk : mySdks) {
+      if(sdk.isBundled() && sdk.getSdkType() == sdkType) {
+        return sdk;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public void addSdk(@NotNull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     mySdks.add(sdk);
     myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkAdded(sdk);
   }
 
   @Override
-  public void removeSdk(Sdk sdk) {
+  public void removeSdk(@NotNull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     myMessageBus.syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
     mySdks.remove(sdk);
@@ -208,8 +224,8 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
       if (sdk.isBundled()) {
         continue;
       }
-      final Element e = new Element(ELEMENT_SDK);
       try {
+        final Element e = new Element(ELEMENT_SDK);
         ((SdkImpl)sdk).writeExternal(e);
         element.addContent(e);
       }

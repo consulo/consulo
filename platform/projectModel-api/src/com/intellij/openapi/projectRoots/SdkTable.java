@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
 import org.consulo.lombok.annotations.ApplicationService;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
@@ -26,7 +27,7 @@ import java.util.List;
 
 @ApplicationService
 public abstract class SdkTable {
-  public static Topic<Listener> SDK_TABLE_TOPIC = Topic.create("Project SDK table", Listener.class);
+  public static Topic<Listener> SDK_TABLE_TOPIC = Topic.create("Sdk table", Listener.class);
 
   public interface Listener extends EventListener {
     void sdkAdded(Sdk sdk);
@@ -67,15 +68,18 @@ public abstract class SdkTable {
     return found;
   }
 
-  public abstract void addSdk(Sdk sdk);
+  public abstract void addSdk(@NotNull Sdk sdk);
 
-  public abstract void removeSdk(Sdk sdk);
+  public abstract void removeSdk(@NotNull Sdk sdk);
 
   public abstract void updateSdk(Sdk originalSdk, Sdk modifiedSdk);
 
   public abstract SdkTypeId getDefaultSdkType();
 
   public abstract SdkTypeId getSdkTypeByName(String name);
+
+  @Nullable
+  public abstract Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass);
 
   public abstract Sdk createSdk(final String name, final SdkTypeId sdkType);
 }
