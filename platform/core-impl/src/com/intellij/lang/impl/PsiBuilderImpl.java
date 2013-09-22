@@ -48,7 +48,6 @@ import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -1062,9 +1061,13 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
     }
   }
 
-  @NonNls private static final String UNBALANCED_MESSAGE = "Unbalanced tree. Most probably caused by unbalanced markers. " +
-                                                           "Try calling setDebugMode(true) against PsiBuilder passed to identify exact location of the problem";
-
+  private static String makeUnbalandedMessage(PsiFile psiFile) {
+    StringBuilder builder = new StringBuilder(
+      "Unbalanced tree. Most probably caused by unbalanced markers. " +
+       "Try calling setDebugMode(true) against PsiBuilder passed to identify exact location of the problem. File url: ");
+    builder.append(psiFile.getVirtualFile());
+    return builder.toString();
+  }
   @NotNull
   private DiffLog merge(@NotNull final ASTNode oldRoot, @NotNull StartMarker newRoot) {
     DiffLog diffLog = new DiffLog();
@@ -1109,7 +1112,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
         if (curDepth > maxDepth) maxDepth = curDepth;
       }
       else if (item instanceof DoneMarker) {
-        if (((DoneMarker)item).myStart != curNode) LOG.error(UNBALANCED_MESSAGE);
+        if (((DoneMarker)item).myStart != curNode) LOG.error(makeUnbalandedMessage(myFile));
         curNode = nodes.pop();
         curDepth--;
       }
@@ -1144,7 +1147,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
     myLexStarts[myCurrentLexeme + 1] = 0;
     myLexTypes[myCurrentLexeme] = null;
 
-    LOG.assertTrue(curNode == rootMarker, UNBALANCED_MESSAGE);
+    LOG.assertTrue(curNode == rootMarker, makeUnbalandedMessage(myFile));
 
     checkTreeDepth(maxDepth, rootMarker.getTokenType() instanceof IFileElementType);
 
@@ -1160,7 +1163,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
       final ProductionMarker item = myProduction.get(i);
 
       if (item instanceof StartMarker && ((StartMarker)item).myDoneMarker == null) {
-        LOG.error(UNBALANCED_MESSAGE);
+        LOG.error(makeUnbalandedMessage(myFile));
       }
 
       final int prevProductionLexIndex = myProduction.get(i - 1).myLexemeIndex;
@@ -1303,7 +1306,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
     }
 
     if (type == null) {
-      throw new RuntimeException(UNBALANCED_MESSAGE);
+      throw new RuntimeException(makeUnbalandedMessage(marker.myBuilder.myFile));
     }
 
     return ASTFactory.composite(type);

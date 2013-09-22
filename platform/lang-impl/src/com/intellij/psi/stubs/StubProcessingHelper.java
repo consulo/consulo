@@ -40,9 +40,9 @@ public class StubProcessingHelper extends StubProcessingHelperBase {
                                             VirtualFile virtualFile,
                                             StubTree stubTreeFromIndex) {
     String details = "Please report the problem to JetBrains with the file attached";
-    details += "\npsiFile" + psiFile;
-    details += "\npsiFile.class" + psiFile.getClass();
-    details += "\npsiFile.lang" + psiFile.getLanguage();
+    details += "\npsiFile: " + psiFile;
+    details += "\npsiFile.class: " + psiFile.getClass();
+    details += "\npsiFile.lang: " + psiFile.getLanguage();
     return LogMessageEx.createEvent("PSI and index do not match",
                                     details,
                                     new Attachment(virtualFile != null ? virtualFile.getPath() + "_file.txt" : "vFile.txt", psiFile.getText()),
