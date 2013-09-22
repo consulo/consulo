@@ -502,6 +502,16 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     });
   }
 
+  public static boolean showSdkSettings(@NotNull Project project, @NotNull final Sdk sdk) {
+    final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
+    return ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
+      @Override
+      public void run() {
+        configurable.select(sdk, true);
+      }
+    });
+  }
+
   public static boolean showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
     return ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
