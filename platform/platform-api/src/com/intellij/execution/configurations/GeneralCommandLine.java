@@ -17,6 +17,7 @@ package com.intellij.execution.configurations;
 
 import com.intellij.execution.CommandLineUtil;
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.Platform;
 import com.intellij.execution.process.ProcessNotCreatedException;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.diagnostic.Logger;
@@ -43,6 +44,8 @@ import java.util.*;
  * <p/>
  * Main idea of the class is to accept parameters "as-is", just as they should look to an external process, and quote/escape them
  * as required by the underlying platform.
+ *
+ * @see com.intellij.execution.process.OSProcessHandler
  */
 public class GeneralCommandLine implements UserDataHolder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.GeneralCommandLine");
@@ -198,12 +201,13 @@ public class GeneralCommandLine implements UserDataHolder {
    * Prepares command (quotes and escapes all arguments) and returns it as a newline-separated list
    * (suitable e.g. for passing in an environment variable).
    *
+   * @param platform a target platform
    * @return command as a newline-separated list.
    */
   @NotNull
-  public String getPreparedCommandLine() {
+  public String getPreparedCommandLine(@NotNull Platform platform) {
     String exePath = myExePath != null ? myExePath : "";
-    return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList()), "\n");
+    return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList(), platform), "\n");
   }
 
   public Process createProcess() throws ExecutionException {

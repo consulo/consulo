@@ -15,8 +15,10 @@
  */
 package com.intellij.execution.process;
 
+import com.intellij.execution.TaskExecutor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
+import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.io.BaseOutputReader;
 import org.jetbrains.annotations.NotNull;
@@ -28,19 +30,19 @@ import java.util.concurrent.*;
 
 import static com.intellij.util.io.BaseOutputReader.AdaptiveSleepingPolicy;
 
-public class BaseOSProcessHandler extends ProcessHandler {
+public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.process.OSProcessHandlerBase");
 
   @NotNull protected final Process myProcess;
   @Nullable protected final String myCommandLine;
   protected final ProcessWaitFor myWaitFor;
-  @Nullable private final Charset myCharset;
+  @Nullable protected final Charset myCharset;
 
   public BaseOSProcessHandler(@NotNull final Process process, @Nullable final String commandLine, @Nullable Charset charset) {
     myProcess = process;
     myCommandLine = commandLine;
     myCharset = charset;
-    myWaitFor = new ProcessWaitFor(process);
+    myWaitFor = new ProcessWaitFor(process, this);
   }
 
   /**
@@ -52,13 +54,23 @@ public class BaseOSProcessHandler extends ProcessHandler {
     return ExecutorServiceHolder.ourThreadExecutorsService.submit(task);
   }
 
+  @Override
+  public Future<?> executeTask(Runnable task) {
+    return executeOnPooledThread(task);
+  }
+
   @NotNull
   public Process getProcess() {
     return myProcess;
   }
 
-  protected boolean useAdaptiveSleepingPolicyWhenReadingOutput() { return false; }
-  protected boolean processHasSeparateErrorStream() { return true; }
+  protected boolean useAdaptiveSleepingPolicyWhenReadingOutput() {
+    return false;
+  }
+
+  protected boolean processHasSeparateErrorStream() {
+    return true;
+  }
 
   @Override
   public void startNotify() {
@@ -73,7 +85,10 @@ public class BaseOSProcessHandler extends ProcessHandler {
           BaseOutputReader.SleepingPolicy sleepingPolicy =
             useAdaptiveSleepingPolicyWhenReadingOutput() ? new AdaptiveSleepingPolicy() : BaseOutputReader.SleepingPolicy.SIMPLE;
           final BaseOutputReader stdoutReader = new SimpleOutputReader(createProcessOutReader(), ProcessOutputTypes.STDOUT, sleepingPolicy);
-          final BaseOutputReader stderrReader = processHasSeparateErrorStream() ? new SimpleOutputReader(createProcessErrReader(), ProcessOutputTypes.STDERR, sleepingPolicy) : null;
+          final BaseOutputReader stderrReader = processHasSeparateErrorStream()
+                                                ? new SimpleOutputReader(createProcessErrReader(), ProcessOutputTypes.STDERR,
+                                                                         sleepingPolicy)
+                                                : null;
 
           myWaitFor.setTerminationCallback(new Consumer<Integer>() {
             @Override
@@ -174,7 +189,9 @@ public class BaseOSProcessHandler extends ProcessHandler {
     return myProcess.getOutputStream();
   }
 
-  /** @deprecated internal use only (to remove in IDEA 13) */
+  /**
+   * @deprecated internal use only (to remove in IDEA 13)
+   */
   @Nullable
   public String getCommandLine() {
     return myCommandLine;
@@ -185,60 +202,15 @@ public class BaseOSProcessHandler extends ProcessHandler {
     return myCharset;
   }
 
-  private static class ExecutorServiceHolder {
+  public static class ExecutorServiceHolder {
     private static final ExecutorService ourThreadExecutorsService = createServiceImpl();
 
     private static ThreadPoolExecutor createServiceImpl() {
-      return new ThreadPoolExecutor(10, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ThreadFactory() {
-        @NotNull
-        @Override
-        @SuppressWarnings({"HardCodedStringLiteral"})
-        public Thread newThread(@NotNull Runnable r) {
-          return new Thread(r, "OSProcessHandler pooled thread");
-        }
-      });
-    }
-  }
-
-  protected class ProcessWaitFor {
-    private final Future<?> myWaitForThreadFuture;
-    private final BlockingQueue<Consumer<Integer>> myTerminationCallback = new ArrayBlockingQueue<Consumer<Integer>>(1);
-
-    public void detach() {
-      myWaitForThreadFuture.cancel(true);
+      return new ThreadPoolExecutor(10, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), ConcurrencyUtil.newNamedThreadFactory("OSProcessHandler pooled thread"));
     }
 
-
-    public ProcessWaitFor(final Process process) {
-      myWaitForThreadFuture = executeOnPooledThread(new Runnable() {
-        @Override
-        public void run() {
-          int exitCode = 0;
-          try {
-            while (true) {
-              try {
-                exitCode = process.waitFor();
-                break;
-              }
-              catch (InterruptedException e) {
-                LOG.debug(e);
-              }
-            }
-          }
-          finally {
-            try {
-              myTerminationCallback.take().consume(exitCode);
-            }
-            catch (InterruptedException e) {
-              LOG.info(e);
-            }
-          }
-        }
-      });
-    }
-
-    public void setTerminationCallback(Consumer<Integer> r) {
-      myTerminationCallback.offer(r);
+    public static Future<?> submit(Runnable task) {
+      return ourThreadExecutorsService.submit(task);
     }
   }
 
