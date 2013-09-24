@@ -5,7 +5,6 @@
   <description>Import Maven projects and execute Maven goals</description>
   <vendor>JetBrains</vendor>
   <depends>com.intellij.xml</depends>
-  <depends>com.intellij.xml.dom</depends>
   <depends>org.consulo.java</depends>
   <extensionPoints>
     <extensionPoint name="importer" interface="org.jetbrains.idea.maven.importing.MavenImporter"/>

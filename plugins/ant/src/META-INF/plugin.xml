@@ -7,7 +7,6 @@
 
   <resource-bundle>com.intellij.lang.ant.resources.AntActionsBundle</resource-bundle>
   <depends>com.intellij.properties</depends>
-  <depends>com.intellij.xml.dom</depends>
   <depends>org.consulo.java</depends>
 
   <extensionPoints>

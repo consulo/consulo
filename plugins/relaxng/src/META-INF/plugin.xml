@@ -2,7 +2,6 @@
   <id>com.intellij.xml.relaxng</id>
   <name>RelaxNG</name>
   <depends>com.intellij.xml</depends>
-  <depends>com.intellij.xml.dom</depends>
 
   <extensions defaultExtensionNs="com.intellij.xml">
     <standardResourceProvider implementation="org.intellij.plugins.relaxNG.ApplicationLoader$ResourceProvider"/>

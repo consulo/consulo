@@ -132,8 +132,8 @@
       <module fileurl="file://$PROJECT_DIR$/platform/xdebugger-impl/xdebugger-impl.iml" filepath="$PROJECT_DIR$/platform/xdebugger-impl/xdebugger-impl.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-api/xml-api.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-api/xml-api.iml" group="plugins/xml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-copyright/xml-copyright.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-copyright/xml-copyright.iml" group="plugins/xml" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/xml-dom/xml-dom-api/xml-dom-api.iml" filepath="$PROJECT_DIR$/plugins/xml-dom/xml-dom-api/xml-dom-api.iml" group="plugins/xml" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/xml-dom/xml-dom-impl/xml-dom-impl.iml" filepath="$PROJECT_DIR$/plugins/xml-dom/xml-dom-impl/xml-dom-impl.iml" group="plugins/xml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-dom-api/xml-dom-api.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-dom-api/xml-dom-api.iml" group="plugins/xml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-dom-impl/xml-dom-impl.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-dom-impl/xml-dom-impl.iml" group="plugins/xml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-impl/xml-impl.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-impl/xml-impl.iml" group="plugins/xml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-intellilang/xml-intellilang.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-intellilang/xml-intellilang.iml" group="plugins/xml" />
       <module fileurl="file://$PROJECT_DIR$/plugins/xml/xml-tests/xml-tests.iml" filepath="$PROJECT_DIR$/plugins/xml/xml-tests/xml-tests.iml" group="plugins/xml" />

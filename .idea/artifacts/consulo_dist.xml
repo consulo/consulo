@@ -67,10 +67,6 @@
             <element id="archive" name="xml-intellilang.jar">
               <element id="module-output" name="xml-intellilang" />
             </element>
-          </element>
-        </element>
-        <element id="directory" name="xml-dom">
-          <element id="directory" name="lib">
             <element id="archive" name="xml-dom.jar">
               <element id="module-output" name="xml-dom-impl" />
               <element id="module-output" name="xml-dom-api" />

@@ -18,7 +18,6 @@ package com.intellij.lang.ant.dom;
 import com.intellij.pom.references.PomService;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlElement;
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomTarget;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;

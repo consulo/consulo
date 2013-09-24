@@ -2,7 +2,6 @@
   <id>com.intellij.spellchecker</id>
   <name>Spellchecker</name>
   <depends>com.intellij.xml</depends>
-  <depends>com.intellij.xml.dom</depends>
 
   <actions>
     <group id="com.intellij.spellchecker.actions.SpellingPopupActionGroup"
