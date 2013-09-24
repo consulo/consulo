@@ -1065,7 +1065,7 @@ public class PsiBuilderImpl extends UserDataHolderBase implements PsiBuilder {
     StringBuilder builder = new StringBuilder(
       "Unbalanced tree. Most probably caused by unbalanced markers. " +
        "Try calling setDebugMode(true) against PsiBuilder passed to identify exact location of the problem. File url: ");
-    builder.append(psiFile.getVirtualFile());
+    builder.append(psiFile == null ? null : psiFile.getVirtualFile());
     return builder.toString();
   }
   @NotNull
