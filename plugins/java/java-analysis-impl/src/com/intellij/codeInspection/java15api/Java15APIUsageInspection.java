@@ -15,12 +15,11 @@
  */
 package com.intellij.codeInspection.java15api;
 
-import com.intellij.ToolExtensionPoints;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.GroupNames;
 import com.intellij.codeInspection.*;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.ide.ui.ListCellRendererWrapper;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.EffectiveLanguageLevelUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -34,7 +33,6 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ide.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -64,6 +62,9 @@ public class Java15APIUsageInspection extends BaseJavaBatchLocalInspectionTool {
   @NonNls private static final String EFFECTIVE_LL = "effectiveLL";
 
   private LanguageLevel myEffectiveLanguageLevel = null;
+
+  private static final ExtensionPointName<FileCheckingInspection> EP_NAME =
+    ExtensionPointName.create("org.consulo.java.java15InspectionTool");
 
   static {
     ourPresentableShortMessage.put(LanguageLevel.JDK_1_3, "1.4");
@@ -235,7 +236,6 @@ public class Java15APIUsageInspection extends BaseJavaBatchLocalInspectionTool {
   private class MyVisitor extends JavaElementVisitor {
     private final ProblemsHolder myHolder;
     private final boolean myOnTheFly;
-    private final ExtensionPoint<FileCheckingInspection> point = Extensions.getRootArea().getExtensionPoint(ToolExtensionPoints.JAVA15_INSPECTION_TOOL);
 
     public MyVisitor(final ProblemsHolder holder, boolean onTheFly) {
       myHolder = holder;
@@ -317,7 +317,7 @@ public class Java15APIUsageInspection extends BaseJavaBatchLocalInspectionTool {
 
     @Override
     public void visitFile(PsiFile file) {
-      for (FileCheckingInspection inspection : point.getExtensions()) {
+      for (FileCheckingInspection inspection : EP_NAME.getExtensions()) {
         ProblemDescriptor[] descriptors = inspection.checkFile(file, InspectionManager.getInstance(file.getProject()), myOnTheFly);
         if (descriptors != null) {
           for (ProblemDescriptor descriptor : descriptors) {

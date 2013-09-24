@@ -22,7 +22,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.util.PlatformUtils;
 import org.apache.oro.io.GlobFilenameFilter;
 
 import java.io.File;
@@ -53,9 +52,8 @@ public class ProjectCheckoutListener implements CheckoutListener {
 
   static String getProductNameWithArticle() {
     final ApplicationNamesInfo namesInfo = ApplicationNamesInfo.getInstance();
-    // example: "to create an IntelliJ IDEA project" (full product name is ok);
-    // "to create a JetBrains Astella project" (better use not full product name: "to create an Astella project")
-    final String productName = PlatformUtils.isIdea() ? namesInfo.getFullProductName() : namesInfo.getProductName();
+
+    final String productName = namesInfo.getProductName();
     final String article = StringUtil.isVowel(Character.toLowerCase(productName.charAt(0))) ? "an " : "a ";
     return article + productName;
   }

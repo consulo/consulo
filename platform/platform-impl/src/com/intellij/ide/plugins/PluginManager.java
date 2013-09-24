@@ -260,7 +260,7 @@ public class PluginManager {
     }
 
     final IdeaPluginDescriptor corePluginDescriptor = idToDescriptorMap.get(PluginId.getId(CORE_PLUGIN_ID));
-    assert corePluginDescriptor != null : CORE_PLUGIN_ID + " not found; platform prefix is " + System.getProperty(PlatformUtils.PLATFORM_PREFIX_KEY);
+    assert corePluginDescriptor != null : CORE_PLUGIN_ID + " not found.";
     for (IdeaPluginDescriptorImpl descriptor : result) {
       if (descriptor != corePluginDescriptor) {
         descriptor.insertDependency(corePluginDescriptor);

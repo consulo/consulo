@@ -19,7 +19,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,7 @@ public abstract class IdeFrameDecorator implements Disposable {
   @Nullable
   public static IdeFrameDecorator decorate(@NotNull IdeFrameImpl frame) {
     if (SystemInfo.isMac) {
-      return new MacMainFrameDecorator(frame, PlatformUtils.isAppCode());
+      return new MacMainFrameDecorator(frame, false);
     }
     else if (SystemInfo.isWindows) {
       return new WinMainFrameDecorator(frame);

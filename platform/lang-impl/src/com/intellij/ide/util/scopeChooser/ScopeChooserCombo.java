@@ -49,7 +49,6 @@ import com.intellij.usages.Usage;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewManager;
 import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.TreeItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -237,11 +236,8 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
       result.add(GlobalSearchScope.allScope(project));
     }
 
-    if (!PlatformUtils.isAppCode()) { // TODO: fix these scopes in AppCode
-      result.add(GlobalSearchScopes.projectProductionScope(project));
-      result.add(GlobalSearchScopes.projectTestScope(project));
-    }
-
+    result.add(GlobalSearchScopes.projectProductionScope(project));
+    result.add(GlobalSearchScopes.projectTestScope(project));
     result.add(GlobalSearchScopes.openFilesScope(project));
 
     if (dataContext != null) {
@@ -250,15 +246,14 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         dataContextElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
       }
       if (dataContextElement != null) {
-        if (!PlatformUtils.isAppCode()) { // TODO: have an API to disable module scopes.
-          Module module = ModuleUtilCore.findModuleForPsiElement(dataContextElement);
-          if (module == null) {
-            module = LangDataKeys.MODULE.getData(dataContext);
-          }
-          if (module != null) {
-            result.add(module.getModuleScope());
-          }
+        Module module = ModuleUtilCore.findModuleForPsiElement(dataContextElement);
+        if (module == null) {
+          module = LangDataKeys.MODULE.getData(dataContext);
         }
+        if (module != null) {
+          result.add(module.getModuleScope());
+        }
+
         if (dataContextElement.getContainingFile() != null) {
           result.add(new LocalSearchScope(dataContextElement, IdeBundle.message("scope.current.file")));
         }

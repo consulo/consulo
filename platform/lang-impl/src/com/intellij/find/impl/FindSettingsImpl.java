@@ -29,7 +29,6 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizableStringList;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.PlatformUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -67,15 +66,9 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     RECENT_FILE_MASKS.add("*.as");
     RECENT_FILE_MASKS.add("*.css");
     RECENT_FILE_MASKS.add("*.mxml");
-    if (PlatformUtils.isPyCharm()) {
-      RECENT_FILE_MASKS.add("*.py");
-    }
-    else if (PlatformUtils.isRubyMine()) {
-      RECENT_FILE_MASKS.add("*.rb");
-    }
-    else if (PlatformUtils.isPhpStorm()) {
-      RECENT_FILE_MASKS.add("*.php");
-    }
+    RECENT_FILE_MASKS.add("*.py");
+    RECENT_FILE_MASKS.add("*.rb");
+    RECENT_FILE_MASKS.add("*.php");
   }
 
   @Override

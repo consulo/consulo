@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.ant;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.compiler.ant.taskdefs.PatternSetRef;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
@@ -33,7 +32,7 @@ public abstract class ChunkCustomCompilerExtension {
    * Extension point name
    */
   public static final ExtensionPointName<ChunkCustomCompilerExtension> EP_NAME =
-    ExtensionPointName.create(ExtensionPoints.ANT_CUSTOM_COMPILER);
+    ExtensionPointName.create("com.intellij.antCustomCompiler");
   /**
    * Comparator that compares extensions using names. It is used for make order of elements predictable.
    */

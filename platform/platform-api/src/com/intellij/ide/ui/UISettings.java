@@ -25,7 +25,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.Accessor;
@@ -73,14 +72,14 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
   public boolean SHOW_NAVIGATION_BAR = true;
   public boolean ALWAYS_SHOW_WINDOW_BUTTONS = false;
   public boolean CYCLE_SCROLLING = true;
-  public boolean SCROLL_TAB_LAYOUT_IN_EDITOR = PlatformUtils.isAppCode();
+  public boolean SCROLL_TAB_LAYOUT_IN_EDITOR;
   public boolean SHOW_CLOSE_BUTTON = true;
   public int EDITOR_TAB_PLACEMENT = 1;
   public boolean HIDE_KNOWN_EXTENSION_IN_TABS = false;
   public boolean SHOW_ICONS_IN_QUICK_NAVIGATION = true;
   public boolean CLOSE_NON_MODIFIED_FILES_FIRST = false;
   public boolean ACTIVATE_MRU_EDITOR_ON_CLOSE = false;
-  public boolean ACTIVATE_RIGHT_EDITOR_ON_CLOSE = PlatformUtils.isAppCode();
+  public boolean ACTIVATE_RIGHT_EDITOR_ON_CLOSE;
   public boolean ANTIALIASING_IN_EDITOR = true;
   public boolean MOVE_MOUSE_ON_DEFAULT_BUTTON = false;
   public boolean ENABLE_ALPHA_MODE = false;
@@ -115,17 +114,8 @@ public class UISettings implements PersistentStateComponent<UISettings>, Exporta
 
   public UISettings() {
     myListenerList = new EventListenerList();
-    tweakPlatformDefaults();
-    setSystemFontFaceAndSize();
-  }
 
-  private void tweakPlatformDefaults() {
-    // TODO: Make it pluggable
-    if (PlatformUtils.isAppCode()) {
-      SHOW_MAIN_TOOLBAR = false;
-      SHOW_ICONS_IN_MENUS = false;
-      SHOW_MEMORY_INDICATOR = false;
-    }
+    setSystemFontFaceAndSize();
   }
 
   /**

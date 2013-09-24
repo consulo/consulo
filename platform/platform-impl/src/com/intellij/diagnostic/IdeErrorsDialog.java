@@ -16,7 +16,6 @@
 package com.intellij.diagnostic;
 
 import com.intellij.CommonBundle;
-import com.intellij.ExtensionPoints;
 import com.intellij.diagnostic.errordialog.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
@@ -33,7 +32,6 @@ import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.extensions.ExtensionException;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -1003,17 +1001,11 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       return null;
     }
     final PluginId pluginId = findPluginId(throwable);
-    final ErrorReportSubmitter[] reporters;
-    try {
-      reporters = Extensions.getExtensions(ExtensionPoints.ERROR_HANDLER_EP);
-    }
-    catch (Throwable t) {
-      return null;
-    }
+
     ErrorReportSubmitter submitter = null;
-    for (ErrorReportSubmitter reporter : reporters) {
+    for (ErrorReportSubmitter reporter : ErrorReportSubmitter.EP_NAME.getExtensions()) {
       final PluginDescriptor descriptor = reporter.getPluginDescriptor();
-      if (pluginId == null && (descriptor == null || PluginId.getId("com.intellij") == descriptor.getPluginId())
+      if (pluginId == null && (descriptor == null || PluginId.getId(PluginManager.CORE_PLUGIN_ID) == descriptor.getPluginId())
           || descriptor != null && Comparing.equal(pluginId, descriptor.getPluginId())) {
         submitter = reporter;
       }

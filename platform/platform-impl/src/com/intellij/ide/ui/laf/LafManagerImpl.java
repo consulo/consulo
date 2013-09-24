@@ -39,14 +39,12 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacPopupMenuUI;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sun.security.action.GetPropertyAction;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -67,7 +65,6 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -276,16 +273,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       UIManager.LookAndFeelInfo laf = findLaf(systemLafClassName);
       LOG.assertTrue(laf != null);
       return laf;
-    }
-    if (PlatformUtils.isRubyMine() || PlatformUtils.isPyCharm()) {
-      final String desktop = AccessController.doPrivileged(new GetPropertyAction("sun.desktop"));
-      if ("gnome".equals(desktop)) {
-        UIManager.LookAndFeelInfo laf=findLaf(systemLafClassName);
-        if (laf != null) {
-          return laf;
-        }
-        LOG.info("Could not find system look and feel: " + laf);
-      }
     }
     // Default
     final String defaultLafName = StartupUtil.getDefaultLAF();

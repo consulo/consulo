@@ -26,11 +26,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.codeStyle.DisplayPriority;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.LocalTimeCounter;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -70,12 +68,6 @@ public class JavaLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSett
     );
     file.putUserData(PsiUtil.FILE_LANGUAGE_LEVEL_KEY, LanguageLevel.HIGHEST);
     return file;
-  }
-
-  @Override
-  public DisplayPriority getDisplayPriority() {
-    if (PlatformUtils.isIdea()) return DisplayPriority.KEY_LANGUAGE_SETTINGS;
-    return DisplayPriority.LANGUAGE_SETTINGS;
   }
 
   @Override

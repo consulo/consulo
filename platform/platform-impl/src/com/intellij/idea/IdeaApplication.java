@@ -15,7 +15,6 @@
  */
 package com.intellij.idea;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.Patches;
 import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.AppLifecycleListener;
@@ -29,8 +28,6 @@ import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.UpdateChecker;
@@ -122,8 +119,7 @@ public class IdeaApplication {
     if (myArgs.length > 0) {
       PluginManager.getPlugins();
 
-      ExtensionPoint<ApplicationStarter> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.APPLICATION_STARTER);
-      final ApplicationStarter[] starters = point.getExtensions();
+     final ApplicationStarter[] starters = ApplicationStarter.EP_NAME.getExtensions();
       String key = myArgs[0];
       for (ApplicationStarter o : starters) {
         if (Comparing.equal(o.getCommandName(), key)) return o;

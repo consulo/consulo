@@ -33,7 +33,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.Function;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -214,7 +213,6 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Optiona
 
   @Override
   public boolean needDisplay() {
-    // TODO[yole] cleaner API
-    return !PlatformUtils.isRubyMine();
+    return true;
   }
 }

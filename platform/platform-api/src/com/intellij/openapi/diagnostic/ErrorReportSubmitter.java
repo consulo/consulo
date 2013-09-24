@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.diagnostic;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.util.Consumer;
@@ -22,10 +23,12 @@ import com.intellij.util.Consumer;
 import java.awt.*;
 
 /**
- * This class should be extended by plugin vendor and provided by means of {@link com.intellij.ExtensionPoints#ERROR_HANDLER} if
+ * This class should be extended by plugin vendor and provided by means of {@link EP_NAME} if
  * reporting errors that happened in plugin code to vendor is desirable.
  */
 public abstract class ErrorReportSubmitter implements PluginAware {
+  public static final ExtensionPointName<ErrorReportSubmitter> EP_NAME = ExtensionPointName.create("com.intellij.errorHandler");
+
   private PluginDescriptor myPlugin;
 
   /**

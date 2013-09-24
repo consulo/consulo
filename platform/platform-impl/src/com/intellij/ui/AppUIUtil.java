@@ -27,7 +27,6 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -132,7 +131,7 @@ public class AppUIUtil {
     if ("true".equals(System.getProperty("idea.debug.mode"))) {
       wmClass += "-debug";
     }
-    return PlatformUtils.isCommunity() ? wmClass + "-ce" : wmClass;
+    return wmClass;
   }
 
   public static void registerBundledFonts() {

@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInspection.reference;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
+
 /**
  * Callback which gets called while a reference graph is being built during a global
  * inspection run.
@@ -24,6 +26,7 @@ package com.intellij.codeInspection.reference;
  * @see com.intellij.codeInspection.GlobalInspectionTool#getAnnotator
  */
 public abstract class RefGraphAnnotator {
+  public static final ExtensionPointName<RefGraphAnnotator> EP_NAME = ExtensionPointName.create("com.intellij.refGraphAnnotator");
   /**
    * Called before the references to the specified element have been collected.
    *

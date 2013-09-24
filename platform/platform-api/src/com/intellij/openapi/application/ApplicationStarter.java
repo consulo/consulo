@@ -15,19 +15,18 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.NonNls;
 
 /**
- * Implementors of this interface declared via {@link com.intellij.ExtensionPoints#APPLICATION_STARTER} contribute a
+ * Implementors of this interface declared via {@link EP_NAME} contribute a
  * command line application based on IDEA platform.
  *
  * @author max
  * @see ApplicationStarterEx
  */
 public interface ApplicationStarter {
-  ExtensionPointName<ApplicationStarter> EP_NAME = ExtensionPointName.create(ExtensionPoints.APPLICATION_STARTER);
+  ExtensionPointName<ApplicationStarter> EP_NAME = ExtensionPointName.create("com.intellij.appStarter");
 
   /**
    * Command line switch to start with this runner. For example return "inspect" if you'd like to start app with

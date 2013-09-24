@@ -31,7 +31,6 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferen
 import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ImageLoader;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -189,7 +188,7 @@ public class IconLineMarkerProvider implements LineMarkerProvider {
     Pair<Long, Icon> iconInfo = iconsCache.get(path);
     if (iconInfo == null || iconInfo.getFirst() < stamp) {
       try {
-        final Icon icon = createOrFindBetterIcon(file, PlatformUtils.isIdeaProject(project));
+        final Icon icon = createOrFindBetterIcon(file, true);
         iconInfo = new Pair<Long, Icon>(stamp, hasProperSize(icon) ? icon : null);
         iconsCache.put(file.getPath(), iconInfo);
       }

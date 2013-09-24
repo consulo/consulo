@@ -19,7 +19,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.NonNls;
 
 /**
@@ -40,6 +39,6 @@ public class MacHelpUtil {
   }
 
   static boolean isApplicable() {
-    return SystemInfo.isMac && Registry.is("ide.mac.show.native.help", false) && !PlatformUtils.isAppCode() && !PlatformUtils.isCommunity();
+    return SystemInfo.isMac && Registry.is("ide.mac.show.native.help", false);
   }
 }

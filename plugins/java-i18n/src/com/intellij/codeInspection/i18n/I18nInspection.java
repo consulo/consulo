@@ -19,7 +19,6 @@
  */
 package com.intellij.codeInspection.i18n;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.GroupNames;
@@ -30,8 +29,7 @@ import com.intellij.ide.util.TreeClassChooser;
 import com.intellij.ide.util.TreeClassChooserFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -91,6 +89,9 @@ public class I18nInspection extends BaseLocalInspectionTool {
 
   @Nullable private Pattern myCachedNonNlsPattern;
   @NonNls private static final String TO_STRING = "toString";
+
+  private static final ExtensionPointName<FileCheckingInspection> EP_NAME =
+    ExtensionPointName.create("org.consulo.java.i18nInspectionTool");
 
   public I18nInspection() {
     cacheNonNlsCommentPattern();
@@ -406,9 +407,7 @@ public class I18nInspection extends BaseLocalInspectionTool {
   @Override
   @Nullable
   public ProblemDescriptor[] checkFile(@NotNull PsiFile file, @NotNull InspectionManager manager, boolean isOnTheFly) {
-    ExtensionPoint<FileCheckingInspection> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.I18N_INSPECTION_TOOL);
-    final FileCheckingInspection[] fileCheckingInspections = point.getExtensions();
-    for(FileCheckingInspection obj: fileCheckingInspections) {
+    for(FileCheckingInspection obj: EP_NAME.getExtensions()) {
       ProblemDescriptor[] descriptors = obj.checkFile(file, manager, isOnTheFly);
       if (descriptors != null) {
         return descriptors;

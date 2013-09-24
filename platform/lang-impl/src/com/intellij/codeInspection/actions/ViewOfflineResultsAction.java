@@ -56,7 +56,6 @@ import com.intellij.profile.Profile;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +76,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     final Presentation presentation = event.getPresentation();
     final Project project = event.getData(PlatformDataKeys.PROJECT);
     presentation.setEnabled(project != null);
-    presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()) && !PlatformUtils.isAppCode());
+    presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
   }
 
   @Override

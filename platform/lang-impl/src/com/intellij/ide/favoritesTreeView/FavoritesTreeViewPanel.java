@@ -64,7 +64,6 @@ import com.intellij.ui.treeStructure.actions.CollapseAllAction;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -605,9 +604,8 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     if (helper.supportsFlattenPackages()) {
       group.addAction(new FavoritesAbbreviatePackageNamesAction(myProject, myBuilder));
     }
-    if (!PlatformUtils.isAppCode()) {
-      group.add(new FavoritesShowMembersAction(myProject, myBuilder));
-    }
+
+    group.add(new FavoritesShowMembersAction(myProject, myBuilder));
 
     final FavoritesAutoscrollFromSourceHandler handler = new FavoritesAutoscrollFromSourceHandler(myProject, myBuilder);
     handler.install();

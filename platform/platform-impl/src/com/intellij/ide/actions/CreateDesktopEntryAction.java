@@ -36,7 +36,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,7 +135,6 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     assert new File(binPath).isDirectory() : "Invalid bin/ path: '" + binPath + "'";
 
     String name = ApplicationNamesInfo.getInstance().getFullProductName();
-    if (PlatformUtils.isCommunity()) name += " Community Edition";
 
     final String iconPath = findIcon(binPath);
     if (iconPath == null) {

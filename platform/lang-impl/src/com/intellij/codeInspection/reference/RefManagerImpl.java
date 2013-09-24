@@ -24,7 +24,6 @@
  */
 package com.intellij.codeInspection.reference;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
@@ -36,7 +35,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -376,9 +374,7 @@ public class RefManagerImpl extends RefManager {
   }
 
   public void initializeAnnotators() {
-    ExtensionPoint<RefGraphAnnotator> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.INSPECTIONS_GRAPH_ANNOTATOR);
-    final RefGraphAnnotator[] graphAnnotators = point.getExtensions();
-    for (RefGraphAnnotator annotator : graphAnnotators) {
+    for (RefGraphAnnotator annotator : RefGraphAnnotator.EP_NAME.getExtensions()) {
       registerGraphAnnotator(annotator);
     }
     for (RefGraphAnnotator graphAnnotator : myGraphAnnotators) {

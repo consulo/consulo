@@ -39,10 +39,10 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.StandardFileSystems;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UrlConnectionUtil;
 import com.intellij.util.net.HttpConfigurable;
@@ -58,7 +58,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -702,9 +705,7 @@ public final class UpdateChecker {
     String toBuildNumber = newVersion.getNumber().asStringWithoutProductCode();
     String fileName = productCode + "-" + fromBuildNumber + "-" + toBuildNumber + "-patch" + osSuffix + ".jar";
 
-    String platform = PlatformUtils.getPlatformPrefix();
-
-    File tempFile = FileUtil.createTempFile(platform, "patch", true);
+    File tempFile = FileUtil.createTempFile("consulo", "patch", true);
 
     OutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
     try {
@@ -746,7 +747,7 @@ public final class UpdateChecker {
       out.close();
     }
 
-    String patchFileName = ("jetbrains.patch.jar." + platform).toLowerCase();
+    String patchFileName = ("jetbrains.patch.jar.consulo").toLowerCase();
     File patchFile = new File(FileUtil.getTempDirectory(), patchFileName);
     FileUtil.copy(tempFile, patchFile);
     FileUtil.delete(tempFile);

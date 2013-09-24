@@ -43,7 +43,6 @@ import com.intellij.openapi.vfs.newvfs.FileSystemInterface;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
@@ -1051,7 +1050,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
   }
 
   public static String getFileTypeComponentName() {
-    return PlatformUtils.isCommunity() ? "CommunityFileTypes" : "FileTypeManager";
+    return "FileTypeManager";
   }
 
   public FileTypeAssocTable getExtensionMap() {

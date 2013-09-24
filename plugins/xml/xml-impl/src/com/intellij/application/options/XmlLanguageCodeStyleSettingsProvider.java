@@ -17,9 +17,7 @@ package com.intellij.application.options;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.xml.XMLLanguage;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,17 +36,6 @@ public class XmlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSetti
       return CodeStyleAbstractPanel.readFromFile(getClass(), "preview.xml.template");
     }
     return "";
-  }
-
-  @Override
-  public CommonCodeStyleSettings getDefaultCommonSettings() {
-    CommonCodeStyleSettings xmlSettings = new CommonCodeStyleSettings(getLanguage());
-    CommonCodeStyleSettings.IndentOptions indentOptions = xmlSettings.initIndentOptions();
-    // HACK [yole]
-    if (PlatformUtils.isRubyMine()) {
-      indentOptions.INDENT_SIZE = 2;
-    }
-    return xmlSettings;
   }
 
   @Override

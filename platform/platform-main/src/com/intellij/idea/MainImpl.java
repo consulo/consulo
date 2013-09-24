@@ -19,7 +19,6 @@ import com.intellij.openapi.application.ConfigImportHelper;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -34,8 +33,6 @@ public class MainImpl {
    * Called from PluginManager via reflection.
    */
   protected static void start(final String[] args) {
-    System.setProperty(PlatformUtils.PLATFORM_PREFIX_KEY, PlatformUtils.CONSULO_PREFIX);
-
     StartupUtil.isHeadless = Main.isHeadless(args);
     if (!StartupUtil.isHeadless) {
       AppUIUtil.updateFrameClass();

@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInspection.i18n;
 
-import com.intellij.ExtensionPoints;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.CodeInsightBundle;
@@ -23,8 +22,7 @@ import com.intellij.codeInsight.daemon.GroupNames;
 import com.intellij.codeInspection.*;
 import com.intellij.lang.properties.PropertiesReferenceManager;
 import com.intellij.lang.properties.psi.PropertiesFile;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -44,6 +42,8 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 public class InvalidPropertyKeyInspection extends BaseJavaLocalInspectionTool {
+  private static final ExtensionPointName<FileCheckingInspection> EP_NAME =
+    ExtensionPointName.create("org.consulo.java.invalidPropertyKeyInspectionTool");
 
   @Override
   @NotNull
@@ -127,9 +127,7 @@ public class InvalidPropertyKeyInspection extends BaseJavaLocalInspectionTool {
   @Override
   @Nullable
   public ProblemDescriptor[] checkFile(@NotNull final PsiFile file, @NotNull final InspectionManager manager, boolean isOnTheFly) {
-    ExtensionPoint<FileCheckingInspection> point = Extensions.getRootArea().getExtensionPoint(ExtensionPoints.INVALID_PROPERTY_KEY_INSPECTION_TOOL);
-    final FileCheckingInspection[] fileCheckingInspections = point.getExtensions();
-    for (FileCheckingInspection obj : fileCheckingInspections) {
+    for (FileCheckingInspection obj : EP_NAME.getExtensions()) {
       ProblemDescriptor[] descriptors = obj.checkFile(file, manager, isOnTheFly);
       if (descriptors != null) {
         return descriptors;

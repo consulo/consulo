@@ -16,7 +16,7 @@
 package com.intellij.openapi.application;
 
 /**
- * Implementors of this interface declared via {@link com.intellij.ExtensionPoints#APPLICATION_STARTER} are also capable of processing
+ * Implementors of this interface declared via {@link EP_NAME} are also capable of processing
  * an external command line within a running IntelliJ Platform instance.
 
  * @author yole

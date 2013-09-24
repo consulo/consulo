@@ -21,7 +21,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.util.PlatformUtils;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ThreeState;
 import org.jetbrains.annotations.NonNls;
@@ -31,8 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PropertyResourceBundle;
@@ -81,28 +78,6 @@ public class ConfigImportHelper {
   }
 
   private static ConfigImportSettings getConfigImportSettings() {
-    try {
-      Class customProviderClass =
-        Class.forName("com.intellij.openapi.application." + PlatformUtils.getPlatformPrefix() + "ConfigImportSettings");
-      if (customProviderClass != null) {
-        if (ConfigImportSettings.class.isAssignableFrom(customProviderClass)) {
-          Constructor constructor = customProviderClass.getDeclaredConstructor();
-          if (constructor != null) {
-            return (ConfigImportSettings)constructor.newInstance();
-          }
-        }
-      }
-    }
-    catch (ClassNotFoundException ignored) {
-    }
-    catch (NoSuchMethodException ignored) {
-    }
-    catch (InvocationTargetException ignored) {
-    }
-    catch (InstantiationException ignored) {
-    }
-    catch (IllegalAccessException ignored) {
-    }
     return new ConfigImportSettings();
   }
 

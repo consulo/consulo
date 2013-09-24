@@ -38,11 +38,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
-import com.intellij.util.PlatformUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,22 +50,7 @@ public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
   @Override
   public boolean canDeleteElement(@NotNull DataContext dataContext) {
     final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
-    return modules != null && !isPrimaryModule(modules);
-  }
-
-  private static boolean isPrimaryModule(Module[] modules) {
-    if (!ProjectAttachProcessor.canAttachToProject()) {
-      return !PlatformUtils.isIdea();
-    }
-    for (Module module : modules) {
-      final File moduleFile = new File(module.getModuleDirPath());
-      final File projectFile = new File(module.getProject().getProjectFilePath());
-      if (moduleFile.getAbsolutePath().equals(projectFile.getParent()) &&
-          moduleFile.getParentFile().getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
-        return true;
-      }
-    }
-    return false;
+    return modules != null;
   }
 
   @Override

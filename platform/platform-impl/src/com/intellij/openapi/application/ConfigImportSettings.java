@@ -47,7 +47,7 @@ public class ConfigImportSettings {
       return namesInfo.getProductName();
     }
     else {
-      return namesInfo.getProductName().equals("IDEA") ? namesInfo.getFullProductName() : namesInfo.getProductName();
+      return namesInfo.getProductName();
     }
   }
 
