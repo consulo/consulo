@@ -1,13 +1,5 @@
 <idea-plugin version="2">
-  <name>JVM Bytecode Viever</name>
-  <id>org.jetbrains.jvmbytecodeviewer</id>
-  <version>0.1</version>
-  <description>Viewing java bytecode inside IntelliJ IDEA.</description>
-  <vendor>JetBrains</vendor>
-  <depends>org.consulo.java</depends>
-
   <extensions defaultExtensionNs="com.intellij">
-    <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <projectService serviceInterface="com.intellij.byteCodeViewer.ByteCodeViewerManager"
                     serviceImplementation="com.intellij.byteCodeViewer.ByteCodeViewerManager"/>
   </extensions>

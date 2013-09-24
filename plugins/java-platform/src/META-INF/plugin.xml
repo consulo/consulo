@@ -13,11 +13,13 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<idea-plugin>
+<idea-plugin version="2" xmlns:xi="http://www.w3.org/2001/XInclude">
   <id>org.consulo.java.platform</id>
   <name>Java Platform</name>
   <version>1.0</version>
   <vendor>Consulo</vendor>
+
+  <xi:include href="/META-INF/JvmByteCodeViewer.xml" xpointer="xpointer(/idea-plugin/*)" />
 
   <extensionPoints>
     <extensionPoint name="augmentProvider" interface="com.intellij.psi.augment.PsiAugmentProvider"/>
