@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<idea-plugin version="2">
+<idea-plugin version="2" xmlns:xi="http://www.w3.org/2001/XInclude">
   <id>org.consulo.java</id>
   <name>Java</name>
   <version>1.0</version>
@@ -25,6 +25,8 @@
   <depends>com.intellij.xml</depends>
   <depends>com.intellij.xml.dom</depends>
   <resource-bundle>messages.JavaBundle</resource-bundle>
+
+  <xi:include href="/META-INF/GenerateToString.xml" xpointer="xpointer(/idea-plugin/*)" />
 
   <actions>
     <group id="JavaGenerateGroup1">

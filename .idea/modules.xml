@@ -60,7 +60,7 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" filepath="$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-execution-impl/java-execution-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-execution-impl/java-execution-impl.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-generate-tostring/java-generate-tostring.iml" filepath="$PROJECT_DIR$/plugins/java-generate-tostring/java-generate-tostring.iml" group="plugins/java" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-generate-tostring/java-generate-tostring.iml" filepath="$PROJECT_DIR$/plugins/java/java-generate-tostring/java-generate-tostring.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" filepath="$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" group="plugins/java" />

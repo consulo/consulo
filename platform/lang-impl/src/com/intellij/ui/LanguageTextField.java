@@ -34,11 +34,11 @@ public class LanguageTextField extends EditorTextField {
   private final Language myLanguage;
   private final Project myProject;
 
-  public LanguageTextField(Language language, @NotNull Project project, @NotNull String value) {
+  public LanguageTextField(@Nullable Language language, @NotNull Project project, @NotNull String value) {
     this(language, project, value, true);
   }
 
-  public LanguageTextField(Language language, @NotNull Project project, @NotNull String value, boolean oneLineMode) {
+  public LanguageTextField(@Nullable Language language, @NotNull Project project, @NotNull String value, boolean oneLineMode) {
     this(language, project, value, new SimpleDocumentCreator(), oneLineMode);
   }
 

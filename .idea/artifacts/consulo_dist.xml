@@ -117,6 +117,7 @@
               <element id="module-output" name="java-compiler-impl" />
               <element id="module-output" name="java-execution-impl" />
               <element id="module-output" name="testFrameworkJava" />
+              <element id="module-output" name="java-generate-tostring" />
             </element>
             <element id="archive" name="java-debugger-api.jar">
               <element id="module-output" name="java-debugger-api" />
@@ -213,13 +214,6 @@
           <element id="directory" name="lib">
             <element id="archive" name="java-intention-power-pack.jar">
               <element id="module-output" name="java-intention-power-pack" />
-            </element>
-          </element>
-        </element>
-        <element id="directory" name="java-generate-tostring">
-          <element id="directory" name="lib">
-            <element id="archive" name="java-generate-tostring.jar">
-              <element id="module-output" name="java-generate-tostring" />
             </element>
           </element>
         </element>
