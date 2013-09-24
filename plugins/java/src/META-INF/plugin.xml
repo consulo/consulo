@@ -27,6 +27,8 @@
   <resource-bundle>messages.JavaBundle</resource-bundle>
 
   <xi:include href="/META-INF/GenerateToString.xml" xpointer="xpointer(/idea-plugin/*)" />
+  <xi:include href="/META-INF/InspectionGadgets.xml" xpointer="xpointer(/idea-plugin/*)" />
+  <xi:include href="/META-INF/IntentionPowerPack.xml" xpointer="xpointer(/idea-plugin/*)" />
 
   <actions>
     <group id="JavaGenerateGroup1">

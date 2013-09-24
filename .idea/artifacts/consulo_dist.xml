@@ -118,6 +118,8 @@
               <element id="module-output" name="java-execution-impl" />
               <element id="module-output" name="testFrameworkJava" />
               <element id="module-output" name="java-generate-tostring" />
+              <element id="module-output" name="java-inspection-gadgets" />
+              <element id="module-output" name="java-intention-power-pack" />
             </element>
             <element id="archive" name="java-debugger-api.jar">
               <element id="module-output" name="java-debugger-api" />
@@ -200,20 +202,6 @@
             <element id="file-copy" path="$PROJECT_DIR$/plugins/tasks/tasks-core/lib/commons-discovery-0.4.jar" />
             <element id="archive" name="tasks-java.jar">
               <element id="module-output" name="tasks-java" />
-            </element>
-          </element>
-        </element>
-        <element id="directory" name="java-inspection-gadgets">
-          <element id="directory" name="lib">
-            <element id="archive" name="java-inspection-gadgets.jar">
-              <element id="module-output" name="java-inspection-gadgets" />
-            </element>
-          </element>
-        </element>
-        <element id="directory" name="java-intention-power-pack">
-          <element id="directory" name="lib">
-            <element id="archive" name="java-intention-power-pack.jar">
-              <element id="module-output" name="java-intention-power-pack" />
             </element>
           </element>
         </element>
