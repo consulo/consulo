@@ -79,7 +79,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   private final PsiElement myContextElement;
   private final PsiFile myHostPsiFile;
 
-  MultiHostRegistrarImpl(@NotNull Project project,
+  public MultiHostRegistrarImpl(@NotNull Project project,
                          @NotNull PsiFile hostPsiFile,
                          @NotNull PsiElement contextElement) {
     myProject = project;

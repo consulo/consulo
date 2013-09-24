@@ -974,7 +974,8 @@ public class PluginManager {
           descriptors.put(entry.getKey(), optionalDescriptor);
         }
         else {
-          getLogger().info("Cannot find optional descriptor " + optionalDescriptorName);
+          getLogger().info("Cannot find optional descriptor " + optionalDescriptorName + ". PluginId: " +
+                           descriptor.getPluginId().getIdString());
         }
       }
       descriptor.setOptionalDescriptors(descriptors);

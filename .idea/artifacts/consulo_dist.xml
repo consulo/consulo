@@ -64,7 +64,7 @@
             <element id="archive" name="xml-copyright.jar">
               <element id="module-output" name="xml-copyright" />
             </element>
-            <element id="archive" name="xml-intellilang.xml">
+            <element id="archive" name="xml-intellilang.jar">
               <element id="module-output" name="xml-intellilang" />
             </element>
           </element>
