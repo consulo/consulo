@@ -364,7 +364,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     PsiDocumentManagerImpl.checkConsistency(psiFile, documentWindow);
   }
 
-  void addToResults(Place place, PsiFile psiFile) {
+  public void addToResults(Place place, PsiFile psiFile) {
     if (result == null) {
       result = new SmartList<Pair<Place, PsiFile>>();
     }
