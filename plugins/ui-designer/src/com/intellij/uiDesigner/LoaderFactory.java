@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,17 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModuleRootAdapter;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.uiDesigner.core.Spacer;
 import com.intellij.util.PathUtil;
+import com.intellij.util.containers.ConcurrentWeakHashMap;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
@@ -44,17 +49,17 @@ import java.util.*;
 public final class LoaderFactory {
   private final Project myProject;
 
-  private final WeakHashMap<Module, ClassLoader> myModule2ClassLoader;
+  private final ConcurrentWeakHashMap<Module, ClassLoader> myModule2ClassLoader;
   private ClassLoader myProjectClassLoader = null;
   private final MessageBusConnection myConnection;
 
   public static LoaderFactory getInstance(final Project project) {
     return ServiceManager.getService(project, LoaderFactory.class);
   }
-  
+
   public LoaderFactory(final Project project) {
     myProject = project;
-    myModule2ClassLoader = new WeakHashMap<Module, ClassLoader>();
+    myModule2ClassLoader = new ConcurrentWeakHashMap<Module, ClassLoader>();
     myConnection = myProject.getMessageBus().connect();
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       public void rootsChanged(final ModuleRootEvent event) {
@@ -105,14 +110,19 @@ public final class LoaderFactory {
   private static ClassLoader createClassLoader(final String runClasspath, final String moduleName) {
     final ArrayList<URL> urls = new ArrayList<URL>();
     final VirtualFileManager manager = VirtualFileManager.getInstance();
-    final JarFileSystemImpl fileSystem = (JarFileSystemImpl)StandardFileSystems.jar();
     final StringTokenizer tokenizer = new StringTokenizer(runClasspath, File.pathSeparator);
     while (tokenizer.hasMoreTokens()) {
       final String s = tokenizer.nextToken();
       try {
         VirtualFile vFile = manager.findFileByUrl(VfsUtil.pathToUrl(s));
-        final File realFile = fileSystem.getMirroredFile(vFile);
-        urls.add(realFile != null ? realFile.toURI().toURL() : new File(s).toURI().toURL());
+
+        VirtualFile archiveFile = ArchiveVfsUtil.getVirtualFileForJar(vFile);
+        if(archiveFile != null) {
+          urls.add(new File(archiveFile.getCanonicalPath()).toURI().toURL());
+        }
+        else {
+          urls.add(new File(s).toURI().toURL());
+        }
       }
       catch (Exception e) {
         // ignore ?
@@ -126,8 +136,7 @@ public final class LoaderFactory {
       // ignore
     }
 
-    final URL[] _urls = urls.toArray(new URL[urls.size()]);
-    return new DesignTimeClassLoader(Arrays.asList(_urls), LoaderFactory.class.getClassLoader(), moduleName);
+    return new DesignTimeClassLoader(urls, LoaderFactory.class.getClassLoader(), moduleName);
   }
 
   public void clearClassLoaderCache() {
@@ -151,7 +160,7 @@ public final class LoaderFactory {
     private final String myModuleName;
 
     public DesignTimeClassLoader(final List<URL> urls, final ClassLoader parent, final String moduleName) {
-      super(urls, parent);
+      super(build().urls(urls).parent(parent));
       myModuleName = moduleName;
     }
 
