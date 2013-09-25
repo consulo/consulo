@@ -15,7 +15,10 @@
  */
 package com.intellij.compiler.impl.javaCompiler;
 
-import com.intellij.compiler.*;
+import com.intellij.compiler.CompilerEncodingService;
+import com.intellij.compiler.CompilerException;
+import com.intellij.compiler.JavaSdkUtil;
+import com.intellij.compiler.OutputParser;
 import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.ModuleChunk;
@@ -31,17 +34,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.Chunk;
 import gnu.trove.THashMap;
+import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -601,7 +607,7 @@ public class BackendCompilerWrapper {
                                     final FileTypeManager typeManager,
                                     final VirtualFile sourceRoot,
                                     final String packagePrefix, final List<File> filesToRefresh, final Map<String, Collection<TranslatingCompiler.OutputItem>> results) throws CacheCorruptedException {
-    final Ref<CacheCorruptedException> exRef = new Ref<CacheCorruptedException>(null);
+   /* final Ref<CacheCorruptedException> exRef = new Ref<CacheCorruptedException>(null);
     final ModuleFileIndex fileIndex = ModuleRootManager.getInstance(module).getFileIndex();
     final GlobalSearchScope srcRootScope = GlobalSearchScope.moduleScope(module).intersectWith(
       GlobalSearchScopes.directoryScope(myProject, sourceRoot, true));
@@ -618,11 +624,11 @@ public class BackendCompilerWrapper {
         }
         catch (CacheCorruptedException e) {
           exRef.set(e);  */
-          return false;  /*
-        }   */
-      }
-    };
-    if (fileIndex.isInContent(from)) {
+          //return false;  /*
+      //  }   */
+  //    }
+ //   };
+  /*  if (fileIndex.isInContent(from)) {
       // use file index for iteration to handle 'inner modules' and excludes properly
       fileIndex.iterateContentUnderDirectory(from, contentIterator);
     }
@@ -637,10 +643,24 @@ public class BackendCompilerWrapper {
           return true;
         }
       });
-    }
-    final CacheCorruptedException exc = exRef.get();
+    }     */
+    /*final CacheCorruptedException exc = exRef.get();
     if (exc != null) {
       throw exc;
+    } */
+
+    VirtualFile compilerOutput =
+      CompilerPathsManager.getInstance(myProject).getCompilerOutput(module, ContentFolderType.PRODUCTION);//FIXME [VISTALL] ??
+
+    try {
+      String canonicalPath = compilerOutput.getCanonicalPath();
+      if(FileUtil.pathsEqual(outputDir, canonicalPath)) {
+        return;
+      }
+      FileUtil.copyDir(new File(outputDir), new File(canonicalPath));
+    }
+    catch (IOException e) {
+      throw new CacheCorruptedException(e);
     }
   }
 
