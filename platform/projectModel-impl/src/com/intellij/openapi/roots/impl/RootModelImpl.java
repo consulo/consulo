@@ -767,9 +767,11 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Nullable
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
-    final T extensionWithoutCheck = getExtensionWithoutCheck(clazz);
-    if (extensionWithoutCheck.isEnabled()) {
-      return extensionWithoutCheck;
+    for (ModuleExtension<?> extension : myExtensions) {
+      if (clazz.isAssignableFrom(extension.getClass()) && extension.isEnabled()) {
+        //noinspection unchecked
+        return (T)extension;
+      }
     }
     return null;
   }
