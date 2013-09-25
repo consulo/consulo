@@ -41,7 +41,7 @@ public class ModuleExtensionConvertUtil {
     List<Class<? extends ModuleExtension<?>>> list = new ArrayList<Class<? extends ModuleExtension<?>>>();
 
     for (String id : split) {
-      ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
+      ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id.trim());
       if(provider != null) {
         list.add(provider.getImmutableClass());
       }
