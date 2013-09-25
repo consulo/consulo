@@ -5551,13 +5551,17 @@
     <!--Remote servers-->
     <applicationService serviceInterface="com.intellij.remoteServer.configuration.RemoteServersManager"
                         serviceImplementation="com.intellij.remoteServer.impl.configuration.RemoteServersManagerImpl"/>
+    <applicationService serviceInterface="com.intellij.remoteServer.configuration.deployment.ArtifactDeploymentManager"
+                        serviceImplementation="com.intellij.remoteServer.impl.runtime.deployment.ArtifactDeploymentManagerImpl" />
     <applicationService serviceInterface="com.intellij.remoteServer.runtime.ServerConnectionManager"
                         serviceImplementation="com.intellij.remoteServer.impl.runtime.ServerConnectionManagerImpl"/>
     <applicationConfigurable instance="com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
     <programRunner implementation="com.intellij.remoteServer.impl.runtime.DeployToServerRunner"/>
     <projectService serviceInterface="com.intellij.remoteServer.runtime.ui.RemoteServersView"
                     serviceImplementation="com.intellij.remoteServer.runtime.ui.RemoteServersView"/>
+
     <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deployment.ModuleDeploymentSourceType"/>
+    <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.runtime.deployment.ArtifactDeploymentSourceType"/>
 
     <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
   </extensions>
