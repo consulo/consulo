@@ -21,7 +21,7 @@ public class LanguageHtmlScriptContentProvider extends LanguageExtension<HtmlScr
   public final static LanguageHtmlScriptContentProvider INSTANCE = new LanguageHtmlScriptContentProvider();
 
   public LanguageHtmlScriptContentProvider() {
-    super("com.intellij.html.scriptContentProvider");
+    super("com.intellij.xml.html.scriptContentProvider");
   }
 
   public static HtmlScriptContentProvider getScriptContentProvider(@NotNull Language language) {
