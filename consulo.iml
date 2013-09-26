@@ -67,7 +67,6 @@
     <orderEntry type="module" module-name="java-intellilang" />
     <orderEntry type="module" module-name="java-intention-power-pack" />
     <orderEntry type="module" module-name="properties-copyright" />
-    <orderEntry type="module" module-name="relaxng" />
     <orderEntry type="module" module-name="xml-api" />
     <orderEntry type="module" module-name="xml-copyright" />
     <orderEntry type="module" module-name="xml-dom-api" />

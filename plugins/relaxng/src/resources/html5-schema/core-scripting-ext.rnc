@@ -1,3 +1,0 @@
-datatypes w = "http://whattf.org/datatype-draft"
-
-noscript.inner.head |= meta.http-equiv.content-language.elem
