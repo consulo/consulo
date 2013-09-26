@@ -82,8 +82,6 @@
     <orderEntry type="module" module-name="ui-designer-core" />
     <orderEntry type="module" module-name="ui-designer" />
     <orderEntry type="module" module-name="forms-compiler" />
-    <orderEntry type="module" module-name="junit" />
-    <orderEntry type="module" module-name="junit_rt" />
     <orderEntry type="module" module-name="testng" />
     <orderEntry type="module" module-name="testng_rt" />
     <orderEntry type="module" module-name="tasks-api" />

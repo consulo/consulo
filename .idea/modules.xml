@@ -71,8 +71,6 @@
       <module fileurl="file://$PROJECT_DIR$/platform/tools/javac2/javac2.iml" filepath="$PROJECT_DIR$/platform/tools/javac2/javac2.iml" group="platform/tools" />
       <module fileurl="file://$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" filepath="$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" group="plugins/VCS/cvs" />
       <module fileurl="file://$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" filepath="$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" group="plugins/tasks" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/junit/junit.iml" filepath="$PROJECT_DIR$/plugins/junit/junit.iml" group="plugins" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/junit_rt/junit_rt.iml" filepath="$PROJECT_DIR$/plugins/junit_rt/junit_rt.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/jvm-bytecode-viewer/jvm-bytecode-viewer.iml" filepath="$PROJECT_DIR$/plugins/java-platform/jvm-bytecode-viewer/jvm-bytecode-viewer.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/lang-api/lang-api.iml" filepath="$PROJECT_DIR$/platform/lang-api/lang-api.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/lang-impl/lang-impl.iml" filepath="$PROJECT_DIR$/platform/lang-impl/lang-impl.iml" group="platform" />
