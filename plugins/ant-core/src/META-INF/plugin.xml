@@ -1,4 +1,0 @@
-<idea-plugin version="2">
-  <id>org.consulo.ant.core</id>
-  <name>Apache Ant Core</name>
-</idea-plugin>

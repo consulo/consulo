@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/platform/analysis-impl/analysis-impl.iml" filepath="$PROJECT_DIR$/platform/analysis-impl/analysis-impl.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/annotations/annotations.iml" filepath="$PROJECT_DIR$/platform/annotations/annotations.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/ant/ant.iml" filepath="$PROJECT_DIR$/plugins/ant/ant.iml" group="plugins" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/ant-core/ant-core.iml" filepath="$PROJECT_DIR$/plugins/ant-core/ant-core.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/ant/ant-rt/ant-rt.iml" filepath="$PROJECT_DIR$/plugins/ant/ant-rt/ant-rt.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/plugins/svn4idea/bindSvn/bindSvn.iml" filepath="$PROJECT_DIR$/plugins/svn4idea/bindSvn/bindSvn.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/platform/boot/boot.iml" filepath="$PROJECT_DIR$/platform/boot/boot.iml" group="platform" />
