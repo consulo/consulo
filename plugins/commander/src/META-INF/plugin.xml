@@ -12,7 +12,7 @@
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <selectInTarget implementation="com.intellij.ide.commander.CommanderSelectInTarget"/>
     <toolWindow id="Commander" anchor="right" icon="AllIcons.Toolwindows.ToolWindowCommander"
-                factoryClass="com.intellij.ide.commander.CommanderToolWindowFactory"/>
+                factoryClass="com.intellij.ide.commander.CommanderToolWindowFactory" requireModuleExtensions="java"/>
     <projectService serviceInterface="com.intellij.ide.commander.Commander"
                     serviceImplementation="com.intellij.ide.commander.Commander"/>
   </extensions>
