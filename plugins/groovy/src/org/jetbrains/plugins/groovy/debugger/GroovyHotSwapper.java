@@ -1,10 +1,7 @@
 package org.jetbrains.plugins.groovy.debugger;
 
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.JavaParameters;
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.JavaProgramPatcher;
 import com.intellij.openapi.application.PathManager;
@@ -100,8 +97,9 @@ public class GroovyHotSwapper extends JavaProgramPatcher {
       return;
     }
 
-    if (configuration instanceof ModuleBasedConfiguration) {
-      final Module module = ((ModuleBasedConfiguration)configuration).getConfigurationModule().getModule();
+    if (configuration instanceof ModuleRunProfile) {
+      Module[] modulesInConfiguration = ((ModuleRunProfile)configuration).getModules();
+      final Module module = modulesInConfiguration.length == 0 ? null : modulesInConfiguration[0];
       if (module != null) {
         final JavaModuleExtension extension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
         final LanguageLevel level = extension == null ? null : extension.getLanguageLevel();

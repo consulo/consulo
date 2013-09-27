@@ -4330,9 +4330,6 @@
 
     <projectService serviceInterface="com.intellij.openapi.wm.impl.ProjectFrameBounds"
                     serviceImplementation="com.intellij.openapi.wm.impl.ProjectFrameBounds"/>
-    <!--
-       <exceptionFilter implementation="com.intellij.execution.filters.ExceptionBaseFilterFactory"/>
-       <exceptionFilter implementation="com.intellij.execution.filters.ExceptionExFilterFactory"/>   -->
 
     <applicationService serviceInterface="com.intellij.ide.TypePresentationService"
                         serviceImplementation="com.intellij.ide.TypePresentationServiceImpl"/>

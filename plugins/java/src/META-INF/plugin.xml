@@ -589,6 +589,8 @@
 
   <extensions defaultExtensionNs="org.consulo.java">
     <exceptionFilter implementation="com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationExceptionFilterFactory"/>
+    <exceptionFilter implementation="com.intellij.execution.filters.ExceptionBaseFilterFactory"/>
+    <exceptionFilter implementation="com.intellij.execution.filters.ExceptionExFilterFactory"/>
 
     <constantExpressionEvaluator language="JAVA" implementationClass="com.intellij.psi.impl.PsiExpressionEvaluator"/>
     <annotationSupport language="JAVA" implementationClass="com.intellij.psi.impl.source.tree.java.JavaAnnotationSupport"/>
@@ -1851,7 +1853,8 @@
                         serviceImplementation="com.intellij.psi.impl.file.PsiPackageImplementationHelperImpl"/>
     <sdkType implementation="com.intellij.openapi.projectRoots.impl.JavaSdkImpl"/>
     <bundledSdkProvider implementation="com.intellij.openapi.projectRoots.impl.InternalBundledSdkProvider" />
-    <!--  <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>  -->
+
+    <consoleFilterProvider implementation="com.intellij.execution.filters.DefaultConsoleFiltersProvider"/>
 
     <configurationType implementation="com.intellij.execution.application.ApplicationConfigurationType"/>
     <runConfigurationProducer implementation="com.intellij.execution.application.ApplicationConfigurationProducer"/>
