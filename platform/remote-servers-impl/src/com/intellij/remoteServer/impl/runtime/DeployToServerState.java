@@ -33,7 +33,6 @@ import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
 import com.intellij.remoteServer.runtime.log.LoggingHandler;
-import com.intellij.remoteServer.runtime.ui.RemoteServersView;
 import com.intellij.util.ParameterizedRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +60,6 @@ public class DeployToServerState<S extends ServerConfiguration, D extends Deploy
   public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
     final ServerConnection connection = ServerConnectionManager.getInstance().getOrCreateConnection(myServer);
     final Project project = myEnvironment.getProject();
-    RemoteServersView.getInstance(project).showServerConnection(connection);
 
     LoggingHandler loggingHandler = new LoggingHandlerImpl(project);
     DebugConnector<?,?> debugConnector;
@@ -74,7 +72,7 @@ public class DeployToServerState<S extends ServerConfiguration, D extends Deploy
     connection.deploy(new DeploymentTaskImpl(mySource, myConfiguration, project, loggingHandler, debugConnector, myEnvironment), new ParameterizedRunnable<String>() {
       @Override
       public void run(String s) {
-        RemoteServersView.getInstance(project).showDeployment(connection, s);
+
       }
     });
     return null;

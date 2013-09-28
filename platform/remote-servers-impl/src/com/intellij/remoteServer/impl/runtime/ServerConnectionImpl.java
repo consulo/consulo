@@ -123,6 +123,12 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
   @Nullable
   @Override
+  public DeploymentLogManager getLogManager(@NotNull String deployment) {
+    return myLogManagers.get(deployment);
+  }
+
+  @Nullable
+  @Override
   public DeploymentLogManager getLogManager(@NotNull Deployment deployment) {
     return myLogManagers.get(deployment.getName());
   }

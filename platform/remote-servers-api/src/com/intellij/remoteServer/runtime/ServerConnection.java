@@ -40,5 +40,7 @@ public interface ServerConnection<D extends DeploymentConfiguration> {
   Collection<Deployment> getDeployments();
 
   @Nullable
+  DeploymentLogManager getLogManager(@NotNull String deployment);
+
   DeploymentLogManager getLogManager(@NotNull Deployment deployment);
 }
