@@ -575,7 +575,7 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
 
     if (myUnknownElements != null) {
       for (Element unloadedElement : myUnknownElements) {
-        parentNode.addContent((Element)unloadedElement.clone());
+        parentNode.addContent(unloadedElement.clone());
       }
     }
   }
