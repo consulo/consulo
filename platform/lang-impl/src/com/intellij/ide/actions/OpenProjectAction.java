@@ -16,7 +16,6 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -46,7 +45,6 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true);
     descriptor.setTitle(IdeBundle.message("title.open.project"));
     final Set<String> extensions = new LinkedHashSet<String>();
-    extensions.add(ProjectFileType.DOT_DEFAULT_EXTENSION);
     final ProjectOpenProcessor[] openProcessors = Extensions.getExtensions(ProjectOpenProcessor.EXTENSION_POINT_NAME);
     for (ProjectOpenProcessor openProcessor : openProcessors) {
       final String[] supportedExtensions = ((ProjectOpenProcessorBase)openProcessor).getSupportedExtensions();
