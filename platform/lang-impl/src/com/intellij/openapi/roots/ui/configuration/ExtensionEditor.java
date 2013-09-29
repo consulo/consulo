@@ -80,7 +80,10 @@ public class ExtensionEditor extends ModuleElementsEditor {
             return;
           }
 
-          mySplitter.setSecondComponent(createConfigurationPanel(extension));
+          JPanel panel = new JPanel(new BorderLayout());
+          panel.add(createConfigurationPanel(extension), BorderLayout.NORTH);
+
+          mySplitter.setSecondComponent(panel);
         }
       }
     });
