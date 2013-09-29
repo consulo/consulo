@@ -16,7 +16,6 @@
 
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.ide.util.PlatformModuleRendererFactory;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
@@ -128,16 +127,6 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFile> {
 
     renderer.append(itemPresentation.getLocationString(), new SimpleTextAttributes(Font.PLAIN, JBColor.GRAY));
     return true;
-  }
-
-  @Override
-  protected DefaultListCellRenderer getRightCellRenderer(final Object value) {
-    final DefaultListCellRenderer rightRenderer = super.getRightCellRenderer(value);
-    if (rightRenderer instanceof PlatformModuleRendererFactory.PlatformModuleRenderer) {
-      // that renderer will display file path, but we're showing it ourselves - no need to show twice
-      return null;
-    }
-    return rightRenderer;
   }
 
   @Override

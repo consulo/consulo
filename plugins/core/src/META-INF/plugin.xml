@@ -3208,9 +3208,6 @@
     <extensionPoint name="compiler.additionalCompileScopeProvider"
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 
-    <extensionPoint name="compiler.makeDependencyProcessor"
-                    interface="com.intellij.compiler.DependencyProcessor"/>
-
     <extensionPoint name="compiler.resourceCompilerExtension"
                     interface="com.intellij.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
 
@@ -3232,7 +3229,9 @@
     <extensionPoint name="projectImportBuilder" interface="com.intellij.projectImport.ProjectImportBuilder"/>
     <extensionPoint name="projectStructureDetector" interface="com.intellij.ide.util.projectWizard.importSources.ProjectStructureDetector"/>
 
-    <extensionPoint name="codeInsight.wordCompletionFilter" beanClass="com.intellij.lang.LanguageExtensionPoint"/>
+    <extensionPoint name="codeInsight.wordCompletionFilter" beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.lang.WordCompletionElementFilter"/>
+    </extensionPoint>
 
 
     <extensionPoint name="compiler" area="CONSULO_PROJECT" interface="com.intellij.openapi.compiler.Compiler"/>
@@ -3713,8 +3712,6 @@
     <extensionPoint name="library.presentationProvider" interface="com.intellij.openapi.roots.libraries.LibraryPresentationProvider"/>
     <extensionPoint name="library.type" interface="com.intellij.openapi.roots.libraries.LibraryType"/>
 
-    <extensionPoint name="sdkFinder" interface="com.intellij.openapi.roots.impl.SdkFinder"/>
-
     <extensionPoint name="lang.implementationTextSelectioner"
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.hint.ImplementationTextSelectioner"/>
@@ -3986,8 +3983,6 @@
 
     <extensionPoint name="aliasingPsiTargetMapper" interface="com.intellij.psi.targets.AliasingPsiTargetMapper"/>
 
-    <extensionPoint name="sourceRootFinder" interface="com.intellij.ide.util.newProjectWizard.SourceRootFinder"/>
-
     <extensionPoint name="inspectionsReportConverter"
                     interface="com.intellij.codeInspection.InspectionsReportConverter"/>
 
@@ -4010,8 +4005,6 @@
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.CodeBlockProvider"/>
     </extensionPoint>
-
-    <extensionPoint name="moduleRendererFactory" interface="com.intellij.ide.util.ModuleRendererFactory"/>
 
     <extensionPoint name="toolsProvider" interface="com.intellij.tools.ToolsProvider"/>
 
@@ -4602,7 +4595,6 @@
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                         serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
-    <moduleRendererFactory implementation="com.intellij.ide.util.DefaultModuleRendererFactory" order="last"/>
 
     <!--Lang-->
     <appStarter implementation="com.intellij.codeInspection.InspectionMain"/>
@@ -5425,7 +5417,6 @@
                     serviceImplementation="com.intellij.platform.ProjectBaseDirectory"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable"/>
 
-    <moduleRendererFactory implementation="com.intellij.ide.util.PlatformModuleRendererFactory" order="last"/>
     <projectService serviceInterface="com.intellij.lang.injection.InjectedLanguageManager"
                     serviceImplementation="com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.patch.PatchBaseDirectoryDetector"

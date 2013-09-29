@@ -69,9 +69,8 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
     removeAll();
 
     final boolean hasRightRenderer = UISettings.getInstance().SHOW_ICONS_IN_QUICK_NAVIGATION;
-    final ModuleRendererFactory factory = ModuleRendererFactory.findInstance(value);
 
-    final LeftRenderer left = new LeftRenderer(!hasRightRenderer || !factory.rendersLocationString(), myMatcher);
+    final LeftRenderer left = new LeftRenderer(!hasRightRenderer, myMatcher);
     final Component leftCellRendererComponent = left.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     final Color listBg = leftCellRendererComponent.getBackground();
     add(leftCellRendererComponent, BorderLayout.WEST);
@@ -79,7 +78,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
     setBackground(isSelected ? UIUtil.getListSelectionBackground() : listBg);
 
     if  (hasRightRenderer){
-      final DefaultListCellRenderer moduleRenderer = factory.getModuleRenderer();
+      final DefaultListCellRenderer moduleRenderer = new PsiElementModuleRenderer();
 
       final Component rightCellRendererComponent =
         moduleRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
