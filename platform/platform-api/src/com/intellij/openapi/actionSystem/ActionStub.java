@@ -98,7 +98,7 @@ public class ActionStub extends AnAction {
     }
     targetAction.setShortcutSet(getShortcutSet());
     targetAction.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
-    targetAction.setModuleExtensionClasses(getModuleExtensionClasses());
+    targetAction.setModuleExtensionIds(getModuleExtensionIds());
   }
 
 }

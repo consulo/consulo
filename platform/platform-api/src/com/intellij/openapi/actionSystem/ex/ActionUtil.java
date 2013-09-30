@@ -25,7 +25,8 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionProvider;
+import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -138,13 +139,13 @@ public class ActionUtil {
     if(project == null) {
       return true;
     }
-    Class<? extends ModuleExtension<?>>[] moduleExtensionClasses = action.getModuleExtensionClasses();
-    if(moduleExtensionClasses.length == 0) {
+    String[] moduleExtensionIds = action.getModuleExtensionIds();
+    if(moduleExtensionIds.length == 0) {
       return true;
     }
     if(action.isCanUseProjectAsDefault()) {
       for (Module temp : ModuleManager.getInstance(project).getModules()) {
-        boolean b = checkModuleForModuleExtensions(temp, moduleExtensionClasses);
+        boolean b = checkModuleForModuleExtensions(temp, moduleExtensionIds);
         if(b) {
           return true;
         }
@@ -153,7 +154,10 @@ public class ActionUtil {
     else {
       Module module = e.getData(LangDataKeys.MODULE);
       if(module != null) {
-        return checkModuleForModuleExtensions(module, moduleExtensionClasses);
+        boolean result = checkModuleForModuleExtensions(module, moduleExtensionIds);
+        if(result) {
+          return true;
+        }
       }
 
       VirtualFile[] virtualFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
@@ -161,7 +165,7 @@ public class ActionUtil {
         for (VirtualFile virtualFile : virtualFiles) {
           Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
           if(moduleForFile != null) {
-            return checkModuleForModuleExtensions(module, moduleExtensionClasses);
+            return checkModuleForModuleExtensions(module, moduleExtensionIds);
           }
         }
       }
@@ -169,12 +173,16 @@ public class ActionUtil {
     return false;
   }
 
-  private static boolean checkModuleForModuleExtensions(@Nullable Module module, @NotNull Class<? extends ModuleExtension<?>>[] array) {
+  private static boolean checkModuleForModuleExtensions(@Nullable Module module, @NotNull String[] array) {
     if(module == null) {
       return false;
     }
-    for (Class<? extends ModuleExtension> moduleExtensionClass : array) {
-      if(ModuleUtilCore.getExtension(module, moduleExtensionClass) != null) {
+    for (String moduleExtensionId : array) {
+      ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(moduleExtensionId);
+      if(provider == null) {
+        continue;
+      }
+      if(ModuleUtilCore.getExtension(module, provider.getImmutableClass()) != null) {
         return true;
       }
     }

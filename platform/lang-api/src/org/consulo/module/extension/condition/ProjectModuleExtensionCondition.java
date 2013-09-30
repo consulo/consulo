@@ -22,7 +22,10 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
 import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionProvider;
+import org.consulo.module.extension.ModuleExtensionProviderEP;
 
 /**
  * @author VISTALL
@@ -34,24 +37,24 @@ public class ProjectModuleExtensionCondition implements Condition<Project> {
     return StringUtil.isEmptyOrSpaces(ids) ? Conditions.<Project>alwaysTrue() : new ProjectModuleExtensionCondition(ids);
   }
 
-  private Class<? extends ModuleExtension<?>>[] myExtensionClasses;
+  private String[] myExtensionIds;
 
   private ProjectModuleExtensionCondition(String ids) {
-    myExtensionClasses = ModuleExtensionConvertUtil.toModuleExtensionClassArray(ids);
+    myExtensionIds = ArrayUtil.toStringArray(StringUtil.split(ids, ","));
   }
 
   @Override
   public boolean value(Project project) {
-    if (myExtensionClasses.length == 0) {
-      return false;
-    }
-
     ModuleManager moduleManager = ModuleManager.getInstance(project);
     for (Module module : moduleManager.getModules()) {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
-      for (Class<? extends ModuleExtension<?>> extensionClass : myExtensionClasses) {
-        ModuleExtension<?> extension = moduleRootManager.getExtension(extensionClass);
+      for (String extensionId : myExtensionIds) {
+        ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(extensionId);
+        if(provider == null) {
+          continue;
+        }
+        ModuleExtension<?> extension = moduleRootManager.getExtension(provider.getImmutableClass());
         if(extension != null) {
           return true;
         }

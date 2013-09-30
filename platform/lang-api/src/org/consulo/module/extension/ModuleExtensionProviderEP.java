@@ -16,13 +16,15 @@
 package org.consulo.module.extension;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.KeyedLazyInstanceEP;
+import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -41,27 +43,29 @@ public class ModuleExtensionProviderEP extends KeyedLazyInstanceEP<ModuleExtensi
   @Attribute("system-only")
   public boolean systemOnly;
 
-  @NotNull
-  public static List<ModuleExtensionProvider> getProviders() {
-    final ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();
-    if (extensions.length == 0) {
-      return Collections.emptyList();
+  private static NotNullLazyValue<Map<String, ModuleExtensionProvider>> myLazyMap = new NotNullLazyValue<Map<String, ModuleExtensionProvider>>() {
+    @NotNull
+    @Override
+    protected Map<String, ModuleExtensionProvider> compute() {
+      Map<String, ModuleExtensionProvider> map = new HashMap<String, ModuleExtensionProvider>();
+      for (ModuleExtensionProviderEP ep : EP_NAME.getExtensions()) {
+        ModuleExtensionProvider extensionProvider = ep.getInstance();
+        if(extensionProvider == null) {
+          continue;
+        }
+        map.put(ep.getKey(), extensionProvider);
+      }
+      return map;
     }
+  };
 
-    List<ModuleExtensionProvider> list = new ArrayList<ModuleExtensionProvider>(extensions.length);
-    for (ModuleExtensionProviderEP ep : extensions) {
-      list.add(ep.getInstance());
-    }
-    return list;
+  @NotNull
+  public static Collection<ModuleExtensionProvider> getProviders() {
+    return myLazyMap.getValue().values();
   }
 
+  @Nullable
   public static ModuleExtensionProvider findProvider(@NotNull String id) {
-    final ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();
-    for (ModuleExtensionProviderEP ep : extensions) {
-      if (ep.getKey().equals(id)) {
-        return ep.getInstance();
-      }
-    }
-    return null;
+    return myLazyMap.getValue().get(id);
   }
 }
