@@ -57,6 +57,7 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
   protected Project generateProject(Project project, NewDirectoryProjectDialog dlg) {
     final DirectoryProjectGenerator generator = dlg.getProjectGenerator();
     final File location = new File(dlg.getNewProjectLocation());
+    final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {
       Messages.showErrorDialog(project, "Cannot create directory '" + location + "'", "Create Project");
       return null;
@@ -69,7 +70,7 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
     });
     baseDir.refresh(false, true);
 
-    if (baseDir.getChildren().length > 0) {
+    if (childCount > 0) {
       int rc = Messages.showYesNoDialog(project,
                                         "The directory '" + location +
                                         "' is not empty. Would you like to create a project from existing sources instead?",

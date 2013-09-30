@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author yole
  */
+@Deprecated
 public interface DirectoryProjectConfigurator {
   ExtensionPointName<DirectoryProjectConfigurator> EP_NAME = ExtensionPointName.create("com.intellij.directoryProjectConfigurator");
 

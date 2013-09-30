@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 
 @Logger
+@Deprecated
 public class NewProjectUtil extends NewProjectUtilPlatform {
   private NewProjectUtil() {
   }

@@ -51,7 +51,7 @@ public abstract class AbstractGithubTagDownloadedProjectGenerator extends WebPro
 
   @Override
   public void generateProject(@NotNull final Project project, @NotNull final VirtualFile baseDir,
-                              @NotNull GithubTagInfo tag, @NotNull Module module) {
+                              @NotNull GithubTagInfo tag, @Nullable Module module) {
     try {
       unpackToDir(project, new File(baseDir.getPath()), tag);
     }

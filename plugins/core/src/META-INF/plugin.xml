@@ -912,7 +912,7 @@
     </group>
 
     <group id="WelcomeScreen.QuickStart.IDEA">
-      <action id="WelcomeScreen.CreateNewProject" class="com.intellij.ide.actions.NewProjectAction"
+      <action id="WelcomeScreen.CreateNewProject" class="com.intellij.platform.NewDirectoryProjectAction"
               icon="AllIcons.General.CreateNewProject"/>
       <action id="WelcomeScreen.ImportProject" class="com.intellij.ide.actions.ImportProjectAction" icon="AllIcons.General.ImportProject"/>
       <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenProjectAction"
@@ -1800,7 +1800,7 @@
 
     <!-- File -->
     <group id="OpenProjectGroup">
-      <action id="NewProject" class="com.intellij.ide.actions.NewProjectAction"/>
+      <action id="NewProject" class="com.intellij.platform.NewDirectoryProjectAction"/>
       <action id="NewModule" class="com.intellij.openapi.actionSystem.EmptyAction"/>
       <!--com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction-->
       <action id="ImportProject" class="com.intellij.ide.actions.ImportProjectAction" text="Import Project..."/>
@@ -5133,8 +5133,6 @@
     <syntaxHighlighter factoryClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeHighlighterProvider"/>
     <fileTypeRegistrator implementation="com.intellij.ide.highlighter.custom.impl.StandardFileTypeRegistrator"/>
 
-    <directoryProjectConfigurator implementation="com.intellij.platform.PlatformProjectConfigurator" order="first"
-                                  id="PlatformProjectConfigurator"/>
     <directoryProjectConfigurator implementation="com.intellij.platform.PlatformProjectViewOpener"/>
 
     <statementUpDownMover implementation="com.intellij.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
@@ -5551,5 +5549,7 @@
                     serviceImplementation="com.intellij.remoteServer.impl.ui.RemoteServersViewImpl" />
 
     <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
+
+    <directoryProjectGenerator implementation="com.intellij.platform.DefaultDirectoryProjectGenerator" />
   </extensions>
 </idea-plugin>

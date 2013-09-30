@@ -16,18 +16,14 @@
 package com.intellij.platform;
 
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
 /**
  * @author yole
@@ -46,9 +42,6 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
 
   private JPanel myPlaceHolder;
 
-  private static final Object EMPTY_PROJECT_GENERATOR = new Object();
-  private final DirectoryProjectGenerator myGeneratorBeforeSeparator;
-
   protected NewDirectoryProjectDialog(Project project) {
     super(project, true);
     setTitle("Create New Project");
@@ -56,98 +49,38 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
 
     myLocationLabel.setLabelFor(myLocationField.getChildComponent());
 
-    new LocationNameFieldsBinding(project, myLocationField, myProjectNameTextField, ProjectUtil.getBaseDir(), "Select Location for Project Directory");
+    new LocationNameFieldsBinding(project, myLocationField, myProjectNameTextField, ProjectUtil.getBaseDir(),
+                                  "Select Location for Project Directory");
 
-    final DirectoryProjectGenerator[] generators = getGenerators();
-    if (generators.length == 0) {
-      myProjectTypePanel.setVisible(false);
-      myGeneratorBeforeSeparator = null;
+    final DirectoryProjectGenerator[] generators = DirectoryProjectGenerator.EP_NAME.getExtensions();
+    assert generators.length != 0;
+
+    DefaultComboBoxModel model = new DefaultComboBoxModel();
+
+    for (DirectoryProjectGenerator generator : generators) {
+      if (generator instanceof HideableProjectGenerator) {
+        if (((HideableProjectGenerator)generator).isHidden()) {
+          continue;
+        }
+      }
+      model.addElement(generator);
     }
-    else {
-      DefaultComboBoxModel model = new DefaultComboBoxModel();
-      model.addElement(getEmptyProjectGenerator());
-      List<DirectoryProjectGenerator> primaryGenerators = ContainerUtil.newArrayList();
-      List<DirectoryProjectGenerator> otherGenerators = ContainerUtil.newArrayList();
-      for (DirectoryProjectGenerator generator : generators) {
-        if (generator instanceof HideableProjectGenerator) {
-          if (((HideableProjectGenerator)generator).isHidden()) {
-            continue;
-          }
-        }
-        boolean primary = true;
-        if (generator instanceof WebProjectGenerator) {
-          primary = ((WebProjectGenerator) generator).isPrimaryGenerator();
-        }
-        if (primary) {
-          primaryGenerators.add(generator);
-        } else {
-          otherGenerators.add(generator);
-        }
-      }
-      if (!primaryGenerators.isEmpty() && !otherGenerators.isEmpty()) {
-        myGeneratorBeforeSeparator = primaryGenerators.get(primaryGenerators.size() - 1);
-      }
-      else {
-        myGeneratorBeforeSeparator = null;
-      }
-      for (DirectoryProjectGenerator generator : primaryGenerators) {
-        model.addElement(generator);
-      }
-      for (DirectoryProjectGenerator generator : otherGenerators) {
-        model.addElement(generator);
-      }
-      myProjectTypeComboBox.setModel(model);
-      myProjectTypeComboBox.setRenderer(createProjectTypeListCellRenderer(myProjectTypeComboBox.getRenderer()));
-    }
+
+    myProjectTypeComboBox.setModel(model);
+    myProjectTypeComboBox.setRenderer(createProjectTypeListCellRenderer(myProjectTypeComboBox.getRenderer()));
 
   }
 
   @NotNull
   private ListCellRenderer createProjectTypeListCellRenderer(@NotNull final ListCellRenderer originalRenderer) {
-    ListCellRenderer intermediate = myGeneratorBeforeSeparator == null ? originalRenderer : new ListCellRenderer() {
 
-      private final JSeparator mySeparator = new JSeparator(SwingConstants.HORIZONTAL);
-      private final JPanel myComponentWithSeparator = new JPanel(new BorderLayout(0, 0));
-
-      @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Component original = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if (index != -1 && value == myGeneratorBeforeSeparator
-            && value instanceof DirectoryProjectGenerator && original instanceof JLabel) {
-          myComponentWithSeparator.removeAll();
-
-          JLabel label = (JLabel) original;
-          label.setText(((DirectoryProjectGenerator) value).getName());
-          myComponentWithSeparator.add(label, BorderLayout.CENTER);
-          myComponentWithSeparator.add(mySeparator, BorderLayout.SOUTH);
-
-          myComponentWithSeparator.revalidate();
-          myComponentWithSeparator.repaint();
-          return myComponentWithSeparator;
-        }
-        return original;
-      }
-    };
     return new ListCellRendererWrapper() {
       @Override
       public void customize(final JList list, final Object value, final int index, final boolean selected, final boolean cellHasFocus) {
         if (value == null) return;
-        if (value == EMPTY_PROJECT_GENERATOR) {
-          setText("Empty project");
-        }
-        else {
-          setText(((DirectoryProjectGenerator)value).getName());
-        }
+        setText(((DirectoryProjectGenerator)value).getName());
       }
     };
-  }
-
-  protected Object getEmptyProjectGenerator() {
-    return EMPTY_PROJECT_GENERATOR;
-  }
-
-  protected DirectoryProjectGenerator[] getGenerators() {
-    return Extensions.getExtensions(DirectoryProjectGenerator.EP_NAME);
   }
 
   protected void checkValid() {
@@ -192,7 +125,6 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
   @Nullable
   public DirectoryProjectGenerator getProjectGenerator() {
     final Object selItem = myProjectTypeComboBox.getSelectedItem();
-    if (selItem == EMPTY_PROJECT_GENERATOR) return null;
     return (DirectoryProjectGenerator)selItem;
   }
 
