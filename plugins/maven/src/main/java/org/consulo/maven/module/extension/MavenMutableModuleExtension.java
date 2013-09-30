@@ -34,7 +34,6 @@ public class MavenMutableModuleExtension extends MavenModuleExtension implements
   public MavenMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull MavenModuleExtension mavenModuleExtension) {
     super(id, module);
     myMavenModuleExtension = mavenModuleExtension;
-    commit(mavenModuleExtension);
   }
 
   @Nullable

@@ -21,11 +21,21 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * @author VISTALL
  * @since 12:30/19.05.13
  */
 public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements ModuleExtension<T> {
+  @NotNull
+  protected static JComponent wrapToNorth(@NotNull JComponent component) {
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(component, BorderLayout.NORTH);
+    return panel;
+  }
+
   protected boolean myIsEnabled;
   private final String myId;
   private final Module myModule;

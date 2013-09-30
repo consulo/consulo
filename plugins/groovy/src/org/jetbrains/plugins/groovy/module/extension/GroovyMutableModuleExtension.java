@@ -20,7 +20,6 @@ public class GroovyMutableModuleExtension extends GroovyModuleExtension implemen
   public GroovyMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull GroovyModuleExtension moduleExtension) {
     super(id, module);
     myModuleExtension = moduleExtension;
-    commit(myModuleExtension);
   }
 
   @Nullable

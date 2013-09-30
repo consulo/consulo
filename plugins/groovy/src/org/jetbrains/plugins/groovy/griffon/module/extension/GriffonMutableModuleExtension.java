@@ -34,7 +34,6 @@ public class GriffonMutableModuleExtension extends GriffonModuleExtension implem
   public GriffonMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull GriffonModuleExtension originalModuleExtension) {
     super(id, module);
     myOriginalModuleExtension = originalModuleExtension;
-    commit(originalModuleExtension);
   }
 
   @Nullable
