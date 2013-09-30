@@ -1,5 +1,9 @@
 language: java
 script: ant
+env:
+  # disable cext
+  global:
+    - JAVA_OPTS="-server -Xmx512m"
 branches:
   only:
     - master
