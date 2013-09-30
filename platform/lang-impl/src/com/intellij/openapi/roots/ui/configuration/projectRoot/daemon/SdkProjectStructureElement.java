@@ -2,6 +2,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,12 @@ public class SdkProjectStructureElement extends ProjectStructureElement {
 
   public Sdk getSdk() {
     return mySdk;
+  }
+
+  @Nullable
+  @Override
+  public String getDescription() {
+    return mySdk.getVersionString();
   }
 
   @Override

@@ -39,7 +39,7 @@ import javax.swing.*;
  * Date: 05-Jun-2006
  */
 public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> implements Place.Navigator {
-  private final SdkImpl myProjectSdk;
+  private final SdkImpl mySdk;
   private final SdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
@@ -49,10 +49,10 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
                          @NotNull History history,
                          Project project) {
     super(true, updateTree);
-    myProjectSdk = projectSdk;
-    mySdkEditor = createSdkEditor(sdksModel, history, myProjectSdk);
+    mySdk = projectSdk;
+    mySdkEditor = createSdkEditor(sdksModel, history, mySdk);
     final StructureConfigurableContext context = ModuleStructureConfigurable.getInstance(project).getContext();
-    myProjectStructureElement = new SdkProjectStructureElement(context, myProjectSdk);
+    myProjectStructureElement = new SdkProjectStructureElement(context, mySdk);
   }
 
   protected SdkEditor createSdkEditor(ProjectSdksModel sdksModel, History history, SdkImpl projectJdk) {
@@ -66,36 +66,35 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
 
   @Override
   public void setDisplayName(final String name) {
-    myProjectSdk.setName(name);
+    mySdk.setName(name);
   }
 
   @Override
   public Sdk getEditableObject() {
-    return myProjectSdk;
+    return mySdk;
   }
 
   @Override
   public String getBannerSlogan() {
-    return ProjectBundle.message("project.roots.jdk.banner.text", myProjectSdk.getName());
+    return ProjectBundle.message("project.roots.jdk.banner.text", mySdk.getName());
   }
 
   @Override
   public String getDisplayName() {
-    return myProjectSdk.getName();
+    return mySdk.getName();
   }
 
   @Override
   public Icon getIcon(boolean open) {
-    return ((SdkType) myProjectSdk.getSdkType()).getIcon();
+    return ((SdkType) mySdk.getSdkType()).getIcon();
   }
 
   @Override
   @Nullable
   @NonNls
   public String getHelpTopic() {
-    return ((SdkType) myProjectSdk.getSdkType()).getHelpTopic();
+    return ((SdkType) mySdk.getSdkType()).getHelpTopic();
   }
-
 
   @Override
   public JComponent createOptionsPanel() {
@@ -134,5 +133,9 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   @Override
   public void queryPlace(@NotNull final Place place) {
     mySdkEditor.queryPlace(place);
+  }
+
+  public Sdk getSdk() {
+    return mySdk;
   }
 }

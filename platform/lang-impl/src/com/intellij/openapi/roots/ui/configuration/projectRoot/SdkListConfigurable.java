@@ -98,7 +98,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   @Override
   @Nls
   public String getDisplayName() {
-    return ProjectBundle.message("jdks.node.display.name");
+    return ProjectBundle.message("global.bundles.display.name");
   }
 
   @Override
@@ -285,9 +285,8 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   }
 
   @Override
-  protected
   @Nullable
-  String getEmptySelectionString() {
-    return "Select an SDK to view or edit its details here";
+  protected String getEmptySelectionString() {
+    return ProjectBundle.message("global.bundles.empty.text");
   }
 }

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
@@ -204,7 +205,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
     boolean isDefaultProject = myProject == ProjectManager.getInstance().getDefaultProject();
 
     mySidePanel = new SidePanel(this, myHistory);
-    mySidePanel.addSeparator("Project Settings");
+    mySidePanel.addSeparator(IdeBundle.message("project.settings.separator"));
     addProjectConfig();
     if (!isDefaultProject) {
       addModulesConfig();
@@ -214,8 +215,8 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
     if (!isDefaultProject) {
       addArtifactsConfig();
     }
-    mySidePanel.addSeparator("Platform Settings");
-    addJdkListConfig();
+    mySidePanel.addSeparator(IdeBundle.message("global.settings.separator"));
+    addGlobalBundleListConfig();
     addGlobalLibrariesConfig();
   }
 
@@ -228,7 +229,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
   }
 
 
-  private void addJdkListConfig() {
+  private void addGlobalBundleListConfig() {
     if (mySdkListConfig == null) {
       mySdkListConfig = SdkListConfigurable.getInstance(myProject);
       mySdkListConfig.init(myContext);

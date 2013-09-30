@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -39,7 +40,7 @@ public class GlobalLibrariesConfigurable extends BaseLibrariesConfigurable {
   @Override
   @Nls
   public String getDisplayName() {
-    return "Global Libraries";
+    return IdeBundle.message("global.libraries.display.name");
   }
 
   @Override
