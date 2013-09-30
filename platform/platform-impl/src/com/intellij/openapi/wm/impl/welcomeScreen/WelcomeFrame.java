@@ -56,7 +56,7 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
 
   public WelcomeFrame() {
     JRootPane rootPane = getRootPane();
-    final WelcomeScreen screen = new NewWelcomeScreen();
+    final WelcomeScreen screen = new NewWelcomeScreen2();
 
     final IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(rootPane);
     setGlassPane(glassPane);
@@ -205,5 +205,9 @@ public class WelcomeFrame extends JFrame implements IdeFrame {
 
   public static void notifyFrameClosed(JFrame frame) {
     saveLocation(frame.getBounds());
+  }
+
+  public WelcomeScreen getScreen() {
+    return myScreen;
   }
 }

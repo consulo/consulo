@@ -23,6 +23,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 
 import java.awt.event.InputEvent;
 import java.io.File;
@@ -54,6 +55,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
                                        "If it is on a removable or network drive, please make sure that the drive is connected.",
                                        "Reopen Project", new String[]{"OK", "&Remove From List"}, 0, Messages.getErrorIcon()) == 1) {
         RecentProjectsManagerBase.getInstance().removePath(myProjectPath);
+        ((WelcomeFrame)WelcomeFrame.getInstance()).getScreen().removeRecentProjectItem(this);
       }
       return;
     }

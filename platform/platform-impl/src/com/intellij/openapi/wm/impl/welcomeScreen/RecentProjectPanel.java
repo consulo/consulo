@@ -40,7 +40,6 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -165,24 +164,10 @@ public class RecentProjectPanel extends JPanel {
                         }
                       });
     add(list, BorderLayout.CENTER);
+  }
 
-    JPanel title = new JPanel() {
-      @Override
-      public Dimension getPreferredSize() {
-        return new Dimension(super.getPreferredSize().width, 28);
-      }
-    };
-    title.setBorder(new BottomLineBorder());
-
-    JLabel titleLabel = new JLabel("Recent Projects");
-    title.add(titleLabel);
-    titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    titleLabel.setForeground(WelcomeScreenColors.CAPTION_FOREGROUND);
-    title.setBackground(WelcomeScreenColors.CAPTION_BACKGROUND);
-
-    add(title, BorderLayout.NORTH);
-
-    setBorder(new LineBorder(WelcomeScreenColors.BORDER_COLOR));
+  public void removeRecentItem(AnAction anAction) {
+    ListUtil.removeSelectedItems(myList);
   }
 
   private String getTitle2Text(ReopenProjectAction action, JComponent pathLabel) {
@@ -206,11 +191,6 @@ public class RecentProjectPanel extends JPanel {
     private MyList(@NotNull Object... listData) {
       super(listData);
       setEmptyText("  No Project Open Yet  ");
-    }
-
-    @Override
-    public Dimension getPreferredScrollableViewportSize() {
-      return new Dimension(250, 400);
     }
   }
 

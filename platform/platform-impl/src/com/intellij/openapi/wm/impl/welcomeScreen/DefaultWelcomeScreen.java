@@ -62,6 +62,7 @@ import static java.awt.GridBagConstraints.*;
  * @author pti
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public class DefaultWelcomeScreen implements WelcomeScreen {
   private static final Insets ACTION_GROUP_CAPTION_INSETS = new Insets(20, 30, 5, 0);
   private static final Insets PLUGINS_CAPTION_INSETS = new Insets(20, 25, 0, 0);
@@ -124,6 +125,10 @@ public class DefaultWelcomeScreen implements WelcomeScreen {
 
   @Override
   public void setupFrame(JFrame frame) {
+  }
+
+  @Override
+  public void removeRecentProjectItem(AnAction anActiona) {
   }
 
   public DefaultWelcomeScreen(JComponent rootPane) {

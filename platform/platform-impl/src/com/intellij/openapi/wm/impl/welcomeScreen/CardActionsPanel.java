@@ -23,7 +23,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
-import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.JBCardLayout;
@@ -74,21 +73,24 @@ public class CardActionsPanel extends JPanel {
       buttonsPanel.add(button);
     }
     card.add(buttonsPanel, BorderLayout.CENTER);
-    String title;
+
     if (parentId != null) {
-      title = group.getTemplatePresentation().getText();
+      AnAction back = new AnAction(null, null, null) {
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+          myLayout.swipe(myContent, parentId, JBCardLayout.SwipeDirection.BACKWARD);
+        }
+      };
+      Presentation p = new Presentation("Back");
+      p.setIcon(AllIcons.Actions.Back);
+      card.add(new Button(back, p), BorderLayout.NORTH);
     }
-    else {
-      title = "Quick Start";
-    }
-    card.add(new HeaderPanel(title, parentId), BorderLayout.NORTH);
   }
 
   private List<Button> buildButtons(ActionGroup group, String parentId) {
     AnAction[] actions = group.getChildren(null);
 
     List<Button> buttons = new ArrayList<Button>();
-    PresentationFactory factory = new PresentationFactory();
 
     for (AnAction action : actions) {
       Presentation presentation = action.getTemplatePresentation();
@@ -116,41 +118,6 @@ public class CardActionsPanel extends JPanel {
       }
     }
     return buttons;
-  }
-
-  private class HeaderPanel extends JPanel {
-    private HeaderPanel(String text, final String parentId) {
-      super(new BorderLayout(5, 5));
-
-      setBackground(WelcomeScreenColors.CAPTION_BACKGROUND);
-
-      if (parentId != null) {
-        AnAction back = new AnAction("Back", null, AllIcons.Actions.Back) {
-          @Override
-          public void actionPerformed(AnActionEvent e) {
-            myLayout.swipe(myContent, parentId, JBCardLayout.SwipeDirection.BACKWARD);
-          }
-        };
-
-        ActionToolbar toolbar =
-          ActionManager.getInstance().createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, new DefaultActionGroup(back), true);
-
-        JComponent toolbarComponent = toolbar.getComponent();
-        toolbarComponent.setOpaque(false);
-        add(toolbarComponent, BorderLayout.WEST);
-      }
-
-      JLabel title = new JLabel(text);
-      title.setHorizontalAlignment(SwingConstants.CENTER);
-      title.setForeground(WelcomeScreenColors.CAPTION_FOREGROUND);
-      add(title, BorderLayout.CENTER);
-      setBorder(new BottomLineBorder());
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-      return new Dimension(super.getPreferredSize().width, 28);
-    }
   }
 
   private static class Button extends ActionButtonWithText {

@@ -293,6 +293,11 @@ public final class Presentation implements Cloneable {
     setVisible(enabled);
   }
 
+  public final void setEnabledAndVisibleSilent(boolean enabled) {
+    myEnabled = enabled;
+    myVisible = enabled;
+  }
+
   void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
     myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
   }

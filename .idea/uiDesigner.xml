@@ -153,6 +153,9 @@
       <item class="com.intellij.ui.CheckBoxList" icon="/com/intellij/uiDesigner/icons/list.png" removable="true" auto-create-binding="true" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
+      <item class="com.intellij.openapi.wm.impl.welcomeScreen.WelcomeScreenHeaderButton" icon="/com/intellij/uiDesigner/icons/panel.png" removable="true" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
     </group>
   </component>
   <component name="uidesigner-configuration">

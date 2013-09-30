@@ -101,7 +101,7 @@ public class ActionUtil {
       boolean enabled = checkModuleExtensions(action, e);
       //FIXME [VISTALL] hack
       if(enabled && action instanceof ActionGroup) {
-        presentation.setEnabledAndVisible(true);
+        presentation.setEnabledAndVisibleSilent(true);
       }
       else if(!enabled) {
         presentation.setEnabledAndVisible(enabled);
