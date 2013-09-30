@@ -41,6 +41,8 @@
       <exclude name="dev/**"/>
       <exclude name="rt/**"/>
     </copydir>
+
+    <copyfile src="build.txt" dest="out-ant/dist/build.txt" />
   </target>
 
   <target name="build-bin">

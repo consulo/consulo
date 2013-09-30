@@ -1,4 +1,5 @@
-# Consulo
+# Consulo [![Build Status](https://secure.travis-ci.org/consulo/consulo.png?branch=master)](http://travis-ci.org/consulo/consulo)
+
 
 This is fork of IntelliJ IDEA Community Edition
 
