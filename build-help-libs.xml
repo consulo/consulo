@@ -1,0 +1,68 @@
+<project name="help-libs">
+  <property name="out.dir" value="out-ant"/>
+  <property name="lib.dir" value="out-ant/dist/lib"/>
+  <property name="tmp.dir" value="out-ant/tmp"/>
+
+  <path id="classpath">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="build" depends="build-annotations, build-forms-compiler, build-javac2" />
+
+  <target name="build-annotations">
+    <mkdir dir="${tmp.dir}/annotations" />
+    <javac classpathref="classpath" srcdir="platform/annotations/src" destdir="${tmp.dir}/annotations" />
+
+    <jar basedir="${tmp.dir}/annotations" destfile="${lib.dir}/annotations.jar" />
+  </target>
+
+  <target name="build-forms-rt">
+    <mkdir dir="${tmp.dir}/forms_rt" />
+    <javac classpathref="classpath" srcdir="platform/forms_rt/src" destdir="${tmp.dir}/forms_rt" />
+
+    <jar basedir="${tmp.dir}/forms_rt" destfile="${lib.dir}/forms_rt.jar" />
+  </target>
+
+  <target name="build-instrumental-util">
+    <mkdir dir="${tmp.dir}/instrumental-util" />
+    <javac classpathref="classpath" srcdir="platform/tools/instrumentation-util/src" destdir="${tmp.dir}/instrumental-util" />
+    <jar basedir="${tmp.dir}/instrumental-util" destfile="${lib.dir}/instrumental-util.jar" />
+  </target>
+
+  <target name="build-forms-compiler" depends="build-forms-rt, build-instrumental-util">
+    <path id="myClasspath">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
+    <mkdir dir="${tmp.dir}/forms-compiler" />
+    <javac classpathref="myClasspath" srcdir="platform/tools/forms-compiler/src" destdir="${tmp.dir}/forms-compiler" />
+    <jar basedir="${tmp.dir}/forms-compiler" destfile="${lib.dir}/forms-compiler.jar" />
+  </target>
+
+  <target name="build-javac2" depends="build-forms-compiler">
+    <path id="myClasspath">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="lib/ant/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
+    <mkdir dir="${tmp.dir}/javac2" />
+    <javac classpathref="myClasspath" srcdir="platform/tools/javac2/src" destdir="${tmp.dir}/javac2" />
+
+    <jar basedir="${tmp.dir}/javac2" destfile="${lib.dir}/javac2.jar" />
+  </target>
+
+</project>

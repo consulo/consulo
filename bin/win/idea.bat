@@ -1,14 +1,14 @@
 @ECHO OFF
 
 ::----------------------------------------------------------------------
-:: @@product_full@@ startup script.
+:: IntelliJ IDEA startup script.
 ::----------------------------------------------------------------------
 
 :: ---------------------------------------------------------------------
 :: Locate a JDK installation directory which will be used to run the IDE.
-:: Try (in order): @@product_uc@@_JDK, ..\jre, JDK_HOME, JAVA_HOME.
+:: Try (in order): IDEA_JDK, ..\jre, JDK_HOME, JAVA_HOME.
 :: ---------------------------------------------------------------------
-IF EXIST "%@@product_uc@@_JDK%" SET JDK=%@@product_uc@@_JDK%
+IF EXIST "%IDEA_JDK%" SET JDK=%IDEA_JDK%
 IF NOT "%JDK%" == "" GOTO jdk
 IF EXIST "%~dp0\..\jre" SET JDK=%~dp0\..\jre
 IF NOT "%JDK%" == "" GOTO jdk
@@ -33,25 +33,32 @@ IF EXIST "%JRE%\lib\amd64" SET BITS=64
 SET IDE_BIN_DIR=%~dp0
 SET IDE_HOME=%IDE_BIN_DIR%\..
 
-SET MAIN_CLASS_NAME=%@@product_uc@@_MAIN_CLASS_NAME%
+SET MAIN_CLASS_NAME=%IDEA_MAIN_CLASS_NAME%
 IF "%MAIN_CLASS_NAME%" == "" SET MAIN_CLASS_NAME=com.intellij.idea.Main
 
-IF NOT "%@@product_uc@@_PROPERTIES%" == "" SET IDE_PROPERTIES_PROPERTY="-Didea.properties.file=%@@product_uc@@_PROPERTIES%"
+IF NOT "%IDEA_PROPERTIES%" == "" SET IDE_PROPERTIES_PROPERTY="-Didea.properties.file=%IDEA_PROPERTIES%"
 
 :: ---------------------------------------------------------------------
 :: Collect JVM options and properties.
 :: ---------------------------------------------------------------------
-SET VM_OPTIONS_FILE=%IDE_BIN_DIR%\@@vm_options@@.vmoptions
+SET VM_OPTIONS_FILE=%IDE_BIN_DIR%\consulo%BITS%.exe.vmoptions
 SET ACC=
 FOR /F "usebackq delims=" %%i IN ("%VM_OPTIONS_FILE%") DO CALL "%IDE_BIN_DIR%\append.bat" "%%i"
 IF EXIST "%VM_OPTIONS_FILE%" SET ACC=%ACC% -Djb.vmOptionsFile="%VM_OPTIONS_FILE%"
 
-SET COMMON_JVM_ARGS="-Xbootclasspath/a:%IDE_HOME%/lib/boot.jar" -Didea.paths.selector=@@system_selector@@ %IDE_PROPERTIES_PROPERTY%
-SET IDE_JVM_ARGS=@@ide_jvm_args@@
+SET COMMON_JVM_ARGS="-Xbootclasspath/a:%IDE_HOME%/lib/boot.jar" %IDE_PROPERTIES_PROPERTY%
+SET IDE_JVM_ARGS=
 SET ALL_JVM_ARGS=%ACC% %COMMON_JVM_ARGS% %IDE_JVM_ARGS% %REQUIRED_JVM_ARGS%
 
-@@class_path@@
-IF NOT "%@@product_uc@@_CLASS_PATH%" == "" SET CLASS_PATH=%CLASS_PATH%;%@@product_uc@@_CLASS_PATH%
+SET CLASS_PATH=%IDE_HOME%\lib\bootstrap.jar
+SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\extensions.jar
+SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\util.jar
+SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\jdom.jar
+SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\log4j.jar
+SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\trove4j.jar
+SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\jna.jar
+SET CLASS_PATH=%CLASS_PATH%;%JDK%\lib\tools.jar
+IF NOT "%IDEA_CLASS_PATH%" == "" SET CLASS_PATH=%CLASS_PATH%;%IDEA_CLASS_PATH%
 
 :: ---------------------------------------------------------------------
 :: Run the IDE.
@@ -65,8 +72,8 @@ SET PATH=%OLD_PATH%
 GOTO end
 
 :error
-ECHO ERROR: cannot start @@product_full@@.
-ECHO No JDK found. Please validate either @@product_uc@@_JDK, JDK_HOME or JAVA_HOME points to valid JDK installation.
+ECHO ERROR: cannot start IntelliJ IDEA.
+ECHO No JDK found. Please validate either IDEA_JDK, JDK_HOME or JAVA_HOME points to valid JDK installation.
 ECHO
 PAUSE
 
