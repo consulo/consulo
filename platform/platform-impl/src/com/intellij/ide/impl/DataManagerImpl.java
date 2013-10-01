@@ -78,7 +78,9 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
 
   @Nullable
   private Object getDataFromProvider(@NotNull final DataProvider provider, @NotNull String dataId, @Nullable Set<String> alreadyComputedIds) {
-    if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) return null;
+    if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
+      return null;
+    }
     try {
       Object data = provider.getData(dataId);
       if (data != null) return validated(data, dataId, provider);
@@ -116,7 +118,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
     else if (component instanceof JComponent) {
       dataProvider = getDataProvider((JComponent)component);
     }
-    
+
     return dataProvider;
   }
 
@@ -304,7 +306,7 @@ public class DataManagerImpl extends DataManager implements ApplicationComponent
   private static class NullResult {
     public static final NullResult INSTANCE = new NullResult();
   }
-  
+
   private static final Set<String> ourSafeKeys = new HashSet<String>(Arrays.asList(
     PlatformDataKeys.PROJECT.getName(),
     PlatformDataKeys.EDITOR.getName(),

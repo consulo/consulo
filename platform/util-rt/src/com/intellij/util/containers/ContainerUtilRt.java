@@ -15,6 +15,7 @@
  */
 package com.intellij.util.containers;
 
+import com.intellij.openapi.util.Pair;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +57,15 @@ public class ContainerUtilRt {
     Map<K, V> map = newHashMap();
     for (int i = 0; i < keys.size(); ++i) {
       map.put(keys.get(i), values.get(i));
+    }
+    return map;
+  }
+
+  public static <K, V> Map<K,V> newHashMap(Pair<K, V> first, Pair<K, V>[] entries) {
+    Map<K, V> map = newHashMap();
+    map.put(first.getFirst(), first.getSecond());
+    for (Pair<K, V> entry : entries) {
+      map.put(entry.getFirst(), entry.getSecond());
     }
     return map;
   }
@@ -289,28 +299,42 @@ public class ContainerUtilRt {
     }
   }
 
+  /**
+   * @return read-only list consisting of the elements from array converted by mapper
+   */
   @NotNull
   public static <T, V> List<V> map2List(@NotNull T[] array, @NotNull Function<T, V> mapper) {
     return map2List(Arrays.asList(array), mapper);
   }
 
+  /**
+   * @return read-only list consisting of the elements from collection converted by mapper
+   */
   @NotNull
   public static <T, V> List<V> map2List(@NotNull Collection<? extends T> collection, @NotNull Function<T, V> mapper) {
-    final ArrayList<V> list = new ArrayList<V>(collection.size());
+    if (collection.isEmpty()) return emptyList();
+    List<V> list = new ArrayList<V>(collection.size());
     for (final T t : collection) {
       list.add(mapper.fun(t));
     }
     return list;
   }
 
+  /**
+   * @return read-only set consisting of the elements from collection converted by mapper
+   */
   @NotNull
   public static <T, V> Set<V> map2Set(@NotNull T[] collection, @NotNull Function<T, V> mapper) {
     return map2Set(Arrays.asList(collection), mapper);
   }
 
+  /**
+   * @return read-only set consisting of the elements from collection converted by mapper
+   */
   @NotNull
   public static <T, V> Set<V> map2Set(@NotNull Collection<? extends T> collection, @NotNull Function<T, V> mapper) {
-    final HashSet<V> set = new HashSet<V>(collection.size());
+    if (collection.isEmpty()) return Collections.emptySet();
+    Set <V> set = new HashSet<V>(collection.size());
     for (final T t : collection) {
       set.add(mapper.fun(t));
     }
@@ -326,9 +350,7 @@ public class ContainerUtilRt {
       }
       return array;
     }
-    else {
-      return collection.toArray(array);
-    }
+    return collection.toArray(array);
   }
 
   /**

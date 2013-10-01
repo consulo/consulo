@@ -48,7 +48,6 @@ import com.intellij.psi.stubs.BinaryFileStubBuilders;
 import com.intellij.psi.stubs.CoreStubTreeLoader;
 import com.intellij.psi.stubs.StubTreeLoader;
 import com.intellij.util.Consumer;
-import com.intellij.util.EmptyFuture;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.impl.MessageBusImpl;
@@ -57,7 +56,10 @@ import org.picocontainer.MutablePicoContainer;
 
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author yole
@@ -137,7 +139,7 @@ public class CoreApplicationEnvironment {
   protected JobLauncher createJobLauncher() {
     return new JobLauncher() {
       @Override
-      public <T> boolean invokeConcurrentlyUnderProgress(@NotNull List<T> things,
+      public <T> boolean invokeConcurrentlyUnderProgress(@NotNull List<? extends T> things,
                                                          ProgressIndicator progress,
                                                          boolean failFastOnAcquireReadAction,
                                                          @NotNull Processor<T> thingProcessor) throws ProcessCanceledException {
@@ -149,7 +151,17 @@ public class CoreApplicationEnvironment {
       }
 
       @Override
-      public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@NotNull List<T> things,
+      public <T> boolean invokeConcurrentlyUnderProgress(@NotNull List<? extends T> things,
+                                                         ProgressIndicator progress,
+                                                         boolean runInReadAction,
+                                                         boolean failFastOnAcquireReadAction,
+                                                         @NotNull Processor<T> thingProcessor) {
+        return invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor);
+      }
+
+      @NotNull
+      @Override
+      public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@NotNull List<? extends T> things,
                                                                            ProgressIndicator progress,
                                                                            boolean failFastOnAcquireReadAction,
                                                                            @NotNull Processor<T> thingProcessor) {
@@ -157,18 +169,45 @@ public class CoreApplicationEnvironment {
         try {
           final boolean result = invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor);
           asyncFutureResult.set(result);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
           asyncFutureResult.setException(t);
         }
         return asyncFutureResult;
       }
 
+      @NotNull
       @Override
       public Job<Void> submitToJobThread(int priority, @NotNull Runnable action, Consumer<Future> onDoneCallback) {
         action.run();
         if (onDoneCallback != null)
-          onDoneCallback.consume(EmptyFuture.getInstance());
-        return null;
+          onDoneCallback.consume(new Future() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+              return false;
+            }
+
+            @Override
+            public boolean isCancelled() {
+              return false;
+            }
+
+            @Override
+            public boolean isDone() {
+              return true;
+            }
+
+            @Override
+            public Object get() throws InterruptedException, ExecutionException {
+              return null;
+            }
+
+            @Override
+            public Object get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+              return null;
+            }
+          });
+        return Job.NULL_JOB;
       }
     };
   }

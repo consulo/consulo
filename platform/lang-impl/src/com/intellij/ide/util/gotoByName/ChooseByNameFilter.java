@@ -135,11 +135,7 @@ public abstract class ChooseByNameFilter<T> {
     invert.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        final int count = myChooser.getElementCount();
-        for (int i = 0; i < count; i++) {
-          T type = myChooser.getElementAt(i);
-          myChooser.setElementMarked(type, !myChooser.isElementMarked(type));
-        }
+        myChooser.invertSelection();
       }
     });
     buttons.add(invert);
@@ -217,8 +213,8 @@ public abstract class ChooseByNameFilter<T> {
       return;
     }
     myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(myChooserPanel, myChooser).setModalContext(false).setFocusable(false)
-        .setResizable(true).setCancelOnClickOutside(false).setMinSize(new Dimension(200, 200))
-        .setDimensionServiceKey(myProject, "GotoFile_FileTypePopup", false).createPopup();
+      .setResizable(true).setCancelOnClickOutside(false).setMinSize(new Dimension(200, 200))
+      .setDimensionServiceKey(myProject, "GotoFile_FileTypePopup", false).createPopup();
     myPopup.addListener(new JBPopupListener.Adapter() {
       @Override
       public void onClosed(LightweightWindowEvent event) {

@@ -610,7 +610,17 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
 
   @Override
   public boolean removeRangeMarker(@NotNull RangeMarkerEx rangeMarker) {
-    return myDelegate.removeRangeMarker(((RangeMarkerWindow)rangeMarker).getDelegate()); 
+    return myDelegate.removeRangeMarker(((RangeMarkerWindow)rangeMarker).getDelegate());
+  }
+
+  @Override
+  public void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
+                                  int start,
+                                  int end,
+                                  boolean greedyToLeft,
+                                  boolean greedyToRight,
+                                  int layer) {
+    throw new IllegalStateException();
   }
 
   @Override

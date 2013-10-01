@@ -42,6 +42,8 @@ public interface IdeActions {
   @NonNls String ACTION_EDITOR_MOVE_CARET_RIGHT = "EditorRight";
   @NonNls String ACTION_EDITOR_MOVE_CARET_PAGE_UP = "EditorPageUp";
   @NonNls String ACTION_EDITOR_MOVE_CARET_PAGE_DOWN = "EditorPageDown";
+  @NonNls String ACTION_EDITOR_NEXT_WORD = "EditorNextWord";
+  @NonNls String ACTION_EDITOR_PREVIOUS_WORD = "EditorPreviousWord";
   @NonNls String ACTION_EDITOR_TAB = "EditorTab";
   @NonNls String ACTION_EDITOR_ESCAPE = "EditorEscape";
   @NonNls String ACTION_EDITOR_JOIN_LINES = "EditorJoinLines";
@@ -68,6 +70,7 @@ public interface IdeActions {
   @NonNls String ACTION_CODE_COMPLETION = "CodeCompletion";
   @NonNls String ACTION_SMART_TYPE_COMPLETION = "SmartTypeCompletion";
   @Deprecated @NonNls String ACTION_CLASS_NAME_COMPLETION = "ClassNameCompletion";
+  @NonNls String ACTION_HIPPIE_COMPLETION = "HippieCompletion";
   @NonNls String ACTION_CHOOSE_LOOKUP_ITEM = "EditorChooseLookupItem";
   @NonNls String ACTION_CHOOSE_LOOKUP_ITEM_ALWAYS = "EditorChooseLookupItemAlways";
   @NonNls String ACTION_CHOOSE_LOOKUP_ITEM_REPLACE = "EditorChooseLookupItemReplace";
@@ -172,7 +175,7 @@ public interface IdeActions {
   @NonNls String GROUP_EJB_RESOURCE_REFERENCES_VIEW_POPUP = "EjbResourceReferencesViewPopupMenu";
   @NonNls String GROUP_EJB_RESOURCE_ENVIRONMENT_REFERENCES_VIEW_POPUP = "EjbResourceEnvironmentReferencesViewPopupMenu";
   @NonNls String GROUP_ADD_SUPPORT = "AddSupportGroup";
-  
+
   @NonNls String GROUP_STRUCTURE_VIEW_POPUP = "StructureViewPopupMenu";
   @NonNls String GROUP_TYPE_HIERARCHY_POPUP = "TypeHierarchyPopupMenu";
   @NonNls String GROUP_METHOD_HIERARCHY_POPUP = "MethodHierarchyPopupMenu";
@@ -261,4 +264,6 @@ public interface IdeActions {
 
   String CONSOLE_CLEAR_ALL = "ConsoleView.ClearAll";
   String MOVE_TO_ANOTHER_CHANGE_LIST = "ChangesView.Move";
+
+  String ACTION_RECENT_FILES = "RecentFiles";
 }

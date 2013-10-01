@@ -57,8 +57,8 @@ public class CommonShortcuts {
     if (shortcut instanceof KeyboardShortcut) {
       KeyStroke keyStroke = ((KeyboardShortcut)shortcut).getFirstKeyStroke();
       return keyStroke != null
-        && keyStroke.getKeyCode() == KeyEvent.VK_ENTER
-        && (keyStroke.getModifiers() & InputEvent.CTRL_MASK) != 0;
+             && keyStroke.getKeyCode() == KeyEvent.VK_ENTER
+             && (keyStroke.getModifiers() & InputEvent.CTRL_MASK) != 0;
     }
     return false;
   }
@@ -136,6 +136,10 @@ public class CommonShortcuts {
 
   public static ShortcutSet getMoveEnd() {
     return shortcutsById(IdeActions.ACTION_EDITOR_MOVE_LINE_START);
+  }
+
+  public static ShortcutSet getRecentFiles() {
+    return shortcutsById(IdeActions.ACTION_RECENT_FILES);
   }
 
   private static CustomShortcutSet shortcutsById(String actionId) {

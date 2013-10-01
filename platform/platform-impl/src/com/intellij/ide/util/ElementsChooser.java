@@ -375,7 +375,7 @@ public class ElementsChooser<T> extends JPanel implements ComponentWithEmptyText
   public void sort(Comparator<T> comparator) {
     myTableModel.sort(comparator);
   }
-  
+
   @Override
   public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
@@ -392,6 +392,14 @@ public class ElementsChooser<T> extends JPanel implements ComponentWithEmptyText
 
   public JComponent getComponent() {
     return myTable;
+  }
+
+  public void invertSelection() {
+    final int count = getElementCount();
+    for (int i = 0; i < count; i++) {
+      T type = getElementAt(i);
+      setElementMarked(type, !isElementMarked(type));
+    }
   }
 
   public void setAllElementsMarked(boolean marked) {
@@ -424,7 +432,7 @@ public class ElementsChooser<T> extends JPanel implements ComponentWithEmptyText
   public void disableElement(T element) {
     myDisabledMap.put(element, Boolean.TRUE);
   }
-  
+
   private final class MyTableModel extends AbstractTableModel {
     private final List<T> myElements = new ArrayList<T>();
     private final Map<T, Boolean> myMarkedMap = new HashMap<T, Boolean>();
@@ -443,12 +451,12 @@ public class ElementsChooser<T> extends JPanel implements ComponentWithEmptyText
         ELEMENT_COLUMN_INDEX = 0;
       }
     }
-    
+
     public void sort(Comparator<T> comparator) {
       Collections.sort(myElements, comparator);
       fireTableDataChanged();
     }
-    
+
     public T getElementAt(int index) {
       return myElements.get(index);
     }
@@ -586,7 +594,7 @@ public class ElementsChooser<T> extends JPanel implements ComponentWithEmptyText
         return false;
       }
       final T o = (T)getValueAt(rowIndex, ELEMENT_COLUMN_INDEX);
-      return myDisabledMap.get(o) == null; 
+      return myDisabledMap.get(o) == null;
     }
 
     public void clear() {

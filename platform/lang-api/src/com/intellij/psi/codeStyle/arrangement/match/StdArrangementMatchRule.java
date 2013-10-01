@@ -15,18 +15,21 @@
  */
 package com.intellij.psi.codeStyle.arrangement.match;
 
+import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 /**
  * Arrangement rule which uses {@link StdArrangementEntryMatcher standard settings-based matcher}.
  * <p/>
  * Not thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 8/28/12 2:59 PM
  */
-public class StdArrangementMatchRule extends ArrangementMatchRule implements Cloneable {
+public class StdArrangementMatchRule extends ArrangementMatchRule implements Cloneable, Comparable<StdArrangementMatchRule> {
 
   public StdArrangementMatchRule(@NotNull StdArrangementEntryMatcher matcher) {
     super(matcher);
@@ -45,5 +48,17 @@ public class StdArrangementMatchRule extends ArrangementMatchRule implements Clo
   @Override
   public StdArrangementMatchRule clone() {
     return new StdArrangementMatchRule(new StdArrangementEntryMatcher(getMatcher().getCondition().clone()), getOrderType());
+  }
+
+  @Override
+  public int compareTo(@NotNull StdArrangementMatchRule o) {
+    final Set<ArrangementSettingsToken> tokens = ArrangementUtil.extractTokens(getMatcher().getCondition()).keySet();
+    final Set<ArrangementSettingsToken> tokens1 = ArrangementUtil.extractTokens(o.getMatcher().getCondition()).keySet();
+    if (tokens1.containsAll(tokens)) {
+      return tokens.containsAll(tokens1) ? 0 : 1;
+    }
+    else {
+      return tokens.containsAll(tokens1) ? -1 : 0;
+    }
   }
 }

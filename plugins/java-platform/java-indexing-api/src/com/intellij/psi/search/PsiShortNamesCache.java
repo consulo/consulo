@@ -18,10 +18,15 @@ package com.intellij.psi.search;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMethod;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
+import com.intellij.util.indexing.IdFilter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +46,7 @@ public abstract class PsiShortNamesCache {
   public static PsiShortNamesCache getInstance(Project project) {
     return ServiceManager.getService(project, PsiShortNamesCache.class);
   }
-  
+
   public static final ExtensionPointName<PsiShortNamesCache> EP_NAME = ExtensionPointName.create("org.consulo.java.java.shortNamesCache");
 
   /**
@@ -84,6 +89,14 @@ public abstract class PsiShortNamesCache {
   @NotNull
   public abstract String[] getAllClassNames();
 
+  public boolean processAllClassNames(Processor<String> processor) {
+    return ContainerUtil.process(getAllClassNames(), processor);
+  }
+
+  public boolean processAllClassNames(Processor<String> processor, GlobalSearchScope scope, IdFilter filter) {
+    return ContainerUtil.process(getAllClassNames(), processor);
+  }
+
   /**
    * Adds the names of all classes in the project and (optionally) libraries
    * to the specified set.
@@ -108,6 +121,14 @@ public abstract class PsiShortNamesCache {
   public abstract PsiField[] getFieldsByNameIfNotMoreThan(@NonNls @NotNull String name, @NotNull GlobalSearchScope scope, int maxCount);
 
   public abstract boolean processMethodsWithName(@NonNls @NotNull String name, @NotNull GlobalSearchScope scope, @NotNull Processor<PsiMethod> processor);
+
+  public boolean processAllMethodNames(Processor<String> processor, GlobalSearchScope scope, IdFilter filter) {
+    return ContainerUtil.process(getAllFieldNames(), processor);
+  }
+
+  public boolean processAllFieldNames(Processor<String> processor, GlobalSearchScope scope, IdFilter filter) {
+    return ContainerUtil.process(getAllFieldNames(), processor);
+  }
 
   /**
    * Returns the list of names of all methods in the project and

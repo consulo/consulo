@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
@@ -255,12 +256,8 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     }
 
     cleanupUI(isOk);
+    if (ApplicationManager.getApplication().isUnitTestMode()) return;
     myActionListener.onClose();
-  }
-
-  @Nullable
-  public static ChooseByNamePopup getActivePopup(@NotNull final Project project) {
-    return CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY.get(project);
   }
 
   private void cleanupUI(boolean ok) {
@@ -348,12 +345,14 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
       regex = patternToDetectLinesAndColumns;
     }
 
-    if (pattern.indexOf('#') != -1) {
-      regex = patternToDetectMembers;
-    }
+    if (getModel() instanceof GotoClassModel2) {
+      if (pattern.indexOf('#') != -1) {
+        regex = patternToDetectMembers;
+      }
 
-    if (pattern.indexOf('$') != -1) {
-      regex = patternToDetectAnonymousClasses;
+      if (pattern.indexOf('$') != -1) {
+        regex = patternToDetectAnonymousClasses;
+      }
     }
 
     if (regex != null) {

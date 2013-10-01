@@ -50,7 +50,7 @@ import java.util.List;
 
 public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.DocumentImpl");
-  public static boolean CHECK_DOCUMENT_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
+  public static boolean CHECK_DOCUMENT_CONSISTENCY = ApplicationManager.getApplication() != null && ApplicationManager.getApplication().isUnitTestMode();
 
   private final List<DocumentListener> myDocumentListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final RangeMarkerTree<RangeMarkerEx> myRangeMarkers = new RangeMarkerTree<RangeMarkerEx>(this);
@@ -206,12 +206,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     return myRangeMarkers.removeInterval(rangeMarker);
   }
 
-  public void addRangeMarker(@NotNull RangeMarkerEx rangeMarker,
-                             int start,
-                             int end,
-                             boolean greedyToLeft,
-                             boolean greedyToRight,
-                             int layer) {
+  public void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
+                                  int start,
+                                  int end,
+                                  boolean greedyToLeft,
+                                  boolean greedyToRight,
+                                  int layer) {
     myRangeMarkers.addInterval(rangeMarker, start, end, greedyToLeft, greedyToRight, layer);
   }
 

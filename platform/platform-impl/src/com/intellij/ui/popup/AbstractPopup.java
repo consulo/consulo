@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -767,7 +767,7 @@ public class AbstractPopup implements JBPopup {
     myRequestorComponent = owner;
 
     boolean forcedDialog = myMayBeParent
-      || SystemInfo.isMac && !(myOwner instanceof IdeFrame) && myOwner != null && myOwner.isShowing();
+                           || SystemInfo.isMac && !(myOwner instanceof IdeFrame) && myOwner != null && myOwner.isShowing();
 
     PopupComponent.Factory factory = getFactory(myForcedHeavyweight || myResizable, forcedDialog);
     myNativePopup = factory.isNativePopup();
@@ -1529,7 +1529,7 @@ public class AbstractPopup implements JBPopup {
     }
   }
 
-  private Window getPopupWindow() {
+  public Window getPopupWindow() {
     return myPopup.getWindow();
   }
 

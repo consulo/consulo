@@ -25,10 +25,11 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
@@ -39,7 +40,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFile> {
+public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSystemItem> {
   private final int myMaxWidth;
 
   public GotoFileCellRenderer(int maxSize) {
@@ -47,7 +48,7 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFile> {
   }
 
   @Override
-  public String getElementText(PsiFile element) {
+  public String getElementText(PsiFileSystemItem element) {
     return element.getName();
   }
 
@@ -67,8 +68,9 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFile> {
   }
 
   @Override
-  protected String getContainerText(PsiFile element, String name) {
-    final PsiDirectory psiDirectory = element.getContainingDirectory();
+  protected String getContainerText(PsiFileSystemItem element, String name) {
+    PsiFileSystemItem parent = element.getParent();
+    final PsiDirectory psiDirectory = parent instanceof PsiDirectory ? (PsiDirectory)parent : null;
     if (psiDirectory == null) return null;
     final VirtualFile virtualFile = psiDirectory.getVirtualFile();
     final String relativePath = getRelativePath(virtualFile, element.getProject());
@@ -125,7 +127,10 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFile> {
     assert itemPresentation != null;
     renderer.setIcon(itemPresentation.getIcon(true));
 
-    renderer.append(itemPresentation.getLocationString(), new SimpleTextAttributes(Font.PLAIN, JBColor.GRAY));
+    String locationString = itemPresentation.getLocationString();
+    if (!StringUtil.isEmpty(locationString)) {
+      renderer.append(locationString, new SimpleTextAttributes(Font.PLAIN, JBColor.GRAY));
+    }
     return true;
   }
 

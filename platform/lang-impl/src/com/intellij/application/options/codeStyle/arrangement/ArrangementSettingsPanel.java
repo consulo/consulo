@@ -34,10 +34,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementColorsAware;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementSettings;
+import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NotNull;
@@ -81,9 +78,12 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
     myGroupingRulesPanel = new ArrangementGroupingRulesPanel(settingsManager, colorsProvider);
     myMatchingRulesPanel = new ArrangementMatchingRulesPanel(settingsManager, colorsProvider);
-    
+
     myContent.add(myGroupingRulesPanel, new GridBag().coverLine().fillCellHorizontally().weightx(1));
     myContent.add(myMatchingRulesPanel, new GridBag().fillCell().weightx(1).weighty(1));
+
+    final List<CompositeArrangementSettingsToken> groupingTokens = settingsManager.getSupportedGroupingTokens();
+    myGroupingRulesPanel.setVisible(groupingTokens != null && !groupingTokens.isEmpty());
 
     AnAction removeRuleAction = new RemoveArrangementRuleAction();
     removeRuleAction.copyFrom(ActionManager.getInstance().getAction("Arrangement.Rule.Remove"));
@@ -116,12 +116,12 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
   @Override
   public void apply(CodeStyleSettings settings) {
     CommonCodeStyleSettings commonSettings = settings.getCommonSettings(myLanguage);
-    commonSettings.setArrangementSettings(new StdArrangementSettings(myGroupingRulesPanel.getRules(), myMatchingRulesPanel.getRules()));
+    commonSettings.setArrangementSettings(new StdRulePriorityAwareSettings(myGroupingRulesPanel.getRules(), myMatchingRulesPanel.getRules()));
   }
 
   @Override
   public boolean isModified(CodeStyleSettings settings) {
-    StdArrangementSettings s = new StdArrangementSettings(myGroupingRulesPanel.getRules(), myMatchingRulesPanel.getRules());
+    StdArrangementSettings s = new StdRulePriorityAwareSettings(myGroupingRulesPanel.getRules(), myMatchingRulesPanel.getRules());
     return !Comparing.equal(getSettings(settings), s);
   }
 
@@ -134,7 +134,6 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     }
     else {
       List<ArrangementGroupingRule> groupings = s.getGroupings();
-      myGroupingRulesPanel.setVisible(!groupings.isEmpty());
       if (!groupings.isEmpty()) {
         myGroupingRulesPanel.setRules(ContainerUtilRt.newArrayList(groupings));
       }

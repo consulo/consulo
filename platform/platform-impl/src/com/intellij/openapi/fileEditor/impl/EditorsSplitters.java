@@ -18,6 +18,8 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
@@ -31,6 +33,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
@@ -57,6 +60,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ContainerEvent;
 import java.io.File;
 import java.util.*;
 import java.util.List;
@@ -148,7 +152,7 @@ public class EditorsSplitters extends JBPanel {
 
 
   private boolean showEmptyText() {
-    return (myCurrentWindow == null || myCurrentWindow.getFiles().length == 0);
+    return myCurrentWindow == null || myCurrentWindow.getFiles().length == 0;
   }
 
   private boolean isProjectViewVisible() {
@@ -182,13 +186,18 @@ public class EditorsSplitters extends JBPanel {
       final UIUtil.TextPainter painter = new UIUtil.TextPainter().withShadow(true).withLineSpacing(1.4f);
       painter.appendLine("No files are open").underlined(new JBColor(Gray._150, Gray._100));
 
+      if (Registry.is("search.everywhere.enabled")) {
+        painter.appendLine("Search Everywhere with " + KeymapUtil.getShortcutText(CustomShortcutSet.fromString("shift SPACE").getShortcuts()[0]))
+          .smaller().withBullet();
+      }
+
       if (!isProjectViewVisible()) {
         painter.appendLine("Open Project View with " + KeymapUtil.getShortcutText(new KeyboardShortcut(
           KeyStroke.getKeyStroke((SystemInfo.isMac ? "meta" : "alt") + " 1"), null))).smaller().withBullet();
       }
 
       painter.appendLine("Open a file by name with " + getActionShortcutText("GotoFile")).smaller().withBullet()
-        .appendLine("Open Recent files with " + getActionShortcutText("RecentFiles")).smaller().withBullet()
+        .appendLine("Open Recent files with " + getActionShortcutText(IdeActions.ACTION_RECENT_FILES)).smaller().withBullet()
         .appendLine("Open Navigation Bar with " + getActionShortcutText("ShowNavBar")).smaller().withBullet()
         .appendLine("Drag'n'Drop file(s) here from " + ShowFilePathAction.getFileManagerName()).smaller().withBullet()
         .draw(g, new PairFunction<Integer, Integer, Pair<Integer, Integer>>() {
@@ -327,7 +336,7 @@ public class EditorsSplitters extends JBPanel {
       return null;
     }
 
-    EditorWindow window = (panel == null) ? new EditorWindow(this) : findWindowWith(panel);
+    final EditorWindow window = panel == null ? new EditorWindow(this) : findWindowWith(panel);
     LOG.assertTrue(window != null);
 
     @SuppressWarnings("unchecked") final List<Element> children = ContainerUtil.newArrayList(leaf.getChildren("file"));
@@ -345,17 +354,19 @@ public class EditorsSplitters extends JBPanel {
 
     VirtualFile currentFile = null;
     for (int i = 0; i < children.size(); i++) {
-      Element file = children.get(i);
+      final Element file = children.get(i);
       try {
-        final HistoryEntry entry = new HistoryEntry(getManager().getProject(), file.getChild(HistoryEntry.TAG), true);
-        boolean isCurrent = Boolean.valueOf(file.getAttributeValue("current")).booleanValue();
-        getManager().openFileImpl4(window, entry.myFile, false, entry, isCurrent, i);
-        if (getManager().isFileOpen(entry.myFile)) {
+        final FileEditorManagerImpl fileEditorManager = getManager();
+        final HistoryEntry entry = new HistoryEntry(fileEditorManager.getProject(), file.getChild(HistoryEntry.TAG), true);
+        final boolean isCurrent = Boolean.valueOf(file.getAttributeValue("current")).booleanValue();
+        fileEditorManager.openFileImpl4(window, entry.myFile, false, entry, isCurrent, i);
+        if (fileEditorManager.isFileOpen(entry.myFile)) {
           window.setFilePinned(entry.myFile, Boolean.valueOf(file.getAttributeValue(PINNED)).booleanValue());
           if (Boolean.valueOf(file.getAttributeValue("current-in-tab")).booleanValue()) {
             currentFile = entry.myFile;
           }
         }
+
       }
       catch (InvalidDataException e) {
         if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -475,6 +486,7 @@ public class EditorsSplitters extends JBPanel {
     myFilesToUpdateIconsFor.add(file);
     myIconUpdaterAlarm.cancelAllRequests();
     myIconUpdaterAlarm.addRequest(new Runnable() {
+      @Override
       public void run() {
         if (myManager.getProject().isDisposed()) return;
         for (VirtualFile file : myFilesToUpdateIconsFor) {
@@ -646,6 +658,7 @@ public class EditorsSplitters extends JBPanel {
   }
 
   private final class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
+    @Override
     public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
       if (myCurrentWindow != null) {
         final EditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
@@ -704,6 +717,7 @@ public class EditorsSplitters extends JBPanel {
     final EditorWithProviderComposite newEditor = window != null? window.getSelectedEditor() : null;
 
     Runnable fireRunnable = new Runnable() {
+      @Override
       public void run() {
         getManager().fireSelectionChanged(newEditor);
       }
@@ -820,11 +834,17 @@ public class EditorsSplitters extends JBPanel {
   }
 
   private final class MyFocusWatcher extends FocusWatcher {
+    @Override
     protected void focusedComponentChanged(final Component component, final AWTEvent cause) {
       EditorWindow newWindow = null;
 
       if (component != null) {
         newWindow = findWindowWith(component);
+      }
+      else if (cause instanceof ContainerEvent && cause.getID() == ContainerEvent.COMPONENT_REMOVED) {
+        // do not change current window in case of child removal as in JTable.removeEditor
+        // otherwise Escape in a toolwindow will not focus editor with JTable content
+        return;
       }
 
       setCurrentWindow(newWindow);

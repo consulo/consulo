@@ -40,7 +40,7 @@ import java.util.*;
  * @since 7/17/12 11:24 AM
  */
 public class ArrangementUtil {
-  
+
   private ArrangementUtil() {
   }
 
@@ -64,7 +64,7 @@ public class ArrangementUtil {
     }
     return DefaultArrangementSettingsSerializer.INSTANCE;
   }
-  
+
   //endregion
 
   @NotNull
@@ -126,7 +126,7 @@ public class ArrangementUtil {
    *     void test1(){} void test2() {} int i;
    *   }
    * </pre>
-   * 
+   *
    * @param initialRange  anchor range
    * @param document      target document against which the ranges are built
    * @return              expanded range if possible; <code>null</code> otherwise
@@ -135,7 +135,7 @@ public class ArrangementUtil {
   public static TextRange expandToLineIfPossible(@NotNull TextRange initialRange, @NotNull Document document) {
     CharSequence text = document.getCharsSequence();
     String ws = " \t";
-    
+
     int startLine = document.getLineNumber(initialRange.getStartOffset());
     int lineStartOffset = document.getLineStartOffset(startLine);
     int i = CharArrayUtil.shiftBackward(text, lineStartOffset + 1, initialRange.getStartOffset() - 1, ws);
@@ -146,18 +146,18 @@ public class ArrangementUtil {
     int endLine = document.getLineNumber(initialRange.getEndOffset());
     int lineEndOffset = document.getLineEndOffset(endLine);
     i = CharArrayUtil.shiftForward(text, initialRange.getEndOffset(), lineEndOffset, ws);
-    
+
     return i == lineEndOffset ? TextRange.create(lineStartOffset, lineEndOffset) : initialRange;
   }
   //endregion
-  
+
   @Nullable
   public static ArrangementSettingsToken parseType(@NotNull ArrangementMatchCondition condition) throws IllegalArgumentException {
     final Ref<ArrangementSettingsToken> result = new Ref<ArrangementSettingsToken>();
     condition.invite(new ArrangementMatchConditionVisitor() {
       @Override
       public void visit(@NotNull ArrangementAtomMatchCondition condition) {
-        if (StdArrangementTokens.EntryType.is(condition.getType())) {
+        if (StdArrangementTokenType.ENTRY_TYPE.is(condition.getType())) {
           result.set(condition.getType());
         }
       }
@@ -169,7 +169,7 @@ public class ArrangementUtil {
           if (result.get() != null) {
             return;
           }
-        } 
+        }
       }
     });
 
@@ -194,14 +194,14 @@ public class ArrangementUtil {
       public void visit(@NotNull ArrangementAtomMatchCondition condition) {
         ArrangementSettingsToken type = condition.getType();
         Object value = condition.getValue();
-        result.put(condition.getType(), type.equals(value) ? null : value); 
+        result.put(condition.getType(), type.equals(value) ? null : value);
       }
 
       @Override
       public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
         for (ArrangementMatchCondition operand : condition.getOperands()) {
           operand.invite(this);
-        } 
+        }
       }
     });
     return result;
@@ -223,7 +223,7 @@ public class ArrangementUtil {
         }
         else {
           composites.peek().addMatcher(matcher);
-        } 
+        }
       }
 
       @Override
@@ -248,10 +248,10 @@ public class ArrangementUtil {
 
   @Nullable
   public static ArrangementEntryMatcher buildMatcher(@NotNull ArrangementAtomMatchCondition condition) {
-    if (StdArrangementTokens.EntryType.is(condition.getType())) {
+    if (StdArrangementTokenType.ENTRY_TYPE.is(condition.getType())) {
       return new ByTypeArrangementEntryMatcher(condition.getType());
     }
-    else if (StdArrangementTokens.Modifier.is(condition.getType())) {
+    else if (StdArrangementTokenType.MODIFIER.is(condition.getType())) {
       return new ByModifierArrangementEntryMatcher(condition.getType());
     }
     else if (StdArrangementTokens.Regexp.NAME.equals(condition.getType())) {
@@ -291,5 +291,12 @@ public class ArrangementUtil {
       toProcess.addAll(token.getChildren());
     }
     return result;
+  }
+
+  @NotNull
+  public static List<? extends ArrangementMatchRule> getRulesSortedByPriority(@NotNull ArrangementSettings arrangementSettings) {
+    return arrangementSettings instanceof RulePriorityAwareSettings ?
+           ((RulePriorityAwareSettings)arrangementSettings).getRulesSortedByPriority() :
+           arrangementSettings.getRules();
   }
 }
