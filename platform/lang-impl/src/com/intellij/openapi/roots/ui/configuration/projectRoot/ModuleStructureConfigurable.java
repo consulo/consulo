@@ -62,7 +62,6 @@ import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.PlatformIcons;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -308,13 +307,14 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
   @Override
   protected Comparator<MyNode> getNodeComparator() {
-    List<Comparator<MyNode>> comparators = ContainerUtil
-      .mapNotNull(ModuleStructureExtension.EP_NAME.getExtensions(), new Function<ModuleStructureExtension, Comparator<MyNode>>() {
-        @Override
-        public Comparator<MyNode> fun(final ModuleStructureExtension moduleStructureExtension) {
-          return moduleStructureExtension.getNodeComparator();
-        }
-      });
+    ModuleStructureExtension[] extensions = ModuleStructureExtension.EP_NAME.getExtensions();
+    List<Comparator<MyNode>> comparators = new ArrayList<Comparator<MyNode>>(extensions.length + 1) ;
+    for (ModuleStructureExtension extension : extensions) {
+      Comparator<MyNode> nodeComparator = extension.getNodeComparator();
+      if(nodeComparator != null) {
+        comparators.add(nodeComparator);
+      }
+    }
     comparators.add(NODE_COMPARATOR);
     return new MergingComparator<MyNode>(comparators);
   }
