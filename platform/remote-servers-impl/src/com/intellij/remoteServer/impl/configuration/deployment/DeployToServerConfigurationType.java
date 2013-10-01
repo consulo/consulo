@@ -25,6 +25,8 @@ import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfigurator;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
+import com.intellij.remoteServer.impl.configuration.localServer.LocalRunner;
+import com.intellij.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,12 +42,21 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     super(serverType.getId() + "-deploy", serverType.getPresentableName() + " Deployment",
           "Deploy to " + serverType.getPresentableName() + " run configuration", serverType.getIcon());
     addFactory(new DeployToServerConfigurationFactory());
+    LocalRunner localRunner = serverType.getLocalRunner();
+    if(localRunner != null) {
+      addFactory(new LocalServerConfigurationFactory(localRunner));
+    }
     myServerType = serverType;
   }
 
   public class DeployToServerConfigurationFactory extends ConfigurationFactoryEx {
     public DeployToServerConfigurationFactory() {
       super(DeployToServerConfigurationType.this);
+    }
+
+    @Override
+    public String getName() {
+      return "Remote";
     }
 
     @Override
@@ -73,6 +84,41 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     public RunConfiguration createTemplateConfiguration(Project project) {
       DeploymentConfigurator<?> deploymentConfigurator = myServerType.createDeploymentConfigurator(project);
       return new DeployToServerRunConfiguration(project, this, "", myServerType, deploymentConfigurator);
+    }
+  }
+
+  public class LocalServerConfigurationFactory extends ConfigurationFactoryEx {
+    private final LocalRunner myLocalRunner;
+
+    public LocalServerConfigurationFactory(LocalRunner localRunner) {
+      super(DeployToServerConfigurationType.this);
+      myLocalRunner = localRunner;
+    }
+
+    @Override
+    public String getName() {
+      return "Local";
+    }
+
+    @Override
+    public void onNewConfigurationCreated(@NotNull RunConfiguration configuration) {
+      LocalServerRunConfiguration deployConfiguration = (LocalServerRunConfiguration)configuration;
+
+      if (deployConfiguration.getDeploymentSource() == null) {
+        List<DeploymentSource> sources = deployConfiguration.getDeploymentConfigurator().getAvailableDeploymentSources();
+        DeploymentSource source = ContainerUtil.getFirstItem(sources);
+        if (source != null) {
+          deployConfiguration.setDeploymentSource(source);
+          DeploymentSourceType type = source.getType();
+          type.setBuildBeforeRunTask(configuration, source);
+        }
+      }
+    }
+
+    @Override
+    public RunConfiguration createTemplateConfiguration(Project project) {
+      DeploymentConfigurator<?> deploymentConfigurator = myServerType.createDeploymentConfigurator(project);
+      return new LocalServerRunConfiguration(project, this, "", myServerType, deploymentConfigurator, myLocalRunner);
     }
   }
 }

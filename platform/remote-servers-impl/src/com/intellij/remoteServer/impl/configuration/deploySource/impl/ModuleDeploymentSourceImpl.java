@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.remoteServer.impl.configuration.deployment;
+package com.intellij.remoteServer.impl.configuration.deploySource.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.deployment.ModuleDeploymentSource;
+import com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType;
 import com.intellij.util.ArrayUtil;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;

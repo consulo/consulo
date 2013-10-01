@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.remoteServer.impl.configuration.deployment;
+package com.intellij.remoteServer.impl.configuration.deploySource;
 
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.deployment.ModuleDeploymentSource;
+import com.intellij.remoteServer.impl.configuration.deploySource.impl.ModuleDeploymentSourceImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 

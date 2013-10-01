@@ -5546,8 +5546,8 @@
     <applicationConfigurable instance="com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
     <programRunner implementation="com.intellij.remoteServer.impl.runtime.DeployToServerRunner"/>
 
-    <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deployment.ModuleDeploymentSourceType"/>
-    <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.runtime.deployment.ArtifactDeploymentSourceType"/>
+    <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType"/>
+    <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType"/>
 
     <projectService serviceInterface="com.intellij.remoteServer.runtime.ui.RemoteServersView"
                     serviceImplementation="com.intellij.remoteServer.impl.ui.RemoteServersViewImpl" />

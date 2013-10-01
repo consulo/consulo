@@ -1,4 +1,4 @@
-package com.intellij.remoteServer.impl.runtime.deployment;
+package com.intellij.remoteServer.impl.configuration.deploySource.impl;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.artifacts.Artifact;
@@ -7,6 +7,7 @@ import com.intellij.packaging.elements.ArtifactRootElement;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
+import com.intellij.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

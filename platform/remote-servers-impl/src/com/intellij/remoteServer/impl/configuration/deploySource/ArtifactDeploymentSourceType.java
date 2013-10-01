@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.remoteServer.impl.runtime.deployment;
+package com.intellij.remoteServer.impl.configuration.deploySource;
 
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
@@ -22,6 +22,7 @@ import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider;
 import com.intellij.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
+import com.intellij.remoteServer.impl.configuration.deploySource.impl.ArtifactDeploymentSourceImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
