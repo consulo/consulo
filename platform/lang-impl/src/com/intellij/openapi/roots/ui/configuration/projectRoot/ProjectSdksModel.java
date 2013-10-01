@@ -26,21 +26,20 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
+import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * User: anna
@@ -238,11 +237,23 @@ public class ProjectSdksModel implements SdkModel {
                                final Consumer<Sdk> updateTree,
                                @Nullable Condition<SdkTypeId> filter) {
     final SdkType[] types = SdkType.EP_NAME.getExtensions();
-    for (final SdkType type : types) {
-      if (filter != null && !filter.value(type)) continue;
-      final AnAction addAction = new DumbAwareAction(type.getPresentableName(),
-                                              null,
-                                              type.getIcon()) {
+    List<SdkType> list = new ArrayList<SdkType>(types.length);
+    for (SdkType sdkType : types) {
+      if (filter != null && !filter.value(sdkType)) {
+        continue;
+      }
+
+      list.add(sdkType);
+    }
+    Collections.sort(list, new Comparator<SdkType>() {
+      @Override
+      public int compare(SdkType o1, SdkType o2) {
+        return StringUtil.compare(o1.getPresentableName(), o2.getPresentableName(), true);
+      }
+    });
+
+    for (final SdkType type : list) {
+      final AnAction addAction = new DumbAwareAction(type.getPresentableName(), null, type.getIcon()) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             doAdd(parent, type, updateTree);
