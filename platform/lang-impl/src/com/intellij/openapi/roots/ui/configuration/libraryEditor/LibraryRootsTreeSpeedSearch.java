@@ -24,8 +24,8 @@ import java.io.File;
 import java.util.StringTokenizer;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 class LibraryRootsTreeSpeedSearch extends TreeSpeedSearch {
   public LibraryRootsTreeSpeedSearch(final Tree tree) {
     super(tree);
@@ -34,7 +34,7 @@ class LibraryRootsTreeSpeedSearch extends TreeSpeedSearch {
   @Override
   public boolean isMatchingElement(Object element, String pattern) {
     Object userObject = ((DefaultMutableTreeNode)((TreePath)element).getLastPathComponent()).getUserObject();
-    if (userObject instanceof ItemElementDescriptor) {
+    if (userObject instanceof ItemElement) {
       String str = getElementText(element);
       if (str == null) {
         return false;
