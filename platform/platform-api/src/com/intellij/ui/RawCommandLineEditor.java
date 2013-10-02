@@ -21,6 +21,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.execution.ParametersListUtil;
 
@@ -44,8 +45,9 @@ public class RawCommandLineEditor extends JPanel {
   public RawCommandLineEditor(final Function<String, List<String>> lineParser, final Function<List<String>, String> lineJoiner) {
     super(new BorderLayout());
     myTextField = new TextFieldWithBrowseButton(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
-        if (myDialogCaption == null) {
+        if (StringUtil.isEmpty(myDialogCaption)) {
           Container parent = getParent();
           if (parent instanceof LabeledComponent) {
             parent = parent.getParent();
@@ -93,6 +95,7 @@ public class RawCommandLineEditor extends JPanel {
     label.setLabelFor(myTextField.getTextField());
   }
 
+  @Override
   public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
     myTextField.setEnabled(enabled);
