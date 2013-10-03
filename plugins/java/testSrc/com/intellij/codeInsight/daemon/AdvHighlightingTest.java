@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.analysis.PackagesScopesProvider;
-import com.intellij.application.options.colors.ColorAndFontOptions;
+import com.intellij.application.options.colors.ScopeAttributesUtil;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.openapi.application.ex.PathManagerEx;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -28,8 +28,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -44,8 +42,6 @@ import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PatternPackageSet;
 import com.intellij.testFramework.IdeaTestUtil;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
@@ -107,6 +103,10 @@ public class AdvHighlightingTest extends DaemonAnalyzerTestCase {
 
   public void testAccessibleMember() throws Exception {
     doTest(BASE_PATH + "/accessibleMember/com/red/C.java", BASE_PATH + "/accessibleMember", false, false);
+  }
+
+  public void testStaticPackageLocalMember() throws Exception {
+    doTest(BASE_PATH + "/staticPackageLocalMember/p1/C.java", BASE_PATH + "/staticPackageLocalMember", false, false);
   }
 
   public void testOnDemandImportConflict() throws Exception {
@@ -188,11 +188,11 @@ public class AdvHighlightingTest extends DaemonAnalyzerTestCase {
     EditorColorsScheme scheme = (EditorColorsScheme)manager.getGlobalScheme().clone();
     manager.addColorsScheme(scheme);
     EditorColorsManager.getInstance().setGlobalScheme(scheme);
-    TextAttributesKey xKey = ColorAndFontOptions.getScopeTextAttributeKey(xScope.getName());
+    TextAttributesKey xKey = ScopeAttributesUtil.getScopeTextAttributeKey(xScope.getName());
     TextAttributes xAttributes = new TextAttributes(Color.cyan, Color.darkGray, Color.blue, EffectType.BOXED, Font.ITALIC);
     scheme.setAttributes(xKey, xAttributes);
 
-    TextAttributesKey utilKey = ColorAndFontOptions.getScopeTextAttributeKey(utilScope.getName());
+    TextAttributesKey utilKey = ScopeAttributesUtil.getScopeTextAttributeKey(utilScope.getName());
     TextAttributes utilAttributes = new TextAttributes(Color.gray, Color.magenta, Color.orange, EffectType.STRIKEOUT, Font.BOLD);
     scheme.setAttributes(utilKey, utilAttributes);
 
@@ -215,16 +215,16 @@ public class AdvHighlightingTest extends DaemonAnalyzerTestCase {
     EditorColorsScheme scheme = (EditorColorsScheme)manager.getGlobalScheme().clone();
     manager.addColorsScheme(scheme);
     EditorColorsManager.getInstance().setGlobalScheme(scheme);
-    TextAttributesKey xKey = ColorAndFontOptions.getScopeTextAttributeKey(xScope.getName());
+    TextAttributesKey xKey = ScopeAttributesUtil.getScopeTextAttributeKey(xScope.getName());
     TextAttributes xAttributes = new TextAttributes(Color.cyan, Color.darkGray, Color.blue, null, Font.ITALIC);
     scheme.setAttributes(xKey, xAttributes);
 
-    TextAttributesKey utilKey = ColorAndFontOptions.getScopeTextAttributeKey(utilScope.getName());
+    TextAttributesKey utilKey = ScopeAttributesUtil.getScopeTextAttributeKey(utilScope.getName());
     TextAttributes utilAttributes = new TextAttributes(Color.gray, Color.magenta, Color.orange, EffectType.STRIKEOUT, Font.BOLD);
     scheme.setAttributes(utilKey, utilAttributes);
 
     NamedScope projectScope = PackagesScopesProvider.getInstance(myProject).getProjectProductionScope();
-    TextAttributesKey projectKey = ColorAndFontOptions.getScopeTextAttributeKey(projectScope.getName());
+    TextAttributesKey projectKey = ScopeAttributesUtil.getScopeTextAttributeKey(projectScope.getName());
     TextAttributes projectAttributes = new TextAttributes(null, null, Color.blue, EffectType.BOXED, Font.ITALIC);
     scheme.setAttributes(projectKey, projectAttributes);
 
@@ -245,22 +245,13 @@ public class AdvHighlightingTest extends DaemonAnalyzerTestCase {
     ModuleManager moduleManager = ModuleManager.getInstance(getProject());
     Module java4 = moduleManager.findModuleByName("java4");
     Module java5 = moduleManager.findModuleByName("java5");
-    setJdk(java4, IdeaTestUtil.getMockJdk17("java 1.4"));
-    setJdk(java5, IdeaTestUtil.getMockJdk17("java 1.5"));
+    //setJdk(java4, IdeaTestUtil.getMockJdk17("java 1.4"));
+    //setJdk(java5, IdeaTestUtil.getMockJdk17("java 1.5"));
     ModuleRootModificationUtil.addDependency(java5, java4);
 
     configureByExistingFile(root.findFileByRelativePath("moduleJava5/com/Java5.java"));
     Collection<HighlightInfo> infos = highlightErrors();
     assertEmpty(infos);
-  }
-
-  private void setJdk(Module module, Sdk sdk) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
-    JavaMutableModuleExtension javaModuleExtension = (JavaMutableModuleExtension)modifiableModel.getExtension(JavaModuleExtension.class);
-    assert javaModuleExtension != null;
-    javaModuleExtension.getInheritableSdk().set(null, sdk.getName());
-    modifiableModel.commit();
   }
 
   public void testSameFQNClasses() throws Exception {

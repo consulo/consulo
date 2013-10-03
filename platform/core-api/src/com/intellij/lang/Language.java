@@ -113,6 +113,13 @@ public abstract class Language extends UserDataHolderBase implements Named {
     }
   }
 
+  /** Fake language identifier without registering */
+  protected Language(String id, @SuppressWarnings("UnusedParameters") boolean register) {
+    myID = id;
+    myBaseLanguage = null;
+    myMimeTypes = null;
+  }
+
   /**
    * @return collection of all languages registered so far.
    */
@@ -237,6 +244,15 @@ public abstract class Language extends UserDataHolderBase implements Named {
     Language l = this;
     while (l != null) {
       if (l.is(another)) return true;
+      l = l.getBaseLanguage();
+    }
+    return false;
+  }
+
+  public final boolean isKindOf(String anotherLanguageId) {
+    Language l = this;
+    while (l != null) {
+      if (l.getID().equals(anotherLanguageId)) return true;
       l = l.getBaseLanguage();
     }
     return false;

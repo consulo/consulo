@@ -16,6 +16,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.UnfairTextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
@@ -169,7 +170,7 @@ public abstract class JavaFoldingBuilderBase extends CustomFoldingBuilder implem
     if (element == null) return null;
     if (element.getPrevSibling() instanceof PsiWhiteSpace) element = element.getPrevSibling();
     if (element == null || element.equals(first)) return null;
-    return new TextRange(first.getTextOffset(), element.getTextOffset());
+    return new UnfairTextRange(first.getTextOffset(), element.getTextOffset());
   }
 
   private void addAnnotationsToFold(PsiModifierList modifierList, List<FoldingDescriptor> foldElements, Document document) {
@@ -260,10 +261,10 @@ public abstract class JavaFoldingBuilderBase extends CustomFoldingBuilder implem
 
   private static boolean resolvesCorrectly(PsiReferenceExpression expression) {
     for (final JavaResolveResult result : expression.multiResolve(true)) {
-  if (!result.isValidResult()) {
-    return false;
-  }
-}
+      if (!result.isValidResult()) {
+        return false;
+      }
+    }
     return true;
   }
 
@@ -283,7 +284,7 @@ public abstract class JavaFoldingBuilderBase extends CustomFoldingBuilder implem
       return;
     }
 
-   PsiJavaCodeReferenceElement classReference = expression.getClassReference();
+    PsiJavaCodeReferenceElement classReference = expression.getClassReference();
     if (classReference == null) {
       final PsiAnonymousClass anonymousClass = expression.getAnonymousClass();
       if (anonymousClass != null) {
@@ -316,7 +317,7 @@ public abstract class JavaFoldingBuilderBase extends CustomFoldingBuilder implem
   }
 
   private static void addTypeParametersFolding(List<FoldingDescriptor> foldElements, Document document, PsiReferenceParameterList list,
-                                        final int ifLongerThan, boolean quick) {
+                                               final int ifLongerThan, boolean quick) {
     if (!quick) {
       for (final PsiType type : list.getTypeArguments()) {
         if (!type.isValid()) {
@@ -416,8 +417,8 @@ public abstract class JavaFoldingBuilderBase extends CustomFoldingBuilder implem
   }
 
   private static boolean addFoldRegion(final List<FoldingDescriptor> list, final PsiElement elementToFold, final Document document,
-                                final boolean allowOneLiners,
-                                final TextRange range) {
+                                       final boolean allowOneLiners,
+                                       final TextRange range) {
     final TextRange fileRange = elementToFold.getContainingFile().getTextRange();
     if (range.equals(fileRange)) return false;
 

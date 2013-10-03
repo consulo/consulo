@@ -16,6 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -144,7 +145,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     MultiMap<PsiElement, String> conflicts = new MultiMap<PsiElement, String>();
 
     RenameUtil.addConflictDescriptions(usagesIn, conflicts);
-    RenamePsiElementProcessor.forElement(myPrimaryElement).findExistingNameConflicts(myPrimaryElement, myNewName, conflicts);
+    RenamePsiElementProcessor.forElement(myPrimaryElement).findExistingNameConflicts(myPrimaryElement, myNewName, conflicts, myAllRenames);
     if (!conflicts.isEmpty()) {
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         throw new ConflictsInTestsException(conflicts.values());
@@ -219,7 +220,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
       @Override
       public void run() {
         for (final AutomaticRenamer renamer : myRenamers) {
-          renamer.findUsages(variableUsages, mySearchInComments, mySearchTextOccurrences, mySkippedUsages);
+          renamer.findUsages(variableUsages, mySearchInComments, mySearchTextOccurrences, mySkippedUsages, myAllRenames);
         }
       }
     };
@@ -254,7 +255,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     myNewName = newName;
     myAllRenames.put(myPrimaryElement, newName);
     myCommandName = RefactoringBundle
-      .message("renaming.0.1.to.2", UsageViewUtil.getType(myPrimaryElement), UsageViewUtil.getDescriptiveName(myPrimaryElement), newName);
+      .message("renaming.0.1.to.2", UsageViewUtil.getType(myPrimaryElement), DescriptiveNameUtil.getDescriptiveName(myPrimaryElement), newName);
   }
 
   @Override

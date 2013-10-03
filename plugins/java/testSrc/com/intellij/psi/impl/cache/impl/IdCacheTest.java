@@ -20,7 +20,6 @@ import com.intellij.codeInsight.CodeInsightTestCase;
 import com.intellij.ide.todo.TodoConfiguration;
 import com.intellij.ide.todo.TodoIndexPatternProvider;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -31,7 +30,7 @@ import com.intellij.psi.impl.cache.TodoCacheManager;
 import com.intellij.psi.impl.cache.impl.id.IdIndex;
 import com.intellij.psi.impl.cache.impl.todo.TodoIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.TodoAttributes;
+import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.psi.search.UsageSearchContext;
 import com.intellij.testFramework.IdeaTestUtil;
@@ -132,7 +131,7 @@ public class IdCacheTest extends CodeInsightTestCase{
   }
 
   public void testUpdateOnTodoChange() throws Exception {
-    TodoPattern pattern = new TodoPattern("newtodo", TodoAttributes.createDefault(), true);
+    TodoPattern pattern = new TodoPattern("newtodo", TodoAttributesUtil.createDefault(), true);
     TodoPattern[] oldPatterns = TodoConfiguration.getInstance().getTodoPatterns();
     TodoConfiguration.getInstance().setTodoPatterns(new TodoPattern[]{pattern});
 

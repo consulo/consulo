@@ -18,14 +18,16 @@ package com.intellij.util.xml.stubs.builder;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectCoreUtil;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.stubs.BinaryFileStubBuilder;
 import com.intellij.psi.stubs.Stub;
 import com.intellij.psi.xml.XmlFile;
+import com.intellij.util.indexing.FileBasedIndexImpl;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.xml.*;
 import com.intellij.util.xml.stubs.FileStub;
@@ -37,11 +39,13 @@ import com.intellij.xml.util.XmlUtil;
  */
 public class DomStubBuilder implements BinaryFileStubBuilder {
 
+  public final static Key<FileContent> CONTENT_FOR_DOM_STUBS = Key.create("dom stubs content");
   private final static Logger LOG = Logger.getInstance(DomStubBuilder.class);
 
   @Override
   public boolean acceptsFile(VirtualFile file) {
-    return file.getFileType() == XmlFileType.INSTANCE && !ProjectCoreUtil.isProjectOrWorkspaceFile(file);
+    FileType fileType = file.getFileType();
+    return fileType == XmlFileType.INSTANCE && !FileBasedIndexImpl.isProjectOrWorkspaceFile(file, fileType);
   }
 
   @Override
@@ -52,10 +56,10 @@ public class DomStubBuilder implements BinaryFileStubBuilder {
     if (!(psiFile instanceof XmlFile)) return null;
 
     XmlFile xmlFile = (XmlFile)psiFile;
-    DomManager manager = DomManager.getDomManager(project);
     try {
-      xmlFile.putUserData(XmlUtil.BUILDING_DOM_STUBS, Boolean.TRUE);
-      DomFileElement<? extends DomElement> fileElement = manager.getFileElement(xmlFile);
+      XmlUtil.BUILDING_DOM_STUBS.set(Boolean.TRUE);
+      psiFile.putUserData(CONTENT_FOR_DOM_STUBS, fileContent);
+      DomFileElement<? extends DomElement> fileElement = DomManager.getDomManager(project).getFileElement(xmlFile);
       if (fileElement == null || !fileElement.getFileDescription().hasStubs()) return null;
 
       XmlFileHeader header = DomService.getInstance().getXmlFileHeader(xmlFile);
@@ -68,7 +72,8 @@ public class DomStubBuilder implements BinaryFileStubBuilder {
       return fileStub;
     }
     finally {
-      xmlFile.putUserData(XmlUtil.BUILDING_DOM_STUBS, null);
+      XmlUtil.BUILDING_DOM_STUBS.set(Boolean.FALSE);
+      psiFile.putUserData(CONTENT_FOR_DOM_STUBS, null);
     }
   }
 

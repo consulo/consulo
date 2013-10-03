@@ -19,6 +19,7 @@ import com.intellij.codeInsight.ChangeContextUtil;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.lang.Language;
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.lang.refactoring.InlineHandler;
 import com.intellij.openapi.diagnostic.Logger;
@@ -51,7 +52,6 @@ import com.intellij.refactoring.rename.RenameJavaVariableProcessor;
 import com.intellij.refactoring.util.*;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
-import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
@@ -110,7 +110,7 @@ public class InlineMethodProcessor extends BaseRefactoringProcessor {
     myFactory = JavaPsiFacade.getInstance(myManager.getProject()).getElementFactory();
     myCodeStyleManager = CodeStyleManager.getInstance(myProject);
     myJavaCodeStyle = JavaCodeStyleManager.getInstance(myProject);
-    myDescriptiveName = UsageViewUtil.getDescriptiveName(myMethod);
+    myDescriptiveName = DescriptiveNameUtil.getDescriptiveName(myMethod);
   }
 
   protected String getCommandName() {
@@ -182,7 +182,7 @@ public class InlineMethodProcessor extends BaseRefactoringProcessor {
       for (PsiMethod method : superMethods) {
         final String message = method.hasModifierProperty(PsiModifier.ABSTRACT) ? RefactoringBundle
           .message("inlined.method.implements.method.from.0", method.getContainingClass().getQualifiedName()) : RefactoringBundle
-          .message("inlined.method.overrides.method.from.0", method.getContainingClass().getQualifiedName());
+                                 .message("inlined.method.overrides.method.from.0", method.getContainingClass().getQualifiedName());
         conflicts.putValue(method, message);
       }
 
@@ -355,7 +355,7 @@ public class InlineMethodProcessor extends BaseRefactoringProcessor {
         result.put(memberContainer, inaccessibleReferenced);
         for (PsiMember member : referencedElements) {
           if (PsiTreeUtil.isAncestor(elementToInline, member, false)) continue;
-          if (!PsiUtil.isAccessible(member, usageElement, null)) {
+          if (!PsiUtil.isAccessible(usage.getProject(), member, usageElement, null)) {
             inaccessibleReferenced.add(member);
           }
         }
@@ -404,7 +404,7 @@ public class InlineMethodProcessor extends BaseRefactoringProcessor {
         }
       }
       else {
-        RefactoringUtil.sortDepthFirstRightLeftOrder(usages);
+        CommonRefactoringUtil.sortDepthFirstRightLeftOrder(usages);
         if (myMethod.isConstructor()) {
           for (UsageInfo usage : usages) {
             PsiElement element = usage.getElement();

@@ -135,7 +135,7 @@ public class ChangeClassSignatureProcessor extends BaseRefactoringProcessor {
         if (psiClass instanceof PsiTypeParameter) {
           final int i = ArrayUtil.find(typeParameters, psiClass);
           if ( i >= 0 && i < toRemoveParms.length && toRemoveParms[i]) {
-           supersMap.put(typeElement, psiClass.getSuperClass());
+            supersMap.put(typeElement, psiClass.getSuperClass());
           }
         }
       }

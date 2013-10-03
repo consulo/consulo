@@ -22,6 +22,7 @@ import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -206,9 +207,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
 
 
   private void registerPluginActions() {
-    final IdeaPluginDescriptor[] plugins = PluginManager.getPlugins();
+    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManager.shouldSkipPlugin(plugin)) continue;
+      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
       final List<Element> elementList = plugin.getActionsDescriptionElements();
       if (elementList != null) {
         for (Element e : elementList) {

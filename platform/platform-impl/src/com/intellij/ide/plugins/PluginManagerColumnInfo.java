@@ -101,7 +101,7 @@ class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, String> {
   protected boolean isSortByName() {
     return COLUMN_NAME == columnIdx;
   }
-  
+
   protected boolean isSortByDownloads() {
     return columnIdx == COLUMN_DOWNLOADS;
   }

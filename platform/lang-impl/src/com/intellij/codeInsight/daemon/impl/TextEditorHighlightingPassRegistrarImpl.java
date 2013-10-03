@@ -17,7 +17,6 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.*;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -151,7 +150,8 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
       }
     });
 
-    final FileStatusMap statusMap = ((DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(myProject)).getFileStatusMap();
+    DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
+    final FileStatusMap statusMap = daemonCodeAnalyzer.getFileStatusMap();
     passesRefusedToCreate.forEach(new TIntProcedure() {
       @Override
       public boolean execute(int passId) {
@@ -166,7 +166,8 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
   @NotNull
   @Override
   public List<TextEditorHighlightingPass> instantiateMainPasses(@NotNull final PsiFile psiFile,
-                                                                @NotNull final Document document) {
+                                                                @NotNull final Document document,
+                                                                @NotNull final HighlightInfoProcessor highlightInfoProcessor) {
     final THashSet<TextEditorHighlightingPass> ids = new THashSet<TextEditorHighlightingPass>();
     myRegisteredPassFactories.forEachKey(new TIntProcedure() {
       @Override
@@ -174,9 +175,10 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
         PassConfig passConfig = myRegisteredPassFactories.get(passId);
         TextEditorHighlightingPassFactory factory = passConfig.passFactory;
         if (factory instanceof MainHighlightingPassFactory) {
-          final TextEditorHighlightingPass pass = ((MainHighlightingPassFactory)factory).createMainHighlightingPass(psiFile, document);
+          final TextEditorHighlightingPass pass = ((MainHighlightingPassFactory)factory).createMainHighlightingPass(psiFile, document, highlightInfoProcessor);
           if (pass != null) {
             ids.add(pass);
+            pass.setId(passId);
           }
         }
         return true;
@@ -223,6 +225,8 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
     });
   }
 
+  @NotNull
+  @Override
   public List<DirtyScopeTrackingHighlightingPassFactory> getDirtyScopeTrackingFactories() {
     return myDirtyScopeTrackingFactories;
   }

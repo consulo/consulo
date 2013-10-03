@@ -46,7 +46,7 @@ import java.util.Map;
  * @author yole
  */
 public abstract class RenamePsiElementProcessor {
-  private static final ExtensionPointName<RenamePsiElementProcessor> EP_NAME = ExtensionPointName.create("com.intellij.renamePsiElementProcessor");
+  protected static final ExtensionPointName<RenamePsiElementProcessor> EP_NAME = ExtensionPointName.create("com.intellij.renamePsiElementProcessor");
 
   public abstract boolean canProcessElement(@NotNull PsiElement element);
 
@@ -94,6 +94,10 @@ public abstract class RenamePsiElementProcessor {
   }
 
   public void findExistingNameConflicts(final PsiElement element, final String newName, final MultiMap<PsiElement,String> conflicts) {
+  }
+
+  public void findExistingNameConflicts(final PsiElement element, final String newName, final MultiMap<PsiElement,String> conflicts, Map<PsiElement, String> allRenames) {
+    findExistingNameConflicts(element, newName, conflicts);
   }
 
   public boolean isInplaceRenameSupported() {

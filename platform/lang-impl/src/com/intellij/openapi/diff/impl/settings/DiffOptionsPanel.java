@@ -28,6 +28,7 @@ import com.intellij.ui.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -35,7 +36,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DiffOptionsPanel implements OptionsPanel {
   private final ColorAndFontOptions myOptions;
@@ -55,27 +59,27 @@ public class DiffOptionsPanel implements OptionsPanel {
     ListSelectionModel selectionModel = myOptionsList.getSelectionModel();
     selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     selectionModel.addListSelectionListener(new ListSelectionListener() {
-          @Override
-          public void valueChanged(ListSelectionEvent e) {
-            TextDiffType selection = getSelectedOption();
-            ColorPanel background = getBackgroundColorPanel();
-            ColorPanel stripeMark = getStripeMarkColorPanel();
-            if (selection == null) {
-              background.setEnabled(false);
-              stripeMark.setEnabled(false);
-            } else {
-              background.setEnabled(true);
-              stripeMark.setEnabled(true);
-              MyColorAndFontDescription description = getSelectedDescription();
-              if (description != null) {
-                background.setSelectedColor(description.getBackgroundColor());
-                stripeMark.setSelectedColor(description.getStripeMarkColor());
-              }
-            }
-
-            myDispatcher.getMulticaster().selectedOptionChanged(selection);
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        TextDiffType selection = getSelectedOption();
+        ColorPanel background = getBackgroundColorPanel();
+        ColorPanel stripeMark = getStripeMarkColorPanel();
+        if (selection == null) {
+          background.setEnabled(false);
+          stripeMark.setEnabled(false);
+        } else {
+          background.setEnabled(true);
+          stripeMark.setEnabled(true);
+          MyColorAndFontDescription description = getSelectedDescription();
+          if (description != null) {
+            background.setSelectedColor(description.getBackgroundColor());
+            stripeMark.setSelectedColor(description.getStripeMarkColor());
           }
-        });
+        }
+
+        myDispatcher.getMulticaster().selectedOptionChanged(selection);
+      }
+    });
 
     getBackgroundColorPanel().addActionListener(new ActionListener() {
       @Override
@@ -209,11 +213,11 @@ public class DiffOptionsPanel implements OptionsPanel {
 
 
   private static final Comparator<TextDiffType> TEXT_DIFF_TYPE_COMPARATOR = new Comparator<TextDiffType>() {
-      @Override
-      public int compare(TextDiffType textDiffType, TextDiffType textDiffType1) {
-        return textDiffType.getDisplayName().compareToIgnoreCase(textDiffType1.getDisplayName());
-      }
-    };
+    @Override
+    public int compare(TextDiffType textDiffType, TextDiffType textDiffType1) {
+      return textDiffType.getDisplayName().compareToIgnoreCase(textDiffType1.getDisplayName());
+    }
+  };
   private final SortedListModel<TextDiffType> myOptionsModel = new SortedListModel<TextDiffType>(TEXT_DIFF_TYPE_COMPARATOR);
   private final HashMap<String, MyColorAndFontDescription> myDescriptions = new HashMap<String,MyColorAndFontDescription>();
   private TextDiffType getSelectedOption() {
@@ -242,7 +246,7 @@ public class DiffOptionsPanel implements OptionsPanel {
     return myStripeMarkColorComponent.getComponent();
   }
 
-  public static void addSchemeDescriptions(ArrayList<EditorSchemeAttributeDescriptor> descriptions, EditorColorsScheme scheme) {
+  public static void addSchemeDescriptions(@NotNull List<EditorSchemeAttributeDescriptor> descriptions, @NotNull EditorColorsScheme scheme) {
     for (TextDiffType diffType : TextDiffType.MERGE_TYPES) {
       descriptions.add(new MyColorAndFontDescription(diffType, scheme));
     }
@@ -265,7 +269,7 @@ public class DiffOptionsPanel implements OptionsPanel {
     private final EditorColorsScheme myScheme;
     private final TextDiffType myDiffType;
 
-    public MyColorAndFontDescription(TextDiffType diffType, EditorColorsScheme scheme) {
+    public MyColorAndFontDescription(@NotNull TextDiffType diffType, @NotNull EditorColorsScheme scheme) {
       myScheme = scheme;
       myDiffType = diffType;
       TextAttributes attrs = diffType.getTextAttributes(myScheme);

@@ -16,10 +16,10 @@
 package com.intellij.xml.impl.schema;
 
 import com.intellij.codeInsight.daemon.Validator;
+import com.intellij.codeInsight.daemon.XmlErrorMessages;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.xml.XmlBundle;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.util.XmlUtil;
 import org.jetbrains.annotations.NonNls;
@@ -56,9 +56,9 @@ public class SchemaNSDescriptor extends XmlNSDescriptorImpl {
               !ID_ATTR_NAME.equals(name) &&
               !REF_ATTR_NAME.equals(name)) {
             host.addMessage(
-              attr,
-              XmlBundle.message("xml.schema.validation.attr.not.allowed.with.ref", name),
-              ValidationHost.ERROR
+              attr.getNameElement(),
+              XmlErrorMessages.message("xml.schema.validation.attr.not.allowed.with.ref", name),
+              ValidationHost.ErrorType.ERROR
             );
           }
         }
@@ -74,8 +74,8 @@ public class SchemaNSDescriptor extends XmlNSDescriptorImpl {
           if (maxOccurs < minOccurs) {
             host.addMessage(
               tag.getAttribute(MAX_OCCURS_ATTR_VALUE, null).getValueElement(),
-              XmlBundle.message("xml.schema.validation.max.occurs.should.be.not.less.than.min.occurs"),
-              Validator.ValidationHost.ERROR
+              XmlErrorMessages.message("xml.schema.validation.max.occurs.should.be.not.less.than.min.occurs"),
+              ValidationHost.ErrorType.ERROR
             );
           }
         }
@@ -87,8 +87,8 @@ public class SchemaNSDescriptor extends XmlNSDescriptorImpl {
       if (!hasRefAttribute && tag.getAttributeValue(NAME_ATTR_NAME) == null) {
         host.addMessage(
           tag,
-          XmlBundle.message("xml.schema.validation.name.or.ref.should.present"),
-          Validator.ValidationHost.ERROR
+          XmlErrorMessages.message("xml.schema.validation.name.or.ref.should.present"),
+          ValidationHost.ErrorType.ERROR
         );
       }
     }
@@ -101,22 +101,22 @@ public class SchemaNSDescriptor extends XmlNSDescriptorImpl {
       if (tag.getAttributeValue(REF_ATTR_NAME) == null && tag.getAttributeValue(NAME_ATTR_NAME) == null) {
         host.addMessage(
           tag,
-          XmlBundle.message("xml.schema.validation.name.or.ref.should.present"),
-          Validator.ValidationHost.ERROR
+          XmlErrorMessages.message("xml.schema.validation.name.or.ref.should.present"),
+          ValidationHost.ErrorType.ERROR
         );
       }
 
       if (tag.getAttributeValue(DEFAULT_ATTR_NAME) != null && tag.getAttributeValue(FIXED_ATTR_NAME) != null) {
         host.addMessage(
-          tag.getAttribute(DEFAULT_ATTR_NAME, null),
-          XmlBundle.message("xml.schema.validation.default.or.fixed.should.be.specified.but.not.both"),
-          Validator.ValidationHost.ERROR
+          tag.getAttribute(DEFAULT_ATTR_NAME, null).getNameElement(),
+          XmlErrorMessages.message("xml.schema.validation.default.or.fixed.should.be.specified.but.not.both"),
+          ValidationHost.ErrorType.ERROR
         );
 
         host.addMessage(
-          tag.getAttribute(FIXED_ATTR_NAME, null),
-          XmlBundle.message("xml.schema.validation.default.or.fixed.should.be.specified.but.not.both"),
-          Validator.ValidationHost.ERROR
+          tag.getAttribute(FIXED_ATTR_NAME, null).getNameElement(),
+          XmlErrorMessages.message("xml.schema.validation.default.or.fixed.should.be.specified.but.not.both"),
+          ValidationHost.ErrorType.ERROR
         );
       }
     }
@@ -177,5 +177,10 @@ public class SchemaNSDescriptor extends XmlNSDescriptorImpl {
       ((XmlElementDescriptorImpl)descriptor).setValidator(ATTRIBUTE_VALIDATOR);
     }
     return descriptor;
+  }
+
+  @Override
+  public String toString() {
+    return getDefaultNamespace();
   }
 }

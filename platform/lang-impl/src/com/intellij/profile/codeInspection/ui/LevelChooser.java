@@ -23,10 +23,12 @@ package com.intellij.profile.codeInspection.ui;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
+import com.intellij.codeInsight.daemon.impl.SeverityUtil;
 import com.intellij.codeInspection.ex.SeverityEditorDialog;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.ui.ComboboxWithBrowseButton;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -73,7 +75,7 @@ public class LevelChooser extends ComboboxWithBrowseButton {
   private static void fillModel(DefaultComboBoxModel model, final SeverityRegistrar severityRegistrar) {
     model.removeAllElements();
     final TreeSet<HighlightSeverity> severities = new TreeSet<HighlightSeverity>(severityRegistrar);
-    for (SeverityRegistrar.SeverityBasedTextAttributes type : severityRegistrar.getRegisteredHighlightingInfoTypes()) {
+    for (SeverityRegistrar.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(severityRegistrar)) {
       severities.add(type.getSeverity());
     }
     severities.add(HighlightSeverity.ERROR);
@@ -85,6 +87,7 @@ public class LevelChooser extends ComboboxWithBrowseButton {
     }
   }
 
+  @NotNull
   public HighlightDisplayLevel getLevel() {
     HighlightSeverity severity = (HighlightSeverity)getComboBox().getSelectedItem();
     if (severity == null) return HighlightDisplayLevel.WARNING;

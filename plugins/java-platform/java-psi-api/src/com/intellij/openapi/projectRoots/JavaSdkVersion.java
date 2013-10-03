@@ -26,7 +26,10 @@ import java.util.Arrays;
  * @author nik
  */
 public enum JavaSdkVersion {
-  JDK_1_0(LanguageLevel.JDK_1_3, "1.0"), JDK_1_1(LanguageLevel.JDK_1_3, "1.1"), JDK_1_2(LanguageLevel.JDK_1_3, "1.2"), JDK_1_3(LanguageLevel.JDK_1_3, "1.3"),
+  JDK_1_0(LanguageLevel.JDK_1_3, "1.0"),
+  JDK_1_1(LanguageLevel.JDK_1_3, "1.1"),
+  JDK_1_2(LanguageLevel.JDK_1_3, "1.2"),
+  JDK_1_3(LanguageLevel.JDK_1_3, "1.3"),
   JDK_1_4(LanguageLevel.JDK_1_4, "1.4"),
   JDK_1_5(LanguageLevel.JDK_1_5, "1.5"),
   JDK_1_6(LanguageLevel.JDK_1_6, "1.6"),
@@ -71,4 +74,17 @@ public enum JavaSdkVersion {
     );
   }
 
+  @NotNull
+  public static JavaSdkVersion fromLanguageLevel(@NotNull LanguageLevel languageLevel) throws IllegalArgumentException {
+    JavaSdkVersion[] values = values();
+    for (int i = values.length - 1; i >= 0; i--) {
+      JavaSdkVersion version = values[i];
+      if (version.getMaxLanguageLevel().isAtLeast(languageLevel)) {
+        return version;
+      }
+    }
+    throw new IllegalArgumentException(
+      "Can't map Java SDK by language level "+languageLevel+". Available values: "+ Arrays.toString(values())
+    );
+  }
 }

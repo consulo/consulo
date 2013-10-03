@@ -158,7 +158,7 @@ public final class ComponentTree extends Tree implements DataProvider {
   @Nullable
   private static HighlightDisplayLevel getHighlightDisplayLevel(Project project, RadComponent component) {
     HighlightDisplayLevel displayLevel = null;
-    SeverityRegistrar severityRegistrar = SeverityRegistrar.getInstance(project);
+    SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     for (ErrorInfo errorInfo : RadComponent.getError(component)) {
       if (displayLevel == null || severityRegistrar.compare(errorInfo.getLevel().getSeverity(), displayLevel.getSeverity()) > 0) {
         displayLevel = errorInfo.getLevel();
@@ -173,7 +173,7 @@ public final class ComponentTree extends Tree implements DataProvider {
 
     if (level != null) {
       TextAttributesKey attributesKey =
-        SeverityRegistrar.getInstance(myDesigner.getProject()).getHighlightInfoTypeBySeverity(level.getSeverity()).getAttributesKey();
+        SeverityRegistrar.getSeverityRegistrar(myDesigner.getProject()).getHighlightInfoTypeBySeverity(level.getSeverity()).getAttributesKey();
       final TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(attributesKey);
 
       wrapper = new AttributeWrapper() {

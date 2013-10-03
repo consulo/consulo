@@ -50,8 +50,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     final DataContext dataContext = e.getDataContext();
     final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
     final String path = ChooseComponentsToExportDialog.chooseSettingsFile(PathManager.getConfigPath(), component,
-                                                                IdeBundle.message("title.import.file.location"),
-                                                                IdeBundle.message("prompt.choose.import.file.path"));
+                                                                          IdeBundle.message("title.import.file.location"),
+                                                                          IdeBundle.message("prompt.choose.import.file.path"));
     if (path == null) return;
 
     final File saveFile = new File(path);
@@ -75,8 +75,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
       final Map<File, Set<ExportableComponent>> filesToComponents = ExportSettingsAction.getRegisteredComponentsAndFiles(registeredComponents);
       List<ExportableComponent> components = getComponentsStored(saveFile, registeredComponents);
       final ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(components, filesToComponents, false,
-                                                                       IdeBundle.message("title.select.components.to.import"),
-                                                                       IdeBundle.message("prompt.check.components.to.import"));
+                                                                                       IdeBundle.message("title.select.components.to.import"),
+                                                                                       IdeBundle.message("prompt.check.components.to.import"));
       dialog.show();
       if (!dialog.isOK()) return;
       final Set<ExportableComponent> chosenComponents = dialog.getExportableComponents();
@@ -120,7 +120,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     catch (ZipException e1) {
       Messages.showErrorDialog(
         IdeBundle.message("error.reading.settings.file", presentableFileName(saveFile), e1.getMessage(), promptLocationMessage()),
-                               IdeBundle.message("title.invalid.file"));
+        IdeBundle.message("title.invalid.file"));
     }
     catch (IOException e1) {
       Messages.showErrorDialog(IdeBundle.message("error.reading.settings.file.2", presentableFileName(saveFile), e1.getMessage()),
@@ -137,7 +137,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   }
 
   private static List<ExportableComponent> getComponentsStored(File zipFile,
-                                                                   ArrayList<ExportableComponent> registeredComponents)
+                                                               ArrayList<ExportableComponent> registeredComponents)
     throws IOException {
     final File configPath = new File(PathManager.getConfigPath());
 

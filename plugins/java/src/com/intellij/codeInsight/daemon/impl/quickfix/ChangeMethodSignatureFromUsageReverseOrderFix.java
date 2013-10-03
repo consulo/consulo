@@ -35,12 +35,12 @@ import java.util.Set;
  * Date: 2/9/12
  */
 public class ChangeMethodSignatureFromUsageReverseOrderFix extends ChangeMethodSignatureFromUsageFix {
-  ChangeMethodSignatureFromUsageReverseOrderFix(@NotNull PsiMethod targetMethod,
-                                                @NotNull PsiExpression[] expressions,
-                                                @NotNull PsiSubstitutor substitutor,
-                                                @NotNull PsiElement context,
-                                                boolean changeAllUsages,
-                                                int minUsagesNumberToShowDialog) {
+  public ChangeMethodSignatureFromUsageReverseOrderFix(@NotNull PsiMethod targetMethod,
+                                                       @NotNull PsiExpression[] expressions,
+                                                       @NotNull PsiSubstitutor substitutor,
+                                                       @NotNull PsiElement context,
+                                                       boolean changeAllUsages,
+                                                       int minUsagesNumberToShowDialog) {
     super(targetMethod, expressions, substitutor, context, changeAllUsages, minUsagesNumberToShowDialog);
   }
 
@@ -49,7 +49,7 @@ public class ChangeMethodSignatureFromUsageReverseOrderFix extends ChangeMethodS
     if (myTargetMethod.isValid() && myExpressions.length > myTargetMethod.getParameterList().getParametersCount()) {
       if (super.isAvailable(project, editor, file)) {
         final ArrayList<ParameterInfoImpl> result = new ArrayList<ParameterInfoImpl>();
-        if (super.findNewParamsPlace(myExpressions, myTargetMethod, mySubstitutor, 
+        if (super.findNewParamsPlace(myExpressions, myTargetMethod, mySubstitutor,
                                      new StringBuilder(), new HashSet<ParameterInfoImpl>(), myTargetMethod.getParameterList().getParameters(), result)) {
 
           if (myNewParametersInfo.length != result.size()) return true;

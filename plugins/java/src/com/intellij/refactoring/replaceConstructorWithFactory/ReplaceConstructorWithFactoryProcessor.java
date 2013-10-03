@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.replaceConstructorWithFactory;
 
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
@@ -30,7 +31,6 @@ import com.intellij.refactoring.util.ConflictsUtil;
 import com.intellij.refactoring.util.RefactoringUIUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
-import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.VisibilityUtil;
 import com.intellij.util.containers.MultiMap;
@@ -103,7 +103,7 @@ public class ReplaceConstructorWithFactoryProcessor extends BaseRefactoringProce
         usages.add(new UsageInfo(element.getParent()));
       }
       else if ("super".equals(element.getText()) || "this".equals(element.getText())) {
-          myNonNewConstructorUsages.add(element);
+        myNonNewConstructorUsages.add(element);
       }
       else if (element instanceof PsiMethod && ((PsiMethod)element).isConstructor()) {
         myNonNewConstructorUsages.add(element);
@@ -165,7 +165,7 @@ public class ReplaceConstructorWithFactoryProcessor extends BaseRefactoringProce
           if (PsiTreeUtil.isAncestor(containingClass, myTargetClass, true)) {
             String message = RefactoringBundle.message("constructor.being.refactored.is.used.in.initializer.of.0",
                                                        RefactoringUIUtil.getDescription(field, true), RefactoringUIUtil.getDescription(
-                constructorContainingClass, false));
+              constructorContainingClass, false));
             conflicts.putValue(field, message);
           }
         }
@@ -300,11 +300,11 @@ public class ReplaceConstructorWithFactoryProcessor extends BaseRefactoringProce
   protected String getCommandName() {
     if (myConstructor != null) {
       return RefactoringBundle.message("replace.constructor.0.with.a.factory.method",
-                                       UsageViewUtil.getDescriptiveName(myConstructor));
+                                       DescriptiveNameUtil.getDescriptiveName(myConstructor));
     }
     else {
       return RefactoringBundle.message("replace.default.constructor.of.0.with.a.factory.method",
-                                       UsageViewUtil.getDescriptiveName(myOriginalClass));
+                                       DescriptiveNameUtil.getDescriptiveName(myOriginalClass));
     }
   }
 

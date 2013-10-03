@@ -20,6 +20,7 @@ import com.intellij.BundleBase;
 import com.intellij.find.*;
 import com.intellij.find.ngrams.TrigramIndex;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -85,7 +86,7 @@ public class FindInProjectUtil {
   public static void setDirectoryName(@NotNull FindModel model, @NotNull DataContext dataContext) {
     PsiElement psiElement;
     try {
-      psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+      psiElement = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
     }
     catch (IndexNotReadyException e) {
       psiElement = null;
@@ -95,15 +96,6 @@ public class FindInProjectUtil {
 
     if (psiElement instanceof PsiDirectory) {
       directoryName = ((PsiDirectory)psiElement).getVirtualFile().getPresentableUrl();
-    }
-    else {
-      final PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
-      if (psiFile != null) {
-        PsiDirectory psiDirectory = psiFile.getContainingDirectory();
-        if (psiDirectory != null) {
-          directoryName = psiDirectory.getVirtualFile().getPresentableUrl();
-        }
-      }
     }
 
     if (directoryName == null && psiElement instanceof PsiDirectoryContainer) {
@@ -116,7 +108,7 @@ public class FindInProjectUtil {
       model.setModuleName(module.getName());
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     if (model.getModuleName() == null || editor == null) {
       model.setDirectoryName(directoryName);
       model.setProjectScope(directoryName == null && module == null && !model.isCustomScope() || editor != null);
@@ -143,7 +135,7 @@ public class FindInProjectUtil {
             break;
           }
           if(virtualFile == null){
-             virtualFile = file;
+            virtualFile = file;
           }
         }
       }
@@ -273,11 +265,11 @@ public class FindInProjectUtil {
                                          @NotNull final Processor<UsageInfo> consumer) {
     if (findModel.getStringToFind().isEmpty()) {
       if (!ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-              @Override
-              public Boolean compute() {
-                return consumer.process(new UsageInfo(psiFile,0,0,true));
-              }
-            })) {
+        @Override
+        public Boolean compute() {
+          return consumer.process(new UsageInfo(psiFile,0,0,true));
+        }
+      })) {
         throw new ProcessCanceledException();
       }
       return 1;
@@ -554,7 +546,7 @@ public class FindInProjectUtil {
         final TextRange range = new TextRange(result.getStartOffset(), result.getEndOffset());
         if (!((LocalSearchScope)customScope).containsRange(psiFile, range)) break;
       }
-      UsageInfo info = new UsageInfo(psiFile, result.getStartOffset(), result.getEndOffset());
+      UsageInfo info = new FindResultUsageInfo(findManager, psiFile, offset, findModel, result);
       if (!consumer.process(info)){
         throw new ProcessCanceledException();
       }
@@ -627,6 +619,7 @@ public class FindInProjectUtil {
                                                                        @NotNull final UsageViewPresentation presentation) {
     FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation();
     processPresentation.setShowNotFoundMessage(true);
+    processPresentation.setShowFindOptionsPrompt(false);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
     processPresentation.setProgressIndicatorFactory(
       new Factory<ProgressIndicator>() {

@@ -32,6 +32,7 @@
     <orderEntry type="module" module-name="instrumentation-util" />
     <orderEntry type="module" module-name="java-compiler-impl" />
     <orderEntry type="library" name="Velocity" level="project" />
+    <orderEntry type="module" module-name="java-debugger-impl" />
   </component>
 </module>
 

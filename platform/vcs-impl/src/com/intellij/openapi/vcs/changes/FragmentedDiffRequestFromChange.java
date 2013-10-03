@@ -28,6 +28,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.UnfairTextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
@@ -91,9 +92,9 @@ public class FragmentedDiffRequestFromChange {
       file = filePath.getVirtualFile();
     }
     final PreparedFragmentedContent preparedFragmentedContent = new PreparedFragmentedContent(myProject, fragmentedContent,
-                                    filePath.getName(), filePath.getFileType(),
-                                    change.getBeforeRevision() == null ? null : change.getBeforeRevision().getRevisionNumber(),
-                                    change.getAfterRevision() == null ? null : change.getAfterRevision().getRevisionNumber(), filePath, file);
+                                                                                              filePath.getName(), filePath.getFileType(),
+                                                                                              change.getBeforeRevision() == null ? null : change.getBeforeRevision().getRevisionNumber(),
+                                                                                              change.getAfterRevision() == null ? null : change.getAfterRevision().getRevisionNumber(), filePath, file);
     return preparedFragmentedContent;
   }
 
@@ -152,10 +153,10 @@ public class FragmentedDiffRequestFromChange {
               if (! lineFragment.isEqual()) {
                 final TextRange oldRange = lineFragment.getRange(FragmentSide.SIDE1);
                 final TextRange newRange = lineFragment.getRange(FragmentSide.SIDE2);
-                myRanges.add(new BeforeAfter<TextRange>(new TextRange(myOldDocument.getLineNumber(oldRange.getStartOffset()),
-                                           myOldDocument.getLineNumber(correctRangeEnd(oldRange.getEndOffset(), myOldDocument))),
-                                                        new TextRange(myDocument.getLineNumber(newRange.getStartOffset()),
-                                           myDocument.getLineNumber(correctRangeEnd(newRange.getEndOffset(), myDocument)))));
+                myRanges.add(new BeforeAfter<TextRange>(new UnfairTextRange(myOldDocument.getLineNumber(oldRange.getStartOffset()),
+                                                                            myOldDocument.getLineNumber(correctRangeEnd(oldRange.getEndOffset(), myOldDocument))),
+                                                        new UnfairTextRange(myDocument.getLineNumber(newRange.getStartOffset()),
+                                                                            myDocument.getLineNumber(correctRangeEnd(newRange.getEndOffset(), myDocument)))));
               }
             }
             cache.put(new Pair<Long, String>(myDocument.getModificationStamp(), convertedPath), new ArrayList<BeforeAfter<TextRange>>(myRanges));
@@ -169,7 +170,7 @@ public class FragmentedDiffRequestFromChange {
         }
       });
     }
-    
+
     private int correctRangeEnd(final int end, final Document document) {
       if (end == 0) return end;
       return "\n".equals(document.getText(new TextRange(end - 1, end))) ? end - 1 : end;

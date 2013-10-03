@@ -17,7 +17,7 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.diagnostic.PluginException;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.*;
@@ -350,7 +350,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     final Class<? extends PersistentStateComponent> aClass = persistentStateComponent.getClass();
     final State stateSpec = aClass.getAnnotation(State.class);
     if (stateSpec == null) {
-      final PluginId pluginId = PluginManager.getPluginByClassName(aClass.getName());
+      final PluginId pluginId = PluginManagerCore.getPluginByClassName(aClass.getName());
       if (pluginId != null) {
         throw new PluginException("No @State annotation found in " + aClass, pluginId);
       }

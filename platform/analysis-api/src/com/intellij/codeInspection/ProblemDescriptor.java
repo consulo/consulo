@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package com.intellij.codeInspection;
 
+import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +31,7 @@ public interface ProblemDescriptor extends CommonProblemDescriptor{
   PsiElement getPsiElement();
   PsiElement getStartElement();
   PsiElement getEndElement();
+  TextRange getTextRangeInElement();
   int getLineNumber();
   @NotNull
   ProblemHighlightType getHighlightType();
@@ -43,19 +46,19 @@ public interface ProblemDescriptor extends CommonProblemDescriptor{
   void setTextAttributes(TextAttributesKey key);
 
   /**
-   * Gets the unique string, which is the same for all of the problems of this group
+   * Gets the unique object, which is the same for all of the problems of this group
    *
    * @return the problem group
    */
   @Nullable
-  String getProblemGroup();
+  ProblemGroup getProblemGroup();
 
   /**
-   * Sets the unique string, which is the same for all of the problems of this group
+   * Sets the unique object, which is the same for all of the problems of this group
    *
    * @param problemGroup the problemGroup
    */
-  void setProblemGroup(@Nullable String problemGroup);
+  void setProblemGroup(@Nullable ProblemGroup problemGroup);
 
   boolean showTooltip();
 }

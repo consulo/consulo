@@ -25,6 +25,7 @@ package com.intellij.profile.codeInspection.ui;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
 import com.intellij.codeInspection.ModifiableModel;
+import com.intellij.codeInspection.ex.InspectionManagerEx;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
 import com.intellij.icons.AllIcons;
@@ -51,6 +52,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.profile.Profile;
 import com.intellij.profile.ProfileManager;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
+import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBScrollPane;
@@ -93,20 +95,21 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable imple
   private JButton myCopyButton;
   private JBScrollPane myJBScrollPane;
 
-  private final ArrayList<String> myDeletedProfiles = new ArrayList<String>();
+  private final List<String> myDeletedProfiles = new ArrayList<String>();
   protected final InspectionProfileManager myProfileManager;
   protected final InspectionProjectProfileManager myProjectProfileManager;
   private static final Logger LOG = Logger.getInstance("#" + InspectionToolsConfigurable.class.getName());
   private Alarm mySelectionAlarm;
 
 
-  public InspectionToolsConfigurable(InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {
-    InspectionToolRegistrar.getInstance().buildInspectionSearchIndexIfNecessary();
+  public InspectionToolsConfigurable(@NotNull final InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {
+    ((InspectionManagerEx)InspectionManagerEx.getInstance(projectProfileManager.getProject())).buildInspectionSearchIndexIfNecessary();
     myAddButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         final Set<String> existingProfileNames = myPanels.keySet();
-        final ModifiableModel model = SingleInspectionProfilePanel.createNewProfile(-1, getSelectedObject(), myWholePanel, "", existingProfileNames);
+        final ModifiableModel model = SingleInspectionProfilePanel.createNewProfile(-1, getSelectedObject(), myWholePanel, "", existingProfileNames,
+                                                                                    projectProfileManager.getProject());
         if (model != null) {
           addProfile((InspectionProfileImpl)model);
           myDeletedProfiles.remove(getProfilePrefix(model) + model.getName());
@@ -158,7 +161,7 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable imple
               }
               for (Iterator<String> iterator = levels.iterator(); iterator.hasNext(); ) {
                 String level = iterator.next();
-                if (myProfileManager.getOwnSeverityRegistrar().getSeverity(level) != null) {
+                if (((InspectionProfileManagerImpl)myProfileManager).getOwnSeverityRegistrar().getSeverity(level) != null) {
                   iterator.remove();
                 }
               }
@@ -172,7 +175,7 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable imple
                     HighlightInfoType.HighlightInfoTypeImpl info
                       = new HighlightInfoType.HighlightInfoTypeImpl(new HighlightSeverity(level, 50), com.intellij.openapi.editor.colors
                       .TextAttributesKey.createTextAttributesKey(level));
-                    myProfileManager.getOwnSeverityRegistrar()
+                    ((InspectionProfileManagerImpl)myProfileManager).getOwnSeverityRegistrar()
                       .registerSeverity(new SeverityRegistrar.SeverityBasedTextAttributes(textAttributes.clone(), info),
                                         textAttributes.getErrorStripeColor());
                   }
@@ -180,7 +183,7 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable imple
               }
               profile.readExternal(rootElement);
               profile.setLocal(true);
-              profile.initInspectionTools(null);
+              profile.initInspectionTools(project);
               if (getProfilePanel(profile) != null) {
                 if (Messages.showOkCancelDialog(myWholePanel, "Profile with name \'" +
                                                               profile.getName() +
@@ -249,7 +252,7 @@ public abstract class InspectionToolsConfigurable extends BaseConfigurable imple
       public void actionPerformed(ActionEvent e) {
         final Set<String> existingProfileNames = myPanels.keySet();
         final InspectionProfileImpl model = (InspectionProfileImpl)
-          SingleInspectionProfilePanel.createNewProfile(0, getSelectedObject(), myWholePanel, "", existingProfileNames);
+          SingleInspectionProfilePanel.createNewProfile(0, getSelectedObject(), myWholePanel, "", existingProfileNames, project);
         if (model != null) {
           final InspectionProfileImpl modifiableModel = (InspectionProfileImpl)model.getModifiableModel();
           modifiableModel.setModified(true);

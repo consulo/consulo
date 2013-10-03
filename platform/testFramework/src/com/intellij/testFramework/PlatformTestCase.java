@@ -111,8 +111,9 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   private static Set<VirtualFile> ourEternallyLivingFilesCache;
 
   static {
-    Logger.setFactory(TestLoggerFactory.getInstance());
+    Logger.setFactory(TestLoggerFactory.class);
   }
+
 
   protected static long getTimeRequired() {
     return DEFAULT_TEST_TIME;

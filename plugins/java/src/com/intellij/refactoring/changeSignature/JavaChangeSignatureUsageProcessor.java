@@ -16,6 +16,7 @@
 package com.intellij.refactoring.changeSignature;
 
 import com.intellij.codeInsight.ExceptionUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.lang.StdLanguages;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -215,10 +216,10 @@ public class JavaChangeSignatureUsageProcessor implements ChangeSignatureUsagePr
   }
 
   private static void processMethodUsage(PsiElement ref,
-                                  JavaChangeInfo changeInfo,
-                                  boolean toChangeArguments,
-                                  boolean toCatchExceptions,
-                                  PsiMethod callee, PsiSubstitutor subsitutor, final UsageInfo[] usages) throws IncorrectOperationException {
+                                         JavaChangeInfo changeInfo,
+                                         boolean toChangeArguments,
+                                         boolean toCatchExceptions,
+                                         PsiMethod callee, PsiSubstitutor subsitutor, final UsageInfo[] usages) throws IncorrectOperationException {
     if (changeInfo.isNameChanged()) {
       if (ref instanceof PsiJavaCodeReferenceElement) {
         PsiElement last = ((PsiJavaCodeReferenceElement)ref).getReferenceNameElement();
@@ -245,7 +246,7 @@ public class JavaChangeSignatureUsageProcessor implements ChangeSignatureUsagePr
 
     if (toCatchExceptions) {
       if (!(ref instanceof PsiReferenceExpression &&
-            RefactoringUtil.isSuperOrThisCall(PsiTreeUtil.getParentOfType(ref, PsiStatement.class), true, false))) {
+            JavaHighlightUtil.isSuperOrThisCall(PsiTreeUtil.getParentOfType(ref, PsiStatement.class), true, false))) {
         if (needToCatchExceptions(changeInfo, caller)) {
           PsiClassType[] newExceptions =
             callee != null ? getCalleeChangedExceptionInfo(callee) : getPrimaryChangedExceptionInfo(changeInfo);
@@ -379,7 +380,7 @@ public class JavaChangeSignatureUsageProcessor implements ChangeSignatureUsagePr
           else {
             newArg = factory.createExpressionFromText(info.getName(), list);
           }
-          JavaCodeStyleManager.getInstance(list.getProject()).shortenClassReferences(list.add(newArg));
+          if (newArg != null) JavaCodeStyleManager.getInstance(list.getProject()).shortenClassReferences(list.add(newArg));
         }
       }
       else {
@@ -805,8 +806,8 @@ public class JavaChangeSignatureUsageProcessor implements ChangeSignatureUsagePr
     PsiReferenceList methodThrowsList = (PsiReferenceList)method.getThrowsList().replace(throwsList);
     methodThrowsList = (PsiReferenceList)JavaCodeStyleManager.getInstance(method.getProject()).shortenClassReferences(methodThrowsList);
     CodeStyleManager.getInstance(method.getManager().getProject())
-        .reformatRange(method, method.getParameterList().getTextRange().getEndOffset(),
-                       methodThrowsList.getTextRange().getEndOffset());
+      .reformatRange(method, method.getParameterList().getTextRange().getEndOffset(),
+                     methodThrowsList.getTextRange().getEndOffset());
   }
 
   private static void fixJavadocsForChangedMethod(final PsiMethod method, final JavaChangeInfo changeInfo, int newParamsLength) throws IncorrectOperationException {

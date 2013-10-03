@@ -17,21 +17,19 @@
 package com.intellij.codeInspection.uncheckedWarnings;
 
 import com.intellij.codeInsight.daemon.JavaErrorMessages;
-import com.intellij.codeInsight.daemon.impl.analysis.GenericsHighlightUtil;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaGenericsUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.codeInsight.daemon.impl.quickfix.GenerifyFileFix;
 import com.intellij.codeInsight.daemon.impl.quickfix.VariableArrayTypeFix;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.QuickFixFactory;
 import com.intellij.codeInsight.quickfix.ChangeVariableTypeQuickFixProvider;
-import com.intellij.codeInspection.BaseJavaLocalInspectionTool;
-import com.intellij.codeInspection.InspectionsBundle;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Pass;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
 import com.intellij.psi.util.*;
 import org.intellij.lang.annotations.Pattern;
@@ -121,7 +119,7 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     panel.add(createSetting("Ignore unchecked generics array creation for vararg parameter", IGNORE_UNCHECKED_GENERICS_ARRAY_CREATION, new Pass<JCheckBox>() {
       @Override
       public void pass(JCheckBox cb) {
-          IGNORE_UNCHECKED_GENERICS_ARRAY_CREATION = cb.isSelected();
+        IGNORE_UNCHECKED_GENERICS_ARRAY_CREATION = cb.isSelected();
       }
     }), gc);
 
@@ -168,8 +166,13 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
 
   @NotNull
   @Override
-  public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
-    return new UncheckedWarningsVisitor(isOnTheFly){
+  public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder,
+                                        boolean isOnTheFly,
+                                        @NotNull LocalInspectionToolSession session) {
+    LanguageLevel languageLevel = PsiUtil.getLanguageLevel(session.getFile());
+    if (!languageLevel.isAtLeast(LanguageLevel.JDK_1_5)) return super.buildVisitor(holder, isOnTheFly, session);
+
+    return new UncheckedWarningsVisitor(isOnTheFly, languageLevel){
       @Override
       protected void registerProblem(@NotNull String message, @NotNull PsiElement psiElement, @NotNull LocalQuickFix[] quickFixes) {
         holder.registerProblem(psiElement, message, quickFixes);
@@ -177,12 +180,14 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     };
   }
 
-  public abstract class UncheckedWarningsVisitor extends JavaElementVisitor {
+  private abstract class UncheckedWarningsVisitor extends JavaElementVisitor {
     private final boolean myOnTheFly;
+    @NotNull private final LanguageLevel myLanguageLevel;
     private final LocalQuickFix[] myGenerifyFixes;
 
-    public UncheckedWarningsVisitor(boolean onTheFly) {
+    public UncheckedWarningsVisitor(boolean onTheFly, @NotNull LanguageLevel level) {
       myOnTheFly = onTheFly;
+      myLanguageLevel = level;
       myGenerifyFixes = onTheFly ? new LocalQuickFix[]{new GenerifyFileFix()} : LocalQuickFix.EMPTY_ARRAY;
     }
 
@@ -192,9 +197,8 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     @Override
     public void visitReferenceExpression(PsiReferenceExpression expression) {
       if (IGNORE_UNCHECKED_GENERICS_ARRAY_CREATION) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(expression)) return;
       final JavaResolveResult result = expression.advancedResolve(false);
-      if (GenericsHighlightUtil.isUncheckedWarning(expression, result)) {
+      if (JavaGenericsUtil.isUncheckedWarning(expression, result, myLanguageLevel)) {
         registerProblem("Unchecked generics array creation for varargs parameter", expression, LocalQuickFix.EMPTY_ARRAY);
       }
     }
@@ -203,9 +207,8 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitNewExpression(PsiNewExpression expression) {
       super.visitNewExpression(expression);
       if (IGNORE_UNCHECKED_GENERICS_ARRAY_CREATION) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(expression)) return;
       final PsiJavaCodeReferenceElement classReference = expression.getClassOrAnonymousClassReference();
-      if (GenericsHighlightUtil.isUncheckedWarning(classReference, expression.resolveMethodGenerics())) {
+      if (classReference != null && JavaGenericsUtil.isUncheckedWarning(classReference, expression.resolveMethodGenerics(), myLanguageLevel)) {
         registerProblem("Unchecked generics array creation for varargs parameter", classReference, LocalQuickFix.EMPTY_ARRAY);
       }
     }
@@ -214,7 +217,6 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitTypeCastExpression(PsiTypeCastExpression expression) {
       super.visitTypeCastExpression(expression);
       if (IGNORE_UNCHECKED_CAST) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(expression)) return;
       final PsiTypeElement typeElement = expression.getCastType();
       if (typeElement == null) return;
       final PsiType castType = typeElement.getType();
@@ -223,9 +225,10 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
       final PsiType exprType = operand.getType();
       if (exprType == null) return;
       if (!TypeConversionUtil.areTypesConvertible(exprType, castType)) return;
-      if (GenericsHighlightUtil.isUncheckedCast(castType, exprType)) {
+      if (JavaGenericsUtil.isUncheckedCast(castType, exprType)) {
         final String description =
-          JavaErrorMessages.message("generics.unchecked.cast", HighlightUtil.formatType(exprType), HighlightUtil.formatType(castType));
+          JavaErrorMessages.message("generics.unchecked.cast", JavaHighlightUtil.formatType(exprType), JavaHighlightUtil
+            .formatType(castType));
         registerProblem(description, expression, myGenerifyFixes);
       }
     }
@@ -233,14 +236,13 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     @Override
     public void visitCallExpression(PsiCallExpression callExpression) {
       super.visitCallExpression(callExpression);
-      if (!PsiUtil.isLanguageLevel5OrHigher(callExpression)) return;
       final JavaResolveResult result = callExpression.resolveMethodGenerics();
       final String description = getUncheckedCallDescription(result);
       if (description != null) {
         if (IGNORE_UNCHECKED_CALL) return;
         final PsiExpression element = callExpression instanceof PsiMethodCallExpression
-                                         ? ((PsiMethodCallExpression)callExpression).getMethodExpression()
-                                         : callExpression;
+                                      ? ((PsiMethodCallExpression)callExpression).getMethodExpression()
+                                      : callExpression;
         registerProblem(description, element, myGenerifyFixes);
       }
       else {
@@ -272,7 +274,6 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitVariable(PsiVariable variable) {
       super.visitVariable(variable);
       if (IGNORE_UNCHECKED_ASSIGNMENT) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(variable)) return;
       PsiExpression initializer = variable.getInitializer();
       if (initializer == null || initializer instanceof PsiArrayInitializerExpression) return;
       final PsiType initializerType = initializer.getType();
@@ -284,13 +285,11 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitForeachStatement(PsiForeachStatement statement) {
       super.visitForeachStatement(statement);
       if (IGNORE_UNCHECKED_ASSIGNMENT) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(statement)) return;
       final PsiParameter parameter = statement.getIterationParameter();
       final PsiType parameterType = parameter.getType();
       final PsiExpression iteratedValue = statement.getIteratedValue();
       if (iteratedValue == null) return;
-      final PsiType itemType = GenericsHighlightUtil.getCollectionItemType(iteratedValue);
-      if (!PsiUtil.isLanguageLevel5OrHigher(statement)) return;
+      final PsiType itemType = JavaGenericsUtil.getCollectionItemType(iteratedValue);
       checkRawToGenericsAssignment(parameter, parameterType, itemType, true, myOnTheFly ? getChangeVariableTypeFixes(parameter, itemType) : LocalQuickFix.EMPTY_ARRAY);
     }
 
@@ -298,7 +297,6 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitAssignmentExpression(PsiAssignmentExpression expression) {
       super.visitAssignmentExpression(expression);
       if (IGNORE_UNCHECKED_ASSIGNMENT) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(expression)) return;
       if (!"=".equals(expression.getOperationSign().getText())) return;
       PsiExpression lExpr = expression.getLExpression();
       PsiExpression rExpr = expression.getRExpression();
@@ -320,7 +318,6 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitArrayInitializerExpression(PsiArrayInitializerExpression arrayInitializer) {
       super.visitArrayInitializerExpression(arrayInitializer);
       if (IGNORE_UNCHECKED_ASSIGNMENT) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(arrayInitializer)) return;
       final PsiType type = arrayInitializer.getType();
       if (!(type instanceof PsiArrayType)) return;
       final PsiType componentType = ((PsiArrayType)type).getComponentType();
@@ -335,12 +332,12 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
 
         if (itemType == null) continue;
         if (!TypeConversionUtil.isAssignable(componentType, itemType)) continue;
-        if (GenericsHighlightUtil.isRawToGeneric(componentType, itemType)) {
+        if (JavaGenericsUtil.isRawToGeneric(componentType, itemType)) {
           String description = JavaErrorMessages.message("generics.unchecked.assignment",
-                                                         HighlightUtil.formatType(itemType),
-                                                         HighlightUtil.formatType(componentType));
+                                                         JavaHighlightUtil.formatType(itemType),
+                                                         JavaHighlightUtil.formatType(componentType));
           if (!arrayTypeFixChecked) {
-            final PsiType checkResult = HighlightUtil.sameType(initializers);
+            final PsiType checkResult = JavaHighlightUtil.sameType(initializers);
             fix = checkResult != null ? new VariableArrayTypeFix(arrayInitializer, checkResult) : null;
             arrayTypeFixChecked = true;
           }
@@ -359,10 +356,10 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
                                               @NotNull LocalQuickFix[] quickFixes) {
       if (parameterType == null || itemType == null) return;
       if (checkAssignability && !TypeConversionUtil.isAssignable(parameterType, itemType)) return;
-      if (GenericsHighlightUtil.isRawToGeneric(parameterType, itemType)) {
+      if (JavaGenericsUtil.isRawToGeneric(parameterType, itemType)) {
         String description = JavaErrorMessages.message("generics.unchecked.assignment",
-                                                       HighlightUtil.formatType(itemType),
-                                                       HighlightUtil.formatType(parameterType));
+                                                       JavaHighlightUtil.formatType(itemType),
+                                                       JavaHighlightUtil.formatType(parameterType));
         registerProblem(description, parameter, quickFixes);
       }
     }
@@ -371,7 +368,6 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitMethod(PsiMethod method) {
       super.visitMethod(method);
       if (IGNORE_UNCHECKED_OVERRIDING) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(method)) return;
       if (!method.isConstructor()) {
         List<HierarchicalMethodSignature> superMethodSignatures = method.getHierarchicalMethodSignature().getSuperSignatures();
         if (!superMethodSignatures.isEmpty() && !method.hasModifierProperty(PsiModifier.STATIC)) {
@@ -384,10 +380,10 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
             final PsiType baseReturnType = substitutor.substitute(baseMethod.getReturnType());
             final PsiType overriderReturnType = method.getReturnType();
             if (baseReturnType == null || overriderReturnType == null) return;
-            if (GenericsHighlightUtil.isRawToGeneric(baseReturnType, overriderReturnType)) {
+            if (JavaGenericsUtil.isRawToGeneric(baseReturnType, overriderReturnType)) {
               final String message = JavaErrorMessages.message("unchecked.overriding.incompatible.return.type",
-                                                               HighlightUtil.formatType(overriderReturnType),
-                                                               HighlightUtil.formatType(baseReturnType));
+                                                               JavaHighlightUtil.formatType(overriderReturnType),
+                                                               JavaHighlightUtil.formatType(baseReturnType));
 
               final PsiTypeElement returnTypeElement = method.getReturnTypeElement();
               LOG.assertTrue(returnTypeElement != null);
@@ -402,7 +398,6 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
     public void visitReturnStatement(PsiReturnStatement statement) {
       super.visitReturnStatement(statement);
       if (IGNORE_UNCHECKED_ASSIGNMENT) return;
-      if (!PsiUtil.isLanguageLevel5OrHigher(statement)) return;
       final PsiMethod method = PsiTreeUtil.getParentOfType(statement, PsiMethod.class);
       if (method != null) {
         final PsiType returnType = method.getReturnType();
@@ -470,22 +465,24 @@ public class UncheckedWarningLocalInspection extends BaseJavaLocalInspectionTool
           final PsiElementFactory elementFactory = JavaPsiFacade.getInstance(method.getProject()).getElementFactory();
           PsiType type = elementFactory.createType(method.getContainingClass(), substitutor);
           return JavaErrorMessages.message("generics.unchecked.call.to.member.of.raw.type",
-                                                         HighlightUtil.formatMethod(method),
-                                                         HighlightUtil.formatType(type));
+                                           JavaHighlightUtil.formatMethod(method),
+                                           JavaHighlightUtil.formatType(type));
         }
       }
       return null;
     }
   }
 
-  public static LocalQuickFix[] getChangeVariableTypeFixes(PsiVariable parameter, PsiType itemType) {
+  public static LocalQuickFix[] getChangeVariableTypeFixes(@NotNull PsiVariable parameter, PsiType itemType) {
     if (itemType instanceof PsiMethodReferenceType) return LocalQuickFix.EMPTY_ARRAY;
     final List<LocalQuickFix> result = new ArrayList<LocalQuickFix>();
     LOG.assertTrue(parameter.isValid());
-    for (ChangeVariableTypeQuickFixProvider fixProvider : Extensions.getExtensions(ChangeVariableTypeQuickFixProvider.EP_NAME)) {
-      for (IntentionAction action : fixProvider.getFixes(parameter, itemType)) {
-        if (action instanceof LocalQuickFix) {
-          result.add((LocalQuickFix)action);
+    if (itemType != null) {
+      for (ChangeVariableTypeQuickFixProvider fixProvider : Extensions.getExtensions(ChangeVariableTypeQuickFixProvider.EP_NAME)) {
+        for (IntentionAction action : fixProvider.getFixes(parameter, itemType)) {
+          if (action instanceof LocalQuickFix) {
+            result.add((LocalQuickFix)action);
+          }
         }
       }
     }

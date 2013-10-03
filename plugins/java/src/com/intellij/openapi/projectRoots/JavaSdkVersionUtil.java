@@ -16,25 +16,30 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.PsiElement;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * User: anna
  * Date: 3/28/12
  */
 public class JavaSdkVersionUtil {
-  public static boolean isAtLeast(PsiElement element, JavaSdkVersion minVersion) {
+  public static boolean isAtLeast(@NotNull PsiElement element, @NotNull JavaSdkVersion minVersion) {
+    JavaSdkVersion version = getJavaSdkVersion(element);
+    return version == null || version.isAtLeast(minVersion);
+  }
+
+  public static JavaSdkVersion getJavaSdkVersion(@NotNull PsiElement element) {
     final Module module = ModuleUtilCore.findModuleForPsiElement(element);
     if (module != null) {
-      final Sdk sdk = ModuleUtil.getSdk(module, JavaModuleExtension.class);
+      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
       if (sdk != null) {
-        final JavaSdkVersion version = JavaSdk.getInstance().getVersion(sdk);
-        return version != null && version.isAtLeast(minVersion);
+        String version = sdk.getVersionString();
+        return version == null ? null : JdkVersionUtil.getVersion(version);
       }
     }
-    return true;
+    return null;
   }
 }

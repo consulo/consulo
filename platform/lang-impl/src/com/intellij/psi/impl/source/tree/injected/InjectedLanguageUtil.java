@@ -17,10 +17,8 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.injected.editor.*;
-import com.intellij.lang.DependentLanguage;
-import com.intellij.lang.InjectableLanguage;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -36,7 +34,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.PsiParameterizedCachedValue;
 import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.templateLanguages.TemplateLanguage;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.*;
 import com.intellij.util.containers.ContainerUtil;
@@ -126,8 +123,14 @@ public class InjectedLanguageUtil {
     }
     List<Pair<Place, PsiFile>> places = registrar.getResult();
     for (Pair<Place, PsiFile> pair : places) {
-      PsiFile injectedPsi = pair.second;
-      visitor.visit(injectedPsi, pair.first);
+      if (visitor instanceof InjectedReferenceVisitor) {
+        if (registrar.getReferenceInjector() != null) {
+          ((InjectedReferenceVisitor)visitor).visitInjectedReference(registrar.getReferenceInjector(), pair.first);
+        }
+      }
+      else if (pair.second != null) {
+        visitor.visit(pair.second, pair.first);
+      }
     }
   }
 
@@ -377,7 +380,7 @@ public class InjectedLanguageUtil {
     return editor;
   }
 
-  static PsiFile getTopLevelFile(@NotNull PsiElement element) {
+  public static PsiFile getTopLevelFile(@NotNull PsiElement element) {
     PsiFile containingFile = element.getContainingFile();
     if (containingFile == null) return null;
     Document document = PsiDocumentManager.getInstance(element.getProject()).getCachedDocument(containingFile);
@@ -489,21 +492,6 @@ public class InjectedLanguageUtil {
   }
 
   public static boolean isInjectableLanguage(Language language) {
-    if (language == Language.ANY) {
-      return false;
-    }
-    if (language.getID().startsWith("$")) {
-      return false;
-    }
-    if (language instanceof InjectableLanguage) {
-      return true;
-    }
-    if (language instanceof TemplateLanguage || language instanceof DependentLanguage) {
-      return false;
-    }
-    if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) {
-      return false;
-    }
-    return true;
+    return LanguageUtil.isInjectableLanguage(language);
   }
 }

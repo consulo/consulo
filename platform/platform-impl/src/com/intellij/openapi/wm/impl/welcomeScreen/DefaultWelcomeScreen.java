@@ -437,7 +437,7 @@ public class DefaultWelcomeScreen implements WelcomeScreen {
   private void createListOfPlugins(final JPanel installedPluginsPanel, final JPanel bundledPluginsPanel) {
     //Create the list of installed plugins
     List<IdeaPluginDescriptor> installedPlugins =
-      new ArrayList<IdeaPluginDescriptor>(Arrays.asList(PluginManager.getPlugins()));
+      new ArrayList<IdeaPluginDescriptor>(Arrays.asList(PluginManagerCore.getPlugins()));
 
     if (installedPlugins.size() == 0) {
       addListItemToPlugins(installedPluginsPanel,
@@ -496,7 +496,7 @@ public class DefaultWelcomeScreen implements WelcomeScreen {
 
   private void addListItemToPlugins(final JPanel bundledPluginsPanel, final IdeaPluginDescriptorImpl plugin) {
     addListItemToPlugins(bundledPluginsPanel, plugin.getName(), plugin.getDescription(),
-                         plugin.getUrl(), plugin.isEnabled(), PluginManager.isIncompatible(plugin));
+                         plugin.getUrl(), plugin.isEnabled(), PluginManagerCore.isIncompatible(plugin));
   }
 
   public void addListItemToPlugins(final JPanel panel,

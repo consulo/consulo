@@ -46,7 +46,7 @@ public class XmlNamespaceIndex extends XmlIndex<XsdNamespaceBuilder> {
 
   @Nullable
   public static String getNamespace(@NotNull VirtualFile file, final Project project, PsiFile context) {
-    if (DumbService.isDumb(project) || (context != null && XmlUtil.isStubBuilding(context))) {
+    if (DumbService.isDumb(project) || (context != null && XmlUtil.isStubBuilding())) {
       try {
         return XsdNamespaceBuilder.computeNamespace(file.getInputStream());
       }
@@ -72,8 +72,8 @@ public class XmlNamespaceIndex extends XmlIndex<XsdNamespaceBuilder> {
                                                                                            @Nullable NullableFunction<List<IndexedRelevantResource<String, XsdNamespaceBuilder>>, IndexedRelevantResource<String, XsdNamespaceBuilder>> chooser) {
     return IndexedRelevantResource.getAllResources(NAME, module, project, chooser);
   }
-  
-  private static final ID<String,XsdNamespaceBuilder> NAME = ID.create("XmlNamespaces");
+
+  public static final ID<String,XsdNamespaceBuilder> NAME = ID.create("XmlNamespaces");
 
   @Override
   @NotNull
@@ -170,7 +170,7 @@ public class XmlNamespaceIndex extends XmlIndex<XsdNamespaceBuilder> {
                                     @Nullable final String version,
                                     @NotNull PsiFile file) {
 
-    if (DumbService.isDumb(file.getProject()) || XmlUtil.isStubBuilding(file)) return null;
+    if (DumbService.isDumb(file.getProject()) || XmlUtil.isStubBuilding()) return null;
 
     IndexedRelevantResource<String,XsdNamespaceBuilder> resource =
       guessSchema(namespace, tagName, version, ModuleUtilCore.findModuleForPsiElement(file));
@@ -189,11 +189,41 @@ public class XmlNamespaceIndex extends XmlIndex<XsdNamespaceBuilder> {
 
     if (!dtdUri.endsWith(".dtd") ||
         DumbService.isDumb(baseFile.getProject()) ||
-        XmlUtil.isStubBuilding(baseFile)) return null;
+        XmlUtil.isStubBuilding()) return null;
 
     String dtdFileName = new File(dtdUri).getName();
     List<IndexedRelevantResource<String, XsdNamespaceBuilder>>
       list = getResourcesByNamespace(dtdFileName, baseFile.getProject(), ModuleUtilCore.findModuleForPsiElement(baseFile));
-    return list.isEmpty() ? null : findSchemaFile(list.get(0).getFile(), baseFile);
+    if (list.isEmpty()) {
+      return null;
+    }
+    IndexedRelevantResource<String, XsdNamespaceBuilder> resource;
+    if (list.size() > 1) {
+      final String[] split = dtdUri.split("/");
+      resource = Collections.max(list, new Comparator<IndexedRelevantResource<String, XsdNamespaceBuilder>>() {
+        @Override
+        public int compare(IndexedRelevantResource<String, XsdNamespaceBuilder> o1,
+                           IndexedRelevantResource<String, XsdNamespaceBuilder> o2) {
+
+          return weight(o1) - weight(o2);
+        }
+
+        int weight(IndexedRelevantResource<String, XsdNamespaceBuilder> o1) {
+          VirtualFile file = o1.getFile();
+          for (int i = split.length - 1; i >= 0 && file != null; i--) {
+            String s = split[i];
+            if (!s.equals(file.getName())) {
+              return split.length - i;
+            }
+            file = file.getParent();
+          }
+          return 0;
+        }
+      });
+    }
+    else {
+      resource = list.get(0);
+    }
+    return findSchemaFile(resource.getFile(), baseFile);
   }
 }

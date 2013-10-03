@@ -52,7 +52,6 @@ public final class LanguageUtil {
   }
 
   @NotNull
-  @Deprecated
   public static Language[] getLanguageDialects(final Language base) {
     final List<Language> list = ContainerUtil.findAll(Language.getRegisteredLanguages(), new Condition<Language>() {
       @Override
@@ -71,5 +70,24 @@ public final class LanguageUtil {
 
     final Language language = psiFile.getViewProvider().getBaseLanguage();
     return language instanceof TemplateLanguage;
+  }
+
+  public static boolean isInjectableLanguage(Language language) {
+    if (language == Language.ANY) {
+      return false;
+    }
+    if (language.getID().startsWith("$")) {
+      return false;
+    }
+    if (language instanceof InjectableLanguage) {
+      return true;
+    }
+    if (language instanceof TemplateLanguage) {
+      return false;
+    }
+    if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) {
+      return false;
+    }
+    return true;
   }
 }

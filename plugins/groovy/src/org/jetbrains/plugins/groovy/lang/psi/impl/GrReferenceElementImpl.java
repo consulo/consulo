@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,12 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.codeStyle.GroovyCodeStyleSettings;
-import org.jetbrains.plugins.groovy.lang.GrReferenceAdjuster;
 import org.jetbrains.plugins.groovy.lang.parser.GroovyElementTypes;
 import org.jetbrains.plugins.groovy.lang.psi.GrReferenceElement;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
@@ -86,7 +87,7 @@ public abstract class GrReferenceElementImpl<Q extends PsiElement> extends Groov
         newNameNode = factory.createLiteralFromValue(newElementName).getFirstChild().getNode();
       }
       assert newNameNode != null && node != null;
-      node.getTreeParent().replaceChild(node, newNameNode);
+      getNode().replaceChild(node, newNameNode);
     }
 
     return this;
@@ -115,7 +116,7 @@ public abstract class GrReferenceElementImpl<Q extends PsiElement> extends Groov
 
       final GrReferenceElement<Q> qualifiedRef = bindWithQualifiedRef(qualifiedName);
       if (!preserveQualification) {
-        GrReferenceAdjuster.shortenReferences(qualifiedRef);
+        JavaCodeStyleManager.getInstance(getProject()).shortenClassReferences(qualifiedRef);
       }
       return qualifiedRef;
     }
@@ -131,12 +132,12 @@ public abstract class GrReferenceElementImpl<Q extends PsiElement> extends Groov
       String qName = psiClass.getQualifiedName() + "." + member.getName();
       final GrReferenceElement<Q> qualifiedRef = bindWithQualifiedRef(qName);
       if (!preserveQualification) {
-        GrReferenceAdjuster.shortenReferences(qualifiedRef);
+        JavaCodeStyleManager.getInstance(getProject()).shortenClassReferences(qualifiedRef);
       }
       return qualifiedRef;
     }
-    else if (element instanceof PsiJavaPackage) {
-      return bindWithQualifiedRef(((PsiJavaPackage)element).getQualifiedName());
+    else if (element instanceof PsiPackage) {
+      return bindWithQualifiedRef(((PsiPackage)element).getQualifiedName());
     }
 
     throw new IncorrectOperationException("Cannot bind to:" + element + " of class " + element.getClass());
@@ -191,4 +192,7 @@ public abstract class GrReferenceElementImpl<Q extends PsiElement> extends Groov
     return whiteSpaceAndComments;
   }
 
+  public boolean isQualified() {
+    return getQualifier() != null;
+  }
 }

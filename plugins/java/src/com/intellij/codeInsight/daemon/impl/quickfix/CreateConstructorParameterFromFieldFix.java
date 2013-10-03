@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl.quickfix;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.NullableNotNullManager;
 import com.intellij.codeInsight.daemon.QuickFixBundle;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightControlFlowUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.codeInsight.generation.PsiElementClassMember;
 import com.intellij.codeInsight.generation.PsiFieldMember;
 import com.intellij.codeInsight.generation.PsiMethodMember;
@@ -90,7 +90,7 @@ public class CreateConstructorParameterFromFieldFix implements IntentionAction {
            && field.getManager().isInProject(field)
            && !field.hasModifierProperty(PsiModifier.STATIC)
            && containingClass != null
-          // && !(containingClass instanceof JspClass)
+           && !(containingClass instanceof PsiSyntheticClass)
            && containingClass.getName() != null;
   }
 
@@ -185,7 +185,7 @@ public class CreateConstructorParameterFromFieldFix implements IntentionAction {
     }
   }
 
-   @NotNull
+  @NotNull
   private Collection<SmartPsiElementPointer<PsiField>> getFieldsToFix() {
     Map<SmartPsiElementPointer<PsiField>, Boolean> fields = myClass.getUserData(FIELDS);
     if (fields == null) myClass.putUserData(FIELDS, fields = new ConcurrentWeakHashMap<SmartPsiElementPointer<PsiField>,Boolean>(1));
@@ -315,7 +315,7 @@ public class CreateConstructorParameterFromFieldFix implements IntentionAction {
     if (newParameters == parameters) return false; //user must have canceled dialog
     boolean created = false;
     // do not introduce assignment in chanined constructor
-    if (HighlightControlFlowUtil.getChainedConstructors(constructor) == null) {
+    if (JavaHighlightUtil.getChainedConstructors(constructor) == null) {
       for (PsiField field : fields.keySet()) {
         final String defaultParamName = fields.get(field);
         PsiParameter parameter = findParamByName(defaultParamName, field.getType(), newParameters, parameterInfos);

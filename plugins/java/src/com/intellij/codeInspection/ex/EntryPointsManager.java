@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,19 +23,34 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefManager;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 
-public interface EntryPointsManager extends Disposable {
-  void resolveEntryPoints(RefManager manager);
+import javax.swing.*;
 
-  void addEntryPoint(RefElement newEntryPoint, boolean isPersistent);
+public abstract class EntryPointsManager implements Disposable {
+  public static EntryPointsManager getInstance(Project project) {
+    return ServiceManager.getService(project, EntryPointsManager.class);
+  }
 
-  void removeEntryPoint(RefElement anEntryPoint);
+  public abstract void resolveEntryPoints(@NotNull RefManager manager);
 
-  RefElement[] getEntryPoints();
+  public abstract void addEntryPoint(@NotNull RefElement newEntryPoint, boolean isPersistent);
 
-  void cleanup();
+  public abstract void removeEntryPoint(@NotNull RefElement anEntryPoint);
 
-  boolean isAddNonJavaEntries();
+  @NotNull
+  public abstract RefElement[] getEntryPoints();
 
-  void configureAnnotations();
+  public abstract void cleanup();
+
+  public abstract boolean isAddNonJavaEntries();
+
+  public abstract void configureAnnotations();
+
+  public abstract JButton createConfigureAnnotationsBtn();
+
+  public abstract boolean isEntryPoint(@NotNull PsiElement element);
 }

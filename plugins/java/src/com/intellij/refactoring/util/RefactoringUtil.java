@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.refactoring.util;
 import com.intellij.codeInsight.ExpectedTypeInfo;
 import com.intellij.codeInsight.ExpectedTypesProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightControlFlowUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.diagnostic.Logger;
@@ -171,22 +172,6 @@ public class RefactoringUtil {
     }
   }
 
-  //order of usages accross different files is irrelevant
-  public static void sortDepthFirstRightLeftOrder(final UsageInfo[] usages) {
-    Arrays.sort(usages, new Comparator<UsageInfo>() {
-      public int compare(final UsageInfo usage1, final UsageInfo usage2) {
-        final PsiElement element1 = usage1.getElement();
-        final PsiElement element2 = usage2.getElement();
-        if (element1 == null) {
-          if (element2 == null) return 0;
-          return 1;
-        }
-        if (element2 == null) return -1;
-        return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
-      }
-    });
-  }
-
   @Nullable
   public static String suggestNewOverriderName(String oldOverriderName, String oldBaseName, String newBaseName) {
     if (oldOverriderName.equals(oldBaseName)) {
@@ -232,7 +217,7 @@ public class RefactoringUtil {
     return false;
   }
 
-   public static boolean hasStaticImportOn(final PsiElement expr, final PsiMember member) {
+  public static boolean hasStaticImportOn(final PsiElement expr, final PsiMember member) {
     if (expr.getContainingFile() instanceof PsiJavaFile) {
       final PsiImportList importList = ((PsiJavaFile)expr.getContainingFile()).getImportList();
       if (importList != null) {
@@ -306,9 +291,9 @@ public class RefactoringUtil {
     while (parent instanceof PsiStatement) {
       if (!skipScopingStatements && ((parent instanceof PsiForStatement && parentStatement == ((PsiForStatement)parent).getBody()) || (
         parent instanceof PsiForeachStatement && parentStatement == ((PsiForeachStatement)parent).getBody()) || (
-        parent instanceof PsiWhileStatement && parentStatement == ((PsiWhileStatement)parent).getBody()) || (
-        parent instanceof PsiIfStatement &&
-        (parentStatement == ((PsiIfStatement)parent).getThenBranch() || parentStatement == ((PsiIfStatement)parent).getElseBranch())))) {
+                                       parent instanceof PsiWhileStatement && parentStatement == ((PsiWhileStatement)parent).getBody()) || (
+                                       parent instanceof PsiIfStatement &&
+                                       (parentStatement == ((PsiIfStatement)parent).getThenBranch() || parentStatement == ((PsiIfStatement)parent).getElseBranch())))) {
         return parentStatement;
       }
       parentStatement = parent;
@@ -778,14 +763,25 @@ public class RefactoringUtil {
       PsiUtil.setModifierProperty(method, PsiModifier.ABSTRACT, true);
     }
 
-    PsiUtil.setModifierProperty(method, PsiModifier.FINAL, false);
-    PsiUtil.setModifierProperty(method, PsiModifier.SYNCHRONIZED, false);
-    PsiUtil.setModifierProperty(method, PsiModifier.NATIVE, false);
+    prepareForInterface(method);
 
     if (!targetClass.isInterface()) {
       PsiUtil.setModifierProperty(targetClass, PsiModifier.ABSTRACT, true);
     }
 
+  }
+
+  public static void makeMethodDefault(@NotNull PsiMethod method) throws IncorrectOperationException {
+    PsiUtil.setModifierProperty(method, PsiModifier.DEFAULT, true);
+    PsiUtil.setModifierProperty(method, PsiModifier.ABSTRACT, false);
+
+    prepareForInterface(method);
+  }
+
+  private static void prepareForInterface(PsiMethod method) {
+    PsiUtil.setModifierProperty(method, PsiModifier.FINAL, false);
+    PsiUtil.setModifierProperty(method, PsiModifier.SYNCHRONIZED, false);
+    PsiUtil.setModifierProperty(method, PsiModifier.NATIVE, false);
     removeFinalParameters(method);
   }
 
@@ -822,21 +818,6 @@ public class RefactoringUtil {
     return buffer.toString();
   }
 
-  public static boolean isSuperOrThisCall(PsiStatement statement, boolean testForSuper, boolean testForThis) {
-    if (!(statement instanceof PsiExpressionStatement)) return false;
-    PsiExpression expression = ((PsiExpressionStatement)statement).getExpression();
-    if (!(expression instanceof PsiMethodCallExpression)) return false;
-    final PsiReferenceExpression methodExpression = ((PsiMethodCallExpression)expression).getMethodExpression();
-    if (testForSuper) {
-      if ("super".equals(methodExpression.getText())) return true;
-    }
-    if (testForThis) {
-      if ("this".equals(methodExpression.getText())) return true;
-    }
-
-    return false;
-  }
-
   public static void visitImplicitSuperConstructorUsages(PsiClass subClass,
                                                          final ImplicitConstructorUsageVisitor implicitConstructorUsageVistor,
                                                          PsiClass superClass) {
@@ -845,7 +826,7 @@ public class RefactoringUtil {
     if (constructors.length > 0) {
       for (PsiMethod constructor : constructors) {
         final PsiStatement[] statements = constructor.getBody().getStatements();
-        if (statements.length < 1 || !isSuperOrThisCall(statements[0], true, true)) {
+        if (statements.length < 1 || !JavaHighlightUtil.isSuperOrThisCall(statements[0], true, true)) {
           implicitConstructorUsageVistor.visitConstructor(constructor, baseDefaultConstructor);
         }
       }
@@ -1167,7 +1148,7 @@ public class RefactoringUtil {
       paramTag.delete();
     }
     for (PsiDocTag psiDocTag : newTags) {
-      anchor = docComment.addAfter(psiDocTag, anchor);
+      anchor = anchor != null && anchor.isValid() ? docComment.addAfter(psiDocTag, anchor) : docComment.add(psiDocTag);
     }
   }
 

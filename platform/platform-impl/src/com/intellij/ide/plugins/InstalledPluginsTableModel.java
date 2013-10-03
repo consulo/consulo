@@ -180,7 +180,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     return myDependentToRequiredListMap;
   }
 
-  private void updatePluginDependencies() {
+  protected void updatePluginDependencies() {
     myDependentToRequiredListMap.clear();
 
     final int rowCount = getRowCount();
@@ -197,22 +197,23 @@ public class InstalledPluginsTableModel extends PluginTableModel {
                                           return PluginManager.getPlugin(pluginId);
                                         }
                                       }, new Condition<PluginId>() {
-          public boolean value(final PluginId dependantPluginId) {
-            final Boolean enabled = myEnabled.get(dependantPluginId);
-            if (enabled == null || !enabled.booleanValue()) {
-              Set<PluginId> required = myDependentToRequiredListMap.get(pluginId);
-              if (required == null) {
-                required = new HashSet<PluginId>();
-                myDependentToRequiredListMap.put(pluginId, required);
-              }
+                                        public boolean value(final PluginId dependantPluginId) {
+                                          final Boolean enabled = myEnabled.get(dependantPluginId);
+                                          if ((enabled == null && !updatedPlugins.contains(dependantPluginId)) ||
+                                              (enabled != null && !enabled.booleanValue())) {
+                                            Set<PluginId> required = myDependentToRequiredListMap.get(pluginId);
+                                            if (required == null) {
+                                              required = new HashSet<PluginId>();
+                                              myDependentToRequiredListMap.put(pluginId, required);
+                                            }
 
-              required.add(dependantPluginId);
-              //return false;
-            }
+                                            required.add(dependantPluginId);
+                                            //return false;
+                                          }
 
-            return true;
-          }
-        }
+                                          return true;
+                                        }
+                                      }
         );
         if (enabled == null && !myDependentToRequiredListMap.containsKey(pluginId) && !PluginManager.isIncompatible(descriptor)) {
           myEnabled.put(pluginId, true);
@@ -459,27 +460,28 @@ public class InstalledPluginsTableModel extends PluginTableModel {
                                         return PluginManager.getPlugin(pluginId);
                                       }
                                     }, new Condition<PluginId>() {
-        public boolean value(final PluginId pluginId) {
-          Boolean enabled = myEnabled.get(pluginId);
-          if (enabled == null) {
-            return false;
-          }
-          if (newVal && !enabled.booleanValue()) {
-            deps.add(pluginId);
-          }
+                                      public boolean value(final PluginId pluginId) {
+                                        Boolean enabled = myEnabled.get(pluginId);
+                                        if (enabled == null) {
+                                          return false;
+                                        }
+                                        if (newVal && !enabled.booleanValue()) {
+                                          deps.add(pluginId);
+                                        }
 
-          if (!newVal) {
-            final PluginId pluginDescriptorId = ideaPluginDescriptor.getPluginId();
-            for (IdeaPluginDescriptor descriptor : ideaPluginDescriptors) {
-              if (pluginId.equals(descriptor.getPluginId())) {
-                deps.add(pluginDescriptorId);
-                break;
-              }
-            }
-          }
-          return true;
-        }
-      }
+                                        if (!newVal) {
+                                          if (ideaPluginDescriptor instanceof IdeaPluginDescriptorImpl && ((IdeaPluginDescriptorImpl)ideaPluginDescriptor).isDeleted()) return true;
+                                          final PluginId pluginDescriptorId = ideaPluginDescriptor.getPluginId();
+                                          for (IdeaPluginDescriptor descriptor : ideaPluginDescriptors) {
+                                            if (pluginId.equals(descriptor.getPluginId())) {
+                                              deps.add(pluginDescriptorId);
+                                              break;
+                                            }
+                                          }
+                                        }
+                                        return true;
+                                      }
+                                    }
       );
     }
     if (!deps.isEmpty()) {
@@ -527,7 +529,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       myNameLabel.setFont(PluginManagerColumnInfo.getNameFont());
       myBundledLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
       myPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 1, 1));
-      
+
       myNameLabel.setOpaque(true);
       myPanel.add(myNameLabel, BorderLayout.WEST);
       myPanel.add(myBundledLabel, BorderLayout.EAST);

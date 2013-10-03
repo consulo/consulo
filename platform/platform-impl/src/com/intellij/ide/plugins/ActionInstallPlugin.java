@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,9 @@ package com.intellij.ide.plugins;
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -35,11 +28,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.net.IOExceptionDialog;
-import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
+import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -119,6 +109,29 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
           list.add(pluginNode);
           ourInstallingNodes.add(pluginNode);
         }
+        final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)installed.getPluginsModel();
+        final Set<IdeaPluginDescriptor> disabled = new HashSet<IdeaPluginDescriptor>();
+        final Set<IdeaPluginDescriptor> disabledDependants = new HashSet<IdeaPluginDescriptor>();
+        for (PluginNode node : list) {
+          final PluginId pluginId = node.getPluginId();
+          if (pluginsModel.isDisabled(pluginId)) {
+            disabled.add(node);
+          }
+          final List<PluginId> depends = node.getDepends();
+          if (depends != null) {
+            final Set<PluginId> optionalDeps = new HashSet<PluginId>(Arrays.asList(node.getOptionalDependentPluginIds()));
+            for (PluginId dependantId : depends) {
+              if (optionalDeps.contains(dependantId)) continue;
+              final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
+              if (pluginDescriptor != null && pluginsModel.isDisabled(dependantId)) {
+                disabledDependants.add(pluginDescriptor);
+              }
+            }
+          }
+        }
+        if (suggestToEnableInstalledPlugins(pluginsModel, disabled, disabledDependants, list)) {
+          installed.setRequireShutdown(true);
+        }
       }
       try {
         final Runnable onInstallRunnable = new Runnable() {
@@ -127,27 +140,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
             installedPluginsToModel(list);
             if (!installed.isDisposed()) {
               getPluginTable().updateUI();
-              final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)installed.getPluginsModel();
-              final Set<IdeaPluginDescriptor> disabled = new HashSet<IdeaPluginDescriptor>();
-              final Set<IdeaPluginDescriptor> disabledDependants = new HashSet<IdeaPluginDescriptor>();
-              for (PluginNode node : list) {
-                final PluginId pluginId = node.getPluginId();
-                if (pluginsModel.isDisabled(pluginId)) {
-                  disabled.add(node);
-                }
-                final List<PluginId> depends = node.getDepends();
-                if (depends != null) {
-                  for (PluginId dependantId : depends) {
-                    final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
-                    if (pluginDescriptor != null && pluginsModel.isDisabled(dependantId)) {
-                      disabledDependants.add(pluginDescriptor);
-                    }
-                  }
-                }
-              }
-              if (suggestToEnableInstalledPlugins(pluginsModel, disabled, disabledDependants, list)) {
-                installed.setRequireShutdown(true);
-              }
+              installed.setRequireShutdown(true);
             }
             else {
               boolean needToRestart = false;
@@ -160,7 +153,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
               }
 
               if (needToRestart) {
-                notifyPluginsWereInstalled(list.size() == 1 ? list.get(0).getName() : null);
+                PluginManagerMain.notifyPluginsWereInstalled(list.size() == 1 ? list.get(0).getName() : null);
               }
             }
           }
@@ -172,18 +165,24 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
           }
         });
       }
-      catch (IOException e1) {
+      catch (final IOException e1) {
+        ourInstallingNodes.removeAll(list);
         PluginManagerMain.LOG.error(e1);
-        IOExceptionDialog
-          .showErrorDialog(IdeBundle.message("action.download.and.install.plugin"), IdeBundle.message("error.plugin.download.failed"));
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            IOExceptionDialog
+              .showErrorDialog(IdeBundle.message("action.download.and.install.plugin"), IdeBundle.message("error.plugin.download.failed"));
+          }
+        });
       }
     }
   }
 
   private static boolean suggestToEnableInstalledPlugins(final InstalledPluginsTableModel pluginsModel,
-                                                      final Set<IdeaPluginDescriptor> disabled,
-                                                      final Set<IdeaPluginDescriptor> disabledDependants,
-                                                      final ArrayList<PluginNode> list) {
+                                                         final Set<IdeaPluginDescriptor> disabled,
+                                                         final Set<IdeaPluginDescriptor> disabledDependants,
+                                                         final ArrayList<PluginNode> list) {
     if (!disabled.isEmpty() || !disabledDependants.isEmpty()) {
       String message = "<html><body>";
       if (disabled.size() == 1) {
@@ -229,7 +228,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
           message += "plugin dependenc" + (disabledDependants.size() > 1 ? "ies" : "y");
         }
         message += "?</body></html>";
-        result = Messages.showOkCancelDialog(message, CommonBundle.getWarningTitle(), Messages.getQuestionIcon());
+        result = Messages.showYesNoDialog(message, CommonBundle.getWarningTitle(), Messages.getQuestionIcon());
         if (result == DialogWrapper.CANCEL_EXIT_CODE) return false;
       }
 
@@ -239,8 +238,9 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
       } else if (result == DialogWrapper.CANCEL_EXIT_CODE && !disabled.isEmpty()) {
         pluginsModel.enableRows(disabled.toArray(new IdeaPluginDescriptor[disabled.size()]), true);
       }
+      return true;
     }
-    return true;
+    return false;
   }
 
   private void installedPluginsToModel(ArrayList<PluginNode> list) {
@@ -257,33 +257,6 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
     for (PluginNode node : list) {
       installedPluginsModel.appendOrUpdateDescriptor(node);
     }
-  }
-
-  private static void notifyPluginsWereInstalled(@Nullable String pluginName) {
-    final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-    final boolean restartCapable = app.isRestartCapable();
-    String message =
-      restartCapable ? IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName())
-                     : IdeBundle.message("message.idea.shutdown.required", ApplicationNamesInfo.getInstance().getFullProductName());
-    message += "<br><a href=";
-    message += restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown";
-    message += "</a>";
-    Notifications.Bus.notify(new Notification("Plugins Lifecycle Group",
-                                              pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed",
-                                              XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION,
-                                              new NotificationListener() {
-                                                @Override
-                                                public void hyperlinkUpdate(@NotNull Notification notification,
-                                                                            @NotNull HyperlinkEvent event) {
-                                                  notification.expire();
-                                                  if (restartCapable) {
-                                                    app.restart(true);
-                                                  }
-                                                  else {
-                                                    app.exit(true);
-                                                  }
-                                                }
-                                              }));
   }
 
 

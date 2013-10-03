@@ -187,7 +187,7 @@ public class ConvertToInstanceMethodProcessor extends BaseRefactoringProcessor {
     myTypeParameterReplacements = buildTypeParameterReplacements();
     List<PsiClass> inheritors = new ArrayList<PsiClass>();
 
-    RefactoringUtil.sortDepthFirstRightLeftOrder(usages);
+    CommonRefactoringUtil.sortDepthFirstRightLeftOrder(usages);
 
     // Process usages
     for (final UsageInfo usage : usages) {
@@ -356,8 +356,8 @@ public class ConvertToInstanceMethodProcessor extends BaseRefactoringProcessor {
 
   @Nullable
   private static Map<PsiTypeParameter, PsiTypeParameter> calculateReplacementMap(final PsiSubstitutor substitutor,
-                                                                          final PsiClass targetClass,
-                                                                          final PsiElement containingElement) {
+                                                                                 final PsiClass targetClass,
+                                                                                 final PsiElement containingElement) {
     final HashMap<PsiTypeParameter, PsiTypeParameter> result = new HashMap<PsiTypeParameter, PsiTypeParameter>();
     for (PsiTypeParameter classTypeParameter : PsiUtil.typeParametersIterable(targetClass)) {
       final PsiType substitution = substitutor.substitute(classTypeParameter);

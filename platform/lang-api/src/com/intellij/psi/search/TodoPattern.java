@@ -16,9 +16,9 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * @author Vladimir Kondratyev
  */
-public class TodoPattern implements Cloneable, JDOMExternalizable {
+public class TodoPattern implements Cloneable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.TodoPattern");
 
   private IndexPattern myIndexPattern;
@@ -42,11 +42,11 @@ public class TodoPattern implements Cloneable, JDOMExternalizable {
   @NonNls private static final String CASE_SENS_ATT = "case-sensitive";
   @NonNls private static final String PATTERN_ATT = "pattern";
 
-  public TodoPattern(){
-    this("", TodoAttributes.createDefault(), false);
+  public TodoPattern(@NotNull TodoAttributes attributes){
+    this("", attributes, false);
   }
 
-  public TodoPattern(@NotNull @NonNls String patternString, @NotNull TodoAttributes attributes, boolean caseSensitive){
+  public TodoPattern(@NotNull @NonNls String patternString, @NotNull TodoAttributes attributes, boolean caseSensitive) {
     myIndexPattern = new IndexPattern(patternString, caseSensitive);
     myAttributes = attributes;
   }
@@ -67,6 +67,7 @@ public class TodoPattern implements Cloneable, JDOMExternalizable {
     }
   }
 
+  @NotNull
   public String getPatternString(){
     return myIndexPattern.getPatternString();
   }
@@ -75,6 +76,7 @@ public class TodoPattern implements Cloneable, JDOMExternalizable {
     myIndexPattern.setPatternString(patternString);
   }
 
+  @NotNull
   public TodoAttributes getAttributes(){
     return myAttributes;
   }
@@ -95,10 +97,8 @@ public class TodoPattern implements Cloneable, JDOMExternalizable {
     return myIndexPattern.getPattern();
   }
 
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    myAttributes = new TodoAttributes();
-    myAttributes.readExternal(element);
+  public void readExternal(Element element, @NotNull TextAttributes defaultTodoAttributes) throws InvalidDataException {
+    myAttributes = new TodoAttributes(element,defaultTodoAttributes);
     myIndexPattern.setCaseSensitive(Boolean.valueOf(element.getAttributeValue(CASE_SENS_ATT)).booleanValue());
     String attributeValue = element.getAttributeValue(PATTERN_ATT);
     if (attributeValue != null){
@@ -106,7 +106,6 @@ public class TodoPattern implements Cloneable, JDOMExternalizable {
     }
   }
 
-  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     myAttributes.writeExternal(element);
     element.setAttribute(CASE_SENS_ATT, Boolean.toString(myIndexPattern.isCaseSensitive()));

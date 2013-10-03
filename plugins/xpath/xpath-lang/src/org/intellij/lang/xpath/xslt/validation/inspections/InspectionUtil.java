@@ -16,7 +16,6 @@
 package org.intellij.lang.xpath.xslt.validation.inspections;
 
 import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;

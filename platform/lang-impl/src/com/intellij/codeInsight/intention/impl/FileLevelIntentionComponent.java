@@ -72,7 +72,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     }
 
     myLabel.setText(description);
-    myLabel.setIcon(SeverityRegistrar.getInstance(project).compare(severity, HighlightSeverity.ERROR) >= 0 ? AllIcons.Actions.QuickfixBulb : AllIcons.Actions.IntentionBulb);
+    myLabel.setIcon(SeverityRegistrar.getSeverityRegistrar(project).compare(severity, HighlightSeverity.ERROR) >= 0 ? AllIcons.Actions.QuickfixBulb : AllIcons.Actions.IntentionBulb);
 
     new ClickListener() {
       @Override
@@ -97,11 +97,11 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
   }
 
   private  Color getColor(HighlightSeverity severity) {
-    if (SeverityRegistrar.getInstance(myProject).compare(severity, HighlightSeverity.ERROR) >= 0) {
+    if (SeverityRegistrar.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.ERROR) >= 0) {
       return LightColors.RED;
     }
 
-    if (SeverityRegistrar.getInstance(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
+    if (SeverityRegistrar.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
       return LightColors.YELLOW;
     }
 

@@ -87,7 +87,7 @@ class AvailablePluginColumnInfo extends PluginManagerColumnInfo {
         final Color grayedFg = isSelected ? fg : new JBColor(Color.DARK_GRAY, Gray._128);
         myNameLabel.setForeground(fg);
         myStatusLabel.setForeground(grayedFg);
-        
+
 
         myPanel.setBackground(bg);
         myNameLabel.setBackground(bg);

@@ -28,12 +28,7 @@ import java.util.*;
  * @author Dmitry Avdeev
  */
 public class MultiMap<K, V> implements Serializable {
-  public static final MultiMap EMPTY = new MultiMap() {
-    @Override
-    protected Map createMap() {
-      return Collections.emptyMap();
-    }
-  };
+  public static final MultiMap EMPTY = new EmptyMap();
   private static final long serialVersionUID = -2632269270151455493L;
 
   protected final Map<K, Collection<V>> myMap;
@@ -41,6 +36,11 @@ public class MultiMap<K, V> implements Serializable {
 
   public MultiMap() {
     myMap = createMap();
+  }
+
+  public MultiMap(MultiMap<? extends K, ? extends V> toCopy) {
+    this();
+    putAllValues(toCopy);
   }
 
   public MultiMap(int i, float v) {
@@ -99,13 +99,13 @@ public class MultiMap<K, V> implements Serializable {
         return false;
       }
     }
-    return true;    
+    return true;
   }
 
   public boolean containsKey(K key) {
     return myMap.containsKey(key);
   }
-  
+
   public boolean containsScalarValue(V value) {
     for(Collection<V> valueList: myMap.values()) {
       if (valueList.contains(value)) {
@@ -142,14 +142,23 @@ public class MultiMap<K, V> implements Serializable {
     myMap.put(key, values);
   }
 
-  public void removeValue(final K key, final V value) {
+  /**
+   * @deprecated use {@link #remove(Object, Object)} instead
+   */
+  public void removeValue(K key, V value) {
+    remove(key, value);
+  }
+
+  public boolean remove(final K key, final V value) {
     final Collection<V> values = myMap.get(key);
     if (values != null) {
-      values.remove(value);
+      boolean removed = values.remove(value);
       if (values.isEmpty()) {
         myMap.remove(key);
       }
+      return removed;
     }
+    return false;
   }
 
   public Collection<? extends V> values() {
@@ -268,5 +277,12 @@ public class MultiMap<K, V> implements Serializable {
   @Override
   public String toString() {
     return myMap.toString();
+  }
+
+  private static class EmptyMap extends MultiMap {
+    @Override
+    protected Map createMap() {
+      return Collections.emptyMap();
+    }
   }
 }

@@ -23,7 +23,10 @@ import com.intellij.openapi.command.AbnormalCommandTerminationException;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.*;
+import com.intellij.psi.impl.source.tree.Factory;
+import com.intellij.psi.impl.source.tree.LeafElement;
+import com.intellij.psi.impl.source.tree.TreeElement;
+import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.NotNullFunction;
@@ -37,7 +40,6 @@ public class CodeEditUtil {
   private static final Key<Integer> INDENT_INFO = new Key<Integer>("INDENT_INFO");
   private static final Key<Boolean> REFORMAT_BEFORE_KEY = new Key<Boolean>("REFORMAT_BEFORE_KEY");
   private static final Key<Boolean> REFORMAT_KEY = new Key<Boolean>("REFORMAT_KEY");
-  private static final Key<Boolean> DISABLE_POSTPONED_REFORMAT_KEY = new Key<Boolean>("DISABLE_POSTPONED_REFORMAT_KEY");
   private static final ThreadLocal<Boolean> ALLOW_TO_MARK_NODES_TO_REFORMAT = new ThreadLocal<Boolean>() {
     @Override
     protected Boolean initialValue() {
@@ -352,6 +354,14 @@ public class CodeEditUtil {
     next.putCopyableUserData(GENERATED_FLAG, value ? true : null);
   }
 
+  public static void setNodeGeneratedRecursively(final ASTNode next, final boolean value) {
+    if (next == null) return;
+    setNodeGenerated(next, value);
+    for (ASTNode child = next.getFirstChildNode(); child != null; child = child.getTreeNext()) {
+      setNodeGeneratedRecursively(child, value);
+    }
+  }
+
   public static void setOldIndentation(final TreeElement treeElement, final int oldIndentation) {
     if (treeElement == null) return;
     treeElement.putCopyableUserData(INDENT_INFO, oldIndentation >= 0 ? oldIndentation : null);
@@ -390,26 +400,6 @@ public class CodeEditUtil {
     if (ALLOW_TO_MARK_NODES_TO_REFORMAT.get()) {
       node.putCopyableUserData(REFORMAT_KEY, value ? true : null);
     }
-  }
-
-  public static void disablePostponedFormatting(@NotNull ASTNode node) {
-    markToReformat(node, false);
-    markToReformatBefore(node, false);
-    node.putUserData(DISABLE_POSTPONED_REFORMAT_KEY, true);
-  }
-
-  public static void enablePostponedFormattingInTree(@NotNull ASTNode node) {
-    ((TreeElement)node).acceptTree(new RecursiveTreeElementVisitor() {
-      @Override
-      protected boolean visitNode(TreeElement element) {
-        element.putUserData(DISABLE_POSTPONED_REFORMAT_KEY, null);
-        return true;
-      }
-    });
-  }
-
-  public static boolean isPostponedFormattingDisabled(@NotNull ASTNode node) {
-    return node.getUserData(DISABLE_POSTPONED_REFORMAT_KEY) != null;
   }
 
   /**

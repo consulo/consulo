@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.UnfairTextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDiamondTypeUtil;
 import com.intellij.psi.util.PsiExpressionTrimRenderer;
@@ -103,7 +104,7 @@ public class ChangeNewOperatorTypeFix implements IntentionAction {
 
       newExpression = (PsiNewExpression)factory.createExpressionFromText(text, originalExpression);
       if (caretOffset < 0) {
-        selection = new TextRange(caretOffset, caretOffset+1);
+        selection = new UnfairTextRange(caretOffset, caretOffset+1);
       } else {
         selection = null;
       }
@@ -175,7 +176,7 @@ public class ChangeNewOperatorTypeFix implements IntentionAction {
   */
   @Nullable
   private static PsiSubstitutor getInheritorSubstitutorForNewExpression(final PsiClass baseClass, final PsiClass inheritor,
-                                                                       final PsiSubstitutor baseSubstitutor, final PsiElement context) {
+                                                                        final PsiSubstitutor baseSubstitutor, final PsiElement context) {
     final Project project = baseClass.getProject();
     JavaPsiFacade facade = JavaPsiFacade.getInstance(project);
     final PsiResolveHelper resolveHelper = facade.getResolveHelper();

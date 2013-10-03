@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.startupWizard;
 
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.project.Project;
@@ -45,7 +45,7 @@ public class StartupWizard extends WizardDialog<StartupWizardModel> {
     super.onWizardGoalAchieved();
 
     try {
-      PluginManager.saveDisabledPlugins(myModel.getDisabledPluginIds(), false);
+      PluginManagerCore.saveDisabledPlugins(myModel.getDisabledPluginIds(), false);
     }
     catch (IOException e) {
       // ignore?

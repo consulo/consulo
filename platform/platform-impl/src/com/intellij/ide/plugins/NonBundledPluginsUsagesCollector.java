@@ -38,7 +38,7 @@ public class NonBundledPluginsUsagesCollector extends UsagesCollector {
 
   @NotNull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    final IdeaPluginDescriptor[] plugins = PluginManager.getPlugins();
+    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     final List<IdeaPluginDescriptor> nonBundledEnabledPlugins = ContainerUtil.filter(plugins, new Condition<IdeaPluginDescriptor>() {
       public boolean value(final IdeaPluginDescriptor d) {
         return d.isEnabled() && !d.isBundled() && d.getPluginId() != null;

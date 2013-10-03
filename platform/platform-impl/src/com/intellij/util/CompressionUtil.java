@@ -15,7 +15,6 @@
  */
 package com.intellij.util;
 
-import com.intellij.idea.StartupUtil;
 import com.intellij.util.io.DataInputOutputUtil;
 import org.xerial.snappy.Snappy;
 
@@ -36,7 +35,7 @@ public class CompressionUtil {
   static {
     boolean canUseSnappy = false;
     try {
-      if (!StartupUtil.NO_SNAPPY) {
+      if (!SnappyInitializer.NO_SNAPPY) {
         Field impl = Snappy.class.getDeclaredField("impl");
         impl.setAccessible(true);
         canUseSnappy = impl.get(null) != null;
@@ -84,17 +83,17 @@ public class CompressionUtil {
 
   private static final int STRING_COMPRESSION_THRESHOLD = 1024;
 
-  public static CharSequence uncompressCharSequence(Object string) {
+  public static CharSequence uncompressCharSequence(Object string, Charset charset) {
     if (string instanceof CharSequence) return (CharSequence)string;
     byte[] b = (byte[])string;
     try {
-      return Snappy.uncompressString(b, Charset.defaultCharset());
+      return Snappy.uncompressString(b, charset);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
   }
 
-  public static Object compressCharSequence(CharSequence string) {
+  public static Object compressCharSequence(CharSequence string, Charset charset) {
     if (!ourCanUseSnappy || string.length() < STRING_COMPRESSION_THRESHOLD) {
       if (string instanceof CharBuffer && ((CharBuffer)string).capacity() > STRING_COMPRESSION_THRESHOLD) {
         string = string.toString();   // shrink to size
@@ -102,7 +101,7 @@ public class CompressionUtil {
       return string;
     }
     try {
-      return Snappy.compress(string.toString(), Charset.defaultCharset());
+      return Snappy.compress(string.toString(), charset);
     } catch (IOException ex) {
       ex.printStackTrace();
       return string;

@@ -47,7 +47,7 @@ import java.util.Map;
 
 /**
  * @author cdr
-*/
+ */
 public class WholeFileLocalInspectionsPassFactory extends AbstractProjectComponent implements TextEditorHighlightingPassFactory {
   private final Map<PsiFile, Boolean> myFileTools = new ConcurrentWeakHashMap<PsiFile, Boolean>();
   public InspectionProjectProfileManager myProfileManager;
@@ -76,7 +76,7 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
       }
 
       @Override
-      public void profileActivated(Profile oldProfile, Profile profile) {
+      public void profileActivated(@NotNull Profile oldProfile, Profile profile) {
         myFileTools.clear();
       }
     };
@@ -99,7 +99,8 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
       return null;
     }
 
-    return new LocalInspectionsPass(file, editor.getDocument(), 0, file.getTextLength(), LocalInspectionsPass.EMPTY_PRIORITY_RANGE, true) {
+    return new LocalInspectionsPass(file, editor.getDocument(), 0, file.getTextLength(), LocalInspectionsPass.EMPTY_PRIORITY_RANGE, true,
+                                    new DefaultHighlightInfoProcessor()) {
       @NotNull
       @Override
       List<LocalInspectionToolWrapper> getInspectionTools(@NotNull InspectionProfileWrapper profile) {

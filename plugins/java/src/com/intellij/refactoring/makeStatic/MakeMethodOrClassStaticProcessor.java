@@ -24,6 +24,7 @@
  */
 package com.intellij.refactoring.makeStatic;
 
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
@@ -174,19 +175,19 @@ public abstract class MakeMethodOrClassStaticProcessor<T extends PsiTypeParamete
   }
 
   private static void createInaccessibleFieldsConflictDescription(ArrayList<PsiField> inaccessible, PsiElement container,
-                                                                                     MultiMap<PsiElement, String> conflicts) {
+                                                                  MultiMap<PsiElement, String> conflicts) {
     if (inaccessible.size() == 1) {
       final PsiField field = inaccessible.get(0);
       conflicts.putValue(field, RefactoringBundle.message("field.0.is.not.accessible",
-                                       CommonRefactoringUtil.htmlEmphasize(field.getName()),
-                                       RefactoringUIUtil.getDescription(container, true)));
+                                                          CommonRefactoringUtil.htmlEmphasize(field.getName()),
+                                                          RefactoringUIUtil.getDescription(container, true)));
     } else {
 
       for (int j = 0; j < inaccessible.size(); j++) {
         PsiField field = inaccessible.get(j);
         conflicts.putValue(field, RefactoringBundle.message("field.0.is.not.accessible",
-                                       CommonRefactoringUtil.htmlEmphasize(field.getName()),
-                                       RefactoringUIUtil.getDescription(container, true)));
+                                                            CommonRefactoringUtil.htmlEmphasize(field.getName()),
+                                                            RefactoringUIUtil.getDescription(container, true)));
 
 
       }
@@ -274,7 +275,7 @@ public abstract class MakeMethodOrClassStaticProcessor<T extends PsiTypeParamete
   }
 
   protected String getCommandName() {
-    return RefactoringBundle.message("make.static.command", UsageViewUtil.getDescriptiveName(myMember));
+    return RefactoringBundle.message("make.static.command", DescriptiveNameUtil.getDescriptiveName(myMember));
   }
 
   public T getMember() {

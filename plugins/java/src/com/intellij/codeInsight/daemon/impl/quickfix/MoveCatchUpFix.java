@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl.quickfix;
 
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.daemon.QuickFixBundle;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -35,17 +35,17 @@ public class MoveCatchUpFix implements IntentionAction {
   private final PsiCatchSection myCatchSection;
   private final PsiCatchSection myMoveBeforeSection;
 
-    public MoveCatchUpFix(PsiCatchSection catchSection, PsiCatchSection moveBeforeSection) {
+  public MoveCatchUpFix(@NotNull PsiCatchSection catchSection, @NotNull PsiCatchSection moveBeforeSection) {
     this.myCatchSection = catchSection;
-        myMoveBeforeSection = moveBeforeSection;
-    }
+    myMoveBeforeSection = moveBeforeSection;
+  }
 
   @Override
   @NotNull
   public String getText() {
     return QuickFixBundle.message("move.catch.up.text",
-                                  HighlightUtil.formatType(myCatchSection.getCatchType()),
-                                  HighlightUtil.formatType(myMoveBeforeSection.getCatchType()));
+                                  JavaHighlightUtil.formatType(myCatchSection.getCatchType()),
+                                  JavaHighlightUtil.formatType(myMoveBeforeSection.getCatchType()));
   }
 
   @Override
@@ -56,18 +56,16 @@ public class MoveCatchUpFix implements IntentionAction {
 
   @Override
   public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-    return myCatchSection != null
-           && myCatchSection.isValid()
+    return myCatchSection.isValid()
            && myCatchSection.getManager().isInProject(myCatchSection)
-           && myMoveBeforeSection != null
            && myMoveBeforeSection.isValid()
            && myCatchSection.getCatchType() != null
            && PsiUtil.resolveClassInType(myCatchSection.getCatchType()) != null
            && myMoveBeforeSection.getCatchType() != null
            && PsiUtil.resolveClassInType(myMoveBeforeSection.getCatchType()) != null
            && !myCatchSection.getManager().areElementsEquivalent(
-                  PsiUtil.resolveClassInType(myCatchSection.getCatchType()),
-                  PsiUtil.resolveClassInType(myMoveBeforeSection.getCatchType()));
+      PsiUtil.resolveClassInType(myCatchSection.getCatchType()),
+      PsiUtil.resolveClassInType(myMoveBeforeSection.getCatchType()));
   }
 
   @Override

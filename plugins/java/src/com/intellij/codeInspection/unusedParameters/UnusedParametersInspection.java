@@ -28,9 +28,10 @@ import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.daemon.GroupNames;
 import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.ex.EntryPointsManagerImpl;
+import com.intellij.codeInspection.ex.EntryPointsManager;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.*;
 import com.intellij.psi.search.PsiReferenceProcessor;
@@ -52,17 +53,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class UnusedParametersInspection extends GlobalJavaInspectionTool {
-
+public class UnusedParametersInspection extends GlobalJavaBatchInspectionTool {
   @NonNls public static final String SHORT_NAME = "UnusedParameters";
 
   @Override
   @Nullable
-  public CommonProblemDescriptor[] checkElement(final RefEntity refEntity,
-                                                final AnalysisScope scope,
-                                                final InspectionManager manager,
-                                                final GlobalInspectionContext globalContext,
-                                                final ProblemDescriptionsProcessor processor) {
+  public CommonProblemDescriptor[] checkElement(@NotNull final RefEntity refEntity,
+                                                @NotNull final AnalysisScope scope,
+                                                @NotNull final InspectionManager manager,
+                                                @NotNull final GlobalInspectionContext globalContext,
+                                                @NotNull final ProblemDescriptionsProcessor processor) {
     if (refEntity instanceof RefMethod) {
       final RefMethod refMethod = (RefMethod)refEntity;
 
@@ -76,14 +76,14 @@ public class UnusedParametersInspection extends GlobalJavaInspectionTool {
 
       if (refMethod.isAppMain()) return null;
 
-      final ArrayList<RefParameter> unusedParameters = getUnusedParameters(refMethod);
+      final List<RefParameter> unusedParameters = getUnusedParameters(refMethod);
 
       if (unusedParameters.isEmpty()) return null;
 
       if (refMethod.isEntry()) return null;
 
       final PsiModifierListOwner element = refMethod.getElement();
-      if (element != null && EntryPointsManagerImpl.getInstance(manager.getProject()).isEntryPoint(element)) return null;
+      if (element != null && EntryPointsManager.getInstance(manager.getProject()).isEntryPoint(element)) return null;
 
       final List<ProblemDescriptor> result = new ArrayList<ProblemDescriptor>();
       for (RefParameter refParameter : unusedParameters) {
@@ -103,8 +103,8 @@ public class UnusedParametersInspection extends GlobalJavaInspectionTool {
   }
 
   @Override
-  protected boolean queryExternalUsagesRequests(final RefManager manager, final GlobalJavaInspectionContext globalContext,
-                                                final ProblemDescriptionsProcessor processor) {
+  protected boolean queryExternalUsagesRequests(@NotNull final RefManager manager, @NotNull final GlobalJavaInspectionContext globalContext,
+                                                @NotNull final ProblemDescriptionsProcessor processor) {
     final Project project = manager.getProject();
     for (RefElement entryPoint : globalContext.getEntryPointsManager(manager).getEntryPoints()) {
       processor.ignoreElement(entryPoint);
@@ -118,7 +118,7 @@ public class UnusedParametersInspection extends GlobalJavaInspectionTool {
         if (refEntity instanceof RefMethod) {
           RefMethod refMethod = (RefMethod)refEntity;
           final PsiModifierListOwner element = refMethod.getElement();
-          if (element instanceof PsiMethod) { //implicit construcors are invisible
+          if (element instanceof PsiMethod) { //implicit constructors are invisible
             PsiMethod psiMethod = (PsiMethod)element;
             if (!refMethod.isStatic() && !refMethod.isConstructor() && !PsiModifier.PRIVATE.equals(refMethod.getAccessModifier())) {
               final ArrayList<RefParameter> unusedParameters = getUnusedParameters(refMethod);
@@ -162,7 +162,7 @@ public class UnusedParametersInspection extends GlobalJavaInspectionTool {
 
   @Override
   @Nullable
-  public String getHint(final QuickFix fix) {
+  public String getHint(@NotNull final QuickFix fix) {
     return ((AcceptSuggested)fix).getHint();
   }
 
@@ -173,7 +173,7 @@ public class UnusedParametersInspection extends GlobalJavaInspectionTool {
   }
 
   @Override
-  public void compose(final StringBuffer buf, final RefEntity refEntity, final HTMLComposer composer) {
+  public void compose(@NotNull final StringBuffer buf, @NotNull final RefEntity refEntity, @NotNull final HTMLComposer composer) {
     if (refEntity instanceof RefMethod) {
       final RefMethod refMethod = (RefMethod)refEntity;
       final HTMLJavaHTMLComposer javaComposer = composer.getExtension(HTMLJavaHTMLComposer.COMPOSER);
@@ -235,7 +235,8 @@ public class UnusedParametersInspection extends GlobalJavaInspectionTool {
   @Override
   public JComponent createOptionsPanel() {
     final JPanel panel = new JPanel(new GridBagLayout());
-    panel.add(EntryPointsManagerImpl.createConfigureAnnotationsBtn(panel),
+    Project project = ProjectUtil.guessCurrentProject(panel);
+    panel.add(EntryPointsManager.getInstance(project).createConfigureAnnotationsBtn(),
               new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                                      new Insets(0, 0, 0, 0), 0, 0));
     return panel;

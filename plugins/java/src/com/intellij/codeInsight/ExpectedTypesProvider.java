@@ -51,7 +51,7 @@ import java.util.*;
  * @author ven
  */
 public class ExpectedTypesProvider {
-  private static final ExpectedTypeInfo VOID_EXPECTED = new ExpectedTypeInfoImpl(PsiType.VOID, ExpectedTypeInfo.TYPE_OR_SUBTYPE, 0, PsiType.VOID,
+  private static final ExpectedTypeInfo VOID_EXPECTED = new ExpectedTypeInfoImpl(PsiType.VOID, ExpectedTypeInfo.TYPE_OR_SUBTYPE, PsiType.VOID,
                                                                                  TailType.SEMICOLON);
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.ExpectedTypesProvider");
@@ -90,13 +90,7 @@ public class ExpectedTypesProvider {
 
   @NotNull
   private static ExpectedTypeInfoImpl createInfoImpl(@NotNull PsiType type, int kind, PsiType defaultType, @NotNull TailType tailType) {
-    int dims = 0;
-    while (type instanceof PsiArrayType && defaultType instanceof PsiArrayType) {
-      type = ((PsiArrayType) type).getComponentType();
-      defaultType = ((PsiArrayType) defaultType).getComponentType();
-      dims++;
-    }
-    return new ExpectedTypeInfoImpl(type, kind, dims, defaultType, tailType);
+    return new ExpectedTypeInfoImpl(type, kind, defaultType, tailType);
   }
 
   @NotNull
@@ -138,7 +132,7 @@ public class ExpectedTypesProvider {
     for (ExpectedTypeInfo info : infos) {
       ExpectedTypeInfoImpl infoImpl = (ExpectedTypeInfoImpl)info;
 
-      if (infoImpl.getDefaultType() instanceof PsiClassType && infoImpl.getDimCount() == 0) {
+      if (infoImpl.getDefaultType() instanceof PsiClassType) {
         JavaResolveResult result = ((PsiClassType)infoImpl.getDefaultType()).resolveGenerics();
         PsiClass aClass = (PsiClass)result.getElement();
         if (aClass instanceof PsiAnonymousClass) {
@@ -154,10 +148,10 @@ public class ExpectedTypesProvider {
       }
 
       if (infoImpl.kind == ExpectedTypeInfo.TYPE_OR_SUPERTYPE) {
-        processAllSuperTypes(infoImpl.getType(), infoImpl.getDimCount(), visitor, project, set);
+        processAllSuperTypes(infoImpl.getType(), visitor, project, set);
       }
       else if (infoImpl.getKind() == ExpectedTypeInfo.TYPE_OR_SUBTYPE) {
-        if (infoImpl.getType() instanceof PsiPrimitiveType && infoImpl.getDimCount() == 0) {
+        if (infoImpl.getType() instanceof PsiPrimitiveType) {
           processPrimitiveTypeAndSubtypes((PsiPrimitiveType)infoImpl.getType(), visitor, set);
         }
         //else too expensive to search
@@ -182,7 +176,7 @@ public class ExpectedTypesProvider {
     }
   }
 
-  public static void processAllSuperTypes(@NotNull PsiType type, int dimCount, @NotNull PsiTypeVisitor<PsiType> visitor, @NotNull Project project, @NotNull Set<PsiType> set) {
+  public static void processAllSuperTypes(@NotNull PsiType type, @NotNull PsiTypeVisitor<PsiType> visitor, @NotNull Project project, @NotNull Set<PsiType> set) {
     if (type instanceof PsiPrimitiveType) {
       if (type.equals(PsiType.BOOLEAN) || type.equals(PsiType.VOID) || type.equals(PsiType.NULL)) return;
 
@@ -204,12 +198,8 @@ public class ExpectedTypesProvider {
       if (type instanceof PsiClassType) {
         PsiType[] superTypes = type.getSuperTypes();
         for (PsiType superType : superTypes) {
-          PsiType wrappedType = superType;
-          for (int j = 0; j < dimCount; j++) {
-            wrappedType = wrappedType.createArrayType();
-          }
-          processType(wrappedType, visitor, set);
-          processAllSuperTypes(superType, dimCount, visitor, project, set);
+          processType(superType, visitor, set);
+          processAllSuperTypes(superType, visitor, project, set);
         }
       }
     }
@@ -291,7 +281,10 @@ public class ExpectedTypesProvider {
     }
 
     @Override public void visitAnnotationArrayInitializer(@NotNull PsiArrayInitializerMemberValue initializer) {
-      final PsiElement parent = initializer.getParent();
+      PsiElement parent = initializer.getParent();
+      while (parent instanceof PsiArrayInitializerMemberValue) {
+        parent = parent.getParent();
+      }
       final PsiType type;
       if (parent instanceof PsiNameValuePair) {
         type = getAnnotationMethodType((PsiNameValuePair)parent);
@@ -818,7 +811,7 @@ public class ExpectedTypesProvider {
     @Override public void visitArrayAccessExpression(@NotNull PsiArrayAccessExpression expr) {
       if (myExpr.equals(expr.getIndexExpression())) {
         ExpectedTypeInfoImpl info = createInfoImpl(PsiType.INT, ExpectedTypeInfo.TYPE_OR_SUBTYPE, PsiType.INT, TailType.NONE)
-            ; //todo: special tail type
+          ; //todo: special tail type
         myResult = new ExpectedTypeInfo[]{info};
       }
       else if (myExpr.equals(expr.getArrayExpression())) {
@@ -863,7 +856,6 @@ public class ExpectedTypesProvider {
         ExpectedTypeInfo[] types = getExpectedTypes(expr, myForCompletion);
         for (ExpectedTypeInfo info : types) {
           ExpectedTypeInfoImpl infoImpl = (ExpectedTypeInfoImpl)info;
-          infoImpl.setInsertExplicitTypeParams(true);
           infoImpl.myTailType = TailType.COND_EXPR_COLON;
         }
         myResult = types;
@@ -873,9 +865,6 @@ public class ExpectedTypesProvider {
           LOG.error(Arrays.asList(expr.getChildren()) + "; " + myExpr);
         }
         myResult = getExpectedTypes(expr, myForCompletion);
-        for (ExpectedTypeInfo info : myResult) {
-          ((ExpectedTypeInfoImpl)info).setInsertExplicitTypeParams(true);
-        }
       }
     }
 
@@ -953,14 +942,14 @@ public class ExpectedTypesProvider {
       }
 
       ParameterTypeInferencePolicy policy = forCompletion ? CompletionParameterTypeInferencePolicy.INSTANCE : DefaultParameterTypeInferencePolicy.INSTANCE;
-      
+
       Set<ExpectedTypeInfo> array = new LinkedHashSet<ExpectedTypeInfo>();
       for (CandidateInfo candidateInfo : methodCandidates) {
         PsiMethod method = (PsiMethod)candidateInfo.getElement();
         PsiSubstitutor substitutor;
         if (candidateInfo instanceof MethodCandidateInfo) {
           final MethodCandidateInfo info = (MethodCandidateInfo)candidateInfo;
-          substitutor = info.inferTypeArguments(policy, args);
+          substitutor = info.inferTypeArguments(policy, args, true);
           if (!info.isStaticsScopeCorrect() && method != null && !method.hasModifierProperty(PsiModifier.STATIC)) continue;
         }
         else {
@@ -969,7 +958,7 @@ public class ExpectedTypesProvider {
         inferMethodCallArgumentTypes(argument, forCompletion, args, index, method, substitutor, array);
 
         if (leftArgs != null && candidateInfo instanceof MethodCandidateInfo) {
-          substitutor = ((MethodCandidateInfo)candidateInfo).inferTypeArguments(policy, leftArgs);
+          substitutor = ((MethodCandidateInfo)candidateInfo).inferTypeArguments(policy, leftArgs, true);
           inferMethodCallArgumentTypes(argument, forCompletion, leftArgs, index, method, substitutor, array);
         }
       }
@@ -997,7 +986,7 @@ public class ExpectedTypesProvider {
     }
 
     private static TailType getMethodArgumentTailType(@NotNull final PsiExpression argument, final int index, @NotNull final PsiMethod method, @NotNull final PsiSubstitutor substitutor,
-                                               @NotNull final PsiParameter[] params) {
+                                                      @NotNull final PsiParameter[] params) {
       if (index >= params.length || index == params.length - 2 && params[index + 1].isVarArgs()) {
         return TailType.NONE;
       }
@@ -1037,7 +1026,6 @@ public class ExpectedTypesProvider {
       PsiType defaultType = getDefaultType(method, substitutor, parameterType, argument, args, index);
 
       ExpectedTypeInfoImpl info = createInfoImpl(parameterType, ExpectedTypeInfo.TYPE_OR_SUBTYPE, defaultType, tailType);
-      info.setInsertExplicitTypeParams(true);
       info.setCalledMethod(method);
       NullableComputable<String> propertyName = getPropertyName(parameter);
       info.expectedName = propertyName;
@@ -1047,7 +1035,6 @@ public class ExpectedTypesProvider {
         //Then we may still want to call with array argument
         final PsiArrayType arrayType = parameterType.createArrayType();
         ExpectedTypeInfoImpl info1 = createInfoImpl(arrayType, ExpectedTypeInfo.TYPE_OR_SUBTYPE, arrayType, tailType);
-        info1.setInsertExplicitTypeParams(true);
         info1.setCalledMethod(method);
         info1.expectedName = propertyName;
         array.add(info1);

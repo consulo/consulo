@@ -15,7 +15,6 @@
  */
 package org.intellij.lang.xpath.xslt.context;
 
-import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

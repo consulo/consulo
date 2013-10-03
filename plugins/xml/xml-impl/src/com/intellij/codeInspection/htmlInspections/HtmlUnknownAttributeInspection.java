@@ -44,7 +44,6 @@ import org.jetbrains.annotations.NotNull;
 public class HtmlUnknownAttributeInspection extends HtmlUnknownTagInspection {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.htmlInspections.HtmlUnknownAttributeInspection");
-  @NonNls public static final String ATTRIBUTE_SHORT_NAME = "HtmlUnknownAttribute";
   public static final Key<HtmlUnknownTagInspection> ATTRIBUTE_KEY = Key.create(ATTRIBUTE_SHORT_NAME);
 
   public HtmlUnknownAttributeInspection() {
@@ -109,7 +108,7 @@ public class HtmlUnknownAttributeInspection extends HtmlUnknownTagInspection {
 
           boolean maySwitchToHtml5 = HtmlUtil.isCustomHtml5Attribute(name) && !HtmlUtil.hasNonHtml5Doctype(tag);
           LocalQuickFix[] quickfixes = new LocalQuickFix[maySwitchToHtml5 ? 3 : 2];
-          quickfixes[0] = new AddCustomTagOrAttributeIntentionAction(ATTRIBUTE_KEY, name, XmlEntitiesInspection.UNKNOWN_ATTRIBUTE);
+          quickfixes[0] = new AddCustomTagOrAttributeIntentionAction(ATTRIBUTE_KEY, name, XmlBundle.message("add.custom.html.attribute", name));
           quickfixes[1] = new RemoveAttributeIntentionAction(name);
           if (maySwitchToHtml5) {
             quickfixes[2] = new SwitchToHtml5WithHighPriorityAction();
@@ -117,7 +116,7 @@ public class HtmlUnknownAttributeInspection extends HtmlUnknownTagInspection {
 
           if (nameElement.getTextLength() > 0)
             holder.registerProblem(nameElement, XmlErrorMessages.message("attribute.is.not.allowed.here", name),
-                                 ProblemHighlightType.GENERIC_ERROR_OR_WARNING, quickfixes);
+                                   ProblemHighlightType.GENERIC_ERROR_OR_WARNING, quickfixes);
         }
       }
     }

@@ -19,7 +19,7 @@ import com.intellij.core.CoreEncodingRegistry;
 import com.intellij.core.CoreFileTypeRegistry;
 import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx2;
@@ -126,16 +126,16 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   private void loadApplicationComponents() {
-    PluginManager.initPlugins(new StartupProgress() {
+    PluginManagerCore.initPlugins(new StartupProgress() {
       @Override
       public void showProgress(String message, float progress) {
 
       }
     });
 
-    final IdeaPluginDescriptor[] plugins = PluginManager.getPlugins();
+    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManager.shouldSkipPlugin(plugin)) continue;
+      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
       loadComponentsConfiguration(plugin.getAppComponents(), plugin, false);
     }
   }

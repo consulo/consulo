@@ -290,7 +290,7 @@ public class RenameUtil {
       PsiElement element = usage.getElement();
 
       if (element == null) continue;
-      element = CodeInsightUtilBase.forcePsiPostprocessAndRestoreElement(element, true);
+      element = CodeInsightUtilBase.forcePsiPostprocessAndRestoreElement(element);
       if (element == null) continue;
 
       final ProperTextRange rangeInElement = usage.getRangeInElement();

@@ -26,14 +26,11 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TestDialog;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
-import org.apache.log4j.Level;
 import org.consulo.compiler.server.application.CompilerServerApplication;
 import org.consulo.compiler.server.rmi.CompilerClientInterface;
 import org.consulo.compiler.server.rmi.CompilerServerInterface;
 import org.consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.rmi.RemoteException;
@@ -110,65 +107,7 @@ public class Main {
   }
 
   private static void initLogger() {
-    Logger.setFactory(new Logger.Factory() {
-      @Override
-      public Logger getLoggerInstance(String category) {
-        return new Logger() {
-          @Override
-          public boolean isDebugEnabled() {
-            return false;
-          }
-
-          @Override
-          public void debug(@NonNls String message) {
-
-          }
-
-          @Override
-          public void debug(@Nullable Throwable t) {
-
-          }
-
-          @Override
-          public void debug(@NonNls String message, @Nullable Throwable t) {
-
-          }
-
-          @Override
-          public void error(@NonNls String message, @Nullable Throwable t, @NonNls String... details) {
-            System.out.println(message);
-            if(t != null) {
-              t.printStackTrace();
-            }
-          }
-
-          @Override
-          public void info(@NonNls String message) {
-            System.out.println(message);
-          }
-
-          @Override
-          public void info(@NonNls String message, @Nullable Throwable t) {
-            System.out.println(message);
-            if(t != null) {
-              t.printStackTrace();
-            }
-          }
-
-          @Override
-          public void warn(@NonNls String message, @Nullable Throwable t) {
-            System.out.println(message);
-            if(t != null) {
-              t.printStackTrace();
-            }
-          }
-
-          @Override
-          public void setLevel(Level level) {
-          }
-        };
-      }
-    });
+    Logger.setFactory(CompilerServerLoggerFactory.class);
   }
 
   private static CompilerServerInterfaceImpl createServer() throws Exception {

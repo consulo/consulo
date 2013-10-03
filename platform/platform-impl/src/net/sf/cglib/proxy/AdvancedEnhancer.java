@@ -15,7 +15,7 @@
  */
 package net.sf.cglib.proxy;
 
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.util.ReflectionCache;
 import org.objectweb.asm.ClassVisitor;
@@ -401,7 +401,7 @@ public class AdvancedEnhancer extends AbstractClassGenerator
       for (final Class anInterface : interfaces) {
         final ClassLoader loader = anInterface.getClassLoader();
         if (loader instanceof PluginClassLoader) {
-          final int order = PluginManager.getPluginLoadingOrder(((PluginClassLoader)loader).getPluginId());
+          final int order = PluginManagerCore.getPluginLoadingOrder(((PluginClassLoader)loader).getPluginId());
           if (maxIndex < order) {
             maxIndex = order;
             bestLoader = loader;
@@ -413,7 +413,7 @@ public class AdvancedEnhancer extends AbstractClassGenerator
     if (superclass != null) {
       superLoader = superclass.getClassLoader();
       if (superLoader instanceof PluginClassLoader &&
-          maxIndex < PluginManager.getPluginLoadingOrder(((PluginClassLoader)superLoader).getPluginId())) {
+          maxIndex < PluginManagerCore.getPluginLoadingOrder(((PluginClassLoader)superLoader).getPluginId())) {
         return superLoader;
       }
     }

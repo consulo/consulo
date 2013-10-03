@@ -46,18 +46,18 @@ public class XmlNSDescriptorImpl implements XmlNSDescriptorEx,Validator<XmlDocum
 
   private static final SimpleFieldCache<CachedValue<Map<String, XmlElementDescriptor>>, XmlNSDescriptorImpl> myCachedDeclsCache = new
     SimpleFieldCache<CachedValue<Map<String, XmlElementDescriptor>>, XmlNSDescriptorImpl>() {
-    protected final CachedValue<Map<String, XmlElementDescriptor>> compute(final XmlNSDescriptorImpl xmlNSDescriptor) {
-      return xmlNSDescriptor.doBuildDeclarationMap();
-    }
+      protected final CachedValue<Map<String, XmlElementDescriptor>> compute(final XmlNSDescriptorImpl xmlNSDescriptor) {
+        return xmlNSDescriptor.doBuildDeclarationMap();
+      }
 
-    protected final CachedValue<Map<String, XmlElementDescriptor>> getValue(final XmlNSDescriptorImpl xmlNSDescriptor) {
-      return xmlNSDescriptor.myCachedDecls;
-    }
+      protected final CachedValue<Map<String, XmlElementDescriptor>> getValue(final XmlNSDescriptorImpl xmlNSDescriptor) {
+        return xmlNSDescriptor.myCachedDecls;
+      }
 
-    protected final void putValue(final CachedValue<Map<String, XmlElementDescriptor>> cachedValue, final XmlNSDescriptorImpl xmlNSDescriptor) {
-      xmlNSDescriptor.myCachedDecls = cachedValue;
-    }
-  };
+      protected final void putValue(final CachedValue<Map<String, XmlElementDescriptor>> cachedValue, final XmlNSDescriptorImpl xmlNSDescriptor) {
+        xmlNSDescriptor.myCachedDecls = cachedValue;
+      }
+    };
 
   private volatile CachedValue<Map<String, XmlElementDescriptor>> myCachedDecls;
   private static final XmlUtil.DuplicationInfoProvider<XmlElementDecl> XML_ELEMENT_DECL_PROVIDER = new XmlUtil.DuplicationInfoProvider<XmlElementDecl>() {
@@ -112,8 +112,8 @@ public class XmlNSDescriptorImpl implements XmlNSDescriptorEx,Validator<XmlDocum
           }
         }
         return new Result<Map<String, XmlElementDescriptor>>(ret, myDescriptorFile);
-       }
-     }, false);
+      }
+    }, false);
   }
 
   public XmlElementDescriptor getElementDescriptor(@NotNull XmlTag tag) {

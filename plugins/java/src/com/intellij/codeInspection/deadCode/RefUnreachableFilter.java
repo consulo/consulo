@@ -24,23 +24,29 @@
  */
 package com.intellij.codeInspection.deadCode;
 
-import com.intellij.codeInspection.ex.InspectionTool;
+import com.intellij.codeInspection.GlobalInspectionContext;
+import com.intellij.codeInspection.GlobalInspectionTool;
+import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.codeInspection.util.RefFilter;
+import org.jetbrains.annotations.NotNull;
 
 public class RefUnreachableFilter extends RefFilter {
-  protected InspectionTool myTool;
+  @NotNull
+  protected GlobalInspectionTool myTool;
+  @NotNull protected final GlobalInspectionContext myContext;
 
-  public RefUnreachableFilter(final InspectionTool tool) {
+  public RefUnreachableFilter(@NotNull GlobalInspectionTool tool, @NotNull GlobalInspectionContext context) {
     myTool = tool;
+    myContext = context;
   }
 
   @Override
-  public int getElementProblemCount(RefJavaElement refElement) {
+  public int getElementProblemCount(@NotNull RefJavaElement refElement) {
     if (refElement instanceof RefParameter) return 0;
     if (refElement.isSyntheticJSP()) return 0;
     if (!(refElement instanceof RefMethod || refElement instanceof RefClass || refElement instanceof RefField)) return 0;
-    if (!myTool.getContext().isToCheckMember(refElement, myTool)) return 0;
+    if (!((GlobalInspectionContextBase)myContext).isToCheckMember(refElement, myTool)) return 0;
     return ((RefElementImpl)refElement).isSuspicious() ? 1 : 0;
   }
 }

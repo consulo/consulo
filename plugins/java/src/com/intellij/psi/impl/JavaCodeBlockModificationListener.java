@@ -49,7 +49,7 @@ public class JavaCodeBlockModificationListener implements PsiTreeChangePreproces
 
       case CHILDREN_CHANGED:
         // general childrenChanged() event after each change
-        if (!event.isGenericChildrenChange()) {
+        if (!event.isGenericChange()) {
           processChange(event.getParent(), event.getParent(), null);
         }
         break;
@@ -83,7 +83,7 @@ public class JavaCodeBlockModificationListener implements PsiTreeChangePreproces
         myModificationTracker.incCounter();
       }
     }
-    catch (PsiInvalidElementAccessException e) {
+    catch (PsiInvalidElementAccessException ignored) {
       myModificationTracker.incCounter(); // Shall not happen actually, just a pre-release paranoia
     }
   }

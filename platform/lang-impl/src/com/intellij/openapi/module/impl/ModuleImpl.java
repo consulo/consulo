@@ -17,7 +17,7 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
@@ -85,9 +85,9 @@ public class ModuleImpl extends ComponentManagerImpl implements ModuleEx {
 
  @Override
   public void loadModuleComponents() {
-    final IdeaPluginDescriptor[] plugins = PluginManager.getPlugins();
+    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManager.shouldSkipPlugin(plugin)) continue;
+      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
       loadComponentsConfiguration(plugin.getModuleComponents(), plugin, false);
     }
   }

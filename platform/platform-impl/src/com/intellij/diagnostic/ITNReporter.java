@@ -27,8 +27,8 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
@@ -63,9 +63,9 @@ public class ITNReporter extends ErrorReportSubmitter {
 
   @Override
   public boolean trySubmitAsync(IdeaLoggingEvent[] events,
-                          String additionalInfo,
-                          Component parentComponent,
-                          Consumer<SubmittedReportInfo> consumer) {
+                                String additionalInfo,
+                                Component parentComponent,
+                                Consumer<SubmittedReportInfo> consumer) {
     return sendError(events[0], additionalInfo, parentComponent, consumer);
   }
 
@@ -79,24 +79,24 @@ public class ITNReporter extends ErrorReportSubmitter {
   }
 
   /**
-     * @noinspection ThrowablePrintStackTrace
-     */
+   * @noinspection ThrowablePrintStackTrace
+   */
   private static boolean sendError(IdeaLoggingEvent event,
-                                String additionalInfo,
-                                final Component parentComponent,
-                                final Consumer<SubmittedReportInfo> callback) {
+                                   String additionalInfo,
+                                   final Component parentComponent,
+                                   final Consumer<SubmittedReportInfo> callback) {
     ErrorBean errorBean = new ErrorBean(event.getThrowable(), IdeaLogger.ourLastActionId);
 
     return doSubmit(event, parentComponent, callback, errorBean, additionalInfo);
   }
 
   private static boolean doSubmit(final IdeaLoggingEvent event,
-                               final Component parentComponent,
-                               final Consumer<SubmittedReportInfo> callback,
-                               final ErrorBean errorBean,
-                               final String description) {
+                                  final Component parentComponent,
+                                  final Consumer<SubmittedReportInfo> callback,
+                                  final ErrorBean errorBean,
+                                  final String description) {
     final DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
     final ErrorReportConfigurable errorReportConfigurable = ErrorReportConfigurable.getInstance();
     if (!errorReportConfigurable.KEEP_ITN_PASSWORD &&
@@ -146,82 +146,82 @@ public class ITNReporter extends ErrorReportSubmitter {
     }
 
     ErrorReportSender.sendError(project, login, password, errorBean, new Consumer<Integer>() {
-      @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
-      @Override
-      public void consume(Integer threadId) {
-        previousExceptionThreadId = threadId;
-        wasException = true;
-        final SubmittedReportInfo reportInfo = new SubmittedReportInfo(URL_HEADER + threadId, String.valueOf(threadId),
-                                                        SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
-        callback.consume(reportInfo);
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            StringBuilder text = new StringBuilder();
-            final String url = IdeErrorsDialog.getUrl(reportInfo, true);
-            IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
-            text.append(".");
-            if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
-              text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
-            }
+                                  @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
+                                  @Override
+                                  public void consume(Integer threadId) {
+                                    previousExceptionThreadId = threadId;
+                                    wasException = true;
+                                    final SubmittedReportInfo reportInfo = new SubmittedReportInfo(URL_HEADER + threadId, String.valueOf(threadId),
+                                                                                                   SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
+                                    callback.consume(reportInfo);
+                                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                        StringBuilder text = new StringBuilder();
+                                        final String url = IdeErrorsDialog.getUrl(reportInfo, true);
+                                        IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
+                                        text.append(".");
+                                        if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
+                                          text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
+                                        }
 
-            NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
-                                    ? NotificationType.ERROR
-                                    : NotificationType.INFORMATION;
-            NotificationListener listener = url != null ? new NotificationListener.UrlOpeningListener(true) : null;
-            ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT,
-                                                    XmlStringUtil.wrapInHtml(text),
-                                                    type, listener).setImportant(false).notify(project);
-          }
-        });
-      }
-    }, new Consumer<Exception>() {
-      @Override
-      public void consume(final Exception e) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            String msg;
-            if (e instanceof NoSuchEAPUserException) {
-              msg = DiagnosticBundle.message("error.report.authentication.failed");
-            }
-            else if (e instanceof InternalEAPException) {
-              msg = DiagnosticBundle.message("error.report.posting.failed", e.getMessage());
-            }
-            else {
-              msg = DiagnosticBundle.message("error.report.sending.failure");
-            }
-            if (e instanceof UpdateAvailableException) {
-              String message = DiagnosticBundle.message(
-                "error.report.new.eap.build.message", e.getMessage());
-                showMessageDialog(parentComponent, project, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon());
-              callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
-            }
-            else if (showYesNoDialog(parentComponent, project, msg, ReportMessages.ERROR_REPORT, Messages.getErrorIcon()) != 0) {
-              callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
-            }
-            else {
-              if (e instanceof NoSuchEAPUserException) {
-                final JetBrainsAccountDialog dialog;
-                if (parentComponent.isShowing()) {
-                  dialog = new JetBrainsAccountDialog(parentComponent);
-                }
-                else {
-                  dialog = new JetBrainsAccountDialog(project);
-                }
-                dialog.show();
-              }
-              ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  doSubmit(event, parentComponent, callback, errorBean, description);
-                }
-              });
-            }
-          }
-        });
-      }
-    });
+                                        NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
+                                                                ? NotificationType.ERROR
+                                                                : NotificationType.INFORMATION;
+                                        NotificationListener listener = url != null ? new NotificationListener.UrlOpeningListener(true) : null;
+                                        ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT,
+                                                                                XmlStringUtil.wrapInHtml(text),
+                                                                                type, listener).setImportant(false).notify(project);
+                                      }
+                                    });
+                                  }
+                                }, new Consumer<Exception>() {
+                                  @Override
+                                  public void consume(final Exception e) {
+                                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                        String msg;
+                                        if (e instanceof NoSuchEAPUserException) {
+                                          msg = DiagnosticBundle.message("error.report.authentication.failed");
+                                        }
+                                        else if (e instanceof InternalEAPException) {
+                                          msg = DiagnosticBundle.message("error.report.posting.failed", e.getMessage());
+                                        }
+                                        else {
+                                          msg = DiagnosticBundle.message("error.report.sending.failure");
+                                        }
+                                        if (e instanceof UpdateAvailableException) {
+                                          String message = DiagnosticBundle.message(
+                                            "error.report.new.eap.build.message", e.getMessage());
+                                          showMessageDialog(parentComponent, project, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon());
+                                          callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+                                        }
+                                        else if (showYesNoDialog(parentComponent, project, msg, ReportMessages.ERROR_REPORT, Messages.getErrorIcon()) != 0) {
+                                          callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+                                        }
+                                        else {
+                                          if (e instanceof NoSuchEAPUserException) {
+                                            final JetBrainsAccountDialog dialog;
+                                            if (parentComponent.isShowing()) {
+                                              dialog = new JetBrainsAccountDialog(parentComponent);
+                                            }
+                                            else {
+                                              dialog = new JetBrainsAccountDialog(project);
+                                            }
+                                            dialog.show();
+                                          }
+                                          ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                              doSubmit(event, parentComponent, callback, errorBean, description);
+                                            }
+                                          });
+                                        }
+                                      }
+                                    });
+                                  }
+                                });
     return true;
   }
 

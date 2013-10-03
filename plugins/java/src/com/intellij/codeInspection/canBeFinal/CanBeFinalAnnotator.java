@@ -15,16 +15,14 @@
  */
 package com.intellij.codeInspection.canBeFinal;
 
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightControlFlowUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.psi.*;
 import com.intellij.psi.controlFlow.*;
 import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -34,7 +32,7 @@ class CanBeFinalAnnotator extends RefGraphAnnotatorEx {
   private final RefManager myManager;
   public static int CAN_BE_FINAL_MASK;
 
-  public CanBeFinalAnnotator(RefManager manager) {
+  public CanBeFinalAnnotator(@NotNull RefManager manager) {
     myManager = manager;
   }
 
@@ -126,9 +124,9 @@ class CanBeFinalAnnotator extends RefGraphAnnotatorEx {
         PsiMethod[] psiMethods = psiClass.getMethods();
         PsiField[] psiFields = psiClass.getFields();
 
-        HashSet<PsiVariable> allFields = new HashSet<PsiVariable>();
+        Set<PsiVariable> allFields = new HashSet<PsiVariable>();
         ContainerUtil.addAll(allFields, psiFields);
-        ArrayList<PsiVariable> instanceInitializerInitializedFields = new ArrayList<PsiVariable>();
+        List<PsiVariable> instanceInitializerInitializedFields = new ArrayList<PsiVariable>();
         boolean hasInitializers = false;
         for (PsiClassInitializer initializer : psiClass.getInitializers()) {
           PsiCodeBlock body = initializer.getBody();
@@ -182,7 +180,7 @@ class CanBeFinalAnnotator extends RefGraphAnnotatorEx {
                   instanceInitializerInitializedFields.remove(psiVariable);
                 }
               }
-              List<PsiMethod> redirectedConstructors = HighlightControlFlowUtil.getChainedConstructors(psiMethod);
+              List<PsiMethod> redirectedConstructors = JavaHighlightUtil.getChainedConstructors(psiMethod);
               if (redirectedConstructors == null || redirectedConstructors.isEmpty()) {
                 List<PsiVariable> ssaVariables = ControlFlowUtil.getSSAVariables(flow);
                 ArrayList<PsiVariable> good = new ArrayList<PsiVariable>(ssaVariables);

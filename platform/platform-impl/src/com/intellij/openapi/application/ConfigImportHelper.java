@@ -43,7 +43,7 @@ public class ConfigImportHelper {
    * imported on the current startup
    */
   @NonNls public static final String CONFIG_IMPORTED_IN_CURRENT_SESSION_KEY = "intellij.config.imported.in.current.session";
-  
+
   @NonNls private static final String BUILD_NUMBER_FILE = "build.txt";
   @NonNls private static final String PLUGINS_PATH = "plugins";
   @NonNls private static final String BIN_FOLDER = "bin";
@@ -176,7 +176,7 @@ public class ConfigImportHelper {
       }
       FileUtil.delete(plugins);
     }
-    
+
     File pluginsSettings = new File(new File(dest, "options"), "plugin_ui.xml");
     if (pluginsSettings.exists()) {
       FileUtil.delete(pluginsSettings);
@@ -246,7 +246,7 @@ public class ConfigImportHelper {
     // idea.properties
     files.add(new File(bin, "idea.properties"));
 
-    
+
     // other binary scripts
     final String executableName = StringUtil.toLowerCase(settings.getExecutableName());
     // * defaults:
@@ -285,14 +285,14 @@ public class ConfigImportHelper {
         }
         if (bundle.containsKey(propertyName)) {
           return bundle.getString(propertyName);
-        } 
+        }
         return null;
       }
       catch (IOException e) {
         return null;
       }
     }
-    
+
     final String fileContent = getContent(file);
 
     // try to find custom config path
@@ -305,7 +305,7 @@ public class ConfigImportHelper {
   }
 
   @Nullable
-  private static String findProperty(final String propertyName, 
+  private static String findProperty(final String propertyName,
                                      final String fileContent) {
     String param = propertyName + "=";
     int idx = fileContent.indexOf(param);
@@ -377,14 +377,14 @@ public class ConfigImportHelper {
       dir = dir.substring(1, dir.length() - 1);
     }
     if (replaceUserHome) {
-      if (dir.startsWith("~\\") || dir.startsWith("~//") || StringUtil.startsWithConcatenationOf(dir, "~", File.separator)) {
+      if (dir.startsWith("~\\") || dir.startsWith("~//") || StringUtil.startsWithConcatenation(dir, "~", File.separator)) {
         dir = SystemProperties.getUserHome() + dir.substring(1);
       }
     }
     return dir;
   }
 
-  public static boolean isInstallationHomeOrConfig(@NotNull final String installationHome, 
+  public static boolean isInstallationHomeOrConfig(@NotNull final String installationHome,
                                                    @NotNull final ConfigImportSettings settings) {
     if (new File(installationHome, OPTIONS_XML).exists()) return true;
     if (new File(installationHome, CONFIG_RELATED_PATH + OPTIONS_XML).exists()) return true;

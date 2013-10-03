@@ -65,6 +65,8 @@
       <src path="platform/core-api/src"/>
       <src path="platform/core-impl/src"/>
       <src path="platform/dvcs/src"/>
+      <src path="platform/editor-ui-api/src"/>
+      <src path="platform/editor-ui-ex/src"/>
       <src path="platform/external-system-api/src"/>
       <src path="platform/external-system-impl/src"/>
       <src path="platform/indexing-api/src"/>

@@ -27,41 +27,25 @@ package com.intellij.codeInspection.dataFlow;
 import com.intellij.codeInsight.NullableNotNullManager;
 import com.intellij.codeInspection.dataFlow.instructions.InstanceofInstruction;
 import com.intellij.codeInspection.dataFlow.instructions.Instruction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.*;
-import gnu.trove.THashSet;
+import com.intellij.psi.CommonClassNames;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StandardDataFlowRunner extends AnnotationsAwareDataFlowRunner {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.dataFlow.DataFlowRunner");
-
-  private final Set<Instruction> myNPEInstructions = new HashSet<Instruction>();
+public class StandardDataFlowRunner extends DataFlowRunner {
   private final Set<Instruction> myCCEInstructions = new HashSet<Instruction>();
-  private final Set<PsiExpression> myNullableArguments = new HashSet<PsiExpression>();
-  private final Set<PsiExpression> myNullableArgumentsPassedToNonAnnotatedParam = new HashSet<PsiExpression>();
-  private final Set<PsiExpression> myNullableAssignments = new HashSet<PsiExpression>();
-  private final Set<PsiReturnStatement> myNullableReturns = new HashSet<PsiReturnStatement>();
 
-  private final boolean mySuggestNullableAnnotations;
   private boolean myInNullableMethod = false;
   private boolean myInNotNullMethod = false;
   private boolean myIsInMethod = false;
 
-  private final Set<PsiExpression> myUnboxedNullables = new THashSet<PsiExpression>();
-
-  public StandardDataFlowRunner(boolean suggestNullableAnnotations) {
-    mySuggestNullableAnnotations = suggestNullableAnnotations;
-  }
-
   @Override
-  protected Collection<DfaMemoryState> createInitialStates(@NotNull PsiElement psiBlock, InstructionVisitor visitor) {
-    final Collection<DfaMemoryState> initialStates = super.createInitialStates(psiBlock, visitor);
-
+  protected void prepareAnalysis(@NotNull PsiElement psiBlock, Iterable<DfaMemoryState> initialStates) {
     myIsInMethod = psiBlock.getParent() instanceof PsiMethod;
     if (myIsInMethod) {
       PsiMethod method = (PsiMethod)psiBlock.getParent();
@@ -71,19 +55,7 @@ public class StandardDataFlowRunner extends AnnotationsAwareDataFlowRunner {
       myInNotNullMethod = NullableNotNullManager.isNotNull(method);
     }
 
-    myNPEInstructions.clear();
     myCCEInstructions.clear();
-    myNullableArguments.clear();
-    myNullableArgumentsPassedToNonAnnotatedParam.clear();
-    myNullableAssignments.clear();
-    myNullableReturns.clear();
-    myUnboxedNullables.clear();
-
-    return initialStates;
-  }
-
-  public void onInstructionProducesNPE(Instruction instruction) {
-    myNPEInstructions.add(instruction);
   }
 
   public void onInstructionProducesCCE(Instruction instruction) {
@@ -94,74 +66,24 @@ public class StandardDataFlowRunner extends AnnotationsAwareDataFlowRunner {
     return myCCEInstructions;
   }
 
-  @NotNull public Set<Instruction> getNPEInstructions() {
-    return myNPEInstructions;
-  }
-
-  @NotNull public Set<PsiReturnStatement> getNullableReturns() {
-    return myNullableReturns;
-  }
-
   public boolean isInNotNullMethod() {
     return myInNotNullMethod;
   }
 
-  @NotNull public Set<PsiExpression> getNullableArguments() {
-    return myNullableArguments;
+  public boolean isInNullableMethod() {
+    return myInNullableMethod;
   }
 
-  public Set<PsiExpression> getNullableArgumentsPassedToNonAnnotatedParam() {
-    return myNullableArgumentsPassedToNonAnnotatedParam;
-  }
-
-  @NotNull public Set<PsiExpression> getNullableAssignments() {
-    return myNullableAssignments;
-  }
-
-  @NotNull public Set<PsiExpression> getUnboxedNullables() {
-    return myUnboxedNullables;
-  }
-
-  public void onUnboxingNullable(@NotNull PsiExpression expression) {
-    LOG.assertTrue(expression.isValid());
-    if (expression.isPhysical()) {
-      myUnboxedNullables.add(expression);
-    }
-  }
-
-  public void onPassingNullParameter(PsiExpression expr) {
-    myNullableArguments.add(expr);
-  }
-
-  public void onPassingNullParameterToNonAnnotated(PsiExpression expr) {
-    if (mySuggestNullableAnnotations) {
-      myNullableArgumentsPassedToNonAnnotatedParam.add(expr);
-    }
-  }
-
-  public void onAssigningToNotNullableVariable(final PsiExpression expr) {
-    myNullableAssignments.add(expr);
-  }
-
-  public void onNullableReturn(final PsiReturnStatement statement) {
-    if (myInNullableMethod || !myIsInMethod) return;
-    if (myInNotNullMethod || mySuggestNullableAnnotations) {
-      myNullableReturns.add(statement);
-    }
+  public boolean isInMethod() {
+    return myIsInMethod;
   }
 
   public boolean problemsDetected(StandardInstructionVisitor visitor) {
     final Pair<Set<Instruction>, Set<Instruction>> constConditions = getConstConditionalExpressions();
     return !constConditions.getFirst().isEmpty()
            || !constConditions.getSecond().isEmpty()
-           || !myNPEInstructions.isEmpty()
            || !myCCEInstructions.isEmpty()
-           || !getRedundantInstanceofs(this, visitor).isEmpty()
-           || !myNullableArguments.isEmpty()
-           || !myNullableArgumentsPassedToNonAnnotatedParam.isEmpty()
-           || !myNullableAssignments.isEmpty()
-           || !myNullableReturns.isEmpty()
-           || !myUnboxedNullables.isEmpty();
+           || !getRedundantInstanceofs(this, visitor).isEmpty();
   }
 
   @NotNull public static Set<Instruction> getRedundantInstanceofs(final DataFlowRunner runner, StandardInstructionVisitor visitor) {

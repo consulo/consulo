@@ -21,8 +21,8 @@ import com.intellij.psi.infos.CandidateInfo;
 import com.intellij.psi.infos.MethodCandidateInfo;
 import com.intellij.psi.scope.PsiConflictResolver;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.scope.conflictResolvers.JavaMethodsConflictResolver;
 import com.intellij.psi.scope.conflictResolvers.DuplicateConflictResolver;
+import com.intellij.psi.scope.conflictResolvers.JavaMethodsConflictResolver;
 import com.intellij.psi.scope.processor.MethodCandidatesProcessor;
 import com.intellij.psi.scope.processor.MethodResolverProcessor;
 import com.intellij.psi.util.MethodSignature;
@@ -33,7 +33,9 @@ import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,11 +47,12 @@ public class JavaMethodResolveHelper {
   private final MethodCandidatesProcessor myProcessor;
   @Nullable private final PsiType[] myArgumentTypes;
 
-  public JavaMethodResolveHelper(final PsiElement argumentList, @Nullable final PsiType[] argumentTypes) {
+  public JavaMethodResolveHelper(@NotNull final PsiElement argumentList, PsiFile containingFile, @Nullable final PsiType[] argumentTypes) {
     myArgumentTypes = argumentTypes;
     final LanguageLevel languageLevel = PsiUtil.getLanguageLevel(argumentList);
-    final PsiConflictResolver resolver = argumentTypes == null ? DuplicateConflictResolver.INSTANCE : new JavaMethodsConflictResolver(argumentList, argumentTypes);
-    myProcessor = new MethodResolverProcessor(argumentList, new PsiConflictResolver[]{resolver}) {
+    final PsiConflictResolver resolver = argumentTypes == null ? DuplicateConflictResolver.INSTANCE : new JavaMethodsConflictResolver(argumentList, argumentTypes,
+                                                                                                                                      languageLevel);
+    myProcessor = new MethodResolverProcessor(argumentList, containingFile, new PsiConflictResolver[]{resolver}) {
       @Override
       protected MethodCandidateInfo createCandidateInfo(final PsiMethod method, final PsiSubstitutor substitutor,
                                                         final boolean staticProblem,
@@ -72,7 +75,8 @@ public class JavaMethodResolveHelper {
                                                     PsiElement currentFileContext,
                                                     boolean accessProblem,
                                                     PsiElement argumentList,
-                                                    PsiType[] argumentTypes, LanguageLevel languageLevel) {
+                                                    PsiType[] argumentTypes,
+                                                    @NotNull LanguageLevel languageLevel) {
     return new MethodCandidateInfo(method, substitutor, accessProblem, staticProblem, argumentList, currentFileContext, argumentTypes,
                                    PsiType.EMPTY_ARRAY, languageLevel);
   }
@@ -85,12 +89,16 @@ public class JavaMethodResolveHelper {
 
   @NotNull
   public ErrorType getResolveError() {
-    final CandidateInfo[] candidates = myProcessor.getCandidates();
-    if (candidates.length != 1) return ErrorType.RESOLVE;
+    final List<CandidateInfo> candidates = getCandidates();
+    if (candidates.size() != 1) return ErrorType.RESOLVE;
 
-    if (!candidates[0].isStaticsScopeCorrect()) return ErrorType.STATIC;
+    if (!candidates.get(0).isStaticsScopeCorrect()) return ErrorType.STATIC;
 
-    return getResolveError((MethodCandidateInfo)candidates[0]);
+    return getResolveError((MethodCandidateInfo)candidates.get(0));
+  }
+
+  protected List<CandidateInfo> getCandidates() {
+    return Arrays.asList(myProcessor.getCandidates());
   }
 
   protected ErrorType getResolveError(MethodCandidateInfo info) {
@@ -125,7 +133,7 @@ public class JavaMethodResolveHelper {
   }
 
   public Collection<JavaMethodCandidateInfo> getMethods() {
-    return ContainerUtil.mapNotNull(myProcessor.getResult(), new Function<JavaResolveResult, JavaMethodCandidateInfo>() {
+    return ContainerUtil.mapNotNull(getCandidates(), new Function<JavaResolveResult, JavaMethodCandidateInfo>() {
       @Override
       public JavaMethodCandidateInfo fun(final JavaResolveResult javaResolveResult) {
         return new JavaMethodCandidateInfo((PsiMethod)javaResolveResult.getElement(), javaResolveResult.getSubstitutor());

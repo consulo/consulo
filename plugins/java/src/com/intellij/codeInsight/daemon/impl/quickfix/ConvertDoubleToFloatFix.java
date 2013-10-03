@@ -16,13 +16,13 @@
 package com.intellij.codeInsight.daemon.impl.quickfix;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightUtil;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
+import com.intellij.psi.util.TypeConversionUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +56,7 @@ public class ConvertDoubleToFloatFix implements IntentionAction {
       if (!StringUtil.endsWithIgnoreCase(myExpression.getText(), "f")) {
         final PsiLiteralExpression expression = (PsiLiteralExpression)createFloatingPointExpression(project);
         final Object value = expression.getValue();
-        return value instanceof Float && !((Float)value).isInfinite() && !(((Float)value).floatValue() == 0 && !HighlightUtil.isFPZero(expression.getText())); 
+        return value instanceof Float && !((Float)value).isInfinite() && !(((Float)value).floatValue() == 0 && !TypeConversionUtil.isFPZero(expression.getText()));
       }
     }
     return false;

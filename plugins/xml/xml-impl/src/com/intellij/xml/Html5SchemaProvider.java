@@ -1,9 +1,8 @@
 package com.intellij.xml;
 
-import com.intellij.javaee.ExternalResourceManagerImpl;
+import com.intellij.javaee.ExternalResourceManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.io.URLUtil;
 import org.jetbrains.annotations.NotNull;
@@ -14,25 +13,32 @@ import java.net.URL;
  * @author Eugene.Kudelevsky
  */
 public abstract class Html5SchemaProvider {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.xml.html5SchemaProvider");
+  private static final Logger LOG = Logger.getInstance("#com.intellij.xml.Html5SchemaProvider");
 
-  private static final ExtensionPointName<Html5SchemaProvider> EP_NAME = ExtensionPointName.create("com.intellij.xml.html5SchemaProvider");
+  public static final ExtensionPointName<Html5SchemaProvider> EP_NAME = ExtensionPointName.create("com.intellij.xml.html5SchemaProvider");
 
-  public static final String HTML5_SCHEMA_LOCATION;
-  public static final String XHTML5_SCHEMA_LOCATION;
+  private static String HTML5_SCHEMA_LOCATION;
+  private static String XHTML5_SCHEMA_LOCATION;
 
-  @NotNull
-  public abstract URL getHtmlSchemaLocation();
+  private static boolean ourInitialized;
 
-  @NotNull
-  public abstract URL getXhtmlSchemaLocation();
+  public static String getHtml5SchemaLocation() {
+    ensureInitialized();
+    return HTML5_SCHEMA_LOCATION;
+  }
 
-  static {
+  public static String getXhtml5SchemaLocation() {
+    ensureInitialized();
+    return XHTML5_SCHEMA_LOCATION;
+  }
+
+  private synchronized static void ensureInitialized() {
+    if (ourInitialized) return;
+    ourInitialized = true;
+
     final Html5SchemaProvider[] providers = EP_NAME.getExtensions();
     final URL htmlSchemaLocationURL;
     final URL xhtmlSchemaLocationURL;
-
-    LOG.warn("RelaxNG based schema for HTML5 is not supported. Old XSD schema will be used");
 
     if (providers.length > 1) {
       LOG.error("More than one HTML5 schema providers found: " + getClassesListString(providers));
@@ -43,17 +49,27 @@ public abstract class Html5SchemaProvider {
       xhtmlSchemaLocationURL = providers[0].getXhtmlSchemaLocation();
     }
     else {
-      htmlSchemaLocationURL = Html5SchemaProvider.class.getResource(ExternalResourceManagerImpl.STANDARD_SCHEMAS + "html5/xhtml5.xsd");
+      LOG.info("RelaxNG based schema for HTML5 is not supported. Old XSD schema will be used");
+      htmlSchemaLocationURL = Html5SchemaProvider.class.getResource(ExternalResourceManagerEx.STANDARD_SCHEMAS + "html5/xhtml5.xsd");
       xhtmlSchemaLocationURL = htmlSchemaLocationURL;
     }
 
-    HTML5_SCHEMA_LOCATION = VfsUtilCore.urlToPath(VfsUtil.fixURLforIDEA(
+    HTML5_SCHEMA_LOCATION = VfsUtilCore.urlToPath(VfsUtilCore.fixURLforIDEA(
       URLUtil.unescapePercentSequences(htmlSchemaLocationURL.toExternalForm())));
-    LOG.info("HTML5_SCHEMA_LOCATION = " + HTML5_SCHEMA_LOCATION);
+    LOG.info("HTML5_SCHEMA_LOCATION = " + getHtml5SchemaLocation());
 
-    XHTML5_SCHEMA_LOCATION = VfsUtilCore.urlToPath(VfsUtil.fixURLforIDEA(
+    XHTML5_SCHEMA_LOCATION = VfsUtilCore.urlToPath(VfsUtilCore.fixURLforIDEA(
       URLUtil.unescapePercentSequences(xhtmlSchemaLocationURL.toExternalForm())));
-    LOG.info("XHTML5_SCHEMA_LOCATION = " + XHTML5_SCHEMA_LOCATION);
+    LOG.info("XHTML5_SCHEMA_LOCATION = " + getXhtml5SchemaLocation());
+  }
+
+  @NotNull
+  public abstract URL getHtmlSchemaLocation();
+
+  @NotNull
+  public abstract URL getXhtmlSchemaLocation();
+
+  static {
   }
 
   private static <T> String getClassesListString(T[] a) {

@@ -282,11 +282,6 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
   static AbstractTreeUpdater _createUpdater(AbstractTreeBuilder builder) {
     final AbstractTreeUpdater updater = new AbstractTreeUpdater(builder) {
       @Override
-      protected void invokeLater(Runnable runnable) {
-        runnable.run();
-      }
-
-      @Override
       protected boolean isEdt() {
         return SwingUtilities.isEventDispatchThread();
       }
@@ -422,7 +417,7 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
   void select(final Object element, final boolean addToSelection) throws Exception {
     select(new Object[] {element}, addToSelection);
   }
-  
+
   void select(final Object[] elements, final boolean addToSelection) throws Exception {
     select(elements, addToSelection, false);
   }
@@ -430,21 +425,21 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
   void select(final Object[] elements, final boolean addToSelection, final boolean canBeInterrupted) throws Exception {
     final AtomicBoolean done = new AtomicBoolean();
     doAndWaitForBuilder(new Runnable() {
-      @Override
-      public void run() {
-        getBuilder().select(elements, new Runnable() {
-          @Override
-          public void run() {
-            done.set(true);
-          }
-        }, addToSelection);
-      }
-    }, new Condition() {
-      @Override
-      public boolean value(Object o) {
-        return done.get() || canBeInterrupted && getBuilder().getUi().isCancelledReady();
-      }
-    });
+                          @Override
+                          public void run() {
+                            getBuilder().select(elements, new Runnable() {
+                              @Override
+                              public void run() {
+                                done.set(true);
+                              }
+                            }, addToSelection);
+                          }
+                        }, new Condition() {
+                          @Override
+                          public boolean value(Object o) {
+                            return done.get() || canBeInterrupted && getBuilder().getUi().isCancelledReady();
+                          }
+                        });
   }
 
   protected final boolean isYieldingUiBuild() {

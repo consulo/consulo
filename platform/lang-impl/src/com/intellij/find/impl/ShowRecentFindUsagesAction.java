@@ -20,9 +20,10 @@ import com.intellij.find.FindBundle;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.ide.IconDescriptorUpdaters;
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupStep;
@@ -50,14 +51,14 @@ public class ShowRecentFindUsagesAction extends AnAction {
   @Override
   public void update(final AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(usageView != null && project != null);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
     List<FindUsagesManager.SearchData> history = new ArrayList<FindUsagesManager.SearchData>(findUsagesManager.getFindUsageHistory());
 
@@ -93,7 +94,7 @@ public class ShowRecentFindUsagesAction extends AnAction {
           String scopeString = data.myOptions.searchScope == null ? null : data.myOptions.searchScope.getDisplayName();
           return FindBundle.message("recent.find.usages.action.description",
                                     StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
-                                    UsageViewUtil.getDescriptiveName(psiElement),
+                                    DescriptiveNameUtil.getDescriptiveName(psiElement),
                                     scopeString == null ? ProjectScope.getAllScope(psiElement.getProject()).getDisplayName() : scopeString);
         }
 

@@ -20,11 +20,12 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.Pass;
+import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.codeInsight.daemon.LineMarkerProviders;
 import com.intellij.codeInsight.daemon.MergeableLineMarkerInfo;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -58,11 +59,12 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.*;
 
-public class LineMarkersPass extends ProgressableTextEditorHighlightingPass implements LineMarkersProcessor, DumbAware {
+public class LineMarkersPass extends TextEditorHighlightingPass implements LineMarkersProcessor, DumbAware {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.impl.LineMarkersPass");
 
   private volatile Collection<LineMarkerInfo> myMarkers = Collections.emptyList();
 
+  @NotNull private final PsiFile myFile;
   @Nullable private final Editor myEditor;
   private final int myStartOffset;
   private final int myEndOffset;
@@ -75,7 +77,8 @@ public class LineMarkersPass extends ProgressableTextEditorHighlightingPass impl
                          int startOffset,
                          int endOffset,
                          boolean updateAll) {
-    super(project, document, GeneralHighlightingPass.PRESENTABLE_NAME, file, false);
+    super(project, document, false);
+    myFile = file;
     myEditor = editor;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
@@ -83,22 +86,22 @@ public class LineMarkersPass extends ProgressableTextEditorHighlightingPass impl
   }
 
   @Override
-  protected void applyInformationWithProgress() {
+  public void doApplyInformationToEditor() {
     try {
-      UpdateHighlightersUtil.setLineMarkersToEditor(myProject, myDocument, myStartOffset, myEndOffset, myMarkers, Pass.UPDATE_ALL);
+      LineMarkersUtil.setLineMarkersToEditor(myProject, myDocument, myStartOffset, myEndOffset, myMarkers, Pass.UPDATE_ALL);
     }
     catch (IndexNotReadyException ignored) {
     }
   }
 
   @Override
-  protected void collectInformationWithProgress(final ProgressIndicator progress) {
+  public void doCollectInformation(@NotNull ProgressIndicator progress) {
     final List<LineMarkerInfo> lineMarkers = new ArrayList<LineMarkerInfo>();
     final FileViewProvider viewProvider = myFile.getViewProvider();
     final Set<Language> relevantLanguages = viewProvider.getLanguages();
     for (Language language : relevantLanguages) {
       PsiElement psiRoot = viewProvider.getPsi(language);
-      if (!HighlightLevelUtil.shouldHighlight(psiRoot)) continue;
+      if (!HighlightingLevelManager.getInstance(myProject).shouldHighlight(psiRoot)) continue;
       //long time = System.currentTimeMillis();
       int start = myStartOffset;
       int end = myEndOffset;
@@ -127,7 +130,7 @@ public class LineMarkersPass extends ProgressableTextEditorHighlightingPass impl
     final Iterator<LineMarkerInfo> iterator = markers.iterator();
     while (iterator.hasNext()) {
       final LineMarkerInfo marker = iterator.next();
-          
+
       if (marker instanceof MergeableLineMarkerInfo) {
         iterator.remove();
         forMerge.add((MergeableLineMarkerInfo)marker);
@@ -228,13 +231,13 @@ public class LineMarkersPass extends ProgressableTextEditorHighlightingPass impl
           TextRange hostRange = manager.injectedToHost(injectedPsi, editable);
           Icon icon = gutterRenderer == null ? null : gutterRenderer.getIcon();
           LineMarkerInfo converted =
-              new LineMarkerInfo<PsiElement>(injectedMarker.getElement(), hostRange, icon, injectedMarker.updatePass,
-                                 new Function<PsiElement, String>() {
-                                   @Override
-                                   public String fun(PsiElement element) {
-                                     return injectedMarker.getLineMarkerTooltip();
-                                   }
-                                 }, injectedMarker.getNavigationHandler(), GutterIconRenderer.Alignment.RIGHT);
+            new LineMarkerInfo<PsiElement>(injectedMarker.getElement(), hostRange, icon, injectedMarker.updatePass,
+                                           new Function<PsiElement, String>() {
+                                             @Override
+                                             public String fun(PsiElement element) {
+                                               return injectedMarker.getLineMarkerTooltip();
+                                             }
+                                           }, injectedMarker.getNavigationHandler(), GutterIconRenderer.Alignment.RIGHT);
           result.add(converted);
         }
       }
@@ -248,25 +251,19 @@ public class LineMarkersPass extends ProgressableTextEditorHighlightingPass impl
       // binary file? see IDEADEV-2809
       return Collections.emptyList();
     }
-    collectInformationWithProgress(new EmptyProgressIndicator());
+    doCollectInformation(new EmptyProgressIndicator());
     return myMarkers;
-  }
-
-  @Override
-  public double getProgress() {
-    // do not show progress of visible highlighters update
-    return myUpdateAll ? super.getProgress() : -1;
   }
 
   @NotNull
   public static LineMarkerInfo createMethodSeparatorLineMarker(@NotNull PsiElement startFrom, @NotNull EditorColorsManager colorsManager) {
     LineMarkerInfo info = new LineMarkerInfo<PsiElement>(
-      startFrom, 
-      startFrom.getTextRange(), 
-      null, 
-      Pass.UPDATE_ALL, 
+      startFrom,
+      startFrom.getTextRange(),
+      null,
+      Pass.UPDATE_ALL,
       FunctionUtil.<Object, String>nullConstant(),
-      null, 
+      null,
       GutterIconRenderer.Alignment.RIGHT
     );
     EditorColorsScheme scheme = colorsManager.getGlobalScheme();

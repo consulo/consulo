@@ -20,7 +20,7 @@ import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
@@ -366,13 +366,13 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
     }
     myHandlingInitComponentError = true;
     try {
-      PluginId pluginId = config == null ? PluginManager.getPluginByClassName(componentClassName) : config.getPluginId();
+      PluginId pluginId = config == null ? PluginManagerCore.getPluginByClassName(componentClassName) : config.getPluginId();
       if (pluginId != null) {
         LOG.warn(ex);
         @NonNls final String errorMessage =
           "Plugin " + pluginId.getIdString() + " failed to initialize and will be disabled:\n" + ex.getMessage() +
           "\nPlease restart " + ApplicationNamesInfo.getInstance().getFullProductName() + ".";
-        PluginManager.disablePlugin(pluginId.getIdString());
+        PluginManagerCore.disablePlugin(pluginId.getIdString());
         if (!myHeadlessMode) {
           JOptionPane.showMessageDialog(null, errorMessage);
         }
@@ -404,10 +404,10 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
   }
 
   private void loadApplicationComponents() {
-    PluginManager.initPlugins(mySplash);
-    final IdeaPluginDescriptor[] plugins = PluginManager.getPlugins();
+    PluginManagerCore.initPlugins(mySplash);
+    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManager.shouldSkipPlugin(plugin)) continue;
+      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
       loadComponentsConfiguration(plugin.getAppComponents(), plugin, false);
     }
   }
@@ -1442,7 +1442,7 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
             public void run() {
               if (ex instanceof PluginException) {
                 final PluginException pluginException = (PluginException)ex;
-                PluginManager.disablePlugin(pluginException.getPluginId().getIdString());
+                PluginManagerCore.disablePlugin(pluginException.getPluginId().getIdString());
                 Messages.showMessageDialog("The plugin " +
                                            pluginException.getPluginId() +
                                            " failed to save settings and has been disabled. Please restart " +

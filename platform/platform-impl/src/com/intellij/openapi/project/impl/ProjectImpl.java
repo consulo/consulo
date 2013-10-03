@@ -18,7 +18,7 @@ package com.intellij.openapi.project.impl;
 import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.RecentProjectsManagerBase;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -220,9 +220,9 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
   }
 
   public void loadProjectComponents() {
-    final IdeaPluginDescriptor[] plugins = PluginManager.getPlugins();
+    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManager.shouldSkipPlugin(plugin)) continue;
+      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
       loadComponentsConfiguration(plugin.getProjectComponents(), plugin, isDefault());
     }
   }
@@ -358,7 +358,7 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
       LOG.info(e);
     }
     catch (PluginException e) {
-      PluginManager.disablePlugin(e.getPluginId().getIdString());
+      PluginManagerCore.disablePlugin(e.getPluginId().getIdString());
       Notification notification = new Notification(
         PLUGIN_SETTINGS_ERROR,
         "Unable to save plugin settings!",

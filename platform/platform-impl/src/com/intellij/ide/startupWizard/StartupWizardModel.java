@@ -17,7 +17,7 @@ package com.intellij.ide.startupWizard;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
@@ -59,13 +59,13 @@ public class StartupWizardModel extends WizardModel {
       add(myOtherStep);
     }
 
-    myAllPlugins = PluginManager.loadDescriptors(null);
+    myAllPlugins = PluginManagerCore.loadDescriptors(null);
     for (IdeaPluginDescriptor pluginDescriptor : myAllPlugins) {
       if (pluginDescriptor.getPluginId().getIdString().equals("com.intellij")) {
         // skip 'IDEA CORE' plugin
         continue;
       }
-      PluginManager.initClassLoader(getClass().getClassLoader(), (IdeaPluginDescriptorImpl) pluginDescriptor);
+      PluginManagerCore.initClassLoader(getClass().getClassLoader(), (IdeaPluginDescriptorImpl)pluginDescriptor);
       SelectPluginsStep step = myStepMap.get(pluginDescriptor.getCategory());
       if (step == null) {
         step = myOtherStep;
@@ -118,7 +118,7 @@ public class StartupWizardModel extends WizardModel {
   }
 
   public void loadDisabledPlugins(final File configDir) {
-    PluginManager.loadDisabledPlugins(configDir.getPath(), myDisabledPluginIds);
+    PluginManagerCore.loadDisabledPlugins(configDir.getPath(), myDisabledPluginIds);
   }
 
   public Collection<String> getDisabledPluginIds() {

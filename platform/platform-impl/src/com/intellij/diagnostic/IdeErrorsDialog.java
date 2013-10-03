@@ -22,6 +22,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
@@ -1001,11 +1002,17 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       return null;
     }
     final PluginId pluginId = findPluginId(throwable);
-
+    final ErrorReportSubmitter[] reporters;
+    try {
+      reporters = ErrorReportSubmitter.EP_NAME.getExtensions();
+    }
+    catch (Throwable t) {
+      return null;
+    }
     ErrorReportSubmitter submitter = null;
-    for (ErrorReportSubmitter reporter : ErrorReportSubmitter.EP_NAME.getExtensions()) {
+    for (ErrorReportSubmitter reporter : reporters) {
       final PluginDescriptor descriptor = reporter.getPluginDescriptor();
-      if (pluginId == null && (descriptor == null || PluginId.getId(PluginManager.CORE_PLUGIN_ID) == descriptor.getPluginId())
+      if (pluginId == null && (descriptor == null || PluginId.getId(PluginManagerCore.CORE_PLUGIN_ID) == descriptor.getPluginId())
           || descriptor != null && Comparing.equal(pluginId, descriptor.getPluginId())) {
         submitter = reporter;
       }

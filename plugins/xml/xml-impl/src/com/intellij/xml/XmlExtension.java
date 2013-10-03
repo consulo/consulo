@@ -15,17 +15,10 @@
  */
 package com.intellij.xml;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
-import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.xml.SchemaPrefix;
@@ -36,20 +29,17 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.IncorrectOperationException;
 import com.intellij.xml.util.XmlUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class XmlExtension {
-  private static final ExtensionPointName<XmlExtension> EP_NAME = new ExtensionPointName<XmlExtension>("com.intellij.xml.xmlExtension");
+  public static final ExtensionPointName<XmlExtension> EP_NAME = new ExtensionPointName<XmlExtension>("com.intellij.xml.xmlExtension");
 
   public static final XmlExtension DEFAULT_EXTENSION = new DefaultXmlExtension();
 
@@ -73,13 +63,24 @@ public abstract class XmlExtension {
 
   public abstract boolean isAvailable(PsiFile file);
 
-  @NotNull
-  public abstract List<Pair<String,String>> getAvailableTagNames(@NotNull final XmlFile file, @NotNull final XmlTag context);
+  public static class TagInfo {
+
+    public final String name;
+    public final String namespace;
+
+    public TagInfo(String name, String namespace) {
+      this.name = name;
+      this.namespace = namespace;
+    }
+
+    @Nullable
+    public PsiElement getDeclaration() {
+      return null;
+    }
+  }
 
   @NotNull
-  public abstract Set<String> getNamespacesByTagName(@NotNull final String tagName, @NotNull final XmlFile context);
-  @NotNull
-  public abstract Set<String> guessUnboundNamespaces(@NotNull PsiElement element, final XmlFile file);
+  public abstract List<TagInfo> getAvailableTagNames(@NotNull final XmlFile file, @NotNull final XmlTag context);
 
   @Nullable
   public TagNameReference createTagNameReference(final ASTNode nameElement, final boolean startTagFlag) {
@@ -89,59 +90,6 @@ public abstract class XmlExtension {
   @Nullable
   public String[][] getNamespacesFromDocument(final XmlDocument parent, boolean declarationsExist) {
     return declarationsExist ? null : XmlUtil.getDefaultNamespaces(parent);
-  }
-
-  public interface Runner<P, T extends Throwable> {
-    void run(P param) throws T;
-  }
-
-  public abstract void insertNamespaceDeclaration(@NotNull final XmlFile file,
-                                                    @Nullable final Editor editor,
-                                                    @NonNls @NotNull final Set<String> possibleNamespaces,
-                                                    @NonNls @Nullable final String nsPrefix,
-                                                    @Nullable Runner<String, IncorrectOperationException> runAfter) throws IncorrectOperationException;
-
-  @Nullable
-  public String getNamespacePrefix(PsiElement element) {
-    final PsiElement tag = element instanceof XmlTag ? element : element.getParent();
-    if (tag instanceof XmlTag) {
-      return ((XmlTag)tag).getNamespacePrefix();
-    } else {
-      return null;
-    }
-  }
-
-  public boolean qualifyWithPrefix(final String namespacePrefix, final PsiElement element, final Document document) throws
-                                                                                                                 IncorrectOperationException {
-    final PsiElement tag = element instanceof XmlTag ? element : element.getParent();
-    if (tag instanceof XmlTag) {
-      final String prefix = ((XmlTag)tag).getNamespacePrefix();
-      if (!prefix.equals(namespacePrefix)) {
-        final String name = namespacePrefix + ":" + ((XmlTag)tag).getLocalName();
-        ((XmlTag)tag).setName(name);
-      }
-      return true;
-    }
-    return false;
-  }
-
-  public String getNamespaceAlias(@NotNull final XmlFile file) {
-    return XmlBundle.message("namespace.alias");
-  }
-
-  public void createAddAttributeFix(@NotNull final XmlAttribute attribute, final HighlightInfo highlightInfo) {
-    final XmlTag tag = attribute.getParent();
-    String namespace = attribute.getNamespace();
-
-    if(StringUtil.isEmptyOrSpaces(namespace)) namespace = tag.getNamespace();
-
-    final XmlNSDescriptor nsDescriptor = tag.getNSDescriptor(namespace, true);
-    if (nsDescriptor instanceof XmlUndefinedElementFixProvider) {
-      final IntentionAction[] actions = ((XmlUndefinedElementFixProvider)nsDescriptor).createFixes(attribute);
-      for (IntentionAction action : actions) {
-        QuickFixAction.registerQuickFixAction(highlightInfo, action);
-      }
-    }
   }
 
   public boolean canBeDuplicated(XmlAttribute attribute) {
@@ -174,7 +122,7 @@ public abstract class XmlExtension {
 
   @Nullable
   public XmlNSDescriptor getNSDescriptor(final XmlTag element, final String namespace, final boolean strict) {
-    return element.getNSDescriptor(namespace, strict);  
+    return element.getNSDescriptor(namespace, strict);
   }
 
   @Nullable
@@ -211,4 +159,7 @@ public abstract class XmlExtension {
     return true;
   }
 
+  public boolean useXmlTagInsertHandler() {
+    return true;
+  }
 }

@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.daemon;
 
+import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -24,6 +25,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
+import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -41,12 +43,10 @@ public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings i
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings");
   @NonNls private static final String ROOT_TAG = "root";
   @NonNls private static final String PROFILE_ATT = "profile";
-  @NonNls public static final String DEFAULT_PROFILE_ATT = "Default";
-  @NonNls public static final String PROFILE_COPY_NAME = "copy";
-  private final InspectionProfileManager myManager;
+  private final InspectionProfileManagerImpl myManager;
 
   public DaemonCodeAnalyzerSettingsImpl(InspectionProfileManager manager) {
-    myManager = manager;
+    myManager = (InspectionProfileManagerImpl)manager;
   }
 
   @Override
@@ -111,13 +111,15 @@ public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings i
     }
   }
 
-  public void readExternal(Element element) throws InvalidDataException {
+  private void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
-    myManager.getConverter().storeEditorHighlightingProfile(element);
+    myManager.getConverter().storeEditorHighlightingProfile(element,
+                                                            new InspectionProfileImpl(
+                                                              InspectionProfileConvertor.OLD_HIGHTLIGHTING_SETTINGS_PROFILE));
     myManager.setRootProfile(element.getAttributeValue(PROFILE_ATT));
   }
 
-  public void writeExternal(Element element) throws WriteExternalException {
+  private void writeExternal(Element element) throws WriteExternalException {
     DefaultJDOMExternalizer.writeExternal(this, element);
     element.setAttribute(PROFILE_ATT, myManager.getRootProfile().getName());
   }

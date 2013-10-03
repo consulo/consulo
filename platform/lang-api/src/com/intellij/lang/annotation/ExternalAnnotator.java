@@ -29,35 +29,49 @@ import org.jetbrains.annotations.Nullable;
  * @see com.intellij.lang.ExternalLanguageAnnotators
  */
 public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
-  // Invoked initially in read action
+  /**
+   * Collects initial information required for annotation. Expected to run within read action.
+   * See {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)} for details.
+   *
+   * @param file file to annotate
+   * @return see {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
+   */
   @Nullable
-  public InitialInfoType collectionInformation(@NotNull PsiFile file) {
+  public InitialInfoType collectInformation(@NotNull PsiFile file) {
     return null;
   }
-  
+
+  /**
+   * Collects initial information required for annotation. This method is called within read action during annotation pass.
+   * Default implementation returns the result of {@link ExternalAnnotator#collectInformation(PsiFile)}
+   * if file has no errors or {@code null} otherwise.
+   * @param file      file to annotate
+   * @param editor    editor in which file's document reside
+   * @param hasErrors indicates if file has errors detected by preceding analyses
+   * @return information to pass to {@link ExternalAnnotator#doAnnotate(InitialInfoType)} or {@code null} if annotation should be skipped
+   */
   @Nullable
-  public InitialInfoType collectInformation(@NotNull PsiFile file, @NotNull Editor editor) {
-    return collectionInformation(file);
+  public InitialInfoType collectInformation(@NotNull PsiFile file, @NotNull Editor editor, boolean hasErrors) {
+    return hasErrors ? null : collectInformation(file);
   }
 
-  // Lengthy annotation goes here
+  /**
+   * Collects full information required for annotation. This method is intended for long-running activities
+   * and will be called outside read/write actions during annotation pass.
+   * @param collectedInfo initial information gathered by {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
+   * @return annotation result to pass to {@link ExternalAnnotator#apply(PsiFile, AnnotationResultType, AnnotationHolder)}
+   */
   @Nullable
   public AnnotationResultType doAnnotate(InitialInfoType collectedInfo) {
     return null;
   }
 
-  // Result of annotation is applied in read action
-  public void apply(@NotNull PsiFile file, AnnotationResultType annotationResult, @NotNull AnnotationHolder holder) {
-  }
-
   /**
-   * Annotates the specified file.
-   *
-   * @param file   the file to annotate.
-   * @param holder the container which receives annotations created by the plugin.
+   * Applies results of annotation. This method is called within read action during annotation pass.
+   * @param file file to annotate
+   * @param annotationResult annotation result acquired through {@link ExternalAnnotator#doAnnotate(InitialInfoType)}
+   * @param holder container which receives annotations
    */
-  // todo: adapt existing annotators to a new API
-  @Deprecated
-  public void annotate(PsiFile file, AnnotationHolder holder) {
+  public void apply(@NotNull PsiFile file, AnnotationResultType annotationResult, @NotNull AnnotationHolder holder) {
   }
 }

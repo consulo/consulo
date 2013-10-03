@@ -26,7 +26,7 @@ import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.components.PathMacroManager;
@@ -136,12 +136,12 @@ public class XsltCommandLineState extends CommandLineState {
     }
     vmParameters.defineProperty("xslt.smart-error-handling", String.valueOf(myXsltRunConfiguration.mySmartErrorHandling));
 
-    final PluginId pluginId = PluginManager.getPluginByClassName(getClass().getName());
+    final PluginId pluginId = PluginManagerCore.getPluginByClassName(getClass().getName());
     assert pluginId != null || System.getProperty("xslt.plugin.path") != null : "PluginId not found - development builds need to specify -Dxslt.plugin.path=../out/classes/production/xslt-rt";
 
     final File pluginPath;
     if (pluginId != null) {
-      final IdeaPluginDescriptor descriptor = PluginManager.getPlugin(pluginId);
+      final IdeaPluginDescriptor descriptor = PluginManagerCore.getPlugin(pluginId);
       assert descriptor != null;
       pluginPath = descriptor.getPath();
     } else {

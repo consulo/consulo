@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInspection;
 
+import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -40,11 +41,11 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
   private final boolean myShowTooltip;
   private TextAttributesKey myEnforcedTextAttributes;
   private int myLineNumber = -1;
-  private String myProblemGroup;
+  private ProblemGroup myProblemGroup;
 
   public ProblemDescriptorBase(@NotNull PsiElement startElement,
                                @NotNull PsiElement endElement,
-                               String descriptionTemplate,
+                               @NotNull String descriptionTemplate,
                                LocalQuickFix[] fixes,
                                @NotNull ProblemHighlightType highlightType,
                                boolean isAfterEndOfLine,
@@ -101,6 +102,11 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
     return PsiTreeUtil.findCommonParent(startElement, endElement);
   }
 
+  @Nullable
+  public TextRange getTextRangeInElement() {
+    return myTextRangeInElement;
+  }
+
   @Override
   public PsiElement getStartElement() {
     return myStartSmartPointer.getElement();
@@ -125,7 +131,10 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
       TextRange textRange = getTextRange();
       if (textRange == null) return -1;
       textRange = manager.injectedToHost(psiElement, textRange);
-      myLineNumber =  document.getLineNumber(textRange.getStartOffset()) + 1;
+      final int startOffset = textRange.getStartOffset();
+      final int textLength = document.getTextLength();
+      LOG.assertTrue(startOffset <= textLength, getDescriptionTemplate() + " at " + startOffset + ", " + textLength);
+      myLineNumber =  document.getLineNumber(startOffset) + 1;
     }
     return myLineNumber;
   }
@@ -186,12 +195,12 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
 
   @Override
   @Nullable
-  public String getProblemGroup() {
+  public ProblemGroup getProblemGroup() {
     return myProblemGroup;
   }
 
   @Override
-  public void setProblemGroup(@Nullable String problemGroup) {
+  public void setProblemGroup(@Nullable ProblemGroup problemGroup) {
     myProblemGroup = problemGroup;
   }
 

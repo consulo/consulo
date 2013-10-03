@@ -49,35 +49,35 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
   private static final FieldCache<XmlElementDescriptor[],ComplexTypeDescriptor,Object, XmlElement> myElementDescriptorsCache =
     new FieldCache<XmlElementDescriptor[],ComplexTypeDescriptor,Object, XmlElement>() {
 
-    protected XmlElementDescriptor[] compute(final ComplexTypeDescriptor complexTypeDescriptor, final XmlElement p) {
-      return complexTypeDescriptor.doCollectElements(p);
-    }
+      protected XmlElementDescriptor[] compute(final ComplexTypeDescriptor complexTypeDescriptor, final XmlElement p) {
+        return complexTypeDescriptor.doCollectElements(p);
+      }
 
-    protected XmlElementDescriptor[] getValue(final ComplexTypeDescriptor complexTypeDescriptor, final Object p) {
-      return complexTypeDescriptor.myElementDescriptors;
-    }
+      protected XmlElementDescriptor[] getValue(final ComplexTypeDescriptor complexTypeDescriptor, final Object p) {
+        return complexTypeDescriptor.myElementDescriptors;
+      }
 
-    protected void putValue(final XmlElementDescriptor[] xmlElementDescriptors,
-                            final ComplexTypeDescriptor complexTypeDescriptor, final Object p) {
-      complexTypeDescriptor.myElementDescriptors = xmlElementDescriptors;
-    }
-  };
+      protected void putValue(final XmlElementDescriptor[] xmlElementDescriptors,
+                              final ComplexTypeDescriptor complexTypeDescriptor, final Object p) {
+        complexTypeDescriptor.myElementDescriptors = xmlElementDescriptors;
+      }
+    };
 
   private static final FieldCache<XmlAttributeDescriptor[], ComplexTypeDescriptor, Object, XmlElement> myAttributeDescriptorsCache =
     new FieldCache<XmlAttributeDescriptor[], ComplexTypeDescriptor, Object, XmlElement>() {
-    protected final XmlAttributeDescriptor[] compute(final ComplexTypeDescriptor complexTypeDescriptor, XmlElement p) {
-      return complexTypeDescriptor.doCollectAttributes(p);
-    }
+      protected final XmlAttributeDescriptor[] compute(final ComplexTypeDescriptor complexTypeDescriptor, XmlElement p) {
+        return complexTypeDescriptor.doCollectAttributes(p);
+      }
 
-    protected final XmlAttributeDescriptor[] getValue(final ComplexTypeDescriptor complexTypeDescriptor, Object o) {
-      return complexTypeDescriptor.myAttributeDescriptors;
-    }
+      protected final XmlAttributeDescriptor[] getValue(final ComplexTypeDescriptor complexTypeDescriptor, Object o) {
+        return complexTypeDescriptor.myAttributeDescriptors;
+      }
 
-    protected final void putValue(final XmlAttributeDescriptor[] xmlAttributeDescriptors,
-                            final ComplexTypeDescriptor complexTypeDescriptor, final Object p) {
-      complexTypeDescriptor.myAttributeDescriptors = xmlAttributeDescriptors;
-    }
-  };
+      protected final void putValue(final XmlAttributeDescriptor[] xmlAttributeDescriptors,
+                                    final ComplexTypeDescriptor complexTypeDescriptor, final Object p) {
+        complexTypeDescriptor.myAttributeDescriptors = xmlAttributeDescriptors;
+      }
+    };
 
   private final FactoryMap<String, CachedValue<CanContainAttributeType>> myAnyAttributeCache = new ConcurrentFactoryMap<String, CachedValue<CanContainAttributeType>>() {
     @Override
@@ -242,7 +242,7 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
     return result.toArray(new XmlAttributeDescriptor[result.size()]);
   }
 
-  public XmlNSDescriptorImpl getNsDescriptors() {
+  public XmlNSDescriptorImpl getNsDescriptor() {
     return myDocumentDescriptor;
   }
 
@@ -269,7 +269,7 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
 
   public boolean canContainTag(String localName, String namespace, XmlElement context) {
     return _canContainTag(localName, namespace, myTag, context, new HashSet<XmlTag>(5),
-                          new CurrentContextInfo(myDocumentDescriptor, myDocumentDescriptor.getDefaultNamespace()));
+                          new CurrentContextInfo(myDocumentDescriptor, myDocumentDescriptor.getDefaultNamespace()), false);
   }
 
   static class CurrentContextInfo {
@@ -286,7 +286,7 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
     XmlTag rootTag = info.documentDescriptor.getTag();
     XmlNSDescriptorImpl nsDescriptor = XmlNSDescriptorImpl.getNSDescriptorToSearchIn(rootTag, ref, info.documentDescriptor);
     String ns;
-    
+
     if (nsDescriptor == info.documentDescriptor) {
       ns = rootTag.getNamespaceByPrefix(XmlUtil.findPrefixByQualifiedName(ref));
     } else {
@@ -298,12 +298,14 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
   }
 
   private boolean _canContainTag(String localName, String namespace, XmlTag tag, XmlElement context, Set<XmlTag> visited,
-                                 CurrentContextInfo info) {
+                                 CurrentContextInfo info, boolean restriction) {
     if (visited.contains(tag)) return false;
     visited.add(tag);
 
     if (XmlNSDescriptorImpl.equalsToSchemaName(tag, "any")) {
-      myHasAnyInContentModel = true;
+      if (!restriction) {
+        myHasAnyInContentModel = true;
+      }
       if (OTHER_NAMESPACE_ATTR_VALUE.equals(tag.getAttributeValue("namespace"))) {
         return namespace == null || !namespace.equals(info.expectedDefaultNs);
       }
@@ -315,7 +317,7 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
       if (ref != null) {
         XmlTag groupTag = info.documentDescriptor.findGroup(ref);
         if (groupTag != null) {
-          if (_canContainTag(localName, namespace, groupTag, context, visited, getContextInfo(info, ref)))  return true;
+          if (_canContainTag(localName, namespace, groupTag, context, visited, getContextInfo(info, ref), restriction))  return true;
         }
       }
     }
@@ -329,7 +331,8 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
         if (descriptor instanceof ComplexTypeDescriptor) {
           ComplexTypeDescriptor complexTypeDescriptor = (ComplexTypeDescriptor)descriptor;
           if (complexTypeDescriptor._canContainTag(localName, namespace, complexTypeDescriptor.myTag, context, visited,
-                                                   getContextInfo(info, base))) {
+                                                   getContextInfo(info, base), restriction || XmlNSDescriptorImpl.equalsToSchemaName(tag,
+                                                                                                                                     RESTRICTION_TAG_NAME))) {
             myHasAnyInContentModel |= complexTypeDescriptor.myHasAnyInContentModel;
             return true;
           }
@@ -361,11 +364,11 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
             return true; // could be more parent-child relation complex!!!
           }
         }
-    }
+      }
     }
 
     for (XmlTag subTag : tag.getSubTags()) {
-      if (_canContainTag(localName, namespace, subTag, context, visited, info)) return true;
+      if (_canContainTag(localName, namespace, subTag, context, visited, info, restriction)) return true;
     }
 
     return false;
@@ -377,9 +380,9 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
     }
     return _canContainAttribute(namespace, myTag, qName, new THashSet<String>(), null);
   }
-  
+
   enum CanContainAttributeType {
-    CanContainButSkip, CanContainButDoNotSkip, CanNotContain
+    CanContainButSkip, CanContainButDoNotSkip, CanContainAny, CanNotContain
   }
 
   private CanContainAttributeType _canContainAttribute(String namespace,
@@ -394,9 +397,12 @@ public class ComplexTypeDescriptor extends TypeDescriptor {
       String ns = tag.getAttributeValue("namespace");
       CanContainAttributeType canContainAttributeType = CanContainAttributeType.CanContainButDoNotSkip;
       if ("skip".equals(tag.getAttributeValue("processContents"))) canContainAttributeType= CanContainAttributeType.CanContainButSkip;
-      
+
       if (OTHER_NAMESPACE_ATTR_VALUE.equals(ns)) {
         return !namespace.equals(myDocumentDescriptor.getDefaultNamespace()) ? canContainAttributeType : CanContainAttributeType.CanNotContain;
+      }
+      else if ("##any".equals(ns)) {
+        return CanContainAttributeType.CanContainAny;
       }
       return canContainAttributeType;
     }

@@ -19,6 +19,7 @@ import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.ide.SaveAndSyncHandlerImpl;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -106,7 +107,7 @@ public abstract class DvcsPlatformFacadeImpl implements DvcsPlatformFacade {
   @Nullable
   @Override
   public IdeaPluginDescriptor getPluginByClassName(@NotNull String name) {
-    return PluginManager.getPlugin(PluginManager.getPluginByClassName(name));
+    return PluginManager.getPlugin(PluginManagerCore.getPluginByClassName(name));
   }
 
   @Nullable

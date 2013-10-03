@@ -19,25 +19,29 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
+import com.intellij.codeInspection.ui.InspectionToolPresentation;
+import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.injected.editor.VirtualFileWindow;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author max
  */
 public class DescriptorComposer extends HTMLComposerImpl {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.DescriptorComposer");
-  private final DescriptorProviderInspection myTool;
+  private final InspectionToolPresentation myTool;
 
-  public DescriptorComposer(DescriptorProviderInspection tool) {
+  public DescriptorComposer(@NotNull InspectionToolPresentation tool) {
     myTool = tool;
   }
 
@@ -62,14 +66,28 @@ public class DescriptorComposer extends HTMLComposerImpl {
 
       doneList(buf);
 
-      appendResolution(buf, myTool, refEntity);
+      appendResolution(buf,refEntity, quickFixTexts(refEntity, myTool));
     }
     else {
       appendNoProblems(buf);
     }
   }
 
-  protected void composeAdditionalDescription(final StringBuffer buf, final RefEntity refEntity) {}
+  public static String[] quickFixTexts(RefEntity where, @NotNull InspectionToolPresentation toolPresentation){
+    QuickFixAction[] quickFixes = toolPresentation.getQuickFixes(new RefEntity[] {where});
+    if (quickFixes == null) {
+      return null;
+    }
+    List<String> texts = new ArrayList<String>();
+    for (QuickFixAction quickFix : quickFixes) {
+      final String text = quickFix.getText(where);
+      if (text == null) continue;
+      texts.add(text);
+    }
+    return texts.toArray(new String[texts.size()]);
+  }
+
+  protected void composeAdditionalDescription(@NotNull StringBuffer buf, @NotNull RefEntity refEntity) {}
 
   @Override
   public void compose(StringBuffer buf, RefEntity refElement, CommonProblemDescriptor descriptor) {
@@ -123,9 +141,9 @@ public class DescriptorComposer extends HTMLComposerImpl {
     }
   }
 
-  protected void composeDescription(final CommonProblemDescriptor description, int i, StringBuffer buf, final RefEntity refElement) {
+  protected void composeDescription(@NotNull CommonProblemDescriptor description, int i, @NotNull StringBuffer buf, @NotNull RefEntity refElement) {
     PsiElement expression = description instanceof ProblemDescriptor ? ((ProblemDescriptor)description).getPsiElement() : null;
-    StringBuffer anchor = new StringBuffer();
+    StringBuilder anchor = new StringBuilder();
     VirtualFile vFile = null;
 
     if (expression != null) {
@@ -138,7 +156,8 @@ public class DescriptorComposer extends HTMLComposerImpl {
         if (myExporter == null){
           //noinspection HardCodedStringLiteral
           anchor.append(new URL(vFile.getUrl() + "#descr:" + i));
-        } else {
+        }
+        else {
           anchor.append(myExporter.getURL(refElement));
         }
       }
@@ -187,7 +206,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
       lineAnchor.append("</a>");
       //noinspection HardCodedStringLiteral
       final String location = "#loc";
-      if (!containsReference && !res.contains(location)) {
+      if (!res.contains(location)) {
         res += " (" + location + ")";
       }
       res = res.replaceAll(location, lineAnchor.toString());
@@ -196,4 +215,6 @@ public class DescriptorComposer extends HTMLComposerImpl {
     buf.append(BR).append(BR);
     composeAdditionalDescription(buf, refElement);
   }
+
+
 }

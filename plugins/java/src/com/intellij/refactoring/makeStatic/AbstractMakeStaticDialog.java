@@ -30,7 +30,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypeParameterListOwner;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.RefactoringDialog;
-import com.intellij.refactoring.util.ParameterTablePanel;
+import com.intellij.refactoring.util.VariableData;
 import com.intellij.usageView.UsageViewUtil;
 
 import javax.swing.*;
@@ -68,7 +68,7 @@ public abstract class AbstractMakeStaticDialog extends RefactoringDialog {
 
   public abstract String getClassParameterName();
 
-  public abstract ParameterTablePanel.VariableData[] getVariableData();
+  public abstract VariableData[] getVariableData();
 
   public abstract boolean isReplaceUsages();
 

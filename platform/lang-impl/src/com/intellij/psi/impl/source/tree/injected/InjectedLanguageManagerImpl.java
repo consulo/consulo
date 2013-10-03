@@ -121,6 +121,26 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   public void dispose() {
   }
 
+  @NotNull
+  @Override
+  public List<DocumentWindow> getCachedInjectedDocuments(@NotNull PsiFile hostPsiFile) {
+    return InjectedLanguageUtil.getCachedInjectedDocuments(hostPsiFile);
+  }
+
+  @Override
+  public void enumerate(@NotNull PsiElement host, @NotNull PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
+    InjectedLanguageUtil.enumerate(host, visitor);
+  }
+
+  @Override
+  public void enumerateEx(@NotNull PsiElement host,
+                          @NotNull PsiFile containingFile,
+                          boolean probeUp,
+                          @NotNull PsiLanguageInjectionHost.InjectedPsiVisitor visitor) {
+    InjectedLanguageUtil.enumerate(host, containingFile, probeUp, visitor);
+  }
+
+  @Override
   public void startRunInjectors(@NotNull final Document hostDocument, final boolean synchronously) {
     if (myProject.isDisposed()) return;
     if (!synchronously && ApplicationManager.getApplication().isWriteAccessAllowed()) return;

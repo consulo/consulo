@@ -17,6 +17,8 @@ package com.intellij.psi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.JavaSdkVersion;
+import com.intellij.openapi.projectRoots.JavaVersionService;
 import com.intellij.openapi.roots.ProjectRootModificationTracker;
 import com.intellij.openapi.util.*;
 import com.intellij.pom.java.LanguageLevel;
@@ -29,6 +31,7 @@ import com.intellij.util.containers.HashMap;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -159,7 +162,7 @@ public class TypeConversionUtil {
         final PsiClass resolved = ((PsiClassType)toType).resolve();
         if (resolved instanceof PsiTypeParameter) {
           for (final PsiClassType boundType : resolved.getExtendsListTypes()) {
-            if (!isNarrowingReferenceConversionAllowed(fromType, boundType)) return false;
+            if (!areTypesConvertible(fromType, boundType)) return false;
           }
           return true;
         }
@@ -445,8 +448,6 @@ public class TypeConversionUtil {
 
   /**
    * @param tokenType JavaTokenType enumeration
-   * @param lOperand
-   * @param rOperand
    * @param strict    true if operator result type should be convertible to the left operand
    * @return true if lOperand operator rOperand expression is syntactically correct
    */
@@ -480,14 +481,22 @@ public class TypeConversionUtil {
       }
       else {
         if (isPrimitiveAndNotNull(ltype)) {
-          if (rtype instanceof PsiClassType && ((PsiClassType)rtype).getLanguageLevel().isAtLeast(LanguageLevel.JDK_1_7)) {
-            return areTypesConvertible(ltype, rtype);
+          if (rtype instanceof PsiClassType) {
+            final LanguageLevel languageLevel = ((PsiClassType)rtype).getLanguageLevel();
+            if (languageLevel.isAtLeast(LanguageLevel.JDK_1_5) &&
+                !languageLevel.isAtLeast(LanguageLevel.JDK_1_8) &&
+                areTypesConvertible(ltype, rtype)) {
+              return true;
+            }
           }
           return false;
         }
         if (isPrimitiveAndNotNull(rtype)) {
-          if (ltype instanceof PsiClassType && ((PsiClassType)ltype).getLanguageLevel().isAtLeast(LanguageLevel.JDK_1_7)) {
-            return areTypesConvertible(rtype, ltype);
+          if (ltype instanceof PsiClassType) {
+            final LanguageLevel level = ((PsiClassType)ltype).getLanguageLevel();
+            if (level.isAtLeast(LanguageLevel.JDK_1_7) && !level.isAtLeast(LanguageLevel.JDK_1_8) && areTypesConvertible(rtype, ltype)) {
+              return true;
+            }
           }
           return false;
         }
@@ -620,8 +629,8 @@ public class TypeConversionUtil {
     if (rType == null) return false;
     if (isAssignable(lType, rType)) return true;
     if (lType instanceof PsiClassType) {
-        lType = PsiPrimitiveType.getUnboxedType(lType);
-        if (lType == null) return false;
+      lType = PsiPrimitiveType.getUnboxedType(lType);
+      if (lType == null) return false;
     }
 
     final int rTypeRank = getTypeRank(rType);
@@ -693,10 +702,7 @@ public class TypeConversionUtil {
         final PsiType lType = lLambdaExpression.getFunctionalInterfaceType();
         return Comparing.equal(rType, lType);
       }
-      if (left instanceof PsiArrayType) {
-        return false;
-      }
-      return LambdaUtil.isAcceptable(rLambdaExpression, left, false);
+      return !(left instanceof PsiArrayType) && LambdaUtil.isAcceptable(rLambdaExpression, left, false);
     }
 
     if (left instanceof PsiIntersectionType) {
@@ -745,9 +751,7 @@ public class TypeConversionUtil {
       if (lCompType instanceof PsiPrimitiveType) {
         return lCompType.equals(rCompType);
       }
-      else {
-        return !(rCompType instanceof PsiPrimitiveType) && isAssignable(lCompType, rCompType, allowUncheckedConversion);
-      }
+      return !(rCompType instanceof PsiPrimitiveType) && isAssignable(lCompType, rCompType, allowUncheckedConversion);
     }
 
     if (left instanceof PsiDisjunctionType) {
@@ -828,12 +832,10 @@ public class TypeConversionUtil {
     if (left instanceof PsiPrimitiveType && !PsiType.NULL.equals(left)) {
       return right instanceof PsiClassType && isAssignable(left, right);
     }
-    else {
-      return left instanceof PsiClassType
-                && right instanceof PsiPrimitiveType
-                && !PsiType.NULL.equals(right)
-                && isAssignable(left, right);
-    }
+    return left instanceof PsiClassType
+           && right instanceof PsiPrimitiveType
+           && !PsiType.NULL.equals(right)
+           && isAssignable(left, right);
   }
 
   private static final Key<CachedValue<Set<String>>> POSSIBLE_BOXED_HOLDER_TYPES = Key.create("Types that may be possibly assigned from primitive ones");
@@ -903,9 +905,6 @@ public class TypeConversionUtil {
     PsiSubstitutor leftSubstitutor = leftResult.getSubstitutor();
 
     if (!leftClass.getManager().areElementsEquivalent(leftClass, rightClass)) {
-      if (!allowUncheckedConversion && PsiUtil.isRawSubstitutor(leftClass, leftSubstitutor) && !rightClass.hasTypeParameters() && !(rightClass instanceof PsiTypeParameter)) {
-        return false;
-      }
       rightSubstitutor = getSuperClassSubstitutor(leftClass, rightClass, rightSubstitutor);
       rightClass = leftClass;
     }
@@ -932,7 +931,7 @@ public class TypeConversionUtil {
   }
 
   private static final RecursionGuard ourGuard = RecursionManager.createGuard("isAssignable");
-  
+
   public static boolean typesAgree(PsiType typeLeft, PsiType typeRight, final boolean allowUncheckedConversion) {
     if (typeLeft instanceof PsiWildcardType) {
       final PsiWildcardType leftWildcard = (PsiWildcardType)typeLeft;
@@ -985,7 +984,7 @@ public class TypeConversionUtil {
     }
   }
 
-  private static Boolean containsWildcards(PsiType leftBound) {
+  private static boolean containsWildcards(@NotNull PsiType leftBound) {
     final WildcardDetector wildcardDetector = new WildcardDetector();
     if (leftBound instanceof PsiIntersectionType) {
       for (PsiType conjunctType :((PsiIntersectionType)leftBound).getConjuncts()) {
@@ -993,7 +992,7 @@ public class TypeConversionUtil {
       }
       return true;
     }
-    
+
     return leftBound.accept(wildcardDetector);
   }
 
@@ -1020,9 +1019,6 @@ public class TypeConversionUtil {
    * <code>superClass</code> must be a super class/interface of <code>derivedClass</code> (as in
    * <code>InheritanceUtil.isInheritor(derivedClass, superClass, true)</code>
    *
-   * @param superClass
-   * @param derivedClass
-   * @param derivedSubstitutor
    * @return substitutor (never returns <code>null</code>)
    * @see InheritanceUtil#isInheritor(PsiClass, PsiClass, boolean)
    */
@@ -1083,8 +1079,8 @@ public class TypeConversionUtil {
 
   @NotNull
   public static PsiSubstitutor getSuperClassSubstitutor(@NotNull PsiClass superClass, @NotNull PsiClassType classType) {
-      final PsiClassType.ClassResolveResult classResolveResult = classType.resolveGenerics();
-      return getSuperClassSubstitutor(superClass, classResolveResult.getElement(), classResolveResult.getSubstitutor());
+    final PsiClassType.ClassResolveResult classResolveResult = classType.resolveGenerics();
+    return getSuperClassSubstitutor(superClass, classResolveResult.getElement(), classResolveResult.getSubstitutor());
   }
 
   private static PsiSubstitutor getSuperClassSubstitutorInner(PsiClass base,
@@ -1216,10 +1212,20 @@ public class TypeConversionUtil {
   public static boolean isPrimitiveWrapper(String typeName) {
     return PRIMITIVE_WRAPPER_TYPES.contains(typeName);
   }
+  @Contract("null -> false")
+  public static boolean isAssignableFromPrimitiveWrapper(final PsiType type) {
+    if (type == null) return false;
+    return isPrimitiveWrapper(type) ||
+           type.equalsToText(CommonClassNames.JAVA_LANG_OBJECT) ||
+           type.equalsToText(CommonClassNames.JAVA_LANG_NUMBER);
+  }
+
+  @Contract("null -> false")
   public static boolean isPrimitiveWrapper(final PsiType type) {
     return type != null && isPrimitiveWrapper(type.getCanonicalText());
   }
 
+  @Contract("null -> false")
   public static boolean isComposite(final PsiType type) {
     return type instanceof PsiDisjunctionType || type instanceof PsiIntersectionType;
   }
@@ -1228,7 +1234,7 @@ public class TypeConversionUtil {
     return typeParameterErasure(typeParameter, PsiSubstitutor.EMPTY);
   }
 
-  private static PsiType typeParameterErasure(@NotNull PsiTypeParameter typeParameter, final PsiSubstitutor beforeSubstitutor) {
+  private static PsiType typeParameterErasure(@NotNull PsiTypeParameter typeParameter, @NotNull PsiSubstitutor beforeSubstitutor) {
     final PsiClassType[] extendsList = typeParameter.getExtendsList().getReferencedTypes();
     if (extendsList.length > 0) {
       final PsiClass psiClass = extendsList[0].resolve();
@@ -1270,11 +1276,13 @@ public class TypeConversionUtil {
     return PsiType.getJavaLangObject(typeParameter.getManager(), typeParameter.getResolveScope());
   }
 
+  @Contract("null -> null")
   public static PsiType erasure(@Nullable PsiType type) {
     return erasure(type, PsiSubstitutor.EMPTY);
   }
 
-  public static PsiType erasure(@Nullable final PsiType type, final PsiSubstitutor beforeSubstitutor) {
+  @Contract("null, _ -> null")
+  public static PsiType erasure(@Nullable final PsiType type, @NotNull final PsiSubstitutor beforeSubstitutor) {
     if (type == null) return null;
     return type.accept(new PsiTypeVisitor<PsiType>() {
       @Override
@@ -1283,9 +1291,7 @@ public class TypeConversionUtil {
         if (aClass instanceof PsiTypeParameter) {
           return typeParameterErasure((PsiTypeParameter)aClass, beforeSubstitutor);
         }
-        else {
-          return classType.rawType();
-        }
+        return classType.rawType();
       }
 
       @Override
@@ -1450,6 +1456,16 @@ public class TypeConversionUtil {
     return null;
   }
 
+  // true if floating point literal consists of zeros only
+  public static boolean isFPZero(@NotNull final String text) {
+    for (int i = 0; i < text.length(); i++) {
+      final char c = text.charAt(i);
+      if (Character.isDigit(c) && c != '0') return false;
+      if (Character.toUpperCase(c) == 'E') break;
+    }
+    return true;
+  }
+
   private interface Caster {
     Object cast(Object operand);
   }
@@ -1463,41 +1479,41 @@ public class TypeConversionUtil {
         }
       }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Short.valueOf((short)((Number)operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Short.valueOf((short)((Number)operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Character((char) ((Number) operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Character((char) ((Number) operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Integer.valueOf(((Number)operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Integer.valueOf(((Number)operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Long.valueOf(((Number)operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Long.valueOf(((Number)operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Float(((Number) operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Float(((Number) operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Double(((Number) operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Double(((Number) operand).intValue());
       }
+    }
     }
     ,
     {
@@ -1508,41 +1524,41 @@ public class TypeConversionUtil {
         }
       }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Short.valueOf(((Short)operand).shortValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Short.valueOf(((Short)operand).shortValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Character((char) ((Short) operand).shortValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Character((char) ((Short) operand).shortValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Integer.valueOf(((Short)operand).shortValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Integer.valueOf(((Short)operand).shortValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Long.valueOf(((Short)operand).shortValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Long.valueOf(((Short)operand).shortValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Float(((Short) operand).shortValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Float(((Short) operand).shortValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Double(((Short) operand).shortValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Double(((Short) operand).shortValue());
       }
+    }
     }
     ,
     {
@@ -1553,41 +1569,41 @@ public class TypeConversionUtil {
         }
       }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Short.valueOf((short)((Character)operand).charValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Short.valueOf((short)((Character)operand).charValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Character(((Character) operand).charValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Character(((Character) operand).charValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Integer.valueOf(((Character)operand).charValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Integer.valueOf(((Character)operand).charValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Long.valueOf(((Character)operand).charValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Long.valueOf(((Character)operand).charValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Float(((Character) operand).charValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Float(((Character) operand).charValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Double(((Character) operand).charValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Double(((Character) operand).charValue());
       }
+    }
     }
     ,
     {
@@ -1598,41 +1614,41 @@ public class TypeConversionUtil {
         }
       }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Short.valueOf((short)((Integer)operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Short.valueOf((short)((Integer)operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Character((char) ((Integer) operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Character((char) ((Integer) operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Integer.valueOf(((Integer)operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Integer.valueOf(((Integer)operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Long.valueOf(((Integer)operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Long.valueOf(((Integer)operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Float(((Integer) operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Float(((Integer) operand).intValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Double(((Integer) operand).intValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Double(((Integer) operand).intValue());
       }
+    }
     }
     ,
     {
@@ -1643,41 +1659,41 @@ public class TypeConversionUtil {
         }
       }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Short.valueOf((short)((Long)operand).longValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Short.valueOf((short)((Long)operand).longValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Character((char) ((Long) operand).longValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Character((char) ((Long) operand).longValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Integer.valueOf((int)((Long)operand).longValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Integer.valueOf((int)((Long)operand).longValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Long.valueOf(((Long)operand).longValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Long.valueOf(((Long)operand).longValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Float(((Long) operand).longValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Float(((Long) operand).longValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Double(((Long) operand).longValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Double(((Long) operand).longValue());
       }
+    }
     }
     ,
     {
@@ -1688,41 +1704,41 @@ public class TypeConversionUtil {
         }
       }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Short.valueOf((short)((Float)operand).floatValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Short.valueOf((short)((Float)operand).floatValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Character((char) ((Float) operand).floatValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Character((char) ((Float) operand).floatValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Integer.valueOf((int)((Float)operand).floatValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Integer.valueOf((int)((Float)operand).floatValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Long.valueOf((long)((Float)operand).floatValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Long.valueOf((long)((Float)operand).floatValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Float(((Float) operand).floatValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Float(((Float) operand).floatValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Double(((Float) operand).floatValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Double(((Float) operand).floatValue());
       }
+    }
     }
     ,
     {
@@ -1733,41 +1749,41 @@ public class TypeConversionUtil {
         }
       }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Short.valueOf((short)((Double)operand).doubleValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Short.valueOf((short)((Double)operand).doubleValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Character((char) ((Double) operand).doubleValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Character((char) ((Double) operand).doubleValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Integer.valueOf((int)((Double)operand).doubleValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Integer.valueOf((int)((Double)operand).doubleValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return Long.valueOf((long)((Double)operand).doubleValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return Long.valueOf((long)((Double)operand).doubleValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Float(((Double) operand).doubleValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Float(((Double) operand).doubleValue());
       }
+    }
       , new Caster() {
-        @Override
-        public Object cast(Object operand) {
-          return new Double(((Double) operand).doubleValue());
-        }
+      @Override
+      public Object cast(Object operand) {
+        return new Double(((Double) operand).doubleValue());
       }
+    }
     }
   };
 

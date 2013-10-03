@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.StartMarkAction;
+import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
@@ -41,12 +42,12 @@ import com.intellij.testFramework.exceptionCases.AbstractExceptionCase;
 import com.intellij.util.Consumer;
 import com.intellij.util.FileComparisonFailure;
 import com.intellij.util.Function;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import junit.framework.*;
+import org.intellij.lang.annotations.RegExp;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -62,22 +63,24 @@ import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author peter
  */
 public abstract class UsefulTestCase extends TestCase {
+  public static final String IDEA_MARKER_CLASS = "com.intellij.openapi.components.impl.stores.IdeaProjectStoreImpl";
+  public static final String TEMP_DIR_MARKER = "unitTest_";
+
   protected static boolean OVERWRITE_TESTDATA = false;
 
   private static final String DEFAULT_SETTINGS_EXTERNALIZED;
-  private static final Random PRNG = new SecureRandom();
+  private static final Random RNG = new SecureRandom();
   private static final String ORIGINAL_TEMP_DIR = FileUtil.getTempDirectory();
-  public static final String IDEA_MARKER_CLASS = "com.intellij.openapi.components.impl.stores.IdeaProjectStoreImpl";
 
   protected final Disposable myTestRootDisposable = new Disposable() {
     @Override
-    public void dispose() {
-    }
+    public void dispose() { }
 
     @Override
     public String toString() {
@@ -85,6 +88,9 @@ public abstract class UsefulTestCase extends TestCase {
       return UsefulTestCase.this.getClass() + (StringUtil.isEmpty(testName) ? "" : ".test" + testName);
     }
   };
+
+  protected static String ourPathToKeep = null;
+
   private CodeStyleSettings myOldCodeStyleSettings;
   private String myTempDir;
 
@@ -113,12 +119,17 @@ public abstract class UsefulTestCase extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
+    PathManager.ensureConfigFolderExists();
+
     if (shouldContainTempFiles()) {
       String testName = getTestName(true);
       if (StringUtil.isEmptyOrSpaces(testName)) testName = "";
-      myTempDir = ORIGINAL_TEMP_DIR + "/unitTest_" + testName + "_"+ PRNG.nextInt(1000);
+      testName = new File(testName).getName(); // in case the test name contains file separators
+      myTempDir = FileUtil.toSystemDependentName(ORIGINAL_TEMP_DIR + "/" + TEMP_DIR_MARKER + testName + "_"+ RNG.nextInt(1000));
       FileUtil.resetCanonicalTempPathCache(myTempDir);
     }
+    //noinspection AssignmentToStaticFieldFromInstanceMethod
+    DocumentImpl.CHECK_DOCUMENT_CONSISTENCY = !isPerformanceTest();
   }
 
   @Override
@@ -130,7 +141,19 @@ public abstract class UsefulTestCase extends TestCase {
     finally {
       if (shouldContainTempFiles()) {
         FileUtil.resetCanonicalTempPathCache(ORIGINAL_TEMP_DIR);
-        FileUtil.delete(new File(myTempDir));
+        if (ourPathToKeep != null && FileUtil.isAncestor(myTempDir, ourPathToKeep, false)) {
+          File[] files = new File(myTempDir).listFiles();
+          if (files != null) {
+            for (File file : files) {
+              if (!FileUtil.pathsEqual(file.getPath(), ourPathToKeep)) {
+                FileUtil.delete(file);
+              }
+            }
+          }
+        }
+        else {
+          FileUtil.delete(new File(myTempDir));
+        }
       }
     }
 
@@ -169,6 +192,14 @@ public abstract class UsefulTestCase extends TestCase {
     if (isPerformanceTest() || ApplicationManager.getApplication() == null || ApplicationManager.getApplication() instanceof MockApplication) {
       return;
     }
+    CodeStyleSettings oldCodeStyleSettings = myOldCodeStyleSettings;
+    myOldCodeStyleSettings = null;
+
+    doCheckForSettingsDamage(oldCodeStyleSettings, getCurrentCodeStyleSettings());
+  }
+
+  public static void doCheckForSettingsDamage(@NotNull CodeStyleSettings oldCodeStyleSettings,
+                                              @NotNull CodeStyleSettings currentCodeStyleSettings) throws Exception {
     CompositeException result = new CompositeException();
     final CodeInsightSettings settings = CodeInsightSettings.getInstance();
     try {
@@ -184,18 +215,16 @@ public abstract class UsefulTestCase extends TestCase {
       result.add(error);
     }
 
-    CodeStyleSettings codeStyleSettings = getCurrentCodeStyleSettings();
-    codeStyleSettings.getIndentOptions(StdFileTypes.JAVA);
+    currentCodeStyleSettings.getIndentOptions(StdFileTypes.JAVA);
     try {
-      checkSettingsEqual(myOldCodeStyleSettings, codeStyleSettings, "Code style settings damaged");
+      checkSettingsEqual(oldCodeStyleSettings, currentCodeStyleSettings, "Code style settings damaged");
     }
     catch (AssertionError e) {
       result.add(e);
     }
     finally {
-      codeStyleSettings.clearCodeStyleSettings();
+      currentCodeStyleSettings.clearCodeStyleSettings();
     }
-    myOldCodeStyleSettings = null;
 
     try {
       InplaceRefactoring.checkCleared();
@@ -381,7 +410,7 @@ public abstract class UsefulTestCase extends TestCase {
   public static <T> void assertSameElements(Collection<? extends T> collection, Collection<T> expected) {
     assertSameElements(null, collection, expected);
   }
-  
+
   public static <T> void assertSameElements(String message, Collection<? extends T> collection, Collection<T> expected) {
     assertNotNull(collection);
     assertNotNull(expected);
@@ -390,11 +419,11 @@ public abstract class UsefulTestCase extends TestCase {
       Assert.assertEquals(message, new HashSet<T>(expected), new HashSet<T>(collection));
     }
   }
-  
+
   public <T> void assertContainsOrdered(Collection<? extends T> collection, T... expected) {
     assertContainsOrdered(collection, Arrays.asList(expected));
   }
-    
+
   public <T> void assertContainsOrdered(Collection<? extends T> collection, Collection<T> expected) {
     ArrayList<T> copy = new ArrayList<T>(collection);
     copy.retainAll(expected);
@@ -404,7 +433,7 @@ public abstract class UsefulTestCase extends TestCase {
   public <T> void assertContainsElements(Collection<? extends T> collection, T... expected) {
     assertContainsElements(collection, Arrays.asList(expected));
   }
-    
+
   public <T> void assertContainsElements(Collection<? extends T> collection, Collection<T> expected) {
     ArrayList<T> copy = new ArrayList<T>(collection);
     copy.retainAll(expected);
@@ -420,9 +449,9 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public <T> void assertDoesntContain(Collection<? extends T> collection, Collection<T> notExpected) {
-    ArrayList<T> copy = new ArrayList<T>(collection);
-    copy.retainAll(notExpected);
-    assertEmpty(copy);
+    ArrayList<T> expected = new ArrayList<T>(collection);
+    expected.removeAll(notExpected);
+    assertSameElements(collection, expected);
   }
 
   public static String toString(Collection<?> collection, String separator) {
@@ -520,7 +549,7 @@ public abstract class UsefulTestCase extends TestCase {
 
   public static <T> T assertOneElement(T[] ts) {
     Assert.assertNotNull(ts);
-    Assert.assertEquals(1, ts.length);
+    Assert.assertEquals(Arrays.asList(ts).toString(), 1, ts.length);
     return ts[0];
   }
 
@@ -828,7 +857,7 @@ public abstract class UsefulTestCase extends TestCase {
     return GraphicsEnvironment.isHeadless();
   }
 
-  protected static void refreshRecursively(@NotNull VirtualFile file) {
+  public static void refreshRecursively(@NotNull VirtualFile file) {
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
       public boolean visitFile(@NotNull VirtualFile file) {
@@ -837,5 +866,26 @@ public abstract class UsefulTestCase extends TestCase {
       }
     });
     file.refresh(false, true);
+  }
+
+  public static @NotNull Test filteredSuite(@RegExp String regexp, @NotNull Test test) {
+    final Pattern pattern = Pattern.compile(regexp);
+    final TestSuite testSuite = new TestSuite();
+    new Processor<Test>() {
+
+      @Override
+      public boolean process(Test test) {
+        if (test instanceof TestSuite) {
+          for (int i = 0, len = ((TestSuite)test).testCount(); i < len; i++) {
+            process(((TestSuite)test).testAt(i));
+          }
+        }
+        else if (pattern.matcher(test.toString()).find()) {
+          testSuite.addTest(test);
+        }
+        return false;
+      }
+    }.process(test);
+    return testSuite;
   }
 }

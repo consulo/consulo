@@ -49,6 +49,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
 
   private static final String VERSION = "1.0";
 
+  @NotNull
   protected final Project myProject;
 
   /** This field is used for serialization. Do not rename it or make access weaker */
@@ -63,14 +64,15 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
   private final List<ProfileChangeAdapter> myProfilesListener = ContainerUtil.createLockFreeCopyOnWriteList();
   @NonNls private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
 
-  public DefaultProjectProfileManager(final Project project, final ApplicationProfileManager applicationProfileManager,
-                                      final DependencyValidationManager holder) {
+  public DefaultProjectProfileManager(@NotNull final Project project,
+                                      @NotNull ApplicationProfileManager applicationProfileManager,
+                                      @NotNull DependencyValidationManager holder) {
     myProject = project;
     myHolder = holder;
     myApplicationProfileManager = applicationProfileManager;
-    LOG.assertTrue(myApplicationProfileManager != null);
   }
 
+  @NotNull
   public Project getProject() {
     return myProject;
   }
@@ -126,8 +128,8 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
   public synchronized void writeExternal(Element element) throws WriteExternalException {
 
     final List<String> sortedProfiles = new ArrayList<String>(myProfiles.keySet());
-    Element profiles = null;
     Collections.sort(sortedProfiles);
+    Element profiles = null;
     for (String profile : sortedProfiles) {
       final Profile projectProfile = myProfiles.get(profile);
       if (projectProfile != null) {
@@ -226,7 +228,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     return profile;
   }
 
-  public void addProfilesListener(final ProfileChangeAdapter profilesListener, Disposable parent) {
+  public void addProfilesListener(@NotNull final ProfileChangeAdapter profilesListener, @NotNull Disposable parent) {
     myProfilesListener.add(profilesListener);
     Disposer.register(parent, new Disposable() {
       @Override
@@ -236,7 +238,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     });
   }
 
-  public void removeProfilesListener(ProfileChangeAdapter profilesListener) {
+  public void removeProfilesListener(@NotNull ProfileChangeAdapter profilesListener) {
     myProfilesListener.remove(profilesListener);
   }
 
@@ -282,7 +284,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
       Element profiles = new Element("profiles");
       target.addContent(profiles);
 
-        for (Element element : elements) {
+      for (Element element : elements) {
         if (element.getName().equals("profile")) {
           element.detach();
           profiles.addContent(element);
@@ -298,4 +300,14 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     }
   }
 
+  protected void fireProfilesInitialized() {
+    for (ProfileChangeAdapter profileChangeAdapter : myProfilesListener) {
+      profileChangeAdapter.profilesInitialized();
+    }
+  }
+  protected void fireProfilesShutdown() {
+    for (ProfileChangeAdapter profileChangeAdapter : myProfilesListener) {
+      profileChangeAdapter.profilesShutdown();
+    }
+  }
 }

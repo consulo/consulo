@@ -15,7 +15,7 @@ public class PluginDescriptorTest extends TestCase {
     String path = PathManagerEx.getTestDataPath().replace(File.separatorChar, '/') + "/ide/plugins/pluginDescriptor";
     File file = new File(path + "/asp.jar");
     assertTrue(file + " not exist", file.exists());
-    IdeaPluginDescriptorImpl descriptor = PluginManager.loadDescriptorFromJar(file);
+    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file);
     assertNotNull(descriptor);
   }
 }

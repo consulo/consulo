@@ -16,37 +16,30 @@
 package com.intellij.xml.util;
 
 import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import com.intellij.codeInspection.htmlInspections.HtmlUnknownAttributeInspection;
-import com.intellij.codeInspection.htmlInspections.HtmlUnknownTagInspection;
 import com.intellij.codeInspection.htmlInspections.XmlEntitiesInspection;
 import com.intellij.ide.highlighter.HtmlFileType;
+import com.intellij.ide.highlighter.XHtmlFileType;
 import com.intellij.javaee.ExternalResourceManagerEx;
 import com.intellij.lang.Language;
 import com.intellij.lang.html.HTMLLanguage;
 import com.intellij.lang.xhtml.XHTMLLanguage;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.psi.*;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.html.HtmlTag;
 import com.intellij.psi.impl.source.html.HtmlDocumentImpl;
 import com.intellij.psi.impl.source.parsing.xml.HtmlBuilderDriver;
 import com.intellij.psi.impl.source.parsing.xml.XmlBuilder;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.xml.XmlAttributeImpl;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
-import com.intellij.psi.templateLanguages.TemplateLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.*;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.Html5SchemaProvider;
 import com.intellij.xml.XmlAttributeDescriptor;
@@ -99,7 +92,6 @@ public class HtmlUtil {
       , "multipart/alternative", "multipart/appledouble", "multipart/digest", "multipart/mixed", "multipart/parallel", "text/html"
       , "text/plain", "text/richtext", "text/tab-separated-values", "text/x-setext", "text/x-sgml", "video/mpeg"
       , "video/quicktime", "video/x-msvideo", "video/x-sgi-movie", "x-conference/x-cooltalk", "x-world/x-vrml"};
-  @NonNls public static final String LINK = "link";
 
   @NonNls public static final String MATH_ML_NAMESPACE = "http://www.w3.org/1998/Math/MathML";
   @NonNls public static final String SVG_NAMESPACE = "http://www.w3.org/2000/svg";
@@ -127,11 +119,12 @@ public class HtmlUtil {
     "body", "object", "applet", "ins", "del", "dd", "li", "button", "th", "td", "iframe", "comment", "nobr"
   };
 
-  // flow elements are block or inline, so they shuld not close <p> for example
-  @NonNls private static final String[] POSSIBLY_INLINE_TAGS = {"a", "abbr", "acronym", "applet", "b", "basefont", "bdo", "big", "br", "button",
-    "cite", "code", "del", "dfn", "em", "font", "i", "iframe", "img", "input", "ins",
-    "kbd", "label", "map", "object", "q", "s", "samp", "select", "small", "span", "strike",
-    "strong", "sub", "sup", "textarea", "tt", "u", "var"};
+  // flow elements are block or inline, so they should not close <p> for example
+  @NonNls private static final String[] POSSIBLY_INLINE_TAGS =
+    {"a", "abbr", "acronym", "applet", "b", "basefont", "bdo", "big", "br", "button",
+      "cite", "code", "del", "dfn", "em", "font", "i", "iframe", "img", "input", "ins",
+      "kbd", "label", "map", "object", "q", "s", "samp", "select", "small", "span", "strike",
+      "strong", "sub", "sup", "textarea", "tt", "u", "var"};
 
   private static final Set<String> BLOCK_TAGS_MAP = new THashSet<String>();
 
@@ -146,7 +139,8 @@ public class HtmlUtil {
 
   @NonNls private static final String[] HTML5_TAGS = {
     "article", "aside", "audio", "canvas", "command", "datalist", "details", "embed", "figcaption", "figure", "footer", "header", "hgroup",
-    "keygen", "mark", "meter", "nav", "output", "progress", "rp", "rt", "ruby", "section", "source", "summary", "time", "video", "wbr"
+    "keygen", "mark", "meter", "nav", "output", "progress", "rp", "rt", "ruby", "section", "source", "summary", "time", "video", "wbr",
+    "main"
   };
   private static final Set<String> HTML5_TAGS_SET = new THashSet<String>();
 
@@ -230,14 +224,7 @@ public class HtmlUtil {
 
   @Nullable
   public static XmlDocument getRealXmlDocument(@Nullable XmlDocument doc) {
-    if (doc == null) return null;
-    final PsiFile containingFile = doc.getContainingFile();
-
-    final PsiFile templateFile = TemplateLanguageUtil.getTemplateFile(containingFile);
-    if (templateFile instanceof XmlFile) {
-      return ((XmlFile)templateFile).getDocument();
-    }
-    return doc;
+    return HtmlPsiUtil.getRealXmlDocument(doc);
   }
 
   public static String[] getHtmlTagNames() {
@@ -245,7 +232,7 @@ public class HtmlUtil {
   }
 
   public static XmlAttributeDescriptor[] getCustomAttributeDescriptors(XmlElement context) {
-    String entitiesString = getEntitiesString(context, XmlEntitiesInspection.UNKNOWN_ATTRIBUTE);
+    String entitiesString = getEntitiesString(context, XmlEntitiesInspection.ATTRIBUTE_SHORT_NAME);
     if (entitiesString == null) return XmlAttributeDescriptor.EMPTY;
 
     StringTokenizer tokenizer = new StringTokenizer(entitiesString, ",");
@@ -257,10 +244,12 @@ public class HtmlUtil {
       if (customName.length() == 0) continue;
 
       descriptors[index++] = new XmlAttributeDescriptorImpl() {
+        @Override
         public String getName(PsiElement context) {
           return customName;
         }
 
+        @Override
         public String getName() {
           return customName;
         }
@@ -271,7 +260,7 @@ public class HtmlUtil {
   }
 
   public static XmlElementDescriptor[] getCustomTagDescriptors(XmlElement context) {
-    String entitiesString = getEntitiesString(context, XmlEntitiesInspection.UNKNOWN_TAG);
+    String entitiesString = getEntitiesString(context, XmlEntitiesInspection.TAG_SHORT_NAME);
     if (entitiesString == null) return XmlElementDescriptor.EMPTY_ARRAY;
 
     StringTokenizer tokenizer = new StringTokenizer(entitiesString, ",");
@@ -283,14 +272,17 @@ public class HtmlUtil {
       if (tagName.length() == 0) continue;
 
       descriptors[index++] = new XmlElementDescriptorImpl(context instanceof XmlTag ? (XmlTag)context : null) {
+        @Override
         public String getName(PsiElement context) {
           return tagName;
         }
 
+        @Override
         public String getDefaultName() {
           return tagName;
         }
 
+        @Override
         public boolean allowElementsFromNamespace(final String namespace, final XmlTag context) {
           return true;
         }
@@ -301,38 +293,21 @@ public class HtmlUtil {
   }
 
   @Nullable
-  public static String getEntitiesString(XmlElement context, int type) {
+  public static String getEntitiesString(XmlElement context, String inspectionName) {
     if (context == null) return null;
     PsiFile containingFile = context.getContainingFile().getOriginalFile();
 
     final InspectionProfile profile = InspectionProjectProfileManager.getInstance(context.getProject()).getInspectionProfile();
-
-    switch (type) {
-      case XmlEntitiesInspection.UNKNOWN_TAG:
-        HtmlUnknownTagInspection unknownTagInspection = (HtmlUnknownTagInspection)profile.getUnwrappedTool(HtmlUnknownTagInspection.TAG_SHORT_NAME,
-                                                                                                           containingFile);
-        if (unknownTagInspection != null) {
-          return unknownTagInspection.getAdditionalEntries();
-        }
-        break;
-      case XmlEntitiesInspection.UNKNOWN_ATTRIBUTE:
-        LocalInspectionToolWrapper wrapper1 =
-          (LocalInspectionToolWrapper)profile.getInspectionTool(HtmlUnknownAttributeInspection.ATTRIBUTE_SHORT_NAME,
-                                                                containingFile);
-        HtmlUnknownAttributeInspection unknownAttributeInspection =
-          wrapper1 != null ? (HtmlUnknownAttributeInspection)wrapper1.getTool() : null;
-        if (unknownAttributeInspection != null) {
-          return unknownAttributeInspection.getAdditionalEntries();
-        }
-        break;
+    XmlEntitiesInspection inspection = (XmlEntitiesInspection)profile.getUnwrappedTool(inspectionName, containingFile);
+    if (inspection != null) {
+      return inspection.getAdditionalEntries();
     }
-
     return null;
   }
 
   public static XmlAttributeDescriptor[] appendHtmlSpecificAttributeCompletions(final XmlTag declarationTag,
                                                                                 XmlAttributeDescriptor[] descriptors,
-                                                                                final XmlAttributeImpl context) {
+                                                                                final XmlAttribute context) {
     if (declarationTag instanceof HtmlTag) {
       descriptors = ArrayUtil.mergeArrays(
         descriptors,
@@ -341,17 +316,27 @@ public class HtmlUtil {
       return descriptors;
     }
 
-    if (declarationTag.getPrefixByNamespace(XmlUtil.JSF_HTML_URI) != null &&
-        declarationTag.getNSDescriptor(XmlUtil.XHTML_URI, true) != null &&
+
+    boolean isJsfHtmlNamespace = false;
+    for (String jsfHtmlUri : XmlUtil.JSF_HTML_URIS) {
+      if (declarationTag.getPrefixByNamespace(jsfHtmlUri) != null) {
+        isJsfHtmlNamespace = true;
+        break;
+      }
+    }
+
+    if (isJsfHtmlNamespace && declarationTag.getNSDescriptor(XmlUtil.XHTML_URI, true) != null &&
         !XmlUtil.JSP_URI.equals(declarationTag.getNamespace())) {
 
       descriptors = ArrayUtil.append(
         descriptors,
         new XmlAttributeDescriptorImpl() {
+          @Override
           public String getName(PsiElement context) {
             return JSFC;
           }
 
+          @Override
           public String getName() {
             return JSFC;
           }
@@ -390,7 +375,7 @@ public class HtmlUtil {
 
     if (doctype == null) {
       LOG.debug("DOCTYPE for " + htmlFileFullName + " is null");
-      return Html5SchemaProvider.HTML5_SCHEMA_LOCATION
+      return Html5SchemaProvider.getHtml5SchemaLocation()
         .equals(ExternalResourceManagerEx.getInstanceEx().getDefaultHtmlDoctype(doc.getProject()));
     }
 
@@ -430,81 +415,6 @@ public class HtmlUtil {
     return attributeName.startsWith(HTML5_DATA_ATTR_PREFIX);
   }
 
-  public static void processLinks(@NotNull final XmlFile xhtmlFile,
-                                  @NotNull Processor<XmlTag> tagProcessor) {
-    final XmlDocument doc = getRealXmlDocument(xhtmlFile.getDocument());
-    if (doc == null) return;
-
-    final XmlTag rootTag = doc.getRootTag();
-    if (rootTag == null) return;
-
-    if (LINK.equalsIgnoreCase(rootTag.getName())) {
-      tagProcessor.process(rootTag);
-    }
-    else {
-      findLinkStylesheets(rootTag, tagProcessor);
-    }
-  }
-
-  public static void findLinkStylesheets(@NotNull final XmlTag tag,
-                                         @NotNull Processor<XmlTag> tagProcessor) {
-    processInjectedContent(tag, tagProcessor);
-
-    for (XmlTag subTag : tag.getSubTags()) {
-      findLinkStylesheets(subTag, tagProcessor);
-    }
-
-    if (LINK.equalsIgnoreCase(tag.getName())) {
-      tagProcessor.process(tag);
-    }
-  }
-
-  public static void processInjectedContent(final XmlTag element,
-                                            @NotNull final Processor<XmlTag> tagProcessor) {
-    final PsiLanguageInjectionHost.InjectedPsiVisitor injectedPsiVisitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-      public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places) {
-        if (injectedPsi instanceof XmlFile) {
-          final XmlDocument injectedDocument = ((XmlFile)injectedPsi).getDocument();
-          if (injectedDocument != null) {
-            final XmlTag rootTag = injectedDocument.getRootTag();
-            if (rootTag != null) {
-              for (PsiElement element = rootTag; element != null; element = element.getNextSibling()) {
-                if (element instanceof XmlTag) {
-                  final XmlTag tag = (XmlTag)element;
-                  String tagName = tag.getLocalName();
-                  if (element instanceof HtmlTag || tag.getNamespacePrefix().length() > 0) tagName = tagName.toLowerCase();
-                  if (LINK.equalsIgnoreCase(tagName)) {
-                    tagProcessor.process((XmlTag)element);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    };
-
-    final XmlText[] texts = PsiTreeUtil.getChildrenOfType(element, XmlText.class);
-    if (texts != null && texts.length > 0) {
-      for (final XmlText text : texts) {
-        for (PsiElement _element : text.getChildren()) {
-          if (_element instanceof PsiLanguageInjectionHost) {
-            InjectedLanguageUtil.enumerate(_element, injectedPsiVisitor);
-          }
-        }
-      }
-    }
-
-    final XmlComment[] comments = PsiTreeUtil.getChildrenOfType(element, XmlComment.class);
-    if (comments != null && comments.length > 0) {
-      for (final XmlComment comment : comments) {
-        if (comment instanceof PsiLanguageInjectionHost) {
-          InjectedLanguageUtil.enumerate(comment, injectedPsiVisitor);
-        }
-      }
-    }
-  }
-
   private static class TerminateException extends RuntimeException {
     private static final TerminateException INSTANCE = new TerminateException();
   }
@@ -516,12 +426,14 @@ public class HtmlUtil {
         @NonNls final Set<String> inTag = new THashSet<String>();
         boolean metHttpEquiv = false;
 
+        @Override
         public void doctype(@Nullable final CharSequence publicId,
                             @Nullable final CharSequence systemId,
                             final int startOffset,
                             final int endOffset) {
         }
 
+        @Override
         public ProcessingOrder startTag(final CharSequence localName, final String namespace, final int startoffset, final int endoffset,
                                         final int headerEndOffset) {
           @NonNls String name = localName.toString().toLowerCase();
@@ -534,6 +446,7 @@ public class HtmlUtil {
           throw TerminateException.INSTANCE;
         }
 
+        @Override
         public void endTag(final CharSequence localName, final String namespace, final int startoffset, final int endoffset) {
           @NonNls final String name = localName.toString().toLowerCase();
           if ("meta".equals(name) && metHttpEquiv && contentAttributeValue != null) {
@@ -556,6 +469,7 @@ public class HtmlUtil {
 
         private String contentAttributeValue;
 
+        @Override
         public void attribute(final CharSequence localName, final CharSequence v, final int startoffset, final int endoffset) {
           @NonNls final String name = localName.toString().toLowerCase();
           if (inTag.contains("meta")) {
@@ -569,20 +483,23 @@ public class HtmlUtil {
           }
         }
 
+        @Override
         public void textElement(final CharSequence display, final CharSequence physical, final int startoffset, final int endoffset) {
         }
 
+        @Override
         public void entityRef(final CharSequence ref, final int startOffset, final int endOffset) {
         }
 
+        @Override
         public void error(String message, int startOffset, int endOffset) {
         }
       });
     }
-    catch (TerminateException e) {
+    catch (TerminateException ignored) {
       //ignore
     }
-    catch (Exception e) {
+    catch (Exception ignored) {
       // some weird things can happen, like unbalanaced tree
     }
 
@@ -605,14 +522,14 @@ public class HtmlUtil {
            url.startsWith("ftp://");
   }
 
-  public static boolean isHtmlFile(PsiElement element) {
+  public static boolean isHtmlFile(@NotNull PsiElement element) {
     Language language = element.getLanguage();
     return language == HTMLLanguage.INSTANCE || language == XHTMLLanguage.INSTANCE;
   }
 
   public static boolean isHtmlFile(@NotNull VirtualFile file) {
     FileType fileType = file.getFileType();
-    return fileType == StdFileTypes.HTML || fileType == StdFileTypes.XHTML;
+    return fileType == HtmlFileType.INSTANCE || fileType == XHtmlFileType.INSTANCE;
   }
 
   public static boolean isHtmlTagContainingFile(PsiElement element) {
@@ -642,21 +559,4 @@ public class HtmlUtil {
     }
     return false;
   }
-
-  public static boolean isHtmlTagContainingFile(final Editor editor, final PsiFile file) {
-    if (editor == null || file == null || !(file instanceof XmlFile)) {
-      return false;
-    }
-    final int offset = editor.getCaretModel().getOffset();
-    final PsiElement element = file.findElementAt(offset);
-    return isHtmlTagContainingFile(element);
-  }
-
-  public static boolean isPureHtmlFile(@NotNull PsiFile file) {
-    FileType fileTypeByName = FileTypeManager.getInstance().getFileTypeByFileName(file.getName());
-    return file.getLanguage() == HTMLLanguage.INSTANCE &&
-        fileTypeByName == HtmlFileType.INSTANCE &&
-        !(file.getViewProvider() instanceof MultiplePsiFilesPerDocumentFileViewProvider);
-  }
-
 }

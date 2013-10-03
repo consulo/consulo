@@ -15,9 +15,9 @@
  */
 package com.intellij.psi;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ClassExtension;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,6 +60,7 @@ public class ElementManipulators extends ClassExtension<ElementManipulator> {
     return manipulator == null ? TextRange.from(0, element.getTextLength()) : manipulator.getRangeInElement(element);
   }
 
+  @NotNull
   public static String getValueText(final PsiElement element) {
     final TextRange valueTextRange = getValueTextRange(element);
     if (valueTextRange.isEmpty()) return "";

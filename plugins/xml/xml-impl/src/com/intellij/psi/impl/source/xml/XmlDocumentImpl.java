@@ -195,7 +195,7 @@ public class XmlDocumentImpl extends XmlElementImpl implements XmlDocument {
     }
     XmlFile descriptorFile = defaultNSDescriptorInner.getDescriptorFile();
     if (descriptorFile == null) {
-        return false;
+      return false;
     }
     @NonNls String otherName = XmlUtil.getContainingFile(this).getName() + ".dtd";
     return descriptorFile.getName().equals(otherName);
@@ -218,7 +218,7 @@ public class XmlDocumentImpl extends XmlElementImpl implements XmlDocument {
       if (nsDescriptor == null) {
         String htmlns = ExternalResourceManagerEx.getInstanceEx().getDefaultHtmlDoctype(getProject());
         if (htmlns.length() == 0) {
-          htmlns = Html5SchemaProvider.HTML5_SCHEMA_LOCATION;
+          htmlns = Html5SchemaProvider.getHtml5SchemaLocation();
         }
         nsDescriptor = getDefaultNSDescriptor(htmlns, false);
       }
@@ -227,7 +227,7 @@ public class XmlDocumentImpl extends XmlElementImpl implements XmlDocument {
     else if (XmlUtil.XHTML_URI.equals(namespace)) {
       String xhtmlNamespace = XmlUtil.getDefaultXhtmlNamespace(getProject());
       if (xhtmlNamespace == null || xhtmlNamespace.length() == 0) {
-        xhtmlNamespace = Html5SchemaProvider.XHTML5_SCHEMA_LOCATION;
+        xhtmlNamespace = Html5SchemaProvider.getXhtml5SchemaLocation();
       }
       return getDefaultNSDescriptor(xhtmlNamespace, false);
     }
@@ -282,7 +282,7 @@ public class XmlDocumentImpl extends XmlElementImpl implements XmlDocument {
 
     return null;
   }
-  
+
   @NotNull
   private static String getFilePathForLogging(@Nullable PsiFile file) {
     if (file == null) {
@@ -300,7 +300,7 @@ public class XmlDocumentImpl extends XmlElementImpl implements XmlDocument {
 
     final String dtdUri = XmlUtil.getDtdUri(doctype);
     LOG.debug("DTD url for doctype " + doctype.getText() + " in file " + filePath + " is " + dtdUri);
-    
+
     if (dtdUri != null && dtdUri.length() > 0){
       XmlFile xmlFile = XmlUtil.findNamespace(containingFile, dtdUri);
       if (xmlFile == null) {
@@ -308,9 +308,9 @@ public class XmlDocumentImpl extends XmlElementImpl implements XmlDocument {
         xmlFile = XmlNamespaceIndex.guessDtd(dtdUri, containingFile);
       }
       final String schemaFilePath = getFilePathForLogging(xmlFile);
-      
+
       LOG.debug("Schema file for " + filePath + " is " + schemaFilePath);
-      
+
       XmlNSDescriptor descriptorFromDtd = getNSDescriptorFromMetaData(xmlFile == null ? null : xmlFile.getDocument(), forHtml);
 
       LOG.debug("Descriptor from meta data for schema file " +

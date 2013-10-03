@@ -22,9 +22,13 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.CommonBundle;
 import com.intellij.analysis.AnalysisScope;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.GlobalInspectionContext;
+import com.intellij.codeInspection.GlobalJavaInspectionContext;
+import com.intellij.codeInspection.InspectionManager;
+import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.deadCode.UnusedDeclarationInspection;
 import com.intellij.codeInspection.reference.*;
+import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.lang.StdLanguages;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -67,8 +71,8 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
   public void enqueueClassUsagesProcessor(RefClass refClass, UsagesProcessor p) {
     if (myClassUsagesRequests == null) myClassUsagesRequests = new THashMap<SmartPsiElementPointer, List<UsagesProcessor>>();
     enqueueRequestImpl(refClass, myClassUsagesRequests, p);
-  }
 
+  }
   @Override
   public void enqueueDerivedClassesProcessor(RefClass refClass, DerivedClassesProcessor p) {
     if (myDerivedClassesRequests == null) myDerivedClassesRequests = new THashMap<SmartPsiElementPointer, List<DerivedClassesProcessor>>();
@@ -100,7 +104,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
   }
 
   @SuppressWarnings({"UseOfSystemOutOrSystemErr"})
-  public static boolean isInspectionsEnabled(final boolean online, Project project) {
+  public static boolean isInspectionsEnabled(final boolean online, @NotNull Project project) {
     final Module[] modules = ModuleManager.getInstance(project).getModules();
     if (online) {
       if (modules.length == 0) {
@@ -166,7 +170,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
     return false;
   }
 
-  private static <T extends Processor> void enqueueRequestImpl(RefElement refElement, Map<SmartPsiElementPointer, List<T>> requestMap, T processor) {
+  private static <T extends Processor> void enqueueRequestImpl(RefElement refElement, Map <SmartPsiElementPointer, List<T>> requestMap, T processor) {
     List<T> requests = requestMap.get(refElement.getPointer());
     if (requests == null) {
       requests = new ArrayList<T>();
@@ -216,7 +220,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
       for (SmartPsiElementPointer sortedID : sortedIDs) {
         final PsiClass psiClass = (PsiClass)dereferenceInReadAction(sortedID);
         if (psiClass == null) continue;
-        context.incrementJobDoneAmount(((GlobalInspectionContextImpl)context).FIND_EXTERNAL_USAGES, ApplicationManager.getApplication().runReadAction(
+        context.incrementJobDoneAmount(context.getStdJobDescriptors().FIND_EXTERNAL_USAGES, ApplicationManager.getApplication().runReadAction(
           new Computable<String>() {
             @Override
             public String compute() {
@@ -241,7 +245,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
         if (psiMethod == null) continue;
         final RefMethod refMethod = (RefMethod)refManager.getReference(psiMethod);
 
-        context.incrementJobDoneAmount(((GlobalInspectionContextImpl)context).FIND_EXTERNAL_USAGES, refManager.getQualifiedName(refMethod));
+        context.incrementJobDoneAmount(context.getStdJobDescriptors().FIND_EXTERNAL_USAGES, refManager.getQualifiedName(refMethod));
 
         final List<DerivedMethodsProcessor> processors = myDerivedMethodsRequests.get(sortedID);
         LOG.assertTrue(processors != null, psiMethod.getClass().getName());
@@ -260,7 +264,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
         final List<UsagesProcessor> processors = myFieldUsagesRequests.get(sortedID);
 
         LOG.assertTrue(processors != null, psiField.getClass().getName());
-        context.incrementJobDoneAmount(((GlobalInspectionContextImpl)context).FIND_EXTERNAL_USAGES, refManager.getQualifiedName(refManager.getReference(psiField)));
+        context.incrementJobDoneAmount(context.getStdJobDescriptors().FIND_EXTERNAL_USAGES, refManager.getQualifiedName(refManager.getReference(psiField)));
 
         ReferencesSearch.search(psiField, searchScope, false)
           .forEach(new PsiReferenceProcessorAdapter(createReferenceProcessor(processors, context)));
@@ -277,7 +281,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
         final List<UsagesProcessor> processors = myClassUsagesRequests.get(sortedID);
 
         LOG.assertTrue(processors != null, psiClass.getClass().getName());
-        context.incrementJobDoneAmount(((GlobalInspectionContextImpl)context).FIND_EXTERNAL_USAGES, ApplicationManager.getApplication().runReadAction(
+        context.incrementJobDoneAmount(context.getStdJobDescriptors().FIND_EXTERNAL_USAGES, ApplicationManager.getApplication().runReadAction(
           new Computable<String>() {
             @Override
             public String compute() {
@@ -301,7 +305,7 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
         final List<UsagesProcessor> processors = myMethodUsagesRequests.get(sortedID);
 
         LOG.assertTrue(processors != null, psiMethod.getClass().getName());
-        context.incrementJobDoneAmount(((GlobalInspectionContextImpl)context).FIND_EXTERNAL_USAGES, refManager.getQualifiedName(refManager.getReference(psiMethod)));
+        context.incrementJobDoneAmount(context.getStdJobDescriptors().FIND_EXTERNAL_USAGES, refManager.getQualifiedName(refManager.getReference(psiMethod)));
 
         MethodReferencesSearch.search(psiMethod, searchScope, true)
           .forEach(new PsiReferenceProcessorAdapter(createReferenceProcessor(processors, context)));
@@ -412,12 +416,14 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
   }
 
   @Override
-  public void performPreRunActivities(final List<Tools> globalTools, final List<Tools> localTools,
-                                      final GlobalInspectionContext context) {
+  public void performPreRunActivities(@NotNull final List<Tools> globalTools,
+                                      @NotNull final List<Tools> localTools,
+                                      @NotNull final GlobalInspectionContext context) {
     getEntryPointsManager(context.getRefManager()).resolveEntryPoints(context.getRefManager());
+    // UnusedDeclarationInspection should run first
     for (int i = 0; i < globalTools.size(); i++) {
-      InspectionProfileEntry tool = globalTools.get(i).getTool();
-      if (UnusedDeclarationInspection.SHORT_NAME.equals(tool.getShortName())) {
+      InspectionToolWrapper toolWrapper = globalTools.get(i).getTool();
+      if (UnusedDeclarationInspection.SHORT_NAME.equals(toolWrapper.getShortName())) {
         Collections.swap(globalTools, i, 0);
         break;
       }
@@ -427,17 +433,22 @@ public class GlobalJavaInspectionContextImpl extends GlobalJavaInspectionContext
 
 
   @Override
-  public void performPostRunActivities(List<InspectionProfileEntry> needRepeatSearchRequest, final GlobalInspectionContext context) {
-    JobDescriptor progress = ((GlobalInspectionContextImpl)context).FIND_EXTERNAL_USAGES;
+  public void performPostRunActivities(@NotNull List<InspectionToolWrapper> needRepeatSearchRequest, @NotNull final GlobalInspectionContext context) {
+    JobDescriptor progress = context.getStdJobDescriptors().FIND_EXTERNAL_USAGES;
     progress.setTotalAmount(getRequestCount());
 
     do {
       processSearchRequests(context);
-      InspectionProfileEntry[] requestors = needRepeatSearchRequest.toArray(new InspectionProfileEntry[needRepeatSearchRequest.size()]);
-      for (InspectionProfileEntry requestor : requestors) {
-        if (requestor instanceof InspectionTool &&
-            !((InspectionTool)requestor).queryExternalUsagesRequests(InspectionManager.getInstance(context.getProject()))) {
-          needRepeatSearchRequest.remove(requestor);
+      InspectionToolWrapper[] requestors = needRepeatSearchRequest.toArray(new InspectionToolWrapper[needRepeatSearchRequest.size()]);
+      InspectionManager inspectionManager = InspectionManager.getInstance(context.getProject());
+      for (InspectionToolWrapper toolWrapper : requestors) {
+        boolean result = false;
+        if (toolWrapper instanceof GlobalInspectionToolWrapper) {
+          InspectionToolPresentation presentation = ((GlobalInspectionContextImpl)context).getPresentation(toolWrapper);
+          result = ((GlobalInspectionToolWrapper)toolWrapper).getTool().queryExternalUsagesRequests(inspectionManager, context, presentation);
+        }
+        if (!result) {
+          needRepeatSearchRequest.remove(toolWrapper);
         }
       }
       int oldSearchRequestCount = progress.getTotalAmount();

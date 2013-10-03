@@ -18,7 +18,6 @@ package com.intellij.psi.impl.source.text;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -76,35 +75,25 @@ public class BlockSupportImpl extends BlockSupport {
   @Override
   @NotNull
   public DiffLog reparseRange(@NotNull final PsiFile file,
-                              final int startOffset,
-                              final int endOffset,
-                              final int lengthShift,
+                              TextRange changedPsiRange,
                               @NotNull final CharSequence newFileText,
                               @NotNull final ProgressIndicator indicator) {
-    return reparseRangeInternal(file, startOffset > 0 ? startOffset - 1 : 0, endOffset, lengthShift, newFileText, indicator);
-  }
-
-  @NotNull
-  private static DiffLog reparseRangeInternal(@NotNull PsiFile file,
-                                              int startOffset,
-                                              int endOffset,
-                                              int lengthShift,
-                                              @NotNull CharSequence newFileText,
-                                              @NotNull ProgressIndicator indicator) {
     final PsiFileImpl fileImpl = (PsiFileImpl)file;
     Project project = fileImpl.getProject();
     final FileElement treeFileElement = fileImpl.getTreeElement();
     final CharTable charTable = treeFileElement.getCharTable();
 
-    final int textLength = treeFileElement.getTextLength() + lengthShift;
+
+    final int textLength = newFileText.length();
+    int lengthShift = textLength - treeFileElement.getTextLength();
 
     if (treeFileElement.getElementType() instanceof ITemplateDataElementType || isTooDeep(file)) {
       // unable to perform incremental reparse for template data in JSP, or in exceptionally deep trees
       return makeFullParse(treeFileElement, newFileText, textLength, fileImpl, indicator);
     }
 
-    final ASTNode leafAtStart = treeFileElement.findLeafElementAt(startOffset);
-    final ASTNode leafAtEnd = treeFileElement.findLeafElementAt(endOffset);
+    final ASTNode leafAtStart = treeFileElement.findLeafElementAt(Math.max(0, changedPsiRange.getStartOffset() - 1));
+    final ASTNode leafAtEnd = treeFileElement.findLeafElementAt(changedPsiRange.getEndOffset());
     ASTNode node = leafAtStart != null && leafAtEnd != null ? TreeUtil.findCommonParent(leafAtStart, leafAtEnd) : treeFileElement;
     Language baseLanguage = file.getViewProvider().getBaseLanguage();
 
@@ -129,8 +118,8 @@ public class BlockSupportImpl extends BlockSupport {
 
               if (holder.getTextLength() != newTextStr.length()) {
                 String details = ApplicationManager.getApplication().isInternal()
-                           ? "text=" + newTextStr + "; treeText=" + holder.getText() + ";"
-                           : "";
+                                 ? "text=" + newTextStr + "; treeText=" + holder.getText() + ";"
+                                 : "";
                 LOG.error("Inconsistent reparse: " + details + " type=" + elementType);
               }
 
@@ -195,7 +184,7 @@ public class BlockSupportImpl extends BlockSupport {
 
       final FileElement newFileElement = (FileElement)newFile.getNode();
       final FileElement oldFileElement = (FileElement)fileImpl.getNode();
-                                                            
+
       assert oldFileElement != null && newFileElement != null;
       DiffLog diffLog = mergeTrees(fileImpl, oldFileElement, newFileElement, indicator);
 
@@ -249,7 +238,6 @@ public class BlockSupportImpl extends BlockSupport {
 
     try {
       newRoot.putUserData(TREE_TO_BE_REPARSED, oldRoot);
-      newRoot.putUserData(LanguageVersion.KEY, fileImpl.getLanguageVersion());
       if (isReplaceWholeNode(fileImpl, newRoot)) {
         DiffLog treeChangeEvent = replaceElementWithEvents((CompositeElement)oldRoot, (CompositeElement)newRoot);
         fileImpl.putUserData(TREE_DEPTH_LIMIT_EXCEEDED, Boolean.TRUE);
@@ -324,8 +312,8 @@ public class BlockSupportImpl extends BlockSupport {
     event.setFile(scope.getContainingFile());
     event.setOffset(scope.getTextRange().getStartOffset());
     event.setOldLength(scope.getTextLength());
-      // the "generic" event is being sent on every PSI change. It does not carry any specific info except the fact that "something has changed"
-    event.setGeneric(isGenericChange);
+    // the "generic" event is being sent on every PSI change. It does not carry any specific info except the fact that "something has changed"
+    event.setGenericChange(isGenericChange);
     manager.beforeChildrenChange(event);
   }
 
@@ -342,7 +330,7 @@ public class BlockSupportImpl extends BlockSupport {
     event.setFile(scope);
     event.setOffset(0);
     event.setOldLength(oldLength);
-    event.setGeneric(isGenericChange);
+    event.setGenericChange(isGenericChange);
     manager.childrenChanged(event);
   }
 }

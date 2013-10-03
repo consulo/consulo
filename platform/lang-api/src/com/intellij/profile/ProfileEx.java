@@ -16,6 +16,7 @@
 package com.intellij.profile;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
@@ -27,21 +28,22 @@ import org.jetbrains.annotations.NotNull;
  * User: anna
  * Date: 01-Dec-2005
  */
-public class ProfileEx implements Profile {
+public abstract class ProfileEx implements Profile {
+  // public for JDOMExternalizable
+  @NotNull
   public String myName;
   private static final Logger LOG = Logger.getInstance("com.intellij.profile.ProfileEx");
   public boolean myLocal = true;
   protected ProfileManager myProfileManager;
+  @NonNls public static final String SCOPE = "scope";
+  public static final String NAME = "name";
 
   public ProfileEx(@NotNull String name) {
-    myName = name;
-  }
-
-  public ProfileEx(@NotNull String name, final Element element) {
-    this(name);
+    setName(name);
   }
 
   @Override
+  @NotNull
   public String getName() {
     return myName;
   }
@@ -72,7 +74,7 @@ public class ProfileEx implements Profile {
   }
 
   @Override
-  public void setName(String name) {
+  public void setName(@NotNull String name) {
     myName = name;
   }
 
@@ -97,6 +99,8 @@ public class ProfileEx implements Profile {
     DefaultJDOMExternalizer.writeExternal(this, element);
   }
 
+  public void profileChanged() {}
+
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (!(o instanceof ProfileEx)) return false;
@@ -119,4 +123,6 @@ public class ProfileEx implements Profile {
     }
     return 0;
   }
+
+  public void convert(@NotNull Element element, @NotNull Project project) {}
 }

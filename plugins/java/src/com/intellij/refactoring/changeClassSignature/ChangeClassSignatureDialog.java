@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.changeClassSignature;
 
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -116,7 +117,7 @@ public class ChangeClassSignatureDialog extends RefactoringDialog {
   }
 
   protected JComponent createNorthPanel() {
-    return new JLabel(RefactoringBundle.message("changeClassSignature.class.label.text", UsageViewUtil.getDescriptiveName(myClass)));
+    return new JLabel(RefactoringBundle.message("changeClassSignature.class.label.text", DescriptiveNameUtil.getDescriptiveName(myClass)));
   }
 
   @Override

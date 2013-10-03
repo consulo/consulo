@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.inline;
 
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
@@ -30,7 +31,6 @@ import com.intellij.refactoring.rename.NonCodeUsageInfoFactory;
 import com.intellij.refactoring.util.*;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
-import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NotNull;
@@ -212,7 +212,7 @@ public class InlineConstantFieldProcessor extends BaseRefactoringProcessor {
   }
 
   protected String getCommandName() {
-    return RefactoringBundle.message("inline.field.command", UsageViewUtil.getDescriptiveName(myField));
+    return RefactoringBundle.message("inline.field.command", DescriptiveNameUtil.getDescriptiveName(myField));
   }
 
   protected boolean preprocessUsages(Ref<UsageInfo[]> refUsages) {

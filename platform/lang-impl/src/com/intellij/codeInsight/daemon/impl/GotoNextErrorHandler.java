@@ -51,7 +51,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
   }
 
   private void gotoNextError(Project project, Editor editor, PsiFile file, int caretOffset) {
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getInstance(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     DaemonCodeAnalyzerSettings settings = DaemonCodeAnalyzerSettings.getInstance();
     int maxSeverity = settings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST ? severityRegistrar.getSeveritiesCount() - 1 : 0;
 
@@ -71,7 +71,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
     final HighlightInfo[][] infoToGo = new HighlightInfo[2][2]; //HighlightInfo[luck-noluck][skip-noskip]
     final int caretOffsetIfNoLuck = myGoForward ? -1 : document.getTextLength();
 
-    DaemonCodeAnalyzerImpl.processHighlights(document, project, minSeverity, 0, document.getTextLength(), new Processor<HighlightInfo>() {
+    DaemonCodeAnalyzerEx.processHighlights(document, project, minSeverity, 0, document.getTextLength(), new Processor<HighlightInfo>() {
       @Override
       public boolean process(HighlightInfo info) {
         int startOffset = getNavigationPositionFor(info, document);

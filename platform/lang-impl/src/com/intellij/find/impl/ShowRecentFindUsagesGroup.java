@@ -20,6 +20,7 @@ import com.intellij.find.FindBundle;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.ide.IconDescriptorUpdaters;
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -40,7 +41,7 @@ import java.util.List;
 public class ShowRecentFindUsagesGroup extends ActionGroup {
   @Override
   public void update(final AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null);
     e.getPresentation().setVisible(project != null);
   }
@@ -49,7 +50,7 @@ public class ShowRecentFindUsagesGroup extends ActionGroup {
   @NotNull
   public AnAction[] getChildren(@Nullable final AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return EMPTY_ARRAY;
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
     List<FindUsagesManager.SearchData> history = new ArrayList<FindUsagesManager.SearchData>(findUsagesManager.getFindUsageHistory());
@@ -67,7 +68,7 @@ public class ShowRecentFindUsagesGroup extends ActionGroup {
       if (psiElement == null) continue;
       String scopeString = data.myOptions.searchScope == null ? null : data.myOptions.searchScope.getDisplayName();
       String text = FindBundle.message("recent.find.usages.action.popup", StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
-                                       UsageViewUtil.getDescriptiveName(psiElement),
+                                       DescriptiveNameUtil.getDescriptiveName(psiElement),
                                        scopeString == null ? ProjectScope.getAllScope(psiElement.getProject()).getDisplayName() : scopeString);
       AnAction action = new AnAction(text, description, IconDescriptorUpdaters.getIcon(psiElement, 0)) {
         @Override

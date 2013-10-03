@@ -15,7 +15,6 @@
  */
 package org.intellij.lang.xpath.xslt.validation.inspections;
 
-import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -34,7 +33,7 @@ import com.intellij.xml.util.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-abstract class SuppressInspectionAction extends SuppressIntentionAction {
+abstract class SuppressInspectionAction {
     private final String myToolId;
     private final String myMsg;
 

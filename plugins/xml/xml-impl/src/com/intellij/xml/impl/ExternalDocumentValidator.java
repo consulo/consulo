@@ -17,9 +17,8 @@ package com.intellij.xml.impl;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.Validator;
-import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
+import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.ide.highlighter.XHtmlFileType;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.Language;
@@ -41,11 +40,12 @@ import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.*;
 import com.intellij.reference.SoftReference;
-import com.intellij.xml.actions.ValidateXmlActionHandler;
-import com.intellij.xml.util.CheckXmlFileWithXercesValidatorInspection;
+import com.intellij.xml.actions.validate.ErrorReporter;
+import com.intellij.xml.actions.validate.ValidateXmlActionHandler;
 import com.intellij.xml.util.XmlResourceResolver;
 import com.intellij.xml.util.XmlUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXParseException;
 
 import java.lang.ref.WeakReference;
@@ -58,6 +58,9 @@ import java.util.List;
 public class ExternalDocumentValidator {
   private static final Logger LOG = Logger.getInstance("#com.intellij.xml.impl.ExternalDocumentValidator");
   private static final Key<SoftReference<ExternalDocumentValidator>> validatorInstanceKey = Key.create("validatorInstance");
+
+  public static final @NonNls String INSPECTION_SHORT_NAME = "CheckXmlFileWithXercesValidator";
+
   private ValidateXmlActionHandler myHandler;
   private Validator.ValidationHost myHost;
 
@@ -81,9 +84,15 @@ public class ExternalDocumentValidator {
   private static final String ATTRIBUTE_MESSAGE_PREFIX = "cvc-attribute.";
 
   private static class ValidationInfo {
-    PsiElement element;
-    String message;
-    int type;
+    final PsiElement element;
+    final String message;
+    final Validator.ValidationHost.ErrorType type;
+
+    private ValidationInfo(PsiElement element, String message, Validator.ValidationHost.ErrorType type) {
+      this.element = element;
+      this.message = message;
+      this.type = type;
+    }
   }
 
   private WeakReference<List<ValidationInfo>> myInfos; // last jaxp validation result
@@ -97,7 +106,7 @@ public class ExternalDocumentValidator {
         !ValidateXmlActionHandler.isValidationDependentFilesOutOfDate((XmlFile)file) &&
         myInfos!=null &&
         myInfos.get()!=null // we have validated before
-        ) {
+      ) {
       addAllInfos(host,myInfos.get());
       return;
     }
@@ -110,28 +119,29 @@ public class ExternalDocumentValidator {
     final List<ValidationInfo> results = new LinkedList<ValidationInfo>();
 
     myHost = new Validator.ValidationHost() {
+      @Override
       public void addMessage(PsiElement context, String message, int type) {
-        final ValidationInfo o = new ValidationInfo();
-
-        results.add(o);
-        o.element = context;
-        o.message = message;
-        o.type = type;
+        addMessage(context, message, type==ERROR?ErrorType.ERROR : type==WARNING?ErrorType.WARNING : ErrorType.INFO);
       }
 
-      public void addMessage(final PsiElement context, final String message, final ErrorType type, final IntentionAction... fixes) {
-        addMessage(context, message, type.ordinal());
+      @Override
+      public void addMessage(final PsiElement context, final String message, @NotNull final ErrorType type) {
+        final ValidationInfo o = new ValidationInfo(context, message, type);
+        results.add(o);
       }
     };
 
-    myHandler.setErrorReporter(myHandler.new ErrorReporter() {
+    myHandler.setErrorReporter(new ErrorReporter(myHandler) {
+      @Override
       public boolean isStopOnUndeclaredResource() {
         return true;
       }
 
+      @Override
       public void processError(final SAXParseException e, final ValidateXmlActionHandler.ProblemType warning) {
         try {
           ApplicationManager.getApplication().runReadAction(new Runnable() {
+            @Override
             public void run() {
               if (e.getPublicId() != null) {
                 return;
@@ -146,7 +156,7 @@ public class ExternalDocumentValidator {
                 return;
               }
 
-              int problemType = getProblemType(warning);
+              Validator.ValidationHost.ErrorType problemType = getProblemType(warning);
               int offset = Math.max(0, document.getLineStartOffset(e.getLineNumber() - 1) + e.getColumnNumber() - 2);
               if (offset >= document.getTextLength()) return;
               PsiElement currentElement = PsiDocumentManager.getInstance(project).getPsiFile(document).findElementAt(offset);
@@ -175,7 +185,7 @@ public class ExternalDocumentValidator {
                   localizedMessage.startsWith(ELEMENT_ERROR_PREFIX) ||
                   localizedMessage.startsWith(ROOT_ELEMENT_ERROR_PREFIX) ||
                   localizedMessage.startsWith(CONTENT_OF_ELEMENT_TYPE_ERROR_PREFIX)
-                  ) {
+                ) {
                 addProblemToTagName(currentElement, originalElement, localizedMessage, warning);
                 //return;
               } else if (localizedMessage.startsWith(VALUE_ERROR_PREFIX)) {
@@ -210,7 +220,7 @@ public class ExternalDocumentValidator {
 
                   if ( localizedMessage.charAt(messagePrefixLength) == '"' ||
                        localizedMessage.charAt(messagePrefixLength) == '\''
-                     ) {
+                    ) {
                     // extract the attribute name from message and get it from tag!
                     final int nextQuoteIndex = localizedMessage.indexOf(localizedMessage.charAt(messagePrefixLength), messagePrefixLength + 1);
                     String attrName = nextQuoteIndex == -1 ? null : localizedMessage.substring(messagePrefixLength + 1, nextQuoteIndex);
@@ -237,7 +247,7 @@ public class ExternalDocumentValidator {
                   }
                 } else if (localizedMessage.startsWith(STRING_ERROR_PREFIX)) {
                   if (currentElement != null) {
-                    myHost.addMessage(currentElement,localizedMessage,Validator.ValidationHost.WARNING);
+                    myHost.addMessage(currentElement,localizedMessage, Validator.ValidationHost.ErrorType.WARNING);
                   }
                 }
                 else {
@@ -269,8 +279,8 @@ public class ExternalDocumentValidator {
     addAllInfos(host,results);
   }
 
-  private int getProblemType(ValidateXmlActionHandler.ProblemType warning) {
-    return warning == ValidateXmlActionHandler.ProblemType.WARNING ? Validator.ValidationHost.WARNING : Validator.ValidationHost.ERROR;
+  private static Validator.ValidationHost.ErrorType getProblemType(ValidateXmlActionHandler.ProblemType warning) {
+    return warning == ValidateXmlActionHandler.ProblemType.WARNING ? Validator.ValidationHost.ErrorType.WARNING : Validator.ValidationHost.ErrorType.ERROR;
   }
 
   private static PsiElement getNodeForMessage(final PsiElement currentElement) {
@@ -302,9 +312,9 @@ public class ExternalDocumentValidator {
   }
 
   private PsiElement addProblemToTagName(PsiElement currentElement,
-                                     final PsiElement originalElement,
-                                     final String localizedMessage,
-                                     final ValidateXmlActionHandler.ProblemType problemType) {
+                                         final PsiElement originalElement,
+                                         final String localizedMessage,
+                                         final ValidateXmlActionHandler.ProblemType problemType) {
     currentElement = PsiTreeUtil.getParentOfType(currentElement,XmlTag.class,false);
     if (currentElement==null) {
       currentElement = PsiTreeUtil.getParentOfType(originalElement,XmlElementDecl.class,false);
@@ -339,7 +349,7 @@ public class ExternalDocumentValidator {
     if (containingFile.getViewProvider() instanceof TemplateLanguageFileViewProvider) {
       return;
     }
-    
+
     final FileType fileType = containingFile.getViewProvider().getVirtualFile().getFileType();
     if (fileType != XmlFileType.INSTANCE && fileType != XHtmlFileType.INSTANCE) {
       return;
@@ -358,11 +368,11 @@ public class ExternalDocumentValidator {
     final Project project = document.getProject();
 
     final InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-    final LocalInspectionToolWrapper toolWrapper =
-      (LocalInspectionToolWrapper)profile.getInspectionTool(CheckXmlFileWithXercesValidatorInspection.SHORT_NAME, containingFile);
+    final InspectionToolWrapper toolWrapper =
+      profile.getInspectionTool(INSPECTION_SHORT_NAME, containingFile);
 
     if (toolWrapper == null) return;
-    if (!profile.isToolEnabled(HighlightDisplayKey.find(CheckXmlFileWithXercesValidatorInspection.SHORT_NAME), containingFile)) return;
+    if (!profile.isToolEnabled(HighlightDisplayKey.find(INSPECTION_SHORT_NAME), containingFile)) return;
 
     SoftReference<ExternalDocumentValidator> validatorReference = project.getUserData(validatorInstanceKey);
     ExternalDocumentValidator validator = validatorReference != null? validatorReference.get() : null;

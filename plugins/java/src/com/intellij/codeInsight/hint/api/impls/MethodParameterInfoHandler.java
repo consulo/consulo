@@ -23,7 +23,6 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.parameterInfo.*;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.CompletionParameterTypeInferencePolicy;
 import com.intellij.psi.infos.CandidateInfo;
@@ -33,6 +32,7 @@ import com.intellij.psi.util.MethodSignatureUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashSet;
+import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -144,7 +144,7 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
       assert substitutor != null;
 
       if (!method.isValid() || !substitutor.isValid()) {
-          // this may sometimes happen e,g, when editing method call in field initializer candidates in the same file get invalidated
+        // this may sometimes happen e,g, when editing method call in field initializer candidates in the same file get invalidated
         context.setUIComponentEnabled(i, false);
         continue;
       }
@@ -215,8 +215,8 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
 
   private static PsiSubstitutor getCandidateInfoSubstitutor(CandidateInfo candidate) {
     return candidate instanceof MethodCandidateInfo && ((MethodCandidateInfo)candidate).isInferencePossible()
-                                 ? ((MethodCandidateInfo)candidate).inferTypeArguments(CompletionParameterTypeInferencePolicy.INSTANCE)
-                                 : candidate.getSubstitutor();
+           ? ((MethodCandidateInfo)candidate).inferTypeArguments(CompletionParameterTypeInferencePolicy.INSTANCE, true)
+           : candidate.getSubstitutor();
   }
 
   private static boolean isAssignableParametersBeforeGivenIndex(final PsiParameter[] parms,
@@ -337,7 +337,7 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
           }
         }
       }
-      return result.toArray(new CandidateInfo[result.size()]);
+      return result.isEmpty() ? candidates : result.toArray(new CandidateInfo[result.size()]);
     }
     else {
       assert call instanceof PsiEnumConstant;
@@ -352,12 +352,12 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
     }
   }
 
-  public static void updateMethodPresentation(PsiMethod method, @Nullable PsiSubstitutor substitutor, ParameterInfoUIContext context) {
+  public static String updateMethodPresentation(PsiMethod method, @Nullable PsiSubstitutor substitutor, ParameterInfoUIContext context) {
     CodeInsightSettings settings = CodeInsightSettings.getInstance();
 
     if (!method.isValid() || substitutor != null && !substitutor.isValid()) {
       context.setUIComponentEnabled(false);
-      return;
+      return null;
     }
 
     StringBuilder buffer = new StringBuilder();
@@ -387,7 +387,7 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
       for (int j = 0; j < numParams; j++) {
         PsiParameter param = parms[j];
 
-        int startOffset = buffer.length();
+        int startOffset = XmlStringUtil.escapeString(buffer.toString()).length();
 
         if (param.isValid()) {
           PsiType paramType = param.getType();
@@ -397,7 +397,7 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
             paramType = substitutor.substitute(paramType);
           }
           appendModifierList(buffer, param);
-          buffer.append(StringUtil.escapeXml(paramType.getPresentableText()));
+          buffer.append(paramType.getPresentableText());
           String name = param.getName();
           if (name != null) {
             buffer.append(" ");
@@ -405,7 +405,7 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
           }
         }
 
-        int endOffset = buffer.length();
+        int endOffset = XmlStringUtil.escapeString(buffer.toString()).length();
 
         if (j < numParams - 1) {
           buffer.append(", ");
@@ -426,7 +426,7 @@ public class MethodParameterInfoHandler implements ParameterInfoHandlerWithTabAc
       buffer.append(")");
     }
 
-    context.setupUIComponentPresentation(
+    return context.setupUIComponentPresentation(
       buffer.toString(),
       highlightStartOffset,
       highlightEndOffset,

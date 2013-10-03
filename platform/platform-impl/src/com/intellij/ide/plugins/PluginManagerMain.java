@@ -21,15 +21,19 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationListener;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
@@ -40,6 +44,7 @@ import com.intellij.ui.*;
 import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,14 +68,10 @@ import java.util.List;
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Dec 25, 2003
- * Time: 9:47:59 PM
- * To change this template use Options | File Templates.
+ * @author stathik
+ * @since Dec 25, 2003
  */
 public abstract class PluginManagerMain implements Disposable {
-
   public static Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginManagerMain");
 
   @NonNls private static final String TEXT_PREFIX = "<html><head>" +
@@ -80,10 +81,10 @@ public abstract class PluginManagerMain implements Disposable {
                                                     "        }" +
                                                     "    </style>" +
                                                     "</head><body style=\"font-family: Arial,serif; font-size: 12pt; margin: 5px 5px;\">";
-  @NonNls private static final String TEXT_SUFIX = "</body></html>";
+  @NonNls private static final String TEXT_SUFFIX = "</body></html>";
 
   @NonNls private static final String HTML_PREFIX = "<a href=\"";
-  @NonNls private static final String HTML_SUFIX = "</a>";
+  @NonNls private static final String HTML_SUFFIX = "</a>";
 
   private boolean requireShutdown = false;
 
@@ -183,8 +184,7 @@ public abstract class PluginManagerMain implements Disposable {
     return pluginsModel.dependent(pluginDescriptor);
   }
 
-
-  protected void modifyPluginsList(ArrayList<IdeaPluginDescriptor> list) {
+  protected void modifyPluginsList(List<IdeaPluginDescriptor> list) {
     IdeaPluginDescriptor[] selected = pluginTable.getSelectedObjects();
     pluginsModel.updatePluginsList(list);
     pluginTable.getRowSorter().setSortKeys(Collections.singletonList(pluginsModel.getDefaultSortKey()));
@@ -204,7 +204,7 @@ public abstract class PluginManagerMain implements Disposable {
   protected boolean acceptHost(String host) {
     return true;
   }
-  
+
   /**
    * Start a new thread which downloads new list of plugins from the site in
    * the background and updates a list of plugins in the table.
@@ -213,12 +213,12 @@ public abstract class PluginManagerMain implements Disposable {
     setDownloadStatus(true);
 
     new SwingWorker() {
-      ArrayList<IdeaPluginDescriptor> list = null;
-      final List<String> errorMessages = new ArrayList<String>();
+      List<IdeaPluginDescriptor> list = null;
+      List<String> errorMessages = new ArrayList<String>();
 
       public Object construct() {
         try {
-          list = RepositoryHelper.process(null);
+          list = RepositoryHelper.loadPluginsFromRepository(null);
         }
         catch (Exception e) {
           LOG.info(e);
@@ -269,7 +269,7 @@ public abstract class PluginManagerMain implements Disposable {
     }.start();
   }
 
-  protected abstract void propagateUpdates(ArrayList<IdeaPluginDescriptor> list);
+  protected abstract void propagateUpdates(List<IdeaPluginDescriptor> list);
 
   protected void setDownloadStatus(boolean status) {
     pluginTable.setPaintBusy(status);
@@ -283,7 +283,7 @@ public abstract class PluginManagerMain implements Disposable {
       //  then read it, load into the list and start the updating process.
       //  Otherwise just start the process of loading the list and save it
       //  into the persistent config file for later reading.
-      File file = new File(PathManager.getPluginsPath(), RepositoryHelper.extPluginsFile);
+      File file = new File(PathManager.getPluginsPath(), RepositoryHelper.PLUGIN_LIST_FILE);
       if (file.exists()) {
         RepositoryContentHandler handler = new RepositoryContentHandler();
         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
@@ -302,10 +302,10 @@ public abstract class PluginManagerMain implements Disposable {
   public static boolean downloadPlugins(final List<PluginNode> plugins,
                                         final List<IdeaPluginDescriptor> allPlugins,
                                         final Runnable onSuccess,
-                                        final Runnable cleanup) throws IOException {
+                                        @Nullable final Runnable cleanup) throws IOException {
     final boolean[] result = new boolean[1];
     try {
-      ProgressManager.getInstance().run(new Task.Backgroundable(null, IdeBundle.message("progress.download.plugins"), true) {
+      ProgressManager.getInstance().run(new Task.Backgroundable(null, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance()) {
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
           try {
@@ -315,7 +315,7 @@ public abstract class PluginManagerMain implements Disposable {
             }
           }
           finally {
-            cleanup.run();
+            if (cleanup != null) cleanup.run();
           }
         }
       });
@@ -399,17 +399,17 @@ public abstract class PluginManagerMain implements Disposable {
   private static void setTextValue(@Nullable StringBuilder text, @Nullable String filter, JEditorPane pane) {
     if (text != null) {
       text.insert(0, TEXT_PREFIX);
-      text.append(TEXT_SUFIX);
+      text.append(TEXT_SUFFIX);
       pane.setText(SearchUtil.markup(text.toString(), filter).trim());
       pane.setCaretPosition(0);
     }
     else {
-      pane.setText(TEXT_PREFIX + TEXT_SUFIX);
+      pane.setText(TEXT_PREFIX + TEXT_SUFFIX);
     }
   }
 
   private static String composeHref(String vendorUrl) {
-    return HTML_PREFIX + vendorUrl + "\">" + vendorUrl + HTML_SUFIX;
+    return HTML_PREFIX + vendorUrl + "\">" + vendorUrl + HTML_SUFFIX;
   }
 
   public boolean isModified() {
@@ -520,6 +520,36 @@ public abstract class PluginManagerMain implements Disposable {
       return true;
     }
     return false;
+  }
+
+
+  public static void notifyPluginsWereInstalled(@Nullable String pluginName) {
+    final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
+    final boolean restartCapable = app.isRestartCapable();
+    String message =
+      restartCapable ? IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName())
+                     : IdeBundle.message("message.idea.shutdown.required", ApplicationNamesInfo.getInstance().getFullProductName());
+    message += "<br><a href=";
+    message += restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown";
+    message += "</a>";
+    Notifications.Bus.notify(new Notification("Plugins Lifecycle Group",
+                                              pluginName != null
+                                              ? "Plugin \'" + pluginName + "\' was successfully installed"
+                                              : "Plugins were installed",
+                                              XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION,
+                                              new NotificationListener() {
+                                                @Override
+                                                public void hyperlinkUpdate(@NotNull Notification notification,
+                                                                            @NotNull HyperlinkEvent event) {
+                                                  notification.expire();
+                                                  if (restartCapable) {
+                                                    app.restart(true);
+                                                  }
+                                                  else {
+                                                    app.exit(true);
+                                                  }
+                                                }
+                                              }));
   }
 
   protected class SortByStatusAction extends ToggleAction {

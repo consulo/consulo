@@ -30,8 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiTypeParameterListOwner;
 import com.intellij.refactoring.HelpID;
 import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.refactoring.util.ParameterTablePanel;
-import com.intellij.ui.IdeBorderFactory;
+import com.intellij.refactoring.util.VariableData;
 import com.intellij.usageView.UsageViewUtil;
 
 import javax.swing.*;
@@ -59,7 +58,7 @@ public class SimpleMakeStaticDialog extends AbstractMakeStaticDialog {
     return null;
   }
 
-  public ParameterTablePanel.VariableData[] getVariableData() {
+  public VariableData[] getVariableData() {
     return null;
   }
 

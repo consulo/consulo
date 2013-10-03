@@ -47,6 +47,7 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
+import com.intellij.psi.injection.ReferenceInjector;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
@@ -78,6 +79,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   private final VirtualFile myHostVirtualFile;
   private final PsiElement myContextElement;
   private final PsiFile myHostPsiFile;
+  private ReferenceInjector myReferenceInjector;
 
   public MultiHostRegistrarImpl(@NotNull Project project,
                          @NotNull PsiFile hostPsiFile,
@@ -121,7 +123,12 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
 
     Language language = languageVersion.getLanguage();
     if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) {
-      throw new UnsupportedOperationException("Cannot inject language '" + language + "' since its getParserDefinition() returns null");
+      ReferenceInjector injector = ReferenceInjector.findById(language.getID());
+      if (injector == null) {
+        throw new UnsupportedOperationException("Cannot inject language '" + language + "' since its getParserDefinition() returns null");
+      }
+      myLanguage = null;
+      myReferenceInjector = injector;
     }
     myLanguage = language;
     myLanguageVersion = languageVersion;
@@ -155,7 +162,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
       throw new IllegalArgumentException("rangeInsideHost must lie within host text range. rangeInsideHost:"+rangeInsideHost+"; host textRange:"+
                                          hostTextRange);
     }
-    if (myLanguage == null) {
+    if (myLanguage == null && myReferenceInjector == null) {
       clear();
       throw new IllegalStateException("Seems you haven't called startInjecting()");
     }
@@ -198,6 +205,10 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     try {
       if (shreds.isEmpty()) {
         throw new IllegalStateException("Seems you haven't called addPlace()");
+      }
+      if (myReferenceInjector != null) {
+        addToResults(new Place(shreds), null);
+        return;
       }
       PsiDocumentManagerImpl documentManager = (PsiDocumentManagerImpl)PsiDocumentManager.getInstance(myProject);
       //todo restore
@@ -364,13 +375,17 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     PsiDocumentManagerImpl.checkConsistency(psiFile, documentWindow);
   }
 
-  public void addToResults(Place place, PsiFile psiFile) {
+  void addToResults(Place place, PsiFile psiFile, MultiHostRegistrarImpl from) {
+    addToResults(place, psiFile);
+    myReferenceInjector = from.myReferenceInjector;
+  }
+
+  private void addToResults(Place place, PsiFile psiFile) {
     if (result == null) {
       result = new SmartList<Pair<Place, PsiFile>>();
     }
     result.add(Pair.create(place, psiFile));
   }
-
 
   private static void patchLeafs(ASTNode parsedNode, List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers, Place shreds) {
     LeafPatcher patcher = new LeafPatcher(shreds, escapers);
@@ -457,12 +472,12 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
 
   // returns lexer element types with corresponding ranges in encoded (injection host based) PSI
   private static List<Trinity<IElementType, SmartPsiElementPointer<PsiLanguageInjectionHost>, TextRange>>
-          obtainHighlightTokensFromLexer(Language language,
-                                         StringBuilder outChars,
-                                         List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers,
-                                         Place shreds,
-                                         VirtualFileWindow virtualFile,
-                                         Project project) {
+  obtainHighlightTokensFromLexer(Language language,
+                                 StringBuilder outChars,
+                                 List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers,
+                                 Place shreds,
+                                 VirtualFileWindow virtualFile,
+                                 Project project) {
     List<Trinity<IElementType, SmartPsiElementPointer<PsiLanguageInjectionHost>, TextRange>> tokens = new ArrayList<Trinity<IElementType, SmartPsiElementPointer<PsiLanguageInjectionHost>, TextRange>>(10);
     SyntaxHighlighter syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(language, project, (VirtualFile)virtualFile);
     Lexer lexer = syntaxHighlighter.getHighlightingLexer();
@@ -491,12 +506,12 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
         }
         //in prefix/suffix or spills over to next fragment
         if (range.getStartOffset() < prevHostEndOffset + prefixLength) {
-          range = new TextRange(prevHostEndOffset + prefixLength, range.getEndOffset());
+          range = new UnfairTextRange(prevHostEndOffset + prefixLength, range.getEndOffset());
         }
         TextRange spilled = null;
         if (range.getEndOffset() > shredEndOffset - suffixLength) {
-          spilled = new TextRange(shredEndOffset, range.getEndOffset());
-          range = new TextRange(range.getStartOffset(), shredEndOffset-suffixLength);
+          spilled = new UnfairTextRange(shredEndOffset, range.getEndOffset());
+          range = new UnfairTextRange(range.getStartOffset(), shredEndOffset-suffixLength);
         }
         if (!range.isEmpty()) {
           int start = escaper.getOffsetInHost(range.getStartOffset() - prevHostEndOffset - prefixLength, rangeInsideHost);
@@ -531,5 +546,15 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   @Override
   public String toString() {
     return result.toString();
+  }
+
+  @NotNull
+  public PsiFile getHostPsiFile() {
+    return myHostPsiFile;
+  }
+
+  @Nullable
+  public ReferenceInjector getReferenceInjector() {
+    return myReferenceInjector;
   }
 }

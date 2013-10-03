@@ -24,21 +24,24 @@
  */
 package com.intellij.codeInspection.deadCode;
 
-import com.intellij.codeInspection.ex.InspectionTool;
+import com.intellij.codeInspection.GlobalInspectionContext;
+import com.intellij.codeInspection.GlobalInspectionTool;
+import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
 import com.intellij.codeInspection.reference.*;
+import org.jetbrains.annotations.NotNull;
 
 public class UnreferencedFilter extends RefUnreachableFilter {
-  public UnreferencedFilter(final InspectionTool tool) {
-    super(tool);
+  public UnreferencedFilter(@NotNull GlobalInspectionTool tool, @NotNull GlobalInspectionContext context) {
+    super(tool, context);
   }
 
   @Override
-  public int getElementProblemCount(RefJavaElement refElement) {
+  public int getElementProblemCount(@NotNull RefJavaElement refElement) {
     if (refElement instanceof RefParameter) return 0;
     if (refElement.isEntry() || !((RefElementImpl)refElement).isSuspicious() || refElement.isSyntheticJSP()) return 0;
 
     if (!(refElement instanceof RefMethod || refElement instanceof RefClass || refElement instanceof RefField)) return 0;
-    if (!myTool.getContext().isToCheckMember(refElement, myTool)) return 0;
+    if (!((GlobalInspectionContextBase)myContext).isToCheckMember(refElement, myTool)) return 0;
 
     if (refElement instanceof RefField) {
       RefField refField = (RefField) refElement;

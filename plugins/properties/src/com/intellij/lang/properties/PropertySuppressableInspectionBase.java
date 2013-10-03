@@ -18,7 +18,6 @@ package com.intellij.lang.properties;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.lang.properties.psi.PropertiesList;
 import com.intellij.lang.properties.psi.Property;
@@ -88,7 +87,7 @@ public abstract class PropertySuppressableInspectionBase extends LocalInspection
     return false;
   }
 
-  private static class SuppressSinglePropertyFix extends SuppressIntentionAction {
+  private static class SuppressSinglePropertyFix {
     private final String shortName;
 
     public SuppressSinglePropertyFix(String shortName) {
@@ -128,7 +127,7 @@ public abstract class PropertySuppressableInspectionBase extends LocalInspection
     }
   }
 
-  private static class SuppressForFile extends SuppressIntentionAction {
+  private static class SuppressForFile {
     private final String shortName;
 
     public SuppressForFile(String shortName) {

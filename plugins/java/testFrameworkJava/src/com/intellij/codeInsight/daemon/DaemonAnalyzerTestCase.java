@@ -18,6 +18,7 @@ package com.intellij.codeInsight.daemon;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.CodeInsightTestCase;
+import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.quickFix.LightQuickFixTestCase;
@@ -121,16 +122,17 @@ public abstract class DaemonAnalyzerTestCase extends CodeInsightTestCase {
 
       @Override
       @NotNull
-      public InspectionTool[] getInspectionTools(PsiElement element) {
+      public InspectionToolWrapper[] getInspectionTools(PsiElement element) {
         Collection<InspectionToolWrapper> values = myAvailableTools.values();
-        return values.toArray(new InspectionTool[values.size()]);
+        return values.toArray(new InspectionToolWrapper[values.size()]);
       }
 
+      @NotNull
       @Override
-      public List<ToolsImpl> getAllEnabledInspectionTools(Project project) {
-        List<ToolsImpl> result = new ArrayList<ToolsImpl>();
-        for (InspectionProfileEntry entry : getInspectionTools(null)) {
-          result.add(new ToolsImpl(entry, entry.getDefaultLevel(), true));
+      public List<Tools> getAllEnabledInspectionTools(Project project) {
+        List<Tools> result = new ArrayList<Tools>();
+        for (InspectionToolWrapper toolWrapper : getInspectionTools(null)) {
+          result.add(new ToolsImpl(toolWrapper, toolWrapper.getDefaultLevel(), true));
         }
         return result;
       }
@@ -142,12 +144,12 @@ public abstract class DaemonAnalyzerTestCase extends CodeInsightTestCase {
 
       @Override
       public HighlightDisplayLevel getErrorLevel(@NotNull HighlightDisplayKey key, PsiElement element) {
-        final InspectionProfileEntry localInspectionTool = myAvailableTools.get(key.toString());
+        final InspectionToolWrapper localInspectionTool = myAvailableTools.get(key.toString());
         return localInspectionTool != null ? localInspectionTool.getDefaultLevel() : HighlightDisplayLevel.WARNING;
       }
 
       @Override
-      public InspectionTool getInspectionTool(@NotNull String shortName, @NotNull PsiElement element) {
+      public InspectionToolWrapper getInspectionTool(@NotNull String shortName, @NotNull PsiElement element) {
         return myAvailableTools.get(shortName);
       }
     };
@@ -189,19 +191,14 @@ public abstract class DaemonAnalyzerTestCase extends CodeInsightTestCase {
   @Override
   protected void tearDown() throws Exception {
     ((StartupManagerImpl)StartupManager.getInstance(getProject())).checkCleared();
-    ((DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(getProject())).cleanupAfterTest(!LightPlatformTestCase.isLight(getProject()));
+    ((DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(getProject())).cleanupAfterTest();
     super.tearDown();
     //((VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance()).assertPointersDisposed();
   }
 
-  protected void enableInspectionTool(InspectionProfileEntry tool){
-    InspectionToolWrapper wrapper = InspectionToolRegistrar.wrapTool(tool);
-    final String shortName = wrapper.getShortName();
-    final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
-    if (key == null) {
-      HighlightDisplayKey.register(shortName, wrapper.getDisplayName(), ((LocalInspectionToolWrapper)wrapper).getID());
-    }
-    myAvailableTools.put(shortName, wrapper);
+  protected void enableInspectionTool(@NotNull InspectionProfileEntry tool) {
+    InspectionToolWrapper toolWrapper = InspectionToolRegistrar.wrapTool(tool);
+    LightPlatformTestCase.enableInspectionTool(myAvailableTools, toolWrapper);
   }
 
   protected void enableInspectionToolsFromProvider(InspectionToolProvider toolProvider){
@@ -371,7 +368,8 @@ public abstract class DaemonAnalyzerTestCase extends CodeInsightTestCase {
 
     if (!canChange) {
       Document document = getDocument(getFile());
-      ((DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(getProject())).getFileStatusMap().assertAllDirtyScopesAreNull(document);
+      DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
+      daemonCodeAnalyzer.getFileStatusMap().assertAllDirtyScopesAreNull(document);
     }
 
     return infos;

@@ -15,25 +15,32 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.mac.MacDockImpl;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.ui.mac.MacDockDelegate;
+import com.intellij.ui.win.WinDockDelegate;
 
 /**
  * @author Denis Fokin
  */
 public class SystemDock {
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.SystemDock");
+  private static Delegate delegate;
 
-  synchronized public static void initialize() {
+  static {
     if (SystemInfo.isMac) {
-      try {
-        MacDockImpl.initialize();
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
+      delegate = MacDockDelegate.getInstance();
+    } else if (SystemInfo.isWin7OrNewer && Registry.is("windows.jumplist")) {
+      delegate = WinDockDelegate.getInstance();
     }
+  }
+
+  public static void updateMenu () {
+    if (delegate == null) return;
+    delegate.updateRecentProjectsMenu();
+  }
+
+  public interface Delegate {
+    void updateRecentProjectsMenu();
   }
 }

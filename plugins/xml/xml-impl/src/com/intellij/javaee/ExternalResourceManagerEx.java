@@ -16,6 +16,7 @@
 package com.intellij.javaee;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
  * author: lesya
  */
 public abstract class ExternalResourceManagerEx extends ExternalResourceManager {
+  @NonNls public static final String STANDARD_SCHEMAS = "/standardSchemas/";
+
   public static ExternalResourceManagerEx getInstanceEx(){
     return (ExternalResourceManagerEx)getInstance();
   }
@@ -49,8 +52,11 @@ public abstract class ExternalResourceManagerEx extends ExternalResourceManager 
 
   public abstract void removeExternalResourceListener(ExternalResourceListener listener);
 
+  public abstract boolean isUserResource(VirtualFile file);
+  public abstract boolean isStandardResource(VirtualFile file);
+
   @Nullable
-  public abstract String getUserResourse(Project project, String url, String version);
+  public abstract String getUserResource(Project project, String url, String version);
   @Nullable
   public abstract String getStdResource(String url, String version);
 

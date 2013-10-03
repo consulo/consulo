@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.psi.impl.source;
 
 import com.intellij.formatting.FormatTextRanges;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
@@ -47,21 +48,25 @@ import com.intellij.psi.impl.source.codeStyle.CodeFormatterFacade;
 import com.intellij.psi.impl.source.codeStyle.IndentHelperImpl;
 import com.intellij.psi.impl.source.tree.*;
 import com.intellij.util.LocalTimeCounter;
+import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PostprocessReformattingAspect implements PomModelAspect {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.PostprocessReformatingAspect");
+  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.PostprocessReformattingAspect");
   private final Project myProject;
   private final PsiManager myPsiManager;
   private final TreeAspect myTreeAspect;
   private final Map<FileViewProvider, List<ASTNode>> myReformatElements = new HashMap<FileViewProvider, List<ASTNode>>();
   private volatile int myDisabledCounter = 0;
   private final Set<FileViewProvider> myUpdatedProviders = new HashSet<FileViewProvider>();
+  private final AtomicInteger myPostponedCounter = new AtomicInteger();
 
-  public PostprocessReformattingAspect(Project project, PsiManager psiManager, TreeAspect treeAspect) {
+  public PostprocessReformattingAspect(Project project, PsiManager psiManager, TreeAspect treeAspect,final CommandProcessor processor) {
     myProject = project;
     myPsiManager = psiManager;
     myTreeAspect = treeAspect;
@@ -71,18 +76,16 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     ApplicationListener applicationListener = new ApplicationAdapter() {
       @Override
       public void writeActionStarted(final Object action) {
-        final CommandProcessor processor = CommandProcessor.getInstance();
         if (processor != null) {
           final Project project = processor.getCurrentCommandProject();
           if (project == myProject) {
-            myPostponedCounter++;
+            incrementPostponedCounter();
           }
         }
       }
 
       @Override
       public void writeActionFinished(final Object action) {
-        final CommandProcessor processor = CommandProcessor.getInstance();
         if (processor != null) {
           final Project project = processor.getCurrentCommandProject();
           if (project == myProject) {
@@ -115,8 +118,6 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   }
 
-  private int myPostponedCounter = 0;
-
   public void postponeFormattingInside(final Runnable runnable) {
     postponeFormattingInside(new NullableComputable<Object>() {
       @Override
@@ -128,9 +129,10 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   }
 
   public <T> T postponeFormattingInside(Computable<T> computable) {
+    Application application = ApplicationManager.getApplication();
+    application.assertIsDispatchThread();
     try {
-      //if(myPostponedCounter == 0) myDisabled = false;
-      myPostponedCounter++;
+      incrementPostponedCounter();
       return computable.compute();
     }
     finally {
@@ -138,13 +140,19 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   }
 
+  private void incrementPostponedCounter() {
+    myPostponedCounter.incrementAndGet();
+  }
+
   private void decrementPostponedCounter() {
-    if (--myPostponedCounter == 0) {
-      if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
+    Application application = ApplicationManager.getApplication();
+    application.assertIsDispatchThread();
+    if (myPostponedCounter.decrementAndGet() == 0) {
+      if (application.isWriteAccessAllowed()) {
         doPostponedFormatting();
       }
       else {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        application.runWriteAction(new Runnable() {
           @Override
           public void run() {
             doPostponedFormatting();
@@ -154,7 +162,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   }
 
-  private static void atomic(Runnable r) {
+  private static void atomic(@NotNull Runnable r) {
     ProgressManager.getInstance().executeNonCancelableSection(r);
   }
 
@@ -163,7 +171,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     atomic(new Runnable() {
       @Override
       public void run() {
-        if (isDisabled() || myPostponedCounter == 0 && !ApplicationManager.getApplication().isUnitTestMode()) return;
+        if (isDisabled() || myPostponedCounter.get() == 0 && !ApplicationManager.getApplication().isUnitTestMode()) return;
         final TreeChangeEvent changeSet = (TreeChangeEvent)event.getChangeSet(myTreeAspect);
         if (changeSet == null) return;
         final PsiElement psiElement = changeSet.getRootElement().getPsi();
@@ -260,7 +268,8 @@ public class PostprocessReformattingAspect implements PomModelAspect {
 
   public void beforeDocumentChanged(FileViewProvider viewProvider) {
     if (isViewProviderLocked(viewProvider)) {
-      throw new RuntimeException("Document is locked by write PSI operations. Use PsiDocumentManager.doPostponedOperationsAndUnblockDocument() to commit PSI changes to the document.");
+      throw new RuntimeException("Document is locked by write PSI operations. " +
+                                 "Use PsiDocumentManager.doPostponedOperationsAndUnblockDocument() to commit PSI changes to the document.");
     }
     postponedFormatting(viewProvider);
   }
@@ -284,44 +293,52 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   }
 
   private void doPostponedFormattingInner(final FileViewProvider key) {
-
-
     final List<ASTNode> astNodes = myReformatElements.remove(key);
     final Document document = key.getDocument();
     // Sort ranges by end offsets so that we won't need any offset adjustment after reformat or reindent
-    if (document == null /*|| documentManager.isUncommited(document) TODO */) return;
+    if (document == null) return;
 
     final VirtualFile virtualFile = key.getVirtualFile();
     if (!virtualFile.isValid()) return;
 
-    final TreeSet<PostprocessFormattingTask> postprocessTasks = new TreeSet<PostprocessFormattingTask>();
-    // process all roots in viewProvider to find marked for reformat before elements and create appropriate ragge markers
-    handleReformatMarkers(key, postprocessTasks);
+    final TreeSet<PostprocessFormattingTask> postProcessTasks = new TreeSet<PostprocessFormattingTask>();
+    Collection<Disposable> toDispose = ContainerUtilRt.newArrayList();
+    try {
+      // process all roots in viewProvider to find marked for reformat before elements and create appropriate range markers
+      handleReformatMarkers(key, postProcessTasks);
+      toDispose.addAll(postProcessTasks);
 
-    // then we create ranges by changed nodes. One per node. There ranges can intersect. Ranges are sorted by end offset.
-    if (astNodes != null) createActionsMap(astNodes, key, postprocessTasks);
+      // then we create ranges by changed nodes. One per node. There ranges can intersect. Ranges are sorted by end offset.
+      if (astNodes != null) createActionsMap(astNodes, key, postProcessTasks);
 
-    if ("true".equals(System.getProperty("check.psi.is.valid")) && ApplicationManager.getApplication().isUnitTestMode()) {
-      checkPsiIsCorrect(key);
+      if (Boolean.getBoolean("check.psi.is.valid") && ApplicationManager.getApplication().isUnitTestMode()) {
+        checkPsiIsCorrect(key);
+      }
+
+      while (!postProcessTasks.isEmpty()) {
+        // now we have to normalize actions so that they not intersect and ordered in most appropriate way
+        // (free reformatting -> reindent -> formatting under reindent)
+        final List<PostponedAction> normalizedActions = normalizeAndReorderPostponedActions(postProcessTasks, document);
+        toDispose.addAll(normalizedActions);
+
+        // only in following loop real changes in document are made
+        for (final PostponedAction normalizedAction : normalizedActions) {
+          CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(myPsiManager.getProject());
+          boolean old = settings.ENABLE_JAVADOC_FORMATTING;
+          settings.ENABLE_JAVADOC_FORMATTING = false;
+          try {
+            normalizedAction.execute(key);
+          }
+          finally {
+            settings.ENABLE_JAVADOC_FORMATTING = old;
+          }
+        }
+      }
     }
-
-    while (!postprocessTasks.isEmpty()) {
-      // now we have to normalize actions so that they not intersect and ordered in most appropriate way
-      // (free reformating -> reindent -> formating under reindent)
-
-      final List<PostponedAction> normalizedActions = normalizeAndReorderPostponedActions(postprocessTasks, document);
-
-      // only in following loop real changes in document are made
-      for (final PostponedAction normalizedAction : normalizedActions) {
-        CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(myPsiManager.getProject());
-        boolean old = settings.ENABLE_JAVADOC_FORMATTING;
-        settings.ENABLE_JAVADOC_FORMATTING = false;
-        try {
-          normalizedAction.execute(key);
-        }
-        finally {
-          settings.ENABLE_JAVADOC_FORMATTING = old;
-        }
+    finally {
+      for (Disposable disposable : toDispose) {
+        //noinspection SSBasedInspection
+        disposable.dispose();
       }
     }
   }
@@ -346,13 +363,10 @@ public class PostprocessReformattingAspect implements PomModelAspect {
         assert expectedPsi.equals(actualPsiTree) : "Refactored psi should be the same as result of parsing";
       }
     }
-
-
   }
 
-  private List<PostponedAction> normalizeAndReorderPostponedActions(final TreeSet<PostprocessFormattingTask> rangesToProcess,
-                                                                            Document document) {
-    final List<PostprocessFormattingTask> freeFormatingActions = new ArrayList<PostprocessFormattingTask>();
+  private List<PostponedAction> normalizeAndReorderPostponedActions(TreeSet<PostprocessFormattingTask> rangesToProcess, Document document) {
+    final List<PostprocessFormattingTask> freeFormattingActions = new ArrayList<PostprocessFormattingTask>();
     final List<ReindentTask> indentActions = new ArrayList<ReindentTask>();
 
     PostprocessFormattingTask accumulatedTask = null;
@@ -365,13 +379,13 @@ public class PostprocessReformattingAspect implements PomModelAspect {
       }
       else if (accumulatedTask.getStartOffset() > currentTask.getEndOffset() ||
                accumulatedTask.getStartOffset() == currentTask.getEndOffset() &&
-                !canStickActionsTogether(accumulatedTask, currentTask)) {
+               !canStickActionsTogether(accumulatedTask, currentTask)) {
         // action can be pushed
         if (accumulatedTask instanceof ReindentTask) {
           indentActions.add((ReindentTask) accumulatedTask);
         }
         else {
-          freeFormatingActions.add(accumulatedTask);
+          freeFormattingActions.add(accumulatedTask);
         }
 
         accumulatedTask = currentTask;
@@ -389,7 +403,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
           while (iterator.next().getRange() != currentTask.getRange()) ;
         }
         final RangeMarker rangeToProcess = document.createRangeMarker(currentTask.getEndOffset(), accumulatedTask.getEndOffset());
-        freeFormatingActions.add(new ReformatWithHeadingWhitespaceTask(rangeToProcess));
+        freeFormattingActions.add(new ReformatWithHeadingWhitespaceTask(rangeToProcess));
         accumulatedTask = currentTask;
         iterator.remove();
       }
@@ -404,8 +418,8 @@ public class PostprocessReformattingAspect implements PomModelAspect {
             withLeadingWhitespace = true;
           }
           else if (accumulatedTask instanceof ReformatWithHeadingWhitespaceTask &&
-              currentTask instanceof ReformatTask &&
-              accumulatedTask.getStartOffset() < currentTask.getStartOffset()) {
+                   currentTask instanceof ReformatTask &&
+                   accumulatedTask.getStartOffset() < currentTask.getStartOffset()) {
             withLeadingWhitespace = false;
           }
           int newStart = Math.min(accumulatedTask.getStartOffset(), currentTask.getStartOffset());
@@ -440,17 +454,17 @@ public class PostprocessReformattingAspect implements PomModelAspect {
         indentActions.add((ReindentTask) accumulatedTask);
       }
       else {
-        freeFormatingActions.add(accumulatedTask);
+        freeFormattingActions.add(accumulatedTask);
       }
     }
 
     final List<PostponedAction> result = new ArrayList<PostponedAction>();
-    Collections.reverse(freeFormatingActions);
+    Collections.reverse(freeFormattingActions);
     Collections.reverse(indentActions);
 
-    if (!freeFormatingActions.isEmpty()) {
+    if (!freeFormattingActions.isEmpty()) {
       FormatTextRanges ranges = new FormatTextRanges();
-      for (PostprocessFormattingTask action : freeFormatingActions) {
+      for (PostprocessFormattingTask action : freeFormattingActions) {
         TextRange range = TextRange.create(action);
         ranges.add(range, action instanceof ReformatWithHeadingWhitespaceTask);
       }
@@ -470,12 +484,12 @@ public class PostprocessReformattingAspect implements PomModelAspect {
 
   private static boolean canStickActionsTogether(final PostprocessFormattingTask currentTask,
                                                  final PostprocessFormattingTask nextTask) {
-    // empty reformat markers can't sticked together with any action
+    // empty reformat markers can't be stuck together with any action
     if (nextTask instanceof ReformatWithHeadingWhitespaceTask && nextTask.getStartOffset() == nextTask.getEndOffset()) return false;
     if (currentTask instanceof ReformatWithHeadingWhitespaceTask && currentTask.getStartOffset() == currentTask.getEndOffset()) {
       return false;
     }
-    // reindent actions can't be sticked at all
+    // reindent actions can't be be stuck at all
     return !(currentTask instanceof ReindentTask);
   }
 
@@ -499,7 +513,6 @@ public class PostprocessReformattingAspect implements PomModelAspect {
         @Override
         protected boolean visitNode(TreeElement element) {
           if (nodesToProcess.contains(element)) return false;
-          if (CodeEditUtil.isPostponedFormattingDisabled(element)) return false;
 
           final boolean currentNodeGenerated = CodeEditUtil.isNodeGenerated(element);
           CodeEditUtil.setNodeGenerated(element, false);
@@ -532,8 +545,6 @@ public class PostprocessReformattingAspect implements PomModelAspect {
           inGeneratedContext = oldGeneratedContext;
         }
       });
-
-      CodeEditUtil.enablePostponedFormattingInTree(node);
     }
   }
 
@@ -605,15 +616,15 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     return codeFormatter;
   }
 
-  private abstract static class PostprocessFormattingTask implements Comparable<PostprocessFormattingTask>, Segment {
-    private final RangeMarker myRange;
+  private abstract static class PostprocessFormattingTask implements Comparable<PostprocessFormattingTask>, Segment, Disposable {
+    @NotNull private final RangeMarker myRange;
 
-    public PostprocessFormattingTask(RangeMarker rangeMarker) {
+    public PostprocessFormattingTask(@NotNull RangeMarker rangeMarker) {
       myRange = rangeMarker;
     }
 
     @Override
-    public int compareTo(PostprocessFormattingTask o) {
+    public int compareTo(@NotNull PostprocessFormattingTask o) {
       RangeMarker o1 = myRange;
       RangeMarker o2 = o.myRange;
       if (o1.equals(o2)) return 0;
@@ -627,6 +638,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
       return diff;
     }
 
+    @NotNull
     public RangeMarker getRange() {
       return myRange;
     }
@@ -639,6 +651,13 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     @Override
     public int getEndOffset() {
       return myRange.getEndOffset();
+    }
+
+    @Override
+    public void dispose() {
+      if (myRange.isValid()) {
+        myRange.dispose();
+      }
     }
   }
 
@@ -667,7 +686,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   }
 
-  private interface PostponedAction {
+  private interface PostponedAction extends Disposable {
     void execute(FileViewProvider viewProvider);
   }
 
@@ -682,6 +701,10 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     public void execute(FileViewProvider viewProvider) {
       final CodeFormatterFacade codeFormatter = getFormatterFacade(viewProvider);
       codeFormatter.processText(viewProvider.getPsi(viewProvider.getBaseLanguage()), myRanges.ensureNonEmpty(), false);
+    }
+
+    @Override
+    public void dispose() {
     }
   }
 
@@ -704,6 +727,16 @@ public class PostprocessReformattingAspect implements PomModelAspect {
         final TextRange[] whitespaces = CharArrayUtil.getIndents(charsSequence, marker.getStartOffset());
         final int indentAdjustment = getNewIndent(psiFile, marker.getStartOffset()) - oldIndent;
         if (indentAdjustment != 0) adjustIndentationInRange(psiFile, document, whitespaces, indentAdjustment);
+      }
+    }
+
+    @Override
+    public void dispose() {
+      for (Pair<Integer, RangeMarker> pair : myRangesToReindent) {
+        RangeMarker marker = pair.second;
+        if (marker.isValid()) {
+          marker.dispose();
+        }
       }
     }
   }

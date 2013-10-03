@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.impl.source.xml;
 
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
@@ -46,12 +45,12 @@ public class SchemaPrefixReference extends PsiReferenceBase<XmlElement> implemen
    * @param element XmlAttribute || XmlAttributeValue
    * @param range
    * @param name
-   * @param tagNameReference
+   * @param reference
    */
-  public SchemaPrefixReference(XmlElement element, TextRange range, String name, @Nullable TagNameReference tagNameReference) {
+  public SchemaPrefixReference(XmlElement element, TextRange range, String name, @Nullable TagNameReference reference) {
     super(element, range);
     myName = name;
-    myTagNameReference = tagNameReference;
+    myTagNameReference = reference;
     if (myElement instanceof XmlAttribute && (((XmlAttribute)myElement).isNamespaceDeclaration())) {
       myPrefix = new SchemaPrefix((XmlAttribute)myElement, getRangeInElement(), myName);
     }
@@ -74,9 +73,6 @@ public class SchemaPrefixReference extends PsiReferenceBase<XmlElement> implemen
 
   @NotNull
   public Object[] getVariants() {
-    if (myTagNameReference != null) {
-      return new LookupElement[]{ myTagNameReference.createClosingTagLookupElement(myTagNameReference.getTagElement(), true)};
-    }
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
@@ -115,5 +111,10 @@ public class SchemaPrefixReference extends PsiReferenceBase<XmlElement> implemen
   @Override
   public boolean isPrefixReference() {
     return true;
+  }
+
+  @Nullable
+  public TagNameReference getTagNameReference() {
+    return myTagNameReference;
   }
 }

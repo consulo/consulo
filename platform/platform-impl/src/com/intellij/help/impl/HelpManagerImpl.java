@@ -20,7 +20,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.HelpSetPath;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
@@ -91,7 +91,7 @@ public class HelpManagerImpl extends HelpManager {
     if (mainHelpSet == null) return null;
 
     // merge plugins help sets
-    IdeaPluginDescriptor[] pluginDescriptors = PluginManager.getPlugins();
+    IdeaPluginDescriptor[] pluginDescriptors = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor pluginDescriptor : pluginDescriptors) {
       HelpSetPath[] sets = pluginDescriptor.getHelpSets();
       for (HelpSetPath hsPath : sets) {

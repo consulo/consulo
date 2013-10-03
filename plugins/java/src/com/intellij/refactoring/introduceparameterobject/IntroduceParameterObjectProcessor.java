@@ -38,10 +38,7 @@ import com.intellij.refactoring.MoveDestination;
 import com.intellij.refactoring.RefactorJBundle;
 import com.intellij.refactoring.introduceparameterobject.usageInfo.*;
 import com.intellij.refactoring.psi.PropertyUtils;
-import com.intellij.refactoring.util.FixableUsageInfo;
-import com.intellij.refactoring.util.FixableUsagesRefactoringProcessor;
-import com.intellij.refactoring.util.ParameterTablePanel;
-import com.intellij.refactoring.util.RefactoringUtil;
+import com.intellij.refactoring.util.*;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.util.IncorrectOperationException;
@@ -77,7 +74,7 @@ public class IntroduceParameterObjectProcessor extends FixableUsagesRefactoringP
                                            String packageName,
                                            MoveDestination moveDestination,
                                            PsiMethod method,
-                                           ParameterTablePanel.VariableData[] parameters, boolean keepMethodAsDelegate, final boolean useExistingClass,
+                                           VariableData[] parameters, boolean keepMethodAsDelegate, final boolean useExistingClass,
                                            final boolean createInnerClass,
                                            String newVisibility,
                                            boolean generateAccessors) {
@@ -92,14 +89,14 @@ public class IntroduceParameterObjectProcessor extends FixableUsagesRefactoringP
     myNewVisibility = newVisibility;
     myGenerateAccessors = generateAccessors;
     this.parameters = new ArrayList<ParameterChunk>();
-    for (ParameterTablePanel.VariableData parameter : parameters) {
+    for (VariableData parameter : parameters) {
       this.parameters.add(new ParameterChunk(parameter));
     }
     final PsiParameterList parameterList = method.getParameterList();
     final PsiParameter[] methodParams = parameterList.getParameters();
     paramsToMerge = new int[parameters.length];
     for (int p = 0; p < parameters.length; p++) {
-      ParameterTablePanel.VariableData parameter = parameters[p];
+      VariableData parameter = parameters[p];
       for (int i = 0; i < methodParams.length; i++) {
         final PsiParameter methodParam = methodParams[i];
         if (parameter.variable.equals(methodParam)) {
@@ -119,7 +116,7 @@ public class IntroduceParameterObjectProcessor extends FixableUsagesRefactoringP
         return super.visitClassType(classType);
       }
     };
-    for (ParameterTablePanel.VariableData parameter : parameters) {
+    for (VariableData parameter : parameters) {
       parameter.type.accept(typeParametersVisitor);
     }
     typeParams = new ArrayList<PsiTypeParameter>(typeParamSet);
@@ -266,7 +263,7 @@ public class IntroduceParameterObjectProcessor extends FixableUsagesRefactoringP
     beanClassBuilder.setClassName(className);
     beanClassBuilder.setPackageName(packageName);
     for (ParameterChunk parameterChunk : parameters) {
-      final ParameterTablePanel.VariableData parameter = parameterChunk.parameter;
+      final VariableData parameter = parameterChunk.parameter;
       final boolean setterRequired = paramsNeedingSetters.contains(parameter.variable);
       beanClassBuilder.addField((PsiParameter)parameter.variable,  parameter.name, parameter.type, setterRequired);
     }
@@ -439,12 +436,12 @@ public class IntroduceParameterObjectProcessor extends FixableUsagesRefactoringP
   }
 
   public static class ParameterChunk {
-    private final ParameterTablePanel.VariableData parameter;
+    private final VariableData parameter;
     private PsiField field;
     private String getter;
     private String setter;
 
-    public ParameterChunk(ParameterTablePanel.VariableData parameter) {
+    public ParameterChunk(VariableData parameter) {
       this.parameter = parameter;
     }
 

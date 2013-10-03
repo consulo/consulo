@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.OrderPanel;
 import com.intellij.ui.ScrollPaneFactory;
@@ -43,7 +44,7 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
 
   private static JEditorPane myDescriptionPanel = new JEditorPane();
 
-  protected DetectedPluginsPanel() {
+  public DetectedPluginsPanel() {
     super(PluginDownloader.class);
     final JTable entryTable = getEntryTable();
     entryTable.setTableHeader(null);
@@ -56,8 +57,15 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
                                            final int column) {
         final PluginDownloader downloader = (PluginDownloader)value;
         if (downloader != null) {
-          append(downloader.getPluginName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+          final String pluginName = downloader.getPluginName();
+          append(pluginName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
           final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(PluginId.getId(downloader.getPluginId()));
+          if (ideaPluginDescriptor != null) {
+            final String oldPluginName = ideaPluginDescriptor.getName();
+            if (!Comparing.strEqual(pluginName, oldPluginName)) {
+              append(" - " + oldPluginName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            }
+          }
           final String loadedVersion = downloader.getPluginVersion();
           if (loadedVersion != null || (ideaPluginDescriptor != null && ideaPluginDescriptor.getVersion() != null)) {
             final String installedVersion = ideaPluginDescriptor != null && ideaPluginDescriptor.getVersion() != null
@@ -103,18 +111,22 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
   }
 
   public boolean isChecked(final PluginDownloader downloader) {
-    return !UpdateChecker.getDisabledToUpdatePlugins().contains(downloader.getPluginId());
+    return !getSkippedPlugins().contains(downloader.getPluginId());
   }
 
   public void setChecked(final PluginDownloader downloader, final boolean checked) {
     if (checked) {
-      UpdateChecker.getDisabledToUpdatePlugins().remove(downloader.getPluginId());
+      getSkippedPlugins().remove(downloader.getPluginId());
     } else {
-      UpdateChecker.getDisabledToUpdatePlugins().add(downloader.getPluginId());
+      getSkippedPlugins().add(downloader.getPluginId());
     }
     for (Listener listener : myListeners) {
       listener.stateChanged();
     }
+  }
+
+  protected Set<String> getSkippedPlugins() {
+    return UpdateChecker.getDisabledToUpdatePlugins();
   }
 
   public void addStateListener(Listener l) {

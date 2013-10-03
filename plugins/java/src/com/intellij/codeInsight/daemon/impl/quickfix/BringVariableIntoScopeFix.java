@@ -105,7 +105,7 @@ public class BringVariableIntoScopeFix implements IntentionAction {
     PsiElement commonParent = PsiTreeUtil.findCommonParent(myOutOfScopeVariable, myUnresolvedReference);
     LOG.assertTrue(commonParent != null);
     PsiElement child = myOutOfScopeVariable.getTextRange().getStartOffset() < myUnresolvedReference.getTextRange().getStartOffset() ? myOutOfScopeVariable
-                       : myUnresolvedReference;
+                                                                                                                                    : myUnresolvedReference;
 
     while(child.getParent() != commonParent) child = child.getParent();
     PsiDeclarationStatement newDeclaration = (PsiDeclarationStatement)JavaPsiFacade.getInstance(manager.getProject()).getElementFactory().createStatementFromText("int i = 0", null);
@@ -127,7 +127,7 @@ public class BringVariableIntoScopeFix implements IntentionAction {
     PsiExpression initializer = myOutOfScopeVariable.getInitializer();
     if (initializer != null) {
       PsiExpressionStatement assignment = (PsiExpressionStatement)JavaPsiFacade.getInstance(manager.getProject()).getElementFactory().createStatementFromText(myOutOfScopeVariable
-        .getName() + "= e;", null);
+                                                                                                                                                                .getName() + "= e;", null);
       ((PsiAssignmentExpression)assignment.getExpression()).getRExpression().replace(initializer);
       assignment = (PsiExpressionStatement)CodeStyleManager.getInstance(manager.getProject()).reformat(assignment);
       PsiDeclarationStatement declStatement = PsiTreeUtil.getParentOfType(myOutOfScopeVariable, PsiDeclarationStatement.class);
@@ -145,7 +145,7 @@ public class BringVariableIntoScopeFix implements IntentionAction {
       myOutOfScopeVariable.delete();
     }
 
-    if (HighlightControlFlowUtil.checkVariableInitializedBeforeUsage(myUnresolvedReference, addedVar, new THashMap<PsiElement, Collection<PsiReferenceExpression>>()) != null) {
+    if (HighlightControlFlowUtil.checkVariableInitializedBeforeUsage(myUnresolvedReference, addedVar, new THashMap<PsiElement, Collection<PsiReferenceExpression>>(),file) != null) {
       initialize(addedVar);
     }
 

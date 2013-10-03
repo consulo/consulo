@@ -32,7 +32,7 @@ public abstract class FileTypeManagerEx extends FileTypeManager{
   public abstract void registerFileType(FileType fileType);
   public abstract void unregisterFileType(FileType fileType);
 
-//  public abstract String getIgnoredFilesList();
+  //  public abstract String getIgnoredFilesList();
 //  public abstract void setIgnoredFilesList(String list);
   public abstract boolean isIgnoredFilesListEqualToCurrent(String list);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -28,7 +29,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.statistics.JavaStatisticsManager;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -73,8 +73,15 @@ public class JavaCodeStyleManagerImpl extends JavaCodeStyleManager {
 
     final boolean addImports = (flags & DO_NOT_ADD_IMPORTS) == 0;
     final boolean incompleteCode = (flags & UNCOMPLETE_CODE) != 0;
-    final TreeElement reference = new ReferenceAdjuster(myProject).process((TreeElement)element.getNode(), addImports, incompleteCode);
-    return SourceTreeToPsiMap.treeToPsiNotNull(reference);
+
+    final ReferenceAdjuster adjuster = ReferenceAdjuster.Extension.getReferenceAdjuster(element.getLanguage());
+    if (adjuster != null) {
+      final ASTNode reference = adjuster.process(element.getNode(), addImports, incompleteCode, myProject);
+      return SourceTreeToPsiMap.treeToPsiNotNull(reference);
+    }
+    else {
+      return element;
+    }
   }
 
   @Override
@@ -82,14 +89,21 @@ public class JavaCodeStyleManagerImpl extends JavaCodeStyleManager {
     throws IncorrectOperationException {
     CheckUtil.checkWritable(element);
     if (SourceTreeToPsiMap.hasTreeElement(element)) {
-      new ReferenceAdjuster(myProject).processRange((TreeElement)element.getNode(), startOffset, endOffset);
+      final ReferenceAdjuster adjuster = ReferenceAdjuster.Extension.getReferenceAdjuster(element.getLanguage());
+      if (adjuster != null) {
+        adjuster.processRange(element.getNode(), startOffset, endOffset, myProject);
+      }
     }
   }
 
   @Override
   public PsiElement qualifyClassReferences(@NotNull PsiElement element) {
-    final TreeElement reference = new ReferenceAdjuster(true, true).process((TreeElement)element.getNode(), false, false);
-    return SourceTreeToPsiMap.treeToPsiNotNull(reference);
+    final ReferenceAdjuster adjuster = ReferenceAdjuster.Extension.getReferenceAdjuster(element.getLanguage());
+    if (adjuster != null) {
+      final ASTNode reference = adjuster.process(element.getNode(), false, false, true, true);
+      return SourceTreeToPsiMap.treeToPsiNotNull(reference);
+    }
+    return element;
   }
 
   @Override
@@ -713,7 +727,7 @@ public class JavaCodeStyleManagerImpl extends JavaCodeStyleManager {
           }
 
           buffer.append(Character.toLowerCase(c));
-        continue;
+          continue;
         }
         //noinspection AssignmentToForLoopParameter
         i++;
@@ -733,18 +747,16 @@ public class JavaCodeStyleManagerImpl extends JavaCodeStyleManager {
     String suffix = getSuffixByVariableKind(variableKind);
     boolean doDecapitalize = false;
 
-    if (name.startsWith(prefix) && name.length() > prefix.length()) {
-      name = name.substring(prefix.length());
+    int pLength = prefix.length();
+    if (pLength > 0 && name.startsWith(prefix) && name.length() > pLength &&
+        // check it's not just a long camel word that happens to begin with the specified prefix
+        (!Character.isLetter(prefix.charAt(pLength - 1)) || Character.isUpperCase(name.charAt(pLength)))) {
+      name = name.substring(pLength);
       doDecapitalize = true;
     }
 
     if (name.endsWith(suffix) && name.length() > suffix.length()) {
       name = name.substring(0, name.length() - suffix.length());
-      doDecapitalize = true;
-    }
-
-    if (name.startsWith(IS_PREFIX) && name.length() > IS_PREFIX.length() && Character.isUpperCase(name.charAt(IS_PREFIX.length()))) {
-      name = name.substring(IS_PREFIX.length());
       doDecapitalize = true;
     }
 
@@ -868,9 +880,9 @@ public class JavaCodeStyleManagerImpl extends JavaCodeStyleManager {
   }
 
   private static void sortVariableNameSuggestions(String[] names,
-                                           final VariableKind variableKind,
-                                           @Nullable final String propertyName,
-                                           @Nullable final PsiType type) {
+                                                  final VariableKind variableKind,
+                                                  @Nullable final String propertyName,
+                                                  @Nullable final PsiType type) {
     if( names.length <= 1 ) {
       return;
     }

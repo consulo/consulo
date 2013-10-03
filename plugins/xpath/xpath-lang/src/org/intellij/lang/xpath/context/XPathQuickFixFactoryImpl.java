@@ -22,7 +22,6 @@
  */
 package org.intellij.lang.xpath.context;
 
-import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.psi.PsiElement;
 
 import org.intellij.lang.xpath.psi.XPathExpression;

@@ -26,9 +26,7 @@ package com.intellij.psi.impl.source.xml;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.psi.PsiAnchor;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.CompositePsiElement;
@@ -40,7 +38,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlElementType;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.xml.util.XmlUtil;
+import com.intellij.xml.util.XmlPsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,11 +48,11 @@ public abstract class XmlElementImpl extends CompositePsiElement implements XmlE
   }
 
   public boolean processElements(PsiElementProcessor processor, PsiElement place){
-    return XmlUtil.processXmlElements(this, processor, false);
+    return XmlPsiUtil.processXmlElements(this, processor, false);
   }
 
   public boolean processChildren(PsiElementProcessor processor){
-    return XmlUtil.processXmlElementChildren(this, processor, false);
+    return XmlPsiUtil.processXmlElementChildren(this, processor, false);
   }
 
   public XmlElement findElementByTokenType(final IElementType type){
@@ -84,43 +82,9 @@ public abstract class XmlElementImpl extends CompositePsiElement implements XmlE
     return super.getParent();
   }
 
-  @Nullable
-  private PsiElement findIncludedRoot() {
-    PsiElement cur = this;
-    while (cur != null && !(cur instanceof PsiFile)) {
-      final PsiElement parent = cur instanceof XmlElementImpl ? ((XmlElementImpl)cur).getAstParent() : cur.getParent();
-      if (parent instanceof PsiFile && cur.getUserData(INCLUDING_ELEMENT) != null) {
-        return cur;
-      }
-
-      cur = parent;
-    }
-    return null;
-  }
-
   @NotNull
   public PsiElement getNavigationElement() {
     if (!isPhysical()) {
-      final PsiElement root = findIncludedRoot();
-      if (root != null) {
-        final PsiAnchor anchor = root.getUserData(XmlUtil.ORIGINAL_ELEMENT);
-        if (anchor != null) {
-          final PsiElement original = anchor.retrieve();
-          if (original != null) {
-            final int endOffset = getTextRange().getEndOffset() + original.getTextRange().getStartOffset();
-
-            PsiElement candidate = original.findElementAt(getTextRange().getStartOffset() - root.getTextRange().getStartOffset());
-            while (candidate != null && candidate.getStartOffsetInParent() == 0 && candidate.getTextRange().getEndOffset() < endOffset) {
-              candidate = candidate.getParent();
-            }
-
-            if (candidate != null && candidate.getTextRange().getEndOffset() == endOffset) {
-              return candidate.getNavigationElement();
-            }
-          }
-        }
-      }
-
       final XmlElement including = getUserData(INCLUDING_ELEMENT);
       if (including != null) {
         return including;

@@ -17,7 +17,7 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.injected.editor.VirtualFileWindow;
@@ -1351,7 +1351,7 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
                     Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
                     if (startTime != null) {
                       LOG.info("Project opening took " + (currentTime - startTime.longValue()) / 1000000 + " ms");
-                      PluginManager.dumpPluginClassStatistics();
+                      PluginManagerCore.dumpPluginClassStatistics();
                     }
                   }
                 });

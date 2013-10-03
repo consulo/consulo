@@ -25,6 +25,7 @@
 package com.intellij.refactoring.introduceParameter;
 
 import com.intellij.codeInsight.ChangeContextUtil;
+import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -244,7 +245,7 @@ public class IntroduceParameterProcessor extends BaseRefactoringProcessor implem
           if (!(usageInfo.getElement() instanceof PsiMethod) && !(usageInfo instanceof InternalUsageInfo)) {
             if (!PsiTreeUtil.isAncestor(myMethodToReplaceIn.getContainingClass(), usageInfo.getElement(), false)) {
               conflicts.putValue(myParameterInitializer, RefactoringBundle.message("parameter.initializer.contains.0.but.not.all.calls.to.method.are.in.its.class",
-                                                      CommonRefactoringUtil.htmlEmphasize(PsiKeyword.SUPER)));
+                                                                                   CommonRefactoringUtil.htmlEmphasize(PsiKeyword.SUPER)));
               break;
             }
           }
@@ -381,7 +382,7 @@ public class IntroduceParameterProcessor extends BaseRefactoringProcessor implem
       }
       ChangeContextUtil.clearContextInfo(myParameterInitializer);
 
-      // Replacing expression occurences
+      // Replacing expression occurrences
       for (UsageInfo usage : usages) {
         if (usage instanceof ChangedMethodCallInfo) {
           PsiElement element = usage.getElement();
@@ -535,7 +536,7 @@ public class IntroduceParameterProcessor extends BaseRefactoringProcessor implem
   }
 
   protected String getCommandName() {
-    return RefactoringBundle.message("introduce.parameter.command", UsageViewUtil.getDescriptiveName(myMethodToReplaceIn));
+    return RefactoringBundle.message("introduce.parameter.command", DescriptiveNameUtil.getDescriptiveName(myMethodToReplaceIn));
   }
 
   @Nullable

@@ -26,7 +26,7 @@ package com.intellij.refactoring.makeStatic;
 
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
-import com.intellij.refactoring.util.ParameterTablePanel;
+import com.intellij.refactoring.util.VariableData;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +56,7 @@ public final class Settings {
 
 
   public Settings(boolean replaceUsages, String classParameterName,
-                  ParameterTablePanel.VariableData[] variableDatum) {
+                  VariableData[] variableDatum) {
     myReplaceUsages = replaceUsages;
     myMakeClassParameter = classParameterName != null;
     myClassParameterName = classParameterName;
@@ -64,7 +64,7 @@ public final class Settings {
     myFieldToNameList = new ArrayList<FieldParameter>();
     if(myMakeFieldParameters) {
       myFieldToNameMapping = new com.intellij.util.containers.HashMap<PsiField, String>();
-      for (ParameterTablePanel.VariableData data : variableDatum) {
+      for (VariableData data : variableDatum) {
         if (data.passAsParameter) {
           myFieldToNameMapping.put((PsiField)data.variable, data.name);
           myFieldToNameList.add(new FieldParameter((PsiField)data.variable, data.name, data.type));

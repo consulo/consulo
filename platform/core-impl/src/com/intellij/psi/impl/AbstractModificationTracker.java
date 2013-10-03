@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ public abstract class AbstractModificationTracker implements PsiTreeChangePrepro
         }
 
       case CHILDREN_CHANGED :
-        if (event.isGenericChildrenChange()) return;
+        if (event.isGenericChange()) return;
         changedInsideCodeBlock = isInsideCodeBlock(event.getParent());
-      break;
+        break;
 
       case BEFORE_CHILD_ADDITION:
       case BEFORE_CHILD_REMOVAL:
@@ -67,18 +67,18 @@ public abstract class AbstractModificationTracker implements PsiTreeChangePrepro
                                  isInsideCodeBlock(event.getChild()) &&
                                  isInsideCodeBlock(event.getOldChild()) &&
                                  isInsideCodeBlock(event.getNewChild());
-      break;
+        break;
 
       case BEFORE_CHILD_MOVEMENT:
       case CHILD_MOVED :
         changedInsideCodeBlock = isInsideCodeBlock(event.getOldParent()) && isInsideCodeBlock(event.getNewParent()) && isInsideCodeBlock(event.getChild());
-      break;
+        break;
 
       case BEFORE_PROPERTY_CHANGE:
       case PROPERTY_CHANGED :
         changedInsideCodeBlock = false;
-      break;
-   }
+        break;
+    }
 
     if (!changedInsideCodeBlock) {
       processOutOfCodeBlockModification(event);

@@ -45,6 +45,7 @@ import java.util.Set;
  * @author anna
  * @since 28-Nov-2005
  */
+@SuppressWarnings("JavadocReference")
 public abstract class InspectionProfileEntry {
   public static final String GENERAL_GROUP_NAME = InspectionsBundle.message("inspection.general.tools.group.name");
 
@@ -54,6 +55,10 @@ public abstract class InspectionProfileEntry {
   private static Set<String> ourBlackList = null;
   private static final Object BLACK_LIST_LOCK = new Object();
   private Boolean myUseNewSerializer = null;
+
+  public void cleanup(Project project) {
+
+  }
 
   interface DefaultNameProvider {
     @Nullable String getDefaultShortName();
@@ -238,6 +243,7 @@ public abstract class InspectionProfileEntry {
     }
   }
 
+  @NotNull
   public static Collection<String> getBlackList() {
     synchronized (BLACK_LIST_LOCK) {
       if (ourBlackList == null) {
@@ -265,7 +271,7 @@ public abstract class InspectionProfileEntry {
    * @param project to be associated with this entry
    * @deprecated this won't work for inspections configured via {@link com.intellij.codeInspection.InspectionEP}
    */
-  public void projectOpened(Project project) {
+  public void projectOpened(@NotNull Project project) {
   }
 
   /**
@@ -274,7 +280,7 @@ public abstract class InspectionProfileEntry {
    * @param project to be disassociated from this entry
    * @deprecated this won't work for inspections configured via {@link com.intellij.codeInspection.InspectionEP}
    */
-  public void projectClosed(Project project) {
+  public void projectClosed(@NotNull Project project) {
   }
 
   /**
@@ -299,6 +305,7 @@ public abstract class InspectionProfileEntry {
     return ResourceUtil.getResource(getDescriptionContextClass(), "/inspectionDescriptions", fileName);
   }
 
+  @NotNull
   protected Class<? extends InspectionProfileEntry> getDescriptionContextClass() {
     return getClass();
   }

@@ -27,7 +27,7 @@ import com.intellij.codeInsight.template.impl.MacroCallNode;
 import com.intellij.codeInsight.template.macro.CompleteMacro;
 import com.intellij.codeInsight.template.macro.CompleteSmartMacro;
 import com.intellij.codeInspection.InspectionProfile;
-import com.intellij.codeInspection.htmlInspections.RequiredAttributesInspection;
+import com.intellij.codeInspection.htmlInspections.XmlEntitiesInspection;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.UndoManager;
@@ -198,11 +198,11 @@ public class XmlTagInsertHandler implements InsertHandler<LookupElement> {
 
     if (tag instanceof HtmlTag) {
       final InspectionProfile profile = InspectionProjectProfileManager.getInstance(tag.getProject()).getInspectionProfile();
-      RequiredAttributesInspection inspection = (RequiredAttributesInspection)profile.getUnwrappedTool(
-        RequiredAttributesInspection.SHORT_NAME, tag);
+      XmlEntitiesInspection inspection = (XmlEntitiesInspection)profile.getUnwrappedTool(
+        XmlEntitiesInspection.REQUIRED_ATTRIBUTES_SHORT_NAME, tag);
 
       if (inspection != null) {
-        StringTokenizer tokenizer = new StringTokenizer(inspection.getAdditionalEntries(0));
+        StringTokenizer tokenizer = new StringTokenizer(inspection.getAdditionalEntries());
         notRequiredAttributes = new HashSet<String>();
 
         while(tokenizer.hasMoreElements()) notRequiredAttributes.add(tokenizer.nextToken());
@@ -366,26 +366,26 @@ public class XmlTagInsertHandler implements InsertHandler<LookupElement> {
         }
         break;
       case XmlElementDescriptor.CONTENT_TYPE_MIXED:
-         if (completeIt) {
-           template.addTextSegment(">");
-           if (firstLevel) {
-             template.addEndVariable();
-           }
-           else {
-             template.addVariable(new MacroCallNode(new CompleteMacro()), true);
-           }
-           addTagEnd(template, descriptor, context);
-         }
-         break;
-       default:
-         if (!addRequiredSubTags(template, descriptor, file, context)) {
-           if (completeIt) {
-             template.addTextSegment(">");
-             template.addEndVariable();
-             addTagEnd(template, descriptor, context);
-           }
-         }
-         break;
+        if (completeIt) {
+          template.addTextSegment(">");
+          if (firstLevel) {
+            template.addEndVariable();
+          }
+          else {
+            template.addVariable(new MacroCallNode(new CompleteMacro()), true);
+          }
+          addTagEnd(template, descriptor, context);
+        }
+        break;
+      default:
+        if (!addRequiredSubTags(template, descriptor, file, context)) {
+          if (completeIt) {
+            template.addTextSegment(">");
+            template.addEndVariable();
+            addTagEnd(template, descriptor, context);
+          }
+        }
+        break;
     }
   }
 

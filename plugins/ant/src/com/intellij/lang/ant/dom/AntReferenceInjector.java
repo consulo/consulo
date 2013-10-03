@@ -35,9 +35,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
-* @author Eugene Zhuravlev
-*         Date: Apr 9, 2010
-*/
+ * @author Eugene Zhuravlev
+ *         Date: Apr 9, 2010
+ */
 class AntReferenceInjector implements DomReferenceInjector {
   public String resolveString(@Nullable String unresolvedText, @NotNull ConvertContext context) {
     // todo: speed optimization: disable string resolution in places where it is not applicable
@@ -68,7 +68,7 @@ class AntReferenceInjector implements DomReferenceInjector {
   private static void addPropertyReferences(@NotNull ConvertContext context, final XmlAttributeValue xmlAttributeValue, final Collection<PsiReference> result) {
     final String value = xmlAttributeValue.getValue();
     final DomElement contextElement = context.getInvocationElement();
-    
+
     final XmlAttribute attrib = PsiTreeUtil.getParentOfType(xmlAttributeValue, XmlAttribute.class);
     if (attrib != null) {
       final String name = attrib.getName();
@@ -84,7 +84,7 @@ class AntReferenceInjector implements DomReferenceInjector {
         return;
       }
     }
-    
+
     if (xmlAttributeValue != null /*&& value.indexOf("@{") < 0*/) {
       final int valueBeginingOffset = Math.abs(xmlAttributeValue.getTextRange().getStartOffset() - xmlAttributeValue.getValueTextRange().getStartOffset());
       int startIndex;
@@ -120,14 +120,14 @@ class AntReferenceInjector implements DomReferenceInjector {
           final AntDomPropertyReference ref = new AntDomPropertyReference(
             contextElement, xmlAttributeValue, new TextRange(valueBeginingOffset + startIndex, valueBeginingOffset + endIndex)
           );
-          
+
           result.add(ref);
         }
         endIndex = startIndex;
       }
     }
   }
-  
+
   public static void addMacrodefParameterRefs(@NotNull XmlAttributeValue element, final Collection<PsiReference> refs) {
     final DomElement domElement = DomUtil.getDomElement(element);
     if (domElement == null) {
@@ -161,9 +161,9 @@ class AntReferenceInjector implements DomReferenceInjector {
       if(nestedBrackets > 0 || endIndex == text.length()) return;
       if (endIndex >= startIndex) {
         //final String name = text.substring(startIndex, endIndex);
-         refs.add(new AntDomMacrodefAttributeReference(element, new TextRange(valueBeginingOffset + startIndex, valueBeginingOffset + endIndex)));
+        refs.add(new AntDomMacrodefAttributeReference(element, new TextRange(valueBeginingOffset + startIndex, valueBeginingOffset + endIndex)));
       }
-      endIndex = startIndex; 
+      endIndex = startIndex;
     }
   }
 
