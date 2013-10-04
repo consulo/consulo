@@ -90,7 +90,7 @@ public abstract class WeighingActionGroup extends ActionGroup {
     final DefaultActionGroup chosen = new DefaultActionGroup();
     boolean prevSeparator = true;
     for (final AnAction action : all) {
-      final boolean separator = action instanceof Separator;
+      final boolean separator = action instanceof AnSeparator;
       if (separator && !prevSeparator) {
         chosen.add(action);
       }
@@ -108,7 +108,7 @@ public abstract class WeighingActionGroup extends ActionGroup {
     final ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
     other.setPopup(true);
     other.getTemplatePresentation().setText("Other...");
-    return new AnAction[]{chosen, new Separator(), other};
+    return new AnAction[]{chosen, new AnSeparator(), other};
   }
 
   protected boolean shouldBeChosenAnyway(AnAction action) {

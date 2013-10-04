@@ -53,7 +53,7 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
     List<AnAction> result = new ArrayList<AnAction>();
     result.add(new MoveModulesOutsideGroupAction());
     result.add(new MoveModulesToSubGroupAction(null));
-    result.add(Separator.getInstance());
+    result.add(AnSeparator.getInstance());
     for (String name : topLevelGroupNames) {
       result.add(new MoveModuleToGroup(new ModuleGroup(new String[]{name})));
     }

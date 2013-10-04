@@ -36,7 +36,7 @@ public class MergeActionGroup extends ActionGroup {
     ArrayList<MergeOperations.Operation> operations = myOperations.getOperations();
     AnAction[] actions = new AnAction[operations.size() + 2];
     actions[0] = new SelectSuggestionAction(myOperations);
-    actions[1] = Separator.getInstance();
+    actions[1] = AnSeparator.getInstance();
     for (int i = 2; i < actions.length; i++)
       actions[i] = new OperationAction(operations.get(i - 2));
     return actions;

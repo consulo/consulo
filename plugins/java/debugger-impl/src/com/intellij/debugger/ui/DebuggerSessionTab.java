@@ -125,8 +125,8 @@ public class DebuggerSessionTab extends DebuggerSessionTabBase implements Dispos
     ActionManager actionManager = ActionManager.getInstance();
     topToolbar.addAll(getCustomizedActionGroup(XDebuggerActions.TOOL_WINDOW_TOP_TOOLBAR_GROUP));
     topToolbar.add(actionManager.getAction(DebuggerActions.POP_FRAME), new Constraints(Anchor.AFTER, XDebuggerActions.STEP_OUT));
-    topToolbar.add(Separator.getInstance(), new Constraints(Anchor.BEFORE, DebuggerActions.POP_FRAME));
-    topToolbar.add(Separator.getInstance(), new Constraints(Anchor.AFTER, DebuggerActions.POP_FRAME));
+    topToolbar.add(AnSeparator.getInstance(), new Constraints(Anchor.BEFORE, DebuggerActions.POP_FRAME));
+    topToolbar.add(AnSeparator.getInstance(), new Constraints(Anchor.AFTER, DebuggerActions.POP_FRAME));
     myUi.getOptions().setTopToolbar(topToolbar, ActionPlaces.DEBUGGER_TOOLBAR);
 
 

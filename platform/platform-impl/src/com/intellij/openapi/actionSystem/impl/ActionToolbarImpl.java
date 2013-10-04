@@ -266,7 +266,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
     }
     for (int i = 0; i < actions.size(); i++) {
       final AnAction action = actions.get(i);
-      if (action instanceof Separator && isNavBar()) {
+      if (action instanceof AnSeparator && isNavBar()) {
         continue;
       }
 
@@ -281,7 +281,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
         }
       }
 
-      if (action instanceof Separator) {
+      if (action instanceof AnSeparator) {
         if (i > 0 && i < actions.size() - 1) {
           add(new MySeparator());
         }
@@ -1292,7 +1292,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
         secondary.add(each);
       }
     }
-    result.add(new Separator());
+    result.add(new AnSeparator());
     result.addAll(secondary);
 
     return result;

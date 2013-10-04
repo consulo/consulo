@@ -330,7 +330,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     toolbarActionGroup.add(new RemovePackagingElementAction(this));
-    toolbarActionGroup.add(Separator.getInstance());
+    toolbarActionGroup.add(AnSeparator.getInstance());
     toolbarActionGroup.add(new SortElementsToggleAction(this.getLayoutTreeComponent()));
     toolbarActionGroup.add(new MovePackagingElementAction(myLayoutTreeComponent, "Move Up", "", IconUtil.getMoveUpIcon(), -1));
     toolbarActionGroup.add(new MovePackagingElementAction(myLayoutTreeComponent, "Move Down", "", IconUtil.getMoveDownIcon(), 1));
@@ -361,12 +361,12 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     popupActionGroup.add(new InlineArtifactAction(this));
     popupActionGroup.add(new RenamePackagingElementAction(this));
     popupActionGroup.add(new SurroundElementWithAction(this));
-    popupActionGroup.add(Separator.getInstance());
+    popupActionGroup.add(AnSeparator.getInstance());
     popupActionGroup.add(new HideContentAction(this));
     popupActionGroup.add(new LayoutTreeNavigateAction(myLayoutTreeComponent));
     popupActionGroup.add(new LayoutTreeFindUsagesAction(myLayoutTreeComponent, myProject, myContext.getParent()));
 
-    popupActionGroup.add(Separator.getInstance());
+    popupActionGroup.add(AnSeparator.getInstance());
     CommonActionsManager actionsManager = CommonActionsManager.getInstance();
     DefaultTreeExpander treeExpander = new DefaultTreeExpander(tree);
     popupActionGroup.add(actionsManager.createExpandAllAction(treeExpander, tree));

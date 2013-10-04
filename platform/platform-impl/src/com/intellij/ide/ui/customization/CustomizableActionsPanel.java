@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -193,7 +193,7 @@ public class CustomizableActionsPanel {
         final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
         if (selectionPath != null) {
           DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
-          final ActionUrl url = new ActionUrl(ActionUrl.getGroupPath(selectionPath), Separator.getInstance(), ActionUrl.ADDED,
+          final ActionUrl url = new ActionUrl(ActionUrl.getGroupPath(selectionPath), AnSeparator.getInstance(), ActionUrl.ADDED,
                                               node.getParent().getIndex(node) + 1);
           ActionUrl.changePathInActionsTree(myActionsTree, url);
           addCustomizedAction(url);
@@ -481,7 +481,7 @@ public class CustomizableActionsPanel {
           setText(action != null ? action.getTemplatePresentation().getText() : actionId);
           icon = (Icon)((Pair)userObject).second;
         }
-        else if (userObject instanceof Separator) {
+        else if (userObject instanceof AnSeparator) {
           setText("-------------");
         }
         else if (userObject instanceof QuickList) {
@@ -749,7 +749,7 @@ public class CustomizableActionsPanel {
       mySetIconButton.setEnabled(myTextField.getText().length() != 0 &&
                                  selectionPath != null &&
                                  new DefaultMutableTreeNode(selectionPath).isLeaf() &&
-                                 !(userObject instanceof Separator));
+                                 !(userObject instanceof AnSeparator));
     }
 
     @Nullable

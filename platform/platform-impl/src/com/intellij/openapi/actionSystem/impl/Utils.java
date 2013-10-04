@@ -146,8 +146,8 @@ public class Utils{
           expandActionGroup((ActionGroup)child, list, presentationFactory, context, place, actionManager);
         }
       }
-      else if (child instanceof Separator) {
-        if (!list.isEmpty() && !(list.get(list.size() - 1) instanceof Separator)) {
+      else if (child instanceof AnSeparator) {
+        if (!list.isEmpty() && !(list.get(list.size() - 1) instanceof AnSeparator)) {
           list.add(child);
         }
       }
@@ -188,7 +188,7 @@ public class Utils{
         LOG.error("Null action found in group " + group + ", " + factory.getPresentation(group));
         continue;
       }
-      if (anAction instanceof Separator) {
+      if (anAction instanceof AnSeparator) {
         continue;
       }
       final Project project = CommonDataKeys.PROJECT.getData(context);
@@ -245,7 +245,7 @@ public class Utils{
 
     for (int i = 0, size = list.size(); i < size; i++) {
       final AnAction action = list.get(i);
-      if (action instanceof Separator) {
+      if (action instanceof AnSeparator) {
         if (i > 0 && i < size - 1) {
           component.add(new JPopupMenu.Separator() {
             @Override

@@ -41,7 +41,7 @@ public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
     Collection<SharedScheme<KeymapImpl>> sharedSchemes = ((KeymapManagerEx)KeymapManagerEx.getInstance()).getSchemesManager().loadSharedSchemes();
 
     if (!sharedSchemes.isEmpty()) {
-      group.add(Separator.getInstance());
+      group.add(AnSeparator.getInstance());
       for (SharedScheme<KeymapImpl> sharedScheme : sharedSchemes) {
         addKeymapAction(group, manager,current, sharedScheme.getScheme(), true);
       }

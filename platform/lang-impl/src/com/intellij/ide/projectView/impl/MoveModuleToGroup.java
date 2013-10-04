@@ -69,7 +69,7 @@ public class MoveModuleToGroup extends ActionGroup {
     List<AnAction> result = new ArrayList<AnAction>();
     result.add(new MoveModulesToGroupAction(myModuleGroup, IdeBundle.message("action.move.module.to.this.group")));
     result.add(new MoveModulesToSubGroupAction(myModuleGroup));
-     result.add(Separator.getInstance());
+     result.add(AnSeparator.getInstance());
     for (final ModuleGroup child : children) {
       result.add(new MoveModuleToGroup(child));
     }

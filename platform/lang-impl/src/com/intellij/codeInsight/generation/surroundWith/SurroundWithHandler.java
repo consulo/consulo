@@ -247,7 +247,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     List<TemplateImpl> templates = SurroundWithTemplateHandler.getApplicableTemplates(editor, file, true);
 
     if (!templates.isEmpty() || !customTemplates.isEmpty()) {
-      applicable.add(new Separator("Live templates"));
+      applicable.add(new AnSeparator("Live templates"));
     }
 
     for (TemplateImpl template : templates) {
@@ -261,7 +261,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     }
 
     if (!templates.isEmpty() || !customTemplates.isEmpty()) {
-      applicable.add(Separator.getInstance());
+      applicable.add(AnSeparator.getInstance());
       applicable.add(new ConfigureTemplatesAction());
     }
     return hasEnabledSurrounders ? applicable : null;

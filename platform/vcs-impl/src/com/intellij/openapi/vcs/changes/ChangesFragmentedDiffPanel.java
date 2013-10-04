@@ -655,7 +655,7 @@ public class ChangesFragmentedDiffPanel implements Disposable {
       final DefaultActionGroup dag = new DefaultActionGroup();
       dag.add(myUsual);
       dag.add(myNumbered);
-      dag.add(new Separator());
+      dag.add(new AnSeparator());
       dag.add(mySoftWrapsAction);
       final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(null, dag, e.getDataContext(),
                                                                                        JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,

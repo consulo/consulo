@@ -81,7 +81,7 @@ public class Group implements KeymapGroup {
   }
 
   public void addSeparator() {
-    myChildren.add(Separator.getInstance());
+    myChildren.add(AnSeparator.getInstance());
   }
 
   public boolean containsId(String id) {
@@ -112,16 +112,16 @@ public class Group implements KeymapGroup {
   }
 
   public void normalizeSeparators() {
-    while (myChildren.size() > 0 && myChildren.get(0) instanceof Separator) {
+    while (myChildren.size() > 0 && myChildren.get(0) instanceof AnSeparator) {
       myChildren.remove(0);
     }
 
-    while (myChildren.size() > 0 && myChildren.get(myChildren.size() - 1) instanceof Separator) {
+    while (myChildren.size() > 0 && myChildren.get(myChildren.size() - 1) instanceof AnSeparator) {
       myChildren.remove(myChildren.size() - 1);
     }
 
     for (int i=1; i < myChildren.size() - 1; i++) {
-      if (myChildren.get(i) instanceof Separator && myChildren.get(i + 1) instanceof Separator) {
+      if (myChildren.get(i) instanceof AnSeparator && myChildren.get(i + 1) instanceof AnSeparator) {
         myChildren.remove(i);
         i--;
       }
@@ -200,7 +200,7 @@ public class Group implements KeymapGroup {
       else if (o instanceof Group) {
         addGroup((Group)o);
       }
-      else if (o instanceof Separator) {
+      else if (o instanceof AnSeparator) {
         addSeparator();
       }
     }
@@ -224,7 +224,7 @@ public class Group implements KeymapGroup {
       if (o instanceof String) {
         group.add(actionManager.getAction((String)o));
       }
-      else if (o instanceof Separator) {
+      else if (o instanceof AnSeparator) {
         group.addSeparator();
       }
       else if (o instanceof Group) {

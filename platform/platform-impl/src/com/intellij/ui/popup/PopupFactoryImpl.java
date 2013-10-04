@@ -884,9 +884,9 @@ public class PopupFactoryImpl extends JBPopupFactory {
           LOG.error("null action in group " + actionGroup);
           continue;
         }
-        if (action instanceof Separator) {
+        if (action instanceof AnSeparator) {
           myPrependWithSeparator = true;
-          mySeparatorText = ((Separator)action).getText();
+          mySeparatorText = ((AnSeparator)action).getText();
         }
         else {
           if (action instanceof ActionGroup) {

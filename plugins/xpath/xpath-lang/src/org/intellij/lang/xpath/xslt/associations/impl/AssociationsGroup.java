@@ -51,7 +51,7 @@ public class AssociationsGroup extends ActionGroup {
                 PsiFile assoc = associationsFor[i];
                 children[i] = new ToggleAssociationAction(fileAssociationsManager, psiFile, assoc);
             }
-            children[children.length - 3] = Separator.getInstance();
+            children[children.length - 3] = AnSeparator.getInstance();
         }
         children[children.length - 2] = new AddAssociationAction(fileAssociationsManager);
         children[children.length - 1] = new ConfigureAssociationsAction();

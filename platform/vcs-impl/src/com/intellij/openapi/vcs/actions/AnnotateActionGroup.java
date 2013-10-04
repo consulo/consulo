@@ -37,7 +37,7 @@ public class AnnotateActionGroup extends ActionGroup {
         actions.add(new ShowHideAspectAction(g, gutterComponent));
       }
     }
-    actions.add(Separator.getInstance());
+    actions.add(AnSeparator.getInstance());
     actions.add(new ShowAnnotationColorsAction(gutters, gutterComponent));
     actions.add(new ShowShortenNames(gutterComponent));
     myActions = actions.toArray(new AnAction[actions.size()]);

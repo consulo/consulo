@@ -162,7 +162,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   protected ActionGroup getActionGroup(boolean inToolbar) {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.add(new RefreshAction());
-    actionGroup.add(Separator.getInstance());
+    actionGroup.add(AnSeparator.getInstance());
     actionGroup.add(new ActionInstallPlugin(this, installed));
     if (inToolbar) {
       actionGroup.add(new SortByStatusAction("Sort Installed First"));

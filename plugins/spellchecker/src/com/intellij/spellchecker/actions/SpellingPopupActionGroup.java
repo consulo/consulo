@@ -75,7 +75,7 @@ public final class SpellingPopupActionGroup extends ActionGroup {
       children.put(Anchor.LAST, last);
       extractActions(quickFixes, children);
       if (first.size() > 0 && last.size() > 0) {
-        first.add(new Separator());
+        first.add(new AnSeparator());
       }
       first.addAll(last);
       if (first.size() > 0) {

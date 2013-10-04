@@ -21,15 +21,15 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a separator.
  */
-public final class Separator extends AnAction implements DumbAware {
-  private static final Separator ourInstance = new Separator();
+public final class AnSeparator extends AnAction implements DumbAware {
+  private static final AnSeparator ourInstance = new AnSeparator();
 
   private String myText;
 
-  public Separator() {
+  public AnSeparator() {
   }
 
-  public Separator(@Nullable final String text) {
+  public AnSeparator(@Nullable final String text) {
     myText = text;
   }
 
@@ -37,7 +37,7 @@ public final class Separator extends AnAction implements DumbAware {
     return myText;
   }
 
-  public static Separator getInstance() {
+  public static AnSeparator getInstance() {
     return ourInstance;
   }
 

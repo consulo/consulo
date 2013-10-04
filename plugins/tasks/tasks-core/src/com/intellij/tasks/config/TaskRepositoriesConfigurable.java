@@ -3,8 +3,8 @@ package com.intellij.tasks.config;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -106,7 +106,7 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
         Set<TaskRepository> repositories = RecentTaskRepositories.getInstance().getRepositories();
         repositories.removeAll(myRepositories);
         if (!repositories.isEmpty()) {
-          group.add(Separator.getInstance());
+          group.add(AnSeparator.getInstance());
           for (final TaskRepository repository : repositories) {
             group.add(new IconWithTextAction(repository.getUrl(), repository.getUrl(), repository.getRepositoryType().getIcon()) {
               @Override

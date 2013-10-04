@@ -14,8 +14,8 @@ package org.zmlx.hg4idea.provider;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -42,8 +42,8 @@ public class HgQuickListProvider implements VcsQuickListContentProvider {
     final ActionManager manager = ActionManager.getInstance();
     final List<AnAction> actions = new ArrayList<AnAction>();
 
-    actions.add(new Separator(activeVcs.getDisplayName()));
-    actions.add(new Separator());
+    actions.add(new AnSeparator(activeVcs.getDisplayName()));
+    actions.add(new AnSeparator());
     add("hg4idea.branches", manager, actions);
     add("hg4idea.pull", manager, actions);
     add("hg4idea.push", manager, actions);

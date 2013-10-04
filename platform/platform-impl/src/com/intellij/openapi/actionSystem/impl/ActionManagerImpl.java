@@ -660,7 +660,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
    */
   private void processAddToGroupNode(AnAction action, Element element, final PluginId pluginId, boolean secondary) {
     // Real subclasses of AnAction should not be here
-    if (!(action instanceof Separator)) {
+    if (!(action instanceof AnSeparator)) {
       assertActionIsGroupOrStub(action);
     }
 
@@ -758,7 +758,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       reportActionError(pluginId, "unexpected name of element \"" + element.getName() + "\"");
       return;
     }
-    Separator separator = Separator.getInstance();
+    AnSeparator separator = AnSeparator.getInstance();
     if (parentGroup != null) {
       parentGroup.add(separator, this);
     }

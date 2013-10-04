@@ -854,7 +854,7 @@ public class GitLogUI implements Disposable {
       group.add(new MyCheckoutNewBranchAction());
       group.add(new MyCreateNewTagAction());
 
-      group.add(new Separator());
+      group.add(new AnSeparator());
       group.add(myCopyHashAction);
       group.add(myMyShowTreeAction);
       group.add(myMyGotoCommitAction);
@@ -876,13 +876,13 @@ public class GitLogUI implements Disposable {
       toggleCommitMark.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)),
                                                  myGraphGutter.getComponent());
       group.add(toggleCommitMark);
-      group.add(new Separator());
+      group.add(new AnSeparator());
 
       group.add(myBranchSelectorAction.asTextAction());
       group.add(myUsersFilterAction.asTextAction());
       group.add(myStructureFilterAction.asTextAction());
       group.add(myDatesFilterAction.asTextAction());
-      group.add(new Separator());
+      group.add(new AnSeparator());
       group.add(myRefreshAction);
 
       group.addAll(getCustomActions());
@@ -2085,11 +2085,11 @@ public class GitLogUI implements Disposable {
       if (myRootsUnderVcs.size() == 1) {
         dab.add(myDateOrder);
         dab.add(myTopoOrder);
-        dab.add(new Separator());
+        dab.add(new AnSeparator());
       }
       dab.add(myMultiColorAction);
       dab.add(myCalmAction);
-      dab.add(new Separator());
+      dab.add(new AnSeparator());
       dab.add(myRootsForTreeAction);
       return dab;
     }

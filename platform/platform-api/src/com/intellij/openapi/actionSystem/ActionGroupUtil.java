@@ -49,7 +49,7 @@ public class ActionGroupUtil {
           return false;
         }
       }
-      else if (!(action instanceof Separator) && isActionEnabledAndVisible(e, action2presentation, action)) {
+      else if (!(action instanceof AnSeparator) && isActionEnabledAndVisible(e, action2presentation, action)) {
         return false;
       }
     }
@@ -76,7 +76,7 @@ public class ActionGroupUtil {
           result.addAll(getEnabledChildren((ActionGroup)action, e, action2presentation));
         }
       }
-      else if (!(action instanceof Separator)) {
+      else if (!(action instanceof AnSeparator)) {
         if (isActionEnabledAndVisible(e, action2presentation, action)) {
           result.add(action);
         }

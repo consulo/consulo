@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -290,7 +290,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
   private static void addActionsFromExtensions(@NotNull AnnotationPresentation presentation, @NotNull FileAnnotation fileAnnotation) {
     AnnotationGutterActionProvider[] extensions = AnnotationGutterActionProvider.EP_NAME.getExtensions();
     if (extensions.length > 0) {
-      presentation.addAction(new Separator());
+      presentation.addAction(new AnSeparator());
     }
     for (AnnotationGutterActionProvider provider : extensions) {
       presentation.addAction(provider.createAction(fileAnnotation));

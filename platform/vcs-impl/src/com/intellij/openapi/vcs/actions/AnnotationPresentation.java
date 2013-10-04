@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
@@ -49,12 +49,12 @@ class AnnotationPresentation implements TextAnnotationPresentation {
     mySwitcher = switcher;
 
     myActions = new ArrayList<AnAction>();
-    myActions.add(Separator.getInstance());
+    myActions.add(AnSeparator.getInstance());
     if (actions != null) {
       final List<AnAction> actionsList = Arrays.asList(actions);
       if (!actionsList.isEmpty()) {
         myActions.addAll(actionsList);
-        myActions.add(new Separator());
+        myActions.add(new AnSeparator());
       }
     }
     myActions.addAll(myHighlighting.getList());

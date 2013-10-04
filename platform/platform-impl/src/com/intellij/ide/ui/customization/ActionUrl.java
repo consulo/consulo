@@ -18,7 +18,7 @@ package com.intellij.ide.ui.customization;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import com.intellij.openapi.util.*;
@@ -87,8 +87,8 @@ public class ActionUrl implements JDOMExternalizable {
 
   @Nullable
   public AnAction getComponentAction(){
-    if (myComponent instanceof Separator){
-      return Separator.getInstance();
+    if (myComponent instanceof AnSeparator){
+      return AnSeparator.getInstance();
     }
     if (myComponent instanceof String){
       return ActionManager.getInstance().getAction((String)myComponent);
@@ -137,7 +137,7 @@ public class ActionUrl implements JDOMExternalizable {
       myComponent = attributeValue;
     }
     else if (element.getAttributeValue(SEPARATOR) != null) {
-      myComponent = Separator.getInstance();
+      myComponent = AnSeparator.getInstance();
     }
     else if (element.getAttributeValue(IS_GROUP) != null) {
       final AnAction action = ActionManager.getInstance().getAction(attributeValue);
@@ -160,7 +160,7 @@ public class ActionUrl implements JDOMExternalizable {
       element.setAttribute(VALUE, (String)myComponent);
       element.setAttribute(IS_ACTION, Boolean.TRUE.toString());
     }
-    else if (myComponent instanceof Separator) {
+    else if (myComponent instanceof AnSeparator) {
       element.setAttribute(SEPARATOR, Boolean.TRUE.toString());
     }
     else if (myComponent instanceof Group) {

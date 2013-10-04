@@ -297,7 +297,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
     final List<? extends AnAction> copyActions = createCopyActions(fromPopup);
     result.addAll(copyActions);
-    result.add(Separator.getInstance());
+    result.add(AnSeparator.getInstance());
 
     result.add(new MyFindUsagesAction(myTree));
 

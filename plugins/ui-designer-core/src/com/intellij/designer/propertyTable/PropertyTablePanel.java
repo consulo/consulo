@@ -97,7 +97,7 @@ public final class PropertyTablePanel extends JPanel implements ListSelectionLis
     myActions = actionGroup.getChildren(null);
     for (int i = 0; i < myActions.length; i++) {
       AnAction action = myActions[i];
-      if (!(action instanceof Separator)) {
+      if (!(action instanceof AnSeparator)) {
         Presentation presentation = action.getTemplatePresentation();
         ActionButton button = new ActionButton(action, presentation, ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
         myActionPanel.add(button);

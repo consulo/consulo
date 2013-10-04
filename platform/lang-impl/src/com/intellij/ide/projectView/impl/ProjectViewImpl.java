@@ -282,13 +282,13 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
 
         if (each.getUserData(SUB_ID_KEY) == null) {
           if (lastHeaderHadKids) {
-            views.add(new Separator());
+            views.add(new AnSeparator());
           } else {
             if (i + 1 < myContentManager.getContentCount()) {
               Content next = myContentManager.getContent(i + 1);
               if (next != null) {
                 if (next.getUserData(SUB_ID_KEY) != null) {
-                  views.add(new Separator());
+                  views.add(new AnSeparator());
                 }
               }
             }
@@ -303,7 +303,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
       }
     }
     result.add(views);
-    result.add(new Separator());
+    result.add(new AnSeparator());
 
 
     ArrayList<AnAction> secondary = new ArrayList<AnAction>();
@@ -317,7 +317,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
         }
       }
     }
-    result.add(new Separator());
+    result.add(new AnSeparator());
     result.addAll(secondary);
 
     return result;

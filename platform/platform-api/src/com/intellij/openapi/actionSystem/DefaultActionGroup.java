@@ -89,7 +89,7 @@ public class DefaultActionGroup extends ActionGroup {
    * Adds a separator to the tail.
    */
   public final void addSeparator() {
-    add(Separator.getInstance());
+    add(AnSeparator.getInstance());
   }
 
   /**
@@ -119,7 +119,7 @@ public class DefaultActionGroup extends ActionGroup {
       throw new IllegalArgumentException("Cannot add a group to itself");
     }
     // Check that action isn't already registered
-    if (!(action instanceof Separator)) {
+    if (!(action instanceof AnSeparator)) {
       if (mySortedChildren.contains(action)) {
         throw new IllegalArgumentException("cannot add an action twice: " + action);
       }
@@ -333,6 +333,6 @@ public class DefaultActionGroup extends ActionGroup {
   }
 
   public void addSeparator(@Nullable String separatorText) {
-    add(new Separator(separatorText));
+    add(new AnSeparator(separatorText));
   }
 }

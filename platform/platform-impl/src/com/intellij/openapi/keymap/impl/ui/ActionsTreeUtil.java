@@ -187,7 +187,7 @@ public class ActionsTreeUtil {
         if (group.getChildrenCount() == 0) return "Empty group";
         final AnAction[] children = group.getChildActionsOrStubs();
         for (AnAction child : children) {
-          if (!(child instanceof Separator)) {
+          if (!(child instanceof AnSeparator)) {
             return "group." + getName(child);
           }
         }
@@ -231,7 +231,7 @@ public class ActionsTreeUtil {
           group.addGroup(subGroup);
         }
       }
-      else if (action instanceof Separator) {
+      else if (action instanceof AnSeparator) {
         group.addSeparator();
       }
       else if (action != null) {

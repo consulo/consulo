@@ -483,7 +483,7 @@ public class ActionsTree {
 
           changed = originalKeymap != null && isActionChanged(list.getActionId(), originalKeymap, myKeymap);
         }
-        else if (userObject instanceof Separator) {
+        else if (userObject instanceof AnSeparator) {
           // TODO[vova,anton]: beautify
           changed = false;
           text = "-------------";

@@ -21,7 +21,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +53,7 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
     for (String favoritesList : listNames) {
       actions[idx++] = new AddAllOpenFilesToFavorites(favoritesList);
     }
-    actions[idx++] = Separator.getInstance();
+    actions[idx++] = AnSeparator.getInstance();
     actions[idx] = new AddAllOpenFilesToNewFavoritesListAction();
     return actions;
   }

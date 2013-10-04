@@ -51,7 +51,7 @@ public class SendToFavoritesGroup extends ActionGroup {
     for (String list : availableFavoritesLists) {
       actions.add(new SendToFavoritesAction(list));
     }
-    actions.add(Separator.getInstance());
+    actions.add(AnSeparator.getInstance());
     actions.add(new SendToNewFavoritesListAction());
     return actions.toArray(new AnAction[actions.size()]);
   }

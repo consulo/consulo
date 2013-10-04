@@ -224,7 +224,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     DefaultActionGroup result = new DefaultActionGroup();
     result.add(new RevertAction());
     result.add(new CreatePatchAction());
-    result.add(Separator.getInstance());
+    result.add(AnSeparator.getInstance());
     result.add(new ContextHelpAction(getHelpId()));
     return result;
   }

@@ -122,7 +122,7 @@ public abstract class AbstractTableView<T> extends JPanel implements TypeSafeDat
       actionGroup.add(action);
     }
     if (getHelpId() != null) {
-      actionGroup.add(Separator.getInstance());
+      actionGroup.add(AnSeparator.getInstance());
       actionGroup.add(new ContextHelpAction(getHelpId()));
     }
 

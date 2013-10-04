@@ -178,7 +178,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
         if (action instanceof DefaultActionGroup) {
           firstAction = getFirstAction((DefaultActionGroup)action);
         }
-        else if (action instanceof Separator || action instanceof ActionGroup) {
+        else if (action instanceof AnSeparator || action instanceof ActionGroup) {
           continue;
         }
         else {

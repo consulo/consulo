@@ -36,14 +36,14 @@ public class DirDiffToolbarActions extends ActionGroup {
     super("Directory Diff Actions", false);
     final List<AnAction> actions = new ArrayList<AnAction>(Arrays.asList(
       new RefreshDirDiffAction(model),
-      Separator.getInstance(),
+      AnSeparator.getInstance(),
       new EnableLeft(model),
       new EnableNotEqual(model),
       new EnableEqual(model),
       new EnableRight(model),
-      Separator.getInstance(),
+      AnSeparator.getInstance(),
       new ChangeCompareModeGroup(model),
-      Separator.getInstance()));
+      AnSeparator.getInstance()));
 
     if (model.isOperationsEnabled()) {
       actions.add(new SynchronizeDiff(model, true));

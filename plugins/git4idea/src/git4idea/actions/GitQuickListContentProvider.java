@@ -17,8 +17,8 @@ package git4idea.actions;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.actions.VcsQuickListContentProvider;
@@ -45,7 +45,7 @@ public class GitQuickListContentProvider implements VcsQuickListContentProvider 
     final ActionManager manager = ActionManager.getInstance();
     final List<AnAction> actions = new ArrayList<AnAction>();
 
-    actions.add(new Separator(activeVcs.getDisplayName()));
+    actions.add(new AnSeparator(activeVcs.getDisplayName()));
     add("CheckinProject", manager, actions);
     add("CheckinFiles", manager, actions);
     add("ChangesView.Revert", manager, actions);
@@ -68,7 +68,7 @@ public class GitQuickListContentProvider implements VcsQuickListContentProvider 
     addSeparator(actions);
     final AnAction githubRebase = manager.getAction("Github.Rebase");
     if (githubRebase != null) {
-      actions.add(new Separator(GitBundle.message("vcs.popup.git.github.section")));
+      actions.add(new AnSeparator(GitBundle.message("vcs.popup.git.github.section")));
       actions.add(githubRebase);
     }
 
@@ -88,7 +88,7 @@ public class GitQuickListContentProvider implements VcsQuickListContentProvider 
   }
 
   private static void addSeparator(@NotNull final List<AnAction> actions) {
-    actions.add(new Separator());
+    actions.add(new AnSeparator());
   }
 
   private static void add(String actionName, ActionManager manager, List<AnAction> actions) {

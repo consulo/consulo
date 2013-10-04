@@ -212,7 +212,7 @@ public abstract class RecentProjectsManagerBase implements PersistentStateCompon
         }
       };
       
-      list.add(Separator.getInstance());
+      list.add(AnSeparator.getInstance());
       list.add(clearListAction);
     }
 

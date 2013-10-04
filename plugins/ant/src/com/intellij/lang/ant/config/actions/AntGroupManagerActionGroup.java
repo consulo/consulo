@@ -23,7 +23,7 @@ import com.intellij.lang.ant.config.explorer.AntBuildFileNodeDescriptor;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +73,7 @@ public class AntGroupManagerActionGroup extends ActionGroup {
     }
 
     if(groups.length != 0) {
-      actions.add(Separator.getInstance());
+      actions.add(AnSeparator.getInstance());
       for (AntBuildFileGroup group : groups) {
         actions.add(new AntGroupManagerActionGroup(group, myTree));
       }

@@ -601,7 +601,7 @@ public class SingleInspectionProfilePanel extends JPanel {
         }
       });
     }
-    group.add(Separator.getInstance());
+    group.add(AnSeparator.getInstance());
     group.add(new MyAddScopeAction());
     group.add(new MyDeleteScopeAction());
     ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);

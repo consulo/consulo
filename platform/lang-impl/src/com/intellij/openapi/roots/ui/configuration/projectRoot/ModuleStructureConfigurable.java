@@ -141,7 +141,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   @NotNull
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {
     final ArrayList<AnAction> result = super.createActions(fromPopup);
-    result.add(Separator.getInstance());
+    result.add(AnSeparator.getInstance());
     result.add(new MyGroupAction());
     addCollapseExpandActions(result);
     return result;
@@ -788,7 +788,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         }
 
         if (!actionsFromExtensions.isEmpty() && !result.isEmpty()) {
-          result.add(new Separator());
+          result.add(new AnSeparator());
         }
         result.addAll(actionsFromExtensions);
         return result.toArray(new AnAction[result.size()]);

@@ -192,7 +192,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
   }
 
   private void addSeparator(final DefaultActionGroup toGroup, @Nullable final String title) {
-    final Separator separator = title == null ? new Separator() : new Separator(title);
+    final AnSeparator separator = title == null ? new AnSeparator() : new AnSeparator(title);
     toGroup.add(separator);
   }
 

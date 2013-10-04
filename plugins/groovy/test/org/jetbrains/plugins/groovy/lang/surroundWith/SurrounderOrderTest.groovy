@@ -16,7 +16,7 @@
 package org.jetbrains.plugins.groovy.lang.surroundWith
 
 import com.intellij.codeInsight.generation.surroundWith.SurroundWithHandler
-import com.intellij.openapi.actionSystem.Separator
+import com.intellij.openapi.actionSystem.AnSeparator
 import com.intellij.openapi.application.WriteAction
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 
@@ -104,7 +104,7 @@ println c /*also important */
       def actions = SurroundWithHandler.buildSurroundActions(project, myFixture.editor, myFixture.file, null)
       def names = []
       for (action in actions) {
-        if (action instanceof Separator) {
+        if (action instanceof AnSeparator) {
           break
         }
 

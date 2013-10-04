@@ -141,7 +141,7 @@ public class ViewAsGroup extends ActionGroup implements DumbAware {
       }
     }
 
-    children.add(Separator.getInstance());
+    children.add(AnSeparator.getInstance());
     children.addAll(renderers);
 
     return children.toArray(new AnAction[children.size()]);
