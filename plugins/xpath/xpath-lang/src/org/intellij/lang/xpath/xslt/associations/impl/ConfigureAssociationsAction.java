@@ -15,10 +15,7 @@
  */
 package org.intellij.lang.xpath.xslt.associations.impl;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 
@@ -28,7 +25,7 @@ class ConfigureAssociationsAction extends AnAction {
     }
 
     public void actionPerformed(final AnActionEvent e) {
-        final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+        final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
         if (project == null) return;
 
         final PsiFile file = LangDataKeys.PSI_FILE.getData(e.getDataContext());

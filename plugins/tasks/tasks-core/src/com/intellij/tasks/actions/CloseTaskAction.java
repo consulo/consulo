@@ -17,7 +17,7 @@
 package com.intellij.tasks.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.tasks.LocalTask;
@@ -29,7 +29,7 @@ import com.intellij.tasks.TaskManager;
 public class CloseTaskAction extends BaseTaskAction {
 
   public void actionPerformed(AnActionEvent e) {
-    Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     assert project != null;
     LocalTask task = TaskManager.getManager(project).getActiveTask();
     CloseTaskDialog dialog = new CloseTaskDialog(project, task);
@@ -43,7 +43,7 @@ public class CloseTaskAction extends BaseTaskAction {
     super.update(event);
     if (event.getPresentation().isEnabled()) {
       Presentation presentation = event.getPresentation();
-      Project project = PlatformDataKeys.PROJECT.getData(event.getDataContext());
+      Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
       presentation.setEnabled(project != null && !TaskManager.getManager(project).getActiveTask().isDefault());
     }
   }

@@ -23,7 +23,7 @@ import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
@@ -49,7 +49,7 @@ import java.util.*;
 public class UsedIconsListingAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = LangDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
 
     final MultiMap<String, PsiExpression> calls = new MultiMap<String, PsiExpression>();
 

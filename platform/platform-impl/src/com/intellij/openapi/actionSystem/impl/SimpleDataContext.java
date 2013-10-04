@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
@@ -63,6 +64,6 @@ public class SimpleDataContext implements DataContext {
   }
 
   public static DataContext getProjectContext(Project project) {
-    return getSimpleContext(PlatformDataKeys.PROJECT.getName(), project);
+    return getSimpleContext(CommonDataKeys.PROJECT.getName(), project);
   }
 }

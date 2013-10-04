@@ -624,7 +624,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
         if (PlatformDataKeys.EDITOR.is(dataId)) {
           return getEditor();
         }
-        if (PlatformDataKeys.PROJECT.is(dataId)) {
+        if (CommonDataKeys.PROJECT.is(dataId)) {
           return getProject();
         }
         if (LangDataKeys.PSI_FILE.is(dataId)) {

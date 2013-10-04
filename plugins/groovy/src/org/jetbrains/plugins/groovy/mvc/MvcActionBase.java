@@ -1,9 +1,6 @@
 package org.jetbrains.plugins.groovy.mvc;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -53,7 +50,7 @@ public abstract class MvcActionBase extends DumbAwareAction {
       }
     }
 
-    final Project project = DataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
     if (project == null) {
       return null;
     }

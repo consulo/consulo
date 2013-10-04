@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.macro;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
@@ -46,7 +47,7 @@ public abstract class EditorMacro extends Macro {
 
   @Override
   public final String expand(DataContext dataContext) throws ExecutionCancelledException {
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return null;
     if (ToolWindowManager.getInstance(project).isEditorComponentActive()) {
       Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);

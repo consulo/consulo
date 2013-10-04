@@ -17,10 +17,7 @@ package com.intellij.cvsSupport2.cvsoperations.cvsEdit.ui;
 
 import com.intellij.CvsBundle;
 import com.intellij.cvsSupport2.cvsoperations.cvsEdit.EditorInfo;
-import com.intellij.openapi.actionSystem.DataKey;
-import com.intellij.openapi.actionSystem.DataSink;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -133,8 +130,8 @@ public class EditorsPanel extends JPanel implements TypeSafeDataProvider {
   }
 
   public void calcData(DataKey key, DataSink sink) {
-    if (key.equals(PlatformDataKeys.PROJECT)) {
-      sink.put(PlatformDataKeys.PROJECT, myProject);
+    if (key.equals(CommonDataKeys.PROJECT)) {
+      sink.put(CommonDataKeys.PROJECT, myProject);
     }
     else if (key.equals(PlatformDataKeys.NAVIGATABLE)) {
       final EditorInfo editorInfo = myTable.getSelectedObject();

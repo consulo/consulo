@@ -25,7 +25,7 @@ import com.intellij.lexer.CompositeLexer;
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -95,7 +95,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
   private JEditorPane myDescriptionComponent;
   private boolean myModified = false;
   private URL myDefaultDescriptionUrl;
-  private final Project myProject = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+  private final Project myProject = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
 
   private final List<ChangeListener> myChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();;
   private Splitter mySplitter;

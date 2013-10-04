@@ -17,6 +17,7 @@ package com.intellij.openapi.fileChooser.actions;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.DeleteProvider;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationBundle;
@@ -46,7 +47,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
   public void deleteElement(@NotNull DataContext dataContext) {
     final VirtualFile[] files = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
     if (files == null || files.length == 0) return;
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
     String message = createConfirmationMessage(files);
     int returnValue = Messages.showOkCancelDialog(message, UIBundle.message("delete.dialog.title"), ApplicationBundle.message("button.delete"),

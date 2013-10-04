@@ -46,7 +46,7 @@ public class ViewStructureAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     final Editor editor = e.getData(PlatformDataKeys.EDITOR);
     final FileEditor fileEditor = e.getData(PlatformDataKeys.FILE_EDITOR);
@@ -126,7 +126,7 @@ public class ViewStructureAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
       presentation.setEnabled(false);
       return;

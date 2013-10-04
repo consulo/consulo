@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.content;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
@@ -29,7 +30,7 @@ public class ContentManagerUtil {
    * This is utility method. It returns <code>ContentManager</code> from the current context.
    */
   public static ContentManager getContentManagerFromContext(DataContext dataContext, boolean requiresVisibleToolWindow){
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
       return null;
     }

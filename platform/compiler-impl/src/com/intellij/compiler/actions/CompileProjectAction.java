@@ -16,10 +16,7 @@
 package com.intellij.compiler.actions;
 
 import com.intellij.history.LocalHistory;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileStatusNotification;
 import com.intellij.openapi.compiler.CompilerBundle;
@@ -46,7 +43,7 @@ public class CompileProjectAction extends CompileActionBase {
     if (!presentation.isEnabled()) {
       return;
     }
-    Project project = PlatformDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
     presentation.setEnabled(project != null);
   }
 }

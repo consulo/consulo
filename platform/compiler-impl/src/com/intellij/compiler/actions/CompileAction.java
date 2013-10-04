@@ -66,7 +66,7 @@ public class CompileAction extends CompileActionBase {
     presentation.setText(ActionsBundle.actionText(IdeActions.ACTION_COMPILE));
     presentation.setVisible(true);
 
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
       presentation.setEnabled(false);
       return;

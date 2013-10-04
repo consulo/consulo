@@ -18,7 +18,7 @@ package com.intellij.uiDesigner.palette;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
@@ -33,7 +33,7 @@ public class EditComponentAction extends AnAction {
   private static final Logger LOG = Logger.getInstance("#com.intellij.uiDesigner.palette.EditComponentAction");
 
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     ComponentItem selectedItem = e.getData(ComponentItem.DATA_KEY);
     if (project == null || selectedItem == null || selectedItem.isAnyComponent() || selectedItem.isSpacer()) {
       return;
@@ -66,7 +66,7 @@ public class EditComponentAction extends AnAction {
   }
 
   @Override public void update(AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     ComponentItem selectedItem = e.getData(ComponentItem.DATA_KEY);
     GroupItem groupItem = e.getData(GroupItem.DATA_KEY);
     e.getPresentation().setEnabled(project != null &&

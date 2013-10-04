@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.history.impl;
 
 import com.intellij.diff.Block;
 import com.intellij.diff.FindBlock;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.DiffManager;
 import com.intellij.openapi.diff.DiffPanel;
@@ -436,7 +436,7 @@ public class VcsHistoryDialog extends DialogWrapper implements DataProvider {
   }
 
   public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.PROJECT.is(dataId)) {
+    if (CommonDataKeys.PROJECT.is(dataId)) {
       return myProject;
     } else if (VcsDataKeys.VCS_VIRTUAL_FILE.is(dataId)) {
       return myFile;

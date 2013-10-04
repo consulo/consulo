@@ -15,10 +15,7 @@
  */
 package org.jetbrains.idea.svn.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsDataKeys;
@@ -32,7 +29,7 @@ import org.jetbrains.idea.svn.history.SvnChangeList;
 
 public class ConfigureBranchesAction extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
-    final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     final Presentation presentation = e.getPresentation();
 
     if (project == null) {
@@ -54,7 +51,7 @@ public class ConfigureBranchesAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     final ChangeList[] cls = e.getData(VcsDataKeys.CHANGE_LISTS);
     if ((cls == null) || (cls.length == 0) ||
         (! SvnVcs.getInstance(project).getName().equals(((CommittedChangeList) cls[0]).getVcs().getName())) ||

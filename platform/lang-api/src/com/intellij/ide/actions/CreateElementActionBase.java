@@ -23,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,7 +69,7 @@ public abstract class CreateElementActionBase extends AnAction {
       return;
     }
 
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null) return;
@@ -98,7 +97,7 @@ public abstract class CreateElementActionBase extends AnAction {
   }
 
   protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
       return false;
     }

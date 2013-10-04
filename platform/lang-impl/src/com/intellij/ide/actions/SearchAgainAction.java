@@ -19,10 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.find.FindManager;
 import com.intellij.find.FindUtil;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
@@ -38,7 +35,7 @@ public class SearchAgainAction extends AnAction implements DumbAware {
 
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final FileEditor editor = e.getData(PlatformDataKeys.FILE_EDITOR);
     if (editor == null || project == null) return;
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
@@ -63,7 +60,7 @@ public class SearchAgainAction extends AnAction implements DumbAware {
   @Override
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(PlatformDataKeys.PROJECT);
+    Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;

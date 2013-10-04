@@ -551,7 +551,7 @@ public class FileStructurePopup implements Disposable {
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Override
       public Object getData(@NonNls String dataId) {
-        if (PlatformDataKeys.PROJECT.is(dataId)) {
+        if (CommonDataKeys.PROJECT.is(dataId)) {
           return myProject;
         }
         if (LangDataKeys.PSI_ELEMENT.is(dataId)) {

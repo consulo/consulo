@@ -15,10 +15,7 @@
  */
 package org.jetbrains.idea.svn;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.VcsException;
@@ -138,7 +135,7 @@ public class SvnAnnotationIsClosedTest extends Svn17TestCase {
                                                @Nullable
                                                @Override
                                                public Object getData(@NonNls String dataId) {
-                                                 if (PlatformDataKeys.PROJECT.is(dataId)) {
+                                                 if (CommonDataKeys.PROJECT.is(dataId)) {
                                                    return myProject;
                                                  }
                                                  return null;
@@ -185,7 +182,7 @@ public class SvnAnnotationIsClosedTest extends Svn17TestCase {
                                                @Nullable
                                                @Override
                                                public Object getData(@NonNls String dataId) {
-                                                 if (PlatformDataKeys.PROJECT.is(dataId)) {
+                                                 if (CommonDataKeys.PROJECT.is(dataId)) {
                                                    return myProject;
                                                  }
                                                  return null;

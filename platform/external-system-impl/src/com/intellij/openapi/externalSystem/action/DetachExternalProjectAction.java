@@ -16,10 +16,7 @@
 package com.intellij.openapi.externalSystem.action;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.externalSystem.model.ExternalSystemDataKeys;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
@@ -121,7 +118,7 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
       return MyInfo.EMPTY;
     }
 
-    Project ideProject = PlatformDataKeys.PROJECT.getData(context);
+    Project ideProject = CommonDataKeys.PROJECT.getData(context);
     if (ideProject == null) {
       return MyInfo.EMPTY;
     }

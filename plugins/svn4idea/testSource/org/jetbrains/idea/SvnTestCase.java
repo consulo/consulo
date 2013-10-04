@@ -17,10 +17,7 @@ package org.jetbrains.idea;
 
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.PluginPathManager;
@@ -475,7 +472,7 @@ public abstract class SvnTestCase extends AbstractJunitVcsTestCase  {
                                                @Nullable
                                                @Override
                                                public Object getData(@NonNls String dataId) {
-                                                 if (PlatformDataKeys.PROJECT.is(dataId)) {
+                                                 if (CommonDataKeys.PROJECT.is(dataId)) {
                                                    return project;
                                                  }
                                                  return null;

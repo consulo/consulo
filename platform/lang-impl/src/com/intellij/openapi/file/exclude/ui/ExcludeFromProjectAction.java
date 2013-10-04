@@ -35,7 +35,7 @@ public class ExcludeFromProjectAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return;
     final VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
     if (file == null) return;
@@ -80,7 +80,7 @@ public class ExcludeFromProjectAction extends AnAction {
       presentation.setVisible(false);
       return;
     }
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project != null) {
       ProjectFileExclusionManagerImpl fileExManager = ProjectFileExclusionManagerImpl.getInstance(project);
       if (fileExManager == null) {

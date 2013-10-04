@@ -40,7 +40,7 @@ public class ShowModuleDependenciesAction extends AnAction{
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null){
       return;
     }
@@ -84,7 +84,7 @@ public class ShowModuleDependenciesAction extends AnAction{
   @Override
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     e.getPresentation().setEnabled(project != null);
   }
 

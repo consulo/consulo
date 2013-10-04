@@ -64,7 +64,7 @@ public final class SpellingPopupActionGroup extends ActionGroup {
   @NotNull
   private static AnAction[] findActions(@NotNull AnActionEvent e) {
     PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-    Project project = e.getData(LangDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     Editor editor = e.getData(LangDataKeys.EDITOR);
     if (psiFile != null && project != null && editor != null) {
       List<HighlightInfo.IntentionActionDescriptor> quickFixes = ShowIntentionsPass.getAvailableActions(editor, psiFile, -1);
@@ -125,7 +125,7 @@ public final class SpellingPopupActionGroup extends ActionGroup {
 
     public void actionPerformed(final AnActionEvent e) {
       final PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-      final Project project = e.getData(LangDataKeys.PROJECT);
+      final Project project = e.getData(CommonDataKeys.PROJECT);
       final Editor editor = e.getData(LangDataKeys.EDITOR);
       if (psiFile != null && project != null && editor != null) {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {

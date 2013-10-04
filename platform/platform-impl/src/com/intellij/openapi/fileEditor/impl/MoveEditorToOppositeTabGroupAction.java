@@ -30,7 +30,7 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
   public void actionPerformed(final AnActionEvent event) {
     final DataContext dataContext = event.getDataContext();
     final VirtualFile vFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (vFile == null || project == null){
       return;
     }

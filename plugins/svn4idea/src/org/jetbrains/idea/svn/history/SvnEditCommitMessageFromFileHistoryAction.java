@@ -18,7 +18,7 @@ package org.jetbrains.idea.svn.history;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
@@ -44,7 +44,7 @@ public class SvnEditCommitMessageFromFileHistoryAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     final VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
     if (vcsKey == null || ! SvnVcs.getKey().equals(vcsKey)) return;

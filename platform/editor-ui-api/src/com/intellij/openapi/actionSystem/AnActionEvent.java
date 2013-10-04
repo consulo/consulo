@@ -93,7 +93,7 @@ public class AnActionEvent implements PlaceProvider<String> {
    */
   @Nullable
   public Project getProject() {
-    return getData(PlatformDataKeys.PROJECT);
+    return getData(CommonDataKeys.PROJECT);
   }
 
   @NonNls

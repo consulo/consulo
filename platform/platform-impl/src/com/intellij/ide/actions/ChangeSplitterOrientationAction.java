@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
 
@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
  */
 public final class ChangeSplitterOrientationAction extends SplitterActionBase {
   public void actionPerformed(final AnActionEvent event) {
-    final Project project = PlatformDataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
     final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     fileEditorManager.changeSplitterOrientation ();
   }

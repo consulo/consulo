@@ -31,7 +31,7 @@ import java.util.Set;
 public final class AntBuildActionGroup extends ActionGroup implements DumbAware {
 
   public void update(AnActionEvent event) {
-    Project project = PlatformDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
     Presentation presentation = event.getPresentation();
     presentation.setEnabled(project != null);
     presentation.setVisible(project != null);
@@ -40,7 +40,7 @@ public final class AntBuildActionGroup extends ActionGroup implements DumbAware 
   @NotNull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return AnAction.EMPTY_ARRAY;
-    Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     if (project == null) return AnAction.EMPTY_ARRAY;
 
     final List<AnAction> children = new ArrayList<AnAction>();

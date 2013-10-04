@@ -890,7 +890,7 @@ public class RepositoryBrowserDialog extends DialogWrapper {
       if (dir == null) {
         return;
       }
-      Project p = e.getData(PlatformDataKeys.PROJECT);
+      Project p = e.getData(CommonDataKeys.PROJECT);
       ExportOptionsDialog dialog = new ExportOptionsDialog(p, url, dir);
       dialog.show();
       if (dialog.isOK()) {
@@ -1218,7 +1218,7 @@ public class RepositoryBrowserDialog extends DialogWrapper {
   private class CloseToolWindowAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
       disposeRepositoryBrowser();
-      Project p = e.getData(PlatformDataKeys.PROJECT);
+      Project p = e.getData(CommonDataKeys.PROJECT);
       ToolWindowManager.getInstance(p).unregisterToolWindow(BrowseRepositoryAction.REPOSITORY_BROWSER_TOOLWINDOW);
 
     }

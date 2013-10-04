@@ -46,7 +46,7 @@ abstract class OverrideImplementMethodAction extends AnAction {
     final DataContext dataContext = event.getDataContext();
     final MethodHierarchyBrowser methodHierarchyBrowser = (MethodHierarchyBrowser)MethodHierarchyBrowserBase.DATA_KEY.getData(dataContext);
     if (methodHierarchyBrowser == null) return;
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return;
 
     final String commandName = event.getPresentation().getText();
@@ -103,7 +103,7 @@ abstract class OverrideImplementMethodAction extends AnAction {
       presentation.setVisible(false);
       return;
     }
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
       presentation.setEnabled(false);
       presentation.setVisible(false);

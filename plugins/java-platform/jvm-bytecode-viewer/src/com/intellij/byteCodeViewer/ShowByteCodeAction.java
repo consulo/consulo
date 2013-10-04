@@ -38,7 +38,7 @@ public class ShowByteCodeAction extends AnAction {
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(false);
     e.getPresentation().setIcon(AllIcons.Toolwindows.Documentation);
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       final PsiElement psiElement = getPsiElement(e.getDataContext(), project, e.getData(PlatformDataKeys.EDITOR));
       if (psiElement != null) {
@@ -53,7 +53,7 @@ public class ShowByteCodeAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return;
     final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
 

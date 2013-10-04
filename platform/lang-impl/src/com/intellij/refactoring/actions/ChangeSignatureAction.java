@@ -17,6 +17,7 @@ package com.intellij.refactoring.actions;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageRefactoringSupport;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -92,7 +93,7 @@ public class ChangeSignatureAction extends BaseRefactoringAction {
 
   @Override
   protected boolean hasAvailableHandler(@NotNull DataContext dataContext) {
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return false;
     final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
     final PsiElement targetMember;

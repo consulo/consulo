@@ -232,7 +232,7 @@ public class PropertiesComponent extends JPanel {
     }
 
     public void actionPerformed(AnActionEvent e) {
-      Project p = e.getData(PlatformDataKeys.PROJECT);
+      Project p = e.getData(CommonDataKeys.PROJECT);
       ToolWindowManager.getInstance(p).unregisterToolWindow(ID);
     }
   }
@@ -263,7 +263,7 @@ public class PropertiesComponent extends JPanel {
     }
 
     public void actionPerformed(AnActionEvent e) {
-      Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+      Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
       SVNWCClient wcClient = myVcs.createWCClient();
       SVNPropertyData propValue = null;
       try {
@@ -324,7 +324,7 @@ public class PropertiesComponent extends JPanel {
     }
 
     public void actionPerformed(AnActionEvent e) {
-      Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+      Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
       SetPropertyDialog dialog = new SetPropertyDialog(project, new File[] {myFile}, null,
               myFile.isDirectory());
       dialog.show();
@@ -358,7 +358,7 @@ public class PropertiesComponent extends JPanel {
     }
 
     public void actionPerformed(AnActionEvent e) {
-      Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+      Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
       SetPropertyDialog dialog = new SetPropertyDialog(project, new File[] {myFile}, getSelectedPropertyName(), myFile.isDirectory());
       dialog.show();
       boolean recursive = false;
@@ -412,7 +412,7 @@ public class PropertiesComponent extends JPanel {
         File f = new File(vf.getPath());
         if (!f.equals(myFile)) {
           setFile(myVcs, f);
-          Project p = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+          Project p = CommonDataKeys.PROJECT.getData(e.getDataContext());
           ToolWindowManager.getInstance(p).getToolWindow(ID).setTitle(f.getName());
         }
 

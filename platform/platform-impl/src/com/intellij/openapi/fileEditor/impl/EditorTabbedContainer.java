@@ -425,7 +425,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   private class MyDataProvider implements DataProvider {
     public Object getData(@NonNls final String dataId) {
-      if (PlatformDataKeys.PROJECT.is(dataId)) {
+      if (CommonDataKeys.PROJECT.is(dataId)) {
         return myProject;
       }
       if (PlatformDataKeys.VIRTUAL_FILE.is(dataId)) {

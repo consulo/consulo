@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class CloseEditorAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
 
     FileEditorManagerEx editorManager = getEditorManager(project);
     EditorWindow window = e.getData(EditorWindow.DATA_KEY);
@@ -54,7 +54,7 @@ public class CloseEditorAction extends AnAction implements DumbAware {
   @Override
   public void update(final AnActionEvent event){
     final Presentation presentation = event.getPresentation();
-    final Project project = event.getData(PlatformDataKeys.PROJECT);
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;

@@ -30,8 +30,7 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 class HackyDataContext implements DataContext {
-  private static DataKey[] keys = {
-    PlatformDataKeys.PROJECT,
+  private static DataKey[] keys = {CommonDataKeys.PROJECT,
     PlatformDataKeys.PROJECT_FILE_DIRECTORY,
     PlatformDataKeys.EDITOR,
     PlatformDataKeys.VIRTUAL_FILE,

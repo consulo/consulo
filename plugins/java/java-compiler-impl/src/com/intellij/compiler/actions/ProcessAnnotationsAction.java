@@ -77,7 +77,7 @@ public class ProcessAnnotationsAction extends CompileActionBase {
     DataContext dataContext = event.getDataContext();
     presentation.setVisible(false);
 
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
       presentation.setEnabled(false);
       return;

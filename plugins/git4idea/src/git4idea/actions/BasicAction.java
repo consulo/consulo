@@ -15,10 +15,7 @@
  */
 package git4idea.actions;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -53,7 +50,7 @@ public abstract class BasicAction extends DumbAwareAction {
    */
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
-    final Project project = event.getData(PlatformDataKeys.PROJECT);
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       public void run() {
         FileDocumentManager.getInstance().saveAllDocuments();
@@ -212,7 +209,7 @@ public abstract class BasicAction extends DumbAwareAction {
   public void update(@NotNull AnActionEvent e) {
     super.update(e);
     Presentation presentation = e.getPresentation();
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       presentation.setVisible(false);

@@ -22,10 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -41,7 +38,7 @@ import java.util.List;
 
 public class RemoveChangeListAction extends AnAction implements DumbAware {
   public void update(AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     final boolean visible = canRemoveChangeLists(project, lists);
     if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP))
@@ -62,7 +59,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     final ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     assert lists != null;
     if (! canRemoveChangeLists(project, lists)) {

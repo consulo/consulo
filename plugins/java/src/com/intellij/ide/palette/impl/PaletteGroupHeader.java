@@ -159,7 +159,7 @@ public class PaletteGroupHeader extends JCheckBox implements DataProvider {
   @Nullable public Object getData(String dataId) {
     Object data = myPaletteWindow.getData(dataId);
     if (data != null) return data;
-    Project project = PlatformDataKeys.PROJECT.getData(myPaletteWindow);
+    Project project = CommonDataKeys.PROJECT.getData(myPaletteWindow);
     return myGroup.getData(project, dataId);
   }
 

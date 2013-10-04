@@ -28,10 +28,7 @@ import com.intellij.debugger.impl.DebuggerUtilsEx;
 import com.intellij.debugger.ui.impl.watch.DebuggerTreeNodeImpl;
 import com.intellij.debugger.ui.impl.watch.NodeDescriptorImpl;
 import com.intellij.debugger.ui.tree.ValueDescriptor;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.progress.util.ProgressWindowWithNotification;
 import com.intellij.openapi.project.Project;
 import com.sun.jdi.Value;
@@ -49,7 +46,7 @@ public abstract class BaseValueAction extends DebuggerAction {
     if (value == null) {
       return;
     }
-    final Project project = PlatformDataKeys.PROJECT.getData(actionContext);
+    final Project project = CommonDataKeys.PROJECT.getData(actionContext);
     final DebuggerManagerEx debuggerManager = DebuggerManagerEx.getInstanceEx(project);
     if(debuggerManager == null) {
       return;

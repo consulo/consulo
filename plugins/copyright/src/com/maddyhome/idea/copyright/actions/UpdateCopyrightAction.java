@@ -41,7 +41,7 @@ public class UpdateCopyrightAction extends AnAction {
 
   private static boolean isEnabled(AnActionEvent event) {
     final DataContext context = event.getDataContext();
-    final Project project = PlatformDataKeys.PROJECT.getData(context);
+    final Project project = CommonDataKeys.PROJECT.getData(context);
     if (project == null) {
       return false;
     }
@@ -96,7 +96,7 @@ public class UpdateCopyrightAction extends AnAction {
 
   public void actionPerformed(AnActionEvent event) {
     final DataContext context = event.getDataContext();
-    final Project project = PlatformDataKeys.PROJECT.getData(context);
+    final Project project = CommonDataKeys.PROJECT.getData(context);
     assert project != null;
 
     final Module module = LangDataKeys.MODULE.getData(context);

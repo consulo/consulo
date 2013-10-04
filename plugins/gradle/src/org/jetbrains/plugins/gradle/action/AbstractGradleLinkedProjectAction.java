@@ -1,9 +1,6 @@
 package org.jetbrains.plugins.gradle.action;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +30,7 @@ public abstract class AbstractGradleLinkedProjectAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     if (project == null) {
       return;
     }
@@ -51,7 +48,7 @@ public abstract class AbstractGradleLinkedProjectAction extends AnAction {
       return null;
     }
     
-    final Project project = PlatformDataKeys.PROJECT.getData(context);
+    final Project project = CommonDataKeys.PROJECT.getData(context);
     if (project == null) {
       return null;
     }

@@ -1,7 +1,7 @@
 package org.zmlx.hg4idea.action;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -34,7 +34,7 @@ public class HgInit extends DumbAwareAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    myProject = e.getData(PlatformDataKeys.PROJECT);
+    myProject = e.getData(CommonDataKeys.PROJECT);
     if (myProject == null) {
       myProject = ProjectManager.getInstance().getDefaultProject();
     }

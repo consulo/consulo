@@ -22,10 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -58,7 +55,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     if (unversionedFiles.isEmpty()) {
       return;
     }
-    final ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(e.getData(PlatformDataKeys.PROJECT));
+    final ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(e.getData(CommonDataKeys.PROJECT));
     changeListManager.addUnversionedFiles(changeListManager.getDefaultChangeList(), unversionedFiles);
   }
 
@@ -68,7 +65,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
       return true;
     }
     VirtualFile[] files = getFromSelection(e);
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (files == null || project == null) {
       return false;
     }
@@ -90,7 +87,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     }
 
     final VirtualFile[] files = getFromSelection(e);
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (files == null || project == null) {
       return Collections.emptyList();
     }

@@ -17,8 +17,8 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.ide.TitledHandler;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -95,7 +95,7 @@ public class RenameHandlerRegistry {
     if (availableHandlers.size() == 1) return availableHandlers.values().iterator().next();
     if (availableHandlers.size() > 1) {
       final String[] strings = ArrayUtil.toStringArray(availableHandlers.keySet());
-      final HandlersChooser chooser = new HandlersChooser(PlatformDataKeys.PROJECT.getData(dataContext), strings);
+      final HandlersChooser chooser = new HandlersChooser(CommonDataKeys.PROJECT.getData(dataContext), strings);
       chooser.show();
       if (chooser.isOK()) {
         return availableHandlers.get(chooser.getSelection());

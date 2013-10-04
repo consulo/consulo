@@ -17,10 +17,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
@@ -29,7 +26,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 public class NextSplitAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(
       project, new Runnable(){
@@ -42,7 +39,7 @@ public class NextSplitAction extends AnAction implements DumbAware {
   }
 
   public void update(final AnActionEvent event){
-    final Project project = PlatformDataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
     final Presentation presentation = event.getPresentation();
     if (project == null) {
       presentation.setEnabled(false);

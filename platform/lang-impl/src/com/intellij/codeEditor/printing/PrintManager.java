@@ -18,6 +18,7 @@ package com.intellij.codeEditor.printing;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.highlighter.HighlighterFactory;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -48,7 +49,7 @@ class PrintManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeEditor.printing.PrintManager");
 
   public static void executePrint(DataContext dataContext) {
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
 

@@ -15,10 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
@@ -51,7 +48,7 @@ public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
     p.setVisible(SystemInfo.isMac);
 
     if (SystemInfo.isMac) {
-      Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+      Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
       if (project != null) {
         JFrame frame = WindowManager.getInstance().getFrame(project);
         if (frame != null) {

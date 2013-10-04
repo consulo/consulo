@@ -19,8 +19,8 @@ package org.jetbrains.plugins.groovy.editor.actions;
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegateAdapter;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -207,7 +207,7 @@ public class GroovyEnterHandler extends EnterHandlerDelegateAdapter {
                                            DataContext dataContext,
                                            EditorActionHandler originalHandler,
                                            PsiFile file) {
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return false;
 
     GroovyCodeStyleSettings codeStyleSettings =
@@ -272,7 +272,7 @@ public class GroovyEnterHandler extends EnterHandlerDelegateAdapter {
   }
 
   private static boolean handleInString(Editor editor, int caretOffset, DataContext dataContext, EditorActionHandler originalHandler) {
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return false;
 
     final VirtualFile vfile = FileDocumentManager.getInstance().getFile(editor.getDocument());

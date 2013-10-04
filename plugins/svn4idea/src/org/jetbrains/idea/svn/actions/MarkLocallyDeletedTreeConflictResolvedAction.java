@@ -15,10 +15,7 @@
  */
 package org.jetbrains.idea.svn.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -28,15 +25,12 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
-import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.LocallyDeletedChange;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.idea.svn.ConflictedSvnChange;
 import org.jetbrains.idea.svn.SvnBundle;
 import org.jetbrains.idea.svn.SvnLocallyDeletedChange;
 import org.jetbrains.idea.svn.SvnVcs;
@@ -113,7 +107,7 @@ public class MarkLocallyDeletedTreeConflictResolvedAction extends AnAction {
 
     public MyLocallyDeletedChecker(final AnActionEvent e) {
       final DataContext dc = e.getDataContext();
-      myProject = PlatformDataKeys.PROJECT.getData(dc);
+      myProject = CommonDataKeys.PROJECT.getData(dc);
       if (myProject == null) {
         myPath = null;
         myEnabled = false;

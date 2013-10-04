@@ -16,9 +16,9 @@
 
 package com.intellij.ide;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
@@ -206,7 +206,7 @@ public abstract class CopyPasteDelegator implements CopyPasteSupport {
     }
 
     private boolean isDefaultPasteEnabled(final DataContext dataContext) {
-      Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+      Project project = CommonDataKeys.PROJECT.getData(dataContext);
       if (project == null) {
         return false;
       }

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
@@ -45,7 +46,7 @@ public abstract class TextComponentEditorAction extends EditorAction {
     if (editor != null) return editor;
     final Object data = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
     if (data instanceof JTextComponent) {
-      return new TextComponentEditor(PlatformDataKeys.PROJECT.getData(dataContext), (JTextComponent) data);
+      return new TextComponentEditor(CommonDataKeys.PROJECT.getData(dataContext), (JTextComponent) data);
     }
     return null;
   }

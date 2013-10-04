@@ -19,10 +19,7 @@
  */
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -80,7 +77,7 @@ public class ModuleGroup {
   }
 
   public Collection<ModuleGroup> childGroups(DataContext dataContext) {
-    return childGroups(LangDataKeys.MODIFIABLE_MODULE_MODEL.getData(dataContext), PlatformDataKeys.PROJECT.getData(dataContext));
+    return childGroups(LangDataKeys.MODIFIABLE_MODULE_MODEL.getData(dataContext), CommonDataKeys.PROJECT.getData(dataContext));
   }
 
   public Collection<ModuleGroup> childGroups(ModifiableModuleModel model, Project project) {

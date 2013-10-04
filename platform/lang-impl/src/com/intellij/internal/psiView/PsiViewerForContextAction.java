@@ -1,14 +1,10 @@
 package com.intellij.internal.psiView;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 
 /**
@@ -33,7 +29,7 @@ public class PsiViewerForContextAction extends AnAction implements DumbAware {
       e.getPresentation().setEnabled(false);
       return;
     }
-    final Project project = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     PsiFile currentFile = LangDataKeys.PSI_FILE.getData(e.getDataContext());
     e.getPresentation().setEnabled(project != null && currentFile != null);
   }

@@ -189,7 +189,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
       return;
     }
 
-    if (PlatformDataKeys.PROJECT.getData(dataContext) != myProject) {
+    if (CommonDataKeys.PROJECT.getData(dataContext) != myProject) {
       return;
     }
 

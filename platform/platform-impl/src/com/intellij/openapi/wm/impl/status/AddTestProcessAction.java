@@ -15,17 +15,15 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
@@ -62,7 +60,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
 
 
 
-    final Project p = PlatformDataKeys.PROJECT.getData(e.getDataContext());
+    final Project p = CommonDataKeys.PROJECT.getData(e.getDataContext());
     if (p != null) {
       ToolWindowManager.getInstance(p)
         .notifyByBalloon("TODO", MessageType.INFO, "Started. <a href=\"#a\">Click me!</a>", null, new HyperlinkListener() {
@@ -72,7 +70,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
         });
     }
 
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     new Task.Backgroundable(project, "Test Process", true, PerformInBackgroundOption.DEAF) {
       public void run(@NotNull final ProgressIndicator indicator) {
         try {

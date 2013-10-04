@@ -26,10 +26,7 @@ import com.intellij.execution.util.JreVersionDetector;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.highlighter.JavaHighlightingColors;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -83,7 +80,7 @@ public class CreateSnapShotAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
     e.getPresentation().setVisible(project != null && view != null && hasDirectoryInPackage(project, view));
   }
@@ -100,7 +97,7 @@ public class CreateSnapShotAction extends AnAction {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
     if (project == null || view == null) {
       return;

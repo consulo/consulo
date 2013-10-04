@@ -18,10 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.FileEditorProvider;
 import com.intellij.ide.SelectInContext;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -91,7 +88,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
       if (descriptor instanceof OpenFileDescriptor) {
         final VirtualFile file = ((OpenFileDescriptor)descriptor).getFile();
         if (file.isValid()) {
-          Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+          Project project = CommonDataKeys.PROJECT.getData(dataContext);
           selectInContext = OpenFileDescriptorContext.create(project, file);
         }
       }
@@ -99,7 +96,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
 
     if (selectInContext == null) {
       VirtualFile virtualFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
-      Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+      Project project = CommonDataKeys.PROJECT.getData(dataContext);
       if (virtualFile != null && project != null) {
         return new VirtualFileSelectInContext(project, virtualFile);
       }
@@ -110,7 +107,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
 
   @Nullable
   private static SelectInContext createEditorContext(DataContext dataContext) {
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     final FileEditor editor = PlatformDataKeys.FILE_EDITOR.getData(dataContext);
     return createEditorContext(project, editor);
   }

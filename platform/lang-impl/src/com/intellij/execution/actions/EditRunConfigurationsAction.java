@@ -35,7 +35,7 @@ public class EditRunConfigurationsAction extends AnAction{
 
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null && project.isDisposed()) {
       return;
     }

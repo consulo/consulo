@@ -27,10 +27,7 @@ import com.intellij.codeInsight.generation.PsiGenerationInfo;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.ide.util.PackageUtil;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
@@ -72,7 +69,7 @@ public class GenerateVisitorByHierarchyAction extends AnAction {
   public void actionPerformed(AnActionEvent e) {
     final Ref<String> visitorNameRef = Ref.create("MyVisitor");
     final Ref<PsiClass> parentClassRef = Ref.create(null);
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     assert project != null;
     final JavaPsiFacade psiFacade = JavaPsiFacade.getInstance(project);
     final PsiNameHelper helper = psiFacade.getNameHelper();
@@ -174,7 +171,7 @@ public class GenerateVisitorByHierarchyAction extends AnAction {
   }
 
   public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(PlatformDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
   }
 
   private static void generateVisitorClass(final String visitorName,

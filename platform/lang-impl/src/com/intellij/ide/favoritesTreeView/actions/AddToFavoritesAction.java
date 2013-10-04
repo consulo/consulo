@@ -64,13 +64,13 @@ public class AddToFavoritesAction extends AnAction {
     Collection<AbstractTreeNode> nodesToAdd = getNodesToAdd(dataContext, true);
 
     if (nodesToAdd != null && !nodesToAdd.isEmpty()) {
-      Project project = e.getData(PlatformDataKeys.PROJECT);
+      Project project = e.getData(CommonDataKeys.PROJECT);
       FavoritesManager.getInstance(project).addRoots(myFavoritesListName, nodesToAdd);
     }
   }
 
   public static Collection<AbstractTreeNode> getNodesToAdd(final DataContext dataContext, final boolean inProjectView) {
-    Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
     if (project == null) return Collections.emptyList();
 

@@ -100,7 +100,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
       if (project == null) {
         //noinspection deprecation
-        project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
       }
 
       myProject = project;
@@ -672,7 +672,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
         myDimensionServiceKey = dialogWrapper.getDimensionKey();
 
         if (myDimensionServiceKey != null) {
-          final Project projectGuess = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this));
+          final Project projectGuess = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this));
           location = DimensionService.getInstance().getLocation(myDimensionServiceKey, projectGuess);
           Dimension size = DimensionService.getInstance().getSize(myDimensionServiceKey, projectGuess);
           if (size != null) {
@@ -943,7 +943,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
         if (myDimensionServiceKey != null &&
             myInitialSize != null &&
             myOpened) { // myInitialSize can be null only if dialog is disposed before first showing
-          final Project projectGuess = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MyDialog.this));
+          final Project projectGuess = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MyDialog.this));
 
           // Save location
           Point location = getLocation();

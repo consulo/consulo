@@ -16,8 +16,8 @@
 package com.intellij.openapi.project;
 
 import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.InternalFileType;
@@ -136,7 +136,7 @@ public class ProjectUtil {
     if (openProjects.length > 0) project = openProjects[0];
     if (project == null) {
       DataContext dataContext = component == null ? DataManager.getInstance().getDataContext() : DataManager.getInstance().getDataContext(component);
-      project = PlatformDataKeys.PROJECT.getData(dataContext);
+      project = CommonDataKeys.PROJECT.getData(dataContext);
     }
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();

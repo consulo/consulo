@@ -17,7 +17,7 @@ package org.jetbrains.idea.maven.navigator.actions;
 
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.idea.maven.execution.*;
@@ -37,7 +37,7 @@ import java.util.List;
 public class MavenExecuteGoalAction extends DumbAwareAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getRequiredData(PlatformDataKeys.PROJECT);
+    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
 
     MavenExecuteGoalDialog dialog = new MavenExecuteGoalDialog(project, Collections.<String>emptyList());
     dialog.show();
@@ -69,7 +69,7 @@ public class MavenExecuteGoalAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    Project project = e.getData(PlatformDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
 
     boolean hasMaven = false;
 

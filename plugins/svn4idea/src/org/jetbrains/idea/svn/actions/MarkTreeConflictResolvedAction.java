@@ -15,10 +15,7 @@
  */
 package org.jetbrains.idea.svn.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -69,7 +66,7 @@ public class MarkTreeConflictResolvedAction extends AnAction implements DumbAwar
 
     public MyChecker(final AnActionEvent e) {
       final DataContext dc = e.getDataContext();
-      myProject = PlatformDataKeys.PROJECT.getData(dc);
+      myProject = CommonDataKeys.PROJECT.getData(dc);
       final Change[] changes = VcsDataKeys.CHANGE_LEAD_SELECTION.getData(dc);
 
       if (myProject == null || changes == null || changes.length != 1) {

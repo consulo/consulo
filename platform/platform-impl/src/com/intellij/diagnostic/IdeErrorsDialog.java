@@ -1084,7 +1084,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         e.getModifiers()
       );
 
-      final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+      final Project project = CommonDataKeys.PROJECT.getData(dataContext);
       if (project != null) {
         myAnalyze.actionPerformed(event);
         doOKAction();

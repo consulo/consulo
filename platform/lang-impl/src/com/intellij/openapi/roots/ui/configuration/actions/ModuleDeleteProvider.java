@@ -18,9 +18,9 @@ package com.intellij.openapi.roots.ui.configuration.actions;
 
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.TitledHandler;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.module.ModifiableModuleModel;
@@ -57,7 +57,7 @@ public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
   public void deleteElement(@NotNull DataContext dataContext) {
     final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
     assert modules != null;
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     String names = StringUtil.join(Arrays.asList(modules), new Function<Module, String>() {
       @Override
       public String fun(final Module module) {

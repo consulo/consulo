@@ -21,8 +21,8 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.util.ClassFilter;
 import com.intellij.ide.util.TreeClassChooser;
 import com.intellij.ide.util.TreeClassChooserFactory;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -95,7 +95,7 @@ public class UiUtils {
         @Override
         public void run(AnActionButton button) {
           final DataContext dataContext = DataManager.getInstance().getDataContext(table);
-          final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+          final Project project = CommonDataKeys.PROJECT.getData(dataContext);
           if (project == null) {
             return;
           }
@@ -153,7 +153,7 @@ public class UiUtils {
         @Override
         public void run(AnActionButton anActionButton) {
           final DataContext dataContext = DataManager.getInstance().getDataContext(list);
-          final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+          final Project project = CommonDataKeys.PROJECT.getData(dataContext);
           if (project == null) {
             return;
           }

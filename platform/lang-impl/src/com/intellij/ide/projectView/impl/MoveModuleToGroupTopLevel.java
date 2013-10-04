@@ -35,7 +35,7 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
   @Override
   public void update(AnActionEvent e){
     final DataContext dataContext = e.getDataContext();
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
     boolean active = project != null && modules != null && modules.length != 0;
     e.getPresentation().setVisible(active);
@@ -61,7 +61,7 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
   }
 
   private static Collection<String> getTopLevelGroupNames(final DataContext dataContext) {
-    final Project project =PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
 
     final ModifiableModuleModel model = LangDataKeys.MODIFIABLE_MODULE_MODEL.getData(dataContext);
 

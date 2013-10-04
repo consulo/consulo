@@ -88,6 +88,6 @@ class OpenPartialDiffAction extends AnAction implements DumbAware {
 
   @Nullable
   private static Project projectFromDataContext(DataContext dataContext) {
-    return PlatformDataKeys.PROJECT.getData(dataContext);
+    return CommonDataKeys.PROJECT.getData(dataContext);
   }
 }

@@ -17,6 +17,7 @@
 package org.jetbrains.plugins.groovy.editor;
 
 import com.intellij.lang.Language;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.editor.Document;
@@ -84,7 +85,7 @@ public class HandlerUtils {
 
   @Nullable
   public static Project getProject(@NotNull final DataContext dataContext) {
-    return DataKeys.PROJECT.getData(dataContext);
+    return CommonDataKeys.PROJECT.getData(dataContext);
   }
 
 

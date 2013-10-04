@@ -19,7 +19,7 @@ package com.intellij.openapi.keymap.impl.ui;
 import com.intellij.application.options.ExportSchemeAction;
 import com.intellij.application.options.ImportSchemeAction;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;
 import com.intellij.openapi.application.ApplicationManager;
@@ -207,7 +207,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
       updateList(myCurrentIndex);
       myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
     }
-    Project project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this));
+    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this));
     myQuickListPanel = new QuickListPanel(quickList, getCurrentQuickListIds(), project);
     final DocumentAdapter documentAdapter = new DocumentAdapter() {
       protected void textChanged(DocumentEvent e) {

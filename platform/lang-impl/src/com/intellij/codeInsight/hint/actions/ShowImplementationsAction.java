@@ -81,7 +81,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   }
 
   public void performForContext(DataContext dataContext, boolean invokedByShortcut) {
-    final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
     PsiFile file = LangDataKeys.PSI_FILE.getData(dataContext);
 
@@ -336,7 +336,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
   @Override
   public void update(final AnActionEvent e) {
-    final Project project = e.getData(PlatformDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null);
   }
 
