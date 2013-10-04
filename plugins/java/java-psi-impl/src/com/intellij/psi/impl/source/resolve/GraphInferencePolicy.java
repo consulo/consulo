@@ -25,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
-* User: anna
-* Date: 2/14/13
-*/
+ * User: anna
+ * Date: 2/14/13
+ */
 public class GraphInferencePolicy extends ProcessCandidateParameterTypeInferencePolicy {
   private static final ThreadLocal<Map<PsiExpression, Map<JavaResolveResult, PsiSubstitutor>>> ourResults = new ThreadLocal<Map<PsiExpression, Map<JavaResolveResult, PsiSubstitutor>>>() {
     @Override
@@ -59,7 +59,7 @@ public class GraphInferencePolicy extends ProcessCandidateParameterTypeInference
 
   @NotNull
   @Override
-  protected JavaResolveResult[] getResults(PsiCallExpression contextCall, final int exprIdx)
+  protected JavaResolveResult[] getResults(@NotNull PsiCallExpression contextCall, final int exprIdx)
     throws MethodProcessorSetupFailedException {
     Map<JavaResolveResult, PsiSubstitutor> map = ourResults.get().get(contextCall);
     if (map != null) {
@@ -67,7 +67,8 @@ public class GraphInferencePolicy extends ProcessCandidateParameterTypeInference
       return results.toArray(new JavaResolveResult[results.size()]);
     }
 
-    final MethodCandidatesProcessor processor = new MethodCandidatesProcessor(contextCall) {
+    PsiFile containingFile = contextCall.getContainingFile();
+    final MethodCandidatesProcessor processor = new MethodCandidatesProcessor(contextCall, containingFile) {
       @Override
       protected PsiType[] getExpressionTypes(PsiExpressionList argumentList) {
         if (argumentList != null) {

@@ -15,6 +15,7 @@
  */
 package org.intellij.lang.xpath.xslt.context;
 
+import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -36,66 +37,66 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class XsltQuickFixFactory implements XPathQuickFixFactory {
-    public static final XsltQuickFixFactory INSTANCE = new XsltQuickFixFactory();
+  public static final XsltQuickFixFactory INSTANCE = new XsltQuickFixFactory();
 
-    private XsltQuickFixFactory() {
+  private XsltQuickFixFactory() {
+  }
+
+  public Fix<XPathExpression>[] createImplicitTypeConversionFixes(XPathExpression expression, XPathType type, boolean explicit) {
+    //noinspection unchecked
+    return explicit ? new Fix[]{
+      new RemoveExplicitConversionFix(expression),
+      new MakeTypeExplicitFix(expression, type),
+    } : new Fix[]{
+      new MakeTypeExplicitFix(expression, type),
+    };
+  }
+
+
+  public Fix<XPathExpression>[] createRedundantTypeConversionFixes(XPathExpression expression) {
+    //noinspection unchecked
+    return new Fix[]{
+      new RemoveRedundantConversionFix(expression),
+    };
+  }
+
+  public Fix<XPathNodeTest>[] createUnknownNodeTestFixes(XPathNodeTest test) {
+    //noinspection unchecked
+    return new Fix[]{
+      new EditAssociationsFix(test)
+    };
+  }
+
+  public SuppressIntentionAction[] getSuppressActions(XPathInspection inspection) {
+    final List<SuppressIntentionAction> actions = InspectionUtil.getSuppressActions(inspection, true);
+    return actions.toArray(new SuppressIntentionAction[actions.size()]);
+  }
+
+  public boolean isSuppressedFor(PsiElement element, XPathInspection inspection) {
+    return InspectionUtil.isSuppressed(inspection, element);
+  }
+
+  private static class EditAssociationsFix extends Fix<XPathNodeTest> {
+    public EditAssociationsFix(XPathNodeTest test) {
+      super(test);
     }
 
-    public Fix<XPathExpression>[] createImplicitTypeConversionFixes(XPathExpression expression, XPathType type, boolean explicit) {
-        //noinspection unchecked
-        return explicit ? new Fix[]{
-                new RemoveExplicitConversionFix(expression),
-                new MakeTypeExplicitFix(expression, type),
-        } : new Fix[]{
-                new MakeTypeExplicitFix(expression, type),
-        };
+    public boolean startInWriteAction() {
+      return false;
     }
 
-
-    public Fix<XPathExpression>[] createRedundantTypeConversionFixes(XPathExpression expression) {
-        //noinspection unchecked
-        return new Fix[]{
-                new RemoveRedundantConversionFix(expression),
-        };
+    protected void invokeImpl(final Project project, final PsiFile file) throws IncorrectOperationException {
+      FileAssociationsConfigurable.editAssociations(project, PsiTreeUtil.getContextOfType(file, XmlFile.class, false));
     }
 
-    public Fix<XPathNodeTest>[] createUnknownNodeTestFixes(XPathNodeTest test) {
-        //noinspection unchecked
-        return new Fix[]{
-                new EditAssociationsFix(test)
-        };
+    @NotNull
+    public String getText() {
+      return "Edit File Associations";
     }
 
-    public SuppressIntentionAction[] getSuppressActions(XPathInspection inspection) {
-        final List<SuppressIntentionAction> actions = InspectionUtil.getSuppressActions(inspection, true);
-        return actions.toArray(new SuppressIntentionAction[actions.size()]);
+    @NotNull
+    public String getFamilyName() {
+      return "Edit File Associations";
     }
-
-    public boolean isSuppressedFor(PsiElement element, XPathInspection inspection) {
-        return InspectionUtil.isSuppressed(inspection, element);
-    }
-
-    private static class EditAssociationsFix extends Fix<XPathNodeTest> {
-        public EditAssociationsFix(XPathNodeTest test) {
-            super(test);
-        }
-
-        public boolean startInWriteAction() {
-            return false;
-        }
-
-        protected void invokeImpl(final Project project, final PsiFile file) throws IncorrectOperationException {
-            FileAssociationsConfigurable.editAssociations(project, PsiTreeUtil.getContextOfType(file, XmlFile.class, false));
-        }
-
-        @NotNull
-        public String getText() {
-            return "Edit File Associations";
-        }
-
-        @NotNull
-        public String getFamilyName() {
-            return "Edit File Associations";
-        }
-    }
+  }
 }

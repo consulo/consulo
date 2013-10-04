@@ -2793,7 +2793,8 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.profile.codeInspection.InspectionProjectProfileManager</implementation-class>
+      <interface-class>com.intellij.profile.codeInspection.InspectionProjectProfileManager</interface-class>
+      <implementation-class>com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>
 
@@ -2965,6 +2966,7 @@
 
   <extensionPoints>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider" />
+    <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector" />
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="sdkResolveScopeProvider" interface="com.intellij.psi.SdkResolveScopeProvider"/>
 
@@ -4577,9 +4579,6 @@
     <!-- this depends on TemplateLanguageConfigurable which isn't registered in LangExtensions, so it should go here as well -->
     <errorQuickFixProvider implementation="com.intellij.psi.templateLanguages.TemplateLanguageErrorQuickFixProvider"/>
 
-    <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
-    <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
-
     <!-- File Exclusions -->
     <!--
     <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectFileExclusionManager"
@@ -5396,10 +5395,6 @@
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.SdkTableImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.TargetElementUtilBase"
                         serviceImplementation="com.intellij.codeInsight.TargetElementUtilBase"/>
-    <applicationService serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"
-                        serviceImplementation="com.intellij.profile.codeInspection.InspectionProfileManager"/>
-    <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
-    <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
 
     <exportable serviceInterface="com.intellij.openapi.projectRoots.SdkTable"/>
 
@@ -5558,5 +5553,15 @@
 
     <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider" />
     <search.topHitProvider implementation="com.intellij.ide.ui.UISimpleSettingsProvider" />
+
+    <applicationService serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"
+                        serviceImplementation="com.intellij.profile.codeInspection.InspectionProfileManagerImpl"/>
+
+    <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
+    <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
+
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager"
+                    serviceImplementation="com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile"/>
+
   </extensions>
 </idea-plugin>

@@ -21,6 +21,7 @@
 package com.intellij.refactoring.extractMethodObject;
 
 import com.intellij.codeInsight.NullableNotNullManager;
+import com.intellij.codeInsight.generation.GenerateMembersUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -101,7 +102,7 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
   protected UsageInfo[] findUsages() {
     final ArrayList<UsageInfo> result = new ArrayList<UsageInfo>();
     PsiReference[] refs =
-        ReferencesSearch.search(getMethod(), GlobalSearchScope.projectScope(myProject), false).toArray(PsiReference.EMPTY_ARRAY);
+      ReferencesSearch.search(getMethod(), GlobalSearchScope.projectScope(myProject), false).toArray(PsiReference.EMPTY_ARRAY);
     for (PsiReference ref : refs) {
       final PsiElement element = ref.getElement();
       if (element != null && element.isValid()) {
@@ -252,10 +253,10 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
         myInnerClass.add(outputField);
         field = outputField;
       } else {
-        field = PropertyUtil.findPropertyField(myProject, myInnerClass, name, false);
+        field = PropertyUtil.findPropertyField(myInnerClass, name, false);
       }
       LOG.assertTrue(field != null, "i:" + i + "; output variables: " + Arrays.toString(outputVariables) + "; parameters: " + Arrays.toString(getMethod().getParameterList().getParameters()) + "; output field: " + outputField );
-      myInnerClass.add(PropertyUtil.generateGetterPrototype(field));
+      myInnerClass.add(GenerateMembersUtil.generateGetterPrototype(field));
     }
 
     PsiParameter[] params = getMethod().getParameterList().getParameters();
@@ -386,7 +387,7 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
     }
 
     myChangeSignatureProcessor = new ChangeSignatureProcessor(myProject, getMethod(), false, null, getMethod().getName(),
-                                                                   new PsiImmediateClassType(myInnerClass, PsiSubstitutor.EMPTY), infos);
+                                                              new PsiImmediateClassType(myInnerClass, PsiSubstitutor.EMPTY), infos);
   }
 
   void runChangeSignature() {
@@ -416,7 +417,7 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
                                                                                              }
                                                                                            }, ", ") + ">" : "";
       final PsiMethodCallExpression methodCallExpression =
-          (PsiMethodCallExpression)myElementFactory.createExpressionFromText("invoke" + expressionList.getText(), null);
+        (PsiMethodCallExpression)myElementFactory.createExpressionFromText("invoke" + expressionList.getText(), null);
       return replaceMethodCallExpression(typeArguments, methodCallExpression);
     }
     else {
@@ -440,7 +441,7 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
 
   private PsiMethodCallExpression replaceMethodCallExpression(final String inferredTypeArguments,
                                                               final PsiMethodCallExpression methodCallExpression)
-      throws IncorrectOperationException {
+    throws IncorrectOperationException {
     @NonNls final String staticqualifier =
       getMethod().hasModifierProperty(PsiModifier.STATIC) && notHasGeneratedFields() ? getInnerClassName() : null;
     @NonNls String newReplacement;
@@ -592,10 +593,10 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
   }
 
   protected void changeInstanceAccess(final Project project)
-      throws IncorrectOperationException {
+    throws IncorrectOperationException {
     if (myMadeStatic) {
       PsiReference[] refs =
-          ReferencesSearch.search(myInnerMethod, GlobalSearchScope.projectScope(project), false).toArray(PsiReference.EMPTY_ARRAY);
+        ReferencesSearch.search(myInnerMethod, GlobalSearchScope.projectScope(project), false).toArray(PsiReference.EMPTY_ARRAY);
       for (PsiReference ref : refs) {
         final PsiElement element = ref.getElement();
         final PsiMethodCallExpression callExpression = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
@@ -630,12 +631,12 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
   public class MyExtractMethodProcessor extends ExtractMethodProcessor {
 
     public MyExtractMethodProcessor(Project project,
-                                        Editor editor,
-                                        PsiElement[] elements,
-                                        PsiType forcedReturnType,
-                                        String refactoringName,
-                                        String initialMethodName,
-                                        String helpId) {
+                                    Editor editor,
+                                    PsiElement[] elements,
+                                    PsiType forcedReturnType,
+                                    String refactoringName,
+                                    String initialMethodName,
+                                    String helpId) {
       super(project, editor, elements, forcedReturnType, refactoringName, initialMethodName, helpId);
 
     }
@@ -762,7 +763,8 @@ public class ExtractMethodObjectProcessor extends BaseRefactoringProcessor {
           PsiStatement st = null;
           final String pureName = getPureName(variable);
           final int varIdxInOutput = ArrayUtil.find(myOutputVariables, variable);
-          final String getterName = varIdxInOutput > -1 && myOutputFields[varIdxInOutput] != null ? PropertyUtil.suggestGetterName(myProject, myOutputFields[varIdxInOutput]) : PropertyUtil.suggestGetterName(pureName, variable.getType());
+          final String getterName = varIdxInOutput > -1 && myOutputFields[varIdxInOutput] != null ? PropertyUtil.suggestGetterName(
+            myOutputFields[varIdxInOutput]) : PropertyUtil.suggestGetterName(pureName, variable.getType());
           if (isDeclaredInside(variable)) {
             st = myElementFactory.createStatementFromText(
               variable.getType().getCanonicalText() + " " + name + " = " + object + "." + getterName + "();",

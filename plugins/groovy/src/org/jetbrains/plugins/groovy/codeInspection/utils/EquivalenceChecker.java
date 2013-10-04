@@ -41,13 +41,13 @@ import org.jetbrains.plugins.groovy.lang.psi.api.types.GrTypeElement;
 import org.jetbrains.plugins.groovy.lang.psi.util.PsiUtil;
 
 @SuppressWarnings({"OverlyComplexMethod",
-    "MethodWithMultipleLoops",
-    "OverlyComplexMethod",
-    "OverlyLongMethod",
-    "SwitchStatementWithTooManyBranches",
-    "SwitchStatement",
-    "OverlyComplexClass",
-    "ClassWithTooManyMethods"})
+                    "MethodWithMultipleLoops",
+                    "OverlyComplexMethod",
+                    "OverlyLongMethod",
+                    "SwitchStatementWithTooManyBranches",
+                    "SwitchStatement",
+                    "OverlyComplexClass",
+                    "ClassWithTooManyMethods"})
 public class EquivalenceChecker {
 
   private EquivalenceChecker() {
@@ -173,13 +173,13 @@ public class EquivalenceChecker {
 
   private static boolean assertStatementsAreEquivalent(GrAssertStatement statement1, GrAssertStatement statement2) {
     return expressionsAreEquivalent(statement1.getAssertion(), statement2.getAssertion()) &&
-      expressionsAreEquivalent(statement1.getErrorMessage(), statement2.getErrorMessage());
+           expressionsAreEquivalent(statement1.getErrorMessage(), statement2.getErrorMessage());
   }
 
   private static boolean synchronizedStatementsAreEquivalent(GrSynchronizedStatement statement1,
                                                              GrSynchronizedStatement statement2) {
     return expressionsAreEquivalent(statement1.getMonitor(), statement2.getMonitor()) &&
-        openBlocksAreEquivalent(statement1.getBody(), statement2.getBody());
+           openBlocksAreEquivalent(statement1.getBody(), statement2.getBody());
   }
 
   private static boolean varStatementsAreEquivalent(@NotNull GrVariableDeclaration statement1,
@@ -245,7 +245,7 @@ public class EquivalenceChecker {
 
   private static boolean catchClausesAreEquivalent(GrCatchClause clause1, GrCatchClause clause2) {
     return parametersAreEquivalent(clause1.getParameter(), clause2.getParameter()) &&
-        openBlocksAreEquivalent(clause1.getBody(), clause2.getBody());
+           openBlocksAreEquivalent(clause1.getBody(), clause2.getBody());
   }
 
   private static boolean parametersAreEquivalent(@Nullable GrParameter parameter1,
@@ -280,7 +280,7 @@ public class EquivalenceChecker {
     final GrStatement body1 = statement1.getBody();
     final GrStatement body2 = statement2.getBody();
     return expressionsAreEquivalent(condition1, condition2) &&
-        statementsAreEquivalent(body1, body2);
+           statementsAreEquivalent(body1, body2);
   }
 
   private static boolean forInStatementsAreEquivalent(@NotNull GrForStatement statement1,
@@ -387,8 +387,8 @@ public class EquivalenceChecker {
     final GrStatement elseBranch1 = statement1.getElseBranch();
     final GrStatement elseBranch2 = statement2.getElseBranch();
     return expressionsAreEquivalent(condition1, condition2) &&
-        statementsAreEquivalent(thenBranch1, thenBranch2) &&
-        statementsAreEquivalent(elseBranch1, elseBranch2);
+           statementsAreEquivalent(thenBranch1, thenBranch2) &&
+           statementsAreEquivalent(elseBranch1, elseBranch2);
   }
 
   private static boolean expressionStatementsAreEquivalent(@NotNull GrExpression statement1,
@@ -434,52 +434,52 @@ public class EquivalenceChecker {
         return text1.equals(text2);
       case CALL_EXPRESSION:
         return methodCallExpressionsAreEquivalent((GrMethodCall) expToCompare1,
-            (GrMethodCall) expToCompare2);
+                                                  (GrMethodCall) expToCompare2);
       case NEW_EXPRESSION:
         return newExpressionsAreEquivalent((GrNewExpression) expToCompare1,
-            (GrNewExpression) expToCompare2);
+                                           (GrNewExpression) expToCompare2);
       case ARRAY_LITERAL_EXPRESSION:
         return arrayDeclarationsAreEquivalent((GrArrayDeclaration) expToCompare1,
-            (GrArrayDeclaration) expToCompare2);
+                                              (GrArrayDeclaration) expToCompare2);
       case PREFIX_EXPRESSION:
         return prefixExpressionsAreEquivalent((GrUnaryExpression) expToCompare1,
-            (GrUnaryExpression) expToCompare2);
+                                              (GrUnaryExpression) expToCompare2);
       case POSTFIX_EXPRESSION:
         return postfixExpressionsAreEquivalent((GrUnaryExpression) expToCompare1,
-            (GrUnaryExpression) expToCompare2);
+                                               (GrUnaryExpression) expToCompare2);
       case BINARY_EXPRESSION:
         return binaryExpressionsAreEquivalent((GrBinaryExpression) expToCompare1,
-            (GrBinaryExpression) expToCompare2);
+                                              (GrBinaryExpression) expToCompare2);
       case ASSIGNMENT_EXPRESSION:
         return assignmentExpressionsAreEquivalent((GrAssignmentExpression) expToCompare1,
-            (GrAssignmentExpression) expToCompare2);
+                                                  (GrAssignmentExpression) expToCompare2);
       case CONDITIONAL_EXPRESSION:
         return conditionalExpressionsAreEquivalent((GrConditionalExpression) expToCompare1,
-            (GrConditionalExpression) expToCompare2);
+                                                   (GrConditionalExpression) expToCompare2);
       case ELVIS_EXPRESSION:
         return elvisExpressionsAreEquivalent((GrElvisExpression) expToCompare1,
-            (GrElvisExpression) expToCompare2);
+                                             (GrElvisExpression) expToCompare2);
       case RANGE_EXPRESSION:
         return rangeExpressionsAreEquivalent((GrRangeExpression) expToCompare1,
-            (GrRangeExpression) expToCompare2);
+                                             (GrRangeExpression) expToCompare2);
       case TYPE_CAST_EXPRESSION:
         return typecastExpressionsAreEquivalent((GrTypeCastExpression) expToCompare1,
-            (GrTypeCastExpression) expToCompare2);
+                                                (GrTypeCastExpression) expToCompare2);
       case SAFE_CAST_EXPRESSION:
         return safeCastExpressionsAreEquivalent((GrSafeCastExpression)expToCompare1,
                                                 (GrSafeCastExpression)expToCompare2);
       case INSTANCEOF_EXPRESSION:
         return instanceofExpressionsAreEquivalent((GrInstanceOfExpression) expToCompare1,
-            (GrInstanceOfExpression) expToCompare2);
+                                                  (GrInstanceOfExpression) expToCompare2);
       case INDEX_EXPRESSION:
         return indexExpressionsAreEquivalent((GrIndexProperty) expToCompare1,
-            (GrIndexProperty) expToCompare2);
+                                             (GrIndexProperty) expToCompare2);
       case LIST_OR_MAP_EXPRESSION:
         return listOrMapExpressionsAreEquivalent((GrListOrMap) expToCompare1,
-            (GrListOrMap) expToCompare2);
+                                                 (GrListOrMap) expToCompare2);
       case CLOSABLE_BLOCK_EXPRESSION:
         return closableBlockExpressionsAreEquivalent((GrClosableBlock) expToCompare1,
-            (GrClosableBlock) expToCompare2);
+                                                     (GrClosableBlock) expToCompare2);
       case PROPERTY_SELECTION_EXPRESSION:
         return textOfExpressionsIsEquivalent(expToCompare1, expToCompare2); // todo
       default:
@@ -522,7 +522,7 @@ public class EquivalenceChecker {
 
   private static boolean listOrMapExpressionsAreEquivalent(GrListOrMap expression1, GrListOrMap expression2) {
     return expressionListsAreEquivalent(expression1.getInitializers(), expression2.getInitializers()) &&
-        namedArgumentListsAreEquivalent(expression1.getNamedArguments(), expression2.getNamedArguments());
+           namedArgumentListsAreEquivalent(expression1.getNamedArguments(), expression2.getNamedArguments());
   }
 
   private static boolean arrayDeclarationsAreEquivalent(GrArrayDeclaration expression1,
@@ -706,7 +706,7 @@ public class EquivalenceChecker {
     final GrExpression rhs1 = binaryExp1.getRightOperand();
     final GrExpression rhs2 = binaryExp2.getRightOperand();
     return expressionsAreEquivalent(lhs1, lhs2)
-        && expressionsAreEquivalent(rhs1, rhs2);
+           && expressionsAreEquivalent(rhs1, rhs2);
   }
 
   private static boolean rangeExpressionsAreEquivalent(@NotNull GrRangeExpression rangeExp1,
@@ -727,8 +727,8 @@ public class EquivalenceChecker {
 
   private static boolean assignmentExpressionsAreEquivalent(@NotNull GrAssignmentExpression assignExp1,
                                                             @NotNull GrAssignmentExpression assignExp2) {
-    final IElementType sign1 = assignExp1.getOperationToken();
-    final IElementType sign2 = assignExp2.getOperationToken();
+    final IElementType sign1 = assignExp1.getOperationTokenType();
+    final IElementType sign2 = assignExp2.getOperationTokenType();
     if (sign1 != sign2) {
       return false;
     }
@@ -737,7 +737,7 @@ public class EquivalenceChecker {
     final GrExpression rhs1 = assignExp1.getRValue();
     final GrExpression rhs2 = assignExp2.getRValue();
     return expressionsAreEquivalent(lhs1, lhs2)
-        && expressionsAreEquivalent(rhs1, rhs2);
+           && expressionsAreEquivalent(rhs1, rhs2);
   }
 
   private static boolean conditionalExpressionsAreEquivalent(@NotNull GrConditionalExpression condExp1,
@@ -760,7 +760,7 @@ public class EquivalenceChecker {
     final GrExpression elseExpression1 = condExp1.getElseBranch();
     final GrExpression elseExpression2 = condExp2.getElseBranch();
     return expressionsAreEquivalent(condition1, condition2)
-        && expressionsAreEquivalent(elseExpression1, elseExpression2);
+           && expressionsAreEquivalent(elseExpression1, elseExpression2);
   }
 
   private static boolean expressionListsAreEquivalent(@Nullable GrExpression[] expressions1,

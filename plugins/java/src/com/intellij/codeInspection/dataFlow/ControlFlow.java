@@ -19,7 +19,7 @@
  * User: max
  * Date: Jan 11, 2002
  * Time: 3:05:34 PM
- * To change template for new class use 
+ * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.intellij.codeInspection.dataFlow;
@@ -33,9 +33,10 @@ import com.intellij.psi.PsiVariable;
 import gnu.trove.TObjectIntHashMap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ControlFlow {
-  private final ArrayList<Instruction> myInstructions = new ArrayList<Instruction>();
+  private final List<Instruction> myInstructions = new ArrayList<Instruction>();
   private final TObjectIntHashMap<PsiElement> myElementToStartOffsetMap = new TObjectIntHashMap<PsiElement>();
   private final TObjectIntHashMap<PsiElement> myElementToEndOffsetMap = new TObjectIntHashMap<PsiElement>();
   private DfaVariableValue[] myFields;
@@ -51,6 +52,16 @@ public class ControlFlow {
 
   public int getInstructionCount() {
     return myInstructions.size();
+  }
+
+  public ControlFlowOffset getNextOffset() {
+    final int currentSize = myInstructions.size();
+    return new ControlFlowOffset() {
+      @Override
+      public int getInstructionOffset() {
+        return currentSize;
+      }
+    };
   }
 
   public void startElement(PsiElement psiElement) {
@@ -71,14 +82,22 @@ public class ControlFlow {
     addInstruction(new FlushVariableInstruction(var));
   }
 
-  public int getStartOffset(PsiElement element){
-    if (!myElementToStartOffsetMap.containsKey(element)) return -1;
-    return myElementToStartOffsetMap.get(element);
+  public ControlFlowOffset getStartOffset(final PsiElement element) {
+    return new ControlFlowOffset() {
+      @Override
+      public int getInstructionOffset() {
+        return myElementToStartOffsetMap.get(element);
+      }
+    };
   }
 
-  public int getEndOffset(PsiElement element){
-    if (!myElementToEndOffsetMap.containsKey(element)) return -1;
-    return myElementToEndOffsetMap.get(element);
+  public ControlFlowOffset getEndOffset(final PsiElement element) {
+    return new ControlFlowOffset() {
+      @Override
+      public int getInstructionOffset() {
+        return myElementToEndOffsetMap.get(element);
+      }
+    };
   }
 
   public DfaVariableValue[] getFields() {
@@ -92,7 +111,7 @@ public class ControlFlow {
 
   public String toString() {
     StringBuilder result = new StringBuilder();
-    final ArrayList<Instruction> instructions = myInstructions;
+    final List<Instruction> instructions = myInstructions;
 
     for (int i = 0; i < instructions.size(); i++) {
       Instruction instruction = instructions.get(i);
@@ -101,4 +120,18 @@ public class ControlFlow {
     }
     return result.toString();
   }
+
+  public interface ControlFlowOffset {
+    int getInstructionOffset();
+  }
+
+  static ControlFlowOffset deltaOffset(final ControlFlowOffset delegate, final int delta) {
+    return new ControlFlowOffset() {
+      @Override
+      public int getInstructionOffset() {
+        return delegate.getInstructionOffset() + delta;
+      }
+    };
+  }
+
 }

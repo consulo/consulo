@@ -26,7 +26,7 @@ import org.jetbrains.plugins.groovy.lang.psi.api.toplevel.GrTopStatement;
  */
 public interface GrStatement extends GrTopStatement, GrCondition {
   GrStatement[] EMPTY_ARRAY = new GrStatement[0];
-  
+
   <T extends GrStatement> T replaceWithStatement (T statement);
 
   void removeStatement() throws IncorrectOperationException;

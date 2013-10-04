@@ -15,10 +15,12 @@
  */
 package com.intellij.testFramework;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.JavaSdk;
+import com.intellij.openapi.projectRoots.JavaSdkVersion;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -31,6 +33,7 @@ import com.intellij.pom.java.LanguageLevel;
 import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 
@@ -107,4 +110,20 @@ public class IdeaTestUtil extends PlatformTestUtil {
     assert jar != null : "no .jar for: " + path;
     return jar;
   }
+
+  @TestOnly
+  public static void setTestVersion(@NotNull final JavaSdkVersion testVersion, @NotNull Module module, @NotNull Disposable parentDisposable) {
+    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+   /* final Sdk sdk = rootManager.getSdk();
+    final String oldVersionString = sdk.getVersionString();
+    ((ProjectJdkImpl)sdk).setVersionString(testVersion.getDescription());
+    assert JavaSdk.getInstance().getVersion(sdk) == testVersion;
+    Disposer.register(parentDisposable, new Disposable() {
+      @Override
+      public void dispose() {
+        ((ProjectJdkImpl)sdk).setVersionString(oldVersionString);
+      }
+    }); */
+  }
+
 }

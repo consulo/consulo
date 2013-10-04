@@ -373,6 +373,8 @@
           <element id="module-output" name="remote-servers-impl" />
           <element id="module-output" name="compiler-bridge-impl" />
           <element id="module-output" name="compiler-server-impl" />
+          <element id="module-output" name="editor-ui-api" />
+          <element id="module-output" name="editor-ui-ex" />
         </element>
         <element id="archive" name="boot.jar">
           <element id="module-output" name="boot" />

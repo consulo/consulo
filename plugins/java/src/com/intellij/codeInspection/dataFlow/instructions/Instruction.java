@@ -19,7 +19,7 @@
  * User: max
  * Date: Jan 26, 2002
  * Time: 10:46:40 PM
- * To change template for new class use 
+ * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.intellij.codeInspection.dataFlow.instructions;
@@ -28,40 +28,15 @@ import com.intellij.codeInspection.dataFlow.DataFlowRunner;
 import com.intellij.codeInspection.dataFlow.DfaInstructionState;
 import com.intellij.codeInspection.dataFlow.DfaMemoryState;
 import com.intellij.codeInspection.dataFlow.InstructionVisitor;
-import com.intellij.openapi.progress.ProgressManager;
-
-import java.util.ArrayList;
 
 public abstract class Instruction {
   private int myIndex;
-  private final ArrayList<DfaMemoryState> myProcessedStates;
-
-  protected Instruction() {
-    myProcessedStates = new ArrayList<DfaMemoryState>();
-  }
 
   protected final DfaInstructionState[] nextInstruction(DataFlowRunner runner, DfaMemoryState stateBefore) {
     return new DfaInstructionState[] {new DfaInstructionState(runner.getInstruction(getIndex() + 1), stateBefore)};
   }
 
   public abstract DfaInstructionState[] accept(DataFlowRunner runner, DfaMemoryState stateBefore, InstructionVisitor visitor);
-
-  public boolean isMemoryStateProcessed(DfaMemoryState dfaMemState) {
-    for (DfaMemoryState state : myProcessedStates) {
-      ProgressManager.checkCanceled();
-      if (dfaMemState.equals(state)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  public boolean setMemoryStateProcessed(DfaMemoryState dfaMemState) {
-    if (myProcessedStates.size() > DataFlowRunner.MAX_STATES_PER_BRANCH) return false;
-    myProcessedStates.add(dfaMemState);
-    return true;
-  }
 
   public void setIndex(int index) {
     myIndex = index;

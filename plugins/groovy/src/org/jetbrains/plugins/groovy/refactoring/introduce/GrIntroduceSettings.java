@@ -16,8 +16,8 @@ import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.Nullable;
 
 /**
-* @author Maxim.Medvedev
-*/
+ * @author Maxim.Medvedev
+ */
 public interface GrIntroduceSettings {
   @Nullable
   String getName();

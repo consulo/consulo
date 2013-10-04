@@ -394,7 +394,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     }
   }
 
-  static void cancelAndRestartDaemonLater(@NotNull ProgressIndicator progress,
+  public static void cancelAndRestartDaemonLater(@NotNull ProgressIndicator progress,
                                           @NotNull final Project project,
                                           @NotNull TextEditorHighlightingPass passCalledFrom) throws ProcessCanceledException {
     progress.cancel();

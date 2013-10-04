@@ -386,7 +386,7 @@ public class PluginManagerCore {
     return classLoaders.toArray(new ClassLoader[classLoaders.size()]);
   }
 
-  static int countPlugins(String pluginsPath) {
+  public static int countPlugins(String pluginsPath) {
     File configuredPluginsDir = new File(pluginsPath);
     if (configuredPluginsDir.exists()) {
       String[] list = configuredPluginsDir.list();
@@ -1007,13 +1007,6 @@ public class PluginManagerCore {
     final List<IdeaPluginDescriptorImpl> result = new ArrayList<IdeaPluginDescriptorImpl>();
     final HashMap<String, String> disabledPluginNames = new HashMap<String, String>();
     for (IdeaPluginDescriptorImpl descriptor : pluginDescriptors) {
-      if (descriptor.getPluginId().getIdString().equals(CORE_PLUGIN_ID)) {
-        final List<String> modules = descriptor.getModules();
-        if (modules != null) {
-          ourAvailableModules.addAll(modules);
-        }
-      }
-
       if (!shouldSkipPlugin(descriptor, pluginDescriptors)) {
         result.add(descriptor);
       }
@@ -1050,7 +1043,7 @@ public class PluginManagerCore {
 
     int i = 0;
     for (final IdeaPluginDescriptorImpl pluginDescriptor : result) {
-      if (pluginDescriptor.getPluginId().getIdString().equals(CORE_PLUGIN_ID) || pluginDescriptor.isUseCoreClassLoader()) {
+      if (pluginDescriptor.isUseCoreClassLoader()) {
         pluginDescriptor.setLoader(parentLoader, true);
       }
       else {

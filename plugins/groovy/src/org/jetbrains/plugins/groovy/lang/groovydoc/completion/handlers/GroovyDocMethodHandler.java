@@ -22,9 +22,9 @@ import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiTypesUtil;
 import org.jetbrains.plugins.groovy.extensions.completion.ContextSpecificInsertHandler;
-import org.jetbrains.plugins.groovy.lang.GrReferenceAdjuster;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocComment;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocMethodParameter;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocMethodParams;
@@ -97,7 +97,7 @@ public class GroovyDocMethodHandler implements ContextSpecificInsertHandler {
       GrDocMethodReference methodReference = (GrDocMethodReference) ref;
       GrDocMethodParams list = methodReference.getParameterList();
       for (GrDocMethodParameter parameter : list.getParameters()) {
-        GrReferenceAdjuster.shortenReferences(parameter);
+        JavaCodeStyleManager.getInstance(context.getProject()).shortenClassReferences(parameter);
       }
       endOffset = methodReference.getTextRange().getEndOffset() + 1;
     }

@@ -24,10 +24,7 @@
  */
 package com.intellij.codeInspection.dataFlow.instructions;
 
-import com.intellij.codeInspection.dataFlow.DataFlowRunner;
-import com.intellij.codeInspection.dataFlow.DfaInstructionState;
-import com.intellij.codeInspection.dataFlow.DfaMemoryState;
-import com.intellij.codeInspection.dataFlow.InstructionVisitor;
+import com.intellij.codeInspection.dataFlow.*;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
 import com.intellij.openapi.project.Project;
@@ -36,6 +33,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.psi.JavaTokenType.*;
 
@@ -44,11 +42,10 @@ public class BinopInstruction extends BranchingInstruction {
   private final IElementType myOperationSign;
   private final Project myProject;
 
-  public BinopInstruction(IElementType opSign, PsiElement psiAnchor, @NotNull Project project) {
+  public BinopInstruction(IElementType opSign, @Nullable PsiElement psiAnchor, @NotNull Project project) {
+    super(psiAnchor);
     myProject = project;
     myOperationSign = ourSignificantOperations.contains(opSign) ? opSign : null;
-
-    setPsiAnchor(psiAnchor);
   }
 
   @Override
@@ -60,7 +57,7 @@ public class BinopInstruction extends BranchingInstruction {
     PsiElement anchor = getPsiAnchor();
     Project project = myProject;
     PsiClassType string = PsiType.getJavaLangString(PsiManager.getInstance(project), anchor == null ? GlobalSearchScope.allScope(project) : anchor.getResolveScope());
-    return factory.getNotNullFactory().create(string);
+    return factory.createTypeValue(string, Nullness.NOT_NULL);
   }
 
   public String toString() {

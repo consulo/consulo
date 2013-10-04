@@ -67,9 +67,9 @@ public class ElementToWorkOn {
 
     if (!editor.getSelectionModel().hasSelection()) {
       PsiElement element = TargetElementUtilBase.findTargetElement(editor, TargetElementUtilBase
-        .ELEMENT_NAME_ACCEPTED | TargetElementUtilBase
-        .REFERENCED_ELEMENT_ACCEPTED | TargetElementUtilBase
-        .LOOKUP_ITEM_ACCEPTED);
+                                                                             .ELEMENT_NAME_ACCEPTED | TargetElementUtilBase
+                                                                             .REFERENCED_ELEMENT_ACCEPTED | TargetElementUtilBase
+                                                                             .LOOKUP_ITEM_ACCEPTED);
       if (element instanceof PsiLocalVariable) {
         localVar = (PsiLocalVariable) element;
         PsiElement elementAt = file.findElementAt(editor.getCaretModel().getOffset());
@@ -99,7 +99,7 @@ public class ElementToWorkOn {
         }
 
         if (!editor.getSelectionModel().hasSelection()){
-          final List<PsiExpression> expressions = IntroduceVariableBase.collectExpressions(file, editor, offset, statementsInRange);
+          final List<PsiExpression> expressions = IntroduceVariableBase.collectExpressions(file, editor, offset);
           for (Iterator<PsiExpression> iterator = expressions.iterator(); iterator.hasNext(); ) {
             PsiExpression expression = iterator.next();
             if (!processor.accept(new ElementToWorkOn(null, expression))) {
@@ -185,7 +185,7 @@ public class ElementToWorkOn {
     }
     return new ElementToWorkOn(localVar, expr);
   }
-  
+
   public interface ElementsProcessor<T> {
     boolean accept(ElementToWorkOn el);
     void pass(T t);

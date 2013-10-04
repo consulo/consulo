@@ -27,7 +27,6 @@ import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocComment;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocMemberReference;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocReferenceElement;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocTag;
-import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.GrLabel;
 import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.modifiers.GrModifierList;
 import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.modifiers.annotation.GrAnnotation;
 import org.jetbrains.plugins.groovy.lang.psi.api.signatures.GrClosureSignature;
@@ -95,7 +94,13 @@ public abstract class GroovyPsiElementFactory implements JVMElementFactory {
    */
   public abstract GrImportStatement createImportStatementFromText(@NotNull String qName, boolean isStatic, boolean isOnDemand, @Nullable String alias);
 
-  public abstract GrImportStatement createImportStatementFromText(String text);
+  public abstract GrImportStatement createImportStatementFromText(@NotNull String text);
+
+  public abstract GrImportStatement createImportStatement(@NotNull String qname,
+                                                          boolean isStatic,
+                                                          boolean isOnDemand,
+                                                          @Nullable String alias,
+                                                          @Nullable PsiElement context);
 
   public abstract PsiElement createWhiteSpace();
 
@@ -168,7 +173,8 @@ public abstract class GroovyPsiElementFactory implements JVMElementFactory {
   public abstract GrParameter createParameter(String name,
                                               @Nullable String typeText,
                                               @Nullable String initializer,
-                                              @Nullable GroovyPsiElement context) throws IncorrectOperationException;
+                                              @Nullable GroovyPsiElement context,
+                                              String... modifiers) throws IncorrectOperationException;
 
   public abstract GrCodeReferenceElement createTypeOrPackageReference(String qName);
 
@@ -228,9 +234,8 @@ public abstract class GroovyPsiElementFactory implements JVMElementFactory {
 
   public abstract GrMethod createConstructorFromText(String constructorName, CharSequence constructorText, @Nullable PsiElement context);
 
-  public abstract GrLabel createLabel(@NotNull String name);
-
-  public abstract GrDocComment createDocCommentFromText(String text) ;
+  @NotNull
+  public abstract GrDocComment createDocCommentFromText(@NotNull String text) ;
 
   public abstract GrDocTag createDocTagFromText(String text) ;
 

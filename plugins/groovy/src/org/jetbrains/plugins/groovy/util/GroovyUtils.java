@@ -18,12 +18,18 @@ package org.jetbrains.plugins.groovy.util;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.PluginPathManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.config.GroovyConfigUtils;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefinition;
+import org.jetbrains.plugins.groovy.module.extension.GroovyModuleExtension;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -36,6 +42,7 @@ import java.util.regex.Pattern;
  * @author ilyas
  */
 public abstract class GroovyUtils {
+  public static final String PLUGIN_MODULE_ID = "PLUGIN_MODULE";
 
   public static File[] getFilesInDirectoryByPattern(String dirPath, final String patternString) {
     final Pattern pattern = Pattern.compile(patternString);
@@ -59,6 +66,32 @@ public abstract class GroovyUtils {
     }
 
     return result;
+  }
+
+  public static boolean isSuitableModule(Module module) {
+    if (module == null) return false;
+    return ModuleUtilCore.getExtension(module, GroovyModuleExtension.class) != null;
+  }
+
+  @Nullable
+  public static GrTypeDefinition getPublicClass(@Nullable VirtualFile virtualFile, PsiManager manager) {
+    if (virtualFile == null) return null;
+
+    PsiFile psiFile = manager.findFile(virtualFile);
+    if ((psiFile instanceof GroovyFile)) {
+      return getClassDefinition((GroovyFile)psiFile);
+    }
+
+    return null;
+  }
+
+  @Nullable
+  public static GrTypeDefinition getClassDefinition(@NotNull GroovyFile groovyFile) {
+    String fileName = groovyFile.getName();
+    int idx = fileName.lastIndexOf('.');
+    if (idx < 0) return null;
+
+    return getClassDefinition(groovyFile, fileName.substring(0, idx));
   }
 
   @Nullable

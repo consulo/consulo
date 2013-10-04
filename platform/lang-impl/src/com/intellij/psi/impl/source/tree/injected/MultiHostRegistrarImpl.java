@@ -375,7 +375,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     PsiDocumentManagerImpl.checkConsistency(psiFile, documentWindow);
   }
 
-  void addToResults(Place place, PsiFile psiFile, MultiHostRegistrarImpl from) {
+  public void addToResults(Place place, PsiFile psiFile, MultiHostRegistrarImpl from) {
     addToResults(place, psiFile);
     myReferenceInjector = from.myReferenceInjector;
   }

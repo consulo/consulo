@@ -25,44 +25,49 @@
 package com.intellij.codeInspection.dataFlow.value;
 
 import com.intellij.codeInspection.dataFlow.Nullness;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.JavaConstantExpressionEvaluator;
 import com.intellij.psi.util.PsiTreeUtil;
-import gnu.trove.TIntObjectHashMap;
+import com.intellij.psi.util.TypeConversionUtil;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DfaValueFactory {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.dataFlow.value.DfaValueFactory");
+import java.util.List;
+import java.util.Map;
 
-  private int myLastID;
-  private final TIntObjectHashMap<DfaValue> myValues;
+public class DfaValueFactory {
+  private final List<DfaValue> myValues = ContainerUtil.newArrayList();
+  private final Map<Pair<DfaPsiType, DfaPsiType>, Boolean> myAssignableCache = ContainerUtil.newHashMap();
+  private final Map<Pair<DfaPsiType, DfaPsiType>, Boolean> myConvertibleCache = ContainerUtil.newHashMap();
+  private final Map<PsiType, DfaPsiType> myDfaTypes = ContainerUtil.newHashMap();
 
   public DfaValueFactory() {
-    myValues = new TIntObjectHashMap<DfaValue>();
-    myLastID = 0;
-
+    myValues.add(null);
     myVarFactory = new DfaVariableValue.Factory(this);
     myConstFactory = new DfaConstValue.Factory(this);
     myBoxedFactory = new DfaBoxedValue.Factory(this);
-    myNotNullFactory = new DfaNotNullValue.Factory(this);
     myTypeFactory = new DfaTypeValue.Factory(this);
     myRelationFactory = new DfaRelationValue.Factory(this);
   }
 
-  public DfaValue createTypeValueWithNullability(@Nullable PsiType type, Nullness nullability) {
-    return nullability == Nullness.NOT_NULL ? getNotNullFactory().create(type) : getTypeFactory().create(type, nullability == Nullness.NULLABLE);
+  public DfaValue createTypeValue(@Nullable PsiType type, Nullness nullability) {
+    if (type == null) return DfaUnknownValue.getInstance();
+    return getTypeFactory().createTypeValue(internType(type), nullability);
   }
 
-   int createID() {
-    myLastID++;
-    LOG.assertTrue(myLastID >= 0, "Overflow");
-    return myLastID;
+  private DfaPsiType internType(@NotNull PsiType psiType) {
+    DfaPsiType dfaType = myDfaTypes.get(psiType);
+    if (dfaType == null) {
+      myDfaTypes.put(psiType, dfaType = new DfaPsiType(TypeConversionUtil.erasure(psiType), myAssignableCache, myConvertibleCache));
+    }
+    return dfaType;
   }
 
-  void registerValue(DfaValue value) {
-    myValues.put(value.getID(), value);
+  int registerValue(DfaValue value) {
+    myValues.add(value);
+    return myValues.size() - 1;
   }
 
   public DfaValue getValue(int id) {
@@ -80,16 +85,16 @@ public class DfaValueFactory {
     }
 
     if (psiExpression instanceof PsiNewExpression) {
-      return getNotNullFactory().create(psiExpression.getType());
+      return createTypeValue(psiExpression.getType(), Nullness.NOT_NULL);
     }
 
     final Object value = JavaConstantExpressionEvaluator.computeConstantExpression(psiExpression, false);
     PsiType type = psiExpression.getType();
     if (value != null && type != null) {
       if (value instanceof String) {
-        return getNotNullFactory().create(type); // Non-null string literal.
+        return createTypeValue(type, Nullness.NOT_NULL); // Non-null string literal.
       }
-      return getConstFactory().createFromValue(value, type);
+      return getConstFactory().createFromValue(value, type, null);
     }
 
     return null;
@@ -98,7 +103,7 @@ public class DfaValueFactory {
   @Nullable
   public DfaValue createLiteralValue(PsiLiteralExpression literal) {
     if (literal.getValue() instanceof String) {
-      return getNotNullFactory().create(literal.getType()); // Non-null string literal.
+      return createTypeValue(literal.getType(), Nullness.NOT_NULL); // Non-null string literal.
     }
     return getConstFactory().create(literal);
   }
@@ -131,12 +136,12 @@ public class DfaValueFactory {
       PsiExpression initializer = variable.getInitializer();
       PsiType type = initializer == null ? null : initializer.getType();
       if (initializer != null && type != null && isNotNullExpression(initializer, type)) {
-        return getNotNullFactory().create(type);
+        return createTypeValue(type, Nullness.NOT_NULL);
       }
     }
 
     if (!variable.hasModifierProperty(PsiModifier.VOLATILE) && isEffectivelyUnqualified(referenceExpression)) {
-      return getVarFactory().createVariableValue(variable, referenceExpression.getType(), false, null, false);
+      return getVarFactory().createVariableValue(variable, referenceExpression.getType(), false, null);
     }
 
     return null;
@@ -173,7 +178,6 @@ public class DfaValueFactory {
   private final DfaVariableValue.Factory myVarFactory;
   private final DfaConstValue.Factory myConstFactory;
   private final DfaBoxedValue.Factory myBoxedFactory;
-  private final DfaNotNullValue.Factory myNotNullFactory;
   private final DfaTypeValue.Factory myTypeFactory;
   private final DfaRelationValue.Factory myRelationFactory;
 
@@ -189,11 +193,6 @@ public class DfaValueFactory {
   @NotNull
   public DfaBoxedValue.Factory getBoxedFactory() {
     return myBoxedFactory;
-  }
-
-  @NotNull
-  public DfaNotNullValue.Factory getNotNullFactory() {
-    return myNotNullFactory;
   }
 
   @NotNull

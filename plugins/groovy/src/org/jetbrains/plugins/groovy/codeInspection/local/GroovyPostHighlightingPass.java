@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@ package org.jetbrains.plugins.groovy.codeInspection.local;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.CodeInsightSettings;
+import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.*;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightMethodUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import com.intellij.codeInsight.daemon.impl.quickfix.SafeDeleteFix;
 import com.intellij.codeInsight.intention.IntentionAction;
@@ -32,7 +34,6 @@ import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.AnnotationSession;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -85,6 +86,7 @@ public class GroovyPostHighlightingPass extends TextEditorHighlightingPass {
     myEditor = editor;
   }
 
+  @Override
   public void doCollectInformation(@NotNull final ProgressIndicator progress) {
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     VirtualFile virtualFile = myFile.getViewProvider().getVirtualFile();
@@ -97,10 +99,12 @@ public class GroovyPostHighlightingPass extends TextEditorHighlightingPass {
     final boolean deadCodeEnabled = profile.isToolEnabled(unusedDefKey, myFile);
     final UnusedDeclarationInspection deadCodeInspection = (UnusedDeclarationInspection)profile.getUnwrappedTool(UnusedDeclarationInspection.SHORT_NAME, myFile);
     final GlobalUsageHelper usageHelper = new GlobalUsageHelper() {
+      @Override
       public boolean isCurrentFileAlreadyChecked() {
         return false;
       }
 
+      @Override
       public boolean isLocallyUsed(@NotNull PsiNamedElement member) {
         return false;
       }
@@ -127,8 +131,8 @@ public class GroovyPostHighlightingPass extends TextEditorHighlightingPass {
         }
 
         if (deadCodeEnabled &&
-            element instanceof GrNamedElement &&
-            !PostHighlightingPass.isImplicitUsage((GrNamedElement)element, progress) &&
+            element instanceof GrNamedElement && element instanceof PsiModifierListOwner &&
+            !PostHighlightingPass.isImplicitUsage((PsiModifierListOwner)element, progress) &&
             !GroovySuppressableInspectionTool.isElementToolSuppressedIn(element, GroovyUnusedDeclarationInspection.SHORT_NAME)) {
           PsiElement nameId = ((GrNamedElement)element).getNameIdentifierGroovy();
           if (nameId.getNode().getElementType() == GroovyTokenTypes.mIDENT) {
@@ -208,12 +212,12 @@ public class GroovyPostHighlightingPass extends TextEditorHighlightingPass {
 
   private static boolean methodMayHaveUnusedParameters(GrMethod method) {
     return (method.isConstructor() ||
-         method.hasModifierProperty(PsiModifier.PRIVATE) ||
-         method.hasModifierProperty(PsiModifier.STATIC) ||
-         !method.hasModifierProperty(PsiModifier.ABSTRACT) && !isOverriddenOrOverrides(method)) &&
-        !method.hasModifierProperty(PsiModifier.NATIVE) &&
-        !HighlightMethodUtil.isSerializationRelatedMethod(method, method.getContainingClass()) &&
-        !PsiClassImplUtil.isMainOrPremainMethod(method);
+            method.hasModifierProperty(PsiModifier.PRIVATE) ||
+            method.hasModifierProperty(PsiModifier.STATIC) ||
+            !method.hasModifierProperty(PsiModifier.ABSTRACT) && !isOverriddenOrOverrides(method)) &&
+           !method.hasModifierProperty(PsiModifier.NATIVE) &&
+           !JavaHighlightUtil.isSerializationRelatedMethod(method, method.getContainingClass()) &&
+           !PsiClassImplUtil.isMainOrPremainMethod(method);
   }
 
   private static boolean isFieldUnused(GrField field, ProgressIndicator progress, GlobalUsageHelper usageHelper) {
@@ -244,40 +248,39 @@ public class GroovyPostHighlightingPass extends TextEditorHighlightingPass {
   private static IntentionAction createUnusedImportIntention() {
     return new IntentionAction() {
 
+      @Override
       @NotNull
       public String getText() {
         return GroovyInspectionBundle.message("optimize.all.imports");
       }
 
+      @Override
       @NotNull
       public String getFamilyName() {
         return GroovyInspectionBundle.message("optimize.imports");
       }
 
+      @Override
       public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
         return true;
       }
 
+      @Override
       public void invoke(@NotNull final Project project, Editor editor, PsiFile file) {
-        optimizeImports(project, file);
+        if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
+
+        final Runnable runnable = new GroovyImportOptimizer().processFile(file);
+        CommandProcessor.getInstance().executeCommand(project, runnable, "optimize imports", this);
       }
 
+      @Override
       public boolean startInWriteAction() {
         return true;
       }
     };
   }
 
-  public static void optimizeImports(final Project project, PsiFile file) {
-    GroovyImportOptimizer optimizer = new GroovyImportOptimizer();
-    final Runnable runnable = optimizer.processFile(file);
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      public void run() {
-        CommandProcessor.getInstance().executeCommand(project, runnable, "optimize imports", this);
-      }
-    });
-  }
-
+  @Override
   public void doApplyInformationToEditor() {
     if (myUnusedDeclarations == null || myUnusedImports == null) {
       return;
@@ -328,7 +331,7 @@ public class GroovyPostHighlightingPass extends TextEditorHighlightingPass {
     if (!codeAnalyzer.isErrorAnalyzingFinished(myFile)) return false;
     boolean errors = containsErrorsPreventingOptimize();
 
-    return !errors && codeAnalyzer.canChangeFileSilently(myFile);
+    return !errors && DaemonListeners.canChangeFileSilently(myFile);
   }
 
   private boolean containsErrorsPreventingOptimize() {
@@ -343,14 +346,16 @@ public class GroovyPostHighlightingPass extends TextEditorHighlightingPass {
       ignoreRange = TextRange.EMPTY_RANGE;
     }
 
-    return !DaemonCodeAnalyzerImpl.processHighlights(myDocument, myProject, HighlightSeverity.ERROR, 0, myDocument.getTextLength(), new Processor<HighlightInfo>() {
-      public boolean process(HighlightInfo error) {
-        int infoStart = error.getActualStartOffset();
-        int infoEnd = error.getActualEndOffset();
+    return !DaemonCodeAnalyzerEx
+      .processHighlights(myDocument, myProject, HighlightSeverity.ERROR, 0, myDocument.getTextLength(), new Processor<HighlightInfo>() {
+        @Override
+        public boolean process(HighlightInfo error) {
+          int infoStart = error.getActualStartOffset();
+          int infoEnd = error.getActualEndOffset();
 
-        return ignoreRange.containsRange(infoStart,infoEnd) && error.type.equals(HighlightInfoType.WRONG_REF);
-      }
-    });
+          return ignoreRange.containsRange(infoStart, infoEnd) && error.type.equals(HighlightInfoType.WRONG_REF);
+        }
+      });
   }
 
 

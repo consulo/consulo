@@ -34,7 +34,7 @@ public interface ReferenceAdjuster {
     private static final Extension INSTANCE = new Extension();
 
     public Extension() {
-      super("com.intellij.codeStyle.ReferenceAdjuster");
+      super("org.consulo.java.codeStyle.referenceAdjuster");
     }
 
     public static ReferenceAdjuster getReferenceAdjuster(Language language) {

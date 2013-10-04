@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.guess.impl;
 
-import com.intellij.codeInsight.CodeInsightUtil;
+import com.intellij.codeInsight.JavaPsiEquivalenceUtil;
 import com.intellij.codeInspection.dataFlow.DfaMemoryStateImpl;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaValueFactory;
@@ -41,7 +41,7 @@ public class ExpressionTypeMemoryState extends DfaMemoryStateImpl {
 
     @Override
     public boolean equals(PsiExpression o1, PsiExpression o2) {
-      if (CodeInsightUtil.areExpressionsEquivalent(o1, o2)) {
+      if (JavaPsiEquivalenceUtil.areExpressionsEquivalent(o1, o2)) {
         if (computeHashCode(o1) != computeHashCode(o2)) {
           LOG.error("different hashCodes: " + o1 + "; " + o2 + "; " + computeHashCode(o1) + "!=" + computeHashCode(o2));
         }
@@ -57,14 +57,13 @@ public class ExpressionTypeMemoryState extends DfaMemoryStateImpl {
     super(factory);
   }
 
-  @Override
-  protected DfaMemoryStateImpl createNew() {
-    return new ExpressionTypeMemoryState(getFactory());
+  private ExpressionTypeMemoryState(DfaMemoryStateImpl toCopy) {
+    super(toCopy);
   }
 
   @Override
   public DfaMemoryStateImpl createCopy() {
-    final ExpressionTypeMemoryState copy = (ExpressionTypeMemoryState)super.createCopy();
+    final ExpressionTypeMemoryState copy = new ExpressionTypeMemoryState(this);
     copy.myStates.putAll(myStates);
     return copy;
   }

@@ -165,6 +165,6 @@ public class UnusedSymbolLocalInspection extends BaseJavaLocalInspectionTool imp
   }
 
   public static boolean isInjected(final PsiModifierListOwner modifierListOwner) {
-    return EntryPointsManagerBase.getInstance(modifierListOwner.getProject()).isEntryPoint(modifierListOwner);
+    return EntryPointsManager.getInstance(modifierListOwner.getProject()).isEntryPoint(modifierListOwner);
   }
 }

@@ -22,6 +22,7 @@
  */
 package org.intellij.lang.xpath.context;
 
+import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.psi.PsiElement;
 
 import org.intellij.lang.xpath.psi.XPathExpression;
@@ -34,38 +35,38 @@ import org.intellij.lang.xpath.validation.inspections.quickfix.RemoveRedundantCo
 import org.intellij.lang.xpath.validation.inspections.quickfix.XPathQuickFixFactory;
 
 public class XPathQuickFixFactoryImpl implements XPathQuickFixFactory {
-    public static final XPathQuickFixFactory INSTANCE = new XPathQuickFixFactoryImpl();
+  public static final XPathQuickFixFactory INSTANCE = new XPathQuickFixFactoryImpl();
 
-    private XPathQuickFixFactoryImpl() {
-    }
+  private XPathQuickFixFactoryImpl() {
+  }
 
-    public Fix<XPathExpression>[] createImplicitTypeConversionFixes(XPathExpression expression, XPathType type, boolean explicit) {
-        //noinspection unchecked
-        return explicit ? new Fix[]{
-                new RemoveExplicitConversionFix(expression),
-                new MakeTypeExplicitFix(expression, type),
-        } : new Fix[]{
-                new MakeTypeExplicitFix(expression, type),
-        };
-    }
+  public Fix<XPathExpression>[] createImplicitTypeConversionFixes(XPathExpression expression, XPathType type, boolean explicit) {
+    //noinspection unchecked
+    return explicit ? new Fix[]{
+      new RemoveExplicitConversionFix(expression),
+      new MakeTypeExplicitFix(expression, type),
+    } : new Fix[]{
+      new MakeTypeExplicitFix(expression, type),
+    };
+  }
 
-    public Fix<XPathExpression>[] createRedundantTypeConversionFixes(XPathExpression expression) {
-        //noinspection unchecked
-        return new Fix[]{
-                new RemoveRedundantConversionFix(expression),
-        };
-    }
+  public Fix<XPathExpression>[] createRedundantTypeConversionFixes(XPathExpression expression) {
+    //noinspection unchecked
+    return new Fix[]{
+      new RemoveRedundantConversionFix(expression),
+    };
+  }
 
-    public Fix<XPathNodeTest>[] createUnknownNodeTestFixes(XPathNodeTest test) {
-        //noinspection unchecked
-        return new Fix[0];
-    }
+  public Fix<XPathNodeTest>[] createUnknownNodeTestFixes(XPathNodeTest test) {
+    //noinspection unchecked
+    return new Fix[0];
+  }
 
-    public SuppressIntentionAction[] getSuppressActions(XPathInspection inspection) {
-        return new SuppressIntentionAction[0];
-    }
+  public SuppressIntentionAction[] getSuppressActions(XPathInspection inspection) {
+    return new SuppressIntentionAction[0];
+  }
 
-    public boolean isSuppressedFor(PsiElement element, XPathInspection inspection) {
-        return false;
-    }
+  public boolean isSuppressedFor(PsiElement element, XPathInspection inspection) {
+    return false;
+  }
 }

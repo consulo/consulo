@@ -18,6 +18,7 @@ package com.intellij.psi.util;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
@@ -29,6 +30,7 @@ import com.intellij.psi.meta.PsiMetaOwner;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.util.TimeoutUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +40,7 @@ import java.util.Collection;
  * @author yole
  */
 public class PsiUtilCore {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.psi.util.PsiUtilCore");
   public static final PsiElement NULL_PSI_ELEMENT = new PsiElement() {
     @Override
     @NotNull
@@ -382,7 +385,7 @@ public class PsiUtilCore {
     return 0;
   }
 
-  public static boolean hasErrorElementChild(PsiElement element) {
+  public static boolean hasErrorElementChild(@NotNull PsiElement element) {
     for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
       if (child instanceof PsiErrorElement) return true;
     }
@@ -440,5 +443,45 @@ public class PsiUtilCore {
     if (qName == null) return newName;
     int index = qName.lastIndexOf('.');
     return index < 0 ? newName : qName.substring(0, index + 1) + newName;
+  }
+
+  public static Language getDialect(@NotNull PsiElement element) {
+    return narrowLanguage(element.getLanguage(), element.getContainingFile().getLanguage());
+  }
+
+  protected static Language narrowLanguage(final Language language, final Language candidate) {
+    if (candidate.isKindOf(language)) return candidate;
+    return language;
+  }
+
+  public static void ensureValid(@NotNull PsiElement element) {
+    if (!element.isValid()) {
+      TimeoutUtil.sleep(1); // to see if processing in another thread suddenly makes the element valid again (which is a bug)
+      if (element.isValid()) {
+        LOG.error("PSI resurrected: " + element + " of " + element.getClass());
+        return;
+      }
+      throw new PsiInvalidElementAccessException(element);
+    }
+  }
+
+  /**
+   * @deprecated use CompletionUtil#getOriginalElement where appropriate instead
+   */
+  @Nullable
+  public static <T extends PsiElement> T getOriginalElement(@NotNull T psiElement, final Class<? extends T> elementClass) {
+    final PsiFile psiFile = psiElement.getContainingFile();
+    final PsiFile originalFile = psiFile.getOriginalFile();
+    if (originalFile == psiFile) return psiElement;
+    final TextRange range = psiElement.getTextRange();
+    final PsiElement element = originalFile.findElementAt(range.getStartOffset());
+    final int maxLength = range.getLength();
+    T parent = PsiTreeUtil.getParentOfType(element, elementClass, false);
+    T next = parent ;
+    while (next != null && next.getTextLength() <= maxLength) {
+      parent = next;
+      next = PsiTreeUtil.getParentOfType(next, elementClass, true);
+    }
+    return parent;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,32 +27,32 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.path.GrI
 
 
 class IndexedExpressionConversionPredicate implements PsiElementPredicate {
-    public boolean satisfiedBy(PsiElement element) {
-        if (!(element instanceof GrIndexProperty)) return false;
+  public boolean satisfiedBy(PsiElement element) {
+    if (!(element instanceof GrIndexProperty)) return false;
 
-        if (ErrorUtil.containsError(element)) return false;
+    if (ErrorUtil.containsError(element)) return false;
 
-        final GrIndexProperty arrayIndexExpression = (GrIndexProperty) element;
-        final PsiElement lastChild = arrayIndexExpression.getLastChild();
-        if (!(lastChild instanceof GrArgumentList)) return false;
+    final GrIndexProperty arrayIndexExpression = (GrIndexProperty) element;
+    final PsiElement lastChild = arrayIndexExpression.getLastChild();
+    if (!(lastChild instanceof GrArgumentList)) return false;
 
-        final GrArgumentList argList = (GrArgumentList) lastChild;
+    final GrArgumentList argList = (GrArgumentList) lastChild;
 
-        final GrExpression[] arguments = argList.getExpressionArguments();
-        if (arguments.length != 1) return false;
+    final GrExpression[] arguments = argList.getExpressionArguments();
+    if (arguments.length != 1) return false;
 
-        final PsiElement parent = element.getParent();
-        if (!(parent instanceof GrAssignmentExpression)) {
-            return true;
-        }
-        final GrAssignmentExpression assignmentExpression = (GrAssignmentExpression) parent;
-        final GrExpression rvalue = assignmentExpression.getRValue();
-        if (rvalue == null) return false;
-
-        if (rvalue.equals(element)) return true;
-
-        final IElementType operator = assignmentExpression.getOperationToken();
-        return GroovyTokenTypes.mASSIGN.equals(operator);
+    final PsiElement parent = element.getParent();
+    if (!(parent instanceof GrAssignmentExpression)) {
+      return true;
     }
+    final GrAssignmentExpression assignmentExpression = (GrAssignmentExpression) parent;
+    final GrExpression rvalue = assignmentExpression.getRValue();
+    if (rvalue == null) return false;
+
+    if (rvalue.equals(element)) return true;
+
+    final IElementType operator = assignmentExpression.getOperationTokenType();
+    return GroovyTokenTypes.mASSIGN.equals(operator);
+  }
 
 }

@@ -63,7 +63,7 @@ public class PropertyGroup implements Group, ColoredItemPresentation, AccessLeve
   public static PropertyGroup createOn(PsiElement object, final TreeElement treeElement) {
     if (object instanceof PsiField) {
       PsiField field = (PsiField)object;
-      PropertyGroup group = new PropertyGroup(PropertyUtil.suggestPropertyName(field.getProject(), field), field.getType(),
+      PropertyGroup group = new PropertyGroup(PropertyUtil.suggestPropertyName(field), field.getType(),
                                               field.hasModifierProperty(PsiModifier.STATIC), object.getProject());
       group.setField(field);
       group.myChildren.add(treeElement);
@@ -153,7 +153,7 @@ public class PropertyGroup implements Group, ColoredItemPresentation, AccessLeve
     if (propertyGroup.myPropertyType != null && !propertyGroup.myPropertyType.isValid()) return false;
 
     if (myPropertyType != null && myPropertyType.isValid()
-        ? !myPropertyType.equals(propertyGroup.myPropertyType) 
+        ? !myPropertyType.equals(propertyGroup.myPropertyType)
         : propertyGroup.myPropertyType != null) {
       return false;
     }

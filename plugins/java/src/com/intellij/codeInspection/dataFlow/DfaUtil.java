@@ -15,32 +15,26 @@
  */
 package com.intellij.codeInspection.dataFlow;
 
-import com.intellij.codeInsight.NullableNotNullManager;
 import com.intellij.codeInspection.dataFlow.instructions.AssignInstruction;
 import com.intellij.codeInspection.dataFlow.instructions.Instruction;
 import com.intellij.codeInspection.dataFlow.instructions.PushInstruction;
 import com.intellij.codeInspection.dataFlow.value.DfaValue;
 import com.intellij.codeInspection.dataFlow.value.DfaVariableValue;
-import com.intellij.codeInspection.nullable.NullableStuffInspection;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.MultiValuesMap;
-import com.intellij.openapi.util.Ref;
 import com.intellij.psi.*;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.NullableFunction;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Stack;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Gregory.Shrago
@@ -58,7 +52,7 @@ public class DfaUtil {
 
     CachedValue<MultiValuesMap<PsiVariable, PsiExpression>> cachedValue = context.getUserData(DFA_VARIABLE_INFO_KEY);
     if (cachedValue == null) {
-      final PsiElement codeBlock = getEnclosingCodeBlock(variable, context);
+      final PsiElement codeBlock = DfaPsiUtil.getEnclosingCodeBlock(variable, context);
       cachedValue = CachedValuesManager.getManager(context.getProject()).createCachedValue(new CachedValueProvider<MultiValuesMap<PsiVariable, PsiExpression>>() {
         @Override
         public Result<MultiValuesMap<PsiVariable, PsiExpression>> compute() {
@@ -76,7 +70,7 @@ public class DfaUtil {
               result = TOO_COMPLEX;
             }
           }
-          return new Result<MultiValuesMap<PsiVariable, PsiExpression>>(result, codeBlock);
+          return new Result<MultiValuesMap<PsiVariable, PsiExpression>>(result, variable);
         }
       }, false);
       context.putUserData(DFA_VARIABLE_INFO_KEY, cachedValue);
@@ -88,75 +82,10 @@ public class DfaUtil {
   }
 
   @NotNull
-  public static Nullness getElementNullability(@Nullable PsiType resultType, @Nullable PsiModifierListOwner owner) {
-    if (owner == null) {
-      return Nullness.UNKNOWN;
-    }
-
-    if (NullableNotNullManager.isNullable(owner)) {
-      return Nullness.NULLABLE;
-    }
-    if (NullableNotNullManager.isNotNull(owner)) {
-      return Nullness.NOT_NULL;
-    }
-
-    if (resultType != null) {
-      NullableNotNullManager nnn = NullableNotNullManager.getInstance(owner.getProject());
-      for (PsiAnnotation annotation : resultType.getAnnotations()) {
-        String qualifiedName = annotation.getQualifiedName();
-        if (nnn.getNullables().contains(qualifiedName)) {
-          return Nullness.NULLABLE;
-        }
-        if (nnn.getNotNulls().contains(qualifiedName)) {
-          return Nullness.NOT_NULL;
-        }
-      }
-    }
-
-    return Nullness.UNKNOWN;
-  }
-
-  public static boolean isNullableInitialized(PsiVariable var, boolean nullable) {
-    if (!isFinalField(var)) {
-      return false;
-    }
-
-    List<PsiExpression> initializers = NullableStuffInspection.findAllConstructorInitializers((PsiField)var);
-    if (initializers.isEmpty()) {
-      return false;
-    }
-
-    for (PsiExpression expression : initializers) {
-      if (!(expression instanceof PsiReferenceExpression)) {
-        return false;
-      }
-      PsiElement target = ((PsiReferenceExpression)expression).resolve();
-      if (!(target instanceof PsiParameter)) {
-        return false;
-      }
-      if (nullable && NullableNotNullManager.isNullable((PsiParameter)target)) {
-        return true;
-      }
-      if (!nullable && !NullableNotNullManager.isNotNull((PsiParameter)target)) {
-        return false;
-      }
-    }
-    return !nullable;
-  }
-
-  public static boolean isPlainMutableField(PsiVariable var) {
-    return !var.hasModifierProperty(PsiModifier.FINAL) && !var.hasModifierProperty(PsiModifier.TRANSIENT) && !var.hasModifierProperty(PsiModifier.VOLATILE) && var instanceof PsiField;
-  }
-
-  public static boolean isFinalField(PsiVariable var) {
-    return var.hasModifierProperty(PsiModifier.FINAL) && !var.hasModifierProperty(PsiModifier.TRANSIENT) && var instanceof PsiField;
-  }
-
-  @NotNull
   public static Nullness checkNullness(@Nullable final PsiVariable variable, @Nullable final PsiElement context) {
     if (variable == null || context == null) return Nullness.UNKNOWN;
 
-    final PsiElement codeBlock = getEnclosingCodeBlock(variable, context);
+    final PsiElement codeBlock = DfaPsiUtil.getEnclosingCodeBlock(variable, context);
     if (codeBlock == null) {
       return Nullness.UNKNOWN;
     }
@@ -168,45 +97,6 @@ public class DfaUtil {
     if (visitor.myNulls.contains(variable) && !visitor.myNotNulls.contains(variable)) return Nullness.NULLABLE;
     if (visitor.myNotNulls.contains(variable) && !visitor.myNulls.contains(variable)) return Nullness.NOT_NULL;
     return Nullness.UNKNOWN;
-  }
-
-  @Nullable
-  public static PsiCodeBlock getTopmostBlockInSameClass(@NotNull PsiElement position) {
-    PsiCodeBlock block = PsiTreeUtil.getParentOfType(position, PsiCodeBlock.class, false, PsiMember.class, PsiFile.class);
-    if (block == null) {
-      return null;
-    }
-
-    PsiCodeBlock lastBlock = block;
-    while (true) {
-      block = PsiTreeUtil.getParentOfType(block, PsiCodeBlock.class, true, PsiMember.class, PsiFile.class);
-      if (block == null) {
-        return lastBlock;
-      }
-      lastBlock = block;
-    }
-  }
-
-  private static PsiElement getEnclosingCodeBlock(final PsiVariable variable, final PsiElement context) {
-    PsiElement codeBlock;
-    if (variable instanceof PsiParameter) {
-      codeBlock = ((PsiParameter)variable).getDeclarationScope();
-      if (codeBlock instanceof PsiMethod) {
-        codeBlock = ((PsiMethod)codeBlock).getBody();
-      }
-    }
-    else if (variable instanceof PsiLocalVariable) {
-      codeBlock = PsiTreeUtil.getParentOfType(variable, PsiCodeBlock.class);
-    }
-    else {
-      codeBlock = PsiTreeUtil.getParentOfType(context, PsiCodeBlock.class);
-    }
-    while (codeBlock != null) {
-      PsiAnonymousClass anon = PsiTreeUtil.getParentOfType(codeBlock, PsiAnonymousClass.class);
-      if (anon == null) break;
-      codeBlock = PsiTreeUtil.getParentOfType(anon, PsiCodeBlock.class);
-    }
-    return codeBlock;
   }
 
   @NotNull
@@ -221,7 +111,7 @@ public class DfaUtil {
       }
       final Collection<? extends PsiElement> variableValues = getCachedVariableValues((PsiVariable)targetElement, qualifierExpression);
       if (variableValues == null || variableValues.isEmpty()) {
-        return getVariableAssignmentsInFile((PsiVariable)targetElement, false, qualifierExpression);
+        return DfaPsiUtil.getVariableAssignmentsInFile((PsiVariable)targetElement, false, qualifierExpression);
       }
       return variableValues;
     }
@@ -229,76 +119,6 @@ public class DfaUtil {
       return Collections.singletonList(qualifierExpression);
     }
     return Collections.emptyList();
-  }
-
-  @NotNull
-  public static Collection<PsiExpression> getVariableAssignmentsInFile(final PsiVariable psiVariable,
-                                                                       final boolean literalsOnly,
-                                                                       final PsiElement place) {
-    final Ref<Boolean> modificationRef = Ref.create(Boolean.FALSE);
-    final PsiCodeBlock codeBlock = place == null? null : getTopmostBlockInSameClass(place);
-    final int placeOffset = codeBlock != null? place.getTextRange().getStartOffset() : 0;
-    final List<PsiExpression> list = ContainerUtil.mapNotNull(
-      ReferencesSearch.search(psiVariable, new LocalSearchScope(new PsiElement[] {psiVariable.getContainingFile()}, null, true)).findAll(),
-      new NullableFunction<PsiReference, PsiExpression>() {
-        @Override
-        public PsiExpression fun(final PsiReference psiReference) {
-          if (modificationRef.get()) return null;
-          final PsiElement parent = psiReference.getElement().getParent();
-          if (parent instanceof PsiAssignmentExpression) {
-            final PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression)parent;
-            final IElementType operation = assignmentExpression.getOperationTokenType();
-            if (assignmentExpression.getLExpression() == psiReference) {
-              if (JavaTokenType.EQ.equals(operation)) {
-                final PsiExpression rValue = assignmentExpression.getRExpression();
-                if (!literalsOnly || allOperandsAreLiterals(rValue)) {
-                  // if there's a codeBlock omit the values assigned later
-                  if (codeBlock != null && PsiTreeUtil.isAncestor(codeBlock, parent, true)
-                      && placeOffset < parent.getTextRange().getStartOffset()) {
-                    return null;
-                  }
-                  return rValue;
-                }
-                else {
-                  modificationRef.set(Boolean.TRUE);
-                }
-              }
-              else if (JavaTokenType.PLUSEQ.equals(operation)) {
-                modificationRef.set(Boolean.TRUE);
-              }
-            }
-          }
-          return null;
-        }
-      });
-    if (modificationRef.get()) return Collections.emptyList();
-    if (!literalsOnly || allOperandsAreLiterals(psiVariable.getInitializer())) {
-      ContainerUtil.addIfNotNull(psiVariable.getInitializer(), list);
-    }
-    return list;
-  }
-
-  public static boolean allOperandsAreLiterals(@Nullable final PsiExpression expression) {
-    if (expression == null) return false;
-    if (expression instanceof PsiLiteralExpression) return true;
-    if (expression instanceof PsiPolyadicExpression) {
-      Stack<PsiExpression> stack = new Stack<PsiExpression>();
-      stack.add(expression);
-      while (!stack.isEmpty()) {
-        PsiExpression psiExpression = stack.pop();
-        if (psiExpression instanceof PsiPolyadicExpression) {
-          PsiPolyadicExpression binaryExpression = (PsiPolyadicExpression)psiExpression;
-          for (PsiExpression op : binaryExpression.getOperands()) {
-            stack.push(op);
-          }
-        }
-        else if (!(psiExpression instanceof PsiLiteralExpression)) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
   }
 
   private static class ValuableInstructionVisitor extends StandardInstructionVisitor {
@@ -320,16 +140,22 @@ public class DfaUtil {
           DfaVariableValue variableValue = entry.getKey();
           final PsiExpression psiExpression = state.myExpression;
           if (psiExpression != null && variableValue.getQualifier() == null) {
-            myValues.put(variableValue.getPsiVariable(), psiExpression);
+            PsiModifierListOwner element = variableValue.getPsiVariable();
+            if (element instanceof PsiVariable) {
+              myValues.put((PsiVariable)element, psiExpression);
+            }
           }
         }
         DfaValue value = instruction.getValue();
         if (value instanceof DfaVariableValue && ((DfaVariableValue)value).getQualifier() == null) {
-          if (memState.isNotNull((DfaVariableValue)value)) {
-            myNotNulls.add(((DfaVariableValue)value).getPsiVariable());
-          }
-          if (memState.isNull(value)) {
-            myNulls.add(((DfaVariableValue)value).getPsiVariable());
+          PsiModifierListOwner element = ((DfaVariableValue)value).getPsiVariable();
+          if (element instanceof PsiVariable) {
+            if (memState.isNotNull((DfaVariableValue)value)) {
+              myNotNulls.add((PsiVariable)element);
+            }
+            if (memState.isNull(value)) {
+              myNulls.add((PsiVariable)element);
+            }
           }
         }
       }
@@ -337,9 +163,10 @@ public class DfaUtil {
     }
 
     @Override
-    public DfaInstructionState[] visitAssign(AssignInstruction instruction, DataFlowRunner runner, DfaMemoryState memState) {
+    public DfaInstructionState[] visitAssign(AssignInstruction instruction, DataFlowRunner runner, DfaMemoryState _memState) {
       final Instruction nextInstruction = runner.getInstruction(instruction.getIndex() + 1);
 
+      ValuableDataFlowRunner.MyDfaMemoryState memState = (ValuableDataFlowRunner.MyDfaMemoryState)_memState;
       final DfaValue dfaSource = memState.pop();
       final DfaValue dfaDest = memState.pop();
 
@@ -350,10 +177,10 @@ public class DfaUtil {
         final IElementType type = parent instanceof PsiAssignmentExpression
                                   ? ((PsiAssignmentExpression)parent).getOperationTokenType() : JavaTokenType.EQ;
         // store current value - to use in case of '+='
-        final PsiExpression prevValue = ((ValuableDataFlowRunner.ValuableDfaVariableState)((ValuableDataFlowRunner.MyDfaMemoryState)memState).getVariableState(var)).myExpression;
+        final PsiExpression prevValue = ((ValuableDataFlowRunner.ValuableDfaVariableState)memState.getVariableState(var)).myExpression;
         memState.setVarValue(var, dfaSource);
         // state may have been changed so re-retrieve it
-        final ValuableDataFlowRunner.ValuableDfaVariableState curState = (ValuableDataFlowRunner.ValuableDfaVariableState)((ValuableDataFlowRunner.MyDfaMemoryState)memState).getVariableState(var);
+        final ValuableDataFlowRunner.ValuableDfaVariableState curState = (ValuableDataFlowRunner.ValuableDfaVariableState)memState.getVariableState(var);
         final PsiExpression curValue = curState.myExpression;
         final PsiExpression nextValue;
         if (type == JavaTokenType.PLUSEQ && prevValue != null) {
@@ -370,7 +197,7 @@ public class DfaUtil {
         else {
           nextValue = curValue == null ? rightValue : curValue;
         }
-        curState.myExpression = nextValue;
+        memState.setVariableState(var, curState.withExpression(nextValue));
       }
       memState.push(dfaDest);
       return new DfaInstructionState[]{new DfaInstructionState(nextInstruction, memState)};

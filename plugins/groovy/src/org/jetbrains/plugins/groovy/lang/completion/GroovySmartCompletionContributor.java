@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,7 +160,9 @@ public class GroovySmartCompletionContributor extends CompletionContributor {
         for (TypeConstraint typeConstraint : typeConstraints) {
           final PsiType type = typeConstraint.getType();
           final LookupItem item = PsiTypeLookupItem.createLookupItem(type, position, PsiTypeLookupItem.isDiamond(type), ChooseTypeExpression.IMPORT_FIXER);
-          JavaCompletionUtil.setShowFQN(item);
+          if (item.getObject() instanceof PsiClass) {
+            JavaCompletionUtil.setShowFQN(item);
+          }
           item.setInsertHandler(new InsertHandler<LookupElement>() {
             @Override
             public void handleInsert(InsertionContext context, LookupElement item) {
@@ -193,8 +195,8 @@ public class GroovySmartCompletionContributor extends CompletionContributor {
 
     extend(CompletionType.SMART, AFTER_NEW, new CompletionProvider<CompletionParameters>() {
       protected void addCompletions(@NotNull final CompletionParameters parameters,
-                                 final ProcessingContext matchingContext,
-                                 @NotNull final CompletionResultSet result) {
+                                    final ProcessingContext matchingContext,
+                                    @NotNull final CompletionResultSet result) {
         generateInheritorVariants(parameters, result.getPrefixMatcher(), new Consumer<LookupElement>() {
           @Override
           public void consume(LookupElement lookupElement) {
@@ -343,7 +345,7 @@ public class GroovySmartCompletionContributor extends CompletionContributor {
     }
     else if (pparent instanceof GrAssignmentExpression) {
       GrAssignmentExpression assignment = (GrAssignmentExpression)pparent;
-      IElementType optoken = assignment.getOperationToken();
+      IElementType optoken = assignment.getOperationTokenType();
 
       GrExpression lvalue = assignment.getLValue();
       GrExpression rvalue = assignment.getRValue();
@@ -356,7 +358,7 @@ public class GroovySmartCompletionContributor extends CompletionContributor {
       PsiElement ppparent = pparent.getParent();
       if (ppparent instanceof GrAssignmentExpression) {
         GrAssignmentExpression assignment = (GrAssignmentExpression)ppparent;
-        IElementType optoken = assignment.getOperationToken();
+        IElementType optoken = assignment.getOperationTokenType();
 
         GrExpression lvalue = assignment.getLValue();
         GrExpression rvalue = assignment.getRValue();

@@ -11,6 +11,7 @@
     <orderEntry type="module" module-name="IntelliLang" />
     <orderEntry type="module" module-name="core-api" />
     <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="java-intellilang" />
   </component>
 </module>
 

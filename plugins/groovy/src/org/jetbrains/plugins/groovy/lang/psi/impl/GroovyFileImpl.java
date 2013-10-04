@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.codeStyle.GroovyCodeStyleSettings;
+import org.jetbrains.plugins.groovy.editor.GroovyImportHelper;
 import org.jetbrains.plugins.groovy.editor.GroovyImportOptimizer;
 import org.jetbrains.plugins.groovy.lang.lexer.GroovyTokenTypes;
 import org.jetbrains.plugins.groovy.lang.parser.GroovyElementTypes;
@@ -66,7 +67,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import static org.jetbrains.plugins.groovy.editor.GroovyImportHelper.processImplicitImports;
-import static org.jetbrains.plugins.groovy.editor.GroovyImportHelper.processImports;
 
 /**
  * Implements all abstractions related to Groovy file
@@ -75,7 +75,8 @@ import static org.jetbrains.plugins.groovy.editor.GroovyImportHelper.processImpo
  */
 public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
   private static final Logger LOG = Logger.getInstance("org.jetbrains.plugins.groovy.lang.psi.impl.GroovyFileImpl");
-  private static final Object lock = new Object();
+
+  private static final String SYNTHETIC_PARAMETER_NAME = "args";
 
   private static final CachedValueProvider<ConcurrentMap<String, GrBindingVariable>> BINDING_PROVIDER = new CachedValueProvider<ConcurrentMap<String, GrBindingVariable>>() {
     @Nullable
@@ -86,10 +87,11 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
     }
   };
 
+  private final Object lock = new Object();
+
   private volatile Boolean myScript;
-  private GroovyScriptClass myScriptClass;
-  private static final String SYNTHETIC_PARAMETER_NAME = "args";
-  private GrParameter mySyntheticArgsParameter = null;
+  private volatile GroovyScriptClass myScriptClass;
+  private volatile GrParameter mySyntheticArgsParameter = null;
   private PsiElement myContext;
 
   public GroovyFileImpl(FileViewProvider viewProvider) {
@@ -164,9 +166,9 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
 
     final JavaPsiFacade facade = JavaPsiFacade.getInstance(getProject());
     GrImportStatement[] importStatements = getImportStatements();
-    if (!processImports(state, lastParent, place, processor, importStatements, false)) return false;
+    if (!processImports(processor, state, lastParent, place, importStatements, false)) return false;
     if (!processDeclarationsInPackage(processor, state, lastParent, place, facade, getPackageName())) return false;
-    if (!processImports(state, lastParent, place, processor, importStatements, true)) return false;
+    if (!processImports(processor, state, lastParent, place, importStatements, true)) return false;
 
     if (processClasses && !processImplicitImports(processor, state, lastParent, place, this)) {
       return false;
@@ -174,7 +176,7 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
 
     if (classHint == null || classHint.shouldProcess(ClassHint.ResolveKind.PACKAGE)) {
       if (expectedName != null) {
-        final PsiJavaPackage pkg = facade.findPackage(expectedName);
+        final PsiPackage pkg = facade.findPackage(expectedName);
         if (pkg != null && !processor.execute(pkg, state)) {
           return false;
         }
@@ -198,6 +200,15 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
     }
 
     return true;
+  }
+
+  protected boolean processImports(PsiScopeProcessor processor,
+                                   ResolveState state,
+                                   PsiElement lastParent,
+                                   PsiElement place,
+                                   GrImportStatement[] importStatements,
+                                   boolean onDemand) {
+    return GroovyImportHelper.processImports(state, lastParent, place, processor, importStatements, onDemand);
   }
 
   private boolean processBindings(@NotNull final PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement place) {
@@ -227,7 +238,7 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
   }
 
   private ConcurrentMap<String, GrBindingVariable> getBindings() {
-    return CachedValuesManager.getManager(getProject()).getCachedValue(this, BINDING_PROVIDER);
+    return CachedValuesManager.getCachedValue(this, BINDING_PROVIDER);
   }
 
   @Nullable
@@ -246,11 +257,11 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
                                                       PsiElement lastParent,
                                                       PsiElement place, JavaPsiFacade facade,
                                                       String packageName) {
-    PsiJavaPackage aPackage = facade.findPackage(packageName);
+    PsiPackage aPackage = facade.findPackage(packageName);
     if (aPackage != null && !aPackage.processDeclarations(new DelegatingScopeProcessor(processor) {
       @Override
       public boolean execute(@NotNull PsiElement element, ResolveState state) {
-        if (element instanceof PsiJavaPackage) return true;
+        if (element instanceof PsiPackage) return true;
         return super.execute(element, state);
       }
     }, state, lastParent, place)) {
@@ -364,26 +375,37 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
     }
 
     if (myScript == null) {
-      final GrTopStatement[] topStatements = findChildrenByClass(GrTopStatement.class);
-      boolean hasClassDefinitions = false;
-      boolean hasTopStatements = false;
-      for (GrTopStatement st : topStatements) {
-        if (st instanceof GrTypeDefinition) {
-          hasClassDefinitions = true;
-        }
-        else if (!(st instanceof GrImportStatement || st instanceof GrPackageDefinition)) {
-          hasTopStatements = true;
-          break;
+      synchronized (lock) {
+        boolean isScript = checkIsScript();
+        if (myScript == null) {
+          myScript = isScript;
         }
       }
-      myScript = hasTopStatements || !hasClassDefinitions;
     }
     return myScript;
   }
 
+  private boolean checkIsScript() {
+    final GrTopStatement[] topStatements = findChildrenByClass(GrTopStatement.class);
+    boolean hasClassDefinitions = false;
+    boolean hasTopStatements = false;
+    for (GrTopStatement st : topStatements) {
+      if (st instanceof GrTypeDefinition) {
+        hasClassDefinitions = true;
+      }
+      else if (!(st instanceof GrImportStatement || st instanceof GrPackageDefinition)) {
+        hasTopStatements = true;
+        break;
+      }
+    }
+    return hasTopStatements || !hasClassDefinitions;
+  }
+
   @Override
   public void subtreeChanged() {
-    myScript = null;
+    synchronized (lock) {
+      myScript = null;
+    }
     super.subtreeChanged();
   }
 
@@ -471,7 +493,7 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
 
   @Override
   public PsiType getInferredScriptReturnType() {
-    return CachedValuesManager.getManager(getProject()).getCachedValue(this, new CachedValueProvider<PsiType>() {
+    return CachedValuesManager.getCachedValue(this, new CachedValueProvider<PsiType>() {
       @Override
       public Result<PsiType> compute() {
         return Result.create(GroovyPsiManager.inferType(GroovyFileImpl.this, new MethodTypeInferencer(GroovyFileImpl.this)),
@@ -482,9 +504,8 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
 
   public void clearCaches() {
     super.clearCaches();
-//    myScriptClass = null;
-//    myScriptClassInitialized = false;
     synchronized (lock) {
+      myScriptClass = null;
       mySyntheticArgsParameter = null;
     }
   }
@@ -528,7 +549,7 @@ public class GroovyFileImpl extends GroovyFileBaseImpl implements GroovyFile {
     final PsiClass scriptClass = getScriptClass();
     if (scriptClass != null) {
       final PsiElement originalElement = scriptClass.getOriginalElement();
-      if (originalElement != scriptClass) {
+      if (originalElement != scriptClass && originalElement != null) {
         return originalElement.getContainingFile();
       }
     }

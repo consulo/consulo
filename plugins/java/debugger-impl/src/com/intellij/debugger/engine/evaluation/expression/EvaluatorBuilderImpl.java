@@ -23,6 +23,7 @@ package com.intellij.debugger.engine.evaluation.expression;
 import com.intellij.codeInsight.daemon.JavaErrorMessages;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightUtil;
+import com.intellij.codeInsight.daemon.impl.analysis.JavaHighlightUtil;
 import com.intellij.debugger.DebuggerBundle;
 import com.intellij.debugger.SourcePosition;
 import com.intellij.debugger.engine.ContextUtil;
@@ -39,6 +40,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiTypesUtil;
+import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.util.TypeConversionUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sun.jdi.Value;
@@ -430,17 +432,17 @@ public class EvaluatorBuilderImpl implements EvaluatorBuilder {
       }
 
       return opType == JavaTokenType.ASTERISK ||
-          opType == JavaTokenType.DIV         ||
-          opType == JavaTokenType.PERC        ||
-          opType == JavaTokenType.PLUS        ||
-          opType == JavaTokenType.MINUS       ||
-          opType == JavaTokenType.LT          ||
-          opType == JavaTokenType.LE          ||
-          opType == JavaTokenType.GT          ||
-          opType == JavaTokenType.GE          ||
-          opType == JavaTokenType.AND         ||
-          opType == JavaTokenType.XOR         ||
-          opType == JavaTokenType.OR;
+             opType == JavaTokenType.DIV         ||
+             opType == JavaTokenType.PERC        ||
+             opType == JavaTokenType.PLUS        ||
+             opType == JavaTokenType.MINUS       ||
+             opType == JavaTokenType.LT          ||
+             opType == JavaTokenType.LE          ||
+             opType == JavaTokenType.GT          ||
+             opType == JavaTokenType.GE          ||
+             opType == JavaTokenType.AND         ||
+             opType == JavaTokenType.XOR         ||
+             opType == JavaTokenType.OR;
 
     }
 
@@ -649,7 +651,7 @@ public class EvaluatorBuilderImpl implements EvaluatorBuilder {
           objectEvaluator = myResult;
         }
         else if (fieldClass.equals(getContextPsiClass()) || getContextPsiClass().isInheritor(fieldClass, true)) {
-            objectEvaluator = new ThisEvaluator();
+          objectEvaluator = new ThisEvaluator();
         }
         else {  // myContextPsiClass != fieldClass && myContextPsiClass is not a subclass of fieldClass
           int iterationCount = 0;
@@ -962,7 +964,8 @@ public class EvaluatorBuilderImpl implements EvaluatorBuilder {
 
     @Override
     public void visitLiteralExpression(PsiLiteralExpression expression) {
-      final HighlightInfo parsingError = HighlightUtil.checkLiteralExpressionParsingError(expression);
+      final HighlightInfo parsingError = HighlightUtil.checkLiteralExpressionParsingError(expression, PsiUtil.getLanguageLevel(expression),
+                                                                                          expression.getContainingFile());
       if (parsingError != null) {
         throwEvaluateException(parsingError.getDescription());
         return;
@@ -1029,7 +1032,8 @@ public class EvaluatorBuilderImpl implements EvaluatorBuilder {
 
       if (castType != null && operandType != null && !TypeConversionUtil.areTypesConvertible(operandType, castType)) {
         throw new EvaluateRuntimeException(
-          new EvaluateException(JavaErrorMessages.message("inconvertible.type.cast", HighlightUtil.formatType(operandType), HighlightUtil.formatType(castType)))
+          new EvaluateException(JavaErrorMessages.message("inconvertible.type.cast", JavaHighlightUtil.formatType(operandType), JavaHighlightUtil
+            .formatType(castType)))
         );
       }
 

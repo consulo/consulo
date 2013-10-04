@@ -75,11 +75,10 @@ import org.jetbrains.plugins.groovy.lang.psi.impl.PsiImplUtil;
 import org.jetbrains.plugins.groovy.lang.psi.impl.signatures.GrClosureSignatureUtil;
 import org.jetbrains.plugins.groovy.lang.psi.impl.statements.expressions.GrReferenceResolveUtil;
 import org.jetbrains.plugins.groovy.lang.psi.impl.statements.expressions.TypesUtil;
-import org.jetbrains.plugins.groovy.lang.psi.util.GdkMethodUtil;
-import org.jetbrains.plugins.groovy.lang.psi.util.GroovyCommonClassNames;
-import org.jetbrains.plugins.groovy.lang.psi.util.GroovyConstantExpressionEvaluator;
-import org.jetbrains.plugins.groovy.lang.psi.util.PsiUtil;
+import org.jetbrains.plugins.groovy.lang.psi.typeEnhancers.ClosureParameterEnhancer;
+import org.jetbrains.plugins.groovy.lang.psi.util.*;
 import org.jetbrains.plugins.groovy.lang.resolve.ResolveUtil;
+import org.jetbrains.plugins.groovy.refactoring.GroovyRefactoringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,18 +121,55 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
   }
 
   private static class MyVisitor extends BaseInspectionVisitor {
-    private void checkAssignability(@NotNull PsiType expectedType, @NotNull GrExpression expression) {
+    private void checkAssignability(@NotNull PsiType expectedType, @NotNull GrExpression expression, PsiElement toHighlight) {
       if (PsiUtil.isRawClassMemberAccess(expression)) return;
       if (checkForImplicitEnumAssigning(expectedType, expression, expression)) return;
       final PsiType rType = expression.getType();
-      if (rType == null || rType == PsiType.VOID) return;
+      if (rType == null) return;
 
       if (!TypesUtil.isAssignable(expectedType, rType, expression)) {
-        final LocalQuickFix[] fixes = {new GrCastFix(expectedType)};
+        final List<LocalQuickFix> fixes = ContainerUtil.newArrayList();
+        fixes.add(new GrCastFix(expectedType));
+
+        String varName = getLValueVarName(toHighlight);
+        if (varName != null) {
+          fixes.add(new GrChangeVariableType(rType, varName));
+        }
+
         final String message = GroovyBundle.message("cannot.assign", rType.getPresentableText(), expectedType.getPresentableText());
-        registerError(expression, message, fixes, ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+        registerError(toHighlight, message, fixes.toArray(new LocalQuickFix[fixes.size()]), ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
       }
     }
+
+    @Nullable
+    private static String getLValueVarName(PsiElement highlight) {
+      final PsiElement parent = highlight.getParent();
+      if (parent instanceof GrVariable) {
+        return ((GrVariable)parent).getName();
+      }
+      else if (highlight instanceof GrReferenceExpression &&
+               parent instanceof GrAssignmentExpression &&
+               ((GrAssignmentExpression)parent).getLValue() == highlight) {
+        final PsiElement resolved = ((GrReferenceExpression)highlight).resolve();
+        if (resolved instanceof GrVariable && GroovyRefactoringUtil.isLocalVariable(resolved)) {
+          return ((GrVariable)resolved).getName();
+        }
+      }
+
+      return null;
+    }
+
+    private void checkAssignability(@NotNull PsiType lType,
+                                    @Nullable PsiType rType,
+                                    @NotNull GroovyPsiElement context,
+                                    @NotNull final PsiElement elementToHighlight) {
+      if (rType == null) return;
+      if (!TypesUtil.isAssignable(lType, rType, context)) {
+        final String message = GroovyBundle.message("cannot.assign", rType.getPresentableText(), lType.getPresentableText());
+        registerError(elementToHighlight, message, LocalQuickFix.EMPTY_ARRAY, ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+      }
+    }
+
 
     private boolean checkForImplicitEnumAssigning(PsiType expectedType, GrExpression expression, GroovyPsiElement element) {
       if (!(expectedType instanceof PsiClassType)) return false;
@@ -172,7 +208,7 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
 
       final PsiType returnType = PsiImplUtil.inferReturnType(returnStatement);
       if (returnType != null) {
-        checkAssignability(returnType, value);
+        checkAssignability(returnType, value, returnStatement.getReturnWord());
       }
     }
 
@@ -183,8 +219,10 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
         final PsiType returnType = PsiImplUtil.inferReturnType(expression);
         final GrControlFlowOwner flowOwner = ControlFlowUtils.findControlFlowOwner(expression);
         if (flowOwner != null && returnType != null && returnType != PsiType.VOID) {
-          if (ControlFlowUtils.isReturnValue(expression, flowOwner) && !isNewInstanceInitialingByTuple(expression)) {
-            checkAssignability(returnType, expression);
+          if (ControlFlowUtils.isReturnValue(expression, flowOwner) &&
+              !isNewInstanceInitialingByTuple(expression) &&
+              expression.getType() != PsiType.VOID) {
+            checkAssignability(returnType, expression, getExpressionPartToHighlight(expression));
           }
         }
       }
@@ -202,7 +240,7 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
       if (lValue instanceof GrIndexProperty) return;
       if (!PsiUtil.mightBeLValue(lValue)) return;
 
-      IElementType opToken = assignment.getOperationToken();
+      IElementType opToken = assignment.getOperationTokenType();
       if (opToken != GroovyTokenTypes.mASSIGN) return;
 
       GrExpression rValue = assignment.getRValue();
@@ -240,7 +278,7 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
             if (clazz != null && CommonClassNames.JAVA_UTIL_LIST.equals(clazz.getQualifiedName())) {
               final PsiType[] types = pct.getParameters();
               if (types.length == 1 && types[0] != null && rType != null) {
-                checkAssignability(types[0], rType, tupleExpression, lValue);
+                checkAssignability(types[0], rType, tupleExpression, getExpressionPartToHighlight(lValue));
               }
             }
             return;
@@ -251,7 +289,7 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
           }
 
           if (lType != null && rType != null) {
-            checkAssignability(lType, rType, tupleExpression, lValue);
+            checkAssignability(lType, rType, tupleExpression, getExpressionPartToHighlight(lValue));
           }
         }
       }
@@ -267,7 +305,7 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
         if (clazz != null && CommonClassNames.JAVA_UTIL_LIST.equals(clazz.getQualifiedName())) {
           final PsiType[] types = pct.getParameters();
           if (types.length == 1 && types[0] != null && rType != null) {
-            checkAssignability(types[0], rValue);
+            checkAssignability(types[0], rValue, getExpressionPartToHighlight(lValue));
           }
         }
         return;
@@ -283,7 +321,7 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
       }
 
       if (lType != null && rType != null) {
-        checkAssignability(lType, rValue);
+        checkAssignability(lType, rValue, getExpressionPartToHighlight(lValue));
       }
     }
 
@@ -308,11 +346,13 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
         }
       }
       else if (parent instanceof GrForInClause) {
-        PsiType iteratedType = PsiUtil.extractIteratedType((GrForInClause)parent);
+        GrExpression iterated = ((GrForInClause)parent).getIteratedExpression();
+        if (iterated == null) return;
+
+        PsiType iteratedType = ClosureParameterEnhancer.findTypeForIteration(iterated, parent);
         if (iteratedType == null) return;
 
-        GrExpression iteratedExpression = ((GrForInClause)parent).getIteratedExpression();
-        checkAssignability(varType, iteratedType, iteratedExpression, variable.getNameIdentifierGroovy());
+        checkAssignability(varType, iteratedType, iterated, variable.getNameIdentifierGroovy());
         return;
       }
 
@@ -341,22 +381,11 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
           }
         }
         PsiSubstitutor substitutor = PsiSubstitutorImpl.createSubstitutor(map);
-        checkAssignability(substitutor.substitute(varType), initializer);
+        checkAssignability(substitutor.substitute(varType), initializer, variable.getNameIdentifierGroovy());
         return;
       }
 
-      checkAssignability(varType, initializer);
-    }
-
-    private void checkAssignability(@NotNull PsiType lType,
-                                    @Nullable PsiType rType,
-                                    @NotNull GroovyPsiElement context,
-                                    @NotNull final PsiElement elementToHighlight) {
-      if (rType == null) return;
-      if (!TypesUtil.isAssignable(lType, rType, context)) {
-        final String message = GroovyBundle.message("cannot.assign", rType.getPresentableText(), lType.getPresentableText());
-        registerError(elementToHighlight, message, LocalQuickFix.EMPTY_ARRAY, ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
-      }
+      checkAssignability(varType, initializer, variable.getNameIdentifierGroovy());
     }
 
     private static boolean isNewInstanceInitialingByTuple(GrExpression initializer) {
@@ -434,6 +463,15 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
       return elementToHighlight;
     }
 
+    @NotNull
+    private static PsiElement getExpressionPartToHighlight(@NotNull GrExpression expr) {
+      if (expr instanceof GrClosableBlock) {
+        return ((GrClosableBlock)expr).getLBrace();
+      }
+
+      return expr;
+    }
+
     @Override
     public void visitListOrMap(GrListOrMap listOrMap) {
       super.visitListOrMap(listOrMap);
@@ -473,8 +511,8 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
 
       final GrExpression exception = throwStatement.getException();
       if (exception != null) {
-        checkAssignability(PsiType.getJavaLangThrowable(throwStatement.getManager(), throwStatement.getResolveScope()), exception
-        );
+        final PsiElement throwWord = throwStatement.getFirstChild();
+        checkAssignability(PsiType.getJavaLangThrowable(throwStatement.getManager(), throwStatement.getResolveScope()), exception, throwWord);
       }
     }
 
@@ -530,7 +568,13 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
 
         if (exprArgs.length == 0 && !PsiUtil.isConstructorHasRequiredParameters(constructor)) return true;
       }
-      return checkMethodApplicability(constructorResolveResult, place, checkUnknownArgs);
+
+      PsiType[] types = PsiUtil.getArgumentTypes(place, true);
+      PsiClass containingClass = constructor.getContainingClass();
+      if (types != null && containingClass != null) {
+        types = GrInnerClassConstructorUtil.addEnclosingArgIfNeeded(types, place, containingClass);
+      }
+      return checkMethodApplicability(constructorResolveResult, place, checkUnknownArgs, types);
     }
 
     @Override
@@ -845,13 +889,21 @@ public class GroovyAssignabilityCheckInspection extends BaseInspection {
       return builder.toString();
     }
 
-    private boolean checkMethodApplicability(GroovyResolveResult methodResolveResult, GroovyPsiElement place, boolean checkUnknownArgs) {
+    private boolean checkMethodApplicability(@NotNull GroovyResolveResult methodResolveResult,
+                                             @NotNull GroovyPsiElement place,
+                                             boolean checkUnknownArgs) {
+      return checkMethodApplicability(methodResolveResult, place, checkUnknownArgs, PsiUtil.getArgumentTypes(place, true));
+    }
+
+    private boolean checkMethodApplicability(@NotNull GroovyResolveResult methodResolveResult,
+                                             @NotNull GroovyPsiElement place,
+                                             boolean checkUnknownArgs,
+                                             @Nullable PsiType[] argumentTypes) {
       final PsiElement element = methodResolveResult.getElement();
       if (!(element instanceof PsiMethod)) return true;
       if (element instanceof GrBuilderMethod) return true;
 
       final PsiMethod method = (PsiMethod)element;
-      PsiType[] argumentTypes = PsiUtil.getArgumentTypes(place, true);
       if ("call".equals(method.getName()) && place instanceof GrReferenceExpression) {
         final GrExpression qualifierExpression = ((GrReferenceExpression)place).getQualifierExpression();
         if (qualifierExpression != null) {

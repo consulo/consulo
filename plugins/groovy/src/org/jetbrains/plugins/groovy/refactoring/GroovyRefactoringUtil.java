@@ -41,7 +41,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
-import org.jetbrains.plugins.groovy.lang.GrReferenceAdjuster;
+import org.jetbrains.plugins.groovy.codeStyle.GrReferenceAdjuster;
 import org.jetbrains.plugins.groovy.lang.lexer.GroovyTokenTypes;
 import org.jetbrains.plugins.groovy.lang.lexer.TokenSets;
 import org.jetbrains.plugins.groovy.lang.psi.*;
@@ -447,7 +447,7 @@ public abstract class GroovyRefactoringUtil {
       com.intellij.psi.util.PsiUtil.setModifierProperty((decl.getMembers()[0]), PsiModifier.FINAL, true);
     }*/
     final GrStatement statement = ((GrStatementOwner)anchorStatement.getParent()).addStatementBefore(decl, (GrStatement)anchorStatement);
-    GrReferenceAdjuster.shortenReferences(statement);
+    JavaCodeStyleManager.getInstance(project).shortenClassReferences(statement);
 
     return id;
   }

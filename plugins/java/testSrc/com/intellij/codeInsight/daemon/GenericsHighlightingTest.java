@@ -20,8 +20,6 @@ import com.intellij.codeInspection.uncheckedWarnings.UncheckedWarningLocalInspec
 import com.intellij.codeInspection.unusedImport.UnusedImportLocalInspection;
 import com.intellij.codeInspection.unusedSymbol.UnusedSymbolLocalInspection;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
-import com.intellij.openapi.projectRoots.JavaVersionService;
-import com.intellij.openapi.projectRoots.JavaVersionServiceImpl;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.pom.java.LanguageLevel;
@@ -45,9 +43,9 @@ public class GenericsHighlightingTest extends LightDaemonAnalyzerTestCase {
     return getTestName(false).contains("Jdk14") ? IdeaTestUtil.getMockJdk14() : super.getProjectJDK();
   }
 
-  private void doTest(LanguageLevel languageLevel, JavaSdkVersion sdkVersion, boolean checkWarnings) {
+  private void doTest(@NotNull LanguageLevel languageLevel, @NotNull JavaSdkVersion sdkVersion, boolean checkWarnings) {
     LanguageLevelProjectExtension.getInstance(getJavaFacade().getProject()).setLanguageLevel(languageLevel);
-    ((JavaVersionServiceImpl)JavaVersionService.getInstance()).setTestVersion(sdkVersion, myTestRootDisposable);
+    IdeaTestUtil.setTestVersion(sdkVersion, getModule(), myTestRootDisposable);
     doTest(BASE_PATH + "/" + getTestName(false) + ".java", checkWarnings, false);
   }
   private void doTest5(boolean checkWarnings) { doTest(LanguageLevel.JDK_1_5, JavaSdkVersion.JDK_1_6, checkWarnings); }
@@ -73,9 +71,7 @@ public class GenericsHighlightingTest extends LightDaemonAnalyzerTestCase {
   public void testAutoboxingMethods() { doTest5(false); }
   public void testAutoboxingConstructors() { doTest5(false); }
   public void testEnumWithAbstractMethods() { doTest5(false); }
-  public void testEnum() {
-    doTest(LanguageLevel.JDK_1_5, JavaSdkVersion.JDK_1_5, false);
-  }
+  public void testEnum() { doTest(LanguageLevel.JDK_1_5, JavaSdkVersion.JDK_1_5, false); }
   public void testEnum56239() { doTest(LanguageLevel.JDK_1_6, JavaSdkVersion.JDK_1_6, false); }
   public void testSameErasure() { doTest5(false); }
   public void testMethods() { doTest5(false); }
@@ -180,7 +176,8 @@ public class GenericsHighlightingTest extends LightDaemonAnalyzerTestCase {
   public void testTypeArgumentsGivenOnRawType() { doTest7Incompatibility(false); }
   public void testSelectFromTypeParameter() { doTest5(false); }
   public void testTypeArgumentsGivenOnAnonymousClassCreation() { doTest5(false); }
-  //public void testIDEA94011() { doTest5(false); }
+
+  public void testIDEA94011() { doTest5(false); }
   public void testDifferentTypeParamsInOverloadedMethods() { doTest5(true); }
   public void testIDEA91626() { doTest5(true); }
   public void testIDEA92022() { doTest5(false); }
@@ -236,14 +233,26 @@ public class GenericsHighlightingTest extends LightDaemonAnalyzerTestCase {
   public void testIDEA20244() throws Exception { doTest5(false);}
   public void testIDEA22005() throws Exception { doTest5(false);}
   public void testIDEA57259() throws Exception { doTest5(false);}
+  public void testIDEA107957() throws Exception { doTest6(false);}
+  public void testIDEA109875() throws Exception { doTest6(false);}
   public void testIDEA106964() throws Exception { doTest5(false);}
+  public void testIDEA107782() throws Exception { doTest5(false);}
   public void testInheritedWithDifferentArgsInTypeParams() throws Exception { doTest5(false);}
   public void testIllegalForwardReferenceInTypeParameterDefinition() throws Exception { doTest5(false);}
 
   public void testIDEA57877() throws Exception { doTest5(false);}
+  public void testIDEA110568() throws Exception { doTest5(false);}
   public void testTypeParamsCyclicInference() throws Exception { doTest5(false);}
   public void testCaptureTopLevelWildcardsForConditionalExpression() throws Exception { doTest5(false);}
   public void testGenericsOverrideMethodInRawInheritor() throws Exception { doTest5(false);}
+
+  public void testIDEA107654() throws Exception {
+    doTest5(false);
+  }
+
+  public void testIDEA55510() throws Exception {
+    doTest5(false);
+  }
 
   public void testIDEA27185(){ doTest(LanguageLevel.JDK_1_6, JavaSdkVersion.JDK_1_6, false); }
   public void testIDEA67571(){ doTest(LanguageLevel.JDK_1_7, JavaSdkVersion.JDK_1_7, false); }
@@ -252,6 +261,14 @@ public class GenericsHighlightingTest extends LightDaemonAnalyzerTestCase {
 
   public void testWildcardsOnRawTypes() { doTest5(false); }
   public void testDisableWithinBoundsCheckForSuperWildcards() {
+    doTest(LanguageLevel.JDK_1_7, JavaSdkVersion.JDK_1_7, false);
+  }
+
+  public void testIDEA108287() throws Exception {
+    doTest5(false);
+  }
+
+  public void testIDEA77128() throws Exception {
     doTest(LanguageLevel.JDK_1_7, JavaSdkVersion.JDK_1_7, false);
   }
 
@@ -269,6 +286,36 @@ public class GenericsHighlightingTest extends LightDaemonAnalyzerTestCase {
 
   public void testIDEA104100() {doTest(LanguageLevel.JDK_1_7, JavaSdkVersion.JDK_1_7, false);}
   public void testIDEA104160() {doTest(LanguageLevel.JDK_1_7, JavaSdkVersion.JDK_1_7, false);}
+  public void testSOEInLeastUpperClass() {doTest(LanguageLevel.JDK_1_7, JavaSdkVersion.JDK_1_7, false);}
+
+  public void testIDEA57334() {
+    doTest5(false);
+  }
+
+  public void testIDEA57325() { doTest5(false); }
+  public void testIDEA67835() { doTest5(false); }
+  public void testIDEA67744() { doTest5(false); }
+  public void testIDEA67682() { doTest5(false); }
+  public void testIDEA57391() { doTest5(false); }
+  public void testIDEA110869() { doTest5(false); }
+  /*public void testIDEA110947() { doTest5(false); }*/
+  public void testIDEA112122() { doTest5(false); }
+  public void testNoInferenceFromTypeCast() { doTest5(false); }
+  public void testCaptureWildcardsInTypeCasts() { doTest5(false); }
+  public void testIDEA111085() { doTest5(false); }
+  public void testIDEA109556() { doTest5(false); }
+  public void testIDEA107440() { doTest5(false); }
+  public void testIDEA57289() { doTest5(false); }
+  public void testIDEA57439() { doTest5(false); }
+  public void testIDEA57312() { doTest5(false); }
+  public void testIDEA67865() { doTest5(false); }
+  public void testBoxingSpecific() { doTest5(false); }
+  public void testIDEA67843() { doTest5(false); }
+  public void testAmbiguousTypeParamVsConcrete() { doTest5(false); }
+  public void testRawAssignments() throws Exception { doTest5(false); }
+  public void testIDEA87860() throws Exception { doTest5(false); }
+  public void testIDEA67584() throws Exception { doTest5(false); }
+  public void testIDEA113225() throws Exception { doTest5(false); }
 
   public void testJavaUtilCollections_NoVerify() throws Exception {
     PsiClass collectionsClass = getJavaFacade().findClass("java.util.Collections", GlobalSearchScope.moduleWithLibrariesScope(getModule()));

@@ -32,95 +32,95 @@ import org.jetbrains.plugins.groovy.refactoring.rename.PropertyForRename;
  */
 public class GroovyFindUsagesProvider implements FindUsagesProvider {
 
-    public static final GroovyFindUsagesProvider INSTANCE = new GroovyFindUsagesProvider();
+  public static final GroovyFindUsagesProvider INSTANCE = new GroovyFindUsagesProvider();
 
-    public GroovyFindUsagesProvider() {
+  public GroovyFindUsagesProvider() {
+  }
+
+  @Nullable
+  public WordsScanner getWordsScanner() {
+    return new GroovyWordsScanner();
+  }
+
+  public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
+    return psiElement instanceof PsiClass ||
+           psiElement instanceof PsiMethod ||
+           psiElement instanceof GrVariable;
+  }
+
+  @Nullable
+  public String getHelpId(@NotNull PsiElement psiElement) {
+    return null;
+  }
+
+  @NotNull
+  public String getType(@NotNull PsiElement element) {
+    if (element instanceof PsiClass) return "class";
+    if (element instanceof PsiMethod) return "method";
+    if (element instanceof PsiField) return "field";
+    if (element instanceof PsiParameter) return "parameter";
+    if (element instanceof GrBindingVariable) return "script binding variable";
+    if (element instanceof PsiVariable) return "variable";
+    if (element instanceof GrLabeledStatement) return "label";
+    if (element instanceof PropertyForRename) return "property";
+    if (element instanceof GrClosableBlock) return "closure";
+    return "";
+  }
+
+  @NotNull
+  public String getDescriptiveName(@NotNull PsiElement element) {
+    if (element instanceof PsiClass) {
+      final PsiClass aClass = (PsiClass) element;
+      String qName = aClass.getQualifiedName();
+      return qName == null ? "" : qName;
+    } else if (element instanceof PsiMethod) {
+      final PsiMethod method = (PsiMethod) element;
+      String result = PsiFormatUtil.formatMethod(method,
+                                                 PsiSubstitutor.EMPTY, PsiFormatUtil.SHOW_NAME | PsiFormatUtil.SHOW_PARAMETERS,
+                                                 PsiFormatUtil.SHOW_TYPE);
+      final PsiClass clazz = method.getContainingClass();
+      if (clazz != null) {
+        result += " of " + getDescriptiveName(clazz);
+      }
+
+      return result;
+    } else if (element instanceof PsiVariable) {
+      final String name = ((PsiVariable) element).getName();
+      if (name != null) {
+        return name;
+      }
+    } else if (element instanceof GrLabeledStatement) {
+      return ((GrLabeledStatement)element).getName();
+    } else if (element instanceof PropertyForRename) {
+      return ((PropertyForRename)element).getPropertyName();
+    } else if (element instanceof GrClosableBlock) {
+      return "closure";
     }
 
-    @Nullable
-    public WordsScanner getWordsScanner() {
-        return new GroovyWordsScanner();
+    return "";
+  }
+
+  @NotNull
+  public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+    if (element instanceof PsiClass) {
+      String name = ((PsiClass) element).getQualifiedName();
+      if (name == null || !useFullName) {
+        name = ((PsiClass) element).getName();
+      }
+      if (name != null) return name;
+    } else if (element instanceof PsiMethod) {
+      return PsiFormatUtil.formatMethod((PsiMethod) element,
+                                        PsiSubstitutor.EMPTY,
+                                        PsiFormatUtil.SHOW_NAME | PsiFormatUtil.SHOW_PARAMETERS,
+                                        PsiFormatUtil.SHOW_TYPE);
+
+    } else if (element instanceof PsiVariable) {
+      final String name = ((PsiVariable) element).getName();
+      if (name != null) {
+        return name;
+      }
     }
 
-    public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
-        return psiElement instanceof PsiClass ||
-                psiElement instanceof PsiMethod ||
-                psiElement instanceof GrVariable;
-    }
-
-    @Nullable
-    public String getHelpId(@NotNull PsiElement psiElement) {
-        return null;
-    }
-
-    @NotNull
-    public String getType(@NotNull PsiElement element) {
-        if (element instanceof PsiClass) return "class";
-        if (element instanceof PsiMethod) return "method";
-        if (element instanceof PsiField) return "field";
-        if (element instanceof PsiParameter) return "parameter";
-        if (element instanceof GrBindingVariable) return "script binding variable";
-        if (element instanceof PsiVariable) return "variable";
-        if (element instanceof GrLabeledStatement) return "label";
-        if (element instanceof PropertyForRename) return "property";
-        if (element instanceof GrClosableBlock) return "closure";
-        return "";
-    }
-
-    @NotNull
-    public String getDescriptiveName(@NotNull PsiElement element) {
-        if (element instanceof PsiClass) {
-            final PsiClass aClass = (PsiClass) element;
-            String qName = aClass.getQualifiedName();
-            return qName == null ? "" : qName;
-        } else if (element instanceof PsiMethod) {
-            final PsiMethod method = (PsiMethod) element;
-            String result = PsiFormatUtil.formatMethod(method,
-                    PsiSubstitutor.EMPTY, PsiFormatUtil.SHOW_NAME | PsiFormatUtil.SHOW_PARAMETERS,
-                    PsiFormatUtil.SHOW_TYPE);
-            final PsiClass clazz = method.getContainingClass();
-            if (clazz != null) {
-                result += " of " + getDescriptiveName(clazz);
-            }
-
-            return result;
-        } else if (element instanceof PsiVariable) {
-            final String name = ((PsiVariable) element).getName();
-            if (name != null) {
-                return name;
-            }
-        } else if (element instanceof GrLabeledStatement) {
-            return ((GrLabeledStatement)element).getLabelName();
-        } else if (element instanceof PropertyForRename) {
-          return ((PropertyForRename)element).getPropertyName();
-        } else if (element instanceof GrClosableBlock) {
-          return "closure";
-        }
-
-        return "";
-    }
-
-    @NotNull
-    public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
-        if (element instanceof PsiClass) {
-            String name = ((PsiClass) element).getQualifiedName();
-            if (name == null || !useFullName) {
-                name = ((PsiClass) element).getName();
-            }
-            if (name != null) return name;
-        } else if (element instanceof PsiMethod) {
-            return PsiFormatUtil.formatMethod((PsiMethod) element,
-                    PsiSubstitutor.EMPTY,
-                    PsiFormatUtil.SHOW_NAME | PsiFormatUtil.SHOW_PARAMETERS,
-                    PsiFormatUtil.SHOW_TYPE);
-
-        } else if (element instanceof PsiVariable) {
-            final String name = ((PsiVariable) element).getName();
-            if (name != null) {
-                return name;
-            }
-        }
-
-        return "";
-    }
+    return "";
+  }
 }

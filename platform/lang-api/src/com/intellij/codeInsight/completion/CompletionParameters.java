@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.Lookup;
+import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
@@ -33,7 +34,7 @@ public final class CompletionParameters {
   private final int myInvocationCount;
 
   CompletionParameters(@NotNull final PsiElement position, @NotNull final PsiFile originalFile,
-                                 final CompletionType completionType, int offset, final int invocationCount, Lookup lookup) {
+                       final CompletionType completionType, int offset, final int invocationCount, Lookup lookup) {
     assert offset >= position.getTextRange().getStartOffset();
     myPosition = position;
     assert position.isValid();
@@ -105,5 +106,9 @@ public final class CompletionParameters {
 
   public boolean isExtendedCompletion() {
     return myCompletionType == CompletionType.BASIC && myInvocationCount >= 2;
+  }
+
+  public Editor getEditor() {
+    return myLookup.getEditor();
   }
 }

@@ -21,11 +21,11 @@ import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.lang.GrReferenceAdjuster;
 import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.modifiers.GrModifier;
 import org.jetbrains.plugins.groovy.lang.psi.expectedTypes.TypeConstraint;
 import org.jetbrains.plugins.groovy.lang.psi.impl.synthetic.GroovyScriptClass;
@@ -67,7 +67,7 @@ public class CreateFieldFix {
     }
 
     field = CreateFieldFromUsageHelper.insertField(myTargetClass, field, context);
-    GrReferenceAdjuster.shortenReferences(field.getParent());
+    JavaCodeStyleManager.getInstance(project).shortenClassReferences(field.getParent());
 
     Editor newEditor = QuickfixUtil.positionCursor(project, myTargetClass.getContainingFile(), field);
 

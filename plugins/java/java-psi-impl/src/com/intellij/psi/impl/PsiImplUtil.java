@@ -26,10 +26,7 @@ import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.impl.light.LightClassReference;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.CompositePsiElement;
-import com.intellij.psi.impl.source.tree.JavaDocElementType;
-import com.intellij.psi.impl.source.tree.TreeElement;
+import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.scope.ElementClassHint;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -39,6 +36,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.PackageScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
@@ -304,7 +302,7 @@ public class PsiImplUtil {
     if (operandType instanceof PsiPrimitiveType && !PsiType.NULL.equals(operandType)) {
       if (PsiType.VOID.equals(operandType)) {
         operandType = JavaPsiFacade.getInstance(manager.getProject()).getElementFactory()
-            .createTypeByFQClassName("java.lang.Void", classAccessExpression.getResolveScope());
+          .createTypeByFQClassName("java.lang.Void", classAccessExpression.getResolveScope());
       }
       else {
         operandType = ((PsiPrimitiveType)operandType).getBoxedType(classAccessExpression);
@@ -504,7 +502,7 @@ public class PsiImplUtil {
     return normalized;
   }
 
-  private static PsiType doNormalizeWildcardByPosition(final PsiType type, final PsiExpression expression, final PsiExpression toplevel) {
+  private static PsiType doNormalizeWildcardByPosition(final PsiType type, @NotNull PsiExpression expression, final PsiExpression toplevel) {
     if (type instanceof PsiCapturedWildcardType) {
       return doNormalizeWildcardByPosition(((PsiCapturedWildcardType)type).getWildcard(), expression, toplevel);
     }
@@ -633,8 +631,8 @@ public class PsiImplUtil {
   }
 
   private static PsiNameValuePair createNameValuePair(@NotNull PsiAnnotationMemberValue value,
-                                                     @NotNull String namePrefix,
-                                                     @NotNull PairFunction<Project, String, PsiAnnotation> annotationCreator) {
+                                                      @NotNull String namePrefix,
+                                                      @NotNull PairFunction<Project, String, PsiAnnotation> annotationCreator) {
     return annotationCreator.fun(value.getProject(), "@A(" + namePrefix + value.getText() + ")").getParameterList().getAttributes()[0];
   }
 
@@ -748,4 +746,13 @@ public class PsiImplUtil {
 
     return result;
   }
+
+  public static boolean isLeafElementOfType(@Nullable PsiElement element, IElementType type) {
+    return element instanceof LeafElement && ((LeafElement)element).getElementType() == type;
+  }
+
+  public static boolean isLeafElementOfType(PsiElement element, TokenSet tokenSet) {
+    return element instanceof LeafElement && tokenSet.contains(((LeafElement)element).getElementType());
+  }
+
 }

@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package com.intellij.codeInsight.guess.impl;
 
 import com.intellij.codeInsight.guess.GuessManager;
 import com.intellij.codeInspection.dataFlow.*;
-import com.intellij.codeInspection.dataFlow.instructions.PushInstruction;
-import com.intellij.codeInspection.dataFlow.instructions.TypeCastInstruction;
 import com.intellij.codeInspection.dataFlow.instructions.InstanceofInstruction;
 import com.intellij.codeInspection.dataFlow.instructions.MethodCallInstruction;
+import com.intellij.codeInspection.dataFlow.instructions.PushInstruction;
+import com.intellij.codeInspection.dataFlow.instructions.TypeCastInstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
@@ -31,8 +31,8 @@ import com.intellij.psi.search.PsiElementProcessorAdapter;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
@@ -140,7 +140,7 @@ public class GuessManagerImpl extends GuessManager {
 
   @Nullable
   private static Map<PsiExpression, PsiType> buildDataflowTypeMap(PsiExpression forPlace) {
-    PsiElement scope = DfaUtil.getTopmostBlockInSameClass(forPlace);
+    PsiElement scope = DfaPsiUtil.getTopmostBlockInSameClass(forPlace);
     if (scope == null) {
       PsiFile file = forPlace.getContainingFile();
       if (!(file instanceof PsiCodeFragment)) {

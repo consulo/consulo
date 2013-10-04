@@ -24,7 +24,6 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
@@ -42,16 +41,19 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrParametersOwner;
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrVariable;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.blocks.GrClosableBlock;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpression;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.params.GrParameter;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.members.GrMethod;
-import org.jetbrains.plugins.groovy.refactoring.*;
+import org.jetbrains.plugins.groovy.refactoring.GrRefactoringError;
+import org.jetbrains.plugins.groovy.refactoring.GroovyNamesUtil;
+import org.jetbrains.plugins.groovy.refactoring.GroovyRefactoringBundle;
+import org.jetbrains.plugins.groovy.refactoring.HelpID;
 import org.jetbrains.plugins.groovy.refactoring.extract.ExtractUtil;
 import org.jetbrains.plugins.groovy.refactoring.extract.ParameterInfo;
 import org.jetbrains.plugins.groovy.refactoring.extract.ParameterTablePanel;
@@ -59,11 +61,7 @@ import org.jetbrains.plugins.groovy.refactoring.extract.closure.ExtractClosureFr
 import org.jetbrains.plugins.groovy.refactoring.extract.closure.ExtractClosureFromMethodProcessor;
 import org.jetbrains.plugins.groovy.refactoring.extract.closure.ExtractClosureHelperImpl;
 import org.jetbrains.plugins.groovy.refactoring.extract.closure.ExtractClosureProcessorBase;
-import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceContext;
-import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceContextImpl;
-import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceDialog;
-import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceHandlerBase;
-import org.jetbrains.plugins.groovy.refactoring.introduce.field.GroovyFieldValidator;
+import org.jetbrains.plugins.groovy.refactoring.introduce.StringPartInfo;
 import org.jetbrains.plugins.groovy.refactoring.ui.GrMethodSignatureComponent;
 import org.jetbrains.plugins.groovy.refactoring.ui.GrTypeComboBox;
 import org.jetbrains.plugins.groovy.settings.GroovyApplicationSettings;
@@ -73,11 +71,12 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.intellij.refactoring.IntroduceParameterRefactoring.*;
 
-public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntroduceDialog<GrIntroduceParameterSettings> {
+public class GrIntroduceParameterDialog extends DialogWrapper {
   private GrTypeComboBox myTypeComboBox;
   private NameSuggestionsField myNameSuggestionsField;
   private JCheckBox myDeclareFinalCheckBox;
@@ -101,7 +100,7 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     super(info.getProject(), true);
     myInfo = info;
     myProject = info.getProject();
-    myCanIntroduceSimpleParameter = findExpr() != null || findVar() != null;
+    myCanIntroduceSimpleParameter = GroovyIntroduceParameterUtil.findExpr(myInfo) != null || GroovyIntroduceParameterUtil.findVar(myInfo) != null || findStringPart() != null;
 
     TObjectIntHashMap<GrParameter> parametersToRemove = GroovyIntroduceParameterUtil.findParametersToRemove(info);
     toRemoveCBs = new TObjectIntHashMap<JCheckBox>(parametersToRemove.size());
@@ -275,7 +274,7 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     c.nextLine().next().weightx(0).fillCellNone();
     namePanel.add(typeLabel, c);
 
-    myTypeComboBox = createTypeComboBox(findVar(), findExpr());
+    myTypeComboBox = createTypeComboBox(GroovyIntroduceParameterUtil.findVar(myInfo), GroovyIntroduceParameterUtil.findExpr(myInfo), findStringPart());
     c.next().weightx(1).fillCellHorizontally();
     namePanel.add(myTypeComboBox, c);
     typeLabel.setLabelFor(myTypeComboBox);
@@ -284,7 +283,7 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     c.nextLine().next().weightx(0).fillCellNone();
     namePanel.add(nameLabel, c);
 
-    myNameSuggestionsField = createNameField(findVar(), findExpr());
+    myNameSuggestionsField = createNameField(GroovyIntroduceParameterUtil.findVar(myInfo));
     c.next().weightx(1).fillCellHorizontally();
     namePanel.add(myNameSuggestionsField, c);
     nameLabel.setLabelFor(myNameSuggestionsField);
@@ -293,6 +292,7 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
 
     return namePanel;
   }
+
 
   private void createCheckBoxes(JPanel panel) {
     myDeclareFinalCheckBox = new JCheckBox(UIUtil.replaceMnemonicAmpersand("Declare &final"));
@@ -310,7 +310,7 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     }
   }
 
-  private GrTypeComboBox createTypeComboBox(GrVariable var, GrExpression expr) {
+  private GrTypeComboBox createTypeComboBox(GrVariable var, GrExpression expr, StringPartInfo stringPartInfo) {
     GrTypeComboBox box;
     if (var != null) {
       box = GrTypeComboBox.createTypeComboBoxWithDefType(var.getDeclaredType(), var);
@@ -318,12 +318,15 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     else if (expr != null) {
       box = GrTypeComboBox.createTypeComboBoxFromExpression(expr);
     }
+    else if (stringPartInfo != null) {
+      box = GrTypeComboBox.createTypeComboBoxFromExpression(stringPartInfo.getLiteral());
+    }
     else {
       box = GrTypeComboBox.createEmptyTypeComboBox();
     }
 
     box.addClosureTypesFrom(inferClosureReturnType(), myInfo.getContext());
-    if (expr == null && var == null) {
+    if (expr == null && var == null && stringPartInfo == null) {
       box.setSelectedIndex(box.getItemCount() - 1);
     }
     return box;
@@ -344,29 +347,12 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     return returnType;
   }
 
-  private NameSuggestionsField createNameField(GrVariable var, GrExpression expr) {
-    String[] possibleNames;
-    if (expr != null) {
-      final GrIntroduceContext
-        introduceContext = new GrIntroduceContextImpl(myProject, null, expr, var, PsiElement.EMPTY_ARRAY, myInfo.getToReplaceIn());
-      final GroovyFieldValidator validator = new GroovyFieldValidator(introduceContext);
-      possibleNames = GroovyNameSuggestionUtil.suggestVariableNames(expr, validator, true);
-    }
-    else if (var != null) {
-      final GrIntroduceContext introduceContext =
-        new GrIntroduceContextImpl(myProject, null, expr, var, PsiElement.EMPTY_ARRAY, myInfo.getToReplaceIn());
-      final GroovyFieldValidator validator = new GroovyFieldValidator(introduceContext);
-      possibleNames = GroovyNameSuggestionUtil.suggestVariableNameByType(var.getType(), validator);
-    }
-    else {
-      possibleNames = new String[]{"closure"};
-    }
-
+  private NameSuggestionsField createNameField(GrVariable var) {
     List<String> names = new ArrayList<String>();
     if (var != null) {
       names.add(var.getName());
     }
-    ContainerUtil.addAll(names, possibleNames);
+    ContainerUtil.addAll(names, suggestNames());
 
     return new NameSuggestionsField(ArrayUtil.toStringArray(names), myProject, GroovyFileType.GROOVY_FILE_TYPE);
   }
@@ -466,10 +452,11 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
 
     final GrParametersOwner toReplaceIn = myInfo.getToReplaceIn();
 
-    final GrExpression expr = findExpr();
-    final GrVariable var = findVar();
+    final GrExpression expr = GroovyIntroduceParameterUtil.findExpr(myInfo);
+    final GrVariable var = GroovyIntroduceParameterUtil.findVar(myInfo);
+    final StringPartInfo stringPart = findStringPart();
 
-    if (myTypeComboBox.isClosureSelected() || expr == null && var == null) {
+    if (myTypeComboBox.isClosureSelected() || expr == null && var == null && stringPart == null) {
       GrIntroduceParameterSettings settings = new ExtractClosureHelperImpl(myInfo,
                                                                            getEnteredName(),
                                                                            myDeclareFinalCheckBox.isSelected(),
@@ -532,9 +519,13 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     processor.run();
   }
 
-  @Override
-  public GrIntroduceParameterSettings getSettings() {
-    return null;
+  @NotNull
+  public LinkedHashSet<String> suggestNames() {
+    GrVariable var = GroovyIntroduceParameterUtil.findVar(myInfo);
+    GrExpression expr = GroovyIntroduceParameterUtil.findExpr(myInfo);
+    StringPartInfo stringPart = findStringPart();
+
+    return GroovyIntroduceParameterUtil.suggestNames(var, expr, stringPart, myInfo.getToReplaceIn(), myProject);
   }
 
   private int getReplaceFieldsWithGetter() {
@@ -564,18 +555,8 @@ public class GrIntroduceParameterDialog extends DialogWrapper implements GrIntro
     return list;
   }
 
-
-  @Nullable
-  private GrVariable findVar() {
-    final GrStatement[] statements = myInfo.getStatements();
-    if (statements.length > 1) return null;
-    return GrIntroduceHandlerBase.findVariable(statements[0]);
+  private StringPartInfo findStringPart() {
+    return myInfo.getStringPartInfo();
   }
 
-  @Nullable
-  private GrExpression findExpr() {
-    final GrStatement[] statements = myInfo.getStatements();
-    if (statements.length > 1) return null;
-    return GrIntroduceHandlerBase.findExpression(statements[0]);
-  }
 }

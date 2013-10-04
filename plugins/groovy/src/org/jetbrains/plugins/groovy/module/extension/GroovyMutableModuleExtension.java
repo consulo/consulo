@@ -1,9 +1,11 @@
 package org.jetbrains.plugins.groovy.module.extension;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import lombok.NonNull;
-import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,13 +15,19 @@ import javax.swing.*;
  * @author VISTALL
  * @since 14:47/28.05.13
  */
-public class GroovyMutableModuleExtension extends GroovyModuleExtension implements MutableModuleExtension<GroovyModuleExtension> {
+public class GroovyMutableModuleExtension extends GroovyModuleExtension implements MutableModuleExtensionWithSdk<GroovyModuleExtension> {
   @NotNull
   private final GroovyModuleExtension myModuleExtension;
 
   public GroovyMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull GroovyModuleExtension moduleExtension) {
     super(id, module);
     myModuleExtension = moduleExtension;
+  }
+
+  @NotNull
+  @Override
+  public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
+    return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
   }
 
   @Nullable
@@ -35,7 +43,7 @@ public class GroovyMutableModuleExtension extends GroovyModuleExtension implemen
 
   @Override
   public boolean isModified() {
-    return myIsEnabled != myModuleExtension.isEnabled();
+    return isModifiedImpl(myModuleExtension);
   }
 
   @Override

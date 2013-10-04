@@ -33,57 +33,57 @@ import static org.jetbrains.plugins.groovy.lang.parser.GroovyElementTypes.*;
 public abstract class TokenSets {
 
   public static final TokenSet COMMENTS_TOKEN_SET = TokenSet.create(
-      mSL_COMMENT,
-      mML_COMMENT,
-      GROOVY_DOC_COMMENT
+    mSL_COMMENT,
+    mML_COMMENT,
+    GROOVY_DOC_COMMENT
   );
   public static final TokenSet ALL_COMMENT_TOKENS = TokenSet.orSet(COMMENTS_TOKEN_SET, GROOVY_DOC_TOKENS);
 
   public static final TokenSet SEPARATORS = TokenSet.create(
-      mNLS,
-      mSEMI
+    mNLS,
+    mSEMI
   );
 
 
   public static final TokenSet WHITE_SPACE_TOKEN_SET = TokenSet.create(
-      TokenType.WHITE_SPACE
+    TokenType.WHITE_SPACE
   );
 
   public static final TokenSet NUMBERS = TokenSet.create(
-      mNUM_INT,
-      mNUM_BIG_DECIMAL,
-      mNUM_BIG_INT,
-      mNUM_DOUBLE,
-      mNUM_FLOAT,
-      mNUM_LONG);
+    mNUM_INT,
+    mNUM_BIG_DECIMAL,
+    mNUM_BIG_INT,
+    mNUM_DOUBLE,
+    mNUM_FLOAT,
+    mNUM_LONG);
 
 
   public static final TokenSet CONSTANTS = TokenSet.create(
-      mNUM_INT,
-      mNUM_BIG_DECIMAL,
-      mNUM_BIG_INT,
-      mNUM_DOUBLE,
-      mNUM_FLOAT,
-      mNUM_LONG,
-      kTRUE,
-      kFALSE,
-      kNULL,
-      mSTRING_LITERAL,
-      mGSTRING_LITERAL,
-      mREGEX_LITERAL,
-      mDOLLAR_SLASH_REGEX_LITERAL
+    mNUM_INT,
+    mNUM_BIG_DECIMAL,
+    mNUM_BIG_INT,
+    mNUM_DOUBLE,
+    mNUM_FLOAT,
+    mNUM_LONG,
+    kTRUE,
+    kFALSE,
+    kNULL,
+    mSTRING_LITERAL,
+    mGSTRING_LITERAL,
+    mREGEX_LITERAL,
+    mDOLLAR_SLASH_REGEX_LITERAL
   );
 
-  public static final TokenSet BUILT_IN_TYPE = TokenSet.create(
-      kVOID,
-      kBOOLEAN,
-      kBYTE,
-      kCHAR,
-      kSHORT,
-      kINT,
-      kFLOAT,
-      kLONG,
-      kDOUBLE
+  public static final TokenSet BUILT_IN_TYPES = TokenSet.create(
+    kVOID,
+    kBOOLEAN,
+    kBYTE,
+    kCHAR,
+    kSHORT,
+    kINT,
+    kFLOAT,
+    kLONG,
+    kDOUBLE
   );
 
   public static final TokenSet PROPERTY_NAMES =
@@ -101,48 +101,54 @@ public abstract class TokenSets {
 
 
   public static final TokenSet VISIBILITY_MODIFIERS = TokenSet.create(
-      kPRIVATE,
-      kPROTECTED,
-      kPUBLIC
+    kPRIVATE,
+    kPROTECTED,
+    kPUBLIC
   );
 
   public static final TokenSet MODIFIERS = TokenSet.create(
-      kABSTRACT,
-      kPRIVATE,
-      kPUBLIC,
-      kPROTECTED,
-      kSTATIC,
-      kTRANSIENT,
-      kFINAL,
-      kABSTRACT,
-      kNATIVE,
-      kSYNCHRONIZED,
-      kSTRICTFP,
-      kVOLATILE,
-      kSTRICTFP,
-      kDEF
+    kABSTRACT,
+    kPRIVATE,
+    kPUBLIC,
+    kPROTECTED,
+    kSTATIC,
+    kTRANSIENT,
+    kFINAL,
+    kABSTRACT,
+    kNATIVE,
+    kSYNCHRONIZED,
+    kSTRICTFP,
+    kVOLATILE,
+    kSTRICTFP,
+    kDEF
   );
 
   public static final TokenSet STRING_LITERALS = TokenSet.create(
-      mSTRING_LITERAL,
-      mREGEX_CONTENT,
-      mDOLLAR_SLASH_REGEX_CONTENT,
-      mGSTRING_LITERAL,
-      mGSTRING_CONTENT,
-      mGSTRING_BEGIN,
-      mGSTRING_END,
-      mREGEX_LITERAL,
-      mDOLLAR_SLASH_REGEX_LITERAL
+    mSTRING_LITERAL,
+    mGSTRING_LITERAL,
+    mGSTRING_BEGIN,
+    mGSTRING_CONTENT,
+    mGSTRING_END,
+    mREGEX_LITERAL,
+    mREGEX_BEGIN,
+    mREGEX_CONTENT,
+    mREGEX_END,
+    mDOLLAR_SLASH_REGEX_LITERAL,
+    mDOLLAR_SLASH_REGEX_BEGIN,
+    mDOLLAR_SLASH_REGEX_CONTENT,
+    mDOLLAR_SLASH_REGEX_END
   );
+
+  public static final TokenSet GSTRING_CONTENT_PARTS = TokenSet.create(GSTRING_CONTENT, GSTRING_INJECTION);
 
   public static final TokenSet FOR_IN_DELIMITERS = TokenSet.create(kIN, mCOLON);
 
   public static final TokenSet RELATIONS = TokenSet.create(
-          mLT,
-          mGT,
-          mLE,
-          mGE,
-          kIN
+    mLT,
+    mGT,
+    mLE,
+    mGE,
+    kIN
   );
   public static final TokenSet WHITE_SPACES_SET = TokenSet.create(mNLS, TokenType.WHITE_SPACE);
 
@@ -192,23 +198,29 @@ public abstract class TokenSets {
   }
 
   public static final TokenSet ASSIGNMENTS = TokenSet.create(
-          mASSIGN,
-          mPLUS_ASSIGN,
-          mMINUS_ASSIGN,
-          mSTAR_ASSIGN,
-          mDIV_ASSIGN,
-          mMOD_ASSIGN,
-          mSL_ASSIGN,
-          mSR_ASSIGN,
-          mBSR_ASSIGN,
-          mBAND_ASSIGN,
-          mBOR_ASSIGN,
-          mBXOR_ASSIGN,
-          mSTAR_STAR_ASSIGN
+    mASSIGN,
+    mPLUS_ASSIGN,
+    mMINUS_ASSIGN,
+    mSTAR_ASSIGN,
+    mDIV_ASSIGN,
+    mMOD_ASSIGN,
+    mSL_ASSIGN,
+    mSR_ASSIGN,
+    mBSR_ASSIGN,
+    mBAND_ASSIGN,
+    mBOR_ASSIGN,
+    mBXOR_ASSIGN,
+    mSTAR_STAR_ASSIGN
   );
 
   public static final TokenSet SHIFT_SIGNS = TokenSet.create(COMPOSITE_LSHIFT_SIGN, COMPOSITE_RSHIFT_SIGN, COMPOSITE_TRIPLE_SHIFT_SIGN);
   public static final TokenSet CODE_REFERENCE_ELEMENT_NAME_TOKENS = TokenSet.create(mIDENT, kDEF,  kIN, kAS);
 
   public static final TokenSet BLOCK_SET = TokenSet.create(CLOSABLE_BLOCK, BLOCK_STATEMENT, CONSTRUCTOR_BODY, OPEN_BLOCK, ENUM_BODY, CLASS_BODY);
+  public static final TokenSet METHOD_DEFS = TokenSet.create(METHOD_DEFINITION, CONSTRUCTOR_DEFINITION, ANNOTATION_METHOD);
+  public static final TokenSet VARIABLES = TokenSet.create(VARIABLE, FIELD);
+  public static final TokenSet TYPE_ELEMENTS = TokenSet.create(CLASS_TYPE_ELEMENT, ARRAY_TYPE, BUILT_IN_TYPE, TYPE_ARGUMENT, DISJUNCTION_TYPE_ELEMENT);
+
+
+  public static final TokenSet TYPE_DEFINITIONS = TokenSet.create(CLASS_DEFINITION, ENUM_DEFINITION, INTERFACE_DEFINITION, ANNOTATION_DEFINITION);
 }

@@ -571,7 +571,9 @@
     <extensionPoint name="runConfigurationExtension" interface="com.intellij.execution.RunConfigurationExtension"/>
     <extensionPoint name="jreProvider" interface="com.intellij.execution.ui.JreProvider"/>
     <extensionPoint name="vetoSPICondition" interface="com.intellij.openapi.util.Condition"/>
-  </extensionPoints>
+    <extensionPoint name="codeStyle.referenceAdjuster" beanClass="com.intellij.lang.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="com.intellij.psi.codeStyle.ReferenceAdjuster"/>
+    </extensionPoint>  </extensionPoints>
 
   <!--TODO [VISTALL] move to platform-->
   <extensions defaultExtensionNs="org.consulo.java.platform">
@@ -588,6 +590,7 @@
   </extensions>
 
   <extensions defaultExtensionNs="org.consulo.java">
+    <codeStyle.referenceAdjuster language="JAVA" implementationClass="com.intellij.psi.impl.source.codeStyle.JavaReferenceAdjuster" />
     <exceptionFilter implementation="com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationExceptionFilterFactory"/>
     <exceptionFilter implementation="com.intellij.execution.filters.ExceptionBaseFilterFactory"/>
     <exceptionFilter implementation="com.intellij.execution.filters.ExceptionExFilterFactory"/>
@@ -891,7 +894,7 @@
     <projectService serviceInterface="com.intellij.slicer.SliceManager"
                     serviceImplementation="com.intellij.slicer.SliceManager"/>
 
-    <projectService serviceInterface="com.intellij.codeInspection.ex.EntryPointsManagerImpl"
+    <projectService serviceInterface="com.intellij.codeInspection.ex.EntryPointsManager"
                     serviceImplementation="com.intellij.codeInspection.ex.EntryPointsManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.NullableNotNullManager"

@@ -23,8 +23,9 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.formatter.ClosureBodyBlock;
-import org.jetbrains.plugins.groovy.formatter.GroovyBlock;
+import org.jetbrains.plugins.groovy.formatter.blocks.ClosureBodyBlock;
+import org.jetbrains.plugins.groovy.formatter.blocks.GrLabelBlock;
+import org.jetbrains.plugins.groovy.formatter.blocks.GroovyBlock;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocComment;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocMethodParams;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocTag;
@@ -87,6 +88,12 @@ public class GroovyIndentProcessor extends GroovyElementVisitor {
         return Indent.getNormalIndent();
       }
     }
+    if (parentBlock instanceof GrLabelBlock) {
+      return myChildType == LABELED_STATEMENT
+             ? Indent.getNoneIndent()
+             : Indent.getLabelIndent();
+
+    }
 
     if (GSTRING_TOKENS_INNER.contains(myChildType)) {
       return Indent.getAbsoluteNoneIndent();
@@ -133,16 +140,20 @@ public class GroovyIndentProcessor extends GroovyElementVisitor {
 
   @Override
   public void visitLabeledStatement(GrLabeledStatement labeledStatement) {
-    if (myChildType == LABEL) {
+    if (myChildType == mIDENT) {
       CommonCodeStyleSettings.IndentOptions indentOptions = myBlock.getContext().getSettings().getIndentOptions();
       if (indentOptions != null && indentOptions.LABEL_INDENT_ABSOLUTE) {
         myResult = Indent.getAbsoluteLabelIndent();
       }
-      else {
+      else if (!myBlock.getContext().getGroovySettings().INDENT_LABEL_BLOCKS) {
         myResult = Indent.getLabelIndent();
       }
     }
-
+    else {
+      if (myBlock.getContext().getGroovySettings().INDENT_LABEL_BLOCKS) {
+        myResult = Indent.getLabelIndent();
+      }
+    }
   }
 
   @Override
@@ -229,7 +240,7 @@ public class GroovyIndentProcessor extends GroovyElementVisitor {
 
   @Override
   public void visitConditionalExpression(GrConditionalExpression expression) {
-      myResult = Indent.getContinuationWithoutFirstIndent();
+    myResult = Indent.getContinuationWithoutFirstIndent();
   }
 
   @Override

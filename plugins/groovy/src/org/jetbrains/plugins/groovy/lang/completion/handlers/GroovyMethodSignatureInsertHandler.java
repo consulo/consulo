@@ -27,6 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocTagValue;
 import com.intellij.psi.javadoc.PsiInlineDocTag;
@@ -34,7 +35,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.TypeConversionUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.plugins.groovy.lang.GrReferenceAdjuster;
 import org.jetbrains.plugins.groovy.lang.groovydoc.psi.api.GrDocMemberReference;
 
 /**
@@ -110,7 +110,7 @@ public class GroovyMethodSignatureInsertHandler implements InsertHandler<LookupE
     final GrDocMemberReference tagValue = PsiTreeUtil.getParentOfType(element, GrDocMemberReference.class);
     if (tagValue != null) {
       try {
-        GrReferenceAdjuster.shortenReferences(tagValue);
+        JavaCodeStyleManager.getInstance(project).shortenClassReferences(tagValue);
       }
       catch (IncorrectOperationException e) {
         LOG.error(e);

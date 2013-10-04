@@ -18,6 +18,7 @@ package com.intellij.codeInspection.i18n;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInspection.InspectionsBundle;
+import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -30,9 +31,9 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
 /**
-* User: cdr
-*/
-class SuppressByCommentOutAction {
+ * User: cdr
+ */
+class SuppressByCommentOutAction extends SuppressIntentionAction {
   private final String nonNlsCommentPattern;
 
   SuppressByCommentOutAction(String nonNlsCommentPattern) {

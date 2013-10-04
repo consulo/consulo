@@ -27,6 +27,10 @@ public class InlineSuperClassTest extends MultiFileTestCase {
   }
 
   private void doTest(final boolean fail) throws Exception {
+    doTest(fail, false);
+  }
+
+  private void doTest(final boolean fail, final boolean inlineOne) throws Exception {
     try {
       doTest(new PerformAction() {
         @Override
@@ -41,7 +45,7 @@ public class InlineSuperClassTest extends MultiFileTestCase {
           if (superClass == null) superClass = myJavaFacade.findClass("p1.Super", GlobalSearchScope.allScope(myProject));
           assertNotNull("Class Super not found", superClass);
 
-          new InlineSuperClassRefactoringProcessor(getProject(), superClass, DocCommentPolicy.ASIS, aClass).run();
+          new InlineSuperClassRefactoringProcessor(getProject(), inlineOne ? aClass : null, superClass, DocCommentPolicy.ASIS, aClass).run();
 
           //LocalFileSystem.getInstance().refresh(false);
           //FileDocumentManager.getInstance().saveAllDocuments();
@@ -59,6 +63,14 @@ public class InlineSuperClassTest extends MultiFileTestCase {
     if (fail) {
       fail("Conflict was not detected");
     }
+  }
+
+  public void testInlineOneClass() throws Exception {
+    doTest(false, true);
+  }
+
+  public void testInlineOneClassWithConflicts() throws Exception {
+    doTest(true, true);
   }
 
   public void testAbstractOverrides() throws Exception {
@@ -124,7 +136,7 @@ public class InlineSuperClassTest extends MultiFileTestCase {
   public void testNewArrayInitializerExpr() throws Exception {
     doTest();
   }
-  
+
   public void testNewArrayDimensionsExpr() throws Exception {
     doTest();
   }
@@ -138,11 +150,11 @@ public class InlineSuperClassTest extends MultiFileTestCase {
   }
 
   public void testSuperConstructorWithFieldInitialization() throws Exception {
-     doTest();
+    doTest();
   }
 
   public void testSuperConstructorWithParam() throws Exception {
-     doTest();
+    doTest();
   }
 
   public void testChildConstructorImplicitlyCallsSuper() throws Exception {
@@ -184,7 +196,7 @@ public class InlineSuperClassTest extends MultiFileTestCase {
         PsiClass superClass = myJavaFacade.findClass("Super", GlobalSearchScope.allScope(myProject));
         if (superClass == null) superClass = myJavaFacade.findClass("p1.Super", GlobalSearchScope.allScope(myProject));
         assertNotNull("Class Super not found", superClass);
-        new InlineSuperClassRefactoringProcessor(getProject(), superClass, DocCommentPolicy.ASIS,
+        new InlineSuperClassRefactoringProcessor(getProject(), null, superClass, DocCommentPolicy.ASIS,
                                                  myJavaFacade.findClass("Test", GlobalSearchScope.allScope(myProject)),
                                                  myJavaFacade.findClass("Test1", GlobalSearchScope.allScope(myProject))).run();
       }

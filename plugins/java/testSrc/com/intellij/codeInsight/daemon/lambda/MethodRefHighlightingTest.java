@@ -19,8 +19,7 @@ import com.intellij.codeInsight.daemon.LightDaemonAnalyzerTestCase;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.unusedSymbol.UnusedSymbolLocalInspection;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
-import com.intellij.openapi.projectRoots.JavaVersionService;
-import com.intellij.openapi.projectRoots.JavaVersionServiceImpl;
+import com.intellij.testFramework.IdeaTestUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -79,8 +78,14 @@ public class MethodRefHighlightingTest extends LightDaemonAnalyzerTestCase {
   public void testAbstractMethod() { doTest(); }
   public void testMethodRefAcceptance() { doTest(); }
   public void testVarargsMethodRef() { doTest(); }
+  public void testExprReceiver() { doTest(); }
+  public void testVoidReturnTypeAmbiguity() { doTest(true); }
 
   public void testTypeParameterWithExtendsList() throws Exception {
+    doTest();
+  }
+
+  public void testIDEA112323() throws Exception {
     doTest();
   }
 
@@ -89,7 +94,7 @@ public class MethodRefHighlightingTest extends LightDaemonAnalyzerTestCase {
   }
 
   private void doTest(boolean warnings) {
-    ((JavaVersionServiceImpl)JavaVersionService.getInstance()).setTestVersion(JavaSdkVersion.JDK_1_8, getTestRootDisposable());
-    doTest(BASE_PATH + "/" + getTestName(false) + ".java", warnings, false);
+    IdeaTestUtil.setTestVersion(JavaSdkVersion.JDK_1_8, getModule(), getTestRootDisposable());
+    doTestNewInference(BASE_PATH + "/" + getTestName(false) + ".java", warnings, false);
   }
 }

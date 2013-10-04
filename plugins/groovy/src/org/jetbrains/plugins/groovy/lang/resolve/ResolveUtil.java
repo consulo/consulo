@@ -29,6 +29,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.*;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
@@ -120,12 +121,12 @@ public class ResolveUtil {
                                    boolean processNonCodeMethods,
                                    @NotNull final ResolveState state) {
     try {
-    ClassHint hint = processor.getHint(ClassHint.KEY);
-    if (hint != null) {
-      return new DeclarationCacheKey(getNameHint(processor), hint, processNonCodeMethods, originalPlace).processCachedDeclarations(place, processor);
-    }
+      ClassHint hint = processor.getHint(ClassHint.KEY);
+      if (hint != null) {
+        return new DeclarationCacheKey(getNameHint(processor), hint, processNonCodeMethods, originalPlace).processCachedDeclarations(place, processor);
+      }
 
-    final PsiScopeProcessor nonCodeProcessor = processNonCodeMethods ? processor : null;
+      final PsiScopeProcessor nonCodeProcessor = processNonCodeMethods ? processor : null;
       return doTreeWalkUp(place, originalPlace, processor, nonCodeProcessor, state);
     }
     catch (StackOverflowError e) {
@@ -271,10 +272,10 @@ public class ResolveUtil {
   }
 
   public static boolean processAllDeclarationsSeparately(@NotNull PsiType type,
-                                                          @NotNull PsiScopeProcessor processor,
-                                                          @NotNull PsiScopeProcessor nonCodeProcessor,
-                                                          @NotNull ResolveState state,
-                                                          @NotNull PsiElement place) {
+                                                         @NotNull PsiScopeProcessor processor,
+                                                         @NotNull PsiScopeProcessor nonCodeProcessor,
+                                                         @NotNull ResolveState state,
+                                                         @NotNull PsiElement place) {
     if (type instanceof PsiClassType) {
       final PsiClassType.ClassResolveResult resolveResult = ((PsiClassType)type).resolveGenerics();
       final PsiClass psiClass = resolveResult.getElement();
@@ -284,8 +285,8 @@ public class ResolveUtil {
         if (!psiClass.processDeclarations(processor, state, null, place)) return false;
       }
     }
-    if (!processNonCodeMembers(type, nonCodeProcessor, place, state)) return false;
     if (!processCategoryMembers(place, nonCodeProcessor, state)) return false;
+    if (!processNonCodeMembers(type, nonCodeProcessor, place, state)) return false;
     return true;
   }
 
@@ -448,7 +449,7 @@ public class ResolveUtil {
   }
 
   private static boolean isApplicableLabelStatement(PsiElement element, String labelName) {
-    return ((element instanceof GrLabeledStatement && labelName.equals(((GrLabeledStatement)element).getLabelName())));
+    return ((element instanceof GrLabeledStatement && labelName.equals(((GrLabeledStatement)element).getName())));
   }
 
   @Nullable
@@ -649,7 +650,10 @@ public class ResolveUtil {
     return variants;
   }
 
-  public static GroovyResolveResult[] getAllClassConstructors(PsiClass psiClass, GroovyPsiElement place, PsiSubstitutor substitutor, @Nullable PsiType[] argTypes) {
+  public static GroovyResolveResult[] getAllClassConstructors(@NotNull PsiClass psiClass,
+                                                              @NotNull PsiSubstitutor substitutor,
+                                                              @Nullable PsiType[] argTypes,
+                                                              @NotNull PsiElement place) {
     final MethodResolverProcessor processor = new MethodResolverProcessor(psiClass.getName(), place, true, null, argTypes, PsiType.EMPTY_ARRAY);
     ResolveState state = ResolveState.initial().put(PsiSubstitutor.KEY, substitutor);
     for (PsiMethod constructor : psiClass.getConstructors()) {
@@ -861,7 +865,7 @@ public class ResolveUtil {
     PsiFile file = place.getContainingFile();
     PsiDirectory psiDirectory = file.getContainingDirectory();
     if (psiDirectory != null && file instanceof GroovyFile) {
-      PsiJavaPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
+      PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
       if (aPackage != null) {
         return aPackage.getQualifiedName();
       }
@@ -906,7 +910,7 @@ public class ResolveUtil {
     GrExpression qualifier = ref.getQualifier();
     if (qualifier instanceof GrReferenceExpression) {
       final PsiElement resolvedQualifier = ((GrReferenceExpression)qualifier).resolve();
-      return resolvedQualifier instanceof PsiClass || resolvedQualifier instanceof PsiJavaPackage;
+      return resolvedQualifier instanceof PsiClass || resolvedQualifier instanceof PsiPackage;
     }
     else {
       return qualifier == null;

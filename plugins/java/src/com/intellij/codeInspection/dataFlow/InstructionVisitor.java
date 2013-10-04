@@ -119,9 +119,9 @@ public abstract class InstructionVisitor {
   public DfaInstructionState[] visitFlushVariable(FlushVariableInstruction instruction, DataFlowRunner runner, DfaMemoryState memState) {
     final DfaVariableValue variable = instruction.getVariable();
     if (variable != null) {
-      memState.flushVariableOutOfScope(variable);
+      memState.flushVariable(variable);
     } else {
-      memState.flushFields(runner);
+      memState.flushFields(runner.getFields());
     }
     return nextInstruction(instruction, runner, memState);
   }

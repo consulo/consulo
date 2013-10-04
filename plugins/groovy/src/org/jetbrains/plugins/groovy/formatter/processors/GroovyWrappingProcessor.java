@@ -25,7 +25,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.formatter.FormattingContext;
-import org.jetbrains.plugins.groovy.formatter.GroovyBlock;
+import org.jetbrains.plugins.groovy.formatter.blocks.GroovyBlock;
 import org.jetbrains.plugins.groovy.lang.lexer.TokenSets;
 import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.modifiers.GrModifierList;
 import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.modifiers.annotation.GrAnnotation;
@@ -51,7 +51,7 @@ public class GroovyWrappingProcessor {
 
     myCommonWrap = createCommonWrap();
   }
-  
+
   private static final TokenSet SKIP = TokenSet.create(
     mCOMMA, mQUESTION, mSEMI,
 
@@ -255,7 +255,7 @@ public class GroovyWrappingProcessor {
       return mySettings.CLASS_ANNOTATION_WRAP;
     }
 
-    if (METHOD_DEFS.contains(containerType)) {
+    if (TokenSets.METHOD_DEFS.contains(containerType)) {
       return mySettings.METHOD_ANNOTATION_WRAP;
     }
 

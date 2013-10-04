@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,23 +37,23 @@ import org.jetbrains.plugins.groovy.lang.psi.api.util.GrVariableDeclarationOwner
 public interface GroovyFileBase extends PsiFile, GrVariableDeclarationOwner, GrStatementOwner, PsiClassOwner, GrControlFlowOwner, PsiImportHolder,
                                         GrDeclarationHolder {
   String[] IMPLICITLY_IMPORTED_PACKAGES = {
-      "java.lang",
-      "java.util",
-      "java.io",
-      "java.net",
-      "groovy.lang",
-      "groovy.util",
+    "java.lang",
+    "java.util",
+    "java.io",
+    "java.net",
+    "groovy.lang",
+    "groovy.util",
   };
   String[] IMPLICITLY_IMPORTED_CLASSES = {
-      "java.math.BigInteger",
-      "java.math.BigDecimal",
+    "java.math.BigInteger",
+    "java.math.BigDecimal",
   };
 
   GrTypeDefinition[] getTypeDefinitions();
 
   GrTopLevelDefinition[] getTopLevelDefinitions();
 
-  GrMethod[] getTopLevelMethods();
+  GrMethod[] getCodeMethods();
 
   GrMethod[] getMethods();
 

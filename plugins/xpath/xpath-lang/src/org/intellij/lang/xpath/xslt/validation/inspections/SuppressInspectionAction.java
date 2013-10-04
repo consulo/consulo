@@ -15,6 +15,7 @@
  */
 package org.intellij.lang.xpath.xslt.validation.inspections;
 
+import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -33,83 +34,83 @@ import com.intellij.xml.util.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-abstract class SuppressInspectionAction {
-    private final String myToolId;
-    private final String myMsg;
+abstract class SuppressInspectionAction extends SuppressIntentionAction {
+  private final String myToolId;
+  private final String myMsg;
 
-    public SuppressInspectionAction(String toolId, String msg) {
-        myToolId = toolId;
-        myMsg = msg;
+  public SuppressInspectionAction(String toolId, String msg) {
+    myToolId = toolId;
+    myMsg = msg;
+  }
+
+  @NotNull
+  public String getText() {
+    return myMsg;
+  }
+
+  @NotNull
+  public String getFamilyName() {
+    return "Suppress Inspection";
+  }
+
+  @Nullable
+  protected abstract XmlTag getAnchor(@NotNull PsiElement element);
+
+  public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+    return getAnchor(element) != null;
+  }
+
+  public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+    final XmlTag anchor = getAnchor(element);
+    if (anchor == null) return;
+
+    PsiElement prevSibling = anchor.getPrevSibling();
+    while (prevSibling instanceof PsiWhiteSpace || prevSibling instanceof XmlText) {
+      prevSibling = prevSibling.getPrevSibling();
     }
-
-    @NotNull
-    public String getText() {
-        return myMsg;
+    if (prevSibling instanceof XmlProlog) {
+      prevSibling = prevSibling.getLastChild();
+      if (prevSibling != null && !(prevSibling instanceof XmlComment)) {
+        prevSibling = PsiTreeUtil.getPrevSiblingOfType(prevSibling, XmlComment.class);
+      }
     }
-
-    @NotNull
-    public String getFamilyName() {
-        return "Suppress Inspection";
+    if (prevSibling instanceof XmlComment) {
+      final XmlComment comment = (XmlComment)prevSibling;
+      final String text = XmlUtil.getCommentText(comment);
+      if (text != null && InspectionUtil.SUPPRESSION_PATTERN.matcher(text).matches()) {
+        final String s = text.trim() + ", " + myToolId;
+        final XmlComment newComment = createComment(project, s);
+        CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(comment.replace(newComment));
+      } else {
+        addNoinspectionComment(project, anchor);
+      }
+    } else {
+      addNoinspectionComment(project, anchor);
     }
+  }
 
-    @Nullable
-    protected abstract XmlTag getAnchor(@NotNull PsiElement element);
-
-    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
-        return getAnchor(element) != null;
+  private void addNoinspectionComment(Project project, XmlTag anchor) throws IncorrectOperationException {
+    final XmlComment newComment = createComment(project, "noinspection " + myToolId);
+    PsiElement parent = anchor.getParentTag();
+    if (parent == null) {
+      parent = PsiTreeUtil.getPrevSiblingOfType(anchor, XmlProlog.class);
+      if (parent != null) {
+        CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(parent.add(newComment));
+      }
+    } else {
+      CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(parent.addBefore(newComment, anchor));
     }
+  }
 
-    public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
-        final XmlTag anchor = getAnchor(element);
-        if (anchor == null) return;
+  @NotNull
+  private static XmlComment createComment(Project project, String s) throws IncorrectOperationException {
+    final XmlTag element = XmlElementFactory.getInstance(project).createTagFromText("<foo><!-- " + s + " --></foo>", XMLLanguage.INSTANCE);
+    final XmlComment newComment = PsiTreeUtil.getChildOfType(element, XmlComment.class);
+    assert newComment != null;
+    return newComment;
+  }
 
-        PsiElement prevSibling = anchor.getPrevSibling();
-        while (prevSibling instanceof PsiWhiteSpace || prevSibling instanceof XmlText) {
-            prevSibling = prevSibling.getPrevSibling();
-        }
-        if (prevSibling instanceof XmlProlog) {
-            prevSibling = prevSibling.getLastChild();
-            if (prevSibling != null && !(prevSibling instanceof XmlComment)) {
-                prevSibling = PsiTreeUtil.getPrevSiblingOfType(prevSibling, XmlComment.class);
-            }
-        }
-        if (prevSibling instanceof XmlComment) {
-            final XmlComment comment = (XmlComment)prevSibling;
-            final String text = XmlUtil.getCommentText(comment);
-            if (text != null && InspectionUtil.SUPPRESSION_PATTERN.matcher(text).matches()) {
-                final String s = text.trim() + ", " + myToolId;
-                final XmlComment newComment = createComment(project, s);
-              CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(comment.replace(newComment));
-            } else {
-                addNoinspectionComment(project, anchor);
-            }
-        } else {
-            addNoinspectionComment(project, anchor);
-        }
-    }
-
-    private void addNoinspectionComment(Project project, XmlTag anchor) throws IncorrectOperationException {
-        final XmlComment newComment = createComment(project, "noinspection " + myToolId);
-        PsiElement parent = anchor.getParentTag();
-        if (parent == null) {
-            parent = PsiTreeUtil.getPrevSiblingOfType(anchor, XmlProlog.class);
-            if (parent != null) {
-              CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(parent.add(newComment));
-            }
-        } else {
-          CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(parent.addBefore(newComment, anchor));
-        }
-    }
-
-    @NotNull
-    private static XmlComment createComment(Project project, String s) throws IncorrectOperationException {
-        final XmlTag element = XmlElementFactory.getInstance(project).createTagFromText("<foo><!-- " + s + " --></foo>", XMLLanguage.INSTANCE);
-        final XmlComment newComment = PsiTreeUtil.getChildOfType(element, XmlComment.class);
-        assert newComment != null;
-        return newComment;
-    }
-
-    public boolean startInWriteAction() {
-        return true;
-    }
+  public boolean startInWriteAction() {
+    return true;
+  }
 }

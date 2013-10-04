@@ -18,7 +18,6 @@ package org.jetbrains.plugins.groovy.lang.parser;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.*;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.io.StringRef;
 import org.jetbrains.annotations.NotNull;
@@ -226,8 +225,6 @@ public interface GroovyElementTypes extends GroovyTokenTypes, GroovyDocElementTy
 
   GroovyElementType PATH_INDEX_PROPERTY = new GroovyElementType("Index property");
   GroovyElementType PARENTHESIZED_EXPRESSION = new GroovyElementType("Parenthesized expression");
-  // Plain label
-  GroovyElementType LABEL = new GroovyElementType("Label");
 
   // Arguments
   GroovyElementType ARGUMENTS = new GroovyElementType("Arguments");
@@ -251,7 +248,9 @@ public interface GroovyElementTypes extends GroovyTokenTypes, GroovyDocElementTy
 
   // GStrings
   GroovyElementType GSTRING = new GroovyElementType("GString");
-  IElementType GSTRING_INJECTION =new GroovyElementType("Gstring injection");
+  GroovyElementType GSTRING_INJECTION =new GroovyElementType("Gstring injection");
+  GroovyElementType GSTRING_CONTENT = new GroovyElementType("GString content element");
+
 
   GroovyElementType REGEX = new GroovyElementType("Regular expression");
   //types
@@ -370,11 +369,11 @@ public interface GroovyElementTypes extends GroovyTokenTypes, GroovyDocElementTy
   };
 
   EmptyStubElementType<GrTypeDefinitionBody> CLASS_BODY = new EmptyStubElementType<GrTypeDefinitionBody>("class block", GroovyFileType.GROOVY_LANGUAGE) {
-      @Override
-      public GrTypeDefinitionBody createPsi(@NotNull EmptyStub stub) {
-        return new GrTypeDefinitionBodyBase.GrClassBody(stub);
-      }
-    };
+    @Override
+    public GrTypeDefinitionBody createPsi(@NotNull EmptyStub stub) {
+      return new GrTypeDefinitionBodyBase.GrClassBody(stub);
+    }
+  };
 
   EmptyStubElementType<GrEnumDefinitionBody> ENUM_BODY = new EmptyStubElementType<GrEnumDefinitionBody>("enum block", GroovyFileType.GROOVY_LANGUAGE) {
     @Override
@@ -420,7 +419,6 @@ public interface GroovyElementTypes extends GroovyTokenTypes, GroovyDocElementTy
         return new GrVariableDeclarationImpl(stub);
       }
     };
-  IElementType MULTIPLE_VARIABLE_DEFINITION = new GroovyElementType("multivariable definition");
   GroovyElementType TUPLE_DECLARATION = new GroovyElementType("tuple declaration");
   GroovyElementType TUPLE_EXPRESSION = new GroovyElementType("tuple expression");
 
@@ -433,9 +431,4 @@ public interface GroovyElementTypes extends GroovyTokenTypes, GroovyDocElementTy
 
   //types
   GroovyElementType CLASS_TYPE_ELEMENT = new GroovyElementType("class type element"); //node
-
-  TokenSet METHOD_DEFS = TokenSet.create(METHOD_DEFINITION, CONSTRUCTOR_DEFINITION, ANNOTATION_METHOD);
-  TokenSet VARIABLES = TokenSet.create(VARIABLE, FIELD);
-  TokenSet TYPE_ELEMENTS = TokenSet.create(CLASS_TYPE_ELEMENT, ARRAY_TYPE, BUILT_IN_TYPE, TYPE_ARGUMENT, DISJUNCTION_TYPE_ELEMENT);
-
 }

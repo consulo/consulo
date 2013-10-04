@@ -24,100 +24,70 @@
  */
 package com.intellij.codeInspection.dataFlow.value;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiKeyword;
-import com.intellij.psi.PsiType;
-import com.intellij.util.containers.HashMap;
+import com.intellij.codeInspection.dataFlow.Nullness;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class DfaTypeValue extends DfaValue {
   public static class Factory {
-    private final DfaTypeValue mySharedInstance;
-    private final HashMap<String,ArrayList<DfaTypeValue>> myStringToObject;
+    private final Map<DfaPsiType,ArrayList<DfaTypeValue>> myCache = ContainerUtil.newHashMap();
     private final DfaValueFactory myFactory;
 
     Factory(DfaValueFactory factory) {
       myFactory = factory;
-      mySharedInstance = new DfaTypeValue(factory);
-      myStringToObject = new HashMap<String, ArrayList<DfaTypeValue>>();
     }
 
     @NotNull
-    public DfaTypeValue create(@NotNull PsiType type, boolean nullable) {
-      mySharedInstance.myType = type;
-      mySharedInstance.myCanonicalText = type.getCanonicalText();
-      mySharedInstance.myIsNullable = nullable;
-      if (mySharedInstance.myCanonicalText == null) {
-        mySharedInstance.myCanonicalText = PsiKeyword.NULL;
-      }
-
-      String id = mySharedInstance.toString();
-      ArrayList<DfaTypeValue> conditions = myStringToObject.get(id);
+    public DfaTypeValue createTypeValue(@NotNull DfaPsiType type, @NotNull Nullness nullness) {
+      ArrayList<DfaTypeValue> conditions = myCache.get(type);
       if (conditions == null) {
         conditions = new ArrayList<DfaTypeValue>();
-        myStringToObject.put(id, conditions);
+        myCache.put(type, conditions);
       } else {
         for (DfaTypeValue aType : conditions) {
-          if (aType.hardEquals(mySharedInstance)) return aType;
+          if (aType.myNullness == nullness) return aType;
         }
       }
 
-      DfaTypeValue result = new DfaTypeValue(type, nullable, myFactory);
+      DfaTypeValue result = new DfaTypeValue(type, nullness, myFactory);
       conditions.add(result);
-      return result;
+      return new DfaTypeValue(type, nullness, myFactory);
     }
 
-    public DfaTypeValue create(@NotNull PsiType type) {
-      return create(type, false);
-    }
   }
 
-  private PsiType myType;
-  private String myCanonicalText;
-  private boolean myIsNullable;
+  private DfaPsiType myType;
+  private Nullness myNullness;
 
-  private DfaTypeValue(DfaValueFactory factory) {
-    super(factory);
-  }
-
-  private DfaTypeValue(PsiType type, boolean isNullable, DfaValueFactory factory) {
+  private DfaTypeValue(DfaPsiType type, Nullness nullness, DfaValueFactory factory) {
     super(factory);
     myType = type;
-    myIsNullable = isNullable;
-    myCanonicalText = type.getCanonicalText();
-    if (myCanonicalText == null) {
-      myCanonicalText = PsiKeyword.NULL;
-    }
+    myNullness = nullness;
   }
 
-  public PsiType getType() {
+  public DfaPsiType getDfaType() {
     return myType;
   }
 
   public boolean isNullable() {
-    return myIsNullable;
+    return myNullness == Nullness.NULLABLE;
+  }
+
+  public boolean isNotNull() {
+    return myNullness == Nullness.NOT_NULL;
+  }
+
+  public Nullness getNullness() {
+    return myNullness;
   }
 
   @NonNls
   public String toString() {
-    return myCanonicalText + ", nullable=" + myIsNullable;
+    return myType + ", nullable=" + myNullness;
   }
 
-  private boolean hardEquals(DfaTypeValue aType) {
-    return Comparing.equal(myCanonicalText, aType.myCanonicalText) && myIsNullable == aType.myIsNullable;
-  }
-
-  public boolean isAssignableFrom(DfaTypeValue dfaType) {
-    return dfaType != null && myType.isAssignableFrom(dfaType.myType);
-  }
-
-  public boolean isConvertibleFrom(DfaTypeValue dfaType) {
-    if (dfaType == null) return false;
-    assert myType.isValid() : "my type invalid";
-    assert dfaType.myType.isValid() : " their type invalid";
-    return myType.isConvertibleFrom(dfaType.myType);
-  }
 }

@@ -18,6 +18,7 @@ package org.intellij.lang.xpath.xslt.validation.inspections;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.LocalInspectionTool;
+import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;

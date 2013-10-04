@@ -59,13 +59,13 @@ public class MethodResolverProcessor extends ResolverProcessor implements GrMeth
   private boolean myStopExecuting = false;
 
   private final boolean myByShape;
-  
+
   private final SubstitutorComputer mySubstitutorComputer;
 
   private final boolean myTypedContext;
 
   public MethodResolverProcessor(@Nullable String name,
-                                 @NotNull GroovyPsiElement place,
+                                 @NotNull PsiElement place,
                                  boolean isConstructor,
                                  @Nullable PsiType thisType,
                                  @Nullable PsiType[] argumentTypes,
@@ -106,15 +106,17 @@ public class MethodResolverProcessor extends ResolverProcessor implements GrMeth
       if (!myByShape) {
         substitutor = mySubstitutorComputer.obtainSubstitutor(substitutor, method, state);
       }
-      boolean isAccessible = isAccessible(method);
+
       PsiElement resolveContext = state.get(RESOLVE_CONTEXT);
       final SpreadState spreadState = state.get(SpreadState.SPREAD_STATE);
 
+      boolean isAccessible = isAccessible(method);
       boolean isStaticsOK = isStaticsOK(method, resolveContext, true);
-      if (!myAllVariants && isStaticsOK && isAccessible &&
-          PsiUtil.isApplicable(myArgumentTypes, method, substitutor, (GroovyPsiElement)myPlace, myByShape)) {
+
+      if (!myAllVariants && isStaticsOK && isAccessible && PsiUtil.isApplicable(myArgumentTypes, method, substitutor, myPlace, myByShape)) {
         addCandidate(new GroovyResolveResultImpl(method, resolveContext, spreadState, substitutor, isAccessible, isStaticsOK));
-      } else {
+      }
+      else {
         myInapplicableCandidates.add(new GroovyResolveResultImpl(method, resolveContext, spreadState, substitutor, isAccessible, isStaticsOK));
       }
 
@@ -218,7 +220,7 @@ public class MethodResolverProcessor extends ResolverProcessor implements GrMeth
 
     return 0;
   }
-  
+
   private static boolean isMoreConcreteThan(@NotNull PsiMethod method,
                                             @NotNull final PsiSubstitutor substitutor,
                                             @NotNull PsiMethod another,
@@ -334,8 +336,8 @@ public class MethodResolverProcessor extends ResolverProcessor implements GrMeth
       type1 = ((PsiArrayType) type1).getComponentType();
     }
     return argumentsSupplied() ? //resolve, otherwise same_name_variants
-        TypesUtil.isAssignableWithoutConversions(type1, type2, myPlace) :
-        type1.equals(type2);
+           TypesUtil.isAssignableWithoutConversions(type1, type2, myPlace) :
+           type1.equals(type2);
   }
 
   private boolean argumentsSupplied() {

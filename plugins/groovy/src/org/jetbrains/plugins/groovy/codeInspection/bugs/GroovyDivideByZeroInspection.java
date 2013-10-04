@@ -58,7 +58,7 @@ public class GroovyDivideByZeroInspection extends BaseInspection {
   private static class Visitor extends BaseInspectionVisitor {
 
     public void visitBinaryExpression(
-        @NotNull GrBinaryExpression expression) {
+      @NotNull GrBinaryExpression expression) {
       super.visitBinaryExpression(expression);
       final GrExpression rhs = expression.getRightOperand();
       if (rhs == null) {
@@ -76,13 +76,13 @@ public class GroovyDivideByZeroInspection extends BaseInspection {
     }
 
     public void visitAssignmentExpression(
-        GrAssignmentExpression expression) {
+      GrAssignmentExpression expression) {
       super.visitAssignmentExpression(expression);
       final GrExpression rhs = expression.getRValue();
       if (rhs == null) {
         return;
       }
-      final IElementType tokenType = expression.getOperationToken();
+      final IElementType tokenType = expression.getOperationTokenType();
       if (!tokenType.equals(GroovyTokenTypes.mDIV_ASSIGN)
           && !tokenType.equals(GroovyTokenTypes.mMOD_ASSIGN)) {
         return;
@@ -100,10 +100,10 @@ public class GroovyDivideByZeroInspection extends BaseInspection {
     @NonNls
     final String text = expression.getText();
     return "0".equals(text) ||
-        "0x0".equals(text) ||
-        "0X0".equals(text) ||
-        "0.0".equals(text) ||
-        "0L".equals(text) ||
-        "0l".equals(text);
+           "0x0".equals(text) ||
+           "0X0".equals(text) ||
+           "0.0".equals(text) ||
+           "0L".equals(text) ||
+           "0l".equals(text);
   }
 }

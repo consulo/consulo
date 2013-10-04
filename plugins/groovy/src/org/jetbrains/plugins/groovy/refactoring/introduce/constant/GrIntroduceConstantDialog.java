@@ -31,6 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.JavaResolveUtil;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.JavaRefactoringSettings;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.introduceField.IntroduceConstantHandler;
@@ -43,6 +44,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
+import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,11 +55,12 @@ import org.jetbrains.plugins.groovy.actions.NewGroovyActionBase;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrVariable;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpression;
-import org.jetbrains.plugins.groovy.refactoring.GroovyNameSuggestionUtil;
 import org.jetbrains.plugins.groovy.refactoring.GroovyNamesUtil;
 import org.jetbrains.plugins.groovy.refactoring.GroovyRefactoringBundle;
 import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceContext;
 import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceDialog;
+import org.jetbrains.plugins.groovy.refactoring.introduce.StringPartInfo;
+import org.jetbrains.plugins.groovy.refactoring.introduce.field.GrFieldNameSuggester;
 import org.jetbrains.plugins.groovy.refactoring.introduce.variable.GroovyVariableValidator;
 import org.jetbrains.plugins.groovy.refactoring.ui.GrTypeComboBox;
 
@@ -108,6 +111,16 @@ public class GrIntroduceConstantDialog extends DialogWrapper
     init();
   }
 
+  @Nullable
+  public static PsiClass getParentClass(PsiElement occurrence) {
+    PsiElement cur = occurrence;
+    while (true) {
+      final PsiClass parentClass = PsiTreeUtil.getParentOfType(cur, PsiClass.class, true);
+      if (parentClass == null || parentClass.hasModifierProperty(PsiModifier.STATIC)) return parentClass;
+      cur = parentClass;
+    }
+  }
+
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myNameField;
@@ -142,10 +155,10 @@ public class GrIntroduceConstantDialog extends DialogWrapper
           TreeClassChooser chooser = TreeClassChooserFactory.getInstance(myContext.getProject())
             .createWithInnerClassesScopeChooser(RefactoringBundle.message("choose.destination.class"),
                                                 GlobalSearchScope.projectScope(myContext.getProject()), new ClassFilter() {
-                public boolean isAccepted(PsiClass aClass) {
-                  return aClass.getParent() instanceof GroovyFile || aClass.hasModifierProperty(PsiModifier.STATIC);
-                }
-              }, null);
+              public boolean isAccepted(PsiClass aClass) {
+                return aClass.getParent() instanceof GroovyFile || aClass.hasModifierProperty(PsiModifier.STATIC);
+              }
+            }, null);
           if (myTargetClass != null) {
             chooser.selectDirectory(myTargetClass.getContainingFile().getContainingDirectory());
           }
@@ -162,7 +175,7 @@ public class GrIntroduceConstantDialog extends DialogWrapper
     myTargetClassPanel.add(myTargetClassEditor, BorderLayout.CENTER);
     Set<String> possibleClassNames = new LinkedHashSet<String>();
     for (final PsiElement occurrence : myContext.getOccurrences()) {
-      final PsiClass parentClass = GrIntroduceConstantHandler.getParentClass(occurrence);
+      final PsiClass parentClass = getParentClass(occurrence);
       if (parentClass != null && parentClass.getQualifiedName() != null) {
         possibleClassNames.add(parentClass.getQualifiedName());
       }
@@ -180,7 +193,7 @@ public class GrIntroduceConstantDialog extends DialogWrapper
       public void documentChanged(DocumentEvent e) {
         targetClassChanged();
         updateOkStatus();
-       // enableEnumDependant(introduceEnumConstant());
+        // enableEnumDependant(introduceEnumConstant());
       }
     });
   }
@@ -223,6 +236,12 @@ public class GrIntroduceConstantDialog extends DialogWrapper
     return this;
   }
 
+  @NotNull
+  @Override
+  public LinkedHashSet<String> suggestNames() {
+    return new GrFieldNameSuggester(myContext, new GroovyVariableValidator(myContext), true).suggestNames();
+  }
+
   @Nullable
   @Override
   public String getName() {
@@ -246,12 +265,16 @@ public class GrIntroduceConstantDialog extends DialogWrapper
 
     final GrVariable var = myContext.getVar();
     final GrExpression expression = myContext.getExpression();
-    if (expression == null) {
-      assert var != null;
-      myTypeCombo = GrTypeComboBox.createTypeComboBoxWithDefType(var.getDeclaredType(), var);
+    final StringPartInfo stringPart = myContext.getStringPart();
+    if (expression != null) {
+      myTypeCombo = GrTypeComboBox.createTypeComboBoxFromExpression(expression);
+    }
+    else if (stringPart != null) {
+      myTypeCombo = GrTypeComboBox.createTypeComboBoxFromExpression(stringPart.getLiteral());
     }
     else {
-      myTypeCombo = GrTypeComboBox.createTypeComboBoxFromExpression(expression);
+      assert var != null;
+      myTypeCombo = GrTypeComboBox.createTypeComboBoxWithDefType(var.getDeclaredType(), var);
     }
 
     List<String> names = new ArrayList<String>();
@@ -259,8 +282,7 @@ public class GrIntroduceConstantDialog extends DialogWrapper
       names.add(var.getName());
     }
     if (expression != null) {
-      String[] possibleNames = GroovyNameSuggestionUtil.suggestVariableNames(expression, new GroovyVariableValidator(myContext), true);
-      ContainerUtil.addAll(names, possibleNames);
+      ContainerUtil.addAll(names, suggestNames());
     }
 
     myNameField = new NameSuggestionsField(ArrayUtil.toStringArray(names), myContext.getProject(), GroovyFileType.GROOVY_FILE_TYPE);
@@ -399,7 +421,7 @@ public class GrIntroduceConstantDialog extends DialogWrapper
       if (targetClass != null) return targetClass;
 
       final String packageName = StringUtil.getPackageName(qualifiedName);
-      PsiJavaPackage psiPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
+      PsiPackage psiPackage = JavaPsiFacade.getInstance(project).findPackage(packageName);
       final PsiDirectory psiDirectory;
       if (psiPackage != null) {
         final PsiDirectory[] directories = psiPackage.getDirectories(GlobalSearchScope.allScope(project));

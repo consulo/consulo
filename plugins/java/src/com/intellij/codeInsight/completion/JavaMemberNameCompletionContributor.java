@@ -15,8 +15,10 @@
  */
 package com.intellij.codeInsight.completion;
 
+import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.*;
+import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -30,6 +32,7 @@ import com.intellij.psi.codeStyle.VariableKind;
 import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.introduceField.InplaceIntroduceFieldPopup;
 import com.intellij.refactoring.introduceVariable.IntroduceVariableBase;
 import com.intellij.util.ArrayUtil;
@@ -62,6 +65,10 @@ public class JavaMemberNameCompletionContributor extends CompletionContributor {
   @Override
   public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
     if (parameters.getCompletionType() != CompletionType.BASIC && parameters.getCompletionType() != CompletionType.SMART) {
+      return;
+    }
+
+    if (parameters.getInvocationCount() == 0 && TemplateManagerImpl.getTemplateState(parameters.getEditor()) != null) {
       return;
     }
 
@@ -115,10 +122,10 @@ public class JavaMemberNameCompletionContributor extends CompletionContributor {
     addLookupItems(set, suggestedNameInfo, matcher, project, suggestedNames);
     if (!hasStartMatches(set, matcher)) {
       if (type.equalsToText(CommonClassNames.JAVA_LANG_OBJECT) && matcher.prefixMatches("object")) {
-        set.add(LookupElementBuilder.create("object"));
+        set.add(withInsertHandler(suggestedNameInfo, LookupElementBuilder.create("object")));
       }
       if (type.equalsToText(CommonClassNames.JAVA_LANG_STRING) && matcher.prefixMatches("string")) {
-        set.add(LookupElementBuilder.create("string"));
+        set.add(withInsertHandler(suggestedNameInfo, LookupElementBuilder.create("string")));
       }
     }
 
@@ -365,23 +372,23 @@ public class JavaMemberNameCompletionContributor extends CompletionContributor {
   }
 
   private static String[] getPropertiesHandlersNames(final PsiClass psiClass,
-                                                    final boolean staticContext,
-                                                    final PsiType varType,
-                                                    final PsiElement element) {
+                                                     final boolean staticContext,
+                                                     final PsiType varType,
+                                                     final PsiElement element) {
     final List<String> propertyHandlers = new ArrayList<String>();
 
     for (final PsiField field : psiClass.getFields()) {
       if (field == element) continue;
 
-      assert field.isValid() : "invalid field: " + field;
+      PsiUtilCore.ensureValid(field);
       PsiType fieldType = field.getType();
-      assert fieldType.isValid() : "invalid field type: " + field + "; " + fieldType + " of " + fieldType.getClass();
+      PsiUtil.ensureValidType(fieldType);
 
       final PsiModifierList modifierList = field.getModifierList();
       if (staticContext && (modifierList != null && !modifierList.hasModifierProperty(PsiModifier.STATIC))) continue;
 
       if (fieldType.equals(varType)) {
-        final String getterName = PropertyUtil.suggestGetterName(field.getProject(), field);
+        final String getterName = PropertyUtil.suggestGetterName(field);
         if ((psiClass.findMethodsByName(getterName, true).length == 0 ||
              psiClass.findMethodBySignature(PropertyUtil.generateGetterPrototype(field), true) == null)) {
           propertyHandlers.add(getterName);
@@ -389,7 +396,7 @@ public class JavaMemberNameCompletionContributor extends CompletionContributor {
       }
 
       if (PsiType.VOID.equals(varType)) {
-        final String setterName = PropertyUtil.suggestSetterName(field.getProject(), field);
+        final String setterName = PropertyUtil.suggestSetterName(field);
         if ((psiClass.findMethodsByName(setterName, true).length == 0 ||
              psiClass.findMethodBySignature(PropertyUtil.generateSetterPrototype(field), true) == null)) {
           propertyHandlers.add(setterName);
@@ -416,14 +423,23 @@ public class JavaMemberNameCompletionContributor extends CompletionContributor {
 
       LookupElement element = PrioritizedLookupElement.withPriority(LookupElementBuilder.create(name).withAutoCompletionPolicy(AutoCompletionPolicy.GIVE_CHANCE_TO_OVERWRITE), -i);
       if (callback != null) {
-        element = LookupElementDecorator.withInsertHandler(element, new InsertHandler<LookupElementDecorator<LookupElement>>() {
-          @Override
-          public void handleInsert(InsertionContext context, LookupElementDecorator<LookupElement> item) {
-            callback.nameChosen(item.getLookupString());
-          }
-        });
+        element = withInsertHandler(callback, element);
       }
       lookupElements.add(element);
     }
+  }
+
+  private static LookupElementDecorator<LookupElement> withInsertHandler(final SuggestedNameInfo callback, LookupElement element) {
+    return LookupElementDecorator.withInsertHandler(element, new InsertHandler<LookupElementDecorator<LookupElement>>() {
+      @Override
+      public void handleInsert(InsertionContext context, LookupElementDecorator<LookupElement> item) {
+        TailType tailType = LookupItem.getDefaultTailType(context.getCompletionChar());
+        if (tailType != null) {
+          context.setAddCompletionChar(false);
+          tailType.processTail(context.getEditor(), context.getTailOffset());
+        }
+        callback.nameChosen(item.getLookupString());
+      }
+    });
   }
 }

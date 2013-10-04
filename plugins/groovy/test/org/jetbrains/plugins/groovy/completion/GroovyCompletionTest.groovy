@@ -27,7 +27,7 @@ import com.intellij.psi.statistics.impl.StatisticsManagerImpl
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.plugins.groovy.GroovyFileType
 import org.jetbrains.plugins.groovy.codeStyle.GroovyCodeStyleSettings
-import org.jetbrains.plugins.groovy.lang.GrReferenceAdjuster
+
 import org.jetbrains.plugins.groovy.lang.psi.api.types.GrCodeReferenceElement
 import org.jetbrains.plugins.groovy.util.TestUtils
 /**
