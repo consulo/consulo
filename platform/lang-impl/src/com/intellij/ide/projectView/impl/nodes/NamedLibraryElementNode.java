@@ -97,7 +97,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   public void update(PresentationData presentation) {
     presentation.setPresentableText(getValue().getName());
     final OrderEntry orderEntry = getValue().getOrderEntry();
-    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? getJdkIcon((SdkOrderEntry)orderEntry) : AllIcons.Nodes.PpLibFolder;
+    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? getJdkIcon((SdkOrderEntry)orderEntry) : AllIcons.Nodes.PpLib;
     presentation.setIcon(closedIcon);
     if (orderEntry instanceof SdkOrderEntry) {
       final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
