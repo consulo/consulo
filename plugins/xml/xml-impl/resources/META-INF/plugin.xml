@@ -89,6 +89,8 @@
                     interface="com.intellij.psi.xml.XmlChildRole$StartTagEndTokenProvider"/>
     <extensionPoint name="schemaProvider"
                     interface="com.intellij.xml.XmlSchemaProvider"/>
+
+    <extensionPoint name="undefinedElementFixProvider" interface="com.intellij.xml.XmlUndefinedElementFixProvider"/>
     <extensionPoint name="xmlExtension"
                     interface="com.intellij.xml.XmlExtension"/>
     <extensionPoint name="tagNameProvider"

@@ -19,6 +19,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
@@ -34,7 +35,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
-import com.intellij.util.PlatformIcons;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ import java.util.Set;
 
 public class ExternalLibrariesNode extends ProjectViewNode<String> {
   public ExternalLibrariesNode(Project project, ViewSettings viewSettings) {
-    super(project, "External Libraries", viewSettings);
+    super(project, IdeBundle.message("node.projectview.external.libraries"), viewSettings);
   }
 
   @Override
@@ -123,6 +123,6 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
   @Override
   protected void update(PresentationData presentation) {
     presentation.setPresentableText(IdeBundle.message("node.projectview.external.libraries"));
-    presentation.setIcon(PlatformIcons.LIBRARY_ICON);
+    presentation.setIcon(AllIcons.Nodes.PpLibFolder);
   }
 }
