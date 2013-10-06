@@ -1,0 +1,452 @@
+<!--
+  ~ Copyright 2013 Consulo.org
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<idea-plugin version="2">
+  <project-components>
+    <component>
+      <implementation-class>com.intellij.openapi.components.impl.ServiceManagerImpl</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.notification.EventLog$ProjectTracker</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
+      <implementation-class>com.intellij.openapi.command.impl.UndoManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.project.ProjectReloadState</interface-class>
+      <implementation-class>com.intellij.openapi.project.impl.ProjectReloadStateImpl</implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.vcs.FileStatusManager</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.impl.FileStatusManagerImpl</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.ui.EditorNotifications</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.vfs.encoding.EncodingProjectManager</interface-class>
+      <implementation-class>com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.notification.impl.NotificationsManagerImpl$ProjectNotificationsComponent</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.ui.switcher.SwitchManager</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.ui.switcher.QuickActionManager</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.ide.bookmarks.BookmarkManager</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
+      <implementation-class>com.intellij.openapi.wm.impl.ToolWindowManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.wm.impl.ToolWindowHeadlessManagerImpl</headless-implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
+      <implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.wm.impl.WindowDressing</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.impl.convert.ProjectFileVersion</interface-class>
+      <implementation-class>com.intellij.ide.impl.convert.ProjectFileVersionImpl</implementation-class>
+    </component>
+
+    <!--<component>-->
+    <!--<implementation-class>com.intellij.jsp.impl.browserprofile.BrowserProfileProvider</implementation-class>-->
+    <!--</component>-->
+    <component>
+      <implementation-class>com.intellij.openapi.editor.impl.DocumentMarkupModelManager</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.EditorHistoryManager</implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.fileEditor.ex.IdeDocumentHistory</interface-class>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.editor.LazyRangeMarkerFactory</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.codeInsight.highlighting.HighlightManager</interface-class>
+      <implementation-class>com.intellij.codeInsight.highlighting.HighlightManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.roots.ProjectRootManager</interface-class>
+      <implementation-class>com.intellij.openapi.roots.impl.ProjectRootManagerComponent</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.roots.impl.DirectoryIndex</interface-class>
+      <implementation-class>com.intellij.openapi.roots.impl.DirectoryIndexImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.roots.impl.CompilerServerDirectoryIndex</compiler-server-implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.psi.PsiManager</interface-class>
+      <implementation-class>com.intellij.psi.impl.PsiManagerImpl</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.psi.impl.file.impl.PsiVFSListener</interface-class>
+      <implementation-class>com.intellij.psi.impl.file.impl.PsiVFSListener</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.psi.PsiDocumentManager</interface-class>
+      <implementation-class>com.intellij.psi.impl.PsiDocumentManagerImpl</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.module.ModuleManager</interface-class>
+      <implementation-class>com.intellij.openapi.module.impl.ModuleManagerComponent</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.codeInsight.folding.CodeFoldingManager</interface-class>
+      <implementation-class>com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.fileEditor.FileEditorManager</interface-class>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.fileEditor.impl.TestEditorManagerImpl</headless-implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.problems.WolfTheProblemSolver</interface-class>
+      <implementation-class>com.intellij.codeInsight.problems.WolfTheProblemSolverImpl</implementation-class>
+      <headless-implementation-class>com.intellij.codeInsight.problems.MockWolfTheProblemSolver</headless-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.pom.tree.TreeAspect</interface-class>
+      <implementation-class>com.intellij.pom.tree.TreeAspect</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.psi.impl.source.PostprocessReformattingAspect</implementation-class>
+      <loadForDefaultProject/>
+      <!-- <skipForDefaultProject/> -->
+    </component>
+
+    <component>
+      <interface-class>com.intellij.codeInsight.daemon.DaemonCodeAnalyzer</interface-class>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl</implementation-class>
+      <option name="workspace" value="true"/>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.DaemonListeners</implementation-class>
+      <option name="workspace" value="true"/>
+      <!--<loadForDefaultProject/>-->
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.EditorTracker</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.LineMarkersPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.VisibleLineMarkersPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.ShowIntentionsPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.refactoring.changeSignature.ChangeSignaturePassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.CodeFoldingPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.IndentsPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.InjectedCodeFoldingPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.LocalInspectionsPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.WholeFileLocalInspectionsPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.ExternalToolPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.WolfPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.ShowAutoImportPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.codeInsight.daemon.impl.SlowLineMarkersPassFactory</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.codeInsight.template.TemplateManager</interface-class>
+      <implementation-class>com.intellij.codeInsight.template.impl.TemplateManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.util.indexing.FileBasedIndexProjectHandler</implementation-class>
+      <compiler-server-implementation-class></compiler-server-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.codeInsight.navigation.CtrlMouseHandler</interface-class>
+      <implementation-class>com.intellij.codeInsight.navigation.CtrlMouseHandler</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.pom.wrappers.PsiEventWrapperAspect</interface-class>
+      <implementation-class>com.intellij.pom.wrappers.PsiEventWrapperAspect</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.VcsEventWatcher</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.codeInsight.preview.ImageOrColorPreviewProjectComponent</interface-class>
+      <implementation-class>com.intellij.codeInsight.preview.ImageOrColorPreviewProjectComponent</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.refactoring.changeSignature.ChangeSignatureGestureDetector</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.impl.ModuleVcsDetector</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.profile.codeInspection.InspectionProjectProfileManager</interface-class>
+      <implementation-class>com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl</implementation-class>
+      <loadForDefaultProject/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.internal.statistic.updater.SendStatisticsProjectComponent</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.ProjectLevelVcsManager</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl</implementation-class>
+      <option name="workspace" value="true"/>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.VcsChangeDetailsManager</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.VcsChangeDetailsManager</implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+    <!-- <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.dbCommitted.HistoryCacheManager</implementation-class>
+      <option name="workspace" value="true"/>
+    </component> -->
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.impl.VcsDirectoryMappingStorage</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.impl.LineStatusTrackerManagerI</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.impl.LineStatusTrackerManager</implementation-class>
+      <option name="workspace" value="true"/>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.update.RestoreUpdateTree</implementation-class>
+      <option name="workspace" value="true"/>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.ChangeListManager</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.ChangeListManagerImpl</implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.ChangesViewManager</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
+      <option name="workspace" value="true"/>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeManager</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeManagerImpl</implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.patch.CreatePatchCommitExecutor</implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager</implementation-class>
+      <option name="workspace" value="true"/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.shelf.ShelvedChangesViewManager</implementation-class>
+      <headless-implementation-class></headless-implementation-class>
+      <option name="workspace" value="true"/>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.changes.ui.ChangesViewContentI</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.vcs.changes.ui.DummyChangesViewContentManager</headless-implementation-class>
+      <option name="workspace" value="true"/>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.committed.CommittedChangesCache</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier</implementation-class>
+      <skipForDefaultProject/>
+      <headless-implementation-class/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator</implementation-class>
+      <headless-implementation-class/>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>
+      <skipForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.impl.VcsBaseContentProvider</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotation</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationImpl</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.vcs.contentAnnotation.ContentAnnotationCache</interface-class>
+      <implementation-class>com.intellij.openapi.vcs.contentAnnotation.ContentAnnotationCacheImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.execution.RunManager</interface-class>
+      <implementation-class>com.intellij.execution.impl.RunManagerImpl</implementation-class>
+      <option name="workspace" value="true"/>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <interface-class>com.intellij.execution.ExecutionTargetManager</interface-class>
+      <implementation-class>com.intellij.execution.ExecutionTargetManagerImpl</implementation-class>
+      <option name="workspace" value="true"/>
+      <loadForDefaultProject/>
+    </component>
+    <component>
+      <implementation-class>com.intellij.execution.impl.ProjectRunConfigurationManager</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.execution.ExecutionManager</interface-class>
+      <implementation-class>com.intellij.execution.impl.ExecutionManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.ide.favoritesTreeView.FavoritesManager</implementation-class>
+      <option name="workspace" value="true"/>
+      <skipForDefaultProject/>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.xdebugger.XDebuggerManager</interface-class>
+      <implementation-class>com.intellij.xdebugger.impl.XDebuggerManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.packaging.artifacts.ArtifactManager</interface-class>
+      <implementation-class>com.intellij.packaging.impl.artifacts.ArtifactManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.compiler.impl.CompilerCacheManager</interface-class>
+      <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>org.consulo.compiler.server.rmi.CompilerClientConnector</interface-class>
+      <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerClientConnectorImpl</implementation-class>
+    </component>
+  </project-components>
+</idea-plugin>

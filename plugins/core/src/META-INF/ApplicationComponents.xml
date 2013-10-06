@@ -1,0 +1,318 @@
+<!--
+  ~ Copyright 2013 Consulo.org
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<idea-plugin>
+  <application-components>
+    <component>
+      <implementation-class>com.intellij.openapi.components.impl.ServiceManagerImpl</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.util.registry.RegistryState</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.application.ApplicationInfo</interface-class>
+      <implementation-class>com.intellij.openapi.application.impl.ApplicationInfoImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.project.ProjectManager</interface-class>
+      <implementation-class>com.intellij.openapi.project.impl.ProjectManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.fileTypes.FileTypeManager</interface-class>
+      <implementation-class>com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.vfs.VirtualFileManager</interface-class>
+      <implementation-class>com.intellij.openapi.vfs.PlatformVirtualFileManager</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.vfs.pointers.VirtualFilePointerManager</interface-class>
+      <implementation-class>com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerVirtualFilePointerManager</compiler-server-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.vfs.newvfs.ManagingFS</interface-class>
+      <implementation-class>com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerManagingFSImpl</compiler-server-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.vfs.LocalFileSystem</interface-class>
+      <implementation-class>com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerLocalFileSystemImpl</compiler-server-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.vfs.JarFileSystem</interface-class>
+      <implementation-class>com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.vfs.ex.temp.TempFileSystem</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.DataManager</interface-class>
+      <implementation-class>com.intellij.ide.impl.DataManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.idea.CommandLineApplication$MyDataManagerImpl</headless-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.keymap.KeymapManager</interface-class>
+      <implementation-class>com.intellij.openapi.keymap.impl.KeymapManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.actionSystem.ActionManager</interface-class>
+      <implementation-class>com.intellij.openapi.actionSystem.impl.ActionManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.fileEditor.FileDocumentManager</interface-class>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.editor.EditorFactory</interface-class>
+      <implementation-class>com.intellij.openapi.editor.impl.EditorFactoryImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.history.LocalHistory</interface-class>
+      <implementation-class>com.intellij.history.integration.LocalHistoryImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.command.undo.UndoManager</interface-class>
+      <implementation-class>com.intellij.openapi.command.impl.UndoManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.command.undo.DocumentReferenceManager</interface-class>
+      <implementation-class>com.intellij.openapi.command.impl.DocumentReferenceManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.application.PathMacros</interface-class>
+      <implementation-class>com.intellij.application.options.PathMacrosImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.ui.LafManager</interface-class>
+      <implementation-class>com.intellij.ide.ui.laf.LafManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.ide.ui.laf.HeadlessLafManagerImpl</headless-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.UiActivityMonitor</interface-class>
+      <implementation-class>com.intellij.ide.UiActivityMonitorImpl</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.diagnostic.PerformanceWatcher</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.notification.NotificationsConfiguration</interface-class>
+      <implementation-class>com.intellij.notification.impl.NotificationsConfigurationImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.notification.NotificationsManager</interface-class>
+      <implementation-class>com.intellij.notification.impl.NotificationsManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent</interface-class>
+      <implementation-class>com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent</interface-class>
+      <implementation-class>com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.ClipboardSynchronizer</interface-class>
+      <implementation-class>com.intellij.ide.ClipboardSynchronizer</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.util.FoundationLoader</implementation-class>
+      <headless-implementation-class/>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.notification.EventLog</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.util.net.HttpConfigurable</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.ide.SwingCleanuper</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.util.DimensionService</interface-class>
+      <implementation-class>com.intellij.openapi.util.DimensionService</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.ui.UISettings</interface-class>
+      <implementation-class>com.intellij.ide.ui.UISettings</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.ide.IdeTooltipManager</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.actionSystem.impl.MouseGestureManager</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
+      <implementation-class>com.intellij.ide.SaveAndSyncHandlerImpl</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.ide.FrameStateManager</interface-class>
+      <implementation-class>com.intellij.ide.FrameStateManagerImpl</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.ide.GeneralSettings</interface-class>
+      <implementation-class>com.intellij.ide.GeneralSettings</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.ide.MacOSApplicationProvider</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.ui.switcher.QuickAccessSettings</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.updateSettings.impl.UpdateCheckerComponent</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.wm.WindowManager</interface-class>
+      <implementation-class>com.intellij.openapi.wm.impl.WindowManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.wm.impl.TestWindowManager</headless-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.ide.RecentProjectsManagerBase</interface-class>
+      <implementation-class>com.intellij.ide.RecentDirectoryProjectsManagerEx</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.editor.ex.EditorSettingsExternalizable</interface-class>
+      <implementation-class>com.intellij.openapi.editor.ex.EditorSettingsExternalizable</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.ide.actionMacro.ActionMacroManager</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.actionSystem.ex.QuickListsManager</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.editor.impl.VisibleEditorsTracker</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.fileEditor.impl.text.TextEditorProvider</interface-class>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorProvider</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.formatting.FormatterEx</interface-class>
+      <implementation-class>com.intellij.formatting.FormatterImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.util.indexing.FileBasedIndex</interface-class>
+      <implementation-class>com.intellij.util.indexing.FileBasedIndexImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.fileSystem.CompilerServerFileBasedIndexImpl</compiler-server-implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.psi.stubs.StubIndex</interface-class>
+      <implementation-class>com.intellij.psi.stubs.StubIndexImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.index.CompilerServerStubIndexImpl</compiler-server-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.tools.ToolManager</interface-class>
+      <implementation-class>com.intellij.tools.ToolManager</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.psi.stubs.SerializationManager</interface-class>
+      <implementation-class>com.intellij.psi.stubs.SerializationManagerImpl</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.roots.impl.libraries.LibraryKindLoader</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeVfsListener</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.lifecycle.PeriodicalTasksCloser</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.execution.ExecutorRegistry</interface-class>
+      <implementation-class>com.intellij.execution.ExecutorRegistryImpl</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.execution.RunnerRegistry</interface-class>
+      <implementation-class>com.intellij.execution.impl.RunnerRegistryImpl</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
+      <implementation-class>com.intellij.openapi.wm.impl.FocusManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
+    </component>
+
+    <component>
+      <interface-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
+      <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</implementation-class>
+    </component>
+
+    <component>
+      <interface-class>org.consulo.compiler.server.rmi.CompilerServerConnector</interface-class>
+      <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
+      <compiler-server-implementation-class></compiler-server-implementation-class>
+    </component>
+
+    <!--Remote servers-->
+    <component>
+      <implementation-class>com.intellij.remoteServer.impl.configuration.deployment.DeployToServerConfigurationTypesRegistrar</implementation-class>
+    </component>
+  </application-components>
+</idea-plugin>
