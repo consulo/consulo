@@ -59,10 +59,6 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     super(uiSettings);
     init();
     myActionsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-    final JButton jbButton = new JButton("Install JetBrains plugin...");
-    jbButton.setMnemonic('j');
-    jbButton.addActionListener(new BrowseRepoListener("JetBrains"));
-    myActionsPanel.add(jbButton);
 
     final JButton button = new JButton("Browse repositories...");
     button.setMnemonic('b');

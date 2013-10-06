@@ -146,8 +146,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ATTRIBUTE_RELEASE_URL = "release-url";
   @NonNls private static final String ATTRIBUTE_EAP_URL = "eap-url";
   @NonNls private static final String ELEMENT_PLUGINS = "plugins";
-  @NonNls private static final String ATTRIBUTE_LIST_URL = "list-url";
-  @NonNls private static final String ATTRIBUTE_DOWNLOAD_URL = "download-url";
   @NonNls private static final String ATTRIBUTE_WEBHELP_URL = "webhelp-url";
   @NonNls private static final String ATTRIBUTE_HAS_HELP = "has-help";
   @NonNls private static final String ATTRIBUTE_HAS_CONTEXT_HELP = "has-context-help";
@@ -155,7 +153,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ELEMENT_KEYMAP = "keymap";
   @NonNls private static final String ATTRIBUTE_WINDOWS_URL = "win";
   @NonNls private static final String ATTRIBUTE_MAC_URL = "mac";
-  @NonNls private static final String DEFAULT_PLUGINS_HOST = "http://plugins.jetbrains.com";
+  @NonNls private static final String DEFAULT_PLUGINS_HOST = "http://naco.ws/consulo/plugins/";
   @NonNls private static final String ESSENTIAL_PLUGIN = "essential-plugin";
 
   @NonNls private static final String ELEMENT_STATISTICS = "statistics";
@@ -595,24 +593,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       myWhatsNewUrl = whatsnewElement.getAttributeValue(ATTRIBUTE_URL);
     }
 
-    myPluginsListUrl = DEFAULT_PLUGINS_HOST + "/plugins/list/";
-    myPluginsDownloadUrl = DEFAULT_PLUGINS_HOST + "/pluginManager/";
-
-    Element pluginsElement = parentNode.getChild(ELEMENT_PLUGINS);
-    if (pluginsElement != null) {
-      myPluginManagerUrl = pluginsElement.getAttributeValue(ATTRIBUTE_URL);
-      final String listUrl = pluginsElement.getAttributeValue(ATTRIBUTE_LIST_URL);
-      if (listUrl != null) {
-        myPluginsListUrl = listUrl;
-      }
-      final String downloadUrl = pluginsElement.getAttributeValue(ATTRIBUTE_DOWNLOAD_URL);
-      if (downloadUrl != null) {
-        myPluginsDownloadUrl = downloadUrl;
-      }
-    }
-    else {
-      myPluginManagerUrl = DEFAULT_PLUGINS_HOST;
-    }
+    myPluginsListUrl = DEFAULT_PLUGINS_HOST + "list";
+    myPluginsDownloadUrl = DEFAULT_PLUGINS_HOST + "download";
 
     final String pluginsHost = System.getProperty("idea.plugins.host");
     if (pluginsHost != null) {
