@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class ExpandMacroToPathMap extends PathMacroMap {
   private final Map<String, String> myPlainMap = ContainerUtilRt.newLinkedHashMap();
-  private final Map<String, String> myMacroExpands = ContainerUtil.newHashMap();
+  private final Map<String, String> myMacroExpands = ContainerUtil.newLinkedHashMap();
 
   public void addMacroExpand(String macroName, String path) {
     myMacroExpands.put(macroName, PathMacroMap.quotePath(path));
@@ -55,8 +55,8 @@ public class ExpandMacroToPathMap extends PathMacroMap {
       text = StringUtil.replace(text, entry.getKey(), entry.getValue(), false);
     }
 
-    for (String macroName : myMacroExpands.keySet()) {
-      text = replaceMacro(text, macroName, myMacroExpands.get(macroName));
+    for (Map.Entry<String, String> entry : myMacroExpands.entrySet()) {
+      text = replaceMacro(text, entry.getKey(), entry.getValue());
     }
 
     return text;

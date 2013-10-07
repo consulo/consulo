@@ -21,6 +21,7 @@ package com.intellij.lang;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.KeyedExtensionCollector;
+import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,6 +67,7 @@ public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
   }
 
   @NotNull
+  @Immutable
   public List<T> allForLanguage(Language l) {
     List<T> list = forKey(l);
     if (list.isEmpty()) {
