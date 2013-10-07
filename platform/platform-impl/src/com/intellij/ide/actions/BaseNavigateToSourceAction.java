@@ -41,10 +41,6 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     boolean enabled = target != null;
     if (ActionPlaces.isPopupPlace(event.getPlace())) {
       event.getPresentation().setVisible(enabled);
-      if (!(this instanceof OpenModuleSettingsAction) && OpenModuleSettingsAction.isModuleInProjectViewPopup(event)) {
-        event.getPresentation().setVisible(false);
-        return;
-      }
     }
     else {
       event.getPresentation().setEnabled(enabled);

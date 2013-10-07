@@ -16,13 +16,13 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleNavigatable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.pom.Navigatable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,6 +36,12 @@ public class OpenModuleSettingsAction extends EditSourceAction {
     }
   }
 
+  @Nullable
+  @Override
+  protected Navigatable[] getNavigatables(DataContext dataContext) {
+    return new Navigatable[]{new ModuleNavigatable(LangDataKeys.MODULE.getData(dataContext))};
+  }
+
   protected static boolean isModuleInProjectViewPopup(AnActionEvent e) {
     if (ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace())) {
       final Project project = getEventProject(e);
@@ -45,8 +51,7 @@ public class OpenModuleSettingsAction extends EditSourceAction {
         if (moduleFolder == null) {
           return false;
         }
-        if (ProjectRootsUtil.isModuleContentRoot(moduleFolder, project)
-            || ProjectRootsUtil.isSourceOrTestRoot(moduleFolder, project)) {
+        if (ProjectRootsUtil.isModuleContentRoot(moduleFolder, project) || ProjectRootsUtil.isSourceOrTestRoot(moduleFolder, project)) {
           return true;
         }
       }
