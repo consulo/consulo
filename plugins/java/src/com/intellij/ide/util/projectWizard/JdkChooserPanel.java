@@ -16,20 +16,16 @@
 package com.intellij.ide.util.projectWizard;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.ui.ProjectJdksEditor;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ListScrollingUtil;
@@ -239,7 +235,7 @@ public class JdkChooserPanel extends JPanel {
   }
 
   public static Sdk chooseAndSetJDK(final Project project) {
-    final Sdk projectJdk = ProjectRootManager.getInstance(project).getProjectSdk();
+    /*final Sdk projectJdk = ProjectRootManager.getInstance(project).getProjectSdk();
     final Sdk jdk = showDialog(project, ProjectBundle.message("module.libraries.target.jdk.select.title"), WindowManagerEx.getInstanceEx().getFrame(project), projectJdk);
     if (jdk == null) {
       return null;
@@ -248,8 +244,8 @@ public class JdkChooserPanel extends JPanel {
       public void run() {
         ProjectRootManager.getInstance(project).setProjectSdk(jdk);
       }
-    });
-    return jdk;
+    }); */
+    return null;
   }
 
   public class MyDialog extends DialogWrapper implements ListSelectionListener {

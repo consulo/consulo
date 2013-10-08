@@ -208,10 +208,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   }
 
-  @Override
-  public void setProjectSdkName(String name) {
 
-  }
 
   @Override
   public void projectOpened() {

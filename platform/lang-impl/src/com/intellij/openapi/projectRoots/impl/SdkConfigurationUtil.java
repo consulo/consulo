@@ -22,19 +22,16 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.NullableConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -174,64 +171,6 @@ public class SdkConfigurationUtil {
       return null;
     }
     return sdk;
-  }
-
-  public static void setDirectoryProjectSdk(@NotNull final Project project, @Nullable final Sdk sdk) {
-    /*TODO [VISTALL] new api
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        ProjectRootManager.getInstance(project).setProjectSdk(sdk);
-        final Module[] modules = ModuleManager.getInstance(project).getModules();
-        if (modules.length > 0) {
-          ModuleRootModificationUtil.setSdkInherited(modules[0]);
-        }
-      }
-    }); */
-  }
-
-  public static void configureDirectoryProjectSdk(final Project project,
-                                                  @Nullable Comparator<Sdk> preferredSdkComparator,
-                                                  final SdkType... sdkTypes) {
-    Sdk existingSdk = ProjectRootManager.getInstance(project).getProjectSdk();
-    if (existingSdk != null && ArrayUtil.contains(existingSdk.getSdkType(), sdkTypes)) {
-      return;
-    }
-
-    Sdk sdk = findOrCreateSdk(preferredSdkComparator, sdkTypes);
-    if (sdk != null) {
-      setDirectoryProjectSdk(project, sdk);
-    }
-  }
-
-  @Nullable
-  public static Sdk findOrCreateSdk(@Nullable Comparator<Sdk> comparator, final SdkType... sdkTypes) {
-    final Project defaultProject = ProjectManager.getInstance().getDefaultProject();
-    final Sdk sdk = ProjectRootManager.getInstance(defaultProject).getProjectSdk();
-    if (sdk != null) {
-      for (SdkType type : sdkTypes) {
-        if (sdk.getSdkType() == type) {
-          return sdk;
-        }
-      }
-    }
-    for (SdkType type : sdkTypes) {
-      List<Sdk> sdks = SdkTable.getInstance().getSdksOfType(type);
-      if (!sdks.isEmpty()) {
-        if (comparator != null) {
-          Collections.sort(sdks, comparator);
-        }
-        return sdks.get(0);
-      }
-    }
-    for (SdkType sdkType : sdkTypes) {
-      final String suggestedHomePath = sdkType.suggestHomePath();
-      if (suggestedHomePath != null && sdkType.isValidSdkHome(suggestedHomePath)) {
-        Sdk an_sdk = createAndAddSDK(suggestedHomePath, sdkType, false);
-        if (an_sdk != null) return an_sdk;
-      }
-    }
-    return null;
   }
 
   /**

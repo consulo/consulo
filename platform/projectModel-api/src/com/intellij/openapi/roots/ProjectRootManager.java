@@ -107,12 +107,6 @@ public abstract class ProjectRootManager implements ModificationTracker {
   @Deprecated
   public abstract Sdk getProjectSdk();
 
-  @Deprecated
-  @Nullable
-  public Sdk getProjectJdk() {
-    return getProjectSdk();
-  }
-
   /**
    * Returns the name of the SDK selected for the project.
    *
@@ -121,10 +115,6 @@ public abstract class ProjectRootManager implements ModificationTracker {
   @Deprecated
   public abstract String getProjectSdkName();
 
-  @Deprecated
-  public String getProjectJdkName() {
-    return getProjectSdkName();
-  }
 
   /**
    * Sets the SDK to be used for the project.
@@ -133,23 +123,4 @@ public abstract class ProjectRootManager implements ModificationTracker {
    */
   @Deprecated
   public abstract void setProjectSdk(@Nullable Sdk sdk);
-
-
-  @Deprecated
-  public void setProjectJdk(@Nullable Sdk jdk) {
-    setProjectSdk(jdk);
-  }
-
-  /**
-   * Sets the name of the JDK to be used for the project.
-   *
-   * @param name the name of the JDK.
-   */
-  @Deprecated
-  public abstract void setProjectSdkName(String name);
-
-  @Deprecated
-  public void setProjectJdkName(String name) {
-    setProjectSdkName(name);
-  }
 }
