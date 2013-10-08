@@ -29,6 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import org.consulo.lang.LanguageElementIcons;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,7 +71,11 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
 
       iconDescriptor.setMainIcon(symbolIcon);
     }
-    else if (element instanceof PsiFile && iconDescriptor.getMainIcon() == null) {
+    else if (element instanceof PsiFile) {
+      if(iconDescriptor.getMainIcon() != null) {
+        return;
+      }
+
       final VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
       if (virtualFile != null) {
         iconDescriptor.setMainIcon(NativeFileIconUtil.INSTANCE.getIcon(virtualFile));
@@ -80,6 +85,14 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
         final FileType fileType = ((PsiFile)element).getFileType();
         iconDescriptor.setMainIcon(fileType.getIcon());
       }
+    }
+    else {
+      Icon languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
+      if(languageElementIcon == null) {
+        return;
+      }
+
+      iconDescriptor.addLayerIcon(languageElementIcon);
     }
   }
 }
