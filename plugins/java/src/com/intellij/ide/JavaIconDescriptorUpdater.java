@@ -42,6 +42,10 @@ public class JavaIconDescriptorUpdater implements IconDescriptorUpdater {
         return;
       }
 
+      if(element instanceof PsiTypeParameter) {
+        iconDescriptor.setMainIcon(AllIcons.Nodes.TypeAlias);
+        return;
+      }
       final PsiClass psiClass = (PsiClass)element;
       if(psiClass.isEnum()) {
         iconDescriptor.setMainIcon(AllIcons.Nodes.Enum);
