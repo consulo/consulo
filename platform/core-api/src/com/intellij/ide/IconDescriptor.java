@@ -30,7 +30,7 @@ import java.util.List;
  * @since 0:07/19.07.13
  */
 public class IconDescriptor {
-  private final List<Icon> myLayerIcons = new SmartList<Icon>();
+  private List<Icon> myLayerIcons;
   private Icon myRightIcon;
   private Icon myMainIcon;
 
@@ -43,20 +43,31 @@ public class IconDescriptor {
     return myMainIcon;
   }
 
-  public void setMainIcon(@Nullable Icon mainIcon) {
+  public IconDescriptor setMainIcon(@Nullable Icon mainIcon) {
     myMainIcon = mainIcon;
+    return this;
   }
 
-  public void addLayerIcon(@NotNull Icon icon) {
+  public IconDescriptor addLayerIcon(@NotNull Icon icon) {
+    if(myLayerIcons == null) {
+      myLayerIcons = new SmartList<Icon>();
+    }
     myLayerIcons.add(icon);
+    return this;
   }
 
-  public void removeLayerIcon(@NotNull Icon icon) {
-    myLayerIcons.remove(icon);
+  public IconDescriptor removeLayerIcon(@NotNull Icon icon) {
+    if(myLayerIcons != null) {
+      myLayerIcons.remove(icon);
+    }
+    return this;
   }
 
-  public void clearLayerIcons() {
-    myLayerIcons.clear();
+  public IconDescriptor clearLayerIcons() {
+    if(myLayerIcons != null) {
+      myLayerIcons.clear();
+    }
+    return this;
   }
 
   @Nullable
@@ -71,7 +82,7 @@ public class IconDescriptor {
   @NotNull
   public Icon toIcon() {
     Icon mainIcon = null;
-    if(myLayerIcons.isEmpty()) {
+    if(myLayerIcons == null) {
       mainIcon = myMainIcon;
     }
     else {
