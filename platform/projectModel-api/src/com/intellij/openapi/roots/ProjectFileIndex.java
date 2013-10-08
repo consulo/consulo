@@ -87,6 +87,9 @@ public interface ProjectFileIndex extends FileIndex {
   @Nullable
   VirtualFile getContentRootForFile(@NotNull VirtualFile file);
 
+  @Nullable
+  ContentFolderType getContentFolderTypeForFile(@NotNull VirtualFile file);
+
   /**
    * Returns the name of the package corresponding to the specified directory.
    *

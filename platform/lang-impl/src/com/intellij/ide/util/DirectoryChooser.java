@@ -24,8 +24,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.roots.FileIndex;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
@@ -42,7 +44,6 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -324,17 +325,15 @@ public class DirectoryChooser extends DialogWrapper {
       myFragments = fragments;
     }
 
-    public Icon getIcon(FileIndex fileIndex) {
+    public Icon getIcon(ProjectFileIndex fileIndex) {
       if (myDirectory != null) {
         VirtualFile virtualFile = myDirectory.getVirtualFile();
-        if (fileIndex.isInTestSourceContent(virtualFile)){
-          return PlatformIcons.MODULES_TEST_SOURCE_FOLDER;
-        }
-        else if (fileIndex.isInSourceContent(virtualFile)){
-          return PlatformIcons.MODULES_SOURCE_FOLDERS_ICON;
+        ContentFolderType contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(virtualFile);
+        if(contentFolderTypeForFile != null) {
+          return ContentFolderIconUtil.getRootIcon(contentFolderTypeForFile);
         }
       }
-      return PlatformIcons.FOLDER_ICON;
+      return AllIcons.Nodes.Folder;
     }
 
     public String getPresentableUrl() {

@@ -164,6 +164,14 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
     return info.getContentRoot();
   }
 
+  @Nullable
+  @Override
+  public ContentFolderType getContentFolderTypeForFile(@NotNull VirtualFile file) {
+    final DirectoryInfo info = getInfoForFileOrDirectory(file);
+    if (info == null) return null;
+    return info.findContentFolderType();
+  }
+
   @Override
   public String getPackageNameByDirectory(@NotNull VirtualFile dir) {
     LOG.assertTrue(dir.isDirectory());

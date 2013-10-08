@@ -15,16 +15,19 @@
  */
 package com.intellij.navigation;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 
@@ -43,22 +46,14 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     if (ProjectRootsUtil.isModuleContentRoot(directory)) {
       final Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vFile);
       assert module != null : directory;
-      return new PresentationData(module.getName(), locationString,
-                                  PlatformIcons.CONTENT_ROOT_ICON_CLOSED, null);
+      return new PresentationData(module.getName(), locationString, AllIcons.Nodes.Module, null);
     }
 
-    if (ProjectRootsUtil.isSourceRoot(directory)) {
-      if (ProjectRootsUtil.isInTestSource(directory)) {
-        return new PresentationData(directory.getName(), locationString,
-                                    PlatformIcons.MODULES_TEST_SOURCE_FOLDER, null);
-      }
-      else {
-        return new PresentationData(directory.getName(), locationString,
-                                    PlatformIcons.MODULES_SOURCE_FOLDERS_ICON, null);
-      }
+    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    ContentFolderType contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(vFile);
+    if(contentFolderTypeForFile != null) {
+      return new PresentationData(directory.getName(), locationString, ContentFolderIconUtil.getRootIcon(contentFolderTypeForFile), null);
     }
-
-    return new PresentationData(directory.getName(), locationString,
-                                PlatformIcons.DIRECTORY_CLOSED_ICON, null);
+    return new PresentationData(directory.getName(), locationString, AllIcons.Nodes.TreeClosed, null);
   }
 }
