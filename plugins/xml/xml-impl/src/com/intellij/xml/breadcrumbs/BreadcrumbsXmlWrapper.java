@@ -15,7 +15,7 @@
  */
 package com.intellij.xml.breadcrumbs;
 
-import com.intellij.application.options.editor.WebEditorOptions;
+import com.intellij.application.options.editor.XmlEditorOptions;
 import com.intellij.lang.Language;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.Disposable;
@@ -330,11 +330,11 @@ public class BreadcrumbsXmlWrapper implements BreadcrumbsItemListener<Breadcrumb
   public static BreadcrumbsInfoProvider findInfoProvider(@Nullable FileViewProvider viewProvider) {
     BreadcrumbsInfoProvider provider = null;
     if (viewProvider != null) {
-      final WebEditorOptions webEditorOptions = WebEditorOptions.getInstance();
+      final XmlEditorOptions xmlEditorOptions = XmlEditorOptions.getInstance();
       final Language baseLang = viewProvider.getBaseLanguage();
       provider = getInfoProvider(baseLang);
-      if (!webEditorOptions.isBreadcrumbsEnabledInXml() && baseLang == XMLLanguage.INSTANCE) return null;
-      if (!webEditorOptions.isBreadcrumbsEnabled() && baseLang != XMLLanguage.INSTANCE) return null;
+      if (!xmlEditorOptions.isBreadcrumbsEnabledInXml() && baseLang == XMLLanguage.INSTANCE) return null;
+      if (!xmlEditorOptions.isBreadcrumbsEnabled() && baseLang != XMLLanguage.INSTANCE) return null;
       if (provider == null) {
         for (final Language language : viewProvider.getLanguages()) {
           provider = getInfoProvider(language);

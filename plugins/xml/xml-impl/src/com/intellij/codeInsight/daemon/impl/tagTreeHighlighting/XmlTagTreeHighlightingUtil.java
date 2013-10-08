@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl.tagTreeHighlighting;
 
-import com.intellij.application.options.editor.WebEditorOptions;
+import com.intellij.application.options.editor.XmlEditorOptions;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -61,7 +61,7 @@ class XmlTagTreeHighlightingUtil {
       return false;
     }
 
-    if (!WebEditorOptions.getInstance().isTagTreeHighlightingEnabled()) {
+    if (!XmlEditorOptions.getInstance().isTagTreeHighlightingEnabled()) {
       return false;
     }
     return true;

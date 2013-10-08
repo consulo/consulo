@@ -24,7 +24,7 @@ import javax.swing.*;
 /**
  * @author spleaner
  */
-public class WebEditorOptionsProvider implements EditorOptionsProvider {
+public class XmlEditorOptionsProvider implements EditorOptionsProvider {
   private JPanel myWholePanel;
   private JCheckBox myAutomaticallyInsertClosingTagCheckBox;
   private JCheckBox myAutomaticallyInsertRequiredAttributesCheckBox;
@@ -44,10 +44,8 @@ public class WebEditorOptionsProvider implements EditorOptionsProvider {
     return myWholePanel;
   }
 
-
-
   public boolean isModified() {
-    final WebEditorOptions xmlEditorOptions = WebEditorOptions.getInstance();
+    final XmlEditorOptions xmlEditorOptions = XmlEditorOptions.getInstance();
     return xmlEditorOptions.isAutomaticallyInsertClosingTag() != myAutomaticallyInsertClosingTagCheckBox.isSelected() ||
            xmlEditorOptions.isAutomaticallyInsertRequiredAttributes() != myAutomaticallyInsertRequiredAttributesCheckBox.isSelected() ||
            xmlEditorOptions.isAutomaticallyStartAttribute() != myAutomaticallyStartAttributeAfterCheckBox.isSelected() ||
@@ -55,7 +53,7 @@ public class WebEditorOptionsProvider implements EditorOptionsProvider {
   }
 
   public void apply() throws ConfigurationException {
-    final WebEditorOptions xmlEditorOptions = WebEditorOptions.getInstance();
+    final XmlEditorOptions xmlEditorOptions = XmlEditorOptions.getInstance();
     xmlEditorOptions.setAutomaticallyInsertClosingTag(myAutomaticallyInsertClosingTagCheckBox.isSelected());
     xmlEditorOptions.setAutomaticallyInsertRequiredAttributes(myAutomaticallyInsertRequiredAttributesCheckBox.isSelected());
     xmlEditorOptions.setAutomaticallyInsertRequiredSubTags(myAutomaticallyInsertRequiredSubTagsCheckBox.isSelected());
@@ -63,7 +61,7 @@ public class WebEditorOptionsProvider implements EditorOptionsProvider {
   }
 
   public void reset() {
-    final WebEditorOptions xmlEditorOptions = WebEditorOptions.getInstance();
+    final XmlEditorOptions xmlEditorOptions = XmlEditorOptions.getInstance();
     myAutomaticallyInsertClosingTagCheckBox.setSelected(xmlEditorOptions.isAutomaticallyInsertClosingTag());
     myAutomaticallyInsertRequiredAttributesCheckBox.setSelected(xmlEditorOptions.isAutomaticallyInsertRequiredAttributes());
     myAutomaticallyInsertRequiredSubTagsCheckBox.setSelected(xmlEditorOptions.isAutomaticallyInsertRequiredSubTags());

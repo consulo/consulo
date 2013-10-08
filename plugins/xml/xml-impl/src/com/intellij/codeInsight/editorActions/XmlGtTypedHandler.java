@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.application.options.editor.WebEditorOptions;
+import com.intellij.application.options.editor.XmlEditorOptions;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.xml.XMLLanguage;
@@ -45,8 +45,8 @@ public class XmlGtTypedHandler extends TypedHandlerDelegate {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.TypedHandler");
 
   public Result beforeCharTyped(final char c, final Project project, final Editor editor, final PsiFile editedFile, final FileType fileType) {
-    final WebEditorOptions webEditorOptions = WebEditorOptions.getInstance();
-    if (c == '>' && webEditorOptions != null && webEditorOptions.isAutomaticallyInsertClosingTag()
+    final XmlEditorOptions xmlEditorOptions = XmlEditorOptions.getInstance();
+    if (c == '>' && xmlEditorOptions != null && xmlEditorOptions.isAutomaticallyInsertClosingTag()
         && (editedFile.getLanguage() instanceof XMLLanguage || editedFile.getViewProvider().getBaseLanguage() instanceof XMLLanguage)) {
       PsiDocumentManager.getInstance(project).commitAllDocuments();
 

@@ -1,6 +1,6 @@
 package com.intellij.xml.breadcrumbs;
 
-import com.intellij.application.options.editor.WebEditorOptions;
+import com.intellij.application.options.editor.XmlEditorOptions;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.fileEditor.*;
@@ -35,8 +35,8 @@ public class BreadcrumbsLoaderComponent extends AbstractProjectComponent {
   }
 
   private static boolean isEnabled() {
-    final WebEditorOptions webEditorOptions = WebEditorOptions.getInstance();
-    return webEditorOptions.isBreadcrumbsEnabled() || webEditorOptions.isBreadcrumbsEnabledInXml();
+    final XmlEditorOptions xmlEditorOptions = XmlEditorOptions.getInstance();
+    return xmlEditorOptions.isBreadcrumbsEnabled() || xmlEditorOptions.isBreadcrumbsEnabledInXml();
   }
 
   private static class MyFileEditorManagerListener extends FileEditorManagerAdapter {

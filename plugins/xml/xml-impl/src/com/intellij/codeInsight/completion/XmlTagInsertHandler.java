@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.application.options.editor.WebEditorOptions;
+import com.intellij.application.options.editor.XmlEditorOptions;
 import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -212,7 +212,7 @@ public class XmlTagInsertHandler implements InsertHandler<LookupElement> {
     XmlAttributeDescriptor[] attributes = descriptor.getAttributesDescriptors(tag);
     StringBuilder indirectRequiredAttrs = null;
 
-    if (WebEditorOptions.getInstance().isAutomaticallyInsertRequiredAttributes()) {
+    if (XmlEditorOptions.getInstance().isAutomaticallyInsertRequiredAttributes()) {
       final XmlExtension extension = XmlExtension.getExtension(containingFile);
 
       for (XmlAttributeDescriptor attributeDecl : attributes) {
@@ -265,7 +265,7 @@ public class XmlTagInsertHandler implements InsertHandler<LookupElement> {
       if (toInsertCDataEnd) template.addTextSegment("\n]]>");
 
       if ((!(tag instanceof HtmlTag) || !HtmlUtil.isSingleHtmlTag(tag.getName())) && tag.getAttributes().length == 0) {
-        if (WebEditorOptions.getInstance().isAutomaticallyInsertClosingTag()) {
+        if (XmlEditorOptions.getInstance().isAutomaticallyInsertClosingTag()) {
           final String name = descriptor.getName(tag);
           if (name != null) {
             template.addTextSegment("</");
@@ -279,18 +279,18 @@ public class XmlTagInsertHandler implements InsertHandler<LookupElement> {
       template.addTextSegment("/>");
     }
     else if (completionChar == ' ' && template.getSegmentsCount() == 0) {
-      if (WebEditorOptions.getInstance().isAutomaticallyStartAttribute() &&
+      if (XmlEditorOptions.getInstance().isAutomaticallyStartAttribute() &&
           (descriptor.getAttributesDescriptors(tag).length > 0 || isTagFromHtml(tag) && !HtmlUtil.isTagWithoutAttributes(tag.getName()))) {
         completeAttribute(template);
         return true;
       }
     }
     else if (completionChar == Lookup.AUTO_INSERT_SELECT_CHAR || completionChar == Lookup.NORMAL_SELECT_CHAR || completionChar == Lookup.REPLACE_SELECT_CHAR) {
-      if (WebEditorOptions.getInstance().isAutomaticallyInsertClosingTag() && isHtmlCode && HtmlUtil.isSingleHtmlTag(tag.getName())) {
+      if (XmlEditorOptions.getInstance().isAutomaticallyInsertClosingTag() && isHtmlCode && HtmlUtil.isSingleHtmlTag(tag.getName())) {
         template.addTextSegment(tag instanceof HtmlTag ? ">" : "/>");
       }
       else {
-        if (needAlLeastOneAttribute(tag) && WebEditorOptions.getInstance().isAutomaticallyStartAttribute() && tag.getAttributes().length == 0
+        if (needAlLeastOneAttribute(tag) && XmlEditorOptions.getInstance().isAutomaticallyStartAttribute() && tag.getAttributes().length == 0
             && template.getSegmentsCount() == 0) {
           completeAttribute(template);
           return true;
@@ -326,7 +326,7 @@ public class XmlTagInsertHandler implements InsertHandler<LookupElement> {
 
   private static boolean addRequiredSubTags(Template template, XmlElementDescriptor descriptor, PsiFile file, XmlTag context) {
 
-    if (!WebEditorOptions.getInstance().isAutomaticallyInsertRequiredSubTags()) return false;
+    if (!XmlEditorOptions.getInstance().isAutomaticallyInsertRequiredSubTags()) return false;
     List<XmlElementDescriptor> requiredSubTags = GenerateXmlTagAction.getRequiredSubTags(descriptor);
     if (!requiredSubTags.isEmpty()) {
       template.addTextSegment(">");

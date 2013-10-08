@@ -35,12 +35,10 @@ import java.io.File;
       file = StoragePathMacros.APP_CONFIG + "/editor.xml"
     )}
 )
-public class WebEditorOptions implements PersistentStateComponent<WebEditorOptions>, ExportableComponent {
+public class XmlEditorOptions implements PersistentStateComponent<XmlEditorOptions>, ExportableComponent {
 
   private boolean myBreadcrumbsEnabled = true;
   private boolean myBreadcrumbsEnabledInXml = false;
-  private boolean myShowCssColorPreviewInGutter = true;
-  private boolean myShowCssInlineColorPreview = false;
   private boolean myAutomaticallyInsertClosingTag = true;
   private boolean myAutomaticallyInsertRequiredAttributes = true;
   private boolean myAutomaticallyInsertRequiredSubTags = true;
@@ -50,11 +48,11 @@ public class WebEditorOptions implements PersistentStateComponent<WebEditorOptio
   private int myTagTreeHighlightingLevelCount = 6;
   private int myTagTreeHighlightingOpacity = 10;
 
-  public static WebEditorOptions getInstance() {
-    return ServiceManager.getService(WebEditorOptions.class);
+  public static XmlEditorOptions getInstance() {
+    return ServiceManager.getService(XmlEditorOptions.class);
   }
 
-  public WebEditorOptions() {
+  public XmlEditorOptions() {
     setTagTreeHighlightingEnabled(!ApplicationManager.getApplication().isUnitTestMode());
   }
 
@@ -72,22 +70,6 @@ public class WebEditorOptions implements PersistentStateComponent<WebEditorOptio
 
   public boolean isBreadcrumbsEnabledInXml() {
     return myBreadcrumbsEnabledInXml;
-  }
-
-  public boolean isShowCssInlineColorPreview() {
-    return myShowCssInlineColorPreview;
-  }
-
-  public void setShowCssInlineColorPreview(final boolean showCssInlineColorPreview) {
-    myShowCssInlineColorPreview = showCssInlineColorPreview;
-  }
-
-  public boolean isShowCssColorPreviewInGutter() {
-    return myShowCssColorPreviewInGutter;
-  }
-
-  public void setShowCssColorPreviewInGutter(final boolean showCssColorPreviewInGutter) {
-    myShowCssColorPreviewInGutter = showCssColorPreviewInGutter;
   }
 
   public boolean isAutomaticallyInsertClosingTag() {
@@ -166,11 +148,11 @@ public class WebEditorOptions implements PersistentStateComponent<WebEditorOptio
     }
   }
 
-  public WebEditorOptions getState() {
+  public XmlEditorOptions getState() {
     return this;
   }
 
-  public void loadState(final WebEditorOptions state) {
+  public void loadState(final XmlEditorOptions state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 }

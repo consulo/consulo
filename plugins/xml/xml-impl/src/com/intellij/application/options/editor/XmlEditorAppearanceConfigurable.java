@@ -22,12 +22,11 @@ import com.intellij.xml.XmlBundle;
 /**
  * @author yole
  */
-public class WebEditorAppearanceConfigurable extends BeanConfigurable<WebEditorOptions> implements UnnamedConfigurable {
-  public WebEditorAppearanceConfigurable() {
-    super(WebEditorOptions.getInstance());
+public class XmlEditorAppearanceConfigurable extends BeanConfigurable<XmlEditorOptions> implements UnnamedConfigurable {
+  public XmlEditorAppearanceConfigurable() {
+    super(XmlEditorOptions.getInstance());
+
     checkBox("breadcrumbsEnabled", XmlBundle.message("xml.editor.options.breadcrumbs.title"));
     checkBox("breadcrumbsEnabledInXml", XmlBundle.message("xml.editor.options.breadcrumbs.for.xml.title"));
-    checkBox("showCssColorPreviewInGutter", "Show CSS color preview icon in gutter");
-    checkBox("showCssInlineColorPreview", "Show CSS color preview as background");
   }
 }

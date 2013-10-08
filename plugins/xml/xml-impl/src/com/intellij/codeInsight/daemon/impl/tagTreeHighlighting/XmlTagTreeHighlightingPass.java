@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl.tagTreeHighlighting;
 
-import com.intellij.application.options.editor.WebEditorOptions;
+import com.intellij.application.options.editor.XmlEditorOptions;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
@@ -79,7 +79,7 @@ public class XmlTagTreeHighlightingPass extends TextEditorHighlightingPass {
       return;
     }
 
-    if (!WebEditorOptions.getInstance().isTagTreeHighlightingEnabled()) {
+    if (!XmlEditorOptions.getInstance().isTagTreeHighlightingEnabled()) {
       return;
     }
 
@@ -278,7 +278,7 @@ public class XmlTagTreeHighlightingPass extends TextEditorHighlightingPass {
 
     final Color[] resultColors = new Color[baseColors.length];
     // todo: make configurable
-    final double transparency = WebEditorOptions.getInstance().getTagTreeHighlightingOpacity() * 0.01;
+    final double transparency = XmlEditorOptions.getInstance().getTagTreeHighlightingOpacity() * 0.01;
 
     for (int i = 0; i < resultColors.length; i++) {
       final Color color = baseColors[i];

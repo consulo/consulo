@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl.tagTreeHighlighting;
 
-import com.intellij.application.options.editor.WebEditorOptions;
+import com.intellij.application.options.editor.XmlEditorOptions;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -61,7 +61,7 @@ public class XmlTagTreeHighlightingConfigurable implements UnnamedConfigurable {
 
   @Override
   public boolean isModified() {
-    final WebEditorOptions options = WebEditorOptions.getInstance();
+    final XmlEditorOptions options = XmlEditorOptions.getInstance();
 
     if (myEnableTagTreeHighlightingCheckBox.isSelected() != options.isTagTreeHighlightingEnabled()) {
       return true;
@@ -80,7 +80,7 @@ public class XmlTagTreeHighlightingConfigurable implements UnnamedConfigurable {
 
   @Override
   public void apply() throws ConfigurationException {
-    final WebEditorOptions options = WebEditorOptions.getInstance();
+    final XmlEditorOptions options = XmlEditorOptions.getInstance();
 
     options.setTagTreeHighlightingEnabled(myEnableTagTreeHighlightingCheckBox.isSelected());
     options.setTagTreeHighlightingLevelCount(getLevelCount());
@@ -115,7 +115,7 @@ public class XmlTagTreeHighlightingConfigurable implements UnnamedConfigurable {
 
   @Override
   public void reset() {
-    final WebEditorOptions options = WebEditorOptions.getInstance();
+    final XmlEditorOptions options = XmlEditorOptions.getInstance();
     final boolean enabled = options.isTagTreeHighlightingEnabled();
 
     myEnableTagTreeHighlightingCheckBox.setSelected(enabled);
