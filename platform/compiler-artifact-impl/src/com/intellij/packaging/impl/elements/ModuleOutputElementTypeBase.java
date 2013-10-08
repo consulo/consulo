@@ -55,7 +55,7 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
 
   public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
     for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
-      if(entry.getFolders(ContentFolderType.TEST).length != 0) {
+      if(entry.getFolders(getContentFolderType()).length != 0) {
         return true;
       }
     }
