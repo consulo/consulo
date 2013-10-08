@@ -117,6 +117,17 @@ public class DummyCompileContext implements CompileContext {
   }
 
   @Override
+  public VirtualFile getOutputForFile(Module module, VirtualFile virtualFile) {
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType) {
+    return null;
+  }
+
+  @Override
   public <T> T getUserData(@NotNull Key<T> key) {
     return null;
   }

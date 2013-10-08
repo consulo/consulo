@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.elements;
+package com.intellij.packaging.impl.elements.moduleContent.elementImpl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.ArtifactAntGenerationContext;
+import com.intellij.packaging.impl.elements.ModuleOutputPackagingElementBase;
+import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author VISTALL
- * @since 9:56/31.05.13
+ * @author nik
  */
-public class ResourceModuleOutputPackagingElement extends ModuleOutputPackagingElementBase {
-  public ResourceModuleOutputPackagingElement(@NotNull Project project) {
-    super(ResourceModuleOutputElementType.ELEMENT_TYPE, project);
+public class ProductionModuleOutputPackagingElement extends ModuleOutputPackagingElementBase {
+  public ProductionModuleOutputPackagingElement(@NotNull Project project) {
+    super(ProductionModuleOutputElementType.ELEMENT_TYPE, project);
   }
 
-  public ResourceModuleOutputPackagingElement(@NotNull Project project, @NotNull NamedPointer<Module> modulePointer) {
-    super(ResourceModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
+  public ProductionModuleOutputPackagingElement(@NotNull Project project, @NotNull NamedPointer<Module> modulePointer) {
+    super(ProductionModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
   }
 
   @Override
@@ -42,7 +43,6 @@ public class ResourceModuleOutputPackagingElement extends ModuleOutputPackagingE
 
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.PRODUCTION_RESOURCE;
+    return ContentFolderType.PRODUCTION;
   }
-
 }

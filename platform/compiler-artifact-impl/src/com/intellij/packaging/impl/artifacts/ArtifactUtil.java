@@ -31,6 +31,7 @@ import com.intellij.packaging.artifacts.ArtifactProperties;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.elements.*;
+import com.intellij.packaging.impl.elements.moduleContent.elementImpl.ProductionModuleOutputPackagingElement;
 import com.intellij.util.PathUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;

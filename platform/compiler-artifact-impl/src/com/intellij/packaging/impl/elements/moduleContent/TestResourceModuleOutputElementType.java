@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.elements;
+package com.intellij.packaging.impl.elements.moduleContent;
 
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.packaging.impl.elements.moduleContent.elementImpl.TestResourceModuleOutputPackagingElement;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,27 +27,27 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 9:54/31.05.13
  */
-public class ResourceModuleOutputElementType extends ModuleOutputElementTypeBase<ResourceModuleOutputPackagingElement> {
-  public static final ResourceModuleOutputElementType ELEMENT_TYPE = new ResourceModuleOutputElementType();
+public class TestResourceModuleOutputElementType extends ModuleOutputElementTypeBase<TestResourceModuleOutputPackagingElement> {
+  public static final TestResourceModuleOutputElementType ELEMENT_TYPE = new TestResourceModuleOutputElementType();
 
-  ResourceModuleOutputElementType() {
-    super("module-resource-output", CompilerBundle.message("element.type.name.module.resource.output"));
+  TestResourceModuleOutputElementType() {
+    super("module-test-resource-output", CompilerBundle.message("element.type.name.module.test.resource.output"));
   }
 
   @Override
   @NotNull
-  public ResourceModuleOutputPackagingElement createEmpty(@NotNull Project project) {
-    return new ResourceModuleOutputPackagingElement(project);
+  public TestResourceModuleOutputPackagingElement createEmpty(@NotNull Project project) {
+    return new TestResourceModuleOutputPackagingElement(project);
   }
 
   @Override
-  protected ResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
-    return new ResourceModuleOutputPackagingElement(project, pointer);
+  protected TestResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
+    return new TestResourceModuleOutputPackagingElement(project, pointer);
   }
 
   @NotNull
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.PRODUCTION_RESOURCE;
+    return ContentFolderType.TEST_RESOURCE;
   }
 }

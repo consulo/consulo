@@ -23,6 +23,7 @@ import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -151,6 +152,17 @@ public class CompileContextExProxy implements CompileContextEx {
   @Override
   public VirtualFile getModuleOutputDirectoryForTests(final Module module) {
     return myDelegate.getModuleOutputDirectoryForTests(module);
+  }
+
+  @Override
+  public VirtualFile getOutputForFile(Module module, VirtualFile virtualFile) {
+    return myDelegate.getOutputForFile(module, virtualFile);
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType) {
+    return myDelegate.getOutputForFile(module, contentFolderType);
   }
 
   @Override

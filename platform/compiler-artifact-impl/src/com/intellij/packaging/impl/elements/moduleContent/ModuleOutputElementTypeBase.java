@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.elements;
+package com.intellij.packaging.impl.elements.moduleContent;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -27,6 +27,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
+import com.intellij.packaging.impl.elements.ModuleOutputPackagingElementBase;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;

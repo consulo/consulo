@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.elements;
+package com.intellij.packaging.impl.elements.moduleContent.elementImpl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.ArtifactAntGenerationContext;
+import com.intellij.packaging.impl.elements.ModuleOutputPackagingElementBase;
+import com.intellij.packaging.impl.elements.moduleContent.TestResourceModuleOutputElementType;
 import org.consulo.util.pointers.NamedPointer;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 9:56/31.05.13
  */
-public class TestModuleOutputPackagingElement extends ModuleOutputPackagingElementBase {
-  public TestModuleOutputPackagingElement(Project project) {
-    super(TestModuleOutputElementType.ELEMENT_TYPE, project);
+public class TestResourceModuleOutputPackagingElement extends ModuleOutputPackagingElementBase {
+  public TestResourceModuleOutputPackagingElement(@NotNull Project project) {
+    super(TestResourceModuleOutputElementType.ELEMENT_TYPE, project);
   }
 
-  public TestModuleOutputPackagingElement(Project project, NamedPointer<Module> modulePointer) {
-    super(TestModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
+  public TestResourceModuleOutputPackagingElement(@NotNull Project project, @NotNull NamedPointer<Module> modulePointer) {
+    super(TestResourceModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
   }
 
   @Override
@@ -40,6 +44,7 @@ public class TestModuleOutputPackagingElement extends ModuleOutputPackagingEleme
 
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.TEST;
+    return ContentFolderType.TEST_RESOURCE;
   }
+
 }

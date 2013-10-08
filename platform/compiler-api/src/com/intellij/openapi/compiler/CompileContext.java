@@ -18,6 +18,7 @@ package com.intellij.openapi.compiler;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -130,6 +131,7 @@ public interface CompileContext extends UserDataHolder {
    * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
    */
   @Nullable
+  @Deprecated
   VirtualFile getModuleOutputDirectory(Module module);
 
   /**
@@ -140,7 +142,14 @@ public interface CompileContext extends UserDataHolder {
    *         output directory for tests is not configured explicitly, but the output path is present, the output path will be returned.
    */
   @Nullable
+  @Deprecated
   VirtualFile getModuleOutputDirectoryForTests(Module module);
+
+  @Nullable
+  VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
+
+  @Nullable
+  VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType);
 
   /**
    * Checks if the compilation is incremental, i.e. triggered by one of "Make" actions.

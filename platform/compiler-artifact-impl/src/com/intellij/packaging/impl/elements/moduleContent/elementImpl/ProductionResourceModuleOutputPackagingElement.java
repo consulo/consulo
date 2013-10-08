@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013 Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.elements;
+package com.intellij.packaging.impl.elements.moduleContent.elementImpl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.ArtifactAntGenerationContext;
+import com.intellij.packaging.impl.elements.ModuleOutputPackagingElementBase;
+import com.intellij.packaging.impl.elements.moduleContent.ProductionResourceModuleOutputElementType;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 9:56/31.05.13
  */
-public class ProductionModuleOutputPackagingElement extends ModuleOutputPackagingElementBase {
-  public ProductionModuleOutputPackagingElement(@NotNull Project project) {
-    super(ProductionModuleOutputElementType.ELEMENT_TYPE, project);
+public class ProductionResourceModuleOutputPackagingElement extends ModuleOutputPackagingElementBase {
+  public ProductionResourceModuleOutputPackagingElement(@NotNull Project project) {
+    super(ProductionResourceModuleOutputElementType.ELEMENT_TYPE, project);
   }
 
-  public ProductionModuleOutputPackagingElement(@NotNull Project project, @NotNull NamedPointer<Module> modulePointer) {
-    super(ProductionModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
+  public ProductionResourceModuleOutputPackagingElement(@NotNull Project project, @NotNull NamedPointer<Module> modulePointer) {
+    super(ProductionResourceModuleOutputElementType.ELEMENT_TYPE, project, modulePointer);
   }
 
   @Override
@@ -41,6 +44,7 @@ public class ProductionModuleOutputPackagingElement extends ModuleOutputPackagin
 
   @Override
   protected ContentFolderType getContentFolderType() {
-    return ContentFolderType.PRODUCTION;
+    return ContentFolderType.PRODUCTION_RESOURCE;
   }
+
 }

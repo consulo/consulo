@@ -467,6 +467,22 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
 
   @Override
+  public VirtualFile getOutputForFile(Module module, VirtualFile virtualFile) {
+    ContentFolderType contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
+    if(contentFolderTypeForFile == null) {
+      contentFolderTypeForFile = ContentFolderType.PRODUCTION;
+    }
+
+    return getOutputForFile(module, contentFolderTypeForFile);
+  }
+
+  @Nullable
+  @Override
+  public VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType) {
+    return CompilerPathsManager.getInstance(myProject).getCompilerOutput(module, contentFolderType);
+  }
+
+  @Override
   public boolean isMake() {
     return myMake;
   }

@@ -20,7 +20,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
-import com.intellij.packaging.impl.elements.ProductionModuleOutputPackagingElement;
+import com.intellij.packaging.impl.elements.moduleContent.elementImpl.ProductionModuleOutputPackagingElement;
 import com.intellij.packaging.impl.ui.ModuleElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;

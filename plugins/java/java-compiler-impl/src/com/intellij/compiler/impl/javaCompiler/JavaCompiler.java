@@ -30,10 +30,12 @@ import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
 import com.intellij.util.ExceptionUtil;
+import org.consulo.java.platform.module.extension.JavaModuleExtension;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,6 +62,18 @@ public class JavaCompiler implements TranslatingCompiler {
 
   @Override
   public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
+    boolean found = false;
+    for (Module module : moduleChunk.getNodes()) {
+      JavaModuleExtension extension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
+      if(extension != null) {
+        found = true;
+        break;
+      }
+    }
+
+    if(!found) {
+      return;
+    }
     final BackendCompiler backEndCompiler = getBackEndCompiler();
     final BackendCompilerWrapper wrapper =
       new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), (CompileContextEx)context, backEndCompiler, sink);

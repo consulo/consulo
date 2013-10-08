@@ -33,6 +33,9 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.*;
+import com.intellij.packaging.impl.elements.moduleContent.*;
+import com.intellij.packaging.impl.elements.moduleContent.elementImpl.ProductionModuleOutputPackagingElement;
+import com.intellij.packaging.impl.elements.moduleContent.elementImpl.TestModuleOutputPackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PathUtil;
@@ -62,8 +65,9 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
       ZIP_ARCHIVE_ELEMENT_TYPE,
       LibraryElementType.LIBRARY_ELEMENT_TYPE,
       ProductionModuleOutputElementType.ELEMENT_TYPE,
-      ResourceModuleOutputElementType.ELEMENT_TYPE,
+      ProductionResourceModuleOutputElementType.ELEMENT_TYPE,
       TestModuleOutputElementType.ELEMENT_TYPE,
+      TestResourceModuleOutputElementType.ELEMENT_TYPE,
       ArtifactElementType.ARTIFACT_ELEMENT_TYPE,
       FILE_COPY_ELEMENT_TYPE,
       DIRECTORY_COPY_ELEMENT_TYPE,
