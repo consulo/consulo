@@ -34,6 +34,7 @@ public interface QualifiedNameProvider {
   @Nullable
   String getQualifiedName(PsiElement element);
 
+  @Nullable
   PsiElement qualifiedNameToElement(final String fqn, final Project project);
 
   void insertQualifiedName(final String fqn, final PsiElement element, final Editor editor, final Project project);
