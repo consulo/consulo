@@ -24,7 +24,6 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -32,27 +31,27 @@ import java.util.*;
  * @author nik
  */
 public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
-  private static final PairFunction<ContentEntry, ContentFolderType[], VirtualFile[]> ourSourcesToFileFunc =
-    new PairFunction<ContentEntry, ContentFolderType[], VirtualFile[]>() {
-      @Nullable
+  private static final NotNullPairFunction<ContentEntry, ContentFolderType[], VirtualFile[]> ourSourcesToFileFunc =
+    new NotNullPairFunction<ContentEntry, ContentFolderType[], VirtualFile[]>() {
+      @NotNull
       @Override
       public VirtualFile[] fun(ContentEntry t, ContentFolderType[] v) {
         return t.getFolderFiles(v);
       }
     };
 
-  private static final PairFunction<ContentEntry, ContentFolderType[], String[]> ourSourcesToUrlFunc =
-    new PairFunction<ContentEntry, ContentFolderType[], String[]>() {
-      @Nullable
+  private static final NotNullPairFunction<ContentEntry, ContentFolderType[], String[]> ourSourcesToUrlFunc =
+    new NotNullPairFunction<ContentEntry, ContentFolderType[], String[]>() {
+      @NotNull
       @Override
       public String[] fun(ContentEntry t, ContentFolderType[] v) {
         return t.getFolderUrls(v);
       }
     };
 
-  private static final PairFunction<ModuleRootModel, ContentFolderType[], VirtualFile[]> ourRuntimeToFileFunc =
-    new PairFunction<ModuleRootModel, ContentFolderType[], VirtualFile[]>() {
-      @Nullable
+  private static final NotNullPairFunction<ModuleRootModel, ContentFolderType[], VirtualFile[]> ourRuntimeToFileFunc =
+    new NotNullPairFunction<ModuleRootModel, ContentFolderType[], VirtualFile[]>() {
+      @NotNull
       @Override
       public VirtualFile[] fun(ModuleRootModel t, ContentFolderType[] v) {
         CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(t.getModule().getProject());
@@ -64,9 +63,9 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
     };
 
-  private static final PairFunction<ModuleRootModel, ContentFolderType[], String[]> ourRuntimeToUrlFunc =
-    new PairFunction<ModuleRootModel, ContentFolderType[], String[]>() {
-      @Nullable
+  private static final NotNullPairFunction<ModuleRootModel, ContentFolderType[], String[]> ourRuntimeToUrlFunc =
+    new NotNullPairFunction<ModuleRootModel, ContentFolderType[], String[]>() {
+      @NotNull
       @Override
       public String[] fun(ModuleRootModel t, ContentFolderType[] v) {
         CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(t.getModule().getProject());
@@ -261,8 +260,8 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
                                 Collection<T> result,
                                 final boolean includeProduction,
                                 final boolean includeTests,
-                                PairFunction<ContentEntry, ContentFolderType[], T[]> funForSources,
-                                PairFunction<ModuleRootModel, ContentFolderType[], T[]> funForRuntime) {
+                                NotNullPairFunction<ContentEntry, ContentFolderType[], T[]> funForSources,
+                                NotNullPairFunction<ModuleRootModel, ContentFolderType[], T[]> funForRuntime) {
 
     if (type.equals(OrderRootType.SOURCES)) {
       if (includeProduction) {
