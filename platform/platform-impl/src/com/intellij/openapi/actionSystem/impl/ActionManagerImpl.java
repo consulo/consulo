@@ -96,8 +96,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   @NonNls public static final String ID_ATTR_NAME = "id";
   @NonNls public static final String INTERNAL_ATTR_NAME = "internal";
   @NonNls public static final String ICON_ATTR_NAME = "icon";
-  @NonNls public static final String REQUIRE_MODULE_EXTENSIONS = "requireModuleExtensions";
-  @NonNls public static final String CAN_USE_PROJECT_AS_DEFAULT = "canUseProjectAsDefault";
+  @NonNls public static final String REQUIRE_MODULE_EXTENSIONS = "require-module-extensions";
+  @NonNls public static final String CAN_USE_PROJECT_AS_DEFAULT = "can-use-project-as-default";
   @NonNls public static final String ADD_TO_GROUP_ELEMENT_NAME = "add-to-group";
   @NonNls public static final String SHORTCUT_ELEMENT_NAME = "keyboard-shortcut";
   @NonNls public static final String MOUSE_SHORTCUT_ELEMENT_NAME = "mouse-shortcut";
