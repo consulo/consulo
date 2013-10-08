@@ -212,14 +212,23 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable {
     myButtonPanel.removeAll();
     boolean actionAdded = false;
     for (final AnAction action : actions) {
-      if (action == null) continue;
-      myButtonPanel.add(new ActionButton(action, action.getTemplatePresentation().getIcon()) {
-        @Override
-        protected Icon getActiveHoveredIcon() {
-          final Icon icon = action.getTemplatePresentation().getHoveredIcon();
-          return icon != null ? icon : super.getActiveHoveredIcon();
-        }
-      });
+      if (action == null) {
+        continue;
+      }
+
+      if(action == AnSeparator.getInstance()) {
+        myButtonPanel.add(new JLabel(AllIcons.General.Divider));
+      }
+      else {
+        myButtonPanel.add(new ActionButton(action, action.getTemplatePresentation().getIcon()) {
+          @Override
+          protected Icon getActiveHoveredIcon() {
+            final Icon icon = action.getTemplatePresentation().getHoveredIcon();
+            return icon != null ? icon : super.getActiveHoveredIcon();
+          }
+        });
+      }
+
       myButtonPanel.add(Box.createHorizontalStrut(9));
       actionAdded = true;
     }
