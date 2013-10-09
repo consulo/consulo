@@ -26,7 +26,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -57,12 +59,12 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     return "Library: " + getValue().getName();
   }
 
-  private static Icon getJdkIcon(SdkOrderEntry entry) {
+  private static Icon getSdkIcon(SdkOrderEntry entry) {
     final Sdk sdk = entry.getSdk();
     if (sdk == null) {
-      return AllIcons.General.Jdk;
+      return AllIcons.Toolbar.Unknown;
     }
-    final SdkType sdkType = (SdkType) sdk.getSdkType();
+    final SdkType sdkType = (SdkType)sdk.getSdkType();
     return sdkType.getIcon();
   }
 
@@ -77,13 +79,15 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   }
 
   private static boolean orderEntryContainsFile(LibraryOrSdkOrderEntry orderEntry, VirtualFile file) {
-    for(OrderRootType rootType: OrderRootType.getAllTypes()) {
+    for (OrderRootType rootType : OrderRootType.getAllTypes()) {
       if (containsFileInOrderType(orderEntry, rootType, file)) return true;
     }
     return false;
   }
 
-  private static boolean containsFileInOrderType(final LibraryOrSdkOrderEntry orderEntry, final OrderRootType orderType, final VirtualFile file) {
+  private static boolean containsFileInOrderType(final LibraryOrSdkOrderEntry orderEntry,
+                                                 final OrderRootType orderType,
+                                                 final VirtualFile file) {
     if (!orderEntry.isValid()) return false;
     VirtualFile[] files = orderEntry.getRootFiles(orderType);
     for (VirtualFile virtualFile : files) {
@@ -97,7 +101,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   public void update(PresentationData presentation) {
     presentation.setPresentableText(getValue().getName());
     final OrderEntry orderEntry = getValue().getOrderEntry();
-    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? getJdkIcon((SdkOrderEntry)orderEntry) : AllIcons.Nodes.PpLib;
+    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? getSdkIcon((SdkOrderEntry)orderEntry) : getIconForLibrary(orderEntry);
     presentation.setIcon(closedIcon);
     if (orderEntry instanceof SdkOrderEntry) {
       final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
@@ -111,8 +115,19 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
       presentation.setTooltip(null);
     }
     else {
-      presentation.setTooltip(StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
+      presentation.setTooltip(
+        StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
     }
+  }
+
+  private static Icon getIconForLibrary(OrderEntry orderEntry) {
+    if(orderEntry instanceof LibraryOrderEntry) {
+      Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
+      if(library != null)  {
+        return LibraryPresentationManager.getInstance().getNamedLibraryIcon(library, null);
+      }
+    }
+    return AllIcons.Nodes.PpLib;
   }
 
   @Override
