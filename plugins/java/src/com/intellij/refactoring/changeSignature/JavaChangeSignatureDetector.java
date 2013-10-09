@@ -44,7 +44,8 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
       //do not initialize change signature on return type change
       if (element.getTextRange().getEndOffset() <= method.getTextOffset()) return null;
       return DetectedJavaChangeInfo.createFromMethod(method);
-    } else {
+    }
+    else {
       final PsiVariable variable = PsiTreeUtil.getParentOfType(element, PsiVariable.class);
       if (variable != null) {
         return new RenameChangeInfo(variable, null) {
@@ -62,7 +63,8 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
   public boolean performChange(final ChangeInfo changeInfo, ChangeInfo initialChangeInfo, @NotNull final String oldText, boolean silently) {
     if (changeInfo instanceof DetectedJavaChangeInfo) {
       return ((DetectedJavaChangeInfo)changeInfo).perform(initialChangeInfo, oldText, silently);
-    } else if (changeInfo instanceof RenameChangeInfo) {
+    }
+    else if (changeInfo instanceof RenameChangeInfo) {
       ((RenameChangeInfo)changeInfo).perform();
       return true;
     }
@@ -111,9 +113,11 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
   public String extractSignature(PsiElement element, @NotNull ChangeInfo initialChangeInfo) {
     final PsiMethod method = PsiTreeUtil.getParentOfType(element, PsiMethod.class, false);
     if (method != null && isInsideMethodSignature(element, method) && method == initialChangeInfo.getMethod()) {
-      final TextRange signatureRange = getSignatureRange(method);
-      return element.getContainingFile().getText().substring(signatureRange.getStartOffset(), signatureRange.getEndOffset());
-    } else if (element instanceof PsiIdentifier && element.getParent() instanceof PsiNamedElement) {
+      final PsiCodeBlock body = method.getBody();
+      final TextRange signatureRange = new TextRange(0, body != null ? body.getStartOffsetInParent() : method.getTextLength());
+      return signatureRange.substring(method.getText());
+    }
+    else if (element instanceof PsiIdentifier && element.getParent() instanceof PsiNamedElement) {
       return element.getText();
     }
     return null;
@@ -129,7 +133,7 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
     if (currentInfo instanceof RenameChangeInfo) {
       return currentInfo;
     }
-    
+
     final PsiMethod oldMethod = (PsiMethod)currentInfo.getMethod();
     String visibility = "";
     PsiClass containingClass = oldMethod.getContainingClass();
@@ -146,7 +150,8 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
     final PsiModifierList psiModifierList = method.getModifierList();
     if (psiModifierList instanceof LightModifierList) return false;
     if (body != null) {
-      return textRange.getEndOffset() <= body.getTextOffset() && textRange.getStartOffset() >= psiModifierList.getTextRange().getEndOffset();
+      return textRange.getEndOffset() <= body.getTextOffset() &&
+             textRange.getStartOffset() >= psiModifierList.getTextRange().getEndOffset();
     }
     return textRange.getStartOffset() >= psiModifierList.getTextRange().getEndOffset() &&
            textRange.getEndOffset() <= method.getTextRange().getEndOffset();
@@ -157,8 +162,7 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
     if (body != null) {
       return new TextRange(method.getTextRange().getStartOffset(), body.getTextOffset());
     }
-    return new TextRange(method.getTextRange().getStartOffset(),
-                         method.getTextRange().getEndOffset());
+    return new TextRange(method.getTextRange().getStartOffset(), method.getTextRange().getEndOffset());
   }
 
   @Override
@@ -171,7 +175,8 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
         final int parameterIndex = method.getParameterList().getParameterIndex(parameter);
         if (left) {
           return parameterIndex > 0;
-        } else {
+        }
+        else {
           return parameterIndex < method.getParameterList().getParametersCount() - 1;
         }
       }
@@ -184,7 +189,7 @@ public class JavaChangeSignatureDetector implements LanguageChangeSignatureDetec
     final PsiParameter parameter = (PsiParameter)element;
     final PsiMethod method = (PsiMethod)parameter.getDeclarationScope();
     final int parameterIndex = method.getParameterList().getParameterIndex(parameter);
-    new WriteCommandAction(element.getProject(), MOVE_PARAMETER){
+    new WriteCommandAction(element.getProject(), MOVE_PARAMETER) {
       @Override
       protected void run(Result result) throws Throwable {
         final PsiParameterList parameterList = method.getParameterList();
