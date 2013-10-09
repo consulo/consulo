@@ -139,6 +139,10 @@ public class UIUtil {
     return isUnderDarcula() ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
   }
 
+  public static boolean isAppleRetina() {
+    return isRetina() && SystemInfo.isAppleJvm;
+  }
+
   public enum FontSize {NORMAL, SMALL, MINI}
 
   public enum ComponentStyle {REGULAR, SMALL, MINI}
@@ -928,12 +932,12 @@ public class UIUtil {
   }
 
   public static Icon getTreeSelectedCollapsedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderDarcula()
+    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderDarcula() || isUnderIntelliJLaF()
            ? AllIcons.Mac.Tree_white_right_arrow : getTreeCollapsedIcon();
   }
 
   public static Icon getTreeSelectedExpandedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderDarcula()
+    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderDarcula() || isUnderIntelliJLaF()
            ? AllIcons.Mac.Tree_white_down_arrow : getTreeExpandedIcon();
   }
 
@@ -1020,6 +1024,11 @@ public class UIUtil {
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderDarcula() {
     return UIManager.getLookAndFeel().getName().contains("Darcula");
+  }
+
+  @SuppressWarnings({"HardCodedStringLiteral"})
+  public static boolean isUnderIntelliJLaF() {
+    return UIManager.getLookAndFeel().getName().contains("IntelliJ");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
@@ -1248,7 +1257,7 @@ public class UIUtil {
                                         final Color bgColor,
                                         final Color fgColor,
                                         final boolean opaque) {
-    if (SystemInfo.isMac || SystemInfo.isLinux) {
+    if ((SystemInfo.isMac && !isRetina()) || SystemInfo.isLinux) {
       drawAppleDottedLine(g, startX, endX, lineY, bgColor, fgColor, opaque);
     }
     else {

@@ -52,7 +52,7 @@ import java.util.Map;
  */
 public abstract class ContentRootPanel extends JPanel {
   protected static final Color SOURCES_COLOR = new JBColor(new Color(0x0A50A1), DarculaColors.BLUE);
-  protected static final Color TESTS_COLOR = new Color(0x008C2E);
+  protected static final Color TESTS_COLOR = new JBColor(new Color(0x008C2E), new Color(73, 140, 101));
   protected static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
   private static final Color SELECTED_HEADER_COLOR = new JBColor(new Color(0xDEF2FF), UIUtil.getPanelBackground().darker());
   private static final Color HEADER_COLOR = new JBColor(new Color(0xF5F5F5), Gray._82);
