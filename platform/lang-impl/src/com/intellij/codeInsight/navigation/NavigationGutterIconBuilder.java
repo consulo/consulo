@@ -58,10 +58,10 @@ public class NavigationGutterIconBuilder<T> {
     }
   };
 
-  protected static final NullableFunction<T, String> DEFAULT_NAMER = new NullableFunction<T, String>() {
+  protected static final NullableFunction DEFAULT_NAMER = new NullableFunction<Object, String>() {
     @Nullable
     @Override
-    public String fun(T dom) {
+    public String fun(Object dom) {
       return TypePresentationService.getInstance().getTypePresentableName(dom.getClass());
     }
   };
