@@ -10,6 +10,7 @@
   <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)" />
   <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)" />
   <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)" />
+  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)" />
 
   <extensionPoints>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider" />

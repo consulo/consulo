@@ -41,13 +41,13 @@ public class ProductionResourceModuleOutputElementType extends ModuleOutputEleme
   }
 
   @Override
-  protected ProductionResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
+  public ProductionResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
     return new ProductionResourceModuleOutputPackagingElement(project, pointer);
   }
 
   @NotNull
   @Override
-  protected ContentFolderType getContentFolderType() {
+  public ContentFolderType getContentFolderType() {
     return ContentFolderType.PRODUCTION_RESOURCE;
   }
 }

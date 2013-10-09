@@ -32,9 +32,12 @@ import javax.swing.*;
 /**
  * @author nik
  */
-class DirectoryElementType extends CompositePackagingElementType<DirectoryPackagingElement> {
+public class DirectoryElementType extends CompositePackagingElementType<DirectoryPackagingElement> {
+  public static DirectoryElementType getInstance() {
+    return getInstance(DirectoryElementType.class);
+  }
 
-  DirectoryElementType() {
+  public DirectoryElementType() {
     super("directory", CompilerBundle.message("element.type.name.directory"));
   }
 

@@ -36,8 +36,11 @@ import java.util.List;
 * @author nik
 */
 public class ExtractedDirectoryElementType extends PackagingElementType<ExtractedDirectoryPackagingElement> {
+  public static ExtractedDirectoryElementType getInstance() {
+    return getInstance(ExtractedDirectoryElementType.class);
+  }
 
-  ExtractedDirectoryElementType() {
+  public ExtractedDirectoryElementType() {
     super("extracted-dir", "Extracted Directory");
   }
 

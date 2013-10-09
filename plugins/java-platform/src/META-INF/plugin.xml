@@ -39,6 +39,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <packaging.artifactType implementation="com.intellij.packaging.impl.artifacts.JarArtifactType" order="after zip-artifact"/>
+    <packaging.elementType implementation="com.intellij.packaging.impl.elements.JarArchiveElementType" order="after zip-archive-element" />
     <moduleExtensionProvider id="java" key="java" implementationClass="org.consulo.java.platform.module.extension.JavaModuleExtensionProvider" />
     <orderRootType implementation="com.intellij.openapi.roots.AnnotationOrderRootType"/>
     <orderRootTypeEditor key="JAVA_ANNOTATIONS"

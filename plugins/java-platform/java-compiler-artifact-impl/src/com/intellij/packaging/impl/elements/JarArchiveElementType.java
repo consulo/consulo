@@ -36,10 +36,13 @@ import javax.swing.*;
 /**
  * @author nik
  */
-class JarArchiveElementType extends CompositePackagingElementType<JarArchivePackagingElement> {
-  public static final JarArchiveElementType INSTANCE = new JarArchiveElementType();
+public class JarArchiveElementType extends CompositePackagingElementType<JarArchivePackagingElement> {
+  @NotNull
+  public static JarArchiveElementType getInstance() {
+    return getInstance(JarArchiveElementType.class);
+  }
 
-  JarArchiveElementType() {
+  public JarArchiveElementType() {
     super("jar-archive", CompilerBundle.message("element.type.name.jar.archive"));
   }
 
@@ -51,7 +54,7 @@ class JarArchiveElementType extends CompositePackagingElementType<JarArchivePack
   @NotNull
   @Override
   public JarArchivePackagingElement createEmpty(@NotNull Project project) {
-    return new JarArchivePackagingElement();
+    return new JarArchivePackagingElement(this);
   }
 
   @Override
@@ -73,7 +76,7 @@ class JarArchiveElementType extends CompositePackagingElementType<JarArchivePack
     path = FileUtil.toSystemIndependentName(path);
     final String parentPath = PathUtil.getParentPath(path);
     final String fileName = PathUtil.getFileName(path);
-    final PackagingElement<?> element = new JarArchivePackagingElement(fileName);
+    final PackagingElement<?> element = new JarArchivePackagingElement(this,fileName);
     return (CompositePackagingElement<?>)PackagingElementFactory.getInstance().createParentDirectories(parentPath, element);
   }
 }

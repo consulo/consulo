@@ -34,8 +34,11 @@ import java.util.List;
 * @author nik
 */
 public class FileCopyElementType extends PackagingElementType<FileCopyPackagingElement> {
+  public static FileCopyElementType getInstance() {
+    return getInstance(FileCopyElementType.class);
+  }
 
-  FileCopyElementType() {
+  public FileCopyElementType() {
     super("file-copy", "File");
   }
 

@@ -46,7 +46,7 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
   }
 
   @NotNull
-  protected abstract ContentFolderType getContentFolderType();
+  public abstract ContentFolderType getContentFolderType();
 
   @Nullable
   @Override
@@ -82,7 +82,7 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
     return elements;
   }
 
-  protected abstract ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer);
+  public abstract ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer);
 
   private List<Module> getSuitableModules(ArtifactEditorContext context) {
     ModulesProvider modulesProvider = context.getModulesProvider();

@@ -44,7 +44,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   private String myRenamedOutputFileName;
 
   public FileCopyPackagingElement() {
-    super(PackagingElementFactoryImpl.FILE_COPY_ELEMENT_TYPE);
+    super(FileCopyElementType.getInstance());
   }
 
   public FileCopyPackagingElement(String filePath) {

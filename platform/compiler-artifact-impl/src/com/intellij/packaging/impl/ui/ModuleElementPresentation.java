@@ -37,7 +37,9 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   private final ArtifactEditorContext myContext;
   private final ContentFolderType myContentFolderType;
 
-  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer, @NotNull ArtifactEditorContext context, final ContentFolderType contentFolderType) {
+  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer,
+                                   @NotNull ArtifactEditorContext context,
+                                   final ContentFolderType contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
     myContentFolderType = contentFolderType;
@@ -67,7 +69,9 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   }
 
   @Override
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@NotNull PresentationData presentationData,
+                     SimpleTextAttributes mainAttributes,
+                     SimpleTextAttributes commentAttributes) {
     final Module module = findModule();
     presentationData.setIcon(ContentFolderIconUtil.getRootIcon(myContentFolderType));
 
@@ -100,6 +104,9 @@ public class ModuleElementPresentation extends TreeNodePresentation {
         break;
       case PRODUCTION_RESOURCE:
         text = CompilerBundle.message("node.text.0.resource.compile.output", moduleName);
+        break;
+      case TEST_RESOURCE:
+        text = CompilerBundle.message("node.text.0.test.resource.compile.output", moduleName);
         break;
       default:
         throw new IllegalArgumentException();

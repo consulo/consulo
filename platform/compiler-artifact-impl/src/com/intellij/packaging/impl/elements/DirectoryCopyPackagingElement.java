@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class DirectoryCopyPackagingElement extends FileOrDirectoryCopyPackagingElement<DirectoryCopyPackagingElement> {
   public DirectoryCopyPackagingElement() {
-    super(PackagingElementFactoryImpl.DIRECTORY_COPY_ELEMENT_TYPE);
+    super(DirectoryCopyElementType.getInstance());
   }
 
   public DirectoryCopyPackagingElement(String directoryPath) {

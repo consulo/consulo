@@ -35,11 +35,11 @@ import java.util.List;
  */
 public class ZipArchivePackagingElement extends ArchivePackagingElement {
   public ZipArchivePackagingElement() {
-    super(PackagingElementFactoryImpl.ZIP_ARCHIVE_ELEMENT_TYPE);
+    super(ZipArchiveElementType.getInstance());
   }
 
   public ZipArchivePackagingElement(@NotNull String archiveFileName) {
-    super(PackagingElementFactoryImpl.ZIP_ARCHIVE_ELEMENT_TYPE, archiveFileName);
+    super(ZipArchiveElementType.getInstance(), archiveFileName);
   }
 
   @Override

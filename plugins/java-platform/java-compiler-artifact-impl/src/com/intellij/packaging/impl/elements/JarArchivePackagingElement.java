@@ -34,12 +34,12 @@ import java.util.List;
  * @since 16:05/18.06.13
  */
 public class JarArchivePackagingElement extends ArchivePackagingElement {
-  public JarArchivePackagingElement() {
-    super(JarArchiveElementType.INSTANCE);
+  public JarArchivePackagingElement(@NotNull JarArchiveElementType type) {
+    super(type);
   }
 
-  public JarArchivePackagingElement(@NotNull String archiveFileName) {
-    super(JarArchiveElementType.INSTANCE, archiveFileName);
+  public JarArchivePackagingElement(@NotNull JarArchiveElementType type, @NotNull String archiveFileName) {
+    super(type, archiveFileName);
   }
 
   @Override

@@ -149,7 +149,7 @@ public class ArtifactUtil {
     if (!processor.shouldProcess(element) || !processed.add(element)) {
       return true;
     }
-    if (type == null || element.getType().equals(type)) {
+    if (type == null || element.getType() == type) {
       if (!processor.process((E)element, path)) {
         return false;
       }
@@ -333,9 +333,9 @@ public class ArtifactUtil {
                                                          PackagingElementProcessor<FileOrDirectoryCopyPackagingElement<?>> processor,
                                                          PackagingElementResolvingContext context,
                                                          boolean processSubstitutions) {
-    processPackagingElements(artifact, PackagingElementFactoryImpl.FILE_COPY_ELEMENT_TYPE, processor, context, processSubstitutions);
-    processPackagingElements(artifact, PackagingElementFactoryImpl.DIRECTORY_COPY_ELEMENT_TYPE, processor, context, processSubstitutions);
-    processPackagingElements(artifact, PackagingElementFactoryImpl.EXTRACTED_DIRECTORY_ELEMENT_TYPE, processor, context, processSubstitutions);
+    processPackagingElements(artifact, FileCopyElementType.getInstance(), processor, context, processSubstitutions);
+    processPackagingElements(artifact, DirectoryCopyElementType.getInstance(), processor, context, processSubstitutions);
+    processPackagingElements(artifact, ExtractedDirectoryElementType.getInstance(), processor, context, processSubstitutions);
   }
 
   public static Collection<Trinity<Artifact, PackagingElementPath, String>> findContainingArtifactsWithOutputPaths(@NotNull final VirtualFile file,

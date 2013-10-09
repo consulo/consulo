@@ -36,7 +36,11 @@ import javax.swing.*;
  * @since 16:04/18.06.13
  */
 public class ZipArchiveElementType extends CompositePackagingElementType<ZipArchivePackagingElement> {
-  ZipArchiveElementType() {
+  public static ZipArchiveElementType getInstance() {
+    return getInstance(ZipArchiveElementType.class);
+  }
+
+  public ZipArchiveElementType() {
     super("zip-archive", CompilerBundle.message("element.type.name.zip.archive"));
   }
 

@@ -35,8 +35,11 @@ import java.util.List;
 * @author nik
 */
 public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopyPackagingElement> {
+  public static DirectoryCopyElementType getInstance() {
+    return getInstance(DirectoryCopyElementType.class);
+  }
 
-  DirectoryCopyElementType() {
+  public DirectoryCopyElementType() {
     super("dir-copy", "Directory Content");
   }
 

@@ -53,11 +53,11 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   private String myModuleName;
 
   public LibraryPackagingElement() {
-    super(LibraryElementType.LIBRARY_ELEMENT_TYPE);
+    super(LibraryElementType.getInstance());
   }
 
   public LibraryPackagingElement(String level, String libraryName, String moduleName) {
-    super(LibraryElementType.LIBRARY_ELEMENT_TYPE);
+    super(LibraryElementType.getInstance());
     myLevel = level;
     myLibraryName = libraryName;
     myModuleName = moduleName;

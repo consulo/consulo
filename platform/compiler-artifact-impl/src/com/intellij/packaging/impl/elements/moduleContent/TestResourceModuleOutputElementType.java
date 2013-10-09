@@ -41,13 +41,13 @@ public class TestResourceModuleOutputElementType extends ModuleOutputElementType
   }
 
   @Override
-  protected TestResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
+  public TestResourceModuleOutputPackagingElement createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
     return new TestResourceModuleOutputPackagingElement(project, pointer);
   }
 
   @NotNull
   @Override
-  protected ContentFolderType getContentFolderType() {
+  public ContentFolderType getContentFolderType() {
     return ContentFolderType.TEST_RESOURCE;
   }
 }

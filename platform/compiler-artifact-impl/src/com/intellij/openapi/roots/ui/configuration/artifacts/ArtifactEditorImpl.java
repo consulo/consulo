@@ -25,13 +25,11 @@ import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.artifacts.actions.*;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
-import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.ModuleOutputSourceItem;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.Splitter;
@@ -68,7 +66,6 @@ import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -324,11 +321,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private DefaultActionGroup createToolbarActionGroup() {
     final DefaultActionGroup toolbarActionGroup = new DefaultActionGroup();
 
-    final List<AnAction> createActions = new ArrayList<AnAction>(createNewElementActions());
-    for (AnAction createAction : createActions) {
-      toolbarActionGroup.add(createAction);
-    }
-
+    toolbarActionGroup.add(createAddGroup());
     toolbarActionGroup.add(new RemovePackagingElementAction(this));
     toolbarActionGroup.add(AnSeparator.getInstance());
     toolbarActionGroup.add(new SortElementsToggleAction(this.getLayoutTreeComponent()));
@@ -337,23 +330,11 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     return toolbarActionGroup;
   }
 
-  public List<AnAction> createNewElementActions() {
-    final List<AnAction> createActions = new ArrayList<AnAction>();
-    AddCompositeElementAction.addCompositeCreateActions(createActions, this);
-    createActions.add(createAddNonCompositeElementGroup());
-    return createActions;
-  }
-
   private DefaultActionGroup createPopupActionGroup() {
     final LayoutTree tree = myLayoutTreeComponent.getLayoutTree();
 
     DefaultActionGroup popupActionGroup = new DefaultActionGroup();
-    final List<AnAction> createActions = new ArrayList<AnAction>();
-    AddCompositeElementAction.addCompositeCreateActions(createActions, this);
-    for (AnAction createAction : createActions) {
-      popupActionGroup.add(createAction);
-    }
-    popupActionGroup.add(createAddNonCompositeElementGroup());
+    popupActionGroup.add(createAddGroup());
     final RemovePackagingElementAction removeAction = new RemovePackagingElementAction(this);
     removeAction.registerCustomShortcutSet(CommonShortcuts.DELETE, tree);
     popupActionGroup.add(removeAction);
@@ -379,10 +360,10 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     return mySubstitutionParameters;
   }
 
-  private ActionGroup createAddNonCompositeElementGroup() {
+  private ActionGroup createAddGroup() {
     DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("artifacts.add.copy.action"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
-    for (PackagingElementType<?> type : PackagingElementFactory.getInstance().getNonCompositeElementTypes()) {
+    for (PackagingElementType<?> type : PackagingElementFactory.getInstance().getAllElementTypes()) {
       group.add(new AddNewPackagingElementAction(type, this));
     }
     return group;
@@ -499,11 +480,6 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   @Override
   public void putLibraryIntoDefaultLocation(@NotNull Library library) {
     myLayoutTreeComponent.putIntoDefaultLocations(Collections.singletonList(new LibrarySourceItem(library)));
-  }
-
-  @Override
-  public void putModuleIntoDefaultLocation(@NotNull Module module) {
-    myLayoutTreeComponent.putIntoDefaultLocations(Collections.singletonList(new ModuleOutputSourceItem(module)));
   }
 
   @Override

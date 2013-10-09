@@ -20,13 +20,16 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
+import com.intellij.packaging.elements.PackagingElementFactory;
+import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
+import com.intellij.packaging.impl.elements.FileCopyElementType;
 import com.intellij.packaging.impl.elements.FileCopyPackagingElement;
-import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
 import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
-import com.intellij.packaging.impl.elements.PackagingElementFactoryImpl;
+import com.intellij.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
@@ -43,7 +46,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
 
   @Override
   @NotNull
-  public Collection<? extends PackagingSourceItem> getSourceItems(@NotNull ArtifactEditorContext editorContext, @NotNull Artifact artifact,
+  public Collection<? extends PackagingSourceItem> getSourceItems(@NotNull ArtifactEditorContext editorContext,
+                                                                  @NotNull Artifact artifact,
                                                                   PackagingSourceItem parent) {
     if (parent == null) {
       return createModuleItems(editorContext, artifact, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -58,7 +62,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
   }
 
   private static Collection<? extends PackagingSourceItem> createClasspathItems(ArtifactEditorContext editorContext,
-                                                                                Artifact artifact, @NotNull Module module) {
+                                                                                Artifact artifact,
+                                                                                @NotNull Module module) {
     final List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     final ModuleRootModel rootModel = editorContext.getModulesProvider().getRootModel(module);
     List<Library> libraries = new ArrayList<Library>();
@@ -73,8 +78,14 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
       }
     }
 
-    for (Module toAdd : getNotAddedModules(editorContext, artifact, module)) {
-      items.add(new ModuleOutputSourceItem(toAdd));
+    for (PackagingElementType element : PackagingElementFactory.getInstance().getAllElementTypes()) {
+      if(element instanceof ModuleOutputElementTypeBase<?>) {
+        ModuleOutputElementTypeBase moduleOutputType = (ModuleOutputElementTypeBase)element;
+        boolean can = canAddModuleOutputType(editorContext, artifact, moduleOutputType, module);
+        if(can) {
+          items.add(new ModuleOutputSourceItem(module, moduleOutputType));
+        }
+      }
     }
 
     for (Library library : getNotAddedLibraries(editorContext, artifact, libraries)) {
@@ -83,7 +94,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return items;
   }
 
-  private static Collection<? extends PackagingSourceItem> createModuleItems(ArtifactEditorContext editorContext, Artifact artifact, @NotNull String[] groupPath) {
+  private static Collection<? extends PackagingSourceItem> createModuleItems(ArtifactEditorContext editorContext, Artifact artifact,
+                                                                             @NotNull String[] groupPath) {
     final Module[] modules = editorContext.getModulesProvider().getModules();
     final List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     Set<String> groups = new HashSet<String>();
@@ -106,33 +118,50 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return items;
   }
 
-  @NotNull
-  private static List<? extends Module> getNotAddedModules(@NotNull final ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                          final Module... allModules) {
-    final Set<Module> modules = new HashSet<Module>(Arrays.asList(allModules));
-    ArtifactUtil.processPackagingElements(artifact, ProductionModuleOutputElementType.ELEMENT_TYPE, new Processor<ModuleOutputPackagingElement>() {
-      @Override
-      public boolean process(ModuleOutputPackagingElement moduleOutputPackagingElement) {
-        modules.remove(moduleOutputPackagingElement.findModule(context));
+  private static <T extends ModuleOutputElementTypeBase<?>> boolean canAddModuleOutputType(@NotNull final ArtifactEditorContext context,
+                                                                                           @NotNull Artifact artifact,
+                                                                                           T type,
+                                                                                           final Module module) {
+    final Ref<Boolean> find = new Ref<Boolean>(true);
+    ArtifactUtil
+      .processPackagingElements(artifact, type, new Processor<ModuleOutputPackagingElement>() {
+        @Override
+        public boolean process(ModuleOutputPackagingElement moduleOutputPackagingElement) {
+          if(moduleOutputPackagingElement.findModule(context) == module) {
+            find.set(false);
+          }
+          return true;
+        }
+      }, context, true);
+
+    // if it already added - we cant add new
+    if(!find.get()) {
+      return false;
+    }
+
+    for(ContentEntry c :  context.getModulesProvider().getRootModel(module).getContentEntries()) {
+      if(c.getFolderFiles(type.getContentFolderType()).length > 0) {
         return true;
       }
-    }, context, true);
-    return new ArrayList<Module>(modules);
+    }
+    return false;
   }
 
-  private static List<? extends Library> getNotAddedLibraries(@NotNull final ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                             List<Library> librariesList) {
+  private static List<? extends Library> getNotAddedLibraries(@NotNull final ArtifactEditorContext context,
+                                                              @NotNull Artifact artifact,
+                                                              List<Library> librariesList) {
     final Set<VirtualFile> roots = new HashSet<VirtualFile>();
-    ArtifactUtil.processPackagingElements(artifact, PackagingElementFactoryImpl.FILE_COPY_ELEMENT_TYPE, new Processor<FileCopyPackagingElement>() {
-      @Override
-      public boolean process(FileCopyPackagingElement fileCopyPackagingElement) {
-        final VirtualFile root = fileCopyPackagingElement.getLibraryRoot();
-        if (root != null) {
-          roots.add(root);
+    ArtifactUtil
+      .processPackagingElements(artifact, FileCopyElementType.getInstance(), new Processor<FileCopyPackagingElement>() {
+        @Override
+        public boolean process(FileCopyPackagingElement fileCopyPackagingElement) {
+          final VirtualFile root = fileCopyPackagingElement.getLibraryRoot();
+          if (root != null) {
+            roots.add(root);
+          }
+          return true;
         }
-        return true;
-      }
-    }, context, true);
+      }, context, true);
     final List<Library> result = new ArrayList<Library>();
     for (Library library : librariesList) {
       if (!roots.containsAll(Arrays.asList(library.getFiles(OrderRootType.CLASSES)))) {

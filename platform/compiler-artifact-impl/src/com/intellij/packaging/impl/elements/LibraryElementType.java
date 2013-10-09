@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -24,7 +25,6 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.ComplexPackagingElementType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,15 +36,17 @@ import java.util.List;
 * @author nik
 */
 public class LibraryElementType extends ComplexPackagingElementType<LibraryPackagingElement> {
-  public static final LibraryElementType LIBRARY_ELEMENT_TYPE = new LibraryElementType();
+  public static LibraryElementType getInstance() {
+    return getInstance(LibraryElementType.class);
+  }
 
-  LibraryElementType() {
+  public LibraryElementType() {
     super("library", CompilerBundle.message("element.type.name.library.files"));
   }
 
   @Override
   public Icon getCreateElementIcon() {
-    return PlatformIcons.LIBRARY_ICON;
+    return AllIcons.Nodes.PpLib;
   }
 
   @Override

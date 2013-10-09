@@ -44,11 +44,11 @@ public class ExtractedDirectoryPackagingElement extends FileOrDirectoryCopyPacka
   private String myPathInJar;
 
   public ExtractedDirectoryPackagingElement() {
-    super(PackagingElementFactoryImpl.EXTRACTED_DIRECTORY_ELEMENT_TYPE);
+    super(ExtractedDirectoryElementType.getInstance());
   }
 
   public ExtractedDirectoryPackagingElement(String jarPath, String pathInJar) {
-    super(PackagingElementFactoryImpl.EXTRACTED_DIRECTORY_ELEMENT_TYPE, jarPath);
+    super(ExtractedDirectoryElementType.getInstance(), jarPath);
     myPathInJar = pathInJar;
     if (!StringUtil.startsWithChar(myPathInJar, '/')) {
       myPathInJar = "/" + myPathInJar;

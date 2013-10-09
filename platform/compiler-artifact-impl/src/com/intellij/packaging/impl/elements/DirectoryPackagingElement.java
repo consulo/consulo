@@ -16,15 +16,15 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.compiler.ant.Generator;
+import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.ui.DirectoryElementPresentation;
-import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.util.xmlb.annotations.Attribute;
+import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +39,11 @@ public class DirectoryPackagingElement extends CompositeElementWithManifest<Dire
   private String myDirectoryName;
 
   public DirectoryPackagingElement() {
-    super(PackagingElementFactoryImpl.DIRECTORY_ELEMENT_TYPE);
+    super(DirectoryElementType.getInstance());
   }
 
   public DirectoryPackagingElement(String directoryName) {
-    super(PackagingElementFactoryImpl.DIRECTORY_ELEMENT_TYPE);
+    super(DirectoryElementType.getInstance());
     myDirectoryName = directoryName;
   }
 

@@ -17,10 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
-import com.intellij.packaging.impl.elements.moduleContent.elementImpl.ProductionModuleOutputPackagingElement;
+import com.intellij.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
 import com.intellij.packaging.impl.ui.ModuleElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
@@ -37,19 +36,25 @@ import java.util.List;
  */
 public class ModuleOutputSourceItem extends PackagingSourceItem {
   private final Module myModule;
+  private final ModuleOutputElementTypeBase<?> myModuleOutputType;
 
-  public ModuleOutputSourceItem(@NotNull Module module) {
+  public ModuleOutputSourceItem(@NotNull Module module, ModuleOutputElementTypeBase<?> moduleOutputType) {
     myModule = module;
+    myModuleOutputType = moduleOutputType;
   }
 
   public Module getModule() {
     return myModule;
   }
 
+  @Override
   public boolean equals(Object obj) {
-    return obj instanceof ModuleOutputSourceItem && myModule.equals(((ModuleOutputSourceItem)obj).myModule);
+    return obj instanceof ModuleOutputSourceItem &&
+           myModule.equals(((ModuleOutputSourceItem)obj).myModule) &&
+           myModuleOutputType.equals(((ModuleOutputSourceItem)obj).myModuleOutputType);
   }
 
+  @Override
   public int hashCode() {
     return myModule.hashCode();
   }
@@ -57,7 +62,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   @Override
   public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
     final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
-    return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, ContentFolderType.PRODUCTION)) {
+    return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, myModuleOutputType.getContentFolderType())) {
       @Override
       public int getWeight() {
         return SourceItemWeights.MODULE_OUTPUT_WEIGHT;
@@ -69,7 +74,8 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   @NotNull
   public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
     final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
-    return Collections.singletonList(new ProductionModuleOutputPackagingElement(context.getProject(), modulePointer));
+
+    return Collections.singletonList(myModuleOutputType.createElement(context.getProject(), modulePointer));
   }
 
   @NotNull

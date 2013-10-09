@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBase<ProductionModuleOutputPackagingElement> {
   public static final ProductionModuleOutputElementType ELEMENT_TYPE = new ProductionModuleOutputElementType();
 
-  ProductionModuleOutputElementType() {
+  public ProductionModuleOutputElementType() {
     super("module-output", CompilerBundle.message("element.type.name.module.output"));
   }
 
@@ -42,12 +42,12 @@ public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBa
 
   @NotNull
   @Override
-  protected ContentFolderType getContentFolderType() {
+  public ContentFolderType getContentFolderType() {
     return ContentFolderType.PRODUCTION;
   }
 
   @Override
-  protected ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
+  public ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
     return new ProductionModuleOutputPackagingElement(project, pointer);
   }
 }
