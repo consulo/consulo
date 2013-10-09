@@ -70,8 +70,6 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
 
   public ResourceCompilerConfiguration(Project project) {
     myProject = project;
-
-    loadDefaultWildcardPatterns();
   }
 
   public boolean isResourceFile(VirtualFile virtualFile) {
@@ -202,9 +200,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
               return true;
             }
           });
-        if (wildcardPatterns == null) { // cancel pressed
-          loadDefaultWildcardPatterns();
-        }
+
       }
     }
     finally {
@@ -212,24 +208,6 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     }
   }
 
-  private void loadDefaultWildcardPatterns() {
-    if (!myWildcardPatterns.isEmpty()) {
-      removeWildcardPatterns();
-    }
-    try {
-      addWildcardResourcePattern("!?*.java");
-      addWildcardResourcePattern("!?*.form");
-      addWildcardResourcePattern("!?*.class");
-      addWildcardResourcePattern("!?*.groovy");
-      addWildcardResourcePattern("!?*.scala");
-      addWildcardResourcePattern("!?*.flex");
-      addWildcardResourcePattern("!?*.kt");
-      addWildcardResourcePattern("!?*.clj");
-    }
-    catch (MalformedPatternException e) {
-      LOGGER.error(e);
-    }
-  }
 
 
   private void removeWildcardPatterns() {
