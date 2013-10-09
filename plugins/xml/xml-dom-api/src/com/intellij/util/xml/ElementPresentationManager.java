@@ -179,7 +179,7 @@ public abstract class ElementPresentationManager {
   public static String getTypeNameForObject(Object o) {
     final Object firstImpl = ModelMergerUtil.getFirstImplementation(o);
     o = firstImpl != null ? firstImpl : o;
-    String typeName = TypePresentationService.getService().getTypeName(o);
+    String typeName = TypePresentationService.getInstance().getTypeName(o);
     if (typeName != null) return typeName;
     if (o instanceof DomElement) {
       final DomElement element = (DomElement)o;
@@ -231,7 +231,7 @@ public abstract class ElementPresentationManager {
 
   @Nullable
   private static Icon[] getIconsForClass(final Class clazz, @Nullable Object o) {
-    TypePresentationService service = TypePresentationService.getService();
+    TypePresentationService service = TypePresentationService.getInstance();
     final Icon icon = o == null ? service.getTypeIcon(clazz) : service.getIcon(o);
     if (icon != null) {
       return new Icon[]{icon};

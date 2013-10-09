@@ -68,7 +68,7 @@ public class UsageViewTypeLocation extends ElementDescriptionLocation {
         return type;
       }
 
-      return TypePresentationService.getService().getTypePresentableName(psiElement.getClass());
+      return TypePresentationService.getInstance().getTypePresentableName(psiElement.getClass());
     }
   };
 }

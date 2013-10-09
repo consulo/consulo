@@ -59,7 +59,7 @@ public class ResolvingElementQuickFix implements LocalQuickFix, IntentionAction 
     myParents = parents;
     myChildDescription = childDescription;
 
-    myTypeName = TypePresentationService.getService().getTypePresentableName(myClazz);
+    myTypeName = TypePresentationService.getInstance().getTypePresentableName(myClazz);
   }
 
   public void setTypeName(final String typeName) {

@@ -127,7 +127,7 @@ public class JavaFindUsagesProvider implements FindUsagesProvider {
       return LangBundle.message("java.terms.expression");
     }
 
-    final String name = TypePresentationService.getService().getTypePresentableName(element.getClass());
+    final String name = TypePresentationService.getInstance().getTypePresentableName(element.getClass());
     if (name != null) {
       return name;
     }

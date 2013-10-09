@@ -49,7 +49,7 @@ public class DomElementsToggleAction extends ToggleAction {
     }
     this.myIcon = myIcon;
 
-    myText = TypePresentationService.getService().getTypePresentableName(myClass);
+    myText = TypePresentationService.getInstance().getTypePresentableName(myClass);
 
     if(getHiders() == null) DomUtil.getFile(myTreeView.getRootElement()).putUserData(BaseDomElementNode.TREE_NODES_HIDERS_KEY, new HashMap<Class, Boolean>());
 

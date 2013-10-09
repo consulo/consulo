@@ -88,7 +88,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
 
   @Override
   public Icon getIcon() {
-    Icon icon = TypePresentationService.getService().getIcon(myTarget);
+    Icon icon = TypePresentationService.getInstance().getIcon(myTarget);
     if (icon != null) return icon;
 
     if (myTarget instanceof PsiTarget) {

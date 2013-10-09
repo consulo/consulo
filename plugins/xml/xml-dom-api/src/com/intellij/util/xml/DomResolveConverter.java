@@ -115,7 +115,7 @@ public class DomResolveConverter<T extends DomElement> extends ResolvingConverte
 
   public String getErrorMessage(final String s, final ConvertContext context) {
 
-    return CodeInsightBundle.message("error.cannot.resolve.0.1", TypePresentationService.getService().getTypePresentableName(myClass), s);
+    return CodeInsightBundle.message("error.cannot.resolve.0.1", TypePresentationService.getInstance().getTypePresentableName(myClass), s);
   }
 
   public final String toString(final T t, final ConvertContext context) {

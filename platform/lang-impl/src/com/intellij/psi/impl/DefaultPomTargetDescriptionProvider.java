@@ -49,7 +49,7 @@ public class DefaultPomTargetDescriptionProvider extends PomDescriptionProvider 
 
   private static String getTypeName(PomTarget element) {
 
-    final String s = TypePresentationService.getService().getTypePresentableName(element.getClass());
+    final String s = TypePresentationService.getInstance().getTypePresentableName(element.getClass());
     return s == null ? "Element" : s;
   }
 }

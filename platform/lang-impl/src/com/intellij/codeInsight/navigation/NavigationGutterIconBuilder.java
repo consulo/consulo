@@ -17,11 +17,11 @@ package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
+import com.intellij.ide.TypePresentationService;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.Project;
@@ -34,9 +34,6 @@ import com.intellij.util.ConstantFunction;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.ElementPresentationManager;
-import com.intellij.util.xml.highlighting.DomElementAnnotationHolder;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -54,42 +51,35 @@ import java.util.*;
  */
 public class NavigationGutterIconBuilder<T> {
   @NonNls private static final String PATTERN = "&nbsp;&nbsp;&nbsp;&nbsp;{0}";
-  private static final NotNullFunction<PsiElement,Collection<? extends PsiElement>> DEFAULT_PSI_CONVERTOR = new NotNullFunction<PsiElement, Collection<? extends PsiElement>>() {
+  protected static final NotNullFunction<PsiElement,Collection<? extends PsiElement>> DEFAULT_PSI_CONVERTOR = new NotNullFunction<PsiElement, Collection<? extends PsiElement>>() {
     @NotNull
     public Collection<? extends PsiElement> fun(final PsiElement element) {
       return ContainerUtil.createMaybeSingletonList(element);
     }
   };
 
+  protected static final NullableFunction<T, String> DEFAULT_NAMER = new NullableFunction<T, String>() {
+    @Nullable
+    @Override
+    public String fun(T dom) {
+      return TypePresentationService.getInstance().getTypePresentableName(dom.getClass());
+    }
+  };
+
   private final Icon myIcon;
   private final NotNullFunction<T,Collection<? extends PsiElement>> myConverter;
 
-  private NotNullLazyValue<Collection<? extends T>> myTargets;
-  private boolean myLazy;
+  protected NotNullLazyValue<Collection<? extends T>> myTargets;
+  protected boolean myLazy;
   private String myTooltipText;
   private String myPopupTitle;
   private String myEmptyText;
   private String myTooltipTitle;
   private GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
   private Computable<PsiElementListCellRenderer> myCellRenderer;
-  private NullableFunction<T,String> myNamer = ElementPresentationManager.namer();
+  private NullableFunction<T,String> myNamer = createDefaultNamer();
   private final NotNullFunction<T, Collection<? extends GotoRelatedItem>> myGotoRelatedItemProvider;
-  public static final NotNullFunction<DomElement,Collection<? extends PsiElement>> DEFAULT_DOM_CONVERTOR = new NotNullFunction<DomElement, Collection<? extends PsiElement>>() {
-    @NotNull
-    public Collection<? extends PsiElement> fun(final DomElement o) {
-      return ContainerUtil.createMaybeSingletonList(o.getXmlElement());
-    }
-  };
-  public static final NotNullFunction<DomElement, Collection<? extends GotoRelatedItem>> DOM_GOTO_RELATED_ITEM_PROVIDER = new NotNullFunction<DomElement, Collection<? extends GotoRelatedItem>>() {
-    @NotNull
-    @Override
-    public Collection<? extends GotoRelatedItem> fun(DomElement dom) {
-      if (dom.getXmlElement() != null) {
-        return Collections.singletonList(new DomGotoRelatedItem(dom));
-      }
-      return Collections.emptyList();
-    }
-  };
+
   public static final NotNullFunction<PsiElement, Collection<? extends GotoRelatedItem>> PSI_GOTO_RELATED_ITEM_PROVIDER = new NotNullFunction<PsiElement, Collection<? extends GotoRelatedItem>>() {
     @NotNull
     @Override
@@ -184,10 +174,8 @@ public class NavigationGutterIconBuilder<T> {
     return this;
   }
 
-  @Nullable
-  public Annotation install(@NotNull DomElementAnnotationHolder holder, @Nullable DomElement element) {
-    if (!myLazy && myTargets.getValue().isEmpty() || element == null) return null;
-    return doInstall(holder.createAnnotation(element, HighlightSeverity.INFORMATION, null), element.getManager().getProject());
+  protected NullableFunction<T,String> createDefaultNamer() {
+    return DEFAULT_NAMER;
   }
 
   @Nullable
@@ -196,7 +184,7 @@ public class NavigationGutterIconBuilder<T> {
     return doInstall(holder.createInfoAnnotation(element, null), element.getProject());
   }
 
-  private Annotation doInstall(@NotNull Annotation annotation, @NotNull Project project) {
+  protected Annotation doInstall(@NotNull Annotation annotation, @NotNull Project project) {
     final MyNavigationGutterIconRenderer renderer = createGutterIconRenderer(project);
     annotation.setGutterIconRenderer(renderer);
     annotation.setNeedsUpdateOnTyping(false);

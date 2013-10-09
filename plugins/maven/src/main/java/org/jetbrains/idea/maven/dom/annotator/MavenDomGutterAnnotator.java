@@ -16,6 +16,7 @@
 
 package org.jetbrains.idea.maven.dom.annotator;
 
+import com.intellij.codeInsight.navigation.DomNavigationGutterIconBuilder;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.PsiElementListCellRenderer;
@@ -50,8 +51,8 @@ public class MavenDomGutterAnnotator implements Annotator {
 
     final Set<MavenDomDependency> children = MavenDomProjectProcessorUtils.searchDependencyUsages(dependency);
     if (children.size() > 0) {
-      final NavigationGutterIconBuilder<MavenDomDependency> iconBuilder =
-        NavigationGutterIconBuilder.create(AllIcons.General.OverridenMethod, DependencyConverter.INSTANCE);
+      final DomNavigationGutterIconBuilder<MavenDomDependency> iconBuilder =
+        DomNavigationGutterIconBuilder.create(AllIcons.General.OverridenMethod, DependencyConverter.INSTANCE);
       iconBuilder.
         setTargets(children).
         setPopupTitle(MavenDomBundle.message("navigate.parent.dependency.title")).
@@ -68,8 +69,8 @@ public class MavenDomGutterAnnotator implements Annotator {
     final List<MavenDomDependency> children = getManagingDependencies(dependency);
     if (children.size() > 0) {
 
-      final NavigationGutterIconBuilder<MavenDomDependency> iconBuilder =
-        NavigationGutterIconBuilder.create(AllIcons.General.OverridingMethod, DependencyConverter.INSTANCE);
+      final DomNavigationGutterIconBuilder<MavenDomDependency> iconBuilder =
+        DomNavigationGutterIconBuilder.create(AllIcons.General.OverridingMethod, DependencyConverter.INSTANCE);
       iconBuilder.
         setTargets(children).
         setTooltipText(MavenDomBundle.message("overriden.dependency.title")).
@@ -129,8 +130,8 @@ public class MavenDomGutterAnnotator implements Annotator {
     MavenDomPlugin managingPlugin = MavenDomProjectProcessorUtils.searchManagingPlugin(plugin);
 
     if (managingPlugin != null) {
-      NavigationGutterIconBuilder<MavenDomPlugin> iconBuilder =
-        NavigationGutterIconBuilder.create(AllIcons.General.OverridingMethod, PluginConverter.INSTANCE);
+      DomNavigationGutterIconBuilder<MavenDomPlugin> iconBuilder =
+        DomNavigationGutterIconBuilder.create(AllIcons.General.OverridingMethod, PluginConverter.INSTANCE);
 
       iconBuilder.
         setTargets(Collections.singletonList(managingPlugin)).
@@ -146,8 +147,8 @@ public class MavenDomGutterAnnotator implements Annotator {
     Collection<MavenDomPlugin> children = MavenDomProjectProcessorUtils.searchManagedPluginUsages(plugin);
 
     if (children.size() > 0) {
-      NavigationGutterIconBuilder<MavenDomPlugin> iconBuilder =
-        NavigationGutterIconBuilder.create(AllIcons.General.OverridenMethod, PluginConverter.INSTANCE);
+      DomNavigationGutterIconBuilder<MavenDomPlugin> iconBuilder =
+        DomNavigationGutterIconBuilder.create(AllIcons.General.OverridenMethod, PluginConverter.INSTANCE);
 
       iconBuilder.
         setTargets(children).

@@ -11,7 +11,7 @@ import javax.swing.*;
  */
 public class VirtualFilePresentation {
   public static Icon getIcon(VirtualFile vFile) {
-    Icon icon = TypePresentationService.getService().getIcon(vFile);
+    Icon icon = TypePresentationService.getInstance().getIcon(vFile);
     if (icon != null) {
       return icon;
     }

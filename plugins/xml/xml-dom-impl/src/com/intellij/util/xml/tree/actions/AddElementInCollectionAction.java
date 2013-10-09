@@ -133,7 +133,7 @@ public class AddElementInCollectionAction extends AddDomElementAction {
       if (selectedNode != null) {
         final Type type = selectedNode.getChildDescription().getType();
 
-        text += " " + TypePresentationService.getService().getTypePresentableName(ReflectionUtil.getRawType(type));
+        text += " " + TypePresentationService.getInstance().getTypePresentableName(ReflectionUtil.getRawType(type));
       }
     }
     return text;

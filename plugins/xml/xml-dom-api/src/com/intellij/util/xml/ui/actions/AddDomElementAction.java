@@ -126,7 +126,7 @@ public abstract class AddDomElementAction extends AnAction {
 
         final Class<?> rawType = ReflectionUtil.getRawType(type);
 
-        String name = TypePresentationService.getService().getTypePresentableName(rawType);
+        String name = TypePresentationService.getInstance().getTypePresentableName(rawType);
         Icon icon = null;
         if (!showAsPopup() || descriptions.length == 1) {
 //          if (descriptions.length > 1) {
