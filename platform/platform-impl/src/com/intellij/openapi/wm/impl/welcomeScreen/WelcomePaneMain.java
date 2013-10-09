@@ -1,7 +1,7 @@
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
 import com.intellij.ui.ClickListener;
-import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +38,7 @@ public class WelcomePaneMain extends JPanel {
       myActive = active;
 
       if(myActive) {
-        setBackground(JBColor.LIGHT_GRAY);
+        setBackground(UIUtil.getMenuItemSelectedBackground());
 
         for (HeaderButton o : myButtons) {
           if(o == this) {

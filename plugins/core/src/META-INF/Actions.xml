@@ -2154,8 +2154,8 @@
 
 
     <group id="WelcomeScreen.Documentation.IDEA">
-      <action id="WelcomeScreen.JetBrainsTV.IDEA" class="com.intellij.openapi.wm.impl.welcomeScreen.IdeaJetBrainsTvAction"
-              icon="AllIcons.General.JetbrainsTvIdea"/>
+      <!--<action id="WelcomeScreen.JetBrainsTV.IDEA" class="com.intellij.openapi.wm.impl.welcomeScreen.IdeaJetBrainsTvAction"
+              icon="AllIcons.General.JetbrainsTvIdea"/>  -->
       <action id="WelcomeScreen.DevelopPlugins" class="com.intellij.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
               icon="AllIcons.General.PluginManager"/>
 
@@ -2166,12 +2166,6 @@
       <action class="com.intellij.ide.actions.TemplateProjectSettingsGroup"/>
       <add-to-group group-id="WelcomeScreen.Configure" anchor="last"/>
     </group>
-
-    <!-- <action id="AddFrameworkSupport" class="com.intellij.ide.util.frameworkSupport.AddFrameworkSupportAction">
-       <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
-       <add-to-group group-id="NavbarPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
-     </action>  -->
-
 
     <group id="DiffPanel.Toolbar.IDEA">
       <reference ref="Find"/>

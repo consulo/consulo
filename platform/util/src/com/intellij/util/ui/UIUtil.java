@@ -674,6 +674,10 @@ public class UIUtil {
     return UIManager.getColor("MenuItem.disabledForeground");
   }
 
+  public static Color getMenuItemSelectedBackground() {
+    return UIManager.getColor("MenuItem.selectedBackground");
+  }
+
   public static Object getMenuItemDisabledForegroundObject() {
     return UIManager.get("MenuItem.disabledForeground");
   }
