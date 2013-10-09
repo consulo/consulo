@@ -18,7 +18,6 @@ public class WelcomePaneMain extends JPanel {
 
     public HeaderButton(String text, String key) {
       myKey = key;
-      setBorder(new BottomLineBorder());
 
       JLabel titleLabel = new JLabel(text);
       titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
