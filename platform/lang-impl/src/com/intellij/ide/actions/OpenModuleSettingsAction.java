@@ -16,6 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleNavigatable;
@@ -39,7 +40,11 @@ public class OpenModuleSettingsAction extends EditSourceAction {
   @Nullable
   @Override
   protected Navigatable[] getNavigatables(DataContext dataContext) {
-    return new Navigatable[]{new ModuleNavigatable(LangDataKeys.MODULE.getData(dataContext))};
+    Module data = LangDataKeys.MODULE.getData(dataContext);
+    if(data == null) {
+      return NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY;
+    }
+    return new Navigatable[]{new ModuleNavigatable(data)};
   }
 
   protected static boolean isModuleInProjectViewPopup(AnActionEvent e) {
