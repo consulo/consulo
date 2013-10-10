@@ -148,6 +148,8 @@
                     beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.HtmlInlineScriptTokenTypesProvider"/>
     </extensionPoint>
+
+    <extensionPoint name="namespaceHelper" interface="com.intellij.xml.XmlNamespaceHelper" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
