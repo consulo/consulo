@@ -31,7 +31,7 @@ public abstract class EncapsulateFieldHelper {
   private static class Extension extends LanguageExtension<EncapsulateFieldHelper> {
 
     public Extension() {
-      super("com.intellij.encapsulateFields.Helper");
+      super("org.consulo.java.encapsulateFields.helper");
     }
   }
   private static final Extension INSTANCE = new Extension();

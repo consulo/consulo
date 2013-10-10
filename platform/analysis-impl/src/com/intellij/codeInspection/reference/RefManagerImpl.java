@@ -611,7 +611,7 @@ public class RefManagerImpl extends RefManager {
     if (!deletedRefs.contains(refElement)) deletedRefs.add(refElement);
   }
 
-  protected boolean isValidPointForReference() {
+  public boolean isValidPointForReference() {
     return myIsInProcess || ApplicationManager.getApplication().isUnitTestMode();
   }
 }

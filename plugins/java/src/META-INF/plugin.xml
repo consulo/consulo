@@ -102,7 +102,7 @@
       <add-to-group group-id="EditorTabPopupMenuEx" anchor="after" relative-to-action="AddAllToFavorites"/>
     </action>
 
-    <group id="RefactoringMenu4" requireModuleExtensions="java" canUseProjectAsDefault="true">
+    <group id="RefactoringMenu4" require-module-extensions="java" can-use-project-as-default="true">
       <action id="TurnRefsToSuper" class="com.intellij.refactoring.actions.TurnRefsToSuperAction"/>
       <action id="InheritanceToDelegation" class="com.intellij.refactoring.actions.InheritanceToDelegationAction"/>
       <action id="RemoveMiddleman" class="com.intellij.refactoring.actions.RemoveMiddlemanAction"/>
@@ -402,6 +402,9 @@
   </project-components>
 
   <extensionPoints>
+    <extensionPoint name="encapsulateFields.helper" beanClass="com.intellij.lang.LanguageExtensionPoint" >
+      <with attribute="implementationClass" implements="com.intellij.refactoring.encapsulateFields.EncapsulateFieldHelper"/>
+    </extensionPoint>
     <extensionPoint name="attachSourcesProvider" interface="com.intellij.codeInsight.AttachSourcesProvider"/>
 
     <extensionPoint name="variableTypeCalculator" interface="com.intellij.codeInsight.template.macro.VariableTypeCalculator"/>
@@ -590,6 +593,7 @@
   </extensions>
 
   <extensions defaultExtensionNs="org.consulo.java">
+    <encapsulateFields.helper language="JAVA" implementationClass="com.intellij.refactoring.encapsulateFields.JavaEncapsulateFieldHelper" />
     <codeStyle.referenceAdjuster language="JAVA" implementationClass="com.intellij.psi.impl.source.codeStyle.JavaReferenceAdjuster" />
     <exceptionFilter implementation="com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationExceptionFilterFactory"/>
     <exceptionFilter implementation="com.intellij.execution.filters.ExceptionBaseFilterFactory"/>
