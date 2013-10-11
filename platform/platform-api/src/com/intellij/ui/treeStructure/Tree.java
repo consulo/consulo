@@ -148,9 +148,9 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
   @SuppressWarnings("unchecked")
   @NotNull
   protected Condition<Integer> getWideSelectionBackgroundCondition() {
-    return SystemInfo.isMac || UIUtil.isUnderDarcula() ? Condition.FALSE : Condition.TRUE;
+    return Condition.TRUE;
   }
-  
+
   public boolean isFileColorsEnabled() {
     return false;
   }
@@ -524,13 +524,13 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         for (int i = 0; i < kids.length; i++) {
           final Object kid = kids[i];
           if (kid instanceof PresentableNodeDescriptor) {
-          PresentableNodeDescriptor eachKid = (PresentableNodeDescriptor) kid;
-          if (!node.isHighlightableContentNode(eachKid)) continue;
-          if (first == null) {
-            first = eachKid;
-          }
-          last = eachKid;
-          lastIndex = i;
+            PresentableNodeDescriptor eachKid = (PresentableNodeDescriptor) kid;
+            if (!node.isHighlightableContentNode(eachKid)) continue;
+            if (first == null) {
+              first = eachKid;
+            }
+            last = eachKid;
+            lastIndex = i;
           }
         }
 
@@ -808,7 +808,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     if (myHoldSize != null) {
       size.width = Math.max(size.width, myHoldSize.width);
-      size.height = Math.max(size.height, myHoldSize.height);      
+      size.height = Math.max(size.height, myHoldSize.height);
     }
 
     return size;

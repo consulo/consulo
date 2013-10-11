@@ -40,6 +40,8 @@ import com.intellij.util.ui.UIUtil;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -87,6 +89,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
   private boolean myStripesOverlayed;
   private final Disposable myDisposable = Disposer.newDisposable();
   private boolean myWidescreen = false;
+  private boolean myLeftHorizontalSplit = false;
+  private boolean myRightHorizontalSplit = false;
 
   ToolWindowsPane(final IdeFrameImpl frame, ToolWindowManagerImpl manager){
     myManager = manager;
@@ -112,12 +116,9 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     myHorizontalSplitter.setDividerWidth(0);
     myHorizontalSplitter.setDividerMouseZoneSize(Registry.intValue("ide.splitter.mouseZone"));
     myHorizontalSplitter.setBackground(Color.gray);
-    if (/*ApplicationManager.getApplication().isInternal() ||*/ Registry.is("ide.windowSystem.supportWidescreen", false)) {
-      Rectangle mainScreenBounds = ScreenUtil.getMainScreenBounds();
-      if (!mainScreenBounds.isEmpty() && ((double)mainScreenBounds.width/ mainScreenBounds.height) > 1.34) {
-        myWidescreen = true;
-      }
-    }
+    myWidescreen = UISettings.getInstance().WIDESCREEN_SUPPORT;
+    myLeftHorizontalSplit = UISettings.getInstance().LEFT_HORIZONTAL_SPLIT;
+    myRightHorizontalSplit = UISettings.getInstance().RIGHT_HORIZONTAL_SPLIT;
     if (myWidescreen) {
       myHorizontalSplitter.setInnerComponent(myVerticalSplitter);
     }
@@ -239,8 +240,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     final String id=copiedInfo.getId();
 
     myDecorator2Info.put(decorator,copiedInfo);
-    myId2Decorator.put(id,decorator);    
-    
+    myId2Decorator.put(id,decorator);
+
     if(info.isDocked()){
       WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
       if (sideInfo == null) {
@@ -415,8 +416,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
 
 
     if (oldVisible != visible) {
-     revalidate();
-     repaint();
+      revalidate();
+      repaint();
     }
   }
 
@@ -525,6 +526,44 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     }
 
     resizer.setSize(actualSize);
+  }
+
+  private void updateLayout() {
+    if (myWidescreen != UISettings.getInstance().WIDESCREEN_SUPPORT) {
+      JComponent documentComponent = (myWidescreen ? myVerticalSplitter : myHorizontalSplitter).getInnerComponent();
+      myWidescreen = UISettings.getInstance().WIDESCREEN_SUPPORT;
+      if (myWidescreen) {
+        myVerticalSplitter.setInnerComponent(null);
+        myHorizontalSplitter.setInnerComponent(myVerticalSplitter);
+      }
+      else {
+        myHorizontalSplitter.setInnerComponent(null);
+        myVerticalSplitter.setInnerComponent(myHorizontalSplitter);
+      }
+      myLayeredPane.remove(myWidescreen ? myVerticalSplitter : myHorizontalSplitter);
+      myLayeredPane.add(myWidescreen ? myHorizontalSplitter : myVerticalSplitter, DEFAULT_LAYER);
+      setDocumentComponent(documentComponent);
+    }
+    if (myLeftHorizontalSplit != UISettings.getInstance().LEFT_HORIZONTAL_SPLIT) {
+      JComponent component = getComponentAt(ToolWindowAnchor.LEFT);
+      if (component instanceof Splitter) {
+        Splitter splitter = (Splitter)component;
+        InternalDecorator first = (InternalDecorator)splitter.getFirstComponent();
+        InternalDecorator second = (InternalDecorator)splitter.getSecondComponent();
+        setComponent(splitter, ToolWindowAnchor.LEFT, ToolWindowAnchor.LEFT.isSplitVertically() ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
+      }
+      myLeftHorizontalSplit = UISettings.getInstance().LEFT_HORIZONTAL_SPLIT;
+    }
+    if (myRightHorizontalSplit != UISettings.getInstance().RIGHT_HORIZONTAL_SPLIT) {
+      JComponent component = getComponentAt(ToolWindowAnchor.RIGHT);
+      if (component instanceof Splitter) {
+        Splitter splitter = (Splitter)component;
+        InternalDecorator first = (InternalDecorator)splitter.getFirstComponent();
+        InternalDecorator second = (InternalDecorator)splitter.getSecondComponent();
+        setComponent(splitter, ToolWindowAnchor.RIGHT, ToolWindowAnchor.RIGHT.isSplitVertically() ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
+      }
+      myRightHorizontalSplit = UISettings.getInstance().RIGHT_HORIZONTAL_SPLIT;
+    }
   }
 
 
@@ -661,7 +700,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private final boolean myDirtyMode;
 
     private AddAndSplitDockedComponentCmd(final JComponent newComponent,
-                                    final WindowInfoImpl info, final boolean dirtyMode, final Runnable finishCallBack) {
+                                          final WindowInfoImpl info, final boolean dirtyMode, final Runnable finishCallBack) {
       super(finishCallBack);
       myNewComponent = newComponent;
       myInfo = info;
@@ -672,8 +711,46 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
       try {
         float newWeight;
         final ToolWindowAnchor anchor = myInfo.getAnchor();
-        Splitter splitter = new Splitter(!myInfo.getAnchor().isHorizontal());
-        InternalDecorator oldComponent = (InternalDecorator) getComponentAt(myInfo.getAnchor());
+        final Disposable splitterDisposable = new Disposable() {
+          @Override
+          public void dispose() {
+          }
+        };
+        Disposer.register(myDisposable, splitterDisposable);
+        final Splitter splitter = new Splitter(anchor.isSplitVertically()) {
+          @Override
+          public void removeNotify() {
+            super.removeNotify();
+            Disposer.dispose(splitterDisposable);
+          }
+        };
+        if (!anchor.isHorizontal()) {
+          UISettings.getInstance().addUISettingsListener(new UISettingsListener() {
+            @Override
+            public void uiSettingsChanged(UISettings source) {
+              if (anchor == ToolWindowAnchor.LEFT) {
+                splitter.setOrientation(!source.LEFT_HORIZONTAL_SPLIT);
+              }
+              if (anchor == ToolWindowAnchor.RIGHT) {
+                splitter.setOrientation(!source.RIGHT_HORIZONTAL_SPLIT);
+              }
+            }
+          }, splitterDisposable);
+          splitter.setAllowSwitchOrientationByMouseClick(true);
+          splitter.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+              if (anchor == ToolWindowAnchor.LEFT) {
+                UISettings.getInstance().LEFT_HORIZONTAL_SPLIT = !splitter.isVertical();
+              }
+              if (anchor == ToolWindowAnchor.RIGHT) {
+                UISettings.getInstance().RIGHT_HORIZONTAL_SPLIT = !splitter.isVertical();
+              }
+              UISettings.getInstance().fireUISettingsChanged();
+            }
+          });
+        }
+        InternalDecorator oldComponent = (InternalDecorator) getComponentAt(anchor);
         if (myInfo.isSplit()) {
           splitter.setFirstComponent(oldComponent);
           splitter.setSecondComponent(myNewComponent);
@@ -682,13 +759,22 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
                                                                         (oldComponent.getWindowInfo().getSideWeight() +
                                                                          myInfo.getSideWeight())));
           splitter.setProportion(proportion);
-          newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight());
+          if (!anchor.isHorizontal() && !anchor.isSplitVertically()) {
+            newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
+          } else {
+            newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight());
+          }
         }
         else {
           splitter.setFirstComponent(myNewComponent);
           splitter.setSecondComponent(oldComponent);
           splitter.setProportion(normalizeWeigh(myInfo.getSideWeight()));
-          newWeight = normalizeWeigh(myInfo.getWeight());
+          if (!anchor.isHorizontal() && !anchor.isSplitVertically()) {
+            newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
+          }
+          else {
+            newWeight = normalizeWeigh(myInfo.getWeight());
+          }
         }
         setComponent(splitter, anchor, newWeight);
 
@@ -1017,6 +1103,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
   private final class MyUISettingsListenerImpl implements UISettingsListener{
     public final void uiSettingsChanged(final UISettings source){
       updateToolStripesVisibility();
+      updateLayout();
     }
   }
 
@@ -1031,13 +1118,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     public MyLayeredPane(final JComponent splitter) {
       myBottomImageRef=new SoftReference<BufferedImage>(null);
       myTopImageRef=new SoftReference<BufferedImage>(null);
-      setOpaque(!UIUtil.isUnderDarcula());
+      setOpaque(false);
       add(splitter,JLayeredPane.DEFAULT_LAYER);
-    }
-
-    @Override
-    public Color getBackground() {
-      return SwingUtilities.getDeepestComponentAt(this, 0, 0) == this ? Color.GRAY : UIUtil.getPanelBackground(); 
     }
 
     public final Image getBottomImage(){
@@ -1058,7 +1140,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
       if(
         image==null ||
         image.getWidth(null) < getWidth() || image.getHeight(null) < getHeight()
-      ){
+        ){
         final int width=Math.max(Math.max(1,getWidth()),myFrame.getWidth());
         final int height=Math.max(Math.max(1,getHeight()),myFrame.getHeight());
         if (SystemInfo.isWindows) {
@@ -1081,39 +1163,39 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
      * When component size becomes larger then bottom and top images should be enlarged.
      */
     public void doLayout() {
-        final int width=getWidth();
-        final int height=getHeight();
-        if(width<0||height<0){
-          return;
+      final int width=getWidth();
+      final int height=getHeight();
+      if(width<0||height<0){
+        return;
+      }
+      // Resize component at the DEFAULT layer. It should be only on component in that layer
+      Component[] components=getComponentsInLayer(JLayeredPane.DEFAULT_LAYER.intValue());
+      LOG.assertTrue(components.length<=1);
+      for (final Component component : components) {
+        component.setBounds(0, 0, getWidth(), getHeight());
+      }
+      // Resize components at the PALETTE layer
+      components=getComponentsInLayer(JLayeredPane.PALETTE_LAYER.intValue());
+      for (final Component component : components) {
+        if (!(component instanceof InternalDecorator)) {
+          continue;
         }
-        // Resize component at the DEFAULT layer. It should be only on component in that layer
-        Component[] components=getComponentsInLayer(JLayeredPane.DEFAULT_LAYER.intValue());
-        LOG.assertTrue(components.length<=1);
-        for (final Component component : components) {
-          component.setBounds(0, 0, getWidth(), getHeight());
+        final WindowInfoImpl info = myDecorator2Info.get(component);
+        // In normal situation info is not null. But sometimes Swing sends resize
+        // event to removed component. See SCR #19566.
+        if (info == null) {
+          continue;
         }
-        // Resize components at the PALETTE layer
-        components=getComponentsInLayer(JLayeredPane.PALETTE_LAYER.intValue());
-        for (final Component component : components) {
-          if (!(component instanceof InternalDecorator)) {
-            continue;
-          }
-          final WindowInfoImpl info = myDecorator2Info.get(component);
-          // In normal situation info is not null. But sometimes Swing sends resize
-          // event to removed component. See SCR #19566.
-          if (info == null) {
-            continue;
-          }
 
-          final float weight;
-          if (ToolWindowAnchor.TOP == info.getAnchor() || ToolWindowAnchor.BOTTOM == info.getAnchor()) {
-            weight = (float)component.getHeight() / (float)getHeight();
-          }
-          else {
-            weight = (float)component.getWidth() / (float)getWidth();
-          }
-          setBoundsInPaletteLayer(component, info.getAnchor(), weight);
+        final float weight;
+        if (info.getAnchor().isHorizontal()) {
+          weight = (float)component.getHeight() / (float)getHeight();
         }
+        else {
+          weight = (float)component.getWidth() / (float)getWidth();
+        }
+        setBoundsInPaletteLayer(component, info.getAnchor(), weight);
+      }
     }
 
     public final void setBoundsInPaletteLayer(final Component component,final ToolWindowAnchor anchor,float weight){
@@ -1144,7 +1226,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
   }
 
   @Override
-   public void dispose() {
+  public void dispose() {
   }
 
   private static float normalizeWeigh(final float weight) {
