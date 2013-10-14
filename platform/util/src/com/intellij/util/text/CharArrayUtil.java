@@ -193,6 +193,12 @@ public class CharArrayUtil {
       return chars;
     }
 
+    if (seq instanceof StringBuilder) {
+      char[] chars = new char[end-start];
+      ((StringBuilder)seq).getChars(start, end, chars, 0);
+      return chars;
+    }
+
     String s = seq.toString();
     char[] chars = new char[end-start];
     s.getChars(start, end, chars, 0);
