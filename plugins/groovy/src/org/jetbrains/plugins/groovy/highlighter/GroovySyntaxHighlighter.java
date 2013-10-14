@@ -83,38 +83,38 @@ public class GroovySyntaxHighlighter extends SyntaxHighlighterBase implements Gr
   static final TokenSet tOperators = TokenSet.orSet(BINARY_OP_SET, UNARY_OP_SET, ASSIGN_OP_SET);
 
   static {
-    fillMap(ATTRIBUTES, tLINE_COMMENTS, DefaultHighlighter.LINE_COMMENT);
-    fillMap(ATTRIBUTES, tBLOCK_COMMENTS, DefaultHighlighter.BLOCK_COMMENT);
-    fillMap(ATTRIBUTES, tBAD_CHARACTERS, DefaultHighlighter.BAD_CHARACTER);
-    fillMap(ATTRIBUTES, NUMBERS, DefaultHighlighter.NUMBER);
-    fillMap(ATTRIBUTES, tGSTRINGS, DefaultHighlighter.GSTRING);
-    fillMap(ATTRIBUTES, tSTRINGS, DefaultHighlighter.STRING);
-    fillMap(ATTRIBUTES, DefaultHighlighter.STRING, mREGEX_BEGIN, mREGEX_CONTENT, mREGEX_END, mDOLLAR_SLASH_REGEX_BEGIN, mDOLLAR_SLASH_REGEX_CONTENT, mDOLLAR_SLASH_REGEX_END);
-    fillMap(ATTRIBUTES, tBRACES, DefaultHighlighter.BRACES);
-    fillMap(ATTRIBUTES, tBRACKETS, DefaultHighlighter.BRACKETS);
-    fillMap(ATTRIBUTES, tPARENTHESES, DefaultHighlighter.PARENTHESES);
-    fillMap(ATTRIBUTES, tOperators, DefaultHighlighter.OPERATION_SIGN);
-    fillMap(ATTRIBUTES, DefaultHighlighter.VALID_STRING_ESCAPE, StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN);
-    fillMap(ATTRIBUTES, DefaultHighlighter.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN);
-    fillMap(ATTRIBUTES, DefaultHighlighter.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN);
+    fillMap(ATTRIBUTES, tLINE_COMMENTS, GroovyHighlighterColors.LINE_COMMENT);
+    fillMap(ATTRIBUTES, tBLOCK_COMMENTS, GroovyHighlighterColors.BLOCK_COMMENT);
+    fillMap(ATTRIBUTES, tBAD_CHARACTERS, GroovyHighlighterColors.BAD_CHARACTER);
+    fillMap(ATTRIBUTES, NUMBERS, GroovyHighlighterColors.NUMBER);
+    fillMap(ATTRIBUTES, tGSTRINGS, GroovyHighlighterColors.GSTRING);
+    fillMap(ATTRIBUTES, tSTRINGS, GroovyHighlighterColors.STRING);
+    fillMap(ATTRIBUTES, GroovyHighlighterColors.STRING, mREGEX_BEGIN, mREGEX_CONTENT, mREGEX_END, mDOLLAR_SLASH_REGEX_BEGIN, mDOLLAR_SLASH_REGEX_CONTENT, mDOLLAR_SLASH_REGEX_END);
+    fillMap(ATTRIBUTES, tBRACES, GroovyHighlighterColors.BRACES);
+    fillMap(ATTRIBUTES, tBRACKETS, GroovyHighlighterColors.BRACKETS);
+    fillMap(ATTRIBUTES, tPARENTHESES, GroovyHighlighterColors.PARENTHESES);
+    fillMap(ATTRIBUTES, tOperators, GroovyHighlighterColors.OPERATION_SIGN);
+    fillMap(ATTRIBUTES, GroovyHighlighterColors.VALID_STRING_ESCAPE, StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN);
+    fillMap(ATTRIBUTES, GroovyHighlighterColors.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN);
+    fillMap(ATTRIBUTES, GroovyHighlighterColors.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN);
   }
 
   static {
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tLINE_COMMENTS, DefaultHighlighter.LINE_COMMENT);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBLOCK_COMMENTS, DefaultHighlighter.BLOCK_COMMENT);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBAD_CHARACTERS, DefaultHighlighter.BAD_CHARACTER);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, NUMBERS, DefaultHighlighter.NUMBER);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tGSTRINGS, DefaultHighlighter.GSTRING);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tSTRINGS, DefaultHighlighter.STRING);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, DefaultHighlighter.STRING, mREGEX_BEGIN, mREGEX_CONTENT, mREGEX_END, mDOLLAR_SLASH_REGEX_BEGIN,
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tLINE_COMMENTS, GroovyHighlighterColors.LINE_COMMENT);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBLOCK_COMMENTS, GroovyHighlighterColors.BLOCK_COMMENT);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBAD_CHARACTERS, GroovyHighlighterColors.BAD_CHARACTER);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, NUMBERS, GroovyHighlighterColors.NUMBER);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tGSTRINGS, GroovyHighlighterColors.GSTRING);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tSTRINGS, GroovyHighlighterColors.STRING);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, GroovyHighlighterColors.STRING, mREGEX_BEGIN, mREGEX_CONTENT, mREGEX_END, mDOLLAR_SLASH_REGEX_BEGIN,
             mDOLLAR_SLASH_REGEX_CONTENT, mDOLLAR_SLASH_REGEX_END);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBRACES, DefaultHighlighter.BRACES);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBRACKETS, DefaultHighlighter.BRACKETS);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tPARENTHESES, DefaultHighlighter.PARENTHESES);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, DefaultHighlighter.VALID_STRING_ESCAPE, StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, DefaultHighlighter.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, DefaultHighlighter.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN);
-    fillMap(POWER_SAVE_MODE_ATTRIBUTES, KEYWORDS, DefaultHighlighter.KEYWORD);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBRACES, GroovyHighlighterColors.BRACES);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tBRACKETS, GroovyHighlighterColors.BRACKETS);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, tPARENTHESES, GroovyHighlighterColors.PARENTHESES);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, GroovyHighlighterColors.VALID_STRING_ESCAPE, StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, GroovyHighlighterColors.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, GroovyHighlighterColors.INVALID_STRING_ESCAPE, StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN);
+    fillMap(POWER_SAVE_MODE_ATTRIBUTES, KEYWORDS, GroovyHighlighterColors.KEYWORD);
   }
 
   @NotNull

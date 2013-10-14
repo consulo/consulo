@@ -54,7 +54,7 @@ import org.jetbrains.plugins.groovy.lang.resolve.ResolveUtil;
 
 import java.util.Set;
 
-import static org.jetbrains.plugins.groovy.highlighter.DefaultHighlighter.*;
+import static org.jetbrains.plugins.groovy.highlighter.GroovyHighlighterColors.*;
 
 /**
  * @author Max Medvedev

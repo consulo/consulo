@@ -72,6 +72,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, DisplayPrio
     TAG_HIGHLIGHTING_MAP.put("inst_method", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
     TAG_HIGHLIGHTING_MAP.put("inst_field", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
     TAG_HIGHLIGHTING_MAP.put("static_method", DefaultLanguageHighlighterColors.STATIC_METHOD);
+    TAG_HIGHLIGHTING_MAP.put("type_alias_name", DefaultLanguageHighlighterColors.TYPE_ALIAS_NAME);
     TAG_HIGHLIGHTING_MAP.put("static_field", DefaultLanguageHighlighterColors.STATIC_FIELD);
     TAG_HIGHLIGHTING_MAP.put("label", DefaultLanguageHighlighterColors.LABEL);
     TAG_HIGHLIGHTING_MAP.put("local_var", DefaultLanguageHighlighterColors.LOCAL_VARIABLE);
@@ -147,6 +148,8 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, DisplayPrio
     new AttributesDescriptor(
       OptionsBundle.message("options.language.defaults.interface.name"), DefaultLanguageHighlighterColors.INTERFACE_NAME),
     new AttributesDescriptor(
+      OptionsBundle.message("options.language.defaults.type.alias.name"), DefaultLanguageHighlighterColors.TYPE_ALIAS_NAME),
+    new AttributesDescriptor(
       OptionsBundle.message("options.language.defaults.metadata"), DefaultLanguageHighlighterColors.METADATA),
     new AttributesDescriptor(
       OptionsBundle.message("options.language.defaults.class.name"), DefaultLanguageHighlighterColors.CLASS_NAME),
@@ -212,6 +215,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, DisplayPrio
       "    Local <local_var>variable</local_var>\n" +
       "Function <func_call>call</func_call>()\n" +
       "Interface <interface>Name</interface>\n" +
+      "Type-alias <type_alias_name>Name</type_alias_name>\n" +
       "<metadata>@Metadata</metadata>\n" +
       "Class <class_name>Name</class_name>\n" +
       "    instance <inst_method>method</inst_method>\n" +

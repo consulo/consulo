@@ -21,8 +21,8 @@ import com.intellij.execution.filters.FilterMixin;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.DiffColors;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -76,7 +76,7 @@ public class VcsContentAnnotationExceptionFilter implements Filter, FilterMixin 
       final TextAttributes changedColor = globalScheme.getAttributes(DiffColors.DIFF_MODIFIED);
       if (source == null) {
         TextAttributes atts =
-          globalScheme.getAttributes(CodeInsightColors.CLASS_NAME_ATTRIBUTES).clone();
+          globalScheme.getAttributes(DefaultLanguageHighlighterColors.CLASS_NAME).clone();
         atts.setBackgroundColor(changedColor.getBackgroundColor());
         return atts;
       }

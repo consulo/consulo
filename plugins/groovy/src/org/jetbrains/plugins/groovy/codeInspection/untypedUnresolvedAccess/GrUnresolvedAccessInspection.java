@@ -92,7 +92,7 @@ import java.util.Map;
 
 import static com.intellij.psi.PsiModifier.STATIC;
 import static org.jetbrains.plugins.groovy.annotator.intentions.QuickfixUtil.isCall;
-import static org.jetbrains.plugins.groovy.highlighter.DefaultHighlighter.UNRESOLVED_ACCESS;
+import static org.jetbrains.plugins.groovy.highlighter.GroovyHighlighterColors.UNRESOLVED_ACCESS;
 
 /**
  * @author Maxim.Medvedev

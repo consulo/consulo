@@ -22,6 +22,7 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 import com.intellij.application.options.colors.ScopeAttributesUtil;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import com.intellij.codeInsight.daemon.impl.JavaHighlightInfoTypes;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -202,18 +203,18 @@ public class HighlightNamesUtil {
   @NotNull
   private static HighlightInfoType getClassNameHighlightType(@Nullable PsiClass aClass, @Nullable PsiElement element) {
     if (element instanceof PsiJavaCodeReferenceElement && element.getParent() instanceof PsiAnonymousClass) {
-      return HighlightInfoType.ANONYMOUS_CLASS_NAME;
+      return JavaHighlightInfoTypes.ANONYMOUS_CLASS_NAME;
     }
     if (aClass != null) {
-      if (aClass.isAnnotationType()) return HighlightInfoType.ANNOTATION_NAME;
-      if (aClass.isInterface()) return HighlightInfoType.INTERFACE_NAME;
-      if (aClass.isEnum()) return HighlightInfoType.ENUM_NAME;
-      if (aClass instanceof PsiTypeParameter) return HighlightInfoType.TYPE_PARAMETER_NAME;
+      if (aClass.isAnnotationType()) return JavaHighlightInfoTypes.ANNOTATION_NAME;
+      if (aClass.isInterface()) return JavaHighlightInfoTypes.INTERFACE_NAME;
+      if (aClass.isEnum()) return JavaHighlightInfoTypes.ENUM_NAME;
+      if (aClass instanceof PsiTypeParameter) return JavaHighlightInfoTypes.TYPE_PARAMETER_NAME;
       final PsiModifierList modList = aClass.getModifierList();
-      if (modList != null && modList.hasModifierProperty(PsiModifier.ABSTRACT)) return HighlightInfoType.ABSTRACT_CLASS_NAME;
+      if (modList != null && modList.hasModifierProperty(PsiModifier.ABSTRACT)) return JavaHighlightInfoTypes.ABSTRACT_CLASS_NAME;
     }
     // use class by default
-    return HighlightInfoType.CLASS_NAME;
+    return JavaHighlightInfoTypes.CLASS_NAME;
   }
 
   @Nullable

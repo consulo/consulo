@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.extensions.GroovyNamedArgumentProvider;
 import org.jetbrains.plugins.groovy.extensions.NamedArgumentDescriptor;
-import org.jetbrains.plugins.groovy.highlighter.DefaultHighlighter;
+import org.jetbrains.plugins.groovy.highlighter.GroovyHighlighterColors;
 import org.jetbrains.plugins.groovy.lang.completion.handlers.NamedArgumentInsertHandler;
 import org.jetbrains.plugins.groovy.lang.lexer.GroovyTokenTypes;
 import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.GrListOrMap;
@@ -98,7 +98,7 @@ class MapArgumentCompletionProvider extends CompletionProvider<CompletionParamet
         .withTailText(":");
 
       if (entry.getValue().getPriority() == Priority.UNLIKELY) {
-        lookup.withItemTextForeground(DefaultHighlighter.MAP_KEY_COLOR);
+        lookup.withItemTextForeground(GroovyHighlighterColors.MAP_KEY_COLOR);
       }
       else {
         lookup = lookup.withIcon(JetgroovyIcons.Groovy.DynamicProperty);

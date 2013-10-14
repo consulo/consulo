@@ -98,7 +98,7 @@ import org.jetbrains.plugins.groovy.lang.resolve.ast.GrInheritConstructorContrib
 import java.util.*;
 
 import static com.intellij.psi.PsiModifier.*;
-import static org.jetbrains.plugins.groovy.highlighter.DefaultHighlighter.*;
+import static org.jetbrains.plugins.groovy.highlighter.GroovyHighlighterColors.*;
 
 /**
  * @author ven

@@ -19,17 +19,36 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.unusedImport.UnusedImportLocalInspection;
 import com.intellij.ide.highlighter.JavaHighlightingColors;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 
 /**
  * @author anna
- * Date: 01-Feb-2008
+ *         Date: 01-Feb-2008
  */
-public interface JavaHighlightInfoTypes extends HighlightInfoType {
+public interface JavaHighlightInfoTypes {
   HighlightInfoType UNUSED_IMPORT = new HighlightInfoType.HighlightInfoTypeSeverityByKey(
     HighlightDisplayKey.findOrRegister(UnusedImportLocalInspection.SHORT_NAME, UnusedImportLocalInspection.DISPLAY_NAME),
     CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
 
-  HighlightInfoType JAVA_KEYWORD = new HighlightInfoType.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, JavaHighlightingColors.KEYWORD);
+  HighlightInfoType KEYWORD = new HighlightInfoType.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, JavaHighlightingColors.KEYWORD);
+
+  HighlightInfoType ANNOTATION_NAME =
+    new HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, JavaHighlightingColors.ANNOTATION_NAME);
+  HighlightInfoType CLASS_NAME =
+    new HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, JavaHighlightingColors.CLASS_NAME, false);
+
+  HighlightInfoType ENUM_NAME =
+    new HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, JavaHighlightingColors.ENUM_NAME, false);
+
+  HighlightInfoType INTERFACE_NAME =
+    new HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, JavaHighlightingColors.INTERFACE_NAME, false);
+
+  HighlightInfoType ANONYMOUS_CLASS_NAME =
+    new HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, JavaHighlightingColors.ANONYMOUS_CLASS_NAME, false);
+
+  HighlightInfoType TYPE_PARAMETER_NAME =
+    new HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, JavaHighlightingColors.TYPE_PARAMETER_NAME);
+
+  HighlightInfoType ABSTRACT_CLASS_NAME =
+    new HighlightInfoType.HighlightInfoTypeImpl(HighlightInfoType.SYMBOL_TYPE_SEVERITY, JavaHighlightingColors.ABSTRACT_CLASS_NAME, false);
 }

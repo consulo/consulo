@@ -15,31 +15,56 @@
  */
 package com.intellij.ide.highlighter;
 
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
+import com.intellij.lang.java.JavaLanguage;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 
 /**
  * Highlighting text attributes for Java language.
- * 
+ *
  * @author Rustam Vishnyakov
  */
-@SuppressWarnings("deprecation") // Later SyntaxHighlighterColors will be moved here.
-public class JavaHighlightingColors {
-  public static final TextAttributesKey LINE_COMMENT = SyntaxHighlighterColors.LINE_COMMENT;
-  public static final TextAttributesKey JAVA_BLOCK_COMMENT = SyntaxHighlighterColors.JAVA_BLOCK_COMMENT;
-  public static final TextAttributesKey DOC_COMMENT = SyntaxHighlighterColors.DOC_COMMENT;
-  public static final TextAttributesKey KEYWORD = SyntaxHighlighterColors.KEYWORD;
-  public static final TextAttributesKey NUMBER = SyntaxHighlighterColors.NUMBER;
-  public static final TextAttributesKey STRING = SyntaxHighlighterColors.STRING;
-  public static final TextAttributesKey OPERATION_SIGN = SyntaxHighlighterColors.OPERATION_SIGN;
-  public static final TextAttributesKey PARENTHS = SyntaxHighlighterColors.PARENTHS;
-  public static final TextAttributesKey BRACKETS = SyntaxHighlighterColors.BRACKETS;
-  public static final TextAttributesKey BRACES = SyntaxHighlighterColors.BRACES;
-  public static final TextAttributesKey COMMA = SyntaxHighlighterColors.COMMA;
-  public static final TextAttributesKey DOT = SyntaxHighlighterColors.DOT;
-  public static final TextAttributesKey JAVA_SEMICOLON = SyntaxHighlighterColors.JAVA_SEMICOLON;
-  public static final TextAttributesKey DOC_COMMENT_TAG = SyntaxHighlighterColors.DOC_COMMENT_TAG;
-  public static final TextAttributesKey DOC_COMMENT_MARKUP = SyntaxHighlighterColors.DOC_COMMENT_MARKUP;
-  public static final TextAttributesKey VALID_STRING_ESCAPE = SyntaxHighlighterColors.VALID_STRING_ESCAPE;
-  public static final TextAttributesKey INVALID_STRING_ESCAPE = SyntaxHighlighterColors.INVALID_STRING_ESCAPE;
+public interface JavaHighlightingColors {
+  TextAttributesKey LINE_COMMENT =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.LINE_COMMENT);
+  TextAttributesKey JAVA_BLOCK_COMMENT =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+  TextAttributesKey DOC_COMMENT =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.DOC_COMMENT);
+  TextAttributesKey NUMBER = TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.NUMBER);
+  TextAttributesKey STRING = TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.STRING);
+  TextAttributesKey OPERATION_SIGN =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.OPERATION_SIGN);
+  TextAttributesKey PARENTHS =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.PARENTHESES);
+  TextAttributesKey BRACKETS = TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.BRACKETS);
+  TextAttributesKey BRACES = TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.BRACES);
+  TextAttributesKey COMMA = TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.COMMA);
+  TextAttributesKey DOT = TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.DOT);
+  TextAttributesKey JAVA_SEMICOLON =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.SEMICOLON);
+  TextAttributesKey DOC_COMMENT_TAG =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.DOC_COMMENT_TAG);
+  TextAttributesKey DOC_COMMENT_MARKUP =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.DOC_COMMENT_MARKUP);
+  TextAttributesKey VALID_STRING_ESCAPE =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
+  TextAttributesKey INVALID_STRING_ESCAPE =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
+  TextAttributesKey KEYWORD = TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.KEYWORD);
+
+  TextAttributesKey ANNOTATION_NAME =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.METADATA);
+  TextAttributesKey ENUM_NAME =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.CLASS_NAME);
+  TextAttributesKey CLASS_NAME =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.CLASS_NAME);
+  TextAttributesKey INTERFACE_NAME =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.CLASS_NAME);
+  TextAttributesKey ANONYMOUS_CLASS_NAME =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.CLASS_NAME);
+  TextAttributesKey TYPE_PARAMETER_NAME =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.TYPE_ALIAS_NAME);
+  TextAttributesKey ABSTRACT_CLASS_NAME =
+    TextAttributesKey.createTextAttributesKey(JavaLanguage.INSTANCE, DefaultLanguageHighlighterColors.CLASS_NAME);
 }

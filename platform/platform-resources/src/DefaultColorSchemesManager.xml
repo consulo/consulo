@@ -146,6 +146,13 @@
           <option name="FONT_TYPE" value="1"/>
         </value>
       </option>
+      <option name="DEFAULT_TYPE_ALIAS_NAME">
+        <value>
+          <option name="FOREGROUND" value="20999d"/>
+          <option name="BACKGROUND"/>
+          <option name="EFFECT_COLOR"/>
+        </value>
+      </option>
       <option name="DEFAULT_TAG">
         <value>
           <option name="BACKGROUND" value="efefef"/>
@@ -447,13 +454,6 @@
       <option name="ANONYMOUS_CLASS_NAME_ATTRIBUTES">
         <value>
           <option name="FOREGROUND"/>
-          <option name="BACKGROUND"/>
-          <option name="EFFECT_COLOR"/>
-        </value>
-      </option>
-      <option name="TYPE_PARAMETER_NAME_ATTRIBUTES">
-        <value>
-          <option name="FOREGROUND" value="20999d"/>
           <option name="BACKGROUND"/>
           <option name="EFFECT_COLOR"/>
         </value>

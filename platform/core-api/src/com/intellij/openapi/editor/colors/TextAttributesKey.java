@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor.colors;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.*;
@@ -140,6 +141,10 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey>, J
     return key;
   }
 
+  @NotNull
+  public static TextAttributesKey createTextAttributesKey(@NonNls @NotNull Language language, TextAttributesKey defaultAttributes) {
+    return createTextAttributesKey(language.getName() + "_" + defaultAttributes.getExternalName(), defaultAttributes);
+  }
 
   /**
    * Registers a text attribute key with the specified identifier and a fallback key. If text attributes for the key are not defined in

@@ -17,10 +17,10 @@ package com.intellij.openapi.options.colors.pages;
 
 import com.intellij.application.options.colors.InspectionColorSettingsPage;
 import com.intellij.ide.highlighter.JavaFileHighlighter;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.ide.highlighter.JavaHighlightingColors;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
@@ -60,12 +60,12 @@ public class JavaColorSettingsPage implements ColorSettingsPage, InspectionColor
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.javadoc.tag.value"), CodeInsightColors.DOC_COMMENT_TAG_VALUE),
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.javadoc.markup"), JavaHighlightingColors.DOC_COMMENT_MARKUP),
 
-    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.class"), CodeInsightColors.CLASS_NAME_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.anonymous.class"), CodeInsightColors.ANONYMOUS_CLASS_NAME_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.type.parameter"), CodeInsightColors.TYPE_PARAMETER_NAME_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.abstract.class"), CodeInsightColors.ABSTRACT_CLASS_NAME_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.interface"), CodeInsightColors.INTERFACE_NAME_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.enum"), CodeInsightColors.ENUM_NAME_ATTRIBUTES),
+    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.class"), JavaHighlightingColors.CLASS_NAME),
+    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.anonymous.class"), JavaHighlightingColors.ANONYMOUS_CLASS_NAME),
+    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.type.parameter"), JavaHighlightingColors.TYPE_PARAMETER_NAME),
+    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.abstract.class"), JavaHighlightingColors.ABSTRACT_CLASS_NAME),
+    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.interface"), JavaHighlightingColors.INTERFACE_NAME),
+    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.enum"), JavaHighlightingColors.ENUM_NAME),
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.local.variable"), CodeInsightColors.LOCAL_VARIABLE_ATTRIBUTES),
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.reassigned.local.variable"), CodeInsightColors.REASSIGNED_LOCAL_VARIABLE_ATTRIBUTES),
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.reassigned.parameter"), CodeInsightColors.REASSIGNED_PARAMETER_ATTRIBUTES),
@@ -82,13 +82,15 @@ public class JavaColorSettingsPage implements ColorSettingsPage, InspectionColor
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.abstract.method"), CodeInsightColors.ABSTRACT_METHOD_ATTRIBUTES),
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.inherited.method"), CodeInsightColors.INHERITED_METHOD_ATTRIBUTES),
 
-    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.annotation.name"), CodeInsightColors.ANNOTATION_NAME_ATTRIBUTES),
+    new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.annotation.name"), JavaHighlightingColors.ANNOTATION_NAME),
     new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.annotation.attribute.name"), CodeInsightColors.ANNOTATION_ATTRIBUTE_NAME_ATTRIBUTES)
   };
 
   @NonNls private static final Map<String, TextAttributesKey> ourTags = new HashMap<String, TextAttributesKey>();
   static {
     ourTags.put("field", CodeInsightColors.INSTANCE_FIELD_ATTRIBUTES);
+
+    // TODO [VISTALL] jump to general tab
     ourTags.put("unusedField", CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
     ourTags.put("error", CodeInsightColors.ERRORS_ATTRIBUTES);
     ourTags.put("warning", CodeInsightColors.WARNINGS_ATTRIBUTES);
@@ -96,6 +98,7 @@ public class JavaColorSettingsPage implements ColorSettingsPage, InspectionColor
     ourTags.put("server_problems", CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING);
     ourTags.put("server_duplicate", CodeInsightColors.DUPLICATE_FROM_SERVER);
     ourTags.put("unknownType", CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES);
+
     ourTags.put("localVar", CodeInsightColors.LOCAL_VARIABLE_ATTRIBUTES);
     ourTags.put("reassignedLocalVar", CodeInsightColors.REASSIGNED_LOCAL_VARIABLE_ATTRIBUTES);
     ourTags.put("reassignedParameter", CodeInsightColors.REASSIGNED_PARAMETER_ATTRIBUTES);
@@ -111,13 +114,13 @@ public class JavaColorSettingsPage implements ColorSettingsPage, InspectionColor
     ourTags.put("abstract_method", CodeInsightColors.ABSTRACT_METHOD_ATTRIBUTES);
     ourTags.put("inherited_method", CodeInsightColors.INHERITED_METHOD_ATTRIBUTES);
     ourTags.put("param", CodeInsightColors.PARAMETER_ATTRIBUTES);
-    ourTags.put("class", CodeInsightColors.CLASS_NAME_ATTRIBUTES);
-    ourTags.put("anonymousClass", CodeInsightColors.ANONYMOUS_CLASS_NAME_ATTRIBUTES);
-    ourTags.put("typeParameter", CodeInsightColors.TYPE_PARAMETER_NAME_ATTRIBUTES);
-    ourTags.put("abstractClass", CodeInsightColors.ABSTRACT_CLASS_NAME_ATTRIBUTES);
-    ourTags.put("interface", CodeInsightColors.INTERFACE_NAME_ATTRIBUTES);
-    ourTags.put("enum", CodeInsightColors.ENUM_NAME_ATTRIBUTES);
-    ourTags.put("annotationName", CodeInsightColors.ANNOTATION_NAME_ATTRIBUTES);
+    ourTags.put("class", JavaHighlightingColors.CLASS_NAME);
+    ourTags.put("anonymousClass", JavaHighlightingColors.ANONYMOUS_CLASS_NAME);
+    ourTags.put("typeParameter", JavaHighlightingColors.TYPE_PARAMETER_NAME);
+    ourTags.put("abstractClass", JavaHighlightingColors.ABSTRACT_CLASS_NAME);
+    ourTags.put("interface", JavaHighlightingColors.INTERFACE_NAME);
+    ourTags.put("enum", JavaHighlightingColors.ENUM_NAME);
+    ourTags.put("annotationName", JavaHighlightingColors.ANNOTATION_NAME);
     ourTags.put("annotationAttributeName", CodeInsightColors.ANNOTATION_ATTRIBUTE_NAME_ATTRIBUTES);
   }
 
@@ -129,7 +132,7 @@ public class JavaColorSettingsPage implements ColorSettingsPage, InspectionColor
 
   @Override
   public Icon getIcon() {
-    return StdFileTypes.JAVA.getIcon();
+    return JavaFileType.INSTANCE.getIcon();
   }
 
   @Override

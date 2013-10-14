@@ -33,7 +33,7 @@ import java.awt.*;
 /**
  * @author ilyas
  */
-public class DefaultHighlighter {
+public class GroovyHighlighterColors {
 
   @NonNls
   static final String LINE_COMMENT_ID = "Line comment";
@@ -94,7 +94,7 @@ public class DefaultHighlighter {
     TextAttributesKey.createTextAttributesKey(LINE_COMMENT_ID, DefaultLanguageHighlighterColors.LINE_COMMENT);
 
   public static final TextAttributesKey ANNOTATION =
-    TextAttributesKey.createTextAttributesKey(ANNOTATION_ID, HighlightInfoType.ANNOTATION_NAME.getAttributesKey());
+    TextAttributesKey.createTextAttributesKey(ANNOTATION_ID, JavaHighlightingColors.ANNOTATION_NAME);
   
   public static final TextAttributesKey LOCAL_VARIABLE =
     TextAttributesKey.createTextAttributesKey("Groovy var", HighlightInfoType.LOCAL_VARIABLE.getAttributesKey());
@@ -142,7 +142,7 @@ public class DefaultHighlighter {
     TextAttributesKey.createTextAttributesKey(CLASS_REFERENCE_ID, HighlighterColors.TEXT);
 
   public static final TextAttributesKey TYPE_PARAMETER = 
-    TextAttributesKey.createTextAttributesKey(TYPE_PARAMETER_ID, CodeInsightColors.TYPE_PARAMETER_NAME_ATTRIBUTES);
+    TextAttributesKey.createTextAttributesKey(TYPE_PARAMETER_ID, DefaultLanguageHighlighterColors.TYPE_ALIAS_NAME);
 
   public static final TextAttributesKey INSTANCE_PROPERTY_REFERENCE =
     TextAttributesKey.createTextAttributesKey(INSTANCE_PROPERTY_REFERENCE_ID, DefaultLanguageHighlighterColors.INSTANCE_FIELD);
@@ -204,6 +204,6 @@ public class DefaultHighlighter {
   public static final TextAttributesKey LABEL = TextAttributesKey.createTextAttributesKey(LABEL_ID, HighlighterColors.TEXT);
 
 
-  private DefaultHighlighter() {
+  private GroovyHighlighterColors() {
   }
 }
