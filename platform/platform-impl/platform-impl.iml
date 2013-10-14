@@ -37,6 +37,7 @@
     <orderEntry type="library" name="Guava" level="project" />
     <orderEntry type="module" module-name="analysis-impl" />
     <orderEntry type="module" module-name="editor-ui-ex" exported="" />
+    <orderEntry type="library" name="jsr166" level="project" />
   </component>
 </module>
 

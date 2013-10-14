@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public class ProgressWrapper extends AbstractProgressIndicatorBase {
   private final ProgressIndicator myOriginal;
 
-  private ProgressWrapper(@NotNull ProgressIndicator original) {
+  protected ProgressWrapper(@NotNull ProgressIndicator original) {
     myOriginal = original;
   }
 
