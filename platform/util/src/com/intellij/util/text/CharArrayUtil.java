@@ -157,6 +157,12 @@ public class CharArrayUtil {
       return chars;
     }
 
+    if (seq instanceof StringBuilder) {
+      char[] chars = new char[seq.length()];
+      ((StringBuilder)seq).getChars(0, seq.length(), chars, 0);
+      return chars;
+    }
+
     if (seq instanceof String) {
       char[] chars = new char[seq.length()];
       ((String)seq).getChars(0, seq.length(), chars, 0);
