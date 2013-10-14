@@ -64,7 +64,7 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
     c.addMouseMotionListener(new MouseMotionAdapter() {
       @Override
       public void mouseMoved(MouseEvent e) {
-        if (isSearchField(c)) {
+        if (ui.getComponent() != null && isSearchField(c)) {
           if (ui.getActionUnder(e) != null) {
             c.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
           } else {
@@ -140,10 +140,10 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
     Graphics2D g = (Graphics2D)graphics;
     final JTextComponent c = getComponent();
     final Container parent = c.getParent();
-    if (parent != null) {
-      g.setColor(parent.getBackground());
-      g.fillRect(0, 0, c.getWidth(), c.getHeight());
-    }
+//    if (parent != null) {
+//      g.setColor(parent.getBackground());
+//      g.fillRect(0, 0, c.getWidth(), c.getHeight());
+//    }
     final GraphicsConfig config = new GraphicsConfig(g);
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
@@ -152,18 +152,18 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
     if (isSearchField(c)) {
       g.setColor(c.getBackground());
       final Rectangle r = getDrawingRect();
-      int radius = r.height;
-      g.fillRoundRect(r.x, r.y, r.width, r.height, radius, radius);
+      int radius = r.height-1;
+      g.fillRoundRect(r.x, r.y, r.width, r.height-1, radius, radius);
       g.setColor(c.isEnabled() ? Gray._100 : new Color(0x535353));
-      if (c.hasFocus()) {
+      if (c.hasFocus() && c.getClientProperty("JTextField.Search.noFocusRing") != Boolean.TRUE) {
         DarculaUIUtil.paintSearchFocusRing(g, r);
       } else {
-        g.drawRoundRect(r.x, r.y, r.width, r.height, radius, radius);
+        g.drawRoundRect(r.x, r.y, r.width, r.height-1, radius, radius);
       }
       Point p = getSearchIconCoord();
       Icon searchIcon = getComponent().getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu ? SEARCH_WITH_HISTORY_ICON : SEARCH_ICON;
       searchIcon.paintIcon(null, g, p.x, p.y);
-      if (getComponent().getText().length() > 0) {
+      if (getComponent().hasFocus() && getComponent().getText().length() > 0) {
         p = getClearIconCoord();
         CLEAR_ICON.paintIcon(null, g, p.x, p.y);
       }
@@ -185,7 +185,17 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
     config.restore();
   }
 
+  @Override
+  protected void paintSafely(Graphics g) {
+    paintBackground(g);
+    super.paintSafely(g);
+  }
+
   public static boolean isSearchField(Component c) {
     return c instanceof JTextField && "search".equals(((JTextField)c).getClientProperty("JTextField.variant"));
+  }
+
+  public static boolean isSearchFieldWithHistoryPopup(Component c) {
+    return isSearchField(c) && ((JTextField)c).getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu;
   }
 }

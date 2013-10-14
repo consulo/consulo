@@ -17,19 +17,17 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.keymap.MacKeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.*;
@@ -41,10 +39,11 @@ import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import com.intellij.openapi.wm.impl.IdePanePanel;
+import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.util.Alarm;
@@ -70,7 +69,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * Author: msk
  */
-public class EditorsSplitters extends JBPanel {
+public class EditorsSplitters extends IdePanePanel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorsSplitters");
   private static final String PINNED = "pinned";
 
@@ -85,7 +84,6 @@ public class EditorsSplitters extends JBPanel {
 
   public EditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
     super(new BorderLayout());
-    setOpaque(false);
     myManager = manager;
     myFocusWatcher = new MyFocusWatcher();
     setFocusTraversalPolicy(new MyFocusTraversalPolicy());
@@ -96,25 +94,6 @@ public class EditorsSplitters extends JBPanel {
       DockableEditorTabbedContainer dockable = new DockableEditorTabbedContainer(myManager.getProject(), this, false);
       Disposer.register(manager.getProject(), dockable);
       dockManager.register(dockable);
-    }
-
-    UISettings.getInstance().addUISettingsListener(new UISettingsListener() {
-      @Override
-      public void uiSettingsChanged(UISettings source) {
-        updateBackground();
-      }
-    }, manager.getProject());
-    updateBackground();
-  }
-
-  private void updateBackground() {
-    if (UIUtil.isUnderDarcula()) {
-      setBackgroundImage(IconLoader.getIcon("/frame_background.png"));
-      String icon = ApplicationInfoEx.getInstanceEx().getEditorBackgroundImageUrl();
-      if (icon != null) setCenterImage(IconLoader.getIcon(icon));
-    } else {
-      setBackgroundImage(null);
-      setCenterImage(null);
     }
   }
 
@@ -178,16 +157,21 @@ public class EditorsSplitters extends JBPanel {
       g.drawLine(0, 0, getWidth(), 0);
     }
 
+    boolean isDarkBackground = ColorUtil.isDark(getBackground().darker());
+
     if (showEmptyText()) {
       UIUtil.applyRenderingHints(g);
-      g.setColor(new JBColor(Gray._100, Gray._160));
+      g.setColor(new JBColor(isDarkBackground ? Gray._230 : Gray._100, Gray._160));
       g.setFont(UIUtil.getLabelFont().deriveFont(UIUtil.isUnderDarcula() ? 24f : 18f));
 
-      final UIUtil.TextPainter painter = new UIUtil.TextPainter().withShadow(true).withLineSpacing(1.4f);
-      painter.appendLine("No files are open").underlined(new JBColor(Gray._150, Gray._100));
+      final UIUtil.TextPainter painter = new UIUtil.TextPainter().withLineSpacing(1.4f);
+      if (!isDarkBackground) {
+        painter.withShadow(true);
+      }
+      painter.appendLine("No files are open").underlined(new JBColor(isDarkBackground ? Gray._210 : Gray._150, Gray._100));
 
       if (Registry.is("search.everywhere.enabled")) {
-        painter.appendLine("Search Everywhere with " + KeymapUtil.getShortcutText(CustomShortcutSet.fromString("shift SPACE").getShortcuts()[0]))
+        painter.appendLine("Search Everywhere with Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift"))
           .smaller().withBullet();
       }
 
