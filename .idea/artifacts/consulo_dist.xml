@@ -377,6 +377,8 @@
           <element id="module-output" name="compiler-server-impl" />
           <element id="module-output" name="editor-ui-api" />
           <element id="module-output" name="editor-ui-ex" />
+          <element id="module-output" name="graph-api" />
+          <element id="module-output" name="graph-impl" />
         </element>
         <element id="archive" name="boot.jar">
           <element id="module-output" name="boot" />

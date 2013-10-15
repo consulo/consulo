@@ -36,6 +36,8 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/git4idea/git4idea.iml" filepath="$PROJECT_DIR$/plugins/git4idea/git4idea.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/plugins/git4idea/rt/git4idea-rt.iml" filepath="$PROJECT_DIR$/plugins/git4idea/rt/git4idea-rt.iml" group="plugins/VCS" />
       <module fileurl="file://$PROJECT_DIR$/plugins/gradle/gradle.iml" filepath="$PROJECT_DIR$/plugins/gradle/gradle.iml" group="plugins" />
+      <module fileurl="file://$PROJECT_DIR$/platform/graph-api/graph-api.iml" filepath="$PROJECT_DIR$/platform/graph-api/graph-api.iml" group="platform" />
+      <module fileurl="file://$PROJECT_DIR$/platform/graph-impl/graph-impl.iml" filepath="$PROJECT_DIR$/platform/graph-impl/graph-impl.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/groovy/groovy.iml" filepath="$PROJECT_DIR$/plugins/groovy/groovy.iml" group="plugins/groovy" />
       <module fileurl="file://$PROJECT_DIR$/plugins/groovy/groovy-copyright/groovy-copyright.iml" filepath="$PROJECT_DIR$/plugins/groovy/groovy-copyright/groovy-copyright.iml" group="plugins/groovy" />
       <module fileurl="file://$PROJECT_DIR$/plugins/groovy/groovy-intellilang/groovy-intellilang.iml" filepath="$PROJECT_DIR$/plugins/groovy/groovy-intellilang/groovy-intellilang.iml" group="plugins/groovy" />

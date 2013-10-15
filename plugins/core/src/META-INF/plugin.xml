@@ -12,6 +12,7 @@
   <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)" />
   <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)" />
   <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)" />
+  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)" />
 
   <extensionPoints>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider" />
@@ -1429,8 +1430,6 @@
     <!--Rich-->
     <projectViewPane implementation="com.intellij.ide.projectView.impl.ProjectViewPane"/>
     <projectViewPane implementation="com.intellij.ide.projectView.impl.PackageViewPane"/>
-
-    <appStarter implementation="com.intellij.compiler.ant.GenerateAntMain"/>
 
     <renameHandler implementation="com.intellij.ide.projectView.impl.RenameModuleHandler"/>
     <renameHandler implementation="com.intellij.openapi.roots.impl.libraries.RenameLibraryHandler"/>
