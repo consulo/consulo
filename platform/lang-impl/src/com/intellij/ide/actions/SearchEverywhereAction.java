@@ -78,6 +78,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.IconUtil;
+import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -301,7 +302,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
   private void initSearchField(final SearchTextField search) {
     final JTextField editor = search.getTextEditor();
-    editor.setOpaque(false);
+//    editor.setOpaque(false);
     editor.putClientProperty("JTextField.Search.noFocusRing", Boolean.TRUE);
     onFocusLost(editor);
     editor.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -499,6 +500,9 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
   @Override
   public void actionPerformed(AnActionEvent e) {
+    if (myBalloon != null && myBalloon.isVisible()) {
+      return;
+    }
     if (e == null && myFocusOwner != null) {
       e = new AnActionEvent(null, DataManager.getInstance().getDataContext(myFocusComponent), ActionPlaces.UNKNOWN, getTemplatePresentation(), ActionManager.getInstance(), 0);
     }
@@ -512,13 +516,13 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     final JPanel panel = new JPanel(new BorderLayout()) {
       @Override
       protected void paintComponent(Graphics g) {
-        ((Graphics2D)g).setPaint(new GradientPaint(0,0, new JBColor(new Color(0x6688f2), new Color(16, 91, 180)), 0, getHeight(),
-                                                   new JBColor(new Color(0x2d60ee), new Color(16, 80, 147))));
+        ((Graphics2D)g).setPaint(new GradientPaint(0,0, new JBColor(new Color(0x6688f2), new Color(59, 81, 162)), 0, getHeight(),
+                                                   new JBColor(new Color(0x2d60ee), new Color(53, 67, 134))));
         g.fillRect(0,0, getWidth(), getHeight());
       }
     };
     final JLabel title = new JLabel(" Search Everywhere:");
-    title.setForeground(new JBColor(Gray._255, Gray._200));
+    title.setForeground(new JBColor(Gray._255, Gray._160));
     if (SystemInfo.isMac) {
       title.setFont(title.getFont().deriveFont(Font.BOLD, title.getFont().getSize() - 1f));
     } else {
@@ -573,6 +577,9 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   private static class MySearchTextField extends SearchTextField implements DataProvider {
     public MySearchTextField() {
       super(false);
+      if (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
+        getTextEditor().setOpaque(false);
+      }
     }
 
     @Override
@@ -893,11 +900,12 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       int filesCounter = 0;
       List<MatchResult> matches = collectResults(pattern, myFiles, myFileModel);
       final List<VirtualFile> files = new ArrayList<VirtualFile>();
-
+      FindSymbolParameters parameters = FindSymbolParameters.wrap(pattern, project, false);
       final int maxFiles = 8;
       for (MatchResult o : matches) {
         if (filesCounter > maxFiles) break;
-        Object[] objects = myFileModel.getElementsByName(o.elementName, false, pattern, myProgressIndicator);
+
+        Object[] objects = myFileModel.getElementsByName(o.elementName, parameters, myProgressIndicator);
         for (Object object : objects) {
           if (!myListModel.contains(object)) {
             if (object instanceof PsiFile) {
@@ -937,11 +945,13 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       int clsCounter = 0;
       final int maxCount = includeLibraries ? 5 : 8;
       List<MatchResult> matches = collectResults(pattern, includeLibraries ? myClassModel.getNames(true) : myClasses, myClassModel);
+      FindSymbolParameters parameters = FindSymbolParameters.wrap(pattern, project, includeLibraries);
       final List<Object> classes = new ArrayList<Object>();
+
       for (MatchResult matchResult : matches) {
         if (clsCounter > maxCount) break;
 
-        Object[] objects = myClassModel.getElementsByName(matchResult.elementName, includeLibraries, pattern, myProgressIndicator);
+        Object[] objects = myClassModel.getElementsByName(matchResult.elementName, parameters, myProgressIndicator);
         for (Object object : objects) {
           if (!myListModel.contains(object)) {
             if (object instanceof PsiElement) {

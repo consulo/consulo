@@ -32,11 +32,13 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.HashSet;
+import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IdFilter;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -211,6 +213,30 @@ public class PsiShortNamesCacheImpl extends PsiShortNamesCache {
   @Override
   public void getAllFieldNames(@NotNull HashSet<String> set) {
     JavaFieldNameIndex.getInstance().processAllKeys(myManager.getProject(), new CommonProcessors.CollectProcessor<String>(set));
+  }
+
+  @Override
+  public boolean processFieldsWithName(@NotNull String name,
+                                       @NotNull Processor<? super PsiField> processor,
+                                       @NotNull GlobalSearchScope scope,
+                                       @Nullable IdFilter filter) {
+    return StubIndex.getInstance().process(JavaStubIndexKeys.FIELDS, name, myManager.getProject(), scope, filter, processor);
+  }
+
+  @Override
+  public boolean processMethodsWithName(@NonNls @NotNull String name,
+                                        @NotNull Processor<? super PsiMethod> processor,
+                                        @NotNull GlobalSearchScope scope,
+                                        @Nullable IdFilter filter) {
+    return StubIndex.getInstance().process(JavaStubIndexKeys.METHODS, name, myManager.getProject(), scope, filter, processor);
+  }
+
+  @Override
+  public boolean processClassesWithName(@NotNull String name,
+                                        @NotNull Processor<? super PsiClass> processor,
+                                        @NotNull GlobalSearchScope scope,
+                                        @Nullable IdFilter filter) {
+    return StubIndex.getInstance().process(JavaStubIndexKeys.CLASS_SHORT_NAMES, name, myManager.getProject(), scope, filter, processor);
   }
 
   private <T extends PsiMember> List<T> filterMembers(Collection<T> members, final GlobalSearchScope scope) {

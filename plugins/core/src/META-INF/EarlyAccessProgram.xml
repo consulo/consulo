@@ -20,6 +20,8 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="org.consulo.ide.eap.impl.IntelliJLafEarlyAccessProgramDescriptor" />
+    <eapDescriptor implementation="com.intellij.openapi.wm.impl.SystemDock$WinJumpList" />
+
     <applicationConfigurable instance="org.consulo.ide.eap.EarlyAccessProgramConfigurable" />
     <applicationService serviceImplementation="org.consulo.ide.eap.EarlyAccessProgramManager" />
   </extensions>

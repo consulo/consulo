@@ -97,6 +97,7 @@ public class EarlyAccessProgramConfigurable implements Configurable {
     panel.add(textField , BorderLayout.NORTH);
 
     splitter.setSecondComponent(panel);
+    myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {

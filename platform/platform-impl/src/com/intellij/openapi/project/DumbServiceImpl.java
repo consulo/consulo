@@ -26,7 +26,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.IdeFrame;
@@ -144,7 +144,7 @@ public class DumbServiceImpl extends DumbService {
       }
       try {
         final int size = runner.queryNeededFiles(indicator);
-        if (application.isHeadlessEnvironment() || (size + runner.getNumberOfPendingUpdateJobs(indicator)) < 50) {
+        if (size + runner.getNumberOfPendingUpdateJobs(indicator) < 50) {
           // If not that many files found, process them on the spot, avoiding entering dumb mode
           // Consider number of pending tasks as well, because they may take noticeable time to process even if the number of files is small
           try {
@@ -176,37 +176,38 @@ public class DumbServiceImpl extends DumbService {
           return;
         }
         // ok to test and set the flag like this, because the change is always done from dispatch thread
-        final boolean wasDumb = myDumb;
-        if (!wasDumb) {
-          // always change dumb status inside write action.
-          // This will ensure all active read actions are completed before the app goes dumb
-          final Ref<Boolean> startFailure = new Ref<Boolean>(Boolean.FALSE);
-          application.runWriteAction(new Runnable() {
-            public void run() {
-              myDumb = true;
-              try {
-                myPublisher.enteredDumbMode();
-              }
-              catch (Throwable e) {
-                LOG.error(e);
-              }
-              finally {
-                try {
-                  updateRunnable.run();
-                }
-                catch (Throwable e) {
-                  startFailure.set(Boolean.TRUE);
-                  LOG.error("Failed to start background index update task", e);
-                }
-              }
-            }
-          });
-          if (startFailure.get()) {
-            updateFinished();
-          }
+        if (myDumb) {
+          myUpdatesQueue.addLast(updateRunnable);
         }
         else {
-          myUpdatesQueue.addLast(updateRunnable);
+          // always change dumb status inside write action.
+          // This will ensure all active read actions are completed before the app goes dumb
+          boolean startSuccess =
+            application.runWriteAction(new Computable<Boolean>() {
+              @Override
+              public Boolean compute() {
+                myDumb = true;
+                try {
+                  myPublisher.enteredDumbMode();
+                }
+                catch (Throwable e) {
+                  LOG.error(e);
+                }
+                finally {
+                  try {
+                    updateRunnable.run();
+                  }
+                  catch (Throwable e) {
+                    LOG.error("Failed to start background index update task", e);
+                    return false;
+                  }
+                }
+                return true;
+              }
+            });
+          if (!startSuccess) {
+            updateFinished();
+          }
         }
       }
     });
@@ -221,7 +222,9 @@ public class DumbServiceImpl extends DumbService {
       }
     }
     finally {
-      while (true) {
+      // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
+      // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
+      while (!myDumb) {
         final Runnable runnable;
         synchronized (myRunWhenSmartQueue) {
           if (myRunWhenSmartQueue.isEmpty()) {
@@ -252,11 +255,11 @@ public class DumbServiceImpl extends DumbService {
     });
   }
 
-  private static final Ref<CacheUpdateRunner> NULL_ACTION = new Ref<CacheUpdateRunner>(null);
+  private static final CacheUpdateRunner NULL_ACTION = new CacheUpdateRunner(null,null);
 
   public void waitForSmartMode() {
     final Application application = ApplicationManager.getApplication();
-    if (!application.isUnitTestMode() && !application.isCompilerServerMode()) {
+    if (!application.isUnitTestMode()) {
       assert !application.isDispatchThread();
       assert !application.isReadAccessAllowed();
     }
@@ -387,14 +390,14 @@ public class DumbServiceImpl extends DumbService {
           }
         }
 
-        @Nullable 
+        @Nullable
         private CacheUpdateRunner getNextUpdateRunner() {
-          final BlockingQueue<Ref<CacheUpdateRunner>> actionQueue = new LinkedBlockingQueue<Ref<CacheUpdateRunner>>();
+          final BlockingQueue<CacheUpdateRunner> actionQueue = new LinkedBlockingQueue<CacheUpdateRunner>();
           UIUtil.invokeLaterIfNeeded(new DumbAwareRunnable() {
             public void run() {
               IndexUpdateRunnable nextRunnable = getNextUpdateFromQueue();
               try {
-                actionQueue.offer(nextRunnable == null ? NULL_ACTION : new Ref<CacheUpdateRunner>(nextRunnable.myAction));
+                actionQueue.offer(nextRunnable == null ? NULL_ACTION : nextRunnable.myAction);
               }
               finally {
                 if (nextRunnable == null) {
@@ -407,9 +410,9 @@ public class DumbServiceImpl extends DumbService {
           // try to obtain the next action or terminate if no actions left
           while (!myProject.isDisposed()) {
             try {
-              Ref<CacheUpdateRunner> ref = actionQueue.poll(500L, TimeUnit.MILLISECONDS);
+              CacheUpdateRunner ref = actionQueue.poll(500L, TimeUnit.MILLISECONDS);
               if (ref != null) {
-                return ref.get();
+                return ref == NULL_ACTION ? null : ref;
               }
             }
             catch (InterruptedException e) {
@@ -419,7 +422,7 @@ public class DumbServiceImpl extends DumbService {
           return null;
         }
 
-        @Nullable 
+        @Nullable
         private IndexUpdateRunnable getNextUpdateFromQueue() {
           try {
             return myUpdatesQueue.isEmpty()? null : myUpdatesQueue.pullFirst();

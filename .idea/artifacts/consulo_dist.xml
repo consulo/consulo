@@ -25,6 +25,8 @@
         <element id="file-copy" path="$PROJECT_DIR$/bin/linux/libbreakgen.so" />
         <element id="file-copy" path="$PROJECT_DIR$/bin/linux/fsnotifier64" />
         <element id="file-copy" path="$PROJECT_DIR$/bin/linux/fsnotifier" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/jumplistbridge.dll" />
+        <element id="file-copy" path="$PROJECT_DIR$/bin/win/jumplistbridge64.dll" />
       </element>
       <element id="directory" name="plugins">
         <element id="directory" name="core">
