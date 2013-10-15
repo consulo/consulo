@@ -93,10 +93,15 @@ public class CheckBoxList<T> extends JBList {
   }
 
   public void setItems(final List<T> items, @Nullable Function<T, String> converter) {
+    setItems(items, converter, null);
+  }
+
+  public void setItems(final List<T> items, @Nullable Function<T, String> textConverter, @Nullable Function<T, Boolean> stateConverter) {
     clear();
     for (T item : items) {
-      String text = converter != null ? converter.fun(item) : item.toString();
-      addItem(item, text, false);
+      String text = textConverter != null ? textConverter.fun(item) : item.toString();
+      boolean state = stateConverter != null && stateConverter.fun(item);
+      addItem(item, text, state);
     }
   }
 

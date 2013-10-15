@@ -41,6 +41,8 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacPopupMenuUI;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.ide.eap.EarlyAccessProgramManager;
+import org.consulo.ide.eap.impl.IntelliJLafEarlyAccessProgramDescriptor;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -126,7 +128,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
     else {
       lafList.add(new IdeaLookAndFeelInfo());
-      if(Registry.is("intellij.laf.enabled")) {
+      if(EarlyAccessProgramManager.getInstance().getState(IntelliJLafEarlyAccessProgramDescriptor.class)) {
         lafList.add(new IntelliJLookAndFeelInfo());
       }
       for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
