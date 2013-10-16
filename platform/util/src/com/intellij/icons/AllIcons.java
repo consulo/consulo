@@ -323,7 +323,6 @@ public class AllIcons {
     public static final Icon Java = IconLoader.getIcon("/fileTypes/java.png"); // 16x16
     public static final Icon JavaClass = IconLoader.getIcon("/fileTypes/javaClass.png"); // 16x16
     public static final Icon JavaOutsideSource = IconLoader.getIcon("/fileTypes/javaOutsideSource.png"); // 16x16
-    public static final Icon JavaScript = IconLoader.getIcon("/fileTypes/javaScript.png"); // 16x16
     public static final Icon Jsp = IconLoader.getIcon("/fileTypes/jsp.png"); // 16x16
     public static final Icon Jspx = IconLoader.getIcon("/fileTypes/jspx.png"); // 16x16
     public static final Icon Properties = IconLoader.getIcon("/fileTypes/properties.png"); // 16x16
