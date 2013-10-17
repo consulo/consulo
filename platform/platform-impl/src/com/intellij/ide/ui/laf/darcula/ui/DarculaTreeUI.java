@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm.ex;
+package com.intellij.ide.ui.laf.darcula.ui;
 
-import com.intellij.openapi.progress.TaskInfo;
-import com.intellij.openapi.progress.util.ProgressIndicatorStacked;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ui.tree.WideSelectionTreeUI;
 
-public interface ProgressIndicatorEx extends ProgressIndicatorStacked {
-  void addStateDelegate(@NotNull ProgressIndicatorEx delegate);
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 
-  boolean isModalityEntered();
-
-  void finish(@NotNull TaskInfo task);
-
-  boolean isFinished(@NotNull TaskInfo task);
-
-  boolean wasStarted();
-
-  void processFinish();
+/**
+ * @author Konstantin Bulenkov
+ */
+public class DarculaTreeUI extends WideSelectionTreeUI {
+  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+  public static ComponentUI createUI(JComponent c) {
+    return new DarculaTreeUI();
+  }
 }

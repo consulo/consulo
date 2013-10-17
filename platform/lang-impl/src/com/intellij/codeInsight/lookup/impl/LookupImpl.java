@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.CodeInsightBundle;
+import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.completion.CodeCompletionFeatures;
 import com.intellij.codeInsight.completion.CompletionLookupArranger;
 import com.intellij.codeInsight.completion.PrefixMatcher;
@@ -38,7 +39,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.*;
@@ -66,13 +66,15 @@ import com.intellij.ui.plaf.beg.BegPopupMenuBorder;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.Alarm;
 import com.intellij.util.CollectConsumer;
-import com.intellij.util.ObjectUtils;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ConcurrentHashMap;
+import com.intellij.util.containers.ConcurrentWeakHashMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.ButtonlessScrollBarUI;
+import com.intellij.util.ui.update.Activatable;
+import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -85,8 +87,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LookupImpl extends LightweightHint implements LookupEx, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.lookup.impl.LookupImpl");
@@ -128,7 +132,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   private boolean myDisposed = false;
   private boolean myHidden = false;
   private boolean mySelectionTouched;
-  private boolean myFocused = true;
+  private FocusDegree myFocusDegree = FocusDegree.FOCUSED;
   private final AsyncProcessIcon myProcessIcon = new AsyncProcessIcon("Completion progress");
   private final JPanel myIconPanel = new JPanel(new BorderLayout());
   private volatile boolean myCalculating;
@@ -139,6 +143,8 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   private volatile LookupArranger myArranger;
   private LookupArranger myPresentableArranger;
   private final Map<LookupElement, PrefixMatcher> myMatchers = new ConcurrentHashMap<LookupElement, PrefixMatcher>(
+    ContainerUtil.<LookupElement>identityStrategy());
+  private final Map<LookupElement, Font> myCustomFonts = new ConcurrentWeakHashMap<LookupElement, Font>(
     ContainerUtil.<LookupElement>identityStrategy());
   private LookupHint myElementHint = null;
   private final Alarm myHintAlarm = new Alarm();
@@ -261,20 +267,17 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     myArranger = arranger;
   }
 
+  public FocusDegree getFocusDegree() {
+    return myFocusDegree;
+  }
+
   @Override
   public boolean isFocused() {
-    return myFocused;
+    return getFocusDegree() == FocusDegree.FOCUSED;
   }
 
-  public void setFocused(boolean focused) {
-    if (focused && !isSemiFocused()) {
-      CompletionPreview.installPreview(this);
-    }
-    myFocused = focused;
-  }
-
-  public boolean isSemiFocused() {
-    return CompletionPreview.hasPreview(this);
+  public void setFocusDegree(FocusDegree focusDegree) {
+    myFocusDegree = focusDegree;
   }
 
   public boolean isCalculating() {
@@ -341,9 +344,19 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
 
   public LookupElementPresentation updateLookupWidth(LookupElement item) {
     final LookupElementPresentation presentation = renderItemApproximately(item);
-    int maxWidth = myCellRenderer.updateMaximumWidth(presentation);
+    final Font customFont = myCellRenderer.getFontAbleToDisplay(presentation);
+    if (customFont != null) {
+      myCustomFonts.put(item, customFont);
+    }
+    int maxWidth = myCellRenderer.updateMaximumWidth(presentation, item);
     myLookupTextWidth = Math.max(maxWidth, myLookupTextWidth);
     return presentation;
+  }
+
+  @Nullable
+  public Font getCustomFont(LookupElement item, boolean bold) {
+    Font font = myCustomFonts.get(item);
+    return font == null ? null : bold ? font.deriveFont(Font.BOLD) : font;
   }
 
   public void requestResize() {
@@ -381,7 +394,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   public void setAdvertisementText(@Nullable String text) {
     myAdText = text;
     if (StringUtil.isNotEmpty(text)) {
-      addAdvertisement(ObjectUtils.assertNotNull(text));
+      addAdvertisement(text, null);
     }
   }
 
@@ -574,7 +587,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     }
     Rectangle candidate = new Rectangle(location, dim);
     ScreenUtil.cropRectangleToFitTheScreen(candidate);
-    
+
     SwingUtilities.convertPointFromScreen(location, rootPane.getLayeredPane());
     return new Rectangle(location.x, location.y, dim.width, candidate.height);
   }
@@ -600,7 +613,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     }
 
     final PsiFile file = getPsiFile();
-    boolean writableOk = file == null || WriteCommandAction.ensureFilesWritable(myProject, Arrays.asList(file));
+    boolean writableOk = file == null || FileModificationService.getInstance().prepareFileForWrite(file);
     if (myDisposed) { // ensureFilesWritable could close us by showing a dialog
       return;
     }
@@ -680,14 +693,14 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       EditorModificationUtil.deleteSelectedText(myEditor);
       final int caretOffset = myEditor.getCaretModel().getOffset();
       int lookupStart = caretOffset - prefix;
-  
+
       int len = document.getTextLength();
       LOG.assertTrue(lookupStart >= 0 && lookupStart <= len,
                      "ls: " + lookupStart + " caret: " + caretOffset + " prefix:" + prefix + " doc: " + len);
       LOG.assertTrue(caretOffset >= 0 && caretOffset <= len, "co: " + caretOffset + " doc: " + len);
 
       document.replaceString(lookupStart, caretOffset, lookupString);
-  
+
       int offset = lookupStart + lookupString.length();
       myEditor.getCaretModel().moveToOffset(offset);
       myEditor.getSelectionModel().removeSelection();
@@ -701,7 +714,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     if (item.isCaseSensitive()) {
       return lookupString;
     }
-    
+
     final String prefix = itemPattern(item);
     final int length = prefix.length();
     if (length == 0 || !StringUtil.startsWithIgnoreCase(lookupString, prefix)) return lookupString;
@@ -863,6 +876,20 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       }
     });
 
+    JComponent editorComponent = myEditor.getContentComponent();
+    if (editorComponent.isShowing()) {
+      Disposer.register(this, new UiNotifyConnector(editorComponent, new Activatable() {
+        @Override
+        public void showNotify() {
+        }
+
+        @Override
+        public void hideNotify() {
+          hideLookup(false);
+        }
+      }));
+    }
+
     myList.addListSelectionListener(new ListSelectionListener() {
       private LookupElement oldItem = null;
 
@@ -887,7 +914,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     new ClickListener() {
       @Override
       public boolean onClick(MouseEvent e, int clickCount) {
-        setFocused(true);
+        setFocusDegree(FocusDegree.FOCUSED);
         markSelectionTouched();
 
         if (clickCount == 2){
@@ -1031,7 +1058,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
 
   public boolean fillInCommonPrefix(boolean explicitlyInvoked) {
     if (explicitlyInvoked) {
-      setFocused(true);
+      setFocusDegree(FocusDegree.FOCUSED);
     }
 
     if (explicitlyInvoked && myCalculating) return false;
@@ -1149,11 +1176,6 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   @Override
   public Editor getEditor() {
     return myEditor;
-  }
-
-  @TestOnly
-  public void setPositionedAbove(boolean positionedAbove) {
-    myPositionedAbove = positionedAbove;
   }
 
   @Override
@@ -1302,12 +1324,12 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     requestResize();
   }
 
-  public void addAdvertisement(@NotNull final String text) {
+  public void addAdvertisement(@NotNull final String text, final @Nullable Color bgColor) {
     Runnable runnable = new Runnable() {
       @Override
       public void run() {
         if (!myDisposed) {
-          myAdComponent.addAdvertisement(text);
+          myAdComponent.addAdvertisement(text, bgColor);
           if (myShown) {
             requestResize();
             refreshUi(false, false);
@@ -1445,7 +1467,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       setBorder(INACTIVE_BORDER);
       setIcon(AllIcons.Actions.IntentionBulb);
       String acceleratorsText = KeymapUtil.getFirstKeyboardShortcutText(
-              ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));
+        ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));
       if (acceleratorsText.length() > 0) {
         setToolTipText(CodeInsightBundle.message("lightbulb.tooltip", acceleratorsText));
       }
@@ -1502,4 +1524,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       };
     }
   }
+
+  public enum FocusDegree { FOCUSED, SEMI_FOCUSED, UNFOCUSED }
+
 }

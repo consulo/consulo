@@ -22,6 +22,8 @@ import java.util.Collection;
 public interface ExpandableItemsHandler<T> {
   void setEnabled(boolean enabled);
 
+  boolean isEnabled();
+
   @NotNull
   Collection<T> getExpandedItems();
 }

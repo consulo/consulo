@@ -35,7 +35,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.refactoring.actions.BaseRefactoringAction;
@@ -114,7 +114,7 @@ public class XmlTagRenameHandler implements RenameHandler, TitledHandler {
           return file.getViewProvider().findElementAt(offset);
         }
         if (file != null) {
-          final Language language = PsiUtilBase.getLanguageAtOffset(file, offset);
+          final Language language = PsiUtilCore.getLanguageAtOffset(file, offset);
           if (language != file.getLanguage()) {
             final PsiFile psiAtOffset = file.getViewProvider().getPsi(language);
             if (psiAtOffset instanceof XmlFile) {

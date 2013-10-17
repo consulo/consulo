@@ -61,6 +61,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.ProjectScope;
@@ -72,6 +73,7 @@ import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Query;
 import com.intellij.util.containers.Stack;
@@ -338,12 +340,17 @@ public abstract class InplaceRefactoring {
 
   protected boolean isReferenceAtCaret(PsiElement selectedElement, PsiReference ref) {
     final TextRange textRange = ref.getRangeInElement().shiftRight(ref.getElement().getTextRange().getStartOffset());
-    return selectedElement != null && selectedElement.getTextRange().contains(textRange);
+    if (selectedElement != null){
+      final TextRange selectedElementRange = selectedElement.getTextRange();
+      LOG.assertTrue(selectedElementRange != null, selectedElement);
+      if (selectedElementRange != null && selectedElementRange.contains(textRange)) return true;
+    }
+    return false;
   }
 
   protected void beforeTemplateStart() {
     myCaretRangeMarker = myEditor.getDocument()
-          .createRangeMarker(new TextRange(myEditor.getCaretModel().getOffset(), myEditor.getCaretModel().getOffset()));
+      .createRangeMarker(new TextRange(myEditor.getCaretModel().getOffset(), myEditor.getCaretModel().getOffset()));
     myCaretRangeMarker.setGreedyToLeft(true);
     myCaretRangeMarker.setGreedyToRight(true);
   }
@@ -412,7 +419,7 @@ public abstract class InplaceRefactoring {
 
     final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(myEditor);
     if (lookup != null && lookup.getLookupStart() <= (restoreCaretOffset(offset))) {
-      lookup.setFocused(false);
+      lookup.setFocusDegree(LookupImpl.FocusDegree.UNFOCUSED);
       lookup.performGuardedChange(runnable);
     }
     else {
@@ -524,6 +531,18 @@ public abstract class InplaceRefactoring {
     final PsiReference reference = (myEditorFile != null ?
                                     myEditorFile : myElementToRename.getContainingFile())
       .findReferenceAt(myEditor.getCaretModel().getOffset());
+    if (reference instanceof PsiMultiReference) {
+      final PsiReference[] references = ((PsiMultiReference)reference).getReferences();
+      for (PsiReference ref : references) {
+        addReferenceIfNeeded(refs, ref);
+      }
+    }
+    else {
+      addReferenceIfNeeded(refs, reference);
+    }
+  }
+
+  private void addReferenceIfNeeded(@NotNull final Collection<PsiReference> refs, @Nullable final PsiReference reference) {
     if (reference != null && reference.isReferenceTo(myElementToRename) && !refs.contains(reference)) {
       refs.add(reference);
     }
@@ -596,10 +615,10 @@ public abstract class InplaceRefactoring {
       myEditor.putUserData(INPLACE_RENAMER, null);
     }
     if (myBalloon != null) {
-           if (!isRestart()) {
-             myBalloon.hide();
-           }
-         }
+      if (!isRestart()) {
+        myBalloon.hide();
+      }
+    }
   }
 
   protected void addHighlights(@NotNull Map<TextRange, TextAttributes> ranges,
@@ -750,14 +769,15 @@ public abstract class InplaceRefactoring {
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
     final BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createDialogBalloonBuilder(component, null).setSmallVariant(true);
     myBalloon = balloonBuilder.createBalloon();
+    final Editor topLevelEditor = InjectedLanguageUtil.getTopLevelEditor(myEditor);
     Disposer.register(myProject, myBalloon);
     Disposer.register(myBalloon, new Disposable() {
       @Override
       public void dispose() {
         releaseIfNotRestart();
+        topLevelEditor.putUserData(PopupFactoryImpl.ANCHOR_POPUP_POSITION, null);
       }
     });
-    final Editor topLevelEditor = InjectedLanguageUtil.getTopLevelEditor(myEditor);
     topLevelEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
     myBalloon.show(new PositionTracker<Balloon>(topLevelEditor.getContentComponent()) {
@@ -766,8 +786,11 @@ public abstract class InplaceRefactoring {
         if (myTarget != null && !popupFactory.isBestPopupLocationVisible(topLevelEditor)) {
           return myTarget;
         }
+        if (myCaretRangeMarker != null && myCaretRangeMarker.isValid()) {
+          topLevelEditor.putUserData(PopupFactoryImpl.ANCHOR_POPUP_POSITION,
+                                     topLevelEditor.offsetToVisualPosition(myCaretRangeMarker.getStartOffset()));
+        }
         final RelativePoint target = popupFactory.guessBestPopupLocation(topLevelEditor);
-        if (target == null) return myTarget;
         final Point screenPoint = target.getScreenPoint();
         int y = screenPoint.y;
         if (target.getPoint().getY() > topLevelEditor.getLineHeight() + myBalloon.getPreferredSize().getHeight()) {

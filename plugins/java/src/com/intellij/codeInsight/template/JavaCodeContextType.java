@@ -24,7 +24,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ public abstract class JavaCodeContextType extends TemplateContextType {
 
   @Override
   public boolean isInContext(@NotNull final PsiFile file, final int offset) {
-    if (PsiUtilBase.getLanguageAtOffset(file, offset).isKindOf(JavaLanguage.INSTANCE)) {
+    if (PsiUtilCore.getLanguageAtOffset(file, offset).isKindOf(JavaLanguage.INSTANCE)) {
       PsiElement element = file.findElementAt(offset);
       if (element instanceof PsiWhiteSpace) {
         return false;

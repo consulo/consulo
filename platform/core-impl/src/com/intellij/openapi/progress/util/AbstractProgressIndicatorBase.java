@@ -22,6 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.containers.DoubleArrayList;
 import com.intellij.util.containers.Stack;
@@ -48,6 +49,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
   protected ProgressIndicator myModalityProgress;
   private volatile ModalityState myModalityState = ModalityState.NON_MODAL;
+
+  public String CREATE_TRACE = ExceptionUtil.getThrowableText(new Exception());
 
   @Override
   public synchronized void start() {

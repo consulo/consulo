@@ -35,13 +35,13 @@ public class CompletionInitializationContext {
   /**
    * A default string that is inserted to the file before completion to guarantee that there'll always be some non-empty element there
    */
-  public static @NonNls final String DUMMY_IDENTIFIER = "IntellijIdeaRulezzz ";
-  public static @NonNls final String DUMMY_IDENTIFIER_TRIMMED = "IntellijIdeaRulezzz";
+  public static @NonNls final String DUMMY_IDENTIFIER = CompletionUtilCore.DUMMY_IDENTIFIER;
+  public static @NonNls final String DUMMY_IDENTIFIER_TRIMMED = CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED;
   private final Editor myEditor;
   private final PsiFile myFile;
   private final CompletionType myCompletionType;
   private final OffsetMap myOffsetMap;
-  private FileCopyPatcher myFileCopyPatcher = new DummyIdentifierPatcher(DUMMY_IDENTIFIER);
+  private String myDummyIdentifier = DUMMY_IDENTIFIER;
 
   public CompletionInitializationContext(final Editor editor, final PsiFile file, final CompletionType completionType) {
     myEditor = editor;
@@ -69,12 +69,7 @@ public class CompletionInitializationContext {
   }
 
   public void setDummyIdentifier(@NotNull String dummyIdentifier) {
-    setFileCopyPatcher(new DummyIdentifierPatcher(dummyIdentifier));
-  }
-
-  @Deprecated
-  public void setFileCopyPatcher(@NotNull final FileCopyPatcher fileCopyPatcher) {
-    myFileCopyPatcher = fileCopyPatcher;
+    myDummyIdentifier = dummyIdentifier;
   }
 
   @NotNull
@@ -82,9 +77,8 @@ public class CompletionInitializationContext {
     return PsiUtilBase.getLanguageInEditor(getEditor(), getProject());
   }
 
-  @NotNull
-  public FileCopyPatcher getFileCopyPatcher() {
-    return myFileCopyPatcher;
+  public String getDummyIdentifier() {
+    return myDummyIdentifier;
   }
 
   @NotNull

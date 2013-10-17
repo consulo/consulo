@@ -20,7 +20,7 @@ import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaToken;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,7 +33,7 @@ public class JavaStringContextType extends TemplateContextType {
 
   @Override
   public boolean isInContext(@NotNull final PsiFile file, final int offset) {
-    if (PsiUtilBase.getLanguageAtOffset(file, offset).isKindOf(StdLanguages.JAVA)) {
+    if (PsiUtilCore.getLanguageAtOffset(file, offset).isKindOf(StdLanguages.JAVA)) {
       return isStringLiteral(file.findElementAt(offset));
     }
     return false;

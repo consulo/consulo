@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,7 +34,7 @@ public class JavaCommentContextType extends TemplateContextType {
 
   @Override
   public boolean isInContext(@NotNull final PsiFile file, final int offset) {
-    if (PsiUtilBase.getLanguageAtOffset(file, offset).isKindOf(StdLanguages.JAVA)) {
+    if (PsiUtilCore.getLanguageAtOffset(file, offset).isKindOf(StdLanguages.JAVA)) {
       PsiElement element = file.findElementAt(offset);
       if (element instanceof PsiWhiteSpace && offset > 0) {
         element = file.findElementAt(offset-1);

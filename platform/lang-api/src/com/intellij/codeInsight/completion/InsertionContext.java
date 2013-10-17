@@ -24,7 +24,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -138,7 +138,7 @@ public class InsertionContext {
   }
 
   public CommonCodeStyleSettings getCodeStyleSettings() {
-    Language lang = PsiUtilBase.getLanguageAtOffset(getFile(), getTailOffset());
+    Language lang = PsiUtilCore.getLanguageAtOffset(getFile(), getTailOffset());
     return CodeStyleSettingsManager.getSettings(getProject()).getCommonSettings(lang);
   }
 }

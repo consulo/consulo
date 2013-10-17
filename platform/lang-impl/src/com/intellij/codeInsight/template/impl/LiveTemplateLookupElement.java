@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.codeInsight.lookup.RealLookupElementPresentation;
 import com.intellij.codeInsight.template.TemplateManager;
+import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.KeyEvent;
 
@@ -29,13 +31,21 @@ import java.awt.event.KeyEvent;
  */
 public class LiveTemplateLookupElement extends LookupElement {
   private final String myPrefix;
-  private final TemplateImpl myTemplate;
+  @NotNull private final TemplateImpl myTemplate;
+  private final String myLookupString;
   public final boolean sudden;
+  private final boolean myWorthShowingInAutoPopup;
 
-  public LiveTemplateLookupElement(TemplateImpl template, boolean sudden) {
+  public LiveTemplateLookupElement(@NotNull TemplateImpl template, boolean sudden) {
+    this(template, null, sudden, false);
+  }
+
+  public LiveTemplateLookupElement(@NotNull TemplateImpl template, @Nullable String lookupString, boolean sudden, boolean worthShowingInAutoPopup) {
     this.sudden = sudden;
+    myLookupString = lookupString;
     myPrefix = template.getKey();
     myTemplate = template;
+    myWorthShowingInAutoPopup = worthShowingInAutoPopup;
   }
   @NotNull
   @Override
@@ -43,6 +53,7 @@ public class LiveTemplateLookupElement extends LookupElement {
     return myPrefix;
   }
 
+  @NotNull
   public TemplateImpl getTemplate() {
     return myTemplate;
   }
@@ -50,6 +61,7 @@ public class LiveTemplateLookupElement extends LookupElement {
   @Override
   public void renderElement(LookupElementPresentation presentation) {
     super.renderElement(presentation);
+    presentation.setItemText(StringUtil.notNullize(myLookupString, myPrefix));
     if (sudden) {
       presentation.setItemTextBold(true);
       if (!presentation.isReal() || !((RealLookupElementPresentation)presentation).isLookupSelectionTouched()) {
@@ -59,10 +71,12 @@ public class LiveTemplateLookupElement extends LookupElement {
         }
         presentation.setTypeText("  [" + KeyEvent.getKeyText(shortcutChar) + "] ");
       }
-      presentation.setTailText(" (" + myTemplate.getDescription() + ")", true);
+      String description = myTemplate.getDescription();
+      if (description != null) {
+        presentation.setTailText(" (" + description + ")", true);
+      }
     } else {
       presentation.setTypeText(myTemplate.getDescription());
-
     }
   }
 
@@ -75,6 +89,6 @@ public class LiveTemplateLookupElement extends LookupElement {
 
   @Override
   public boolean isWorthShowingInAutoPopup() {
-    return false;
+    return myWorthShowingInAutoPopup;
   }
 }

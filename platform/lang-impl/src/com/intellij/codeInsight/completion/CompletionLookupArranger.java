@@ -139,7 +139,7 @@ public class CompletionLookupArranger extends LookupArranger {
   public void addElement(Lookup lookup, LookupElement element, LookupElementPresentation presentation) {
     StatisticsWeigher.clearBaseStatisticsInfo(element);
 
-    final String invariant = presentation.getItemText() + "###" + getTailTextOrSpace(presentation) + "###" + presentation.getTypeText();
+    final String invariant = presentation.getItemText() + "\0###" + getTailTextOrSpace(presentation) + "###" + presentation.getTypeText();
     element.putUserData(PRESENTATION_INVARIANT, invariant);
 
     CompletionSorterImpl sorter = obtainSorter(element);
@@ -226,7 +226,7 @@ public class CompletionLookupArranger extends LookupArranger {
     ArrayList<LookupElement> result = new ArrayList<LookupElement>(model);
     if (result.size() > 1) {
       LookupElement first = result.get(0);
-      if (isLiveTemplate(first) && isPrefixItem(lookup, first, true)) {
+      if (isLiveTemplate(first) && isPrefixItem(lookup, first, true) && CompletionServiceImpl.isStartMatch(result.get(1), lookup)) {
         ContainerUtil.swapElements(result, 0, 1);
       }
     }
@@ -321,7 +321,7 @@ public class CompletionLookupArranger extends LookupArranger {
   }
 
   private static int getItemToSelect(LookupImpl lookup, List<LookupElement> items, boolean onExplicitAction, @Nullable LookupElement mostRelevant) {
-    if (items.isEmpty() || !lookup.isFocused() && !lookup.isSemiFocused()) {
+    if (items.isEmpty() || lookup.getFocusDegree() == LookupImpl.FocusDegree.UNFOCUSED) {
       return 0;
     }
 
@@ -332,9 +332,9 @@ public class CompletionLookupArranger extends LookupArranger {
         return old;
       }
 
-      Object selectedValue = ((LookupImpl)lookup).getList().getSelectedValue();
+      Object selectedValue = lookup.getList().getSelectedValue();
       if (selectedValue instanceof EmptyLookupItem && ((EmptyLookupItem)selectedValue).isLoading()) {
-        int index = ((LookupImpl)lookup).getList().getSelectedIndex();
+        int index = lookup.getList().getSelectedIndex();
         if (index >= 0 && index < items.size()) {
           return index;
         }
@@ -351,9 +351,13 @@ public class CompletionLookupArranger extends LookupArranger {
     String selectedText = lookup.getEditor().getSelectionModel().getSelectedText();
     for (int i = 0; i < items.size(); i++) {
       LookupElement item = items.get(i);
-      if (isPrefixItem(lookup, item, true) && !isLiveTemplate(item) ||
+      boolean isTemplate = isLiveTemplate(item);
+      if (isAlphaSorted() && isPrefixItem(lookup, item, true) && !isTemplate ||
           item.getLookupString().equals(selectedText)) {
         return i;
+      }
+      if (i == 0 && isTemplate && items.size() > 1 && !CompletionServiceImpl.isStartMatch(items.get(1), lookup)) {
+        return 0;
       }
     }
 

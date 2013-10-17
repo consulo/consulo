@@ -484,4 +484,29 @@ public class PsiUtilCore {
     }
     return parent;
   }
+
+  @NotNull
+  public static Language getLanguageAtOffset (@NotNull PsiFile file, int offset) {
+    final PsiElement elt = file.findElementAt(offset);
+    if (elt == null) return file.getLanguage();
+    if (elt instanceof PsiWhiteSpace) {
+      final int decremented = elt.getTextRange().getStartOffset() - 1;
+      if (decremented >= 0) {
+        return getLanguageAtOffset(file, decremented);
+      }
+    }
+    return findLanguageFromElement(elt);
+  }
+
+  @NotNull
+  public static Language findLanguageFromElement(final PsiElement elt) {
+    if (elt.getFirstChild() == null) { //is leaf
+      final PsiElement parent = elt.getParent();
+      if (parent != null) {
+        return parent.getLanguage();
+      }
+    }
+
+    return elt.getLanguage();
+  }
 }

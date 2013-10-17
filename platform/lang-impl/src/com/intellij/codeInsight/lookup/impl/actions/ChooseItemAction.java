@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,16 @@ import com.intellij.codeInsight.completion.CompletionService;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.codeInsight.template.impl.ListTemplatesHandler;
-import com.intellij.codeInsight.template.impl.SurroundWithTemplateHandler;
-import com.intellij.codeInsight.template.impl.TemplateImpl;
+import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ChooseItemAction extends EditorAction {
@@ -56,7 +54,7 @@ public abstract class ChooseItemAction extends EditorAction {
       if (lookup == null) {
         throw new AssertionError("The last lookup disposed at: " + LookupImpl.getLastLookupDisposeTrace() + "\n-----------------------\n");
       }
-      
+
       if (finishingChar == Lookup.NORMAL_SELECT_CHAR) {
         if (!lookup.isFocused()) {
           FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ENTER);
@@ -78,21 +76,18 @@ public abstract class ChooseItemAction extends EditorAction {
       LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
       if (lookup == null) return false;
       if (!lookup.isAvailableToUser()) return false;
-      if (focusedOnly && !lookup.isSemiFocused() && !lookup.isFocused()) return false;
+      if (focusedOnly && lookup.getFocusDegree() == LookupImpl.FocusDegree.UNFOCUSED) return false;
       if (finishingChar == Lookup.NORMAL_SELECT_CHAR && hasTemplatePrefix(lookup, TemplateSettings.ENTER_CHAR) ||
           finishingChar == Lookup.REPLACE_SELECT_CHAR && hasTemplatePrefix(lookup, TemplateSettings.TAB_CHAR)) {
         return false;
       }
       if (finishingChar == Lookup.REPLACE_SELECT_CHAR) {
-        if (lookup.isFocused()) {
-          return true;
-        }
         return !lookup.getItems().isEmpty();
       }
 
       return true;
     }
-    
+
   }
 
   public static boolean hasTemplatePrefix(LookupImpl lookup, char shortcutChar) {
@@ -113,21 +108,12 @@ public abstract class ChooseItemAction extends EditorAction {
     final Editor editor = lookup.getEditor();
     PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
 
-    final int end = editor.getCaretModel().getOffset();
-    final int start = lookup.getLookupStart();
-    final String prefix = !lookup.getItems().isEmpty() ? editor.getDocument().getText(TextRange.create(start, end)) : ListTemplatesHandler
-      .getPrefix(editor.getDocument(), end);
-
-    if (TemplateSettings.getInstance().getTemplates(prefix).isEmpty()) {
+    final LiveTemplateLookupElement liveTemplateLookup = ContainerUtil.findInstance(lookup.getItems(), LiveTemplateLookupElement.class);
+    if (liveTemplateLookup == null) {
       return false;
     }
 
-    for (TemplateImpl template : SurroundWithTemplateHandler.getApplicableTemplates(editor, file, false)) {
-      if (prefix.equals(template.getKey()) && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template)) {
-        return true;
-      }
-    }
-    return false;
+    return liveTemplateLookup.getTemplate().getShortcutChar() == shortcutChar;
   }
 
   public static class Always extends ChooseItemAction {

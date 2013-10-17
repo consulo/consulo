@@ -74,8 +74,8 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
   private static void executeUpOrDown(LookupImpl lookup, boolean up) {
     if (!lookup.isFocused()) {
-      boolean semiFocused = lookup.isSemiFocused();
-      lookup.setFocused(true);
+      boolean semiFocused = lookup.getFocusDegree() == LookupImpl.FocusDegree.SEMI_FOCUSED;
+      lookup.setFocusDegree(LookupImpl.FocusDegree.FOCUSED);
       if (!up && !semiFocused) {
         return;
       }
@@ -108,7 +108,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
     @Override
     public void actionPerformed(AnActionEvent e) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS);
-      LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(PlatformDataKeys.EDITOR.getData(e.getDataContext()));
+      LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(CommonDataKeys.EDITOR.getData(e.getDataContext()));
       assert lookup != null;
       lookup.hide();
       ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_MOVE_CARET_UP).actionPerformed(e);
@@ -116,7 +116,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
     @Override
     public void update(AnActionEvent e) {
-      Lookup lookup = LookupManager.getActiveLookup(PlatformDataKeys.EDITOR.getData(e.getDataContext()));
+      Lookup lookup = LookupManager.getActiveLookup(CommonDataKeys.EDITOR.getData(e.getDataContext()));
       e.getPresentation().setEnabled(lookup != null);
     }
   }
@@ -126,7 +126,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
     @Override
     public void actionPerformed(AnActionEvent e) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS);
-      LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(PlatformDataKeys.EDITOR.getData(e.getDataContext()));
+      LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(CommonDataKeys.EDITOR.getData(e.getDataContext()));
       assert lookup != null;
       lookup.hide();
       ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN).actionPerformed(e);
@@ -134,7 +134,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
     @Override
     public void update(AnActionEvent e) {
-      Lookup lookup = LookupManager.getActiveLookup(PlatformDataKeys.EDITOR.getData(e.getDataContext()));
+      Lookup lookup = LookupManager.getActiveLookup(CommonDataKeys.EDITOR.getData(e.getDataContext()));
       e.getPresentation().setEnabled(lookup != null);
     }
   }
@@ -162,7 +162,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
     @Override
     protected void executeInLookup(final LookupImpl lookup, DataContext context) {
-      lookup.setFocused(true);
+      lookup.setFocusDegree(LookupImpl.FocusDegree.FOCUSED);
       ListScrollingUtil.movePageDown(lookup.getList());
     }
   }
@@ -174,7 +174,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
     @Override
     protected void executeInLookup(final LookupImpl lookup, DataContext context) {
-      lookup.setFocused(true);
+      lookup.setFocusDegree(LookupImpl.FocusDegree.FOCUSED);
       ListScrollingUtil.movePageUp(lookup.getList());
     }
   }

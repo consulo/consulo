@@ -22,6 +22,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -45,15 +46,18 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
   }
 
   public static JBColor getTrackBackground() {
-    return new JBColor(LightColors.SLIGHTLY_GRAY, UIUtil.getControlColor());
+    return new JBColor(LightColors.SLIGHTLY_GRAY, UIUtil.getListBackground());
   }
 
   public static JBColor getTrackBorderColor() {
-    return new JBColor(Gray._230, UIUtil.getControlColor());
+    return new JBColor(Gray._230, UIUtil.getListBackground());
   }
 
   private static final BasicStroke BORDER_STROKE = new BasicStroke();
-  public static final int ANIMATION_COLOR_SHIFT = UIUtil.isUnderDarcula() ? 20 : 40;
+
+  private static int getAnimationColorShift() {
+    return UIUtil.isUnderDarcula() ? 20 : 40;
+  }
 
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
@@ -105,6 +109,18 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
     }
   }
 
+  @Override
+  protected ModelListener createModelListener() {
+    return new ModelListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        if (scrollbar != null) {
+          super.stateChanged(e);
+        }
+      }
+    };
+  }
+
   public int getDecrementButtonHeight() {
     return decrButton.getHeight();
   }
@@ -116,7 +132,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
     myAnimator.reset();
     if (scrollbar != null && scrollbar.getValueIsAdjusting() || myMouseIsOverThumb || Registry.is("ui.no.bangs.and.whistles")) {
       myAnimator.suspend();
-      myAnimationColorShift = ANIMATION_COLOR_SHIFT;
+      myAnimationColorShift = getAnimationColorShift();
     }
     else {
       myAnimator.resume();
@@ -164,7 +180,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
     return new Animator("Adjustment fadeout", FRAMES_COUNT, FRAMES_COUNT * 50, false) {
       @Override
       public void paintNow(int frame, int totalFrames, int cycle) {
-        myAnimationColorShift = ANIMATION_COLOR_SHIFT;
+        myAnimationColorShift = getAnimationColorShift();
         if (frame > DELAY_FRAMES) {
           myAnimationColorShift *= 1 - ((double)(frame - DELAY_FRAMES)) / ((double)(totalFrames - DELAY_FRAMES));
         }

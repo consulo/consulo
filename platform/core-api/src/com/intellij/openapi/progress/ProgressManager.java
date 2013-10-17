@@ -60,7 +60,9 @@ public abstract class ProgressManager {
   public abstract void runProcess(@NotNull Runnable process, ProgressIndicator progress) throws ProcessCanceledException;
   public abstract <T> T runProcess(@NotNull Computable<T> process, ProgressIndicator progress) throws ProcessCanceledException;
 
-  public abstract ProgressIndicator getProgressIndicator();
+  public ProgressIndicator getProgressIndicator() {
+    return myThreadIndicator.get();
+  }
 
   protected static volatile boolean ourNeedToCheckCancel = false;
   public static void checkCanceled() throws ProcessCanceledException {
@@ -196,7 +198,6 @@ public abstract class ProgressManager {
   public abstract void runProcessWithProgressAsynchronously(@NotNull Task.Backgroundable task, @NotNull ProgressIndicator progressIndicator);
 
   protected static final ThreadLocal<ProgressIndicator> myThreadIndicator = new ThreadLocal<ProgressIndicator>();
-
   public void executeProcessUnderProgress(@NotNull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
     ProgressIndicator oldIndicator = null;
 
