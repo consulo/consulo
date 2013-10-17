@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Deprecated
 public class Registry  {
   private static Reference<ResourceBundle> ourBundle;
 
