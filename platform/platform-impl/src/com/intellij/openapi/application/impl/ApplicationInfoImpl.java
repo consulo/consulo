@@ -70,8 +70,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   private Calendar myMajorReleaseBuildDate = null;
   private String myPackageCode = null;
   private boolean myShowLicensee = true;
-  private String myWelcomeScreenCaptionUrl;
-  private String myWelcomeScreenDeveloperSloganUrl;
   private UpdateUrls myUpdateUrls;
   private String myDocumentationUrl;
   private String mySupportUrl;
@@ -128,7 +126,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ELEMENT_LICENSEE = "licensee";
   @NonNls private static final String ATTRIBUTE_SHOW = "show";
   @NonNls private static final String WELCOME_SCREEN_ELEMENT_NAME = "welcome-screen";
-  @NonNls private static final String CAPTION_URL_ATTR = "caption-url";
   @NonNls private static final String LOGO_URL_ATTR = "logo-url";
   @NonNls private static final String SLOGAN_URL_ATTR = "slogan-url";
   @NonNls private static final String ELEMENT_EDITOR = "editor";
@@ -261,14 +258,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
 
   public String getToolWindowIconUrl() {
     return myToolWindowIconUrl;
-  }
-
-  public String getWelcomeScreenCaptionUrl() {
-    return myWelcomeScreenCaptionUrl;
-  }
-
-  public String getWelcomeScreenDeveloperSloganUrl() {
-    return myWelcomeScreenDeveloperSloganUrl;
   }
 
   @Override
@@ -544,8 +533,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     Element welcomeScreen = parentNode.getChild(WELCOME_SCREEN_ELEMENT_NAME);
     if (welcomeScreen != null) {
       myWelcomeScreenLogoUrl = welcomeScreen.getAttributeValue(LOGO_URL_ATTR);
-      myWelcomeScreenCaptionUrl = welcomeScreen.getAttributeValue(CAPTION_URL_ATTR);
-      myWelcomeScreenDeveloperSloganUrl = welcomeScreen.getAttributeValue(SLOGAN_URL_ATTR);
     }
 
     Element editor = parentNode.getChild(ELEMENT_EDITOR);

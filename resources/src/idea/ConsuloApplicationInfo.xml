@@ -9,9 +9,7 @@
   <package code="__PACKAGE_CODE__"/>
   <names product="Consulo" fullname="Consulo" script="consulo"/>
 
-  <welcome-screen logo-url="/Logo_welcomeScreen.png"
-                  caption-url="/welcomeCaption_community.png" 
-                  slogan-url="/developSlogan_community.png"/>
+  <welcome-screen logo-url="/Logo_welcomeScreen.png" />
 
   <third-party url="http://www.jetbrains.org/"/>
 

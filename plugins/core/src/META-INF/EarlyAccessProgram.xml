@@ -22,6 +22,7 @@
     <eapDescriptor implementation="org.consulo.ide.eap.impl.IntelliJLafEarlyAccessProgramDescriptor" />
     <eapDescriptor implementation="com.intellij.openapi.wm.impl.SystemDock$WinJumpList" />
     <eapDescriptor implementation="org.consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
+    <eapDescriptor implementation="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction$NewModuleWizard" />
 
     <applicationConfigurable instance="org.consulo.ide.eap.EarlyAccessProgramConfigurable" />
     <applicationService serviceImplementation="org.consulo.ide.eap.EarlyAccessProgramManager" />

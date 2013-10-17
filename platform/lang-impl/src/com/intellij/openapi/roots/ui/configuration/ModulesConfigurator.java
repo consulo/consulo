@@ -22,7 +22,11 @@ import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Result;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -34,6 +38,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
+import com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
@@ -49,6 +54,7 @@ import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
+import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -334,30 +340,83 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   @Nullable
   public List<Module> addModule(Component parent, boolean anImport) {
     if (myProject.isDefault()) return null;
-    final ProjectBuilder builder = runModuleWizard(parent, anImport);
-    if (builder != null ) {
-      final List<Module> modules = new ArrayList<Module>();
-      final List<Module> commitedModules;
-      if (builder instanceof ProjectImportBuilder<?>) {
-        final ModifiableArtifactModel artifactModel =
+
+    if(anImport || !EarlyAccessProgramManager.getInstance().getState(NewModuleAction.NewModuleWizard.class)) {
+      final ProjectBuilder builder = runModuleWizard(parent, anImport);
+      if (builder != null ) {
+        final List<Module> modules = new ArrayList<Module>();
+        final List<Module> commitedModules;
+        if (builder instanceof ProjectImportBuilder<?>) {
+          final ModifiableArtifactModel artifactModel =
             ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
-        commitedModules = ((ProjectImportBuilder<?>)builder).commit(myProject, myModuleModel, this, artifactModel);
+          commitedModules = ((ProjectImportBuilder<?>)builder).commit(myProject, myModuleModel, this, artifactModel);
+        }
+        else {
+          commitedModules = builder.commit(myProject, myModuleModel, this);
+        }
+        if (commitedModules != null) {
+          modules.addAll(commitedModules);
+        }
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+            for (Module module : modules) {
+              getOrCreateModuleEditor(module);
+            }
+          }
+        });
+        return modules;
       }
-      else {
-        commitedModules = builder.commit(myProject, myModuleModel, this);
+    }
+    else {
+      FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
+        @Override
+        public boolean isFileSelectable(VirtualFile file) {
+          if(!super.isFileSelectable(file)) {
+            return false;
+          }
+          for (Module module : myModuleModel.getModules()) {
+            VirtualFile moduleDir = module.getModuleDir();
+            if(moduleDir != null && moduleDir.equals(file)) {
+              return false;
+            }
+          }
+          return true;
+        }
+      };
+      fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
+
+      VirtualFile moduleDir =
+        FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
+
+      if(moduleDir == null) {
+        return null;
       }
-      if (commitedModules != null) {
-        modules.addAll(commitedModules);
-      }
+
+      final Module module = myModuleModel.newModule(moduleDir.getNameWithoutExtension(), moduleDir.getPath());
+
+      final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+
+      modifiableModel.addContentEntry(moduleDir);
+
+      new WriteAction<Object>() {
+        @Override
+        protected void run(Result<Object> result) throws Throwable {
+          modifiableModel.commit();
+        }
+      }.execute();
+
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
-         @Override
-         public void run() {
-           for (Module module : modules) {
-             getOrCreateModuleEditor(module);
-           }
-         }
-       });
-      return modules;
+        @Override
+        public void run() {
+          getOrCreateModuleEditor(module);
+
+          Collections.sort(myModuleEditors, myModuleEditorComparator);
+        }
+      });
+      processModuleCountChanged();
+
+      return Collections.singletonList(module);
     }
     return null;
   }

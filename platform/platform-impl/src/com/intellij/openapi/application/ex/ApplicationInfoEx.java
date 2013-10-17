@@ -58,10 +58,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getToolWindowIconUrl();
 
-  public abstract String getWelcomeScreenCaptionUrl();
-
-  public abstract String getWelcomeScreenDeveloperSloganUrl();
-
   public abstract String getWelcomeScreenLogoUrl();
 
   public abstract String getEditorBackgroundImageUrl();

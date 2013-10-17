@@ -56,6 +56,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
+@Deprecated
 public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
 {
   private static final String ADD_MODULE_TITLE = IdeBundle.message("title.add.module");

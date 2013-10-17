@@ -21,7 +21,6 @@ package com.intellij.ide.impl;
 
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
-import com.intellij.ide.util.newProjectWizard.AddModuleWizardPro;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -37,7 +36,6 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -65,9 +63,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       }
     }, ProjectBundle.message("project.new.wizard.progress.title"), true, null);
     if (!proceed) return;
-    final AddModuleWizard dialog = Registry.is("new.project.wizard")
-                                   ? new AddModuleWizardPro(null, ModulesProvider.EMPTY_MODULES_PROVIDER, defaultPath)
-                                   : new AddModuleWizard(null, ModulesProvider.EMPTY_MODULES_PROVIDER, defaultPath);
+    final AddModuleWizard dialog = new AddModuleWizard(null, ModulesProvider.EMPTY_MODULES_PROVIDER, defaultPath);
     dialog.show();
     if (!dialog.isOK()) {
       return;
