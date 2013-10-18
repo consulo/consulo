@@ -40,8 +40,7 @@ public abstract class FileTemplateManager{
   public static final String INTERNAL_HTML5_TEMPLATE_NAME = "Html5";
   @NonNls 
   public static final String INTERNAL_XHTML_TEMPLATE_NAME = "Xhtml";
-  @NonNls 
-  public static final String FILE_HEADER_TEMPLATE_NAME = "File Header";
+
   public static final String DEFAULT_TEMPLATES_CATEGORY = "Default";
   public static final String INTERNAL_TEMPLATES_CATEGORY = "Internal";
   public static final String INCLUDES_TEMPLATES_CATEGORY = "Includes";

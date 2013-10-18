@@ -415,7 +415,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       return true;
     }
     if (Comparing.strEqual(templateTabTitle, INCLUDES_TITLE)) {
-      return Comparing.strEqual(templateName, FileTemplateManager.FILE_HEADER_TEMPLATE_NAME);
+      return true;
     }
     return false;
   }
