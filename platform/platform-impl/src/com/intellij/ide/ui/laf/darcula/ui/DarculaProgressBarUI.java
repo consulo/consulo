@@ -53,11 +53,11 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
       return;
     }
     //boxRect = getBox(boxRect);
-    g.setColor(Gray._128);
+    g.setColor(UIManager.getColor("ProgressBar.stepColor1"));
     int w = c.getWidth();
     int h = c.getHeight();
     g.fillRect(0, 0, w, h);
-    g.setColor(Gray._88);
+    g.setColor(UIManager.getColor("ProgressBar.stepColor2"));
     GraphicsUtil.setupAAPainting(g);
     Path2D.Double path = new Path2D.Double();
     int ww = getPeriodLength() / 2;
@@ -126,7 +126,7 @@ public class DarculaProgressBarUI extends BasicProgressBarUI {
     g2.fill(new RoundRectangle2D.Double(0, 0, w - 1, h - 1, 9, 9));
     g2.setColor(c.getParent().getBackground());
     g2.fill(new RoundRectangle2D.Double(1,1,w-3,h-3,8,8));
-    g2.setColor(progressBar.getForeground());
+    g2.setColor(UIManager.getColor("ProgressBar.stepColor1"));
     g2.fill(new RoundRectangle2D.Double(2,2,amountFull-5,h-5,7,7));
 
 
