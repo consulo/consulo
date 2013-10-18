@@ -25,10 +25,8 @@
   <depends>org.consulo.java</depends>
   <depends>com.intellij.xml</depends>
 
-  <depends optional="true" config-file="com.intellij.copyright.xml">com.intellij.copyright</depends>
   <depends optional="true" config-file="org.intellij.intelliLang.xml">org.intellij.intelliLang</depends>
   <depends optional="true">AntSupport</depends>
-  <depends optional="true">cucumber</depends>
 
   <extensionPoints>
     <extensionPoint name="methodComparator" interface="org.jetbrains.plugins.groovy.lang.resolve.GrMethodComparator"/>
@@ -241,6 +239,7 @@
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
+    <copyright.updater filetype="Groovy" implementationClass="org.jetbrains.plugins.groovy.copyright.UpdateGroovyCopyrightsProvider"/>
     <pom.declarationSearcher implementation="org.jetbrains.plugins.groovy.lang.psi.GroovyDeclarationSearcher"/>
     <compiler implementation="org.jetbrains.plugins.groovy.compiler.generator.GroovycStubGenerator" id="groovy-stub-generator" />
     <compiler implementation="org.jetbrains.plugins.groovy.compiler.GroovyCompiler" id="groovy-compiler" order="after groovy-stub-generator"/>

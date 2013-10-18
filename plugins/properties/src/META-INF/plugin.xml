@@ -7,12 +7,15 @@
   </description>
   <vendor>JetBrains</vendor>
   <depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
-  <depends config-file="com.intellij.copyright.xml" optional="true">com.intellij.copyright</depends>
   <depends config-file="com.intellij.spellchecker.xml" optional="true">com.intellij.spellchecker</depends>
 
   <extensionPoints>
     <extensionPoint name="implicitPropertyUsageProvider" interface="com.intellij.codeInspection.unused.ImplicitPropertyUsageProvider"/>
   </extensionPoints>
+
+  <extensions defaultExtensionNs="com.intellij.copyright">
+    <updater filetype="Properties" implementationClass="com.maddyhome.idea.copyright.psi.UpdatePropertiesFileCopyright$UpdatePropertiesFileCopyrightProvider"/>
+  </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>

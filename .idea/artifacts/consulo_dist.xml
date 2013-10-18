@@ -63,9 +63,6 @@
               <element id="module-output" name="xml-api" />
               <element id="module-output" name="xml-impl" />
             </element>
-            <element id="archive" name="xml-copyright.jar">
-              <element id="module-output" name="xml-copyright" />
-            </element>
             <element id="archive" name="xml-intellilang.jar">
               <element id="module-output" name="xml-intellilang" />
             </element>
@@ -126,9 +123,6 @@
             <element id="archive" name="java-debugger-impl.jar">
               <element id="module-output" name="java-debugger-impl" />
             </element>
-            <element id="archive" name="java-copyright.jar">
-              <element id="module-output" name="java-copyright" />
-            </element>
             <element id="archive" name="java-intellilang.jar">
               <element id="module-output" name="java-intellilang" />
             </element>
@@ -148,34 +142,7 @@
           <element id="directory" name="lib">
             <element id="archive" name="properties.jar">
               <element id="module-output" name="properties" />
-              <element id="module-output" name="properties-copyright" />
             </element>
-          </element>
-        </element>
-        <element id="directory" name="devkit">
-          <element id="directory" name="lib">
-            <element id="archive" name="devkit.jar">
-              <element id="module-output" name="devkit" />
-            </element>
-            <element id="file-copy" path="$PROJECT_DIR$/plugins/devkit/lib/dtdparser113.jar" />
-          </element>
-        </element>
-        <element id="directory" name="copyright">
-          <element id="directory" name="lib">
-            <element id="archive" name="copyright.jar">
-              <element id="module-output" name="copyright" />
-            </element>
-          </element>
-        </element>
-        <element id="directory" name="relaxng">
-          <element id="directory" name="lib">
-            <element id="archive" name="relaxng.jar">
-              <element id="module-output" name="relaxng" />
-            </element>
-            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/isorelax.jar" />
-            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/jing.jar" />
-            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/rngom-20051226-patched.jar" />
-            <element id="file-copy" path="$PROJECT_DIR$/plugins/relaxng/lib/trang-core.jar" />
           </element>
         </element>
         <element id="directory" name="hg4idea">
@@ -224,9 +191,6 @@
             </element>
             <element id="archive" name="groovy-spellchecker.jar">
               <element id="module-output" name="groovy-spellchecker" />
-            </element>
-            <element id="archive" name="groovy-copyright.jar">
-              <element id="module-output" name="groovy-copyright" />
             </element>
             <element id="archive" name="groovy-rt.jar">
               <element id="module-output" name="groovy-rt-constants" />

@@ -51,7 +51,6 @@
     <orderEntry type="module" module-name="java-psi-impl" />
     <orderEntry type="module" module-name="properties" />
     <orderEntry type="module" module-name="groovy" />
-    <orderEntry type="module" module-name="groovy-copyright" />
     <orderEntry type="module" module-name="groovy-intellilang" />
     <orderEntry type="module" module-name="groovy-rt" />
     <orderEntry type="module" module-name="groovy-rt-constants" />
@@ -59,7 +58,6 @@
     <orderEntry type="module" module-name="ant" />
     <orderEntry type="module" module-name="IntelliLang" />
     <orderEntry type="module" module-name="java-compiler-impl" />
-    <orderEntry type="module" module-name="java-copyright" />
     <orderEntry type="module" module-name="java-debugger-api" />
     <orderEntry type="module" module-name="java-debugger-impl" />
     <orderEntry type="module" module-name="java-execution-impl" />
@@ -68,9 +66,7 @@
     <orderEntry type="module" module-name="java-inspection-gadgets" />
     <orderEntry type="module" module-name="java-intellilang" />
     <orderEntry type="module" module-name="java-intention-power-pack" />
-    <orderEntry type="module" module-name="properties-copyright" />
     <orderEntry type="module" module-name="xml-api" />
-    <orderEntry type="module" module-name="xml-copyright" />
     <orderEntry type="module" module-name="xml-dom-api" />
     <orderEntry type="module" module-name="xml-intellilang" />
     <orderEntry type="module" module-name="xpath" />

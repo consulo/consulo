@@ -13,6 +13,7 @@
   <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)" />
   <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)" />
   <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)" />
+  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)" />
 
   <extensionPoints>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider" />

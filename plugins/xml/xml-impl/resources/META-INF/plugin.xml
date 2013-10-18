@@ -1,7 +1,6 @@
 <idea-plugin version="2" xmlns:xi="http://www.w3.org/2001/XInclude">
   <id>com.intellij.xml</id>
   <name>XML</name>
-  <depends optional="true" config-file="com.intellij.copyright.xml">com.intellij.copyright</depends>
   <depends optional="true" config-file="org.intellij.intelliLang.xml">org.intellij.intelliLang</depends>
 
   <xi:include href="/META-INF/XmlDom.xml" xpointer="xpointer(/idea-plugin/*)" />
@@ -538,6 +537,11 @@
     </projectConfigurable>
 
     <selectInTarget implementation="com.intellij.ide.browsers.SelectInDefaultBrowserTarget"/>
+  </extensions>
+
+  <extensions defaultExtensionNs="com.intellij.copyright">
+    <updater filetype="XML" implementationClass="com.maddyhome.idea.copyright.psi.UpdateXmlCopyrightsProvider"/>
+    <updater filetype="HTML" implementationClass="com.maddyhome.idea.copyright.psi.UpdateXmlCopyrightsProvider"/>
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij.xml">

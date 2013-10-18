@@ -20,7 +20,6 @@
   <vendor>Consulo</vendor>
   <depends>org.consulo.java.platform</depends>
   <depends optional="true" config-file="com.intellij.regexp.xml">com.intellij.regexp</depends>
-  <depends optional="true" config-file="com.intellij.copyright.xml">com.intellij.copyright</depends>
   <depends optional="true" config-file="org.intellij.intellilang.xml">org.intellij.intelliLang</depends>
   <depends>com.intellij.xml</depends>
   <resource-bundle>messages.JavaBundle</resource-bundle>
@@ -1889,6 +1888,11 @@
     <lang.substitutor language="TEXT" implementationClass="com.intellij.spi.SPILanguageSubstitutor" />
   </extensions>
 
+  <extensions defaultExtensionNs="com.intellij.copyright">
+    <updater filetype="JSPX" implementationClass="com.maddyhome.idea.copyright.psi.UpdateJspxFileCopyright$UpdateJspxCopyrightsProvider"/>
+    <updater filetype="JSP" implementationClass="com.maddyhome.idea.copyright.psi.UpdateJspFileCopyright$UpdateJspCopyrightsProvider"/>
+    <updater filetype="JAVA" implementationClass="com.maddyhome.idea.copyright.psi.UpdateJavaFileCopyright$UpdateJavaCopyrightsProvider"/>
+  </extensions>
 
   <extensions defaultExtensionNs="com.intellij.xml.dom">
     <uiControlsProvider implementation="com.intellij.util.xml.impl.JavaDomApplicationComponent"/>
