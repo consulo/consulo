@@ -45,6 +45,8 @@ public final class GuiDesignerConfiguration implements PersistentStateComponent<
   
   public boolean COPY_FORMS_RUNTIME_TO_OUTPUT = true;
 
+  public boolean COPY_FORMS_TO_OUTPUT = true;
+
   public String DEFAULT_LAYOUT_MANAGER = UIFormXmlConstants.LAYOUT_INTELLIJ;
 
   public String DEFAULT_FIELD_ACCESSIBILITY = PsiModifier.PRIVATE;

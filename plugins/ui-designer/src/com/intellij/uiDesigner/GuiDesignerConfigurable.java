@@ -86,6 +86,10 @@ public final class GuiDesignerConfigurable implements SearchableConfigurable, Co
       return true;
     }
 
+    if (myGeneralUI.myChkCopyForms.isSelected() != configuration.COPY_FORMS_TO_OUTPUT) {
+      return true;
+    }
+
     if (!Comparing.equal(configuration.DEFAULT_LAYOUT_MANAGER, myGeneralUI.myLayoutManagerCombo.getSelectedItem())) {
       return true;
     }
@@ -108,6 +112,7 @@ public final class GuiDesignerConfigurable implements SearchableConfigurable, Co
   public void apply() {
     final GuiDesignerConfiguration configuration = GuiDesignerConfiguration.getInstance(myProject);
     configuration.COPY_FORMS_RUNTIME_TO_OUTPUT = myGeneralUI.myChkCopyFormsRuntime.isSelected();
+    configuration.COPY_FORMS_TO_OUTPUT = myGeneralUI.myChkCopyForms.isSelected();
     configuration.DEFAULT_LAYOUT_MANAGER = (String)myGeneralUI.myLayoutManagerCombo.getSelectedItem();
     configuration.INSTRUMENT_CLASSES = myGeneralUI.myRbInstrumentClasses.isSelected();
     configuration.DEFAULT_FIELD_ACCESSIBILITY = (String)myGeneralUI .myDefaultFieldAccessibilityCombo.getSelectedItem();
@@ -132,6 +137,7 @@ public final class GuiDesignerConfigurable implements SearchableConfigurable, Co
       myGeneralUI.myRbInstrumentSources.setSelected(true);
     }
     myGeneralUI.myChkCopyFormsRuntime.setSelected(configuration.COPY_FORMS_RUNTIME_TO_OUTPUT);
+    myGeneralUI.myChkCopyForms.setSelected(configuration.COPY_FORMS_TO_OUTPUT);
 
     myGeneralUI.myLayoutManagerCombo.setModel(new DefaultComboBoxModel(LayoutManagerRegistry.getNonDeprecatedLayoutManagerNames()));
     myGeneralUI.myLayoutManagerCombo.setRenderer(new ListCellRendererWrapper<String>() {
@@ -159,6 +165,7 @@ public final class GuiDesignerConfigurable implements SearchableConfigurable, Co
     private JComboBox myLayoutManagerCombo;
     private JComboBox myDefaultFieldAccessibilityCombo;
     private JCheckBox myResizeHeaders;
+    private JCheckBox myChkCopyForms;
   }
 
   private final class MyApplyRunnable implements Runnable {

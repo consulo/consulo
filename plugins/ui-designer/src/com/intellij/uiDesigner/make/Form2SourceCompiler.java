@@ -155,6 +155,34 @@ public final class Form2SourceCompiler implements SourceInstrumentingCompiler{
 
       final VirtualFile formFile = item.getFormFile();
 
+      /*if(GuiDesignerConfiguration.getInstance(project).COPY_FORMS_TO_OUTPUT) {
+        VirtualFile outputForFile = context.getOutputForFile(module, formFile);
+        if (outputForFile != null) {
+          String packageName = directoryIndex.getPackageName(formFile.getParent());
+
+          File outputFormFile = null;
+          if (packageName == null || packageName.isEmpty()) {
+            outputFormFile = new File(outputForFile.getPath(), formFile.getName());
+          }
+          else {
+            outputFormFile = new File(outputForFile.getPath(), packageName.replace(".", "/") + "/" + formFile.getName());
+          }
+
+          FileUtil.createParentDirs(outputFormFile);
+          try {
+            FileUtil.copy(new File(formFile.getPath()), outputFormFile);
+          }
+          catch (IOException e) {
+            addError(
+              context,
+              new FormErrorInfo(null, UIDesignerBundle.message("error.cannot.copy.gui.designer.form.runtime",
+                                                               module.getName(), ExceptionUtil.getThrowableText(e))),
+              null
+            );
+          }
+        }
+      }   */
+
       if (GuiDesignerConfiguration.getInstance(project).COPY_FORMS_RUNTIME_TO_OUTPUT) {
         ApplicationManager.getApplication().runReadAction(new Runnable() {
           public void run() {
