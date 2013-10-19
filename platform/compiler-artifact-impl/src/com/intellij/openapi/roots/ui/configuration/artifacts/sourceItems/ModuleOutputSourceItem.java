@@ -36,9 +36,9 @@ import java.util.List;
  */
 public class ModuleOutputSourceItem extends PackagingSourceItem {
   private final Module myModule;
-  private final ModuleOutputElementTypeBase<?> myModuleOutputType;
+  private final ModuleOutputElementTypeBase myModuleOutputType;
 
-  public ModuleOutputSourceItem(@NotNull Module module, ModuleOutputElementTypeBase<?> moduleOutputType) {
+  public ModuleOutputSourceItem(@NotNull Module module, ModuleOutputElementTypeBase moduleOutputType) {
     myModule = module;
     myModuleOutputType = moduleOutputType;
   }

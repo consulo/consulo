@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.elements;
+package com.intellij.packaging.impl.elements.moduleContent;
 
 import com.intellij.compiler.ant.BuildProperties;
 import com.intellij.compiler.ant.Generator;
@@ -29,6 +29,7 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.*;
+import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
 import com.intellij.packaging.impl.ui.DelegatedPackagingElementPresentation;
 import com.intellij.packaging.impl.ui.ModuleElementPresentation;
 import com.intellij.packaging.ui.ArtifactEditorContext;
@@ -50,21 +51,28 @@ import java.util.List;
 /**
  * @author nik
  */
-public abstract class ModuleOutputPackagingElementBase
-  extends PackagingElement<ModuleOutputPackagingElementBase.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
+public final class ModuleOutputPackagingElementImpl
+  extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
   @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
-  protected NamedPointer<Module> myModulePointer;
-  protected final Project myProject;
 
-  public ModuleOutputPackagingElementBase(PackagingElementType type, Project project, NamedPointer<Module> modulePointer) {
+  private NamedPointer<Module> myModulePointer;
+  private final ContentFolderType myContentFolderType;
+  private final Project myProject;
+
+  public ModuleOutputPackagingElementImpl(PackagingElementType type,
+                                          Project project,
+                                          NamedPointer<Module> modulePointer,
+                                          ContentFolderType contentFolderType) {
     super(type);
     myProject = project;
     myModulePointer = modulePointer;
+    myContentFolderType = contentFolderType;
   }
 
-  public ModuleOutputPackagingElementBase(PackagingElementType type, Project project) {
+  public ModuleOutputPackagingElementImpl(PackagingElementType type, Project project, ContentFolderType contentFolderType) {
     super(type);
     myProject = project;
+    myContentFolderType = contentFolderType;
   }
 
   @Override
@@ -73,13 +81,12 @@ public abstract class ModuleOutputPackagingElementBase
                                                           @NotNull ArtifactAntGenerationContext generationContext,
                                                           @NotNull ArtifactType artifactType) {
     if (myModulePointer != null) {
-      final String moduleOutput = BuildProperties.propertyRef(getModuleOutputAntProperty(generationContext));
+      final String moduleOutput =
+        BuildProperties.propertyRef(generationContext.getModuleOutputPath(myModulePointer.getName(), myContentFolderType));
       return Collections.singletonList(creator.createDirectoryContentCopyInstruction(moduleOutput));
     }
     return Collections.emptyList();
   }
-
-  protected abstract String getModuleOutputAntProperty(ArtifactAntGenerationContext generationContext);
 
   @Override
   public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
@@ -89,14 +96,12 @@ public abstract class ModuleOutputPackagingElementBase
     final Module module = findModule(resolvingContext);
     if (module != null) {
       final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
-      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, getContentFolderType());
+      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, myContentFolderType);
       if (output != null) {
         creator.addDirectoryCopyInstructions(output, null);
       }
     }
   }
-
-  protected abstract ContentFolderType getContentFolderType();
 
   @NotNull
   @Override
@@ -109,7 +114,7 @@ public abstract class ModuleOutputPackagingElementBase
     List<VirtualFile> roots = new SmartList<VirtualFile>();
     ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
     for (ContentEntry entry : rootModel.getContentEntries()) {
-      for (ContentFolder folder : entry.getFolders(getContentFolderType())) {
+      for (ContentFolder folder : entry.getFolders(myContentFolderType)) {
         ContainerUtil.addIfNotNull(folder.getFile(), roots);
       }
     }
@@ -132,7 +137,8 @@ public abstract class ModuleOutputPackagingElementBase
   public boolean isEqualTo(@NotNull PackagingElement<?> element) {
     return element.getClass() == getClass() &&
            myModulePointer != null &&
-           myModulePointer.equals(((ModuleOutputPackagingElementBase)element).myModulePointer);
+           myModulePointer.equals(((ModuleOutputPackagingElementImpl)element).myModulePointer) &&
+           myContentFolderType == ((ModuleOutputPackagingElementImpl)element).getContentFolderType();
   }
 
   @Override
@@ -156,9 +162,15 @@ public abstract class ModuleOutputPackagingElementBase
     return myModulePointer != null ? myModulePointer.getName() : null;
   }
 
+  @NotNull
+  @Override
+  public ContentFolderType getContentFolderType() {
+    return myContentFolderType;
+  }
+
   @Override
   public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
-    return new DelegatedPackagingElementPresentation(new ModuleElementPresentation(myModulePointer, context, getContentFolderType()));
+    return new DelegatedPackagingElementPresentation(new ModuleElementPresentation(myModulePointer, context, myContentFolderType));
   }
 
   @Override

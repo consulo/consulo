@@ -126,7 +126,7 @@ public class ArtifactCompileScope {
   }
 
   private static boolean containsModuleOutput(Artifact artifact, final Set<Module> modules, final PackagingElementResolvingContext context) {
-    return !ArtifactUtil.processPackagingElements(artifact, ProductionModuleOutputElementType.ELEMENT_TYPE,
+    return !ArtifactUtil.processPackagingElements(artifact, ProductionModuleOutputElementType.getInstance(),
                                                   new Processor<ModuleOutputPackagingElement>() {
                                                     public boolean process(ModuleOutputPackagingElement moduleOutputPackagingElement) {
                                                       final Module module = moduleOutputPackagingElement.findModule(context);

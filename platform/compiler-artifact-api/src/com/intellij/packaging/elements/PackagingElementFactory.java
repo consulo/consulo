@@ -49,12 +49,15 @@ public abstract class PackagingElementFactory {
   public abstract PackagingElement<?> createFileCopy(@NotNull String filePath, @Nullable String outputFileName);
 
   @NotNull
+  @Deprecated
   public abstract PackagingElement<?> createModuleOutput(@NotNull String moduleName, @NotNull Project project);
 
   @NotNull
+  @Deprecated
   public abstract PackagingElement<?> createModuleOutput(@NotNull Module module);
 
   @NotNull
+  @Deprecated
   public abstract PackagingElement<?> createTestModuleOutput(@NotNull Module module);
 
   @NotNull

@@ -16,38 +16,17 @@
 package com.intellij.packaging.impl.elements.moduleContent;
 
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.packaging.impl.elements.ModuleOutputPackagingElementBase;
-import com.intellij.packaging.impl.elements.moduleContent.elementImpl.ProductionModuleOutputPackagingElement;
-import org.consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
 
 /**
 * @author nik
 */
-public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBase<ProductionModuleOutputPackagingElement> {
-  public static final ProductionModuleOutputElementType ELEMENT_TYPE = new ProductionModuleOutputElementType();
+public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBase {
+  public static ProductionModuleOutputElementType getInstance() {
+    return getInstance(ProductionModuleOutputElementType.class);
+  }
 
   public ProductionModuleOutputElementType() {
-    super("module-output", CompilerBundle.message("element.type.name.module.output"));
-  }
-
-  @Override
-  @NotNull
-  public ProductionModuleOutputPackagingElement createEmpty(@NotNull Project project) {
-    return new ProductionModuleOutputPackagingElement(project);
-  }
-
-  @NotNull
-  @Override
-  public ContentFolderType getContentFolderType() {
-    return ContentFolderType.PRODUCTION;
-  }
-
-  @Override
-  public ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
-    return new ProductionModuleOutputPackagingElement(project, pointer);
+    super("module-output", CompilerBundle.message("element.type.name.module.output"), ContentFolderType.PRODUCTION);
   }
 }

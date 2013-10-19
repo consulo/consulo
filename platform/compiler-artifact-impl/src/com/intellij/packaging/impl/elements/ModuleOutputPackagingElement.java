@@ -16,6 +16,7 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,9 @@ import java.util.Collection;
 public interface ModuleOutputPackagingElement {
   @Nullable
   String getModuleName();
+
+  @NotNull
+  ContentFolderType getContentFolderType();
 
   @Nullable
   Module findModule(PackagingElementResolvingContext context);

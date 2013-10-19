@@ -79,7 +79,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     }
 
     for (PackagingElementType element : PackagingElementFactory.getInstance().getAllElementTypes()) {
-      if(element instanceof ModuleOutputElementTypeBase<?>) {
+      if(element instanceof ModuleOutputElementTypeBase) {
         ModuleOutputElementTypeBase moduleOutputType = (ModuleOutputElementTypeBase)element;
         boolean can = canAddModuleOutputType(editorContext, artifact, moduleOutputType, module);
         if(can) {
@@ -118,7 +118,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return items;
   }
 
-  private static <T extends ModuleOutputElementTypeBase<?>> boolean canAddModuleOutputType(@NotNull final ArtifactEditorContext context,
+  private static <T extends ModuleOutputElementTypeBase> boolean canAddModuleOutputType(@NotNull final ArtifactEditorContext context,
                                                                                            @NotNull Artifact artifact,
                                                                                            T type,
                                                                                            final Module module) {

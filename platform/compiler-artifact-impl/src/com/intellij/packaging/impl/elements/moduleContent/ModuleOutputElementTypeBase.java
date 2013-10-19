@@ -27,7 +27,6 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
-import com.intellij.packaging.impl.elements.ModuleOutputPackagingElementBase;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
@@ -40,23 +39,23 @@ import java.util.List;
 /**
  * @author nik
  */
-public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagingElementBase> extends PackagingElementType<E> {
-  public ModuleOutputElementTypeBase(String id, String presentableName) {
-    super(id, presentableName);
-  }
+public abstract class ModuleOutputElementTypeBase extends PackagingElementType<ModuleOutputPackagingElementImpl> {
+  private final ContentFolderType myContentFolderType;
 
-  @NotNull
-  public abstract ContentFolderType getContentFolderType();
+  public ModuleOutputElementTypeBase(String id, String presentableName, ContentFolderType contentFolderType) {
+    super(id, presentableName);
+    myContentFolderType = contentFolderType;
+  }
 
   @Nullable
   @Override
   public Icon getCreateElementIcon() {
-    return ContentFolderIconUtil.getRootIcon(getContentFolderType()) ;
+    return ContentFolderIconUtil.getRootIcon(myContentFolderType);
   }
 
   public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
     for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
-      if(entry.getFolders(getContentFolderType()).length != 0) {
+      if (entry.getFolders(myContentFolderType).length != 0) {
         return true;
       }
     }
@@ -70,8 +69,9 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
 
   @Override
   @NotNull
-  public List<? extends PackagingElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                                       @NotNull CompositePackagingElement<?> parent) {
+  public List<? extends PackagingElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context,
+                                                             @NotNull Artifact artifact,
+                                                             @NotNull CompositePackagingElement<?> parent) {
     List<Module> suitableModules = getSuitableModules(context);
     List<Module> selected = context.chooseModules(suitableModules, ProjectBundle.message("dialog.title.packaging.choose.module"));
 
@@ -82,7 +82,19 @@ public abstract class ModuleOutputElementTypeBase<E extends ModuleOutputPackagin
     return elements;
   }
 
-  public abstract ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer);
+  public ContentFolderType getContentFolderType() {
+    return myContentFolderType;
+  }
+
+  public ModuleOutputPackagingElementImpl createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
+    return new ModuleOutputPackagingElementImpl(this, project, pointer, myContentFolderType);
+  }
+
+  @NotNull
+  @Override
+  public ModuleOutputPackagingElementImpl createEmpty(@NotNull Project project) {
+    return new ModuleOutputPackagingElementImpl(this, project, myContentFolderType);
+  }
 
   private List<Module> getSuitableModules(ArtifactEditorContext context) {
     ModulesProvider modulesProvider = context.getModulesProvider();

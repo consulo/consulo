@@ -32,8 +32,8 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.packaging.artifacts.ArtifactPointerUtil;
 import com.intellij.packaging.elements.*;
-import com.intellij.packaging.impl.elements.moduleContent.elementImpl.ProductionModuleOutputPackagingElement;
-import com.intellij.packaging.impl.elements.moduleContent.elementImpl.TestModuleOutputPackagingElement;
+import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
+import com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
 import org.consulo.util.pointers.NamedPointer;
@@ -176,21 +176,21 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @NotNull
   public PackagingElement<?> createModuleOutput(@NotNull String moduleName, @NotNull Project project) {
     final NamedPointer<Module> pointer = ModuleUtilCore.createPointer(project, moduleName);
-    return new ProductionModuleOutputPackagingElement(project, pointer);
+    return ProductionModuleOutputElementType.getInstance().createElement(project, pointer);
   }
 
   @NotNull
   @Override
   public PackagingElement<?> createModuleOutput(@NotNull Module module) {
     final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(module);
-    return new ProductionModuleOutputPackagingElement(module.getProject(), modulePointer);
+    return ProductionModuleOutputElementType.getInstance().createElement(module.getProject(), modulePointer);
   }
 
   @NotNull
   @Override
   public PackagingElement<?> createTestModuleOutput(@NotNull Module module) {
     NamedPointer<Module> pointer = ModuleUtilCore.createPointer(module);
-    return new TestModuleOutputPackagingElement(module.getProject(), pointer);
+    return TestModuleOutputElementType.getInstance().createElement(module.getProject(), pointer);
   }
 
   @NotNull

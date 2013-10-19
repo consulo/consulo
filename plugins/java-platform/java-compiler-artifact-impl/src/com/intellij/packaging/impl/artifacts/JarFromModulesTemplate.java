@@ -117,10 +117,10 @@ public class JarFromModulesTemplate extends ArtifactTemplate {
     enumerator.forEachModule(new Processor<Module>() {
       @Override
       public boolean process(Module module) {
-        if (ProductionModuleOutputElementType.ELEMENT_TYPE.isSuitableModule(modulesProvider, module)) {
+        if (ProductionModuleOutputElementType.getInstance().isSuitableModule(modulesProvider, module)) {
           archive.addOrFindChild(factory.createModuleOutput(module));
         }
-        if (includeTests && TestModuleOutputElementType.ELEMENT_TYPE.isSuitableModule(modulesProvider, module)) {
+        if (includeTests && TestModuleOutputElementType.getInstance().isSuitableModule(modulesProvider, module)) {
           archive.addOrFindChild(factory.createTestModuleOutput(module));
         }
         return true;

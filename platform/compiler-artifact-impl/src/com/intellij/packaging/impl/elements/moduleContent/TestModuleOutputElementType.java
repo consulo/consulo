@@ -16,38 +16,17 @@
 package com.intellij.packaging.impl.elements.moduleContent;
 
 import com.intellij.openapi.compiler.CompilerBundle;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.packaging.impl.elements.ModuleOutputPackagingElementBase;
-import com.intellij.packaging.impl.elements.moduleContent.elementImpl.TestModuleOutputPackagingElement;
-import org.consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
  */
-public class TestModuleOutputElementType extends ModuleOutputElementTypeBase<TestModuleOutputPackagingElement> {
-  public static final TestModuleOutputElementType ELEMENT_TYPE = new TestModuleOutputElementType();
+public class TestModuleOutputElementType extends ModuleOutputElementTypeBase {
+  public static TestModuleOutputElementType getInstance() {
+    return getInstance(TestModuleOutputElementType.class);
+  }
 
   public TestModuleOutputElementType() {
-    super("module-test-output", CompilerBundle.message("element.type.name.module.test.output"));
-  }
-
-  @NotNull
-  @Override
-  public TestModuleOutputPackagingElement createEmpty(@NotNull Project project) {
-    return new TestModuleOutputPackagingElement(project);
-  }
-
-  @Override
-  public ModuleOutputPackagingElementBase createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
-    return new TestModuleOutputPackagingElement(project, pointer);
-  }
-
-  @NotNull
-  @Override
-  public ContentFolderType getContentFolderType() {
-    return ContentFolderType.TEST;
+    super("module-test-output", CompilerBundle.message("element.type.name.module.test.output"), ContentFolderType.TEST);
   }
 }
