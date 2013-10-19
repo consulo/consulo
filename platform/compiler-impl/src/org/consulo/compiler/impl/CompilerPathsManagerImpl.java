@@ -11,7 +11,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -327,21 +327,18 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   }
 
   private void createIfNotExists() {
-    for (CompileInfo compileInfo : myModulesToVirtualFilePoints.values()) {
-      for (VirtualFilePointer virtualFilePointer : compileInfo.virtualFilePointers.values()) {
-        String url = virtualFilePointer.getUrl();
-        String path = PathUtil.toPresentableUrl(url);
-        if (path.isEmpty()) {
-          continue;
-        }
-        try {
-          VfsUtil.createDirectoryIfMissing(path);
-        }
-        catch (IOException e) {
-          if (ApplicationManager.getApplication().isInternal()) {
-            LOGGER.error(e);
-          }
-        }
+    try {
+      String path = PathUtil.toPresentableUrl(getCompilerOutputUrl());
+      FileUtil.createDirectory(new File(path));
+
+      for (ContentFolderType folderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+        String contentRootPath = path + "/" + folderType.name().toLowerCase();
+        FileUtil.createDirectory(new File(contentRootPath));
+      }
+    }
+    catch (Exception e) {
+      if (ApplicationManager.getApplication().isInternal()) {
+        LOGGER.error(e);
       }
     }
   }
