@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,11 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.editor.ex.EditorEx;
-
 /**
+ * Indicates that component, or cell editor, or cell renderer performs
+ * some animations and side effects may occur because of  changes of the bounds
+ *
  * @author Konstantin Bulenkov
  */
-public interface EditorSettingsProvider {
-  EditorSettingsProvider NO_WHITESPACE = new EditorSettingsProvider() {
-    @Override
-    public void customizeSettings(EditorEx editor) {
-      editor.getSettings().setWhitespacesShown(false);
-    }
-  };
-
-  void customizeSettings(EditorEx editor);
+public interface Animated {
 }

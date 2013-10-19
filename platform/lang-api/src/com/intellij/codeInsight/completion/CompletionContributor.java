@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ import java.util.List;
 public abstract class CompletionContributor {
 
   private final MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>>> myMap =
-      new MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>>>();
+    new MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>>>();
 
   public final void extend(@Nullable CompletionType type, final ElementPattern<? extends PsiElement> place, CompletionProvider<CompletionParameters> provider) {
     myMap.putValue(type, new Pair<ElementPattern<? extends PsiElement>, CompletionProvider<CompletionParameters>>(place, provider));
@@ -205,6 +205,13 @@ public abstract class CompletionContributor {
   }
 
   /**
+   * Allow autoPopup to appear after custom symbol
+   */
+  public boolean invokeAutoPopup(@NotNull PsiElement position, char typeChar) {
+    return false;
+  }
+
+  /**
    * Invoked in a read action in parallel to the completion process. Used to calculate the replacement offset
    * (see {@link com.intellij.codeInsight.completion.CompletionInitializationContext#setReplacementOffset(int)})
    * if it takes too much time to spend it in {@link #beforeCompletion(CompletionInitializationContext)},
@@ -222,7 +229,7 @@ public abstract class CompletionContributor {
    * @return String representation of action shortcut. Useful while advertising something
    * @see #advertise(CompletionParameters)
    */
-  public static String getActionShortcut(@NonNls final String actionId) {
+  protected static String getActionShortcut(@NonNls final String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }
 

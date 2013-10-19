@@ -52,7 +52,6 @@ public abstract class LocatableConfigurationBase extends RunConfigurationBase im
   }
 
   @Override
-  @Nullable
   public String suggestedName() {
     return null;
   }

@@ -135,13 +135,15 @@ public class SdkConfigurationUtil {
 
     final SdkImpl sdk;
     try {
+      String sdkPath = sdkType.sdkPath(homeDir);
+
       String sdkName = null;
       if (bundled) {
         sdkName = sdkType.getName() + " (bundled)";
       }
       else {
         sdkName = customSdkSuggestedName == null
-                  ? createUniqueSdkName(sdkType, homeDir.getPath(), sdksList)
+                  ? createUniqueSdkName(sdkType, sdkPath, sdksList)
                   : createUniqueSdkName(customSdkSuggestedName, sdksList);
       }
 
@@ -157,7 +159,7 @@ public class SdkConfigurationUtil {
         sdk.setSdkAdditionalData(additionalData);
       }
 
-      sdk.setHomePath(homeDir.getPath());
+      sdk.setHomePath(sdkPath);
       sdkType.setupSdkPaths(sdk);
     }
     catch (Exception e) {

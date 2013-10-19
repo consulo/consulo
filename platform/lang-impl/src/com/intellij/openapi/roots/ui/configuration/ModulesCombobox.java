@@ -15,18 +15,15 @@
  */
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.icons.AllIcons;
+import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ComboboxSpeedSearch;
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedComboBoxModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author nik
@@ -53,18 +50,7 @@ public class ModulesCombobox extends ComboBox {
         return super.getElementText(element);
       }
     };
-    setRenderer(new ListCellRendererWrapper<Module>() {
-      @Override
-      public void customize(JList list, Module value, int index, boolean selected, boolean hasFocus) {
-        if (value != null) {
-          setText(value.getName());
-          setIcon(AllIcons.Nodes.Module);
-        }
-        else {
-          setText("[none]");
-        }
-      }
-    });
+    setRenderer(new ModuleListCellRenderer());
   }
 
 

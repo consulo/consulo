@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,12 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PatternCondition;
+import com.intellij.patterns.PsiJavaElementPattern;
 import com.intellij.patterns.PsiNameValuePairPattern;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
 import com.intellij.psi.filters.*;
+import com.intellij.psi.filters.classes.AnnotationTypeFilter;
 import com.intellij.psi.filters.classes.AssignableFromContextFilter;
 import com.intellij.psi.filters.element.ExcludeDeclaredFilter;
 import com.intellij.psi.filters.element.ModifierFilter;
@@ -75,6 +77,11 @@ public class JavaCompletionContributor extends CompletionContributor {
     ourCompletionData.put(LanguageLevel.JDK_1_3, new JavaCompletionData());
   }
 
+  public static final ElementPattern<PsiElement> ANNOTATION_NAME = psiElement().
+    withParents(PsiJavaCodeReferenceElement.class, PsiAnnotation.class).afterLeaf("@");
+  private static final PsiJavaElementPattern.Capture<PsiElement> UNEXPECTED_REFERENCE_AFTER_DOT =
+    psiJavaElement().afterLeaf(".").insideStarting(psiExpressionStatement());
+
   private static JavaCompletionData getCompletionData(LanguageLevel level) {
     final Set<Map.Entry<LanguageLevel, JavaCompletionData>> entries = ourCompletionData.entrySet();
     for (Map.Entry<LanguageLevel, JavaCompletionData> entry : entries) {
@@ -90,15 +97,15 @@ public class JavaCompletionContributor extends CompletionContributor {
        psiElement().afterLeaf("(").withParent(psiReferenceExpression().withParent(NAME_VALUE_PAIR)));
   private static final ElementPattern SWITCH_LABEL =
     psiElement().withSuperParent(2, psiElement(PsiSwitchLabelStatement.class).withSuperParent(2,
-      psiElement(PsiSwitchStatement.class).with(new PatternCondition<PsiSwitchStatement>("enumExpressionType") {
-        @Override
-        public boolean accepts(@NotNull PsiSwitchStatement psiSwitchStatement, ProcessingContext context) {
-          final PsiExpression expression = psiSwitchStatement.getExpression();
-          if(expression == null) return false;
-          PsiClass aClass = PsiUtil.resolveClassInClassTypeOnly(expression.getType());
-          return aClass != null && aClass.isEnum();
-        }
-      })));
+                                                                                              psiElement(PsiSwitchStatement.class).with(new PatternCondition<PsiSwitchStatement>("enumExpressionType") {
+                                                                                                @Override
+                                                                                                public boolean accepts(@NotNull PsiSwitchStatement psiSwitchStatement, ProcessingContext context) {
+                                                                                                  final PsiExpression expression = psiSwitchStatement.getExpression();
+                                                                                                  if(expression == null) return false;
+                                                                                                  PsiClass aClass = PsiUtil.resolveClassInClassTypeOnly(expression.getType());
+                                                                                                  return aClass != null && aClass.isEnum();
+                                                                                                }
+                                                                                              })));
   private static final ElementPattern<PsiElement> AFTER_NUMBER_LITERAL =
     psiElement().afterLeaf(psiElement().withElementType(elementType().oneOf(JavaTokenType.DOUBLE_LITERAL, JavaTokenType.LONG_LITERAL,
                                                                             JavaTokenType.FLOAT_LITERAL, JavaTokenType.INTEGER_LITERAL)));
@@ -111,6 +118,10 @@ public class JavaCompletionContributor extends CompletionContributor {
     final PsiClass containingClass = PsiTreeUtil.getParentOfType(position, PsiClass.class, false, PsiCodeBlock.class, PsiMethod.class, PsiExpressionList.class, PsiVariable.class, PsiAnnotation.class);
     if (containingClass != null && psiElement().afterLeaf(PsiKeyword.EXTENDS, PsiKeyword.IMPLEMENTS, ",", "&").accepts(position)) {
       return new AndFilter(ElementClassFilter.CLASS, new NotFilter(new AssignableFromContextFilter()));
+    }
+
+    if (ANNOTATION_NAME.accepts(position)) {
+      return new AnnotationTypeFilter();
     }
 
     if (JavaCompletionData.DECLARATION_START.accepts(position) ||
@@ -170,9 +181,9 @@ public class JavaCompletionContributor extends CompletionContributor {
 
   private static ElementFilter createAnnotationFilter(PsiElement position) {
     OrFilter orFilter = new OrFilter(ElementClassFilter.CLASS,
-                                   ElementClassFilter.PACKAGE_FILTER,
-                                   new AndFilter(new ClassFilter(PsiField.class),
-                                                 new ModifierFilter(PsiModifier.STATIC, PsiModifier.FINAL)));
+                                     ElementClassFilter.PACKAGE_FILTER,
+                                     new AndFilter(new ClassFilter(PsiField.class),
+                                                   new ModifierFilter(PsiModifier.STATIC, PsiModifier.FINAL)));
     if (psiElement().insideStarting(psiNameValuePair()).accepts(position)) {
       orFilter.addFilter(new ClassFilter(PsiAnnotationMethod.class) {
         @Override
@@ -195,7 +206,7 @@ public class JavaCompletionContributor extends CompletionContributor {
       return;
     }
 
-    if (AFTER_NUMBER_LITERAL.accepts(position)) {
+    if (AFTER_NUMBER_LITERAL.accepts(position) || UNEXPECTED_REFERENCE_AFTER_DOT.accepts(position)) {
       _result.stopHere();
       return;
     }
@@ -223,9 +234,9 @@ public class JavaCompletionContributor extends CompletionContributor {
       result.addElement(LookupElementBuilder.create("*"));
     }
 
-    Set<String> usedWords = addReferenceVariants(parameters, result, inheritors);
-
     addKeywords(parameters, result);
+
+    Set<String> usedWords = addReferenceVariants(parameters, result, inheritors);
 
     if (psiElement().inside(PsiLiteralExpression.class).accepts(position)) {
       PsiReference reference = position.getContainingFile().findReferenceAt(parameters.getOffset());
@@ -234,7 +245,7 @@ public class JavaCompletionContributor extends CompletionContributor {
       }
     }
 
-    JavaOverrideCompletionContributor.fillCompletionVariants(parameters, result);
+    JavaGenerateMemberCompletionContributor.fillCompletionVariants(parameters, result);
 
     addAllClasses(parameters, result, inheritors);
 
@@ -299,10 +310,10 @@ public class JavaCompletionContributor extends CompletionContributor {
                 .withFilterStaticAfterInstance(first)
                 .withShowInstanceInStaticContext(!first);
             for (LookupElement element : JavaCompletionUtil.processJavaReference(position,
-                                                                                  (PsiJavaReference)reference,
-                                                                                  new ElementExtractorFilter(filter),
-                                                                                  options,
-                                                                                  result.getPrefixMatcher(), parameters)) {
+                                                                                 (PsiJavaReference)reference,
+                                                                                 new ElementExtractorFilter(filter),
+                                                                                 options,
+                                                                                 result.getPrefixMatcher(), parameters)) {
               if (inheritors.alreadyProcessed(element)) {
                 continue;
               }
@@ -381,7 +392,10 @@ public class JavaCompletionContributor extends CompletionContributor {
   static boolean isClassNamePossible(CompletionParameters parameters) {
     boolean isSecondCompletion = parameters.getInvocationCount() >= 2;
 
-    final PsiElement parent = parameters.getPosition().getParent();
+    PsiElement position = parameters.getPosition();
+    if (JavaCompletionData.isInstanceofPlace(position)) return false;
+
+    final PsiElement parent = position.getParent();
     if (!(parent instanceof PsiJavaCodeReferenceElement)) return isSecondCompletion;
     if (((PsiJavaCodeReferenceElement)parent).getQualifier() != null) return isSecondCompletion;
 
@@ -406,10 +420,10 @@ public class JavaCompletionContributor extends CompletionContributor {
       return false;
     }
 
-    if (JavaCompletionData.isAfterPrimitiveOrArrayType(parameters.getPosition())) {
+    if (JavaCompletionData.isAfterPrimitiveOrArrayType(position)) {
       return false;
     }
-    
+
     return true;
   }
 
@@ -576,6 +590,11 @@ public class JavaCompletionContributor extends CompletionContributor {
       }
     }
     return LangBundle.message("completion.no.suggestions") + suffix;
+  }
+
+  @Override
+  public boolean invokeAutoPopup(@NotNull PsiElement position, char typeChar) {
+    return typeChar == ':' && JavaTokenType.COLON == position.getNode().getElementType();
   }
 
   private static boolean shouldSuggestSmartCompletion(final PsiElement element) {

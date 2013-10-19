@@ -16,17 +16,17 @@
 
 package org.jetbrains.plugins.groovy.mvc;
 
+import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.components.JBLabel;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.mvc.util.ModuleCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -151,7 +151,7 @@ public class MvcRunConfigurationEditor<T extends MvcRunConfiguration> extends Se
   protected JComponent createEditor() {
     myModulesModel = new DefaultComboBoxModel();
     myModulesBox.setModel(myModulesModel);
-    myModulesBox.setRenderer(new ModuleCellRenderer(myModulesBox.getRenderer()));
+    myModulesBox.setRenderer(new ModuleListCellRenderer());
 
     return myMainPanel;
   }

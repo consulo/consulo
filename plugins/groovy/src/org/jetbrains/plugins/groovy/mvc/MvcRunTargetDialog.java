@@ -15,6 +15,7 @@
  */
 package org.jetbrains.plugins.groovy.mvc;
 
+import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.editor.event.DocumentAdapter;
@@ -29,7 +30,6 @@ import com.intellij.ui.*;
 import com.intellij.util.TextFieldCompletionProvider;
 import com.intellij.util.TextFieldCompletionProviderDumbAware;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.mvc.util.ModuleCellRenderer;
 import org.jetbrains.plugins.groovy.mvc.util.MvcTargetDialogCompletionUtils;
 
 import javax.swing.*;
@@ -125,7 +125,7 @@ public class MvcRunTargetDialog extends DialogWrapper {
       }
     });
 
-    myModuleBox.setRenderer(new ModuleCellRenderer(myModuleBox.getRenderer()));
+    myModuleBox.setRenderer(new ModuleListCellRenderer());
   }
 
   @NotNull

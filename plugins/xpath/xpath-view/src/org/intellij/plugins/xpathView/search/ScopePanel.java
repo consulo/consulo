@@ -15,7 +15,7 @@
  */
 package org.intellij.plugins.xpathView.search;
 
-import com.intellij.icons.AllIcons;
+import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -27,7 +27,6 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.ListCellRendererWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,15 +91,7 @@ public class ScopePanel extends JPanel implements Disposable{
         myCustomScope.setSelected(scope.getScopeType() == SearchScope.ScopeType.CUSTOM);
 
         myModuleSelection.setModel(createModel(ModuleManager.getInstance(myProject).getModules()));
-        myModuleSelection.setRenderer(new ListCellRendererWrapper<Module>() {
-          @Override
-          public void customize(JList list, Module m, int index, boolean selected, boolean hasFocus) {
-            if (m != null) {
-              setIcon(AllIcons.Nodes.Module);
-              setText(m.getName());
-            }
-          }
-        });
+        myModuleSelection.setRenderer(new ModuleListCellRenderer());
 
         Module m;
         if (scope.getModuleName() != null) {

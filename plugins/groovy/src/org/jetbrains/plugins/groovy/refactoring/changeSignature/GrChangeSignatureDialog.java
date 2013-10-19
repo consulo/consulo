@@ -140,10 +140,10 @@ public class GrChangeSignatureDialog extends ChangeSignatureDialogBase<GrParamet
     myPropExceptionsButton.setShortcut(CustomShortcutSet.fromString("alt X"));*/
 
     final JPanel panel = ToolbarDecorator.createDecorator(table).createPanel();
-      //.addExtraAction(myPropExceptionsButton).createPanel();
-    panel.setBorder(IdeBorderFactory.createEmptyBorder(0));
+    //.addExtraAction(myPropExceptionsButton).createPanel();
+    panel.setBorder(IdeBorderFactory.createEmptyBorder());
 
-    myExceptionsModel.addTableModelListener(getSignatureUpdater());
+    myExceptionsModel.addTableModelListener(mySignatureUpdater);
 
     final ArrayList<Pair<String, JPanel>> result = new ArrayList<Pair<String, JPanel>>();
     final String message = RefactoringBundle.message("changeSignature.exceptions.panel.border.title");

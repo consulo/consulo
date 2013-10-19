@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,17 +112,26 @@ class TableToolbarDecorator extends ToolbarDecorator {
         }
         if (rowCount == table.getRowCount()) return;
         final int index = table.getModel().getRowCount() - 1;
-        table.editCellAt(index, 0);
+
         table.setRowSelectionInterval(index, index);
         table.setColumnSelectionInterval(0, 0);
-        final Component editorComponent = table.getEditorComponent();
-        if (editorComponent != null) {
-          final Rectangle bounds = editorComponent.getBounds();
-          table.scrollRectToVisible(bounds);
-          editorComponent.requestFocus();
-        }
+        table.editCellAt(index, 0);
 
-        updateScroller(table);
+        updateScroller(table, table.getCellEditor() instanceof Animated);
+        //noinspection SSBasedInspection
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            final Component editorComponent = table.getEditorComponent();
+            if (editorComponent != null) {
+              final Rectangle bounds = editorComponent.getBounds();
+              table.scrollRectToVisible(bounds);
+              editorComponent.requestFocus();
+            }
+          }
+        });
+
+
       }
     };
 
@@ -146,13 +155,13 @@ class TableToolbarDecorator extends ToolbarDecorator {
 
         table.requestFocus();
 
-        updateScroller(table);
+        updateScroller(table, false);
       }
     };
 
     myUpAction = new AnActionButtonRunnable() {
       @Override
-      public void run(AnActionButton button) {        
+      public void run(AnActionButton button) {
         final int row = table.getEditingRow();
         final int col = table.getEditingColumn();
         TableUtil.stopEditing(table);
@@ -162,7 +171,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
             tableModel.exchangeRows(index, index - 1);
             table.setRowSelectionInterval(index - 1, index - 1);
           }
-        }        
+        }
         table.requestFocus();
         if (row > 0 && col != -1) {
           table.editCellAt(row - 1, col);
@@ -192,9 +201,15 @@ class TableToolbarDecorator extends ToolbarDecorator {
     };
   }
 
-  private static void updateScroller(JTable table) {
+  private static void updateScroller(JTable table, boolean temporaryHideVerticalScrollBar) {
     JScrollPane scrollPane = UIUtil.getParentOfType(JScrollPane.class, table);
     if (scrollPane != null) {
+      if (temporaryHideVerticalScrollBar) {
+        final JScrollBar bar = scrollPane.getVerticalScrollBar();
+        if (bar == null || !bar.isVisible()) {
+          scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        }
+      }
       scrollPane.revalidate();
       scrollPane.repaint();
     }
