@@ -448,5 +448,17 @@
       <interface-class>org.consulo.compiler.server.rmi.CompilerClientConnector</interface-class>
       <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerClientConnectorImpl</implementation-class>
     </component>
+
+    <component>
+      <interface-class>org.consulo.compiler.CompilerPathsManager</interface-class>
+      <implementation-class>org.consulo.compiler.impl.CompilerPathsManagerImpl</implementation-class>
+      <skipForDefaultProject />
+    </component>
+
+    <component>
+      <interface-class>org.consulo.compiler.CompilerPathsManager</interface-class>
+      <implementation-class>org.consulo.compiler.impl.DefaultCompilerPathsManagerImpl</implementation-class>
+      <loadForDefaultProject />
+    </component>
   </project-components>
 </idea-plugin>

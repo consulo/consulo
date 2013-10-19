@@ -7,6 +7,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
@@ -67,8 +68,6 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   }
 
   @NonNls
-  private static final String DEFAULT_PATH = "/out";
-  @NonNls
   private static final String OUTPUT_TAG = "output";
   @NonNls
   private static final String MODULE_OUTPUT_TAG = "module-output";
@@ -85,11 +84,13 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   private final Project myProject;
 
   private VirtualFilePointer myProjectVirtualFilePointer;
+  private CompilerPathsManager myDefaultCompilerPathsManager;
 
   private final Map<Module, CompileInfo> myModulesToVirtualFilePoints = new LinkedHashMap<Module, CompileInfo>();
 
   public CompilerPathsManagerImpl(@NotNull Project project) {
     myProject = project;
+    myDefaultCompilerPathsManager = CompilerPathsManager.getInstance(ProjectManager.getInstance().getDefaultProject());
 
     final ModuleAdapter handler = new ModuleAdapter() {
       @Override
@@ -110,7 +111,9 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   }
 
   private void createDefaults() {
-    myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance().create(myProject.getBaseDir().getUrl() + DEFAULT_PATH, myProject, null);
+
+    myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance()
+      .create(myProject.getBaseDir().getUrl() + "/" + myDefaultCompilerPathsManager.getCompilerOutputUrl(), myProject, null);
     ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     for (Module module : moduleManager.getModules()) {
       if (!myModulesToVirtualFilePoints.containsKey(module)) {
@@ -147,7 +150,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
   @Override
   public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
     if (compilerOutputUrl == null) {
-      compilerOutputUrl = myProject.getBasePath() + DEFAULT_PATH;
+      compilerOutputUrl = myProject.getBasePath() + "/" + myDefaultCompilerPathsManager.getCompilerOutputUrl();
     }
     myProjectVirtualFilePointer = VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
     //myCompilerOutputWatchRequest = LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, compilerOutputUrl, true);
@@ -174,7 +177,14 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
 
   private VirtualFilePointer createDefaultPointerForModule(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
     final VirtualFilePointerManager instance = VirtualFilePointerManager.getInstance();
-    return instance.create(myProject.getBaseDir().getUrl() + DEFAULT_PATH + "/" + contentFolderType.name().toLowerCase() +  "/" + module.getName() + "/", module, null);
+    return instance.create(myProject.getBaseDir().getUrl() +
+                           "/" +
+                           myDefaultCompilerPathsManager.getCompilerOutputUrl() +
+                           "/" +
+                           contentFolderType.name().toLowerCase() +
+                           "/" +
+                           module.getName() +
+                           "/", module, null);
   }
 
   @Override
@@ -238,7 +248,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
         rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(pointer.getUrl()));
       }
     }
-    rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(myProjectVirtualFilePointer.getUrl())) ;
+    rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(myProjectVirtualFilePointer.getUrl()));
     return rootsToWatch;
   }
 
@@ -326,14 +336,14 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
       for (VirtualFilePointer virtualFilePointer : compileInfo.virtualFilePointers.values()) {
         String url = virtualFilePointer.getUrl();
         String path = PathUtil.toPresentableUrl(url);
-        if(path.isEmpty()) {
+        if (path.isEmpty()) {
           continue;
         }
         try {
           VfsUtil.createDirectoryIfMissing(path);
         }
         catch (IOException e) {
-          if(ApplicationManager.getApplication().isInternal()) {
+          if (ApplicationManager.getApplication().isInternal()) {
             LOGGER.error(e);
           }
         }

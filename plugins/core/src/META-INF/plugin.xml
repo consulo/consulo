@@ -1616,8 +1616,6 @@
     <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
-    <projectService serviceInterface="org.consulo.compiler.CompilerPathsManager"
-                    serviceImplementation="org.consulo.compiler.impl.CompilerPathsManagerImpl"/>
     <roots.watchedRootsProvider implementation="org.consulo.compiler.impl.CompilerPathsManagerImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>

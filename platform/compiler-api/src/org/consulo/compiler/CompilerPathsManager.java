@@ -15,7 +15,6 @@
  */
 package org.consulo.compiler;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
@@ -31,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class CompilerPathsManager {
   @NotNull
   public static CompilerPathsManager getInstance(@NotNull final Project project) {
-    return ServiceManager.getService(project, CompilerPathsManager.class);
+    return project.getComponent(CompilerPathsManager.class);
   }
 
   @Nullable
