@@ -76,7 +76,7 @@ public class JavaCompiler implements TranslatingCompiler {
     }
     final BackendCompiler backEndCompiler = getBackEndCompiler();
     final BackendCompilerWrapper wrapper =
-      new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), (CompileContextEx)context, backEndCompiler, sink);
+      new BackendCompilerWrapper(this, moduleChunk, myProject, Arrays.asList(files), (CompileContextEx)context, backEndCompiler, sink);
     try {
       if (CompileDriver.ourDebugMode) {
         System.out.println("Starting java compiler; with backend compiler: " + backEndCompiler.getClass().getName());

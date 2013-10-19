@@ -284,7 +284,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
       }
       else {
         Collections.addAll(result, funForRuntime
-          .fun(rootModel, includeProduction ? ContentFolderType.ONLY_PRODUCTION_ROOTS : ContentFolderType.ONLY_TEST_ROOTS));
+          .fun(rootModel, includeTests ? ContentFolderType.ALL_SOURCE_ROOTS : ContentFolderType.ONLY_PRODUCTION_ROOTS));
       }
     }
   }

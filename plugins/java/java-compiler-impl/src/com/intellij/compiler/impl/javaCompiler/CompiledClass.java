@@ -19,11 +19,11 @@ package com.intellij.compiler.impl.javaCompiler;
  * @author cdr
  */
 final class CompiledClass {
-  public final int qName;
+  public final String qName;
   public final String relativePathToSource;
   public final String pathToClass;
 
-  CompiledClass(final int qName, final String relativePathToSource, final String pathToClass) {
+  CompiledClass(final String qName, final String relativePathToSource, final String pathToClass) {
     this.qName = qName;
     this.relativePathToSource = relativePathToSource;
     this.pathToClass = pathToClass;
@@ -44,7 +44,7 @@ final class CompiledClass {
 
   public int hashCode() {
     int result;
-    result = qName;
+    result = qName.hashCode();
     result = 31 * result + relativePathToSource.hashCode();
     result = 31 * result + pathToClass.hashCode();
     return result;

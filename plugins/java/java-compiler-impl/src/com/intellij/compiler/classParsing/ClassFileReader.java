@@ -20,7 +20,6 @@
  */
 package com.intellij.compiler.classParsing;
 
-import com.intellij.compiler.SymbolTable;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.util.io.FileUtil;
@@ -51,13 +50,13 @@ public class ClassFileReader {
   private String mySourceFileName;
   private String mySuperClassName;
   private String[] mySuperInterfaces;
-  private final SymbolTable mySymbolTable;
+  private final SymbolTableDummy mySymbolTable;
   private AnnotationConstantValue[] myRuntimeVisibleAnnotations;
   private AnnotationConstantValue[] myRuntimeInvisibleAnnotations;
   private static final String CONSTRUCTOR_NAME = "<init>";
   private boolean myParsingDone;
 
-  public ClassFileReader(@NotNull File file, SymbolTable symbolTable, @Nullable final byte[] fileContent) {
+  public ClassFileReader(@NotNull File file, SymbolTableDummy symbolTable, @Nullable final byte[] fileContent) {
     mySymbolTable = symbolTable;
     myFile = file;
     myData = fileContent;

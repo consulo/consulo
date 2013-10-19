@@ -97,7 +97,7 @@ public class AnnotationProcessingCompiler implements TranslatingCompiler {
     final JavacCompiler javacCompiler = getBackEndCompiler();
     final boolean processorMode = javacCompiler.setAnnotationProcessorMode(true);
     final BackendCompilerWrapper wrapper =
-      new BackendCompilerWrapper(moduleChunk, myProject, Arrays.asList(files), _context, javacCompiler, sink);
+      new BackendCompilerWrapper(this, moduleChunk, myProject, Arrays.asList(files), _context, javacCompiler, sink);
     wrapper.setForceCompileTestsSeparately(true);
     try {
       wrapper.compile();
