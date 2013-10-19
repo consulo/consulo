@@ -45,7 +45,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.ui.configuration.ContentEntriesEditor;
@@ -74,6 +73,7 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.OrderedSet;
 import com.intellij.util.text.DateFormatUtil;
+import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.consulo.compiler.CompilerPathsManager;
@@ -107,6 +107,7 @@ public class CompileDriver {
   private final String myCachesDirectoryPath;
   private boolean myShouldClearOutputDirectory;
 
+  private final Map<ContentFolderType, Map<Module, String>> myOutputs = new THashMap<ContentFolderType, Map<Module, String>>(4);
   private final Map<Module, String> myModuleOutputPaths = new HashMap<Module, String>();
   private final Map<Module, String> myModuleTestOutputPaths = new HashMap<Module, String>();
 
@@ -1908,11 +1909,15 @@ public class CompileDriver {
   }
 
   // [mike] performance optimization - this method is accessed > 15,000 times in Aurora
-  private String getModuleOutputPath(final Module module, boolean inTestSourceContent) {
-    final Map<Module, String> map = inTestSourceContent ? myModuleTestOutputPaths : myModuleOutputPaths;
+  private String getModuleOutputPath(final Module module, ContentFolderType contentFolderType) {
+    Map<Module, String> map = myOutputs.get(contentFolderType);
+    if(map == null) {
+      myOutputs.put(contentFolderType, map = new HashMap<Module, String>());
+    }
+
     String path = map.get(module);
     if (path == null) {
-      path = CompilerPaths.getModuleOutputPath(module, inTestSourceContent);
+      path = CompilerPaths.getModuleOutputPath(module, contentFolderType);
       map.put(module, path);
     }
 
@@ -2134,80 +2139,61 @@ public class CompileDriver {
       final Module[] scopeModules = scope.getAffectedModules()/*ModuleManager.getInstance(myProject).getModules()*/;
       final List<String> modulesWithoutOutputPathSpecified = new ArrayList<String>();
       boolean isProjectCompilePathSpecified = true;
-      final List<String> modulesWithoutJdkAssigned = new ArrayList<String>();
       final Set<File> nonExistingOutputPaths = new HashSet<File>();
       final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
-      final boolean useOutOfProcessBuild = useOutOfProcessBuild();
+      final boolean useOutOfProcessBuild =  false;
       for (final Module module : scopeModules) {
         if (!compilerManager.isValidationEnabled(module)) {
           continue;
         }
-        final boolean hasSources = hasSources(module, false);
-        final boolean hasTestSources = hasSources(module, true);
-        if (!hasSources && !hasTestSources) {
-          // If module contains no sources, shouldn't have to select JDK or output directory (SCR #19333)
-          // todo still there may be problems with this approach if some generated files are attributed by this module
+
+        boolean isEmpty = true;
+        for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+          if(hasContent(module, contentFolderType)) {
+            isEmpty = false;
+            break;
+          }
+        }
+
+        if (isEmpty) {
           continue;
         }
 
-        final String outputPath = getModuleOutputPath(module, false);
-        final String testsOutputPath = getModuleOutputPath(module, true);
-        if (outputPath == null && testsOutputPath == null) {
-          modulesWithoutOutputPathSpecified.add(module.getName());
-        }
-        else {
-          if (outputPath != null) {
-            if (!useOutOfProcessBuild) {
+        for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+          if(hasContent(module, contentFolderType)) {
+
+            final String outputPath = getModuleOutputPath(module, contentFolderType);
+            if(outputPath != null) {
               final File file = new File(FileUtil.toSystemDependentName(outputPath));
               if (!file.exists()) {
                 nonExistingOutputPaths.add(file);
               }
             }
-          }
-          else {
-            if (hasSources) {
+            else {
               modulesWithoutOutputPathSpecified.add(module.getName());
             }
           }
-          if (testsOutputPath != null) {
-            if (!useOutOfProcessBuild) {
-              final File f = new File(FileUtil.toSystemDependentName(testsOutputPath));
-              if (!f.exists()) {
-                nonExistingOutputPaths.add(f);
+        }
+
+        for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
+          for (String path : provider.getOutputDirectories(myProject, module)) {
+            if (path == null) {
+              final CompilerPathsManager extension = CompilerPathsManager.getInstance(module.getProject());
+              if (extension == null || extension.getCompilerOutputUrl() == null) {
+                isProjectCompilePathSpecified = false;
+              }
+              else {
+                modulesWithoutOutputPathSpecified.add(module.getName());
               }
             }
-          }
-          else {
-            if (hasTestSources) {
-              modulesWithoutOutputPathSpecified.add(module.getName());
-            }
-          }
-          if (!useOutOfProcessBuild) {
-            for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensions()) {
-              for (String path : provider.getOutputDirectories(myProject, module)) {
-                if (path == null) {
-                  final CompilerPathsManager extension = CompilerPathsManager.getInstance(module.getProject());
-                  if (extension == null || extension.getCompilerOutputUrl() == null) {
-                    isProjectCompilePathSpecified = false;
-                  }
-                  else {
-                    modulesWithoutOutputPathSpecified.add(module.getName());
-                  }
-                }
-                else {
-                  final File file = new File(path);
-                  if (!file.exists()) {
-                    nonExistingOutputPaths.add(file);
-                  }
-                }
+            else {
+              final File file = new File(path);
+              if (!file.exists()) {
+                nonExistingOutputPaths.add(file);
               }
             }
           }
         }
-      }
-      if (!modulesWithoutJdkAssigned.isEmpty()) {
-        showNotSpecifiedError("error.jdk.not.specified", modulesWithoutJdkAssigned, ProjectBundle.message("modules.classpath.title"));
-        return false;
       }
 
       if (!isProjectCompilePathSpecified) {
@@ -2292,24 +2278,6 @@ public class CompileDriver {
     return CompilerWorkspaceConfiguration.getInstance(myProject).useOutOfProcessBuild();
   }
 
-  private void showCyclicModulesHaveDifferentLanguageLevel(Module[] modulesInChunk) {
-    LOG.assertTrue(modulesInChunk.length > 0);
-    String moduleNameToSelect = modulesInChunk[0].getName();
-    final String moduleNames = getModulesString(modulesInChunk);
-    Messages.showMessageDialog(myProject, CompilerBundle.message("error.chunk.modules.must.have.same.language.level", moduleNames),
-                               CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-    showConfigurationDialog(moduleNameToSelect, null);
-  }
-
-  private void showCyclicModulesHaveDifferentJdksError(Module[] modulesInChunk) {
-    LOG.assertTrue(modulesInChunk.length > 0);
-    String moduleNameToSelect = modulesInChunk[0].getName();
-    final String moduleNames = getModulesString(modulesInChunk);
-    Messages.showMessageDialog(myProject, CompilerBundle.message("error.chunk.modules.must.have.same.jdk", moduleNames),
-                               CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-    showConfigurationDialog(moduleNameToSelect, null);
-  }
-
   private static String getModulesString(Module[] modulesInChunk) {
     final StringBuilder moduleNames = StringBuilderSpinAllocator.alloc();
     try {
@@ -2326,10 +2294,10 @@ public class CompileDriver {
     }
   }
 
-  private static boolean hasSources(Module module, boolean checkTestSources) {
+  private static boolean hasContent(Module module, ContentFolderType c) {
     final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
     for (final ContentEntry contentEntry : contentEntries) {
-      final ContentFolder[] sourceFolders = contentEntry.getFolders(checkTestSources ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
+      final ContentFolder[] sourceFolders = contentEntry.getFolders(c);
       if (sourceFolders.length > 0) {
         return true;
       }

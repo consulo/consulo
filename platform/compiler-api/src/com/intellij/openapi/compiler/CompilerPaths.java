@@ -178,6 +178,7 @@ public class CompilerPaths {
    * The method still returns a non-null value if the output path is specified in Settings but does not exist on disk.
    */
   @Nullable
+  @Deprecated
   public static String getModuleOutputPath(final Module module, final boolean forTestClasses) {
     final String outPathUrl;
     final Application application = ApplicationManager.getApplication();
@@ -191,6 +192,27 @@ public class CompilerPaths {
         @Override
         public String compute() {
           return pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
+        }
+      });
+    }
+
+    return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
+  }
+
+  @Nullable
+  public static String getModuleOutputPath(final Module module, final ContentFolderType contentFolderType) {
+    final String outPathUrl;
+    final Application application = ApplicationManager.getApplication();
+    final CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(module.getProject());
+
+    if (application.isDispatchThread()) {
+      outPathUrl = pathsManager.getCompilerOutputUrl(module, contentFolderType);
+    }
+    else {
+      outPathUrl = application.runReadAction(new Computable<String>() {
+        @Override
+        public String compute() {
+          return pathsManager.getCompilerOutputUrl(module, contentFolderType);
         }
       });
     }
