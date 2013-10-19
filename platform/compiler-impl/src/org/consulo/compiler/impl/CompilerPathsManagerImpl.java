@@ -323,12 +323,7 @@ public class CompilerPathsManagerImpl extends CompilerPathsManager implements Pe
       }
     }
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        createIfNotExists();
-      }
-    });
+    createIfNotExists();
   }
 
   private void createIfNotExists() {

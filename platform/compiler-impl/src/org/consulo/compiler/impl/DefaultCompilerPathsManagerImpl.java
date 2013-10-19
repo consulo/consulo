@@ -15,15 +15,12 @@
  */
 package org.consulo.compiler.impl;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.DefaultCompilerPathsManager;
 import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -37,8 +34,8 @@ import org.jetbrains.annotations.Nullable;
 @Logger
 @State(
   name = "DefaultCompilerPathsManager",
-  storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
-public class DefaultCompilerPathsManagerImpl extends CompilerPathsManager implements PersistentStateComponent<Element> {
+  storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+public class DefaultCompilerPathsManagerImpl extends DefaultCompilerPathsManager implements PersistentStateComponent<Element> {
   @NonNls
   private static final String DEFAULT_PATH = "out";
 

@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class CompilerPathsManager {
   @NotNull
   public static CompilerPathsManager getInstance(@NotNull final Project project) {
-    return project.getComponent(CompilerPathsManager.class);
+    return project.isDefault() ? project.getComponent(DefaultCompilerPathsManager.class) : project.getComponent(CompilerPathsManager.class);
   }
 
   @Nullable
