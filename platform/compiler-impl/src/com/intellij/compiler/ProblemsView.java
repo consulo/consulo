@@ -37,6 +37,7 @@ import java.util.StringTokenizer;
  *         Date: 9/18/12
  */
 public abstract class ProblemsView {
+  public static final String PROBLEMS_TOOLWINDOW_ID = "Problems";
 
   private final Project myProject;
 

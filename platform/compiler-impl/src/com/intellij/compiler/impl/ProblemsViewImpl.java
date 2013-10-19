@@ -44,8 +44,7 @@ import java.util.concurrent.Executor;
  *         Date: 9/18/12
  */
 public class ProblemsViewImpl extends ProblemsView{
-  private static final String PROBLEMS_TOOLWINDOW_ID = "Problems";
-  
+
   private final ProblemsViewPanel myPanel;
   private final SequentialTaskExecutor myViewUpdater = new SequentialTaskExecutor(new Executor() {
     @Override
