@@ -31,6 +31,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.*;
+import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl;
@@ -77,9 +78,8 @@ public class XDebuggerTestUtil {
                                                                                   final Class<? extends XBreakpointType<XBreakpoint<P>, P>> typeClass) {
     return new WriteAction<XBreakpoint<P>>() {
       protected void run(final Result<XBreakpoint<P>> result) {
-        result.setResult(XDebuggerManager.getInstance(project).getBreakpointManager()
-                           .addBreakpoint((XBreakpointType<XBreakpoint<P>, P>)XDebuggerUtil.getInstance().findBreakpointType(typeClass),
-                                          properties));
+        result.setResult(XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpoint(
+          XBreakpointType.EXTENSION_POINT_NAME.findExtension(typeClass), properties));
       }
     }.execute().getResultObject();
   }
@@ -116,9 +116,13 @@ public class XDebuggerTestUtil {
   }
 
   public static List<XStackFrame> collectStacks(@NotNull XExecutionStack thread) throws InterruptedException {
+    return collectStacks(thread, TIMEOUT * 2);
+  }
+
+  public static List<XStackFrame> collectStacks(XExecutionStack thread, long timeout) throws InterruptedException {
     XTestStackFrameContainer container = new XTestStackFrameContainer();
     thread.computeStackFrames(0, container);
-    return container.waitFor(TIMEOUT * 2).first;
+    return container.waitFor(timeout).first;
   }
 
   public static Pair<XValue, String> evaluate(XDebugSession session, String expression) throws InterruptedException {
@@ -163,12 +167,16 @@ public class XDebuggerTestUtil {
   }
 
   public static XTestValueNode computePresentation(@NotNull XValue value) throws InterruptedException {
+    return computePresentation(value, TIMEOUT);
+  }
+
+  public static XTestValueNode computePresentation(XValue value, long timeout) throws InterruptedException {
     XTestValueNode node = new XTestValueNode();
-    if (value instanceof XNamedValue) {
+    if (value instanceof com.intellij.xdebugger.frame.XNamedValue) {
       node.myName = ((XNamedValue)value).getName();
     }
     value.computePresentation(node, XValuePlace.TREE);
-    Assert.assertTrue("timed out", node.waitFor(TIMEOUT));
+    node.waitFor(timeout);
     return node;
   }
 
@@ -431,12 +439,8 @@ public class XDebuggerTestUtil {
     }
 
     @Override
-    public void errorOccurred(String errorMessage) {
+    public void errorOccurred(@NotNull String errorMessage) {
       setErrorMessage(errorMessage);
-    }
-
-    public void errorOccured(String errorMessage) {
-      errorOccurred(errorMessage);
     }
   }
 

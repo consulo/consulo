@@ -33,7 +33,9 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.xdebugger.XDebugProcess;
@@ -41,12 +43,10 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
-import com.intellij.xdebugger.impl.frame.XDebugViewBase;
-import com.intellij.xdebugger.impl.frame.XFramesView;
-import com.intellij.xdebugger.impl.frame.XVariablesView;
-import com.intellij.xdebugger.impl.frame.XWatchesView;
+import com.intellij.xdebugger.impl.frame.*;
 import com.intellij.xdebugger.impl.ui.tree.actions.SortValuesToggleAction;
-import com.intellij.xdebugger.ui.XDebugLayoutCustomizer;
+import com.intellij.xdebugger.ui.XDebugTabLayouter;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,8 +58,8 @@ import java.util.List;
  * @author spleaner
  */
 public class XDebugSessionTab extends DebuggerSessionTabBase {
-  private XWatchesView myWatchesView;
-  private final List<XDebugViewBase> myViews = new ArrayList<XDebugViewBase>();
+  private XWatchesViewImpl myWatchesView;
+  private final List<XDebugView> myViews = new ArrayList<XDebugView>();
 
   public XDebugSessionTab(@NotNull final Project project, @NotNull final XDebugSessionImpl session, final @Nullable Icon icon,
                           ExecutionEnvironment environment, ProgramRunner runner) {
@@ -73,17 +73,8 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     attachToSession(session, runner, environment, session.getSessionData(), debugProcess);
   }
 
-  private Content createConsoleContent() {
-    Content result = myUi.createContent(DebuggerContentInfo.CONSOLE_CONTENT, myConsole.getComponent(),
-                                        XDebuggerBundle.message("debugger.session.tab.console.content.name"),
-                                        AllIcons.Debugger.Console,
-                                        myConsole.getPreferredFocusableComponent());
-    result.setCloseable(false);
-    return result;
-  }
-
   private Content createVariablesContent(final XDebugSession session) {
-    final XVariablesView variablesView = new XVariablesView(session, this);
+    final XVariablesView variablesView = new XVariablesView(session);
     myViews.add(variablesView);
     Content result = myUi.createContent(DebuggerContentInfo.VARIABLES_CONTENT, variablesView.getPanel(),
                                         XDebuggerBundle.message("debugger.session.tab.variables.title"),
@@ -97,17 +88,17 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   }
 
   private Content createWatchesContent(final XDebugSession session, final XDebugSessionData sessionData) {
-    myWatchesView = new XWatchesView(session, this, sessionData);
+    myWatchesView = new XWatchesViewImpl(session, sessionData);
     myViews.add(myWatchesView);
     Content watchesContent = myUi.createContent(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView.getMainPanel(),
-                                                XDebuggerBundle.message("debugger.session.tab.watches.title"), AllIcons.Debugger.Watches, null);
+                                         XDebuggerBundle.message("debugger.session.tab.watches.title"), AllIcons.Debugger.Watches, null);
     watchesContent.setCloseable(false);
 
     return watchesContent;
   }
 
   private Content createFramesContent(final XDebugSession session) {
-    final XFramesView framesView = new XFramesView(session, this);
+    final XFramesView framesView = new XFramesView(session);
     myViews.add(framesView);
     Content framesContent = myUi.createContent(DebuggerContentInfo.FRAME_CONTENT, framesView.getMainPanel(),
                                                XDebuggerBundle.message("debugger.session.tab.frames.title"), AllIcons.Debugger.Frame, null);
@@ -121,9 +112,14 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   }
 
   public void rebuildViews() {
-    for (XDebugViewBase view : myViews) {
-      view.rebuildView();
-    }
+    AppUIUtil.invokeLaterIfProjectAlive(getProject(), new Runnable() {
+      @Override
+      public void run() {
+        for (XDebugView view : myViews) {
+          view.processSessionEvent(XDebugView.SessionEvent.SETTINGS_CHANGED);
+        }
+      }
+    });
   }
 
   public XWatchesView getWatchesView() {
@@ -136,21 +132,26 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     myUi.addContent(createFramesContent(session), 0, PlaceInGrid.left, false);
     myUi.addContent(createVariablesContent(session), 0, PlaceInGrid.center, false);
     myUi.addContent(createWatchesContent(session, sessionData), 0, PlaceInGrid.right, false);
-    XDebugLayoutCustomizer layoutCustomizer = debugProcess.getLayoutCustomizer();
-    final Content consoleContent;
-    if (layoutCustomizer != null) {
-      consoleContent = layoutCustomizer.registerConsoleContent(myConsole, myUi);
+    for (XDebugView view : myViews) {
+      Disposer.register(this, view);
+      session.addSessionListener(new XDebugViewSessionListener(view, getProject()), this);
     }
-    else {
-      consoleContent = createConsoleContent();
-      myUi.addContent(consoleContent, 1, PlaceInGrid.bottom, false);
-    }
+
+    myUi.getContentManager().addDataProvider(new DataProvider() {
+      @Nullable
+      @Override
+      public Object getData(@NonNls String dataId) {
+        if (XWatchesView.DATA_KEY.is(dataId)) {
+          return myWatchesView;
+        }
+        return null;
+      }
+    });
+    XDebugTabLayouter layouter = debugProcess.createTabLayouter();
+    Content consoleContent = layouter.registerConsoleContent(myUi, myConsole);
     attachNotificationTo(consoleContent);
 
-    debugProcess.registerAdditionalContent(myUi);
-    if (layoutCustomizer != null) {
-      layoutCustomizer.registerAdditionalContent(myUi);
-    }
+    layouter.registerAdditionalContent(myUi);
     RunContentBuilder.addAdditionalConsoleEditorActions(myConsole, consoleContent);
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -197,10 +198,11 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     if (commonSettings.length > 0) {
       settings.addSeparator();
     }
-    settings.add(new ToggleSortValuesAction(commonSettings.length == 0));
+    if (!debugProcess.isValuesCustomSorted()) {
+      settings.add(new ToggleSortValuesAction(commonSettings.length == 0));
+    }
 
     leftToolbar.add(settings);
-
 
     leftToolbar.addSeparator();
 

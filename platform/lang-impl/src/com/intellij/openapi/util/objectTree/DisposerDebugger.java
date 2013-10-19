@@ -30,7 +30,6 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.TextTransferrable;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 import com.intellij.ui.speedSearch.ElementFilter;
@@ -41,6 +40,7 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.util.PlatformIcons;
+import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import org.jetbrains.annotations.NotNull;
@@ -56,8 +56,10 @@ import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class DisposerDebugger implements UiDebuggerExtension, Disposable  {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.objectTree.DisposerDebugger");
@@ -206,7 +208,7 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable  {
       @Override
       public void actionPerformed(AnActionEvent e) {
         try {
-          CopyPasteManager.getInstance().setContents(new TextTransferrable(myAllocation.getText(), myAllocation.getText()));
+          CopyPasteManager.getInstance().setContents(new TextTransferable(myAllocation.getText(), myAllocation.getText()));
         }
         catch (HeadlessException e1) {
           LOG.error(e1);

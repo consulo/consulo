@@ -18,7 +18,10 @@ package com.intellij.ui;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -474,7 +477,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         }
         return;
       }
-      
+
       if (isUpDownHomeEnd(i)) {
         e.consume();
         return;

@@ -30,13 +30,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 
 public class MasterDetailPopupBuilder implements MasterController {
 
   private static final Color BORDER_COLOR = Gray._135;
-  private Project myProject;
+  private final Project myProject;
   private ActionGroup myActions;
   private Delegate myDelegate;
   private boolean myCloseOnEnter;
@@ -348,15 +350,15 @@ public class MasterDetailPopupBuilder implements MasterController {
     return this;
   }
 
-  public MasterDetailPopupBuilder setTree(final JTree tree) {
-    setChooser(tree);
-    myDetailController.setTree(tree);
-    return this;
-  }
-
   public MasterDetailPopupBuilder setList(final JBList list) {
     setChooser(list);
     myDetailController.setList(list);
+    list.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent event) {
+        myDetailController.updateDetailView();
+      }
+    });
     return this;
   }
 
@@ -423,7 +425,7 @@ public class MasterDetailPopupBuilder implements MasterController {
   public static class ListItemRenderer extends JPanel implements ListCellRenderer {
     private final Project myProject;
     private final ColoredListCellRenderer myRenderer;
-    private Delegate myDelegate;
+    private final Delegate myDelegate;
 
     private ListItemRenderer(Delegate delegate, Project project) {
       super(new BorderLayout());
@@ -468,7 +470,7 @@ public class MasterDetailPopupBuilder implements MasterController {
     @Override
     protected void addCenterComponentToContentPane(JPanel contentPane, JComponent component) {
       if (myAddDetailViewToEast) {
-        JBSplitter splitPane = new JBSplitter(false, 0.3f);
+        JBSplitter splitPane = new JBSplitter(0.3f);
         splitPane.setSplitterProportionKey(getSplitterProportionKey());
         splitPane.setFirstComponent(component);
         splitPane.setSecondComponent((JComponent)myDetailView);

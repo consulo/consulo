@@ -19,6 +19,7 @@ import com.intellij.execution.actions.ChooseDebugConfigurationPopupAction;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.AbstractDebuggerSession;
 import com.intellij.xdebugger.impl.DebuggerSupport;

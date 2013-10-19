@@ -13,10 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.frame;
+package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import com.intellij.ui.SimpleColoredText;
+import org.jetbrains.annotations.Nullable;
 
-public interface XValuePresenter {
-  void append(String value, SimpleColoredText text, boolean changed);
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+
+/**
+ * @author nik
+ */
+public interface RestorableStateNode extends TreeNode {
+  @Nullable
+  String getName();
+
+  @Nullable
+  String getRawValue();
+
+  boolean isComputed();
+
+  TreePath getPath();
+
+  void markChanged();
 }

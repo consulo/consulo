@@ -21,6 +21,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntIntHashMap;
 import org.intellij.lang.annotations.JdkConstants;
@@ -47,7 +48,9 @@ import java.util.Locale;
  * @author Vladimir Kondratyev
  */
 @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext", "FieldAccessedSynchronizedAndUnsynchronized", "UnusedDeclaration"})
-public class SimpleColoredComponent extends JComponent implements Accessible {
+public class SimpleColoredComponent extends JComponent implements Accessible, ColoredTextContainer {
+  private static final boolean isOracleRetina = UIUtil.isRetina() && SystemInfo.isOracleJvm;
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.SimpleColoredComponent");
 
   public static final Color SHADOW_COLOR = new JBColor(new Color(250, 250, 250, 140), Gray._0.withAlpha(50));
@@ -97,7 +100,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
 
   private boolean myAutoInvalidate = !(this instanceof TreeCellRenderer);
 
-  private AccessibleContext myContext = new MyAccessibleContext();
+  private final AccessibleContext myContext = new MyAccessibleContext();
 
   private boolean myIconOnTheRight = false;
   private boolean myTransparentIconBackground;
@@ -130,6 +133,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
    * @param fragment text fragment
    * @param attributes text attributes
    */
+  @Override
   public final void append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes) {
     append(fragment, attributes, myMainTextLastIndex < 0);
   }
@@ -218,6 +222,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
    * Sets a new component icon
    * @param icon icon
    */
+  @Override
   public final void setIcon(final @Nullable Icon icon) {
     myIcon = icon;
     revalidateAndRepaint();
@@ -364,6 +369,10 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
       height += insets.top + insets.bottom;
     }
 
+    if (isOracleRetina) {
+      width++; //todo[kb] remove when IDEA-108760 will be fixed
+    }
+
     return new Dimension(width, height);
   }
 
@@ -378,8 +387,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
         font = font.deriveFont(attributes.getFontStyle(), isSmaller ? UIUtil.getFontSize(UIUtil.FontSize.SMALL) : baseSize);
       }
       wasSmaller = isSmaller;
-      final FontMetrics metrics = getFontMetrics(font);
-      result += metrics.stringWidth(myFragments.get(i));
+      final String text = myFragments.get(i);
+      result += isOracleRetina ? GraphicsUtil.stringWidth(text, font) : getFontMetrics(font).stringWidth(text);
 
       final int fixedWidth = myFixedWidths.get(i);
       if (fixedWidth > 0 && result < fixedWidth) {
@@ -421,8 +430,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
       }
       wasSmaller = isSmaller;
 
-      final FontMetrics metrics = getFontMetrics(font);
-      final int curWidth = metrics.stringWidth(myFragments.get(i));
+      final String text = myFragments.get(i);
+      final int curWidth = isOracleRetina ? GraphicsUtil.stringWidth(text, font) : getFontMetrics(font).stringWidth(text);
       if (x >= curX && x < curX + curWidth) {
         return i;
       }
@@ -518,6 +527,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
     }
   }
 
+  @Override
   protected void paintComponent(final Graphics g) {
     try {
       _doPaint(g);
@@ -614,7 +624,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
       final FontMetrics metrics = g.getFontMetrics(font);
 
       final String fragment = myFragments.get(i);
-      final int fragmentWidth = metrics.stringWidth(fragment);
+      final int fragmentWidth = isOracleRetina ? GraphicsUtil.stringWidth(fragment, font) : metrics.stringWidth(fragment);
 
       final Color bgColor = attributes.getBgColor();
       if ((attributes.isOpaque() || isOpaque()) && bgColor != null) {
@@ -816,15 +826,18 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
       myInsets = insets;
     }
 
+    @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
       g.setColor(Color.BLACK);
       UIUtil.drawDottedRectangle(g, x, y, x + width - 1, y + height - 1);
     }
 
+    @Override
     public Insets getBorderInsets(final Component c) {
       return myInsets;
     }
 
+    @Override
     public boolean isBorderOpaque() {
       return true;
     }
@@ -896,6 +909,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible {
       myUrl = url;
     }
 
+    @Override
     public void run() {
       BrowserUtil.launchBrowser(myUrl);
     }

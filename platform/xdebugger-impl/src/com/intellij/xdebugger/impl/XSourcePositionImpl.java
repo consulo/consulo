@@ -39,19 +39,25 @@ public class XSourcePositionImpl implements XSourcePosition {
     myOffset = offset;
   }
 
+  @Override
   public int getLine() {
     return myLine;
   }
 
+  @Override
   public int getOffset() {
     return myOffset;
   }
 
+  @Override
   @NotNull
   public VirtualFile getFile() {
     return myFile;
   }
 
+  /**
+   * do not call this method from plugins, use {@link com.intellij.xdebugger.XDebuggerUtil#createPositionByOffset(com.intellij.openapi.vfs.VirtualFile, int)} instead
+   */
   @Nullable
   public static XSourcePositionImpl createByOffset(@Nullable VirtualFile file, final int offset) {
     if (file == null) return null;
@@ -63,6 +69,9 @@ public class XSourcePositionImpl implements XSourcePosition {
     return new XSourcePositionImpl(file, line, offset);
   }
 
+  /**
+   * do not call this method from plugins, use {@link com.intellij.xdebugger.XDebuggerUtil#createPosition(com.intellij.openapi.vfs.VirtualFile, int)} instead
+   */
   @Nullable
   public static XSourcePositionImpl create(@Nullable VirtualFile file, int line) {
     if (file == null) return null;
@@ -78,6 +87,7 @@ public class XSourcePositionImpl implements XSourcePosition {
     return new XSourcePositionImpl(file, line, offset);
   }
 
+  @Override
   @NotNull
   public Navigatable createNavigatable(final @NotNull Project project) {
     return myOffset != -1 ? new OpenFileDescriptor(project, myFile, myOffset) : new OpenFileDescriptor(project, myFile, getLine(), 0);

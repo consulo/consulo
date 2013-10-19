@@ -31,15 +31,15 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -107,23 +107,27 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     return VirtualFileManager.getInstance().findFileByUrl(getFileUrl());
   }
 
+  @Override
   @NotNull
   public XLineBreakpointType<P> getType() {
     return myType;
   }
 
+  @Override
   public int getLine() {
     return myState.getLine();
   }
 
+  @Override
   public String getFileUrl() {
     return myState.getFileUrl();
   }
 
+  @Override
   public String getPresentableFilePath() {
     String url = getFileUrl();
     if (url != null && LocalFileSystem.PROTOCOL.equals(VirtualFileManager.extractProtocol(url))) {
-      return FileUtil.toSystemDependentName(VfsUtil.urlToPath(url));
+      return FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(url));
     }
     return url != null ? url : "";
   }
@@ -140,21 +144,25 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     return myHighlighter;
   }
 
+  @Override
   public XSourcePosition getSourcePosition() {
     if (mySourcePosition == null) {
       new ReadAction() {
+        @Override
         protected void run(final Result result) {
-          mySourcePosition = XSourcePositionImpl.create(getFile(), getLine());
+          mySourcePosition = XDebuggerUtil.getInstance().createPosition(getFile(), getLine());
         }
       }.execute();
     }
     return mySourcePosition;
   }
 
+  @Override
   public boolean isValid() {
     return myHighlighter != null && myHighlighter.isValid();
   }
 
+  @Override
   public void dispose() {
     removeHighlighter();
     myDisposed = true;
@@ -170,6 +178,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   @Override
   protected GutterDraggableObject createBreakpointDraggableObject() {
     return new GutterDraggableObject() {
+      @Override
       public boolean copy(int line, VirtualFile file) {
         if (canMoveTo(line, file)) {
           setFileUrl(file.getUrl());
@@ -179,6 +188,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
         return false;
       }
 
+      @Override
       public Cursor getCursor(int line) {
         return canMoveTo(line, getFile()) ? DragSource.DefaultMoveDrop : DragSource.DefaultMoveNoDrop;
       }
@@ -225,6 +235,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     }
   }
 
+  @Override
   protected List<? extends AnAction> getAdditionalPopupMenuActions(final XDebugSession session) {
     return getType().getAdditionalPopupMenuActions(this, session);
   }

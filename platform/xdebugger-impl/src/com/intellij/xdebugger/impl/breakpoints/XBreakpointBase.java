@@ -18,6 +18,7 @@ package com.intellij.xdebugger.impl.breakpoints;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.editor.markup.GutterDraggableObject;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.Project;
@@ -34,7 +35,6 @@ import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.XDebuggerSupport;
-import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.actions.EditBreakpointAction;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -71,12 +71,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     myBreakpointManager = breakpointManager;
     myProperties = type.createProperties();
     if (myProperties != null) {
-      //noinspection unchecked
-      Element element = myState.getPropertiesElement();
-      if (element != null) {
-        //noinspection unchecked
-        myProperties.loadState(XmlSerializer.deserialize(element, XDebuggerUtilImpl.getStateClass(myProperties.getClass())));
-      }
+      ComponentSerializationUtil.loadComponentState(myProperties, myState.getPropertiesElement());
     }
   }
 
@@ -289,15 +284,15 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     XDebugSessionImpl session = getBreakpointManager().getDebuggerManager().getCurrentSession();
     if (session == null) {
       if (getBreakpointManager().getDependentBreakpointManager().getMasterBreakpoint(this) != null) {
-        return getType().getDisabledDependentIcon();
+        return getType().getInactiveDependentIcon();
       }
     }
     else {
       if (session.areBreakpointsMuted()) {
         return AllIcons.Debugger.Db_muted_breakpoint;
       }
-      if (session.isDisabledSlaveBreakpoint(this)) {
-        return getType().getDisabledDependentIcon();
+      if (session.isInactiveSlaveBreakpoint(this)) {
+        return getType().getInactiveDependentIcon();
       }
       CustomizedBreakpointPresentation presentation = session.getBreakpointPresentation(this);
       if (presentation != null) {
@@ -350,7 +345,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   @Override
-  public int compareTo(Self self) {
+  public int compareTo(@NotNull Self self) {
     return myType.getBreakpointComparator().compare((Self)this, self);
   }
 

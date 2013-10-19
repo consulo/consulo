@@ -18,19 +18,26 @@ package com.intellij.xdebugger.impl.ui;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.*;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.JBPopupListener;
+import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.ui.AppUIUtil;
+import com.intellij.ui.EditorTextField;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.intellij.xdebugger.breakpoints.XBreakpointAdapter;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.frame.XFullValueEvaluator;
@@ -60,6 +67,7 @@ public class DebuggerUIUtil {
 
   public static void enableEditorOnCheck(final JCheckBox checkbox, final JComponent textfield) {
     checkbox.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         boolean selected = checkbox.isSelected();
         textfield.setEnabled(selected);
@@ -70,11 +78,13 @@ public class DebuggerUIUtil {
 
   public static void focusEditorOnCheck(final JCheckBox checkbox, final JComponent component) {
     final Runnable runnable = new Runnable() {
+      @Override
       public void run() {
         component.requestFocus();
       }
     };
     checkbox.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         if (checkbox.isSelected()) {
           SwingUtilities.invokeLater(runnable);
@@ -83,35 +93,8 @@ public class DebuggerUIUtil {
     });
   }
 
-  public static void invokeLater(final Runnable runnable) {
+  public static void invokeLater(Runnable runnable) {
     ApplicationManager.getApplication().invokeLater(runnable);
-  }
-
-  public static void invokeOnEventDispatch(final Runnable runnable) {
-    invokeOnEventDispatch(runnable, null);
-  }
-
-  public static void invokeOnEventDispatchIfProjectNotDisposed(final Runnable runnable, final Project project) {
-    invokeOnEventDispatch(runnable, new Condition<Object>() {
-      @Override
-      public boolean value(Object o) {
-        return project.isDisposed();
-      }
-    });
-  }
-
-  private static void invokeOnEventDispatch(final Runnable runnable,
-                                           @Nullable Condition<Object> expired) {
-    if (ApplicationManager.getApplication().isDispatchThread()) {
-      runnable.run();
-    }
-    else {
-      if (expired == null) {
-        ApplicationManager.getApplication().invokeLater(runnable);
-      } else {
-        ApplicationManager.getApplication().invokeLater(runnable, expired);
-      }
-    }
   }
 
   public static RelativePoint calcPopupLocation(Editor editor, final int line) {
@@ -125,12 +108,11 @@ public class DebuggerUIUtil {
   }
 
   public static void showValuePopup(@NotNull XFullValueEvaluator text, @NotNull MouseEvent event, @NotNull Project project) {
-    final JTextArea textArea = new JTextArea("Evaluating...");
+    EditorTextField textArea = new EditorTextField(EditorFactory.getInstance().createDocument("Evaluating..."), project, FileTypes.PLAIN_TEXT, true);
+    textArea.setBackground(HintUtil.INFORMATION_COLOR);
+
     final FullValueEvaluationCallbackImpl callback = new FullValueEvaluationCallbackImpl(textArea);
     text.startEvaluation(callback);
-    textArea.setEditable(false);
-    textArea.setBackground(HintUtil.INFORMATION_COLOR);
-    textArea.setLineWrap(false);
 
     final JScrollPane component = ScrollPaneFactory.createScrollPane(textArea);
     final Dimension frameSize = WindowManager.getInstance().getFrame(project).getSize();
@@ -142,24 +124,20 @@ public class DebuggerUIUtil {
     component.setPreferredSize(size);
     component.setBorder(null);
 
-    final JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(component, null)
+    JBPopupFactory.getInstance().createComponentPopupBuilder(component, null)
       .setResizable(true)
       .setMovable(true)
       .setDimensionServiceKey(project, FULL_VALUE_POPUP_DIMENSION_KEY, false)
       .setRequestFocus(false)
       .setCancelCallback(new Computable<Boolean>() {
+        @Override
         public Boolean compute() {
           callback.setObsolete();
           return true;
         }
       })
-      .createPopup();
-    final Component parentComponent = event.getComponent();
-    RelativePoint point = new RelativePoint(parentComponent, new Point(event.getX()-size.width, event.getY()-size.height));
-    popup.show(point);
+      .createPopup().show(new RelativePoint(event.getComponent(), new Point(event.getX() - size.width, event.getY() - size.height)));
   }
-
-
 
   public static void showXBreakpointEditorBalloon(final Project project,
                                                   @Nullable final Point point,
@@ -167,9 +145,7 @@ public class DebuggerUIUtil {
                                                   final boolean showAllOptions,
                                                   final XBreakpoint breakpoint) {
     final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
-    final XLightBreakpointPropertiesPanel propertiesPanel =
-      new XLightBreakpointPropertiesPanel(project, breakpointManager,
-                                          breakpoint, showAllOptions);
+    final XLightBreakpointPropertiesPanel<XBreakpoint<?>> propertiesPanel = new XLightBreakpointPropertiesPanel<XBreakpoint<?>>(project, breakpointManager, breakpoint, showAllOptions);
 
     final Ref<Balloon> balloonRef = Ref.create(null);
     final Ref<Boolean> isLoading = Ref.create(Boolean.FALSE);
@@ -187,49 +163,32 @@ public class DebuggerUIUtil {
       }
     });
 
-
     isLoading.set(Boolean.TRUE);
     propertiesPanel.loadProperties();
     isLoading.set(Boolean.FALSE);
 
-    final JComponent mainPanel = propertiesPanel.getMainPanel();
-
-    final Runnable viewBreakpoints = new Runnable() {
+    Runnable showMoreOptions = new Runnable() {
       @Override
       public void run() {
         propertiesPanel.saveProperties();
-        //showXBreakpointEditorBalloon(project, point, component, true, breakpoint);
         BreakpointsDialogFactory.getInstance(project).showDialog(breakpoint);
       }
     };
 
-    final Balloon balloon = showBreakpointEditor(project, mainPanel, breakpoint.getType().getDisplayText(breakpoint), point, component, viewBreakpoints,
-                                                 breakpoint);
+    final JComponent mainPanel = propertiesPanel.getMainPanel();
+    final Balloon balloon = showBreakpointEditor(project, mainPanel, point, component, showMoreOptions, breakpoint);
     balloonRef.set(balloon);
 
-
-    final XBreakpointListener<XBreakpoint<?>> breakpointListener = new XBreakpointListener<XBreakpoint<?>>() {
+    final XBreakpointListener<XBreakpoint<?>> breakpointListener = new XBreakpointAdapter<XBreakpoint<?>>() {
       @Override
-      public void breakpointAdded(@NotNull XBreakpoint<?> breakpoint1) {
-      }
-
-      @Override
-      public void breakpointRemoved(@NotNull XBreakpoint<?> breakpoint1) {
-        if (breakpoint1.equals(breakpoint)) {
+      public void breakpointRemoved(@NotNull XBreakpoint<?> removedBreakpoint) {
+        if (removedBreakpoint.equals(breakpoint)) {
           balloon.hide();
         }
       }
-
-      @Override
-      public void breakpointChanged(@NotNull XBreakpoint<?> breakpoint1) {
-      }
     };
 
-    balloon.addListener(new JBPopupListener() {
-      @Override
-      public void beforeShown(LightweightWindowEvent event) {
-      }
-
+    balloon.addListener(new JBPopupListener.Adapter() {
       @Override
       public void onClosed(LightweightWindowEvent event) {
         propertiesPanel.saveProperties();
@@ -237,12 +196,10 @@ public class DebuggerUIUtil {
       }
     });
 
-
-
-
     if (point == null) {
       balloon.showInCenterOf(component);
-    } else {
+    }
+    else {
       balloon.show(new RelativePoint(component, point), Balloon.Position.atRight);
     }
 
@@ -256,7 +213,6 @@ public class DebuggerUIUtil {
   }
 
   public static Balloon showBreakpointEditor(Project project, final JComponent mainPanel,
-                                             final String displayName,
                                              final Point whereToShow,
                                              final JComponent component,
                                              @Nullable final Runnable showMoreOptions, Object breakpoint) {
@@ -311,30 +267,35 @@ public class DebuggerUIUtil {
 
   private static class FullValueEvaluationCallbackImpl implements XFullValueEvaluator.XFullValueEvaluationCallback {
     private final AtomicBoolean myObsolete = new AtomicBoolean(false);
-    private final JTextArea myTextArea;
+    private final EditorTextField myTextArea;
 
-    public FullValueEvaluationCallbackImpl(final JTextArea textArea) {
+    public FullValueEvaluationCallbackImpl(final EditorTextField textArea) {
       myTextArea = textArea;
     }
 
+    @Override
     public void evaluated(@NotNull final String fullValue) {
       evaluated(fullValue, null);
     }
 
+    @Override
     public void evaluated(@NotNull final String fullValue, @Nullable final Font font) {
-      invokeOnEventDispatch(new Runnable() {
+      AppUIUtil.invokeOnEdt(new Runnable() {
+        @Override
         public void run() {
           myTextArea.setText(fullValue);
           if (font != null) {
             myTextArea.setFont(font);
           }
-          myTextArea.setCaretPosition(0);
+          myTextArea.getCaretModel().moveToOffset(0);
         }
       });
     }
 
+    @Override
     public void errorOccurred(@NotNull final String errorMessage) {
-      invokeOnEventDispatch(new Runnable() {
+      AppUIUtil.invokeOnEdt(new Runnable() {
+        @Override
         public void run() {
           myTextArea.setForeground(XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES.getFgColor());
           myTextArea.setText(errorMessage);
@@ -346,6 +307,7 @@ public class DebuggerUIUtil {
       myObsolete.set(true);
     }
 
+    @Override
     public boolean isObsolete() {
       return myObsolete.get();
     }

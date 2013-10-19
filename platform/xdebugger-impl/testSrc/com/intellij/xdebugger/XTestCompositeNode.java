@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XTestCompositeNode extends XTestContainer<XValue> implements XCompositeNode {
-  private volatile boolean myAlreadySorted;
-
   @Override
   public void addChildren(@NotNull XValueChildrenList children, boolean last) {
     final List<XValue> list = new ArrayList<XValue>();
@@ -21,12 +19,6 @@ public class XTestCompositeNode extends XTestContainer<XValue> implements XCompo
   }
 
   @Override
-  public boolean isAlreadySorted() {
-    return myAlreadySorted;
-  }
-
-  @Override
   public void setAlreadySorted(boolean alreadySorted) {
-    myAlreadySorted = alreadySorted;
   }
 }
