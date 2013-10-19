@@ -24,6 +24,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckboxTreeBase;
 import com.intellij.ui.JBSplitter;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleExtension;
@@ -88,7 +89,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     mySplitter.setFirstComponent(myTree);
 
-    myRootPane.add(mySplitter, BorderLayout.CENTER);
+    myRootPane.add(new JBScrollPane(mySplitter), BorderLayout.CENTER);
 
     return myRootPane;
   }
