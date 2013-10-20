@@ -21,10 +21,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import com.intellij.notification.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -524,6 +521,12 @@ public abstract class PluginManagerMain implements Disposable {
 
 
   public static void notifyPluginsWereInstalled(@Nullable String pluginName) {
+    notifyPluginsWereUpdated(pluginName != null
+                             ? "Plugin \'" + pluginName + "\' was successfully installed"
+                             : "Plugins were installed");
+  }
+
+  public static void notifyPluginsWereUpdated(final String title) {
     final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
     final boolean restartCapable = app.isRestartCapable();
     String message =
@@ -532,24 +535,22 @@ public abstract class PluginManagerMain implements Disposable {
     message += "<br><a href=";
     message += restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown";
     message += "</a>";
-    Notifications.Bus.notify(new Notification("Plugins Lifecycle Group",
-                                              pluginName != null
-                                              ? "Plugin \'" + pluginName + "\' was successfully installed"
-                                              : "Plugins were installed",
-                                              XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION,
-                                              new NotificationListener() {
-                                                @Override
-                                                public void hyperlinkUpdate(@NotNull Notification notification,
-                                                                            @NotNull HyperlinkEvent event) {
-                                                  notification.expire();
-                                                  if (restartCapable) {
-                                                    app.restart(true);
-                                                  }
-                                                  else {
-                                                    app.exit(true);
-                                                  }
-                                                }
-                                              }));
+    new NotificationGroup("Plugins Lifecycle Group", NotificationDisplayType.STICKY_BALLOON, true)
+      .createNotification(title,
+                          XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION,
+                          new NotificationListener() {
+                            @Override
+                            public void hyperlinkUpdate(@NotNull Notification notification,
+                                                        @NotNull HyperlinkEvent event) {
+                              notification.expire();
+                              if (restartCapable) {
+                                app.restart(true);
+                              }
+                              else {
+                                app.exit(true);
+                              }
+                            }
+                          }).notify(null);
   }
 
   protected class SortByStatusAction extends ToggleAction {
