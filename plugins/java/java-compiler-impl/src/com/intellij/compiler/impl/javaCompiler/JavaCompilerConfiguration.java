@@ -22,19 +22,14 @@ import java.util.*;
 @ProjectService
 @State(
   name = "JavaCompilerConfiguration",
-  storages = {
-    @Storage(file = StoragePathMacros.PROJECT_FILE),
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
-  }
+  storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
+    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)}
 )
 public class JavaCompilerConfiguration implements PersistentStateComponent<Element> {
-
-  public static final String EXCLUDE_FROM_COMPILE = "excludeFromCompile";
-  public static final String RESOURCE_EXTENSIONS = "resourceExtensions";
   public static final String ANNOTATION_PROCESSING = "annotationProcessing";
   public static final String BYTECODE_TARGET_LEVEL = "bytecodeTargetLevel";
-  public static final String WILDCARD_RESOURCE_PATTERNS = "wildcardResourcePatterns";
-  public static final String ADD_NOTNULL_ASSERTIONS = "addNotNullAssertions";
+
+  public static final String ADD_NOTNULL_ASSERTIONS = "add-not-null-assertions";
   public static final String ENTRY = "entry";
   public static final String NAME = "name";
   public static final String ENABLED = "enabled";
@@ -53,6 +48,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
 
   // the map is calculated by module processor profiles list for faster access to module settings
   private Map<Module, ProcessorConfigProfile> myProcessorsProfilesMap = null;
+  private boolean myAddNotNullAssertions;
 
   public JavaCompilerConfiguration(@NotNull Project project) {
     myProject = project;
@@ -67,13 +63,9 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
 
   }
 
-  public boolean isAddNotNullAssertions() {
-    return false;//TODO [VISTALL]
-  }
-
   @NotNull
   public BackendCompiler getActiveCompiler() {
-    if(myBackendCompilerCache == null) {
+    if (myBackendCompilerCache == null) {
       myBackendCompilerCache = findCompiler(DEFAULT_COMPILER);
     }
     return myBackendCompilerCache;
@@ -106,7 +98,11 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
       AnnotationProcessorProfileSerializer.writeExternal(profile, profileElem);
     }
 
-    parentNode.setAttribute("compiler", myBackendCompilerCache == null ? DEFAULT_COMPILER : myBackendCompilerCache.getClass().getSimpleName());
+    parentNode
+      .setAttribute("compiler", myBackendCompilerCache == null ? DEFAULT_COMPILER : myBackendCompilerCache.getClass().getSimpleName());
+    if(myAddNotNullAssertions) {
+      parentNode.setAttribute(ADD_NOTNULL_ASSERTIONS, String.valueOf(Boolean.TRUE));
+    }
     return parentNode;
   }
 
@@ -119,6 +115,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
   @Override
   public void loadState(Element parentNode) {
     myBackendCompilerCache = findCompiler(parentNode.getAttributeValue("compiler"));
+    myAddNotNullAssertions = Boolean.parseBoolean(parentNode.getAttributeValue(ADD_NOTNULL_ASSERTIONS, String.valueOf(Boolean.FALSE)));
 
     final Element annotationProcessingSettings = parentNode.getChild(ANNOTATION_PROCESSING);
     if (annotationProcessingSettings != null) {
@@ -251,7 +248,7 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
       myProcessorsProfilesMap = map;
     }
     final ProcessorConfigProfile profile = map.get(module);
-    return profile != null? profile : myDefaultProcessorsProfile;
+    return profile != null ? profile : myDefaultProcessorsProfile;
   }
 
   @NotNull
@@ -305,5 +302,13 @@ public class JavaCompilerConfiguration implements PersistentStateComponent<Eleme
     }
 
     return null;
+  }
+
+  public void setAddNotNullAssertions(boolean addNotNullAssertions) {
+    myAddNotNullAssertions = addNotNullAssertions;
+  }
+
+  public boolean isAddNotNullAssertions() {
+    return myAddNotNullAssertions;
   }
 }
