@@ -96,7 +96,9 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
       ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
       for (ContentFolderType folderType : ContentFolderType.ALL_SOURCE_ROOTS) {
-        rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(moduleCompilerPathsManager.getCompilerOutputUrl(folderType)));
+        String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(folderType);
+        assert compilerOutputUrl != null : module.getName() + ":" + folderType + " url is null";
+        rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(compilerOutputUrl));
       }
     }
 

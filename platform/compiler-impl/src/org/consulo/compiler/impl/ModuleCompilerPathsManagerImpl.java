@@ -109,13 +109,14 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     if(myInheritOutput) {
       CompilerConfiguration compilerManager = CompilerConfiguration.getInstance(myModule.getProject());
 
+      final String backUrl = compilerManager.getCompilerOutputUrl() + "/" + contentFolderType.name().toLowerCase() + "/" + myModule.getName();
       VirtualFile compilerOutput = compilerManager.getCompilerOutput();
       if(compilerOutput == null) {
-        return compilerManager.getCompilerOutputUrl() + "/" + contentFolderType.name().toLowerCase() + "/" + myModule.getName();
+        return backUrl;
       }
       VirtualFile outDir =
         compilerOutput.findFileByRelativePath(contentFolderType.name().toLowerCase() + "/" + myModule.getName());
-      return outDir != null ? outDir.getUrl() : null;
+      return outDir != null ? outDir.getUrl() : backUrl;
     }
     else {
       VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType);
