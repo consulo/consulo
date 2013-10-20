@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import com.intellij.openapi.util.*;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.EventDispatcher;
@@ -49,8 +50,6 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
     new HashMap<String, RunnerAndConfigurationSettings>();
   private final Map<String, RunnerAndConfigurationSettings> myConfigurations =
     new LinkedHashMap<String, RunnerAndConfigurationSettings>(); // template configurations are not included here
-  final Map<Object, List<RunnerAndConfigurationSettings>> myExternalSettings =
-    new java.util.HashMap<Object, List<RunnerAndConfigurationSettings>>();
   private final Map<String, Boolean> mySharedConfigurations = new TreeMap<String, Boolean>();
   private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = new WeakHashMap<RunConfiguration, List<BeforeRunTask>>();
 
@@ -224,11 +223,6 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
   }
 
   @NotNull
-  public List<RunnerAndConfigurationSettings> getExternalSettings(@NotNull Object key) {
-    return myExternalSettings.containsKey(key) ? myExternalSettings.get(key) : Collections.<RunnerAndConfigurationSettings>emptyList();
-  }
-
-  @NotNull
   @Override
   public List<RunnerAndConfigurationSettings> getAllSettings() {
     return Collections.unmodifiableList(new ArrayList<RunnerAndConfigurationSettings>(getSortedConfigurations()));
@@ -326,7 +320,7 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
                                List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent) {
     final RunConfiguration configuration = settings.getConfiguration();
 
-    String existingId = findConfigurationIdByUniqueName(settings.getUniqueID());
+    String existingId = findExistingConfigurationId(settings);
     String newId = settings.getUniqueID();
     RunnerAndConfigurationSettings existingSettings = null;
 
@@ -403,9 +397,6 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
   @Override
   public void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings) {
     if (settings == null) return;
-    for (Map.Entry<Object, List<RunnerAndConfigurationSettings>> entry : myExternalSettings.entrySet()) {
-      if (entry.getValue().remove(settings)) break;
-    }
 
     for (Iterator<RunnerAndConfigurationSettings> it = getSortedConfigurations().iterator(); it.hasNext(); ) {
       final RunnerAndConfigurationSettings configuration = it.next();
@@ -429,7 +420,7 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
   @Nullable
   public RunnerAndConfigurationSettings getSelectedConfiguration() {
     if (mySelectedConfigurationId == null && myLoadedSelectedConfigurationUniqueName != null) {
-      setSelectedConfigurationId(findConfigurationIdByUniqueName(myLoadedSelectedConfigurationUniqueName));
+      setSelectedConfigurationId(myLoadedSelectedConfigurationUniqueName);
     }
     return mySelectedConfigurationId == null ? null : myConfigurations.get(mySelectedConfigurationId);
   }
@@ -575,7 +566,7 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
 
     if (myUnknownElements != null) {
       for (Element unloadedElement : myUnknownElements) {
-        parentNode.addContent(unloadedElement.clone());
+        parentNode.addContent((Element)unloadedElement.clone());
       }
     }
   }
@@ -711,16 +702,15 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
         }
       }
       for (String name : list) {
-        String id = findConfigurationIdByUniqueName(name);
-        if (id != null) {
-          myRecentlyUsedTemporaries.add(myConfigurations.get(id).getConfiguration());
-        }
+        RunnerAndConfigurationSettings settings = myConfigurations.get(name);
+        if (settings != null)
+          myRecentlyUsedTemporaries.add(settings.getConfiguration());
       }
     }
     myOrdered = false;
 
     myLoadedSelectedConfigurationUniqueName = parentNode.getAttributeValue(SELECTED_ATTR);
-    setSelectedConfigurationId(findConfigurationIdByUniqueName(myLoadedSelectedConfigurationUniqueName));
+    setSelectedConfigurationId(myLoadedSelectedConfigurationUniqueName);
 
     fireBeforeRunTasksUpdated();
     fireRunConfigurationSelected();
@@ -739,26 +729,17 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
       }
     }
 
-    setSelectedConfigurationId(findConfigurationIdByUniqueName(myLoadedSelectedConfigurationUniqueName));
+    setSelectedConfigurationId(myLoadedSelectedConfigurationUniqueName);
 
     fireRunConfigurationSelected();
   }
 
   @Nullable
-  private String findConfigurationIdByUniqueName(@Nullable String selectedUniqueName) {
-    if (selectedUniqueName != null) {
-      for (RunnerAndConfigurationSettings each : myConfigurations.values()) {
-        if (selectedUniqueName.equals(each.getUniqueID())) {
-          return each.getUniqueID();
-        }
-      }
-      //migration code 11.08.2013
-      for (RunnerAndConfigurationSettings each : myConfigurations.values()) {
-        RunConfiguration config = each.getConfiguration();
-        String uniqueName = config.getType().getDisplayName() + "." + config.getName() +
-                            (config instanceof UnknownRunConfiguration ? config.getUniqueID() : "");
-        if (selectedUniqueName.equals(uniqueName)) {
-          return each.getUniqueID();
+  private String findExistingConfigurationId(@Nullable RunnerAndConfigurationSettings settings) {
+    if (settings != null) {
+      for (Map.Entry<String, RunnerAndConfigurationSettings> entry : myConfigurations.entrySet()) {
+        if (entry.getValue() == settings) {
+          return entry.getKey();
         }
       }
     }
@@ -786,33 +767,13 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
     fireRunConfigurationsRemoved(configurations);
   }
 
-  public void removeExternalSettings(@NotNull Object removerKey) {
-    List<RunnerAndConfigurationSettings> settingsList = getExternalSettings(removerKey);
-    for (RunnerAndConfigurationSettings each : settingsList) {
-      removeConfiguration(each);
-    }
-    myExternalSettings.remove(removerKey);
-  }
-
   @Nullable
   public RunnerAndConfigurationSettings loadConfiguration(final Element element, boolean isShared) throws InvalidDataException {
-    return loadConfiguration(null, element, isShared);
-  }
-
-  @Nullable
-  public RunnerAndConfigurationSettings loadConfiguration(@Nullable final Object removerKey, final Element element, boolean isShared) throws InvalidDataException {
     final RunnerAndConfigurationSettingsImpl settings = new RunnerAndConfigurationSettingsImpl(this);
     settings.readExternal(element);
     ConfigurationFactory factory = settings.getFactory();
     if (factory == null) {
       return null;
-    }
-
-    if (removerKey !=null) {
-      if (!myExternalSettings.containsKey(removerKey)) {
-        myExternalSettings.put(removerKey, new ArrayList<RunnerAndConfigurationSettings>());
-      }
-      myExternalSettings.get(removerKey).add(settings);
     }
 
     final Element methodsElement = element.getChild(METHOD);
@@ -857,7 +818,15 @@ public class RunManagerImpl extends RunManagerEx implements JDOMExternalizable, 
 
   @Nullable
   public ConfigurationFactory getFactory(final String typeName, String factoryName) {
+    return getFactory(typeName, factoryName, false);
+  }
+
+  @Nullable
+  public ConfigurationFactory getFactory(final String typeName, String factoryName, boolean checkUnknown) {
     final ConfigurationType type = myTypesByName.get(typeName);
+    if (type == null && checkUnknown && typeName != null) {
+      UnknownFeaturesCollector.getInstance(myProject).registerUnknownRunConfiguration(typeName);
+    }
     if (factoryName == null) {
       factoryName = type != null ? type.getConfigurationFactories()[0].getName() : null;
     }
