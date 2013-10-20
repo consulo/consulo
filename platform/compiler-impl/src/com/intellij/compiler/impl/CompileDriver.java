@@ -20,13 +20,18 @@ import com.intellij.CommonBundle;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.ModuleCompilerUtil;
-import com.intellij.compiler.ProblemsView;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.make.DependencyCache;
+import com.intellij.compiler.make.impl.CompositeDependencyCache;
+import com.intellij.compiler.options.CompilerConfigurable;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.diagnostic.PluginException;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationListener;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
@@ -40,6 +45,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -54,9 +60,12 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.packaging.artifacts.Artifact;
@@ -66,13 +75,15 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.util.*;
+import com.intellij.util.Chunk;
+import com.intellij.util.Function;
+import com.intellij.util.StringBuilderSpinAllocator;
+import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.OrderedSet;
-import com.intellij.util.text.DateFormatUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
@@ -83,10 +94,8 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.swing.event.HyperlinkEvent;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -103,13 +112,11 @@ public class CompileDriver {
 
   private final Project myProject;
   private final Map<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> myGenerationCompilerModuleToOutputDirMap;
-  // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
+    // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
   private final String myCachesDirectoryPath;
   private boolean myShouldClearOutputDirectory;
 
   private final Map<ContentFolderType, Map<Module, String>> myOutputs = new THashMap<ContentFolderType, Map<Module, String>>(4);
-  private final Map<Module, String> myModuleOutputPaths = new HashMap<Module, String>();
-  private final Map<Module, String> myModuleTestOutputPaths = new HashMap<Module, String>();
 
   @NonNls private static final String VERSION_FILE_NAME = "version.dat";
   @NonNls private static final String LOCK_FILE_NAME = "in_progress.dat";
@@ -157,7 +164,7 @@ public class CompileDriver {
 
     myGenerationCompilerModuleToOutputDirMap = new HashMap<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>>();
 
-    if (!useOutOfProcessBuild()) {
+    if (true) {
       final LocalFileSystem lfs = LocalFileSystem.getInstance();
       final IntermediateOutputCompiler[] generatingCompilers =
         CompilerManager.getInstance(myProject).getCompilers(IntermediateOutputCompiler.class, myCompilerFilter);
@@ -191,7 +198,7 @@ public class CompileDriver {
   public void rebuild(CompileStatusNotification callback) {
     final CompileScope compileScope;
     ProjectCompileScope projectScope = new ProjectCompileScope(myProject);
-    if (useOutOfProcessBuild()) {
+    if (false) {
       compileScope = projectScope;
     }
     else {
@@ -203,7 +210,7 @@ public class CompileDriver {
   }
 
   public void make(CompileScope scope, CompileStatusNotification callback) {
-    if (!useOutOfProcessBuild()) {
+    if (!false) {
       scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
     }
     if (validateCompilerConfiguration(scope, false)) {
@@ -218,17 +225,17 @@ public class CompileDriver {
     if (LOG.isDebugEnabled()) {
       LOG.debug("isUpToDate operation started");
     }
-    if (!useOutOfProcessBuild()) {
+    if (!false) {
       scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
     }
 
     final CompilerTask task =
       new CompilerTask(myProject, "Classes up-to-date check", true, false, false, isCompilationStartedAutomatically(scope));
-    final DependencyCache cache = useOutOfProcessBuild() ? null : createDependencyCache();
+    final CompositeDependencyCache cache = false ? null : createDependencyCache();
     final CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
 
-    if (!useOutOfProcessBuild()) {
-      //checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
+    if (!false) {
+      checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
       if (compileContext.isRebuildRequested()) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("Rebuild requested, up-to-date=false");
@@ -249,21 +256,20 @@ public class CompileDriver {
     final Ref<ExitStatus> result = new Ref<ExitStatus>();
 
     final Runnable compileWork;
-      compileWork = new Runnable() {
-        @Override
-        public void run() {
-          try {
-            myAllOutputDirectories = getAllOutputDirectories(compileContext);
-            // need this for updating zip archives experiment, uncomment if the feature is turned on
-            //myOutputFinder = new OutputPathFinder(myAllOutputDirectories);
-            result.set(doCompile(compileContext, false, false, true));
-          }
-          finally {
-            CompilerCacheManager.getInstance(myProject).flushCaches();
-          }
+    compileWork = new Runnable() {
+      @Override
+      public void run() {
+        try {
+          myAllOutputDirectories = getAllOutputDirectories(compileContext);
+          // need this for updating zip archives experiment, uncomment if the feature is turned on
+          //myOutputFinder = new OutputPathFinder(myAllOutputDirectories);
+          result.set(doCompile(compileContext, false, false, true));
         }
-      };
-
+        finally {
+          CompilerCacheManager.getInstance(myProject).flushCaches();
+        }
+      }
+    };
     task.start(compileWork, null);
 
     if (LOG.isDebugEnabled()) {
@@ -273,8 +279,8 @@ public class CompileDriver {
     return ExitStatus.UP_TO_DATE.equals(result.get());
   }
 
-  private DependencyCache createDependencyCache() {
-    return new DependencyCache(myCachesDirectoryPath + File.separator + ".dependency-info");
+  private CompositeDependencyCache createDependencyCache() {
+    return new CompositeDependencyCache(myProject, myCachesDirectoryPath);
   }
 
   public void compile(CompileScope scope, CompileStatusNotification callback, boolean clearingOutputDirsPossible) {
@@ -313,7 +319,7 @@ public class CompileDriver {
     }
   }
 
- /* private CompileStatus readStatus() {
+  private CompileStatus readStatus() {
     final boolean isInProgress = getLockFile().exists();
     int version = -1;
     long vfsStamp = -1L;
@@ -340,9 +346,9 @@ public class CompileDriver {
       return null;
     }
     return new CompileStatus(version, isInProgress, vfsStamp);
-  }    */
+  }
 
- /* private void writeStatus(CompileStatus status, CompileContext context) {
+  private void writeStatus(CompileStatus status, CompileContext context) {
     final File statusFile = new File(myCachesDirectoryPath, VERSION_FILE_NAME);
 
     final File lockFile = getLockFile();
@@ -366,7 +372,7 @@ public class CompileDriver {
     catch (IOException e) {
       context.addMessage(CompilerMessageCategory.ERROR, CompilerBundle.message("compiler.error.exception", e.getMessage()), null, -1, -1);
     }
-  }    */
+  }
 
   private File getLockFile() {
     return new File(CompilerPaths.getCompilerSystemDirectory(myProject), LOCK_FILE_NAME);
@@ -376,7 +382,7 @@ public class CompileDriver {
                          CompilerMessage message,
                          final boolean checkCachesVersion,
                          final CompileScope compileScope) {
-    if (validateCompilerConfiguration(compileScope, !useOutOfProcessBuild())) {
+    if (validateCompilerConfiguration(compileScope, !false)) {
       startup(compileScope, true, false, callback, message, checkCachesVersion);
     }
     else {
@@ -422,7 +428,7 @@ public class CompileDriver {
     return Boolean.TRUE.equals(scope.getUserData(COMPILATION_STARTED_AUTOMATICALLY));
   }
 
-  private void attachAdditionalOutputDirectories(CompileContextEx context) {
+  private void attachAnnotationProcessorsOutputDirectories(CompileContextEx context) {
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
     final Set<Module> affected = new HashSet<Module>(Arrays.asList(context.getCompileScope().getAffectedModules()));
     for (Module module : affected) {
@@ -455,26 +461,26 @@ public class CompileDriver {
 
     ProblemsViewImpl.SERVICE.getInstance(myProject).clearOldMessages(null);
 
-    final boolean useExtProcessBuild = useOutOfProcessBuild();
+    final boolean useExtProcessBuild = false;
 
     final String contentName =
       forceCompile ? CompilerBundle.message("compiler.content.name.compile") : CompilerBundle.message("compiler.content.name.make");
+    final boolean isUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
     final CompilerTask compileTask =
-      new CompilerTask(myProject, contentName, ApplicationManager.getApplication().isUnitTestMode(), true, true,
-                       isCompilationStartedAutomatically(scope));
+      new CompilerTask(myProject, contentName, isUnitTestMode, true, true, isCompilationStartedAutomatically(scope));
 
     StatusBar.Info.set("", myProject, "Compiler");
     if (useExtProcessBuild) {
       // ensure the project model seen by build process is up-to-date
       myProject.save();
-      if (!ApplicationManager.getApplication().isUnitTestMode()) {
+      if (!isUnitTestMode) {
         ApplicationManager.getApplication().saveSettings();
       }
     }
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     FileDocumentManager.getInstance().saveAllDocuments();
 
-    final DependencyCache dependencyCache = useExtProcessBuild ? null : createDependencyCache();
+    final CompositeDependencyCache dependencyCache = useExtProcessBuild ? null : createDependencyCache();
     final CompileContextImpl compileContext =
       new CompileContextImpl(myProject, compileTask, scope, dependencyCache, !isRebuild && !forceCompile, isRebuild);
 
@@ -487,7 +493,7 @@ public class CompileDriver {
         compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
         compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
       }
-      attachAdditionalOutputDirectories(compileContext);
+      attachAnnotationProcessorsOutputDirectories(compileContext);
     }
 
     final Runnable compileWork = new Runnable() {
@@ -507,7 +513,13 @@ public class CompileDriver {
           if (message != null) {
             compileContext.addMessage(message);
           }
+          else {
+            if (!isUnitTestMode) {
+              //FIXME [VISTALL] notifyDeprecatedImplementation();
+            }
+          }
 
+          TranslatingCompilerFilesMonitor.getInstance().ensureInitializationCompleted(myProject, compileContext.getProgressIndicator());
           doCompile(compileContext, isRebuild, forceCompile, callback, checkCachesVersion);
         }
         finally {
@@ -532,6 +544,28 @@ public class CompileDriver {
     });
   }
 
+  private static final Key<Boolean> OLD_IMPLEMENTATION_WARNING_SHOWN = Key.create("_old_make_implementation_warning_shown_");
+
+  private void notifyDeprecatedImplementation() {
+    if (OLD_IMPLEMENTATION_WARNING_SHOWN.get(myProject, Boolean.FALSE).booleanValue()) {
+      return;
+    }
+    OLD_IMPLEMENTATION_WARNING_SHOWN.set(myProject, Boolean.TRUE);
+    final NotificationListener hyperlinkHandler = new NotificationListener.Adapter() {
+      @Override
+      protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent e) {
+        notification.expire();
+        if (!myProject.isDisposed()) {
+          ShowSettingsUtil.getInstance().editConfigurable(myProject, new CompilerConfigurable(myProject));
+        }
+      }
+    };
+    final Notification notification = new Notification("Compile", "Deprecated make implementation",
+                                                       "Old implementation of \"Make\" feature is enabled for this project.<br>It has been deprecated and will be removed soon.<br>Please enable newer 'external build' feature in <a href=\"#\">Settings | Compiler</a>.",
+                                                       NotificationType.WARNING, hyperlinkHandler);
+    Notifications.Bus.notify(notification, myProject);
+  }
+
   @Nullable
   @TestOnly
   public static ExitStatus getExternalBuildExitStatus(CompileContext context) {
@@ -545,8 +579,15 @@ public class CompileDriver {
                          final boolean checkCachesVersion) {
     ExitStatus status = ExitStatus.ERRORS;
     boolean wereExceptions = false;
-
+    final long vfsTimestamp = (ManagingFS.getInstance()).getCreationTimestamp();
     try {
+      if (checkCachesVersion) {
+        checkCachesVersion(compileContext, vfsTimestamp);
+        if (compileContext.isRebuildRequested()) {
+          return;
+        }
+      }
+      writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, true, vfsTimestamp), compileContext);
       if (compileContext.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
         return;
       }
@@ -558,7 +599,6 @@ public class CompileDriver {
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         throw new RuntimeException(ex);
       }
-      ex.printStackTrace();
       wereExceptions = true;
       final PluginId pluginId = IdeErrorsDialog.findPluginId(ex);
 
@@ -590,7 +630,7 @@ public class CompileDriver {
       }
       else {
         if (!myProject.isDisposed()) {
-          //writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, wereExceptions, vfsTimestamp), compileContext);
+          writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, wereExceptions, vfsTimestamp), compileContext);
         }
         final long duration = notifyCompilationCompleted(compileContext, callback, status, false);
         CompilerUtil.logDuration("\tCOMPILATION FINISHED; Errors: " +
@@ -620,7 +660,7 @@ public class CompileDriver {
       if (!outputs.isEmpty()) {
         final ProgressIndicator indicator = compileContext.getProgressIndicator();
         indicator.setText("Synchronizing output directories...");
-        lfs.refreshIoFiles(outputs, false, false, null);
+        lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
         indicator.setText("");
       }
 
@@ -651,7 +691,7 @@ public class CompileDriver {
             final String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
             final MessageType messageType = errorCount > 0 ? MessageType.ERROR : warningCount > 0 ? MessageType.WARNING : MessageType.INFO;
             if (duration > ONE_MINUTE_MS) {
-              ToolWindowManager.getInstance(myProject).notifyByBalloon(ProblemsView.PROBLEMS_TOOLWINDOW_ID, messageType, statusMessage);
+              ToolWindowManager.getInstance(myProject).notifyByBalloon(ToolWindowId.MESSAGES_WINDOW, messageType, statusMessage);
             }
             CompilerManager.NOTIFICATION_GROUP.createNotification(statusMessage, messageType).notify(myProject);
             if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {
@@ -667,6 +707,29 @@ public class CompileDriver {
       }
     });
     return duration;
+  }
+
+  private void checkCachesVersion(final CompileContextImpl compileContext, final long currentVFSTimestamp) {
+    if (CompilerPaths.getRebuildMarkerFile(compileContext.getProject()).exists()) {
+      compileContext.requestRebuildNextTime("Compiler caches are out of date, project rebuild is required");
+      return;
+    }
+    final CompileStatus compileStatus = readStatus();
+    if (compileStatus == null) {
+      compileContext.requestRebuildNextTime(CompilerBundle.message("error.compiler.caches.corrupted"));
+    }
+    else if (compileStatus.CACHE_FORMAT_VERSION != -1 &&
+             compileStatus.CACHE_FORMAT_VERSION != DEPENDENCY_FORMAT_VERSION) {
+      compileContext.requestRebuildNextTime(CompilerBundle.message("error.caches.old.format"));
+    }
+    else if (compileStatus.COMPILATION_IN_PROGRESS) {
+      compileContext.requestRebuildNextTime(CompilerBundle.message("error.previous.compilation.failed"));
+    }
+    else if (compileStatus.VFS_CREATION_STAMP >= 0L) {
+      if (currentVFSTimestamp != compileStatus.VFS_CREATION_STAMP) {
+        compileContext.requestRebuildNextTime(CompilerBundle.message("error.vfs.was.rebuilt"));
+      }
+    }
   }
 
   private static String createStatusMessage(final ExitStatus status, final int warningCount, final int errorCount, long duration) {
@@ -686,7 +749,7 @@ public class CompileDriver {
       else {
         message = CompilerBundle.message("status.compilation.completed.successfully.with.warnings.and.errors", errorCount, warningCount);
       }
-      message = message + " in " + DateFormatUtil.formatDuration(duration);
+      message = message + " in " + StringUtil.formatDuration(duration);
     }
     return message;
   }
@@ -1207,21 +1270,23 @@ public class CompileDriver {
           }
           while (!dependentFiles.isEmpty() && context.getMessageCount(CompilerMessageCategory.ERROR) == 0);
 
-          if (!context.getProgressIndicator().isCanceled()) {
-            // when cancelled pretend nothing was compiled and next compile will compile everything from the scratch
-            final ProgressIndicator indicator = context.getProgressIndicator();
-            final DependencyCache cache = context.getDependencyCache();
+          if (CompilerManager.MAKE_ENABLED) {
+            if (!context.getProgressIndicator().isCanceled()) {
+              // when cancelled pretend nothing was compiled and next compile will compile everything from the scratch
+              final ProgressIndicator indicator = context.getProgressIndicator();
+              final DependencyCache cache = context.getDependencyCache();
 
-            indicator.pushState();
-            indicator.setText(CompilerBundle.message("progress.updating.caches"));
-            indicator.setText2("");
+              indicator.pushState();
+              indicator.setText(CompilerBundle.message("progress.updating.caches"));
+              indicator.setText2("");
 
-            cache.update();
+              cache.update();
 
-            indicator.setText(CompilerBundle.message("progress.saving.caches"));
-            cache.resetState();
-            processedModules.addAll(currentChunk.getNodes());
-            indicator.popState();
+              indicator.setText(CompilerBundle.message("progress.saving.caches"));
+              cache.resetState();
+              processedModules.addAll(currentChunk.getNodes());
+              indicator.popState();
+            }
           }
 
           if (context.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
@@ -1382,7 +1447,7 @@ public class CompileDriver {
         throw e;
       }
       catch (Exception e) {
-        context.addMessage(CompilerMessageCategory.ERROR, ExceptionUtil.getThrowableText(e), null, -1, -1);
+        context.addMessage(CompilerMessageCategory.ERROR, CompilerBundle.message("compiler.error.exception", e.getMessage()), null, -1, -1);
         LOG.error(e);
       }
     }
@@ -1441,9 +1506,9 @@ public class CompileDriver {
                     context.getProgressIndicator().checkCanceled();
                     final File file = trinity.getFirst();
                     deleteFile(file);
-                    if (isTestMode) {
-                      //FIXME [VISTALL] CompilerManagerImpl.addDeletedPath(file.getPath());
-                    }
+                    /*if (isTestMode) {
+                      CompilerManagerImpl.addDeletedPath(file.getPath());
+                    }      */
                   }
                 }
               }
@@ -1725,8 +1790,7 @@ public class CompileDriver {
     finally {
       CompilerUtil.refreshIOFiles(filesToRefresh);
       if (!generatedFiles.isEmpty()) {
-        DumbService.getInstance(myProject).waitForSmartMode();
-        List<VirtualFile> vFiles = ApplicationManager.getApplication().runReadAction(new Computable<List<VirtualFile>>() {
+        List<VirtualFile> vFiles = DumbService.getInstance(myProject).runReadActionInSmartMode(new Computable<List<VirtualFile>>() {
           @Override
           public List<VirtualFile> compute() {
             final ArrayList<VirtualFile> vFiles = new ArrayList<VirtualFile>(generatedFiles.size());
@@ -1823,11 +1887,6 @@ public class CompileDriver {
         }
       }
 
-      CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
-      final VirtualFile compilerOutput = compilerPathsManager.getCompilerOutput();
-      if(compilerOutput != null) {
-        compilerOutput.refresh(false, true);
-      }
       if ((wereFilesDeleted[0] || !toCompile.isEmpty()) && context.getMessageCount(CompilerMessageCategory.ERROR) == 0) {
         compiler.compile(context, moduleChunk, VfsUtilCore.toVirtualFileArray(toCompile), sink);
       }
@@ -1860,14 +1919,14 @@ public class CompileDriver {
                                         LOG.assertTrue(outputPath.exists());
                                       }
                                       if (!deleteFile(outputPath)) {
-                                        if (isTestMode) {
-                                          if (outputPath.exists()) {
-                                            LOG.error("Was not able to delete output file: " + outputPath.getPath());
-                                          }
-                                          else {
-                                            //FIXME [VISTALL]CompilerManagerImpl.addDeletedPath(outputPath.getPath());
-                                          }
-                                        }
+             /* if (isTestMode) {
+                if (outputPath.exists()) {
+                  LOG.error("Was not able to delete output file: " + outputPath.getPath());
+                }
+                else {
+                  CompilerManagerImpl.addDeletedPath(outputPath.getPath());
+                }
+              } */
                                         continue;
                                       }
                                       wereFilesDeleted[0] = true;
@@ -1883,20 +1942,11 @@ public class CompileDriver {
                                       //  }
                                       //}
 
-           /*
-            //FIXME [VISTALL]
-            final String className = trinity.getSecond();
-            if (className != null) {
-              final int id = dependencyCache.getSymbolTable().getId(className);
-              dependencyCache.addTraverseRoot(id);
-              final boolean sourcePresent = trinity.getThird().booleanValue();
-              if (!sourcePresent) {
-                dependencyCache.markSourceRemoved(id);
-              }
-            }
-            if (isTestMode) {
+                                      dependencyCache.syncOutDir(trinity);
+
+            /*if (isTestMode) {
               CompilerManagerImpl.addDeletedPath(outputPath.getPath());
-            }    */
+            }   */
                                     }
                                   }
                                   finally {
@@ -1911,7 +1961,7 @@ public class CompileDriver {
   // [mike] performance optimization - this method is accessed > 15,000 times in Aurora
   private String getModuleOutputPath(final Module module, ContentFolderType contentFolderType) {
     Map<Module, String> map = myOutputs.get(contentFolderType);
-    if(map == null) {
+    if (map == null) {
       myOutputs.put(contentFolderType, map = new HashMap<Module, String>());
     }
 
@@ -1942,8 +1992,7 @@ public class CompileDriver {
     final List<FileProcessingCompiler.ProcessingItem> toProcess = new ArrayList<FileProcessingCompiler.ProcessingItem>();
     final Set<String> allUrls = new HashSet<String>();
     final IOException[] ex = {null};
-    DumbService.getInstance(myProject).waitForSmartMode();
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
+    DumbService.getInstance(myProject).runReadActionInSmartMode(new Runnable() {
       @Override
       public void run() {
         try {
@@ -2141,7 +2190,7 @@ public class CompileDriver {
       boolean isProjectCompilePathSpecified = true;
       final Set<File> nonExistingOutputPaths = new HashSet<File>();
       final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
-      final boolean useOutOfProcessBuild =  false;
+      final boolean useOutOfProcessBuild = false;
       for (final Module module : scopeModules) {
         if (!compilerManager.isValidationEnabled(module)) {
           continue;
@@ -2149,7 +2198,7 @@ public class CompileDriver {
 
         boolean isEmpty = true;
         for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
-          if(hasContent(module, contentFolderType)) {
+          if (hasContent(module, contentFolderType)) {
             isEmpty = false;
             break;
           }
@@ -2160,10 +2209,10 @@ public class CompileDriver {
         }
 
         for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
-          if(hasContent(module, contentFolderType)) {
+          if (hasContent(module, contentFolderType)) {
 
             final String outputPath = getModuleOutputPath(module, contentFolderType);
-            if(outputPath != null) {
+            if (outputPath != null) {
               final File file = new File(FileUtil.toSystemDependentName(outputPath));
               if (!file.exists()) {
                 nonExistingOutputPaths.add(file);
@@ -2274,8 +2323,32 @@ public class CompileDriver {
     }
   }
 
-  private boolean useOutOfProcessBuild() {
-    return CompilerWorkspaceConfiguration.getInstance(myProject).useOutOfProcessBuild();
+  private void showCyclicModulesHaveDifferentLanguageLevel(Module[] modulesInChunk) {
+    LOG.assertTrue(modulesInChunk.length > 0);
+    String moduleNameToSelect = modulesInChunk[0].getName();
+    final String moduleNames = getModulesString(modulesInChunk);
+    Messages.showMessageDialog(myProject, CompilerBundle.message("error.chunk.modules.must.have.same.language.level", moduleNames),
+                               CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+    showConfigurationDialog(moduleNameToSelect, null);
+  }
+
+  private void showCyclicModulesHaveDifferentJdksError(Module[] modulesInChunk) {
+    LOG.assertTrue(modulesInChunk.length > 0);
+    String moduleNameToSelect = modulesInChunk[0].getName();
+    final String moduleNames = getModulesString(modulesInChunk);
+    Messages.showMessageDialog(myProject, CompilerBundle.message("error.chunk.modules.must.have.same.jdk", moduleNames),
+                               CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+    showConfigurationDialog(moduleNameToSelect, null);
+  }
+
+  private void showCyclesNotSupportedForAnnotationProcessors(Module[] modulesInChunk) {
+    LOG.assertTrue(modulesInChunk.length > 0);
+    String moduleNameToSelect = modulesInChunk[0].getName();
+    final String moduleNames = getModulesString(modulesInChunk);
+    Messages
+      .showMessageDialog(myProject, CompilerBundle.message("error.annotation.processing.not.supported.for.module.cycles", moduleNames),
+                         CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+    showConfigurationDialog(moduleNameToSelect, null);
   }
 
   private static String getModulesString(Module[] modulesInChunk) {

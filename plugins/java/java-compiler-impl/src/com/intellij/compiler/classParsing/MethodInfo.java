@@ -20,7 +20,7 @@
  */
 package com.intellij.compiler.classParsing;
 
-import com.intellij.compiler.SymbolTable;
+import com.intellij.compiler.cache.SymbolTable;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.openapi.diagnostic.Logger;

@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl;
 
-import com.intellij.compiler.make.DependencyCache;
+import com.intellij.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
@@ -50,7 +50,7 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  public DependencyCache getDependencyCache() {
+  public CompositeDependencyCache getDependencyCache() {
     return myDelegate.getDependencyCache();
   }
 

@@ -15,31 +15,44 @@
  */
 package com.intellij.compiler.make;
 
+import com.intellij.compiler.impl.ExitException;
+import com.intellij.openapi.compiler.ex.CompileContextEx;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.Trinity;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Function;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.util.Set;
+
 /**
  * @author VISTALL
  * @since 23:35/25.05.13
- * TODO [VISTALL] dummy
  */
-public class DependencyCache {
-  public DependencyCache(String val) {
+public interface DependencyCache {
 
-  }
+  ExtensionPointName<DependencyCacheEP> EP_NAME = ExtensionPointName.create("com.intellij.compiler.dependencyCache");
 
-  public void resetState() {
+  void findDependentFiles(CompileContextEx context,
+                          Ref<CacheCorruptedException> exceptionRef,
+                          Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter,
+                          Set<VirtualFile> dependentFiles, Set<VirtualFile> compiledWithErrors) throws CacheCorruptedException,
+                                                                                                       ExitException;
 
-  }
+  boolean hasUnprocessedTraverseRoots();
 
-  public void clearTraverseRoots() {
+  void resetState();
 
-  }
+  void clearTraverseRoots();
 
-  public boolean hasUnprocessedTraverseRoots() {
-    return false;
-  }
+  void update() throws CacheCorruptedException;
 
-  public void update() {
+  @Nullable
+  String relativePathToQName(@NotNull String path, char separator);
 
-  }
-
-
+  void syncOutDir(Trinity<File, String, Boolean> trinity) throws CacheCorruptedException;
 }

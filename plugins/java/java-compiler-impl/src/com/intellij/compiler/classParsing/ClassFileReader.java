@@ -20,6 +20,7 @@
  */
 package com.intellij.compiler.classParsing;
 
+import com.intellij.compiler.cache.SymbolTable;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.util.io.FileUtil;
@@ -50,13 +51,13 @@ public class ClassFileReader {
   private String mySourceFileName;
   private String mySuperClassName;
   private String[] mySuperInterfaces;
-  private final SymbolTableDummy mySymbolTable;
+  private final SymbolTable mySymbolTable;
   private AnnotationConstantValue[] myRuntimeVisibleAnnotations;
   private AnnotationConstantValue[] myRuntimeInvisibleAnnotations;
   private static final String CONSTRUCTOR_NAME = "<init>";
   private boolean myParsingDone;
 
-  public ClassFileReader(@NotNull File file, SymbolTableDummy symbolTable, @Nullable final byte[] fileContent) {
+  public ClassFileReader(@NotNull File file, SymbolTable symbolTable, @Nullable final byte[] fileContent) {
     mySymbolTable = symbolTable;
     myFile = file;
     myData = fileContent;
@@ -280,7 +281,7 @@ public class ClassFileReader {
     return (getAccessFlags() & ClsUtil.ACC_INTERFACE) != 0;
   }
 
-// helper methods
+  // helper methods
   private void parseConstantPool() throws ClsFormatException {
     if (myReferences != null) {
       return;
@@ -478,11 +479,11 @@ public class ClassFileReader {
   }
 
   /**
-      Signature_attribute {
-        u2 attribute_name_index;    (must be equal to "Signature")
-        u4 attribute_length;        (must be equal to 2)
-        u2 signature_index;
-      }
+   Signature_attribute {
+   u2 attribute_name_index;    (must be equal to "Signature")
+   u4 attribute_length;        (must be equal to 2)
+   u2 signature_index;
+   }
    */
   private String readSignatureAttribute(BytePointer p) throws ClsFormatException {
     final BytePointer ptr = new BytePointer(p.bytes, p.offset + 2); // position to the length
@@ -730,7 +731,7 @@ public class ClassFileReader {
         case ClsUtil.CONSTANT_Class:
         case ClsUtil.CONSTANT_String:
           myPtr.offset += 2;
-        break;
+          break;
 
         case ClsUtil.CONSTANT_Fieldref:
         case ClsUtil.CONSTANT_Methodref:
@@ -739,18 +740,18 @@ public class ClassFileReader {
         case ClsUtil.CONSTANT_Float:
         case ClsUtil.CONSTANT_NameAndType:
           myPtr.offset += 4;
-        break;
+          break;
 
         case ClsUtil.CONSTANT_Long:
         case ClsUtil.CONSTANT_Double:
           myPtr.offset += 8;
           myCurrentEntryIndex++; // takes 2 entries
-        break;
+          break;
 
         case ClsUtil.CONSTANT_Utf8:
           int length = ClsUtil.readU2(myPtr);
           myPtr.offset += length;
-        break;
+          break;
 
         case ClsUtil.CONSTANT_MethodHandle:
           myPtr.offset += 3;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler.ex;
 
-import com.intellij.compiler.make.DependencyCache;
+import com.intellij.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessage;
@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Set;
 
 public interface CompileContextEx extends CompileContext {
-  DependencyCache getDependencyCache();
+  CompositeDependencyCache getDependencyCache();
 
   @Nullable
   VirtualFile getSourceFileByOutputFile(VirtualFile outputFile);

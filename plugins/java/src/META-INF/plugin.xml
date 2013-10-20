@@ -570,6 +570,7 @@
     <extensionPoint name="backendCompiler" beanClass="com.intellij.compiler.impl.javaCompiler.BackendCompilerEP" area="CONSULO_PROJECT">
       <with attribute="implementationClass" implements="com.intellij.compiler.impl.javaCompiler.BackendCompiler"/>
     </extensionPoint>
+    <extensionPoint name="compiler.makeDependencyProcessor" interface="com.intellij.compiler.cache.DependencyProcessor" />
     <extensionPoint name="runConfigurationExtension" interface="com.intellij.execution.RunConfigurationExtension"/>
     <extensionPoint name="jreProvider" interface="com.intellij.execution.ui.JreProvider"/>
     <extensionPoint name="vetoSPICondition" interface="com.intellij.openapi.util.Condition"/>
@@ -668,6 +669,7 @@
 
     <compiler implementation="com.intellij.compiler.impl.javaCompiler.AnnotationProcessingCompiler" id="java-annotation-processor" order="before java-compiler" />
     <compiler implementation="com.intellij.compiler.impl.javaCompiler.JavaCompiler" id="java-compiler"/>
+    <compiler.dependencyCache implementationClass="com.intellij.compiler.cache.JavaDependencyCache" />
 
     <projectConfigurable id="project.propCompiler.java" bundle="messages.JavaCoreBundle" key="java" parentId="project.propCompiler"
                          instance="com.intellij.compiler.impl.javaCompiler.JavaCompilerConfigurable"/>

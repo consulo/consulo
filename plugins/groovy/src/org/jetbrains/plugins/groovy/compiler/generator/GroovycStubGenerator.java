@@ -18,6 +18,7 @@ package org.jetbrains.plugins.groovy.compiler.generator;
 
 import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.impl.FileSetCompileScope;
+import com.intellij.compiler.impl.TranslatingCompilerFilesMonitor;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
@@ -205,7 +206,7 @@ public class GroovycStubGenerator extends GroovyCompilerBase {
             @Override
             public boolean process(VirtualFile virtualFile) {
               if (!virtualFile.isDirectory()) {
-              //  TranslatingCompilerFilesMonitor.removeSourceInfo(virtualFile);
+                TranslatingCompilerFilesMonitor.removeSourceInfo(virtualFile);
                 try {
                   virtualFile.delete(this);
                 }

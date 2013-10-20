@@ -15,13 +15,17 @@
  */
 package com.intellij.compiler.impl;
 
+import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
+import com.intellij.compiler.make.DependencyCache;
 import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.compiler.*;
+import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -33,10 +37,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
-import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -47,11 +48,13 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
+import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IndexInfrastructure;
 import com.intellij.util.io.*;
+import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.*;
 import org.consulo.compiler.CompilerPathsManager;
@@ -59,24 +62,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.io.DataOutputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Eugene Zhuravlev
  * @since Jun 3, 2008
- *
- * A source file is scheduled for recompilation if
- * 1. its timestamp has changed
- * 2. one of its corresponding output files was deleted
- * 3. output root of containing module has changed
- *
- * An output file is scheduled for deletion if:
- * 1. corresponding source file has been scheduled for recompilation (see above)
- * 2. corresponding source file has been deleted
+ *        <p/>
+ *        A source file is scheduled for recompilation if
+ *        1. its timestamp has changed
+ *        2. one of its corresponding output files was deleted
+ *        3. output root of containing module has changed
+ *        <p/>
+ *        An output file is scheduled for deletion if:
+ *        1. corresponding source file has been scheduled for recompilation (see above)
+ *        2. corresponding source file has been deleted
  */
-@Deprecated
 public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.TranslatingCompilerFilesMonitor");
   private static final boolean ourDebugMode = false;
@@ -89,8 +90,10 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
 
   private final TIntHashSet mySuspendedProjects = new TIntHashSet(); // projectId for all projects that should not be monitored
 
-  private final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<TIntHashSet>(); // ProjectId->set of source file paths
-  private PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myOutputRootsStorage; // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
+  private final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<TIntHashSet>();
+    // ProjectId->set of source file paths
+  private PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myOutputRootsStorage;
+    // ProjectId->map[moduleId->Pair(outputDirId, testOutputDirId)]
 
   // Map: projectId -> Map{output path -> [sourceUrl; className]}
   private final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
@@ -122,7 +125,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
         }
         else {
           final File compilerCacheDir = CompilerPaths.getCacheStoreDirectory(dirName);
-          storeFile = compilerCacheDir.exists()? new File(compilerCacheDir, "paths_to_delete.dat") : null;
+          storeFile = compilerCacheDir.exists() ? new File(compilerCacheDir, "paths_to_delete.dat") : null;
         }
         return new Outputs(storeFile, loadPathsToDelete(storeFile));
       }
@@ -150,31 +153,32 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
       return CompilerPaths.getGeneratedDataDirectory(project);
     }
   };
-  private final SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myProjectOutputRoots = new SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(2, 2) {
-    @Override
-    protected void onDropFromCache(Integer key, TIntObjectHashMap<Pair<Integer, Integer>> value) {
-      try {
-        myOutputRootsStorage.put(key, value);
+  private final SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>> myProjectOutputRoots =
+    new SLRUCache<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(2, 2) {
+      @Override
+      protected void onDropFromCache(Integer key, TIntObjectHashMap<Pair<Integer, Integer>> value) {
+        try {
+          myOutputRootsStorage.put(key, value);
+        }
+        catch (IOException e) {
+          LOG.info(e);
+        }
       }
-      catch (IOException e) {
-        LOG.info(e);
-      }
-    }
 
-    @Override
-    @NotNull
-    public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
-      TIntObjectHashMap<Pair<Integer, Integer>> map = null;
-      try {
-        ensureOutputStorageInitialized();
-        map = myOutputRootsStorage.get(key);
+      @Override
+      @NotNull
+      public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
+        TIntObjectHashMap<Pair<Integer, Integer>> map = null;
+        try {
+          ensureOutputStorageInitialized();
+          map = myOutputRootsStorage.get(key);
+        }
+        catch (IOException e) {
+          LOG.info(e);
+        }
+        return map != null ? map : new TIntObjectHashMap<Pair<Integer, Integer>>();
       }
-      catch (IOException e) {
-        LOG.info(e);
-      }
-      return map != null? map : new TIntObjectHashMap<Pair<Integer, Integer>>();
-    }
-  };
+    };
   private final ProjectManager myProjectManager;
   private final TIntIntHashMap myInitInProgress = new TIntIntHashMap(); // projectId for successfully initialized projects
   private final Object myAsyncScanLock = new Object();
@@ -244,31 +248,145 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     return null;
   }
 
-  public void collectFiles(CompileContext context, final TranslatingCompiler compiler, Iterator<VirtualFile> scopeSrcIterator, boolean forceCompile,
+  public void collectFiles(CompileContext context,
+                           final TranslatingCompiler compiler,
+                           Iterator<VirtualFile> scopeSrcIterator,
+                           boolean forceCompile,
                            final boolean isRebuild,
                            Collection<VirtualFile> toCompile,
                            Collection<Trinity<File, String, Boolean>> toDelete) {
-
     final Project project = context.getProject();
-    if (ourDebugMode) {
-      System.out.println("Analysing potentially recompilable files for " + compiler.getDescription());
-    }
-    while (scopeSrcIterator.hasNext()) {
-      final VirtualFile file = scopeSrcIterator.next();
-      if (!file.isValid()) {
-        if (LOG.isDebugEnabled() || ourDebugMode) {
-          LOG.debug("Skipping invalid file " + file.getPresentableUrl());
-          if (ourDebugMode) {
-            System.out.println("\t SKIPPED(INVALID) " + file.getPresentableUrl());
+    final int projectId = getProjectId(project);
+    final CompilerManager configuration = CompilerManager.getInstance(project);
+    final boolean _forceCompile = forceCompile || isRebuild;
+    final Set<VirtualFile> selectedForRecompilation = new HashSet<VirtualFile>();
+    synchronized (myDataLock) {
+      final TIntHashSet pathsToRecompile = mySourcesToRecompile.get(projectId);
+      if (_forceCompile || pathsToRecompile != null && !pathsToRecompile.isEmpty()) {
+        if (ourDebugMode) {
+          System.out.println("Analysing potentially recompilable files for " + compiler.getDescription());
+        }
+        while (scopeSrcIterator.hasNext()) {
+          final VirtualFile file = scopeSrcIterator.next();
+          if (!file.isValid()) {
+            if (LOG.isDebugEnabled() || ourDebugMode) {
+              LOG.debug("Skipping invalid file " + file.getPresentableUrl());
+              if (ourDebugMode) {
+                System.out.println("\t SKIPPED(INVALID) " + file.getPresentableUrl());
+              }
+            }
+            continue;
+          }
+          final int fileId = getFileId(file);
+          if (_forceCompile) {
+            if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
+              toCompile.add(file);
+              if (ourDebugMode) {
+                System.out.println("\t INCLUDED " + file.getPresentableUrl());
+              }
+              selectedForRecompilation.add(file);
+              if (pathsToRecompile == null || !pathsToRecompile.contains(fileId)) {
+                loadInfoAndAddSourceForRecompilation(projectId, file);
+              }
+            }
+            else {
+              if (ourDebugMode) {
+                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
+              }
+            }
+          }
+          else if (pathsToRecompile.contains(fileId)) {
+            if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
+              toCompile.add(file);
+              if (ourDebugMode) {
+                System.out.println("\t INCLUDED " + file.getPresentableUrl());
+              }
+              selectedForRecompilation.add(file);
+            }
+            else {
+              if (ourDebugMode) {
+                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
+              }
+            }
+          }
+          else {
+            if (ourDebugMode) {
+              System.out.println("\t NOT INCLUDED " + file.getPresentableUrl());
+            }
           }
         }
-        continue;
       }
-    
-      if (compiler.isCompilableFile(file, context) && !CompilerManager.getInstance(project).isExcludedFromCompilation(file)) {
-        toCompile.add(file);
-        if (ourDebugMode) {
-          System.out.println("\t INCLUDED " + file.getPresentableUrl());
+      // it is important that files to delete are collected after the files to compile (see what happens if forceCompile == true)
+      if (!isRebuild) {
+        final Outputs outputs = myOutputsToDelete.get(projectId);
+        try {
+          final VirtualFileManager vfm = VirtualFileManager.getInstance();
+          final LocalFileSystem lfs = LocalFileSystem.getInstance();
+          final List<String> zombieEntries = new ArrayList<String>();
+          final Map<String, VirtualFile> srcFileCache = getFileCache(context);
+          for (Map.Entry<String, SourceUrlClassNamePair> entry : outputs.getEntries()) {
+            final String outputPath = entry.getKey();
+            final SourceUrlClassNamePair classNamePair = entry.getValue();
+            final String sourceUrl = classNamePair.getSourceUrl();
+
+            final VirtualFile srcFile;
+            if (srcFileCache.containsKey(sourceUrl)) {
+              srcFile = srcFileCache.get(sourceUrl);
+            }
+            else {
+              srcFile = vfm.findFileByUrl(sourceUrl);
+              srcFileCache.put(sourceUrl, srcFile);
+            }
+
+            final boolean sourcePresent = srcFile != null;
+            if (sourcePresent) {
+              if (!compiler.isCompilableFile(srcFile, context)) {
+                continue; // do not collect files that were compiled by another compiler
+              }
+              if (!selectedForRecompilation.contains(srcFile)) {
+                if (!isMarkedForRecompilation(projectId, getFileId(srcFile))) {
+                  if (LOG.isDebugEnabled() || ourDebugMode) {
+                    final String message = "Found zombie entry (output is marked, but source is present and up-to-date): " + outputPath;
+                    LOG.debug(message);
+                    if (ourDebugMode) {
+                      System.out.println(message);
+                    }
+                  }
+                  zombieEntries.add(outputPath);
+                }
+                continue;
+              }
+            }
+            if (lfs.findFileByPath(outputPath) != null) {
+              //noinspection UnnecessaryBoxing
+              final File file = new File(outputPath);
+              toDelete.add(new Trinity<File, String, Boolean>(file, classNamePair.getClassName(), Boolean.valueOf(sourcePresent)));
+              if (LOG.isDebugEnabled() || ourDebugMode) {
+                final String message = "Found file to delete: " + file;
+                LOG.debug(message);
+                if (ourDebugMode) {
+                  System.out.println(message);
+                }
+              }
+            }
+            else {
+              if (LOG.isDebugEnabled() || ourDebugMode) {
+                final String message = "Found zombie entry marked for deletion: " + outputPath;
+                LOG.debug(message);
+                if (ourDebugMode) {
+                  System.out.println(message);
+                }
+              }
+              // must be gagbage entry, should cleanup
+              zombieEntries.add(outputPath);
+            }
+          }
+          for (String path : zombieEntries) {
+            unmarkOutputPathForDeletion(projectId, path);
+          }
+        }
+        finally {
+          outputs.release();
         }
       }
     }
@@ -290,9 +408,12 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     return IndexInfrastructure.findFileById((PersistentFS)ManagingFS.getInstance(), id);
   }
 
-  public void update(final CompileContext context, @Nullable final String outputRoot, final Collection<TranslatingCompiler.OutputItem> successfullyCompiled, final VirtualFile[] filesToRecompile)
-    throws IOException {
-    /*final Project project = context.getProject();
+  public void update(final CompileContext context,
+                     @Nullable final String outputRoot,
+                     final Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
+                     final VirtualFile[] filesToRecompile) throws IOException {
+    final Project project = context.getProject();
+    final DependencyCache dependencyCache = ((CompileContextEx)context).getDependencyCache();
     final int projectId = getProjectId(project);
     if (!successfullyCompiled.isEmpty()) {
       final LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -328,7 +449,8 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
 
                 if (outputFile != null) {
                   if (!sourceFile.equals(outputFile)) {
-                    final String className = outputRoot == null? null : MakeUtil.relativeClassPathToQName(outputPath.substring(outputRoot.length()), '/');
+                    final String className =
+                      outputRoot == null ? null : dependencyCache.relativePathToQName(outputPath.substring(outputRoot.length()), '/');
                     if (isSourceValid) {
                       srcInfo.addOutputPath(projectId, outputPath);
                       saveOutputInfo(outputFile, new OutputFileInfo(sourceFile.getPath(), className));
@@ -391,15 +513,15 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
           }
         }
       });
-    }  */
+    }
   }
 
   public void updateOutputRootsLayout(Project project) {
-  /*  final TIntObjectHashMap<Pair<Integer, Integer>> map = buildOutputRootsLayout(new ProjectRef(project));
+    final TIntObjectHashMap<Pair<Integer, Integer>> map = buildOutputRootsLayout(new ProjectRef(project));
     final int projectId = getProjectId(project);
     synchronized (myProjectOutputRoots) {
       myProjectOutputRoots.put(projectId, map);
-    } */
+    }
   }
 
   @Override
@@ -480,41 +602,50 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(projRef.get());
     final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
     for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
-        final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
-        final int first = output != null? Math.abs(getFileId(output)) : -1;
-        final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, ContentFolderType.TEST);
-        final int second = testsOutput != null? Math.abs(getFileId(testsOutput)) : -1;
-        map.put(getModuleId(module), new Pair<Integer, Integer>(first, second));
+      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
+      final int first = output != null ? Math.abs(getFileId(output)) : -1;
+      final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, ContentFolderType.TEST);
+      final int second = testsOutput != null ? Math.abs(getFileId(testsOutput)) : -1;
+      map.put(getModuleId(module), new Pair<Integer, Integer>(first, second));
     }
     return map;
   }
 
   private void initOutputRootsFile(File rootsFile) throws IOException {
-    myOutputRootsStorage = new PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(rootsFile, EnumeratorIntegerDescriptor.INSTANCE, new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
-      @Override
-      public void save(DataOutput out, TIntObjectHashMap<Pair<Integer, Integer>> value) throws IOException {
-        for (final TIntObjectIterator<Pair<Integer, Integer>> it = value.iterator(); it.hasNext();) {
-          it.advance();
-          DataInputOutputUtil.writeINT(out, it.key());
-          final Pair<Integer, Integer> pair = it.value();
-          DataInputOutputUtil.writeINT(out, pair.first);
-          DataInputOutputUtil.writeINT(out, pair.second);
-        }
-      }
+    myOutputRootsStorage =
+      new PersistentHashMap<Integer, TIntObjectHashMap<Pair<Integer, Integer>>>(rootsFile, EnumeratorIntegerDescriptor.INSTANCE,
+                                                                                new DataExternalizer<TIntObjectHashMap<Pair<Integer, Integer>>>() {
+                                                                                  @Override
+                                                                                  public void save(DataOutput out,
+                                                                                                   TIntObjectHashMap<Pair<Integer, Integer>> value)
+                                                                                    throws IOException {
+                                                                                    for (
+                                                                                      final TIntObjectIterator<Pair<Integer, Integer>> it =
+                                                                                        value.iterator(); it.hasNext(); ) {
+                                                                                      it.advance();
+                                                                                      DataInputOutputUtil.writeINT(out, it.key());
+                                                                                      final Pair<Integer, Integer> pair = it.value();
+                                                                                      DataInputOutputUtil.writeINT(out, pair.first);
+                                                                                      DataInputOutputUtil.writeINT(out, pair.second);
+                                                                                    }
+                                                                                  }
 
-      @Override
-      public TIntObjectHashMap<Pair<Integer, Integer>> read(DataInput in) throws IOException {
-        final DataInputStream _in = (DataInputStream)in;
-        final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
-        while (_in.available() > 0) {
-          final int key = DataInputOutputUtil.readINT(_in);
-          final int first = DataInputOutputUtil.readINT(_in);
-          final int second = DataInputOutputUtil.readINT(_in);
-          map.put(key, new Pair<Integer, Integer>(first, second));
-        }
-        return map;
-      }
-    });
+                                                                                  @Override
+                                                                                  public TIntObjectHashMap<Pair<Integer, Integer>> read(
+                                                                                    DataInput in) throws IOException {
+                                                                                    final DataInputStream _in = (DataInputStream)in;
+                                                                                    final TIntObjectHashMap<Pair<Integer, Integer>> map =
+                                                                                      new TIntObjectHashMap<Pair<Integer, Integer>>();
+                                                                                    while (_in.available() > 0) {
+                                                                                      final int key = DataInputOutputUtil.readINT(_in);
+                                                                                      final int first = DataInputOutputUtil.readINT(_in);
+                                                                                      final int second = DataInputOutputUtil.readINT(_in);
+                                                                                      map.put(key,
+                                                                                              new Pair<Integer, Integer>(first, second));
+                                                                                    }
+                                                                                    return map;
+                                                                                  }
+                                                                                });
   }
 
   @Override
@@ -687,7 +818,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     OutputFileInfo(final String sourcePath, @Nullable String className) throws IOException {
       final PersistentStringEnumerator symtable = FSRecords.getNames();
       mySourcePath = symtable.enumerate(sourcePath);
-      myClassName = className != null? symtable.enumerate(className) : -1;
+      myClassName = className != null ? symtable.enumerate(className) : -1;
     }
 
     OutputFileInfo(final DataInput in) throws IOException {
@@ -708,7 +839,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     @Nullable
     public String getClassName() {
       try {
-        return myClassName < 0? null : FSRecords.getNames().valueOf(myClassName);
+        return myClassName < 0 ? null : FSRecords.getNames().valueOf(myClassName);
       }
       catch (IOException e) {
         LOG.info(e);
@@ -750,7 +881,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
       for (int projectId : projects) {
         DataInputOutputUtil.writeINT(out, projectId);
         DataInputOutputUtil.writeTIME(out, getTimestamp(projectId));
-        final Object value = myProjectToOutputPathMap != null? myProjectToOutputPathMap.get(projectId) : null;
+        final Object value = myProjectToOutputPathMap != null ? myProjectToOutputPathMap.get(projectId) : null;
         if (value instanceof Integer) {
           DataInputOutputUtil.writeINT(out, 1);
           out.writeInt(((Integer)value).intValue());
@@ -758,7 +889,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
         else if (value instanceof TIntHashSet) {
           final TIntHashSet set = (TIntHashSet)value;
           DataInputOutputUtil.writeINT(out, set.size());
-          final IOException[] ex = new IOException[] {null};
+          final IOException[] ex = new IOException[]{null};
           set.forEach(new TIntProcedure() {
             @Override
             public boolean execute(final int value) {
@@ -823,12 +954,12 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
       }
       else {
         final Object val = myProjectToOutputPathMap.get(projectId);
-        if (val == null)  {
+        if (val == null) {
           myProjectToOutputPathMap.put(projectId, outputPath);
         }
         else {
           TIntHashSet set;
-          if (val instanceof Integer)  {
+          if (val instanceof Integer) {
             set = new TIntHashSet();
             set.add(((Integer)val).intValue());
             myProjectToOutputPathMap.put(projectId, set);
@@ -842,7 +973,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
       }
     }
 
-    public boolean clearPaths(final int projectId){
+    public boolean clearPaths(final int projectId) {
       if (myProjectToOutputPathMap != null) {
         final Serializable removed = myProjectToOutputPathMap.remove(projectId);
         return removed != null;
@@ -851,15 +982,15 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     }
 
     long getTimestamp(final int projectId) {
-      return myTimestamps == null? -1L : myTimestamps.get(projectId);
+      return myTimestamps == null ? -1L : myTimestamps.get(projectId);
     }
 
-    void processOutputPaths(final int projectId, final Proc proc){
+    void processOutputPaths(final int projectId, final Proc proc) {
       if (myProjectToOutputPathMap != null) {
         try {
           final PersistentStringEnumerator symtable = FSRecords.getNames();
           final Object val = myProjectToOutputPathMap.get(projectId);
-          if (val instanceof Integer)  {
+          if (val instanceof Integer) {
             proc.execute(projectId, symtable.valueOf(((Integer)val).intValue()));
           }
           else if (val instanceof TIntHashSet) {
@@ -888,7 +1019,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
       if (myProjectToOutputPathMap != null) {
         try {
           final Object val = myProjectToOutputPathMap.get(projectId);
-          if (val instanceof Integer)  {
+          if (val instanceof Integer) {
             return FileUtil.pathsEqual(outputPath, FSRecords.getNames().valueOf(((Integer)val).intValue()));
           }
           if (val instanceof TIntHashSet) {
@@ -940,7 +1071,8 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
 
     final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
-      @NotNull @Override
+      @NotNull
+      @Override
       public Result visitFileEx(@NotNull VirtualFile file) {
         if (fileTypeManager.isFileIgnored(file)) {
           return SKIP_CHILDREN;
@@ -961,7 +1093,10 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   }
 
   // made public for tests
-  public void scanSourceContent(final ProjectRef projRef, final Collection<VirtualFile> roots, final int totalRootCount, final boolean isNewRoots) {
+  public void scanSourceContent(final ProjectRef projRef,
+                                final Collection<VirtualFile> roots,
+                                final int totalRootCount,
+                                final boolean isNewRoots) {
     if (roots.isEmpty()) {
       return;
     }
@@ -1026,7 +1161,21 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   }
 
   public void ensureInitializationCompleted(Project project, ProgressIndicator indicator) {
-
+    final int id = getProjectId(project);
+    synchronized (myAsyncScanLock) {
+      while (myInitInProgress.containsKey(id)) {
+        if (!project.isOpen() || project.isDisposed() || (indicator != null && indicator.isCanceled())) {
+          // makes no sense to continue waiting
+          break;
+        }
+        try {
+          myAsyncScanLock.wait(500);
+        }
+        catch (InterruptedException ignored) {
+          break;
+        }
+      }
+    }
   }
 
   private void markOldOutputRoots(final ProjectRef projRef, final TIntObjectHashMap<Pair<Integer, Integer>> currentLayout) {
@@ -1035,20 +1184,20 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
     final TIntHashSet rootsToMark = new TIntHashSet();
     synchronized (myProjectOutputRoots) {
       final TIntObjectHashMap<Pair<Integer, Integer>> oldLayout = myProjectOutputRoots.get(projectId);
-      for (final TIntObjectIterator<Pair<Integer, Integer>> it = oldLayout.iterator(); it.hasNext();) {
+      for (final TIntObjectIterator<Pair<Integer, Integer>> it = oldLayout.iterator(); it.hasNext(); ) {
         it.advance();
         final Pair<Integer, Integer> currentRoots = currentLayout.get(it.key());
         final Pair<Integer, Integer> oldRoots = it.value();
-        if (shouldMark(oldRoots.first, currentRoots != null? currentRoots.first : -1)) {
+        if (shouldMark(oldRoots.first, currentRoots != null ? currentRoots.first : -1)) {
           rootsToMark.add(oldRoots.first);
         }
-        if (shouldMark(oldRoots.second, currentRoots != null? currentRoots.second : -1)) {
+        if (shouldMark(oldRoots.second, currentRoots != null ? currentRoots.second : -1)) {
           rootsToMark.add(oldRoots.second);
         }
       }
     }
 
-    for (TIntIterator it = rootsToMark.iterator(); it.hasNext();) {
+    for (TIntIterator it = rootsToMark.iterator(); it.hasNext(); ) {
       final int id = it.next();
       final VirtualFile outputRoot = findFileById(id);
       if (outputRoot != null) {
@@ -1071,7 +1220,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
           final OutputFileInfo outputInfo = loadOutputInfo(file);
           if (outputInfo != null) {
             final String srcPath = outputInfo.getSourceFilePath();
-            final VirtualFile srcFile = srcPath != null? LocalFileSystem.getInstance().findFileByPath(srcPath) : null;
+            final VirtualFile srcFile = srcPath != null ? LocalFileSystem.getInstance().findFileByPath(srcPath) : null;
             if (srcFile != null) {
               loadInfoAndAddSourceForRecompilation(projectId, srcFile);
             }
@@ -1096,7 +1245,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
           public void run(@NotNull final ProgressIndicator indicator) {
             final ProjectRef projRef = new ProjectRef(project);
             if (LOG.isDebugEnabled()) {
-              LOG.debug("Initial sources scan for project hash=" + projectId + "; url="+ projRef.get().getPresentableUrl());
+              LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
             }
             try {
               final IntermediateOutputCompiler[] compilers =
@@ -1110,11 +1259,13 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
                     if (module.isDisposed()) {
                       continue;
                     }
-                    final VirtualFile outputRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
+                    final VirtualFile outputRoot = LocalFileSystem.getInstance()
+                      .refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
                     if (outputRoot != null) {
                       intermediateRoots.add(outputRoot);
                     }
-                    final VirtualFile testsOutputRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
+                    final VirtualFile testsOutputRoot =
+                      LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
                     if (testsOutputRoot != null) {
                       intermediateRoots.add(testsOutputRoot);
                     }
@@ -1180,7 +1331,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   private void startAsyncScan(final int projectId) {
     synchronized (myAsyncScanLock) {
       int counter = myInitInProgress.get(projectId);
-      counter = (counter > 0)? counter + 1 : 1;
+      counter = (counter > 0) ? counter + 1 : 1;
       myInitInProgress.put(projectId, counter);
       myAsyncScanLock.notifyAll();
     }
@@ -1192,7 +1343,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
 
     @Override
     public void projectOpened(final Project project) {
-      /*final MessageBusConnection conn = project.getMessageBus().connect();
+      final MessageBusConnection conn = project.getMessageBus().connect();
       myConnections.put(project, conn);
       final ProjectRef projRef = new ProjectRef(project);
       final int projectId = getProjectId(project);
@@ -1227,7 +1378,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
             return;
           }
           if (LOG.isDebugEnabled()) {
-            LOG.debug("Before roots changed for projectId=" + projectId + "; url="+ project.getPresentableUrl());
+            LOG.debug("Before roots changed for projectId=" + projectId + "; url=" + project.getPresentableUrl());
           }
           try {
             final VirtualFile[] rootsBefore = myRootsBefore;
@@ -1286,18 +1437,18 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
         }
       });
 
-      scanSourcesForCompilableFiles(project);    */
+      scanSourcesForCompilableFiles(project);
     }
 
     @Override
     public void projectClosed(final Project project) {
-      /*final int projectId = getProjectId(project);
+      final int projectId = getProjectId(project);
       terminateAsyncScan(projectId, true);
       myConnections.remove(project).disconnect();
       synchronized (myDataLock) {
         mySourcesToRecompile.remove(projectId);
         myOutputsToDelete.remove(projectId);  // drop cache to save memory
-      }   */
+      }
     }
   }
 
@@ -1394,7 +1545,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
             final OutputFileInfo outputInfo = loadOutputInfo(file);
             if (outputInfo != null) {
               final String srcPath = outputInfo.getSourceFilePath();
-              final VirtualFile srcFile = srcPath != null? LocalFileSystem.getInstance().findFileByPath(srcPath) : null;
+              final VirtualFile srcFile = srcPath != null ? LocalFileSystem.getInstance().findFileByPath(srcPath) : null;
               if (srcFile != null) {
                 final SourceFileInfo srcInfo = loadSourceInfo(srcFile);
                 if (srcInfo != null) {
@@ -1480,7 +1631,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
         @Override
         public void execute(final VirtualFile file) {
           pathsToMark.add(new File(file.getPath()));
-          final SourceFileInfo srcInfo = file.isValid()? loadSourceInfo(file) : null;
+          final SourceFileInfo srcInfo = file.isValid() ? loadSourceInfo(file) : null;
           if (srcInfo != null) {
             for (int projectId : srcInfo.getProjectIds().toArray()) {
               if (isSuspended(projectId)) {
@@ -1629,6 +1780,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   private void loadInfoAndAddSourceForRecompilation(final int projectId, final VirtualFile srcFile) {
     addSourceForRecompilation(projectId, srcFile, loadSourceInfo(srcFile));
   }
+
   private void addSourceForRecompilation(final int projectId, final VirtualFile srcFile, @Nullable final SourceFileInfo srcInfo) {
     final boolean alreadyMarked;
     synchronized (myDataLock) {
@@ -1667,7 +1819,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   }
 
   public boolean isMarkedForCompilation(Project project, VirtualFile file) {
-    if (CompilerWorkspaceConfiguration.getInstance(project).USE_COMPILE_SERVER) {
+    if (CompilerWorkspaceConfiguration.getInstance(project).useOutOfProcessBuild()) {
       final CompilerManager compilerManager = CompilerManager.getInstance(project);
       return !compilerManager.isUpToDate(compilerManager.createFilesCompileScope(new VirtualFile[]{file}));
     }
@@ -1709,7 +1861,7 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
         }
         else {
           final OutputFileInfo outputInfo = loadOutputInfo(outFile);
-          final String classname = outputInfo != null? outputInfo.getClassName() : null;
+          final String classname = outputInfo != null ? outputInfo.getClassName() : null;
           markOutputPathForDeletion(projectId, outputPath, classname, mySrcUrl);
         }
       }

@@ -94,7 +94,7 @@ public class JobLauncherImpl extends JobLauncher {
       throw e;
     }
     catch (Error e) {
-      assert wrapper.isCanceled();
+//      assert wrapper.isCanceled();
       throw e;
     }
     catch (Throwable e) {

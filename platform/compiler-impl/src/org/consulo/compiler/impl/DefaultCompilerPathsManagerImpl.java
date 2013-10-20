@@ -17,6 +17,7 @@ package org.consulo.compiler.impl;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
@@ -41,10 +42,12 @@ public class DefaultCompilerPathsManagerImpl extends DefaultCompilerPathsManager
 
   @NonNls
   private static final String URL = "url";
+  private final Project myProject;
 
   private String myDefaultUrl = DEFAULT_PATH;
 
-  public DefaultCompilerPathsManagerImpl() {
+  public DefaultCompilerPathsManagerImpl(Project p) {
+    myProject = p;
   }
 
   @Nullable
@@ -116,6 +119,9 @@ public class DefaultCompilerPathsManagerImpl extends DefaultCompilerPathsManager
   @Nullable
   @Override
   public Element getState() {
+    if(!myProject.isDefault()) {
+      return null;
+    }
     Element element = new Element("state");
     element.setAttribute(URL, myDefaultUrl);
 
@@ -124,6 +130,9 @@ public class DefaultCompilerPathsManagerImpl extends DefaultCompilerPathsManager
 
   @Override
   public void loadState(Element element) {
+    if(!myProject.isDefault()) {
+      return;
+    }
     String url = element.getAttributeValue(URL);
     if (url != null) {
 

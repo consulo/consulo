@@ -23,7 +23,7 @@ package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
-import com.intellij.compiler.make.DependencyCache;
+import com.intellij.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
@@ -67,7 +67,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
   private final boolean myShouldUpdateProblemsView;
   private CompileScope myCompileScope;
-  private final DependencyCache myDependencyCache;
+  private final CompositeDependencyCache myDependencyCache;
   private final boolean myMake;
   private final boolean myIsRebuild;
 
@@ -89,7 +89,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   public CompileContextImpl(final Project project,
                             final CompilerTask compilerSession,
                             CompileScope compileScope,
-                            DependencyCache dependencyCache,
+                            CompositeDependencyCache dependencyCache,
                             boolean isMake,
                             boolean isRebuild) {
     myProject = project;
@@ -215,7 +215,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
 
   @Override
-  public DependencyCache getDependencyCache() {
+  public CompositeDependencyCache getDependencyCache() {
     return myDependencyCache;
   }
 

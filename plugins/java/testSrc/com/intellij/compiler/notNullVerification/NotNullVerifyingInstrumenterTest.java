@@ -23,6 +23,8 @@ import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.JavaTestFixtureFactory;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.asm4.ClassReader;
 import org.jetbrains.asm4.ClassWriter;
@@ -33,6 +35,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * @author yole
@@ -105,6 +108,19 @@ public class NotNullVerifyingInstrumenterTest extends UsefulTestCase {
     verifyCallThrowsException("ConstructorParam.ConstructorParam.o cant be null", null, method, (Object)null);
   }
 
+  public void testUseParameterNames() throws Exception {
+    Class<?> testClass = prepareTest(true);
+    Constructor constructor = testClass.getConstructor(Object.class, Object.class);
+    verifyCallThrowsException("Argument for @NotNull parameter 'obj2' of UseParameterNames.<init> must not be null", null, constructor, null, null);
+
+    Method staticMethod = testClass.getMethod("staticMethod", Object.class);
+    verifyCallThrowsException("Argument for @NotNull parameter 'y' of UseParameterNames.staticMethod must not be null", null, staticMethod, (Object)null);
+
+    Object instance = constructor.newInstance("", "");
+    Method instanceMethod = testClass.getMethod("instanceMethod", Object.class);
+    verifyCallThrowsException("Argument for @NotNull parameter 'x' of UseParameterNames.instanceMethod must not be null", instance, instanceMethod, (Object)null);
+  }
+
   public void testEnumConstructor() throws Exception {
     Class testClass = prepareTest();
     Object field = testClass.getField("Value");
@@ -147,6 +163,10 @@ public class NotNullVerifyingInstrumenterTest extends UsefulTestCase {
   }
 
   private Class prepareTest() throws IOException {
+    return prepareTest(false);
+  }
+
+  private Class prepareTest(boolean withDebugInfo) throws IOException {
     String base = JavaTestUtil.getJavaTestDataPath() + "/compiler/notNullVerification/";
     final String baseClassName = getTestName(false);
     String path = base + baseClassName;
@@ -154,7 +174,12 @@ public class NotNullVerifyingInstrumenterTest extends UsefulTestCase {
     File classesDir = FileUtil.createTempDirectory(baseClassName, "output");
 
     try {
-      com.sun.tools.javac.Main.compile(new String[]{"-classpath", base + "annotations.jar", "-d", classesDir.getAbsolutePath(), javaPath});
+      List<String> cmdLine = ContainerUtil.newArrayList("-classpath", base + "annotations.jar", "-d", classesDir.getAbsolutePath());
+      if (withDebugInfo) {
+        cmdLine.add("-g");
+      }
+      cmdLine.add(javaPath);
+      com.sun.tools.javac.Main.compile(ArrayUtil.toStringArray(cmdLine));
 
       Class mainClass = null;
       final File[] files = classesDir.listFiles();
@@ -167,9 +192,7 @@ public class NotNullVerifyingInstrumenterTest extends UsefulTestCase {
 
         ClassReader reader = new ClassReader(content, 0, content.length);
         ClassWriter writer = new PsiClassWriter(myFixture.getProject(), myJava6);
-        final NotNullVerifyingInstrumenter instrumenter = new NotNullVerifyingInstrumenter(writer);
-        reader.accept(instrumenter, 0);
-        modified |= instrumenter.isModification();
+        modified |= NotNullVerifyingInstrumenter.processClassFile(reader, writer);
 
         byte[] instrumented = writer.toByteArray();
         final String className = FileUtil.getNameWithoutExtension(fileName);

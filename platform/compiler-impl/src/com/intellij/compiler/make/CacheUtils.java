@@ -16,11 +16,13 @@
 package com.intellij.compiler.make;
 
 import com.intellij.compiler.impl.ExitException;
+import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
@@ -74,61 +76,18 @@ public class CacheUtils {
     final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
     throws CacheCorruptedException, ExitException {
 
-
-    /* context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
+    context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
 
     final DependencyCache dependencyCache = context.getDependencyCache();
-
-    final Pair<int[], Set<VirtualFile>> deps = dependencyCache.findDependentClasses(context, context.getProject(), compiledWithErrors);
-    final Pair<int[], Set<VirtualFile>> filteredDeps = filter != null? filter.fun(deps) : deps;
-
     final Set<VirtualFile> dependentFiles = new HashSet<VirtualFile>();
-    final CacheCorruptedException[] _ex = {null};
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      public void run() {
-        try {
-          CompilerConfiguration compilerConfiguration = CompilerConfiguration.getInstance(context.getProject());
-          SourceFileFinder sourceFileFinder = new SourceFileFinder(context.getProject(), context);
-          final Cache cache = dependencyCache.getCache();
-          for (final int infoQName : filteredDeps.getFirst()) {
-            final String qualifiedName = dependencyCache.resolve(infoQName);
-            final String sourceFileName = cache.getSourceFileName(infoQName);
-            final VirtualFile file = sourceFileFinder.findSourceFile(qualifiedName, sourceFileName, true);
-            if (file != null) {
-              dependentFiles.add(file);
-              if (ApplicationManager.getApplication().isUnitTestMode()) {
-                LOG.assertTrue(file.isValid());
-                CompilerManagerImpl.addRecompiledPath(file.getPath());
-              }
-            }
-            else {
-              LOG.info("No source file for " + dependencyCache.resolve(infoQName) + " found; source file name=" + sourceFileName);
-            }
-          }
-          for (final VirtualFile file : filteredDeps.getSecond()) {
-            if (!compilerConfiguration.isExcludedFromCompilation(file)) {
-              dependentFiles.add(file);
-              if (ApplicationManager.getApplication().isUnitTestMode()) {
-                LOG.assertTrue(file.isValid());
-                CompilerManagerImpl.addRecompiledPath(file.getPath());
-              }
-            }
-          }
-        }
-        catch (CacheCorruptedException e) {
-          _ex[0] = e;
-        }
-      }
-    });
-    if (_ex[0] != null) {
-      throw _ex[0];
-    }
+
+    dependencyCache.findDependentFiles(context, new Ref<CacheCorruptedException>(), filter, dependentFiles, compiledWithErrors);
+
     context.getProgressIndicator().setText(
       dependentFiles.size() > 0? CompilerBundle.message("progress.found.dependent.files", dependentFiles.size()) : ""
     );
 
-    return dependentFiles;  */
-    return Collections.emptyList();
+    return dependentFiles;
   }
 
   @NotNull
