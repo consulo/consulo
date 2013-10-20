@@ -22,7 +22,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
@@ -58,7 +58,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     private boolean myDominated;
 
     public WatchRequestImpl(String rootPath, boolean toWatchRecursively) throws FileNotFoundException {
-      int index = rootPath.indexOf(JarFileSystem.JAR_SEPARATOR);
+      int index = rootPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
       if (index >= 0) rootPath = rootPath.substring(0, index);
 
       File rootFile = new File(FileUtil.toSystemDependentName(rootPath));
