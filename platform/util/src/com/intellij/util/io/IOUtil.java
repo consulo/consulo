@@ -17,13 +17,16 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 
 public class IOUtil {
+  public static final boolean ourByteBuffersUseNativeByteOrder = SystemProperties.getBooleanProperty("idea.bytebuffers.use.native.byte.order", true);
   private static final int STRING_HEADER_SIZE = 1;
   private static final int STRING_LENGTH_THRESHOLD = 255;
 
@@ -120,6 +123,7 @@ public class IOUtil {
       return result;
     }
 
+    if (len == 0) return "";
     storage.readFully(buffer, 0, len);
     return new String(buffer, 0, len, US_ASCII);
   }
@@ -153,5 +157,31 @@ public class IOUtil {
     }
 
     return ok;
+  }
+
+  public static void syncStream(OutputStream stream) throws IOException {
+    stream.flush();
+
+    try {
+      Field outField = FilterOutputStream.class.getDeclaredField("out");
+      outField.setAccessible(true);
+      while (stream instanceof FilterOutputStream) {
+        Object o = outField.get(stream);
+        if (o instanceof OutputStream) {
+          stream = (OutputStream)o;
+        } else {
+          break;
+        }
+      }
+      if (stream instanceof FileOutputStream) {
+        ((FileOutputStream)stream).getFD().sync();
+      }
+    }
+    catch (NoSuchFieldException e) {
+      throw new RuntimeException(e);
+    }
+    catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

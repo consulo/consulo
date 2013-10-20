@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.intellij.util.io;
 import com.intellij.openapi.Forceable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileUtilRt;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -34,7 +35,16 @@ public class ResizeableMappedFile implements Forceable {
 
   public ResizeableMappedFile(final File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize,
                               boolean valuesAreBufferAligned) throws IOException {
-    myStorage = new PagedFileStorage(file, lockContext, pageSize, valuesAreBufferAligned);
+    this(file, initialSize, lockContext, pageSize, valuesAreBufferAligned, false);
+  }
+
+  public ResizeableMappedFile(final File file,
+                              int initialSize,
+                              @Nullable PagedFileStorage.StorageLockContext lockContext,
+                              int pageSize,
+                              boolean valuesAreBufferAligned,
+                              boolean nativeBytesOrder) throws IOException {
+    myStorage = new PagedFileStorage(file, lockContext, pageSize, valuesAreBufferAligned, nativeBytesOrder);
     boolean exists = file.exists();
     if (!exists || file.length() == 0) {
       if (!exists) FileUtil.createParentDirs(file);
@@ -96,14 +106,22 @@ public class ResizeableMappedFile implements Forceable {
   }
 
   private void writeLength(final long len) {
-    File lengthFile = getLengthFile();
+    final File lengthFile = getLengthFile();
     DataOutputStream stream = null;
     try {
-      stream = new DataOutputStream(new FileOutputStream(lengthFile));
-      stream.writeLong(len);
-    }
-    catch (FileNotFoundException e) {
-      LOG.error(e);
+      stream = FileUtilRt.doIOOperation(new FileUtilRt.RepeatableIOOperation<DataOutputStream, FileNotFoundException>() {
+        @Nullable
+        @Override
+        public DataOutputStream execute(boolean lastAttempt) throws FileNotFoundException {
+          try {
+            return new DataOutputStream(new FileOutputStream(lengthFile));
+          } catch (FileNotFoundException ex) {
+            if (!lastAttempt) return null;
+            throw ex;
+          }
+        }
+      });
+      if (stream != null) stream.writeLong(len);
     }
     catch (IOException e) {
       LOG.error(e);
