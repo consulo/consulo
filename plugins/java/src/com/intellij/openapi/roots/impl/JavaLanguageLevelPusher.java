@@ -68,6 +68,9 @@ public class JavaLanguageLevelPusher implements FilePropertyPusher<LanguageLevel
 
   @Override
   public LanguageLevel getImmediateValue(Project project, VirtualFile file) {
+    if(file == null) {
+      return null;
+    }
     final Module moduleForFile = ModuleUtil.findModuleForFile(file, project);
     if(moduleForFile == null) {
       return null;
