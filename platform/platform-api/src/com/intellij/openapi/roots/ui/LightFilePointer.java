@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui;
 
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
@@ -70,8 +70,8 @@ public class LightFilePointer implements VirtualFilePointer {
 
   public static String toPresentableUrl(String url) {
     String path = VirtualFileManager.extractPath(url);
-    if (path.endsWith(JarFileSystem.JAR_SEPARATOR)) {
-      path = path.substring(0, path.length() - JarFileSystem.JAR_SEPARATOR.length());
+    if (path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) {
+      path = path.substring(0, path.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
     }
     return path.replace('/', File.separatorChar);
   }

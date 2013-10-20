@@ -26,11 +26,7 @@ import com.intellij.util.messages.Topic;
 public class ProjectTopics {
   public static final Topic<ModuleRootListener> PROJECT_ROOTS = new Topic<ModuleRootListener>("project root changes", ModuleRootListener.class);
   public static final Topic<ModuleListener> MODULES = new Topic<ModuleListener>("modules added or removed from project", ModuleListener.class);
-  /**
-   * Topic use in special case - for example, CompilerPathsManager, when module added, but not committed, in UI output settings can be changed.
-   * But config is not exists, and it ill throw AssertionError.
-   */
-  public static final Topic<ModuleListener> MODIFIABLE_MODEL_FOR_MODULES = new Topic<ModuleListener>("modifiable model for modules", ModuleListener.class);
+
 
   private ProjectTopics() {
   }

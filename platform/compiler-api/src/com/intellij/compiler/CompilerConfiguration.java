@@ -15,8 +15,10 @@
  */
 package com.intellij.compiler;
 
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.consulo.lombok.annotations.ProjectService;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -24,8 +26,13 @@ import org.jetbrains.annotations.NotNull;
  */
 @ProjectService
 public abstract class CompilerConfiguration {
-  @NotNull
-  public abstract CompilationType getCompilationType();
+  @Nullable
+  public abstract VirtualFile getCompilerOutput();
 
-  public abstract void setCompilationType(@NotNull CompilationType compilationType);
+  @Nullable
+  public abstract String getCompilerOutputUrl();
+
+  public abstract VirtualFilePointer getCompilerOutputPointer();
+
+  public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
 }

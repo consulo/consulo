@@ -40,6 +40,7 @@ public class CompilerWorkspaceConfiguration implements PersistentStateComponent<
     LOG.info("Available processors: " + Runtime.getRuntime().availableProcessors());
   }
 
+  public CompilationType COMPILATION_TYPE = CompilationType.IN_PROGRESS;
   public boolean AUTO_SHOW_ERRORS_IN_EDITOR = true;
   @Deprecated public boolean CLOSE_MESSAGE_VIEW_IF_SUCCESS = true;
   public boolean CLEAR_OUTPUT_DIRECTORY = true;

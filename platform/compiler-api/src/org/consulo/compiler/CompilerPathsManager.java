@@ -15,6 +15,7 @@
  */
 package org.consulo.compiler;
 
+import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolderType;
@@ -27,37 +28,70 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 17:03/26.05.13
  */
-public abstract class CompilerPathsManager {
+@Deprecated
+public class CompilerPathsManager {
   @NotNull
   public static CompilerPathsManager getInstance(@NotNull final Project project) {
-    return project.isDefault() ? project.getComponent(DefaultCompilerPathsManager.class) : project.getComponent(CompilerPathsManager.class);
+    return project.getComponent(CompilerPathsManager.class);
+  }
+
+  private final Project myProject;
+
+  public CompilerPathsManager(Project project) {
+    myProject = project;
   }
 
   @Nullable
-  public abstract VirtualFile getCompilerOutput();
+  public VirtualFile getCompilerOutput() {
+    return CompilerConfiguration.getInstance(myProject).getCompilerOutput();
+  }
 
   @Nullable
-  public abstract String getCompilerOutputUrl();
+  public String getCompilerOutputUrl() {
+    return CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+  }
 
-  public abstract VirtualFilePointer getCompilerOutputPointer();
+  public VirtualFilePointer getCompilerOutputPointer() {
+    return CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
+  }
 
-  public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
+  public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
+    CompilerConfiguration.getInstance(myProject).setCompilerOutputUrl(compilerOutputUrl);
+  }
 
-  public abstract boolean isInheritedCompilerOutput(@NotNull Module module);
+  public boolean isInheritedCompilerOutput(@NotNull Module module) {
+    return ModuleCompilerPathsManager.getInstance(module).isInheritedCompilerOutput();
+  }
 
-  public abstract void setInheritedCompilerOutput(@NotNull Module module, boolean val);
+  public void setInheritedCompilerOutput(@NotNull Module module, boolean val) {
+    ModuleCompilerPathsManager.getInstance(module).setInheritedCompilerOutput(val);
+  }
 
-  public abstract boolean isExcludeOutput(@NotNull Module module);
+  public boolean isExcludeOutput(@NotNull Module module) {
+    return ModuleCompilerPathsManager.getInstance(module).isExcludeOutput();
+  }
 
-  public abstract void setExcludeOutput(@NotNull Module module, boolean val);
+  public void setExcludeOutput(@NotNull Module module, boolean val) {
+    ModuleCompilerPathsManager.getInstance(module).setExcludeOutput(val);
+  }
 
-  public abstract void setCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderType contentFolderType, @Nullable String compilerOutputUrl);
+  public void setCompilerOutputUrl(@NotNull Module module,
+                                   @NotNull ContentFolderType contentFolderType,
+                                   @Nullable String compilerOutputUrl) {
+    ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
+  }
 
-  public abstract String getCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
+  public String getCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
+    return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
+  }
 
   @Nullable
-  public abstract VirtualFile getCompilerOutput(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
+  public VirtualFile getCompilerOutput(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
+    return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
+  }
 
   @NotNull
-  public abstract VirtualFilePointer getCompilerOutputPointer(@NotNull Module module, @NotNull ContentFolderType contentFolderType);
+  public VirtualFilePointer getCompilerOutputPointer(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
+    return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPointer(contentFolderType);
+  }
 }

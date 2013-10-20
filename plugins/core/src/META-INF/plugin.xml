@@ -2,22 +2,22 @@
   <id>com.intellij</id>
   <name>IDEA CORE</name>
 
-  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/ModuleComponents.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)" />
-  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)" />
+  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/ModuleComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
   <extensionPoints>
-    <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider" />
-    <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector" />
+    <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
+    <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="sdkResolveScopeProvider" interface="com.intellij.psi.SdkResolveScopeProvider"/>
 
@@ -102,7 +102,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.elementIcon" beanClass="org.consulo.lang.LanguageElementIcon" />
+    <extensionPoint name="lang.elementIcon" beanClass="org.consulo.lang.LanguageElementIcon"/>
 
     <extensionPoint name="projectOpenProcessor"
                     interface="com.intellij.projectImport.ProjectOpenProcessor"/>
@@ -251,8 +251,8 @@
     <extensionPoint name="vcsChangesViewRefresher" interface="com.intellij.openapi.vcs.changes.ChangesViewRefresher"/>
     <extensionPoint name="vcsAnnotationGutterActionProvider" interface="com.intellij.openapi.vcs.annotate.AnnotationGutterActionProvider"/>
     <extensionPoint name="vcschangedetails" interface="com.intellij.openapi.vcs.changes.VcsChangeDetailsProvider" area="CONSULO_PROJECT"/>
-    <extensionPoint name="vcs.rootFinder" interface="com.intellij.openapi.vcs.VcsRootFinder" />
-    <extensionPoint name="vcs.taskHandler" interface="com.intellij.openapi.vcs.VcsTaskHandler" />
+    <extensionPoint name="vcs.rootFinder" interface="com.intellij.openapi.vcs.VcsRootFinder"/>
+    <extensionPoint name="vcs.taskHandler" interface="com.intellij.openapi.vcs.VcsTaskHandler"/>
     <extensionPoint name="antBuildGen"
                     interface="com.intellij.compiler.ant.ChunkBuildExtension"/>
 
@@ -709,7 +709,7 @@
     <extensionPoint name="configurationProducer"
                     interface="com.intellij.execution.junit.RuntimeConfigurationProducer"/>
 
-    <extensionPoint name="runConfigurationProducer" interface="com.intellij.execution.actions.RunConfigurationProducer" />
+    <extensionPoint name="runConfigurationProducer" interface="com.intellij.execution.actions.RunConfigurationProducer"/>
 
     <extensionPoint name="hectorComponentProvider" interface="com.intellij.openapi.editor.HectorComponentPanelsProvider"
                     area="CONSULO_PROJECT"/>
@@ -1085,10 +1085,10 @@
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.fileTypes.FileNameMatcherFactory"
-                        serviceImplementation="com.intellij.openapi.fileTypes.impl.FileNameMatcherFactoryImpl" />
+                        serviceImplementation="com.intellij.openapi.fileTypes.impl.FileNameMatcherFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
-                        serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl" />
+                        serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
     <projectService serviceInterface="com.intellij.ide.util.PropertiesComponent"
                     serviceImplementation="com.intellij.ide.util.ProjectPropertiesComponentImpl"/>
@@ -1367,7 +1367,7 @@
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="com.intellij.openapi.diff.impl.patch.CharsetEP"/>
 
-    <iconDescriptorUpdater implementation="com.intellij.ide.LockedIconDescriptorUpdater" />
+    <iconDescriptorUpdater implementation="com.intellij.ide.LockedIconDescriptorUpdater"/>
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.LargeFileEditorProvider"/>
     <frameEditorComponentProvider implementation="com.intellij.openapi.wm.ex.DefaultFrameEditorComponentProvider"/>
@@ -1575,11 +1575,11 @@
 
 
     <orderRootTypeEditor key="DOCUMENTATION"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
     <orderRootTypeEditor key="CLASSES"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
     <orderRootTypeEditor key="SOURCES"
-                     implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
     <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
@@ -1618,7 +1618,7 @@
     <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"
                     serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
 
-    <roots.watchedRootsProvider implementation="org.consulo.compiler.impl.CompilerPathsManagerImpl$MyWatchedRootsProvider"/>
+    <roots.watchedRootsProvider implementation="com.intellij.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
@@ -2500,7 +2500,7 @@
     <lang.ast.leafFactory implementation="com.intellij.lang.impl.DefaultASTLeafFactory" order="last"/>
     <lang.ast.compositeFactory implementation="com.intellij.lang.impl.DefaultASTCompositeFactory" order="last"/>
     <lang.psi.elementFactory implementation="com.intellij.lang.impl.DefaultPsiElementFactory" order="last"/>
-    <iconDescriptorUpdater implementation="org.consulo.compiler.CompilerIconDescriptorUpdater" />
+    <iconDescriptorUpdater implementation="org.consulo.compiler.CompilerIconDescriptorUpdater"/>
 
     <directoryIndexExcludePolicy implementation="com.intellij.openapi.roots.impl.ExcludeCompilerOutputPolicy"/>
     <compiler implementation="com.intellij.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
@@ -2515,10 +2515,10 @@
 
     <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
 
-    <directoryProjectGenerator implementation="com.intellij.platform.DefaultDirectoryProjectGenerator" />
+    <directoryProjectGenerator implementation="com.intellij.platform.DefaultDirectoryProjectGenerator"/>
 
-    <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider" />
-    <search.topHitProvider implementation="com.intellij.ide.ui.UISimpleSettingsProvider" />
+    <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider"/>
+    <search.topHitProvider implementation="com.intellij.ide.ui.UISimpleSettingsProvider"/>
 
     <applicationService serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"
                         serviceImplementation="com.intellij.profile.codeInspection.InspectionProfileManagerImpl"/>
@@ -2531,5 +2531,8 @@
 
     <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
     <postStartupActivity implementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.PluginsAdvertiser"/>
+
+    <moduleService serviceInterface="org.consulo.compiler.ModuleCompilerPathsManager"
+                   serviceImplementation="org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
   </extensions>
 </idea-plugin>

@@ -16,9 +16,25 @@
 package com.intellij.compiler;
 
 import com.intellij.openapi.components.*;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.WatchedRootsProvider;
+import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
+import com.intellij.openapi.roots.ui.LightFilePointer;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import com.intellij.util.containers.HashSet;
+import org.consulo.compiler.ModuleCompilerPathsManager;
+import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -31,28 +47,108 @@ import org.jetbrains.annotations.Nullable;
     @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
   }
 )
-public class CompilerConfigurationImpl extends CompilerConfiguration implements PersistentStateComponent<CompilerConfigurationImpl>{
-  private CompilationType myCompilationType = CompilationType.IN_PROGRESS;
+public class CompilerConfigurationImpl extends CompilerConfiguration implements PersistentStateComponent<Element>{
+  public static class MyWatchedRootsProvider implements WatchedRootsProvider {
+    private final Project myProject;
 
-  @NotNull
-  @Override
-  public CompilationType getCompilationType() {
-    return myCompilationType;
+    public MyWatchedRootsProvider(final Project project) {
+      myProject = project;
+    }
+
+    @NotNull
+    @Override
+    public Set<String> getRootsToWatch() {
+      return ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject)).getRootsToWatch();
+    }
   }
 
-  @Override
-  public void setCompilationType(@NotNull CompilationType compilationType) {
-    myCompilationType = compilationType;
+  @NonNls
+  private static final String DEFAULT_OUTPUT_URL = "out";
+  @NonNls
+  private static final String URL = "url";
+
+  private final Project myProject;
+  private VirtualFilePointer myOutputDirPointer;
+  private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
+
+  public CompilerConfigurationImpl(Project project) {
+    myProject = project;
   }
 
   @Nullable
   @Override
-  public CompilerConfigurationImpl getState() {
-    return this;
+  public VirtualFile getCompilerOutput() {
+    if(myOutputDirPointer == null) {
+      VirtualFile baseDir = myProject.getBaseDir();
+      assert baseDir != null;
+      VirtualFile outDir = baseDir.findFileByRelativePath(DEFAULT_OUTPUT_URL);
+
+      return outDir == null ? null : outDir;
+    }
+    return myOutputDirPointer.getFile();
+  }
+
+  @NotNull
+  private Set<String> getRootsToWatch() {
+    final Set<String> rootsToWatch = new HashSet<String>();
+    ModuleManager moduleManager = ModuleManager.getInstance(myProject);
+    for (Module module : moduleManager.getModules()) {
+      ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+
+      for (ContentFolderType folderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+        rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(moduleCompilerPathsManager.getCompilerOutputUrl(folderType)));
+      }
+    }
+
+    rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(getCompilerOutputUrl()));
+    return rootsToWatch;
+  }
+
+  @Nullable
+  @Override
+  public String getCompilerOutputUrl() {
+    if(myOutputDirPointer == null) {
+      VirtualFile baseDir = myProject.getBaseDir();
+      assert baseDir != null;
+      VirtualFile outDir = baseDir.findFileByRelativePath(DEFAULT_OUTPUT_URL);
+
+      return outDir == null ? myProject.getPresentableUrl() + "/" + DEFAULT_OUTPUT_URL : outDir.getUrl();
+    }
+    return myOutputDirPointer.getUrl();
   }
 
   @Override
-  public void loadState(CompilerConfigurationImpl state) {
-    XmlSerializerUtil.copyBean(state, this);
+  public VirtualFilePointer getCompilerOutputPointer() {
+    if(myOutputDirPointer == null) {
+      return new LightFilePointer(getCompilerOutputUrl());
+    }
+    return myOutputDirPointer;
+  }
+
+  @Override
+  public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
+    myOutputDirPointer = VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
+
+    myCompilerOutputWatchRequest = LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, compilerOutputUrl, true);
+  }
+
+  @Nullable
+  @Override
+  public Element getState() {
+    if(myOutputDirPointer == null) {
+      return null;
+    }
+    Element element = new Element("state");
+    element.setAttribute(URL, myOutputDirPointer.getUrl());
+    return element;
+  }
+
+  @Override
+  public void loadState(Element element) {
+    String url = element.getAttributeValue(URL);
+    if(url == null) {
+      return;
+    }
+    setCompilerOutputUrl(url);
   }
 }

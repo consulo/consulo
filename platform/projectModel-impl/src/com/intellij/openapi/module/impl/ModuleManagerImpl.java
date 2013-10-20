@@ -305,14 +305,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     myMessageBus.syncPublisher(ProjectTopics.MODULES).moduleAdded(myProject, module);
   }
 
-  protected void fireModuleAddedInModel(Module module) {
-    myMessageBus.syncPublisher(ProjectTopics.MODIFIABLE_MODEL_FOR_MODULES).moduleAdded(myProject, module);
-  }
-
-  protected void fireModuleRemovedInModel(Module module) {
-    myMessageBus.syncPublisher(ProjectTopics.MODIFIABLE_MODEL_FOR_MODULES).moduleRemoved(myProject, module);
-  }
-
   protected void fireModuleRemoved(Module module) {
     myMessageBus.syncPublisher(ProjectTopics.MODULES).moduleRemoved(myProject, module);
   }
@@ -723,8 +715,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
       module.loadModuleComponents();
       module.init();
-
-      fireModuleAddedInModel(module);
     }
 
     @Override
@@ -738,8 +728,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       if (myModuleGroupPath != null){
         myModuleGroupPath.remove(module);
       }
-
-      fireModuleAddedInModel(module);
     }
 
     @Override
@@ -810,8 +798,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       final Collection<Module> thisModules = myPathToModule.values();
       for (Module thisModule : thisModules) {
         if (!list.contains(thisModule)) {
-          fireModuleRemovedInModel(thisModule);
-
           Disposer.dispose(thisModule);
         }
       }

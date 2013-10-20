@@ -18,13 +18,13 @@ package com.intellij.openapi.compiler;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.annotations.Immutable;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,21 +34,12 @@ import java.util.Collection;
  * A "root" class in compiler subsystem - allows one to register a custom compiler or a compilation task, register/unregister a compilation listener
  * and invoke various types of compilations (make, compile, rebuild)
  */
+@ProjectService
 public abstract class CompilerManager {
   public static final boolean MAKE_ENABLED = true;
   public static final Key<Key> CONTENT_ID_KEY = Key.create("COMPILATION_CONTENT_ID_CUSTOM_KEY");
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.logOnlyGroup("Compiler");
 
-  /**
-   * Returns the compiler manager instance for the specified project.
-   *
-   * @param project the project for which the manager is requested.
-   * @return the manager instance.
-   */
-  public static CompilerManager getInstance(Project project) {
-    return ServiceManager.getService(project, CompilerManager.class);
-  }
-  
   public abstract boolean isCompilationActive();
   
   @NotNull

@@ -57,7 +57,7 @@ public class CompilerConfigurable implements Configurable {
 
   @Override
   public boolean isModified() {
-    boolean isModified = !Comparing.equal(myCompilerOptions.getSelectedItem(), myCompilerConfiguration.getCompilationType());
+    boolean isModified = !Comparing.equal(myCompilerOptions.getSelectedItem(), myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
     isModified |= ComparingUtils.isModified(myCbClearOutputDirectory, myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
     isModified |= ComparingUtils.isModified(myCbAutoShowFirstError, myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
     return isModified;
@@ -65,14 +65,14 @@ public class CompilerConfigurable implements Configurable {
 
   @Override
   public void apply() throws ConfigurationException {
-    myCompilerConfiguration.setCompilationType((CompilationType)myCompilerOptions.getSelectedItem());
+    myCompilerWorkspaceConfiguration.COMPILATION_TYPE = (CompilationType)myCompilerOptions.getSelectedItem();
     myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = myCbAutoShowFirstError.isSelected();
     myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = myCbClearOutputDirectory.isSelected();
   }
 
   @Override
   public void reset() {
-    myCompilerOptions.setSelectedItem(myCompilerConfiguration.getCompilationType());
+    myCompilerOptions.setSelectedItem(myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
     myCbAutoShowFirstError.setSelected(myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
     myCbClearOutputDirectory.setSelected(myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
   }

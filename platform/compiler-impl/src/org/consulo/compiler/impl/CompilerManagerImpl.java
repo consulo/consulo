@@ -31,6 +31,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,11 +45,13 @@ import java.util.concurrent.Semaphore;
  * @author VISTALL
  * @since 10:44/21.05.13
  */
+@Logger
 @State(
   name = "CompilerManager",
   storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
     @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
+
   private class ListenerNotificator implements CompileStatusNotification {
     private final @Nullable CompileStatusNotification myDelegate;
 
@@ -72,8 +75,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerInputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
   private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
 
-  private final CompilationStatusListener myEventPublisher;
-  private final Set<LocalFileSystem.WatchRequest> myWatchRoots;
+  private CompilationStatusListener myEventPublisher;
+  private Set<LocalFileSystem.WatchRequest> myWatchRoots;
   private final List<CompileTask> myBeforeTasks = new ArrayList<CompileTask>();
   private final List<CompileTask> myAfterTasks = new ArrayList<CompileTask>();
   private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
@@ -82,15 +85,14 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
     myProject = project;
+
+    if(myProject.isDefault()) {
+      return;
+    }
     myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
     for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {
-      try {
-        compiler.init(this);
-      }
-      catch (Error e) {
-        System.out.println(compiler.getClass().getName());
-      }
+      compiler.init(this);
 
       myCompilers.add(compiler);
 
