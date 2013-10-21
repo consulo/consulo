@@ -34,8 +34,8 @@ import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.ModuleFixture;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
 import com.intellij.util.ArrayUtil;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtensionImpl;
 import org.consulo.sdk.SdkPointerManager;
 import org.consulo.util.pointers.NamedPointer;
 import org.consulo.util.pointers.NamedPointerImpl;
@@ -170,7 +170,7 @@ abstract class JavaModuleFixtureBuilderImpl<T extends ModuleFixture> extends Mod
       jdk = IdeaTestUtil.getMockJdk17();
     }
 
-    JavaMutableModuleExtension moduleExtension = (JavaMutableModuleExtension)model.getExtensionWithoutCheck(JavaModuleExtension.class);
+    JavaMutableModuleExtensionImpl moduleExtension = (JavaMutableModuleExtensionImpl)model.getExtensionWithoutCheck(JavaModuleExtensionImpl.class);
     assert moduleExtension != null;
     moduleExtension.setEnabled(true);
     /*if (jdk != null) {

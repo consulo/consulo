@@ -11,8 +11,8 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.PsiTestCase;
 import com.intellij.testFramework.PsiTestUtil;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtensionImpl;
 import org.consulo.lombok.annotations.Logger;
 
 import java.io.File;
@@ -122,7 +122,8 @@ public class SCR14423Test extends PsiTestCase {
 
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(myModule);
         final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
-        JavaMutableModuleExtension javaModuleExtension = (JavaMutableModuleExtension)modifiableModel.getExtension(JavaModuleExtension.class);
+        JavaMutableModuleExtensionImpl
+          javaModuleExtension = (JavaMutableModuleExtensionImpl)modifiableModel.getExtension(JavaModuleExtensionImpl.class);
         assert javaModuleExtension != null;
         javaModuleExtension.getInheritableSdk().set((String) null, null);
         modifiableModel.commit();

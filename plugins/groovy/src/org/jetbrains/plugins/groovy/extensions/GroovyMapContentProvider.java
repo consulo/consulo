@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpression;
 
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author Sergey Evdokimov

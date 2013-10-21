@@ -42,7 +42,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import gnu.trove.THashSet;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -162,7 +162,7 @@ public class JavaPsiImplementationHelperImpl extends JavaPsiImplementationHelper
       if(moduleForFile == null) {
         return null;
       }
-      final JavaModuleExtension extension = ModuleUtil.getExtension(moduleForFile, JavaModuleExtension.class);
+      final JavaModuleExtensionImpl extension = ModuleUtil.getExtension(moduleForFile, JavaModuleExtensionImpl.class);
       return extension == null ? null : extension.getLanguageLevel();
     }
     return null;

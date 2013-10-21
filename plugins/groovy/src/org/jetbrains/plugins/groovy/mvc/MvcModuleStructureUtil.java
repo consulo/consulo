@@ -46,8 +46,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtensionImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -487,8 +487,8 @@ public class MvcModuleStructureUtil {
     final ModuleRootManager auxRootManager = ModuleRootManager.getInstance(pluginsModule);
     final ModuleRootManager appRootManager = ModuleRootManager.getInstance(appModule);
 
-    final boolean isSdkEquals = Comparing.equal(ModuleUtilCore.getExtension(pluginsModule, JavaModuleExtension.class), ModuleUtilCore.getExtension(
-      appModule, JavaModuleExtension.class));
+    final boolean isSdkEquals = Comparing.equal(ModuleUtilCore.getExtension(pluginsModule, JavaModuleExtensionImpl.class), ModuleUtilCore.getExtension(
+      appModule, JavaModuleExtensionImpl.class));
 
     List<Library> appLibraries = new ArrayList<Library>();
     Library appUserLibrary = extractNonModuleLibraries(appLibraries, appRootManager, false, framework.getUserLibraryName());
@@ -619,8 +619,8 @@ public class MvcModuleStructureUtil {
   }
 
   public static void copySdk(ModuleRootModel from, ModifiableRootModel to) {
-    final JavaModuleExtension fromExtension = from.getExtension(JavaModuleExtension.class);
-    final JavaMutableModuleExtension toExtension = (JavaMutableModuleExtension)to.getExtension(JavaModuleExtension.class);
+    final JavaModuleExtensionImpl fromExtension = from.getExtension(JavaModuleExtensionImpl.class);
+    final JavaMutableModuleExtensionImpl toExtension = (JavaMutableModuleExtensionImpl)to.getExtension(JavaModuleExtensionImpl.class);
 
     assert fromExtension != null;
     assert toExtension != null;

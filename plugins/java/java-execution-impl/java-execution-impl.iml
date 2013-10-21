@@ -7,10 +7,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="java" />
     <orderEntry type="module" module-name="testRunner" />
     <orderEntry type="module" module-name="java-debugger-impl" />
     <orderEntry type="module" module-name="java-rt" />
+    <orderEntry type="module" module-name="java-execution-api" exported="" />
   </component>
 </module>
 

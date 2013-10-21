@@ -21,7 +21,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
 import com.intellij.openapi.projectRoots.Sdk;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.intellij.lang.regexp.DefaultRegExpPropertiesProvider;
 import org.intellij.lang.regexp.RegExpLanguageHost;
 import org.intellij.lang.regexp.psi.RegExpGroup;
@@ -64,7 +64,7 @@ public class JavaRegExpHost implements RegExpLanguageHost {
     if (group.isRubyNamedGroup()) {
       final Module module = ModuleUtilCore.findModuleForPsiElement(group);
       if (module != null) {
-        final Sdk sdk = ModuleUtil.getSdk(module, JavaModuleExtension.class);
+        final Sdk sdk = ModuleUtil.getSdk(module, JavaModuleExtensionImpl.class);
         if (sdk != null) {
           final JavaSdkVersion version = JavaSdk.getInstance().getVersion(sdk);
           return version != null && version.isAtLeast(JavaSdkVersion.JDK_1_7);

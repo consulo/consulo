@@ -46,7 +46,6 @@
     <orderEntry type="module" module-name="java-execution-api" />
     <orderEntry type="module" module-name="java-indexing-api" />
     <orderEntry type="module" module-name="java-indexing-impl" />
-    <orderEntry type="module" module-name="java-platform" />
     <orderEntry type="module" module-name="java-psi-api" />
     <orderEntry type="module" module-name="java-psi-impl" />
     <orderEntry type="module" module-name="properties" />

@@ -19,7 +19,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +61,7 @@ public class PsiPackageQualifiedNameProvider implements QualifiedNameProvider {
   @Nullable
   @Override
   public PsiElement qualifiedNameToElement(String fqn, Project project) {
-    return PsiPackageManager.getInstance(project).findPackage(fqn, ModuleExtension.class);
+    return PsiPackageManager.getInstance(project).findAnyPackage(fqn);
   }
 
   @Override

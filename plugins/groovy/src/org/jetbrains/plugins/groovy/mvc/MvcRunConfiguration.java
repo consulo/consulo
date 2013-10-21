@@ -34,7 +34,7 @@ import com.intellij.openapi.util.JDOMExternalizer;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.HashMap;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -213,7 +213,7 @@ public abstract class MvcRunConfiguration extends ModuleBasedConfiguration<RunCo
       throw new ExecutionException(getNoSdkMessage());
     }
 
-    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     if (sdk == null || !(sdk.getSdkType() instanceof JavaSdkType)) {
       throw CantRunException.noJdkForModule(module);
     }

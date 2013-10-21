@@ -37,7 +37,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.IgnoredBeanFactory;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -46,7 +45,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import gnu.trove.TIntArrayList;
 import icons.JetgroovyIcons;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -234,7 +233,7 @@ public class GriffonFramework extends MvcFramework {
                                              @NotNull MvcCommand command) throws ExecutionException {
     JavaParameters params = new JavaParameters();
 
-    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     if(sdk == null) {
       return params;
     }

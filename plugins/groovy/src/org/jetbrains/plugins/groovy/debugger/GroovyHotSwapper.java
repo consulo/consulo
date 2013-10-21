@@ -17,7 +17,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.PathUtil;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileTypeLoader;
 import org.jetbrains.plugins.groovy.debugger.filters.GroovyDebuggerSettings;
@@ -101,7 +101,7 @@ public class GroovyHotSwapper extends JavaProgramPatcher {
       Module[] modulesInConfiguration = ((ModuleRunProfile)configuration).getModules();
       final Module module = modulesInConfiguration.length == 0 ? null : modulesInConfiguration[0];
       if (module != null) {
-        final JavaModuleExtension extension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
+        final JavaModuleExtensionImpl extension = ModuleUtilCore.getExtension(module, JavaModuleExtensionImpl.class);
         final LanguageLevel level = extension == null ? null : extension.getLanguageLevel();
         if (level != null && !level.isAtLeast(LanguageLevel.JDK_1_5)) {
           return;

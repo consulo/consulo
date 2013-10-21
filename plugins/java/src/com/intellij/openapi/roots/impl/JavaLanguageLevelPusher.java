@@ -28,7 +28,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.messages.MessageBus;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
@@ -82,7 +82,7 @@ public class JavaLanguageLevelPusher implements FilePropertyPusher<LanguageLevel
   public LanguageLevel getImmediateValue(Module module) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
-    final JavaModuleExtension extension = moduleRootManager.getExtension(JavaModuleExtension.class);
+    final JavaModuleExtensionImpl extension = moduleRootManager.getExtension(JavaModuleExtensionImpl.class);
     return extension == null ? null : extension.getLanguageLevel();
   }
 

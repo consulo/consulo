@@ -42,7 +42,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.util.Processor;
 import org.consulo.compiler.CompilerPathsManager;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.asm4.ClassReader;
@@ -111,7 +111,7 @@ public abstract class AnnotationBasedInstrumentingCompiler implements ClassInstr
     final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     final Module module = index.getModuleForFile(sourceFile);
     if (module != null) {
-      final Sdk jdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+      final Sdk jdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
       final boolean jdk6 = jdk != null && JavaSdk.getInstance().isOfVersionOrHigher(jdk, JavaSdkVersion.JDK_1_6);
 
       final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(project);

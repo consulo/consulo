@@ -32,8 +32,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +85,7 @@ public class IncreaseLanguageLevelFix implements IntentionAction {
   }
 
   public static boolean isLanguageLevelAcceptable(Module module, final LanguageLevel level) {
-    return isJdkSupportsLevel(ModuleUtilCore.getSdk(module, JavaModuleExtension.class), level);
+    return isJdkSupportsLevel(ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class), level);
   }
 
   @Override
@@ -97,13 +97,13 @@ public class IncreaseLanguageLevelFix implements IntentionAction {
       return;
     }
 
-    JavaModuleExtension extension = ModuleUtilCore.getExtension(module, JavaModuleExtension.class);
+    JavaModuleExtensionImpl extension = ModuleUtilCore.getExtension(module, JavaModuleExtensionImpl.class);
     if (extension == null) {
       return;
     }
 
     final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
-    JavaMutableModuleExtension mutableModuleExtension = rootModel.getExtension(JavaMutableModuleExtension.class);
+    JavaMutableModuleExtensionImpl mutableModuleExtension = rootModel.getExtension(JavaMutableModuleExtensionImpl.class);
 
     assert mutableModuleExtension != null;
 

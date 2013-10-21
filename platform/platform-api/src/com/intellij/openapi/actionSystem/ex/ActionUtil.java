@@ -160,12 +160,15 @@ public class ActionUtil {
         }
       }
 
-      VirtualFile[] virtualFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+      VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
       if(virtualFiles != null) {
         for (VirtualFile virtualFile : virtualFiles) {
           Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
           if(moduleForFile != null) {
-            return checkModuleForModuleExtensions(module, moduleExtensionIds);
+            boolean b = checkModuleForModuleExtensions(moduleForFile, moduleExtensionIds);
+            if(b) {
+              return true;
+            }
           }
         }
       }

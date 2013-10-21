@@ -41,7 +41,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashSet;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.module.extension.JavaModuleExtension;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

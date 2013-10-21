@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.ClassUtil;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.asm4.ClassWriter;
 

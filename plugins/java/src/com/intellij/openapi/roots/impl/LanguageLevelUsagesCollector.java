@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -45,7 +45,7 @@ public class LanguageLevelUsagesCollector extends AbstractApplicationUsagesColle
 
     final Set<String> languageLevels = new HashSet<String>();
     for (Module module : ModuleManager.getInstance(project).getModules()) {
-      JavaModuleExtension extension = ModuleRootManager.getInstance(module).getExtension(JavaModuleExtension.class);
+      JavaModuleExtensionImpl extension = ModuleRootManager.getInstance(module).getExtension(JavaModuleExtensionImpl.class);
       if(extension != null) {
         languageLevels.add(extension.getLanguageLevel().toString());
       }

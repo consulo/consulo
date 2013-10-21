@@ -23,7 +23,7 @@ import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.text.StringUtil;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,6 +58,6 @@ public class JavaTestUtil {
 
   @Nullable
   public static Sdk getSdk(@NotNull Module module) {
-    return ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    return ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
   }
 }

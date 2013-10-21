@@ -23,7 +23,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.rt.compiler.JavacRunner;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.module.extension.JavaModuleExtension;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

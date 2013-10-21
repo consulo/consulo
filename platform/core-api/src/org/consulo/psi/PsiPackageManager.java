@@ -43,6 +43,9 @@ public abstract class PsiPackageManager {
   @Nullable
   public abstract PsiPackage findAnyPackage(@NotNull PsiDirectory directory);
 
+  @Nullable
+  public abstract PsiPackage findAnyPackage(@NotNull String packageName);
+
   @NotNull
   public abstract Project getProject();
 }

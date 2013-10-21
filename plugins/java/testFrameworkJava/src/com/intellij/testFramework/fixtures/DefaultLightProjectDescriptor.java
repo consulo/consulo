@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtensionImpl;
 
 /**
 * @author peter
@@ -35,6 +35,6 @@ public class DefaultLightProjectDescriptor implements LightProjectDescriptor {
 
   @Override
   public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
-    model.getExtensionWithoutCheck(JavaMutableModuleExtension.class).getInheritableLanguageLevel().set(null, LanguageLevel.HIGHEST);
+    model.getExtensionWithoutCheck(JavaMutableModuleExtensionImpl.class).getInheritableLanguageLevel().set(null, LanguageLevel.HIGHEST);
   }
 }

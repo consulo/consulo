@@ -38,7 +38,7 @@ public class DefaultPsiPackageResolver implements PsiPackageResolver {
 
     PsiManager psiManager = PsiManager.getInstance(packageManager.getProject());
     for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
-      if (p.getSupportedModuleExtensionClass() == extensionClass) {
+      if (p.getSupportedModuleExtensionClass().isAssignableFrom(extensionClass)) {
         return p.createPackage(psiManager, packageManager, extensionClass, qualifiedName);
       }
     }

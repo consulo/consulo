@@ -7,7 +7,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="java" />
+    <orderEntry type="module" module-name="java-psi-api" exported="" />
+    <orderEntry type="module" module-name="lang-impl" />
+    <orderEntry type="module" module-name="external-system-impl" />
+    <orderEntry type="library" name="asm4" level="project" />
+    <orderEntry type="module" module-name="java-indexing-impl" />
+    <orderEntry type="module" module-name="java-execution-api" />
   </component>
 </module>
 

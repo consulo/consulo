@@ -37,7 +37,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import gnu.trove.THashSet;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -70,7 +70,7 @@ public class InconsistentLanguageLevelInspection extends GlobalInspectionTool {
 
 
     for (Module module : modules) {
-      LanguageLevel languageLevel = ModuleUtilCore.getExtension(module, JavaModuleExtension.class).getLanguageLevel();
+      LanguageLevel languageLevel = ModuleUtilCore.getExtension(module, JavaModuleExtensionImpl.class).getLanguageLevel();
 
       LOGGER.assertTrue(languageLevel != null);
       final RefModule refModule = globalContext.getRefManager().getRefModule(module);
@@ -78,7 +78,7 @@ public class InconsistentLanguageLevelInspection extends GlobalInspectionTool {
         if (!(entry instanceof ModuleOrderEntry)) continue;
         final Module dependantModule = ((ModuleOrderEntry)entry).getModule();
         if (dependantModule == null) continue;
-        LanguageLevel dependantLanguageLevel = ModuleUtilCore.getExtension(dependantModule, JavaModuleExtension.class).getLanguageLevel();
+        LanguageLevel dependantLanguageLevel = ModuleUtilCore.getExtension(dependantModule, JavaModuleExtensionImpl.class).getLanguageLevel();
         LOGGER.assertTrue(dependantLanguageLevel != null);
         if (languageLevel.compareTo(dependantLanguageLevel) < 0) {
           final CommonProblemDescriptor problemDescriptor = manager.createProblemDescriptor(

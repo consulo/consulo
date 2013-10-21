@@ -37,7 +37,7 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import icons.JetgroovyIcons;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.GroovyBundle;
 import org.jetbrains.plugins.groovy.GroovyFileType;
@@ -99,7 +99,7 @@ public class GroovyCompiler extends GroovyCompilerBase {
 
     Set<Module> nojdkModules = new HashSet<Module>();
     for (Module module : modules) {
-      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
       if (sdk == null || !(sdk.getSdkType() instanceof JavaSdkType)) {
         nojdkModules.add(module);
         continue;

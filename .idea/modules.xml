@@ -52,27 +52,26 @@
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java.iml" filepath="$PROJECT_DIR$/plugins/java/java.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-api/java-analysis-api.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-analysis-impl/java-analysis-impl.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-compiler-artifact-impl/java-compiler-artifact-impl.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-compiler-artifact-impl/java-compiler-artifact-impl.iml" group="plugins/java-platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-compiler-artifact-impl/java-compiler-artifact-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-compiler-artifact-impl/java-compiler-artifact-impl.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-compiler-impl/java-compiler-impl.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java/debugger-api/java-debugger-api.iml" filepath="$PROJECT_DIR$/plugins/java/debugger-api/java-debugger-api.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" filepath="$PROJECT_DIR$/plugins/java/debugger-impl/java-debugger-impl.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-execution-api/java-execution-api.iml" group="plugins/java-platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-debugger-api/java-debugger-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-debugger-api/java-debugger-api.iml" group="plugins/java" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-debugger-impl/java-debugger-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-debugger-impl/java-debugger-impl.iml" group="plugins/java" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-execution-api/java-execution-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-execution-api/java-execution-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-execution-impl/java-execution-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-execution-impl/java-execution-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-generate-tostring/java-generate-tostring.iml" filepath="$PROJECT_DIR$/plugins/java/java-generate-tostring/java-generate-tostring.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" filepath="$PROJECT_DIR$/plugins/java-i18n/java-i18n.iml" group="plugins" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-indexing-api/java-indexing-api.iml" group="plugins/java-platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-indexing-api/java-indexing-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-indexing-api/java-indexing-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-indexing-impl/java-indexing-impl.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-inspection-gadgets/java-inspection-gadgets.iml" filepath="$PROJECT_DIR$/plugins/java/java-inspection-gadgets/java-inspection-gadgets.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-intellilang/java-intellilang.iml" filepath="$PROJECT_DIR$/plugins/java/java-intellilang/java-intellilang.iml" group="plugins/java" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-intention-power-pack/java-intention-power-pack.iml" filepath="$PROJECT_DIR$/plugins/java/java-intention-power-pack/java-intention-power-pack.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-platform.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-platform.iml" group="plugins/java-platform" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-psi-api/java-psi-api.iml" group="plugins/java-platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-psi-api/java-psi-api.iml" filepath="$PROJECT_DIR$/plugins/java/java-psi-api/java-psi-api.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/plugins/java/java-psi-impl/java-psi-impl.iml" filepath="$PROJECT_DIR$/plugins/java/java-psi-impl/java-psi-impl.iml" group="plugins/java" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/java-rt/java-rt.iml" filepath="$PROJECT_DIR$/plugins/java-platform/java-rt/java-rt.iml" group="plugins/java-platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/java-rt/java-rt.iml" filepath="$PROJECT_DIR$/plugins/java/java-rt/java-rt.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/tools/javac2/javac2.iml" filepath="$PROJECT_DIR$/platform/tools/javac2/javac2.iml" group="platform/tools" />
       <module fileurl="file://$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" filepath="$PROJECT_DIR$/plugins/cvs/javacvs-src/javacvs-src.iml" group="plugins/VCS/cvs" />
       <module fileurl="file://$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" filepath="$PROJECT_DIR$/plugins/tasks/jira-connector/jira-connector.iml" group="plugins/tasks" />
-      <module fileurl="file://$PROJECT_DIR$/plugins/java-platform/jvm-bytecode-viewer/jvm-bytecode-viewer.iml" filepath="$PROJECT_DIR$/plugins/java-platform/jvm-bytecode-viewer/jvm-bytecode-viewer.iml" group="plugins/java-platform" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/java/jvm-bytecode-viewer/jvm-bytecode-viewer.iml" filepath="$PROJECT_DIR$/plugins/java/jvm-bytecode-viewer/jvm-bytecode-viewer.iml" group="plugins/java-platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/lang-api/lang-api.iml" filepath="$PROJECT_DIR$/platform/lang-api/lang-api.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/lang-impl/lang-impl.iml" filepath="$PROJECT_DIR$/platform/lang-impl/lang-impl.iml" group="platform" />
       <module fileurl="file://$PROJECT_DIR$/platform/lvcs-api/lvcs-api.iml" filepath="$PROJECT_DIR$/platform/lvcs-api/lvcs-api.iml" group="platform" />

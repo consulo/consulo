@@ -33,7 +33,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
@@ -84,7 +84,7 @@ public class SetupSDKNotificationProvider extends EditorNotifications.Provider<E
     if(moduleForPsiElement == null) {
       return null;
     }
-    final JavaModuleExtension extension = ModuleUtilCore.getExtension(moduleForPsiElement, JavaModuleExtension.class);
+    final JavaModuleExtensionImpl extension = ModuleUtilCore.getExtension(moduleForPsiElement, JavaModuleExtensionImpl.class);
     if(extension == null) {
       return null;
     }

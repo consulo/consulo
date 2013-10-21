@@ -372,8 +372,13 @@ public class JavaSdkImpl extends JavaSdk {
   }
 
   public static void attachJdkAnnotations(@NotNull SdkModificator modificator) {
-    String path = FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/plugins/java-platform/lib/jdk-annotations.jar";
+    String path = FileUtil.toSystemIndependentName(PathManager.getPreInstalledPluginsPath()) + "/java/lib/jdk-annotations.jar";
     VirtualFile jarFile = JarArchiveFileType.INSTANCE.getFileSystem().findLocalVirtualFileByPath(path);
+
+    if(jarFile == null) {
+      path = FileUtil.toSystemIndependentName(PathManager.getHomePath()) + "/java/lib/jdk-annotations.jar";
+      jarFile = JarArchiveFileType.INSTANCE.getFileSystem().findLocalVirtualFileByPath(path);
+    }
 
     if (jarFile == null) {
       LOG.error("jdk annotations not found in: "+ path);

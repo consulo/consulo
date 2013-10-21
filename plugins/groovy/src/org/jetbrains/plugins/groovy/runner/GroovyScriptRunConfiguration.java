@@ -51,7 +51,7 @@ import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -281,7 +281,7 @@ public class GroovyScriptRunConfiguration extends ModuleBasedConfiguration<RunCo
     params.setCharset(null);
 
     if (module != null) {
-      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
       if (sdk != null && sdk.getSdkType() instanceof JavaSdkType) {
         params.setJdk(sdk);
       }

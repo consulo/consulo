@@ -40,7 +40,7 @@ import com.intellij.util.xml.DomUtil;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.XmlNSDescriptor;
 import gnu.trove.THashSet;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.dom.MavenDomProjectProcessorUtils;
@@ -241,7 +241,7 @@ public class MavenPropertyPsiReference extends MavenPsiReference {
     Module module = myProjectsManager.findModule(mavenProject);
     if (module == null) return null;
 
-    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     if (sdk == null) return null;
 
     VirtualFile homeDirectory = sdk.getHomeDirectory();

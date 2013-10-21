@@ -35,7 +35,7 @@ import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -287,7 +287,7 @@ public class JavaSuppressionUtil {
   public static boolean canHave15Suppressions(@NotNull PsiElement file) {
     final Module module = ModuleUtilCore.findModuleForPsiElement(file);
     if (module == null) return false;
-    final Sdk jdk = ModuleUtil.getSdk(module, JavaModuleExtension.class);
+    final Sdk jdk = ModuleUtil.getSdk(module, JavaModuleExtensionImpl.class);
     if (jdk == null) return false;
     JavaSdkVersion version = getVersion(jdk);
     if (version == null) return false;

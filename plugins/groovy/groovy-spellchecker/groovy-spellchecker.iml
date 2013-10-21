@@ -10,7 +10,7 @@
     <orderEntry type="module" module-name="groovy" />
     <orderEntry type="module" module-name="spellchecker" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="module" module-name="java-platform" />
+    <orderEntry type="module" module-name="java-psi-api" />
   </component>
 </module>
 

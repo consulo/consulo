@@ -32,7 +32,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +58,7 @@ public class CreateClassAction extends JavaCreateTemplateInPackageAction<PsiClas
 
     Module module = ModuleUtilCore.findModuleForPsiElement(directory);
     assert module != null;
-    JavaModuleExtension moduleExtension = ModuleRootManager.getInstance(module).getExtension(JavaModuleExtension.class);
+    JavaModuleExtensionImpl moduleExtension = ModuleRootManager.getInstance(module).getExtension(JavaModuleExtensionImpl.class);
 
     assert moduleExtension != null;
     if (moduleExtension.getLanguageLevel().isAtLeast(LanguageLevel.JDK_1_5)) {
@@ -97,7 +97,7 @@ public class CreateClassAction extends JavaCreateTemplateInPackageAction<PsiClas
   @Nullable
   @Override
   protected Class<? extends ModuleExtension> getModuleExtensionClass() {
-    return JavaModuleExtension.class;
+    return JavaModuleExtensionImpl.class;
   }
 
   @Override

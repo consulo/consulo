@@ -33,7 +33,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.Stack;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtensionImpl;
 import org.consulo.maven.module.extension.MavenMutableModuleExtension;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.importing.configurers.MavenModuleConfigurer;
@@ -449,7 +449,7 @@ public class MavenProjectImporter {
 
           final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
           //noinspection ConstantConditions
-          modifiableModel.getExtensionWithoutCheck(JavaMutableModuleExtension.class).setEnabled(true);
+          modifiableModel.getExtensionWithoutCheck(JavaMutableModuleExtensionImpl.class).setEnabled(true);
           //noinspection ConstantConditions
           modifiableModel.getExtensionWithoutCheck(MavenMutableModuleExtension.class).setEnabled(mavenized);
           modifiableModel.commit();

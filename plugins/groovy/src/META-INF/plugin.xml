@@ -222,7 +222,7 @@
 
   </extensions>
 
-  <extensions defaultExtensionNs="org.consulo.java.platform">
+  <extensions defaultExtensionNs="org.consulo.java">
     <directClassInheritorsSearch implementation="org.jetbrains.plugins.groovy.lang.psi.impl.GroovyDirectInheritorsSearcher"/>
 
     <methodReferencesSearch implementation="org.jetbrains.plugins.groovy.findUsages.AccessorMethodReferencesSearcher"/>

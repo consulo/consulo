@@ -27,7 +27,7 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
 import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.containers.Convertor;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +45,7 @@ public class PathUtilEx {
   private static final Function<Module, Sdk> MODULE_JDK = new Function<Module, Sdk>() {
     @Nullable
     public Sdk fun(Module module) {
-      return ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+      return ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     }
   };
   private static final Convertor<Sdk, String> SDK_VERSION = new Convertor<Sdk, String>() {

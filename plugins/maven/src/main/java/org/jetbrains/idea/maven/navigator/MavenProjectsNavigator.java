@@ -42,7 +42,7 @@ import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import icons.MavenIcons;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.idea.maven.execution.MavenRunner;
@@ -167,7 +167,7 @@ public class MavenProjectsNavigator extends MavenSimpleProjectComponent implemen
     connect.subscribe(ProjectTopics.MODULES, new ModuleAdapter() {
       @Override
       public void moduleAdded(Project project, Module module) {
-        if (ModuleUtilCore.getExtension(module, JavaModuleExtension.class) != null) {
+        if (ModuleUtilCore.getExtension(module, JavaModuleExtensionImpl.class) != null) {
           MavenUtil.runWhenInitialized(myProject, new DumbAwareRunnable() {
             @Override
             public void run() {

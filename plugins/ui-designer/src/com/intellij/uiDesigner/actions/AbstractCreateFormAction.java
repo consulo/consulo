@@ -30,7 +30,7 @@ import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.uiDesigner.UIDesignerBundle;
 import com.intellij.util.IncorrectOperationException;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +53,7 @@ public abstract class AbstractCreateFormAction extends CreateElementActionBase i
     final Presentation presentation = e.getPresentation();
     if (presentation.isEnabled()) {
       final Module module = e.getData(LangDataKeys.MODULE);
-      if (module != null && ModuleUtilCore.getExtension(module, JavaModuleExtension.class) != null) {
+      if (module != null && ModuleUtilCore.getExtension(module, JavaModuleExtensionImpl.class) != null) {
         final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
         if (view != null) {
           final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();

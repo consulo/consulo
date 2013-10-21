@@ -32,7 +32,6 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.HashSet;
-import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IdFilter;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;

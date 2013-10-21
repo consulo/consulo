@@ -18,7 +18,7 @@ package com.intellij.openapi.projectRoots;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.PsiElement;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,7 +34,7 @@ public class JavaSdkVersionUtil {
   public static JavaSdkVersion getJavaSdkVersion(@NotNull PsiElement element) {
     final Module module = ModuleUtilCore.findModuleForPsiElement(element);
     if (module != null) {
-      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+      final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
       if (sdk != null) {
         String version = sdk.getVersionString();
         return version == null ? null : JdkVersionUtil.getVersion(version);

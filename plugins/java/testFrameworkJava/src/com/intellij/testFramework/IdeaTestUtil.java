@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.pom.java.LanguageLevel;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
-import org.consulo.java.platform.module.extension.JavaMutableModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
+import org.consulo.java.platform.module.extension.JavaMutableModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -48,7 +48,7 @@ public class IdeaTestUtil extends PlatformTestUtil {
   }
 
   public static void withLevel(final Module module, final LanguageLevel level, final Runnable r) {
-    final LanguageLevel moduleLevel = ModuleUtilCore.getExtension(module, JavaModuleExtension.class).getLanguageLevel();
+    final LanguageLevel moduleLevel = ModuleUtilCore.getExtension(module, JavaModuleExtensionImpl.class).getLanguageLevel();
     try {
       setModuleLanguageLevel(module, level);
       r.run();
@@ -60,7 +60,7 @@ public class IdeaTestUtil extends PlatformTestUtil {
 
   public static void setModuleLanguageLevel(Module module, final LanguageLevel level) {
     ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-    modifiableModel.getExtension(JavaMutableModuleExtension.class).getInheritableLanguageLevel().set(null, level);
+    modifiableModel.getExtension(JavaMutableModuleExtensionImpl.class).getInheritableLanguageLevel().set(null, level);
     modifiableModel.commit();
   }
 

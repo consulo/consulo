@@ -23,7 +23,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -46,7 +46,7 @@ public class MavenAnnotationProcessorConfigurer extends MavenModuleConfigurer {
   public void configure(@NotNull MavenProject mavenProject, @NotNull Project project, @Nullable Module module) {
     if (module == null) return;
 
-    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     if (sdk != null) {
       String versionString = sdk.getVersionString();
       if (versionString != null) {

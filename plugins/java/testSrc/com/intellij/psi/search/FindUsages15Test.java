@@ -16,7 +16,6 @@
 package com.intellij.psi.search;
 
 import com.intellij.JavaTestUtil;
-import com.intellij.openapi.projectRoots.impl.JavaSdkImpl;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;

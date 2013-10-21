@@ -19,7 +19,7 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.gradle.tooling.ModelBuilder;
 import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.model.DomainObjectSet;
@@ -169,7 +169,7 @@ public class GradleProjectResolver implements ExternalSystemProjectResolver<Grad
       ModuleData ideModule = new ModuleData(GradleConstants.SYSTEM_ID,
                                             moduleName,
                                             projectData.getIdeProjectFileDirectoryPath(),
-                                            JavaModuleExtension.class,
+                                            JavaModuleExtensionImpl.class,
                                             moduleConfigPath);
       Pair<DataNode<ModuleData>, IdeaModule> previouslyParsedModule = result.get(moduleName);
       if (previouslyParsedModule != null) {

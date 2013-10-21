@@ -67,6 +67,12 @@ public abstract class CorePsiPackageManager extends PsiPackageManager {
     return findPackage(directory, CoreModuleExtension.class);
   }
 
+  @Nullable
+  @Override
+  public PsiPackage findAnyPackage(@NotNull String packageName) {
+    return null;
+  }
+
   @NotNull
   @Override
   public Project getProject() {

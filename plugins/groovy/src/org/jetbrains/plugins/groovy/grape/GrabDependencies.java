@@ -60,7 +60,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.lang.psi.api.auxiliary.modifiers.annotation.GrAnnotation;
 import org.jetbrains.plugins.groovy.runner.DefaultGroovyScriptRunner;
@@ -111,7 +111,7 @@ public class GrabDependencies implements IntentionAction {
       return false;
     }
 
-    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     if (sdk == null) {
       return false;
     }
@@ -134,7 +134,7 @@ public class GrabDependencies implements IntentionAction {
 
     Map<String, String> queries = prepareQueries(file);
 
-    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     assert sdk != null;
     SdkTypeId sdkType = sdk.getSdkType();
     assert sdkType instanceof JavaSdkType;

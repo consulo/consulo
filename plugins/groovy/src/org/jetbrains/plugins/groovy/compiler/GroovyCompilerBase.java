@@ -60,7 +60,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import gnu.trove.THashSet;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.groovy.compiler.rt.CompilerMessage;
 import org.jetbrains.groovy.compiler.rt.GroovyCompilerMessageCategories;
@@ -95,7 +95,7 @@ public abstract class GroovyCompilerBase implements TranslatingCompiler {
                                     VirtualFile outputDir,
                                     OutputSink sink, boolean tests) {
     //assert !ApplicationManager.getApplication().isDispatchThread();
-    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     assert sdk != null; //verified before
     SdkTypeId sdkType = sdk.getSdkType();
     assert sdkType instanceof JavaSdkType;

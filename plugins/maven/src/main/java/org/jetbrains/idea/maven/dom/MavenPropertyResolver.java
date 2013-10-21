@@ -21,7 +21,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.compiler.MavenEscapeWindowsCharacterUtils;
@@ -242,7 +242,7 @@ public class MavenPropertyResolver {
     if ("java.home".equals(propName)) {
       Module module = projectsManager.findModule(mavenProject);
       if (module != null) {
-        Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+        Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
         if (sdk != null) {
           VirtualFile homeDirectory = sdk.getHomeDirectory();
           if (homeDirectory != null) {

@@ -57,7 +57,7 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.PathsList;
 import com.intellij.util.containers.ContainerUtil;
 import org.consulo.compiler.CompilerPathsManager;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -125,7 +125,7 @@ public abstract class MvcFramework {
 
   public void createApplicationIfNeeded(@NotNull final Module module) {
     if (findAppRoot(module) == null && module.getUserData(CREATE_APP_STRUCTURE) == Boolean.TRUE) {
-      while (ModuleUtilCore.getSdk(module, JavaModuleExtension.class) == null) {
+      while (ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class) == null) {
         if (Messages.showYesNoDialog(module.getProject(), "Cannot generate " + getDisplayName() + " project structure because JDK is not specified for module \"" +
                                                           module.getName() + "\".\n" +
                                                           getDisplayName() + " project will not be created if you don't specify JDK.\nDo you want to specify JDK?",
@@ -399,7 +399,7 @@ public abstract class MvcFramework {
   }
 
   public static void addJavaHome(@NotNull JavaParameters params, @NotNull Module module) {
-    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtension.class);
+    final Sdk sdk = ModuleUtilCore.getSdk(module, JavaModuleExtensionImpl.class);
     if (sdk != null && sdk.getSdkType() instanceof JavaSdkType) {
       String path = StringUtil.trimEnd(sdk.getHomePath(), File.separator);
       if (StringUtil.isNotEmpty(path)) {

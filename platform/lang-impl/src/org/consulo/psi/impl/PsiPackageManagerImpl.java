@@ -162,6 +162,17 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     return null;
   }
 
+  @Override
+  public PsiPackage findAnyPackage(@NotNull String packageName) {
+    for (ConcurrentMap<String, PsiPackage> map : myPackageCache.values()) {
+      PsiPackage psiPackage = map.get(packageName);
+      if(psiPackage != null) {
+        return psiPackage;
+      }
+    }
+    return null;
+  }
+
   @NotNull
   @Override
   public Project getProject() {

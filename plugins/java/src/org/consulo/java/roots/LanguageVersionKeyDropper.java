@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.pom.java.LanguageLevel;
-import org.consulo.java.platform.module.extension.JavaModuleExtension;
+import org.consulo.java.platform.module.extension.JavaModuleExtensionImpl;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
@@ -39,12 +39,12 @@ public class LanguageVersionKeyDropper {
     project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
       @Override
       public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
-        if(!(oldExtension instanceof JavaModuleExtension)) {
+        if(!(oldExtension instanceof JavaModuleExtensionImpl)) {
           return;
         }
 
-        LanguageLevel oldLevel = ((JavaModuleExtension)oldExtension).getLanguageLevel();
-        LanguageLevel newLevel = ((JavaModuleExtension)newExtension).getLanguageLevel();
+        LanguageLevel oldLevel = ((JavaModuleExtensionImpl)oldExtension).getLanguageLevel();
+        LanguageLevel newLevel = ((JavaModuleExtensionImpl)newExtension).getLanguageLevel();
 
         if(oldLevel == newLevel) {
           return;

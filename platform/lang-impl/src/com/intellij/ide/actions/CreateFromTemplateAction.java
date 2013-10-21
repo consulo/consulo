@@ -108,7 +108,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     final DataContext dataContext = e.getDataContext();
     final Presentation presentation = e.getPresentation();
 
-    final boolean enabled = isAvailable(dataContext);
+    final boolean enabled = isAvailable(dataContext) && e.getPresentation().isEnabled();
 
     presentation.setVisible(enabled);
     presentation.setEnabled(enabled);
