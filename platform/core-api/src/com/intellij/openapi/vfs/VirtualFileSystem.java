@@ -98,4 +98,7 @@ public abstract class VirtualFileSystem implements IVirtualFileSystem {
                                           @NotNull VirtualFile newParent,
                                           @NotNull String copyName) throws IOException;
 
+  public boolean isCaseSensitive() {
+    return true;
+  }
 }
