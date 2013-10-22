@@ -244,7 +244,9 @@ public class MavenRootModelAdapter {
 
     compilerPathsManager.setInheritedCompilerOutput(getModule(), false);
     compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION, toUrl(production).getUrl());
+    compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION_RESOURCE, toUrl(production).getUrl());
     compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.TEST, toUrl(test).getUrl());
+    compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.TEST_RESOURCE, toUrl(test).getUrl());
     compilerPathsManager.setInheritedCompilerOutput(getModule(), false);
   }
 

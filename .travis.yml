@@ -1,13 +1,11 @@
 language: java
 script: ant
-before_script:
- - 'echo $JAVA_OPTS'
- - 'export JAVA_OPTS="-XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+HeapDumpOnOutOfMemoryError -Xmx1024m"'
+env: ANT_OPTS=512Mb
 branches:
   only:
     - master
 jdk:
-  - openjdk6
-  - openjdk7
+#  - openjdk6
+#  - openjdk7
   - oraclejdk6
-  - oraclejdk7
+#  - oraclejdk7

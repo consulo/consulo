@@ -81,7 +81,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
 
   @Override
   public void setInheritedCompilerOutput(boolean val) {
-    //FIXME [VISTALL] myInheritOutput = val; currently unsupported!
+    myInheritOutput = val;
   }
 
   @Override
