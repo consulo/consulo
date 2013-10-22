@@ -15,31 +15,12 @@
  */
 package com.intellij.compiler;
 
-import com.intellij.AbstractBundle;
-import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.PropertyKey;
+import org.consulo.lombok.annotations.Bundle;
 
 /**
  * @author VISTALL
  * @since 18:11/20.10.13
  */
-public class JavaCompilerBundle extends AbstractBundle {
-  private static final JavaCompilerBundle INSTANCE = new JavaCompilerBundle();
-
-  private static final String BUNDLE = "messages.JavaCompilerBundle";
-
-  private JavaCompilerBundle() {
-    super(BUNDLE);
-  }
-
-  @NotNull
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... arg) {
-    return INSTANCE.getMessage(key, arg);
-  }
-
-  @NotNull
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
-    return INSTANCE.getMessage(key, ArrayUtil.EMPTY_OBJECT_ARRAY);
-  }
+@Bundle("messages.JavaCompilerBundle")
+public class JavaCompilerBundle {
 }

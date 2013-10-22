@@ -25,8 +25,8 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
-import com.intellij.util.ArrayFactory;
 import com.intellij.util.IncorrectOperationException;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,20 +37,8 @@ import org.jetbrains.annotations.Nullable;
  * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
  * for high-level overview.
  */
+@ArrayFactoryFields
 public interface PsiElement extends UserDataHolder {
-  /**
-   * The empty array of PSI elements which can be reused to avoid unnecessary allocations.
-   */
-  PsiElement[] EMPTY_ARRAY = new PsiElement[0];
-
-  ArrayFactory<PsiElement> ARRAY_FACTORY = new ArrayFactory<PsiElement>() {
-    @NotNull
-    @Override
-    public PsiElement[] create(final int count) {
-      return count == 0 ? EMPTY_ARRAY : new PsiElement[count];
-    }
-  };
-
   /**
    * Returns the project to which the PSI element belongs.
    *
