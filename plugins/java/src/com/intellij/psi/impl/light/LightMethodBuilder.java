@@ -191,7 +191,7 @@ public class LightMethodBuilder extends LightElement implements PsiMethod, Origi
       @NotNull
       @Override
       protected PsiType internalCompute() {
-        return JavaPsiFacade.getInstance(myManager.getProject()).getElementFactory().createTypeByFQClassName(returnType, getResolveScope());
+        return JavaPsiFacade.getInstance(getManager().getProject()).getElementFactory().createTypeByFQClassName(returnType, getResolveScope());
       }
     });
   }
