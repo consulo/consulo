@@ -196,7 +196,7 @@ public class SchemaReferencesProvider extends PsiReferenceProvider {
           info, new CreateXmlElementIntentionAction("xml.schema.create.simple.type.intention.name",SIMPLE_TYPE_TAG_NAME,reference)
         );
       } else if (myType != null) {
-        @PropertyKey(resourceBundle = XmlBundle.PATH_TO_BUNDLE) String key = null;
+        @PropertyKey(resourceBundle = XmlBundle.BUNDLE) String key = null;
         @NonNls String declarationTagName = null;
 
         if (myType == ReferenceType.ElementReference) {
@@ -561,7 +561,7 @@ public class SchemaReferencesProvider extends PsiReferenceProvider {
     private final String myDeclarationTagName;
 
     CreateXmlElementIntentionAction(
-      @PropertyKey(resourceBundle = XmlBundle.PATH_TO_BUNDLE) String messageKey,
+      @PropertyKey(resourceBundle = XmlBundle.BUNDLE) String messageKey,
       @NonNls @NotNull String declarationTagName,
       TypeOrElementOrAttributeReference ref) {
 

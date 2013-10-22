@@ -15,23 +15,12 @@
  */
 package com.intellij.internal.statistic;
 
-import com.intellij.AbstractBundle;
-import org.jetbrains.annotations.PropertyKey;
+import org.consulo.lombok.annotations.Bundle;
 
 /**
  * @author Denis Zhdanov
  * @since 4/25/13 1:02 PM
  */
-public class StatisticsBundle extends AbstractBundle {
-
-  public static final  String       PATH_TO_BUNDLE = "messages.StatisticsBundle";
-  private static final StatisticsBundle BUNDLE         = new StatisticsBundle();
-
-  public StatisticsBundle() {
-    super(PATH_TO_BUNDLE);
-  }
-
-  public static String message(@PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, Object... params) {
-    return BUNDLE.getMessage(key, params);
-  }
+@Bundle("messages.StatisticsBundle")
+public class StatisticsBundle {
 }

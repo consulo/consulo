@@ -23,6 +23,7 @@
     <orderEntry type="library" name="Guava" level="project" />
     <orderEntry type="module" module-name="icons" />
     <orderEntry type="library" name="jsr166" level="project" />
+    <orderEntry type="library" name="Lombok" level="project" />
   </component>
   <component name="copyright">
     <Base>

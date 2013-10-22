@@ -8,7 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="lang-impl" />
-    <orderEntry type="module" module-name="java-psi-api" />
+    <orderEntry type="module" module-name="java-psi-api" exported="" />
   </component>
 </module>
 

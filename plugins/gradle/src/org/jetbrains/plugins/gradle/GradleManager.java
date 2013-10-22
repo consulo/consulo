@@ -187,7 +187,7 @@ public class GradleManager
     PathsList classPath = parameters.getClassPath();
 
     // Gradle i18n bundle.
-    ExternalSystemApiUtil.addBundle(classPath, GradleBundle.PATH_TO_BUNDLE, GradleBundle.class);
+    ExternalSystemApiUtil.addBundle(classPath, GradleBundle.BUNDLE, GradleBundle.class);
 
     // Gradle tool jars.
     String toolingApiPath = PathManager.getJarPathForClass(ProjectConnection.class);

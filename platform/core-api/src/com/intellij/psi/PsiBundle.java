@@ -15,40 +15,14 @@
  */
 package com.intellij.psi;
 
-import com.intellij.CommonBundle;
-import org.jetbrains.annotations.NonNls;
+import org.consulo.lombok.annotations.Bundle;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.PropertyKey;
-
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
-import java.util.ResourceBundle;
 
 /**
  * @author max
  */
+@Bundle("messages.PsiBundle")
 public class PsiBundle {
-  private static Reference<ResourceBundle> ourBundle;
-
-  @NonNls private static final String BUNDLE = "messages.PsiBundle";
-
-  private PsiBundle() {
-  }
-
-  public static String message(@PropertyKey(resourceBundle = BUNDLE)String key, Object... params) {
-    return CommonBundle.message(getBundle(), key, params);
-  }
-
-  private static ResourceBundle getBundle() {
-    ResourceBundle bundle = null;
-    if (ourBundle != null) bundle = ourBundle.get();
-    if (bundle == null) {
-      bundle = ResourceBundle.getBundle(BUNDLE);
-      ourBundle = new SoftReference<ResourceBundle>(bundle);
-    }
-    return bundle;
-  }
-
   @NotNull
   public static String visibilityPresentation(@NotNull String modifier) {
     return message(modifier + ".visibility.presentation");
