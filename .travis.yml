@@ -1,6 +1,6 @@
 language: java
 script: ant
-env: ANT_OPTS=-Xmx512m
+env: ANT_OPTS=-XX:-UseGCOverheadLimit
 branches:
   only:
     - master
