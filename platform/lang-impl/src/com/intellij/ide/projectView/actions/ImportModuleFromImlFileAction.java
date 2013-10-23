@@ -23,7 +23,6 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -95,13 +94,7 @@ public class ImportModuleFromImlFileAction extends AnAction {
     }
 
     List<VirtualFile> modulesFiles = new ArrayList<VirtualFile>();
-    for (VirtualFile file : files) {
-      if (!file.getFileType().equals(StdFileTypes.IDEA_MODULE)) {
-        return Collections.emptyList();
-      }
 
-      modulesFiles.add(file);
-    }
     return modulesFiles;
   }
 }

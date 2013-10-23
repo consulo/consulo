@@ -356,8 +356,6 @@ class XsltRunSettingsEditor extends SettingsEditor<XsltRunConfiguration> {
       for (FileType fileType : fileTypes) {
         // get rid of file types useless for highlighting
         if (fileType == StdFileTypes.CLASS ||
-            fileType == StdFileTypes.IDEA_PROJECT ||
-            fileType == StdFileTypes.IDEA_WORKSPACE ||
             fileType == StdFileTypes.GUI_DESIGNER_FORM) {
           continue;
         }

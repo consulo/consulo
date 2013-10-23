@@ -28,8 +28,6 @@ import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -110,7 +108,7 @@ public class ImportImlMode extends WizardMode {
   public boolean validate() throws ConfigurationException {
     final String imlPath = myModulePathFieldPanel.getText().trim();
     if (!new File(imlPath).exists()) throw new ConfigurationException("File \'" + imlPath + "\' doesn't exist");
-    if (!FileTypeManager.getInstance().getFileTypeByFileName(imlPath).equals(StdFileTypes.IDEA_MODULE)) throw new ConfigurationException("File \'" + imlPath + "\' doesn't contain IDEA module");
+//    if (!FileTypeManager.getInstance().getFileTypeByFileName(imlPath).equals(StdFileTypes.IDEA_MODULE)) throw new ConfigurationException("File \'" + imlPath + "\' doesn't contain IDEA module");
     return super.validate();
   }
 
@@ -137,7 +135,7 @@ public class ImportImlMode extends WizardMode {
       if (!isVisible || file.isDirectory()) {
         return isVisible;
       }
-      return StdFileTypes.IDEA_MODULE.equals(file.getFileType());
+      return /*StdFileTypes.IDEA_MODULE.equals(file.getFileType());*/false;
     }
   }
 }

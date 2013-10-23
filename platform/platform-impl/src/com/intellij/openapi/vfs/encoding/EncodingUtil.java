@@ -181,11 +181,7 @@ public class EncodingUtil {
     // in lesser IDEs all special file types are plain text so check for that first
     if (fileType == FileTypes.PLAIN_TEXT) return Pair.create(null, null);
     if (fileType == StdFileTypes.GUI_DESIGNER_FORM) return Pair.create(CharsetToolkit.UTF8_CHARSET, "Consulo GUI Designer form");
-    if (fileType == StdFileTypes.IDEA_PROJECT) return Pair.create(CharsetToolkit.UTF8_CHARSET, "Consulo project file");
-    if (fileType == StdFileTypes.IDEA_WORKSPACE) return Pair.create(CharsetToolkit.UTF8_CHARSET, "Consulo workspace file");
-
     if (fileType == StdFileTypes.PROPERTIES) return Pair.create(virtualFile.getCharset(), ".properties file");
-
     if (fileType == StdFileTypes.XML || fileType == StdFileTypes.JSPX) {
       return Pair.create(virtualFile.getCharset(), "XML file");
     }
