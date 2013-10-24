@@ -26,6 +26,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class VcsFileTypeFactory extends FileTypeFactory {
   public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-    consumer.consume(new PatchFileType(), VcsConfiguration.PATCH + ";" + VcsConfiguration.DIFF);
+    consumer.consume(PatchFileType.INSTANCE, VcsConfiguration.PATCH + ";" + VcsConfiguration.DIFF);
   }
 }

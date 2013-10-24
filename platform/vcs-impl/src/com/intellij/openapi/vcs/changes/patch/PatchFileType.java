@@ -23,10 +23,7 @@
 package com.intellij.openapi.vcs.changes.patch;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
@@ -36,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public class PatchFileType implements FileType {
+  public static final PatchFileType INSTANCE = new PatchFileType();
   public static final String NAME = "PATCH";
 
   @NotNull
@@ -71,16 +69,6 @@ public class PatchFileType implements FileType {
   @Nullable
   @NonNls
   public String getCharset(@NotNull VirtualFile file, final byte[] content) {
-    return null;
-  }
-
-  @Nullable
-  public SyntaxHighlighter getHighlighter(@Nullable Project project, final VirtualFile virtualFile) {
-    return null;
-  }
-
-  @Nullable
-  public StructureViewBuilder getStructureViewBuilder(@NotNull VirtualFile file, @NotNull Project project) {
     return null;
   }
 }

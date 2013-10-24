@@ -18,6 +18,7 @@ package com.intellij.openapi.fileTypes;
 /**
  * @author max
  */
+@Deprecated
 public class FileTypes {
   protected FileTypes() { }
 

@@ -40,7 +40,6 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -76,7 +75,7 @@ public class ApplyPatchAction extends DumbAwareAction {
 
     if (e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP)) {
       VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-      if (vFile != null && vFile.getFileType() == StdFileTypes.PATCH) {
+      if (vFile != null && vFile.getFileType() == PatchFileType.INSTANCE) {
         showApplyPatch(project, vFile);
         return;
       }
@@ -301,8 +300,8 @@ public class ApplyPatchAction extends DumbAwareAction {
   public void update(AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (e.getPlace().equals(ActionPlaces.PROJECT_VIEW_POPUP)) {
-      VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-      e.getPresentation().setVisible(project != null && vFile != null && vFile.getFileType() == StdFileTypes.PATCH);
+      VirtualFile vFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
+      e.getPresentation().setVisible(project != null && vFile != null && vFile.getFileType() == PatchFileType.INSTANCE);
     }
     else {
       e.getPresentation().setEnabled(project != null);
