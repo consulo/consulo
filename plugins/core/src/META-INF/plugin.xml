@@ -2536,5 +2536,7 @@
                    serviceImplementation="org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
 
     <qualifiedNameProvider implementation="com.intellij.ide.actions.PsiPackageQualifiedNameProvider" />
+
+    <pathMacroExpendableProtocol protocol="zip" />
   </extensions>
 </idea-plugin>

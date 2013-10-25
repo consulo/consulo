@@ -44,7 +44,6 @@ public class ReplacePathToMacroMap extends PathMacroMap {
   static {
     List<String> protocols = new ArrayList<String>();
     protocols.add("file");
-    protocols.add("jar");
     for (PathMacroExpendableProtocolBean bean : PathMacroExpendableProtocolBean.EP_NAME.getExtensions()) {
       protocols.add(bean.protocol);
     }
