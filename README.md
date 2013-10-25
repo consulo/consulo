@@ -10,7 +10,7 @@ To develop Consulo, you can use either IntelliJ IDEA Community Edition or Intell
 * Open the directory with the source code as a directory-based project
 * Configure a JSDK named "IDEA jdk", pointing to an installation of JDK 1.6
 * On Windows or Linux, add lib\tools.jar from the JDK installation directory to the classpath of IDEA jdk
-* Use 'Build | Build Artifact | consulo-dist' to build the code
+* Use 'Build | Build Artifacts... | consulo-dist' to build the code
 * To run the code, use the provided shared run configuration "IDEA".
 
 ## Links
