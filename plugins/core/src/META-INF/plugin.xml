@@ -2534,5 +2534,7 @@
 
     <moduleService serviceInterface="org.consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
+
+    <qualifiedNameProvider implementation="com.intellij.ide.actions.PsiPackageQualifiedNameProvider" />
   </extensions>
 </idea-plugin>

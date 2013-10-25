@@ -1,1 +1,0 @@
-Integer.<ref>methods.each { println it.name }

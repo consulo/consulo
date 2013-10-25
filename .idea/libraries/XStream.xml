@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/xstream-1.4.3-src.zip!/xstream-1.4.3/xstream/src/java" />
+      <root url="jar://$PROJECT_DIR$/libSrc/xstream-1.4.3-src.zip!/xstream-1.4.3/xstream/src/java" />
     </SOURCES>
   </library>
 </component>

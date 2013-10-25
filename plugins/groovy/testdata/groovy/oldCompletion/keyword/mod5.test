@@ -1,7 +1,0 @@
-class A {
-  p<caret> foo; 
-}
------
-private
-protected
-public

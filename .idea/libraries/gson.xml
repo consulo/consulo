@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/gson-2.2.3-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libSrc/gson-2.2.3-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -5,8 +5,8 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/cglib-src-2.2.2.jar!/src/proxy" />
-      <root url="jar://$PROJECT_DIR$/lib/src/cglib-src-2.2.2.jar!/src/test" />
+      <root url="jar://$PROJECT_DIR$/libSrc/cglib-src-2.2.2.jar!/src/proxy" />
+      <root url="jar://$PROJECT_DIR$/libSrc/cglib-src-2.2.2.jar!/src/test" />
     </SOURCES>
   </library>
 </component>

@@ -1,8 +1,0 @@
-/$1\//
------
-Groovy script
-  Literal
-    GroovyASTPsiElementImpl(regex literal)
-      PsiElement(regex begin)('/')
-      PsiElement(regex content)('$1\/')
-      PsiElement(regex end)('/')

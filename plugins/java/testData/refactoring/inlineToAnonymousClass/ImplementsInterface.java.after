@@ -1,9 +1,0 @@
-import java.awt.event.*;
-
-class A {
-    private ActionListener b = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        }
-    };
-
-}

@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/log4j.zip!/" />
+      <root url="jar://$PROJECT_DIR$/libSrc/log4j.zip!/" />
     </SOURCES>
   </library>
 </component>

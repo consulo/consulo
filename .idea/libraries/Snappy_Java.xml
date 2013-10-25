@@ -5,8 +5,8 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/snappy-java-1.1.0-M3-src.zip!/snappy-java-1.1.0-M3/src/main/java" />
-      <root url="jar://$PROJECT_DIR$/lib/src/snappy-java-1.1.0-M3-src.zip!/snappy-java-1.1.0-M3/src/main/resources" />
+      <root url="jar://$PROJECT_DIR$/libSrc/snappy-java-1.1.0-M3-src.zip!/snappy-java-1.1.0-M3/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/libSrc/snappy-java-1.1.0-M3-src.zip!/snappy-java-1.1.0-M3/src/main/resources" />
     </SOURCES>
   </library>
 </component>

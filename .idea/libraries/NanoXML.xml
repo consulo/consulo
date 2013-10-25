@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/nanoxml.zip!/" />
+      <root url="jar://$PROJECT_DIR$/libSrc/nanoxml.zip!/" />
     </SOURCES>
   </library>
 </component>

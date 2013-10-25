@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/picocontainer-src.zip!/picocontainer-1_2/container/src/java" />
+      <root url="jar://$PROJECT_DIR$/libSrc/picocontainer-src.zip!/picocontainer-1_2/container/src/java" />
     </SOURCES>
   </library>
 </component>

@@ -1,1 +1,0 @@
-new java.lang.<ref>String()

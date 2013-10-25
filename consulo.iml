@@ -17,7 +17,6 @@
     <orderEntry type="module" module-name="lang-impl" />
     <orderEntry type="module" module-name="lvcs-api" />
     <orderEntry type="module" module-name="lvcs-impl" />
-    <orderEntry type="module" module-name="instrumentation-util" />
     <orderEntry type="module" module-name="platform-api" />
     <orderEntry type="module" module-name="platform-impl" />
     <orderEntry type="module" module-name="platform-main" />
@@ -33,70 +32,14 @@
     <orderEntry type="module" module-name="vcs-impl" />
     <orderEntry type="module" module-name="xdebugger-api" />
     <orderEntry type="module" module-name="xdebugger-impl" />
-    <orderEntry type="module" module-name="regexp" />
     <orderEntry type="module" module-name="core" />
-    <orderEntry type="module" module-name="xml-impl" />
-    <orderEntry type="module" module-name="xml-dom-impl" />
-    <orderEntry type="module" module-name="images" />
-    <orderEntry type="module" module-name="spellchecker" />
-    <orderEntry type="module" module-name="git4idea" />
-    <orderEntry type="module" module-name="java" />
-    <orderEntry type="module" module-name="java-analysis-api" />
-    <orderEntry type="module" module-name="java-analysis-impl" />
-    <orderEntry type="module" module-name="java-execution-api" />
-    <orderEntry type="module" module-name="java-indexing-api" />
-    <orderEntry type="module" module-name="java-indexing-impl" />
-    <orderEntry type="module" module-name="java-psi-api" />
-    <orderEntry type="module" module-name="java-psi-impl" />
-    <orderEntry type="module" module-name="properties" />
-    <orderEntry type="module" module-name="groovy" />
-    <orderEntry type="module" module-name="groovy-intellilang" />
-    <orderEntry type="module" module-name="groovy-rt" />
-    <orderEntry type="module" module-name="groovy-rt-constants" />
-    <orderEntry type="module" module-name="groovy-spellchecker" />
-    <orderEntry type="module" module-name="ant" />
-    <orderEntry type="module" module-name="IntelliLang" />
-    <orderEntry type="module" module-name="java-compiler-impl" />
-    <orderEntry type="module" module-name="java-debugger-api" />
-    <orderEntry type="module" module-name="java-debugger-impl" />
-    <orderEntry type="module" module-name="java-execution-impl" />
-    <orderEntry type="module" module-name="java-generate-tostring" />
-    <orderEntry type="module" module-name="java-i18n" />
-    <orderEntry type="module" module-name="java-inspection-gadgets" />
-    <orderEntry type="module" module-name="java-intellilang" />
-    <orderEntry type="module" module-name="java-intention-power-pack" />
-    <orderEntry type="module" module-name="xml-api" />
-    <orderEntry type="module" module-name="xml-dom-api" />
-    <orderEntry type="module" module-name="xml-intellilang" />
-    <orderEntry type="module" module-name="xpath" />
-    <orderEntry type="module" module-name="xpath-intellilang" />
-    <orderEntry type="module" module-name="xslt-rt" />
     <orderEntry type="module" module-name="smRunner" />
-    <orderEntry type="module" module-name="ui-designer-core" />
-    <orderEntry type="module" module-name="ui-designer" />
-    <orderEntry type="module" module-name="forms-compiler" />
-    <orderEntry type="module" module-name="tasks-api" />
-    <orderEntry type="module" module-name="tasks-core" />
-    <orderEntry type="module" module-name="tasks-java" />
-    <orderEntry type="module" module-name="tasks-tests" />
-    <orderEntry type="module" module-name="tasks-time-tracking" />
-    <orderEntry type="module" module-name="gradle" />
-    <orderEntry type="module" module-name="idea" />
-    <orderEntry type="module" module-name="java-compiler-artifact-impl" />
     <orderEntry type="module" module-name="projectImportModel" />
     <orderEntry type="module" module-name="platform-tests" />
-    <orderEntry type="module" module-name="maven" />
-    <orderEntry type="module" module-name="maven-artifact-resolver-m2" />
-    <orderEntry type="module" module-name="maven-artifact-resolver-m3" />
-    <orderEntry type="module" module-name="maven-server-api" />
-    <orderEntry type="module" module-name="maven2-server-impl" />
-    <orderEntry type="module" module-name="maven3-server-impl" />
-    <orderEntry type="module" module-name="jvm-bytecode-viewer" />
     <orderEntry type="module" module-name="remote-servers-api" />
     <orderEntry type="module" module-name="remote-servers-impl" />
     <orderEntry type="module" module-name="compiler-bridge-impl" />
     <orderEntry type="module" module-name="compiler-server-impl" />
-    <orderEntry type="module" module-name="ant-rt" />
   </component>
 </module>
 

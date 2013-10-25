@@ -6,8 +6,8 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/jna-src.zip!/src" />
-      <root url="jar://$PROJECT_DIR$/lib/src/jna-src.zip!/contrib/platform/src" />
+      <root url="jar://$PROJECT_DIR$/libSrc/jna-src.zip!/src" />
+      <root url="jar://$PROJECT_DIR$/libSrc/jna-src.zip!/contrib/platform/src" />
     </SOURCES>
   </library>
 </component>

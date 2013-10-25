@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Groovy" level="project" />
     <orderEntry type="module" module-name="core-api" />
     <orderEntry type="module" module-name="testFramework" />
     <orderEntry type="module" module-name="vcs-impl" />

@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/commons-net-3.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libSrc/commons-net-3.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

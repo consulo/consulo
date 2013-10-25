@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/ecjsrc-4.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libSrc/ecjsrc-4.2.1.jar!/" />
     </SOURCES>
   </library>
 </component>

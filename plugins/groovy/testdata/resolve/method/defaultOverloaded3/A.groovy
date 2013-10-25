@@ -1,1 +1,0 @@
-"abc"[0..1].<ref>endsWith("ab")

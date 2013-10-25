@@ -1,1 +1,0 @@
-Object.<ref>sleep(0, {})

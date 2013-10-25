@@ -5,7 +5,7 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/src/winp-1.17-patched-src.zip!/" />
+      <root url="jar://$PROJECT_DIR$/libSrc/winp-1.17-patched-src.zip!/" />
     </SOURCES>
   </library>
 </component>

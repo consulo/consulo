@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="EasyMock">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/dev/easymockclassextension.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/dev/easymock.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/easymockclassextension.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/easymock.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

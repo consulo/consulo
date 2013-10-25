@@ -1,3 +1,0 @@
-PsiJavaFile:SwitchLabelsIncomplete0.java
-  PsiErrorElement:Unexpected token
-    PsiKeyword:case('case')
