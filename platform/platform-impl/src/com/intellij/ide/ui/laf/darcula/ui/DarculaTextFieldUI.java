@@ -33,9 +33,9 @@ import java.awt.event.*;
  * @author Konstantin Bulenkov
  */
 public class DarculaTextFieldUI extends BasicTextFieldUI {
-  private static final Icon SEARCH_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/darcula/icons/search.png", DarculaTextFieldUI.class, true);
-  private static final Icon SEARCH_WITH_HISTORY_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/darcula/icons/searchWithHistory.png", DarculaTextFieldUI.class, true);
-  private static final Icon CLEAR_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/darcula/icons/clear.png", DarculaTextFieldUI.class, true);
+  private static final Icon SEARCH_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/search.png");
+  private static final Icon SEARCH_WITH_HISTORY_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png");
+  private static final Icon CLEAR_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/clear.png");
 
   private enum SearchAction {POPUP, CLEAR}
 
