@@ -1547,7 +1547,6 @@
     <applicationConfigurable instance="com.intellij.execution.console.ConsoleFoldingConfigurable" id="Console Folding"
                              displayName="Console Folding"/>
 
-    <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectCheckoutListener"/>
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectDirCheckoutListener"/>
     <checkoutListener implementation="com.intellij.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
     <vcsAwareCheckoutListener implementation="com.intellij.openapi.vcs.checkout.NewProjectCheckoutListener"/>
@@ -1567,22 +1566,24 @@
     <projectTemplatesFactory implementation="com.intellij.platform.templates.RemoteTemplatesFactory"/>
     -->
     <projectTemplatesFactory implementation="com.intellij.platform.templates.PlainModuleTemplatesFactory"/>
+    <!--
     <projectTemplateFileProcessor implementation="com.intellij.platform.templates.SystemFileProcessor"/>
+    -->
 
-    <applicationService serviceImplementation="com.intellij.ide.util.newProjectWizard.SelectTemplateSettings"/>
+     <applicationService serviceImplementation="com.intellij.ide.util.newProjectWizard.SelectTemplateSettings"/>
 
-    <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
+     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
 
-    <orderRootTypeEditor key="DOCUMENTATION"
-                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
-    <orderRootTypeEditor key="CLASSES"
-                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
-    <orderRootTypeEditor key="SOURCES"
-                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
+     <orderRootTypeEditor key="DOCUMENTATION"
+                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
+     <orderRootTypeEditor key="CLASSES"
+                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
+     <orderRootTypeEditor key="SOURCES"
+                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
-    <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
-    <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
+     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
+     <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
 
     <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
 
@@ -2462,8 +2463,6 @@
     <projectConfigurable instance="com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable" id="project.scopes"
                          key="scopes.display.name" bundle="messages.IdeBundle"/>
 
-    <checkoutCompletedListener implementation="com.intellij.openapi.vcs.checkout.PlatformProjectCheckoutListener"
-                               id="PlatformProjectCheckoutListener"/>
 
     <weigher key="proximity" implementationClass="com.intellij.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"
              order="after openedInEditor"/>
