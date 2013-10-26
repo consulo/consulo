@@ -2,8 +2,8 @@
 <project version="4">
   <component name="AntConfiguration">
     <buildFile url="file://$PROJECT_DIR$/build.xml">
-      <maximumHeapSize value="256" />
-      <maximumStackSize value="256" />
+      <maximumHeapSize value="1024" />
+      <maximumStackSize value="1024" />
     </buildFile>
   </component>
 </project>
