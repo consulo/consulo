@@ -143,7 +143,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     final ArrayList<AnAction> result = super.createActions(fromPopup);
     result.add(AnSeparator.getInstance());
     result.add(new MyGroupAction());
-    addCollapseExpandActions(result);
     return result;
   }
 
