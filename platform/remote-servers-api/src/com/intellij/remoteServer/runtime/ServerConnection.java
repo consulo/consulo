@@ -43,4 +43,6 @@ public interface ServerConnection<D extends DeploymentConfiguration> {
   DeploymentLogManager getLogManager(@NotNull String deployment);
 
   DeploymentLogManager getLogManager(@NotNull Deployment deployment);
+
+  void connectIfNeeded(ServerConnector.ConnectionCallback<D> callback);
 }

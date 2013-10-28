@@ -15,22 +15,16 @@
  */
 package com.intellij.remoteServer.runtime.ui;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
 import com.intellij.remoteServer.runtime.ServerConnection;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
  */
-public class RemoteServersView {
-  public static RemoteServersView getInstance(@NotNull Project project) {
-    return ServiceManager.getService(project, RemoteServersView.class);
-  }
+@ProjectService
+public abstract class RemoteServersView {
+  public abstract void showServerConnection(@NotNull ServerConnection<?> connection);
 
-  public void showServerConnection(@NotNull ServerConnection<?> connection) {
-  }
-
-  public void showDeployment(@NotNull ServerConnection<?> connection, @NotNull String deploymentName) {
-  }
+  public abstract void showDeployment(@NotNull ServerConnection<?> connection, @NotNull String deploymentName);
 }

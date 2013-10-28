@@ -119,6 +119,9 @@
         <element id="archive" name="javac2.jar">
           <element id="module-output" name="javac2" />
         </element>
+        <element id="archive" name="remote-servers-rt.jar">
+          <element id="module-output" name="remote-servers-agent-rt" />
+        </element>
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/build.txt" />
     </root>

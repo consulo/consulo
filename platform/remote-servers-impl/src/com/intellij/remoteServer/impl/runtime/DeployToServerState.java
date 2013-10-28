@@ -28,11 +28,10 @@ import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.impl.runtime.deployment.DeploymentTaskImpl;
-import com.intellij.remoteServer.impl.runtime.log.LoggingHandlerImpl;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
-import com.intellij.remoteServer.runtime.log.LoggingHandler;
+import com.intellij.remoteServer.runtime.ui.RemoteServersView;
 import com.intellij.util.ParameterizedRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,8 +45,7 @@ public class DeployToServerState<S extends ServerConfiguration, D extends Deploy
   @NotNull private final D myConfiguration;
   @NotNull private final ExecutionEnvironment myEnvironment;
 
-  public DeployToServerState(@NotNull RemoteServer<S> server,
-                             @NotNull DeploymentSource deploymentSource,
+  public DeployToServerState(@NotNull RemoteServer<S> server, @NotNull DeploymentSource deploymentSource,
                              @NotNull D deploymentConfiguration, @NotNull ExecutionEnvironment environment) {
     myServer = server;
     mySource = deploymentSource;
@@ -60,19 +58,25 @@ public class DeployToServerState<S extends ServerConfiguration, D extends Deploy
   public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
     final ServerConnection connection = ServerConnectionManager.getInstance().getOrCreateConnection(myServer);
     final Project project = myEnvironment.getProject();
+    RemoteServersView.getInstance(project).showServerConnection(connection);
 
-    LoggingHandler loggingHandler = new LoggingHandlerImpl(project);
-    DebugConnector<?,?> debugConnector;
+    final DebugConnector<?,?> debugConnector;
     if (DefaultDebugExecutor.getDebugExecutorInstance().equals(executor)) {
       debugConnector = myServer.getType().createDebugConnector();
     }
     else {
       debugConnector = null;
     }
-    connection.deploy(new DeploymentTaskImpl(mySource, myConfiguration, project, loggingHandler, debugConnector, myEnvironment), new ParameterizedRunnable<String>() {
+    connection.computeDeployments(new Runnable() {
       @Override
-      public void run(String s) {
-
+      public void run() {
+        connection.deploy(new DeploymentTaskImpl(mySource, myConfiguration, project, debugConnector, myEnvironment),
+                          new ParameterizedRunnable<String>() {
+                            @Override
+                            public void run(String s) {
+                              RemoteServersView.getInstance(project).showDeployment(connection, s);
+                            }
+                          });
       }
     });
     return null;

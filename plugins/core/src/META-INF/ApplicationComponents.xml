@@ -309,10 +309,5 @@
       <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
       <compiler-server-implementation-class></compiler-server-implementation-class>
     </component>
-
-    <!--Remote servers-->
-    <component>
-      <implementation-class>com.intellij.remoteServer.impl.configuration.deployment.DeployToServerConfigurationTypesRegistrar</implementation-class>
-    </component>
   </application-components>
 </idea-plugin>

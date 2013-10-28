@@ -10,6 +10,7 @@
     <orderEntry type="module" module-name="core-api" exported="" />
     <orderEntry type="module" module-name="platform-api" exported="" />
     <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
+    <orderEntry type="module" module-name="remote-servers-agent-rt" exported="" />
   </component>
 </module>
 

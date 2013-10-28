@@ -1,4 +1,4 @@
-package com.intellij.remoteServer.impl.configuration.localServer;
+package com.intellij.remoteServer.configuration.localServer;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;

@@ -25,7 +25,7 @@ import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfigurator;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
-import com.intellij.remoteServer.impl.configuration.localServer.LocalRunner;
+import com.intellij.remoteServer.configuration.localServer.LocalRunner;
 import com.intellij.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
