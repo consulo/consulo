@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 Jetbrains & Consulo.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.consulo.compiler.impl;
 
+import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.impl.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -29,6 +30,11 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Chunk;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.graph.CachingSemiGraph;
+import com.intellij.util.graph.Graph;
+import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import org.consulo.lombok.annotations.Logger;
@@ -41,10 +47,6 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-/**
- * @author VISTALL
- * @since 10:44/21.05.13
- */
 @Logger
 @State(
   name = "CompilerManager",
@@ -71,6 +73,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final Project myProject;
 
   private final ExcludedEntriesConfiguration myExcludedEntriesConfiguration = new ExcludedEntriesConfiguration();
+  private final List<TranslatingCompiler> myTranslatingCompilers = new ArrayList<TranslatingCompiler>();
   private final List<Compiler> myCompilers = new ArrayList<Compiler>();
   private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerInputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
   private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
@@ -83,6 +86,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   private final List<FileType> myCompilableFileTypes = new ArrayList<FileType>();
 
+  private Compiler[] myAllCompilers;
+
   public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
     myProject = project;
 
@@ -91,17 +96,27 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     }
     myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
+    List<TranslatingCompiler> translatingCompilers = new ArrayList<TranslatingCompiler>();
     for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {
       compiler.init(this);
 
-      myCompilers.add(compiler);
-
       if(compiler instanceof TranslatingCompiler) {
-        final TranslatingCompiler translatingCompiler = (TranslatingCompiler)compiler;
+        TranslatingCompiler translatingCompiler = (TranslatingCompiler)compiler;
+
+        translatingCompilers.add(translatingCompiler);
 
         myTranslatingCompilerInputFileTypes.put(translatingCompiler, Arrays.asList(translatingCompiler.getInputFileTypes()));
         myTranslatingCompilerOutputFileTypes.put(translatingCompiler, Arrays.asList(translatingCompiler.getOutputFileTypes()));
       }
+      else {
+        myCompilers.add(compiler);
+      }
+    }
+
+    final List<Chunk<TranslatingCompiler>> chunks = ModuleCompilerUtil.getSortedChunks(createCompilerGraph(translatingCompilers));
+
+    for (Chunk<TranslatingCompiler> chunk : chunks) {
+      myTranslatingCompilers.addAll(chunk.getNodes());
     }
 
     final File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
@@ -137,7 +152,13 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @NotNull
   @Override
   public Compiler[] getAllCompilers() {
-    return myCompilers.toArray(new Compiler[myCompilers.size()]);
+    if(myAllCompilers == null) {
+      List<Compiler> list = new ArrayList<Compiler>(myCompilers.size() + myTranslatingCompilers.size());
+      list.addAll(myCompilers);
+      list.addAll(myTranslatingCompilers);
+      myAllCompilers = list.toArray(new Compiler[list.size()]);
+    }
+    return myAllCompilers;
   }
 
   @Override
@@ -155,8 +176,41 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
         compilers.add((T)item);
       }
     }
+    for (final Compiler item : myTranslatingCompilers) {
+      if (compilerClass.isAssignableFrom(item.getClass()) && filter.acceptCompiler(item)) {
+        compilers.add((T)item);
+      }
+    }
     final T[] array = (T[])Array.newInstance(compilerClass, compilers.size());
     return compilers.toArray(array);
+  }
+
+  private Graph<TranslatingCompiler> createCompilerGraph(final List<TranslatingCompiler> compilers) {
+    return GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<TranslatingCompiler>() {
+      @Override
+      public Collection<TranslatingCompiler> getNodes() {
+        return compilers;
+      }
+
+      @Override
+      public Iterator<TranslatingCompiler> getIn(TranslatingCompiler compiler) {
+        final Collection<FileType> compilerInput = myTranslatingCompilerInputFileTypes.get(compiler);
+        if (compilerInput == null || compilerInput.isEmpty()) {
+          return Collections.<TranslatingCompiler>emptySet().iterator();
+        }
+
+        final Set<TranslatingCompiler> inCompilers = new HashSet<TranslatingCompiler>();
+
+        for (Map.Entry<TranslatingCompiler, Collection<FileType>> entry : myTranslatingCompilerOutputFileTypes.entrySet()) {
+          final Collection<FileType> outputs = entry.getValue();
+          TranslatingCompiler comp = entry.getKey();
+          if (outputs != null && ContainerUtil.intersects(compilerInput, outputs)) {
+            inCompilers.add(comp);
+          }
+        }
+        return inCompilers.iterator();
+      }
+    }));
   }
 
   @Override
