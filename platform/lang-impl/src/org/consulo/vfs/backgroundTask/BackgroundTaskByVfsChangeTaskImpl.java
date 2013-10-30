@@ -17,30 +17,22 @@ package org.consulo.vfs.backgroundTask;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.RunContentExecutor;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.MessageView;
 import com.intellij.util.ui.UIUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +73,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     myListener = new VirtualFileAdapter() {
       @Override
       public void contentsChanged(VirtualFileEvent event) {
-        if(!myVirtualFilePointer.isValid()) {
+        if (!myVirtualFilePointer.isValid()) {
           return;
         }
         VirtualFile file = myVirtualFilePointer.getFile();
@@ -89,7 +81,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
           return;
         }
         if (file.equals(event.getFile())) {
-          if(!myProgress.getAndSet(true)) {
+          if (!myProgress.getAndSet(true)) {
             start();
           }
         }
@@ -116,12 +108,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
           commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
           commandLine.getEnvironment().putAll(myParameters.getEnvs());
 
-
-          final Ref<Boolean> b = new Ref<Boolean>(false);
-
-          final TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(myProject);
-          OSProcessHandler processHandler = new OSProcessHandler(commandLine.createProcess());
-          consoleBuilder.getConsole().attachToProcess(processHandler);
+          CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine.createProcess());
           processHandler.addProcessListener(new ProcessAdapter() {
             @Override
             public void processTerminated(ProcessEvent event) {
@@ -143,29 +130,21 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
                 }.execute();
               }
             }
+          });
 
+          final RunContentExecutor contentExecutor =
+            new RunContentExecutor(myProject, processHandler).withTitle(myProviderName).withActivateToolWindow(false);
+          UIUtil.invokeLaterIfNeeded(new Runnable() {
             @Override
-            public void onTextAvailable(ProcessEvent event, Key outputType) {
-              if (outputType == ProcessOutputTypes.STDERR && !b.get()) {
-                UIUtil.invokeLaterIfNeeded(new Runnable() {
-                  @Override
-                  public void run() {
-                    ContentManager contentManager = MessageView.SERVICE.getInstance(myProject).getContentManager();
-                    Content content = ContentFactory.SERVICE.getInstance()
-                      .createContent(consoleBuilder.getConsole().getComponent(), myProviderName, false);
-                    contentManager.addContent(content);
-                  }
-                });
-              }
+            public void run() {
+              contentExecutor.run();
             }
           });
-          processHandler.startNotify();
         }
         catch (ExecutionException e) {
           LOGGER.error(e);
         }
       }
-
     };
 
     backgroundTask.queue();
