@@ -16,17 +16,20 @@
 package com.intellij.ide.projectView.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author yole
@@ -35,18 +38,23 @@ public class MarkRootAction extends DumbAwareAction {
   @Nullable
   private final ContentFolderType myContentFolderType;
 
-  public MarkRootAction() {
-    this(ContentFolderType.PRODUCTION);
+  protected MarkRootAction(@NotNull ContentFolderType contentFolderType) {
+    this(ContentFolderIconUtil.getName(contentFolderType), ContentFolderIconUtil.getDescription(contentFolderType),
+         ContentFolderIconUtil.getRootIcon(contentFolderType), contentFolderType);
   }
 
-  protected MarkRootAction(@Nullable ContentFolderType contentFolderType) {
+  protected MarkRootAction(@Nullable String text,
+                           @Nullable String description,
+                           @Nullable Icon icon,
+                           @Nullable ContentFolderType contentFolderType) {
+    super(text, description, icon);
     myContentFolderType = contentFolderType;
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     Module module = e.getData(LangDataKeys.MODULE);
-    VirtualFile[] vFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] vFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     assert vFiles != null;
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
     for (VirtualFile vFile : vFiles) {
@@ -93,7 +101,7 @@ public class MarkRootAction extends DumbAwareAction {
 
   public boolean canMark(AnActionEvent e) {
     Module module = e.getData(LangDataKeys.MODULE);
-    VirtualFile[] vFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] vFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (module == null || vFiles == null) {
       return false;
     }

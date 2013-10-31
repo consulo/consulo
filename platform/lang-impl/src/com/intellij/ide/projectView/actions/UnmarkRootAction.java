@@ -15,9 +15,11 @@
  */
 package com.intellij.ide.projectView.actions;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
@@ -30,18 +32,17 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public class UnmarkRootAction extends MarkRootAction {
   public UnmarkRootAction() {
-    super(null);
+    super(ActionsBundle.message("action.UnmarkRoot.text"), null, AllIcons.Actions.Delete, null);
   }
 
   @Override
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(canUnmark(e));
-    e.getPresentation().setText("Unmark");
   }
 
   public boolean canUnmark(AnActionEvent e) {
     Module module = e.getData(LangDataKeys.MODULE);
-    VirtualFile[] vFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] vFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (module == null || vFiles == null) {
       return false;
     }

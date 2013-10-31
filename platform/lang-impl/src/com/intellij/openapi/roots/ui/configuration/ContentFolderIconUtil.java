@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentFolderType;
 
 import javax.swing.*;
@@ -42,5 +43,41 @@ public class ContentFolderIconUtil {
         return AllIcons.Modules.ExcludeRoot;
     }
     return null;
+  }
+
+  public static String getName(ContentFolderType contentFolderType) {
+    switch (contentFolderType) {
+
+      case PRODUCTION:
+        return ProjectBundle.message("module.toggle.sources.action");
+      case PRODUCTION_RESOURCE:
+        return ProjectBundle.message("module.toggle.resources.action");
+      case TEST:
+        return ProjectBundle.message("module.toggle.test.sources.action");
+      case TEST_RESOURCE:
+        return ProjectBundle.message("module.toggle.test.resources.action");
+      case EXCLUDED:
+        return ProjectBundle.message("module.toggle.excluded.action");
+      default:
+        throw new IllegalArgumentException(contentFolderType.name());
+    }
+  }
+
+  public static String getDescription(ContentFolderType contentFolderType) {
+    switch (contentFolderType) {
+
+      case PRODUCTION:
+        return ProjectBundle.message("module.toggle.sources.action.description");
+      case PRODUCTION_RESOURCE:
+        return ProjectBundle.message("module.toggle.resources.action.description");
+      case TEST:
+        return ProjectBundle.message("module.toggle.test.sources.action.description");
+      case TEST_RESOURCE:
+        return ProjectBundle.message("module.toggle.test.resources.action.description");
+      case EXCLUDED:
+        return ProjectBundle.message("module.toggle.excluded.action.description");
+      default:
+        throw new IllegalArgumentException(contentFolderType.name());
+    }
   }
 }

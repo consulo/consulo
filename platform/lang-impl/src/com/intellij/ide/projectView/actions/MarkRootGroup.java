@@ -15,17 +15,37 @@
  */
 package com.intellij.ide.projectView.actions;
 
-import com.intellij.openapi.actionSystem.ActionGroupUtil;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.roots.ContentFolderType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yole
  */
-public class MarkRootGroup extends DefaultActionGroup implements DumbAware {
+public class MarkRootGroup extends ActionGroup implements DumbAware {
   @Override
   public void update(AnActionEvent e) {
     e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
+  }
+
+  @NotNull
+  @Override
+  public AnAction[] getChildren(@Nullable AnActionEvent e) {
+    List<AnAction> actionList = new ArrayList<AnAction>(5);
+    for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+      actionList.add(new MarkRootAction(contentFolderType));
+    }
+    actionList.add(new MarkExcludeRootAction());
+    if (!actionList.isEmpty()) {
+      actionList.add(AnSeparator.getInstance());
+      actionList.add(new UnmarkRootAction());
+    }
+
+    return actionList.isEmpty() ? AnAction.EMPTY_ARRAY : actionList.toArray(new AnAction[actionList.size()]);
   }
 }
