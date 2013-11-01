@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.roots;
 
+import com.google.common.base.Predicate;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * Represents a module content root.
@@ -53,10 +55,7 @@ public interface ContentEntry extends Synthetic {
    * @return
    */
   @NotNull
-  ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType);
-
-  @NotNull
-  ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes);
+  ContentFolder[] getFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate);
 
   /**
    * Returns the list of directories roots under this content root.
@@ -64,27 +63,19 @@ public interface ContentEntry extends Synthetic {
    * @return
    */
   @NotNull
-  VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType);
+  VirtualFile[] getFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate);
 
   @NotNull
-  VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes);
-
-  @NotNull
-  String[] getFolderUrls(@NotNull ContentFolderType contentFolderType);
-
-  @NotNull
-  String[] getFolderUrls(@NotNull ContentFolderType... contentFolderTypes);
+  String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate);
 
   @NotNull
   ContentFolder[] getFolders();
 
   @NotNull
-  ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType);
+  ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType);
 
   @NotNull
-  ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderType contentFolderType);
+  ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType);
 
   void removeFolder(@NotNull ContentFolder contentFolder);
-
-  void clearFolders(@NotNull ContentFolderType contentFolderType);
 }

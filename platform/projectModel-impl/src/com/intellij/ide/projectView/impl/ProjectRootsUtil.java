@@ -73,7 +73,7 @@ public class ProjectRootsUtil {
   }
 
   @Nullable
-  public static ContentFolder findContentRoot(@NotNull VirtualFile virtualFile, final Project project) {
+  public static ContentFolder getContentFolderIfIs(@NotNull VirtualFile virtualFile, final Project project) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module == null) {

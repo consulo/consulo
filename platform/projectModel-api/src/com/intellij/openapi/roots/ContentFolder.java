@@ -18,6 +18,7 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * Represents a source or exclude root under the content root of a module.
@@ -34,7 +35,7 @@ public interface ContentFolder extends Synthetic {
    * @return
    */
   @NotNull
-  ContentFolderType getType();
+  ContentFolderTypeProvider getType();
 
   /**
    * Returns the root directory for this root.

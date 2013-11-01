@@ -23,7 +23,6 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
@@ -48,7 +47,7 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
       final Project project = psiDirectory.getProject();
       boolean isArhiveSystem = vFile.getParent() == null && vFile.getFileSystem() instanceof ArchiveFileSystem;
       boolean isContentRoot = ProjectRootsUtil.isModuleContentRoot(vFile, project);
-      ContentFolder contentFolder = ProjectRootsUtil.findContentRoot(vFile, project);
+      ContentFolder contentFolder = ProjectRootsUtil.getContentFolderIfIs(vFile, project);
 
       Icon symbolIcon;
       if (isArhiveSystem) {
@@ -58,7 +57,7 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
         symbolIcon = AllIcons.Nodes.Module;
       }
       else if (contentFolder != null) {
-        symbolIcon = ContentFolderIconUtil.getRootIcon(contentFolder.getType());
+        symbolIcon = contentFolder.getType().getIcon();
       }
       else if (PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory) != null) {
         symbolIcon = ProjectRootsUtil.isInTestSource(psiDirectory) || ProjectRootsUtil.isInTestResource(psiDirectory)

@@ -15,13 +15,13 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
+import com.google.common.base.Predicates;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
@@ -31,6 +31,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -40,22 +41,22 @@ import java.util.List;
  * @author nik
  */
 public abstract class ModuleOutputElementTypeBase extends PackagingElementType<ModuleOutputPackagingElementImpl> {
-  private final ContentFolderType myContentFolderType;
+  private final ContentFolderTypeProvider myContentFolderTypeProvider;
 
-  public ModuleOutputElementTypeBase(String id, String presentableName, ContentFolderType contentFolderType) {
-    super(id, presentableName);
-    myContentFolderType = contentFolderType;
+  public ModuleOutputElementTypeBase(ContentFolderTypeProvider contentFolderType) {
+    super("module-" + contentFolderType.getId().toLowerCase(), contentFolderType.getName());
+    myContentFolderTypeProvider = contentFolderType;
   }
 
   @Nullable
   @Override
   public Icon getCreateElementIcon() {
-    return ContentFolderIconUtil.getRootIcon(myContentFolderType);
+    return myContentFolderTypeProvider.getIcon();
   }
 
   public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
     for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
-      if (entry.getFolders(myContentFolderType).length != 0) {
+      if (entry.getFolders(Predicates.equalTo(myContentFolderTypeProvider)).length != 0) {
         return true;
       }
     }
@@ -82,18 +83,18 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
     return elements;
   }
 
-  public ContentFolderType getContentFolderType() {
-    return myContentFolderType;
+  public ContentFolderTypeProvider getContentFolderType() {
+    return myContentFolderTypeProvider;
   }
 
   public ModuleOutputPackagingElementImpl createElement(@NotNull Project project, @NotNull NamedPointer<Module> pointer) {
-    return new ModuleOutputPackagingElementImpl(this, project, pointer, myContentFolderType);
+    return new ModuleOutputPackagingElementImpl(this, project, pointer, myContentFolderTypeProvider);
   }
 
   @NotNull
   @Override
   public ModuleOutputPackagingElementImpl createEmpty(@NotNull Project project) {
-    return new ModuleOutputPackagingElementImpl(this, project, myContentFolderType);
+    return new ModuleOutputPackagingElementImpl(this, project, myContentFolderTypeProvider);
   }
 
   private List<Module> getSuitableModules(ArtifactEditorContext context) {

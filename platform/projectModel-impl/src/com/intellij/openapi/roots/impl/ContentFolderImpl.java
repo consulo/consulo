@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
@@ -27,6 +27,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.UnknownContentFolderTypeProvider;
 
 /**
  * @author dsl
@@ -42,16 +44,16 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   private boolean myIsSynthetic;
   private final VirtualFilePointer myFilePointer;
   protected final ContentEntryImpl myContentEntry;
-  private final ContentFolderType myContentFolderType;
+  private final ContentFolderTypeProvider myContentFolderType;
 
-  ContentFolderImpl(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType, @NotNull ContentEntryImpl contentEntry) {
+  ContentFolderImpl(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType, @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
     myFilePointer = VirtualFilePointerManager.getInstance().create(file, this, null);
   }
 
-  ContentFolderImpl(@NotNull String url, @NotNull ContentFolderType contentFolderType, @NotNull ContentEntryImpl contentEntry) {
+  ContentFolderImpl(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType, @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
@@ -68,7 +70,7 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   }
 
   protected ContentFolderImpl(@NotNull VirtualFilePointer filePointer,
-                              @NotNull ContentFolderType contentFolderType,
+                              @NotNull ContentFolderTypeProvider contentFolderType,
                               @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
@@ -84,21 +86,19 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
     return url;
   }
 
-  private static ContentFolderType getType(Element element) throws InvalidDataException {
+  private static ContentFolderTypeProvider getType(Element element) throws InvalidDataException {
     String type = element.getAttributeValue(TYPE_ATTRIBUTE);
     if (type == null) {
       throw new InvalidDataException();
     }
 
-    //TODO [VISTALL] remove it after first beta
-    ContentFolderType contentFolderType = ContentFolderType.valueOf(type);
-    if(contentFolderType == ContentFolderType.SOURCE) {
-      contentFolderType = ContentFolderType.PRODUCTION;
+    for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensions()) {
+      if(Comparing.equal(contentFolderTypeProvider.getId(), type)) {
+        return contentFolderTypeProvider;
+      }
     }
-    else if(contentFolderType == ContentFolderType.RESOURCE) {
-      contentFolderType = ContentFolderType.PRODUCTION_RESOURCE;
-    }
-    return contentFolderType;
+
+    return new UnknownContentFolderTypeProvider(type);
   }
 
   @Override
@@ -117,7 +117,7 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   }
 
   protected void writeExternal(Element element) {
-    element.setAttribute(TYPE_ATTRIBUTE, myContentFolderType.name());
+    element.setAttribute(TYPE_ATTRIBUTE, myContentFolderType.getId());
     element.setAttribute(URL_ATTRIBUTE, myFilePointer.getUrl());
   }
 
@@ -134,13 +134,13 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
 
   @NotNull
   @Override
-  public ContentFolderType getType() {
+  public ContentFolderTypeProvider getType() {
     return myContentFolderType;
   }
 
   @Override
   public int compareTo(@NotNull ContentFolderImpl folder) {
-    int typeCompare = getType().compareTo(folder.getType());
+    int typeCompare = getType().getId().compareToIgnoreCase(folder.getType().getId());
     if(typeCompare != 0) {
       return typeCompare;
     }

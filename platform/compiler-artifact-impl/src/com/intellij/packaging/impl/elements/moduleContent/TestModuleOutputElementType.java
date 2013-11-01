@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.roots.ContentFolderType;
 
 /**
@@ -27,6 +26,6 @@ public class TestModuleOutputElementType extends ModuleOutputElementTypeBase {
   }
 
   public TestModuleOutputElementType() {
-    super("module-test-output", CompilerBundle.message("element.type.name.module.test.output"), ContentFolderType.TEST);
+    super(ContentFolderType.TEST);
   }
 }

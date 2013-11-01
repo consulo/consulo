@@ -1,12 +1,13 @@
 package com.intellij.openapi.externalSystem.service.project;
 
+import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author Denis Zhdanov
@@ -50,38 +51,20 @@ public class ModuleAwareContentRoot implements ContentEntry {
 
   @NotNull
   @Override
-  public ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType) {
-    return myDelegate.getFolders(contentFolderType);
+  public ContentFolder[] getFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    return myDelegate.getFolders(predicate);
   }
 
   @NotNull
   @Override
-  public ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes) {
-    return myDelegate.getFolders(contentFolderTypes);
+  public VirtualFile[] getFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    return myDelegate.getFolderFiles(predicate);
   }
 
   @NotNull
   @Override
-  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
-    return myDelegate.getFolderFiles(contentFolderType);
-  }
-
-  @NotNull
-  @Override
-  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes) {
-    return myDelegate.getFolderFiles(contentFolderTypes);
-  }
-
-  @NotNull
-  @Override
-  public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
-    return myDelegate.getFolderUrls(contentFolderType);
-  }
-
-  @NotNull
-  @Override
-  public String[] getFolderUrls(@NotNull ContentFolderType... contentFolderTypes) {
-    return myDelegate.getFolderUrls(contentFolderTypes);
+  public String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    return myDelegate.getFolderUrls(predicate);
   }
 
   @NonNull
@@ -92,13 +75,13 @@ public class ModuleAwareContentRoot implements ContentEntry {
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType) {
     return myDelegate.addFolder(file, contentFolderType);
   }
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType) {
     return myDelegate.addFolder(url, contentFolderType);
   }
 
@@ -106,11 +89,6 @@ public class ModuleAwareContentRoot implements ContentEntry {
   public void removeFolder(@NotNull ContentFolder contentFolder) {
     myDelegate.removeFolder(contentFolder);
 
-  }
-
-  @Override
-  public void clearFolders(@NotNull ContentFolderType contentFolderType) {
-    myDelegate.clearFolders(contentFolderType);
   }
 
   @Override

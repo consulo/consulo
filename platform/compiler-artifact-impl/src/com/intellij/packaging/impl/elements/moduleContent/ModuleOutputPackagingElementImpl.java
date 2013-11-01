@@ -43,6 +43,7 @@ import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -56,20 +57,20 @@ public final class ModuleOutputPackagingElementImpl
   @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
 
   private NamedPointer<Module> myModulePointer;
-  private final ContentFolderType myContentFolderType;
+  private final ContentFolderTypeProvider myContentFolderType;
   private final Project myProject;
 
   public ModuleOutputPackagingElementImpl(PackagingElementType type,
                                           Project project,
                                           NamedPointer<Module> modulePointer,
-                                          ContentFolderType contentFolderType) {
+                                          ContentFolderTypeProvider contentFolderType) {
     super(type);
     myProject = project;
     myModulePointer = modulePointer;
     myContentFolderType = contentFolderType;
   }
 
-  public ModuleOutputPackagingElementImpl(PackagingElementType type, Project project, ContentFolderType contentFolderType) {
+  public ModuleOutputPackagingElementImpl(PackagingElementType type, Project project, ContentFolderTypeProvider contentFolderType) {
     super(type);
     myProject = project;
     myContentFolderType = contentFolderType;

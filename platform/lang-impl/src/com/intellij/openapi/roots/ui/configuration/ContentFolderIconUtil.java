@@ -65,15 +65,11 @@ public class ContentFolderIconUtil {
 
   public static String getDescription(ContentFolderType contentFolderType) {
     switch (contentFolderType) {
-
       case PRODUCTION:
-        return ProjectBundle.message("module.toggle.sources.action.description");
       case PRODUCTION_RESOURCE:
-        return ProjectBundle.message("module.toggle.resources.action.description");
       case TEST:
-        return ProjectBundle.message("module.toggle.test.sources.action.description");
       case TEST_RESOURCE:
-        return ProjectBundle.message("module.toggle.test.resources.action.description");
+        return ProjectBundle.message("module.toggle.0.action.description", getName(contentFolderType));
       case EXCLUDED:
         return ProjectBundle.message("module.toggle.excluded.action.description");
       default:

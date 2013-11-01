@@ -16,11 +16,12 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.io.FileUtil;
@@ -34,6 +35,8 @@ import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.*;
 
@@ -92,29 +95,20 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
-  public ContentFolder[] getFolders(@NotNull ContentFolderType contentFolderType) {
+  public ContentFolder[] getFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
     List<ContentFolder> list = new ArrayList<ContentFolder>();
-    for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
+    for (ContentFolder contentFolder : getFolders0(predicate)) {
       list.add(contentFolder);
     }
     return list.isEmpty() ? ContentFolder.EMPTY_ARRAY : list.toArray(new ContentFolder[list.size()]);
   }
 
-  @NotNull
-  @Override
-  public ContentFolder[] getFolders(@NotNull ContentFolderType... contentFolderTypes) {
-    List<ContentFolder> list = new ArrayList<ContentFolder>();
-    for (ContentFolder contentFolder : getFolders0(contentFolderTypes)) {
-      list.add(contentFolder);
-    }
-    return list.isEmpty() ? ContentFolder.EMPTY_ARRAY : list.toArray(new ContentFolder[list.size()]);
-  }
 
   @NotNull
   @Override
-  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType contentFolderType) {
+  public VirtualFile[] getFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
     List<VirtualFile> list = new ArrayList<VirtualFile>();
-    for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
+    for (ContentFolder contentFolder : getFolders0(predicate)) {
       ContainerUtil.addIfNotNull(contentFolder.getFile(), list);
     }
     return VfsUtilCore.toVirtualFileArray(list);
@@ -122,56 +116,35 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
 
   @NotNull
   @Override
-  public VirtualFile[] getFolderFiles(@NotNull ContentFolderType... contentFolderTypes) {
-    List<VirtualFile> list = new ArrayList<VirtualFile>();
-    for (ContentFolder contentFolder : getFolders0(contentFolderTypes)) {
-      ContainerUtil.addIfNotNull(contentFolder.getFile(), list);
-    }
-    return VfsUtilCore.toVirtualFileArray(list);
-  }
-
-  @NotNull
-  @Override
-  public String[] getFolderUrls(@NotNull ContentFolderType contentFolderType) {
+  public String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
     List<String> list = new ArrayList<String>();
-    for (ContentFolder contentFolder : getFolders0(contentFolderType)) {
+    for (ContentFolder contentFolder : getFolders0(predicate)) {
       list.add(contentFolder.getUrl());
     }
     return ArrayUtil.toStringArray(list);
-  }
-
-  @NotNull
-  @Override
-  public String[] getFolderUrls(@NotNull ContentFolderType... contentFolderTypes) {
-    List<String> list = new ArrayList<String>();
-    for (ContentFolder contentFolder : getFolders0(contentFolderTypes)) {
-      list.add(contentFolder.getUrl());
-    }
-    return ArrayUtil.toStringArray(list);
-
   }
 
   @NotNull
   @Override
   public ContentFolder[] getFolders() {
-    final List<ContentFolder> contentFolders = getFolders0();
+    final List<ContentFolder> contentFolders = getFolders0(Predicates.<ContentFolderTypeProvider>alwaysTrue());
     return contentFolders.isEmpty() ? ContentFolder.EMPTY_ARRAY : contentFolders.toArray(new ContentFolder[contentFolders.size()]);
   }
 
-  private List<ContentFolder> getFolders0(ContentFolderType contentFolderType) {
+  private List<ContentFolder> getFolders0(Predicate<ContentFolderTypeProvider> predicate) {
     List<ContentFolder> list = new ArrayList<ContentFolder>();
     for (ContentFolder contentFolder : myContentFolders) {
-      if (contentFolder.getType() == contentFolderType) {
+      if (predicate.apply(contentFolder.getType())) {
         list.add(contentFolder);
       }
     }
 
-    if(contentFolderType == ContentFolderType.EXCLUDED) {
+    if(predicate.apply(ExcludedContentFolderTypeProvider.getInstance())) {
       for (DirectoryIndexExcludePolicy excludePolicy : Extensions
         .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
         final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
         for (VirtualFilePointer file : files) {
-          ContentFolderImpl contentFolder = new ContentFolderImpl(file, ContentFolderType.EXCLUDED, this);
+          ContentFolderImpl contentFolder = new ContentFolderImpl(file, ExcludedContentFolderTypeProvider.getInstance(), this);
           contentFolder.setSynthetic();
           list.add(contentFolder);
         }
@@ -179,54 +152,16 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
     }
     return list;
   }
-
-  private List<ContentFolder> getFolders0(ContentFolderType... contentFolderTypes) {
-    List<ContentFolder> list = new ArrayList<ContentFolder>();
-    for (ContentFolder contentFolder : myContentFolders) {
-      if (ArrayUtil.contains(contentFolder.getType(), contentFolderTypes)) {
-        list.add(contentFolder);
-      }
-    }
-
-    if(ArrayUtil.contains(ContentFolderType.EXCLUDED, contentFolderTypes)) {
-      for (DirectoryIndexExcludePolicy excludePolicy : Extensions
-        .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
-        final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
-        for (VirtualFilePointer file : files) {
-          ContentFolderImpl contentFolder = new ContentFolderImpl(file, ContentFolderType.EXCLUDED, this);
-          contentFolder.setSynthetic();
-          list.add(contentFolder);
-        }
-      }
-    }
-    return list;
-  }
-
-  private List<ContentFolder> getFolders0() {
-    List<ContentFolder> list = new ArrayList<ContentFolder>(myContentFolders);
-
-    for (DirectoryIndexExcludePolicy excludePolicy : Extensions
-      .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
-      final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
-      for (VirtualFilePointer file : files) {
-        ContentFolderImpl contentFolder = new ContentFolderImpl(file, ContentFolderType.EXCLUDED, this);
-        contentFolder.setSynthetic();
-        list.add(contentFolder);
-      }
-    }
-    return list;
-  }
-
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType) {
     assertCanAddFolder(file);
     return addFolder(new ContentFolderImpl(file, contentFolderType, this));
   }
 
   @NotNull
   @Override
-  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType) {
     assertFolderUnderMe(url);
     return addFolder(new ContentFolderImpl(url, contentFolderType, this));
   }
@@ -235,22 +170,6 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
     myContentFolders.add(f);
     Disposer.register(this, f); //rewire source folder dispose parent from rootmodel to this content root
     return f;
-  }
-
-  @Override
-  public void clearFolders(@NotNull ContentFolderType contentFolderType) {
-    assert !isDisposed();
-    getRootModel().assertWritable();
-
-    Iterator<ContentFolder> iterator = myContentFolders.iterator();
-    while (iterator.hasNext()) {
-      final ContentFolder next = iterator.next();
-      if (next.getType() == contentFolderType) {
-        iterator.remove();
-
-        Disposer.dispose((Disposable)next);
-      }
-    }
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.elements.moduleContent;
+package org.mustbe.consulo.roots;
 
-import com.intellij.openapi.roots.ContentFolderType;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author VISTALL
- * @since 9:54/31.05.13
+ * @since 23:38/31.10.13
  */
-public class TestResourceModuleOutputElementType extends ModuleOutputElementTypeBase {
-  public static TestResourceModuleOutputElementType getInstance() {
-    return getInstance(TestResourceModuleOutputElementType.class);
-  }
-
-  public TestResourceModuleOutputElementType() {
-    super(ContentFolderType.TEST_RESOURCE);
-  }
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.CLASS)
+public @interface CompilerSupport {
+  Class<? extends ContentFolderTypeProvider> ruleProvider();
 }

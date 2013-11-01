@@ -18,10 +18,10 @@ package com.intellij.packaging.elements;
 import com.intellij.compiler.ant.GenerationOptions;
 import com.intellij.compiler.ant.Generator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.packaging.artifacts.Artifact;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author nik
@@ -36,7 +36,7 @@ public interface ArtifactAntGenerationContext {
 
   String createNewTempFileProperty(@NonNls String basePropertyName, @NonNls String fileName);
 
-  String getModuleOutputPath(@NonNls String moduleName, @NotNull ContentFolderType contentFolderType);
+  String getModuleOutputPath(@NonNls String moduleName, @NotNull ContentFolderTypeProvider contentFolderType);
 
   String getSubstitutedPath(@NonNls String path);
 

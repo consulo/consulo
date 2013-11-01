@@ -22,12 +22,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 
@@ -36,19 +36,14 @@ import javax.swing.*;
  */
 public class MarkRootAction extends DumbAwareAction {
   @Nullable
-  private final ContentFolderType myContentFolderType;
+  private final ContentFolderTypeProvider myContentFolderType;
 
-  protected MarkRootAction(@NotNull ContentFolderType contentFolderType) {
-    this(ContentFolderIconUtil.getName(contentFolderType), ContentFolderIconUtil.getDescription(contentFolderType),
-         ContentFolderIconUtil.getRootIcon(contentFolderType), contentFolderType);
-  }
-
-  protected MarkRootAction(@Nullable String text,
+  public MarkRootAction(@Nullable String text,
                            @Nullable String description,
                            @Nullable Icon icon,
-                           @Nullable ContentFolderType contentFolderType) {
+                           @Nullable ContentFolderTypeProvider contentFolderTypeProvider) {
     super(text, description, icon);
-    myContentFolderType = contentFolderType;
+    myContentFolderType = contentFolderTypeProvider;
   }
 
   @Override

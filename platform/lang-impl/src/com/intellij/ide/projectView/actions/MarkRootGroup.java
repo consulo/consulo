@@ -16,8 +16,11 @@
 package com.intellij.ide.projectView.actions;
 
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.roots.ContentFolderType;
+import com.intellij.openapi.roots.ModuleRootManager;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +39,17 @@ public class MarkRootGroup extends ActionGroup implements DumbAware {
   @NotNull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
+    if(e == null) {
+      return EMPTY_ARRAY;
+    }
+    Module module = e.getData(LangDataKeys.MODULE);
+    if(module == null) {
+      return EMPTY_ARRAY;
+    }
+
+    for (ModuleExtension o : ModuleRootManager.getInstance(module).getExtensions()) {
+
+    }
     List<AnAction> actionList = new ArrayList<AnAction>(5);
     for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
       actionList.add(new MarkRootAction(contentFolderType));

@@ -15,7 +15,6 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.roots.ContentFolderType;
 
 /**
@@ -27,6 +26,6 @@ public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBa
   }
 
   public ProductionModuleOutputElementType() {
-    super("module-output", CompilerBundle.message("element.type.name.module.output"), ContentFolderType.PRODUCTION);
+    super(ContentFolderType.PRODUCTION);
   }
 }

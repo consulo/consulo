@@ -21,6 +21,7 @@ import org.consulo.annotations.Immutable;
 * @author VISTALL
 * @since 13:20/22.05.13
 */
+@Deprecated
 public enum ContentFolderType {
   @Deprecated
   SOURCE,   //TODO [VISTALL] remove it after first beta
