@@ -1,7 +1,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.LowMemoryWatcher;
-import jsr166e.SequenceLock;
+import jsr166e.extra.SequenceLock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.locks.Lock;
