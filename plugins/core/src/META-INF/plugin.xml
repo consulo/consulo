@@ -2431,8 +2431,6 @@
     <applicationService serviceInterface="com.intellij.codeEditor.printing.FileSeparatorProvider"
                         serviceImplementation="com.intellij.codeEditor.printing.FileSeparatorProvider"/>
 
-    <treeStructureProvider implementation="com.intellij.platform.PlatformProjectViewStructureProvider"/>
-
     <programRunner implementation="com.intellij.execution.runners.BasicProgramRunner" order="last"/>
 
     <projectConfigurable provider="com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurableProvider"
