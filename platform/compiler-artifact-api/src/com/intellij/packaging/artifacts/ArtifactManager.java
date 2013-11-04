@@ -15,12 +15,12 @@
  */
 package com.intellij.packaging.artifacts;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.util.messages.Topic;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,17 +31,15 @@ import java.util.Comparator;
 /**
  * @author nik
  */
+@ProjectService
 public abstract class ArtifactManager implements ArtifactModel {
   public static final Topic<ArtifactListener> TOPIC = Topic.create("artifacts changes", ArtifactListener.class);
   public static final Comparator<Artifact> ARTIFACT_COMPARATOR = new Comparator<Artifact>() {
+    @Override
     public int compare(Artifact o1, Artifact o2) {
       return o1.getName().compareToIgnoreCase(o2.getName());
     }
   };
-
-  public static ArtifactManager getInstance(@NotNull Project project) {
-    return project.getComponent(ArtifactManager.class);
-  }
 
   public abstract Artifact[] getSortedArtifacts();
 

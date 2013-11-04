@@ -1460,29 +1460,6 @@
     <applicationService serviceInterface="com.intellij.openapi.roots.ui.OrderEntryAppearanceService"
                         serviceImplementation="com.intellij.openapi.roots.ui.OrderEntryAppearanceServiceImpl"/>
 
-    <projectService serviceInterface="com.intellij.packaging.artifacts.ArtifactPointerManager"
-                    serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
-    <projectService serviceInterface="com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder"
-                    serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinderImpl"/>
-    <projectService serviceInterface="com.intellij.packaging.impl.artifacts.ArtifactSortingUtil"
-                    serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactSortingUtilImpl"/>
-    <applicationService serviceImplementation="com.intellij.packaging.impl.artifacts.InvalidArtifactType"/>
-
-    <projectService serviceInterface="com.intellij.openapi.compiler.CompilerManager"
-                    serviceImplementation="org.consulo.compiler.impl.CompilerManagerImpl"/>
-
-    <projectService serviceInterface="com.intellij.compiler.CompilerConfiguration"
-                    serviceImplementation="com.intellij.compiler.CompilerConfigurationImpl"/>
-
-    <projectService serviceInterface="com.intellij.compiler.CompilerEncodingService"
-                    serviceImplementation="com.intellij.compiler.CompilerEncodingServiceImpl"/>
-
-    <projectService serviceInterface="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"
-                    serviceImplementation="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"/>
-
-    <projectService serviceInterface="com.intellij.compiler.CompilerWorkspaceConfiguration"
-                    serviceImplementation="com.intellij.compiler.CompilerWorkspaceConfiguration"/>
-
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.ui.ChangesGroupingPolicyFactory"
                     serviceImplementation="com.intellij.openapi.vcs.changes.ui.ChangesModuleGroupingPolicyFactory"/>
 

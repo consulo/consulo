@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
@@ -47,15 +48,14 @@ import java.util.*;
  * @author nik
  */
 @State(
-    name = ArtifactManagerImpl.COMPONENT_NAME,
+    name = "ArtifactManager",
     storages = {
         @Storage( file = StoragePathMacros.PROJECT_FILE),
         @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/artifacts/", scheme = StorageScheme.DIRECTORY_BASED, stateSplitter = ArtifactManagerStateSplitter.class)
     }
 )
-public class ArtifactManagerImpl extends ArtifactManager implements ProjectComponent, PersistentStateComponent<ArtifactManagerState> {
+public class ArtifactManagerImpl extends ArtifactManager implements Disposable, PersistentStateComponent<ArtifactManagerState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.artifacts.ArtifactManagerImpl");
-  @NonNls public static final String COMPONENT_NAME = "ArtifactManager";
   @NonNls public static final String PACKAGING_ELEMENT_NAME = "element";
   @NonNls public static final String TYPE_ID_ATTRIBUTE = "id";
   private final ArtifactManagerModel myModel;
@@ -75,6 +75,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements ProjectCompo
     myProject = project;
     myModel = new ArtifactManagerModel();
     myResolvingContext = new DefaultPackagingElementResolvingContext(myProject);
+
+    VirtualFileManager.getInstance().addVirtualFileListener(new ArtifactVirtualFileListener(myProject, this), myProject);
+    updateWatchedRoots();
   }
 
   @NotNull
@@ -253,18 +256,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements ProjectCompo
     }
   }
 
-  public void disposeComponent() {
+  @Override
+  public void dispose() {
     LocalFileSystem.getInstance().removeWatchedRoots(myWatchedOutputs.values());
-  }
-
-  @NotNull
-  public String getComponentName() {
-    return COMPONENT_NAME;
-  }
-
-  public void initComponent() {
-    VirtualFileManager.getInstance().addVirtualFileListener(new ArtifactVirtualFileListener(myProject, this), myProject);
-    updateWatchedRoots();
   }
 
   private void updateWatchedRoots() {
@@ -290,12 +284,6 @@ public class ArtifactManagerImpl extends ArtifactManager implements ProjectCompo
     for (LocalFileSystem.WatchRequest request : newRequests) {
       myWatchedOutputs.put(request.getRootPath(), request);
     }
-  }
-
-  public void projectOpened() {
-  }
-
-  public void projectClosed() {
   }
 
   @Override

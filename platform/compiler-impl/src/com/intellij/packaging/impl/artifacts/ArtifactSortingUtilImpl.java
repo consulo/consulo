@@ -157,7 +157,7 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
       final PackagingElementResolvingContext context = myArtifactManager.getResolvingContext();
       final Artifact artifact = context.getArtifactModel().findArtifact(name);
       if (artifact != null) {
-        ArtifactUtil.processPackagingElements(artifact, ArtifactElementType.ARTIFACT_ELEMENT_TYPE, new PackagingElementProcessor<ArtifactPackagingElement>() {
+        ArtifactUtil.processPackagingElements(artifact, ArtifactElementType.getInstance(), new PackagingElementProcessor<ArtifactPackagingElement>() {
           @Override
           public boolean process(@NotNull ArtifactPackagingElement element,
                                  @NotNull PackagingElementPath path) {
