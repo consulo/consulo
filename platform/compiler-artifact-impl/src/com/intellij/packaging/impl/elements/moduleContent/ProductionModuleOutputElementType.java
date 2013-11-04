@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.openapi.roots.ContentFolderType;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 /**
 * @author nik
@@ -26,6 +26,6 @@ public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBa
   }
 
   public ProductionModuleOutputElementType() {
-    super(ContentFolderType.PRODUCTION);
+    super(ProductionContentFolderTypeProvider.getInstance());
   }
 }

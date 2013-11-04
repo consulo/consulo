@@ -88,10 +88,14 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.compiler.roots.CompilerPathsImpl;
+import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -112,11 +116,11 @@ public class CompileDriver {
 
   private final Project myProject;
   private final Map<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> myGenerationCompilerModuleToOutputDirMap;
-    // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
+  // [IntermediateOutputCompiler, Module] -> [ProductionSources, TestSources]
   private final String myCachesDirectoryPath;
   private boolean myShouldClearOutputDirectory;
 
-  private final Map<ContentFolderType, Map<Module, String>> myOutputs = new THashMap<ContentFolderType, Map<Module, String>>(4);
+  private final Map<ContentFolderTypeProvider, Map<Module, String>> myOutputs = new THashMap<ContentFolderTypeProvider, Map<Module, String>>(4);
 
   @NonNls private static final String VERSION_FILE_NAME = "version.dat";
   @NonNls private static final String LOCK_FILE_NAME = "in_progress.dat";
@@ -653,7 +657,7 @@ public class CompileDriver {
       // refresh on output roots is required in order for the order enumerator to see all roots via VFS
       final Set<File> outputs = new HashSet<File>();
       final Module[] affectedModules = compileContext.getCompileScope().getAffectedModules();
-      for (final String path : CompilerPathsEx.getOutputPaths(affectedModules)) {
+      for (final String path : CompilerPathsImpl.getOutputPaths(affectedModules)) {
         outputs.add(new File(path));
       }
       final LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -718,8 +722,7 @@ public class CompileDriver {
     if (compileStatus == null) {
       compileContext.requestRebuildNextTime(CompilerBundle.message("error.compiler.caches.corrupted"));
     }
-    else if (compileStatus.CACHE_FORMAT_VERSION != -1 &&
-             compileStatus.CACHE_FORMAT_VERSION != DEPENDENCY_FORMAT_VERSION) {
+    else if (compileStatus.CACHE_FORMAT_VERSION != -1 && compileStatus.CACHE_FORMAT_VERSION != DEPENDENCY_FORMAT_VERSION) {
       compileContext.requestRebuildNextTime(CompilerBundle.message("error.caches.old.format"));
     }
     else if (compileStatus.COMPILATION_IN_PROGRESS) {
@@ -967,28 +970,19 @@ public class CompileDriver {
   }
 
   private void clearAffectedOutputPathsIfPossible(final CompileContextEx context) {
-    final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(context.getProject());
     final List<File> scopeOutputs = new ReadAction<List<File>>() {
       @Override
       protected void run(final Result<List<File>> result) {
         final MultiMap<File, Module> outputToModulesMap = new MultiMap<File, Module>();
         for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-          final String outputPathUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.PRODUCTION);
-          if (outputPathUrl != null) {
-            final String path = VirtualFileManager.extractPath(outputPathUrl);
-            outputToModulesMap.putValue(new File(path), module);
-          }
-
-          final String outputPathForTestsUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.TEST);
-          if (outputPathForTestsUrl != null) {
-            final String path = VirtualFileManager.extractPath(outputPathForTestsUrl);
-            outputToModulesMap.putValue(new File(path), module);
-          }
-
-          final String outputPathForResourceUrl = compilerPathsManager.getCompilerOutputUrl(module, ContentFolderType.PRODUCTION_RESOURCE);
-          if (outputPathForResourceUrl != null) {
-            final String path = VirtualFileManager.extractPath(outputPathForResourceUrl);
-            outputToModulesMap.putValue(new File(path), module);
+          ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+          for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider
+            .filter(ContentFolderScopes.productionAndTest())) {
+            final String outputPathUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+            if (outputPathUrl != null) {
+              final String path = VirtualFileManager.extractPath(outputPathUrl);
+              outputToModulesMap.putValue(new File(path), module);
+            }
           }
         }
         final Set<Module> affectedModules = new HashSet<Module>(Arrays.asList(context.getCompileScope().getAffectedModules()));
@@ -1574,7 +1568,7 @@ public class CompileDriver {
   private Set<File> getAllOutputDirectories(CompileContext context) {
     final Set<File> outputDirs = new OrderedSet<File>();
     final Module[] modules = ModuleManager.getInstance(myProject).getModules();
-    for (final String path : CompilerPathsEx.getOutputPaths(modules)) {
+    for (final String path : CompilerPathsImpl.getOutputPaths(modules)) {
       outputDirs.add(new File(path));
     }
     for (Pair<IntermediateOutputCompiler, Module> pair : myGenerationCompilerModuleToOutputDirMap.keySet()) {
@@ -1959,7 +1953,7 @@ public class CompileDriver {
   }
 
   // [mike] performance optimization - this method is accessed > 15,000 times in Aurora
-  private String getModuleOutputPath(final Module module, ContentFolderType contentFolderType) {
+  private String getModuleOutputPath(final Module module, ContentFolderTypeProvider contentFolderType) {
     Map<Module, String> map = myOutputs.get(contentFolderType);
     if (map == null) {
       myOutputs.put(contentFolderType, map = new HashMap<Module, String>());
@@ -1967,7 +1961,7 @@ public class CompileDriver {
 
     String path = map.get(module);
     if (path == null) {
-      path = CompilerPaths.getModuleOutputPath(module, contentFolderType);
+      path = CompilerPathsImpl.getModuleOutputPath(module, contentFolderType);
       map.put(module, path);
     }
 
@@ -2197,7 +2191,7 @@ public class CompileDriver {
         }
 
         boolean isEmpty = true;
-        for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+        for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
           if (hasContent(module, contentFolderType)) {
             isEmpty = false;
             break;
@@ -2208,7 +2202,7 @@ public class CompileDriver {
           continue;
         }
 
-        for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+        for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
           if (hasContent(module, contentFolderType)) {
 
             final String outputPath = getModuleOutputPath(module, contentFolderType);
@@ -2367,10 +2361,10 @@ public class CompileDriver {
     }
   }
 
-  private static boolean hasContent(Module module, ContentFolderType c) {
+  private static boolean hasContent(Module module, ContentFolderTypeProvider c) {
     final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
     for (final ContentEntry contentEntry : contentEntries) {
-      final ContentFolder[] sourceFolders = contentEntry.getFolders(c);
+      final ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderScopes.of(c));
       if (sourceFolders.length > 0) {
         return true;
       }
@@ -2415,7 +2409,7 @@ public class CompileDriver {
   private boolean validateOutputAndSourcePathsIntersection() {
     final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
     List<VirtualFile> allOutputs = new ArrayList<VirtualFile>();
-    ContainerUtil.addAll(allOutputs, CompilerPathsEx.getOutputDirectories(allModules));
+    ContainerUtil.addAll(allOutputs, CompilerPathsImpl.getOutputDirectories(allModules));
     for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
       ContainerUtil.addIfNotNull(artifact.getOutputFile(), allOutputs);
     }

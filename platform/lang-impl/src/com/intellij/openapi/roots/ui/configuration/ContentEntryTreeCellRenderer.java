@@ -16,18 +16,13 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -69,31 +64,13 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
     for (ContentFolder contentFolder : entry.getFolders()) {
       final VirtualFile contentPath = contentFolder.getFile();
       if (file.equals(contentPath)) {
-        icon = ContentFolderIconUtil.getRootIcon(contentFolder.getType());
+        icon = contentFolder.getType().getIcon();
       }
       else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
         if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
           continue;
         }
-        switch (contentFolder.getType()) {
-          case EXCLUDED:
-            icon = AllIcons.Modules.ExcludeRoot;
-            break;
-          case PRODUCTION:
-          case PRODUCTION_RESOURCE:
-          case TEST:
-          case TEST_RESOURCE:
-            for (ModuleExtension moduleExtension : myTreeEditor.getContentEntryEditor().getModel().getExtensions()) {
-              for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
-                if (supportProvider.getSupportedModuleExtensionClass().isAssignableFrom(moduleExtension.getClass())) {
-                  icon = ArrayUtil.contains(contentFolder.getType(), ContentFolderType.ONLY_TEST_ROOTS)
-                         ? AllIcons.Nodes.TestPackage
-                         : AllIcons.Nodes.Package;
-                }
-              }
-            }
-            break;
-        }
+        icon = contentFolder.getType().getChildDirectoryIcon();
         currentRoot = contentPath;
       }
     }

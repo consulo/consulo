@@ -34,6 +34,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,7 +72,7 @@ public class PatchProjectUtil {
                 final Set<Pattern> dirPatterns = excludePatterns.get(module);
                 for (Pattern pattern : dirPatterns) {
                   if (pattern.matcher(relativeName).matches()) {
-                    contentEntry.addFolder(fileOrDir, ContentFolderType.EXCLUDED);
+                    contentEntry.addFolder(fileOrDir, ExcludedContentFolderTypeProvider.getInstance());
                     return false;
                   }
                 }
@@ -120,7 +121,7 @@ public class PatchProjectUtil {
           }
         }
         if (toExcludeSibling) {
-          contentEntry.addFolder(toExclude, ContentFolderType.EXCLUDED);
+          contentEntry.addFolder(toExclude, ExcludedContentFolderTypeProvider.getInstance());
         }
       }
     }

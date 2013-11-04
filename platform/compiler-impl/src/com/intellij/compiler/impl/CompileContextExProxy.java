@@ -23,12 +23,12 @@ import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Collection;
 import java.util.Set;
@@ -161,7 +161,7 @@ public class CompileContextExProxy implements CompileContextEx {
 
   @Nullable
   @Override
-  public VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType) {
+  public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
     return myDelegate.getOutputForFile(module, contentFolderType);
   }
 

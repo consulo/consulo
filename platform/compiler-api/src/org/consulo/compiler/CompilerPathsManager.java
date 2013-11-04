@@ -18,11 +18,11 @@ package org.consulo.compiler;
 import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL
@@ -76,22 +76,22 @@ public class CompilerPathsManager {
   }
 
   public void setCompilerOutputUrl(@NotNull Module module,
-                                   @NotNull ContentFolderType contentFolderType,
+                                   @NotNull ContentFolderTypeProvider contentFolderType,
                                    @Nullable String compilerOutputUrl) {
     ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
   }
 
-  public String getCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
+  public String getCompilerOutputUrl(@NotNull Module module, @NotNull ContentFolderTypeProvider contentFolderType) {
     return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
   }
 
   @Nullable
-  public VirtualFile getCompilerOutput(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
+  public VirtualFile getCompilerOutput(@NotNull Module module, @NotNull ContentFolderTypeProvider contentFolderType) {
     return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
   }
 
   @NotNull
-  public VirtualFilePointer getCompilerOutputPointer(@NotNull Module module, @NotNull ContentFolderType contentFolderType) {
+  public VirtualFilePointer getCompilerOutputPointer(@NotNull Module module, @NotNull ContentFolderTypeProvider contentFolderType) {
     return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPointer(contentFolderType);
   }
 }

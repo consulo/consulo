@@ -17,9 +17,6 @@ package com.intellij.compiler.ant;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
-import org.consulo.compiler.CompilerPathsManager;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -71,16 +68,6 @@ public class ModuleChunk {
 
   public Module[] getModules() {
     return myModules;
-  }
-
-  @Nullable
-  public String getOutputDirUrl() {
-    return CompilerPathsManager.getInstance(myMainModule.getProject()).getCompilerOutputUrl(myMainModule, ContentFolderType.PRODUCTION);
-  }
-
-  @Nullable
-  public String getTestsOutputDirUrl() {
-    return CompilerPathsManager.getInstance(myMainModule.getProject()).getCompilerOutputUrl(myMainModule, ContentFolderType.TEST);
   }
 
   public ModuleChunk[] getDependentChunks() {

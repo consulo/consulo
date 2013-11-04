@@ -20,7 +20,7 @@ import com.google.common.base.Predicates;
 import com.intellij.openapi.util.NotNullFactory;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.*;
 
 /**
  * @author VISTALL
@@ -32,10 +32,77 @@ public class ContentFolderScopes {
 
   private static final int ALL = 1;
   private static final int ALL_WITHOUT_EXCLUDE = 2;
+  private static final int PRODUCTION = 3;
+  private static final int TEST = 4;
+  private static final int ONLY_PRODUCTION = 5;
+  private static final int ONLY_TEST = 6;
+  private static final int PRODUCTION_AND_TEST = 7;
 
   @NotNull
   public static Predicate<ContentFolderTypeProvider> all() {
     return all(true);
+  }
+
+  @NotNull
+  public static Predicate<ContentFolderTypeProvider> of(@NotNull ContentFolderTypeProvider provider) {
+    return Predicates.equalTo(provider);
+  }
+
+  @NotNull
+  public static Predicate<ContentFolderTypeProvider> production() {
+    return cacheScope(PRODUCTION, new NotNullFactory<Predicate<ContentFolderTypeProvider>>() {
+      @NotNull
+      @Override
+      public Predicate<ContentFolderTypeProvider> create() {
+        return Predicates.or(Predicates.<ContentFolderTypeProvider>equalTo(ProductionContentFolderTypeProvider.getInstance()),
+                             Predicates.<ContentFolderTypeProvider>equalTo(ProductionResourceContentFolderTypeProvider.getInstance()));
+      }
+    });
+  }
+
+  @NotNull
+  public static Predicate<ContentFolderTypeProvider> test() {
+    return cacheScope(TEST, new NotNullFactory<Predicate<ContentFolderTypeProvider>>() {
+      @NotNull
+      @Override
+      public Predicate<ContentFolderTypeProvider> create() {
+        return Predicates.or(Predicates.<ContentFolderTypeProvider>equalTo(TestContentFolderTypeProvider.getInstance()),
+                             Predicates.<ContentFolderTypeProvider>equalTo(TestResourceContentFolderTypeProvider.getInstance()));
+      }
+    });
+  }
+
+  @NotNull
+  public static Predicate<ContentFolderTypeProvider> productionAndTest() {
+    return cacheScope(PRODUCTION_AND_TEST, new NotNullFactory<Predicate<ContentFolderTypeProvider>>() {
+      @NotNull
+      @Override
+      public Predicate<ContentFolderTypeProvider> create() {
+        return Predicates.or(production(), test());
+      }
+    });
+  }
+
+  @NotNull
+  public static Predicate<ContentFolderTypeProvider> onlyProduction() {
+    return cacheScope(ONLY_PRODUCTION, new NotNullFactory<Predicate<ContentFolderTypeProvider>>() {
+      @NotNull
+      @Override
+      public Predicate<ContentFolderTypeProvider> create() {
+        return Predicates.<ContentFolderTypeProvider>equalTo(ProductionContentFolderTypeProvider.getInstance());
+      }
+    });
+  }
+
+  @NotNull
+  public static Predicate<ContentFolderTypeProvider> onlyTest() {
+    return cacheScope(ONLY_TEST, new NotNullFactory<Predicate<ContentFolderTypeProvider>>() {
+      @NotNull
+      @Override
+      public Predicate<ContentFolderTypeProvider> create() {
+        return Predicates.<ContentFolderTypeProvider>equalTo(TestContentFolderTypeProvider.getInstance());
+      }
+    });
   }
 
   @NotNull
@@ -53,7 +120,7 @@ public class ContentFolderScopes {
 
   private static Predicate<ContentFolderTypeProvider> cacheScope(int id, NotNullFactory<Predicate<ContentFolderTypeProvider>> lazyFactory) {
     Predicate<ContentFolderTypeProvider> contentFolderTypeProviderPredicate = ourScopesCache.get(id);
-    if(contentFolderTypeProviderPredicate != null) {
+    if (contentFolderTypeProviderPredicate != null) {
       return contentFolderTypeProviderPredicate;
     }
     ourScopesCache.put(id, contentFolderTypeProviderPredicate = lazyFactory.create());

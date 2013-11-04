@@ -18,7 +18,6 @@ package org.mustbe.consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.CompilerSupport;
 
 import javax.swing.*;
 
@@ -26,8 +25,11 @@ import javax.swing.*;
  * @author VISTALL
  * @since 22:37/31.10.13
  */
-@CompilerSupport(ruleProvider = ProductionResourceContentFolderTypeProvider.class)
 public class ProductionResourceContentFolderTypeProvider extends BaseContentFolderTypeProvider {
+  public static ProductionResourceContentFolderTypeProvider getInstance() {
+    return EP_NAME.findExtension(ProductionResourceContentFolderTypeProvider.class);
+  }
+
   public ProductionResourceContentFolderTypeProvider() {
     super("PRODUCTION_RESOURCE");
   }

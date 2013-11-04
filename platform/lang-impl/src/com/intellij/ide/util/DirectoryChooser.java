@@ -24,10 +24,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
@@ -48,6 +46,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -328,9 +327,9 @@ public class DirectoryChooser extends DialogWrapper {
     public Icon getIcon(ProjectFileIndex fileIndex) {
       if (myDirectory != null) {
         VirtualFile virtualFile = myDirectory.getVirtualFile();
-        ContentFolderType contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(virtualFile);
+        ContentFolderTypeProvider contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(virtualFile);
         if(contentFolderTypeForFile != null) {
-          return ContentFolderIconUtil.getRootIcon(contentFolderTypeForFile);
+          return contentFolderTypeForFile.getIcon();
         }
       }
       return AllIcons.Nodes.Folder;

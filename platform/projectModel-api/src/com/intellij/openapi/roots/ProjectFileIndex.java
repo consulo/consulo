@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.List;
 
@@ -88,7 +89,7 @@ public interface ProjectFileIndex extends FileIndex {
   VirtualFile getContentRootForFile(@NotNull VirtualFile file);
 
   @Nullable
-  ContentFolderType getContentFolderTypeForFile(@NotNull VirtualFile file);
+  ContentFolderTypeProvider getContentFolderTypeForFile(@NotNull VirtualFile file);
 
   /**
    * Returns the name of the package corresponding to the specified directory.

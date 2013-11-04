@@ -35,7 +35,10 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction;
@@ -51,12 +54,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.awt.*;
 import java.util.*;
@@ -232,8 +235,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
           );
         }
 
-        final VirtualFile[] sourceAndTestFiles = ArrayUtil.mergeArrays(contentEntry.getFolderFiles(ContentFolderType.PRODUCTION),
-                                                                 contentEntry.getFolderFiles(ContentFolderType.TEST));
+        final VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(ContentFolderScopes.all(false));
         for (VirtualFile srcRoot : sourceAndTestFiles) {
           final VirtualFile anotherContentRoot = srcRootsToContentRootMap.put(srcRoot, contentRoot);
           if (anotherContentRoot != null) {

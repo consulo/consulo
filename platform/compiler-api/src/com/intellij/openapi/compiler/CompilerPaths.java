@@ -16,20 +16,13 @@
 package com.intellij.openapi.compiler;
 
 import com.intellij.ide.highlighter.ProjectFileType;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.PathUtil;
-import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,85 +132,6 @@ public class CompilerPaths {
     final String systemPath =
       ourSystemPath != null ? ourSystemPath : (ourSystemPath = PathUtil.getCanonicalPath(PathManager.getSystemPath()));
     return new File(systemPath, "compiler");
-  }
-
-  /**
-   * @param module
-   * @param forTestClasses true if directory for test sources, false - for sources.
-   * @return a directory to which the sources (or test sources depending on the second partameter) should be compiled.
-   *         Null is returned if output directory is not specified or is not valid
-   */
-  @Nullable
-  public static VirtualFile getModuleOutputDirectory(final Module module, boolean forTestClasses) {
-    final CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
-    VirtualFile outPath;
-    if (forTestClasses) {
-      final VirtualFile path = manager.getCompilerOutput(module, ContentFolderType.TEST);
-      if (path != null) {
-        outPath = path;
-      }
-      else {
-        outPath = manager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
-      }
-    }
-    else {
-      outPath = manager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
-    }
-    if (outPath == null) {
-      return null;
-    }
-    if (!outPath.isValid()) {
-      LOG.info("Requested output path for module " + module.getName() + " is not valid");
-      return null;
-    }
-    return outPath;
-  }
-
-  /**
-   * The same as {@link #getModuleOutputDirectory} but returns String.
-   * The method still returns a non-null value if the output path is specified in Settings but does not exist on disk.
-   */
-  @Nullable
-  @Deprecated
-  public static String getModuleOutputPath(final Module module, final boolean forTestClasses) {
-    final String outPathUrl;
-    final Application application = ApplicationManager.getApplication();
-    final CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(module.getProject());
-
-    if (application.isDispatchThread()) {
-      outPathUrl = pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
-    }
-    else {
-      outPathUrl = application.runReadAction(new Computable<String>() {
-        @Override
-        public String compute() {
-          return pathsManager.getCompilerOutputUrl(module, forTestClasses ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
-        }
-      });
-    }
-
-    return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
-  }
-
-  @Nullable
-  public static String getModuleOutputPath(final Module module, final ContentFolderType contentFolderType) {
-    final String outPathUrl;
-    final Application application = ApplicationManager.getApplication();
-    final CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(module.getProject());
-
-    if (application.isDispatchThread()) {
-      outPathUrl = pathsManager.getCompilerOutputUrl(module, contentFolderType);
-    }
-    else {
-      outPathUrl = application.runReadAction(new Computable<String>() {
-        @Override
-        public String compute() {
-          return pathsManager.getCompilerOutputUrl(module, contentFolderType);
-        }
-      });
-    }
-
-    return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
   }
 
   @NonNls

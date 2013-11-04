@@ -36,6 +36,7 @@ import com.intellij.util.containers.HashSet;
 import org.consulo.compiler.server.fileSystem.archive.ChildArchiveNewVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,12 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
     directoryInfo = getDirectoryInfo0(fileForInfo);
     myInfoDirectoryCache.put(fileForInfo, directoryInfo);
     return directoryInfo;
+  }
+
+  @Nullable
+  @Override
+  public ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info) {
+    return null;
   }
 
   private DirectoryInfo getDirectoryInfo0(VirtualFile fileForInfo) {

@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.openapi.roots.ContentFolderType;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 /**
  * @author nik
@@ -26,6 +26,6 @@ public class TestModuleOutputElementType extends ModuleOutputElementTypeBase {
   }
 
   public TestModuleOutputElementType() {
-    super(ContentFolderType.TEST);
+    super(TestContentFolderTypeProvider.getInstance());
   }
 }

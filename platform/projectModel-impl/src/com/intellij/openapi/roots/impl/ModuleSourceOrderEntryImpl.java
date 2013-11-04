@@ -27,6 +27,7 @@ import com.intellij.util.ArrayUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.ArrayList;
 
@@ -95,7 +96,7 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
     if (OrderRootType.SOURCES.equals(type)) {
       final ContentEntry[] content = getRootModel().getContentEntries();
       for (ContentEntry contentEntry : content) {
-        for (String url : contentEntry.getFolderUrls(ContentFolderType.ALL_SOURCE_ROOTS)) {
+        for (String url : contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest())) {
           result.add(url);
         }
       }

@@ -42,6 +42,7 @@ import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,7 +157,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     if (ArrayUtil.contains(folder.getType(), ContentFolderType.ALL_SOURCE_ROOTS)) {
       return formatRelativePath(folder, AllIcons.Nodes.Folder);
     }
-    else if (folder.getType() == ContentFolderType.EXCLUDED) {
+    else if (folder.getType() == ExcludedContentFolderTypeProvider.getInstance()) {
       return formatRelativePath(folder, EXCLUDE_FOLDER_ICON);
     }
     else {

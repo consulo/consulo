@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.openapi.roots.ContentFolderType;
+import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 
 /**
  * @author VISTALL
@@ -27,6 +27,6 @@ public class ProductionResourceModuleOutputElementType extends ModuleOutputEleme
   }
 
   public ProductionResourceModuleOutputElementType() {
-    super(ContentFolderType.PRODUCTION_RESOURCE);
+    super(ProductionResourceContentFolderTypeProvider.getInstance());
   }
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import com.intellij.openapi.roots.ContentFolderType;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 /**
  * @author VISTALL
@@ -27,6 +27,6 @@ public class TestResourceModuleOutputElementType extends ModuleOutputElementType
   }
 
   public TestResourceModuleOutputElementType() {
-    super(ContentFolderType.TEST_RESOURCE);
+    super(TestContentFolderTypeProvider.getInstance());
   }
 }

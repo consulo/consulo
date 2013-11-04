@@ -18,12 +18,12 @@ package com.intellij.openapi.compiler;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * An interface allowing access and modification of the data associated with the current compile session.
@@ -149,7 +149,7 @@ public interface CompileContext extends UserDataHolder {
   VirtualFile getOutputForFile(Module module, VirtualFile virtualFile);
 
   @Nullable
-  VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType);
+  VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType);
 
   /**
    * Checks if the compilation is incremental, i.e. triggered by one of "Make" actions.

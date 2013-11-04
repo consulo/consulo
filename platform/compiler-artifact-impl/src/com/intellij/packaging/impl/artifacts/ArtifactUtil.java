@@ -17,7 +17,6 @@ package com.intellij.packaging.impl.artifacts;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Trinity;
@@ -41,6 +40,7 @@ import org.consulo.compiler.CompilerPathsManager;
 import org.consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 import java.util.*;
 
@@ -607,7 +607,7 @@ public class ArtifactUtil {
       public boolean process(@NotNull PackagingElement<?> element) {
         if (element instanceof ModuleOutputPackagingElement &&
             module.equals(((ModuleOutputPackagingElement)element).findModule(context)) &&
-            ((ModuleOutputPackagingElement)element).getContentFolderType() == ContentFolderType.PRODUCTION) {
+            ((ModuleOutputPackagingElement)element).getContentFolderType() == ProductionContentFolderTypeProvider.getInstance()) {
           return false;
         }
         if (element instanceof ArtifactPackagingElement && result.contains(((ArtifactPackagingElement)element).findArtifact(context))) {

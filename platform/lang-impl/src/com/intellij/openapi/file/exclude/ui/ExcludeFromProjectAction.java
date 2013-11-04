@@ -22,11 +22,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 /**
  * @author Rustam Vishnyakov
@@ -37,7 +37,7 @@ public class ExcludeFromProjectAction extends AnAction {
     DataContext dataContext = e.getDataContext();
     final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return;
-    final VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
     if (file == null) return;
     if (file.isDirectory()) {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -62,7 +62,7 @@ public class ExcludeFromProjectAction extends AnAction {
       VirtualFile entryFile = entry.getFile();
       if (entryFile != null) {
         if (VfsUtilCore.isAncestor(entryFile, folder, true)) {
-          entry.addFolder(folder, ContentFolderType.EXCLUDED);
+          entry.addFolder(folder, ExcludedContentFolderTypeProvider.getInstance());
           model.commit();
           return;
         }
@@ -74,7 +74,7 @@ public class ExcludeFromProjectAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
     final Presentation presentation = e.getPresentation();
     if (file == null) {
       presentation.setVisible(false);

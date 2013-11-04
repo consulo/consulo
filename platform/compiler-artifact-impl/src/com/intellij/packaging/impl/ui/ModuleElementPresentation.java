@@ -28,6 +28,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author nik
@@ -35,11 +36,11 @@ import org.jetbrains.annotations.Nullable;
 public class ModuleElementPresentation extends TreeNodePresentation {
   private final NamedPointer<Module> myModulePointer;
   private final ArtifactEditorContext myContext;
-  private final ContentFolderType myContentFolderType;
+  private final ContentFolderTypeProvider myContentFolderType;
 
   public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer,
                                    @NotNull ArtifactEditorContext context,
-                                   final ContentFolderType contentFolderType) {
+                                   final ContentFolderTypeProvider contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
     myContentFolderType = contentFolderType;
@@ -73,7 +74,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
                      SimpleTextAttributes mainAttributes,
                      SimpleTextAttributes commentAttributes) {
     final Module module = findModule();
-    presentationData.setIcon(ContentFolderIconUtil.getRootIcon(myContentFolderType));
+    presentationData.setIcon(myContentFolderType.getIcon());
 
     String moduleName;
     if (module != null) {

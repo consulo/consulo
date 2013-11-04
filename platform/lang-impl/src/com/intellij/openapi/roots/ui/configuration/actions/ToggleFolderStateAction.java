@@ -25,6 +25,7 @@ import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 
@@ -34,9 +35,9 @@ import javax.swing.*;
  */
 public class ToggleFolderStateAction extends ContentEntryEditingAction {
   private final ContentEntryTreeEditor myEntryTreeEditor;
-  private final ContentFolderType myContentFolderType;
+  private final ContentFolderTypeProvider myContentFolderType;
 
-  public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolderType contentFolderType) {
+  public ToggleFolderStateAction(JTree tree, ContentEntryTreeEditor entryEditor, ContentFolderTypeProvider contentFolderType) {
     super(tree);
     myEntryTreeEditor = entryEditor;
     myContentFolderType = contentFolderType;
@@ -91,7 +92,7 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
           contentEntryEditor.addFolder(selectedFile, myContentFolderType);
         }
         else {
-          if (myContentFolderType != contentFolder.getType()) {
+          if (myContentFolderType.equals(contentFolder.getType())) {
 
             contentEntryEditor.removeFolder(contentFolder);
             contentEntryEditor.addFolder(selectedFile, myContentFolderType);

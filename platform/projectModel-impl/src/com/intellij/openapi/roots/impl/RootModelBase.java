@@ -23,6 +23,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,7 +67,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public String[] getExcludeRootUrls() {
     final List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderType.EXCLUDED));
+      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -75,7 +77,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   public VirtualFile[] getExcludeRoots() {
     final List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderType.EXCLUDED));
+      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }
@@ -91,7 +93,9 @@ public abstract class RootModelBase implements ModuleRootModel {
   public String[] getSourceRootUrls(boolean includingTests) {
     List<String> result = new SmartList<String>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests ? contentEntry.getFolderUrls(ContentFolderType.ALL_SOURCE_ROOTS) : contentEntry.getFolderUrls(ContentFolderType.ONLY_PRODUCTION_ROOTS));
+      Collections.addAll(result, includingTests
+                                 ? contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest())
+                                 : contentEntry.getFolderUrls(ContentFolderScopes.production()));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -107,7 +111,9 @@ public abstract class RootModelBase implements ModuleRootModel {
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
     List<VirtualFile> result = new SmartList<VirtualFile>();
     for (ContentEntry contentEntry : getContent()) {
-       Collections.addAll(result, includingTests ? contentEntry.getFolderFiles(ContentFolderType.ALL_SOURCE_ROOTS) : contentEntry.getFolderFiles(ContentFolderType.ONLY_PRODUCTION_ROOTS));
+      Collections.addAll(result, includingTests
+                                 ? contentEntry.getFolderFiles(ContentFolderScopes.productionAndTest())
+                                 : contentEntry.getFolderFiles(ContentFolderScopes.production()));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }

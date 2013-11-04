@@ -15,12 +15,12 @@
  */
 package org.consulo.compiler;
 
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.consulo.lombok.annotations.ModuleService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL
@@ -36,14 +36,14 @@ public abstract class ModuleCompilerPathsManager {
 
   public abstract void setExcludeOutput(boolean val);
 
-  public abstract void setCompilerOutputUrl(@NotNull ContentFolderType contentFolderType, @Nullable String compilerOutputUrl);
+  public abstract void setCompilerOutputUrl(@NotNull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
 
   @Nullable
-  public abstract String getCompilerOutputUrl(@NotNull ContentFolderType contentFolderType);
+  public abstract String getCompilerOutputUrl(@NotNull ContentFolderTypeProvider contentFolderType);
 
   @Nullable
-  public abstract VirtualFile getCompilerOutput(@NotNull ContentFolderType contentFolderType);
+  public abstract VirtualFile getCompilerOutput(@NotNull ContentFolderTypeProvider contentFolderType);
 
   @NotNull
-  public abstract VirtualFilePointer getCompilerOutputPointer(@NotNull ContentFolderType contentFolderType);
+  public abstract VirtualFilePointer getCompilerOutputPointer(@NotNull ContentFolderTypeProvider contentFolderType);
 }

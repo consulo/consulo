@@ -29,6 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -166,7 +167,7 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
 
   @Nullable
   @Override
-  public ContentFolderType getContentFolderTypeForFile(@NotNull VirtualFile file) {
+  public ContentFolderTypeProvider getContentFolderTypeForFile(@NotNull VirtualFile file) {
     final DirectoryInfo info = getInfoForFileOrDirectory(file);
     if (info == null) return null;
     return info.findContentFolderType();
@@ -197,8 +198,7 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   public boolean isInSource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
     if (info != null) {
-      return info.hasContentFolderFlag(ContentFolderType.PRODUCTION) ||
-             info.hasContentFolderFlag(ContentFolderType.TEST) ||
+      return info.isInModuleSource() ||
              info.isInLibrarySource();
     }
     else {
@@ -210,6 +210,7 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   @Override
   public boolean isInResource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
+    if(info.isInModuleSource() && getContentFolderTypeForFile())
     if (info != null) {
       return info.hasContentFolderFlag(ContentFolderType.PRODUCTION_RESOURCE);
     }

@@ -16,11 +16,11 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Collection;
 
@@ -32,7 +32,7 @@ public interface ModuleOutputPackagingElement {
   String getModuleName();
 
   @NotNull
-  ContentFolderType getContentFolderType();
+  ContentFolderTypeProvider getContentFolderType();
 
   @Nullable
   Module findModule(PackagingElementResolvingContext context);

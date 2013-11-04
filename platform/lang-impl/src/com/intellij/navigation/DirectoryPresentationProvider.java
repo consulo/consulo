@@ -21,13 +21,12 @@ import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 
@@ -50,9 +49,9 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
     }
 
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    ContentFolderType contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(vFile);
+    ContentFolderTypeProvider contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(vFile);
     if(contentFolderTypeForFile != null) {
-      return new PresentationData(directory.getName(), locationString, ContentFolderIconUtil.getRootIcon(contentFolderTypeForFile), null);
+      return new PresentationData(directory.getName(), locationString, contentFolderTypeForFile.getIcon(), null);
     }
     return new PresentationData(directory.getName(), locationString, AllIcons.Nodes.TreeClosed, null);
   }

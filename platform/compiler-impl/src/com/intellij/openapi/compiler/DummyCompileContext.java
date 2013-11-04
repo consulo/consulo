@@ -19,14 +19,15 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 public class DummyCompileContext implements CompileContext {
   protected DummyCompileContext() {
@@ -106,7 +107,8 @@ public class DummyCompileContext implements CompileContext {
     return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
       @Override
       public VirtualFile compute() {
-        return CompilerPathsManager.getInstance(module.getProject()).getCompilerOutput(module, ContentFolderType.PRODUCTION);
+        return ModuleCompilerPathsManager.getInstance(module)
+          .getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
       }
     });
   }
@@ -123,7 +125,7 @@ public class DummyCompileContext implements CompileContext {
 
   @Nullable
   @Override
-  public VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType) {
+  public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
     return null;
   }
 

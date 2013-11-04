@@ -19,7 +19,6 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
@@ -28,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -185,7 +185,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   @Nullable
-  public ContentFolder addFolder(@NotNull final VirtualFile file, ContentFolderType contentFolderType) {
+  public ContentFolder addFolder(@NotNull final VirtualFile file, ContentFolderTypeProvider contentFolderType) {
     final ContentEntry contentEntry = getContentEntry();
     if (contentEntry != null) {
       final ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);

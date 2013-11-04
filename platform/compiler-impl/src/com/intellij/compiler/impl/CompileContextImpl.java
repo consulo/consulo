@@ -55,6 +55,7 @@ import org.consulo.compiler.CompilerPathsManager;
 import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.compiler.roots.CompilerPathsImpl;
 
 import java.io.File;
 import java.util.*;
@@ -458,12 +459,12 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public VirtualFile getModuleOutputDirectory(Module module) {
-    return CompilerPaths.getModuleOutputDirectory(module, false);
+    return CompilerPathsImpl.getModuleOutputDirectory(module, false);
   }
 
   @Override
   public VirtualFile getModuleOutputDirectoryForTests(Module module) {
-    return CompilerPaths.getModuleOutputDirectory(module, true);
+    return CompilerPathsImpl.getModuleOutputDirectory(module, true);
   }
 
   @Override

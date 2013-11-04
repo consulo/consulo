@@ -25,9 +25,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.Processor;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.util.*;
@@ -201,14 +205,15 @@ public class ModuleDependenciesAnalyzer {
               }
               else if (orderEntry instanceof ModuleSourceOrderEntry) {
                 if (!myProduction || !myCompile) {
-                  CompilerPathsManager e = CompilerPathsManager.getInstance(m.getProject());
+                  ModuleCompilerPathsManager e = ModuleCompilerPathsManager.getInstance(m);
                   final OrderPath p = new OrderPath(myStack);
 
-                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.PRODUCTION));
-                  addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.PRODUCTION_RESOURCE));
+                  addUrlPath(p, e.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance()));
+                  addUrlPath(p, e.getCompilerOutputUrl(ProductionResourceContentFolderTypeProvider.getInstance()));
                   boolean includeTests = !myCompile ? !myProduction : level > 0 && !myProduction;
                   if(includeTests) {
-                    addUrlPath(p, e.getCompilerOutputUrl(m, ContentFolderType.TEST));
+                    addUrlPath(p, e.getCompilerOutputUrl(TestContentFolderTypeProvider.getInstance()));
+                    addUrlPath(p, e.getCompilerOutputUrl(TestResourceContentFolderTypeProvider.getInstance()));
                   }
                   addEntryPath(orderEntry, p);
                 }

@@ -15,12 +15,17 @@
  */
 package org.mustbe.consulo.roots;
 
+import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.Comparing;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -73,5 +78,26 @@ public abstract class ContentFolderTypeProvider {
   @Override
   public int hashCode() {
     return myId.hashCode();
+  }
+
+  @NotNull
+  public static List<ContentFolderTypeProvider> filter(@NotNull Predicate<ContentFolderTypeProvider> predicate){
+    List<ContentFolderTypeProvider> providers = new ArrayList<ContentFolderTypeProvider>();
+    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensions()) {
+      if(predicate.apply(contentFolderTypeProvider)) {
+        providers.add(contentFolderTypeProvider);
+      }
+    }
+    return providers;
+  }
+
+  @Nullable
+  public static ContentFolderTypeProvider byId(String attributeValue) {
+    for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensions()) {
+      if (Comparing.equal(attributeValue, contentFolderTypeProvider.getId())) {
+        return contentFolderTypeProvider;
+      }
+    }
+    return null;
   }
 }

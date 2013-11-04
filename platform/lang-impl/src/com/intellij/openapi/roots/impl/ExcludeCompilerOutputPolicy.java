@@ -19,7 +19,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -28,6 +27,8 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
     }
 
     for (Module m : ModuleManager.getInstance(myProject).getModules()) {
-      for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
         if (isEqualWithFileOrUrl(file, manager.getCompilerOutput(m, contentFolderType),
                                  manager.getCompilerOutputUrl(m, contentFolderType))) {
           return true;
@@ -64,7 +65,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
   public boolean isExcludeRootForModule(@NotNull final Module module, final VirtualFile excludeRoot) {
     CompilerPathsManager manager = CompilerPathsManager.getInstance(myProject);
 
-    for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+    for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
       if (Comparing.equal(manager.getCompilerOutputUrl(module, contentFolderType), excludeRoot)) {
         return true;
       }
@@ -102,7 +103,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
         return VirtualFilePointer.EMPTY_ARRAY;
       }
 
-      for (ContentFolderType contentFolderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+      for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
         result.add(manager.getCompilerOutputPointer(module, contentFolderType));
       }
     }

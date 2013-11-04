@@ -57,9 +57,11 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.*;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.*;
 import java.util.*;
@@ -599,12 +601,12 @@ public class TranslatingCompilerFilesMonitor implements ApplicationComponent {
   }
 
   private TIntObjectHashMap<Pair<Integer, Integer>> buildOutputRootsLayout(ProjectRef projRef) {
-    CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(projRef.get());
-    final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
+   final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
     for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
-      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
+      ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+      final VirtualFile output = moduleCompilerPathsManager.getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
       final int first = output != null ? Math.abs(getFileId(output)) : -1;
-      final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, ContentFolderType.TEST);
+      final VirtualFile testsOutput = moduleCompilerPathsManager.getCompilerOutput(TestContentFolderTypeProvider.getInstance());
       final int second = testsOutput != null ? Math.abs(getFileId(testsOutput)) : -1;
       map.put(getModuleId(module), new Pair<Integer, Integer>(first, second));
     }

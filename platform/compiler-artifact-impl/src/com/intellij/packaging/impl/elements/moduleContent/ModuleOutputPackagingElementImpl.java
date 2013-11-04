@@ -22,7 +22,6 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -38,11 +37,12 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Collection;
@@ -96,8 +96,7 @@ public final class ModuleOutputPackagingElementImpl
                                                      @NotNull ArtifactType artifactType) {
     final Module module = findModule(resolvingContext);
     if (module != null) {
-      final CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
-      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, myContentFolderType);
+      final VirtualFile output = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(myContentFolderType);
       if (output != null) {
         creator.addDirectoryCopyInstructions(output, null);
       }
@@ -115,7 +114,7 @@ public final class ModuleOutputPackagingElementImpl
     List<VirtualFile> roots = new SmartList<VirtualFile>();
     ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
     for (ContentEntry entry : rootModel.getContentEntries()) {
-      for (ContentFolder folder : entry.getFolders(myContentFolderType)) {
+      for (ContentFolder folder : entry.getFolders(ContentFolderScopes.of(myContentFolderType))) {
         ContainerUtil.addIfNotNull(folder.getFile(), roots);
       }
     }
@@ -139,7 +138,7 @@ public final class ModuleOutputPackagingElementImpl
     return element.getClass() == getClass() &&
            myModulePointer != null &&
            myModulePointer.equals(((ModuleOutputPackagingElementImpl)element).myModulePointer) &&
-           myContentFolderType == ((ModuleOutputPackagingElementImpl)element).getContentFolderType();
+           myContentFolderType.equals(((ModuleOutputPackagingElementImpl)element).getContentFolderType());
   }
 
   @Override
@@ -165,7 +164,7 @@ public final class ModuleOutputPackagingElementImpl
 
   @NotNull
   @Override
-  public ContentFolderType getContentFolderType() {
+  public ContentFolderTypeProvider getContentFolderType() {
     return myContentFolderType;
   }
 

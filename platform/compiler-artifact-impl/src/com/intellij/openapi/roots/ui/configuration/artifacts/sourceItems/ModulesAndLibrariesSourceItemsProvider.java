@@ -36,6 +36,7 @@ import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 
@@ -140,7 +141,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     }
 
     for(ContentEntry c :  context.getModulesProvider().getRootModel(module).getContentEntries()) {
-      if(c.getFolderFiles(type.getContentFolderType()).length > 0) {
+      if(c.getFolderFiles(ContentFolderScopes.of(type.getContentFolderType())).length > 0) {
         return true;
       }
     }
