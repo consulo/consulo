@@ -16,6 +16,8 @@
   <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
   <extensionPoints>
+    <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP" />
+    <extensionPoint name="addTo.listOfElements" beanClass="org.mustbe.consulo.util.AddToElementEP" />
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>

@@ -21,11 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtil;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
+import org.mustbe.consulo.util.ListOfElementsEP;
 
 /**
  * @author VISTALL
@@ -34,13 +33,19 @@ import org.consulo.module.extension.ModuleExtensionProviderEP;
 public class ProjectModuleExtensionCondition implements Condition<Project> {
 
   public static Condition<Project> create(String ids) {
-    return StringUtil.isEmptyOrSpaces(ids) ? Conditions.<Project>alwaysTrue() : new ProjectModuleExtensionCondition(ids);
+    String[] valuesOfVariableIfFound = ListOfElementsEP.getValuesOfVariableIfFound(ids);
+    if (valuesOfVariableIfFound.length == 0) {
+      return Conditions.alwaysTrue();
+    }
+    else {
+      return new ProjectModuleExtensionCondition(valuesOfVariableIfFound);
+    }
   }
 
   private String[] myExtensionIds;
 
-  private ProjectModuleExtensionCondition(String ids) {
-    myExtensionIds = ArrayUtil.toStringArray(StringUtil.split(ids, ","));
+  private ProjectModuleExtensionCondition(String[] ids) {
+    myExtensionIds = ids;
   }
 
   @Override
