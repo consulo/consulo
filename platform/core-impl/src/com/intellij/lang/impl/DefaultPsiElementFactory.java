@@ -18,6 +18,7 @@ package com.intellij.lang.impl;
 import com.intellij.lang.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.IElementTypeAsPsiFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,8 +30,12 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
   @Nullable
   @Override
   public PsiElement createElement(@NotNull ASTNode node) {
-    final Language lang = node.getElementType().getLanguage();
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+    IElementType elementType = node.getElementType();
+    if(elementType instanceof IElementTypeAsPsiFactory) {
+      return ((IElementTypeAsPsiFactory)elementType).createElement(node);
+    }
+
+    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(elementType.getLanguage());
     if (parserDefinition != null) {
       return parserDefinition.createElement(node);
     }
