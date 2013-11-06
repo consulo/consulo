@@ -382,7 +382,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   @Override
   @Nullable
   public VirtualFile getSourceFileByOutputFile(VirtualFile outputFile) {
-    return TranslatingCompilerFilesMonitor.getSourceFileByOutput(outputFile);
+    return TranslatingCompilerFilesMonitorImpl.getSourceFileByOutput(outputFile);
   }
 
   @Override

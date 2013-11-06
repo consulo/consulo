@@ -259,7 +259,7 @@ public class DumbServiceImpl extends DumbService {
 
   public void waitForSmartMode() {
     final Application application = ApplicationManager.getApplication();
-    if (!application.isUnitTestMode()) {
+    if (!application.isUnitTestMode() && !application.isCompilerServerMode()) {
       assert !application.isDispatchThread();
       assert !application.isReadAccessAllowed();
     }

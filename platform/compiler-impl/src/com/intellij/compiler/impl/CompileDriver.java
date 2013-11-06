@@ -75,10 +75,7 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.util.Chunk;
-import com.intellij.util.Function;
-import com.intellij.util.StringBuilderSpinAllocator;
-import com.intellij.util.ThrowableRunnable;
+import com.intellij.util.*;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
@@ -599,6 +596,7 @@ public class CompileDriver {
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         throw new RuntimeException(ex);
       }
+      System.out.println(ExceptionUtil.getThrowableText(ex));
       wereExceptions = true;
       final PluginId pluginId = IdeErrorsDialog.findPluginId(ex);
 
