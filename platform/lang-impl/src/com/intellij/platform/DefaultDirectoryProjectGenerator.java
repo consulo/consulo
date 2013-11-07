@@ -8,13 +8,13 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 /**
  * @author VISTALL
@@ -51,7 +51,7 @@ public class DefaultDirectoryProjectGenerator implements DirectoryProjectGenerat
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(newModule);
         ModifiableRootModel modifiableModelForModule = moduleRootManager.getModifiableModel();
         ContentEntry contentEntry = modifiableModelForModule.addContentEntry(baseDir);
-        contentEntry.addFolder(baseDir.getUrl() + "/" + Project.DIRECTORY_STORE_FOLDER, ContentFolderType.EXCLUDED);
+        contentEntry.addFolder(baseDir.getUrl() + "/" + Project.DIRECTORY_STORE_FOLDER, ExcludedContentFolderTypeProvider.getInstance());
         modifiableModelForModule.commit();
 
         modifiableModel.commit();
