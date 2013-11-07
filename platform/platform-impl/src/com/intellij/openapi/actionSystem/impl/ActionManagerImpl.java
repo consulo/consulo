@@ -58,6 +58,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.util.ListOfElementsEP;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import javax.swing.*;
@@ -415,15 +416,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     action.setCanUseProjectAsDefault(canUseProjectAsDefault);
 
     String requestModuleExtensionsValue = element.getAttributeValue(REQUIRE_MODULE_EXTENSIONS);
-    action.setModuleExtensionIds(StringUtil.isEmptyOrSpaces(requestModuleExtensionsValue)
-                                 ? ArrayUtil.EMPTY_STRING_ARRAY
-                                 : ArrayUtil.toStringArray(StringUtil.split(requestModuleExtensionsValue, ",")));
+    action.setModuleExtensionIds(ListOfElementsEP.getValuesOfVariableIfFound(requestModuleExtensionsValue));
   }
 
   @Nullable
   private static ResourceBundle getActionsResourceBundle(ClassLoader loader, IdeaPluginDescriptor plugin) {
     @NonNls final String resBundleName =
-      plugin != null && !plugin.getPluginId().getIdString().equals("com.intellij") ? plugin.getResourceBundleBaseName() : ACTIONS_BUNDLE;
+      plugin != null && !plugin.getPluginId().getIdString().equals(PluginManagerCore.CORE_PLUGIN_ID) ? plugin.getResourceBundleBaseName() : ACTIONS_BUNDLE;
     ResourceBundle bundle = null;
     if (resBundleName != null) {
       bundle = AbstractBundle.getResourceBundle(resBundleName, loader);

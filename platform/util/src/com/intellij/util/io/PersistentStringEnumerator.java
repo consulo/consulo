@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import com.intellij.util.containers.SLRUMap;
-import jsr166e.SequenceLock;
+import jsr166e.extra.SequenceLock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

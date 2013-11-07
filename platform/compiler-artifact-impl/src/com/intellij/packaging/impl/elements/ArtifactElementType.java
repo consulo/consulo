@@ -35,9 +35,12 @@ import java.util.*;
 * @author nik
 */
 public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPackagingElement> {
-  public static final ArtifactElementType ARTIFACT_ELEMENT_TYPE = new ArtifactElementType();
+  @NotNull
+  public static ArtifactElementType getInstance() {
+    return getInstance(ArtifactElementType.class);
+  }
 
-  ArtifactElementType() {
+  public ArtifactElementType() {
     super("artifact", CompilerBundle.message("element.type.name.artifact"));
   }
 
@@ -69,7 +72,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
                                                                final boolean notIncludedOnly) {
     final Set<Artifact> result = new HashSet<Artifact>(Arrays.asList(context.getArtifactModel().getArtifacts()));
     if (notIncludedOnly) {
-      ArtifactUtil.processPackagingElements(artifact, ARTIFACT_ELEMENT_TYPE, new Processor<ArtifactPackagingElement>() {
+      ArtifactUtil.processPackagingElements(artifact, getInstance(), new Processor<ArtifactPackagingElement>() {
         public boolean process(ArtifactPackagingElement artifactPackagingElement) {
           result.remove(artifactPackagingElement.findArtifact(context));
           return true;
@@ -81,7 +84,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     while (iterator.hasNext()) {
       Artifact another = iterator.next();
       final boolean notContainThis =
-          ArtifactUtil.processPackagingElements(another, ARTIFACT_ELEMENT_TYPE, new Processor<ArtifactPackagingElement>() {
+          ArtifactUtil.processPackagingElements(another, getInstance(), new Processor<ArtifactPackagingElement>() {
             public boolean process(ArtifactPackagingElement element) {
               return !artifact.getName().equals(element.getArtifactName());
             }

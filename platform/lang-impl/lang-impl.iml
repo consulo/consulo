@@ -31,6 +31,7 @@
     <orderEntry type="module" module-name="compiler-impl" />
     <orderEntry type="module" module-name="compiler-artifact-api" />
     <orderEntry type="module" module-name="compiler-artifact-impl" />
+    <orderEntry type="library" name="jsr166" level="project" />
   </component>
 </module>
 

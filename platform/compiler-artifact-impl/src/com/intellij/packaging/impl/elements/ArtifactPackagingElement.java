@@ -46,7 +46,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   @NonNls public static final String ARTIFACT_NAME_ATTRIBUTE = "artifact-name";
 
   public ArtifactPackagingElement(@NotNull Project project) {
-    super(ArtifactElementType.ARTIFACT_ELEMENT_TYPE);
+    super(ArtifactElementType.getInstance());
     myProject = project;
   }
 

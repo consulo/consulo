@@ -21,14 +21,11 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
-import com.intellij.openapi.util.InvalidDataException;
 import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.consulo.compiler.server.rmi.CompilerClientInterface;
 import org.consulo.compiler.server.rmi.CompilerServerInterface;
 import org.consulo.lombok.annotations.Logger;
-import org.jdom.JDOMException;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -71,13 +68,7 @@ public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements 
         }
       });
     }
-    catch (IOException e) {
-      throw new RemoteException(e.getMessage(), e);
-    }
-    catch (JDOMException e) {
-      throw new RemoteException(e.getMessage(), e);
-    }
-    catch (InvalidDataException e) {
+    catch (Exception e) {
       throw new RemoteException(e.getMessage(), e);
     }
   }

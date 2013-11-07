@@ -301,7 +301,8 @@
 
     <component>
       <interface-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>
-      <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitor</implementation-class>
+      <implementation-class>com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl</implementation-class>
+      <compiler-server-implementation-class>org.consulo.compiler.server.compiler.TranslatingCompilerFilesMonitorImpl</compiler-server-implementation-class>
     </component>
 
     <component>

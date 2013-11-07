@@ -549,7 +549,7 @@ public class ArtifactUtil {
             return true;
           }
         };
-      if (!processPackagingElements(anArtifact, ArtifactElementType.ARTIFACT_ELEMENT_TYPE, elementProcessor, context, true)) {
+      if (!processPackagingElements(anArtifact, ArtifactElementType.getInstance(), elementProcessor, context, true)) {
         return false;
       }
     }

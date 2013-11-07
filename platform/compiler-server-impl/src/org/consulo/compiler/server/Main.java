@@ -41,18 +41,24 @@ import java.rmi.registry.Registry;
  * @author VISTALL
  * @since 5:48/09.08.13
  */
-@org.consulo.lombok.annotations.Logger
 public class Main {
-  public static void main(String[] args) throws Exception{
+  private static final Logger LOGGER;
+
+  static {
+    Logger.setFactory(CompilerServerLoggerFactory.class);
+    LOGGER = Logger.getInstance(Main.class);
+  }
+
+  public static void main(String[] args) throws Exception {
     File t = FileUtil.createTempDirectory("consulo", "data");
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, t.getAbsolutePath() + "/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, t.getAbsolutePath() + "/system");
 
     System.setProperty(PathManager.PROPERTY_PLUGINS_PATH, "G:\\consulo-ext-plugins");
-    System.setProperty(PathManager.PROPERTY_HOME_PATH, "F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
+    System.setProperty(PathManager.PROPERTY_HOME_PATH, "H:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
     System.setProperty(FileWatcher.PROPERTY_WATCHER_DISABLED, "true");
 
-    initLogger();
+    LOGGER.info("Data dir: " + t.getAbsolutePath());
 
     CompilerServerInterfaceImpl server = createServer();
 
@@ -63,18 +69,18 @@ public class Main {
         LOGGER.info(message);
         return 0;
       }
-    }) ;
+    });
 
     app.load(PathManager.getOptionsPath());
 
     setupSdk("JDK", "1.6", "I:\\Programs\\jdk6");
-    setupSdk("Consulo Plugin SDK", "Consulo 1.SNAPSHOT", "F:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
+    setupSdk("Consulo Plugin SDK", "Consulo 1.SNAPSHOT", "H:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
 
     server.compile(new CompilerClientInterface() {
       @Override
       public void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum)
         throws RemoteException {
-        System.out.println(category + ": " + message);
+        LOGGER.info(category + ": " + message);
       }
 
       @Override
@@ -84,7 +90,7 @@ public class Main {
       @NotNull
       @Override
       public String getProjectDir() {
-        return "F:\\github.com\\consulo\\consulo-osgi";
+        return "H:\\github.com\\consulo\\consulo-java";
       }
     });
   }
@@ -92,7 +98,7 @@ public class Main {
   private static void setupSdk(String sdkTypeName, String name, String home) {
     SdkType sdkType = null;
     for (SdkType temp : SdkType.EP_NAME.getExtensions()) {
-      if(temp.getName().equals(sdkTypeName)) {
+      if (temp.getName().equals(sdkTypeName)) {
         sdkType = temp;
         break;
       }
@@ -104,10 +110,6 @@ public class Main {
     sdkType.setupSdkPaths(sdk);
 
     SdkTable.getInstance().addSdk(sdk);
-  }
-
-  private static void initLogger() {
-    Logger.setFactory(CompilerServerLoggerFactory.class);
   }
 
   private static CompilerServerInterfaceImpl createServer() throws Exception {

@@ -1814,11 +1814,9 @@
     <!-- File -->
     <group id="OpenProjectGroup">
       <action id="NewProject" class="com.intellij.platform.NewDirectoryProjectAction"/>
-      <action id="NewModule" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <!--com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction-->
+      <action id="NewModule" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction"/>
       <action id="ImportProject" class="com.intellij.ide.actions.ImportProjectAction" text="Import Project..."/>
-      <action id="ImportModule" class="com.intellij.openapi.actionSystem.EmptyAction" text="Import Module..."/>
-      <!--com.intellij.ide.actions.ImportModuleAction-->
+      <action id="ImportModule" class="com.intellij.ide.actions.ImportModuleAction" text="Import Module..."/>
       <action id="OpenProject" class="com.intellij.ide.actions.OpenProjectAction"/>
 
       <add-to-group group-id="FileOpenGroup" anchor="first"/>

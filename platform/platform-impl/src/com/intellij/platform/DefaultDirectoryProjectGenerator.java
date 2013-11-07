@@ -7,6 +7,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -48,7 +50,8 @@ public class DefaultDirectoryProjectGenerator implements DirectoryProjectGenerat
 
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(newModule);
         ModifiableRootModel modifiableModelForModule = moduleRootManager.getModifiableModel();
-        modifiableModelForModule.addContentEntry(baseDir);
+        ContentEntry contentEntry = modifiableModelForModule.addContentEntry(baseDir);
+        contentEntry.addFolder(baseDir.getUrl() + "/" + Project.DIRECTORY_STORE_FOLDER, ContentFolderType.EXCLUDED);
         modifiableModelForModule.commit();
 
         modifiableModel.commit();

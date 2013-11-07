@@ -35,7 +35,6 @@ public abstract class XDebuggerTestCase extends PlatformTestCase {
   protected static final MySimpleBreakpointType MY_SIMPLE_BREAKPOINT_TYPE = new MySimpleBreakpointType();
 
   protected XDebuggerTestCase() {
-    initPlatformLangPrefix();
   }
 
   @Override

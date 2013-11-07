@@ -252,7 +252,7 @@ public class CompilerServerManagingFSImpl extends PersistentFS {
 
   @Override
   public long getCreationTimestamp() {
-    throw new UnsupportedOperationException();
+    return 0;
   }
 
   @Override

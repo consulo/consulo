@@ -155,7 +155,7 @@ public class ArtifactCompileScope {
       result.add(artifact);
     }
 
-    ArtifactUtil.processPackagingElements(artifact, ArtifactElementType.ARTIFACT_ELEMENT_TYPE, new Processor<ArtifactPackagingElement>() {
+    ArtifactUtil.processPackagingElements(artifact, ArtifactElementType.getInstance(), new Processor<ArtifactPackagingElement>() {
       @Override
       public boolean process(ArtifactPackagingElement element) {
         Artifact included = element.findArtifact(context);
