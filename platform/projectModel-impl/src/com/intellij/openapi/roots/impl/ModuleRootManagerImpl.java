@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.google.common.base.Predicate;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
@@ -34,6 +35,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -265,6 +267,27 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   public String[] getContentRootUrls() {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentRootUrls();
+  }
+
+  @NotNull
+  @Override
+  public String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    LOGGER.assertTrue(!myIsDisposed);
+    return myRootModel.getContentFolderUrls(predicate);
+  }
+
+  @NotNull
+  @Override
+  public VirtualFile[] getContentFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    LOGGER.assertTrue(!myIsDisposed);
+    return myRootModel.getContentFolderFiles(predicate);
+  }
+
+  @NotNull
+  @Override
+  public ContentFolder[] getContentFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    LOGGER.assertTrue(!myIsDisposed);
+    return myRootModel.getContentFolders(predicate);
   }
 
   @Override

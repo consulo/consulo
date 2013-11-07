@@ -51,6 +51,7 @@ public interface ContentEntry extends Synthetic {
 
   /**
    * Returns the list of content roots under this content root.
+   *
    * @param contentFolderType
    * @return
    */
@@ -59,6 +60,7 @@ public interface ContentEntry extends Synthetic {
 
   /**
    * Returns the list of directories roots under this content root.
+   *
    * @param contentFolderType
    * @return
    */
@@ -69,6 +71,7 @@ public interface ContentEntry extends Synthetic {
   String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate);
 
   @NotNull
+  @Deprecated // use #getFolders(ContentFolderScopes.all());
   ContentFolder[] getFolders();
 
   @NotNull

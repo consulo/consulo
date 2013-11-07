@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.impl;
 
+import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -24,6 +25,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.ArrayList;
@@ -80,6 +82,36 @@ public abstract class RootModelBase implements ModuleRootModel {
       Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
     }
     return VfsUtilCore.toVirtualFileArray(result);
+  }
+
+  @NotNull
+  @Override
+  public String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    List<String> result = new SmartList<String>();
+    for (ContentEntry contentEntry : getContent()) {
+      Collections.addAll(result, contentEntry.getFolderUrls(predicate));
+    }
+    return ArrayUtil.toStringArray(result);
+  }
+
+  @NotNull
+  @Override
+  public VirtualFile[] getContentFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    List<VirtualFile> result = new SmartList<VirtualFile>();
+    for (ContentEntry contentEntry : getContent()) {
+      Collections.addAll(result, contentEntry.getFolderFiles(predicate));
+    }
+    return VfsUtilCore.toVirtualFileArray(result);
+  }
+
+  @NotNull
+  @Override
+  public ContentFolder[] getContentFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+    List<ContentFolder> result = new SmartList<ContentFolder>();
+    for (ContentEntry contentEntry : getContent()) {
+      Collections.addAll(result, contentEntry.getFolders(predicate));
+    }
+    return result.isEmpty() ? ContentFolder.EMPTY_ARRAY : result.toArray(new ContentFolder[result.size()]);
   }
 
   @Override

@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.roots;
 
+import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
  * Interface providing root information model for a given module.
@@ -69,13 +71,24 @@ public interface ModuleRootModel {
    */
   @NotNull String[] getContentRootUrls();
 
+  @NotNull
+  String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate);
+
+  @NotNull
+  VirtualFile[] getContentFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate);
+
+  @NotNull
+  ContentFolder[] getContentFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate);
+
   /**
    * Returns an array of exclude roots from all content entries. A helper method.
    *
    * @return the array of excluded roots.
    * @see #getContentEntries()
    */
-  @NotNull VirtualFile[] getExcludeRoots();
+  @NotNull
+  @Deprecated
+  VirtualFile[] getExcludeRoots();
 
   /**
    * Returns an array of exclude root urls from all content entries. A helper method.
@@ -83,7 +96,9 @@ public interface ModuleRootModel {
    * @return the array of excluded root URLs.
    * @see #getContentEntries()
    */
-  @NotNull String[] getExcludeRootUrls();
+  @Deprecated
+  @NotNull
+  String[] getExcludeRootUrls();
 
   /**
    * Returns an array of source roots from all content entries. A helper method.
@@ -93,6 +108,7 @@ public interface ModuleRootModel {
    * @see #getSourceRoots(boolean)
    */
   @NotNull
+  @Deprecated
   VirtualFile[] getSourceRoots();
 
   /**
@@ -104,6 +120,7 @@ public interface ModuleRootModel {
    * @since 10.0
    */
   @NotNull
+  @Deprecated
   VirtualFile[] getSourceRoots(boolean includingTests);
 
   /**
@@ -113,7 +130,9 @@ public interface ModuleRootModel {
    * @see #getContentEntries()
    * @see #getSourceRootUrls(boolean)
    */
-  @NotNull String[] getSourceRootUrls();
+  @Deprecated
+  @NotNull
+  String[] getSourceRootUrls();
 
   /**
    * Returns an array of source root urls from all content entries. A helper method.
@@ -123,7 +142,9 @@ public interface ModuleRootModel {
    * @see #getContentEntries()
    * @since 10.0
    */
-  @NotNull String[] getSourceRootUrls(boolean includingTests);
+  @NotNull
+  @Deprecated
+  String[] getSourceRootUrls(boolean includingTests);
 
   /**
    * Passes all order entries in the module to the specified visitor.
