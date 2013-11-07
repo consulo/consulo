@@ -52,13 +52,13 @@ import java.util.List;
 /**
  * @author nik
  */
-public final class ModuleOutputPackagingElementImpl
+public class ModuleOutputPackagingElementImpl
   extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
   @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
 
-  private NamedPointer<Module> myModulePointer;
-  private final ContentFolderTypeProvider myContentFolderType;
-  private final Project myProject;
+  protected NamedPointer<Module> myModulePointer;
+  protected final ContentFolderTypeProvider myContentFolderType;
+  protected final Project myProject;
 
   public ModuleOutputPackagingElementImpl(PackagingElementType type,
                                           Project project,

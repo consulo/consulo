@@ -40,7 +40,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class ModuleOutputElementTypeBase extends PackagingElementType<ModuleOutputPackagingElementImpl> {
-  private final ContentFolderTypeProvider myContentFolderTypeProvider;
+  protected final ContentFolderTypeProvider myContentFolderTypeProvider;
 
   public ModuleOutputElementTypeBase(String id, ContentFolderTypeProvider contentFolderType) {
     super(id, contentFolderType.getName());

@@ -55,6 +55,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
     myArtifactPointer = artifactPointer;
   }
 
+  @Override
   public List<? extends PackagingElement<?>> getSubstitution(@NotNull PackagingElementResolvingContext context, @NotNull ArtifactType artifactType) {
     final Artifact artifact = findArtifact(context);
     if (artifact != null) {
@@ -133,21 +134,24 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
     return artifactType;
   }
 
+  @Override
   public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
     return new DelegatedPackagingElementPresentation(new ArtifactElementPresentation(myArtifactPointer, context));
   }
 
+  @Override
   public ArtifactPackagingElementState getState() {
     final ArtifactPackagingElementState state = new ArtifactPackagingElementState();
     if (myArtifactPointer != null) {
-      state.setArtifactName(myArtifactPointer.getArtifactName());
+      state.setArtifactName(myArtifactPointer.getName());
     }
     return state;
   }
 
+  @Override
   public void loadState(ArtifactPackagingElementState state) {
     final String name = state.getArtifactName();
-    myArtifactPointer = name != null ? ArtifactPointerUtil.getPointerManager(myProject).createPointer(name) : null;
+    myArtifactPointer = name != null ? ArtifactPointerUtil.getPointerManager(myProject).create(name) : null;
   }
 
   @Override
@@ -168,9 +172,13 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
 
   @Nullable
   public String getArtifactName() {
-    return myArtifactPointer != null ? myArtifactPointer.getArtifactName() : null;
+    return myArtifactPointer != null ? myArtifactPointer.getName() : null;
   }
 
+  @SuppressWarnings("unused")
+  public void setArtifactPointer(@Nullable ArtifactPointer artifactPointer) {
+    myArtifactPointer = artifactPointer;
+  }
 
   public static class ArtifactPackagingElementState {
     private String myArtifactName;
