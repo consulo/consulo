@@ -60,6 +60,8 @@ import gnu.trove.*;
 import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.*;
 import java.util.*;
@@ -606,9 +608,9 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(projRef.get());
     final TIntObjectHashMap<Pair<Integer, Integer>> map = new TIntObjectHashMap<Pair<Integer, Integer>>();
     for (Module module : ModuleManager.getInstance(projRef.get()).getModules()) {
-      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
+      final VirtualFile output = compilerPathsManager.getCompilerOutput(module, ProductionContentFolderTypeProvider.getInstance());
       final int first = output != null ? Math.abs(getFileId(output)) : -1;
-      final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, ContentFolderType.TEST);
+      final VirtualFile testsOutput = compilerPathsManager.getCompilerOutput(module, TestContentFolderTypeProvider.getInstance());
       final int second = testsOutput != null ? Math.abs(getFileId(testsOutput)) : -1;
       map.put(getModuleId(module), new Pair<Integer, Integer>(first, second));
     }
