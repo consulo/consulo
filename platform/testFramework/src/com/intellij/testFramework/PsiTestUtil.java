@@ -43,6 +43,9 @@ import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -145,7 +148,7 @@ public class PsiTestUtil {
         final ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
         final ContentEntry contentEntry = rootModel.addContentEntry(vDir);
-        contentEntry.addFolder(vDir, testSource ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
+        contentEntry.addFolder(vDir, testSource ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance());
         rootModel.commit();
       }
     }.execute().throwException();
@@ -163,7 +166,7 @@ public class PsiTestUtil {
         final ModifiableRootModel rootModel = rootManager.getModifiableModel();
         ContentEntry entry = findContentEntry(rootModel, vDir);
         if (entry == null) entry = rootModel.addContentEntry(vDir);
-        entry.addFolder(vDir, isTestSource ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
+        entry.addFolder(vDir, isTestSource ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance());
         rootModel.commit();
       }
     }.execute().throwException();
@@ -201,7 +204,7 @@ public class PsiTestUtil {
 
   public static void addExcludedRoot(Module module, VirtualFile dir) {
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
-    findContentEntryWithAssertion(model, dir).addFolder(dir, ContentFolderType.EXCLUDED);
+    findContentEntryWithAssertion(model, dir).addFolder(dir, ExcludedContentFolderTypeProvider.getInstance());
     commitModel(model);
   }
 
@@ -356,7 +359,7 @@ public class PsiTestUtil {
         final Module dep = ModuleManager.getInstance(project).findModuleByName(moduleName);
         final ModifiableRootModel model = ModuleRootManager.getInstance(dep).getModifiableModel();
         final ContentEntry entry = model.addContentEntry(root);
-        entry.addFolder(root, ContentFolderType.PRODUCTION);
+        entry.addFolder(root, ProductionContentFolderTypeProvider.getInstance());
 
         model.commit();
         result.setResult(dep);
@@ -366,7 +369,7 @@ public class PsiTestUtil {
 
   public static void setCompilerOutputPath(Module module, String url, boolean forTests) {
     CompilerPathsManager manager = CompilerPathsManager.getInstance(module.getProject());
-    manager.setCompilerOutputUrl(module, forTests ? ContentFolderType.TEST : ContentFolderType.PRODUCTION, url);
+    manager.setCompilerOutputUrl(module, forTests ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance(), url);
   }
 
   public static void setExcludeCompileOutput(Module module, boolean exclude) {

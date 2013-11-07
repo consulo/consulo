@@ -18,12 +18,9 @@ package com.intellij.openapi.roots.ui.configuration.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryEditor;
 import com.intellij.openapi.roots.ui.configuration.ContentEntryTreeEditor;
-import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
@@ -43,30 +40,8 @@ public class ToggleFolderStateAction extends ContentEntryEditingAction {
     myContentFolderType = contentFolderType;
 
     final Presentation templatePresentation = getTemplatePresentation();
-    switch (contentFolderType) {
-
-      case PRODUCTION:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.sources.action"));
-        templatePresentation.setDescription(ProjectBundle.message("module.toggle.sources.action.description"));
-        break;
-      case PRODUCTION_RESOURCE:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.resources.action"));
-        templatePresentation.setDescription(ProjectBundle.message("module.toggle.resources.action.description"));
-        break;
-      case TEST:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.test.sources.action"));
-        templatePresentation.setDescription(ProjectBundle.message("module.toggle.test.sources.action.description"));
-        break;
-      case TEST_RESOURCE:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.test.resources.action"));
-        templatePresentation.setDescription(ProjectBundle.message("module.toggle.test.resources.action.description"));
-        break;
-      case EXCLUDED:
-        templatePresentation.setText(ProjectBundle.message("module.toggle.excluded.action"));
-        templatePresentation.setDescription(ProjectBundle.message("module.toggle.excluded.action.description"));
-        break;
-    }
-    templatePresentation.setIcon(ContentFolderIconUtil.getRootIcon(contentFolderType));
+    templatePresentation.setText(contentFolderType.getName());
+    templatePresentation.setIcon(contentFolderType.getIcon());
   }
 
   @Override

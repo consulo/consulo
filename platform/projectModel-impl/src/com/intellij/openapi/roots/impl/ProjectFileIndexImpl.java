@@ -18,39 +18,37 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.file.exclude.ProjectFileExclusionManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ProjectFileIndexImpl implements ProjectFileIndex {
+public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIndex {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.ProjectFileIndexImpl");
-
   private final Project myProject;
-  private final FileTypeRegistry myFileTypeRegistry;
-  private final DirectoryIndex myDirectoryIndex;
   private final ContentFilter myContentFilter;
-  private final ProjectFileExclusionManager myFileExclusionManager;
 
   public ProjectFileIndexImpl(@NotNull Project project, @NotNull DirectoryIndex directoryIndex, @NotNull FileTypeRegistry fileTypeManager) {
+    super(directoryIndex, fileTypeManager, project);
     myProject = project;
-
-    myDirectoryIndex = directoryIndex;
-    myFileTypeRegistry = fileTypeManager;
     myContentFilter = new ContentFilter();
-    myFileExclusionManager = ProjectFileExclusionManager.SERVICE.getInstance(project);
   }
 
   @Override
@@ -78,28 +76,6 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
     return true;
   }
 
-  @Nullable
-  private DirectoryInfo getInfoForFileOrDirectory(@NotNull VirtualFile file) {
-    return getInfoForFileOrDirectory(file, myDirectoryIndex);
-  }
-
-  @Nullable
-  static DirectoryInfo getInfoForFileOrDirectory(@NotNull VirtualFile file, DirectoryIndex directoryIndex) {
-    if (!file.isDirectory() && file.getParent() == null) return null; // e.g. LightVirtualFile in test
-    DirectoryInfo info = directoryIndex.getInfoForDirectory(file);
-    if (info != null) {
-      return info;
-    }
-
-    if (!file.isDirectory()) {
-      VirtualFile dir = file.getParent();
-      if (dir != null) {
-        return directoryIndex.getInfoForDirectory(dir);
-      }
-    }
-    return null;
-  }
-
   @Override
   public boolean iterateContentUnderDirectory(@NotNull VirtualFile dir, @NotNull ContentIterator iterator) {
     return VfsUtilCore.iterateChildrenRecursively(dir, myContentFilter, iterator);
@@ -108,7 +84,7 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   @Override
   public boolean isIgnored(@NotNull VirtualFile file) {
     if (myFileTypeRegistry.isFileIgnored(file)) return true;
-    if (myFileExclusionManager != null && myFileExclusionManager.isExcluded(file)) return true;
+    if (myExclusionManager != null && myExclusionManager.isExcluded(file)) return true;
     VirtualFile dir = file.isDirectory() ? file : file.getParent();
     if (dir == null) return false;
 
@@ -170,20 +146,13 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   public ContentFolderTypeProvider getContentFolderTypeForFile(@NotNull VirtualFile file) {
     final DirectoryInfo info = getInfoForFileOrDirectory(file);
     if (info == null) return null;
-    return info.findContentFolderType();
+    return myDirectoryIndex.getContentFolderType(info);
   }
 
   @Override
   public String getPackageNameByDirectory(@NotNull VirtualFile dir) {
     LOG.assertTrue(dir.isDirectory());
     return myDirectoryIndex.getPackageName(dir);
-  }
-
-  @Override
-  public boolean isContentSourceFile(@NotNull VirtualFile file) {
-    return !file.isDirectory() &&
-           !myFileTypeRegistry.isFileIgnored(file) &&
-           isInSourceContent(file);
   }
 
   @Override
@@ -197,63 +166,35 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   @Override
   public boolean isInSource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    if (info != null) {
-      return info.isInModuleSource() ||
-             info.isInLibrarySource();
-    }
-    else {
-      VirtualFile parent = fileOrDir.getParent();
-      return parent != null && isInSource(parent);
-    }
+    return info != null && (info.isInModuleSource() || info.isInLibrarySource());
   }
 
   @Override
   public boolean isInResource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    if(info.isInModuleSource() && getContentFolderTypeForFile())
-    if (info != null) {
-      return info.hasContentFolderFlag(ContentFolderType.PRODUCTION_RESOURCE);
-    }
-    else {
-      VirtualFile parent = fileOrDir.getParent();
-      return parent != null && isInResource(parent);
-    }
+    return info != null &&
+           info.isInModuleSource() &&
+           myDirectoryIndex.getContentFolderType(info) == ProductionResourceContentFolderTypeProvider.getInstance();
   }
 
   @Override
   public boolean isInTestResource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    if (info != null) {
-      return info.hasContentFolderFlag(ContentFolderType.TEST_RESOURCE);
-    }
-    else {
-      VirtualFile parent = fileOrDir.getParent();
-      return parent != null && isInTestResource(parent);
-    }
+    return info != null &&
+           info.isInModuleSource() &&
+           myDirectoryIndex.getContentFolderType(info) == TestResourceContentFolderTypeProvider.getInstance();
   }
 
   @Override
   public boolean isInLibraryClasses(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    if (info != null) {
-      return info.hasLibraryClassRoot();
-    }
-    else {
-      VirtualFile parent = fileOrDir.getParent();
-      return parent != null && isInLibraryClasses(parent);
-    }
+    return info != null && info.hasLibraryClassRoot();
   }
 
   @Override
   public boolean isInLibrarySource(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    if (info != null) {
-      return info.isInLibrarySource();
-    }
-    else {
-      VirtualFile parent = fileOrDir.getParent();
-      return parent != null && isInLibrarySource(parent);
-    }
+    return info != null && info.isInLibrarySource();
   }
 
   @Override
@@ -265,13 +206,13 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
   @Override
   public boolean isInSourceContent(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info != null && (info.hasContentFolderFlag(ContentFolderType.PRODUCTION) || info.hasContentFolderFlag(ContentFolderType.TEST));
+    return info != null && info.isInModuleSource();
   }
 
   @Override
   public boolean isInTestSourceContent(@NotNull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info != null && info.hasContentFolderFlag(ContentFolderType.TEST);
+    return info != null && info.isInModuleSource() && ContentFolderScopes.test().apply(myDirectoryIndex.getContentFolderType(info));
   }
 
   private class ContentFilter implements VirtualFileFilter {
@@ -282,7 +223,7 @@ public class ProjectFileIndexImpl implements ProjectFileIndex {
         return info != null && info.getModule() != null;
       }
       else {
-        return (myFileExclusionManager == null || !myFileExclusionManager.isExcluded(file)) && !myFileTypeRegistry.isFileIgnored(file);
+        return (myExclusionManager == null || !myExclusionManager.isExcluded(file)) && !myFileTypeRegistry.isFileIgnored(file);
       }
     }
   }

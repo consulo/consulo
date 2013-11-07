@@ -21,7 +21,6 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
@@ -43,8 +42,8 @@ import java.util.List;
 public abstract class ModuleOutputElementTypeBase extends PackagingElementType<ModuleOutputPackagingElementImpl> {
   private final ContentFolderTypeProvider myContentFolderTypeProvider;
 
-  public ModuleOutputElementTypeBase(ContentFolderTypeProvider contentFolderType) {
-    super("module-" + contentFolderType.getId().toLowerCase(), contentFolderType.getName());
+  public ModuleOutputElementTypeBase(String id, ContentFolderTypeProvider contentFolderType) {
+    super(id, contentFolderType.getName());
     myContentFolderTypeProvider = contentFolderType;
   }
 

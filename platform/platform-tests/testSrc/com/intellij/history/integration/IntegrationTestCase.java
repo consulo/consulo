@@ -27,7 +27,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Clock;
@@ -38,6 +37,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PsiTestUtil;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -175,7 +175,7 @@ public abstract class IntegrationTestCase extends PlatformTestCase {
         ModifiableRootModel m = rm.getModifiableModel();
         for (ContentEntry e : m.getContentEntries()) {
           if (!Comparing.equal(e.getFile(), myRoot)) continue;
-          e.addFolder(VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(path)), ContentFolderType.EXCLUDED);
+          e.addFolder(VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(path)), ExcludedContentFolderTypeProvider.getInstance());
         }
         m.commit();
       }

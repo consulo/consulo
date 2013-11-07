@@ -25,15 +25,20 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.DarculaColors;
+import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 22:46/31.10.13
  */
 public class ExcludedContentFolderTypeProvider extends BaseContentFolderTypeProvider {
+  private static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
+
   @NotNull
   public static ExcludedContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(ExcludedContentFolderTypeProvider.class);
@@ -78,5 +83,11 @@ public class ExcludedContentFolderTypeProvider extends BaseContentFolderTypeProv
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.excluded.action");
+  }
+
+  @NotNull
+  @Override
+  public Color getGroupColor() {
+    return EXCLUDED_COLOR;
   }
 }

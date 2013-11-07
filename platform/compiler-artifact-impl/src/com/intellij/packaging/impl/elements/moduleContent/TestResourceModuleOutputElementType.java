@@ -27,6 +27,6 @@ public class TestResourceModuleOutputElementType extends ModuleOutputElementType
   }
 
   public TestResourceModuleOutputElementType() {
-    super(TestContentFolderTypeProvider.getInstance());
+    super("module-test-resource-output",TestContentFolderTypeProvider.getInstance());
   }
 }

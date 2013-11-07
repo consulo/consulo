@@ -19,7 +19,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.ui.LightFilePointer;
@@ -33,6 +32,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Set;
 
@@ -95,7 +96,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     for (Module module : moduleManager.getModules()) {
       ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
-      for (ContentFolderType folderType : ContentFolderType.ALL_SOURCE_ROOTS) {
+      for (ContentFolderTypeProvider folderType : ContentFolderTypeProvider.filter(ContentFolderScopes.all(false))) {
         String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(folderType);
         assert compilerOutputUrl != null : module.getName() + ":" + folderType + " url is null";
         rootsToWatch.add(ProjectRootManagerImpl.extractLocalPath(compilerOutputUrl));

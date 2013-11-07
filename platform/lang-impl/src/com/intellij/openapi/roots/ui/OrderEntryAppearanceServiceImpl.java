@@ -32,17 +32,18 @@ import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.PlatformIcons;
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -154,15 +155,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @NotNull
   @Override
   public CellAppearanceEx forContentFolder(@NotNull final ContentFolder folder) {
-    if (ArrayUtil.contains(folder.getType(), ContentFolderType.ALL_SOURCE_ROOTS)) {
-      return formatRelativePath(folder, AllIcons.Nodes.Folder);
-    }
-    else if (folder.getType() == ExcludedContentFolderTypeProvider.getInstance()) {
-      return formatRelativePath(folder, EXCLUDE_FOLDER_ICON);
-    }
-    else {
-      throw new RuntimeException(folder.getClass().getName());
-    }
+    return formatRelativePath(folder, folder.getType().getChildDirectoryIcon());
   }
 
   @NotNull

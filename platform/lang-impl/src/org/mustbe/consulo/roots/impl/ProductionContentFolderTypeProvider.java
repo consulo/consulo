@@ -17,15 +17,20 @@ package org.mustbe.consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
+import com.intellij.ui.DarculaColors;
+import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 22:37/31.10.13
  */
 public class ProductionContentFolderTypeProvider extends BaseContentFolderTypeProvider {
+  private static final Color SOURCES_COLOR = new JBColor(new Color(0x0A50A1), DarculaColors.BLUE);
+
   public static ProductionContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(ProductionContentFolderTypeProvider.class);
   }
@@ -49,5 +54,11 @@ public class ProductionContentFolderTypeProvider extends BaseContentFolderTypePr
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.sources.action");
+  }
+
+  @NotNull
+  @Override
+  public Color getGroupColor() {
+    return SOURCES_COLOR;
   }
 }

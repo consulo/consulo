@@ -20,6 +20,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -44,5 +45,11 @@ public class ProductionResourceContentFolderTypeProvider extends BaseContentFold
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.resources.action");
+  }
+
+  @NotNull
+  @Override
+  public Color getGroupColor() {
+    return new Color(0x812DF3);
   }
 }

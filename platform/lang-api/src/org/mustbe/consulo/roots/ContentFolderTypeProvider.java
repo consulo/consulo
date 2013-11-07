@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ import java.util.List;
  */
 public abstract class ContentFolderTypeProvider {
   public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME =
-    ExtensionPointName.create("org.mustbe.consulo.contentFolderTypeProvider");
+    ExtensionPointName.create("com.intellij.contentFolderTypeProvider");
 
   private final String myId;
 
@@ -62,6 +63,9 @@ public abstract class ContentFolderTypeProvider {
 
   @NotNull
   public abstract String getName();
+
+  @NotNull
+  public abstract Color getGroupColor();
 
   @Override
   public boolean equals(Object o) {

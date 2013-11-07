@@ -21,7 +21,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -31,6 +30,7 @@ import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.ModuleFixture;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public abstract class ModuleFixtureBuilderImpl<T extends ModuleFixture> implemen
         }
         //assert vf != null : "cannot find source root: " + sourceRoot;
         if (vf != null) {
-          contentEntry.addFolder(vf, ContentFolderType.PRODUCTION);
+          contentEntry.addFolder(vf, ProductionContentFolderTypeProvider.getInstance());
         }
       }
     }

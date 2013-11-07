@@ -22,7 +22,10 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.lookup.LookupManager;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.InspectionEP;
+import com.intellij.codeInspection.InspectionProfileEntry;
+import com.intellij.codeInspection.LocalInspectionEP;
+import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.ide.highlighter.ProjectFileType;
@@ -97,6 +100,7 @@ import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.io.ByteArrayOutputStream;
@@ -266,7 +270,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
 
         final ContentEntry contentEntry = rootModel.addContentEntry(ourSourceRoot);
-        contentEntry.addFolder(ourSourceRoot, ContentFolderType.PRODUCTION);
+        contentEntry.addFolder(ourSourceRoot, ProductionContentFolderTypeProvider.getInstance());
 
         descriptor.configureModule(ourModule, rootModel, contentEntry);
 

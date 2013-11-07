@@ -20,6 +20,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.util.Collection;
 import java.util.List;
@@ -119,14 +123,14 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   private static void removeOutdatedContentFolders(@NotNull final ContentEntry entry, @NotNull final Set<String> retainedContentFolders) {
-    final List<ContentFolder> sourceFolders = ContainerUtilRt.newArrayList(entry.getFolders(ContentFolderType.ALL_SOURCE_ROOTS));
+    final List<ContentFolder> sourceFolders = ContainerUtilRt.newArrayList(entry.getFolders(ContentFolderScopes.all(false)));
     for(final ContentFolder sourceFolder : sourceFolders) {
       final String path = VirtualFileManager.extractPath(sourceFolder.getUrl());
       if(!retainedContentFolders.contains(path)) {
         entry.removeFolder(sourceFolder);
       }
     }
-    final List<ContentFolder> excludeFolders =  ContainerUtilRt.newArrayList(entry.getFolders(ContentFolderType.EXCLUDED));
+    final List<ContentFolder> excludeFolders =  ContainerUtilRt.newArrayList(entry.getFolders(ContentFolderScopes.excluded()));
     for(final ContentFolder excludeFolder : excludeFolders) {
       final String path = VirtualFileManager.extractPath(excludeFolder.getUrl());
       if(!(excludeFolder.isSynthetic()) && !retainedContentFolders.contains(path)) {
@@ -155,10 +159,10 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   private static void createSourceRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {
-    ContentFolder[] folders = entry.getFolders(ContentFolderType.PRODUCTION);
+    ContentFolder[] folders = entry.getFolders(ContentFolderScopes.of(ProductionContentFolderTypeProvider.getInstance()));
     if (folders.length == 0) {
       LOG.info(String.format("Importing source root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-      entry.addFolder(toVfsUrl(path), ContentFolderType.PRODUCTION);
+      entry.addFolder(toVfsUrl(path), ProductionContentFolderTypeProvider.getInstance());
       return;
     }
     for (ContentFolder folder : folders) {
@@ -171,14 +175,14 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing source root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addFolder(toVfsUrl(path), ContentFolderType.PRODUCTION);
+    entry.addFolder(toVfsUrl(path), ProductionContentFolderTypeProvider.getInstance());
   }
 
   private static void createExcludedRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {
-    ContentFolder[] folders = entry.getFolders(ContentFolderType.EXCLUDED);
+    ContentFolder[] folders = entry.getFolders(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance()));
     if (folders.length == 0) {
       LOG.info(String.format("Importing excluded root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-      entry.addFolder(toVfsUrl(path), ContentFolderType.EXCLUDED);
+      entry.addFolder(toVfsUrl(path), ExcludedContentFolderTypeProvider.getInstance());
       return;
     }
     for (ContentFolder folder : folders) {
@@ -191,14 +195,14 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing excluded root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addFolder(toVfsUrl(path), ContentFolderType.EXCLUDED);
+    entry.addFolder(toVfsUrl(path), ExcludedContentFolderTypeProvider.getInstance());
   }
 
   private static void createTestRootIfAbsent(@NotNull ContentEntry entry, @NotNull String path, @NotNull String moduleName) {
-    ContentFolder[] folders = entry.getFolders(ContentFolderType.TEST);
+    ContentFolder[] folders = entry.getFolders(ContentFolderScopes.of(TestContentFolderTypeProvider.getInstance()));
     if (folders.length == 0) {
       LOG.info(String.format("Importing test root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-      entry.addFolder(toVfsUrl(path), ContentFolderType.TEST);
+      entry.addFolder(toVfsUrl(path), TestContentFolderTypeProvider.getInstance());
       return;
     }
     for (ContentFolder folder : folders) {
@@ -211,7 +215,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
       }
     }
     LOG.info(String.format("Importing test root '%s' for content root '%s' of module '%s'", path, entry.getUrl(), moduleName));
-    entry.addFolder(toVfsUrl(path), ContentFolderType.TEST);
+    entry.addFolder(toVfsUrl(path), TestContentFolderTypeProvider.getInstance());
   }
 
   @Override

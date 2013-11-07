@@ -28,7 +28,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -40,6 +39,9 @@ import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +91,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
         if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
           return;
         }
-        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION, url);
+        compilerPathsManager.setCompilerOutputUrl(getModule(), ProductionContentFolderTypeProvider.getInstance(), url);
       }
     });
     myTestsOutputPathPanel = createOutputPathPanel(ProjectBundle.message("module.paths.test.output.title"), new CommitPathRunnable() {
@@ -98,20 +100,22 @@ public class BuildElementsEditor extends ModuleElementsEditor {
         if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
           return;
         }
-        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.TEST, url);
+        compilerPathsManager.setCompilerOutputUrl(getModule(), TestContentFolderTypeProvider.getInstance(), url);
       }
     });
-    myResourcesOutputPathPanel = createOutputPathPanel(ProjectBundle.message("module.paths.resource.output.title"), new CommitPathRunnable() {
-      @Override
-      public void saveUrl(String url) {
-        if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
-          return;
+    myResourcesOutputPathPanel =
+      createOutputPathPanel(ProjectBundle.message("module.paths.resource.output.title"), new CommitPathRunnable() {
+        @Override
+        public void saveUrl(String url) {
+          if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
+            return;
+          }
+          compilerPathsManager.setCompilerOutputUrl(getModule(), ProductionResourceContentFolderTypeProvider.getInstance(), url);
         }
-        compilerPathsManager.setCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION_RESOURCE, url);
-      }
-    });
+      });
 
-    myCbExcludeOutput = new JCheckBox(ProjectBundle.message("module.paths.exclude.output.checkbox"), compilerPathsManager.isExcludeOutput(getModule()));
+    myCbExcludeOutput =
+      new JCheckBox(ProjectBundle.message("module.paths.exclude.output.checkbox"), compilerPathsManager.isExcludeOutput(getModule()));
     myCbExcludeOutput.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
@@ -122,12 +126,12 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     final JPanel outputPathsPanel = new JPanel(new GridBagLayout());
 
 
-    outputPathsPanel.add(myInheritCompilerOutput, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0,
-                                                                         GridBagConstraints.WEST, GridBagConstraints.NONE,
-                                                                         new Insets(6, 0, 0, 4), 0, 0));
-    outputPathsPanel.add(myPerModuleCompilerOutput, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0,
-                                                                           GridBagConstraints.WEST, GridBagConstraints.NONE,
-                                                                           new Insets(6, 0, 0, 4), 0, 0));
+    outputPathsPanel.add(myInheritCompilerOutput,
+                         new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                                GridBagConstraints.NONE, new Insets(6, 0, 0, 4), 0, 0));
+    outputPathsPanel.add(myPerModuleCompilerOutput,
+                         new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                                GridBagConstraints.NONE, new Insets(6, 0, 0, 4), 0, 0));
 
     myOutputLabel = new JLabel(ProjectBundle.message("module.paths.output.label"));
     outputPathsPanel.add(myOutputLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
@@ -138,16 +142,17 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     myTestOutputLabel = new JLabel(ProjectBundle.message("module.paths.test.output.label"));
     outputPathsPanel.add(myTestOutputLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
                                                                    GridBagConstraints.NONE, new Insets(6, 16, 0, 4), 0, 0));
-    outputPathsPanel.add(myTestsOutputPathPanel, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0,
-                                                                        GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                                                        new Insets(6, 4, 0, 0), 0, 0));
+    outputPathsPanel.add(myTestsOutputPathPanel,
+                         new GridBagConstraints(1, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                                GridBagConstraints.HORIZONTAL, new Insets(6, 4, 0, 0), 0, 0));
 
     myResourceOutputLabel = new JLabel(ProjectBundle.message("module.paths.resource.output.label"));
-    outputPathsPanel.add(myResourceOutputLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
-                                                                   GridBagConstraints.NONE, new Insets(6, 16, 0, 4), 0, 0));
-    outputPathsPanel.add(myResourcesOutputPathPanel, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0,
-                                                                        GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                                                        new Insets(6, 4, 0, 0), 0, 0));
+    outputPathsPanel.add(myResourceOutputLabel,
+                         new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.EAST,
+                                                GridBagConstraints.NONE, new Insets(6, 16, 0, 4), 0, 0));
+    outputPathsPanel.add(myResourcesOutputPathPanel,
+                         new GridBagConstraints(1, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                                GridBagConstraints.HORIZONTAL, new Insets(6, 4, 0, 0), 0, 0));
 
     outputPathsPanel.add(myCbExcludeOutput, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.WEST,
                                                                    GridBagConstraints.NONE, new Insets(6, 16, 0, 0), 0, 0));
@@ -156,14 +161,13 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     updateOutputPathPresentation();
 
     //compiler settings
-    final boolean outputPathInherited =compilerPathsManager.isInheritedCompilerOutput(getModule());
+    final boolean outputPathInherited = compilerPathsManager.isInheritedCompilerOutput(getModule());
     myInheritCompilerOutput.setSelected(outputPathInherited);
     myPerModuleCompilerOutput.setSelected(!outputPathInherited);
     enableCompilerSettings(!outputPathInherited);
 
     final JPanel panel = new JPanel(new BorderLayout());
-    panel.setBorder(IdeBorderFactory.createTitledBorder(ProjectBundle.message("project.roots.output.compiler.title"),
-                                                        true));
+    panel.setBorder(IdeBorderFactory.createTitledBorder(ProjectBundle.message("project.roots.output.compiler.title"), true));
     panel.add(outputPathsPanel, BorderLayout.NORTH);
     return panel;
   }
@@ -173,33 +177,38 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
       final String baseUrl = ProjectStructureConfigurable.getInstance(myProject).getProjectConfig().getCompilerOutputUrl();
       moduleCompileOutputChanged(baseUrl, getModule().getName());
-    } else {
-      final VirtualFile compilerOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.PRODUCTION);
+    }
+    else {
+      final VirtualFile compilerOutputPath =
+        compilerPathsManager.getCompilerOutput(getModule(), ProductionContentFolderTypeProvider.getInstance());
       if (compilerOutputPath != null) {
         myOutputPathPanel.setText(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
       }
       else {
-        final String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION);
+        final String compilerOutputUrl =
+          compilerPathsManager.getCompilerOutputUrl(getModule(), ProductionContentFolderTypeProvider.getInstance());
         if (compilerOutputUrl != null) {
           myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerOutputUrl)));
         }
       }
-      final VirtualFile testsOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.TEST);
+      final VirtualFile testsOutputPath = compilerPathsManager.getCompilerOutput(getModule(), TestContentFolderTypeProvider.getInstance());
       if (testsOutputPath != null) {
         myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(testsOutputPath.getPath()));
       }
       else {
-        final String testsOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.TEST);
+        final String testsOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), TestContentFolderTypeProvider.getInstance());
         if (testsOutputUrl != null) {
           myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(testsOutputUrl)));
         }
       }
-      final VirtualFile resourcesOutputPath = compilerPathsManager.getCompilerOutput(getModule(), ContentFolderType.PRODUCTION_RESOURCE);
+      final VirtualFile resourcesOutputPath =
+        compilerPathsManager.getCompilerOutput(getModule(), ProductionResourceContentFolderTypeProvider.getInstance());
       if (resourcesOutputPath != null) {
         myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(resourcesOutputPath.getPath()));
       }
       else {
-        final String resourcesOutputUrl = compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION_RESOURCE);
+        final String resourcesOutputUrl =
+          compilerPathsManager.getCompilerOutputUrl(getModule(), ProductionResourceContentFolderTypeProvider.getInstance());
         if (resourcesOutputUrl != null) {
           myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(resourcesOutputUrl)));
         }
@@ -255,7 +264,8 @@ public class BuildElementsEditor extends ModuleElementsEditor {
       }
     };
 
-    return new CommitableFieldPanel(textField, null, null, new BrowseFilesListener(textField, title, "", outputPathsChooserDescriptor), null, commitRunnable);
+    return new CommitableFieldPanel(textField, null, null, new BrowseFilesListener(textField, title, "", outputPathsChooserDescriptor),
+                                    null, commitRunnable);
   }
 
   @Override
@@ -290,9 +300,12 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     CompilerPathsManager compilerPathsManager = CompilerPathsManager.getInstance(myProject);
     if (compilerPathsManager.isInheritedCompilerOutput(getModule())) {
       if (baseUrl != null) {
-        myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION))));
-        myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.TEST))));
-        myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), ContentFolderType.PRODUCTION_RESOURCE))));
+        myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(
+          compilerPathsManager.getCompilerOutputUrl(getModule(), ProductionContentFolderTypeProvider.getInstance()))));
+        myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(
+          VfsUtilCore.urlToPath(compilerPathsManager.getCompilerOutputUrl(getModule(), TestContentFolderTypeProvider.getInstance()))));
+        myResourcesOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(
+          compilerPathsManager.getCompilerOutputUrl(getModule(), ProductionResourceContentFolderTypeProvider.getInstance()))));
       }
       else {
         myOutputPathPanel.setText(null);

@@ -57,6 +57,8 @@ import com.intellij.util.containers.MultiMap;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.io.File;
@@ -68,11 +70,13 @@ import java.util.*;
  *         Date: Jul 17, 2007
  */
 public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implements ProjectFromSourcesBuilder {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.projectWizard.importSources.impl.ProjectFromSourcesBuilderImpl");
+  private static final Logger LOG =
+    Logger.getInstance("#com.intellij.ide.util.projectWizard.importSources.impl.ProjectFromSourcesBuilderImpl");
   private static final String NAME = "Existing Sources";
   private String myBaseProjectPath;
   private final List<ProjectConfigurationUpdater> myUpdaters = new ArrayList<ProjectConfigurationUpdater>();
-  private final Map<ProjectStructureDetector, ProjectDescriptor> myProjectDescriptors = new LinkedHashMap<ProjectStructureDetector, ProjectDescriptor>();
+  private final Map<ProjectStructureDetector, ProjectDescriptor> myProjectDescriptors =
+    new LinkedHashMap<ProjectStructureDetector, ProjectDescriptor>();
   private MultiMap<ProjectStructureDetector, DetectedProjectRoot> myRoots = MultiMap.emptyInstance();
   private final WizardContext myContext;
   private final ModulesProvider myModulesProvider;
@@ -182,14 +186,14 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
         // create project-level libraries
         for (ProjectDescriptor projectDescriptor : getSelectedDescriptors()) {
           for (LibraryDescriptor lib : projectDescriptor.getLibraries()) {
-              final Collection<File> files = lib.getJars();
-              final Library projectLib = projectLibraryTable.createLibrary(lib.getName());
-              final Library.ModifiableModel libraryModel = projectLib.getModifiableModel();
-              for (File file : files) {
-                libraryModel.addRoot(VfsUtil.getUrlForLibraryRoot(file), OrderRootType.CLASSES);
-              }
-              libraryModel.commit();
-              projectLibs.put(lib, projectLib);
+            final Collection<File> files = lib.getJars();
+            final Library projectLib = projectLibraryTable.createLibrary(lib.getName());
+            final Library.ModifiableModel libraryModel = projectLib.getModifiableModel();
+            for (File file : files) {
+              libraryModel.addRoot(VfsUtil.getUrlForLibraryRoot(file), OrderRootType.CLASSES);
+            }
+            libraryModel.commit();
+            projectLibs.put(lib, projectLib);
           }
         }
         if (!fromProjectStructure) {
@@ -316,8 +320,10 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
   }
 
   @NotNull
-  private static Module createModule(ProjectDescriptor projectDescriptor, final ModuleDescriptor descriptor,
-                                     final Map<LibraryDescriptor, Library> projectLibs, final ModifiableModuleModel moduleModel)
+  private static Module createModule(ProjectDescriptor projectDescriptor,
+                                     final ModuleDescriptor descriptor,
+                                     final Map<LibraryDescriptor, Library> projectLibs,
+                                     final ModifiableModuleModel moduleModel)
     throws InvalidDataException, IOException, ModuleWithNameAlreadyExists, JDOMException, ConfigurationException {
 
     final Module module = moduleModel.newModule(descriptor.getName(), descriptor.computeModuleDir());
@@ -328,8 +334,10 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
     return module;
   }
 
-  private static void setupRootModel(ProjectDescriptor projectDescriptor, final ModuleDescriptor descriptor,
-                                     final ModifiableRootModel rootModel, final Map<LibraryDescriptor, Library> projectLibs) {
+  private static void setupRootModel(ProjectDescriptor projectDescriptor,
+                                     final ModuleDescriptor descriptor,
+                                     final ModifiableRootModel rootModel,
+                                     final Map<LibraryDescriptor, Library> projectLibs) {
 
     final Set<File> contentRoots = descriptor.getContentRoots();
     for (File contentRoot : contentRoots) {
@@ -342,7 +350,9 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
           final String srcpath = FileUtil.toSystemIndependentName(srcRoot.getDirectory().getPath());
           final VirtualFile sourceRoot = lfs.refreshAndFindFileByPath(srcpath);
           if (sourceRoot != null) {
-            contentEntry.addFolder(sourceRoot, shouldBeTestRoot(srcRoot.getDirectory()) ? ContentFolderType.TEST : ContentFolderType.PRODUCTION);
+            contentEntry.addFolder(sourceRoot, shouldBeTestRoot(srcRoot.getDirectory())
+                                               ? TestContentFolderTypeProvider.getInstance()
+                                               : ProductionContentFolderTypeProvider.getInstance());
           }
         }
       }
@@ -383,15 +393,17 @@ public class ProjectFromSourcesBuilderImpl extends ProjectImportBuilder implemen
   }
 
   private static boolean isTestRootName(final String name) {
-    return "test".equalsIgnoreCase(name) || 
-           "tests".equalsIgnoreCase(name) || 
-           "testSource".equalsIgnoreCase(name) || 
-           "testSources".equalsIgnoreCase(name) || 
+    return "test".equalsIgnoreCase(name) ||
+           "tests".equalsIgnoreCase(name) ||
+           "testSource".equalsIgnoreCase(name) ||
+           "testSources".equalsIgnoreCase(name) ||
            "testSrc".equalsIgnoreCase(name);
   }
 
   public interface ProjectConfigurationUpdater {
-    void updateProject(@NotNull Project project, @NotNull ModifiableModelsProvider modelsProvider, @NotNull ModulesProvider modulesProvider);
+    void updateProject(@NotNull Project project,
+                       @NotNull ModifiableModelsProvider modelsProvider,
+                       @NotNull ModulesProvider modulesProvider);
   }
 
   @Override

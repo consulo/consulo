@@ -20,7 +20,6 @@ import com.intellij.conversion.CannotConvertException;
 import com.intellij.conversion.ComponentManagerSettings;
 import com.intellij.conversion.ModuleSettings;
 import com.intellij.ide.highlighter.ModuleFileType;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.util.JDOMUtil;
@@ -77,7 +76,7 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
   @NotNull
   public Collection<File> getSourceRoots(boolean includeTests) {
     final List<File> result = new ArrayList<File>();
-    for (Element contentRoot : getContentRootElements()) {
+    /*for (Element contentRoot : getContentRootElements()) {
       for (Element sourceFolder : contentRoot.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
         ContentFolderType contentFolderType = ContentFolderType.valueOf(sourceFolder.getAttributeValue(ContentFolderImpl.TYPE_ATTRIBUTE));
         if (includeTests && (contentFolderType == ContentFolderType.PRODUCTION || contentFolderType == ContentFolderType.TEST) ||
@@ -85,7 +84,7 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
           result.add(getFile(sourceFolder.getAttributeValue(ContentFolderImpl.URL_ATTRIBUTE)));
         }
       }
-    }
+    }*/
     return result;
   }
 
@@ -197,7 +196,7 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
   }
 
   private void addExcludedFolder(File directory, Element contentRoot) {
-    for (Element excludedFolder : contentRoot.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
+    /*for (Element excludedFolder : contentRoot.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
       ContentFolderType contentFolderType = ContentFolderType.valueOf(excludedFolder.getAttributeValue(ContentFolderImpl.TYPE_ATTRIBUTE));
       if (contentFolderType != ContentFolderType.EXCLUDED) {
         continue;
@@ -211,7 +210,7 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
     String path = myContext.collapsePath(FileUtil.toSystemIndependentName(directory.getAbsolutePath()), this);
     contentRoot.addContent(
       new Element(ContentFolderImpl.ELEMENT_NAME).setAttribute(ContentFolderImpl.URL_ATTRIBUTE, VfsUtil.pathToUrl(path))
-        .setAttribute(ContentFolderImpl.TYPE_ATTRIBUTE, ContentFolderType.EXCLUDED.name()));
+        .setAttribute(ContentFolderImpl.TYPE_ATTRIBUTE, ContentFolderType.EXCLUDED.name()));   */
   }
 
   private File getFile(String url) {

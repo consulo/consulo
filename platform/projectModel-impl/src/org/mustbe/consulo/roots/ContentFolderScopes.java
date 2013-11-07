@@ -49,6 +49,11 @@ public class ContentFolderScopes {
   }
 
   @NotNull
+  public static Predicate<ContentFolderTypeProvider> excluded() {
+    return of(ExcludedContentFolderTypeProvider.getInstance());
+  }
+
+  @NotNull
   public static Predicate<ContentFolderTypeProvider> production() {
     return cacheScope(PRODUCTION, new NotNullFactory<Predicate<ContentFolderTypeProvider>>() {
       @NotNull

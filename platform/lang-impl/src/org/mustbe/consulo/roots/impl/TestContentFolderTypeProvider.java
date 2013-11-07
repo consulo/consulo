@@ -17,15 +17,19 @@ package org.mustbe.consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
+import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 22:44/31.10.13
  */
 public class TestContentFolderTypeProvider extends BaseContentFolderTypeProvider {
+  private static final Color TESTS_COLOR = new JBColor(new Color(0x008C2E), new Color(73, 140, 101));
+
   public static TestContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(TestContentFolderTypeProvider.class);
   }
@@ -49,5 +53,11 @@ public class TestContentFolderTypeProvider extends BaseContentFolderTypeProvider
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.test.sources.action");
+  }
+
+  @NotNull
+  @Override
+  public Color getGroupColor() {
+    return TESTS_COLOR;
   }
 }

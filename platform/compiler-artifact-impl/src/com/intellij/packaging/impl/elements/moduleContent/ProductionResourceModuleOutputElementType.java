@@ -27,6 +27,6 @@ public class ProductionResourceModuleOutputElementType extends ModuleOutputEleme
   }
 
   public ProductionResourceModuleOutputElementType() {
-    super(ProductionResourceContentFolderTypeProvider.getInstance());
+    super("module-production-resource-output", ProductionResourceContentFolderTypeProvider.getInstance());
   }
 }

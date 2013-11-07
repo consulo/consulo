@@ -26,6 +26,6 @@ public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBa
   }
 
   public ProductionModuleOutputElementType() {
-    super(ProductionContentFolderTypeProvider.getInstance());
+    super("module-output", ProductionContentFolderTypeProvider.getInstance());
   }
 }

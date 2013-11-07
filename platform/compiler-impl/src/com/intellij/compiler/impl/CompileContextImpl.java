@@ -34,7 +34,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -56,6 +55,9 @@ import org.consulo.compiler.server.rmi.CompilerClientConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.compiler.roots.CompilerPathsImpl;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.File;
 import java.util.*;
@@ -126,12 +128,13 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     CompilerPathsManager pathsManager = CompilerPathsManager.getInstance(getProject());
     for (Module module : allModules) {
-      final VirtualFile output = pathsManager.getCompilerOutput(module, ContentFolderType.PRODUCTION);
+      final VirtualFile output = pathsManager.getCompilerOutput(module, ProductionContentFolderTypeProvider.getInstance());
       if (output != null && output.isValid()) {
         allDirs.add(output);
         productionOutputDirs.add(output);
       }
-      final VirtualFile testsOutput = pathsManager.getCompilerOutput(module, ContentFolderType.TEST);
+
+      final VirtualFile testsOutput = pathsManager.getCompilerOutput(module, TestContentFolderTypeProvider.getInstance());
       if (testsOutput != null && testsOutput.isValid()) {
         allDirs.add(testsOutput);
         testOutputDirs.add(testsOutput);
@@ -469,9 +472,9 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public VirtualFile getOutputForFile(Module module, VirtualFile virtualFile) {
-    ContentFolderType contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
-    if(contentFolderTypeForFile == null) {
-      contentFolderTypeForFile = ContentFolderType.PRODUCTION;
+    ContentFolderTypeProvider contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
+    if (contentFolderTypeForFile == null) {
+      contentFolderTypeForFile = ProductionContentFolderTypeProvider.getInstance();
     }
 
     return getOutputForFile(module, contentFolderTypeForFile);
@@ -479,7 +482,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Nullable
   @Override
-  public VirtualFile getOutputForFile(Module module, ContentFolderType contentFolderType) {
+  public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
     return CompilerPathsManager.getInstance(myProject).getCompilerOutput(module, contentFolderType);
   }
 

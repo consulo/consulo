@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -53,6 +54,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   private final ModuleManager myModuleManager;
 
   private Map<VirtualFile, DirectoryInfo> myInfoDirectoryCache = new HashMap<VirtualFile, DirectoryInfo>();
+  private Map<DirectoryInfo, ContentFolderTypeProvider> myFolderTypeProvider = new HashMap<DirectoryInfo, ContentFolderTypeProvider>();
 
   public CompilerServerDirectoryIndex(@NotNull Project project, @NotNull ModuleManager moduleManager) {
     myProject = project;
@@ -70,23 +72,25 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
       return directoryInfo;
     }
 
-    directoryInfo = getDirectoryInfo0(fileForInfo);
-    myInfoDirectoryCache.put(fileForInfo, directoryInfo);
+    Pair<DirectoryInfo, ContentFolderTypeProvider> pair = getDirectoryInfo0(fileForInfo);
+    myInfoDirectoryCache.put(fileForInfo, directoryInfo = pair.getFirst());
+    myFolderTypeProvider.put(directoryInfo, pair.getSecond());
     return directoryInfo;
   }
 
   @Nullable
   @Override
   public ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info) {
-    return null;
+    return myFolderTypeProvider.get(info);
   }
 
-  private DirectoryInfo getDirectoryInfo0(VirtualFile fileForInfo) {
+  private Pair<DirectoryInfo, ContentFolderTypeProvider> getDirectoryInfo0(VirtualFile fileForInfo) {
     Module module = null;
     VirtualFile contentRoot = null;
     VirtualFile sourceRoot = null;
     VirtualFile libraryRoot = null;
     byte flags = 0;
+    ContentFolderTypeProvider provider = null;
 
     for (Module moduleIter : myModuleManager.getModules()) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleIter);
@@ -101,7 +105,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
             if (temp != null && VfsUtilCore.isAncestor(temp, fileForInfo, false)) {
               sourceRoot = temp;
 
-              flags |= 1 << contentFolder.getType().ordinal();
+              provider = contentFolder.getType();
             }
           }
 
@@ -132,7 +136,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
 
     DirectoryInfo directoryInfo = DirectoryInfo.createNew();
     directoryInfo = directoryInfo.with(module, contentRoot, sourceRoot, libraryRoot, flags, OrderEntry.EMPTY_ARRAY);
-    return directoryInfo;
+    return new Pair<DirectoryInfo, ContentFolderTypeProvider>(directoryInfo, provider);
   }
 
   @Override

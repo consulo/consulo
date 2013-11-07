@@ -21,7 +21,6 @@ import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
@@ -36,7 +35,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ContentFolderType;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import com.intellij.openapi.util.Disposer;
@@ -50,34 +48,34 @@ import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.Comparator;
+import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Oct 9, 2003
- *         Time: 1:19:47 PM
+ * Date: Oct 9, 2003
+ * Time: 1:19:47 PM
  */
 public class ContentEntryTreeEditor {
   private final Project myProject;
-
-  protected Tree myTree;
+  private final Set<ContentFolderTypeProvider> myContentFolderTypeProviders;
+  protected final Tree myTree;
   private FileSystemTreeImpl myFileSystemTree;
   private final JPanel myTreePanel;
   private final DefaultMutableTreeNode EMPTY_TREE_ROOT = new DefaultMutableTreeNode(ProjectBundle.message("module.paths.empty.node"));
-  protected DefaultActionGroup myEditingActionsGroup;
+  protected final DefaultActionGroup myEditingActionsGroup;
   private ContentEntryEditor myContentEntryEditor;
   private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
   private final FileChooserDescriptor myDescriptor;
 
-  public ContentEntryTreeEditor(Project project) {
+  public ContentEntryTreeEditor(Project project, Set<ContentFolderTypeProvider> contentFolderTypeProviders) {
     myProject = project;
-
+    myContentFolderTypeProviders = contentFolderTypeProviders;
     myTree = new Tree();
     myTree.setRootVisible(true);
     myTree.setShowsRootHandles(true);
@@ -97,25 +95,14 @@ public class ContentEntryTreeEditor {
   }
 
   protected void createEditingActions() {
-    ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, ContentFolderType.PRODUCTION);
-    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK)), myTree);
-    myEditingActionsGroup.add(action);
-
-    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.PRODUCTION_RESOURCE);
-    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK)), myTree);
-    myEditingActionsGroup.add(action);
-
-    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.TEST);
-    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_MASK)), myTree);
-    myEditingActionsGroup.add(action);
-
-    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.TEST_RESOURCE);
-    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_MASK)), myTree);
-    myEditingActionsGroup.add(action);
-
-    action = new ToggleFolderStateAction(myTree, this, ContentFolderType.EXCLUDED);
-    action.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_MASK)), myTree);
-    myEditingActionsGroup.add(action);
+    for (final ContentFolderTypeProvider contentFolderTypeProvider : myContentFolderTypeProviders) {
+      ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
+     /* CustomShortcutSet shortcutSet = editor.getMarkRootShortcutSet();
+      if (shortcutSet != null) {
+        action.registerCustomShortcutSet(shortcutSet, myTree);
+      }     */
+      myEditingActionsGroup.add(action);
+    }
   }
 
   protected TreeCellRenderer getContentEntryCellRenderer() {
@@ -169,11 +156,8 @@ public class ContentEntryTreeEditor {
 
     myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, getContentEntryCellRenderer(), init, null) {
       @Override
-      protected AbstractTreeBuilder createTreeBuilder(JTree tree,
-                                                      DefaultTreeModel treeModel,
-                                                      AbstractTreeStructure treeStructure,
-                                                      Comparator<NodeDescriptor> comparator,
-                                                      FileChooserDescriptor descriptor,
+      protected AbstractTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, AbstractTreeStructure treeStructure,
+                                                      Comparator<NodeDescriptor> comparator, FileChooserDescriptor descriptor,
                                                       final Runnable onInitialized) {
         return new MyFileTreeBuilder(tree, treeModel, treeStructure, comparator, descriptor, onInitialized);
       }
@@ -225,25 +209,34 @@ public class ContentEntryTreeEditor {
     }
   }
 
-  public Project getProject() {
-    return myProject;
+  private static class MarkSourceToggleActionsGroup extends DefaultActionGroup {
+    public MarkSourceToggleActionsGroup(String groupName, final Icon rootIcon) {
+      super(groupName, true);
+      getTemplatePresentation().setIcon(rootIcon);
+    }
+
+    @Override
+    public boolean displayTextInToolbar() {
+      return true;
+    }
   }
 
   private class MyContentEntryEditorListener extends ContentEntryEditorListenerAdapter {
     @Override
-    public void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
+    public void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder folder) {
       update();
     }
 
     @Override
-    public void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
+    public void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder file) {
       update();
     }
   }
 
   private static class MyNewFolderAction extends NewFolderAction implements CustomComponentAction {
     private MyNewFolderAction() {
-      super(ActionsBundle.message("action.FileChooser.NewFolder.text"), ActionsBundle.message("action.FileChooser.NewFolder.description"),
+      super(ActionsBundle.message("action.FileChooser.NewFolder.text"),
+            ActionsBundle.message("action.FileChooser.NewFolder.description"),
             AllIcons.Actions.NewFolder);
     }
 
@@ -282,5 +275,9 @@ public class ContentEntryTreeEditor {
       }
       return null;
     }
+  }
+
+  public DefaultActionGroup getEditingActionsGroup() {
+    return myEditingActionsGroup;
   }
 }

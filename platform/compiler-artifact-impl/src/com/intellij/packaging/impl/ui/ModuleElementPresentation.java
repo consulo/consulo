@@ -19,8 +19,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ContentFolderType;
-import com.intellij.openapi.roots.ui.configuration.ContentFolderIconUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
@@ -94,25 +93,9 @@ public class ModuleElementPresentation extends TreeNodePresentation {
       moduleName = "<unknown>";
     }
 
-    String text;
-    switch (myContentFolderType) {
-
-      case PRODUCTION:
-        text = CompilerBundle.message("node.text.0.compile.output", moduleName);
-        break;
-      case TEST:
-        text = CompilerBundle.message("node.text.0.test.compile.output", moduleName);
-        break;
-      case PRODUCTION_RESOURCE:
-        text = CompilerBundle.message("node.text.0.resource.compile.output", moduleName);
-        break;
-      case TEST_RESOURCE:
-        text = CompilerBundle.message("node.text.0.test.resource.compile.output", moduleName);
-        break;
-      default:
-        throw new IllegalArgumentException();
-    }
-    presentationData.addText(text, module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
+    presentationData
+      .addText(CompilerBundle.message("node.text.0.1.compile.output", moduleName, StringUtil.toLowerCase(myContentFolderType.getName())),
+               module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
   @Override
