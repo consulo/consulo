@@ -36,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 import java.util.*;
@@ -73,10 +72,10 @@ class RootIndex {
       for (ContentEntry contentEntry : contentEntries) {
         // Init excluded roots
         Collections.addAll(myProjectExcludedRoots,
-                           contentEntry.getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
+                           contentEntry.getFolderFiles(ContentFolderScopes.excluded()));
 
         // Init module sources
-        ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderScopes.productionAndTest());
+        ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderScopes.all(false));
         for (final ContentFolder sourceFolder : sourceFolders) {
           final VirtualFile sourceFolderRoot = sourceFolder.getFile();
           if (sourceFolderRoot != null) {

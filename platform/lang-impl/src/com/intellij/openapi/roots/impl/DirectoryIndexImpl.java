@@ -58,7 +58,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.*;
 
@@ -963,7 +962,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
       for (ContentEntry contentEntry : contentEntries) {
         VirtualFile contentRoot = contentEntry.getFile();
-        ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderScopes.productionAndTest());
+        ContentFolder[] sourceFolders = contentEntry.getFolders(ContentFolderScopes.all(false));
         if (reverseAllSets) {
           sourceFolders = ArrayUtil.reverseArray(sourceFolders);
         }
@@ -1454,7 +1453,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           if (!(contentRoot instanceof NewVirtualFile)) continue;
 
           for (VirtualFile excludeRoot : contentEntry
-            .getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance()))) {
+            .getFolderFiles(ContentFolderScopes.excluded())) {
             // Output paths should be excluded (if marked as such) regardless if they're under corresponding module's content root
             if (excludeRoot instanceof NewVirtualFile) {
               if (!FileUtil.startsWith(contentRoot.getUrl(), excludeRoot.getUrl())) {
@@ -1466,7 +1465,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
             }
 
           }
-          for (String url : contentEntry.getFolderUrls(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance()))) {
+          for (String url : contentEntry.getFolderUrls(ContentFolderScopes.excluded())) {
             putForFileAndAllAncestors((NewVirtualFile)contentRoot, url);
           }
         }

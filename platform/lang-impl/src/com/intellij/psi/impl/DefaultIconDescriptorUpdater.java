@@ -23,14 +23,15 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.consulo.lang.LanguageElementIcons;
-import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 
@@ -59,19 +60,18 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
       else if (contentFolder != null) {
         symbolIcon = contentFolder.getType().getIcon();
       }
-      else if (PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory) != null) {
-        symbolIcon = ProjectRootsUtil.isInTestSource(psiDirectory) || ProjectRootsUtil.isInTestResource(psiDirectory)
-                     ? AllIcons.Nodes.TestPackage
-                     : AllIcons.Nodes.Package;
-      }
       else {
-        symbolIcon = AllIcons.Nodes.TreeClosed;
+        ContentFolderTypeProvider contentFolderTypeForFile =
+          ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(vFile);
+        symbolIcon = contentFolderTypeForFile != null
+                     ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory)
+                     : AllIcons.Nodes.TreeClosed;
       }
 
       iconDescriptor.setMainIcon(symbolIcon);
     }
     else if (element instanceof PsiFile) {
-      if(iconDescriptor.getMainIcon() != null) {
+      if (iconDescriptor.getMainIcon() != null) {
         return;
       }
 
@@ -87,7 +87,7 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
     }
     else {
       Icon languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
-      if(languageElementIcon == null) {
+      if (languageElementIcon == null) {
         return;
       }
 

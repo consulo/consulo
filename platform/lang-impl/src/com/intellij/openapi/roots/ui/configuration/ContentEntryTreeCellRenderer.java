@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
@@ -23,6 +24,8 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -70,7 +73,17 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
         if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
           continue;
         }
-        icon = contentFolder.getType().getChildDirectoryIcon();
+
+        boolean hasSupport = false;
+        for (ModuleExtension moduleExtension : myTreeEditor.getContentEntryEditor().getModel().getExtensions()) {
+          for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+            if (supportProvider.getSupportedModuleExtensionClass().isAssignableFrom(moduleExtension.getClass())) {
+              hasSupport = true;
+              break;
+            }
+          }
+        }
+        icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null) : AllIcons.Nodes.TreeOpen;
         currentRoot = contentPath;
       }
     }

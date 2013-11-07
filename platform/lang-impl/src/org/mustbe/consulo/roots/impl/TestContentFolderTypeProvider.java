@@ -45,7 +45,7 @@ public class TestContentFolderTypeProvider extends BaseContentFolderTypeProvider
   }
 
   @Override
-  public Icon getChildDirectoryIcon() {
+  public Icon getChildPackageIcon() {
     return AllIcons.Nodes.TestPackage;
   }
 

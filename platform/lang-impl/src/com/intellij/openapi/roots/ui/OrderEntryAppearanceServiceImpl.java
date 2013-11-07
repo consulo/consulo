@@ -155,7 +155,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @NotNull
   @Override
   public CellAppearanceEx forContentFolder(@NotNull final ContentFolder folder) {
-    return formatRelativePath(folder, folder.getType().getChildDirectoryIcon());
+    return formatRelativePath(folder, folder.getType().getChildDirectoryIcon(null));
   }
 
   @NotNull

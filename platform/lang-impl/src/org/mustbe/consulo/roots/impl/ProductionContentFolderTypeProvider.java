@@ -46,7 +46,7 @@ public class ProductionContentFolderTypeProvider extends BaseContentFolderTypePr
   }
 
   @Override
-  public Icon getChildDirectoryIcon() {
+  public Icon getChildPackageIcon() {
     return AllIcons.Nodes.Package;
   }
 

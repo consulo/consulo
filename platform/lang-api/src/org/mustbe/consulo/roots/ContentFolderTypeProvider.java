@@ -20,6 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.psi.PsiDirectory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +55,7 @@ public abstract class ContentFolderTypeProvider {
     return myId;
   }
 
-  public Icon getChildDirectoryIcon() {
+  public Icon getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
     return AllIcons.Nodes.TreeOpen;
   }
 

@@ -25,9 +25,12 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +39,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 22:46/31.10.13
  */
-public class ExcludedContentFolderTypeProvider extends BaseContentFolderTypeProvider {
+public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
 
   @NotNull
@@ -52,6 +55,11 @@ public class ExcludedContentFolderTypeProvider extends BaseContentFolderTypeProv
   @Override
   public Icon getIcon() {
     return AllIcons.Modules.ExcludeRoot;
+  }
+
+  @NotNull
+  public String getMarkActionDescription() {
+    return ProjectBundle.message("module.toggle.0.action.description", getName());
   }
 
   @NotNull
@@ -75,7 +83,7 @@ public class ExcludedContentFolderTypeProvider extends BaseContentFolderTypeProv
   }
 
   @Override
-  public Icon getChildDirectoryIcon() {
+  public Icon getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
     return AllIcons.Modules.ExcludeRoot;
   }
 

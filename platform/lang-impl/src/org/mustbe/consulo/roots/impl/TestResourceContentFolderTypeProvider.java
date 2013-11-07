@@ -41,7 +41,6 @@ public class TestResourceContentFolderTypeProvider extends BaseContentFolderType
     return AllIcons.Modules.TestResourcesRoot;
   }
 
-
   @NotNull
   @Override
   public String getName() {
