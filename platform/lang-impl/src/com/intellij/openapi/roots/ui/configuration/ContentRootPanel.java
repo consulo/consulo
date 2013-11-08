@@ -36,7 +36,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
@@ -49,7 +48,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
@@ -63,7 +61,6 @@ public abstract class ContentRootPanel extends JPanel {
   private static final Color UNSELECTED_TEXT_COLOR = Gray._51;
 
   protected final ActionCallback myCallback;
-  private final Set<ContentFolderTypeProvider> myContentFolderTypeProviders;
   private JComponent myHeader;
   private JComponent myBottom;
   private final Map<JComponent, Color> myComponentToForegroundMap = new HashMap<JComponent, Color>();
@@ -76,13 +73,12 @@ public abstract class ContentRootPanel extends JPanel {
     void navigateFolder(ContentEntry contentEntry, ContentFolder contentFolder);
   }
 
-  public ContentRootPanel(ActionCallback callback, Set<ContentFolderTypeProvider> contentFolderTypeProviders) {
+  public ContentRootPanel(ActionCallback callback) {
     super(new GridBagLayout());
     myCallback = callback;
-    myContentFolderTypeProviders = contentFolderTypeProviders;
   }
 
-  @Nullable
+  @NotNull
   protected abstract ContentEntry getContentEntry();
 
   public void initUI() {
@@ -102,9 +98,9 @@ public abstract class ContentRootPanel extends JPanel {
   }
 
   protected void addFolderGroupComponents() {
-    final ContentFolder[] sourceFolders = getContentEntry().getFolders();
+    final ContentFolder[] contentFolders = getContentEntry().getFolders(ContentFolderScopes.all());
     MultiMap<ContentFolderTypeProvider, ContentFolder> folderByType = new MultiMap<ContentFolderTypeProvider, ContentFolder>();
-    for (ContentFolder folder : sourceFolders) {
+    for (ContentFolder folder : contentFolders) {
       if (folder.isSynthetic()) {
         continue;
       }
@@ -119,9 +115,11 @@ public abstract class ContentRootPanel extends JPanel {
     GridBagConstraints constraints =
       new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
                              insets, 0, 0);
-    for (ContentFolderTypeProvider contentFolderTypeProvider : myContentFolderTypeProviders) {
-      Collection<ContentFolder> folders = folderByType.get(contentFolderTypeProvider);
+    for (Map.Entry<ContentFolderTypeProvider, Collection<ContentFolder>> entry : folderByType.entrySet()) {
+      Collection<ContentFolder> folders = entry.getValue();
       if (folders.isEmpty()) continue;
+
+      ContentFolderTypeProvider contentFolderTypeProvider = entry.getKey();
 
       ContentFolder[] foldersArray = folders.toArray(new ContentFolder[folders.size()]);
       final JComponent sourcesComponent = createFolderGroupComponent(contentFolderTypeProvider.getName(), foldersArray,
@@ -167,7 +165,7 @@ public abstract class ContentRootPanel extends JPanel {
     for (int idx = 0; idx < folders.length; idx++) {
       final ContentFolder folder = folders[idx];
       final int verticalPolicy = idx == folders.length - 1 ? GridConstraints.SIZEPOLICY_CAN_GROW : GridConstraints.SIZEPOLICY_FIXED;
-      panel.add(createFolderComponent(folder, foregroundColor, editor),
+      panel.add(createFolderComponent(folder, foregroundColor),
                 new GridConstraints(idx, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_HORIZONTAL,
                                     GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_CAN_SHRINK, verticalPolicy, null, null,
                                     null));
@@ -199,9 +197,7 @@ public abstract class ContentRootPanel extends JPanel {
     myComponentToForegroundMap.put(component, foreground);
   }
 
-  private JComponent createFolderComponent(final ContentFolder folder,
-                                                                  Color foreground,
-                                                                  ContentFolderTypeProvider editor) {
+  private JComponent createFolderComponent(final ContentFolder folder, Color foreground) {
     final VirtualFile folderFile = folder.getFile();
     final VirtualFile contentEntryFile = getContentEntry().getFile();
     final String properties ="";
@@ -248,9 +244,6 @@ public abstract class ContentRootPanel extends JPanel {
 
   public boolean isExcludedOrUnderExcludedDirectory(final VirtualFile file) {
     final ContentEntry contentEntry = getContentEntry();
-    if (contentEntry == null) {
-      return false;
-    }
     for (VirtualFile excludedDir : contentEntry.getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance()))) {
       if (VfsUtilCore.isAncestor(excludedDir, file, false)) {
         return true;

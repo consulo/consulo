@@ -178,11 +178,12 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
 
   private void createEditors() {
     ModuleConfigurationState state = createModuleConfigurationState();
-    myEditors.add(new ContentEntriesEditor(myName, state));
+    ContentEntriesEditor contentEntriesEditor = new ContentEntriesEditor(myName, state);
+    myEditors.add(contentEntriesEditor);
     myEditors.add(new OutputEditor(state));
-    final ClasspathEditor e = new ClasspathEditor(state);
-    myEditors.add(e);
-    myEditors.add(new ExtensionEditor(state, e));
+    final ClasspathEditor classpathEditor = new ClasspathEditor(state);
+    myEditors.add(classpathEditor);
+    myEditors.add(new ExtensionEditor(state, classpathEditor, contentEntriesEditor));
   }
 
   public ModuleConfigurationState createModuleConfigurationState() {

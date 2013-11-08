@@ -34,7 +34,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EventListener;
-import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
@@ -46,8 +45,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   private ContentRootPanel myContentRootPanel;
   private JPanel myMainPanel;
   protected EventDispatcher<ContentEntryEditorListener> myEventDispatcher;
-  private final String myContentEntryUrl;
-  private final Set<ContentFolderTypeProvider> myContentFolderTypeProviders;
+  private final ContentEntry myContentEntry;
 
   public interface ContentEntryEditorListener extends EventListener {
     void editingStarted(@NotNull ContentEntryEditor editor);
@@ -61,13 +59,8 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
     void navigationRequested(@NotNull ContentEntryEditor editor, VirtualFile file);
   }
 
-  public ContentEntryEditor(final String contentEntryUrl, Set<ContentFolderTypeProvider> contentFolderTypeProviders) {
-    myContentEntryUrl = contentEntryUrl;
-    myContentFolderTypeProviders = contentFolderTypeProviders;
-  }
-
-  public String getContentEntryUrl() {
-    return myContentEntryUrl;
+  public ContentEntryEditor(final ContentEntry contentEntry) {
+    myContentEntry = contentEntry;
   }
 
   public void initUI() {
@@ -98,24 +91,16 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
     update();
   }
 
-  @Nullable
+  @NotNull
   protected ContentEntry getContentEntry() {
-    final ModifiableRootModel model = getModel();
-    if (model != null) {
-      final ContentEntry[] entries = model.getContentEntries();
-      for (ContentEntry entry : entries) {
-        if (entry.getUrl().equals(myContentEntryUrl)) return entry;
-      }
-    }
-
-    return null;
+    return myContentEntry;
   }
 
   protected abstract ModifiableRootModel getModel();
 
   @Override
   public void deleteContentEntry() {
-    final String path = FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(myContentEntryUrl));
+    final String path = FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(myContentEntry.getUrl()));
     final int answer = Messages.showYesNoDialog(ProjectBundle.message("module.paths.remove.content.prompt", path),
                                                 ProjectBundle.message("module.paths.remove.content.title"), Messages.getQuestionIcon());
     if (answer != 0) { // no
@@ -179,7 +164,8 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   protected ContentRootPanel createContentRootPane() {
-    return new ContentRootPanel(this, myContentFolderTypeProviders) {
+    return new ContentRootPanel(this) {
+      @NotNull
       @Override
       protected ContentEntry getContentEntry() {
         return ContentEntryEditor.this.getContentEntry();

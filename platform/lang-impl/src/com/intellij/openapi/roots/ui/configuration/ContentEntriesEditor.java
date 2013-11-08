@@ -44,16 +44,16 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.ContentFoldersSupportUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
@@ -68,21 +68,19 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   protected ContentEntryTreeEditor myRootTreeEditor;
   private MyContentEntryEditorListener myContentEntryEditorListener;
   protected JPanel myEditorsPanel;
-  private final Map<String, ContentEntryEditor> myEntryToEditorMap = new HashMap<String, ContentEntryEditor>();
-  private String mySelectedEntryUrl;
+  private final Map<ContentEntry, ContentEntryEditor> myEntryToEditorMap = new HashMap<ContentEntry, ContentEntryEditor>();
+  private ContentEntry mySelectedEntry;
 
   private VirtualFile myLastSelectedDir = null;
   private final String myModuleName;
   private final ModulesProvider myModulesProvider;
   private final ModuleConfigurationState myState;
-  private final Set<ContentFolderTypeProvider> myContentFolderTypeProviders;
 
   public ContentEntriesEditor(String moduleName, final ModuleConfigurationState state) {
     super(state);
     myState = state;
     myModuleName = moduleName;
     myModulesProvider = state.getModulesProvider();
-    myContentFolderTypeProviders = ContentFoldersSupportUtil.getSupportedFolders(state.getRootModel());
     final VirtualFileManagerAdapter fileManagerListener = new VirtualFileManagerAdapter() {
       @Override
       public void afterRefreshFinish(boolean asynchronous) {
@@ -131,6 +129,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     super.disposeUIResources();
   }
 
+  @NotNull
   @Override
   public JPanel createComponentImpl() {
     final Module module = getModule();
@@ -140,8 +139,6 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     final JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
-
-    addAdditionalSettingsToPanel(mainPanel);
 
     final JPanel entriesPanel = new JPanel(new BorderLayout());
 
@@ -159,7 +156,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     splitter.setProportion(0.6f);
     splitter.setHonorComponentsMinimumSize(true);
 
-    myRootTreeEditor = createContentEntryTreeEditor(project);
+    myRootTreeEditor = new ContentEntryTreeEditor(project, myState);
     splitter.setFirstComponent(myRootTreeEditor.createComponent());
     splitter.setSecondComponent(entriesPanel);
     JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -176,43 +173,25 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     mainPanel.add(contentPanel, BorderLayout.CENTER);
 
-
-    final JPanel innerPanel = createBottomControl(module);
-    if (innerPanel != null) {
-      mainPanel.add(innerPanel, BorderLayout.SOUTH);
-    }
-
     final ModifiableRootModel model = getModel();
     if (model != null) {
       final ContentEntry[] contentEntries = model.getContentEntries();
       if (contentEntries.length > 0) {
         for (final ContentEntry contentEntry : contentEntries) {
-          addContentEntryPanel(contentEntry.getUrl());
+          addContentEntryPanel(contentEntry);
         }
-        selectContentEntry(contentEntries[0].getUrl());
+        selectContentEntry(contentEntries[0]);
       }
     }
 
     return mainPanel;
   }
 
-  @Nullable
-  protected JPanel createBottomControl(Module module) {
-    return null;
-  }
-
-  protected ContentEntryTreeEditor createContentEntryTreeEditor(Project project) {
-    return new ContentEntryTreeEditor(project, myContentFolderTypeProviders);
-  }
-
-  protected void addAdditionalSettingsToPanel(final JPanel mainPanel) {
-  }
-
   protected Module getModule() {
     return myModulesProvider.getModule(myModuleName);
   }
 
-  protected void addContentEntryPanel(final String contentEntry) {
+  protected void addContentEntryPanel(final ContentEntry contentEntry) {
     final ContentEntryEditor contentEntryEditor = createContentEntryEditor(contentEntry);
     contentEntryEditor.initUI();
     contentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
@@ -233,8 +212,8 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     myEditorsPanel.add(component);
   }
 
-  protected ContentEntryEditor createContentEntryEditor(String contentEntryUrl) {
-    return new ContentEntryEditor(contentEntryUrl, myContentFolderTypeProviders) {
+  protected ContentEntryEditor createContentEntryEditor(ContentEntry contentEntry) {
+    return new ContentEntryEditor(contentEntry) {
       @Override
       protected ModifiableRootModel getModel() {
         return ContentEntriesEditor.this.getModel();
@@ -242,13 +221,13 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     };
   }
 
-  void selectContentEntry(final String contentEntryUrl) {
-    if (mySelectedEntryUrl != null && mySelectedEntryUrl.equals(contentEntryUrl)) {
+  void selectContentEntry(@Nullable final ContentEntry contentEntryUrl) {
+    if (mySelectedEntry != null && mySelectedEntry.equals(contentEntryUrl)) {
       return;
     }
     try {
-      if (mySelectedEntryUrl != null) {
-        ContentEntryEditor editor = myEntryToEditorMap.get(mySelectedEntryUrl);
+      if (mySelectedEntry != null) {
+        ContentEntryEditor editor = myEntryToEditorMap.get(mySelectedEntry);
         if (editor != null) {
           editor.setSelected(false);
         }
@@ -272,7 +251,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
       }
     }
     finally {
-      mySelectedEntryUrl = contentEntryUrl;
+      mySelectedEntry = contentEntryUrl;
     }
   }
 
@@ -284,21 +263,21 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   }
 
   @Nullable
-  private String getNextContentEntry(final String contentEntryUrl) {
+  private ContentEntry getNextContentEntry(final ContentEntry contentEntryUrl) {
     return getAdjacentContentEntry(contentEntryUrl, 1);
   }
 
   @Nullable
-  private String getAdjacentContentEntry(final String contentEntryUrl, int delta) {
+  private ContentEntry getAdjacentContentEntry(final ContentEntry contentEntryUrl, int delta) {
     final ContentEntry[] contentEntries = getModel().getContentEntries();
     for (int idx = 0; idx < contentEntries.length; idx++) {
       ContentEntry entry = contentEntries[idx];
-      if (contentEntryUrl.equals(entry.getUrl())) {
+      if (contentEntryUrl.equals(entry)) {
         int nextEntryIndex = (idx + delta) % contentEntries.length;
         if (nextEntryIndex < 0) {
           nextEntryIndex += contentEntries.length;
         }
-        return nextEntryIndex == idx ? null : contentEntries[nextEntryIndex].getUrl();
+        return nextEntryIndex == idx ? null : contentEntries[nextEntryIndex];
       }
     }
     return null;
@@ -332,26 +311,26 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
   protected void addContentEntryPanels(ContentEntry[] contentEntriesArray) {
     for (ContentEntry contentEntry : contentEntriesArray) {
-      addContentEntryPanel(contentEntry.getUrl());
+      addContentEntryPanel(contentEntry);
     }
     myEditorsPanel.revalidate();
     myEditorsPanel.repaint();
-    selectContentEntry(contentEntriesArray[contentEntriesArray.length - 1].getUrl());
+    selectContentEntry(contentEntriesArray[contentEntriesArray.length - 1]);
   }
 
   private final class MyContentEntryEditorListener extends ContentEntryEditorListenerAdapter {
     @Override
     public void editingStarted(@NotNull ContentEntryEditor editor) {
-      selectContentEntry(editor.getContentEntryUrl());
+      selectContentEntry(editor.getContentEntry());
     }
 
     @Override
     public void beforeEntryDeleted(@NotNull ContentEntryEditor editor) {
-      final String entryUrl = editor.getContentEntryUrl();
-      if (mySelectedEntryUrl != null && mySelectedEntryUrl.equals(entryUrl)) {
+      final ContentEntry entryUrl = editor.getContentEntry();
+      if (mySelectedEntry != null && mySelectedEntry.equals(entryUrl)) {
         myRootTreeEditor.setContentEntryEditor(null);
       }
-      final String nextContentEntryUrl = getNextContentEntry(entryUrl);
+      final ContentEntry nextContentEntryUrl = getNextContentEntry(entryUrl);
       removeContentEntryPanel(entryUrl);
       selectContentEntry(nextContentEntryUrl);
       editor.removeContentEntryEditorListener(this);
@@ -359,22 +338,22 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     @Override
     public void navigationRequested(@NotNull ContentEntryEditor editor, VirtualFile file) {
-      if (mySelectedEntryUrl != null && mySelectedEntryUrl.equals(editor.getContentEntryUrl())) {
+      if (mySelectedEntry != null && mySelectedEntry.equals(editor.getContentEntry())) {
         myRootTreeEditor.requestFocus();
         myRootTreeEditor.select(file);
       }
       else {
-        selectContentEntry(editor.getContentEntryUrl());
+        selectContentEntry(editor.getContentEntry());
         myRootTreeEditor.requestFocus();
         myRootTreeEditor.select(file);
       }
     }
 
-    private void removeContentEntryPanel(final String contentEntryUrl) {
-      ContentEntryEditor editor = myEntryToEditorMap.get(contentEntryUrl);
+    private void removeContentEntryPanel(final ContentEntry contentEntry) {
+      ContentEntryEditor editor = myEntryToEditorMap.get(contentEntry);
       if (editor != null) {
         myEditorsPanel.remove(editor.getComponent());
-        myEntryToEditorMap.remove(contentEntryUrl);
+        myEntryToEditorMap.remove(contentEntry);
         myEditorsPanel.revalidate();
         myEditorsPanel.repaint();
       }
@@ -410,22 +389,10 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
       });
     }
 
-    @Nullable
-    private ContentEntry getContentEntry(final String url) {
-      final ContentEntry[] entries = getModel().getContentEntries();
-      for (final ContentEntry entry : entries) {
-        if (entry.getUrl().equals(url)) return entry;
-      }
-
-      return null;
-    }
-
     private void validateContentEntriesCandidates(VirtualFile[] files) throws Exception {
       for (final VirtualFile file : files) {
         // check for collisions with already existing entries
-        for (final String contentEntryUrl : myEntryToEditorMap.keySet()) {
-          final ContentEntry contentEntry = getContentEntry(contentEntryUrl);
-          if (contentEntry == null) continue;
+        for (final ContentEntry contentEntry : myEntryToEditorMap.keySet()) {
           final VirtualFile contentEntryFile = contentEntry.getFile();
           if (contentEntryFile == null) {
             continue;  // skip invalid entry

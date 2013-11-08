@@ -49,21 +49,21 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.ContentFoldersSupportUtil;
 
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.util.Comparator;
-import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
- * Date: Oct 9, 2003
- * Time: 1:19:47 PM
+ *         Date: Oct 9, 2003
+ *         Time: 1:19:47 PM
  */
 public class ContentEntryTreeEditor {
   private final Project myProject;
-  private final Set<ContentFolderTypeProvider> myContentFolderTypeProviders;
+  private final ModuleConfigurationState myState;
   protected final Tree myTree;
   private FileSystemTreeImpl myFileSystemTree;
   private final JPanel myTreePanel;
@@ -73,9 +73,9 @@ public class ContentEntryTreeEditor {
   private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
   private final FileChooserDescriptor myDescriptor;
 
-  public ContentEntryTreeEditor(Project project, Set<ContentFolderTypeProvider> contentFolderTypeProviders) {
+  public ContentEntryTreeEditor(Project project, ModuleConfigurationState state) {
     myProject = project;
-    myContentFolderTypeProviders = contentFolderTypeProviders;
+    myState = state;
     myTree = new Tree();
     myTree.setRootVisible(true);
     myTree.setShowsRootHandles(true);
@@ -94,8 +94,11 @@ public class ContentEntryTreeEditor {
     myDescriptor.setShowFileSystemRoots(false);
   }
 
-  protected void createEditingActions() {
-    for (final ContentFolderTypeProvider contentFolderTypeProvider : myContentFolderTypeProviders) {
+  protected void updateMarkActions() {
+    myEditingActionsGroup.removeAll();
+
+    for (final ContentFolderTypeProvider contentFolderTypeProvider : ContentFoldersSupportUtil
+      .getSupportedFolders(myState.getRootModel())) {
       ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
      /* CustomShortcutSet shortcutSet = editor.getMarkRootShortcutSet();
       if (shortcutSet != null) {
@@ -112,7 +115,7 @@ public class ContentEntryTreeEditor {
   /**
    * @param contentEntryEditor : null means to clear the editor
    */
-  public void setContentEntryEditor(final ContentEntryEditor contentEntryEditor) {
+  public void setContentEntryEditor(@Nullable final ContentEntryEditor contentEntryEditor) {
     if (myContentEntryEditor != null && myContentEntryEditor.equals(contentEntryEditor)) {
       return;
     }
@@ -127,9 +130,6 @@ public class ContentEntryTreeEditor {
     if (contentEntryEditor == null) {
       ((DefaultTreeModel)myTree.getModel()).setRoot(EMPTY_TREE_ROOT);
       myTreePanel.setVisible(false);
-      if (myFileSystemTree != null) {
-        Disposer.dispose(myFileSystemTree);
-      }
       return;
     }
     myTreePanel.setVisible(true);
@@ -156,8 +156,11 @@ public class ContentEntryTreeEditor {
 
     myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, getContentEntryCellRenderer(), init, null) {
       @Override
-      protected AbstractTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, AbstractTreeStructure treeStructure,
-                                                      Comparator<NodeDescriptor> comparator, FileChooserDescriptor descriptor,
+      protected AbstractTreeBuilder createTreeBuilder(JTree tree,
+                                                      DefaultTreeModel treeModel,
+                                                      AbstractTreeStructure treeStructure,
+                                                      Comparator<NodeDescriptor> comparator,
+                                                      FileChooserDescriptor descriptor,
                                                       final Runnable onInitialized) {
         return new MyFileTreeBuilder(tree, treeModel, treeStructure, comparator, descriptor, onInitialized);
       }
@@ -178,7 +181,7 @@ public class ContentEntryTreeEditor {
   }
 
   public JComponent createComponent() {
-    createEditingActions();
+    updateMarkActions();
     return myTreePanel;
   }
 
@@ -193,6 +196,7 @@ public class ContentEntryTreeEditor {
   }
 
   public void update() {
+    updateMarkActions();
     if (myFileSystemTree != null) {
       myFileSystemTree.updateTree();
       final DefaultTreeModel model = (DefaultTreeModel)myTree.getModel();
@@ -235,8 +239,7 @@ public class ContentEntryTreeEditor {
 
   private static class MyNewFolderAction extends NewFolderAction implements CustomComponentAction {
     private MyNewFolderAction() {
-      super(ActionsBundle.message("action.FileChooser.NewFolder.text"),
-            ActionsBundle.message("action.FileChooser.NewFolder.description"),
+      super(ActionsBundle.message("action.FileChooser.NewFolder.text"), ActionsBundle.message("action.FileChooser.NewFolder.description"),
             AllIcons.Actions.NewFolder);
     }
 

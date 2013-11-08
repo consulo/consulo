@@ -48,14 +48,16 @@ import java.util.List;
 public class ExtensionEditor extends ModuleElementsEditor {
   private final ModuleConfigurationState myState;
   private final ClasspathEditor myClasspathEditor;
+  private final ContentEntriesEditor myContentEntriesEditor;
   private JPanel myRootPane;
   private CheckboxTree myTree;
   private JBSplitter mySplitter;
 
-  public ExtensionEditor(ModuleConfigurationState state, ClasspathEditor e) {
+  public ExtensionEditor(ModuleConfigurationState state, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
     super(state);
     myState = state;
-    myClasspathEditor = e;
+    myClasspathEditor = classpathEditor;
+    myContentEntriesEditor = contentEntriesEditor;
   }
 
   @NotNull
@@ -148,6 +150,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     }
 
     myClasspathEditor.moduleStateChanged();
+    myContentEntriesEditor.moduleStateChanged();
   }
 
   @Override
