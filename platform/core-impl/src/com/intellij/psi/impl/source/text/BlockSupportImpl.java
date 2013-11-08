@@ -18,6 +18,7 @@ package com.intellij.psi.impl.source.text;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -238,6 +239,7 @@ public class BlockSupportImpl extends BlockSupport {
 
     try {
       newRoot.putUserData(TREE_TO_BE_REPARSED, oldRoot);
+      newRoot.putUserData(LanguageVersion.KEY, fileImpl.getLanguageVersion());
       if (isReplaceWholeNode(fileImpl, newRoot)) {
         DiffLog treeChangeEvent = replaceElementWithEvents((CompositeElement)oldRoot, (CompositeElement)newRoot);
         fileImpl.putUserData(TREE_DEPTH_LIMIT_EXCEEDED, Boolean.TRUE);
