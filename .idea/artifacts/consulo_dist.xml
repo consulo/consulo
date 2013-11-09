@@ -79,6 +79,9 @@
           <element id="module-output" name="editor-ui-ex" />
           <element id="module-output" name="graph-api" />
           <element id="module-output" name="graph-impl" />
+          <element id="module-output" name="vcs-log-api" />
+          <element id="module-output" name="vcs-log-impl" />
+          <element id="module-output" name="vcs-log-graph" />
         </element>
         <element id="archive" name="boot.jar">
           <element id="module-output" name="boot" />
