@@ -49,17 +49,8 @@ public class StartupUtil {
   @NonNls public static final String NO_SPLASH = Bootstrap.NO_SPLASH;
 
   private static SocketLock ourLock;
-  private static String myDefaultLAF;
 
   private StartupUtil() { }
-
-  public static void setDefaultLAF(String laf) {
-    myDefaultLAF = laf;
-  }
-
-  public static String getDefaultLAF() {
-    return myDefaultLAF;
-  }
 
   public static boolean shouldShowSplash(final String[] args) {
     return !Arrays.asList(args).contains(NO_SPLASH);

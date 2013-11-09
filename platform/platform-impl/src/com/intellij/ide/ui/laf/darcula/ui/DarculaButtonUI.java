@@ -56,6 +56,7 @@ public class DarculaButtonUI extends BasicButtonUI {
     super.paint(g, c);
   }
 
+  @Override
   protected void paintText(Graphics g, JComponent c, Rectangle textRect, String text) {
     AbstractButton button = (AbstractButton)c;
     ButtonModel model = button.getModel();
@@ -94,7 +95,9 @@ public class DarculaButtonUI extends BasicButtonUI {
   public void update(Graphics g, JComponent c) {
     super.update(g, c);
     if (((JButton)c).isDefaultButton() && !SystemInfo.isMac) {
-      c.setFont(c.getFont().deriveFont(Font.BOLD));
+      if (!c.getFont().isBold()) {
+        c.setFont(c.getFont().deriveFont(Font.BOLD));
+      }
     }
   }
 

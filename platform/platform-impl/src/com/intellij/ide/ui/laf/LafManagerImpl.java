@@ -22,7 +22,6 @@ import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLaf;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
-import com.intellij.idea.StartupUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -35,14 +34,11 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacPopupMenuUI;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
-import org.consulo.ide.eap.impl.IntelliJLafEarlyAccessProgramDescriptor;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -127,10 +123,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       lafList.add(new UIManager.LookAndFeelInfo("Default", UIManager.getSystemLookAndFeelClassName()));
     }
     else {
-      lafList.add(new IdeaLookAndFeelInfo());
-      if(EarlyAccessProgramManager.getInstance().getState(IntelliJLafEarlyAccessProgramDescriptor.class)) {
-        lafList.add(new IntelliJLookAndFeelInfo());
-      }
+      lafList.add(new IntelliJLookAndFeelInfo());
       for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
         String name = laf.getName();
         if (!"Metal".equalsIgnoreCase(name) && !"CDE/Motif".equalsIgnoreCase(name)) {
@@ -139,9 +132,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       }
     }
 
-    if (Registry.is("dark.laf.available")) {
-      lafList.add(new DarculaLookAndFeelInfo());
-    }
+    lafList.add(new DarculaLookAndFeelInfo());
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
 
@@ -280,14 +271,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       return laf;
     }
     // Default
-    final String defaultLafName = StartupUtil.getDefaultLAF();
-    if (defaultLafName != null) {
-      UIManager.LookAndFeelInfo defaultLaf = findLaf(defaultLafName);
-      if (defaultLaf != null) {
-        return defaultLaf;
-      }
-    }
-    UIManager.LookAndFeelInfo ideaLaf = findLaf(IdeaLookAndFeelInfo.CLASS_NAME);
+    UIManager.LookAndFeelInfo ideaLaf = findLaf(IntelliJLaf.class.getName());
     if (ideaLaf != null) {
       return ideaLaf;
     }
