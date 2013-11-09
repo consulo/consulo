@@ -406,7 +406,7 @@ public class UIUtil {
       int width = fontMetrics.stringWidth(s);
 
       if (width >= widthLimit - fontMetrics.charWidth('w')) {
-        if (currentLine.length() > 0) {
+        if (!currentLine.isEmpty()) {
           lines.add(currentLine);
           currentLine = "";
         }
@@ -418,7 +418,7 @@ public class UIUtil {
     }
 
     String s = currentLine + currentAtom.toString();
-    if (s.length() > 0) {
+    if (!s.isEmpty()) {
       lines.add(s);
     }
 
@@ -719,6 +719,11 @@ public class UIUtil {
   }
 
   public static Color getListBackground() {
+    if (isUnderNimbusLookAndFeel()) {
+      final Color color = UIManager.getColor("List.background");
+      //noinspection UseJBColor
+      return new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
     // Under GTK+ L&F "Table.background" often has main panel color, which looks ugly
     return isUnderGTKLookAndFeel() ? getTreeTextBackground() : UIManager.getColor("List.background");
   }
@@ -1619,6 +1624,7 @@ public class UIUtil {
     assert !SwingUtilities.isEventDispatchThread();
     final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>();
     SwingUtilities.invokeLater(new Runnable() {
+      @Override
       public void run() {
         queue.offer(queue);
       }
@@ -1634,6 +1640,7 @@ public class UIUtil {
   public static void addAwtListener(final AWTEventListener listener, long mask, Disposable parent) {
     Toolkit.getDefaultToolkit().addAWTEventListener(listener, mask);
     Disposer.register(parent, new Disposable() {
+      @Override
       public void dispose() {
         Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
       }
@@ -1732,7 +1739,7 @@ public class UIUtil {
       eachParent = eachParent.getParent();
     }
 
-    return eachParent;
+    return null;
   }
 
   @NonNls
@@ -1792,6 +1799,7 @@ public class UIUtil {
     }
     else {
       SwingUtilities.invokeLater(new Runnable() {
+        @Override
         public void run() {
           c.requestFocus();
         }
@@ -1824,6 +1832,7 @@ public class UIUtil {
     if (!isUnderNativeMacLookAndFeel()) return;
 
     SwingUtilities.invokeLater(new Runnable() {
+      @Override
       public void run() {
         if (isToDispose(progress)) {
           progress.getUI().uninstallUI(progress);
@@ -1935,6 +1944,7 @@ public class UIUtil {
 
   public static void removeScrollBorder(final Component c) {
     new AwtVisitor(c) {
+      @Override
       public boolean visit(final Component component) {
         if (component instanceof JScrollPane) {
           if (!hasNonPrimitiveParents(c, component)) {
@@ -2110,6 +2120,7 @@ public class UIUtil {
   public static void addKeyboardShortcut(final JComponent target, final AbstractButton button, final KeyStroke keyStroke) {
     target.registerKeyboardAction(
       new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           if (button.isEnabled()) {
             button.doClick();
@@ -2312,7 +2323,7 @@ public class UIUtil {
   }
 
   public static class TextPainter {
-    private List<Pair<String, LineInfo>> myLines = new ArrayList<Pair<String, LineInfo>>();
+    private final List<Pair<String, LineInfo>> myLines = new ArrayList<Pair<String, LineInfo>>();
     private boolean myDrawShadow;
     private Color myShadowColor;
     private float myLineSpacing;
@@ -2340,7 +2351,7 @@ public class UIUtil {
     }
 
     public TextPainter appendLine(final String text) {
-      if (text == null || text.length() == 0) return this;
+      if (text == null || text.isEmpty()) return this;
       myLines.add(Pair.create(text, new LineInfo()));
       return this;
     }
@@ -2411,7 +2422,7 @@ public class UIUtil {
           final int bulletWidth = info.withBullet ? fm.stringWidth(" " + info.bulletChar) : 0;
           maxBulletWidth[0] = Math.max(maxBulletWidth[0], bulletWidth);
 
-          maxWidth[0] = Math.max(fm.stringWidth(pair.getFirst() + bulletWidth), maxWidth[0]);
+          maxWidth[0] = Math.max(fm.stringWidth(pair.getFirst().replace("<shortcut>", "").replace("</shortcut>", "") + bulletWidth), maxWidth[0]);
           height[0] += (fm.getHeight() + fm.getLeading()) * myLineSpacing;
 
           if (old != null) {
@@ -2430,6 +2441,12 @@ public class UIUtil {
         @Override
         public boolean process(final Pair<String, LineInfo> pair) {
           final LineInfo info = pair.getSecond();
+          String text = pair.first;
+          String shortcut = "";
+          if (pair.first.contains("<shortcut>")) {
+            shortcut = text.substring(text.indexOf("<shortcut>") + "<shortcut>".length(), text.indexOf("</shortcut>"));
+            text = text.substring(0, text.indexOf("<shortcut>"));
+          }
 
           Font old = null;
           if (info.smaller) {
@@ -2442,20 +2459,20 @@ public class UIUtil {
           final FontMetrics fm = g.getFontMetrics();
           int xOffset = x;
           if (info.center) {
-            xOffset = x + (maxWidth[0] - fm.stringWidth(pair.getFirst())) / 2;
+            xOffset = x + (maxWidth[0] - fm.stringWidth(text)) / 2;
           }
 
           if (myDrawShadow) {
             int xOff = isUnderDarcula() ? 1 : 0;
             int yOff = 1;
-            final Color oldColor = g.getColor();
+            Color oldColor = g.getColor();
             g.setColor(myShadowColor);
 
             if (info.withBullet) {
               g.drawString(info.bulletChar + " ", x - fm.stringWidth(" " + info.bulletChar) + xOff, yOffset[0] + yOff);
             }
 
-            g.drawString(pair.getFirst(), xOffset + xOff, yOffset[0] + yOff);
+            g.drawString(text, xOffset + xOff, yOffset[0] + yOff);
             g.setColor(oldColor);
           }
 
@@ -2463,7 +2480,15 @@ public class UIUtil {
             g.drawString(info.bulletChar + " ", x - fm.stringWidth(" " + info.bulletChar), yOffset[0]);
           }
 
-          g.drawString(pair.getFirst(), xOffset, yOffset[0]);
+          g.drawString(text, xOffset, yOffset[0]);
+          if (!StringUtil.isEmpty(shortcut)) {
+            Color oldColor = g.getColor();
+            if (isUnderDarcula()) {
+              g.setColor(new Color(60, 118, 249));
+            }
+            g.drawString(shortcut, xOffset + fm.stringWidth(text + (isUnderDarcula() ? " " : "")), yOffset[0]);
+            g.setColor(oldColor);
+          }
 
           if (info.underlined) {
             Color c = null;
@@ -2475,6 +2500,7 @@ public class UIUtil {
             g.drawLine(x - maxBulletWidth[0] - 10, yOffset[0] + fm.getDescent(), x + maxWidth[0] + 10, yOffset[0] + fm.getDescent());
             if (c != null) {
               g.setColor(c);
+
             }
 
             if (myDrawShadow) {
@@ -2621,6 +2647,7 @@ public class UIUtil {
     if (!newSize.equals(size)) {
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(new Runnable() {
+        @Override
         public void run() {
           if (window.isShowing()) {
             window.setSize(newSize);

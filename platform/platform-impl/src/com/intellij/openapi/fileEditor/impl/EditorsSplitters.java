@@ -31,7 +31,6 @@ import com.intellij.openapi.keymap.MacKeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
@@ -40,7 +39,6 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdePanePanel;
-import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
@@ -50,6 +48,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -157,27 +156,31 @@ public class EditorsSplitters extends IdePanePanel {
       g.drawLine(0, 0, getWidth(), 0);
     }
 
-    boolean isDarkBackground = ColorUtil.isDark(getBackground().darker());
+    boolean isDarkBackground = UIUtil.isUnderDarcula();
 
     if (showEmptyText()) {
       UIUtil.applyRenderingHints(g);
-      g.setColor(new JBColor(isDarkBackground ? Gray._230 : Gray._100, Gray._160));
-      g.setFont(UIUtil.getLabelFont().deriveFont(UIUtil.isUnderDarcula() ? 24f : 18f));
+      GraphicsUtil.setupAntialiasing(g, true, false);
+      g.setColor(new JBColor(isDarkBackground ? Gray._230 : Gray._80, Gray._160));
+      g.setFont(UIUtil.getLabelFont().deriveFont(isDarkBackground ? 24f : 20f));
 
-      final UIUtil.TextPainter painter = new UIUtil.TextPainter().withLineSpacing(1.4f);
-      if (!isDarkBackground) {
-        painter.withShadow(true);
-      }
-      painter.appendLine("No files are open").underlined(new JBColor(isDarkBackground ? Gray._210 : Gray._150, Gray._100));
+      final UIUtil.TextPainter painter = new UIUtil.TextPainter().withLineSpacing(1.5f);
+      painter.withShadow(true, new JBColor(Gray._200.withAlpha(100), Gray._0.withAlpha(255)));
 
-      if (Registry.is("search.everywhere.enabled")) {
-        painter.appendLine("Search Everywhere with Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift"))
-          .smaller().withBullet();
+      painter.appendLine("No files are open").underlined(new JBColor(Gray._150, Gray._180));
+
+      final Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
+      final String everywhere;
+      if (shortcuts.length == 0) {
+        everywhere = "Search Everywhere with <shortcut>Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift");
+      } else {
+        everywhere = "Search Everywhere <shortcut>" + KeymapUtil.getShortcutsText(shortcuts);
       }
+      painter.appendLine(everywhere + "</shortcut>").smaller().withBullet();
 
       if (!isProjectViewVisible()) {
-        painter.appendLine("Open Project View with " + KeymapUtil.getShortcutText(new KeyboardShortcut(
-          KeyStroke.getKeyStroke((SystemInfo.isMac ? "meta" : "alt") + " 1"), null))).smaller().withBullet();
+        painter.appendLine("Open Project View with <shortcut>" + KeymapUtil.getShortcutText(new KeyboardShortcut(
+          KeyStroke.getKeyStroke((SystemInfo.isMac ? "meta" : "alt") + " 1"), null)) + "</shortcut>").smaller().withBullet();
       }
 
       painter.appendLine("Open a file by name with " + getActionShortcutText("GotoFile")).smaller().withBullet()
@@ -204,7 +207,7 @@ public class EditorsSplitters extends IdePanePanel {
       }
     }
 
-    return shortcutText;
+    return "<shortcut>" + shortcutText + "</shortcut>";
   }
 
   public void writeExternal(final Element element) {

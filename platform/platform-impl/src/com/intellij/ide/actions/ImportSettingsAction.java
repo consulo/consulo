@@ -29,11 +29,13 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ExportableComponent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.Consumer;
 import com.intellij.util.io.ZipUtil;
 
 import java.awt.*;
@@ -46,14 +48,19 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 public class ImportSettingsAction extends AnAction implements DumbAware {
+  @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
-    final String path = ChooseComponentsToExportDialog.chooseSettingsFile(PathManager.getConfigPath(), component,
-                                                                          IdeBundle.message("title.import.file.location"),
-                                                                          IdeBundle.message("prompt.choose.import.file.path"));
-    if (path == null) return;
+    ChooseComponentsToExportDialog.chooseSettingsFile(PathManager.getConfigPath(), component, IdeBundle.message("title.import.file.location"), IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(new Consumer<String>() {
+      @Override
+      public void consume(String path) {
+        doImport(path);
+      }
+    });
+  }
 
+  private static void doImport(String path) {
     final File saveFile = new File(path);
     try {
       if (!saveFile.exists()) {
@@ -61,9 +68,8 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
                                  IdeBundle.message("title.file.not.found"));
         return;
       }
-      final ZipFile zipFile = new ZipFile(saveFile);
 
-      final ZipEntry magicEntry = zipFile.getEntry(ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
+      final ZipEntry magicEntry = new ZipFile(saveFile).getEntry(ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
       if (magicEntry == null) {
         Messages.showErrorDialog(
           IdeBundle.message("error.file.contains.no.settings.to.import", presentableFileName(saveFile), promptLocationMessage()),
@@ -114,7 +120,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
                                                                     ApplicationNamesInfo.getInstance().getFullProductName()),
                                                   IdeBundle.message("title.restart.needed"), Messages.getQuestionIcon());
       if (ret == 0) {
-        ApplicationManager.getApplication().restart();
+        ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
       }
     }
     catch (ZipException e1) {

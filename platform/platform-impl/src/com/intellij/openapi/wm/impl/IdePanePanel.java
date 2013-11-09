@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.components.JBPanel;
@@ -49,7 +48,7 @@ public class IdePanePanel extends JBPanel {
 
   @Nullable
   public static Icon getIdeBackgroundImage() {
-    return UIUtil.isUnderDarcula() ? AllIcons.Frame_background : null;
+    return null;
   }
 
   @Nullable
@@ -63,9 +62,19 @@ public class IdePanePanel extends JBPanel {
     return null;
   }
 
+  @Override
+  protected void paintCenterImage(Graphics g) {
+    final Icon image = getCenterImage();
+    if (image != null) {
+      final int x = (getWidth() - image.getIconWidth()) / 2;
+      final int y = ((getHeight() - 222) / 2 - image.getIconHeight()) / 2;
+      image.paintIcon(this, g, x, y);
+    }
+  }
+
   @Nullable
   public static Color getIdeBackgroundColor() {
     Color result = UIUtil.getSlightlyDarkerColor(UIUtil.getPanelBackground());
-    return UIUtil.isUnderDarcula() ? result : UIUtil.getSlightlyDarkerColor(UIUtil.getSlightlyDarkerColor(result));
+    return UIUtil.isUnderDarcula() ? new Color(40, 40, 41) : UIUtil.getSlightlyDarkerColor(UIUtil.getSlightlyDarkerColor(result));
   }
 }

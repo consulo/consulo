@@ -225,13 +225,18 @@ public class DirectoryIndexImpl extends DirectoryIndex {
         }
       }
 
-      if (parentInfo == null) return state;
-
-      Module module = parentInfo.getModule();
-
       for (DirectoryIndexExcludePolicy policy : myExcludePolicies) {
-        if (policy.isExcludeRoot(file)) return state;
+        if (policy.isExcludeRoot(file)) {
+          if (parentInfo == null || parentInfo.getContentRoot() == null) {
+            if (state == originalState) state = state.copy(null);
+            state.myProjectExcludeRoots.add(file.getId());
+          }
+          return state;
+        }
       }
+
+      if (parentInfo == null) return state;
+      Module module = parentInfo.getModule();
 
       if (state == originalState) state = state.copy(null);
       VirtualFile parentContentRoot = parentInfo.getContentRoot();

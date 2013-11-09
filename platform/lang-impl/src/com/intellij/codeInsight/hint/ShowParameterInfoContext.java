@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.codeInsight.lookup.LookupManager;
+import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.parameterInfo.CreateParameterInfoContext;
 import com.intellij.lang.parameterInfo.ParameterInfoHandler;
 import com.intellij.openapi.application.ApplicationManager;
@@ -37,7 +38,7 @@ import java.awt.*;
 
 /**
  * @author peter
-*/
+ */
 public class ShowParameterInfoContext implements CreateParameterInfoContext {
   private final Editor myEditor;
   private final PsiFile myFile;
@@ -48,7 +49,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
   private Object[] myItems;
 
   public ShowParameterInfoContext(final Editor editor, final Project project,
-                                    final PsiFile file, int offset, int parameterListStart) {
+                                  final PsiFile file, int offset, int parameterListStart) {
     myEditor = editor;
     myProject = project;
     myFile = file;
@@ -113,7 +114,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
                                         final Project project, final ShowParameterInfoHandler.BestLocationPointProvider provider,
                                         @Nullable PsiElement highlighted,
                                         final int elementStart, final ParameterInfoHandler handler
-                                        ) {
+  ) {
     if (ParameterInfoController.isAlreadyShown(editor, elementStart)) return;
 
     if (editor.isDisposed() || !editor.getComponent().isVisible()) return;
@@ -141,7 +142,8 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
         HintHint hintHint = HintManagerImpl.createHintHint(editor, pos.getFirst(), hint, pos.getSecond());
         hintHint.setExplicitClose(true);
 
-        hintManager.showEditorHint(hint, editor, pos.getFirst(), HintManager.HIDE_BY_ESCAPE | HintManager.UPDATE_BY_SCROLLING, 0, false, hintHint);
+        Editor editorToShow = editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
+        hintManager.showEditorHint(hint, editorToShow, pos.getFirst(), HintManager.HIDE_BY_ESCAPE | HintManager.UPDATE_BY_SCROLLING, 0, false, hintHint);
         new ParameterInfoController(project, editor, elementStart, hint, handler, provider);
       }
     });
@@ -153,7 +155,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
                                      Object[] candidates,
                                      int offset,
                                      ParameterInfoHandler handler
-                                     ) {
+  ) {
     showParameterHint(list, editor, candidates, project, new MyBestLocationPointProvider(editor),
                       candidates.length > 1 ? highlighted: null,offset, handler);
   }

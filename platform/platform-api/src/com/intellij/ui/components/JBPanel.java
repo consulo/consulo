@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,8 +69,6 @@ public class JBPanel extends JPanel implements TypeSafeDataProvider {
 
   @Override
   protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-
     Icon image = getBackgroundImage();
     if (image != null) {
       final int w = image.getIconWidth();
@@ -85,8 +83,14 @@ public class JBPanel extends JPanel implements TypeSafeDataProvider {
         y=0;
         x+=w;
       }
+    } else {
+      super.paintComponent(g);
     }
 
+    paintCenterImage(g);
+  }
+
+  protected void paintCenterImage(Graphics g) {
     Icon centerImage = getCenterImage();
     if (centerImage != null) {
       IconUtil.paintInCenterOf(this, g, centerImage);

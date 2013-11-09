@@ -1377,6 +1377,7 @@
       <separator/>
       <action id="RevealIn" class="com.intellij.ide.actions.RevealFileAction"/>
       <reference ref="ShowFilePath"/>
+      <action id="GoToLinkTarget" class="com.intellij.ide.actions.GoToLinkTargetAction"/>
       <separator/>
       <reference ref="CompareTwoFiles"/>
       <reference ref="CompareFileWithEditor"/>
