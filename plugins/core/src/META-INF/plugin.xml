@@ -14,6 +14,7 @@
   <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)"/>
   <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)"/>
   <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP" />
@@ -238,6 +239,8 @@
 
     <extensionPoint name="vcsConfigurableProvider"
                     interface="com.intellij.openapi.vcs.VcsConfigurableProvider"/>
+
+    <extensionPoint name="vcsRootChecker" interface="com.intellij.openapi.vcs.VcsRootChecker" />
 
     <!--<extensionPoint name="writingAccessProvider"-->
     <!--interface="com.intellij.openapi.vfs.WritingAccessProvider"-->

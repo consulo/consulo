@@ -40,8 +40,10 @@ public class PlatformVcsDetector implements ProjectComponent {
     myVcsManager = vcsManager;
   }
 
+  @Override
   public void projectOpened() {
     StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
+      @Override
       public void run() {
         final DumbAwareRunnable runnable = new DumbAwareRunnable() {
           @Override
@@ -68,18 +70,22 @@ public class PlatformVcsDetector implements ProjectComponent {
     });
   }
 
+  @Override
   public void projectClosed() {
   }
 
+  @Override
   @NonNls
   @NotNull
   public String getComponentName() {
     return "PlatformVcsDetector";
   }
 
+  @Override
   public void initComponent() {
   }
 
+  @Override
   public void disposeComponent() {
   }
 }

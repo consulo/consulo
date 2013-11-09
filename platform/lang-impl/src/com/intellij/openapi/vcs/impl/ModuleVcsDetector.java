@@ -61,7 +61,7 @@ public class ModuleVcsDetector implements ProjectComponent {
   @Override
   public void projectOpened() {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
-    
+
     final StartupManager manager = StartupManager.getInstance(myProject);
     manager.registerStartupActivity(new Runnable() {
       @Override
