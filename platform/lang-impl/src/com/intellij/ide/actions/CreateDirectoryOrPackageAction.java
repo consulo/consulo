@@ -25,21 +25,17 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import org.consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
-  private enum CreateType {
+  private enum ChildType {
     Directory {
-      @Override
-      public Icon getIcon() {
-        return AllIcons.Nodes.TreeClosed;
-      }
-
       @Override
       public String getName() {
         return IdeBundle.message("action.directory");
@@ -52,27 +48,6 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     },
     Package {
       @Override
-      public Icon getIcon() {
-        return AllIcons.Nodes.Package;
-      }
-
-      @Override
-      public String getName() {
-        return IdeBundle.message("action.package");
-      }
-
-      @Override
-      public String getSeparator() {
-        return ".";
-      }
-    },
-    TestPackage {
-      @Override
-      public Icon getIcon() {
-        return AllIcons.Nodes.TestPackage;
-      }
-
-      @Override
       public String getName() {
         return IdeBundle.message("action.package");
       }
@@ -83,31 +58,9 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       }
     };
 
-    public abstract Icon getIcon();
-
     public abstract String getName();
 
     public abstract String getSeparator();
-
-    public static CreateType findCreateType(PsiDirectory... directories) {
-      if (directories.length == 0) {
-        return Directory;
-      }
-      Project project = directories[0].getProject();
-      PsiPackageManager packageManager = PsiPackageManager.getInstance(project);
-      ProjectFileIndex projectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
-
-      for (PsiDirectory directory : directories) {
-        if (projectFileIndex.isInResource(directory.getVirtualFile()) || projectFileIndex.isInTestResource(directory.getVirtualFile())) {
-          continue;
-        }
-        PsiPackage anyPackage = packageManager.findAnyPackage(directory);
-        if (anyPackage != null) {
-          return projectFileIndex.isInTestSourceContent(directory.getVirtualFile()) ? TestPackage : Package;
-        }
-      }
-      return Directory;
-    }
   }
 
   public CreateDirectoryOrPackageAction() {
@@ -122,20 +75,21 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     if (view == null || project == null) {
       return;
     }
-    PsiDirectory directory = DirectoryChooserUtil.getOrChooseDirectory(view);
+
+    val directory = DirectoryChooserUtil.getOrChooseDirectory(view);
 
     if (directory == null) {
       return;
     }
-    CreateType createType = CreateType.findCreateType(directory);
 
-    CreateDirectoryOrPackageHandler validator =
-      new CreateDirectoryOrPackageHandler(project, directory, createType == CreateType.Directory, createType.getSeparator());
-    Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.name"),
-                             createType.getName(),
-                             Messages.getQuestionIcon(), "", validator);
+    val info = getInfo(directory);
 
-    final PsiElement result = validator.getCreatedElement();
+    val validator =
+      new CreateDirectoryOrPackageHandler(project, directory, info.getThird() == ChildType.Directory, info.getThird().getSeparator());
+    Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.name"), info.getThird().getName(), Messages.getQuestionIcon(), "",
+                             validator);
+
+    val result = validator.getCreatedElement();
     if (result != null) {
       view.selectElement(result);
     }
@@ -169,9 +123,39 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     presentation.setVisible(true);
     presentation.setEnabled(true);
 
-    CreateType createType = CreateType.findCreateType(directories);
+    // is more that one directories not show package support
+    if (directories.length > 1) {
+      presentation.setText(ChildType.Directory.getName());
+      presentation.setIcon(AllIcons.Nodes.TreeClosed);
+    }
+    else {
+      val info = getInfo(directories[0]);
 
-    presentation.setText(createType.getName());
-    presentation.setIcon(createType.getIcon());
+      presentation.setText(info.getThird().getName());
+
+      val first = info.getFirst();
+      Icon childIcon;
+      if (first == null) {
+        childIcon = AllIcons.Nodes.TreeClosed;
+      }
+      else {
+        childIcon = first.getChildPackageIcon() == null ? first.getChildDirectoryIcon() : first.getChildPackageIcon();
+      }
+      presentation.setIcon(childIcon);
+    }
+  }
+
+  @NotNull
+  private static Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> getInfo(PsiDirectory d) {
+    val project = d.getProject();
+    val projectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
+
+    val contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
+    if (contentFolderTypeForFile != null) {
+      val childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
+      return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? ChildType.Package : ChildType.Directory);
+    }
+
+    return Trinity.create(null, d, ChildType.Directory);
   }
 }

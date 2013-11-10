@@ -21,6 +21,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiDirectory;
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,8 +57,40 @@ public abstract class ContentFolderTypeProvider {
     return myId;
   }
 
-  public Icon getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
+  /**
+   * Return child directory icon
+   * If psiDirectory is null it require force package support if this provider is supported it
+   * @param psiDirectory
+   * @return
+   */
+  public final Icon getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
+    Icon packageIcon = getChildPackageIcon();
+    if(packageIcon == null) {
+      return getChildDirectoryIcon();
+    }
+
+    if(psiDirectory != null) {
+      PsiPackage anyPackage = PsiPackageManager.getInstance(psiDirectory.getProject()).findAnyPackage(psiDirectory);
+      if(anyPackage != null) {
+        return packageIcon;
+      }
+      else {
+        return getChildDirectoryIcon();
+      }
+    }
+    else {
+      //
+      return packageIcon;
+    }
+  }
+
+  public Icon getChildDirectoryIcon() {
     return AllIcons.Nodes.TreeOpen;
+  }
+
+  @Nullable
+  public Icon getChildPackageIcon() {
+    return null;
   }
 
   @NotNull

@@ -25,11 +25,9 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
@@ -83,7 +81,7 @@ public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider
   }
 
   @Override
-  public Icon getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory) {
+  public Icon getChildDirectoryIcon() {
     return AllIcons.Modules.ExcludeRoot;
   }
 

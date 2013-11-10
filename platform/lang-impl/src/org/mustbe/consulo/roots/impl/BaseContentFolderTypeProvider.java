@@ -15,17 +15,11 @@
  */
 package org.mustbe.consulo.roots.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.actions.MarkRootAction;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.psi.PsiDirectory;
-import org.consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -39,26 +33,6 @@ public abstract class BaseContentFolderTypeProvider extends ContentFolderTypePro
   @NotNull
   public String getMarkActionDescription() {
     return ProjectBundle.message("module.toggle.0.action.description", getName());
-  }
-
-  @Override
-  public final Icon getChildDirectoryIcon(PsiDirectory psiDirectory) {
-    if(psiDirectory != null) {
-      PsiPackage anyPackage = PsiPackageManager.getInstance(psiDirectory.getProject()).findAnyPackage(psiDirectory);
-      if(anyPackage != null) {
-        return getChildPackageIcon();
-      }
-      else {
-        return super.getChildDirectoryIcon(psiDirectory);
-      }
-    }
-    else {
-      return getChildPackageIcon();
-    }
-  }
-
-  public Icon getChildPackageIcon() {
-    return AllIcons.Nodes.TreeOpen;
   }
 
   @NotNull
