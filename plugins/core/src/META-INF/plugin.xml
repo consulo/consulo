@@ -735,6 +735,7 @@
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
     <extensionPoint name="psi.packageSupportProvider" interface="org.consulo.psi.PsiPackageSupportProvider"/>
+    <extensionPoint name="psi.directoryMethodProxy"  interface="com.intellij.psi.PsiDirectoryMethodProxy" />
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
     <extensionPoint name="pom.declarationSearcher" interface="com.intellij.pom.PomDeclarationSearcher"/>

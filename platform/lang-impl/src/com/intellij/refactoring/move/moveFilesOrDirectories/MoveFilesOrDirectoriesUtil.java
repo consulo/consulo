@@ -304,7 +304,7 @@ public class MoveFilesOrDirectoriesUtil {
           }
         }
         else {
-          throw new IncorrectOperationException();
+          throw new IncorrectOperationException("Element is not directory: " + element);
         }
       }
       container = container.getParent();

@@ -433,6 +433,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     if (existingFile != null) {
       throw new IncorrectOperationException(VfsBundle.message("file.already.exists.error", existingFile.getPresentableUrl()));
     }
+
+    for (PsiDirectoryMethodProxy proxy : PsiDirectoryMethodProxy.EP_NAME.getExtensions()) {
+      if(!proxy.checkCreateFile(this, name)) {
+        return;
+      }
+    }
+
     CheckUtil.checkWritable(this);
   }
 
@@ -491,6 +498,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
       }
     }
     else {
+      for (PsiDirectoryMethodProxy proxy : PsiDirectoryMethodProxy.EP_NAME.getExtensions()) {
+        PsiElement add = proxy.add(this, element);
+        if(add != null) {
+          return add;
+        }
+      }
+
       LOG.assertTrue(false);
       return null;
     }
@@ -518,7 +532,12 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
       }
     }
     else {
-      throw new IncorrectOperationException();
+      for (PsiDirectoryMethodProxy proxy : PsiDirectoryMethodProxy.EP_NAME.getExtensions()) {
+        if(proxy.checkAdd(this, element)) {
+          return;
+        }
+      }
+      throw new IncorrectOperationException("Element is not file or directory " + element);
     }
   }
 
