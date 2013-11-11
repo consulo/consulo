@@ -71,6 +71,8 @@
       <src path="platform/external-system-impl/src"/>
       <src path="platform/indexing-api/src"/>
       <src path="platform/indexing-impl/src"/>
+      <src path="platform/graph-api/src"/>
+      <src path="platform/graph-impl/src"/>
       <src path="platform/lang-api/src"/>
       <src path="platform/lang-impl/src"/>
       <src path="platform/lvcs-api/src"/>
@@ -81,6 +83,7 @@
       <src path="platform/projectImportModel/src"/>
       <src path="platform/projectModel-api/src"/>
       <src path="platform/projectModel-impl/src"/>
+      <src path="platform/remote-servers-agent-rt/src"/>
       <src path="platform/remote-servers-api/src"/>
       <src path="platform/remote-servers-impl/src"/>
       <src path="platform/smRunner/src"/>
@@ -90,6 +93,9 @@
       <src path="platform/usageView/src"/>
       <src path="platform/vcs-api/src"/>
       <src path="platform/vcs-impl/src"/>
+      <src path="platform/vcs-log/api/src"/>
+      <src path="platform/vcs-log/graph/src"/>
+      <src path="platform/vcs-log/impl/src"/>
       <src path="platform/xdebugger-api/src"/>
       <src path="platform/xdebugger-impl/src"/>
     </javac2>
