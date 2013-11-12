@@ -60,6 +60,11 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     }
 
     @Override
+    public boolean isApplicable(@NotNull Project project) {
+      return  myServerType.isConfigurationTypeIsAvailable(project);
+    }
+
+    @Override
     public void onNewConfigurationCreated(@NotNull RunConfiguration configuration) {
       DeployToServerRunConfiguration deployConfiguration = (DeployToServerRunConfiguration)configuration;
       if (deployConfiguration.getServerName() == null) {
@@ -113,6 +118,11 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
           type.setBuildBeforeRunTask(configuration, source);
         }
       }
+    }
+
+    @Override
+    public boolean isApplicable(@NotNull Project project) {
+      return  myServerType.isConfigurationTypeIsAvailable(project);
     }
 
     @Override

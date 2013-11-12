@@ -3,6 +3,7 @@ package com.intellij.remoteServer;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.project.Project;
+import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfigurator;
 import com.intellij.remoteServer.configuration.localServer.LocalRunner;
@@ -46,6 +47,10 @@ public abstract class ServerType<C extends ServerConfiguration> {
 
   @NotNull
   public abstract ServerConnector<?> createConnector(@NotNull C configuration, @NotNull ServerTaskExecutor asyncTasksExecutor);
+
+  public boolean isConfigurationTypeIsAvailable(@NotNull Project project) {
+    return !RemoteServersManager.getInstance().getServers(this).isEmpty();
+  }
 
   /**
    * @return a non-null instance of {@link DebugConnector} if the server supports deployment in debug mode
