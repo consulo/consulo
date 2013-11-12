@@ -19,8 +19,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.util.containers.MultiMap;
 import org.consulo.annotations.Immutable;
 import org.consulo.module.extension.ModuleExtension;
@@ -29,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -51,7 +50,15 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
   @Override
   public boolean hasModuleExtension(@NotNull Class<? extends ModuleExtension> clazz) {
     checkInit();
-    return myExtensions != null && myExtensions.containsKey(clazz);
+
+    assert myExtensions != null;
+
+    for (Class<? extends ModuleExtension> aClass : myExtensions.keySet()) {
+      if(clazz.isAssignableFrom(aClass)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
@@ -60,12 +67,16 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@NotNull Class<T> clazz) {
     checkInit();
-    if(myExtensions != null) {
-      return (Collection) myExtensions.get(clazz);
+
+    assert myExtensions != null;
+
+
+    for (Map.Entry<Class<? extends ModuleExtension>, Collection<ModuleExtension>> entry : myExtensions.entrySet()) {
+      if(clazz.isAssignableFrom(entry.getKey())) {
+        return (Collection)entry.getValue();
+      }
     }
-    else {
-      return Collections.emptyList();
-    }
+    return Collections.emptyList();
   }
 
   private void checkInit() {
