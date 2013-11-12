@@ -247,12 +247,14 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
       @NotNull
       @Override
       public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        final ArtifactType[] types = ArtifactType.getAllTypes();
-        final AnAction[] actions = new AnAction[types.length];
-        for (int i = 0; i < types.length; i++) {
-          actions[i] = createAddArtifactAction(types[i]);
+        final ArtifactType[] types = ArtifactType.EP_NAME.getExtensions();
+        List<AnAction> list = new ArrayList<AnAction>(types.length);
+        for (ArtifactType type : types) {
+          if(type.isAvailableForAdd(myContext.getModulesConfigurator()))  {
+            list.add(createAddArtifactAction(type));
+          }
         }
-        return actions;
+        return list.isEmpty() ? AnAction.EMPTY_ARRAY : list.toArray(new AnAction[list.size()]);
       }
     };
   }

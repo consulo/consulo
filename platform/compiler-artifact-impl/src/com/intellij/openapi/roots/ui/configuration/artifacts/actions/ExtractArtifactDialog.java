@@ -43,7 +43,7 @@ public class ExtractArtifactDialog extends DialogWrapper implements IExtractArti
     super(treeComponent.getLayoutTree(), true);
     myContext = context;
     setTitle(ProjectBundle.message("dialog.title.extract.artifact"));
-    for (ArtifactType type : ArtifactType.getAllTypes()) {
+    for (ArtifactType type : ArtifactType.EP_NAME.getExtensions()) {
       myTypeBox.addItem(type);
     }
     myTypeBox.setSelectedItem(PlainArtifactType.getInstance());

@@ -16,7 +16,7 @@
 package com.intellij.packaging.artifacts;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
@@ -35,6 +35,17 @@ import java.util.List;
  * @author nik
  */
 public abstract class ArtifactType {
+  @Nullable
+  public static ArtifactType findById(@NotNull @NonNls String id) {
+    for (ArtifactType type : EP_NAME.getExtensions()) {
+      if (id.equals(type.getId())) {
+        return type;
+      }
+    }
+    return null;
+  }
+
+
   public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create("com.intellij.packaging.artifactType");
   private final String myId;
   private final String myTitle;
@@ -67,18 +78,8 @@ public abstract class ArtifactType {
     return true;
   }
 
-  public static ArtifactType[] getAllTypes() {
-    return Extensions.getExtensions(EP_NAME);
-  }
-
-  @Nullable
-  public static ArtifactType findById(@NotNull @NonNls String id) {
-    for (ArtifactType type : getAllTypes()) {
-      if (id.equals(type.getId())) {
-        return type;
-      }
-    }
-    return null;
+  public boolean isAvailableForAdd(@NotNull ModulesProvider modulesProvider) {
+    return true;
   }
 
   @NotNull

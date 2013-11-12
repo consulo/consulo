@@ -2520,6 +2520,9 @@
 
     <pathMacroExpendableProtocol protocol="zip" />
 
+    <projectService serviceInterface="org.mustbe.consulo.module.extension.ModuleExtensionHelper"
+                    serviceImplementation="org.mustbe.consulo.module.extension.ModuleExtensionHelperImpl" />
+
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider" />
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider" />
     <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider" />
