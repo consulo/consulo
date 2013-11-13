@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements.moduleContent;
 
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
 
 /**
  * @author VISTALL
@@ -27,6 +27,6 @@ public class TestResourceModuleOutputElementType extends ModuleOutputElementType
   }
 
   public TestResourceModuleOutputElementType() {
-    super("module-test-resource-output",TestContentFolderTypeProvider.getInstance());
+    super("module-test-resource-output", TestResourceContentFolderTypeProvider.getInstance());
   }
 }
