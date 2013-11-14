@@ -117,8 +117,8 @@ public class ContentFolderScopes {
       @Override
       public Predicate<ContentFolderTypeProvider> create() {
         return withExclude
-               ? Predicates.not(Predicates.<ContentFolderTypeProvider>equalTo(ExcludedContentFolderTypeProvider.getInstance()))
-               : Predicates.<ContentFolderTypeProvider>alwaysTrue();
+               ? Predicates.<ContentFolderTypeProvider>alwaysTrue()
+               : Predicates.not(Predicates.<ContentFolderTypeProvider>equalTo(ExcludedContentFolderTypeProvider.getInstance()));
       }
     });
   }

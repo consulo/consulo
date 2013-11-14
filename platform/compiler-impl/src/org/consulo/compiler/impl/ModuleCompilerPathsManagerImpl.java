@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import lombok.val;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
@@ -62,8 +63,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   private boolean myExcludeOutput = true;
 
   @NotNull
-  private Map<String, VirtualFilePointer> myVirtualFilePointers =
-    new LinkedHashMap<String, VirtualFilePointer>();
+  private Map<String, VirtualFilePointer> myVirtualFilePointers = new LinkedHashMap<String, VirtualFilePointer>();
 
   public ModuleCompilerPathsManagerImpl(Module module) {
     myModule = module;
@@ -101,22 +101,26 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   @Override
   @Nullable
   public String getCompilerOutputUrl(@NotNull ContentFolderTypeProvider contentFolderType) {
-    if (myInheritOutput) {
-      CompilerConfiguration compilerManager = CompilerConfiguration.getInstance(myModule.getProject());
+    val compilerManager = CompilerConfiguration.getInstance(myModule.getProject());
 
-      final String backUrl =
-        compilerManager.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName();
-      VirtualFile compilerOutput = compilerManager.getCompilerOutput();
+    val backUrl = compilerManager.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName();
+
+    if (myInheritOutput) {
+      val compilerOutput = compilerManager.getCompilerOutput();
       if (compilerOutput == null) {
         return backUrl;
       }
-      VirtualFile outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
+      val outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
       return outDir != null ? outDir.getUrl() : backUrl;
     }
     else {
-      VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
-      assert virtualFilePointer != null;
-      return virtualFilePointer.getUrl();
+      val virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
+      if (virtualFilePointer == null) {
+        return backUrl;
+      }
+      else {
+        return virtualFilePointer.getUrl();
+      }
     }
   }
 
