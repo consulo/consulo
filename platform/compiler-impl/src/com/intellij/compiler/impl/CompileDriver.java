@@ -225,32 +225,28 @@ public class CompileDriver {
     if (LOG.isDebugEnabled()) {
       LOG.debug("isUpToDate operation started");
     }
-    if (!false) {
-      scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
-    }
+    scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
 
     final CompilerTask task =
       new CompilerTask(myProject, "Classes up-to-date check", true, false, false, isCompilationStartedAutomatically(scope));
-    final CompositeDependencyCache cache = false ? null : createDependencyCache();
+    final CompositeDependencyCache cache = createDependencyCache();
     final CompileContextImpl compileContext = new CompileContextImpl(myProject, task, scope, cache, true, false);
 
-    if (!false) {
-      checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
-      if (compileContext.isRebuildRequested()) {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Rebuild requested, up-to-date=false");
-        }
-        return false;
+    checkCachesVersion(compileContext, ManagingFS.getInstance().getCreationTimestamp());
+    if (compileContext.isRebuildRequested()) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Rebuild requested, up-to-date=false");
       }
+      return false;
+    }
 
-      for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> entry : myGenerationCompilerModuleToOutputDirMap
-        .entrySet()) {
-        final Pair<VirtualFile, VirtualFile> outputs = entry.getValue();
-        final Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
-        final Module module = key.getSecond();
-        compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
-        compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
-      }
+    for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> entry : myGenerationCompilerModuleToOutputDirMap
+      .entrySet()) {
+      final Pair<VirtualFile, VirtualFile> outputs = entry.getValue();
+      final Pair<IntermediateOutputCompiler, Module> key = entry.getKey();
+      final Module module = key.getSecond();
+      compileContext.assignModule(outputs.getFirst(), module, false, key.getFirst());
+      compileContext.assignModule(outputs.getSecond(), module, true, key.getFirst());
     }
 
     final Ref<ExitStatus> result = new Ref<ExitStatus>();
@@ -279,6 +275,7 @@ public class CompileDriver {
     return ExitStatus.UP_TO_DATE.equals(result.get());
   }
 
+  @NotNull
   private CompositeDependencyCache createDependencyCache() {
     return new CompositeDependencyCache(myProject, myCachesDirectoryPath);
   }
