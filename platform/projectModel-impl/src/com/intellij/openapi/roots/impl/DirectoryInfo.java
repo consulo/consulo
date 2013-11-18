@@ -42,8 +42,8 @@ public final class DirectoryInfo {
   private final VirtualFile contentRoot;
   private final VirtualFile sourceRoot;
 
-  private static final byte MODULE_SOURCE_FLAG = 1; // set if files in this directory belongs to sources of the module (if field 'module' is not null)
-  private static final byte LIBRARY_SOURCE_FLAG = 2; // set if it's a directory with sources of some library
+  public static final byte MODULE_SOURCE_FLAG = 1; // set if files in this directory belongs to sources of the module (if field 'module' is not null)
+  public static final byte LIBRARY_SOURCE_FLAG = 2; // set if it's a directory with sources of some library
   private final byte sourceRootTypeData;//two least significant bits are used for MODULE_SOURCE_FLAG and LIBRARY_SOURCE_FLAG, the remaining bits store module root type id (source/tests/resources/...)
 
   /**
@@ -56,10 +56,10 @@ public final class DirectoryInfo {
     return new DirectoryInfo(null, null, null, null, (byte)0, null);
   }
 
-  private DirectoryInfo(Module module,
-                        VirtualFile contentRoot,
-                        VirtualFile sourceRoot,
-                        VirtualFile libraryClassRoot,
+  private DirectoryInfo(@Nullable Module module,
+                        @Nullable VirtualFile contentRoot,
+                        @Nullable VirtualFile sourceRoot,
+                        @Nullable VirtualFile libraryClassRoot,
                         byte sourceRootTypeData,
                         OrderEntry[] orderEntries) {
     this.module = module;
@@ -298,15 +298,16 @@ public final class DirectoryInfo {
     return module;
   }
 
-  private static <T> T iff(T value, T defaultValue) {
+  @Nullable
+  private static <T> T iff(@Nullable T value, @Nullable T defaultValue) {
     return value == null ? defaultValue : value;
   }
 
   @NotNull
-  public DirectoryInfo with(Module module,
-                            VirtualFile contentRoot,
-                            VirtualFile sourceRoot,
-                            VirtualFile libraryClassRoot,
+  public DirectoryInfo with(@Nullable Module module,
+                            @Nullable VirtualFile contentRoot,
+                            @Nullable VirtualFile sourceRoot,
+                            @Nullable VirtualFile libraryClassRoot,
                             int sourceRootTypeData,
                             OrderEntry[] orderEntries) {
     return new DirectoryInfo(iff(module, this.module), iff(contentRoot, this.contentRoot), iff(sourceRoot, this.sourceRoot),

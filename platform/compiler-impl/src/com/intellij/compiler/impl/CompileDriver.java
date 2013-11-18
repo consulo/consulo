@@ -211,9 +211,8 @@ public class CompileDriver {
   }
 
   public void make(CompileScope scope, CompileStatusNotification callback) {
-    if (!false) {
-      scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
-    }
+    scope = addAdditionalRoots(scope, ALL_EXCEPT_SOURCE_PROCESSING);
+
     if (validateCompilerConfiguration(scope, false)) {
       startup(scope, false, false, callback, null, true);
     }

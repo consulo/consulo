@@ -35,6 +35,7 @@ public class CompilerContentIterator implements ContentIterator {
     myFiles = files;
   }
 
+  @Override
   public boolean processFile(VirtualFile fileOrDir) {
     if (fileOrDir.isDirectory()) return true;
     if (!fileOrDir.isInLocalFileSystem()) return true;

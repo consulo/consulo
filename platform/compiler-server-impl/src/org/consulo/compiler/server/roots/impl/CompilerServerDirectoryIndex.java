@@ -15,6 +15,7 @@
  */
 package org.consulo.compiler.server.roots.impl;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -23,7 +24,6 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
@@ -37,8 +37,11 @@ import com.intellij.util.containers.HashSet;
 import org.consulo.compiler.server.fileSystem.archive.ChildArchiveNewVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,11 +57,36 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   private final ModuleManager myModuleManager;
 
   private Map<VirtualFile, DirectoryInfo> myInfoDirectoryCache = new HashMap<VirtualFile, DirectoryInfo>();
-  private Map<DirectoryInfo, ContentFolderTypeProvider> myFolderTypeProvider = new HashMap<DirectoryInfo, ContentFolderTypeProvider>();
+  private List<ContentFolderTypeProvider> myTypes = new ArrayList<ContentFolderTypeProvider>();
 
   public CompilerServerDirectoryIndex(@NotNull Project project, @NotNull ModuleManager moduleManager) {
     myProject = project;
     myModuleManager = moduleManager;
+    myTypes.add(new ContentFolderTypeProvider("T") {
+      @NotNull
+      @Override
+      public AnAction createMarkAction() {
+        return null;
+      }
+
+      @NotNull
+      @Override
+      public Icon getIcon() {
+        return null;
+      }
+
+      @NotNull
+      @Override
+      public String getName() {
+        return null;
+      }
+
+      @NotNull
+      @Override
+      public Color getGroupColor() {
+        return null;
+      }
+    });
   }
 
   @Override
@@ -74,14 +102,13 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
 
     Pair<DirectoryInfo, ContentFolderTypeProvider> pair = getDirectoryInfo0(fileForInfo);
     myInfoDirectoryCache.put(fileForInfo, directoryInfo = pair.getFirst());
-    myFolderTypeProvider.put(directoryInfo, pair.getSecond());
     return directoryInfo;
   }
 
   @Nullable
   @Override
   public ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info) {
-    return myFolderTypeProvider.get(info);
+    return myTypes.get(info.getSourceRootTypeId());
   }
 
   private Pair<DirectoryInfo, ContentFolderTypeProvider> getDirectoryInfo0(VirtualFile fileForInfo) {
@@ -89,7 +116,6 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
     VirtualFile contentRoot = null;
     VirtualFile sourceRoot = null;
     VirtualFile libraryRoot = null;
-    byte flags = 0;
     ContentFolderTypeProvider provider = null;
 
     for (Module moduleIter : myModuleManager.getModules()) {
@@ -100,12 +126,15 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
           contentRoot = temp;
           module = moduleIter;
 
-          for (ContentFolder contentFolder : contentEntry.getFolders()) {
+          for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all(false))) {
             temp = contentFolder.getFile();
             if (temp != null && VfsUtilCore.isAncestor(temp, fileForInfo, false)) {
               sourceRoot = temp;
 
               provider = contentFolder.getType();
+              if(!myTypes.contains(provider)) {
+                myTypes.add(provider);
+              }
             }
           }
 
@@ -133,6 +162,8 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
         }
       }
     }
+
+    int flags = DirectoryInfo.createSourceRootTypeData(provider != null , false, myTypes.indexOf(provider));
 
     DirectoryInfo directoryInfo = DirectoryInfo.createNew();
     directoryInfo = directoryInfo.with(module, contentRoot, sourceRoot, libraryRoot, flags, OrderEntry.EMPTY_ARRAY);
@@ -216,7 +247,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
         }
       }
     }
-    return VfsUtil.toVirtualFileArray(roots);
+    return VfsUtilCore.toVirtualFileArray(roots);
   }
 
   @Nullable

@@ -13,11 +13,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.impl.TranslatingCompilerFilesMonitor");
-  private static final boolean ourDebugMode = false;
 
   private final Object myDataLock = new Object();
 
@@ -50,56 +52,21 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     final Project project = context.getProject();
 
     final CompilerManager configuration = CompilerManager.getInstance(project);
-    final boolean _forceCompile = forceCompile || isRebuild;
-    //final Set<VirtualFile> selectedForRecompilation = new HashSet<VirtualFile>();
     synchronized (myDataLock) {
-      //final TIntHashSet pathsToRecompile = mySourcesToRecompile.get(projectId);
-      if (_forceCompile) {
-        if (ourDebugMode) {
-          System.out.println("Analysing potentially recompilable files for " + compiler.getDescription());
+      while (scopeSrcIterator.hasNext()) {
+        final VirtualFile file = scopeSrcIterator.next();
+        if (!file.isValid()) {
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Skipping invalid file " + file.getPresentableUrl());
+          }
+          continue;
         }
-        while (scopeSrcIterator.hasNext()) {
-          final VirtualFile file = scopeSrcIterator.next();
-          if (!file.isValid()) {
-            if (LOG.isDebugEnabled() || ourDebugMode) {
-              LOG.debug("Skipping invalid file " + file.getPresentableUrl());
-              if (ourDebugMode) {
-                System.out.println("\t SKIPPED(INVALID) " + file.getPresentableUrl());
-              }
-            }
-            continue;
-          }
 
-          if (_forceCompile) {
-            if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
-              toCompile.add(file);
-              if (ourDebugMode) {
-                System.out.println("\t INCLUDED " + file.getPresentableUrl());
-              }
-              //selectedForRecompilation.add(file);
-            }
-            else {
-              if (ourDebugMode) {
-                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
-              }
-            }
-          }
-          else
-            if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
-              toCompile.add(file);
-              if (ourDebugMode) {
-                System.out.println("\t INCLUDED " + file.getPresentableUrl());
-              }
-             // selectedForRecompilation.add(file);
-            }
-            else {
-              if (ourDebugMode) {
-                System.out.println("\t NOT COMPILABLE OR EXCLUDED " + file.getPresentableUrl());
-              }
-            }
-          }
+        if (compiler.isCompilableFile(file, context) && !configuration.isExcludedFromCompilation(file)) {
+          toCompile.add(file);
         }
       }
+    }
   }
 
   @Override
