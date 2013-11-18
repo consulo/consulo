@@ -18,7 +18,6 @@ package com.intellij.ide.util.projectWizard;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.ide.wizard.StepAdapter;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -27,8 +26,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class ModuleWizardStep extends StepAdapter {
-
-  protected static final Icon ICON = IconLoader.getIcon("/addmodulewizard.png");
   public static final ModuleWizardStep[] EMPTY_ARRAY = new ModuleWizardStep[0];
 
   @Override
@@ -53,7 +50,7 @@ public abstract class ModuleWizardStep extends StepAdapter {
 
   @Override
   public Icon getIcon() {
-    return ICON;
+    return null;
   }
 
   public boolean isStepVisible() {
