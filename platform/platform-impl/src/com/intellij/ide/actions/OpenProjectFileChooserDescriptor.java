@@ -35,10 +35,12 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     super(chooseFiles, true, chooseFiles, chooseFiles, false, false);
   }
 
+  @Override
   public boolean isFileSelectable(final VirtualFile file) {
     return isProjectDirectory(file) || isProjectFile(file);
   }
 
+  @Override
   public Icon getIcon(final VirtualFile file) {
     if (isProjectDirectory(file)) {
       return dressIcon(file, ourProjectIcon);
@@ -59,6 +61,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     return null;
   }
 
+  @Override
   public boolean isFileVisible(final VirtualFile file, final boolean showHiddenFiles) {
     if (!showHiddenFiles && FileElement.isFileHidden(file)) return false;
     return isProjectFile(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
