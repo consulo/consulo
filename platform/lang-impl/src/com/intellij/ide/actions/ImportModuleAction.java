@@ -97,6 +97,12 @@ public class ImportModuleAction extends AnAction {
       FileChooserDescriptor myDelegate = new OpenProjectFileChooserDescriptor(true);
       @Override
       public Icon getIcon(VirtualFile file) {
+        for (ProjectImportProvider projectImportProvider : ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions()) {
+          final Icon iconForFile = projectImportProvider.getIconForFile(file);
+          if(iconForFile != null) {
+            return iconForFile;
+          }
+        }
         Icon icon = myDelegate.getIcon(file);
         return icon == null ? super.getIcon(file) : icon;
       }
