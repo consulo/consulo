@@ -82,6 +82,9 @@ public abstract class CreateElementActionBase extends AnAction {
 
   @Override
   public void update(final AnActionEvent e) {
+    if(!e.getPresentation().isVisible()) {
+      return;
+    }
     final DataContext dataContext = e.getDataContext();
     final Presentation presentation = e.getPresentation();
 
