@@ -21,6 +21,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author dsl
@@ -30,6 +31,7 @@ public class OrderEntryFactory {
   @NonNls public static final String ORDER_ENTRY_ELEMENT_NAME = "orderEntry";
   @NonNls public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
+  @Nullable
   static OrderEntry createOrderEntryByElement(Element element, RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager)
     throws InvalidDataException {
     LOG.assertTrue(ORDER_ENTRY_ELEMENT_NAME.equals(element.getName()));
@@ -43,11 +45,6 @@ public class OrderEntryFactory {
     else if (ModuleExtensionWithSdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new ModuleExtensionWithSdkOrderEntryImpl(element, rootModel, projectRootManager);
     }
-    /*
-    FIXME [VISTALL] currently inherit sdk is not working
-    else if (InheritedSdkOrderEntryImpl.ENTRY_TYPE.equals(type)) {
-      return new InheritedSdkOrderEntryImpl(element, rootModel, projectRootManager);
-    }   */
     else if (LibraryOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new LibraryOrderEntryImpl(element, rootModel, projectRootManager);
     }
