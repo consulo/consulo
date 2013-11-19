@@ -169,10 +169,9 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   static void doCommit(RootModelImpl rootModel) {
-    rootModel.docommit();
+    rootModel.doCommit();
     rootModel.dispose();
   }
-
 
   @Override
   @NotNull

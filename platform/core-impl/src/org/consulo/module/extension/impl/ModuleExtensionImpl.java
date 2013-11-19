@@ -88,14 +88,9 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
 
   @Override
   public void loadState(Element state) {
-    for (Element element : state.getChildren("extension")) {
-      final String id = element.getAttributeValue("id");
-      if (myId.equals(id)) {
-        myIsEnabled = true;
-        loadStateImpl(element);
-        break;
-      }
-    }
+    myIsEnabled = true;
+
+    loadStateImpl(state);
   }
 
   protected void loadStateImpl(@NotNull Element element) {

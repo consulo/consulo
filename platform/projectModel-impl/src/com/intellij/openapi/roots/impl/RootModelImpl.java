@@ -31,6 +31,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.consulo.module.extension.*;
 import org.jdom.Element;
@@ -57,6 +58,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private final VirtualFilePointerManager myFilePointerManager;
   private boolean myDisposed = false;
   private final Set<ModuleExtension<?>> myExtensions = new LinkedHashSet<ModuleExtension<?>>();
+  private final List<Element> myUnknownModuleExtensions = new SmartList<Element>();
 
   private final RootConfigurationAccessor myConfigurationAccessor;
 
@@ -96,7 +98,29 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     RootModelImpl originalRootModel = moduleRootManager.getRootModel();
 
-    createMutableExtensions(originalRootModel, element);
+    createMutableExtensions(originalRootModel);
+
+    List<Element> moduleExtensionChild = element.getChildren("extension");
+
+    for (Element child : moduleExtensionChild) {
+      final String id = child.getAttributeValue("id");
+
+      ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
+      if (provider != null) {
+        ModuleExtension rootModuleExtension = originalRootModel.getExtensionWithoutCheck(provider.getImmutableClass());
+
+        //noinspection unchecked
+        rootModuleExtension.loadState(child);
+
+        ModuleExtension moduleExtension = getExtensionWithoutCheck(rootModuleExtension.getClass());
+
+        //noinspection unchecked
+        moduleExtension.commit(rootModuleExtension);
+      }
+      else {
+        myUnknownModuleExtensions.add(child.clone());
+      }
+    }
 
     final List<Element> contentChildren = element.getChildren(ContentEntryImpl.ELEMENT_NAME);
     for (Element child : contentChildren) {
@@ -153,20 +177,18 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
-    createMutableExtensions(rootModel, null);
+    createMutableExtensions(rootModel);
 
     setOrderEntriesFrom(rootModel);
   }
 
-  private void createMutableExtensions(RootModelImpl rootModel, @Nullable Element state) {
+  @SuppressWarnings("unchecked")
+  private void createMutableExtensions(RootModelImpl rootModel) {
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       final ModuleExtensionProvider provider = providerEP.getInstance();
 
       final ModuleExtension<?> originalExtension = rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
 
-      if (state != null) {
-        originalExtension.loadState(state);
-      }
       MutableModuleExtension mutable = provider.createMutable(providerEP.getKey(), rootModel.getModule(), originalExtension);
 
       mutable.commit(originalExtension);
@@ -396,7 +418,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myWritable = false;
   }
 
-  public void docommit() {
+  public void doCommit() {
     assert isWritable();
 
     if (areOrderEntriesChanged()) {
@@ -422,6 +444,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         mutableExtension.commit();
       }
     }
+
+    getSourceModel().myUnknownModuleExtensions.addAll(myUnknownModuleExtensions);
   }
 
   @Override
@@ -464,13 +488,26 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   public void writeExternal(@NotNull Element element) {
+    List<Element> moduleExtensionElements = new ArrayList<Element>();
     for (ModuleExtension<?> extension : myExtensions) {
       final Element state = extension.getState();
       if (state == null) {
         continue;
       }
-      element.addContent(state);
+      moduleExtensionElements.add(state);
     }
+
+    for (Element unknownModuleExtension : myUnknownModuleExtensions) {
+      moduleExtensionElements.add(unknownModuleExtension.clone());
+    }
+    Collections.sort(moduleExtensionElements, new Comparator<Element>() {
+      @Override
+      public int compare(Element o1, Element o2) {
+        return Comparing.compare(o1.getAttributeValue("id"), o2.getAttributeValue("id"));
+      }
+    });
+
+    element.addContent(moduleExtensionElements);
 
     for (ContentEntry contentEntry : getContent()) {
       if (contentEntry instanceof ContentEntryImpl) {
