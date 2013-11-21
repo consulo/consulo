@@ -76,7 +76,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
       JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<CompositePackagingElementType>("Surround With...", types) {
         @Override
         public Icon getIconFor(CompositePackagingElementType aValue) {
-          return aValue.getCreateElementIcon();
+          return aValue.getIcon();
         }
 
         @NotNull

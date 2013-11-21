@@ -36,7 +36,7 @@ public class AddCompositeElementAction extends DumbAwareAction {
     super(ProjectBundle.message("artifacts.create.action", elementType.getPresentableName()));
     myArtifactEditor = artifactEditor;
     myElementType = elementType;
-    getTemplatePresentation().setIcon(elementType.getCreateElementIcon());
+    getTemplatePresentation().setIcon(elementType.getIcon());
   }
 
   @Override

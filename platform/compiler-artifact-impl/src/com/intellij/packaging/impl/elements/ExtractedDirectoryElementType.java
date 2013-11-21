@@ -44,14 +44,10 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
     super("extracted-dir", "Extracted Directory");
   }
 
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return AllIcons.Nodes.ExtractedFolder;
-  }
-
-  @Override
-  public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
-    return true;
   }
 
   @NotNull

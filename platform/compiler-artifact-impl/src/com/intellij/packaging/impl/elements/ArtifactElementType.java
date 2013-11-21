@@ -44,13 +44,14 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     super("artifact", CompilerBundle.message("element.type.name.artifact"));
   }
 
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
     return !getAvailableArtifacts(context, artifact, false).isEmpty();
   }
 

@@ -16,7 +16,6 @@
 package com.intellij.packaging.impl.elements;
 
 import com.intellij.compiler.ant.Generator;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.packaging.artifacts.ArtifactType;
@@ -36,7 +35,8 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
     super(PackagingElementFactoryImpl.ARTIFACT_ROOT_ELEMENT_TYPE);
   }
 
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  @Override
+  public PackagingElementPresentation createPresentation(@NotNull final ArtifactEditorContext context) {
     return new PackagingElementPresentation() {
       @Override
       public String getPresentableName() {
@@ -46,7 +46,7 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
       @Override
       public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                          SimpleTextAttributes commentAttributes) {
-        presentationData.setIcon(AllIcons.Nodes.Artifact);
+        presentationData.setIcon(context.getArtifactType().getIcon());
         presentationData.addText(getPresentableName(), mainAttributes);
       }
 
@@ -57,10 +57,12 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
     };
   }
 
+  @Override
   public Object getState() {
     return null;
   }
 
+  @Override
   public void loadState(Object state) {
   }
 
@@ -69,9 +71,11 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
     return false;
   }
 
+  @Override
   public void rename(@NotNull String newName) {
   }
 
+  @Override
   public List<? extends Generator> computeAntInstructions(@NotNull PackagingElementResolvingContext resolvingContext, @NotNull AntCopyInstructionCreator creator,
                                                           @NotNull ArtifactAntGenerationContext generationContext,
                                                           @NotNull ArtifactType artifactType) {
@@ -85,6 +89,7 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
     computeChildrenInstructions(creator, resolvingContext, compilerContext, artifactType);
   }
 
+  @Override
   public String getName() {
     return "";
   }

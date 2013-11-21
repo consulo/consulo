@@ -29,7 +29,6 @@ import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
@@ -47,9 +46,9 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
     myContentFolderTypeProvider = contentFolderType;
   }
 
-  @Nullable
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return myContentFolderTypeProvider.getIcon();
   }
 
@@ -63,7 +62,7 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
   }
 
   @Override
-  public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
     return !getSuitableModules(context).isEmpty();
   }
 

@@ -364,7 +364,9 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("artifacts.add.copy.action"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
     for (PackagingElementType<?> type : PackagingElementFactory.getInstance().getAllElementTypes()) {
-      group.add(new AddNewPackagingElementAction(type, this));
+      if(type.isAvailableForAdd(getContext(), getArtifact())) {
+        group.add(new AddNewPackagingElementAction(type, this));
+      }
     }
     return group;
   }

@@ -44,8 +44,9 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
     super("zip-archive", CompilerBundle.message("element.type.name.zip.archive"));
   }
 
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return AllIcons.Nodes.PpJar;
   }
 

@@ -44,13 +44,14 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
     super("library", CompilerBundle.message("element.type.name.library.files"));
   }
 
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return AllIcons.Nodes.PpLib;
   }
 
   @Override
-  public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
     return !getAllLibraries(context).isEmpty();
   }
 

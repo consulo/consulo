@@ -43,14 +43,10 @@ public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopy
     super("dir-copy", "Directory Content");
   }
 
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return AllIcons.Nodes.CopyOfFolder;
-  }
-
-  @Override
-  public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
-    return true;
   }
 
   @NotNull

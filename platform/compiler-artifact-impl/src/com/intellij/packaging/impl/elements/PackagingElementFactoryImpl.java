@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -329,8 +331,14 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
       super("root", "");
     }
 
+    @NotNull
     @Override
-    public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+    public Icon getIcon() {
+      return AllIcons.Nodes.Artifact;
+    }
+
+    @Override
+    public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
       return false;
     }
 

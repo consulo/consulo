@@ -28,14 +28,9 @@ public class AddNewPackagingElementAction extends DumbAwareAction {
   private final ArtifactEditorEx myArtifactEditor;
 
   public AddNewPackagingElementAction(PackagingElementType<?> type, ArtifactEditorEx artifactEditor) {
-    super(type.getPresentableName(), null, type.getCreateElementIcon());
+    super(type.getPresentableName(), null, type.getIcon());
     myType = type;
     myArtifactEditor = artifactEditor;
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setVisible(myType.canCreate(myArtifactEditor.getContext(), myArtifactEditor.getArtifact()));
   }
 
   @Override

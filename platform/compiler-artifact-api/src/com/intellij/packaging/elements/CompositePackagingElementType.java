@@ -33,7 +33,7 @@ public abstract class CompositePackagingElementType<E extends CompositePackaging
   }
 
   @Override
-  public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
     return true;
   }
 

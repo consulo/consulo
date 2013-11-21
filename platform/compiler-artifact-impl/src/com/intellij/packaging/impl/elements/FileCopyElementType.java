@@ -42,14 +42,10 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
     super("file-copy", "File");
   }
 
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return AllIcons.FileTypes.Text;
-  }
-
-  @Override
-  public boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
-    return true;
   }
 
   @NotNull

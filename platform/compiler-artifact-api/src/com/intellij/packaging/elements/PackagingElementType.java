@@ -49,12 +49,12 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
     return myPresentableName;
   }
 
-  @Nullable
-  public Icon getCreateElementIcon() {
-    return null;
-  }
+  @NotNull
+  public abstract Icon getIcon();
 
-  public abstract boolean canCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact);
+  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+    return true;
+  }
 
   @NotNull 
   public abstract List<? extends PackagingElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,

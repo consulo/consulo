@@ -41,8 +41,9 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
     super("directory", CompilerBundle.message("element.type.name.directory"));
   }
 
+  @NotNull
   @Override
-  public Icon getCreateElementIcon() {
+  public Icon getIcon() {
     return AllIcons.Actions.NewFolder;
   }
 
