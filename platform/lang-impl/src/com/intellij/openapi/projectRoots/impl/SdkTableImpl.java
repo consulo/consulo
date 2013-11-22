@@ -204,17 +204,6 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
       }
       mySdks.add(sdk);
     }
-
-    for (BundledSdkProvider bundledSdkProvider : BundledSdkProvider.EP_NAME.getExtensions()) {
-      final Sdk[] bundledSdks = bundledSdkProvider.createBundledSdks();
-
-      for (Sdk bundledSdk : bundledSdks) {
-        if(bundledSdk instanceof SdkImpl) {
-          ((SdkImpl)bundledSdk).setBundled();
-        }
-        mySdks.add(bundledSdk);
-      }
-    }
   }
 
   @Override

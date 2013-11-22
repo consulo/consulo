@@ -310,5 +310,9 @@
       <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
       <compiler-server-implementation-class></compiler-server-implementation-class>
     </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.projectRoots.impl.BundledSdkLoader</implementation-class>
+    </component>
   </application-components>
 </idea-plugin>
