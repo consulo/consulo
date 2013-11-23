@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vfs.newvfs.events;
 
-import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +63,10 @@ public class VFileCreateEvent extends VFileEvent {
     return myParent;
   }
 
+  public boolean isReCreation() {
+    return myReCreation;
+  }
+
   @NonNls
   @Override
   public String toString() {
@@ -81,9 +85,13 @@ public class VFileCreateEvent extends VFileEvent {
     return myCreatedFile = myParent.findChild(myChildName);
   }
 
+  public void resetCache() {
+    myCreatedFile = null;
+  }
+
   @NotNull
   @Override
-  public IVirtualFileSystem getFileSystem() {
+  public VirtualFileSystem getFileSystem() {
     return myParent.getFileSystem();
   }
 

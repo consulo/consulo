@@ -36,7 +36,10 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
@@ -167,11 +170,11 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
   private void registerTreeActions() {
     myTree.registerKeyboardAction(
-        new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            performEnterAction(true);
-          }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED
+      new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          performEnterAction(true);
+        }
+      }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED
     );
 
     new DoubleClickListener() {
@@ -276,28 +279,28 @@ public class FileSystemTreeImpl implements FileSystemTree {
   public Exception createNewFolder(final VirtualFile parentDirectory, final String newFolderName) {
     final Exception[] failReason = new Exception[] { null };
     CommandProcessor.getInstance().executeCommand(
-        myProject, new Runnable() {
+      myProject, new Runnable() {
+      public void run() {
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
           public void run() {
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              public void run() {
-                try {
-                  VirtualFile parent = parentDirectory;
-                  for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
-                    VirtualFile folder = parent.createChildDirectory(this, name);
-                    updateTree();
-                    select(folder, null);
-                    parent = folder;
-                  }
-                }
-                catch (IOException e) {
-                  failReason[0] = e;
-                }
+            try {
+              VirtualFile parent = parentDirectory;
+              for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
+                VirtualFile folder = parent.createChildDirectory(this, name);
+                updateTree();
+                select(folder, null);
+                parent = folder;
               }
-            });
+            }
+            catch (IOException e) {
+              failReason[0] = e;
+            }
           }
-        },
-        UIBundle.message("file.chooser.create.new.folder.command.name"),
-        null
+        });
+      }
+    },
+      UIBundle.message("file.chooser.create.new.folder.command.name"),
+      null
     );
     return failReason[0];
   }
@@ -305,26 +308,26 @@ public class FileSystemTreeImpl implements FileSystemTree {
   public Exception createNewFile(final VirtualFile parentDirectory, final String newFileName, final FileType fileType, final String initialContent) {
     final Exception[] failReason = new Exception[] { null };
     CommandProcessor.getInstance().executeCommand(
-        myProject, new Runnable() {
+      myProject, new Runnable() {
+      public void run() {
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
           public void run() {
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              public void run() {
-                try {
-                  final String newFileNameWithExtension = newFileName.endsWith('.'+fileType.getDefaultExtension())? newFileName : newFileName+'.'+fileType.getDefaultExtension();
-                  final VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
-                  VfsUtil.saveText(file, initialContent != null ? initialContent : "");
-                  updateTree();
-                  select(file, null);
-                }
-                catch (IOException e) {
-                  failReason[0] = e;
-                }
-              }
-            });
+            try {
+              final String newFileNameWithExtension = newFileName.endsWith('.'+fileType.getDefaultExtension())? newFileName : newFileName+'.'+fileType.getDefaultExtension();
+              final VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
+              VfsUtil.saveText(file, initialContent != null ? initialContent : "");
+              updateTree();
+              select(file, null);
+            }
+            catch (IOException e) {
+              failReason[0] = e;
+            }
           }
-        },
-        UIBundle.message("file.chooser.create.new.file.command.name"),
-        null
+        });
+      }
+    },
+      UIBundle.message("file.chooser.create.new.file.command.name"),
+      null
     );
     return failReason[0];
   }

@@ -15,43 +15,22 @@
  */
 package com.intellij.openapi.wm.impl;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.mac.MacDockDelegate;
 import com.intellij.ui.win.WinDockDelegate;
-import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Denis Fokin
  */
 public class SystemDock {
-  public static class WinJumpList implements EarlyAccessProgramDescriptor {
-
-    @NotNull
-    @Override
-    public String getName() {
-      return "Windows 7+ JumpList";
-    }
-
-    @Override
-    public boolean getDefaultState() {
-      return false;
-    }
-
-    @NotNull
-    @Override
-    public String getDescription() {
-      return "JumpList support for Windows 7+";
-    }
-  }
 
   private static Delegate delegate;
 
   static {
     if (SystemInfo.isMac) {
       delegate = MacDockDelegate.getInstance();
-    } else if (SystemInfo.isWin7OrNewer && EarlyAccessProgramManager.getInstance().getState(WinJumpList.class)) {
+    } else if (SystemInfo.isWin7OrNewer && !ApplicationManager.getApplication().isUnitTestMode()) {
       delegate = WinDockDelegate.getInstance();
     }
   }

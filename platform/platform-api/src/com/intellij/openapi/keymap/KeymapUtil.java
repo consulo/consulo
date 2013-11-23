@@ -23,6 +23,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.openapi.util.registry.RegistryValueListener;
+import com.intellij.openapi.util.text.StringUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -148,7 +149,7 @@ public class KeymapUtil {
 
     final int code = accelerator.getKeyCode();
     String keyText = SystemInfo.isMac ? MacKeymapUtil.getKeyText(code) : KeyEvent.getKeyText(code);
-    // [vova] this is dirty fix for bug #35092 
+    // [vova] this is dirty fix for bug #35092
     if(CANCEL_KEY_TEXT.equals(keyText)){
       keyText = BREAK_KEY_TEXT;
     }
@@ -256,25 +257,25 @@ public class KeymapUtil {
 
   public static String getKeyModifiersTextForMacOSLeopard(@JdkConstants.InputEventMask int modifiers) {
     StringBuilder buf = new StringBuilder();
-      if ((modifiers & InputEvent.META_MASK) != 0) {
-          buf.append("\u2318");
-      }
-      if ((modifiers & InputEvent.CTRL_MASK) != 0) {
-          buf.append(Toolkit.getProperty("AWT.control", "Ctrl"));
-      }
-      if ((modifiers & InputEvent.ALT_MASK) != 0) {
-          buf.append("\2325");
-      }
-      if ((modifiers & InputEvent.SHIFT_MASK) != 0) {
-          buf.append(Toolkit.getProperty("AWT.shift", "Shift"));
-      }
-      if ((modifiers & InputEvent.ALT_GRAPH_MASK) != 0) {
-          buf.append(Toolkit.getProperty("AWT.altGraph", "Alt Graph"));
-      }
-      if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
-          buf.append(Toolkit.getProperty("AWT.button1", "Button1"));
-      }
-      return buf.toString();
+    if ((modifiers & InputEvent.META_MASK) != 0) {
+      buf.append("\u2318");
+    }
+    if ((modifiers & InputEvent.CTRL_MASK) != 0) {
+      buf.append(Toolkit.getProperty("AWT.control", "Ctrl"));
+    }
+    if ((modifiers & InputEvent.ALT_MASK) != 0) {
+      buf.append("\2325");
+    }
+    if ((modifiers & InputEvent.SHIFT_MASK) != 0) {
+      buf.append(Toolkit.getProperty("AWT.shift", "Shift"));
+    }
+    if ((modifiers & InputEvent.ALT_GRAPH_MASK) != 0) {
+      buf.append(Toolkit.getProperty("AWT.altGraph", "Alt Graph"));
+    }
+    if ((modifiers & InputEvent.BUTTON1_MASK) != 0) {
+      buf.append(Toolkit.getProperty("AWT.button1", "Button1"));
+    }
+    return buf.toString();
   }
 
   public static boolean isTooltipRequest(KeyEvent keyEvent) {
@@ -329,7 +330,7 @@ public class KeymapUtil {
   public static boolean isEmacsKeymap() {
     return isEmacsKeymap(KeymapManager.getInstance().getActiveKeymap());
   }
-  
+
   public static boolean isEmacsKeymap(@Nullable Keymap keymap) {
     for (; keymap != null; keymap = keymap.getParent()) {
       if ("Emacs".equalsIgnoreCase(keymap.getName())) {
@@ -348,5 +349,18 @@ public class KeymapUtil {
       return null;
     }
     return shortcut.getFirstKeyStroke();
+  }
+
+  @NotNull
+  public static String createTooltipText(@Nullable String name, @NotNull AnAction action) {
+    String toolTipText = name == null ? "" : name;
+    while (StringUtil.endsWithChar(toolTipText, '.')) {
+      toolTipText = toolTipText.substring(0, toolTipText.length() - 1);
+    }
+    String shortcutsText = getFirstKeyboardShortcutText(action);
+    if (!shortcutsText.isEmpty()) {
+      toolTipText += " (" + shortcutsText + ")";
+    }
+    return toolTipText;
   }
 }

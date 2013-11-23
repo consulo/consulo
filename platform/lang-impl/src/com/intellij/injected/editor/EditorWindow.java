@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
+import java.util.*;
+import java.util.List;
 
 /**
  * @author Alexey
@@ -68,7 +69,7 @@ public class EditorWindow extends UserDataHolderBase implements EditorEx {
   private final boolean myOneLine;
   private final CaretModelWindow myCaretModelDelegate;
   private final SelectionModelWindow mySelectionModelDelegate;
-  private static final WeakList<EditorWindow> allEditors = new WeakList<EditorWindow>();
+  private static final List<EditorWindow> allEditors = new WeakList<EditorWindow>();
   private boolean myDisposed;
   private final MarkupModelWindow myMarkupModelDelegate;
   private final FoldingModelWindow myFoldingModelWindow;
@@ -166,12 +167,8 @@ public class EditorWindow extends UserDataHolderBase implements EditorEx {
     else {
       int offset = lineStartOffset + column;
       int hostOffset = getDocument().injectedToHost(offset);
-      int hostLineNumber = getDocument().getDelegate().getLineNumber(hostOffset);
-      int hostLineStart = getDocument().getDelegate().getLineStartOffset(hostLineNumber);
-
-      return new LogicalPosition(hostLineNumber, hostOffset - hostLineStart);
+      return myDelegate.offsetToLogicalPosition(hostOffset);
     }
-
   }
 
   private void dispose() {
@@ -289,6 +286,7 @@ public class EditorWindow extends UserDataHolderBase implements EditorEx {
     myDelegate.setHighlighter(highlighter);
   }
 
+  @NotNull
   @Override
   public EditorHighlighter getHighlighter() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();

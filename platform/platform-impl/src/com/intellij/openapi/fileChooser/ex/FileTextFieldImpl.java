@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -247,7 +247,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
     if (result.myCompletionBase.length() == result.myFieldText.length()) return null;
 
     String strokeText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(
-            "EditorChooseLookupItemReplace"));
+      "EditorChooseLookupItemReplace"));
     return IdeBundle.message("file.chooser.completion.ad.text", strokeText);
   }
 
@@ -404,7 +404,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
           processChosenFromCompletion(false);
         }
       }).setCancelKeyEnabled(false).setAlpha(0.1f).setFocusOwners(new Component[]{myPathTextField}).
-          createPopup();
+        createPopup();
 
 
     if (result.myPreselected != null) {
@@ -477,8 +477,8 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
     if (result.current != null) {
       result.currentParentMatch = SystemInfo.isFileSystemCaseSensitive
-                                         ? typedText.equals(result.current.getAbsolutePath())
-                                         : typedText.equalsIgnoreCase(result.current.getAbsolutePath());
+                                  ? typedText.equals(result.current.getAbsolutePath())
+                                  : typedText.equalsIgnoreCase(result.current.getAbsolutePath());
 
       result.closedPath = typed.endsWith(myFinder.getSeparator()) && typedText.length() > myFinder.getSeparator().length();
       final String currentParentText = result.current.getAbsolutePath();
@@ -498,7 +498,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
       result.currentGrandparent = result.current.getParent();
       if (result.currentGrandparent != null && result.currentParentMatch && !result.closedPath) {
         final String currentGrandparentText = result.currentGrandparent.getAbsolutePath();
-        if (StringUtil.startsWithConcatenationOf(typedText, currentGrandparentText, myFinder.getSeparator())) {
+        if (StringUtil.startsWithConcatenation(typedText, currentGrandparentText, myFinder.getSeparator())) {
           result.grandparentPrefix = currentParentText.substring(currentGrandparentText.length() + myFinder.getSeparator().length());
         }
       }
