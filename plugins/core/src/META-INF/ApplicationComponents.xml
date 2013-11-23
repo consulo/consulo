@@ -310,7 +310,10 @@
       <implementation-class>org.consulo.compiler.server.rmi.impl.CompilerServerConnectorImpl</implementation-class>
       <compiler-server-implementation-class></compiler-server-implementation-class>
     </component>
-
+    <component>
+      <interface-class>com.intellij.openapi.actionSystem.AbbreviationManager</interface-class>
+      <implementation-class>com.intellij.openapi.actionSystem.impl.AbbreviationManagerImpl</implementation-class>
+    </component>
     <component>
       <implementation-class>com.intellij.openapi.projectRoots.impl.BundledSdkLoader</implementation-class>
     </component>

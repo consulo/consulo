@@ -56,7 +56,6 @@ import java.util.List;
  * @author spleaner
  */
 public class NotificationsManagerImpl extends NotificationsManager {
-
   public NotificationsManagerImpl() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(null));
   }
@@ -64,6 +63,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   @Override
   public void expire(@NotNull final Notification notification) {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
       public void run() {
         EventLog.expireNotification(notification);
       }
@@ -85,8 +85,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
   }
 
   private static void doNotify(@NotNull final Notification notification,
-                              @Nullable NotificationDisplayType displayType,
-                              @Nullable final Project project) {
+                               @Nullable NotificationDisplayType displayType,
+                               @Nullable final Project project) {
     final NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getNotificationsConfigurationImpl();
     if (!configuration.isRegistered(notification.getGroupId())) {
       configuration.register(notification.getGroupId(), displayType == null ? NotificationDisplayType.BALLOON : displayType);
@@ -156,7 +156,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
             balloon.addListener(new JBPopupAdapter() {
               @Override
               public void onClosed(LightweightWindowEvent event) {
-                notification.expire();
+                if (!event.isOk()) {
+                  notification.expire();
+                }
               }
             });
           }
@@ -164,8 +166,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
         break;
       case TOOL_WINDOW:
         MessageType messageType = notification.getType() == NotificationType.ERROR
-                            ? MessageType.ERROR
-                            : notification.getType() == NotificationType.WARNING ? MessageType.WARNING : MessageType.INFO;
+                                  ? MessageType.ERROR
+                                  : notification.getType() == NotificationType.WARNING ? MessageType.WARNING : MessageType.INFO;
         final NotificationListener notificationListener = notification.getListener();
         HyperlinkListener listener = notificationListener == null ? null : new HyperlinkListener() {
           @Override
@@ -189,8 +191,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   @Nullable
   private static Balloon notifyByBalloon(final Notification notification,
-                                      final NotificationDisplayType displayType,
-                                      @Nullable final Project project) {
+                                         final NotificationDisplayType displayType,
+                                         @Nullable final Project project) {
     if (isDummyEnvironment()) return null;
 
     Window window = findWindowForBalloon(project);
@@ -223,16 +225,16 @@ public class NotificationsManagerImpl extends NotificationsManager {
             }
             else //noinspection ConstantConditions
               if (noProjects) {
-              projectManager.addProjectManagerListener(new ProjectManagerAdapter() {
-                @Override
-                public void projectOpened(Project project) {
-                  projectManager.removeProjectManagerListener(this);
-                  if (!balloon.isDisposed()) {
-                    ((BalloonImpl)balloon).startFadeoutTimer(300);
+                projectManager.addProjectManagerListener(new ProjectManagerAdapter() {
+                  @Override
+                  public void projectOpened(Project project) {
+                    projectManager.removeProjectManagerListener(this);
+                    if (!balloon.isDisposed()) {
+                      ((BalloonImpl)balloon).startFadeoutTimer(300);
+                    }
                   }
-                }
-              });
-            }
+                });
+              }
           }
         });
       }
@@ -292,7 +294,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     Dimension preferredSize = text.getPreferredSize();
     text.setSize(preferredSize);
-    
+
     Dimension paneSize = new Dimension(text.getPreferredSize());
     int maxHeight = Math.min(400, window.getComponent().getHeight() - 20);
     int maxWidth = Math.min(600, window.getComponent().getWidth() - 20);
@@ -331,7 +333,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   }
 
-  private static class MyNotificationListener implements Notifications {
+  private static class MyNotificationListener extends NotificationsAdapter {
     private final Project myProject;
 
     public MyNotificationListener(@Nullable Project project) {
@@ -341,16 +343,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
     @Override
     public void notify(@NotNull Notification notification) {
       doNotify(notification, null, myProject);
-    }
-
-    @Override
-    public void register(@NotNull String groupDisplayName, @NotNull NotificationDisplayType defaultDisplayType) {
-    }
-
-    @Override
-    public void register(@NotNull String groupDisplayName,
-                         @NotNull NotificationDisplayType defaultDisplayType,
-                         boolean shouldLog) {
     }
   }
 

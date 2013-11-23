@@ -64,7 +64,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
     new ClickListener() {
       @Override
       public boolean onClick(MouseEvent e, int clickCount) {
-        EventLog.toggleLog(getProject());
+        EventLog.toggleLog(getProject(), null);
         return true;
       }
     }.installOn(this);
@@ -96,7 +96,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
 
   @Nullable
   private Project getProject() {
-    return CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext((Component)myStatusBar));
+    return CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext((Component) myStatusBar));
   }
 
   @NotNull
@@ -117,6 +117,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
 
   private void applyIconToStatusAndToolWindow(Project project, LayeredIcon icon) {
     if (UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE) {
+      setVisible(true);
       setIcon(icon);
     }
     else {
@@ -124,7 +125,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
       if (eventLog != null) {
         eventLog.setIcon(icon);
       }
-      setIcon(null);
+      setVisible(false);
     }
   }
 

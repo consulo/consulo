@@ -133,7 +133,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     public void removeCustomIndicationComponent(@NotNull JComponent c) { }
 
     @Override
-    public void addProgress(ProgressIndicatorEx indicator, TaskInfo info) { }
+    public void addProgress(@NotNull ProgressIndicatorEx indicator, @NotNull TaskInfo info) { }
 
     @Override
     public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
@@ -164,6 +164,11 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
 
     @Override
     public void updateWidget(@NotNull String id) { }
+
+    @Override
+    public StatusBarWidget getWidget(String id) {
+      return null;
+    }
 
     @Override
     public void removeWidget(@NotNull String id) { }

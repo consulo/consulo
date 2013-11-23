@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,25 @@
  */
 package com.intellij.notification;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class NotificationsConfiguration extends NotificationsAdapter {
-  public abstract void changeSettings(String groupDisplayName, NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud);
+/**
+ * @author gregsh
+ */
+public abstract class EventLogCategory {
+  public static final ExtensionPointName<EventLogCategory> EP_NAME = ExtensionPointName.create("com.intellij.eventLogCategory");
 
-  public static NotificationsConfiguration getNotificationsConfiguration() {
-    return ApplicationManager.getApplication().getComponent(NotificationsConfiguration.class);
+  private final String myDisplayName;
+
+  protected EventLogCategory(@NotNull String displayName) {
+    myDisplayName = displayName;
   }
 
-  public abstract void registerToolWindowCapability(@NotNull String groupId, @NotNull String toolWindowId);
+  @NotNull
+  public final String getDisplayName() {
+    return myDisplayName;
+  }
+
+  public abstract boolean acceptsNotification(@NotNull String groupId);
 }
