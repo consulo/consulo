@@ -23,7 +23,7 @@ import javax.swing.event.ChangeListener;
 
 public abstract class VisibilityPanelBase<V> extends JPanel {
 
-  protected final EventDispatcher<ChangeListener> myEventDispatcher = EventDispatcher.create(ChangeListener.class);
+  public final EventDispatcher<ChangeListener> myEventDispatcher = EventDispatcher.create(ChangeListener.class);
 
   @Nullable
   public abstract V getVisibility();
