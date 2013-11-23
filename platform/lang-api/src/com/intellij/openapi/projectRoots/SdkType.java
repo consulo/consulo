@@ -119,13 +119,13 @@ public abstract class SdkType implements SdkTypeId {
 
   @Nullable
   public Icon getGroupIcon() {
-    return null;
+    return getIcon();
   }
 
   @NotNull
   @NonNls
   public String getHelpTopic() {
-    return "preferences.jdks";
+    return "preferences.bundles";
   }
 
   public boolean equals(Object o) {
