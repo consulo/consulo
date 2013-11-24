@@ -19,19 +19,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import lombok.val;
 import org.consulo.lang.LanguageElementIcons;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
 
@@ -43,12 +40,12 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
   @Override
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     if (element instanceof PsiDirectory) {
-      final PsiDirectory psiDirectory = (PsiDirectory)element;
-      final VirtualFile vFile = psiDirectory.getVirtualFile();
-      final Project project = psiDirectory.getProject();
-      boolean isArhiveSystem = vFile.getParent() == null && vFile.getFileSystem() instanceof ArchiveFileSystem;
-      boolean isContentRoot = ProjectRootsUtil.isModuleContentRoot(vFile, project);
-      ContentFolder contentFolder = ProjectRootsUtil.getContentFolderIfIs(vFile, project);
+      val psiDirectory = (PsiDirectory)element;
+      val vFile = psiDirectory.getVirtualFile();
+      val project = psiDirectory.getProject();
+      val isArhiveSystem = vFile.getParent() == null && vFile.getFileSystem() instanceof ArchiveFileSystem;
+      val isContentRoot = ProjectRootsUtil.isModuleContentRoot(vFile, project);
+      val contentFolder = ProjectRootsUtil.getContentFolderIfIs(vFile, project);
 
       Icon symbolIcon;
       if (isArhiveSystem) {
@@ -61,11 +58,15 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
         symbolIcon = contentFolder.getType().getIcon();
       }
       else {
-        ContentFolderTypeProvider contentFolderTypeForFile =
-          ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(vFile);
-        symbolIcon = contentFolderTypeForFile != null
-                     ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory)
-                     : AllIcons.Nodes.TreeClosed;
+        if (vFile.getFileSystem() instanceof ArchiveFileSystem) {
+          val psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory);
+          symbolIcon = psiPackage != null ? AllIcons.Nodes.Package : AllIcons.Nodes.TreeClosed;
+        }
+        else {
+          val contentFolderTypeForFile = ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(vFile);
+          symbolIcon =
+            contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
+        }
       }
 
       iconDescriptor.setMainIcon(symbolIcon);
@@ -75,18 +76,18 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
         return;
       }
 
-      final VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
+      val virtualFile = ((PsiFile)element).getVirtualFile();
       if (virtualFile != null) {
         iconDescriptor.setMainIcon(NativeFileIconUtil.INSTANCE.getIcon(virtualFile));
       }
 
       if (iconDescriptor.getMainIcon() == null) {
-        final FileType fileType = ((PsiFile)element).getFileType();
+        val fileType = ((PsiFile)element).getFileType();
         iconDescriptor.setMainIcon(fileType.getIcon());
       }
     }
     else {
-      Icon languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
+      val languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
       if (languageElementIcon == null) {
         return;
       }
