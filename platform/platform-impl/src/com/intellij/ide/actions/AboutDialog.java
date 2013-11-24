@@ -199,18 +199,13 @@ public class AboutDialog extends JDialog {
                                                      properties.getProperty("java.vendor", "unknown"))));
       appendLast();
 
-      /*
       myLines.add(new AboutBoxLine(""));
-      myLines.add(new AboutBoxLine(info.getCompanyURL(), true, info.getCompanyURL()));
-      */
-
-      String thirdParty = ideInfo.getThirdPartySoftwareURL();
-      if (thirdParty != null) {
-        myLines.add(new AboutBoxLine(""));
-        myLines.add(new AboutBoxLine(""));
-        myLines.add(new AboutBoxLine("Powered by ").keepWithNext());
-        myLines.add(new AboutBoxLine("open-source software", false, thirdParty).keepWithNext());
-      }
+      myLines.add(new AboutBoxLine("Based on ").keepWithNext());
+      myLines.add(new AboutBoxLine("IntelliJ Platform", true, "http://jetbrains.org"));
+      myLines.add(new AboutBoxLine(""));
+      myLines.add(new AboutBoxLine(""));
+      myLines.add(new AboutBoxLine("Powered by ").keepWithNext());
+      myLines.add(new AboutBoxLine("Must-Be.org", true, "http://must-be.org/consulo/"));
 
       addMouseListener(new MouseAdapter() {
         public void mousePressed(MouseEvent event) {

@@ -39,7 +39,6 @@ public abstract class ApplicationInfo {
   public abstract String getHelpURL();
   public abstract String getCompanyName();
   public abstract String getCompanyURL();
-  public abstract String getThirdPartySoftwareURL();
   public abstract Rectangle getAboutLogoRect();
   public abstract boolean hasHelp();
   public abstract boolean hasContextHelp();

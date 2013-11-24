@@ -91,7 +91,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   private String[] myEssentialPluginsIds;
   private String myStatisticsSettingsUrl;
   private String myStatisticsServiceUrl;
-  private String myThirdPartySoftwareUrl;
 
   private Rectangle myAboutLogoRect;
 
@@ -156,9 +155,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ELEMENT_STATISTICS = "statistics";
   @NonNls private static final String ATTRIBUTE_STATISTICS_SETTINGS = "settings";
   @NonNls private static final String ATTRIBUTE_STATISTICS_SERVICE = "service";
-
-  @NonNls private static final String ELEMENT_THIRD_PARTY = "third-party";
-
 
   public void initComponent() { }
 
@@ -374,11 +370,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
 
   public String getStatisticsServiceUrl() {
     return myStatisticsServiceUrl;
-  }
-
-  @Override
-  public String getThirdPartySoftwareURL() {
-    return myThirdPartySoftwareUrl;
   }
 
   @Override
@@ -619,11 +610,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     else {
       myStatisticsSettingsUrl = "http://jetbrains.com/idea/statistics/stat-assistant.xml";
       myStatisticsServiceUrl = "http://jetbrains.com/idea/statistics/index.jsp";
-    }
-
-    Element thirdPartyElement = parentNode.getChild(ELEMENT_THIRD_PARTY);
-    if (thirdPartyElement != null) {
-      myThirdPartySoftwareUrl = thirdPartyElement.getAttributeValue(ATTRIBUTE_URL);
     }
   }
 
