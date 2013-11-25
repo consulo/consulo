@@ -92,7 +92,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   protected JBListTable myParametersList;
   protected TableView<ParameterTableModelItem> myParametersTable;
   protected final ParameterTableModel myParametersTableModel;
-  protected final UpdateSignatureListener mySignatureUpdater = new UpdateSignatureListener();
+  private final UpdateSignatureListener mySignatureUpdater = new UpdateSignatureListener();
   private MethodSignatureComponent mySignatureArea;
   private final Alarm myUpdateSignatureAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
@@ -646,6 +646,11 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   @Override
   protected String getHelpId() {
     return "refactoring.changeSignature";
+  }
+
+  @NotNull
+  public UpdateSignatureListener getSignatureUpdater() {
+    return mySignatureUpdater;
   }
 
   class UpdateSignatureListener implements ChangeListener, DocumentListener, TableModelListener {
