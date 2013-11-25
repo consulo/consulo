@@ -40,30 +40,14 @@ import java.util.ArrayList;
 public class ProjectRootUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootUtil");
 
-  @NonNls public static final String SIMPLE_ROOT = "simple";
-  @NonNls public static final String COMPOSITE_ROOT = "composite";
-  /**
-   * @deprecated
-   */
-  @NonNls public static final String JDK_ROOT = "jdk";
-  /**
-   * @deprecated
-   */
-  @NonNls public static final String OUTPUT_ROOT = "output";
-  /**
-   * @deprecated
-   */
-  @NonNls public static final String EXCLUDED_OUTPUT = "excludedOutput";
-  /**
-   * @deprecated
-   */
-  @NonNls public static final String LIBRARY_ROOT = "library";
-  /**
-   * @deprecated
-   */
-  @NonNls public static final String EJB_ROOT = "ejb";
-  @NonNls private static final String ATTRIBUTE_TYPE = "type";
-  @NonNls public static final String ELEMENT_ROOT = "root";
+  @NonNls
+  public static final String SIMPLE_ROOT = "simple";
+  @NonNls
+  public static final String COMPOSITE_ROOT = "composite";
+  @NonNls
+  private static final String ATTRIBUTE_TYPE = "type";
+  @NonNls
+  public static final String ELEMENT_ROOT = "root";
 
   private ProjectRootUtil() {
   }

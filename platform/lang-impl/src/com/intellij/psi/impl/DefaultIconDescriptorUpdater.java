@@ -55,7 +55,7 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
         symbolIcon = AllIcons.Nodes.Module;
       }
       else if (contentFolder != null) {
-        symbolIcon = contentFolder.getType().getIcon();
+        symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
       }
       else {
         if (vFile.getFileSystem() instanceof ArchiveFileSystem) {

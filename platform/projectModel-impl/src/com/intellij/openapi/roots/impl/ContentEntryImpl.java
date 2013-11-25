@@ -144,7 +144,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
         .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
         final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
         for (VirtualFilePointer file : files) {
-          ContentFolderImpl contentFolder = new ContentFolderImpl(file, ExcludedContentFolderTypeProvider.getInstance(), this);
+          ContentFolderImpl contentFolder = new ContentFolderImpl(file, null, ExcludedContentFolderTypeProvider.getInstance(), this);
           contentFolder.setSynthetic();
           list.add(contentFolder);
         }
@@ -163,7 +163,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @Override
   public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType) {
     assertFolderUnderMe(url);
-    return addFolder(new ContentFolderImpl(url, contentFolderType, this));
+    return addFolder(new ContentFolderImpl(url, contentFolderType, null, this));
   }
 
   private ContentFolder addFolder(ContentFolderImpl f) {

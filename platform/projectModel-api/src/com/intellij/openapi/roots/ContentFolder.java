@@ -15,10 +15,13 @@
  */
 package com.intellij.openapi.roots;
 
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+
+import java.util.Map;
 
 /**
  * Represents a source or exclude root under the content root of a module.
@@ -60,4 +63,12 @@ public interface ContentFolder extends Synthetic {
    */
   @NotNull
   String getUrl();
+
+  @NotNull
+  Map<Key, Object> getProperties();
+
+  @Nullable
+  <T> T getPropertyValue(@NotNull Key<T> key);
+
+  <T> void setPropertyValue(@NotNull Key<T> key, @Nullable T value);
 }

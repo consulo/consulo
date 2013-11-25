@@ -37,6 +37,7 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.impl.BulkVirtualFileListenerAdapter;
@@ -85,7 +86,8 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   private volatile boolean myInitialized = false;
   private volatile boolean myDisposed = false;
   private final PackageSink mySink = new PackageSink();
-  private static final boolean ourUseRootIndex = false;
+  private static final boolean ourUseRootIndexOnly = Registry.is("directory.index.use.root.index");
+  private static final boolean ourCompareImplementations = Registry.is("directory.index.compare.implementations");
   private volatile RootIndex myRootIndex = null;
 
   public DirectoryIndexImpl(@NotNull ManagingFS managingFS, @NotNull Project project, @NotNull StartupManager startupManager) {
@@ -347,10 +349,13 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     }
 
     private boolean myBatchChangePlanned;
-    private static final boolean ourCanHaveBatchUpdate = true;
 
     @Override
     public void before(@NotNull List<? extends VFileEvent> events) {
+      if (ourUseRootIndexOnly) {
+        return;
+      }
+
       myBatchChangePlanned = false;
       int directoriesRemoved = 0;
       int directoriesCreated = 0;
@@ -371,10 +376,9 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       }
 
       final boolean willDoBatchUpdate = directoriesCreated + directoriesRemoved > DIRECTORIES_CHANGED_THRESHOLD;
-
-      if (willDoBatchUpdate && ourCanHaveBatchUpdate) {
+      if (willDoBatchUpdate) {
         myBatchChangePlanned = true;
-        LOG.info("Too many directories created / deleted: " + directoriesCreated + "," + directoriesRemoved + ", will rebuild indexstate");
+        LOG.info("Too many directories created / deleted: " + directoriesCreated + "," + directoriesRemoved + ", will rebuild index state");
       }
       else {
         for (VFileEvent event : events) {
@@ -383,7 +387,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       }
     }
 
-    private int countDirectories(VirtualFile file, int depth) {
+    private int countDirectories(@Nullable VirtualFile file, int depth) {
       if (!(file instanceof NewVirtualFile)) return 0;
 
       int counter = 0;
@@ -398,6 +402,9 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       RootIndex rootIndex = myRootIndex;
       if (rootIndex != null && !rootIndex.handleAfterEvent(events)) {
         myRootIndex = null;
+      }
+      if (ourUseRootIndexOnly) {
+        return;
       }
 
       if (myBatchChangePlanned) {
@@ -469,15 +476,20 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   @Override
   @NotNull
   public Query<VirtualFile> getDirectoriesByPackageName(@NotNull String packageName, boolean includeLibrarySources) {
-    Query<VirtualFile> standardResult = mySink.search(packageName, includeLibrarySources);
 
     RootIndex rootIndex = getRootIndex();
     if (rootIndex != null) {
       Collection<VirtualFile> riResult = rootIndex.getDirectoriesByPackageName(packageName, includeLibrarySources);
+      if (ourUseRootIndexOnly) {
+        return new CollectionQuery<VirtualFile>(riResult);
+      }
+
+      Query<VirtualFile> standardResult = mySink.search(packageName, includeLibrarySources);
       Collection<VirtualFile> standard = standardResult.findAll();
       if (!new HashSet<VirtualFile>(riResult).equals(new HashSet<VirtualFile>(standard))) {
         for (VirtualFile file : standard) {
-          if (file.getPath().contains(".")) {
+          String path = file.getPath();
+          if (path.substring(path.length() - packageName.length()).contains(".")) {
             return standardResult; // standard and rootIndex return different results for directories with dot in name
           }
         }
@@ -485,12 +497,12 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       }
     }
 
-    return standardResult;
+    return mySink.search(packageName, includeLibrarySources);
   }
 
   @Nullable
   private RootIndex getRootIndex() {
-    if (!ourUseRootIndex) {
+    if (!ourUseRootIndexOnly && !ourCompareImplementations) {
       return null;
     }
     RootIndex rootIndex = myRootIndex;
@@ -506,6 +518,9 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     RootIndex rootIndex = getRootIndex();
     if (rootIndex != null) {
       rootIndex.checkConsistency();
+    }
+    if (ourUseRootIndexOnly) {
+      return;
     }
 
     doCheckConsistency(false);
@@ -563,6 +578,9 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
   private void doInitialize() {
     myRootIndex = null;
+    if (ourUseRootIndexOnly) {
+      return;
+    }
 
     IndexState newState = new IndexState();
     newState.doInitialize(false);
@@ -599,12 +617,16 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
     RootIndex rootIndex = getRootIndex();
     DirectoryInfo riInfo = rootIndex != null ? rootIndex.getInfoForDirectory(dir) : null;
+    if (ourUseRootIndexOnly) {
+      return riInfo;
+    }
+
     return assertConsistentResult(dir, riInfo, myState.getInfo(((NewVirtualFile)dir).getId()));
   }
 
   private static <T> T assertConsistentResult(@NotNull Object arg, @Nullable T rootIndexResult, T standardResult) {
     //noinspection ConstantConditions
-    if (ourUseRootIndex && !Comparing.equal(rootIndexResult, standardResult)) {
+    if (ourCompareImplementations && !Comparing.equal(rootIndexResult, standardResult)) {
       LOG.error("DirectoryIndex differs from RootIndex at " + arg + "\nriInfo=" + rootIndexResult + "\nstandardResult=" + standardResult);
     }
     return standardResult;
@@ -625,6 +647,12 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   public boolean isProjectExcludeRoot(@NotNull VirtualFile dir) {
     checkAvailability();
     if (!(dir instanceof NewVirtualFile)) return false;
+
+    if (ourUseRootIndexOnly) {
+      //noinspection ConstantConditions
+      return getRootIndex().isProjectExcludeRoot(dir);
+    }
+
 
     //noinspection UnnecessaryLocalVariable
     boolean standardResult = myState.myProjectExcludeRoots.contains(((NewVirtualFile)dir).getId());
@@ -647,6 +675,10 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
     RootIndex rootIndex = getRootIndex();
     String riResult = rootIndex != null ? rootIndex.getPackageName(dir) : null;
+    if (ourUseRootIndexOnly) {
+      return riResult;
+    }
+
     return assertConsistentResult(dir, riResult, myState.getPackageNameForDirectory((NewVirtualFile)dir));
   }
 
@@ -1404,6 +1436,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       fillMapWithOrderEntries(depEntries, libClassRootEntries, libSourceRootEntries, progress);
 
       internDirectoryInfos();
+      progress.popState();
     }
 
     private void internDirectoryInfos() {
@@ -1457,11 +1490,10 @@ public class DirectoryIndexImpl extends DirectoryIndex {
           VirtualFile contentRoot = contentEntry.getFile();
           if (!(contentRoot instanceof NewVirtualFile)) continue;
 
-          for (VirtualFile excludeRoot : contentEntry
-            .getFolderFiles(ContentFolderScopes.excluded())) {
+          for (VirtualFile excludeRoot : contentEntry.getFolderFiles(ContentFolderScopes.excluded())) {
             // Output paths should be excluded (if marked as such) regardless if they're under corresponding module's content root
             if (excludeRoot instanceof NewVirtualFile) {
-              if (!FileUtil.startsWith(contentRoot.getUrl(), excludeRoot.getUrl())) {
+              if (!FileUtil.startsWith(excludeRoot.getUrl(), contentRoot.getUrl())) {
                 if (isExcludeRootForModule(module, excludeRoot)) {
                   putForFileAndAllAncestors((NewVirtualFile)excludeRoot, excludeRoot.getUrl());
                 }

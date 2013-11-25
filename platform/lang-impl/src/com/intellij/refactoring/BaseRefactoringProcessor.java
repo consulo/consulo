@@ -21,7 +21,7 @@ import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.DataManager;
 import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
@@ -60,13 +60,14 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
+import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public abstract class BaseRefactoringProcessor {
+public abstract class BaseRefactoringProcessor implements Runnable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.BaseRefactoringProcessor");
 
   protected final Project myProject;
@@ -233,7 +234,7 @@ public abstract class BaseRefactoringProcessor {
       public UsageSearcher create() {
         return new UsageSearcher() {
           @Override
-          public void generate(final Processor<Usage> processor) {
+          public void generate(@NotNull final Processor<Usage> processor) {
             ApplicationManager.getApplication().runReadAction(new Runnable() {
               @Override
               public void run() {
@@ -288,7 +289,7 @@ public abstract class BaseRefactoringProcessor {
   }
 
   private boolean ensureElementsWritable(@NotNull final UsageInfo[] usages, final UsageViewDescriptor descriptor) {
-    Set<PsiElement> elements = new THashSet<PsiElement>();
+    Set<PsiElement> elements = new THashSet<PsiElement>(TObjectHashingStrategy.IDENTITY); // protect against poorly implemented equality
     for (UsageInfo usage : usages) {
       assert usage != null: "Found null element in usages array";
       if (skipNonCodeUsages() && usage.isNonCodeUsage()) continue;
@@ -316,7 +317,7 @@ public abstract class BaseRefactoringProcessor {
   }
 
   protected boolean isGlobalUndoAction() {
-    return PlatformDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext()) == null;
+    return CommonDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext()) == null;
   }
 
   @SuppressWarnings("MethodMayBeStatic")
@@ -365,9 +366,18 @@ public abstract class BaseRefactoringProcessor {
     nonCodeFiles.remove(null);
     dynamicUsagesCodeFiles.remove(null);
 
-    presentation.setCodeUsagesString(descriptor.getCodeReferencesText(codeUsageCount, codeFiles.size()));
+    String codeReferencesText = descriptor.getCodeReferencesText(codeUsageCount, codeFiles.size());
+    presentation.setCodeUsagesString(codeReferencesText);
     presentation.setNonCodeUsagesString(descriptor.getCommentReferencesText(nonCodeUsageCount, nonCodeFiles.size()));
     presentation.setDynamicUsagesString("Dynamic " + StringUtil.decapitalize(descriptor.getCodeReferencesText(dynamicUsagesCount, dynamicUsagesCodeFiles.size())));
+    String generatedCodeString;
+    if (codeReferencesText.contains("in code")) {
+      generatedCodeString = StringUtil.replace(codeReferencesText, "in code", "in generated code");
+    }
+    else {
+      generatedCodeString = codeReferencesText + " in generated code";
+    }
+    presentation.setUsagesInGeneratedCodeString(generatedCodeString);
     return presentation;
   }
 
@@ -432,7 +442,7 @@ public abstract class BaseRefactoringProcessor {
   }
 
   private void doRefactoring(@NotNull Collection<UsageInfo> usageInfoSet) {
-   for (Iterator<UsageInfo> iterator = usageInfoSet.iterator(); iterator.hasNext();) {
+    for (Iterator<UsageInfo> iterator = usageInfoSet.iterator(); iterator.hasNext();) {
       UsageInfo usageInfo = iterator.next();
       final PsiElement element = usageInfo.getElement();
       if (element == null || !isToBeChanged(usageInfo)) {
@@ -521,6 +531,7 @@ public abstract class BaseRefactoringProcessor {
     }
   }
 
+  @Override
   public final void run() {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       ApplicationManager.getApplication().assertIsDispatchThread();
@@ -560,12 +571,12 @@ public abstract class BaseRefactoringProcessor {
     }
 
     public Collection<String> getMessages() {
-        List<String> result = new ArrayList<String>(messages);
-        for (int i = 0; i < messages.size(); i++) {
-          result.set(i, result.get(i).replaceAll("<[^>]+>", ""));
-        }
-        return result;
+      List<String> result = new ArrayList<String>(messages);
+      for (int i = 0; i < messages.size(); i++) {
+        result.set(i, result.get(i).replaceAll("<[^>]+>", ""));
       }
+      return result;
+    }
 
     @Override
     public String getMessage() {
@@ -606,11 +617,11 @@ public abstract class BaseRefactoringProcessor {
   @NotNull
   protected ConflictsDialog createConflictsDialog(MultiMap<PsiElement, String> conflicts, @Nullable final UsageInfo[] usages) {
     return new ConflictsDialog(myProject, conflicts, usages == null ? null : new Runnable() {
-        @Override
-        public void run() {
-          execute(usages);
-        }
-      }, false, true);
+      @Override
+      public void run() {
+        execute(usages);
+      }
+    }, false, true);
   }
 
   @NotNull

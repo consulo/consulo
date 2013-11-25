@@ -17,9 +17,11 @@ package org.mustbe.consulo.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptor;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDirectory;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
@@ -30,6 +32,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -43,10 +46,6 @@ public abstract class ContentFolderTypeProvider {
 
   protected ContentFolderTypeProvider(String id) {
     myId = id;
-  }
-
-  public boolean isValid() {
-    return true;
   }
 
   @NotNull
@@ -93,6 +92,29 @@ public abstract class ContentFolderTypeProvider {
     return null;
   }
 
+  @NotNull
+  @SuppressWarnings("unchecked")
+  public Icon getIcon(@NotNull Map<Key, Object> map) {
+    if(map.isEmpty()) {
+      return getIcon();
+    }
+
+    IconDescriptor iconDescriptor = new IconDescriptor(getIcon());
+    for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
+      Object value = propertyProvider.getKey().get(map);
+      if(value == null) {
+        continue;
+      }
+
+      Icon layerIcon = propertyProvider.getLayerIcon(value);
+      if(layerIcon == null) {
+        continue;
+      }
+      iconDescriptor.addLayerIcon(layerIcon);
+    }
+    return iconDescriptor.toIcon();
+  }
+  
   @NotNull
   public abstract Icon getIcon();
 

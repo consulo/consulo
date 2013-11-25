@@ -27,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -64,10 +65,10 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
   protected Icon updateIcon(final ContentEntry entry, final VirtualFile file, Icon originalIcon) {
     Icon icon = originalIcon;
     VirtualFile currentRoot = null;
-    for (ContentFolder contentFolder : entry.getFolders()) {
+    for (ContentFolder contentFolder : entry.getFolders(ContentFolderScopes.all())) {
       final VirtualFile contentPath = contentFolder.getFile();
       if (file.equals(contentPath)) {
-        icon = contentFolder.getType().getIcon();
+        icon = contentFolder.getType().getIcon(contentFolder.getProperties());
       }
       else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
         if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {

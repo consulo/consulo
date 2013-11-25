@@ -20,20 +20,36 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderPropertyProvider;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.UnknownContentFolderTypeProvider;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author dsl
  */
-public class ContentFolderImpl extends RootModelComponentBase implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
+public class ContentFolderImpl extends RootModelComponentBase
+  implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
+  private static Map<Key, ContentFolderPropertyProvider> ourPropertiesToKeyCache = new HashMap<Key, ContentFolderPropertyProvider>();
+
+  static {
+    for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
+      ourPropertiesToKeyCache.put(propertyProvider.getKey(), propertyProvider);
+    }
+  }
+
   @NonNls
   public static final String URL_ATTRIBUTE = "url";
   @NonNls
@@ -41,40 +57,48 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   @NonNls
   public static final String ELEMENT_NAME = "content-folder";
 
-  private boolean myIsSynthetic;
+  private boolean mySynthetic;
   private final VirtualFilePointer myFilePointer;
   protected final ContentEntryImpl myContentEntry;
   private final ContentFolderTypeProvider myContentFolderType;
+  private Map<Key, Object> myProperties;
 
-  ContentFolderImpl(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType, @NotNull ContentEntryImpl contentEntry) {
+  ContentFolderImpl(@NotNull VirtualFile file,
+                    @NotNull ContentFolderTypeProvider contentFolderType,
+                    @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
     myFilePointer = VirtualFilePointerManager.getInstance().create(file, this, null);
   }
 
-  ContentFolderImpl(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType, @NotNull ContentEntryImpl contentEntry) {
+  ContentFolderImpl(@NotNull String url,
+                    @NotNull ContentFolderTypeProvider contentFolderType,
+                    @Nullable Map<Key, Object> map,
+                    @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
+    myProperties = map == null ? null : new HashMap<Key, Object>(map);
     myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
-  protected ContentFolderImpl(@NotNull ContentFolderImpl that,
-                              @NotNull ContentEntryImpl contentEntry) {
-    this(that.myFilePointer, that.getType(), contentEntry);
+  protected ContentFolderImpl(@NotNull ContentFolderImpl that, @NotNull ContentEntryImpl contentEntry) {
+    this(that.myFilePointer, that.myProperties, that.getType(), contentEntry);
   }
 
   ContentFolderImpl(@NotNull Element element, @NotNull ContentEntryImpl contentEntry) throws InvalidDataException {
-    this(getUrlFrom(element), getType(element), contentEntry);
+    this(getUrlFrom(element), getType(element), getProperties(element), contentEntry);
   }
 
   protected ContentFolderImpl(@NotNull VirtualFilePointer filePointer,
+                              @Nullable Map<Key, Object> properties,
                               @NotNull ContentFolderTypeProvider contentFolderType,
                               @NotNull ContentEntryImpl contentEntry) {
     super(contentEntry.getRootModel());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
+    myProperties = properties == null ? null : new HashMap<Key, Object>(properties);
     myFilePointer = VirtualFilePointerManager.getInstance().duplicate(filePointer, this, null);
   }
 
@@ -86,6 +110,32 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
     return url;
   }
 
+  @Nullable
+  private static Map<Key, Object> getProperties(Element element) throws InvalidDataException {
+    List<Element> elementChildren = element.getChildren("property");
+    if (elementChildren.isEmpty()) {
+      return null;
+    }
+    Map<Key, Object> map = new HashMap<Key, Object>();
+
+    for (Element elementChild : elementChildren) {
+      String key = elementChild.getAttributeValue("key");
+      String value = elementChild.getAttributeValue("value");
+
+      Key<?> keyAsKey = Key.findKeyByName(key);
+
+      ContentFolderPropertyProvider propertyProvider = keyAsKey != null ? ourPropertiesToKeyCache.get(keyAsKey) : null;
+      if(propertyProvider != null) {
+        Object b = propertyProvider.fromString(value);
+        map.put(keyAsKey, b);
+      }
+      else {
+        map.put(keyAsKey, value);
+      }
+    }
+    return map;
+  }
+
   private static ContentFolderTypeProvider getType(Element element) throws InvalidDataException {
     String type = element.getAttributeValue(TYPE_ATTRIBUTE);
     if (type == null) {
@@ -93,7 +143,7 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
     }
 
     for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.EP_NAME.getExtensions()) {
-      if(Comparing.equal(contentFolderTypeProvider.getId(), type)) {
+      if (Comparing.equal(contentFolderTypeProvider.getId(), type)) {
         return contentFolderTypeProvider;
       }
     }
@@ -116,9 +166,29 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
     return myContentEntry;
   }
 
+  @SuppressWarnings("unchecked")
   protected void writeExternal(Element element) {
     element.setAttribute(TYPE_ATTRIBUTE, myContentFolderType.getId());
     element.setAttribute(URL_ATTRIBUTE, myFilePointer.getUrl());
+
+    if(myProperties == null) {
+      return;
+    }
+    for (Map.Entry<Key, Object> entry : myProperties.entrySet()) {
+      Key key = entry.getKey();
+      Object value = entry.getValue();
+
+      Element child = new Element("property");
+      child.setAttribute("key", key.toString());
+      ContentFolderPropertyProvider propertiesProvider = ourPropertiesToKeyCache.get(key);
+      if(propertiesProvider != null) {
+        child.setAttribute("value", propertiesProvider.toString(value));
+      }
+      else {
+        child.setAttribute("value", (String)value);
+      }
+      element.addContent(child);
+    }
   }
 
   @Override
@@ -127,9 +197,42 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
     return myFilePointer.getUrl();
   }
 
+  @NotNull
+  @Override
+  public Map<Key, Object> getProperties() {
+    return myProperties == null ? Collections.<Key, Object>emptyMap() : myProperties;
+  }
+
+  @Nullable
+  @Override
+  public <T> T getPropertyValue(@NotNull Key<T> key) {
+    if (myProperties == null) {
+      return null;
+    }
+    return key.get(myProperties);
+  }
+
+  @Override
+  public <T> void setPropertyValue(@NotNull Key<T> key, @Nullable T value) {
+    if (value == null && myProperties == null) {
+      return;
+    }
+
+    if (value == null) {
+      myProperties.remove(key);
+    }
+    else {
+      if (myProperties == null) {
+        myProperties = new HashMap<Key, Object>();
+      }
+
+      key.set(myProperties, value);
+    }
+  }
+
   @Override
   public boolean isSynthetic() {
-    return myIsSynthetic;
+    return mySynthetic;
   }
 
   @NotNull
@@ -141,10 +244,14 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   @Override
   public int compareTo(@NotNull ContentFolderImpl folder) {
     int typeCompare = getType().getId().compareToIgnoreCase(folder.getType().getId());
-    if(typeCompare != 0) {
+    if (typeCompare != 0) {
       return typeCompare;
     }
 
+    int diff = (myProperties == null ? 0 : myProperties.hashCode()) - (folder.myProperties == null ? 0 : folder.myProperties.hashCode());
+    if (diff != 0) {
+      return diff > 0 ? 1 : -1;
+    }
     return getUrl().compareTo(folder.getUrl());
   }
 
@@ -166,8 +273,8 @@ public class ContentFolderImpl extends RootModelComponentBase implements Content
   }
 
   public void setSynthetic() {
-    assert !myIsSynthetic;
-    myIsSynthetic = true;
+    assert !mySynthetic;
+    mySynthetic = true;
   }
 
   @Override

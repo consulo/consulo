@@ -31,7 +31,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteCustomUsageInfo;
@@ -194,11 +194,8 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     final HashMap<PsiElement,UsageHolder> elementsToUsageHolders = sortUsages(usages);
     final Collection<UsageHolder> usageHolders = elementsToUsageHolders.values();
     for (UsageHolder usageHolder : usageHolders) {
-      if (usageHolder.getNonCodeUsagesNumber() != usageHolder.getUnsafeUsagesNumber()) {
-        final String description = usageHolder.getDescription();
-        if (description != null) {
-          conflicts.add(description);
-        }
+      if (usageHolder.hasUnsafeUsagesInCode()) {
+        conflicts.add(usageHolder.getDescription());
       }
     }
 
@@ -244,6 +241,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     presentation.setShowReadOnlyStatusAsRed(true);
     presentation.setShowCancelButton(true);
     presentation.setCodeUsagesString(RefactoringBundle.message("references.found.in.code"));
+    presentation.setUsagesInGeneratedCodeString(RefactoringBundle.message("references.found.in.generated.code"));
     presentation.setNonCodeUsagesString(RefactoringBundle.message("occurrences.found.in.comments.strings.and.non.java.files"));
     presentation.setUsagesString(RefactoringBundle.message("usageView.usagesText"));
 
@@ -267,10 +265,10 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
   private UsageView showUsages(UsageInfo[] usages, UsageViewPresentation presentation, UsageViewManager manager) {
     for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
-       if (delegate instanceof SafeDeleteProcessorDelegateBase) {
-         final UsageView view = ((SafeDeleteProcessorDelegateBase)delegate).showUsages(usages, presentation, manager, myElements);
-         if (view != null) return view;
-       }
+      if (delegate instanceof SafeDeleteProcessorDelegateBase) {
+        final UsageView view = ((SafeDeleteProcessorDelegateBase)delegate).showUsages(usages, presentation, manager, myElements);
+        if (view != null) return view;
+      }
     }
     UsageTarget[] targets = new UsageTarget[myElements.length];
     for (int i = 0; i < targets.length; i++) {
@@ -305,22 +303,22 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     @Override
     public void run() {
       ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-            myUsageView.close();
-            ArrayList<PsiElement> elements = new ArrayList<PsiElement>();
-            for (SmartPsiElementPointer pointer : myPointers) {
-              final PsiElement element = pointer.getElement();
-              if (element != null) {
-                elements.add(element);
-              }
-            }
-            if(!elements.isEmpty()) {
-              SafeDeleteHandler.invoke(myProject, PsiUtilBase.toPsiElementArray(elements), true);
+        @Override
+        public void run() {
+          PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+          myUsageView.close();
+          ArrayList<PsiElement> elements = new ArrayList<PsiElement>();
+          for (SmartPsiElementPointer pointer : myPointers) {
+            final PsiElement element = pointer.getElement();
+            if (element != null) {
+              elements.add(element);
             }
           }
-        });
+          if(!elements.isEmpty()) {
+            SafeDeleteHandler.invoke(myProject, PsiUtilCore.toPsiElementArray(elements), true);
+          }
+        }
+      });
     }
   }
 
@@ -351,9 +349,8 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
   @Override
   protected boolean isPreviewUsages(UsageInfo[] usages) {
-    if(myPreviewNonCodeUsages && UsageViewUtil.hasNonCodeUsages(usages)) {
-      WindowManager.getInstance().getStatusBar(myProject).setInfo(
-        RefactoringBundle.message("occurrences.found.in.comments.strings.and.non.java.files"));
+    if(myPreviewNonCodeUsages && (UsageViewUtil.hasNonCodeUsages(usages) || UsageViewUtil.hasUsagesInGeneratedCode(usages, myProject))) {
+      WindowManager.getInstance().getStatusBar(myProject).setInfo(RefactoringBundle.message("occurrences.found.in.comments.strings.non.code.files.and.generated.code"));
       return true;
     }
 
@@ -435,7 +432,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     return super.isToBeChanged(usageInfo);
   }
 
-  public static boolean validElement(PsiElement element) {
+  public static boolean validElement(@NotNull PsiElement element) {
     if (element instanceof PsiFile) return true;
     if (!element.isPhysical()) return false;
     final RefactoringSupportProvider provider = LanguageRefactoringSupport.INSTANCE.forLanguage(element.getLanguage());
@@ -466,7 +463,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     return new SafeDeleteProcessor(project, prepareSuccessfulCallBack,
-                                   PsiUtilBase.toPsiElementArray(elements),
+                                   PsiUtilCore.toPsiElementArray(elements),
                                    isSearchInComments, isSearchNonJava);
   }
 
