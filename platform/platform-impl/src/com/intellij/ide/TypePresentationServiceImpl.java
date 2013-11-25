@@ -46,6 +46,19 @@ public class TypePresentationServiceImpl extends TypePresentationService {
     return getIcon(type, null);
   }
 
+  @Nullable
+  @Override
+  public String getPresentableName(Object o) {
+    Set<PresentationTemplate> templates = mySuperClasses.get(o.getClass());
+    for (PresentationTemplate template : templates) {
+      String name = template.getName(o);
+      if(name != null) {
+        return name;
+      }
+    }
+    return null;
+  }
+
   private Icon getIcon(Class type, Object o) {
     Set<PresentationTemplate> templates = mySuperClasses.get(type);
     for (PresentationTemplate template : templates) {

@@ -31,6 +31,9 @@ public abstract class TypePresentationService {
   public abstract Icon getIcon(Object o);
 
   @Nullable
+  public abstract String getPresentableName(Object o);
+
+  @Nullable
   public abstract Icon getTypeIcon(Class type);
 
   @Nullable
