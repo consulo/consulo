@@ -11,8 +11,6 @@
 
   <welcome-screen logo-url="/Logo_welcomeScreen.png" />
 
-  <editor background-url="/frame_background.png"/>
-
   <update-urls check="http://www.jetbrains.com/updates/updates.xml"
                patches="http://download.jetbrains.com/idea/"/>
 
