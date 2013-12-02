@@ -78,8 +78,8 @@ public class DarculaLaf extends BasicLookAndFeel {
 
   @SuppressWarnings("UnusedParameters")
   private static void log(Exception e) {
-    //everything is gonna be alright
-    //e.printStackTrace();
+//    everything is gonna be alright
+    e.printStackTrace();
   }
 
   @Override
@@ -110,7 +110,7 @@ public class DarculaLaf extends BasicLookAndFeel {
       if (SystemInfo.isWindows) {
         //JFrame.setDefaultLookAndFeelDecorated(true);
       }
-
+      defaults.put("EditorPane.font", defaults.getFont("TextField.font"));
       return defaults;
     }
     catch (Exception e) {
@@ -287,6 +287,9 @@ public class DarculaLaf extends BasicLookAndFeel {
       final Integer invVal = getInteger(value);
       final Boolean boolVal = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
       Icon icon = value.startsWith("AllIcons.") ? IconLoader.getIcon(value) : null;
+      if (icon == null && value.endsWith(".png")) {
+        icon = IconLoader.findIcon(value, getClass(), true);
+      }
       if (color != null) {
         return  new ColorUIResource(color);
       } else if (invVal != null) {

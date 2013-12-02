@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowPassInfo;
 import com.intellij.ui.tabs.impl.table.TableLayout;
 import com.intellij.ui.tabs.impl.table.TablePassInfo;
+import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.JBInsets;
@@ -168,6 +169,7 @@ public class JBTabsImpl extends JComponent
   private SelectionChangeHandler mySelectionChangeHandler;
 
   private Runnable myDeferredFocusRequest;
+  private boolean myAlwaysPaintSelectedTab;
 
   public JBTabsImpl(@NotNull Project project) {
     this(project, project);
@@ -557,18 +559,11 @@ public class JBTabsImpl extends JComponent
       return;
     }
     mySingleRowLayout.myMorePopup = new JBPopupMenu();
-    float grayPercent = 0.9f;
     for (final TabInfo each : myVisibleInfos) {
-      final JMenuItem item = new JBCheckboxMenuItem(each.getText(), getSelectedInfo() == each);
-      item.setIcon(each.getIcon());
-      Color color = UIManager.getColor("MenuItem.background");
-      if (color != null) {
-        if (mySingleRowLayout.isTabHidden(each)) {
-          color = new Color((int) (color.getRed() * grayPercent), (int) (color.getGreen() * grayPercent), (int) (color.getBlue() * grayPercent));
-        }
-        item.setBackground(color);
-      }
-
+      if (!mySingleRowLayout.isTabHidden(each)) continue;
+      final JBMenuItem item = new JBMenuItem(each.getText(), each.getIcon());
+      item.setForeground(each.getDefaultForeground());
+      item.setBackground(each.getTabColor());
       mySingleRowLayout.myMorePopup.add(item);
       item.addActionListener(new ActionListener() {
         @Override
@@ -893,6 +888,15 @@ public class JBTabsImpl extends JComponent
     for (TabsListener eachListener : myTabListeners) {
       if (eachListener != null) {
         eachListener.tabsMoved();
+      }
+    }
+  }
+
+
+  void fireTabRemoved(TabInfo info) {
+    for (TabsListener eachListener : myTabListeners) {
+      if (eachListener != null) {
+        eachListener.tabRemoved(info);
       }
     }
   }
@@ -1420,6 +1424,8 @@ public class JBTabsImpl extends JComponent
 
       if (isSingleRow()) {
         myLastLayoutPass = mySingleRowLayout.layoutSingleRow(visible);
+        mySingleRowLayout.scroll(0);
+        myLastLayoutPass = mySingleRowLayout.layoutSingleRow(visible);
         myTableLayout.myLastTableLayout = null;
       }
       else {
@@ -1669,7 +1675,7 @@ public class JBTabsImpl extends JComponent
     final int alpha;
     int paintTopY = shapeInfo.labelTopY;
     int paintBottomY = shapeInfo.labelBottomY;
-    final boolean paintFocused = myPaintFocus && (myFocused || myActivePopup != null);
+    final boolean paintFocused = myPaintFocus && (myFocused || myActivePopup != null || myAlwaysPaintSelectedTab);
     Color bgPreFill = null;
     if (paintFocused) {
       final Color bgColor = getActiveTabColor(getActiveTabFillIn());
@@ -1719,8 +1725,8 @@ public class JBTabsImpl extends JComponent
 
 
       g2d.setPaint(UIUtil.getGradientPaint((float)gradientLine.getX1(), (float)gradientLine.getY1(),
-                                     shapeInfo.fillPath.transformY1(shapeInfo.from, shapeInfo.to), (float)gradientLine.getX2(),
-                                     (float)gradientLine.getY2(), shapeInfo.fillPath.transformY1(shapeInfo.to, shapeInfo.from)));
+                                           shapeInfo.fillPath.transformY1(shapeInfo.from, shapeInfo.to), (float)gradientLine.getX2(),
+                                           (float)gradientLine.getY2(), shapeInfo.fillPath.transformY1(shapeInfo.to, shapeInfo.from)));
       g2d.fill(shapeInfo.fillPath.getShape());
     }
 
@@ -2109,14 +2115,14 @@ public class JBTabsImpl extends JComponent
       shape.transformLine(0, topY, 0, topY + shape.deltaY((int)(shape.getHeight() / 1.5)));
 
     final Paint gp = UIUtil.isUnderDarcula()
-                             ? UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1,
-                                                 shape.transformY1(backgroundColor, backgroundColor),
-                                                 gradientLine.x2, gradientLine.y2,
-                                                 shape.transformY1(backgroundColor, backgroundColor))
-                             : UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1,
-                                                 shape.transformY1(backgroundColor.brighter().brighter(), backgroundColor),
-                                                 gradientLine.x2, gradientLine.y2,
-                                                 shape.transformY1(backgroundColor, backgroundColor.brighter().brighter()));
+                     ? UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1,
+                                               shape.transformY1(backgroundColor, backgroundColor),
+                                               gradientLine.x2, gradientLine.y2,
+                                               shape.transformY1(backgroundColor, backgroundColor))
+                     : UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1,
+                                               shape.transformY1(backgroundColor.brighter().brighter(), backgroundColor),
+                                               gradientLine.x2, gradientLine.y2,
+                                               shape.transformY1(backgroundColor, backgroundColor.brighter().brighter()));
 
     final Paint old = g2d.getPaint();
     g2d.setPaint(gp);
@@ -2276,9 +2282,9 @@ public class JBTabsImpl extends JComponent
 
   @Override
   public Dimension getMinimumSize() {
-    return computeSize(new Transform<JComponent, Dimension>() {
+    return computeSize(new Function<JComponent, Dimension>() {
       @Override
-      public Dimension transform(JComponent component) {
+      public Dimension fun(JComponent component) {
         return component.getMinimumSize();
       }
     }, 1);
@@ -2286,20 +2292,20 @@ public class JBTabsImpl extends JComponent
 
   @Override
   public Dimension getPreferredSize() {
-    return computeSize(new Transform<JComponent, Dimension>() {
+    return computeSize(new Function<JComponent, Dimension>() {
       @Override
-      public Dimension transform(JComponent component) {
+      public Dimension fun(JComponent component) {
         return component.getPreferredSize();
       }
     }, 3);
   }
 
-  private Dimension computeSize(Transform<JComponent, Dimension> transform, int tabCount) {
+  private Dimension computeSize(Function<JComponent, Dimension> transform, int tabCount) {
     Dimension size = new Dimension();
     for (TabInfo each : myVisibleInfos) {
       final JComponent c = each.getComponent();
       if (c != null) {
-        final Dimension eachSize = transform.transform(c);
+        final Dimension eachSize = transform.fun(c);
         size.width = Math.max(eachSize.width, size.width);
         size.height = Math.max(eachSize.height, size.height);
       }
@@ -2442,6 +2448,8 @@ public class JBTabsImpl extends JComponent
     }
 
     revalidateAndRepaint(true);
+
+    fireTabRemoved(info);
 
     return result;
   }
@@ -2748,6 +2756,12 @@ public class JBTabsImpl extends JComponent
   @Override
   public JBTabsPresentation setPaintFocus(final boolean paintFocus) {
     myPaintFocus = paintFocus;
+    return this;
+  }
+
+  @Override
+  public JBTabsPresentation setAlwaysPaintSelectedTab(final boolean paintSelected) {
+    myAlwaysPaintSelectedTab = paintSelected;
     return this;
   }
 

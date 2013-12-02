@@ -33,6 +33,11 @@ public interface DockContainer extends Disposable, Activatable {
 
   RelativeRectangle getAcceptArea();
 
+  /**
+   * This area is used when nothing was found with getAcceptArea 
+   */
+  RelativeRectangle getAcceptAreaFallback();
+
   @NotNull
   ContentResponse getContentResponse(@NotNull DockableContent content, RelativePoint point);
 
@@ -69,7 +74,7 @@ public interface DockContainer extends Disposable, Activatable {
   interface Listener {
     void contentAdded(Object key);
     void contentRemoved(Object key);
-    
+
     class Adapter implements Listener {
       @Override
       public void contentAdded(Object key) {
