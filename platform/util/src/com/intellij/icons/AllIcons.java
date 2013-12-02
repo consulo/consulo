@@ -310,7 +310,6 @@ public class AllIcons {
   public static class FileTypes {
     public static final Icon Any_type = IconLoader.getIcon("/fileTypes/any_type.png"); // 16x16
     public static final Icon Archive = IconLoader.getIcon("/fileTypes/archive.png"); // 16x16
-    public static final Icon AS = IconLoader.getIcon("/fileTypes/as.png"); // 16x16
     public static final Icon Aspectj = IconLoader.getIcon("/fileTypes/aspectj.png"); // 16x16
     public static final Icon Custom = IconLoader.getIcon("/fileTypes/custom.png"); // 16x16
     public static final Icon Diagram = IconLoader.getIcon("/fileTypes/diagram.png"); // 16x16
