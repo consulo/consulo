@@ -23,6 +23,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.idea.ActionsBundle;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -363,7 +364,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       return null;
     }
 
-    String text = loadTextForElement(element, bundle, id, ACTION_ELEMENT_NAME, className);
+    String text = loadTextValueForElement(element, bundle, id, ACTION_ELEMENT_NAME, TEXT_ATTR_NAME);
 
     String iconPath = element.getAttributeValue(ICON_ATTR_NAME);
 
@@ -379,7 +380,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     presentation.setText(text);
 
     // description
-    presentation.setDescription(loadDescriptionForElement(element, bundle, id, ACTION_ELEMENT_NAME));
+    presentation.setDescription(loadTextValueForElement(element, bundle, id, ACTION_ELEMENT_NAME, DESCRIPTION));
 
     processModuleExtensionOptions(element, stub);
 
@@ -421,8 +422,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
 
   @Nullable
   private static ResourceBundle getActionsResourceBundle(ClassLoader loader, IdeaPluginDescriptor plugin) {
-    @NonNls final String resBundleName =
-      plugin != null && !plugin.getPluginId().getIdString().equals(PluginManagerCore.CORE_PLUGIN_ID) ? plugin.getResourceBundleBaseName() : ACTIONS_BUNDLE;
+    @NonNls final String resBundleName = plugin != null && !plugin.getPluginId().getIdString().equals(PluginManagerCore.CORE_PLUGIN_ID)
+                                         ? plugin.getResourceBundleBaseName()
+                                         : ACTIONS_BUNDLE;
     ResourceBundle bundle = null;
     if (resBundleName != null) {
       bundle = AbstractBundle.getResourceBundle(resBundleName, loader);
@@ -491,24 +493,38 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     presentation.setIcon(lazyIcon);
   }
 
-  private static String loadDescriptionForElement(final Element element, final ResourceBundle bundle, final String id, String elementType) {
-    final String value = element.getAttributeValue(DESCRIPTION);
-    if (bundle != null) {
-      @NonNls final String key = elementType + "." + id + ".description";
-      return CommonBundle.messageOrDefault(bundle, key, value == null ? "" : value);
-    }
-    else {
-      return value;
-    }
+  private static String loadTextValueForElement(final Element element,
+                                                final ResourceBundle bundle,
+                                                final String id,
+                                                String elementType,
+                                                String type) {
+    final String value = element.getAttributeValue(type);
+    String key = elementType + "." + id + "." + type;
+    String text = CommonBundle.messageOrDefault(bundle, key, value == null ? "" : value);
+    return getDefaultInInternalOrNull(key, text);
   }
 
-  private static String loadTextForElement(final Element element,
-                                           final ResourceBundle bundle,
-                                           final String id,
-                                           String elementType,
-                                           final String actionClass) {
-    final String value = element.getAttributeValue(TEXT_ATTR_NAME);
-    return CommonBundle.messageOrDefault(bundle, elementType + "." + id + "." + TEXT_ATTR_NAME, value == null ?/* actionClass */"" : value);
+  @NotNull
+  private static String getDefaultInInternalOrNull(@NotNull String key, @NotNull String text) {
+    if (!StringUtil.isEmpty(text)) {
+      return text;
+    }
+
+    text = ActionsBundle.message(key);
+    if (text.isEmpty()) {
+      return text;
+    }
+    if (text.charAt(0) == '!' && text.charAt(text.length() - 1) == '!') {
+      if (ApplicationManager.getApplication().isInternal()) {
+        return text;
+      }
+      else {
+        return null;
+      }
+    }
+    else {
+      return text;
+    }
   }
 
   private AnAction processGroupElement(Element element, final ClassLoader loader, PluginId pluginId) {
@@ -558,14 +574,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
       Presentation presentation = group.getTemplatePresentation();
 
       // text
-      String text = loadTextForElement(element, bundle, id, GROUP_ELEMENT_NAME, className);
+      String text = loadTextValueForElement(element, bundle, id, GROUP_ELEMENT_NAME, TEXT_ATTR_NAME);
       // don't override value which was set in API with empty value from xml descriptor
       if (!StringUtil.isEmpty(text) || presentation.getText() == null) {
         presentation.setText(text);
       }
 
       // description
-      String description = loadDescriptionForElement(element, bundle, id, GROUP_ELEMENT_NAME);
+      String description = loadTextValueForElement(element, bundle, id, GROUP_ELEMENT_NAME, DESCRIPTION);
       // don't override value which was set in API with empty value from xml descriptor
       if (!StringUtil.isEmpty(description) || presentation.getDescription() == null) {
         presentation.setDescription(description);
