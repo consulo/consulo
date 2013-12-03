@@ -43,7 +43,7 @@ public class ModuleUtilCore {
     ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
     if (isLibraryElement) {
       List<OrderEntry> orders = projectRootManager.getFileIndex().getOrderEntriesForFile(file);
-      for(OrderEntry orderEntry:orders) {
+      for (OrderEntry orderEntry : orders) {
         if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof SdkOrderEntry ||
             orderEntry instanceof LibraryOrderEntry) {
           return true;
@@ -57,7 +57,7 @@ public class ModuleUtilCore {
   }
 
   public static String getModuleNameInReadAction(@NotNull final Module module) {
-    return new ReadAction<String>(){
+    return new ReadAction<String>() {
       protected void run(final Result<String> result) throws Throwable {
         result.setResult(module.getName());
       }
@@ -156,6 +156,7 @@ public class ModuleUtilCore {
 
   /**
    * collect transitive module dependants
+   *
    * @param module to find dependencies on
    * @param result resulted set
    */
@@ -172,7 +173,8 @@ public class ModuleUtilCore {
           if (orderEntry.getModule() == module) {
             if (orderEntry.isExported()) {
               collectModulesDependsOn(dependentModule, result);
-            } else {
+            }
+            else {
               result.add(dependentModule);
             }
             break;
@@ -186,7 +188,7 @@ public class ModuleUtilCore {
   public static List<Module> getAllDependentModules(@NotNull Module module) {
     final ArrayList<Module> list = new ArrayList<Module>();
     final Graph<Module> graph = ModuleManager.getInstance(module.getProject()).moduleGraph();
-    for (Iterator<Module> i = graph.getOut(module); i.hasNext();) {
+    for (Iterator<Module> i = graph.getOut(module); i.hasNext(); ) {
       list.add(i.next());
     }
     return list;
@@ -224,15 +226,35 @@ public class ModuleUtilCore {
   }
 
   @Nullable
+  public static <E extends ModuleExtension<E>> E getExtension(@NotNull PsiElement element, @NotNull Class<E> extensionClass) {
+    Module moduleForPsiElement = findModuleForPsiElement(element);
+    if (moduleForPsiElement == null) {
+      return null;
+    }
+    return getExtension(moduleForPsiElement, extensionClass);
+  }
+
+  @Nullable
+  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Project project,
+                                                              @NotNull VirtualFile virtualFile,
+                                                              @NotNull Class<E> extensionClass) {
+    Module moduleForFile = findModuleForFile(virtualFile, project);
+    if (moduleForFile == null) {
+      return null;
+    }
+    return getExtension(moduleForFile, extensionClass);
+  }
+
+  @Nullable
   public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Module module, @NotNull Class<E> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
     final E extension = moduleRootManager.getExtension(extensionClass);
-    if(extension == null) {
+    if (extension == null) {
       return null;
     }
     else {
-      return (S) extension.getSdk();
+      return (S)extension.getSdk();
     }
   }
 
@@ -250,7 +272,6 @@ public class ModuleUtilCore {
 
   public interface ModuleVisitor {
     /**
-     *
      * @param module module to be visited.
      * @return false to stop visiting.
      */
