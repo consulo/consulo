@@ -39,17 +39,16 @@ public class DefaultEditorTabsPainter implements JBEditorTabsPainter {
                               int row,
                               int column,
                               boolean vertical) {
-    if (tabColor != null) {
-      g2d.setPaint(UIUtil.getGradientPaint(x, y, Gray._200, x, y + effectiveBounds.height, Gray._130));
-      g2d.fillRect(x, y, w, h);
+    g2d.setColor(Gray._255);
+    g2d.fillRect(x, y, w, h);
 
-      g2d.setColor(ColorUtil.toAlpha(tabColor, 150));
-      g2d.fillRect(x, y, w, h);
-    } else {
-      g2d.setPaint(UIUtil.getGradientPaint(x, y, Gray._255.withAlpha(180), x, y + effectiveBounds.height, Gray._255.withAlpha(100)));
+    if (tabColor != null) {
+      g2d.setColor(ColorUtil.toAlpha(tabColor, 200));
       g2d.fillRect(x, y, w, h);
     }
 
+    g2d.setColor(Gray._150.withAlpha(100));
+    g2d.fillRect(x, y, w, h);
 
     // Push top row under the navbar or toolbar and have a blink over previous row shadow for 2nd and subsequent rows.
     if (row == 0) {
@@ -83,8 +82,7 @@ public class DefaultEditorTabsPainter implements JBEditorTabsPainter {
 
     final int x = rectangle.x;
     final int y = rectangle.y;
-    g.setPaint(UIUtil.getGradientPaint(x, y, new Color(255, 255, 255, 160),
-                                 x, rectangle.y + rectangle.height, new Color(255, 255, 255, 120)));
+    g.setPaint(new Color(255, 255, 255, 160));
     g.fillRect(x, rectangle.y, rectangle.width, rectangle.height + (vertical ? 1 : 0));
 
     if (!vertical) {
@@ -106,9 +104,7 @@ public class DefaultEditorTabsPainter implements JBEditorTabsPainter {
                                        Color tabColor,
                                        boolean horizontalTabs) {
     Insets i = selectedShape.path.transformInsets(insets);
-    int _x = rect.x;
-    int _y = rect.y;
-    int _height = rect.height;
+
     if (!horizontalTabs) {
       g2d.setColor(new Color(0, 0, 0, 45));
       g2d.draw(
@@ -123,15 +119,8 @@ public class DefaultEditorTabsPainter implements JBEditorTabsPainter {
                                               selectedShape.labelPath.getMaxY() - selectedShape.labelPath.deltaY(5)));
     }
 
-    if (tabColor != null) {
-      g2d.setColor(multiplyColor(tabColor));
-      g2d.fill(selectedShape.fillPath.getShape());
-
-      g2d.setPaint(UIUtil.getGradientPaint(_x, _y, Gray._255.withAlpha(150), _x, _y + _height, Gray._255.withAlpha(0)));
-    } else {
-      g2d.setPaint(UIUtil.getGradientPaint(_x, _y, Gray._255, _x, _y + _height, Gray._230));
-    }
-
+    tabColor = tabColor != null ? tabColor : Gray._255;
+    g2d.setColor(multiplyColor(tabColor));
     g2d.fill(selectedShape.fillPath.getShape());
 
     g2d.setColor(Gray._255.withAlpha(180));
