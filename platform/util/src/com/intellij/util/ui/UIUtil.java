@@ -975,11 +975,13 @@ public class UIUtil {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
   public static boolean isUnderAlloyLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Alloy");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
   public static boolean isUnderAlloyIDEALookAndFeel() {
     return isUnderAlloyLookAndFeel() && UIManager.getLookAndFeel().getName().contains("IDEA");
   }
@@ -1372,7 +1374,7 @@ public class UIUtil {
     g.setColor(getPanelBackground());
     g.fillRect(x, 0, width, height);
 
-    ((Graphics2D)g).setPaint(getGradientPaint(0, 0, new Color(0, 0, 0, 5), 0, height, new Color(0, 0, 0, 20)));
+    ((Graphics2D)g).setPaint(new Color(0, 0, 0, 5));
     g.fillRect(x, 0, width, height);
 
     g.setColor(new Color(0, 0, 0, toolWindow ? 90 : 50));
@@ -1383,7 +1385,7 @@ public class UIUtil {
     g.drawLine(x, drawTopLine ? 1 : 0, width, drawTopLine ? 1 : 0);
 
     if (active) {
-      g.setColor(new Color(100, 150, 230, toolWindow ? 50 : 30));
+      g.setColor(ColorUtil.toAlpha(UIManager.getColor("Hyperlink.linkColor"), toolWindow ? 100 : 30));//new Color(100, 150, 230, toolWindow ? 50 : 30));
       g.fillRect(x, 0, width, height);
     }
   }

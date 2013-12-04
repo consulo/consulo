@@ -124,12 +124,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
     else {
       lafList.add(new IntelliJLookAndFeelInfo());
-      for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
-        String name = laf.getName();
-        if (!"Metal".equalsIgnoreCase(name) && !"CDE/Motif".equalsIgnoreCase(name)) {
-          lafList.add(laf);
-        }
-      }
     }
 
     lafList.add(new DarculaLookAndFeelInfo());
