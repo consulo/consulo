@@ -519,7 +519,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
         return text;
       }
       else {
-        return null;
+        return "";
       }
     }
     else {
