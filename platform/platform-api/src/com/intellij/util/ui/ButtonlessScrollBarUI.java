@@ -15,8 +15,6 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
@@ -38,7 +36,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
   }
 
   public static JBColor getGradientDarkColor() {
-    return new JBColor(Gray._215, Gray._80);
+    return new JBColor(Gray._251, Gray._80);
   }
 
   private static JBColor getGradientThumbBorderColor() {
@@ -56,25 +54,20 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
   private static final BasicStroke BORDER_STROKE = new BasicStroke();
 
   private static int getAnimationColorShift() {
-    return UIUtil.isUnderDarcula() ? 20 : 40;
+    return 20;
   }
 
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
 
-  private Animator myAnimator;
-
-  private int myAnimationColorShift = 0;
   private boolean myMouseIsOverThumb = false;
-  public static final int DELAY_FRAMES = 4;
-  public static final int FRAMES_COUNT = 10 + DELAY_FRAMES;
 
   protected ButtonlessScrollBarUI() {
     myAdjustmentListener = new AdjustmentListener() {
       @Override
       public void adjustmentValueChanged(AdjustmentEvent e) {
-        resetAnimator();
+        repaint();
       }
     };
 
@@ -84,7 +77,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
         boolean inside = isOverThumb(e.getPoint());
         if (inside != myMouseIsOverThumb) {
           myMouseIsOverThumb = inside;
-          resetAnimator();
+          repaint();
         }
       }
     };
@@ -94,7 +87,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
       public void mouseExited(MouseEvent e) {
         if (myMouseIsOverThumb) {
           myMouseIsOverThumb = false;
-          resetAnimator();
+          repaint();
         }
       }
     };
@@ -128,15 +121,8 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
     return incrButton.getHeight();
   }
 
-  private void resetAnimator() {
-    myAnimator.reset();
-    if (scrollbar != null && scrollbar.getValueIsAdjusting() || myMouseIsOverThumb || Registry.is("ui.no.bangs.and.whistles")) {
-      myAnimator.suspend();
-      myAnimationColorShift = getAnimationColorShift();
-    }
-    else {
-      myAnimator.resume();
-    }
+  private void repaint() {
+    scrollbar.repaint(((ButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
   }
 
   public static BasicScrollBarUI createNormal() {
@@ -166,30 +152,10 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
 
   @Override
   protected void installListeners() {
-    if (myAnimator == null || myAnimator.isDisposed()) {
-      myAnimator = createAnimator();
-    }
-
     super.installListeners();
     scrollbar.addAdjustmentListener(myAdjustmentListener);
     scrollbar.addMouseListener(myMouseListener);
     scrollbar.addMouseMotionListener(myMouseMotionListener);
-  }
-
-  private Animator createAnimator() {
-    return new Animator("Adjustment fadeout", FRAMES_COUNT, FRAMES_COUNT * 50, false) {
-      @Override
-      public void paintNow(int frame, int totalFrames, int cycle) {
-        myAnimationColorShift = getAnimationColorShift();
-        if (frame > DELAY_FRAMES) {
-          myAnimationColorShift *= 1 - ((double)(frame - DELAY_FRAMES)) / ((double)(totalFrames - DELAY_FRAMES));
-        }
-
-        if (scrollbar != null) {
-          scrollbar.repaint(((ButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
-        }
-      }
-    };
   }
 
   private boolean isOverThumb(Point p) {
@@ -209,7 +175,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
       super.uninstallListeners();
     }
     scrollbar.removeAdjustmentListener(myAdjustmentListener);
-    Disposer.dispose(myAnimator);
+  //  Disposer.dispose(myAnimator);
   }
 
   @Override
@@ -296,7 +262,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
     final Stroke stroke = g.getStroke();
     g.setStroke(BORDER_STROKE);
     g.setColor(getGradientThumbBorderColor());
-    g.drawRoundRect(hGap, vGap, w, h, 3, 3);
+    g.drawRoundRect(hGap, vGap, w, h, 0, 0);
     g.setStroke(stroke);
   }
 
@@ -310,9 +276,9 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
   }
 
   protected Color adjustColor(Color c) {
-    if (myAnimationColorShift == 0) return c;
+    if (!myMouseIsOverThumb) return c;
     final int sign = UIUtil.isUnderDarcula() ? -1 : 1;
-    return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * myAnimationColorShift)));
+    return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * getAnimationColorShift())));
   }
 
   private boolean isVertical() {
