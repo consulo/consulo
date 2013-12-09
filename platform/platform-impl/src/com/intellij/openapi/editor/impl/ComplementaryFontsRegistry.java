@@ -43,7 +43,7 @@ public class ComplementaryFontsRegistry {
   private static FontInfo ourSharedDefaultFont;
   private static final TIntHashSet ourUndisplayableChars = new TIntHashSet();
   private static boolean ourOldUseAntialiasing;
-  
+
   static {
     final UISettings settings = UISettings.getInstance();
     ourOldUseAntialiasing = settings.ANTIALIASING_IN_EDITOR;
@@ -63,7 +63,7 @@ public class ComplementaryFontsRegistry {
       }
     }, ApplicationManager.getApplication());
   }
-  
+
   private ComplementaryFontsRegistry() {
   }
 
@@ -104,7 +104,8 @@ public class ComplementaryFontsRegistry {
     ourFontNames = new ArrayList<String>();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       ourFontNames.add("Monospaced");
-    } else {
+    }
+    else {
       GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
       if (SystemInfo.isMac) {
         Font[] allFonts = graphicsEnvironment.getAllFonts();
@@ -133,11 +134,11 @@ public class ComplementaryFontsRegistry {
     if ((style & Font.BOLD) != 0) {
       st.append("Bold");
     }
-    
+
     if ((style & Font.ITALIC) != 0) {
       st.append("Italic");
     }
-    
+
     String styledFamilyName = st.toString();
     boolean found = ourStyledFontNames.contains(styledFamilyName);
     return Pair.create(found ? styledFamilyName : familyName, found ? Font.PLAIN : style);
@@ -148,7 +149,8 @@ public class ComplementaryFontsRegistry {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
     FontInfo result;
-    for (String fontFamily : fontFamilies) {
+    for (int i = 0, len = fontFamilies.size(); i < len; ++i) {
+      final String fontFamily = fontFamilies.get(i);
       result = doGetFontAbleToDisplay(c, preferences.getSize(fontFamily), style, fontFamily);
       if (result != null) {
         return result;
@@ -167,7 +169,7 @@ public class ComplementaryFontsRegistry {
     }
     return doGetFontAbleToDisplay(c, size, style);
   }
-  
+
   @NotNull
   public static FontInfo getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily) {
     FontInfo result = doGetFontAbleToDisplay(c, size, style, defaultFontFamily);
@@ -186,10 +188,7 @@ public class ComplementaryFontsRegistry {
           ourSharedKeyInstance.myFamilyName != null &&
           ourSharedKeyInstance.myFamilyName.equals(p.getFirst()) &&
           ourSharedDefaultFont != null &&
-          ( c < 128 ||
-            ourSharedDefaultFont.canDisplay(c)
-          )
-        ) {
+          (c < 128 || ourSharedDefaultFont.canDisplay(c))) {
         return ourSharedDefaultFont;
       }
 
@@ -213,7 +212,7 @@ public class ComplementaryFontsRegistry {
       }
     }
   }
-  
+
   @NotNull
   private static FontInfo doGetFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style) {
     synchronized (lock) {

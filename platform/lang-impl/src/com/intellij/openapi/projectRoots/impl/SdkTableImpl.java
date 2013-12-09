@@ -96,9 +96,11 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @Override
   @Nullable
   public Sdk findSdk(String name) {
-    for (Sdk sdk : mySdks) {
-      if (Comparing.strEqual(name, sdk.getName())) {
-        return sdk;
+    //noinspection ForLoopReplaceableByForEach
+    for (int i = 0, len = mySdks.size(); i < len; ++i) { // avoid foreach,  it instantiates ArrayList$Itr, this traversal happens very often
+      final Sdk jdk = mySdks.get(i);
+      if (Comparing.strEqual(name, jdk.getName())) {
+        return jdk;
       }
     }
     return null;
