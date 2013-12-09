@@ -42,8 +42,8 @@ public final class DirectoryInfo {
   private final VirtualFile contentRoot;
   private final VirtualFile sourceRoot;
 
-  public static final byte MODULE_SOURCE_FLAG = 1; // set if files in this directory belongs to sources of the module (if field 'module' is not null)
-  public static final byte LIBRARY_SOURCE_FLAG = 2; // set if it's a directory with sources of some library
+  private static final byte MODULE_SOURCE_FLAG = 1; // set if files in this directory belongs to sources of the module (if field 'module' is not null)
+  private static final byte LIBRARY_SOURCE_FLAG = 2; // set if it's a directory with sources of some library
   private final byte sourceRootTypeData;//two least significant bits are used for MODULE_SOURCE_FLAG and LIBRARY_SOURCE_FLAG, the remaining bits store module root type id (source/tests/resources/...)
 
   /**
@@ -56,7 +56,7 @@ public final class DirectoryInfo {
     return new DirectoryInfo(null, null, null, null, (byte)0, null);
   }
 
-  private DirectoryInfo(@Nullable Module module,
+  DirectoryInfo(@Nullable Module module,
                         @Nullable VirtualFile contentRoot,
                         @Nullable VirtualFile sourceRoot,
                         @Nullable VirtualFile libraryClassRoot,
@@ -105,6 +105,7 @@ public final class DirectoryInfo {
            ", libraryClassRoot=" + getLibraryClassRoot() +
            ", contentRoot=" + getContentRoot() +
            ", sourceRoot=" + getSourceRoot() +
+           ", orderEntries=" + Arrays.toString(orderEntries) +
            "}";
   }
 
