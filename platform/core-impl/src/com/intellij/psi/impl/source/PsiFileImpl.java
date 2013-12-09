@@ -268,35 +268,41 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     final List<Pair<StubBasedPsiElementBase, CompositeElement>> result = ContainerUtil.newArrayList();
     final StubBuilder builder = ((IStubFileElementType)getContentElementType()).getBuilder();
 
-    ((TreeElement)root).acceptTree(new RecursiveTreeElementWalkingVisitor() {
-      @Override
-      protected void visitNode(TreeElement node) {
-        CompositeElement parent = node.getTreeParent();
-        if (parent != null && TreeUtil.skipNode(builder, parent, node)) {
-          return;
-        }
-
-
-        IElementType type = node.getElementType();
-        if (type instanceof IStubElementType && ((IStubElementType)type).shouldCreateStub(node)) {
-          if (!stubs.hasNext()) {
-            reportStubAstMismatch("Stub list is less than AST, last AST element: " + node.getElementType() + " " + node, stubTree, cachedDocument);
+    LazyParseableElement.setSuppressEagerPsiCreation(true);
+    try {
+      ((TreeElement)root).acceptTree(new RecursiveTreeElementWalkingVisitor() {
+        @Override
+        protected void visitNode(TreeElement node) {
+          CompositeElement parent = node.getTreeParent();
+          if (parent != null && builder.skipChildProcessingWhenBuildingStubs(parent, node)) {
+            return;
           }
 
-          final StubElement stub = stubs.next();
-          if (stub.getStubType() != node.getElementType()) {
-            reportStubAstMismatch("Stub and PSI element type mismatch in " + getName() + ": stub " + stub + ", AST " +
-                                  node.getElementType() + "; " + node, stubTree, cachedDocument);
+
+          IElementType type = node.getElementType();
+          if (type instanceof IStubElementType && ((IStubElementType)type).shouldCreateStub(node)) {
+            if (!stubs.hasNext()) {
+              reportStubAstMismatch("Stub list is less than AST, last AST element: " + node.getElementType() + " " + node, stubTree, cachedDocument);
+            }
+
+            final StubElement stub = stubs.next();
+            if (stub.getStubType() != node.getElementType()) {
+              reportStubAstMismatch("Stub and PSI element type mismatch in " + getName() + ": stub " + stub + ", AST " +
+                                    node.getElementType() + "; " + node, stubTree, cachedDocument);
+            }
+
+            PsiElement psi = stub.getPsi();
+            assert psi != null : "Stub " + stub + " (" + stub.getClass() + ") has returned null PSI";
+            result.add(Pair.create((StubBasedPsiElementBase)psi, (CompositeElement)node));
           }
 
-          PsiElement psi = stub.getPsi();
-          assert psi != null : "Stub " + stub + " (" + stub.getClass() + ") has returned null PSI";
-          result.add(Pair.create((StubBasedPsiElementBase)psi, (CompositeElement)node));
+          super.visitNode(node);
         }
-
-        super.visitNode(node);
-      }
-    });
+      });
+    }
+    finally {
+      LazyParseableElement.setSuppressEagerPsiCreation(false);
+    }
     if (stubs.hasNext()) {
       reportStubAstMismatch("Stub list in " + getName() + " has more elements than PSI", stubTree, cachedDocument);
     }
@@ -305,7 +311,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   protected void reportStubAstMismatch(String message, StubTree stubTree, Document cachedDocument) {
     rebuildStub();
-    clearStub();
+    clearStub("stub-psi mismatch");
     scheduleDropCachesWithInvalidStubPsi();
 
     String msg = message;
@@ -382,15 +388,15 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     myViewProvider.beforeContentsSynchronized();
     synchronized (PsiLock.LOCK) {
       myTreeElementPointer = null;
-      clearStub();
+      clearStub("unloadContent");
     }
   }
 
-  private void clearStub() {
+  private void clearStub(@NotNull String reason) {
     SoftReference<StubTree> stubRef = myStub;
     StubTree stubHolder = stubRef == null ? null : stubRef.get();
     if (stubHolder != null) {
-      ((StubBase<?>)stubHolder.getRoot()).setPsi(null);
+      ((PsiFileStubImpl<?>)stubHolder.getRoot()).clearPsi(reason);
     }
     myStub = null;
   }
@@ -434,18 +440,18 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @Override
   public void subtreeChanged() {
-    doClearCaches();
+    doClearCaches("subtreeChanged");
     getViewProvider().rootChanged(this);
   }
 
-  private void doClearCaches() {
+  private void doClearCaches(String reason) {
     final FileElement tree = getTreeElement();
     if (tree != null) {
       tree.clearCaches();
     }
 
     synchronized (PsiLock.LOCK) {
-      clearStub();
+      clearStub(reason);
     }
     if (tree != null) {
       tree.putUserData(STUB_TREE_IN_PARSED_TREE, null);
@@ -491,7 +497,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   @Override
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     checkSetName(name);
-    doClearCaches();
+    doClearCaches("setName");
     return PsiFileImplUtil.setName(this, name);
   }
 
@@ -617,7 +623,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   @Override
   @NotNull
   public char[] textToCharArray() {
-    return CharArrayUtil.fromSequenceStrict(getViewProvider().getContents());
+    return CharArrayUtil.fromSequence(getViewProvider().getContents());
   }
 
   @NotNull
@@ -1000,14 +1006,20 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
         IElementType contentElementType = getContentElementType();
         if (!(contentElementType instanceof IStubFileElementType)) {
           VirtualFile vFile = getVirtualFile();
-          throw new AssertionError("ContentElementType: " + contentElementType + "; file: " + this +
-                                   "\n\t" + "Boolean.TRUE.equals(getUserData(BUILDING_STUB)) = " + Boolean.TRUE.equals(getUserData(BUILDING_STUB)) +
-                                   "\n\t" + "getTreeElement() = " + getTreeElement() +
-                                   "\n\t" + "vFile instanceof VirtualFileWithId = " + (vFile instanceof VirtualFileWithId) +
-                                   "\n\t" + "StubUpdatingIndex.canHaveStub(vFile) = " + StubTreeLoader.getInstance().canHaveStub(vFile));
+          String message = "ContentElementType: " + contentElementType + "; file: " + this +
+                           "\n\t" + "Boolean.TRUE.equals(getUserData(BUILDING_STUB)) = " + Boolean.TRUE.equals(getUserData(BUILDING_STUB)) +
+                           "\n\t" + "getTreeElement() = " + getTreeElement() +
+                           "\n\t" + "vFile instanceof VirtualFileWithId = " + (vFile instanceof VirtualFileWithId) +
+                           "\n\t" + "StubUpdatingIndex.canHaveStub(vFile) = " + StubTreeLoader.getInstance().canHaveStub(vFile);
+          rebuildStub();
+          throw new AssertionError(message);
         }
 
         StubElement currentStubTree = ((IStubFileElementType)contentElementType).getBuilder().buildStubTree(this);
+        if (currentStubTree == null) {
+          throw new AssertionError("Stub tree wasn't built for " + contentElementType + "; file: " + this);
+        }
+
         tree = new StubTree((PsiFileStub)currentStubTree);
         tree.setDebugInfo("created in calcStubTree");
         try {

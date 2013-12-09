@@ -105,7 +105,7 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
       }
     }
   }
-                                                            
+
   @Override
   @NotNull
   public <T> T putUserDataIfAbsent(@NotNull final Key<T> key, @NotNull final T value) {
