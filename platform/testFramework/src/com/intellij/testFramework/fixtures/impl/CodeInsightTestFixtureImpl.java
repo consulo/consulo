@@ -1703,14 +1703,14 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
 
     project.getComponent(PostprocessReformattingAspect.class).doPostponedFormatting();
     if (stripTrailingSpaces) {
-      actualText = stripTrailingSpaces(actualText);
+      actualText = stripTrailingSpaces(actualText, project);
     }
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     String newFileText1 = loader.newFileText;
     if (stripTrailingSpaces) {
-      newFileText1 = stripTrailingSpaces(newFileText1);
+      newFileText1 = stripTrailingSpaces(newFileText1, project);
     }
 
     actualText = StringUtil.convertLineSeparators(actualText);
@@ -1792,9 +1792,9 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
     return "(" + startLine + ", " + startCol + ")-(" + endLine + ", " + endCol + ")";
   }
 
-  private static String stripTrailingSpaces(String actualText) {
+  private static String stripTrailingSpaces(String actualText, Project project) {
     final Document document = EditorFactory.getInstance().createDocument(actualText);
-    ((DocumentImpl)document).stripTrailingSpaces();
+    ((DocumentImpl)document).stripTrailingSpaces(project);
     actualText = document.getText();
     return actualText;
   }

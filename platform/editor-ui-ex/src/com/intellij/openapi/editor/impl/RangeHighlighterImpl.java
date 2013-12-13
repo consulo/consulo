@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.ex.DocumentEx;
+import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.Getter;
@@ -58,7 +59,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   @Override
   protected void registerInTree(int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
     // we store highlighters in MarkupModel
-    ((MarkupModelImpl)data.getMarkupModel()).addRangeHighlighter(this, start, end, greedyToLeft, greedyToRight, layer);
+    ((MarkupModelEx)data.getMarkupModel()).addRangeHighlighter(this, start, end, greedyToLeft, greedyToRight, layer);
   }
 
   @Override
@@ -81,11 +82,12 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  public void setTextAttributes(TextAttributes textAttributes) {
+  public void setTextAttributes(@NotNull TextAttributes textAttributes) {
     getData().setTextAttributes(textAttributes);
   }
 
-  boolean changeAttributesNoEvents(@NotNull Consumer<RangeHighlighterEx> change) {
+  @NotNull
+  RangeHighlighterData.ChangeResult changeAttributesNoEvents(@NotNull Consumer<RangeHighlighterEx> change) {
     return getData().changeAttributesInBatch(change);
   }
 

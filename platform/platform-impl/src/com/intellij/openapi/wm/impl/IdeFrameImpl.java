@@ -59,6 +59,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 /**
@@ -71,6 +73,8 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
   private static final String FULL_SCREEN = "FullScreen";
 
   private static boolean myUpdatingTitle;
+
+  private static String xdgCurrentDesktop = System.getenv("XDG_CURRENT_DESKTOP");
 
   private String myTitle;
   private String myFileTitle;
@@ -94,8 +98,10 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     setBackground(UIUtil.getPanelBackground());
     AppUIUtil.updateWindowIcon(this);
     final Dimension size = ScreenUtil.getMainScreenBounds().getSize();
-    size.width-=20;
-    size.height -=40;
+
+    size.width = Math.min(1400, size.width - 20);
+    size.height= Math.min(1000, size.height - 40);
+
     setSize(size);
     setLocationRelativeTo(null);
 
@@ -118,6 +124,50 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     MouseGestureManager.getInstance().add(this);
 
     myFrameDecorator = IdeFrameDecorator.decorate(this);
+
+    addWindowStateListener(new WindowAdapter() {
+      @Override
+      public void windowStateChanged(WindowEvent e) {
+        updateBorder();
+      }
+    });
+
+    Toolkit.getDefaultToolkit().addPropertyChangeListener("win.xpstyle.themeActive", new PropertyChangeListener() {
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+        updateBorder();
+      }
+    });
+
+    IdeMenuBar.installAppMenuIfNeeded(this);
+  }
+
+  private void updateBorder() {
+    int state = getExtendedState();
+    if (!WindowManager.getInstance().isFullScreenSupportedInCurrentOS() || !SystemInfo.isWindows || myRootPane == null) {
+      return;
+    }
+
+    myRootPane.setBorder(null);
+    boolean isNotClassic = Boolean.parseBoolean(String.valueOf(Toolkit.getDefaultToolkit().getDesktopProperty("win.xpstyle.themeActive")));
+    if (isNotClassic && (state & MAXIMIZED_BOTH) != 0) {
+      IdeFrame[] projectFrames = WindowManager.getInstance().getAllProjectFrames();
+      GraphicsDevice device = ScreenUtil.getScreenDevice(getBounds());
+
+      for (IdeFrame frame : projectFrames) {
+        if (frame == this) continue;
+        if (((IdeFrameImpl)frame).isInFullScreen() && ScreenUtil.getScreenDevice(((IdeFrameImpl)frame).getBounds()) == device) {
+          Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(device.getDefaultConfiguration());
+          int mask = SideBorder.NONE;
+          if (insets.top != 0) mask |= SideBorder.TOP;
+          if (insets.left != 0) mask |= SideBorder.LEFT;
+          if (insets.bottom != 0) mask |= SideBorder.BOTTOM;
+          if (insets.right != 0) mask |= SideBorder.RIGHT;
+          myRootPane.setBorder(new SideBorder(JBColor.BLACK, mask, false, 3));
+          break;
+        }
+      }
+    }
   }
 
   protected IdeRootPane createRootPane(ActionManagerEx actionManager,
@@ -491,6 +541,10 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
   public void toggleFullScreen(boolean state) {
     if (myFrameDecorator != null) {
       myFrameDecorator.toggleFullScreen(state);
+    }
+    IdeFrame[] frames = WindowManager.getInstance().getAllProjectFrames();
+    for (IdeFrame frame : frames) {
+      ((IdeFrameImpl)frame).updateBorder();
     }
   }
 

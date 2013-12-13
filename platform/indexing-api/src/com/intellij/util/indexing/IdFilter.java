@@ -30,7 +30,6 @@ import java.util.BitSet;
  */
 @Logger
 public abstract class IdFilter {
-
   public static IdFilter getProjectIdFilter(Project project, boolean includeNonProjectItems) {
     long started = System.currentTimeMillis();
     final BitSet idSet = new BitSet();
@@ -38,9 +37,9 @@ public abstract class IdFilter {
     ContentIterator iterator = new ContentIterator() {
       @Override
       public boolean processFile(VirtualFile fileOrDir) {
-        idSet.set(
-          ((VirtualFileWithId)fileOrDir).getId()
-        );
+        int id = ((VirtualFileWithId)fileOrDir).getId();
+        if (id < 0) id = -id; // workaround for encountering invalid files, see EA-49915, EA-50599
+        idSet.set(id);
         ProgressManager.checkCanceled();
         return true;
       }
@@ -57,11 +56,11 @@ public abstract class IdFilter {
     }
     return new IdFilter() {
       @Override
-      public boolean contains(int id) {
-        return idSet.get(id);
+      public boolean containsFileId(int id) {
+        return id >= 0 && idSet.get(id);
       }
     };
   }
 
-  public abstract boolean contains(int id);
+  public abstract boolean containsFileId(int id);
 }

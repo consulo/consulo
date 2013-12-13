@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author cdr
-*/
+ */
 public class MarkupModelWindow extends UserDataHolderBase implements MarkupModelEx {
   private final DocumentWindow myDocument;
   private final MarkupModelEx myHostModel;
@@ -127,7 +127,7 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
   }
 
   @Override
-  public void setRangeHighlighterAttributes(@NotNull final RangeHighlighter highlighter, final TextAttributes textAttributes) {
+  public void setRangeHighlighterAttributes(@NotNull final RangeHighlighter highlighter, @NotNull final TextAttributes textAttributes) {
     myHostModel.setRangeHighlighterAttributes(highlighter, textAttributes);
   }
 
@@ -154,5 +154,25 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
   public boolean sweep(int start, int end, @NotNull SweepProcessor<RangeHighlighterEx> sweepProcessor) {
     // todo convert
     return myHostModel.sweep(start, end, sweepProcessor);
+  }
+
+  @Override
+  public void fireAttributesChanged(@NotNull RangeHighlighterEx segmentHighlighter, boolean renderersChanged) {
+
+  }
+
+  @Override
+  public void fireAfterAdded(@NotNull RangeHighlighterEx segmentHighlighter) {
+
+  }
+
+  @Override
+  public void fireBeforeRemoved(@NotNull RangeHighlighterEx segmentHighlighter) {
+
+  }
+
+  @Override
+  public void addRangeHighlighter(RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+
   }
 }
