@@ -278,7 +278,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedDocumentList
     region.setExpanded(true);
     final FoldingGroup group = region.getGroup();
     if (group != null) {
-      myGroups.removeValue(group, region);
+      myGroups.remove(group, region);
     }
 
     myFoldTree.removeRegion(region);
@@ -287,6 +287,19 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedDocumentList
   }
 
   public void dispose() {
+    doClearFoldRegions();
+  }
+
+  @Override
+  public void clearFoldRegions() {
+    if (!myIsBatchFoldingProcessing) {
+      LOG.error("Fold regions must be added or removed inside batchFoldProcessing() only.");
+      return;
+    }
+    doClearFoldRegions();
+  }
+
+  public void doClearFoldRegions() {
     myGroups.clear();
     myFoldTree.clear();
   }

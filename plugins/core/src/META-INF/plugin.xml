@@ -17,18 +17,18 @@
   <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
   <extensionPoints>
-    <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP" />
-    <extensionPoint name="addTo.listOfElements" beanClass="org.mustbe.consulo.util.AddToElementEP" />
+    <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
+    <extensionPoint name="addTo.listOfElements" beanClass="org.mustbe.consulo.util.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="sdkResolveScopeProvider" interface="com.intellij.psi.SdkResolveScopeProvider"/>
-    <extensionPoint name="contentFolderTypeProvider" interface="org.mustbe.consulo.roots.ContentFolderTypeProvider" />
-    <extensionPoint name="contentFolderPropertyProvider" interface="org.mustbe.consulo.roots.ContentFolderPropertyProvider" />
+    <extensionPoint name="contentFolderTypeProvider" interface="org.mustbe.consulo.roots.ContentFolderTypeProvider"/>
+    <extensionPoint name="contentFolderPropertyProvider" interface="org.mustbe.consulo.roots.ContentFolderPropertyProvider"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
-    <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter" />
+    <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
 
     <extensionPoint name="appStarter"
                     interface="com.intellij.openapi.application.ApplicationStarter"/>
@@ -242,7 +242,7 @@
     <extensionPoint name="vcsConfigurableProvider"
                     interface="com.intellij.openapi.vcs.VcsConfigurableProvider"/>
 
-    <extensionPoint name="vcsRootChecker" interface="com.intellij.openapi.vcs.VcsRootChecker" />
+    <extensionPoint name="vcsRootChecker" interface="com.intellij.openapi.vcs.VcsRootChecker"/>
 
     <!--<extensionPoint name="writingAccessProvider"-->
     <!--interface="com.intellij.openapi.vfs.WritingAccessProvider"-->
@@ -737,7 +737,7 @@
 
     <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
     <extensionPoint name="psi.packageSupportProvider" interface="org.consulo.psi.PsiPackageSupportProvider"/>
-    <extensionPoint name="psi.directoryMethodProxy"  interface="com.intellij.psi.PsiDirectoryMethodProxy" />
+    <extensionPoint name="psi.directoryMethodProxy" interface="com.intellij.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
     <extensionPoint name="pom.declarationSearcher" interface="com.intellij.pom.PomDeclarationSearcher"/>
@@ -1557,20 +1557,20 @@
     <projectTemplateFileProcessor implementation="com.intellij.platform.templates.SystemFileProcessor"/>
     -->
 
-     <applicationService serviceImplementation="com.intellij.ide.util.newProjectWizard.SelectTemplateSettings"/>
+    <applicationService serviceImplementation="com.intellij.ide.util.newProjectWizard.SelectTemplateSettings"/>
 
-     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
+    <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
 
-     <orderRootTypeEditor key="DOCUMENTATION"
-                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
-     <orderRootTypeEditor key="CLASSES"
-                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
-     <orderRootTypeEditor key="SOURCES"
-                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
+    <orderRootTypeEditor key="DOCUMENTATION"
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
+    <orderRootTypeEditor key="CLASSES"
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
+    <orderRootTypeEditor key="SOURCES"
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
-     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
-     <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
+    <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
+    <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
 
     <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
 
@@ -2313,7 +2313,7 @@
     <applicationService serviceInterface="com.intellij.codeInsight.template.TemplateBuilderFactory"
                         serviceImplementation="com.intellij.codeInsight.template.TemplateBuilderFactoryImpl"/>
 
-  <!--  <projectViewPane implementation="com.intellij.ide.favoritesTreeView.FavoritesProjectViewPane"/> -->
+    <!--  <projectViewPane implementation="com.intellij.ide.favoritesTreeView.FavoritesProjectViewPane"/> -->
     <projectViewPane implementation="com.intellij.ide.scopeView.ScopeViewPane"/>
 
     <renameHandler implementation="com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler"/>
@@ -2507,6 +2507,9 @@
     <applicationService serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"
                         serviceImplementation="com.intellij.profile.codeInspection.InspectionProfileManagerImpl"/>
 
+    <applicationService serviceInterface="com.intellij.execution.filters.HyperlinkInfoFactory"
+                        serviceImplementation="com.intellij.execution.filters.impl.HyperlinkInfoFactoryImpl"/>
+
     <exportable serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
     <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
 
@@ -2519,21 +2522,21 @@
     <moduleService serviceInterface="org.consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
 
-    <qualifiedNameProvider implementation="com.intellij.ide.actions.PsiPackageQualifiedNameProvider" />
+    <qualifiedNameProvider implementation="com.intellij.ide.actions.PsiPackageQualifiedNameProvider"/>
 
-    <pathMacroExpendableProtocol protocol="zip" />
+    <pathMacroExpendableProtocol protocol="zip"/>
 
     <projectService serviceInterface="org.mustbe.consulo.module.extension.ModuleExtensionHelper"
-                    serviceImplementation="org.mustbe.consulo.module.extension.ModuleExtensionHelperImpl" />
+                    serviceImplementation="org.mustbe.consulo.module.extension.ModuleExtensionHelperImpl"/>
 
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider" />
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider" />
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider" />
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider" />
-    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider" />
+    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider"/>
+    <contentFolderTypeProvider implementation="org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider"/>
 
-    <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider" />
+    <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
-    <generatedSourcesFilter implementation="org.mustbe.consulo.roots.impl.property.GeneratedOnRootSourcesFilter" />
+    <generatedSourcesFilter implementation="org.mustbe.consulo.roots.impl.property.GeneratedOnRootSourcesFilter"/>
   </extensions>
 </idea-plugin>

@@ -27,13 +27,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
-* User: cdr
-*/
+ * User: cdr
+ */
 abstract class FoldRegionsTree {
 
   @SuppressWarnings("UseOfArchaicSystemPropertyAccessors")
   public static final boolean DEBUG = Boolean.getBoolean("idea.editor.debug.folding");
-  
+
   private FoldRegion[] myCachedVisible;
   private FoldRegion[] myCachedTopLevelRegions;
   private int[] myCachedEndOffsets;
@@ -81,35 +81,28 @@ abstract class FoldRegionsTree {
     ArrayList<FoldRegion> topLevels = new ArrayList<FoldRegion>(myRegions.size() / 2);
     ArrayList<FoldRegion> visible = new ArrayList<FoldRegion>(myRegions.size());
     FoldRegion[] regions = toFoldArray(myRegions);
-    FoldRegion currentToplevel = null;
+    FoldRegion currentCollapsed = null;
     for (FoldRegion region : regions) {
-      if (region.isValid()) {
+      if (!region.isValid()) {
+        continue;
+      }
+
+      if (currentCollapsed == null || !contains(currentCollapsed, region)) {
         visible.add(region);
-        if (!region.isExpanded()) {
-          if (currentToplevel == null || currentToplevel.getEndOffset() < region.getStartOffset()) {
-            currentToplevel = region;
-            topLevels.add(region);
-          }
+      }
+
+      if (!region.isExpanded()) {
+        if (currentCollapsed == null || currentCollapsed.getEndOffset() < region.getStartOffset()) {
+          currentCollapsed = region;
+          topLevels.add(region);
         }
       }
     }
 
     myCachedTopLevelRegions = toFoldArray(topLevels);
-
-    Arrays.sort(myCachedTopLevelRegions, BY_END_OFFSET);
-
-    FoldRegion[] visibleArrayed = toFoldArray(visible);
-    for (FoldRegion visibleRegion : visibleArrayed) {
-      for (FoldRegion topLevelRegion : myCachedTopLevelRegions) {
-        if (contains(topLevelRegion, visibleRegion)) {
-          visible.remove(visibleRegion);
-          break;
-        }
-      }
-    }
-
     myCachedVisible = toFoldArray(visible);
 
+    Arrays.sort(myCachedTopLevelRegions, BY_END_OFFSET);
     Arrays.sort(myCachedVisible, BY_END_OFFSET_REVERSE);
 
     updateCachedOffsets();
@@ -164,11 +157,18 @@ abstract class FoldRegionsTree {
   boolean addRegion(FoldRegion range) {
     // During batchProcessing elements are inserted in ascending order,
     // binary search find acceptable insertion place first time
-    final boolean canUseCachedValue =
-      myCachedLastIndex != -1 && isBatchFoldingProcessing() && myRegions.get(myCachedLastIndex).getStartOffset() <= range.getStartOffset();
+    final boolean canUseCachedValue;
+    if (myCachedLastIndex >= myRegions.size()) {
+      // todo this happens after removeRegion()... myCachedListIndex must die!
+      canUseCachedValue = false;
+    }
+    else {
+      canUseCachedValue =
+        myCachedLastIndex != -1 && isBatchFoldingProcessing() && myRegions.get(myCachedLastIndex).getStartOffset() <= range.getStartOffset();
+    }
     int fastIndex = canUseCachedValue ? myCachedLastIndex + 1 : Collections.binarySearch(myRegions, range, RangeMarker.BY_START_OFFSET);
     if (fastIndex < 0) fastIndex = -fastIndex - 1;
-    
+
     // There is a possible case that given range is the first at the current batch iteration. It's also possible that it
     // range with the same bounds is already registered (e.g. particular range is registered during 'build initial fold regions' phase
     // and given range has the same offsets but different 'expanded' status.
@@ -178,9 +178,9 @@ abstract class FoldRegionsTree {
       if (TextRange.areSegmentsEqual(foldRegion, range)) {
         removeRegion(foldRegion);
         return addRegion(range);
-      } 
-    } 
-    
+      }
+    }
+
     for (int i = fastIndex - 1; i >=0; --i) {
       final FoldRegion region = myRegions.get(i);
       if (region.getEndOffset() < range.getStartOffset()) break;
@@ -241,7 +241,7 @@ abstract class FoldRegionsTree {
         if (myCachedStartOffsets[i] != myCachedTopLevelRegions[i].getStartOffset()) {
           if (DEBUG) {
             assert false :
-              "inconsistent cached fold data detected. Start offsets: " + Arrays.toString(myCachedStartOffsets) 
+              "inconsistent cached fold data detected. Start offsets: " + Arrays.toString(myCachedStartOffsets)
               + ", end offsets: " + Arrays.toString(myCachedEndOffsets) + ", top regions: " + Arrays.toString(myCachedTopLevelRegions)
               + ", visible regions: " + Arrays.toString(myCachedVisible);
           }
