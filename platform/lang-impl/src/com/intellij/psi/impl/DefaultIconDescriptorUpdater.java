@@ -27,6 +27,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import lombok.val;
 import org.consulo.lang.LanguageElementIcons;
+import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,6 +71,9 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
       }
 
       iconDescriptor.setMainIcon(symbolIcon);
+    }
+    else if(element instanceof PsiPackage) {
+      iconDescriptor.setMainIcon(AllIcons.Nodes.Package);
     }
     else if (element instanceof PsiFile) {
       if (iconDescriptor.getMainIcon() != null) {
