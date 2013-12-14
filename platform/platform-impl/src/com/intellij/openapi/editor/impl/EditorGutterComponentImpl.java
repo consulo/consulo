@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.codeInsight.hint.TooltipController;
 import com.intellij.codeInsight.hint.TooltipGroup;
 import com.intellij.ide.IdeEventQueue;
@@ -37,15 +38,20 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.*;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
@@ -104,6 +110,14 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       installDnD();
     }
     setOpaque(true);
+    if (isDistractionFreeMode()) {
+      editor.getComponent().addComponentListener(new ComponentAdapter(){
+        @Override
+        public void componentResized(ComponentEvent event) {
+          updateSize();
+        }
+      });
+    }
   }
 
   @SuppressWarnings({"ConstantConditions"})
@@ -112,7 +126,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       .setBeanProvider(new Function<DnDActionInfo, DnDDragStartBean>() {
         @Override
         public DnDDragStartBean fun(DnDActionInfo info) {
-          final GutterIconRenderer renderer = getGutterRenderer(info.getPoint());
+          final GutterMark renderer = getGutterRenderer(info.getPoint());
           return renderer != null && (info.isCopy() || info.isMove()) ? new DnDDragStartBean(renderer) : null;
         }
       })
@@ -146,10 +160,16 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Override
   public Dimension getPreferredSize() {
-    if (UISettings.getInstance().PRESENTATION_MODE) {
-      return new Dimension(myEditor.getFontMetrics(Font.PLAIN).getHeight(), myEditor.getPreferredHeight());
-    }
     int w = getLineNumberAreaWidth() + getLineMarkerAreaWidth() + getFoldingAreaWidth() + getAnnotationsAreaWidth();
+
+    if (w > 0 && UISettings.getInstance().PRESENTATION_MODE) {
+      final Dimension dimension = new Dimension(myEditor.getFontMetrics(Font.PLAIN).getHeight(), myEditor.getPreferredHeight());
+      if (isLineMarkersShown()) {
+        dimension.width += getLineNumberAreaWidth() + getLineMarkerAreaWidth();
+      }
+      return dimension;
+    }
+
     myLastPreferredHeight = myEditor.getPreferredHeight();
     return new Dimension(w, myLastPreferredHeight);
   }
@@ -176,11 +196,19 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   public void paint(Graphics g) {
     if (UISettings.getInstance().PRESENTATION_MODE) {
       g.setColor(myEditor.getColorsScheme().getDefaultBackground());
-      Dimension size = getPreferredSize();
-      Rectangle bounds = g.getClipBounds();
-      if (bounds.height >= 0) {
-        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      final Rectangle clip = g.getClipBounds();
+
+      if (clip.height >= 0) {
+        g.fillRect(clip.x, clip.y, clip.width, clip.height);
       }
+
+      paintCaretRowBackground(g, clip.x, clip.width);
+
+      if (isLineNumbersShown()) {
+        UISettings.setupAntialiasing(g);
+        paintLineNumbers(g, clip);
+      }
+
       return;
     }
 
@@ -261,7 +289,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
     if (w == 0) return;
 
-    paintBackground(g, clip, getAnnotationsAreaOffset(), w);
+    final Color background = isDistractionFreeMode() ? myEditor.getBackgroundColor() : getBackground();
+    paintBackground(g, clip, getAnnotationsAreaOffset(), w, background);
 
     Color color = myEditor.getColorsScheme().getColor(EditorColors.ANNOTATIONS_COLOR);
     g.setColor(color != null ? color : JBColor.blue);
@@ -300,7 +329,9 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       x += myTextAnnotationGutterSizes.get(i);
     }
 
-    UIUtil.drawVDottedLine((Graphics2D)g, getAnnotationsAreaOffset() + w - 1, clip.y, clip.y + clip.height, null, getOutlineColor(false));
+    if (!isDistractionFreeMode()) {
+      UIUtil.drawVDottedLine((Graphics2D)g, getAnnotationsAreaOffset() + w - 1, clip.y, clip.y + clip.height, null, getOutlineColor(false));
+    }
   }
 
   private void paintFoldingTree(Graphics g, Rectangle clip, int firstVisibleOffset, int lastVisibleOffset) {
@@ -320,7 +351,15 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   private void paintBackground(final Graphics g, final Rectangle clip, final int x, final int width) {
-    g.setColor(getBackground());
+    paintBackground(g, clip, x, width, getBackground());
+  }
+
+  private void paintBackground(final Graphics g,
+                               final Rectangle clip,
+                               final int x,
+                               final int width,
+                               Color background) {
+    g.setColor(background);
     g.fillRect(x, clip.y, width, clip.height);
 
     paintCaretRowBackground(g, x, width);
@@ -353,10 +392,16 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   @Override
   public Color getBackground() {
     if (myBackgroundColor == null) {
-      Color color = myEditor.getColorsScheme().getColor(EditorColors.GUTTER_BACKGROUND);
+      EditorColorsScheme colorsScheme = myEditor.getColorsScheme();
+      boolean distractionMode = isDistractionFreeMode();
+      Color color = distractionMode ? colorsScheme.getDefaultBackground() : colorsScheme.getColor(EditorColors.GUTTER_BACKGROUND);
       myBackgroundColor = color == null ? new Color(0xF0F0F0) : color;
     }
     return myBackgroundColor;
+  }
+
+  private boolean isDistractionFreeMode() {
+    return Registry.is("editor.distraction.free.mode");
   }
 
   private void doPaintLineNumbers(Graphics g, Rectangle clip) {
@@ -503,7 +548,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     calcIconAreaWidth();
     calcAnnotationsSize();
     if (oldIconsWidth != myLineMarkerAreaWidth || oldAnnotationsWidth != myTextAnnotationGuttersSize
-        || myLastPreferredHeight != myEditor.getPreferredHeight()) 
+        || myLastPreferredHeight != myEditor.getPreferredHeight())
     {
       fireResized();
     }
@@ -527,25 +572,50 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       myTextAnnotationGutterSizes.set(j, gutterSize);
       myTextAnnotationGuttersSize += gutterSize;
     }
+
+    if (myEditor.getComponent().isShowing() && isDistractionFreeMode() && !isMirrored()) {
+      centerEditorByAnnotationArea();
+    }
   }
 
-  private TIntObjectHashMap<ArrayList<GutterIconRenderer>> myLineToGutterRenderers;
+  private void centerEditorByAnnotationArea() {
+    EditorSettings settings = myEditor.getSettings();
+    int rightMargin = settings.getRightMargin(myEditor.getProject());
+    if (rightMargin <= 0) return;
+
+    IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myEditor.getProject());
+
+    JComponent editorComponent = myEditor.getComponent();
+    RelativePoint point = new RelativePoint(editorComponent, new Point(0, 0));
+    Point editorLocationInWindow = point.getPoint(ideFrame.getComponent());
+
+    int editorLocationX = (int)editorLocationInWindow.getX();
+    int rightMarginX = rightMargin * EditorUtil.getSpaceWidth(Font.PLAIN, myEditor) + editorLocationX;
+
+    int width = editorLocationX + editorComponent.getWidth();
+    if (rightMarginX < width && editorLocationX < width - rightMarginX) {
+      myTextAnnotationGuttersSize = Math.max(myTextAnnotationGuttersSize, (width - rightMarginX - editorLocationX)/2 -
+                                                                          (myLineMarkerAreaWidth + myLineNumberAreaWidth));
+    }
+  }
+
+  private TIntObjectHashMap<ArrayList<GutterMark>> myLineToGutterRenderers;
 
   private void calcIconAreaWidth() {
-    myLineToGutterRenderers = new TIntObjectHashMap<ArrayList<GutterIconRenderer>>();
+    myLineToGutterRenderers = new TIntObjectHashMap<ArrayList<GutterMark>>();
 
     processRangeHighlighters(0, myEditor.getDocument().getTextLength(), new RangeHighlighterProcessor() {
       @Override
       public void process(RangeHighlighter highlighter) {
-        GutterIconRenderer renderer = highlighter.getGutterIconRenderer();
+        GutterMark renderer = highlighter.getGutterIconRenderer();
         if (renderer == null) return;
 
         int startOffset = highlighter.getStartOffset();
         int line = myEditor.getDocument().getLineNumber(startOffset);
 
-        ArrayList<GutterIconRenderer> renderers = myLineToGutterRenderers.get(line);
+        ArrayList<GutterMark> renderers = myLineToGutterRenderers.get(line);
         if (renderers == null) {
-          renderers = new ArrayList<GutterIconRenderer>();
+          renderers = new ArrayList<GutterMark>();
           myLineToGutterRenderers.put(line, renderers);
         }
 
@@ -557,12 +627,12 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
     myIconsAreaWidth = START_ICON_AREA_WIDTH;
 
-    myLineToGutterRenderers.forEachValue(new TObjectProcedure<ArrayList<GutterIconRenderer>>() {
+    myLineToGutterRenderers.forEachValue(new TObjectProcedure<ArrayList<GutterMark>>() {
       @Override
-      public boolean execute(ArrayList<GutterIconRenderer> renderers) {
+      public boolean execute(ArrayList<GutterMark> renderers) {
         int width = 1;
         for (int i = 0; i < renderers.size(); i++) {
-          GutterIconRenderer renderer = renderers.get(i);
+          GutterMark renderer = renderers.get(i);
           width += renderer.getIcon().getIconWidth();
           if (i > 0) width += GAP_BETWEEN_ICONS;
         }
@@ -606,7 +676,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       public boolean execute(int line) {
         if (firstVisibleLine > line || lastVisibleLine < line) return true;
         if (isLineCollapsed(line)) return true;
-        ArrayList<GutterIconRenderer> renderers = myLineToGutterRenderers.get(line);
+        ArrayList<GutterMark> renderers = myLineToGutterRenderers.get(line);
         paintIconRow(line, renderers, g);
         return true;
       }
@@ -619,10 +689,10 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return region != null && region.getEndOffset() >= myEditor.getDocument().getLineEndOffset(line);
   }
 
-  private void paintIconRow(int line, ArrayList<GutterIconRenderer> row, final Graphics g) {
+  private void paintIconRow(int line, ArrayList<GutterMark> row, final Graphics g) {
     processIconsRow(line, row, new LineGutterIconRendererProcessor() {
       @Override
-      public void process(int x, int y, GutterIconRenderer renderer) {
+      public void process(int x, int y, GutterMark renderer) {
         Icon icon = renderer.getIcon();
         icon.paintIcon(EditorGutterComponentImpl.this, g, x, y);
       }
@@ -669,17 +739,17 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   private interface LineGutterIconRendererProcessor {
-    void process(int x, int y, GutterIconRenderer renderer);
+    void process(int x, int y, GutterMark renderer);
   }
 
-  private void processIconsRow(int line, ArrayList<GutterIconRenderer> row, LineGutterIconRendererProcessor processor) {
+  private void processIconsRow(int line, ArrayList<GutterMark> row, LineGutterIconRendererProcessor processor) {
     int middleCount = 0;
     int middleSize = 0;
     int x = getLineMarkerAreaOffset() + 1;
     final int y = myEditor.logicalPositionToXY(new LogicalPosition(line, 0)).y;
 
-    for (GutterIconRenderer r : row) {
-      final GutterIconRenderer.Alignment alignment = r.getAlignment();
+    for (GutterMark r : row) {
+      final GutterIconRenderer.Alignment alignment = ((GutterIconRenderer)r).getAlignment();
       final Icon icon = r.getIcon();
       if (alignment == GutterIconRenderer.Alignment.LEFT) {
         processor.process(x, y + getTextAlignmentShift(icon), r);
@@ -696,8 +766,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     final int leftSize = x - getLineMarkerAreaOffset();
 
     x = getLineMarkerAreaOffset() + myIconsAreaWidth;
-    for (GutterIconRenderer r : row) {
-      if (r.getAlignment() == GutterIconRenderer.Alignment.RIGHT) {
+    for (GutterMark r : row) {
+      if (((GutterIconRenderer)r).getAlignment() == GutterIconRenderer.Alignment.RIGHT) {
         Icon icon = r.getIcon();
         x -= icon.getIconWidth();
         processor.process(x, y + getTextAlignmentShift(icon), r);
@@ -710,8 +780,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     if (middleCount > 0) {
       middleSize -= GAP_BETWEEN_ICONS;
       x = getLineMarkerAreaOffset() + leftSize + (myIconsAreaWidth - leftSize - rightSize - middleSize) / 2;
-      for (GutterIconRenderer r : row) {
-        if (r.getAlignment() == GutterIconRenderer.Alignment.CENTER) {
+      for (GutterMark r : row) {
+        if (((GutterIconRenderer)r).getAlignment() == GutterIconRenderer.Alignment.CENTER) {
           Icon icon = r.getIcon();
           processor.process(x, y + getTextAlignmentShift(icon), r);
           x += icon.getIconWidth() + GAP_BETWEEN_ICONS;
@@ -789,7 +859,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       action.fun(visibleFoldRegion);
     }
   }
-  
+
   private void paintFoldingBackground(Graphics g, Rectangle clip, int firstVisibleOffset, int lastVisibleOffset) {
     int lineX = getWhitespaceSeparatorOffset();
     paintBackground(g, clip, getFoldingAreaOffset(), getFoldingAreaWidth());
@@ -1111,7 +1181,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       return true;
     }
     return myEditor.getSettings().isAllowSingleLogicalLineFolding()
-      && !myEditor.getSoftWrapModel().getSoftWrapsForRange(startOffset, endOffsetToUse).isEmpty();
+           && !myEditor.getSoftWrapModel().getSoftWrapsForRange(startOffset, endOffsetToUse).isEmpty();
   }
 
   @SuppressWarnings("SuspiciousNameCombination")
@@ -1165,14 +1235,14 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     if (toolTip != null && !toolTip.isEmpty()) {
       final Ref<Point> t = new Ref<Point>(e.getPoint());
       int line = myEditor.yPositionToLogicalLine(e.getY());
-      ArrayList<GutterIconRenderer> row = myLineToGutterRenderers.get(line);
+      ArrayList<GutterMark> row = myLineToGutterRenderers.get(line);
       Balloon.Position ballPosition = Balloon.Position.atRight;
       if (row != null) {
-        final TreeMap<Integer, GutterIconRenderer> xPos = new TreeMap<Integer, GutterIconRenderer>();
+        final TreeMap<Integer, GutterMark> xPos = new TreeMap<Integer, GutterMark>();
         final int[] currentPos = {0};
         processIconsRow(line, row, new LineGutterIconRendererProcessor() {
           @Override
-          public void process(int x, int y, GutterIconRenderer r) {
+          public void process(int x, int y, GutterMark r) {
             xPos.put(x, r);
             if (renderer == r && r != null) {
               currentPos[0] = x;
@@ -1356,14 +1426,20 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Override
   @Nullable
-  public Point getPoint(GutterIconRenderer renderer) {
+  public Point getPoint(final GutterIconRenderer renderer) {
+    final Ref<Point> result = Ref.create();
     for (int line : myLineToGutterRenderers.keys()) {
-      for (GutterIconRenderer gutterIconRenderer : myLineToGutterRenderers.get(line)) {
-        if (gutterIconRenderer.equals(renderer)) {
-          int x = getLineMarkerAreaOffset() + 1;
-          final int y = myEditor.logicalPositionToXY(new LogicalPosition(line, 0)).y;
-          return new Point(x, y);
+      processIconsRow(line, myLineToGutterRenderers.get(line), new LineGutterIconRendererProcessor() {
+        @Override
+        public void process(int x, int y, GutterMark r) {
+          if (result.isNull() && r.equals(renderer)) {
+            result.set(new Point(x, y));
+          }
         }
+      });
+
+      if (!result.isNull()) {
+        return result.get();
       }
     }
     return null;
@@ -1411,7 +1487,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
         ActionGroup actionGroup = renderer.getPopupMenuActions();
         if (actionGroup != null) {
           ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(ActionPlaces.UNKNOWN,
-                                                                                        actionGroup);
+                                                                          actionGroup);
           popupMenu.getComponent().show(this, e.getX(), e.getY());
           e.consume();
         } else {
@@ -1458,16 +1534,16 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   @Nullable
-  private GutterIconRenderer getGutterRenderer(final Point p) {
+  private GutterMark getGutterRenderer(final Point p) {
     int line = convertPointToLineNumber(p);
     if (line == -1) return null;
-    ArrayList<GutterIconRenderer> renderers = myLineToGutterRenderers.get(line);
+    ArrayList<GutterMark> renderers = myLineToGutterRenderers.get(line);
     if (renderers == null) return null;
 
-    final GutterIconRenderer[] result = {null};
+    final GutterMark[] result = {null};
     processIconsRow(line, renderers, new LineGutterIconRendererProcessor() {
       @Override
-      public void process(int x, int y, GutterIconRenderer renderer) {
+      public void process(int x, int y, GutterMark renderer) {
         final int ex = convertX((int)p.getX());
         Icon icon = renderer.getIcon();
         if (x <= ex && ex <= x + icon.getIconWidth() &&
@@ -1482,7 +1558,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Nullable
   private GutterIconRenderer getGutterRenderer(final MouseEvent e) {
-    return getGutterRenderer(e.getPoint());
+    return (GutterIconRenderer)getGutterRenderer(e.getPoint());
   }
 
   public int convertX(int x) {
