@@ -36,7 +36,7 @@ public class CharArrayUtil {
 
   /**
    * Copies all symbols from the given char sequence to the given array
-   * 
+   *
    * @param src         source data holder
    * @param dst         output data buffer
    * @param dstOffset   start offset to use within the given output data buffer
@@ -56,10 +56,10 @@ public class CharArrayUtil {
   public static void getChars(@NotNull CharSequence src, @NotNull char[] dst, int dstOffset, int len) {
     getChars(src, dst, 0, dstOffset, len);
   }
-  
+
   /**
    * Copies necessary number of symbols from the given char sequence to the given array.
-   * 
+   *
    * @param src         source data holder
    * @param dst         output data buffer
    * @param srcOffset   source text offset
@@ -99,13 +99,12 @@ public class CharArrayUtil {
     }
   }
 
+  /**
+   * @deprecated use {@link #fromSequence(CharSequence)}
+   */
   @NotNull
   public static char[] fromSequenceStrict(@NotNull CharSequence seq) {
-    char[] chars = fromSequence(seq);
-    if (seq.length() == chars.length) return chars;
-    char[] strictChars = new char[seq.length()];
-    System.arraycopy(chars, 0, strictChars, 0, seq.length());
-    return strictChars;
+    return fromSequence(seq);
   }
 
   @Nullable
@@ -126,7 +125,6 @@ public class CharArrayUtil {
 
   /**
    * @return the underlying char[] array if any, or the new chara array if not
-   * NOTE RETURNED ARRAY LENGTH MAY HAVE BE DIFFERENT FROM THE seq.length()
    */
   @NotNull
   public static char[] fromSequence(@NotNull CharSequence seq) {
@@ -137,11 +135,10 @@ public class CharArrayUtil {
     if (seq instanceof CharBuffer) {
       final CharBuffer buffer = (CharBuffer)seq;
       if (buffer.hasArray() && !buffer.isReadOnly() && buffer.arrayOffset() == 0) {
-        return buffer.array();
-        // final char[] bufArray = buffer.array();
-        // return larger array. Clients may use seq.length() to calculate correct processing range.
-        // if (bufArray.length == seq.length())
-        // return bufArray;
+        char[] array = buffer.array();
+        if (buffer.length() == array.length) {
+          return array;
+        }
       }
 
       char[] chars = new char[seq.length()];
@@ -156,7 +153,6 @@ public class CharArrayUtil {
       ((StringBuffer)seq).getChars(0, seq.length(), chars, 0);
       return chars;
     }
-
     if (seq instanceof StringBuilder) {
       char[] chars = new char[seq.length()];
       ((StringBuilder)seq).getChars(0, seq.length(), chars, 0);
@@ -193,12 +189,6 @@ public class CharArrayUtil {
       return chars;
     }
 
-    if (seq instanceof StringBuilder) {
-      char[] chars = new char[end-start];
-      ((StringBuilder)seq).getChars(start, end, chars, 0);
-      return chars;
-    }
-
     String s = seq.toString();
     char[] chars = new char[end-start];
     s.getChars(start, end, chars, 0);
@@ -215,7 +205,7 @@ public class CharArrayUtil {
    * <p/>
    * Example:
    * {@code buffer="abc", startOffset=0, endOffset = 3, chars="ab". Result: 2}
-   * 
+   *
    * @param buffer       target buffer which symbols should be checked
    * @param startOffset  start offset to use within the given buffer (inclusive)
    * @param endOffset    end offset to use within the given buffer (exclusive)
@@ -264,10 +254,10 @@ public class CharArrayUtil {
   public static int shiftBackward(@NotNull CharSequence buffer, int offset, @NotNull String chars) {
     return shiftBackward(buffer, 0, offset, chars);
   }
-  
+
   public static int shiftBackward(@NotNull CharSequence buffer, int minOffset, int maxOffset, @NotNull String chars) {
     if (maxOffset >= buffer.length()) return maxOffset;
-    
+
     int offset = maxOffset;
     while (true) {
       if (offset < minOffset) break;
@@ -360,11 +350,11 @@ public class CharArrayUtil {
     final int len = s.length();
     if (offset + len > bufferEnd) return false;
     if (offset < 0) return false;
-    
+
     //if (buffer instanceof String && s instanceof String) {
     //  return ((String)buffer).regionMatches(offset, (String)s, 0, len);
     //}
-    
+
     for (int i = 0; i < len; i++) {
       if (buffer.charAt(offset + i) != s.charAt(i)) return false;
     }
@@ -608,7 +598,7 @@ public class CharArrayUtil {
 
   /**
    * Allows to answer if target region of the given text contains only white space symbols (tabulations, white spaces and line feeds).
-   * 
+   *
    * @param text      text to check
    * @param start     start offset within the given text to check (inclusive)
    * @param end       end offset within the given text to check (exclusive)

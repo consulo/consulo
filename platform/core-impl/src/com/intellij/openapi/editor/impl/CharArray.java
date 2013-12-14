@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import com.intellij.diagnostic.Dumpable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.CharArrayUtil;
@@ -74,7 +73,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
   // We had a problems with bulk document text processing, hence, debug facilities were introduced. The fields group below work with them.
   // The main idea is to hold all history of bulk processing iteration in order to be able to retrieve it from client and reproduce the
   // problem.
-  
+
   private final boolean myDebug = isDebug();
 
   boolean isDebug() {
@@ -189,7 +188,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
     }
     CharSequence originalSequence = myOriginalSequence;
     int origLen = originalSequence == null ? -1 : originalSequence.length();
-    String string = myStringRef == null ? null : myStringRef.get();
+    String string = com.intellij.reference.SoftReference.dereference(myStringRef);
     int stringLen = string == null ? -1 : string.length();
     assert origLen == stringLen || origLen==-1 || stringLen==-1;
 
@@ -220,7 +219,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
 
     myDebugArray.assertConsistency();
 
-    CharSequence str = myStringRef == null ? null : myStringRef.get();
+    CharSequence str = com.intellij.reference.SoftReference.dereference(myStringRef);
     if (str == null) {
       if (myHasDeferredChanges) {
         str = doSubString(0, myCount + myDeferredShift).toString();
@@ -389,7 +388,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
   @NotNull
   public String toString() {
     assertConsistency();
-    String str = myStringRef == null ? null : myStringRef.get();
+    String str = com.intellij.reference.SoftReference.dereference(myStringRef);
     if (str == null) {
       if (myHasDeferredChanges) {
         str = substring(0, length()).toString();
@@ -468,7 +467,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
       try {
         flushDeferredChanged();
         if (myOriginalSequence != null && myArray == null) {
-          myArray = array = ArrayUtil.realloc(CharArrayUtil.fromSequence(myOriginalSequence), myOriginalSequence.length());
+          myArray = array = CharArrayUtil.fromSequence(myOriginalSequence);
           myStringRef = null;
         }
       }
@@ -565,7 +564,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
   public boolean hasDeferredChanges() {
     return myHasDeferredChanges;
   }
-  
+
   /**
    * There is a possible case that client of this class wants to perform great number of modifications in a short amount of time
    * (e.g. end-user performs formatting of the document backed by the object of the current class). It may result in significant
@@ -597,7 +596,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
    * <b>Note:</b> we can't exclude possibility that <code>'defer changes'</code> mode is started but inadvertently not ended
    * (due to programming error, unexpected exception etc). Hence, this class is free to automatically end
    * <code>'defer changes'</code> mode when necessary in order to avoid memory leak with infinite deferred changes storing.
-   * 
+   *
    * @param deferredChangeMode    flag that defines if <code>'defer changes'</code> mode should be used by the current object
    */
   public void setDeferredChangeMode(boolean deferredChangeMode) {
@@ -673,7 +672,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
     return "deferred changes mode: " + isDeferredChangeMode()+", length: " + length()+" (data array length: " + myCount+
            ", deferred shift: " + myDeferredShift+"); view offsets: [" + myStart+"; "+myCount+"]; deferred changes: "+myDeferredChangesStorage;
   }
-  
+
   private void checkStrings(@NonNls @NotNull String operation, @NotNull String expected, @NotNull CharSequence actual) {
     if (StringUtil.equals(expected, actual)) {
       return;
@@ -696,7 +695,7 @@ abstract class CharArray implements CharSequenceBackedByArray, Dumpable {
       }
     }
     dumpDebugInfo("Incorrect " + operation+" processing. Expected length: " + expected.length()+", actual length: " +
-      actual.length()+", expected: '" + expected+"', actual: '" + actual+"'");
+                  actual.length()+", expected: '" + expected+"', actual: '" + actual+"'");
   }
 
   private void dumpDebugInfo(@NonNls @NotNull String problem) {

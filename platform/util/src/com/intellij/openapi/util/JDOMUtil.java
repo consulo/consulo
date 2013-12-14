@@ -342,15 +342,7 @@ public class JDOMUtil {
 
   @NotNull
   public static Document loadDocument(CharSequence seq) throws IOException, JDOMException {
-    try {
-      return getSaxBuilder().build(new CharSequenceReader(seq));
-    }
-    catch (JDOMException e) {
-      System.out.println("|" + seq + "|");
-      e.printStackTrace();
-    }
-
-    return null;
+    return getSaxBuilder().build(new CharSequenceReader(seq));
   }
 
   @NotNull

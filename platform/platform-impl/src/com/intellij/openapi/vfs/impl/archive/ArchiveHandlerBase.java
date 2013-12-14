@@ -112,6 +112,8 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
   private File getMirrorWithContentHash(File originalFile,
                                         FileAttributes originalAttributes) {
     File mirrorFile = null;
+    String jarDir = getJarsDir();
+
     try {
       String path = originalFile.getPath();
       CacheLibraryInfo info = CacheLibraryInfo.ourCachedLibraryInfo.get(path);
@@ -121,7 +123,7 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
         if (originalAttributes.length == info.myFileLength &&
             Math.abs(originalAttributes.lastModified - info.myModificationTime) <= FS_TIME_RESOLUTION
           ) {
-          mirrorFile = new File(new File(getJarsDir()), info.mySnapshotPath);
+          mirrorFile = new File(new File(jarDir), info.mySnapshotPath);
           mirrorFileAttributes = FileSystemUtil.getAttributes(mirrorFile);
           if (mirrorFileAttributes != null &&
               mirrorFileAttributes.length == originalAttributes.length &&
@@ -140,7 +142,7 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
       File tempJarFile = null;
 
       try {
-        tempJarFile = FileUtil.createTempFile(new File(getJarsDir()), originalFile.getName(), "", true, false);
+        tempJarFile = FileUtil.createTempFile(new File(jarDir), originalFile.getName(), "", true, false);
         os = new DataOutputStream(new FileOutputStream(tempJarFile));
         is = new FileInputStream(originalFile);
         byte[] buffer = new byte[20 * 1024];
@@ -155,10 +157,13 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
           sha1.update(buffer, 0, read);
           os.write(buffer, 0, read);
         }
-      } catch (IOException ex) {
-        reportIOErrorWithJars(originalFile, mirrorFile, ex);
+      }
+      catch (IOException ex) {
+        File target = mirrorFile != null ? mirrorFile : tempJarFile != null ? tempJarFile : new File(jarDir);
+        reportIOErrorWithJars(originalFile, target, ex);
         return originalFile;
-      } catch (NoSuchAlgorithmException ex) {
+      }
+      catch (NoSuchAlgorithmException ex) {
         assert false;
         return originalFile; // should never happen for sha1
       }
@@ -168,7 +173,7 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
       }
 
       byte[] digest = sha1.digest();
-      mirrorFile = new File(new File(getJarsDir()), getSnapshotName(originalFile.getName(), digest));
+      mirrorFile = new File(new File(jarDir), getSnapshotName(originalFile.getName(), digest));
       mirrorFileAttributes = FileSystemUtil.getAttributes(mirrorFile);
 
       if (mirrorFileAttributes == null ||
@@ -194,7 +199,7 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
       CacheLibraryInfo.ourCachedLibraryInfo.force();
       return mirrorFile;
     } catch (IOException ex) {
-      reportIOErrorWithJars(originalFile, mirrorFile != null ? mirrorFile: new File(getJarsDir(), originalFile.getName()), ex);
+      reportIOErrorWithJars(originalFile, mirrorFile != null ? mirrorFile: new File(jarDir, originalFile.getName()), ex);
       return originalFile;
     }
   }

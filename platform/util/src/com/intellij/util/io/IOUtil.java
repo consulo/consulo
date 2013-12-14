@@ -15,8 +15,10 @@
  */
 package com.intellij.util.io;
 
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.reference.SoftReference;
 import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -112,6 +114,8 @@ public class IOUtil {
   }
 
   public static final Charset US_ASCII = Charset.forName("US-ASCII");
+  private static final ThreadLocal<SoftReference<char[]>> spareBufferLocal = new ThreadLocal<SoftReference<char[]>>();
+
   public static String readUTFFast(@NotNull byte[] buffer, @NotNull DataInput storage) throws IOException {
     int len = 0xFF & (int)storage.readByte();
     if (len == 0xFF) {
@@ -125,7 +129,15 @@ public class IOUtil {
 
     if (len == 0) return "";
     storage.readFully(buffer, 0, len);
-    return new String(buffer, 0, len, US_ASCII);
+
+    SoftReference<char[]> reference = spareBufferLocal.get();
+    char[] chars = reference != null ? reference.get() : null;
+    if (chars == null) {
+      chars = new char[STRING_LENGTH_THRESHOLD];
+      spareBufferLocal.set(new SoftReference<char[]>(chars));
+    }
+    for(int i = 0; i < len; ++i) chars[i] = (char)(buffer[i] &0xFF);
+    return new String(chars, 0, len);
   }
 
   public static boolean isAscii(@NotNull String str) {
@@ -183,5 +195,27 @@ public class IOUtil {
     catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static <T> T openCleanOrResetBroken(@NotNull ThrowableComputable<T, IOException> factoryComputable, final File file) throws IOException {
+    return openCleanOrResetBroken(factoryComputable, new Runnable() {
+      @Override
+      public void run() {
+        deleteAllFilesStartingWith(file);
+      }
+    });
+  }
+
+  public static <T> T openCleanOrResetBroken(@NotNull ThrowableComputable<T, IOException> factoryComputable, Runnable cleanupCallback) throws IOException {
+    for(int i = 0; i < 2; ++i) {
+      try {
+        return factoryComputable.compute();
+      } catch (IOException ex) {
+        if (i == 1) throw ex;
+        cleanupCallback.run();
+      }
+    }
+
+    return null;
   }
 }
