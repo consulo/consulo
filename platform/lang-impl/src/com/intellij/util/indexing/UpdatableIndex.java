@@ -31,6 +31,8 @@ public interface UpdatableIndex<Key, Value, Input> extends AbstractIndex<Key,Val
 
   void flush() throws StorageException;
 
+  /**
+   */
   Computable<Boolean> update(int inputId, @Nullable Input content);
 
   Lock getReadLock();

@@ -31,6 +31,7 @@ import java.util.Collections;
  * @since 12:14/14.08.13
  */
 public class CompilerServerStubIndexImpl extends StubIndex {
+
   @Override
   public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey,
                                                            @NotNull Key key,

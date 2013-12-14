@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  * User: max
  * Date: Apr 19, 2002
  * Time: 2:26:19 PM
- * To change template for new class use 
+ * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.intellij.openapi.editor.impl;
@@ -28,10 +28,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.ex.DisposableIterator;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.ex.SweepProcessor;
+import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -50,20 +47,19 @@ import java.util.List;
 
 public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.MarkupModelImpl");
-  private final DocumentImpl myDocument;
+  private final DocumentEx myDocument;
 
   private RangeHighlighter[] myCachedHighlighters;
   private final List<MarkupModelListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final RangeHighlighterTree myHighlighterTree;
 
-  MarkupModelImpl(@NotNull DocumentImpl document) {
+  MarkupModelImpl(@NotNull DocumentEx document) {
     myDocument = document;
     myHighlighterTree = new RangeHighlighterTree(myDocument, this);
   }
 
   @Override
   public void dispose() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
     myHighlighterTree.dispose();
   }
 
@@ -147,20 +143,21 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
   public void changeAttributesInBatch(@NotNull RangeHighlighterEx highlighter,
                                       @NotNull Consumer<RangeHighlighterEx> changeAttributesAction) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    boolean changed = ((RangeHighlighterImpl)highlighter).changeAttributesNoEvents(changeAttributesAction);
-    if (changed) {
-      fireAttributesChanged(highlighter);
+    RangeHighlighterData.ChangeResult changed = ((RangeHighlighterImpl)highlighter).changeAttributesNoEvents(changeAttributesAction);
+    if (changed != RangeHighlighterData.ChangeResult.NOT_CHANGED) {
+      fireAttributesChanged(highlighter, changed == RangeHighlighterData.ChangeResult.RENDERERS_CHANGED);
     }
   }
 
-  IntervalTreeImpl.IntervalNode addRangeHighlighter(RangeHighlighterEx marker,
-                                                    int start,
-                                                    int end,
-                                                    boolean greedyToLeft,
-                                                    boolean greedyToRight,
-                                                    int layer) {
+  @Override
+  public void addRangeHighlighter(RangeHighlighterEx marker,
+                                  int start,
+                                  int end,
+                                  boolean greedyToLeft,
+                                  boolean greedyToRight,
+                                  int layer) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    return myHighlighterTree.addInterval(marker, start, end, greedyToLeft, greedyToRight, layer);
+    myHighlighterTree.addInterval(marker, start, end, greedyToLeft, greedyToRight, layer);
   }
 
   @Override
@@ -213,24 +210,27 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
   }
 
   @Override
-  public void setRangeHighlighterAttributes(@NotNull final RangeHighlighter highlighter, final TextAttributes textAttributes) {
+  public void setRangeHighlighterAttributes(@NotNull final RangeHighlighter highlighter, @NotNull final TextAttributes textAttributes) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    ((RangeHighlighterImpl)highlighter).setTextAttributes(textAttributes);
+    ((RangeHighlighterEx)highlighter).setTextAttributes(textAttributes);
   }
 
-  protected void fireAttributesChanged(RangeHighlighterEx segmentHighlighter) {
+  @Override
+  public void fireAttributesChanged(@NotNull RangeHighlighterEx segmentHighlighter, boolean renderersChanged) {
     for (MarkupModelListener listener : myListeners) {
-      listener.attributesChanged(segmentHighlighter);
+      listener.attributesChanged(segmentHighlighter, renderersChanged);
     }
   }
 
-  private void fireAfterAdded(RangeHighlighterEx segmentHighlighter) {
+  @Override
+  public void fireAfterAdded(@NotNull RangeHighlighterEx segmentHighlighter) {
     for (MarkupModelListener listener : myListeners) {
       listener.afterAdded(segmentHighlighter);
     }
   }
 
-  void fireBeforeRemoved(RangeHighlighterEx segmentHighlighter) {
+  @Override
+  public void fireBeforeRemoved(@NotNull RangeHighlighterEx segmentHighlighter) {
     for (MarkupModelListener listener : myListeners) {
       listener.beforeRemoved(segmentHighlighter);
     }
