@@ -31,20 +31,8 @@ public abstract class PersistentLibraryKind<P extends LibraryProperties> extends
     super(kindId);
   }
 
-  /** @deprecated 'fileBased' has no sense, use {@linkplain #PersistentLibraryKind(String)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedParameters")
-  public PersistentLibraryKind(@NotNull @NonNls String kindId, boolean fileBased) {
-    super(kindId);
-  }
-
   @NotNull
   public abstract P createDefaultProperties();
-
-  /** @deprecated has no sense (to remove in IDEA 13) */
-  @SuppressWarnings({"UnusedDeclaration", "MethodMayBeStatic"})
-  public boolean isFileBased() {
-    return false;
-  }
 
   public OrderRootType[] getAdditionalRootTypes() {
     return new OrderRootType[0];

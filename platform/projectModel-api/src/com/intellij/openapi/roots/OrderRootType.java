@@ -41,7 +41,7 @@ public class OrderRootType {
   /**
    * Classpath without output directories for modules.
    * Includes:
-   * <li>  classes roots for libraries and jdk
+   * <li>  classes roots for libraries and sdk
    * <li>  recursively for module dependencies: only exported items
    */
   public static final OrderRootType CLASSES = new PersistentOrderRootType("CLASSES", "classPath");
@@ -50,7 +50,7 @@ public class OrderRootType {
    * Sources.
    * Includes:
    * <li>  production and test source roots for modules
-   * <li>  source roots for libraries and jdk
+   * <li>  source roots for libraries and sdk
    * <li>  recursively for module dependencies: only exported items
    */
   public static final OrderRootType SOURCES = new PersistentOrderRootType("SOURCES", "sourcePath");
@@ -91,6 +91,7 @@ public class OrderRootType {
     List<PersistentOrderRootType> allTypes = new ArrayList<PersistentOrderRootType>();
     Collections.addAll(allTypes, getAllPersistentTypes());
     Collections.sort(allTypes, new Comparator<PersistentOrderRootType>() {
+      @Override
       public int compare(final PersistentOrderRootType o1, final PersistentOrderRootType o2) {
         return o1.getSdkRootName().compareTo(o2.getSdkRootName());
       }
@@ -110,10 +111,12 @@ public class OrderRootType {
     return null;
   }
 
+  @Override
   public final int hashCode() {
     return super.hashCode();
   }
 
+  @Override
   public final boolean equals(Object obj) {
     return super.equals(obj);
   }
