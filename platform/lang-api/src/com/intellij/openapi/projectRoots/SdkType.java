@@ -192,7 +192,7 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   public boolean isRootTypeApplicable(final OrderRootType type) {
-    return true;
+    return false;
   }
 
   /**
