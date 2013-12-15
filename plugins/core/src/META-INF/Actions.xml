@@ -1262,9 +1262,6 @@
     </group>
 
     <group id="NewGroup1">
-      <action id="NewModuleInGroup" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleInGroupAction"
-              icon="AllIcons.Nodes.Module"/>
-
       <add-to-group group-id="NewGroup" anchor="first"/>
     </group>
 
