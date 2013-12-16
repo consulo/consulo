@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
@@ -28,7 +29,6 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement>{
   @Override
   public void update(final PresentationData presentation) {
     presentation.setPresentableText(IdeBundle.message("node.projectview.libraries"));
-    presentation.setIcon(PlatformIcons.LIBRARY_ICON);
+    presentation.setIcon(AllIcons.Nodes.PpLibFolder);
   }
 
   @Override
