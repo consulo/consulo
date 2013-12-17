@@ -23,7 +23,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.editor.Document;
@@ -36,6 +35,8 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.util.ProgressWrapper;
+import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
@@ -112,6 +113,13 @@ public class FindInProjectUtil {
     if (model.getModuleName() == null || editor == null) {
       model.setDirectoryName(directoryName);
       model.setProjectScope(directoryName == null && module == null && !model.isCustomScope() || editor != null);
+
+      // for convenience set directory name to directory of current file, note that we doesn't change default projectScope
+      if (directoryName == null) {
+        VirtualFile virtualFile = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
+        if (virtualFile != null && !virtualFile.isDirectory()) virtualFile = virtualFile.getParent();
+        if (virtualFile != null) model.setDirectoryName(virtualFile.getPresentableUrl());
+      }
     }
   }
 
@@ -282,7 +290,10 @@ public class FindInProjectUtil {
     final int[] offset = {0};
     int count = 0;
     int found;
+    ProgressIndicator indicator = ProgressWrapper.unwrap(ProgressManager.getInstance().getProgressIndicator());
+    TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.getFrom(indicator);
     do {
+      tooManyUsagesStatus.pauseProcessingIfTooManyUsages(); // wait for user out of read action
       found = ApplicationManager.getApplication().runReadAction(new Computable<Integer>() {
         @Override
         @NotNull
@@ -327,10 +338,11 @@ public class FindInProjectUtil {
 
       if (fastWords.getFirst() && canOptimizeForFastWordSearch(findModel)) return filesForFastWordSearch;
 
-      final GlobalSearchScope customScope = toGlobal(project, findModel.getCustomScope());
+      SearchScope customScope = findModel.getCustomScope();
+      final GlobalSearchScope globalCustomScope = toGlobal(project, customScope);
 
       class EnumContentIterator implements ContentIterator {
-        final List<PsiFile> myFiles = new ArrayList<PsiFile>(filesForFastWordSearch);
+        final Set<PsiFile> myFiles = new LinkedHashSet<PsiFile>(filesForFastWordSearch);
         final PsiManager psiManager = PsiManager.getInstance(project);
 
         @Override
@@ -338,7 +350,7 @@ public class FindInProjectUtil {
           ProgressManager.checkCanceled();
           if (!virtualFile.isDirectory() &&
               (fileMaskRegExp == null || fileMaskRegExp.matcher(virtualFile.getName()).matches()) &&
-              (customScope == null || customScope.contains(virtualFile))) {
+              (globalCustomScope == null || globalCustomScope.contains(virtualFile))) {
             final PsiFile psiFile = psiManager.findFile(virtualFile);
             if (psiFile != null && !filesForFastWordSearch.contains(psiFile)) {
               myFiles.add(psiFile);
@@ -352,14 +364,21 @@ public class FindInProjectUtil {
           return myFiles;
         }
       }
+
       EnumContentIterator iterator = new EnumContentIterator();
+
+      if (customScope instanceof LocalSearchScope) {
+        for (VirtualFile file : getLocalScopeFiles((LocalSearchScope)customScope)) {
+          iterator.processFile(file);
+        }
+      }
 
       if (psiDirectory == null) {
         boolean success = fileIndex.iterateContent(iterator);
-        if (success && customScope != null && customScope.isSearchInLibraries()) {
+        if (success && globalCustomScope != null && globalCustomScope.isSearchInLibraries()) {
           OrderEnumerator enumerator = module == null ? OrderEnumerator.orderEntries(project) : OrderEnumerator.orderEntries(module);
           final VirtualFile[] librarySources = enumerator.withoutModuleSourceEntries().withoutDepModules().getSourceRoots();
-          iterateAll(librarySources, customScope, iterator);
+          iterateAll(librarySources, globalCustomScope, iterator);
         }
       }
       else {
@@ -395,14 +414,18 @@ public class FindInProjectUtil {
     if (scope instanceof GlobalSearchScope || scope == null) {
       return (GlobalSearchScope)scope;
     }
-    Set<VirtualFile> files = new HashSet<VirtualFile>();
-    for (PsiElement element : ((LocalSearchScope)scope).getScope()) {
+    return GlobalSearchScope.filesScope(project, getLocalScopeFiles((LocalSearchScope)scope));
+  }
+
+  private static Set<VirtualFile> getLocalScopeFiles(LocalSearchScope scope) {
+    Set<VirtualFile> files = new LinkedHashSet<VirtualFile>();
+    for (PsiElement element : scope.getScope()) {
       PsiFile file = element.getContainingFile();
       if (file != null) {
         ContainerUtil.addIfNotNull(files, file.getVirtualFile());
       }
     }
-    return GlobalSearchScope.filesScope(project, files);
+    return files;
   }
 
   @NotNull

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
@@ -45,10 +46,9 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
 
-public class TemplateManagerImpl extends TemplateManager implements ProjectComponent {
+public class TemplateManagerImpl extends TemplateManager implements ProjectComponent, Disposable {
   protected Project myProject;
   private boolean myTemplateTesting;
-  private final List<Disposable> myDisposables = new ArrayList<Disposable>();
 
   private static final Key<TemplateState> TEMPLATE_STATE_KEY = Key.create("TEMPLATE_STATE_KEY");
 
@@ -58,10 +58,10 @@ public class TemplateManagerImpl extends TemplateManager implements ProjectCompo
 
   @Override
   public void disposeComponent() {
-    for (Disposable disposable : myDisposables) {
-      Disposer.dispose(disposable);
-    }
-    myDisposables.clear();
+  }
+
+  @Override
+  public void dispose() {
   }
 
   @Override
@@ -108,9 +108,8 @@ public class TemplateManagerImpl extends TemplateManager implements ProjectCompo
     });
   }
 
-  private void disposeState(final TemplateState tState) {
+  private static void disposeState(final TemplateState tState) {
     Disposer.dispose(tState);
-    myDisposables.remove(tState);
   }
 
   @Override
@@ -139,7 +138,7 @@ public class TemplateManagerImpl extends TemplateManager implements ProjectCompo
   private TemplateState initTemplateState(final Editor editor) {
     clearTemplateState(editor);
     TemplateState state = new TemplateState(myProject, editor);
-    myDisposables.add(state);
+    Disposer.register(this, state);
     editor.putUserData(TEMPLATE_STATE_KEY, state);
     return state;
   }
@@ -282,6 +281,7 @@ public class TemplateManagerImpl extends TemplateManager implements ProjectCompo
     for (final CustomLiveTemplate customLiveTemplate : CustomLiveTemplate.EP_NAME.getExtensions()) {
       if (shortcutChar == customLiveTemplate.getShortcut()) {
         if (isApplicable(customLiveTemplate, editor, file)) {
+          PsiDocumentManager.getInstance(myProject).commitAllDocuments();
           final CustomTemplateCallback callback = new CustomTemplateCallback(editor, file, false);
           final String key = customLiveTemplate.computeTemplateKey(callback);
           if (key != null) {
@@ -331,9 +331,9 @@ public class TemplateManagerImpl extends TemplateManager implements ProjectCompo
   }
 
   public Map<TemplateImpl, String> findMatchingTemplates(final PsiFile file,
-                                                          Editor editor,
-                                                          @Nullable Character shortcutChar,
-                                                          TemplateSettings templateSettings) {
+                                                         Editor editor,
+                                                         @Nullable Character shortcutChar,
+                                                         TemplateSettings templateSettings) {
     final Document document = editor.getDocument();
     CharSequence text = document.getCharsSequence();
     final int caretOffset = editor.getCaretModel().getOffset();
@@ -404,7 +404,7 @@ public class TemplateManagerImpl extends TemplateManager implements ProjectCompo
 
   public static List<TemplateImpl> findMatchingTemplates(CharSequence text,
                                                          int caretOffset,
-                                                         Character shortcutChar,
+                                                         @Nullable Character shortcutChar,
                                                          TemplateSettings settings,
                                                          boolean hasArgument) {
     String key;
@@ -587,7 +587,7 @@ public class TemplateManagerImpl extends TemplateManager implements ProjectCompo
     file = (PsiFile)file.copy();
     final Document document = file.getViewProvider().getDocument();
     assert document != null;
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    WriteCommandAction.runWriteCommandAction(file.getProject(), new Runnable() {
       @Override
       public void run() {
         document.replaceString(startOffset, endOffset, CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
