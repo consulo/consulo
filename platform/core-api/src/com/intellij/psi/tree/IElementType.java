@@ -166,6 +166,7 @@ public class IElementType {
     }
   }
 
+  @Deprecated
   public LanguageVersion getLanguageVersion() {
     return myLanguageVersion;
   }
