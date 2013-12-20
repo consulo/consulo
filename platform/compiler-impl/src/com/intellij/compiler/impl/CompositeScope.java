@@ -48,6 +48,12 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     }
   }
 
+  public CompositeScope(Collection<? extends CompileScope> scopes) {
+    for (CompileScope scope : scopes) {
+      addScope(scope);
+    }
+  }
+
   private void addScope(CompileScope scope) {
     if (scope instanceof CompositeScope) {
       final CompositeScope compositeScope = (CompositeScope)scope;

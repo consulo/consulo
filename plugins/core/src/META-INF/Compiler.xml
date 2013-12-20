@@ -18,6 +18,8 @@
     <extensionPoint name="compiler.dependencyCache" beanClass="com.intellij.compiler.make.DependencyCacheEP">
       <with attribute="implementationClass" implements="com.intellij.compiler.make.DependencyCache"/>
     </extensionPoint>
+
+    <extensionPoint name="compiler.moduleScopeFactory" interface="org.consulo.compiler.impl.CompileModuleScopeFactory" />
   </extensionPoints>
   <extensions defaultExtensionNs="com.intellij">
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryElementType"/>

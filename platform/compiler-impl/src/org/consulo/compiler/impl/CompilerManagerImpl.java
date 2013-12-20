@@ -355,13 +355,23 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   @NotNull
   public CompileScope createModuleCompileScope(@NotNull final Module module, final boolean includeDependentModules) {
+    for (CompileModuleScopeFactory compileModuleScopeFactory : CompileModuleScopeFactory.EP_NAME.getExtensions()) {
+      FileIndexCompileScope scope = compileModuleScopeFactory.createScope(module, includeDependentModules);
+      if(scope != null) {
+        return scope;
+      }
+    }
     return new ModuleCompileScope(module, includeDependentModules);
   }
 
   @Override
   @NotNull
   public CompileScope createModulesCompileScope(@NotNull final Module[] modules, final boolean includeDependentModules) {
-    return new ModuleCompileScope(myProject, modules, includeDependentModules);
+    List<CompileScope> list = new ArrayList<CompileScope>(modules.length);
+    for (Module module : modules) {
+      list.add(createModuleCompileScope(module, includeDependentModules));
+    }
+    return new CompositeScope(list);
   }
 
   @Override
@@ -369,7 +379,11 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   public CompileScope createModuleGroupCompileScope(@NotNull final Project project,
                                                     @NotNull final Module[] modules,
                                                     final boolean includeDependentModules) {
-    return new ModuleCompileScope(project, modules, includeDependentModules);
+    List<CompileScope> list = new ArrayList<CompileScope>(modules.length);
+    for (Module module : modules) {
+      list.add(createModuleCompileScope(module, includeDependentModules));
+    }
+    return new CompositeScope(list);
   }
 
   @Override
