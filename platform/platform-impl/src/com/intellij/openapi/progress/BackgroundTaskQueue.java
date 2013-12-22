@@ -39,7 +39,7 @@ import org.jetbrains.annotations.TestOnly;
  * Runs backgroundable tasks one by one.
  * To add a task to the queue use {@link #run(com.intellij.openapi.progress.Task.Backgroundable)}
  * BackgroundTaskQueue may have a title - this title will be used if the task which is currently running doesn't have a title.
- * 
+ *
  * @author yole
  * @author Kirill Likhodedov
  */
@@ -66,15 +66,15 @@ public class BackgroundTaskQueue {
 
     myProcessor = new QueueProcessor<Pair<Task.Backgroundable, Getter<ProgressIndicator>>>(consumer, true,
                                                                                            threadToUse, new Condition<Object>() {
-        @Override public boolean value(Object o) {
-          if (project == null) return ApplicationManager.getApplication().isDisposed();
-          if (project.isDefault()) {
-            return project.isDisposed();
-          } else {
-            return !ApplicationManager.getApplication().isUnitTestMode() && !project.isOpen() || project.isDisposed();
-          }
+      @Override public boolean value(Object o) {
+        if (project == null) return ApplicationManager.getApplication().isDisposed();
+        if (project.isDefault()) {
+          return project.isDisposed();
+        } else {
+          return !ApplicationManager.getApplication().isUnitTestMode() && !project.isOpen() || project.isDisposed();
         }
-      });
+      }
+    });
   }
 
   public void clear() {
@@ -83,6 +83,10 @@ public class BackgroundTaskQueue {
 
   public boolean isEmpty() {
     return myProcessor.isEmpty();
+  }
+
+  public void waitForTasksToFinish() {
+    myProcessor.waitFor();
   }
 
   public void run(Task.Backgroundable task) {
@@ -131,7 +135,7 @@ public class BackgroundTaskQueue {
         public void run() {
           // calls task's run and onCancel() or onSuccess(); call continuation after task.run()
           RunBackgroundable.runIfBackgroundThread(backgroundable,
-            pi[0] == null ? ProgressManager.getInstance().getProgressIndicator() : pi[0], runnable);
+                                                  pi[0] == null ? ProgressManager.getInstance().getProgressIndicator() : pi[0], runnable);
         }
       };
 

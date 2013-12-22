@@ -27,20 +27,21 @@ import com.intellij.ide.ui.laf.darcula.ui.DarculaTextBorder;
 import com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI;
 import com.intellij.ide.ui.search.BooleanOptionDescription;
 import com.intellij.ide.ui.search.OptionDescription;
-import com.intellij.ide.ui.search.SearchableOptionsRegistrarImpl;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -118,6 +119,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   private static final int MAX_SETTINGS = 5;
   private static final int MAX_ACTIONS = 5;
   private static final int MAX_RECENT_FILES = 10;
+  public static final int MAX_SEARCH_EVERYWHERE_HISTORY = 50;
 
   private SearchEverywhereAction.MyListRenderer myRenderer;
   MySearchTextField myPopupField;
@@ -142,14 +144,8 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
   private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, ApplicationManager.getApplication());
   private Alarm myUpdateAlarm = new Alarm(ApplicationManager.getApplication());
-  private JBList myList = new JBList(myListModel) {
-    @Override
-    public Dimension getPreferredSize() {
-      final Dimension size = super.getPreferredSize();
-      return new Dimension(Math.min(size.width, 800), size.height);
-    }
-  };
-  private JCheckBox myNonProjectCheckBox = new JCheckBox();
+  private JBList myList;
+  private JCheckBox myNonProjectCheckBox;
   private AnActionEvent myActionEvent;
   private Component myContextComponent;
   private CalcThread myCalcThread;
@@ -189,6 +185,9 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
           } else {
             ourLastTimePressed.set(System.currentTimeMillis());
             ourOtherKeyWasPressed.set(true);
+            if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_TAB)  {
+              ourLastTimePressed.set(0);
+            }
           }
           resetState();
         }
@@ -257,6 +256,9 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   private Component myFocusOwner;
   private ChooseByNamePopup myFileChooseByName;
 
+  private Editor myEditor;
+  private PsiFile myFile;
+
   @Override
   public JComponent createCustomComponent(Presentation presentation) {
     JPanel panel = new JPanel(new BorderLayout()) {
@@ -319,7 +321,25 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   }
 
   public SearchEverywhereAction() {
+    updateComponents();
+    //noinspection SSBasedInspection
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        onFocusLost();
+      }
+    });
+
+  }
+
+  private void updateComponents() {
     myRenderer = new MyListRenderer();
+    myList = new JBList(myListModel) {
+      @Override
+      public Dimension getPreferredSize() {
+        final Dimension size = super.getPreferredSize();
+        return new Dimension(Math.min(size.width, 800), size.height);
+      }
+    };
     myList.setCellRenderer(myRenderer);
     myList.addMouseListener(new MouseAdapter() {
       @Override
@@ -332,6 +352,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       }
     });
 
+    myNonProjectCheckBox = new JCheckBox();
     myNonProjectCheckBox.setOpaque(false);
     myNonProjectCheckBox.setAlignmentX(1.0f);
     myNonProjectCheckBox.addActionListener(new ActionListener() {
@@ -355,13 +376,6 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
         }
       }
     });
-    //noinspection SSBasedInspection
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        onFocusLost();
-      }
-    });
-
   }
 
   private void initTooltip(JLabel label) {
@@ -613,10 +627,16 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       rebuildList(myPopupField.getText());
       return;
     }
+    if (e != null) {
+      myEditor = e.getData(CommonDataKeys.EDITOR);
+      myFile = e.getData(CommonDataKeys.PSI_FILE);
+    }
     if (e == null && myFocusOwner != null) {
       e = new AnActionEvent(me, DataManager.getInstance().getDataContext(myFocusOwner), ActionPlaces.UNKNOWN, getTemplatePresentation(), ActionManager.getInstance(), 0);
     }
     if (e == null) return;
+
+    updateComponents();
     myContextComponent = PlatformDataKeys.CONTEXT_COMPONENT.getData(e.getDataContext());
     final Project project = e.getProject();
     Window wnd = myContextComponent != null ? SwingUtilities.windowForComponent(myContextComponent)
@@ -673,8 +693,8 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
           List<String> history = StringUtil.isEmpty(historyString) ? new ArrayList<String>() : StringUtil.split(historyString, "\n");
           history.remove(last);
           history.add(0, last);
-          if (history.size() > 10) {
-            history = history.subList(0, 10);
+          if (history.size() > MAX_SEARCH_EVERYWHERE_HISTORY) {
+            history = history.subList(0, MAX_SEARCH_EVERYWHERE_HISTORY);
           }
           storage.setValue(SE_HISTORY_KEY, StringUtil.join(history, "\n"));
           return true;
@@ -967,12 +987,24 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
           if (name != null) {
             setLocationString(name);
           }
-        } else if (value instanceof ItemPresentation) {
-          final String text = ((ItemPresentation)value).getPresentableText();
-          append(text == null ? value.toString() : text);
-          final String location = ((ItemPresentation)value).getLocationString();
-          if (!StringUtil.isEmpty(location)) {
-            setLocationString(location);
+        }
+        else {
+          ItemPresentation presentation = null;
+          if (value instanceof ItemPresentation) {
+            presentation = (ItemPresentation)value;
+          }
+          else if (value instanceof NavigationItem) {
+            presentation = ((NavigationItem)value).getPresentation();
+          }
+          if (presentation != null) {
+            final String text = presentation.getPresentableText();
+            append(text == null ? value.toString() : text);
+            final String location = presentation.getLocationString();
+            if (!StringUtil.isEmpty(location)) {
+              setLocationString(location);
+            }
+            Icon icon = presentation.getIcon(false);
+            if (icon != null) setIcon(icon);
           }
         }
       }
@@ -1368,9 +1400,10 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     private void buildRecentFiles(String pattern) {
       final MinusculeMatcher matcher = new MinusculeMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
       final ArrayList<VirtualFile> files = new ArrayList<VirtualFile>();
+      final List<VirtualFile> selected = Arrays.asList(FileEditorManager.getInstance(project).getSelectedFiles());
       for (VirtualFile file : ArrayUtil.reverseArray(EditorHistoryManager.getInstance(project).getFiles())) {
         if (StringUtil.isEmptyOrSpaces(pattern) || matcher.matches(file.getName())) {
-          if (!files.contains(file)) {
+          if (!files.contains(file) && !selected.contains(file)) {
             files.add(file);
           }
         }
@@ -1449,76 +1482,11 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     }
 
     private GotoActionModel createActionModel() {
-      return new GotoActionModel(project, myFocusComponent) {
+      return new GotoActionModel(project, myFocusComponent, myEditor, myFile) {
         @Override
-        public boolean matches(@NotNull String name, @NotNull String pattern) {
-          final AnAction anAction = ActionManager.getInstance().getAction(name);
-          if (anAction == null) return true;
-          return NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE).matches(
-            anAction.getTemplatePresentation().getText());
-        }
-
-        @NotNull
-        @Override
-        public Object[] getElementsByName(String id, boolean checkBoxState, String pattern) {
-          final HashMap<AnAction, String> map = new HashMap<AnAction, String>();
-          final AnAction act = myActionManager.getAction(id);
-          if (act != null) {
-            map.put(act, myActionsMap.get(act));
-            if (checkBoxState) {
-              final Set<String> ids = ((ActionManagerImpl)myActionManager).getActionIds();
-              for (AnAction action : map.keySet()) { //do not add already included actions
-                ids.remove(getActionId(action));
-              }
-              if (ids.contains(id)) {
-                final AnAction anAction = myActionManager.getAction(id);
-                map.put(anAction, null);
-              }
-            }
-          }
-          Object[] objects = map.entrySet().toArray(new Map.Entry[map.size()]);
-          if (Comparing.strEqual(id, SETTINGS_KEY)) {
-            final Set<String> words = myIndex.getProcessedWords(pattern);
-            Set<OptionDescription> optionDescriptions = null;
-            final String actionManagerName = myActionManager.getComponentName();
-            for (String word : words) {
-              final Set<OptionDescription> descriptions = ((SearchableOptionsRegistrarImpl)myIndex).getAcceptableDescriptions(word);
-              if (descriptions != null) {
-                for (Iterator<OptionDescription> iterator = descriptions.iterator(); iterator.hasNext(); ) {
-                  OptionDescription description = iterator.next();
-                  if (actionManagerName.equals(description.getPath())) {
-                    iterator.remove();
-                  }
-                }
-                if (!descriptions.isEmpty()) {
-                  if (optionDescriptions == null) {
-                    optionDescriptions = descriptions;
-                  }
-                  else {
-                    optionDescriptions.retainAll(descriptions);
-                  }
-                }
-              }
-              else {
-                optionDescriptions = null;
-                break;
-              }
-            }
-            if (optionDescriptions != null && !optionDescriptions.isEmpty()) {
-              Set<String> currentHits = new HashSet<String>();
-              for (Iterator<OptionDescription> iterator = optionDescriptions.iterator(); iterator.hasNext(); ) {
-                OptionDescription description = iterator.next();
-                final String hit = description.getHit();
-                if (hit == null || !currentHits.add(hit.trim())) {
-                  iterator.remove();
-                }
-              }
-              final Object[] descriptions = optionDescriptions.toArray();
-              Arrays.sort(descriptions);
-              objects = ArrayUtil.mergeArrays(objects, descriptions);
-            }
-          }
-          return objects;
+        protected boolean actionMatches(String pattern, @NotNull AnAction anAction) {
+          return NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE)
+            .matches(anAction.getTemplatePresentation().getText());
         }
       };
     }

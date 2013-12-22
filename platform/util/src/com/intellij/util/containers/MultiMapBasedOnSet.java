@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
  */
 package com.intellij.util.containers;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
-import java.util.HashSet;
 
 /**
  * @author Sergey Evdokimov
@@ -32,4 +33,10 @@ public class MultiMapBasedOnSet<K, V> extends MultiMap<K, V> {
   protected Collection<V> createEmptyCollection() {
     return Collections.emptySet();
   }
+
+  @NotNull
+  public static <K, V> MultiMap<K, V> createBasedOnSet() {
+    return new MultiMapBasedOnSet<K, V>();
+  }
+
 }

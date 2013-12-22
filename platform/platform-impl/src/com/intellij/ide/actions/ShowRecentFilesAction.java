@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class ShowRecentFilesAction extends DumbAwareAction {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.recent.files");
-      Switcher.createAndShowSwitcher(project, IdeBundle.message("title.popup.recent.files"), true).goForward();
+      Switcher.createAndShowSwitcher(project, IdeBundle.message("title.popup.recent.files"), true);
     }
   }
 }
