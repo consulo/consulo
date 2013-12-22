@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
-* @author Konstantin Bulenkov
-*/
+ * @author Konstantin Bulenkov
+ */
 @SuppressWarnings("ConstantConditions")
 class HeadlessDialog implements AbstractDialog {
   public void setUndecorated(boolean undecorated) {
@@ -129,6 +129,15 @@ class HeadlessDialog implements AbstractDialog {
 
   public boolean isModal() {
     return false;
+  }
+
+  @Override
+  public void setModalityType(Dialog.ModalityType modalityType) {
+  }
+
+  @Override
+  public Dialog.ModalityType getModalityType() {
+    return null;
   }
 
   public void show() {

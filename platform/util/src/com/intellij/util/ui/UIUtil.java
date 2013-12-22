@@ -55,6 +55,7 @@ import java.awt.image.PixelGrabber;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
@@ -492,13 +493,14 @@ public class UIUtil {
     return UIManager.getColor("Label.disabledText");
   }
 
+  /** @deprecated to remove in IDEA 14 */
+  @SuppressWarnings("UnusedDeclaration")
   public static Icon getOptionPanelWarningIcon() {
-    return UIManager.getIcon("OptionPane.warningIcon");
+    return getWarningIcon();
   }
 
-  /**
-   * @deprecated use com.intellij.util.ui.UIUtil#getQuestionIcon()
-   */
+  /** @deprecated to remove in IDEA 14 */
+  @SuppressWarnings("UnusedDeclaration")
   public static Icon getOptionPanelQuestionIcon() {
     return getQuestionIcon();
   }
@@ -624,14 +626,6 @@ public class UIUtil {
 
   public static void installPopupMenuBorder(final JComponent contentPane) {
     LookAndFeel.installBorder(contentPane, "PopupMenu.border");
-  }
-
-  /**
-   * @deprecated Motif is gone (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean isMotifLookAndFeel() {
-    return false;
   }
 
   public static Color getTreeSelectionBorderColor() {
@@ -966,16 +960,7 @@ public class UIUtil {
     return UIManager.getColor("OptionPane.background");
   }
 
-  /**
-   * @deprecated Quaqua is gone (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean isUnderQuaquaLookAndFeel() {
-    return false;
-  }
-
   @SuppressWarnings({"HardCodedStringLiteral"})
-  @Deprecated
   public static boolean isUnderAlloyLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Alloy");
   }
@@ -996,14 +981,6 @@ public class UIUtil {
     return UIManager.getLookAndFeel().getName().equals("Windows Classic");
   }
 
-  /**
-   * @deprecated Metal is gone (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean isUnderMetalLookAndFeel() {
-    return false;
-  }
-
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderNimbusLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Nimbus");
@@ -1022,14 +999,6 @@ public class UIUtil {
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderAquaBasedLookAndFeel() {
     return SystemInfo.isMac && (isUnderAquaLookAndFeel() || isUnderDarcula());
-  }
-
-  /**
-   * @deprecated Motif is gone (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean isUnderMotif() {
-    return false;
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
@@ -1124,13 +1093,6 @@ public class UIUtil {
 
   public static boolean isToUseDottedCellBorder() {
     return !isUnderNativeMacLookAndFeel();
-  }
-
-  /**
-   * @deprecated Quaqua is gone (to remove in IDEA 13)
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static void removeQuaquaVisualMarginsIn(Component component) {
   }
 
   public static boolean isControlKeyDown(MouseEvent mouseEvent) {
@@ -1291,6 +1253,13 @@ public class UIUtil {
     final Composite oldComposite = g.getComposite();
     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
     g.setPaint(getGradientPaint(startX, 2, c1, startX, height - 5, c2));
+
+    if (isRetina()) {
+      g.fillRoundRect(startX - 1, 2, endX - startX + 1, height - 4, 5, 5);
+      g.setComposite(oldComposite);
+      return;
+    }
+
     g.fillRect(startX, 3, endX - startX, height - 5);
 
     if (drawRound) {
@@ -1374,7 +1343,7 @@ public class UIUtil {
     g.setColor(getPanelBackground());
     g.fillRect(x, 0, width, height);
 
-    ((Graphics2D)g).setPaint(new Color(0, 0, 0, 5));
+    ((Graphics2D)g).setPaint(getGradientPaint(0, 0, new Color(0, 0, 0, 5), 0, height, new Color(0, 0, 0, 20)));
     g.fillRect(x, 0, width, height);
 
     g.setColor(new Color(0, 0, 0, toolWindow ? 90 : 50));
@@ -1385,7 +1354,7 @@ public class UIUtil {
     g.drawLine(x, drawTopLine ? 1 : 0, width, drawTopLine ? 1 : 0);
 
     if (active) {
-      g.setColor(ColorUtil.toAlpha(UIManager.getColor("Hyperlink.linkColor"), toolWindow ? 100 : 30));//new Color(100, 150, 230, toolWindow ? 50 : 30));
+      g.setColor(new Color(100, 150, 230, toolWindow ? 50 : 30));
       g.fillRect(x, 0, width, height);
     }
   }
@@ -1874,24 +1843,6 @@ public class UIUtil {
     }
   }
 
-  /** @deprecated use {@linkplain Dialog#setModalityType(Dialog.ModalityType)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public static void setToolkitModal(final JDialog dialog) {
-    dialog.setModalityType(Dialog.ModalityType.TOOLKIT_MODAL);
-  }
-
-  /** @deprecated use {@linkplain Window#setIconImages(List)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public static void updateDialogIcon(final JDialog dialog, final List<Image> images) {
-    dialog.setIconImages(images);
-  }
-
-  /** @deprecated outdated (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean hasJdk6Dialogs() {
-    return true;
-  }
-
   public static Color getHeaderActiveColor() {
     return ACTIVE_HEADER_COLOR;
   }
@@ -2060,6 +2011,7 @@ public class UIUtil {
    * is event queue thread.
    *
    * @param runnable a runnable to invoke
+   * @see #invokeAndWaitIfNeeded(com.intellij.util.ThrowableRunnable)
    */
   public static void invokeAndWaitIfNeeded(@NotNull Runnable runnable) {
     if (SwingUtilities.isEventDispatchThread()) {
@@ -2072,6 +2024,27 @@ public class UIUtil {
       catch (Exception e) {
         LOG.error(e);
       }
+    }
+  }
+
+  public static void invokeAndWaitIfNeeded(@NotNull final ThrowableRunnable runnable) throws Throwable {
+    if (SwingUtilities.isEventDispatchThread()) {
+      runnable.run();
+    }
+    else {
+      final Ref<Throwable> ref = new Ref<Throwable>();
+      SwingUtilities.invokeAndWait(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            runnable.run();
+          }
+          catch (Throwable throwable) {
+            ref.set(throwable);
+          }
+        }
+      });
+      if (!ref.isNull()) throw ref.get();
     }
   }
 
@@ -2726,5 +2699,18 @@ public class UIUtil {
       if (each.isVisible() && each.isActive()) return each;
     }
     return JOptionPane.getRootFrame();
+  }
+
+  public static void setAutoRequestFocus(final Window onWindow, final boolean set){
+    if (SystemInfo.isMac) return;
+    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+      try {
+        Method setAutoRequestFocusMethod  = onWindow.getClass().getMethod("setAutoRequestFocus",new Class [] {boolean.class});
+        setAutoRequestFocusMethod.invoke(onWindow, set);
+      }
+      catch (NoSuchMethodException e) { LOG.debug(e); }
+      catch (InvocationTargetException e) { LOG.debug(e); }
+      catch (IllegalAccessException e) { LOG.debug(e); }
+    }
   }
 }

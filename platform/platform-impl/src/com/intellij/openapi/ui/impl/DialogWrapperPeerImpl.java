@@ -43,6 +43,7 @@ import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
+import com.intellij.reference.SoftReference;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.mac.foundation.Foundation;
@@ -77,16 +78,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
   private final ActionCallback myTypeAheadDone = new ActionCallback("DialogTypeAheadDone");
   private ActionCallback myTypeAheadCallback;
 
-  /**
-   * Creates modal <code>DialogWrapper</code>. The currently active window will be the dialog's parent.
-   *
-   * @param project     parent window for the dialog will be calculated based on focused window for the
-   *                    specified <code>project</code>. This parameter can be <code>null</code>. In this case parent window
-   *                    will be suggested based on current focused window.
-   * @param canBeParent specifies whether the dialog can be parent for other windows. This parameter is used
-   *                    by <code>WindowManager</code>.
-   */
-  protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {
+  protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
     myTypeAheadCallback = myWrapper.isTypeAheadEnabled() ? new ActionCallback() : null;
     myWindowManager = null;
@@ -135,7 +127,20 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       }
     }
 
-    createDialog(owner, canBeParent);
+    createDialog(owner, canBeParent, ideModalityType);
+  }
+
+  /**
+   * Creates modal <code>DialogWrapper</code>. The currently active window will be the dialog's parent.
+   *
+   * @param project     parent window for the dialog will be calculated based on focused window for the
+   *                    specified <code>project</code>. This parameter can be <code>null</code>. In this case parent window
+   *                    will be suggested based on current focused window.
+   * @param canBeParent specifies whether the dialog can be parent for other windows. This parameter is used
+   *                    by <code>WindowManager</code>.
+   */
+  protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {
+    this(wrapper, project, canBeParent, DialogWrapper.IdeModalityType.IDE);
   }
 
   protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, boolean canBeParent) {
@@ -181,14 +186,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     createDialog(owner, canBeParent);
   }
 
-  /** @see DialogWrapper#DialogWrapper(boolean, boolean)
-   */
-  @Deprecated
-  public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
-    this(wrapper, null, canBeParent, applicationModalIfPossible);
-  }
-
-  public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper,final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+  public DialogWrapperPeerImpl(@NotNull final DialogWrapper wrapper,final Window owner, final boolean canBeParent,
+                               final DialogWrapper.IdeModalityType ideModalityType ) {
     myWrapper = wrapper;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
@@ -196,13 +195,26 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       myWindowManager = (WindowManagerEx)WindowManager.getInstance();
     }
     createDialog(owner, canBeParent);
-    if (applicationModalIfPossible && !isHeadless()) {
-      Dialog.ModalityType modalityType = Dialog.ModalityType.TOOLKIT_MODAL;
-      if (Registry.is("ide.mac.modalDialogsOnFullscreen")) {
-        modalityType = Dialog.ModalityType.APPLICATION_MODAL;
+
+    if (!isHeadless()) {
+      Dialog.ModalityType modalityType = DialogWrapper.IdeModalityType.IDE.toAwtModality();
+      if (Registry.is("ide.perProjectModality")) {
+        modalityType = ideModalityType.toAwtModality();
       }
-      ((MyDialog)myDialog).setModalityType(modalityType);
+      myDialog.setModalityType(modalityType);
     }
+  }
+
+  /** @see DialogWrapper#DialogWrapper(boolean, boolean)
+   */
+  @Deprecated
+  public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
+    this(wrapper, null, canBeParent, applicationModalIfPossible);
+  }
+
+  @Deprecated
+  public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper,final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+    this(wrapper, owner, canBeParent, applicationModalIfPossible ? DialogWrapper.IdeModalityType.IDE : DialogWrapper.IdeModalityType.PROJECT);
   }
 
   @Override
@@ -225,17 +237,20 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     myDialog.addKeyListener(listener);
   }
 
-  private void createDialog(@Nullable Window owner, boolean canBeParent) {
+  private void createDialog(@Nullable Window owner, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType) {
     if (isHeadless()) {
       myDialog = new HeadlessDialog();
       return;
     }
 
     myDialog = new MyDialog(owner, myWrapper, myProject, myWindowFocusedCallback, myTypeAheadDone, myTypeAheadCallback);
-    if (!Registry.is("ide.mac.modalDialogsOnFullscreen")) {
-      myDialog.setModal(true);
-    }
+    myDialog.setModalityType(ideModalityType.toAwtModality());
+
     myCanBeParent = canBeParent;
+  }
+
+  private void createDialog(@Nullable Window owner, boolean canBeParent) {
+    createDialog(owner, canBeParent, DialogWrapper.IdeModalityType.IDE);
   }
 
   @Override
@@ -340,12 +355,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
   @Override
   public void pack() {
     myDialog.pack();
-  }
-
-  @Override
-  @SuppressWarnings("UnusedDeclaration")
-  public void setIconImages(final List<Image> images) {
-    myDialog.getWindow().setIconImages(images);
   }
 
   @Override
@@ -546,10 +555,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
                     @NotNull ActionCallback typeAheadDone,
                     ActionCallback typeAheadCallback) {
       super(owner);
-      if (Registry.is("ide.mac.modalDialogsOnFullscreen")) {
-        //todo should be passed in the super method
-        setModalityType(ModalityType.DOCUMENT_MODAL);
-      }
       myDialogWrapper = new WeakReference<DialogWrapper>(dialogWrapper);
       myProject = project != null ? new WeakReference<Project>(project) : null;
 
@@ -758,12 +763,12 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
           queue.getKeyEventDispatcher().resetState();
         }
 
-        if (myProject != null) {
-          Project project = myProject.get();
-          if (project != null && !project.isDisposed() && project.isInitialized()) {
-            IdeFocusManager.findInstanceByComponent(this).requestFocus(new MyFocusCommand(dialogWrapper), true);
-          }
-        }
+        // if (myProject != null) {
+        //   Project project = myProject.get();
+        //if (project != null && !project.isDisposed() && project.isInitialized()) {
+        // // IdeFocusManager.findInstanceByComponent(this).requestFocus(new MyFocusCommand(dialogWrapper), true);
+        //}
+        // }
       }
 
       if (SystemInfo.isMac && myProject != null && Registry.is("ide.mac.fix.dialog.showing") && !dialogWrapper.isModalProgress()) {
@@ -784,7 +789,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
     @Nullable
     private Project getProject() {
-      return myProject != null ? myProject.get() : null;
+      return SoftReference.dereference(myProject);
     }
 
     @Override
@@ -1107,7 +1112,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     private class MyFocusCommand extends FocusCommand implements KeyEventProcessor {
 
       private Context myContextOnFinish;
-      private final ArrayList<KeyEvent> myEvents = new ArrayList<KeyEvent>();
+      private final List<KeyEvent> myEvents = new ArrayList<KeyEvent>();
       private final DialogWrapper myWrapper;
 
       private MyFocusCommand(DialogWrapper wrapper) {
@@ -1138,7 +1143,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       }
 
       @Override
-      public Boolean dispatch(KeyEvent e, Context context) {
+      public Boolean dispatch(@NotNull KeyEvent e, @NotNull Context context) {
         if (myWrapper == null || myTypeAheadDone.isProcessed()) return null;
 
         myEvents.addAll(context.getQueue());
@@ -1157,7 +1162,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       }
 
       @Override
-      public void finish(Context context) {
+      public void finish(@NotNull Context context) {
         myContextOnFinish = context;
       }
 
@@ -1192,5 +1197,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
   @Override
   public void centerInParent() {
     myDialog.centerInParent();
+  }
+
+  public void setAutoRequestFocus(boolean b) {
+    UIUtil.setAutoRequestFocus((JDialog)myDialog, b);
   }
 }
