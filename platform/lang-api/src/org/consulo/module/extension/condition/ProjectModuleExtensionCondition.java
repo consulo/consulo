@@ -59,7 +59,7 @@ public class ProjectModuleExtensionCondition implements Condition<Project> {
         if(provider == null) {
           continue;
         }
-        ModuleExtension<?> extension = moduleRootManager.getExtension(provider.getImmutableClass());
+        ModuleExtension<?> extension = moduleRootManager.getExtension(extensionId);
         if(extension != null) {
           return true;
         }

@@ -226,7 +226,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         continue;
       }
 
-      final ModuleExtension extension = ModuleUtilCore.getExtension(module, provider.getImmutableClass());
+      final ModuleExtension extension = ModuleUtilCore.getExtension(module, moduleExtension.getId());
       if(extension instanceof ModuleExtensionWithSdk) {
         final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
         // recursive depend

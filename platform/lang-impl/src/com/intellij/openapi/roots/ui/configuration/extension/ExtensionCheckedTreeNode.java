@@ -115,7 +115,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
     final ModuleExtensionProviderEP absoluteParent = findParentWithoutParent(myExtension.getId());
 
-    final ModuleExtension extension = rootModel.getExtension(absoluteParent.getInstance().getImmutableClass());
+    final ModuleExtension extension = rootModel.getExtension(absoluteParent.getKey());
     if (extension != null) {
       return true;
     }
@@ -125,7 +125,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       if (ep.parentKey != null) {
         continue;
       }
-      final ModuleExtension tempExtension = rootModel.getExtension(ep.getInstance().getImmutableClass());
+      final ModuleExtension tempExtension = rootModel.getExtension(ep.getKey());
       if (tempExtension != null) {
         return false;
       }

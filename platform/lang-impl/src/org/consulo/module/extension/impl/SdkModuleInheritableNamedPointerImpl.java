@@ -19,8 +19,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import org.consulo.module.extension.ModuleExtensionProvider;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.sdk.SdkUtil;
 import org.consulo.util.pointers.NamedPointer;
@@ -31,18 +29,16 @@ import org.jetbrains.annotations.NotNull;
  * @since 19:35/15.06.13
  */
 public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamedPointerImpl<Sdk> {
-  private final Class<? extends ModuleExtensionWithSdk> myExtensionClass;
+  private final String myExtensionId;
 
   public SdkModuleInheritableNamedPointerImpl(@NotNull Project project, @NotNull String id) {
     super(project, "sdk");
-    final ModuleExtensionProvider<?, ?> provider = ModuleExtensionProviderEP.findProvider(id);
-    assert provider != null;
-    myExtensionClass = (Class<? extends ModuleExtensionWithSdk>)provider.getImmutableClass();
+    myExtensionId = id;
   }
 
   @Override
   public String getItemNameFromModule(@NotNull Module module) {
-    final ModuleExtensionWithSdk<?> extension = ModuleUtilCore.getExtension(module, myExtensionClass);
+    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk) ModuleUtilCore.getExtension(module, myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().getName();
     }
@@ -51,7 +47,7 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
 
   @Override
   public Sdk getItemFromModule(@NotNull Module module) {
-    final ModuleExtensionWithSdk<?> extension = ModuleUtilCore.getExtension(module, myExtensionClass);
+    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)  ModuleUtilCore.getExtension(module, myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().get();
     }

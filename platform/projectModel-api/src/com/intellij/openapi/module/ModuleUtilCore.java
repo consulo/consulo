@@ -226,6 +226,12 @@ public class ModuleUtilCore {
   }
 
   @Nullable
+  public static ModuleExtension<?> getExtension(@NotNull Module module, @NotNull String key) {
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    return moduleRootManager.getExtension(key);
+  }
+
+  @Nullable
   public static <E extends ModuleExtension<E>> E getExtension(@NotNull PsiElement element, @NotNull Class<E> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {

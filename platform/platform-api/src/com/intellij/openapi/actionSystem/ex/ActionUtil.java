@@ -185,7 +185,7 @@ public class ActionUtil {
       if(provider == null) {
         continue;
       }
-      if(ModuleUtilCore.getExtension(module, provider.getImmutableClass()) != null) {
+      if(ModuleUtilCore.getExtension(module, moduleExtensionId) != null) {
         return true;
       }
     }

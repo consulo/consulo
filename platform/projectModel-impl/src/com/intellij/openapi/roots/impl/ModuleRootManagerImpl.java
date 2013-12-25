@@ -214,6 +214,11 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getExtension(clazz);
   }
 
+  @Override
+  public <T extends ModuleExtension> T getExtension(@NotNull String key) {
+    return myRootModel.getExtension(key);
+  }
+
   @NotNull
   @Override
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {

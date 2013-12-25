@@ -171,7 +171,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
                                VirtualFilePointerManager filePointerManager) {
 
     final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(myModuleExtensionId);
-    final ModuleExtension extension = provider == null ? null : rootModel.getExtension(provider.getImmutableClass());
+    final ModuleExtension extension = provider == null ? null : rootModel.getExtension(myModuleExtensionId);
     return new ModuleExtensionWithSdkOrderEntryImpl(
       extension instanceof ModuleExtensionWithSdk ? (ModuleExtensionWithSdk<?>)extension : null, myModuleExtensionId, rootModel,
                                                     ProjectRootManagerImpl.getInstanceImpl(getRootModel().getModule().getProject()));

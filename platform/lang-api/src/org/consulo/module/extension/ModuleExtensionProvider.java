@@ -33,6 +33,7 @@ public interface ModuleExtensionProvider<ImmutableModel extends ModuleExtension,
   String getName();
 
   @NotNull
+  @Deprecated
   Class<ImmutableModel> getImmutableClass();
 
   @NotNull
