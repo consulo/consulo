@@ -64,7 +64,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     final String moduleExtensionId = element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
     final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(moduleExtensionId);
     final ModuleExtensionWithSdk extension =
-      provider == null ? null : (ModuleExtensionWithSdk)rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
+      provider == null ? null : (ModuleExtensionWithSdk)rootModel.getExtensionWithoutCheck(moduleExtensionId);
 
     init(extension, moduleExtensionId);
   }

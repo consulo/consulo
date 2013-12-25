@@ -180,6 +180,9 @@ public interface ModuleRootModel {
   <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz);
 
   @NotNull
+  <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key);
+
+  @NotNull
   ModuleExtension[] getExtensions();
 
   @NotNull

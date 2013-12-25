@@ -107,12 +107,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
       ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
       if (provider != null) {
-        ModuleExtension rootModuleExtension = originalRootModel.getExtensionWithoutCheck(provider.getImmutableClass());
+        ModuleExtension rootModuleExtension = originalRootModel.getExtensionWithoutCheck(id);
 
         //noinspection unchecked
         rootModuleExtension.loadState(child);
 
-        ModuleExtension moduleExtension = getExtensionWithoutCheck(rootModuleExtension.getClass());
+        ModuleExtension moduleExtension = getExtensionWithoutCheck(id);
 
         //noinspection unchecked
         moduleExtension.commit(rootModuleExtension);
@@ -187,7 +187,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
       final ModuleExtensionProvider provider = providerEP.getInstance();
 
-      final ModuleExtension<?> originalExtension = rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
+      final ModuleExtension<?> originalExtension = rootModel.getExtensionWithoutCheck(providerEP.getKey());
 
       MutableModuleExtension mutable = provider.createMutable(providerEP.getKey(), rootModel.getModule(), originalExtension);
 
@@ -437,7 +437,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       MutableModuleExtension<?> mutableExtension = (MutableModuleExtension)extension;
       if (mutableExtension.isModified()) {
         ModuleExtension originalExtension =
-          getSourceModel().getExtensionWithoutCheck(ModuleExtensionProviderEP.findProvider(extension.getId()).getImmutableClass());
+          getSourceModel().getExtensionWithoutCheck(extension.getId());
 
         getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC).extensionChanged(originalExtension, mutableExtension);
 
@@ -805,7 +805,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
     for (ModuleExtension<?> extension : myExtensions) {
-      if (clazz.isAssignableFrom(extension.getClass()) && extension.isEnabled()) {
+      if (extension.isEnabled() && clazz.isAssignableFrom(extension.getClass())) {
         //noinspection unchecked
         return (T)extension;
       }
@@ -823,6 +823,18 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
     throw new IllegalArgumentException("Trying to search in module " + getModule().getName() + " extension with class: " + clazz.getName());
+  }
+
+  @NotNull
+  @Override
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key) {
+    for (ModuleExtension<?> extension : myExtensions) {
+      if (Comparing.equal(extension.getId(), key)) {
+        //noinspection unchecked
+        return (T)extension;
+      }
+    }
+    throw new IllegalArgumentException("Trying to search in module " + getModule().getName() + " extension with key: " + key);
   }
 
   @NotNull

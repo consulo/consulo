@@ -222,6 +222,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   @NotNull
   @Override
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key) {
+    return myRootModel.getExtensionWithoutCheck(key);
+  }
+
+  @NotNull
+  @Override
   public ModuleExtension[] getExtensions() {
     return myRootModel.getExtensions();
   }

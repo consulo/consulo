@@ -65,7 +65,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
       final ModifiableRootModel model = state.getRootModel();
       if (model != null) {
-        myExtension = (MutableModuleExtension)model.getExtensionWithoutCheck(providerEP.getInstance().getImmutableClass());
+        myExtension = model.getExtensionWithoutCheck(providerEP.getKey());
       }
     }
 
