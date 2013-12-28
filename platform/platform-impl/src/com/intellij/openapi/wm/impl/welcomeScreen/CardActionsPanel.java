@@ -63,6 +63,19 @@ public class CardActionsPanel extends JPanel {
     myContent.add(withBottomFiller, cardId);
 
     List<Button> buttons = buildButtons(group, cardId);
+    if(parentId != null)
+    {
+      AnAction back = new AnAction(null, null, null) {
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+          myLayout.swipe(myContent, parentId, JBCardLayout.SwipeDirection.BACKWARD);
+        }
+      };
+
+      Presentation p = new Presentation("Back");
+      p.setIcon(AllIcons.Actions.Back);
+      buttons.add(0, new Button(back, p));
+    }
 
     JPanel buttonsPanel = new JPanel(new GridLayout(buttons.size(), 1, 5, 5));
     if (!USE_ICONS) {
@@ -73,18 +86,6 @@ public class CardActionsPanel extends JPanel {
       buttonsPanel.add(button);
     }
     card.add(buttonsPanel, BorderLayout.CENTER);
-
-    if (parentId != null) {
-      AnAction back = new AnAction(null, null, null) {
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          myLayout.swipe(myContent, parentId, JBCardLayout.SwipeDirection.BACKWARD);
-        }
-      };
-      Presentation p = new Presentation("Back");
-      p.setIcon(AllIcons.Actions.Back);
-      card.add(new Button(back, p), BorderLayout.NORTH);
-    }
   }
 
   private List<Button> buildButtons(ActionGroup group, String parentId) {
