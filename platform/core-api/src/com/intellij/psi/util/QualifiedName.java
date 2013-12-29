@@ -32,13 +32,19 @@ import java.util.List;
  * @author yole
  */
 public class QualifiedName {
-  @NotNull private final List<String> myComponents;
+  public static final QualifiedName ROOT = new QualifiedName(0);
+
+  @NotNull
+  private final List<String> myComponents;
 
   private QualifiedName(int count) {
     myComponents = new ArrayList<String>(count);
   }
 
   public static QualifiedName fromComponents(Collection<String> components) {
+    if(components.isEmpty()) {
+      return ROOT;
+    }
     QualifiedName qName = new QualifiedName(components.size());
     qName.myComponents.addAll(components);
     return qName;
@@ -46,20 +52,23 @@ public class QualifiedName {
 
   @NotNull
   public static QualifiedName fromComponents(String... components) {
+    if(components.length == 0) {
+      return ROOT;
+    }
     QualifiedName result = new QualifiedName(components.length);
     Collections.addAll(result.myComponents, components);
     return result;
   }
 
   public QualifiedName append(String name) {
-    QualifiedName result = new QualifiedName(myComponents.size()+1);
+    QualifiedName result = new QualifiedName(myComponents.size() + 1);
     result.myComponents.addAll(myComponents);
     result.myComponents.add(name);
     return result;
   }
 
   public QualifiedName append(QualifiedName qName) {
-    QualifiedName result = new QualifiedName(myComponents.size()+qName.getComponentCount());
+    QualifiedName result = new QualifiedName(myComponents.size() + qName.getComponentCount());
     result.myComponents.addAll(myComponents);
     result.myComponents.addAll(qName.getComponents());
     return result;
@@ -76,7 +85,7 @@ public class QualifiedName {
     QualifiedName result = new QualifiedName(size);
     result.myComponents.addAll(myComponents);
     for (int i = 0; i < count && !result.myComponents.isEmpty(); i++) {
-      result.myComponents.remove(result.myComponents.size()-1);
+      result.myComponents.remove(result.myComponents.size() - 1);
     }
     return result;
   }
@@ -172,7 +181,15 @@ public class QualifiedName {
     if (myComponents.isEmpty()) {
       return null;
     }
-    return myComponents.get(myComponents.size()-1);
+    return myComponents.get(myComponents.size() - 1);
+  }
+
+  @Nullable
+  public QualifiedName getParent() {
+    if (myComponents.isEmpty()) {
+      return null;
+    }
+    return fromComponents(myComponents.subList(0, myComponents.size() - 1));
   }
 
   @Override
@@ -186,6 +203,9 @@ public class QualifiedName {
 
   @NotNull
   public static QualifiedName fromDottedString(@NotNull String refName) {
+    if(StringUtil.isEmpty(refName)) {
+      return ROOT;
+    }
     return fromComponents(refName.split("\\."));
   }
 
