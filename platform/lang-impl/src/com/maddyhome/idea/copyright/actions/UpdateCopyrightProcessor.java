@@ -33,28 +33,37 @@ import com.maddyhome.idea.copyright.psi.UpdateCopyright;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightFactory;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
 
-public class UpdateCopyrightProcessor extends AbstractFileProcessor {
-  public UpdateCopyrightProcessor(Project project, Module module) {
+public class UpdateCopyrightProcessor extends AbstractFileProcessor
+{
+  public static final String TITLE = "Update Copyright";
+  public static final String MESSAGE = "Updating copyrights...";
+
+  public UpdateCopyrightProcessor(Project project, Module module)
+  {
     super(project, module, TITLE, MESSAGE);
     setup(project, module);
   }
 
-  public UpdateCopyrightProcessor(Project project, Module module, PsiDirectory dir, boolean subdirs) {
+  public UpdateCopyrightProcessor(Project project, Module module, PsiDirectory dir, boolean subdirs)
+  {
     super(project, dir, subdirs, TITLE, MESSAGE);
     setup(project, module);
   }
 
-  public UpdateCopyrightProcessor(Project project, Module module, PsiFile file) {
+  public UpdateCopyrightProcessor(Project project, Module module, PsiFile file)
+  {
     super(project, file, TITLE, MESSAGE);
     setup(project, module);
   }
 
-  public UpdateCopyrightProcessor(Project project, Module module, PsiFile[] files) {
+  public UpdateCopyrightProcessor(Project project, Module module, PsiFile[] files)
+  {
     super(project, files, TITLE, MESSAGE, null);
     setup(project, module);
   }
 
-  protected Runnable preprocessFile(final PsiFile file) throws IncorrectOperationException {
+  protected Runnable preprocessFile(final PsiFile file) throws IncorrectOperationException
+  {
     VirtualFile vfile = file.getVirtualFile();
     if (vfile == null) return EmptyRunnable.getInstance();
     final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
@@ -62,7 +71,8 @@ public class UpdateCopyrightProcessor extends AbstractFileProcessor {
       progressIndicator.setText2(vfile.getPresentableUrl());
     }
     Module mod = module;
-    if (module == null) {
+    if (module == null)
+    {
       mod = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vfile);
     }
 
@@ -70,30 +80,36 @@ public class UpdateCopyrightProcessor extends AbstractFileProcessor {
 
     CopyrightProfile opts = CopyrightManager.getInstance(project).getCopyrightOptions(file);
 
-    if (opts != null && FileTypeUtil.isSupportedFile(file)) {
+    if (opts != null && FileTypeUtil.isSupportedFile(file))
+    {
       logger.debug("process " + file);
       final UpdateCopyright update = UpdateCopyrightFactory.createUpdateCopyright(project, mod, file, opts);
       if (update == null) return EmptyRunnable.getInstance();
       update.prepare();
 
       return new Runnable() {
-        public void run() {
-          try {
+        public void run()
+        {
+          try
+          {
             update.complete();
 
           }
-          catch (Exception e) {
+          catch (Exception e)
+          {
             logger.error(e);
           }
         }
       };
     }
-    else {
+    else
+    {
       return EmptyRunnable.getInstance();
     }
   }
 
-  private void setup(Project project, Module module) {
+  private void setup(Project project, Module module)
+  {
     this.project = project;
     this.module = module;
 
@@ -101,9 +117,6 @@ public class UpdateCopyrightProcessor extends AbstractFileProcessor {
 
   private Project project;
   private Module module;
-
-  private static final String TITLE = "Update Copyright";
-  private static final String MESSAGE = "Updating copyrights...";
 
   private static final Logger logger = Logger.getInstance(UpdateCopyrightProcessor.class.getName());
 }

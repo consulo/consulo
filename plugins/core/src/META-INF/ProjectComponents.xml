@@ -451,5 +451,10 @@
     <component>
       <implementation-class>org.consulo.compiler.CompilerPathsManager</implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.ide.GeneratedSourceFileChangeTracker</interface-class>
+      <implementation-class>com.intellij.ide.GeneratedSourceFileChangeTrackerImpl</implementation-class>
+    </component>
   </project-components>
 </idea-plugin>

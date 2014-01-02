@@ -75,7 +75,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     LOG.assertTrue(scope != null);
     final boolean rememberScope = e.getPlace().equals(ActionPlaces.MAIN_MENU);
     final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
-    PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
     BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(AnalysisScopeBundle.message("specify.analysis.scope", myTitle),
                                                                 AnalysisScopeBundle.message("analysis.scope.title", myAnalysisNoon),
                                                                 project,
@@ -125,7 +125,7 @@ public abstract class BaseAnalysisAction extends AnAction {
   protected void canceled() {
   }
 
-  protected abstract void analyze(@NotNull Project project, AnalysisScope scope);
+  protected abstract void analyze(@NotNull Project project, @NotNull AnalysisScope scope);
 
   @Nullable
   private AnalysisScope getInspectionScope(@NotNull DataContext dataContext) {
@@ -144,12 +144,12 @@ public abstract class BaseAnalysisAction extends AnAction {
       return new AnalysisScope(projectContext);
     }
 
-    final AnalysisScope analysisScope = AnalysisScope.KEY.getData(dataContext);
+    final AnalysisScope analysisScope = AnalysisScopeUtil.KEY.getData(dataContext);
     if (analysisScope != null) {
       return analysisScope;
     }
 
-    final PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
+    final PsiFile psiFile = CommonDataKeys.PSI_FILE.getData(dataContext);
     if (psiFile != null && psiFile.getManager().isInProject(psiFile)) {
       final VirtualFile file = psiFile.getVirtualFile();
       if (file != null && file.isValid() && file.getFileType() instanceof ArchiveFileType && acceptNonProjectDirectories()) {
@@ -164,7 +164,7 @@ public abstract class BaseAnalysisAction extends AnAction {
       return new AnalysisScope(psiFile);
     }
 
-    VirtualFile[] virtualFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    VirtualFile[] virtualFiles = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
     Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (virtualFiles != null && project != null) { //analyze on selection
       ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();

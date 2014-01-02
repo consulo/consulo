@@ -2538,5 +2538,7 @@
     <contentFolderPropertyProvider implementation="org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider"/>
 
     <generatedSourcesFilter implementation="org.mustbe.consulo.roots.impl.property.GeneratedOnRootSourcesFilter"/>
+    <defaultHighlightingSettingProvider implementation="com.intellij.codeInsight.daemon.impl.analysis.GeneratedSourcesHighlightingSettingProvider"/>
+    <editorNotificationProvider implementation="com.intellij.ide.GeneratedFileEditingNotificationProvider"/>
   </extensions>
 </idea-plugin>

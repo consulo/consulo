@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,10 @@ import com.intellij.find.FindSettings;
 import com.intellij.find.FindUtil;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
+import com.intellij.ide.DataManager;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -38,7 +39,6 @@ import com.intellij.ui.content.Content;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewManager;
 import com.intellij.usages.*;
-import com.intellij.util.AdapterProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
@@ -80,7 +80,7 @@ public class FindInProjectManager {
     findModel.setOpenInNewTab(toOpenInNewTab[0]);
     FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     FindUtil.initStringToFindWithSelection(findModel, editor);
 
     findManager.showFindDialog(findModel, new Runnable() {
@@ -105,39 +105,54 @@ public class FindInProjectManager {
 
         final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, showPanelIfOnlyOneUsage, presentation);
         UsageTarget usageTarget = StringUtil.isEmpty(findModel.getStringToFind()) ? createFileByTypeTarget(findModel)
-                                                         : new FindInProjectUtil.StringUsageTarget(findModel.getStringToFind());
+                                                                                  : new FindInProjectUtil.StringUsageTarget(myProject, findModel.getStringToFind());
         manager.searchAndShowUsages(new UsageTarget[] {usageTarget},
-          new Factory<UsageSearcher>() {
-            @Override
-            public UsageSearcher create() {
-              return new UsageSearcher() {
-                @Override
-                public void generate(final Processor<Usage> processor) {
-                  myIsFindInProgress = true;
+                                    new Factory<UsageSearcher>() {
+                                      @Override
+                                      public UsageSearcher create() {
+                                        return new UsageSearcher() {
+                                          @Override
+                                          public void generate(@NotNull final Processor<Usage> processor) {
+                                            myIsFindInProgress = true;
 
-                  try {
-                    AdapterProcessor<UsageInfo, Usage> consumer = new AdapterProcessor<UsageInfo, Usage>(processor, UsageInfo2UsageAdapter.CONVERTER);
-                    FindInProjectUtil.findUsages(findModelCopy, psiDirectory, myProject, true, consumer, processPresentation);
-                  }
-                  finally {
-                    myIsFindInProgress = false;
-                  }
-                }
-              };
-            }
-          },
-          processPresentation,
-          presentation,
-          null
+                                            try {
+                                              Processor<UsageInfo> consumer = new Processor<UsageInfo>() {
+                                                @Override
+                                                public boolean process(UsageInfo info) {
+                                                  Usage usage = UsageInfo2UsageAdapter.CONVERTER.fun(info);
+                                                  usage.getPresentation().getIcon(); // cache icon
+                                                  return processor.process(usage);
+                                                }
+                                              };
+                                              FindInProjectUtil.findUsages(findModelCopy, psiDirectory, myProject, true, consumer, processPresentation);
+                                            }
+                                            finally {
+                                              myIsFindInProgress = false;
+                                            }
+                                          }
+                                        };
+                                      }
+                                    },
+                                    processPresentation,
+                                    presentation,
+                                    null
         );
       }
     });
     findModel.setOpenInNewTabVisible(false);
   }
 
-  private static UsageTarget createFileByTypeTarget(@NotNull FindModel model) {
+  @NotNull
+  private ConfigurableUsageTarget createFileByTypeTarget(@NotNull FindModel model) {
     final String filter = model.getFileFilter();
-    return new UsageTarget() {
+    return new ConfigurableUsageTarget() {
+      @Override
+      public void showSettings() {
+        Content selectedContent = UsageViewManager.getInstance(myProject).getSelectedContent(true);
+        JComponent component = selectedContent == null ? null : selectedContent.getComponent();
+        findInProject(DataManager.getInstance().getDataContext(component));
+      }
+
       @Override
       public void findUsages() {
         throw new IncorrectOperationException();

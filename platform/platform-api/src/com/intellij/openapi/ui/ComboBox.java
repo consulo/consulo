@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -49,6 +50,7 @@ public class ComboBox extends ComboBoxWithWidePopup implements AWTEventListener 
   private int myMinimumAndPreferredWidth;
   private boolean mySwingPopup = true;
   private JBPopup myJBPopup;
+  protected boolean myPaintingNow;
 
   public ComboBox() {
     this(-1);
@@ -108,7 +110,7 @@ public class ComboBox extends ComboBoxWithWidePopup implements AWTEventListener 
           .setFocusOwners(new Component[]{this})
           .setMinSize(new Dimension(getWidth(), -1))
           .createPopup();
-        list.setBorder(IdeBorderFactory.createEmptyBorder(0));
+        list.setBorder(IdeBorderFactory.createEmptyBorder());
         myJBPopup.showUnderneathOf(this);
         list.addFocusListener(new FocusAdapter() {
           @Override
@@ -193,6 +195,9 @@ public class ComboBox extends ComboBoxWithWidePopup implements AWTEventListener 
     registerCancelOnEscape();
   }
 
+  public ComboBox(@NotNull Object[] items) {
+    this(items, -1);
+  }
 
   public boolean isSwingPopup() {
     return mySwingPopup;
@@ -252,7 +257,15 @@ public class ComboBox extends ComboBoxWithWidePopup implements AWTEventListener 
       width = preferredSize.width;
     }
 
-    return new Dimension(width, preferredSize.height);
+    return new Dimension(width, UIUtil.fixComboBoxHeight(preferredSize.height));
+  }
+
+  @Override
+  public boolean hasFocus() {
+    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel() && myPaintingNow) {
+      return false;
+    }
+    return super.hasFocus();
   }
 
   protected Dimension getOriginalPreferredSize() {
@@ -261,8 +274,13 @@ public class ComboBox extends ComboBoxWithWidePopup implements AWTEventListener 
 
   @Override
   public void paint(Graphics g) {
-    super.paint(g);
-    if (Boolean.TRUE != getClientProperty("JComboBox.isTableCellEditor")) MacUIUtil.drawComboboxFocusRing(this, g);
+    try {
+      myPaintingNow = true;
+      super.paint(g);
+      if (Boolean.TRUE != getClientProperty("JComboBox.isTableCellEditor")) MacUIUtil.drawComboboxFocusRing(this, g);
+    } finally {
+      myPaintingNow = false;
+    }
   }
 
   private static final class MyEditor implements ComboBoxEditor {

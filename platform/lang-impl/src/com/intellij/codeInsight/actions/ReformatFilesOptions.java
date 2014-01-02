@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.usages;
+package com.intellij.codeInsight.actions;
 
-import com.intellij.psi.PsiElement;
+public interface ReformatFilesOptions {
 
-/**
- * @author max
- */
-public interface PsiElementUsageTarget extends ConfigurableUsageTarget {
-  PsiElement getElement();
+  boolean isOptimizeImports();
+
+  boolean isProcessOnlyChangedText();
+
+  boolean isRearrangeEntries();
+
 }

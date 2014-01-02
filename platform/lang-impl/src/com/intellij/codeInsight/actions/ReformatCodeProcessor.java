@@ -35,9 +35,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
-  
+
   public static final String COMMAND_NAME = CodeInsightBundle.message("process.reformat.code");
-  
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.actions.ReformatCodeProcessor");
 
   private final Collection<TextRange> myRanges = new ArrayList<TextRange>();
@@ -77,7 +77,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
 
   @Override
   @NotNull
-  protected FutureTask<Boolean> preprocessFile(@NotNull final PsiFile file, final boolean processChangedTextOnly)
+  protected FutureTask<Boolean> prepareTask(@NotNull final PsiFile file, final boolean processChangedTextOnly)
     throws IncorrectOperationException
   {
     return new FutureTask<Boolean>(new Callable<Boolean>() {

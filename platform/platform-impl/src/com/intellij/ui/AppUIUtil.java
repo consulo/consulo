@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.containers.ContainerUtil;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -48,18 +50,6 @@ public class AppUIUtil {
 
   public static void updateWindowIcon(@NotNull Window window) {
     window.setIconImages(getAppIconImages());
-  }
-
-  /** @deprecated use {@linkplain #updateWindowIcon(Window)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public static void updateFrameIcon(final Frame frame) {
-    updateWindowIcon(frame);
-  }
-
-  /** @deprecated use {@linkplain #updateWindowIcon(Window)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public static void updateDialogIcon(final JDialog dialog) {
-    updateWindowIcon(dialog);
   }
 
   @SuppressWarnings({"UnnecessaryFullyQualifiedName", "deprecation"})
@@ -135,9 +125,11 @@ public class AppUIUtil {
   }
 
   public static void registerBundledFonts() {
-    registerFont("/fonts/Inconsolata.ttf");
-    registerFont("/fonts/SourceCodePro-Regular.ttf");
-    registerFont("/fonts/SourceCodePro-Bold.ttf");
+    if (Registry.is("ide.register.bundled.fonts")) {
+      registerFont("/fonts/Inconsolata.ttf");
+      registerFont("/fonts/SourceCodePro-Regular.ttf");
+      registerFont("/fonts/SourceCodePro-Bold.ttf");
+    }
   }
 
   private static void registerFont(@NonNls String name) {
@@ -171,5 +163,41 @@ public class AppUIUtil {
         }
       }
     });
+  }
+
+  public static JTextField createUndoableTextField() {
+    JTextField field = new JTextField();
+    new TextComponentUndoProvider(field);
+    return field;
+  }
+
+  private static final int MIN_ICON_SIZE = 32;
+
+  @Nullable
+  public static String findIcon(final String iconsPath) {
+    final File iconsDir = new File(iconsPath);
+
+    // 1. look for .svg icon
+    for (String child : iconsDir.list()) {
+      if (child.endsWith(".svg")) {
+        return iconsPath + '/' + child;
+      }
+    }
+
+    // 2. look for .png icon of max size
+    int max = 0;
+    String iconPath = null;
+    for (String child : iconsDir.list()) {
+      if (!child.endsWith(".png")) continue;
+      final String path = iconsPath + '/' + child;
+      final Icon icon = new ImageIcon(path);
+      final int size = icon.getIconHeight();
+      if (size >= MIN_ICON_SIZE && size > max && size == icon.getIconWidth()) {
+        max = size;
+        iconPath = path;
+      }
+    }
+
+    return iconPath;
   }
 }

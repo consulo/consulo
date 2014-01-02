@@ -15,7 +15,9 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.action;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
@@ -33,7 +35,7 @@ import java.util.List;
 
 /**
  * Arranges content at the target file(s).
- * 
+ *
  * @author Denis Zhdanov
  * @since 8/30/12 10:01 AM
  */
@@ -41,7 +43,7 @@ public class RearrangeCodeAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    PsiFile file = LangDataKeys.PSI_FILE.getData(e.getDataContext());
+    PsiFile file = CommonDataKeys.PSI_FILE.getData(e.getDataContext());
     boolean enabled = file != null && Rearranger.EXTENSION.forLanguage(file.getLanguage()) != null;
     e.getPresentation().setEnabled(enabled);
   }
@@ -52,16 +54,16 @@ public class RearrangeCodeAction extends AnAction {
     if (project == null) {
       return;
     }
-    
-    final Editor editor = PlatformDataKeys.EDITOR.getData(e.getDataContext());
+
+    final Editor editor = CommonDataKeys.EDITOR.getData(e.getDataContext());
     if (editor == null) {
       return;
     }
-    
+
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
     Document document = editor.getDocument();
     documentManager.commitDocument(document);
-    
+
     final PsiFile file = documentManager.getPsiFile(document);
     if (file == null) {
       return;
@@ -82,13 +84,13 @@ public class RearrangeCodeAction extends AnAction {
     else {
       ranges.add(TextRange.create(0, document.getTextLength()));
     }
-    
+
     final ArrangementEngine engine = ServiceManager.getService(project, ArrangementEngine.class);
     try {
       CommandProcessor.getInstance().executeCommand(project, new Runnable() {
         @Override
         public void run() {
-          engine.arrange(editor, file, ranges); 
+          engine.arrange(editor, file, ranges);
         }
       }, getTemplatePresentation().getText(), null);
     }

@@ -26,8 +26,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
-import com.intellij.util.ui.OptionsDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,10 +39,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class LayoutCodeDialog extends DialogWrapper {
-  private final           PsiFile      myFile;
+public class LayoutCodeDialog extends DialogWrapper implements LayoutCodeOptions {
+  @NotNull  private final Project myProject;
+  @Nullable private final PsiFile myFile;
   @Nullable private final PsiDirectory myDirectory;
-  private final           Boolean      myTextSelected;
+  private final Boolean myTextSelected;
 
   private JRadioButton myRbFile;
   private JRadioButton myRbSelectedText;
@@ -53,17 +55,26 @@ public class LayoutCodeDialog extends DialogWrapper {
   private JCheckBox    myDoNotAskMeCheckBox;
 
   private final String myHelpId;
+  @Nullable private CommonCodeStyleSettings myCommonSettings;
+  private boolean myRearrangeAlwaysEnabled;
 
-  public LayoutCodeDialog(@NotNull Project project,
-                          @NotNull String title,
-                          @Nullable PsiFile file,
-                          @Nullable PsiDirectory directory,
-                          Boolean isTextSelected,
-                          final String helpId) {
+
+  public  LayoutCodeDialog(@NotNull Project project,
+                           @NotNull String title,
+                           @Nullable PsiFile file,
+                           @Nullable PsiDirectory directory,
+                           Boolean isTextSelected,
+                           final String helpId) {
     super(project, true);
     myFile = file;
+    myProject = project;
     myDirectory = directory;
     myTextSelected = isTextSelected;
+
+    if (myFile != null) myCommonSettings = CodeStyleSettingsManager.getSettings(myProject).getCommonSettings(myFile.getLanguage());
+    myRearrangeAlwaysEnabled = myCommonSettings != null
+                               && myCommonSettings.isForceArrangeMenuAvailable()
+                               && myCommonSettings.FORCE_REARRANGE_MODE == CommonCodeStyleSettings.REARRANGE_ALWAYS;
 
     setOKButtonText(CodeInsightBundle.message("reformat.code.accept.button.text"));
     setTitle(title);
@@ -88,8 +99,10 @@ public class LayoutCodeDialog extends DialogWrapper {
     }
 
     myCbIncludeSubdirs.setSelected(true);
+    //Loading previous state
     myCbOptimizeImports.setSelected(PropertiesComponent.getInstance().getBoolean(LayoutCodeConstants.OPTIMIZE_IMPORTS_KEY, false));
-    myCbArrangeEntries.setSelected(PropertiesComponent.getInstance().getBoolean(LayoutCodeConstants.REARRANGE_ENTRIES_KEY, false));
+    myCbArrangeEntries.setSelected(myRearrangeAlwaysEnabled || ReformatCodeAction.getLastSavedRearrangeCbState(myProject, myFile));
+    myCbOnlyVcsChangedRegions.setSelected(PropertiesComponent.getInstance().getBoolean(LayoutCodeConstants.PROCESS_CHANGED_TEXT_KEY, false));
 
     ItemListener listener = new ItemListener() {
       @Override
@@ -108,20 +121,18 @@ public class LayoutCodeDialog extends DialogWrapper {
   private void updateState() {
     myCbIncludeSubdirs.setEnabled(myRbDirectory.isSelected());
     myCbOptimizeImports.setEnabled(
-      !myRbSelectedText.isSelected() &&
-      !(myFile != null && LanguageImportStatements.INSTANCE.forFile(myFile).isEmpty() && myRbFile.isSelected())
+      !myRbSelectedText.isSelected()
+      && !(myFile != null && LanguageImportStatements.INSTANCE.forFile(myFile).isEmpty() && myRbFile.isSelected())
     );
-    myCbArrangeEntries.setEnabled(myRbFile.isSelected()
-                                  && myFile != null
-                                  && Rearranger.EXTENSION.forLanguage(myFile.getLanguage()) != null
+    myCbArrangeEntries.setEnabled(isProcessDirectory()
+                                  || myFile != null
+                                     && Rearranger.EXTENSION.forLanguage(myFile.getLanguage()) != null
+                                     && !myRearrangeAlwaysEnabled
     );
-
-    final boolean canTargetVcsChanges = canTargetVcsRegions();
-    myCbOnlyVcsChangedRegions.setEnabled(canTargetVcsChanges);
-    myCbOnlyVcsChangedRegions.setSelected(
-      canTargetVcsChanges && PropertiesComponent.getInstance().getBoolean(LayoutCodeConstants.PROCESS_CHANGED_TEXT_KEY, false)
-    );
-
+    if (myRearrangeAlwaysEnabled && !myCbArrangeEntries.isEnabled()) {
+      myCbArrangeEntries.setSelected(true);
+    }
+    myCbOnlyVcsChangedRegions.setEnabled(canTargetVcsRegions());
     myDoNotAskMeCheckBox.setEnabled(!myRbDirectory.isSelected());
     myRbDirectory.setEnabled(!myDoNotAskMeCheckBox.isSelected());
   }
@@ -175,7 +186,8 @@ public class LayoutCodeDialog extends DialogWrapper {
     }
 
     myCbArrangeEntries = new JCheckBox(CodeInsightBundle.message("reformat.option.rearrange.entries"));
-    if (myFile != null && Rearranger.EXTENSION.forLanguage(myFile.getLanguage()) != null) {
+    if (myDirectory != null || myFile != null && Rearranger.EXTENSION.forLanguage(myFile.getLanguage()) != null)
+    {
       gbConstraints.gridy++;
       gbConstraints.insets = new Insets(0, 0, 0, 0);
       panel.add(myCbArrangeEntries, gbConstraints);
@@ -206,7 +218,7 @@ public class LayoutCodeDialog extends DialogWrapper {
         updateState();
       }
     });
-    return OptionsDialog.addDoNotShowCheckBox(southPanel, myDoNotAskMeCheckBox);
+    return DialogWrapper.addDoNotShowCheckBox(southPanel, myDoNotAskMeCheckBox);
   }
 
   @NotNull
@@ -220,30 +232,37 @@ public class LayoutCodeDialog extends DialogWrapper {
     HelpManager.getInstance().invokeHelp(myHelpId);
   }
 
+
   public boolean isProcessSelectedText() {
     return myRbSelectedText.isSelected();
   }
 
+  @Override
   public boolean isProcessWholeFile() {
     return myRbFile.isSelected();
   }
 
+  @Override
   public boolean isProcessDirectory() {
     return myRbDirectory.isSelected();
   }
 
+  @Override
   public boolean isIncludeSubdirectories() {
     return myCbIncludeSubdirs.isSelected();
   }
 
+  @Override
   public boolean isOptimizeImports() {
     return myCbOptimizeImports.isSelected();
   }
 
+  @Override
   public boolean isRearrangeEntries() {
     return myCbArrangeEntries.isSelected();
   }
-  
+
+  @Override
   public boolean isProcessOnlyChangedText() {
     return myCbOnlyVcsChangedRegions.isEnabled() && myCbOnlyVcsChangedRegions.isSelected();
   }
@@ -260,9 +279,16 @@ public class LayoutCodeDialog extends DialogWrapper {
   @Override
   protected void doOKAction() {
     super.doOKAction();
-    PropertiesComponent.getInstance().setValue(LayoutCodeConstants.OPTIMIZE_IMPORTS_KEY, Boolean.toString(isOptimizeImports()));
-    PropertiesComponent.getInstance().setValue(LayoutCodeConstants.REARRANGE_ENTRIES_KEY, Boolean.toString(isRearrangeEntries()));
-    PropertiesComponent.getInstance().setValue(LayoutCodeConstants.PROCESS_CHANGED_TEXT_KEY, Boolean.toString(isProcessOnlyChangedText()));
+    PropertiesComponent.getInstance().setValue(LayoutCodeConstants.OPTIMIZE_IMPORTS_KEY, Boolean.toString(myCbOptimizeImports.isSelected()));
+    PropertiesComponent.getInstance().setValue(LayoutCodeConstants.PROCESS_CHANGED_TEXT_KEY, Boolean.toString(myCbOnlyVcsChangedRegions.isSelected()));
+    saveRearrangeCbState(myCbArrangeEntries.isSelected());
+  }
+
+  private void saveRearrangeCbState(boolean isSelected) {
+    if (myFile != null)
+      LayoutCodeSettingsStorage.saveRearrangeEntriesOptionFor(myProject, myFile.getLanguage(), isSelected);
+    else
+      LayoutCodeSettingsStorage.saveRearrangeEntriesOptionFor(myProject, isSelected);
   }
 
   private boolean canTargetVcsRegions() {
@@ -271,7 +297,7 @@ public class LayoutCodeDialog extends DialogWrapper {
     }
 
     if (isProcessWholeFile()) {
-      return FormatChangedTextUtil.hasChanges(myFile);
+      return myFile != null && FormatChangedTextUtil.hasChanges(myFile);
     }
 
     if (isProcessDirectory()) {

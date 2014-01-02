@@ -1,27 +1,28 @@
 /*
-* Copyright 2000-2009 JetBrains s.r.o.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2000-2013 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.intellij.find.replaceInProject;
 
 import com.intellij.find.*;
+import com.intellij.find.actions.FindInPathAction;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.notification.NotificationGroup;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
@@ -38,9 +39,9 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.usageView.UsageInfo;
@@ -56,7 +57,7 @@ import javax.swing.*;
 import java.util.*;
 
 public class ReplaceInProjectManager {
-  static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("FindInPath", ToolWindowId.FIND, false);
+  static final NotificationGroup NOTIFICATION_GROUP = FindInPathAction.NOTIFICATION_GROUP;
 
   private final Project myProject;
   private boolean myIsFindInProgress = false;
@@ -114,7 +115,7 @@ public class ReplaceInProjectManager {
     findModel.setReplaceState(true);
     FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     FindUtil.initStringToFindWithSelection(findModel, editor);
 
     findManager.showFindDialog(findModel, new Runnable() {
@@ -161,27 +162,27 @@ public class ReplaceInProjectManager {
                                   final FindManager findManager) {
     presentation.setMergeDupLinesAvailable(false);
     final ReplaceContext[] context = new ReplaceContext[1];
-    manager.searchAndShowUsages(new UsageTarget[]{new FindInProjectUtil.StringUsageTarget(findModelCopy.getStringToFind())},
+    manager.searchAndShowUsages(new UsageTarget[]{new FindInProjectUtil.StringUsageTarget(myProject, findModelCopy.getStringToFind())},
                                 usageSearcherFactory, processPresentation, presentation, new UsageViewManager.UsageViewStateListener() {
-        @Override
-        public void usageViewCreated(@NotNull UsageView usageView) {
-          context[0] = new ReplaceContext(usageView, findModelCopy);
-          addReplaceActions(context[0]);
-        }
+      @Override
+      public void usageViewCreated(@NotNull UsageView usageView) {
+        context[0] = new ReplaceContext(usageView, findModelCopy);
+        addReplaceActions(context[0]);
+      }
 
-        @Override
-        public void findingUsagesFinished(final UsageView usageView) {
-          if (context[0] != null && findManager.getFindInProjectModel().isPromptOnReplace()) {
-            SwingUtilities.invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                replaceWithPrompt(context[0]);
-                context[0].invalidateExcludedSetCache();
-              }
-            });
-          }
+      @Override
+      public void findingUsagesFinished(final UsageView usageView) {
+        if (context[0] != null && findManager.getFindInProjectModel().isPromptOnReplace()) {
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              replaceWithPrompt(context[0]);
+              context[0].invalidateExcludedSetCache();
+            }
+          });
         }
-      });
+      }
+    });
   }
 
   private void replaceWithPrompt(final ReplaceContext replaceContext) {
@@ -432,7 +433,8 @@ public class ReplaceInProjectManager {
     }
     FindManager findManager = FindManager.getInstance(myProject);
     final CharSequence foundString = document.getCharsSequence().subSequence(textOffset, textEndOffset);
-    FindResult findResult = findManager.findString(document.getCharsSequence(), textOffset, findModel);
+    PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
+    FindResult findResult = findManager.findString(document.getCharsSequence(), textOffset, findModel, file != null ? file.getVirtualFile() : null);
     if (!findResult.isStringFound()) {
       return false;
     }
@@ -487,7 +489,7 @@ public class ReplaceInProjectManager {
                                                FindBundle.message("find.replace.occurrences.in.read.only.files.prompt"),
                                                FindBundle.message("find.replace.occurrences.in.read.only.files.title"),
                                                Messages.getWarningIcon());
-      if (result != 0) {
+      if (result != Messages.OK) {
         return false;
       }
     }
@@ -519,8 +521,8 @@ public class ReplaceInProjectManager {
     private final FindUsagesProcessPresentation myProcessPresentation;
 
     private UsageSearcherFactory(@NotNull FindModel findModelCopy,
-                                PsiDirectory psiDirectory,
-                                @NotNull FindUsagesProcessPresentation processPresentation) {
+                                 PsiDirectory psiDirectory,
+                                 @NotNull FindUsagesProcessPresentation processPresentation) {
       myFindModelCopy = findModelCopy;
       myPsiDirectory = psiDirectory;
       myProcessPresentation = processPresentation;
@@ -531,7 +533,7 @@ public class ReplaceInProjectManager {
       return new UsageSearcher() {
 
         @Override
-        public void generate(final Processor<Usage> processor) {
+        public void generate(@NotNull final Processor<Usage> processor) {
           try {
             myIsFindInProgress = true;
 
