@@ -680,7 +680,6 @@ public class AllIcons {
     public static final Icon Sources = IconLoader.getIcon("/modules/sources.png"); // 16x16
     public static final Icon Split = IconLoader.getIcon("/modules/split.png"); // 16x16
     public static final Icon TestRoot = IconLoader.getIcon("/modules/testRoot.png"); // 16x16
-    public static final Icon UnmarkWebroot = IconLoader.getIcon("/modules/unmarkWebroot.png"); // 16x16
     public static final Icon WebRoot = IconLoader.getIcon("/modules/webRoot.png"); // 16x16
 
   }

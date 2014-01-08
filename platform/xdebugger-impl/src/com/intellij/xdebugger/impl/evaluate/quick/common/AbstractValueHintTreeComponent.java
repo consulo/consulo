@@ -115,7 +115,7 @@ public abstract class AbstractValueHintTreeComponent<H> {
   private JComponent createToolbar(JPanel parent) {
     DefaultActionGroup group = new DefaultActionGroup();
     group.add(new AnAction(XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"),
-                           XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"), AllIcons.Modules.UnmarkWebroot) {
+                           XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"), AllIcons.Nodes.TreeClosed) {
       @Override
       public void update(AnActionEvent e) {
         TreePath path = myTree.getSelectionPath();
