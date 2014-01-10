@@ -149,7 +149,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ELEMENT_KEYMAP = "keymap";
   @NonNls private static final String ATTRIBUTE_WINDOWS_URL = "win";
   @NonNls private static final String ATTRIBUTE_MAC_URL = "mac";
-  @NonNls private static final String DEFAULT_PLUGINS_HOST = "http://naco.ws/consulo/plugins/";
+  @NonNls private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/consulo/plugins/";
   @NonNls private static final String ESSENTIAL_PLUGIN = "essential-plugin";
 
   @NonNls private static final String ELEMENT_STATISTICS = "statistics";
