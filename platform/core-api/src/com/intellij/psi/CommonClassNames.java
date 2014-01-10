@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NonNls;
 /**
  * @author peter
  */
+@Deprecated // dont use it in Consulo. Later ill moved to java plugin
 public interface CommonClassNames {
   @NonNls String DEFAULT_PACKAGE = "java.lang";
 
