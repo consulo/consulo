@@ -50,7 +50,7 @@ public class DefaultIdeaErrorLogger implements ErrorLogger {
       boolean notificationEnabled = !DISABLED_VALUE.equals(System.getProperty(FATAL_ERROR_NOTIFICATION_PROPERTY, ENABLED_VALUE));
 
       ErrorReportSubmitter submitter = IdeErrorsDialog.getSubmitter(event.getThrowable());
-      boolean showPluginError = !(submitter instanceof ITNReporter) || ((ITNReporter)submitter).showErrorInRelease(event);
+      boolean showPluginError = !(submitter instanceof ITNReporter2) /*|| ((ITNReporter)submitter).showErrorInRelease(event)*/;
 
       //noinspection ThrowableResultOfMethodCallIgnored
       return notificationEnabled ||
