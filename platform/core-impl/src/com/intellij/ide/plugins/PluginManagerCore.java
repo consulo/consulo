@@ -538,6 +538,9 @@ public class PluginManagerCore {
       ZipInputStream zipStream = new ZipInputStream(in);
       try {
         ZipEntry entry = zipStream.getNextEntry();
+        if(entry == null) {
+          return null;
+        }
         if (entry.getName().equals(JarMemoryLoader.SIZE_ENTRY)) {
           entry = zipStream.getNextEntry();
           if (entry.getName().equals("META-INF/" + fileName)) {
