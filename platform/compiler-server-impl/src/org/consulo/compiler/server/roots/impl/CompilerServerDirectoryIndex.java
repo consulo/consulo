@@ -211,7 +211,6 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
       }
     }
 
-    LOGGER.warn("Result for " + packageName + " is " + dirs.size());
     return new AbstractQuery<VirtualFile>() {
       @Override
       protected boolean processResults(@NotNull Processor<VirtualFile> consumer) {
