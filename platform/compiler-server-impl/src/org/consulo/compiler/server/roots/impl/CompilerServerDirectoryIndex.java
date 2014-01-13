@@ -192,7 +192,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
         }
         VirtualFile fileByRelativePath = file.findFileByRelativePath(relatPath);
         if (fileByRelativePath != null) {
-          dirs.add(file);
+          dirs.add(fileByRelativePath);
         }
       }
     }
