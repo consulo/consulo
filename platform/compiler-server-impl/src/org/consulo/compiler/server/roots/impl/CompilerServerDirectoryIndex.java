@@ -35,6 +35,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import org.consulo.compiler.server.fileSystem.archive.ChildArchiveNewVirtualFile;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
@@ -51,6 +52,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 15:43/12.08.13
  */
+@Logger
 public class CompilerServerDirectoryIndex extends DirectoryIndex {
   @NotNull
   private final Project myProject;
@@ -209,6 +211,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
       }
     }
 
+    LOGGER.warn("Result for " + packageName + " is " + dirs.size());
     return new AbstractQuery<VirtualFile>() {
       @Override
       protected boolean processResults(@NotNull Processor<VirtualFile> consumer) {
