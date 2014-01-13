@@ -21,11 +21,10 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.FilteredQuery;
+import com.intellij.util.Query;
 import org.jetbrains.annotations.Nullable;
 
 public class ResourceFileUtil {
@@ -67,14 +66,13 @@ public class ResourceFileUtil {
     String packageName = index >= 0 ? resourceName.substring(0, index).replace('/', '.') : "";
     final String fileName = index >= 0 ? resourceName.substring(index+1) : resourceName;
 
-    final VirtualFile dir = new FilteredQuery<VirtualFile>(
-      DirectoryIndex.getInstance(project).getDirectoriesByPackageName(packageName, true), new Condition<VirtualFile>() {
-      @Override
-      public boolean value(final VirtualFile file) {
-        final VirtualFile child = file.findChild(fileName);
-        return child != null && scope.contains(child);
+    Query<VirtualFile> directoriesByPackageName = DirectoryIndex.getInstance(project).getDirectoriesByPackageName(packageName, true);
+    for (VirtualFile virtualFile : directoriesByPackageName.findAll()) {
+      final VirtualFile child = virtualFile.findChild(fileName);
+      if(child != null && scope.contains(child)) {
+        return child;
       }
-    }).findFirst();
-    return dir != null ? dir.findChild(fileName) : null;
+    }
+    return null;
   }
 }
