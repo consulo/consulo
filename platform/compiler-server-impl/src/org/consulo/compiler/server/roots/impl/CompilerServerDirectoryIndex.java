@@ -24,11 +24,13 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
-import com.intellij.util.*;
+import com.intellij.util.AbstractQuery;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Processor;
+import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
@@ -207,12 +209,6 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
       }
     }
 
-    LOGGER.warn("Find for " + packageName + " files : [" + StringUtil.join(dirs, new Function<VirtualFile, String>() {
-      @Override
-      public String fun(VirtualFile virtualFile) {
-        return virtualFile.getPath();
-      }
-    }, ", ") + "]");
     return new AbstractQuery<VirtualFile>() {
       @Override
       protected boolean processResults(@NotNull Processor< VirtualFile > consumer) {
