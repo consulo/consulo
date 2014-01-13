@@ -189,6 +189,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
           continue;
         }
         VirtualFile fileByRelativePath = file.findFileByRelativePath(relatPath);
+        LOGGER.warn("Content [" + file.getPath() + "] relpath [" + relatPath + "] result [" + fileByRelativePath + "]");
         if (fileByRelativePath != null) {
           dirs.add(fileByRelativePath);
         }
@@ -217,7 +218,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
     }, ", ") + "]");
     return new AbstractQuery<VirtualFile>() {
       @Override
-      protected boolean processResults(@NotNull Processor<VirtualFile> consumer) {
+      protected boolean processResults(@NotNull Processor< VirtualFile > consumer) {
         for (VirtualFile dir : dirs) {
           if (!consumer.process(dir)) {
             return false;
