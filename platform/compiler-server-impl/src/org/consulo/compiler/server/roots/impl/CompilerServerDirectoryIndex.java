@@ -184,14 +184,11 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
     for (Module moduleIter : myModuleManager.getModules()) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleIter);
       for (ContentEntry contentEntry : moduleRootManager.getContentEntries()) {
-        VirtualFile file = contentEntry.getFile();
-        if (file == null) {
-          continue;
-        }
-        VirtualFile fileByRelativePath = file.findFileByRelativePath(relatPath);
-        LOGGER.warn("Content [" + file.getPath() + "] relpath [" + relatPath + "] result [" + fileByRelativePath + "]");
-        if (fileByRelativePath != null) {
-          dirs.add(fileByRelativePath);
+        for (VirtualFile virtualFile : contentEntry.getFolderFiles(ContentFolderScopes.all(false))) {
+          VirtualFile fileByRelativePath = virtualFile.findFileByRelativePath(relatPath);
+          if (fileByRelativePath != null) {
+            dirs.add(fileByRelativePath);
+          }
         }
       }
     }
