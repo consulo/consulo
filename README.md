@@ -2,6 +2,8 @@
 
 This is fork of IntelliJ IDEA Community Edition
 
+![Build Status](http://must-be.org:8080/vulcan_web/statusImage?name=consulo)
+
 ## Building
 
 To develop Consulo, you can use either IntelliJ IDEA Community Edition or IntelliJ IDEA Ultimate. To build and run the code:

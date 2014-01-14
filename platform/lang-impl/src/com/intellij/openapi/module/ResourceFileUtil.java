@@ -67,13 +67,10 @@ public class ResourceFileUtil {
     int index = resourceName.lastIndexOf('/');
     String packageName = index >= 0 ? resourceName.substring(0, index).replace('/', '.') : "";
     final String fileName = index >= 0 ? resourceName.substring(index+1) : resourceName;
-    LOGGER.warn("Scope is " + scope);
     Query<VirtualFile> directoriesByPackageName = DirectoryIndex.getInstance(project).getDirectoriesByPackageName(packageName, true);
     for (VirtualFile virtualFile : directoriesByPackageName) {
       final VirtualFile child = virtualFile.findChild(fileName);
-      LOGGER.warn("Trying to search in [" + virtualFile.getPath() + "] fileName [" + fileName + "] result [" + child + "]");
       if(child != null && scope.contains(child)) {
-        LOGGER.warn("Return file [" + child + "]");
         return child;
       }
     }
