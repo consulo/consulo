@@ -1,8 +1,0 @@
-language: java
-script: ant
-env: ANT_OPTS=-XX:-UseGCOverheadLimit
-branches:
-  only:
-    - master
-jdk:
-  - openjdk6
