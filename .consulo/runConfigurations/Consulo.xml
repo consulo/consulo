@@ -19,7 +19,7 @@
     <ConfigurationWrapper RunnerId="Debug" />
     <method>
       <option name="BuildArtifacts" enabled="true">
-        <artifact name="distMain" />
+        <artifact name="dirForRuntime" />
       </option>
     </method>
   </configuration>

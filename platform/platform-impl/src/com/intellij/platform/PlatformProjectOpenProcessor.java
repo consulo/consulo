@@ -15,10 +15,16 @@
  */
 package com.intellij.platform;
 
+import java.io.File;
+
+import javax.swing.Icon;
+
+import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
@@ -38,17 +44,12 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenedCallback;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import java.io.File;
 
 /**
  * @author max
  */
+@Logger
 public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.platform.PlatformProjectOpenProcessor");
 
   public static PlatformProjectOpenProcessor getInstance() {
     PlatformProjectOpenProcessor projectOpenProcessor = getInstanceIfItExists();
@@ -159,7 +160,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
         }
       }
       catch (Exception e) {
-        // ignore
+        LOGGER.error(e);
       }
     }
     else {
@@ -201,7 +202,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
         configurator.configureProject(project, baseDir, moduleRef);
       }
       catch (Exception e) {
-        LOG.error(e);
+        LOGGER.error(e);
       }
     }
     return moduleRef.get();
