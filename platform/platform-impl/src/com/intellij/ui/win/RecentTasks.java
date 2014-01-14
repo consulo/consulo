@@ -15,11 +15,11 @@
  */
 package com.intellij.ui.win;
 
-import com.intellij.idea.StartupUtil;
-import com.intellij.util.lang.UrlClassLoader;
-
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.intellij.idea.StartupUtil;
+import com.intellij.util.lang.UrlClassLoader;
 
 public class RecentTasks {
 

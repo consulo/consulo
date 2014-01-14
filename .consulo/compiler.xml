@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration" url="file://$PROJECT_DIR$/out" />
+  <component name="JavaCompilerConfiguration" compiler="JavacCompiler" add-not-null-assertions="true">
+    <annotation-processing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+    </annotation-processing>
+    <bytecode-target-level target="1.7" />
+  </component>
+  <component name="JavacCompilerConfiguration">
+    <option name="MAXIMUM_HEAP_SIZE" value="2048" />
+  </component>
+  <component name="ResourceCompilerConfiguration">
+    <resourceExtensions />
+  </component>
+</project>
+

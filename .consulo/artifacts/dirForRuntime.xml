@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact name="dirForRuntime">
+    <output-path>$PROJECT_DIR$/out/artifacts/distForRuntime</output-path>
+    <root id="root">
+      <element id="directory" name="bin">
+        <element id="dir-copy" path="$PROJECT_DIR$/bin/linux" />
+        <element id="dir-copy" path="$PROJECT_DIR$/bin/mac" />
+        <element id="dir-copy" path="$PROJECT_DIR$/bin/win" />
+      </element>
+      <element id="artifact" artifact-name="distMain" />
+    </root>
+  </artifact>
+</component>

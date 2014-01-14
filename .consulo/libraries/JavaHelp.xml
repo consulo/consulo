@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="JavaHelp">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jh.jar!/" />
+    </CLASSES>
+    <DOCUMENTATION />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libSrc/jhsrc.jar!/src" />
+    </SOURCES>
+  </library>
+</component>

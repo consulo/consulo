@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="commons-net">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-net-3.1.jar!/" />
+    </CLASSES>
+    <DOCUMENTATION />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libSrc/commons-net-3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

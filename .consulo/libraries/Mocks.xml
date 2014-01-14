@@ -1,0 +1,25 @@
+<component name="libraryTable">
+  <library name="Mocks">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libDev/easymock.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-cglib-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/easymockclassextension.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/objenesis-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/mockobjects-core-0.09.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/hamcrest-core-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/hamcrest-library-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-2.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-junit4-2.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-legacy-2.5.1.jar!/" />
+    </CLASSES>
+    <DOCUMENTATION />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libDev/hamcrest-core-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/hamcrest-library-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-2.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-junit4-2.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/jmock-legacy-2.5.1.jar!/" />
+    </SOURCES>
+  </library>
+</component>

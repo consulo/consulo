@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="EasyMock">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libDev/easymockclassextension.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libDev/easymock.jar!/" />
+    </CLASSES>
+    <DOCUMENTATION />
+    <SOURCES />
+  </library>
+</component>

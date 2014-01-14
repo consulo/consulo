@@ -1,0 +1,26 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Consulo" type="JavaApplication" factoryName="Java Application" singleton="true">
+    <option name="MAIN_CLASS_NAME" value="com.intellij.idea.Main" />
+    <option name="VM_PARAMETERS" value="-ea -Xbootclasspath/p:$MODULE_DIR$/out/artifacts/distForRuntime/lib/boot.jar -Xmx1024m -Didea.is.internal=true -Didea.plugins.path=G:/consulo-ext-plugins -Didea.home.path=$MODULE_DIR$/out/artifacts/distForRuntime -XX:MaxPermSize=512m -classpath $MODULE_DIR$/out/artifacts/distForRuntime/lib/*;I:/Programs/jdk7/lib/tools.jar;" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/out/artifacts/distForRuntime" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" value="" />
+    <option name="ENABLE_SWING_INSPECTOR" value="false" />
+    <option name="ENV_VARIABLES" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <module name="consulo" />
+    <envs />
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
+    <ConfigurationWrapper RunnerId="Debug" />
+    <method>
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="distMain" />
+      </option>
+    </method>
+  </configuration>
+</component>

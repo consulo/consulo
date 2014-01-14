@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact name="dist">
+    <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
+    <root id="root">
+      <element id="zip-archive" name="consulo-win.zip">
+        <element id="artifact" artifact-name="distMain" />
+        <element id="directory" name="bin">
+          <element id="dir-copy" path="$PROJECT_DIR$/bin/win" />
+        </element>
+      </element>
+      <element id="zip-archive" name="consulo-mac.zip">
+        <element id="artifact" artifact-name="distMain" />
+        <element id="directory" name="bin">
+          <element id="dir-copy" path="$PROJECT_DIR$/bin/mac" />
+        </element>
+      </element>
+      <element id="zip-archive" name="consulo-linux.zip">
+        <element id="artifact" artifact-name="distMain" />
+        <element id="directory" name="bin">
+          <element id="dir-copy" path="$PROJECT_DIR$/bin/linux" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="XStream">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/xstream-1.4.3.jar!/" />
+    </CLASSES>
+    <DOCUMENTATION />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libSrc/xstream-1.4.3-src.zip!/xstream-1.4.3/xstream/src/java" />
+    </SOURCES>
+  </library>
+</component>
