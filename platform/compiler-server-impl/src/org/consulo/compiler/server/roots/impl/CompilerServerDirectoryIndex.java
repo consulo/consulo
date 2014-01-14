@@ -98,7 +98,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   @Override
   public DirectoryInfo getInfoForDirectory(@NotNull VirtualFile fileForInfo) {
     DirectoryInfo directoryInfo = myInfoDirectoryCache.get(fileForInfo);
-    if(directoryInfo != null) {
+    if (directoryInfo != null) {
       return directoryInfo;
     }
 
@@ -134,7 +134,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
               sourceRoot = temp;
 
               provider = contentFolder.getType();
-              if(!myTypes.contains(provider)) {
+              if (!myTypes.contains(provider)) {
                 myTypes.add(provider);
               }
             }
@@ -147,10 +147,11 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
 
     VirtualFile original =
       fileForInfo instanceof ChildArchiveNewVirtualFile ? ((ChildArchiveNewVirtualFile)fileForInfo).getArchiveFile() : fileForInfo;
-    loop: for (Module moduleIter : myModuleManager.getModules()) {
+    loop:
+    for (Module moduleIter : myModuleManager.getModules()) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleIter);
       for (OrderEntry contentEntry : moduleRootManager.getOrderEntries()) {
-        if (contentEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+        if (contentEntry instanceof LibraryOrSdkOrderEntry) {
           VirtualFile[] files =
             ArrayUtil.mergeArrays(contentEntry.getFiles(OrderRootType.CLASSES), contentEntry.getFiles(OrderRootType.SOURCES));
 
@@ -165,7 +166,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
       }
     }
 
-    int flags = DirectoryInfo.createSourceRootTypeData(provider != null , false, myTypes.indexOf(provider));
+    int flags = DirectoryInfo.createSourceRootTypeData(provider != null, false, myTypes.indexOf(provider));
 
     DirectoryInfo directoryInfo = DirectoryInfo.createNew();
     directoryInfo = directoryInfo.with(module, contentRoot, sourceRoot, libraryRoot, flags, OrderEntry.EMPTY_ARRAY);
@@ -211,7 +212,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
 
     return new AbstractQuery<VirtualFile>() {
       @Override
-      protected boolean processResults(@NotNull Processor< VirtualFile > consumer) {
+      protected boolean processResults(@NotNull Processor<VirtualFile> consumer) {
         for (VirtualFile dir : dirs) {
           if (!consumer.process(dir)) {
             return false;
