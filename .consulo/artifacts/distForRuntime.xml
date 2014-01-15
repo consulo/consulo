@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact name="dirForRuntime">
+  <artifact name="distForRuntime">
     <output-path>$PROJECT_DIR$/out/artifacts/distForRuntime</output-path>
     <root id="root">
       <element id="directory" name="bin">
