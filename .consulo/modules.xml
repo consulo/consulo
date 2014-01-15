@@ -140,7 +140,7 @@
         <orderEntry type="module" module-name="compiler-bridge-impl" />
       </module>
       <module name="consulo" dirurl="file://$PROJECT_DIR$">
-        <extension id="java" sdk-module-name="" sdk-name="1.7" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
         <content url="file://$MODULE_DIR$" />
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
