@@ -42,7 +42,7 @@ import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
 
-class RootIndex {
+public class RootIndex {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.RootIndex");
   private static final DirectoryInfo NULL_INFO = DirectoryInfo.createNew();
 
@@ -60,7 +60,7 @@ class RootIndex {
   private final List<ContentFolderTypeProvider> myRootTypes = ContainerUtil.newArrayList();
   private final TObjectIntHashMap<ContentFolderTypeProvider> myRootTypeId = new TObjectIntHashMap<ContentFolderTypeProvider>();
 
-  RootIndex(@NotNull final Project project) {
+  public RootIndex(@NotNull final Project project) {
     final RootInfo info = buildRootInfo(project);
 
     Set<VirtualFile> allRoots = info.getAllRoots();
@@ -236,7 +236,7 @@ class RootIndex {
   }
 
   @NotNull
-  List<VirtualFile> getDirectoriesByPackageName(@NotNull final String packageName, final boolean includeLibrarySources) {
+  public List<VirtualFile> getDirectoriesByPackageName(@NotNull final String packageName, final boolean includeLibrarySources) {
     Map<String, List<VirtualFile>> cacheMap = includeLibrarySources ?
                                               myDirectoriesByPackageNameCacheWithLibSrc :
                                               myDirectoriesByPackageNameCache;

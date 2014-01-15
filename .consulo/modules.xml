@@ -60,6 +60,7 @@
       </module>
       <module name="platform/compiler/compiler-api" dirurl="file://$PROJECT_DIR$/platform/compiler-api">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>
@@ -73,6 +74,7 @@
       </module>
       <module name="platform/compiler/compiler-artifact-api" dirurl="file://$PROJECT_DIR$/platform/compiler-artifact-api">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>
@@ -95,6 +97,7 @@
       </module>
       <module name="platform/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-bridge-impl">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>
@@ -105,6 +108,7 @@
       </module>
       <module name="platform/compiler/compiler-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-impl">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>
@@ -123,6 +127,7 @@
       </module>
       <module name="platform/compiler-server-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-server-impl">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>
@@ -184,6 +189,7 @@
       </module>
       <module name="platform/core-api" dirurl="file://$PROJECT_DIR$/platform/core-api">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
@@ -433,6 +439,7 @@
       </module>
       <module name="platform/platform-api" dirurl="file://$PROJECT_DIR$/platform/platform-api">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>

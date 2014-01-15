@@ -15,6 +15,16 @@
  */
 package org.consulo.compiler.server;
 
+import java.io.File;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+import org.consulo.compiler.server.application.CompilerServerApplication;
+import org.consulo.compiler.server.rmi.CompilerClientInterface;
+import org.consulo.compiler.server.rmi.CompilerServerInterface;
+import org.consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
@@ -26,16 +36,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TestDialog;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
-import org.consulo.compiler.server.application.CompilerServerApplication;
-import org.consulo.compiler.server.rmi.CompilerClientInterface;
-import org.consulo.compiler.server.rmi.CompilerServerInterface;
-import org.consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 /**
  * @author VISTALL
@@ -54,8 +54,8 @@ public class Main {
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, t.getAbsolutePath() + "/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, t.getAbsolutePath() + "/system");
 
-    System.setProperty(PathManager.PROPERTY_PLUGINS_PATH, "G:\\consulo-ext-plugins");
-    System.setProperty(PathManager.PROPERTY_HOME_PATH, "H:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
+    System.setProperty(PathManager.PROPERTY_PLUGINS_PATH, "G:\\target_for_build\\distMain\\plugins");
+    System.setProperty(PathManager.PROPERTY_HOME_PATH, "G:\\target_for_build\\distMain");
     System.setProperty(FileWatcher.PROPERTY_WATCHER_DISABLED, "true");
 
     LOGGER.info("Data dir: " + t.getAbsolutePath());
@@ -74,13 +74,14 @@ public class Main {
     app.load(PathManager.getOptionsPath());
 
     setupSdk("JDK", "1.6", "I:\\Programs\\jdk6");
-    setupSdk("Consulo Plugin SDK", "Consulo 1.SNAPSHOT", "H:\\github.com\\consulo\\consulo\\out\\artifacts\\dist");
+    setupSdk("JDK", "1.7", "I:\\Programs\\jdk7");
+    setupSdk("Consulo Plugin SDK", "Consulo 1.SNAPSHOT", "G:\\target_for_build\\distMainn");
 
     server.compile(new CompilerClientInterface() {
       @Override
       public void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum)
         throws RemoteException {
-        LOGGER.info(category + ": " + message);
+        LOGGER.info(category + ": " + message +  ". Url: " + url);
       }
 
       @Override
@@ -90,7 +91,7 @@ public class Main {
       @NotNull
       @Override
       public String getProjectDir() {
-        return "H:\\github.com\\consulo\\consulo-java";
+        return "G:\\target_for_build\\consulo";
       }
     });
   }
