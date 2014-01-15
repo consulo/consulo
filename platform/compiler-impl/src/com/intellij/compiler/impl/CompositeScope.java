@@ -64,6 +64,11 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     else {
       myScopes.add(scope);
     }
+
+    Map<Key, Object> map = scope.exportUserData();
+    for (Map.Entry<Key, Object> entry : map.entrySet()) {
+      putUserData(entry.getKey(), entry.getValue());
+    }
   }
 
   @NotNull

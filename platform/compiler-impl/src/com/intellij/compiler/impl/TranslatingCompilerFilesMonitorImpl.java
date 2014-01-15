@@ -57,9 +57,11 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.*;
+import lombok.val;
 import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 
@@ -1282,7 +1284,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 }
               }
 
-              final List<VirtualFile> projectRoots = Arrays.asList(ProjectRootManager.getInstance(projRef.get()).getContentSourceRoots());
+              final List<VirtualFile> projectRoots = Arrays.asList(getRootsForScan(projRef.get()));
               final int totalRootsCount = projectRoots.size() + intermediateRoots.size();
               scanSourceContent(projRef, projectRoots, totalRootsCount, true);
 
@@ -1374,7 +1376,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             return;
           }
           try {
-            myRootsBefore = ProjectRootManager.getInstance(projRef.get()).getContentSourceRoots();
+            myRootsBefore = getRootsForScan(projRef.get());
           }
           catch (ProjectRef.ProjectClosedException e) {
             myRootsBefore = null;
@@ -1392,7 +1394,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
           try {
             final VirtualFile[] rootsBefore = myRootsBefore;
             myRootsBefore = null;
-            final VirtualFile[] rootsAfter = ProjectRootManager.getInstance(projRef.get()).getContentSourceRoots();
+            final VirtualFile[] rootsAfter = getRootsForScan(projRef.get());
             final Set<VirtualFile> newRoots = new HashSet<VirtualFile>();
             final Set<VirtualFile> oldRoots = new HashSet<VirtualFile>();
             {
@@ -1825,6 +1827,24 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
       }
     }
+  }
+
+  private VirtualFile[] getRootsForScan(Project project) {
+    List<VirtualFile> list = new ArrayList<VirtualFile>();
+    Module[] modules = ModuleManager.getInstance(project).getModules();
+    val extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensions();
+    for (Module module : modules) {
+      for (TranslatingCompilerFilesMonitorHelper extension : extensions) {
+        VirtualFile[] rootsForModule = extension.getRootsForModule(module);
+        if(rootsForModule != null) {
+          Collections.addAll(list, rootsForModule);
+        }
+      }
+
+      VirtualFile[] contentFolderFiles = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.all(false));
+      Collections.addAll(list, contentFolderFiles);
+    }
+    return VfsUtil.toVirtualFileArray(list);
   }
 
   @Override

@@ -269,6 +269,9 @@
     <extensionPoint name="compiler.additionalCompileScopeProvider"
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 
+    <extensionPoint name="compiler.translatingHelper"
+                    interface="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorHelper" />
+
     <extensionPoint name="compiler.resourceCompilerExtension"
                     interface="com.intellij.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
 

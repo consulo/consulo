@@ -18,6 +18,7 @@ package com.intellij.compiler.options;
 import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.BeforeRunTaskProvider;
 import com.intellij.execution.ExecutionBundle;
+import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileWithCompileBeforeLaunchOption;
@@ -46,9 +47,11 @@ import javax.swing.*;
 public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBeforeRun.MakeBeforeRunTask> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.options.CompileStepBeforeRun");
   public static final Key<MakeBeforeRunTask> ID = Key.create("Make");
-  private static final Key<RunConfiguration> RUN_CONFIGURATION = Key.create("RUN_CONFIGURATION");
-  private static final Key<String> RUN_CONFIGURATION_TYPE_ID = Key.create("RUN_CONFIGURATION_TYPE_ID");
-  private static final Key<String> RUNNER_ID = Key.create("RUNNER_ID");
+
+  public static final Key<RunConfiguration> RUN_CONFIGURATION = Key.create("RUN_CONFIGURATION");
+  public static final Key<String> RUN_CONFIGURATION_TYPE_ID = Key.create("RUN_CONFIGURATION_TYPE_ID");
+  public static final Key<String> RUNNER_ID = Key.create("RUNNER_ID");
+  public static final Key<Executor> EXECUTOR = Key.create("EXECUTOR");
 
   @NonNls protected static final String MAKE_PROJECT_ON_RUN_KEY = "makeProjectOnRun";
 
@@ -153,6 +156,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
             scope.putUserData(RUN_CONFIGURATION, configuration);
             scope.putUserData(RUN_CONFIGURATION_TYPE_ID, configuration.getType().getId());
             scope.putUserData(RUNNER_ID, env.getRunnerId());
+            scope.putUserData(EXECUTOR, env.getExecutor());
             compilerManager.make(scope, callback);
           }
           else {

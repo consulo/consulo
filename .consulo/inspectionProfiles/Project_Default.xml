@@ -6,6 +6,6 @@
       <option name="ignoreObjectMethods" value="false" />
       <option name="ignoreAnonymousClassMethods" value="false" />
     </inspection_tool>
-    <inspection_tool class="TypeCanBeReplacedByVal" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="TypeCanBeReplacedByVal" enabled="true" level="TYPO" enabled_by_default="true" />
   </profile>
 </component>

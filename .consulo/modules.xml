@@ -716,6 +716,7 @@
       </module>
       <module name="platform/util" dirurl="file://$PROJECT_DIR$/platform/util">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
@@ -822,6 +823,7 @@
       </module>
       <module name="platform/xdebugger-api" dirurl="file://$PROJECT_DIR$/platform/xdebugger-api">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>
