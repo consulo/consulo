@@ -1144,8 +1144,8 @@ public class CompileDriver {
 
               if (snapshot == null || ContainerUtil.intersects(generatedTypes, compilerManager.getRegisteredInputTypes(compiler))) {
                 // rescan snapshot if previously generated files may influence the input of this compiler
-                final Set<VirtualFile> prevSnapshot =
-                  round > 0 && snapshot != null ? new HashSet<VirtualFile>(Arrays.asList(snapshot)) : Collections.<VirtualFile>emptySet();
+                final Collection<VirtualFile> prevSnapshot =
+                  round > 0 && snapshot != null ? Arrays.asList(snapshot) : Collections.<VirtualFile>emptySet();
                 snapshot = ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile[]>() {
                   @Override
                   public VirtualFile[] compute() {
