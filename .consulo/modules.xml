@@ -362,6 +362,7 @@
       </module>
       <module name="platform/lang-api" dirurl="file://$PROJECT_DIR$/platform/lang-api">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>
