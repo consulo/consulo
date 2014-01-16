@@ -59,6 +59,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.*;
 import lombok.val;
 import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
@@ -187,6 +189,8 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private final TIntIntHashMap myInitInProgress = new TIntIntHashMap(); // projectId for successfully initialized projects
   private final Object myAsyncScanLock = new Object();
 
+  private boolean myForceCompiling;
+
   public TranslatingCompilerFilesMonitorImpl(VirtualFileManager vfsManager, ProjectManager projectManager, Application application) {
     myProjectManager = projectManager;
 
@@ -264,7 +268,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     final Project project = context.getProject();
     final int projectId = getProjectId(project);
     final CompilerManager configuration = CompilerManager.getInstance(project);
-    final boolean _forceCompile = forceCompile || isRebuild;
+    final boolean _forceCompile = forceCompile || isRebuild || myForceCompiling;
     final Set<VirtualFile> selectedForRecompilation = new HashSet<VirtualFile>();
     synchronized (myDataLock) {
       final TIntHashSet pathsToRecompile = mySourcesToRecompile.get(projectId);
@@ -419,6 +423,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                      @Nullable final String outputRoot,
                      final Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
                      final VirtualFile[] filesToRecompile) throws IOException {
+    myForceCompiling = false;
     final Project project = context.getProject();
     final DependencyCache dependencyCache = ((CompileContextEx)context).getDependencyCache();
     final int projectId = getProjectId(project);
@@ -1366,6 +1371,18 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         watchProject(project);
       }
 
+      conn.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
+        @Override
+        public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+          for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME
+                  .getExtensions()) {
+            if(helper.isModuleExtensionAffectToCompilation(oldExtension)) {
+              myForceCompiling = true;
+              break;
+            }
+          }
+        }
+      });
       conn.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
         private VirtualFile[] myRootsBefore;
         private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
