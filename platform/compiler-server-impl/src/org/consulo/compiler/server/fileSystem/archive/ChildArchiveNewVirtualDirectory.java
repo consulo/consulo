@@ -48,6 +48,11 @@ public class ChildArchiveNewVirtualDirectory extends ChildArchiveNewVirtualFile 
     return myChilds.toArray(new NewVirtualFile[myChilds.size()]);
   }
 
+  @Override
+  public boolean isDirectory() {
+    return true;
+  }
+
   @Nullable
   @Override
   public NewVirtualFile findChild(@NotNull @NonNls String name) {
