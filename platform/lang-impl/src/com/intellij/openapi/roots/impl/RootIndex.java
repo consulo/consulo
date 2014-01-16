@@ -135,7 +135,6 @@ public class RootIndex {
 
           // init library classes
           for (final VirtualFile classRoot : classRoots) {
-            LOG.warn("Map for " + module  + " classRoot " + classRoot);
             info.classAndSourceRoots.add(classRoot);
             info.libClassRootEntries.putValue(classRoot, orderEntry);
             info.packagePrefix.put(classRoot, "");
