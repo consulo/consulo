@@ -44,6 +44,7 @@ public class StringUtil extends StringUtilRt {
   @NonNls private static final String VOWELS = "aeiouy";
   @NonNls private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
   @NonNls private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
+  @NonNls private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
   public static final NotNullFunction<String, String> QUOTER = new NotNullFunction<String, String>() {
     @Override
@@ -2163,6 +2164,11 @@ public class StringUtil extends StringUtilRt {
   @NotNull
   public static String[] splitByLines(@NotNull String string, boolean excludeEmptyStrings) {
     return (excludeEmptyStrings ? EOL_SPLIT_PATTERN : EOL_SPLIT_PATTERN_WITH_EMPTY).split(string);
+  }
+
+  @NotNull
+  public static String[] splitByLinesDontTrim(@NotNull String string) {
+    return EOL_SPLIT_DONT_TRIM_PATTERN.split(string);
   }
 
   @NotNull
