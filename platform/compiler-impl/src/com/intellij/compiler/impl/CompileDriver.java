@@ -596,7 +596,10 @@ public class CompileDriver {
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         throw new RuntimeException(ex);
       }
-      System.out.println(ExceptionUtil.getThrowableText(ex));
+
+      if(ApplicationManager.getApplication().isCompilerServerMode()){
+        LOG.error(ex);
+      }
       wereExceptions = true;
       final PluginId pluginId = IdeErrorsDialog.findPluginId(ex);
 
