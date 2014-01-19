@@ -46,9 +46,9 @@ public class LibNotifyWrapper {
       available = false;
       NotificationGroup.balloonGroup("Linux configuration messages");
       Notifications.Bus.notify(
-        new Notification("Linux configuration messages",
-                         "Notification library has not been installed",
-                         message, NotificationType.INFORMATION)
+              new Notification("Linux configuration messages",
+                               "Notification library has not been installed",
+                               message, NotificationType.INFORMATION)
       );
     }
   }
