@@ -53,7 +53,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -254,7 +254,7 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
       if (lastPathComponent instanceof DefaultMutableTreeNode) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)lastPathComponent;
         Object userObject = node.getUserObject();
-        if (userObject != null && ReflectionCache.isAssignable(nodeClass, userObject.getClass())) {
+        if (userObject != null && ReflectionUtil.isAssignable(nodeClass, userObject.getClass())) {
           result.add((T)userObject);
         }
       }

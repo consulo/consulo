@@ -66,10 +66,8 @@ import java.util.Set;
 
 
 @State(
-  name = "Encoding",
-  storages = {
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/encoding.xml")
-  }
+        name = "Encoding",
+        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/encoding.xml")}
 )
 public class EncodingManagerImpl extends EncodingManager implements PersistentStateComponent<Element>, Disposable {
   private static final Equality<Reference<Document>> REFERENCE_EQUALITY = new Equality<Reference<Document>>() {
@@ -86,19 +84,19 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private final Alarm updateEncodingFromContent = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
   private static final Key<Charset> CACHED_CHARSET_FROM_CONTENT = Key.create("CACHED_CHARSET_FROM_CONTENT");
 
-  private final TransferToPooledThreadQueue<Reference<Document>> myChangedDocuments = new TransferToPooledThreadQueue<Reference<Document>>(
-    "Encoding detection thread",
-    ApplicationManager.getApplication().getDisposed(),
-    -1, // drain the whole queue, do not reschedule
-    new Processor<Reference<Document>>() {
-      @Override
-      public boolean process(Reference<Document> ref) {
-        Document document = ref.get();
-        if (document == null) return true; // document gced, don't bother
-        handleDocument(document);
-        return true;
-      }
-    });
+  private final TransferToPooledThreadQueue<Reference<Document>> myChangedDocuments =
+          new TransferToPooledThreadQueue<Reference<Document>>("Encoding detection thread",
+                                                               ApplicationManager.getApplication().getDisposed(), -1,
+                                                               // drain the whole queue, do not reschedule
+                                                               new Processor<Reference<Document>>() {
+                                                                 @Override
+                                                                 public boolean process(Reference<Document> ref) {
+                                                                   Document document = ref.get();
+                                                                   if (document == null) return true; // document gced, don't bother
+                                                                   handleDocument(document);
+                                                                   return true;
+                                                                 }
+                                                               });
 
   public EncodingManagerImpl(@NotNull EditorFactory editorFactory) {
     editorFactory.getEventMulticaster().addDocumentListener(new DocumentAdapter() {
@@ -118,20 +116,15 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   @NonNls public static final String PROP_CACHED_ENCODING_CHANGED = "cachedEncoding";
 
   private void handleDocument(@NotNull final Document document) {
-    ApplicationManager.getApplication().runReadAction(new Runnable(){
-      @Override
-      public void run() {
-        VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
-        if (virtualFile == null) return;
-        Project project = guessProject(virtualFile);
-        if (project != null && project.isDisposed()) return;
-        Charset charset = LoadTextUtil.charsetFromContentOrNull(project, virtualFile, document.getText());
-        Charset oldCached = getCachedCharsetFromContent(document);
-        if (!Comparing.equal(charset, oldCached)) {
-          setCachedCharsetFromContent(charset, oldCached, document);
-        }
-      }
-    });
+    VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
+    if (virtualFile == null) return;
+    Project project = guessProject(virtualFile);
+    if (project != null && project.isDisposed()) return;
+    Charset charset = LoadTextUtil.charsetFromContentOrNull(project, virtualFile, document.getImmutableCharSequence());
+    Charset oldCached = getCachedCharsetFromContent(document);
+    if (!Comparing.equal(charset, oldCached)) {
+      setCachedCharsetFromContent(charset, oldCached, document);
+    }
   }
 
   private void setCachedCharsetFromContent(Charset charset, Charset oldCached, @NotNull Document document) {
@@ -149,7 +142,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     return ApplicationManager.getApplication().runReadAction(new Computable<Charset>() {
       @Override
       public Charset compute() {
-        Charset charsetFromContent = LoadTextUtil.charsetFromContentOrNull(project, virtualFile, document.getText());
+        Charset charsetFromContent = LoadTextUtil.charsetFromContentOrNull(project, virtualFile, document.getImmutableCharSequence());
         if (charsetFromContent != null) {
           setCachedCharsetFromContent(charsetFromContent, cached, document);
         }
@@ -175,6 +168,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @NonNls private static final String DEFAULT_ENCODING_TAG = "default_encoding";
+
   @Override
   public Element getState() {
     Element result = new Element("x");
@@ -227,7 +221,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   @Override
   public boolean isUseUTFGuessing(final VirtualFile virtualFile) {
     Project project = guessProject(virtualFile);
-    return project != null && EncodingProjectManager.getInstance(project).isUseUTFGuessing(virtualFile);
+    return project == null || EncodingProjectManager.getInstance(project).isUseUTFGuessing(virtualFile);
   }
 
   @Override
@@ -255,6 +249,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     if (project == null) return;
     EncodingProjectManager.getInstance(project).setNative2AsciiForPropertiesFiles(virtualFile, native2Ascii);
   }
+
   @Override
   @NotNull
   public Charset getDefaultCharset() {
@@ -294,7 +289,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener){
+  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
     myPropertyChangeSupport.addPropertyChangeListener(listener);
   }
 
@@ -310,9 +305,10 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener){
+  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
+
   void firePropertyChange(@Nullable Document document, @NotNull String propertyName, final Object oldValue, final Object newValue) {
     Object source = document == null ? this : document;
     myPropertyChangeSupport.firePropertyChange(new PropertyChangeEvent(source, propertyName, oldValue, newValue));

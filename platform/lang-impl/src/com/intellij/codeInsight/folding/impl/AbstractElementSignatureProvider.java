@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,7 +81,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
     int index = 0;
 
     for (PsiElement child : children) {
-      if (ReflectionCache.isAssignable(hisClass, child.getClass())) {
+      if (ReflectionUtil.isAssignable(hisClass, child.getClass())) {
         T namedChild = hisClass.cast(child);
         final String childName = namedChild.getName();
 
@@ -106,7 +106,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
     PsiElement[] children = parent.getChildren();
 
     for (PsiElement child : children) {
-      if (ReflectionCache.isAssignable(hisClass, child.getClass())) {
+      if (ReflectionUtil.isAssignable(hisClass, child.getClass())) {
         T namedChild = hisClass.cast(child);
         final String childName = namedChild.getName();
 

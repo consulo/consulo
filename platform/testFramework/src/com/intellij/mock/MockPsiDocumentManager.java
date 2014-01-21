@@ -56,6 +56,12 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
   public void commitDocument(@NotNull Document document) {
   }
 
+  @NotNull
+  @Override
+  public CharSequence getLastCommittedText(@NotNull Document document) {
+    return document.getImmutableCharSequence();
+  }
+
   @Override
   @NotNull
   public Document[] getUncommittedDocuments() {
@@ -105,7 +111,7 @@ public class MockPsiDocumentManager extends PsiDocumentManager {
   @Override
   public void doPostponedOperationsAndUnblockDocument(@NotNull Document doc) {
     throw new UnsupportedOperationException(
-      "Method doPostponedOperationsAndUnblockDocument is not yet implemented in " + getClass().getName());
+            "Method doPostponedOperationsAndUnblockDocument is not yet implemented in " + getClass().getName());
   }
 
   @Override

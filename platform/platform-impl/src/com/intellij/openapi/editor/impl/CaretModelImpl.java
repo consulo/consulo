@@ -67,6 +67,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
   private int myVisualLineEnd;
   private TextAttributes myTextAttributes;
   private boolean myIsInUpdate;
+  private boolean isDocumentChanged;
   private RangeMarker savedBeforeBulkCaretMarker;
   private boolean myIgnoreWrongMoves = false;
   private boolean mySkipChangeRequests;
@@ -152,7 +153,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     if (myReportCaretMoves) {
       LogMessageEx.error(LOG, "Unexpected caret move request");
     }
-    if (!myEditor.isStickySelection() && !pos.equals(myVisibleCaret)) {
+    if (!myEditor.isStickySelection() && !isDocumentChanged && !pos.equals(myVisibleCaret)) {
       CopyPasteManager.getInstance().stopKillRings();
     }
 
@@ -239,13 +240,13 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
       StringBuilder positionToOffsetTrace = new StringBuilder();
       int inverseOffset = myEditor.logicalPositionToOffset(logicalPosition, positionToOffsetTrace);
       LogMessageEx.error(
-        LOG, "caret moved to wrong offset. Please submit a dedicated ticket and attach current editor's text to it.",
-        String.format(
-          "Requested: offset=%d, logical position='%s' but actual: offset=%d, logical position='%s' (%s). %s%n"
-          + "interested text [%d;%d): '%s'%n debug trace: %s%nLogical position -> offset ('%s'->'%d') trace: %s",
-          offset, logicalPosition, myOffset, myLogicalCaret, positionByOffsetAfterMove, myEditor.dumpState(),
-          textStart, textEnd, text, debugBuffer, logicalPosition, inverseOffset, positionToOffsetTrace
-        ));
+              LOG, "caret moved to wrong offset. Please submit a dedicated ticket and attach current editor's text to it.",
+              String.format(
+                      "Requested: offset=%d, logical position='%s' but actual: offset=%d, logical position='%s' (%s). %s%n"
+                      + "interested text [%d;%d): '%s'%n debug trace: %s%nLogical position -> offset ('%s'->'%d') trace: %s",
+                      offset, logicalPosition, myOffset, myLogicalCaret, positionByOffsetAfterMove, myEditor.dumpState(),
+                      textStart, textEnd, text, debugBuffer, logicalPosition, inverseOffset, positionToOffsetTrace
+              ));
     }
     if (event != null) {
       myCaretListeners.getMulticaster().caretPositionChanged(event);
@@ -270,7 +271,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     if (myReportCaretMoves) {
       LogMessageEx.error(LOG, "Unexpected caret move request");
     }
-    if (!myEditor.isStickySelection()) {
+    if (!myEditor.isStickySelection() && !isDocumentChanged) {
       CopyPasteManager.getInstance().stopKillRings();
     }
     SelectionModelImpl selectionModel = myEditor.getSelectionModel();
@@ -440,7 +441,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     if (myReportCaretMoves) {
       LogMessageEx.error(LOG, "Unexpected caret move request");
     }
-    if (!myEditor.isStickySelection() && !pos.equals(myLogicalCaret)) {
+    if (!myEditor.isStickySelection() && !isDocumentChanged && !pos.equals(myLogicalCaret)) {
       CopyPasteManager.getInstance().stopKillRings();
     }
 
@@ -517,9 +518,9 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
         }
         if (debugBuffer != null) {
           debugBuffer.append(
-            "Resetting target logical column (" + oldColumn + ") to " + lineEndColumnNumber +
-            " because caret is not allowed to be located after line end (offset: " +lineEndOffset + ", "
-            + "logical position: " + endLinePosition+ "). Current soft wrap columns value: " + softWrapColumns+ "\n");
+                  "Resetting target logical column (" + oldColumn + ") to " + lineEndColumnNumber +
+                  " because caret is not allowed to be located after line end (offset: " +lineEndOffset + ", "
+                  + "logical position: " + endLinePosition+ "). Current soft wrap columns value: " + softWrapColumns+ "\n");
         }
       }
     }
@@ -532,7 +533,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     LogicalPosition logicalPositionToUse;
     if (pos.visualPositionAware) {
       logicalPositionToUse = new LogicalPosition(
-        line, column, softWrapLinesBefore, softWrapLinesCurrent, softWrapColumns, pos.foldedLines, pos.foldingColumnDiff
+              line, column, softWrapLinesBefore, softWrapLinesCurrent, softWrapColumns, pos.foldedLines, pos.foldingColumnDiff
       );
     }
     else {
@@ -606,8 +607,8 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
         }
         else {
           LogMessageEx.error(LOG, "Invalid editor dimension mapping", String.format(
-            "Expected to map visual position '%s' to offset %d but got the following: -> logical position '%s'; -> offset %d. "
-            + "State: %s", visualPosition, myOffset, logicalPosition, tmpOffset, myEditor.dumpState()
+                  "Expected to map visual position '%s' to offset %d but got the following: -> logical position '%s'; -> offset %d. "
+                  + "State: %s", visualPosition, myOffset, logicalPosition, tmpOffset, myEditor.dumpState()
           ));
         }
       }
@@ -711,18 +712,26 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void documentChanged(DocumentEvent e) {
-    finishUpdate();
+    isDocumentChanged = true;
+    try {
+      updateCaretPosition((DocumentEventImpl)e);
+    }
+    finally {
+      isDocumentChanged = false;
+    }
+  }
 
-    DocumentEventImpl event = (DocumentEventImpl)e;
+  private void updateCaretPosition(@NotNull final DocumentEventImpl event) {
+    finishUpdate();
     final DocumentEx document = myEditor.getDocument();
-    boolean performSoftWrapAdjustment = e.getNewLength() > 0 // We want to put caret just after the last added symbol
+    boolean performSoftWrapAdjustment = event.getNewLength() > 0 // We want to put caret just after the last added symbol
                                         // There is a possible case that the user removes text just before the soft wrap. We want to keep caret
                                         // on a visual line with soft wrap start then.
-                                        || myEditor.getSoftWrapModel().getSoftWrap(e.getOffset()) != null;
+                                        || myEditor.getSoftWrapModel().getSoftWrap(event.getOffset()) != null;
 
     if (event.isWholeTextReplaced()) {
       int newLength = document.getTextLength();
-      if (myOffset == newLength - e.getNewLength() + e.getOldLength() || newLength == 0) {
+      if (myOffset == newLength - event.getNewLength() + event.getOldLength() || newLength == 0) {
         moveToOffset(newLength, performSoftWrapAdjustment);
       }
       else {
@@ -738,16 +747,16 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     }
     else {
       if (document.isInBulkUpdate()) return;
-      int startOffset = e.getOffset();
-      int oldEndOffset = startOffset + e.getOldLength();
+      int startOffset = event.getOffset();
+      int oldEndOffset = startOffset + event.getOldLength();
 
       int newOffset = myOffset;
 
-      if (myOffset > oldEndOffset || myOffset == oldEndOffset && needToShiftWhiteSpaces(e)) {
-        newOffset += e.getNewLength() - e.getOldLength();
+      if (myOffset > oldEndOffset || myOffset == oldEndOffset && needToShiftWhiteSpaces(event)) {
+        newOffset += event.getNewLength() - event.getOldLength();
       }
       else if (myOffset >= startOffset && myOffset <= oldEndOffset) {
-        newOffset = Math.min(newOffset, startOffset + e.getNewLength());
+        newOffset = Math.min(newOffset, startOffset + event.getNewLength());
       }
 
       newOffset = Math.min(newOffset, document.getTextLength());

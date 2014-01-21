@@ -31,7 +31,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -112,7 +112,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
     if (result == null) {
       MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map = myExtensions.getValue();
       for (Class<? extends PsiElement> registeredType : map.keySet()) {
-        if (ReflectionCache.isAssignable(registeredType, type)) {
+        if (ReflectionUtil.isAssignable(registeredType, type)) {
           final Collection<StructureViewExtension> extensions = map.get(registeredType);
           for (StructureViewExtension extension : extensions) {
             myImplExtensions.put(type, extension);

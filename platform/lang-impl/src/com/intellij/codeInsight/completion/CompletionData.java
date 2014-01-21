@@ -34,7 +34,7 @@ import com.intellij.psi.filters.TrueFilter;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public class CompletionData {
       return true;
 
     for (final Class myFinalScope : myFinalScopes) {
-      if (ReflectionCache.isAssignable(myFinalScope, scopeClass)) {
+      if (ReflectionUtil.isAssignable(myFinalScope, scopeClass)) {
         return true;
       }
     }

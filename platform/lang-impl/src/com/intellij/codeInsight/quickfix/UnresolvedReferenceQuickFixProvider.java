@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiReference;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference> {
@@ -34,7 +34,7 @@ public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference
       if (dumb && !DumbService.isDumbAware(each)) {
         continue;
       }
-      if (ReflectionCache.isAssignable(each.getReferenceClass(), referenceClass)) {
+      if (ReflectionUtil.isAssignable(each.getReferenceClass(), referenceClass)) {
         each.registerFixes(ref, registrar);
       }
     }

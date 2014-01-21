@@ -47,7 +47,7 @@ import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LocalTimeCounter;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
@@ -433,7 +433,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
   @Override
   public PsiElement findElementAt(int offset, @NotNull Class<? extends Language> lang) {
-    if (!ReflectionCache.isAssignable(lang, getBaseLanguage().getClass())) return null;
+    if (!ReflectionUtil.isAssignable(lang, getBaseLanguage().getClass())) return null;
     return findElementAt(offset);
   }
 

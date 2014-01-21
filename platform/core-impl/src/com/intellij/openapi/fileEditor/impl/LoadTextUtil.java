@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.lang.properties.charset.Native2AsciiCharset;
-import com.intellij.openapi.fileTypes.BinaryFileDecompiler;
-import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
@@ -98,7 +95,17 @@ public final class LoadTextUtil {
       detectedLineSeparator = "\n";
     }
 
-    CharSequence result = buffer.length() == dst ? buffer : buffer.subSequence(0, dst);
+    CharSequence result;
+    if (buffer.length() == dst) {
+      result = buffer;
+    }
+    else {
+      // in Mac JDK CharBuffer.subSequence() signature differs from Oracle's
+      // more than that, the signature has changed between jd6 and jdk7,
+      // so use more generic CharSequence.subSequence() just in case
+      @SuppressWarnings("UnnecessaryLocalVariable") CharSequence seq = buffer;
+      result = seq.subSequence(0, dst);
+    }
     return Pair.create(result, detectedLineSeparator);
   }
 
@@ -217,12 +224,9 @@ public final class LoadTextUtil {
    * <p/>
    * Normally you should not use this method.
    *
-   * @param project
-   * @param virtualFile
    * @param requestor            any object to control who called this method. Note that
    *                             it is considered to be an external change if <code>requestor</code> is <code>null</code>.
    *                             See {@link com.intellij.openapi.vfs.VirtualFileEvent#getRequestor}
-   * @param text
    * @param newModificationStamp new modification stamp or -1 if no special value should be set @return <code>Writer</code>
    * @throws java.io.IOException if an I/O error occurs
    * @see VirtualFile#getModificationStamp()
@@ -286,8 +290,6 @@ public final class LoadTextUtil {
     try {
       if (existing == null) return Pair.create(specified, toBytes(text, specified));
       if (specified == null || specified.equals(existing)) return Pair.create(specified, toBytes(text, existing));
-      if (existing == null) return Pair.create(specified, toBytes(text, specified));
-      if (specified == null || specified.equals(existing)) return Pair.create(specified, toBytes(text, existing));
 
       byte[] out = isSupported(specified, text);
       if (out != null) return Pair.create(specified, out); //if explicitly specified encoding is safe, return it
@@ -328,13 +330,17 @@ public final class LoadTextUtil {
     return charset;
   }
 
+  /**
+   * @deprecated use {@link #charsetFromContentOrNull(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile, CharSequence)}
+   */
   @Nullable("returns null if cannot determine from content")
   public static Charset charsetFromContentOrNull(@Nullable Project project, @NotNull VirtualFile virtualFile, @NotNull String text) {
-    FileType fileType = virtualFile.getFileType();
-    if (fileType instanceof LanguageFileType) {
-      return ((LanguageFileType)fileType).extractCharsetFromFileContent(project, virtualFile, text);
-    }
-    return null;
+    return CharsetUtil.extractCharsetFromFileContent(project, virtualFile, virtualFile.getFileType(), text);
+  }
+
+  @Nullable("returns null if cannot determine from content")
+  public static Charset charsetFromContentOrNull(@Nullable Project project, @NotNull VirtualFile virtualFile, @NotNull CharSequence text) {
+    return CharsetUtil.extractCharsetFromFileContent(project, virtualFile, virtualFile.getFileType(), text);
   }
 
   @NotNull
@@ -349,7 +355,9 @@ public final class LoadTextUtil {
       return convertLineSeparators(buffer).first;
     }
 
-    assert !file.isDirectory() : "'"+file.getPresentableUrl() + "' is directory";
+    if (file.isDirectory()) {
+      throw new AssertionError("'" + file.getPresentableUrl() + "' is directory");
+    }
     final FileType fileType = file.getFileType();
 
     if (fileType.isBinary()) {

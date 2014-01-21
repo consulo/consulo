@@ -17,7 +17,7 @@
 package com.intellij.psi.filters;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
 
 /**
@@ -46,7 +46,7 @@ public class ClassFilter implements ElementFilter{
   }
 
   private boolean filterMatches(final Class hintClass) {
-    return ReflectionCache.isAssignable(myFilter, hintClass);
+    return ReflectionUtil.isAssignable(myFilter, hintClass);
   }
 
   @Override

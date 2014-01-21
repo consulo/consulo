@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +51,7 @@ public abstract class ComponentTreeWatcher {
       return true;
     }
     for (Class aClass : myControlsToIgnore) {
-      if (ReflectionCache.isAssignable(aClass, object.getClass())) {
+      if (ReflectionUtil.isAssignable(aClass, object.getClass())) {
         return true;
       }
     }

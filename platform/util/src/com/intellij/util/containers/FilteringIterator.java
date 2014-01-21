@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -126,7 +126,7 @@ public class FilteringIterator<Dom, E extends Dom> implements Iterator<E> {
     }
 
     public boolean isClassAcceptable(Class hintClass) {
-      return ReflectionCache.isAssignable(myInstancesClass, hintClass);
+      return ReflectionUtil.isAssignable(myInstancesClass, hintClass);
     }
 
     public T cast(Object object) {

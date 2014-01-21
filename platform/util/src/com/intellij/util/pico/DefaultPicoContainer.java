@@ -15,7 +15,7 @@
  */
 package com.intellij.util.pico;
 
-import com.intellij.util.ReflectionCache;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
@@ -60,7 +60,7 @@ public class DefaultPicoContainer implements MutablePicoContainer, Serializable 
   protected LinkedList<ComponentAdapter> getNonAssignableAdaptersOfType(final Class componentType) {
     LinkedList<ComponentAdapter> result = new LinkedList<ComponentAdapter>();
     for (final ComponentAdapter componentAdapter : nonAssignableComponentAdapters.get()) {
-      if (ReflectionCache.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
+      if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
         result.addFirst(componentAdapter);
       }
     }
@@ -129,7 +129,7 @@ public class DefaultPicoContainer implements MutablePicoContainer, Serializable 
     for (final Object o : getComponentAdapters()) {
       ComponentAdapter componentAdapter = (ComponentAdapter)o;
 
-      if (ReflectionCache.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
+      if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
         found.add(componentAdapter);
       }
     }
@@ -185,7 +185,7 @@ public class DefaultPicoContainer implements MutablePicoContainer, Serializable 
 
     List<Object> result = new ArrayList<Object>();
     for (final ComponentAdapter componentAdapter : componentAdapters.getImmutableSet()) {
-      if (ReflectionCache.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
+      if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
         // may be null in the case of the "implicit" adapter representing "this".
         ContainerUtil.addIfNotNull(result, getInstance(componentAdapter));
       }

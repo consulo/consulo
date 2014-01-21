@@ -13,20 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.text;
+package com.intellij.openapi.editor.ex.util;
 
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 
-public abstract class ImmutableCharSequence implements CharSequence {
-
-  public static CharSequence asImmutable(@NotNull final CharSequence cs) {
-    return isImmutable(cs) ? cs : cs.toString();
-  }
-
-  public static boolean isImmutable(@NotNull final CharSequence cs) {
-    if (cs instanceof ImmutableCharSequence) return true;
-    if (cs instanceof CharSequenceSubSequence) return isImmutable(((CharSequenceSubSequence)cs).getBaseSequence());
-    return false;
-  }
-
+public interface LayeredHighlighterIterator extends HighlighterIterator {
+  SyntaxHighlighter getActiveSyntaxHighlighter();
 }

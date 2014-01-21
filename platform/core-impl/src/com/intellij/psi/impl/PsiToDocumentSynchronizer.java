@@ -22,6 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
@@ -35,6 +36,7 @@ import java.util.*;
 
 public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.PsiToDocumentSynchronizer");
+  private static final Key<Boolean> PSI_DOCUMENT_ATOMIC_ACTION = Key.create("PSI_DOCUMENT_ATOMIC_ACTION");
 
   private final PsiDocumentManagerBase myPsiDocumentManager;
   private final MessageBus myBus;
@@ -67,24 +69,36 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     void syncDocument(@NotNull Document document, @NotNull PsiTreeChangeEventImpl event);
   }
 
+  private void checkPsiModificationAllowed(@NotNull final PsiTreeChangeEvent event, boolean force) {
+    if (!toProcessPsiEvent()) return;
+    final PsiFile psiFile = event.getFile();
+    if (psiFile == null || psiFile.getNode() == null) return;
+
+    final Document document = getCachedDocument(psiFile, force);
+    if (document == null) return;
+
+    if (myPsiDocumentManager.isUncommited(document)) {
+      throw new IllegalStateException("Attempt to modify PSI for non-committed Document!");
+    }
+  }
+
+  private DocumentEx getCachedDocument(PsiFile psiFile, boolean force) {
+    final DocumentEx document = (DocumentEx)myPsiDocumentManager.getCachedDocument(psiFile);
+    if (document == null || document instanceof DocumentWindow || !force && getTransaction(document) == null) {
+      return null;
+    }
+    return document;
+  }
+
   private void doSync(@NotNull final PsiTreeChangeEvent event, boolean force, @NotNull final DocSyncAction syncAction) {
     if (!toProcessPsiEvent()) return;
     final PsiFile psiFile = event.getFile();
     if (psiFile == null || psiFile.getNode() == null) return;
 
-    final DocumentEx document = (DocumentEx)myPsiDocumentManager.getCachedDocument(psiFile);
-    if (document == null || document instanceof DocumentWindow) return;
-    if (!force && getTransaction(document) == null) {
-      return;
-    }
+    final DocumentEx document = getCachedDocument(psiFile, force);
+    if (document == null) return;
 
-    TextBlock textBlock = TextBlock.get(psiFile);
-
-    if (!textBlock.isEmpty()) {
-      throw new IllegalStateException("Attempt to modify PSI for non-committed Document!");
-    }
-
-    textBlock.performAtomically(new Runnable() {
+    performAtomically(psiFile, new Runnable() {
       @Override
       public void run() {
         syncAction.syncDocument(document, (PsiTreeChangeEventImpl)event);
@@ -100,6 +114,42 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     }
 
     psiFile.getViewProvider().contentsSynchronized();
+  }
+
+  boolean isInsideAtomicChange(@NotNull PsiFile file) {
+    return file.getUserData(PSI_DOCUMENT_ATOMIC_ACTION) == Boolean.TRUE;
+  }
+
+  public void performAtomically(@NotNull PsiFile file, @NotNull Runnable runnable) {
+    assert !isInsideAtomicChange(file);
+    file.putUserData(PSI_DOCUMENT_ATOMIC_ACTION, Boolean.TRUE);
+
+    try {
+      runnable.run();
+    }
+    finally {
+      file.putUserData(PSI_DOCUMENT_ATOMIC_ACTION, null);
+    }
+  }
+
+  @Override
+  public void beforeChildAddition(@NotNull PsiTreeChangeEvent event) {
+    checkPsiModificationAllowed(event, false);
+  }
+
+  @Override
+  public void beforeChildRemoval(@NotNull PsiTreeChangeEvent event) {
+    checkPsiModificationAllowed(event, false);
+  }
+
+  @Override
+  public void beforeChildReplacement(@NotNull PsiTreeChangeEvent event) {
+    checkPsiModificationAllowed(event, false);
+  }
+
+  @Override
+  public void beforeChildrenChange(@NotNull PsiTreeChangeEvent event) {
+    checkPsiModificationAllowed(event, false);
   }
 
   @Override
@@ -207,6 +257,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
       final PsiTreeChangeEventImpl fakeEvent = new PsiTreeChangeEventImpl(changeScope.getManager());
       fakeEvent.setParent(changeScope);
       fakeEvent.setFile(changeScope.getContainingFile());
+      checkPsiModificationAllowed(fakeEvent, true);
       doSync(fakeEvent, true, new DocSyncAction() {
         @Override
         public void syncDocument(@NotNull Document document, @NotNull PsiTreeChangeEventImpl event) {
@@ -332,7 +383,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
                newStartInReplace > 0 &&
                chars.charAt(start - 1) == chars.charAt(end - 1) &&
                chars.charAt(end - 1) != '\n'
-          ) {
+                ) {
           start--;
           end--;
           newStartInReplace--;
