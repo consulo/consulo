@@ -17,7 +17,7 @@ package com.intellij.vcsUtil;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -322,6 +322,10 @@ public class VcsUtil {
     return getFilePath(new File(path), isDirectory);
   }
 
+  public static FilePath getFilePathOnNonLocal(String path, boolean isDirectory) {
+    return VcsContextFactory.SERVICE.getInstance().createFilePathOnNonLocal(path, isDirectory);
+  }
+
   public static FilePath getFilePath(File file, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file, isDirectory);
   }
@@ -436,7 +440,7 @@ public class VcsUtil {
    *         Returns empty array if there are no available files.
    */
   public static VirtualFile[] getVirtualFiles(AnActionEvent e) {
-    VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     return (files == null) ? VirtualFile.EMPTY_ARRAY : files;
   }
 
@@ -474,7 +478,7 @@ public class VcsUtil {
   }
 
   public static boolean runVcsProcessWithProgress(final VcsRunnable runnable, String progressTitle, boolean canBeCanceled, Project project)
-    throws VcsException {
+          throws VcsException {
     final Ref<VcsException> ex = new Ref<VcsException>();
     boolean result = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
       public void run() {
@@ -622,12 +626,12 @@ public class VcsUtil {
 
   @NotNull
   public static Collection<VcsDirectoryMapping> findRoots(@NotNull VirtualFile rootDir, @NotNull Project project)
-    throws IllegalArgumentException
+          throws IllegalArgumentException
   {
     if (!rootDir.isDirectory()) {
       throw new IllegalArgumentException(
-        "Can't find VCS at the target file system path. Reason: expected to find a directory there but it's not. The path: "
-        + rootDir.getParent()
+              "Can't find VCS at the target file system path. Reason: expected to find a directory there but it's not. The path: "
+              + rootDir.getParent()
       );
     }
     Collection<VcsDirectoryMapping> result = ContainerUtilRt.newArrayList();

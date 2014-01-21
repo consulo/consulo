@@ -37,7 +37,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * OS-independent way of executing external processes with complex parameters.
@@ -103,13 +106,17 @@ public class GeneralCommandLine implements UserDataHolder {
     return myEnvParams;
   }
 
-  /** @deprecated use {@link #getEnvironment()} (to remove in IDEA 14) */
+  /**
+   * @deprecated use {@link #getEnvironment()} (to remove in IDEA 14)
+   */
   @SuppressWarnings("unused")
   public Map<String, String> getEnvParams() {
     return getEnvironment();
   }
 
-  /** @deprecated use {@link #getEnvironment()} (to remove in IDEA 14) */
+  /**
+   * @deprecated use {@link #getEnvironment()} (to remove in IDEA 14)
+   */
   @SuppressWarnings("unused")
   public void setEnvParams(@Nullable Map<String, String> envParams) {
     myEnvParams.clear();
@@ -122,7 +129,9 @@ public class GeneralCommandLine implements UserDataHolder {
     myPassParentEnvironment = passParentEnvironment;
   }
 
-  /** @deprecated use {@link #setPassParentEnvironment(boolean)} (to remove in IDEA 14) */
+  /**
+   * @deprecated use {@link #setPassParentEnvironment(boolean)} (to remove in IDEA 14)
+   */
   @SuppressWarnings({"unused", "SpellCheckingInspection"})
   public void setPassParentEnvs(boolean passParentEnvironment) {
     setPassParentEnvironment(passParentEnvironment);
@@ -159,6 +168,10 @@ public class GeneralCommandLine implements UserDataHolder {
 
   public void setCharset(@NotNull final Charset charset) {
     myCharset = charset;
+  }
+
+  public boolean isRedirectErrorStream() {
+    return myRedirectErrorStream;
   }
 
   public void setRedirectErrorStream(final boolean redirectErrorStream) {
@@ -231,16 +244,20 @@ public class GeneralCommandLine implements UserDataHolder {
     }
 
     try {
-      ProcessBuilder builder = new ProcessBuilder(commands);
-      setupEnvironment(builder.environment());
-      builder.directory(myWorkDirectory);
-      builder.redirectErrorStream(myRedirectErrorStream);
-      return builder.start();
+      return startProcess(commands);
     }
     catch (IOException e) {
       LOG.warn(e);
       throw new ProcessNotCreatedException(e.getMessage(), e, this);
     }
+  }
+
+  protected Process startProcess(@NotNull List<String> commands) throws IOException {
+    ProcessBuilder builder = new ProcessBuilder(commands);
+    setupEnvironment(builder.environment());
+    builder.directory(myWorkDirectory);
+    builder.redirectErrorStream(myRedirectErrorStream);
+    return builder.start();
   }
 
   private void checkWorkingDirectory() throws ExecutionException {
@@ -249,14 +266,14 @@ public class GeneralCommandLine implements UserDataHolder {
     }
     if (!myWorkDirectory.exists()) {
       throw new ExecutionException(
-        IdeBundle.message("run.configuration.error.working.directory.does.not.exist", myWorkDirectory.getAbsolutePath()));
+              IdeBundle.message("run.configuration.error.working.directory.does.not.exist", myWorkDirectory.getAbsolutePath()));
     }
     if (!myWorkDirectory.isDirectory()) {
       throw new ExecutionException(IdeBundle.message("run.configuration.error.working.directory.not.directory"));
     }
   }
 
-  private void setupEnvironment(final Map<String, String> environment) {
+  protected void setupEnvironment(@NotNull Map<String, String> environment) {
     environment.clear();
 
     if (myPassParentEnvironment) {

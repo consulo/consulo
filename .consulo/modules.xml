@@ -472,6 +472,7 @@
         <orderEntry type="library" name="proxy-vole" level="project" />
         <orderEntry type="library" name="miglayout-swing" level="project" />
         <orderEntry type="module" module-name="analysis-api" exported="" />
+        <orderEntry type="library" name="pty4" level="project" />
       </module>
       <module name="platform/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
