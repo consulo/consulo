@@ -145,6 +145,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
         final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
         for (VirtualFilePointer file : files) {
           ContentFolderImpl contentFolder = new ContentFolderImpl(file, null, ExcludedContentFolderTypeProvider.getInstance(), this);
+          Disposer.register(this, contentFolder);
           contentFolder.setSynthetic();
           list.add(contentFolder);
         }
