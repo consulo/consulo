@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author max
@@ -37,13 +38,13 @@ public class StringLiteralLexer extends LexerBase {
   private int myState;
   private int myLastState;
   private int myBufferEnd;
-  private char myQuoteChar;
-  private IElementType myOriginalLiteralToken;
+  private final char myQuoteChar;
+  private final IElementType myOriginalLiteralToken;
   private final boolean myCanEscapeEolOrFramingSpaces;
   private final String myAdditionalValidEscapes;
   private boolean mySeenEscapedSpacesOnly;
-  private boolean myAllowOctal;
-  private boolean myAllowHex;
+  private final boolean myAllowOctal;
+  private final boolean myAllowHex;
 
   public StringLiteralLexer(char quoteChar, final IElementType originalLiteralToken) {
     this(quoteChar, originalLiteralToken, false, null);
@@ -54,17 +55,23 @@ public class StringLiteralLexer extends LexerBase {
    *    '\' in the end of the buffer (meaning escaped end of line) or
    *    '\ ' (escaped space) in the beginning and in the end of the buffer (meaning escaped space, to avoid auto trimming on load)
    */
-  public StringLiteralLexer(char quoteChar, final IElementType originalLiteralToken, boolean canEscapeEolOrFramingSpaces, String additionalValidEscapes) {
+  public StringLiteralLexer(char quoteChar,
+                            final IElementType originalLiteralToken,
+                            boolean canEscapeEolOrFramingSpaces,
+                            String additionalValidEscapes) {
     this(quoteChar, originalLiteralToken, canEscapeEolOrFramingSpaces, additionalValidEscapes, true, false);
   }
 
   /**
    * @param canEscapeEolOrFramingSpaces true if following sequences are acceptable
    *    '\' in the end of the buffer (meaning escaped end of line) or
-   * @param allowOctal
    */
-  public StringLiteralLexer(char quoteChar, final IElementType originalLiteralToken, boolean canEscapeEolOrFramingSpaces, String additionalValidEscapes,
-                            boolean allowOctal, boolean allowHex) {
+  public StringLiteralLexer(char quoteChar,
+                            final IElementType originalLiteralToken,
+                            boolean canEscapeEolOrFramingSpaces,
+                            String additionalValidEscapes,
+                            boolean allowOctal,
+                            boolean allowHex) {
     myQuoteChar = quoteChar;
     myOriginalLiteralToken = originalLiteralToken;
     myCanEscapeEolOrFramingSpaces = canEscapeEolOrFramingSpaces;
@@ -74,15 +81,10 @@ public class StringLiteralLexer extends LexerBase {
   }
 
   @Override
-  public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
+  public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int initialState) {
     myBuffer = buffer;
     myStart = startOffset;
-    if (myQuoteChar == NO_QUOTE_CHAR) {
-      myState = AFTER_FIRST_QUOTE;
-    }
-    else {
-      myState = initialState;
-    }
+    myState = myQuoteChar == NO_QUOTE_CHAR ? AFTER_FIRST_QUOTE : initialState;
     myLastState = initialState;
     myBufferEnd = endOffset;
     myEnd = locateToken(myStart);
@@ -108,7 +110,7 @@ public class StringLiteralLexer extends LexerBase {
     mySeenEscapedSpacesOnly &= nextChar == ' ';
     if (myCanEscapeEolOrFramingSpaces &&
         (nextChar == '\n' || nextChar == ' ' && (mySeenEscapedSpacesOnly || isTrailingSpace(myStart+2)))
-      ) {
+            ) {
       return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN;
     }
     if (nextChar == 'u') {
@@ -135,6 +137,7 @@ public class StringLiteralLexer extends LexerBase {
       case '6':
       case '7':
         if (!myAllowOctal) return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN;
+        //noinspection fallthrough
       case 'n':
       case 'r':
       case 'b':
@@ -222,15 +225,11 @@ public class StringLiteralLexer extends LexerBase {
         return i + 1;
       }
     }
-    LOG.assertTrue(myState == AFTER_FIRST_QUOTE || myBuffer.charAt(i) == myQuoteChar, myState);
+    LOG.assertTrue(myState == AFTER_FIRST_QUOTE || myBuffer.charAt(i) == myQuoteChar, this);
     while (i < myBufferEnd) {
       if (myBuffer.charAt(i) == '\\') {
         return i;
       }
-      //if (myBuffer[i] == '\n') {
-      //  myState = AFTER_LAST_QUOTE;
-      //  return i;
-      //}
       if (myState == AFTER_FIRST_QUOTE && myBuffer.charAt(i) == myQuoteChar) {
         if (i + 1 == myBufferEnd) myState = AFTER_LAST_QUOTE;
         return i + 1;
@@ -249,6 +248,7 @@ public class StringLiteralLexer extends LexerBase {
     myEnd = locateToken(myStart);
   }
 
+  @NotNull
   @Override
   public CharSequence getBufferSequence() {
     return myBuffer;
@@ -259,4 +259,23 @@ public class StringLiteralLexer extends LexerBase {
     return myBufferEnd;
   }
 
+  @SuppressWarnings("HardCodedStringLiteral")
+  @Override
+  public String toString() {
+    return "StringLiteralLexer {" +
+           "myAllowHex=" + myAllowHex +
+           ", myAllowOctal=" + myAllowOctal +
+           ", mySeenEscapedSpacesOnly=" + mySeenEscapedSpacesOnly +
+           ", myAdditionalValidEscapes='" + myAdditionalValidEscapes + '\'' +
+           ", myCanEscapeEolOrFramingSpaces=" + myCanEscapeEolOrFramingSpaces +
+           ", myOriginalLiteralToken=" + myOriginalLiteralToken +
+           ", myQuoteChar=" + myQuoteChar +
+           ", myBufferEnd=" + myBufferEnd +
+           ", myLastState=" + myLastState +
+           ", myState=" + myState +
+           ", myEnd=" + myEnd +
+           ", myStart=" + myStart +
+           ", myToken=" + (myBuffer == null ? null : myBuffer.subSequence(myStart, myEnd)) +
+           '}';
+  }
 }

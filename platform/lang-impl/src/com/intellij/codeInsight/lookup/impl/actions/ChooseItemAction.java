@@ -22,13 +22,16 @@ import com.intellij.codeInsight.completion.CompletionService;
 import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
-import com.intellij.codeInsight.template.impl.TemplateSettings;
+import com.intellij.codeInsight.template.CustomLiveTemplate;
+import com.intellij.codeInsight.template.CustomLiveTemplateBase;
+import com.intellij.codeInsight.template.CustomTemplateCallback;
+import com.intellij.codeInsight.template.impl.*;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
@@ -110,10 +113,44 @@ public abstract class ChooseItemAction extends EditorAction {
 
     final LiveTemplateLookupElement liveTemplateLookup = ContainerUtil.findInstance(lookup.getItems(), LiveTemplateLookupElement.class);
     if (liveTemplateLookup == null) {
+      // Lookup doesn't contain live templates. It means that 
+      // - there are no any live template:
+      //    in this case we should find live template with appropriate prefix (custom live templates doesn't participate in this action). 
+      // - completion provider worked too long:
+      //    in this case we should check custom templates that provides completion lookup.
+
+      final CustomTemplateCallback callback = new CustomTemplateCallback(editor, file, false);
+      for (CustomLiveTemplate customLiveTemplate : CustomLiveTemplate.EP_NAME.getExtensions()) {
+        if (customLiveTemplate instanceof CustomLiveTemplateBase) {
+          final int offset = editor.getCaretModel().getOffset();
+          if (customLiveTemplate.getShortcut() == shortcutChar
+              && TemplateManagerImpl.isApplicable(customLiveTemplate, editor, file)
+              && ((CustomLiveTemplateBase)customLiveTemplate).hasCompletionItem(file, offset)) {
+            return customLiveTemplate.computeTemplateKey(callback) != null;
+          }
+        }
+      }
+
+
+      final int end = editor.getCaretModel().getOffset();
+      final int start = lookup.getLookupStart();
+      final String prefix = !lookup.getItems().isEmpty()
+                            ? editor.getDocument().getText(TextRange.create(start, end))
+                            : ListTemplatesHandler.getPrefix(editor.getDocument(), end, false);
+
+      if (TemplateSettings.getInstance().getTemplates(prefix).isEmpty()) {
+        return false;
+      }
+
+      for (TemplateImpl template : SurroundWithTemplateHandler.getApplicableTemplates(editor, file, false)) {
+        if (prefix.equals(template.getKey()) && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template)) {
+          return true;
+        }
+      }
       return false;
     }
 
-    return liveTemplateLookup.getTemplate().getShortcutChar() == shortcutChar;
+    return liveTemplateLookup.getTemplateShortcut() == shortcutChar;
   }
 
   public static class Always extends ChooseItemAction {

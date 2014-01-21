@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,12 +134,12 @@ public class Divider {
       PsiElement parent = !outside.isEmpty() ? outside.get(outside.size() - 1) :
                           !inside.isEmpty() ? inside.get(inside.size() - 1) :
                           CollectHighlightsUtil.findCommonParent(root, startOffset, endOffset);
-      while (parent != null && parent != root) {
+      while (parent != null && !(parent instanceof PsiFile)) {
         parent = parent.getParent();
         if (parent != null) {
           outside.add(parent);
           TextRange textRange = parent.getTextRange();
-          assert textRange != null : "Text range for " + parent + " is null. " + parent.getClass();
+          assert textRange != null : "Text range for " + parent + " is null. " + parent.getClass() +"; root: "+root+": "+root.getVirtualFile();
           outsideRanges.add(ProperTextRange.create(textRange));
         }
       }

@@ -17,9 +17,12 @@ package com.intellij.psi.stubs;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.Key;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
@@ -50,30 +53,52 @@ public class StubTreeBuilder {
       if (builder != null) {
         data = builder.buildStubTree(inputData);
       }
-      else if (!fileType.isBinary()) {
+      if (data == null && !fileType.isBinary()) {
         final LanguageFileType languageFileType = (LanguageFileType)fileType;
         Language l = languageFileType.getLanguage();
         final IFileElementType type = LanguageParserDefinitions.INSTANCE.forLanguage(l).getFileNodeType();
 
-        PsiFile psi = inputData.getPsiFile();
-        CharSequence contentAsText = inputData.getContentAsText();
+        PsiFile psi = null;
+        CharSequence contentAsText = null;
+        Document document = FileDocumentManager.getInstance().getCachedDocument(inputData.getFile());
+        if (document != null) {
+          PsiFile existingPsi = PsiDocumentManager.getInstance(inputData.getProject()).getPsiFile(document);
+          if (existingPsi != null) {
+            contentAsText = existingPsi.getText();
+            psi = existingPsi;
+          }
+        }
+        if (contentAsText == null) {
+          contentAsText = inputData.getContentAsText();
+          psi = inputData.getPsiFile();
+        }
+        psi = psi.getViewProvider().getStubBindingRoot();
         psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, contentAsText);
 
+        // if we load AST, it should be easily gc-able. See PsiFileImpl.createTreeElementPointer()
+        psi.getManager().startBatchFilesProcessingMode();
+
         try {
+          IStubFileElementType stubFileElementType;
           if (type instanceof IStubFileElementType) {
-            data = ((IStubFileElementType)type).getBuilder().buildStubTree(psi);
+            stubFileElementType = (IStubFileElementType)type;
           }
           else if (languageFileType instanceof SubstitutedFileType) {
-            SubstitutedFileType substituted = (SubstitutedFileType) languageFileType;
+            SubstitutedFileType substituted = (SubstitutedFileType)languageFileType;
             LanguageFileType original = (LanguageFileType)substituted.getOriginalFileType();
             final IFileElementType originalType = LanguageParserDefinitions.INSTANCE.forLanguage(original.getLanguage()).getFileNodeType();
-            if (originalType instanceof IStubFileElementType) {
-              data = ((IStubFileElementType)originalType).getBuilder().buildStubTree(psi);
-            }
+            stubFileElementType = originalType instanceof IStubFileElementType ? (IStubFileElementType)originalType : null;
+          }
+          else {
+            stubFileElementType = null;
+          }
+          if (stubFileElementType != null) {
+            data = stubFileElementType.getBuilder().buildStubTree(psi);
           }
         }
         finally {
           psi.putUserData(IndexingDataKeys.FILE_TEXT_CONTENT_KEY, null);
+          psi.getManager().finishBatchFilesProcessingMode();
         }
       }
 

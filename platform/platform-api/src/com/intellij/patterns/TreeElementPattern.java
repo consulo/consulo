@@ -27,7 +27,7 @@ import java.util.Collection;
  * @author peter
  */
 public abstract class TreeElementPattern<ParentType, T extends ParentType, Self extends TreeElementPattern<ParentType, T, Self>>
-  extends ObjectPattern<T, Self> {
+        extends ObjectPattern<T, Self> {
 
   protected TreeElementPattern(@NotNull final InitialPatternCondition<T> condition) {
     super(condition);
@@ -110,7 +110,7 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
     return withSuperParent(level, StandardPatterns.instanceOf(aClass));
   }
   public Self withSuperParent(final int level, @NotNull final ElementPattern<? extends ParentType> pattern) {
-    return with(new PatternConditionPlus<T, ParentType>("withSuperParent", pattern) {
+    return with(new PatternConditionPlus<T, ParentType>(level == 1 ? "withParent" : "withSuperParent", pattern) {
 
       @Override
       public boolean processValues(T t,
@@ -118,7 +118,7 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
                                    PairProcessor<ParentType, ProcessingContext> processor) {
         ParentType parent = t;
         for (int i = 0; i < level; i++) {
-          if (parent == null) return false;
+          if (parent == null) return true;
           parent = getParent(parent);
         }
         return processor.process(parent, context);
@@ -129,7 +129,7 @@ public abstract class TreeElementPattern<ParentType, T extends ParentType, Self 
   public Self inside(@NotNull final Class<? extends ParentType> pattern) {
     return inside(StandardPatterns.instanceOf(pattern));
   }
-  
+
   public Self inside(@NotNull final ElementPattern<? extends ParentType> pattern) {
     return inside(false, pattern);
   }

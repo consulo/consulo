@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * @author peter
-*/
+ */
 public class InvokeTemplateAction extends AnAction {
   private final TemplateImpl myTemplate;
   private final Editor myEditor;

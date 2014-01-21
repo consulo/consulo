@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,9 +64,9 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   private final ArrayList<ProgressIndicatorEx> myOriginals = new ArrayList<ProgressIndicatorEx>();
   private final ArrayList<TaskInfo> myInfos = new ArrayList<TaskInfo>();
   private final Map<InlineProgressIndicator, ProgressIndicatorEx> myInline2Original
-    = new HashMap<InlineProgressIndicator, ProgressIndicatorEx>();
+          = new HashMap<InlineProgressIndicator, ProgressIndicatorEx>();
   private final MultiValuesMap<ProgressIndicatorEx, InlineProgressIndicator> myOriginal2Inlines
-    = new MultiValuesMap<ProgressIndicatorEx, InlineProgressIndicator>();
+          = new MultiValuesMap<ProgressIndicatorEx, InlineProgressIndicator>();
 
   private final MergingUpdateQueue myUpdateQueue;
   private final Alarm myQueryAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
@@ -168,7 +168,6 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     setRefreshVisible(false);
     InlineProgressIndicator[] indicators = getCurrentInlineIndicators().toArray(new InlineProgressIndicator[0]);
     for (InlineProgressIndicator indicator : indicators) {
-      System.out.println("Disposing "+indicator);
       Disposer.dispose(indicator);
     }
     myInline2Original.clear();
@@ -405,10 +404,10 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
 
   public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
     final Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(
-      htmlBody.replace("\n", "<br>"),
-      icon != null ? icon : type.getDefaultIcon(),
-      type.getPopupBackground(),
-      listener).createBalloon();
+            htmlBody.replace("\n", "<br>"),
+            icon != null ? icon : type.getDefaultIcon(),
+            type.getPopupBackground(),
+            listener).createBalloon();
 
     SwingUtilities.invokeLater(new Runnable() {
       @Override

@@ -43,7 +43,7 @@ public class BackspaceHandler extends EditorActionHandler {
     if (originalStart >= 0 && originalStart <= hideOffset) {
       hideOffset = originalStart - 1;
     }
-    
+
     truncatePrefix(dataContext, lookup, myOriginalHandler, hideOffset);
   }
 

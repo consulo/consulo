@@ -118,8 +118,8 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   };
   private volatile int myCount;
   private final ConcurrentHashMap<LookupElement, CompletionSorterImpl> myItemSorters =
-    new ConcurrentHashMap<LookupElement, CompletionSorterImpl>(
-      ContainerUtil.<LookupElement>identityStrategy());
+          new ConcurrentHashMap<LookupElement, CompletionSorterImpl>(
+                  ContainerUtil.<LookupElement>identityStrategy());
   private final PropertyChangeListener myLookupManagerListener;
   private final int myStartCaret;
 
@@ -186,14 +186,14 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         }
       }
       else if (FeatureUsageTracker.getInstance()
-        .isToBeAdvertisedInLookup(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ENTER, getProject())) {
+              .isToBeAdvertisedInLookup(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ENTER, getProject())) {
         myLookup.addAdvertisement("Press " +
                                   CompletionContributor.getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_ALWAYS) +
                                   " to choose the selected (or first) suggestion", null);
       }
       if (!myEditor.isOneLineMode() &&
           FeatureUsageTracker.getInstance()
-            .isToBeAdvertisedInLookup(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS, getProject())) {
+                  .isToBeAdvertisedInLookup(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS, getProject())) {
         myLookup.addAdvertisement(CompletionContributor.getActionShortcut(IdeActions.ACTION_LOOKUP_DOWN) + " and " +
                                   CompletionContributor.getActionShortcut(IdeActions.ACTION_LOOKUP_UP) +
                                   " will move caret down and up in the editor", null);
@@ -351,7 +351,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     myLookup.refreshUi(true, justShown);
     hideAutopopupIfMeaningless();
     if (justShown) {
-      myLookup.ensureSelectionVisible();
+      myLookup.ensureSelectionVisible(true);
     }
     return true;
   }
@@ -422,8 +422,8 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     LOG.assertTrue(currentCompletion == this, currentCompletion + "!=" + this);
 
     CompletionServiceImpl
-      .assertPhase(CompletionPhase.BgCalculation.class, CompletionPhase.ItemsCalculated.class, CompletionPhase.Synchronous.class,
-                   CompletionPhase.CommittingDocuments.class);
+            .assertPhase(CompletionPhase.BgCalculation.class, CompletionPhase.ItemsCalculated.class, CompletionPhase.Synchronous.class,
+                         CompletionPhase.CommittingDocuments.class);
     CompletionPhase oldPhase = CompletionServiceImpl.getCompletionPhase();
     if (oldPhase instanceof CompletionPhase.CommittingDocuments) {
       LOG.assertTrue(((CompletionPhase.CommittingDocuments)oldPhase).isRestartingCompletion(), oldPhase);
@@ -681,7 +681,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
       if (StringUtil.isNotEmpty(text)) {
         LightweightHint hint = showErrorHint(getProject(), getEditor(), text);
         CompletionServiceImpl.setCompletionPhase(
-          awaitSecondInvocation ? new CompletionPhase.NoSuggestionsHint(hint, this) : CompletionPhase.NoCompletion);
+                awaitSecondInvocation ? new CompletionPhase.NoSuggestionsHint(hint, this) : CompletionPhase.NoCompletion);
         return;
       }
     }
@@ -705,6 +705,10 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   }
 
   private static boolean shouldPreselectFirstSuggestion(CompletionParameters parameters) {
+    if (!Registry.is("ide.completion.autopopup.choose.by.enter")) {
+      return false;
+    }
+
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       return true;
     }

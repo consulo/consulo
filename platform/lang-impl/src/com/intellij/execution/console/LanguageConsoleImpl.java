@@ -26,10 +26,8 @@ import com.intellij.lang.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -37,7 +35,6 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
@@ -53,7 +50,10 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -64,9 +64,7 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SideBorder;
 import com.intellij.util.FileContentUtil;
-import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -81,7 +79,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -89,7 +86,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * In case of REPL consider to use {@link com.intellij.execution.runners.LanguageConsoleBuilder}
  */
 public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
-  private static final Logger LOG = Logger.getInstance("#" + LanguageConsoleImpl.class.getName());
   private static final int SEPARATOR_THICKNESS = 1;
   private final Project myProject;
 
@@ -154,7 +150,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
       public void run() {
         installEditorFactoryListener();
       }
-    });
+    }, myProject.getDisposed());
 
     if (initComponents) {
       initComponents();
@@ -391,57 +387,6 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
     this.myTitle = title;
   }
 
-  public void printToHistory(@NotNull final List<Pair<String, TextAttributes>> attributedText) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("printToHistory(): " + attributedText.size());
-    }
-    final boolean scrollToEnd = shouldScrollHistoryToEnd();
-    final int[] offsets = new int[attributedText.size() + 1];
-    int i = 0;
-    offsets[i] = 0;
-    final StringBuilder sb = new StringBuilder();
-    for (final Pair<String, TextAttributes> pair : attributedText) {
-      sb.append(StringUtil.convertLineSeparators(pair.getFirst()));
-      offsets[++i] = sb.length();
-    }
-    final DocumentEx history = myHistoryViewer.getDocument();
-    final int oldHistoryLength = history.getTextLength();
-    appendToHistoryDocument(history, sb);
-
-    assert oldHistoryLength + offsets[i] >= history.getTextLength()
-      : "unexpected history length " + oldHistoryLength + " " + offsets[i] + " " + history.getTextLength();
-
-    if (oldHistoryLength + offsets[i] != history.getTextLength()) {
-      // due to usage of cyclic buffer old text can be dropped
-      final int correction = oldHistoryLength + offsets[i] - history.getTextLength();
-      for (i = 0; i < offsets.length; ++i) {
-        offsets[i] -= correction;
-      }
-    }
-    LOG.debug("printToHistory(): text processed");
-    final MarkupModel markupModel = DocumentMarkupModel.forDocument(history, myProject, true);
-    i = 0;
-    for (final Pair<String, TextAttributes> pair : attributedText) {
-      if (offsets[i] >= 0) {
-        markupModel.addRangeHighlighter(
-          oldHistoryLength + offsets[i],
-          oldHistoryLength + offsets[i+1],
-          HighlighterLayer.SYNTAX,
-          pair.getSecond(),
-          HighlighterTargetArea.EXACT_RANGE
-        );
-      }
-      ++i;
-    }
-    LOG.debug("printToHistory(): markup added");
-    if (scrollToEnd) {
-      scrollHistoryToEnd();
-    }
-    queueUiUpdate(scrollToEnd);
-    LOG.debug("printToHistory(): completed");
-  }
-
   public void printToHistory(@NotNull CharSequence text, @NotNull TextAttributes attributes) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     text = StringUtilRt.unifyLineSeparators(text);
@@ -460,8 +405,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
 
     Document history = myHistoryViewer.getDocument();
     MarkupModel markupModel = DocumentMarkupModel.forDocument(history, myProject, true);
-    int offset = history.getTextLength();
-    appendToHistoryDocument(history, text);
+    int offset = appendToHistoryDocument(history, text);
     if (attributes == null) return;
     markupModel.addRangeHighlighter(offset, offset + text.length(), HighlighterLayer.SYNTAX, attributes, HighlighterTargetArea.EXACT_RANGE);
   }
@@ -479,26 +423,24 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
                                      @NotNull final EditorEx editor,
                                      final boolean erase,
                                      final boolean preserveMarkup) {
-    final Ref<String> ref = Ref.create("");
-    final Runnable action = new Runnable() {
+    String result = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
       @Override
-      public void run() {
-        ref.set(addTextRangeToHistory(textRange, editor, preserveMarkup));
-        if (erase) {
+      public String compute() {
+        return addTextRangeToHistory(textRange, editor, preserveMarkup);
+      }
+    });
+    if (erase) {
+      new WriteCommandAction.Simple(myProject, myFile) {
+        @Override
+        protected void run() throws Throwable {
           editor.getDocument().deleteString(textRange.getStartOffset(), textRange.getEndOffset());
         }
-      }
-    };
-    if (erase) {
-      ApplicationManager.getApplication().runWriteAction(action);
-    }
-    else {
-      ApplicationManager.getApplication().runReadAction(action);
+      }.execute();
     }
     // always scroll to end on user input
     scrollHistoryToEnd();
     queueUiUpdate(true);
-    return ref.get();
+    return result;
   }
 
   public boolean shouldScrollHistoryToEnd() {
@@ -538,8 +480,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
       highlighter = consoleEditor.getHighlighter();
     }
     //offset can be changed after text trimming after insert due to buffer constraints
-    appendToHistoryDocument(history, text);
-    int offset = history.getTextLength() - text.length();
+    int offset = appendToHistoryDocument(history, text);
 
     final HighlighterIterator iterator = highlighter.createIterator(localStartOffset);
     final int localEndOffset = textRange.getEndOffset();
@@ -557,7 +498,8 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
     }
     if (preserveMarkup) {
       duplicateHighlighters(markupModel, DocumentMarkupModel.forDocument(consoleEditor.getDocument(), myProject, true), offset, textRange);
-      duplicateHighlighters(markupModel, consoleEditor.getMarkupModel(), offset, textRange);
+      // don't copy editor markup model, i.e. brace matcher, spell checker, etc.
+      // duplicateHighlighters(markupModel, consoleEditor.getMarkupModel(), offset, textRange);
     }
     if (!text.endsWith("\n")) {
       appendToHistoryDocument(history, "\n");
@@ -569,9 +511,11 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
     addTextToHistory(myPrompt, ConsoleViewContentType.USER_INPUT.getAttributes());
   }
 
-  protected void appendToHistoryDocument(@NotNull Document history, @NotNull CharSequence text) {
+  // returns the real (cyclic-buffer-aware) start offset of the inserted text
+  protected int appendToHistoryDocument(@NotNull Document history, @NotNull CharSequence text) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     history.insertString(history.getTextLength(), text);
+    return history.getTextLength() - text.length();
   }
 
   private static void duplicateHighlighters(@NotNull MarkupModel to, @NotNull MarkupModel from, int offset, @NotNull TextRange textRange) {
@@ -588,7 +532,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
       final int end = Math.min(rangeHighlighter.getEndOffset(), textRange.getEndOffset()) - localOffset;
       if (start > end) continue;
       final RangeHighlighter h = to.addRangeHighlighter(
-        start + offset, end + offset, rangeHighlighter.getLayer(), rangeHighlighter.getTextAttributes(), rangeHighlighter.getTargetArea());
+              start + offset, end + offset, rangeHighlighter.getLayer(), rangeHighlighter.getTextAttributes(), rangeHighlighter.getTargetArea());
       ((RangeHighlighterEx)h).setAfterEndOfLine(((RangeHighlighterEx)rangeHighlighter).isAfterEndOfLine());
     }
   }
@@ -673,9 +617,6 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
         }
       }
     };
-    if (myProject.isDisposed()) {
-      return;
-    }
     myProject.getMessageBus().connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, fileEditorListener);
     FileEditorManager editorManager = FileEditorManager.getInstance(getProject());
     if (editorManager.isFileOpen(myVirtualFile)) {
@@ -685,6 +626,10 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
 
   public Editor getCurrentEditor() {
     return myCurrentEditor == null? myConsoleEditor : myCurrentEditor;
+  }
+
+  public Language getLanguage() {
+    return myVirtualFile.getLanguage();
   }
 
   public void setLanguage(@NotNull Language language) {
@@ -701,76 +646,6 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
         myConsoleEditor.getDocument().setText(query);
       }
     });
-  }
-
-  public static void printToConsole(
-    @NotNull final LanguageConsoleImpl console,
-    @NotNull final ConsoleViewContentType mainType,
-    @NotNull final List<Pair<String, ConsoleViewContentType>> textToPrint)
-  {
-    final List<Pair<String, TextAttributes>> attributedText = ContainerUtil.map(
-      textToPrint,
-      new Function<Pair<String, ConsoleViewContentType>, Pair<String, TextAttributes>>() {
-        @Override
-        public Pair<String, TextAttributes> fun(Pair<String, ConsoleViewContentType> input) {
-          final TextAttributes mainAttributes = mainType.getAttributes();
-          final TextAttributes attributes;
-          if (input.getSecond() == null) {
-            attributes = mainAttributes;
-          }
-          else {
-            attributes = input.getSecond().getAttributes().clone();
-            attributes.setBackgroundColor(mainAttributes.getBackgroundColor());
-          }
-          return Pair.create(input.getFirst(), attributes);
-        }
-      }
-    );
-
-    Application application = ApplicationManager.getApplication();
-    if (application.isDispatchThread()) {
-      console.printToHistory(attributedText);
-    }
-    else {
-      application.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          console.printToHistory(attributedText);
-        }
-      }, ModalityState.stateForComponent(console.getComponent()));
-    }
-  }
-
-  public void printToHistoryOnEdt(@NotNull final CharSequence text, @NotNull final TextAttributes attributes) {
-    Application application = ApplicationManager.getApplication();
-    if (application.isDispatchThread()) {
-      printToHistory(text, attributes);
-    }
-    else {
-      application.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          printToHistory(text, attributes);
-        }
-      }, ModalityState.stateForComponent(getComponent()));
-    }
-  }
-
-  public static void printToConsole(@NotNull final LanguageConsoleImpl console,
-                                    @NotNull final CharSequence string,
-                                    @NotNull final ConsoleViewContentType mainType,
-                                    @Nullable ConsoleViewContentType additionalType) {
-    final TextAttributes mainAttributes = mainType.getAttributes();
-    final TextAttributes attributes;
-    if (additionalType == null) {
-      attributes = mainAttributes;
-    }
-    else {
-      attributes = additionalType.getAttributes().clone();
-      attributes.setBackgroundColor(mainAttributes.getBackgroundColor());
-    }
-
-    console.printToHistoryOnEdt(string, attributes);
   }
 
   @NotNull

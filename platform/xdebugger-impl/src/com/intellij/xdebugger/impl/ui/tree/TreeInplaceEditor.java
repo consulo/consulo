@@ -105,10 +105,10 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     myInplaceEditorComponent = inplaceEditorComponent;
     LOG.assertTrue(inplaceEditorComponent != null);
     inplaceEditorComponent.setBounds(
-      layeredPanePoint.x,
-      layeredPanePoint.y,
-      bounds.width,
-      Math.max(bounds.height, inplaceEditorComponent.getPreferredSize().height)
+            layeredPanePoint.x,
+            layeredPanePoint.y,
+            bounds.width,
+            Math.max(bounds.height, inplaceEditorComponent.getPreferredSize().height)
     );
 
     layeredPane.add(inplaceEditorComponent, new Integer(250));
@@ -214,21 +214,16 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     }
 
     final int id = mouseEvent.getID();
-    if (id == MouseEvent.MOUSE_WHEEL) {
-      cancelEditing();
+    if (id != MouseEvent.MOUSE_PRESSED && id != MouseEvent.MOUSE_RELEASED && id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_WHEEL) {
       return;
     }
 
-    if (id != MouseEvent.MOUSE_PRESSED && id != MouseEvent.MOUSE_RELEASED && id != MouseEvent.MOUSE_CLICKED) {
-      return;
-    }
-    
     final Component sourceComponent = mouseEvent.getComponent();
     final Point originalPoint = mouseEvent.getPoint();
 
     final Editor editor = getEditor();
     if (editor == null) return;
-    
+
     final LookupImpl activeLookup = (LookupImpl)LookupManager.getInstance(editor.getProject()).getActiveLookup();
     if (activeLookup != null){
       final Point lookupPoint = SwingUtilities.convertPoint(sourceComponent, originalPoint, activeLookup.getComponent());
@@ -246,7 +241,9 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     final Component componentAtPoint = SwingUtilities.getDeepestComponentAt(sourceComponent, originalPoint.x, originalPoint.y);
     for (Component comp = componentAtPoint; comp != null; comp = comp.getParent()) {
       if (comp instanceof ComboPopup) {
-        doOKAction();
+        if (id != MouseEvent.MOUSE_WHEEL) {
+          doOKAction();
+        }
         return;
       }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
@@ -60,6 +61,7 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
     uiSettings.addUISettingsListener(new MyUISettingsListener(), project);
   }
 
+  @Override
   public void projectOpened(){
 
     MessageBusConnection connection = myProject.getMessageBus().connect();
@@ -67,34 +69,36 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
     connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new MyEditorManagerListener());
 
     StartupManager.getInstance(myProject).runWhenProjectIsInitialized(
-      new DumbAwareRunnable() {
-        public void run() {
-          // myElement may be null if node that corresponds to this manager does not exist
-          if (myElement != null) {
-            final List children = myElement.getChildren(HistoryEntry.TAG);
-            myElement = null;
-            //noinspection unchecked
-            for (final Element e : (Iterable<Element>)children) {
-              try {
-                myEntriesList.add(new HistoryEntry(myProject, e));
-              }
-              catch (InvalidDataException e1) {
-                // OK here
-              }
-              catch (ProcessCanceledException e1) {
-                // OK here
-              }
-              catch (Exception anyException) {
-                LOG.error(anyException);
+            new DumbAwareRunnable() {
+              @Override
+              public void run() {
+                // myElement may be null if node that corresponds to this manager does not exist
+                if (myElement != null) {
+                  final List<Element> children = myElement.getChildren(HistoryEntry.TAG);
+                  myElement = null;
+                  //noinspection unchecked
+                  for (final Element e : children) {
+                    try {
+                      myEntriesList.add(new HistoryEntry(myProject, e));
+                    }
+                    catch (InvalidDataException e1) {
+                      // OK here
+                    }
+                    catch (ProcessCanceledException e1) {
+                      // OK here
+                    }
+                    catch (Exception anyException) {
+                      LOG.error(anyException);
+                    }
+                  }
+                  trimToSize();
+                }
               }
             }
-            trimToSize();
-          }
-        }
-      }
     );
   }
 
+  @Override
   @NotNull
   public String getComponentName(){
     return "editorHistoryManager";
@@ -156,15 +160,14 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
     }
   }
 
-  private void updateHistoryEntry(@Nullable final VirtualFile file, final boolean changeEntryOrderOnly) {
+  public void updateHistoryEntry(@Nullable final VirtualFile file, final boolean changeEntryOrderOnly) {
     updateHistoryEntry(file, null, null, changeEntryOrderOnly);
   }
 
   private void updateHistoryEntry(@Nullable final VirtualFile file,
                                   @Nullable final FileEditor fallbackEditor,
                                   @Nullable FileEditorProvider fallbackProvider,
-                                  final boolean changeEntryOrderOnly)
-  {
+                                  final boolean changeEntryOrderOnly) {
     if (file == null) {
       return;
     }
@@ -199,7 +202,7 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
         final FileEditorProvider provider = providers [i];
         if (!editor.isValid()) {
           // this can happen for example if file extension was changed
-          // and this method was called during correponding myEditor close up
+          // and this method was called during corresponding myEditor close up
           continue;
         }
 
@@ -305,13 +308,15 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
     }
   }
 
+  @Override
   public void readExternal(final Element element) {
     // we have to delay xml processing because history entries require EditorStates to be created
     // which is done via corresponding EditorProviders, those are not accessible before their
     // is initComponent() called
-    myElement = (Element)element.clone();
+    myElement = element.clone();
   }
 
+  @Override
   public void writeExternal(final Element element){
     // update history before saving
     final VirtualFile[] openFiles = FileEditorManager.getInstance(myProject).getOpenFiles();
@@ -331,13 +336,22 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
    * Updates history
    */
   private final class MyEditorManagerListener extends FileEditorManagerAdapter{
+    @Override
     public void fileOpened(@NotNull final FileEditorManager source, @NotNull final VirtualFile file){
       fileOpenedImpl(file);
     }
 
+    @Override
     public void selectionChanged(@NotNull final FileEditorManagerEvent event){
-      updateHistoryEntry(event.getOldFile(), event.getOldEditor(), event.getOldProvider(), false);
-      updateHistoryEntry(event.getNewFile(), true);
+      // updateHistoryEntry does commitDocument which is 1) very expensive and 2) cannot be performed from within PSI change listener
+      // so defer updating history entry until documents committed to improve responsiveness
+      PsiDocumentManager.getInstance(myProject).performWhenAllCommitted(new Runnable() {
+        @Override
+        public void run() {
+          updateHistoryEntry(event.getOldFile(), event.getOldEditor(), event.getOldProvider(), false);
+          updateHistoryEntry(event.getNewFile(), true);
+        }
+      });
     }
   }
 
@@ -352,6 +366,7 @@ public final class EditorHistoryManager extends AbstractProjectComponent impleme
    * Cuts/extends history length
    */
   private final class MyUISettingsListener implements UISettingsListener{
+    @Override
     public void uiSettingsChanged(final UISettings source) {
       trimToSize();
     }
