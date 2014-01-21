@@ -25,14 +25,9 @@ import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.make.DependencyCache;
 import com.intellij.compiler.make.impl.CompositeDependencyCache;
-import com.intellij.compiler.options.CompilerConfigurable;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.diagnostic.PluginException;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
@@ -46,13 +41,15 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ContentFolder;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.ui.configuration.ContentEntriesEditor;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
@@ -75,7 +72,10 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.util.*;
+import com.intellij.util.Chunk;
+import com.intellij.util.Function;
+import com.intellij.util.StringBuilderSpinAllocator;
+import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
@@ -95,7 +95,6 @@ import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import java.io.*;
 import java.util.*;
 
@@ -541,27 +540,6 @@ public class CompileDriver {
     });
   }
 
-  private static final Key<Boolean> OLD_IMPLEMENTATION_WARNING_SHOWN = Key.create("_old_make_implementation_warning_shown_");
-
-  private void notifyDeprecatedImplementation() {
-    if (OLD_IMPLEMENTATION_WARNING_SHOWN.get(myProject, Boolean.FALSE).booleanValue()) {
-      return;
-    }
-    OLD_IMPLEMENTATION_WARNING_SHOWN.set(myProject, Boolean.TRUE);
-    final NotificationListener hyperlinkHandler = new NotificationListener.Adapter() {
-      @Override
-      protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent e) {
-        notification.expire();
-        if (!myProject.isDisposed()) {
-          ShowSettingsUtil.getInstance().editConfigurable(myProject, new CompilerConfigurable(myProject));
-        }
-      }
-    };
-    final Notification notification = new Notification("Compile", "Deprecated make implementation",
-                                                       "Old implementation of \"Make\" feature is enabled for this project.<br>It has been deprecated and will be removed soon.<br>Please enable newer 'external build' feature in <a href=\"#\">Settings | Compiler</a>.",
-                                                       NotificationType.WARNING, hyperlinkHandler);
-    Notifications.Bus.notify(notification, myProject);
-  }
 
   @Nullable
   @TestOnly
@@ -597,9 +575,6 @@ public class CompileDriver {
         throw new RuntimeException(ex);
       }
 
-      if(ApplicationManager.getApplication().isCompilerServerMode()){
-        LOG.error(ex);
-      }
       wereExceptions = true;
       final PluginId pluginId = IdeErrorsDialog.findPluginId(ex);
 
