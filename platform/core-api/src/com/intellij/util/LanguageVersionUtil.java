@@ -20,6 +20,8 @@ import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.LanguageVersionResolvers;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,6 +42,14 @@ public class LanguageVersionUtil {
     else {
       return (LanguageVersion<T>)LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, project, virtualFile);
     }
+  }
+
+  public static <T extends Language> LanguageVersion<T> findLanguageVersion(@NotNull Language language, @NotNull PsiFile psiFile) {
+    FileViewProvider viewProvider = psiFile.getViewProvider();
+
+    PsiFile psi = viewProvider.getPsi(language);
+    assert psi != null;
+    return psi.getLanguageVersion();
   }
 
   public static <T extends Language> LanguageVersion<T> findDefaultVersion(@NotNull T language) {

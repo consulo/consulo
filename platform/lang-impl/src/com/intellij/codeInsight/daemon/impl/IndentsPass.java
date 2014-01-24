@@ -43,6 +43,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.DocumentUtil;
+import com.intellij.util.LanguageVersionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.IntStack;
@@ -547,7 +548,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       if (comments == null) {
         ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
         if (definition != null) {
-          comments = definition.getCommentTokens(myFile.getLanguageVersion());
+          comments = definition.getCommentTokens(LanguageVersionUtil.findLanguageVersion(language, myFile));
         }
         if (comments == null) {
           return fallbackColumn;
