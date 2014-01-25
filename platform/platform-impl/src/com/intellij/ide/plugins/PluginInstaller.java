@@ -82,8 +82,7 @@ public class PluginInstaller {
       for (int i = 0; i < pluginNode.getDepends().size(); i++) {
         PluginId depPluginId = pluginNode.getDepends().get(i);
 
-        if (PluginManager.isPluginInstalled(depPluginId) || PluginManagerCore.isModuleDependency(depPluginId) ||
-            (pluginIds != null && pluginIds.contains(depPluginId))) {
+        if (PluginManager.isPluginInstalled(depPluginId) || (pluginIds != null && pluginIds.contains(depPluginId))) {
           // ignore installed or installing plugins
           continue;
         }

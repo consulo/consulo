@@ -144,7 +144,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       if (ArrayUtilRt.find(optionalDependentPluginIds, id) > -1) continue;
       final boolean disabled = ((InstalledPluginsTableModel)pluginsModel).isDisabled(id);
       final boolean enabled = ((InstalledPluginsTableModel)pluginsModel).isEnabled(id);
-      if (!enabled && !disabled && !PluginManagerCore.isModuleDependency(id)) {
+      if (!enabled && !disabled) {
         notInstalled.add(id);
       } else if (disabled) {
         disabledIds.add(id);
@@ -313,16 +313,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       new HashMap<PluginId, Set<PluginId>>(((InstalledPluginsTableModel)pluginsModel).getDependentToRequiredListMap());
     for (Iterator<PluginId> iterator = dependentToRequiredListMap.keySet().iterator(); iterator.hasNext(); ) {
       final PluginId id = iterator.next();
-      boolean hasNonModuleDeps = false;
-      for (PluginId pluginId : dependentToRequiredListMap.get(id)) {
-        if (!PluginManagerCore.isModuleDependency(pluginId)) {
-          hasNonModuleDeps = true;
-          break;
-        }
-      }
-      if (!hasNonModuleDeps) {
-        iterator.remove();
-      }
+      iterator.remove();
     }
     if (!dependentToRequiredListMap.isEmpty()) {
       return "<html><body style=\"padding: 5px;\">Unable to apply changes: plugin" +
