@@ -31,7 +31,5 @@ public interface MutableModuleExtension<T extends ModuleExtension<T>> extends Mo
 
   void setEnabled(boolean val);
 
-  boolean isModified();
-
-  void commit();
+  boolean isModified(@NotNull T originalExtension);
 }

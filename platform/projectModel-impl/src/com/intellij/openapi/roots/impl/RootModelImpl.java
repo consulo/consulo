@@ -189,7 +189,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
       final ModuleExtension<?> originalExtension = rootModel.getExtensionWithoutCheck(providerEP.getKey());
 
-      MutableModuleExtension mutable = provider.createMutable(providerEP.getKey(), rootModel.getModule(), originalExtension);
+      MutableModuleExtension mutable = provider.createMutable(providerEP.getKey(), rootModel.getModule());
 
       mutable.commit(originalExtension);
 
@@ -418,6 +418,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myWritable = false;
   }
 
+  @SuppressWarnings("unchecked")
   public void doCommit() {
     assert isWritable();
 
@@ -433,15 +434,15 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
-    for (ModuleExtension<?> extension : myExtensions) {
-      MutableModuleExtension<?> mutableExtension = (MutableModuleExtension)extension;
-      if (mutableExtension.isModified()) {
-        ModuleExtension originalExtension =
-          getSourceModel().getExtensionWithoutCheck(extension.getId());
+    for (ModuleExtension extension : myExtensions) {
+      MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
+
+      ModuleExtension originalExtension = getSourceModel().getExtensionWithoutCheck(extension.getId());
+      if (mutableExtension.isModified(originalExtension)) {
 
         getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC).extensionChanged(originalExtension, mutableExtension);
 
-        mutableExtension.commit();
+        originalExtension.commit(mutableExtension);
       }
     }
 
@@ -597,13 +598,14 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public boolean isChanged() {
     if (!myWritable) return false;
 
     for (ModuleExtension<?> extension : myExtensions) {
       MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
-
-      if (mutableExtension.isModified()) {
+      ModuleExtension<?> originalExtension = getSourceModel().getExtensionWithoutCheck(extension.getId());
+      if (mutableExtension.isModified(originalExtension)) {
         return true;
       }
     }
@@ -633,12 +635,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     if (!((OrderEntryBaseImpl)orderEntry1).sameType(orderEntry2)) return false;
     if (orderEntry1 instanceof SdkOrderEntry) {
       if (!(orderEntry2 instanceof SdkOrderEntry)) return false;
-      if (orderEntry1 instanceof InheritedSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
-        return false;
-      }
-      if (orderEntry2 instanceof InheritedSdkOrderEntry && orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry) {
-        return false;
-      }
+
       if (orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
         String name1 = ((ModuleExtensionWithSdkOrderEntry)orderEntry1).getSdkName();
         String name2 = ((ModuleExtensionWithSdkOrderEntry)orderEntry2).getSdkName();

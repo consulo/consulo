@@ -36,5 +36,5 @@ public interface ModuleExtensionProvider<ImmutableModel extends ModuleExtension,
   ImmutableModel createImmutable(@NotNull String id, @NotNull Module module);
 
   @NotNull
-  MutableModel createMutable(@NotNull String id, @NotNull Module module, @NotNull ImmutableModel immutableModel);
+  MutableModel createMutable(@NotNull String id, @NotNull Module module);
 }
