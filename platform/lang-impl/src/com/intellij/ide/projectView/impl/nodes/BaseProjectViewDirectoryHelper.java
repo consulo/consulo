@@ -39,6 +39,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.util.PathUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,7 +74,7 @@ public class BaseProjectViewDirectoryHelper {
     final VirtualFile contentRootForFile = ProjectRootManager.getInstance(myProject)
       .getFileIndex().getContentRootForFile(directory);
     if (Comparing.equal(contentRootForFile, psiDirectory)) {
-      return directory.getPresentableUrl();
+      return PathUtil.toPresentablePath(directory.getUrl());
     }
     return null;
   }
