@@ -43,8 +43,4 @@ public class RootPolicy<R> {
   public R visitModuleJdkOrderEntry(ModuleExtensionWithSdkOrderEntry jdkOrderEntry, R value) {
     return visitJdkOrderEntry(jdkOrderEntry, value);
   }
-
-  public R visitInheritedJdkOrderEntry(InheritedSdkOrderEntry inheritedJdkOrderEntry, R initialValue) {
-    return visitJdkOrderEntry(inheritedJdkOrderEntry, initialValue);
-  }
 }
