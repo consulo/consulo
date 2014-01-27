@@ -86,7 +86,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
 
   @Override
   public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
-    final ModuleLibraryOrderEntryImpl orderEntry = new ModuleLibraryOrderEntryImpl(name, kind, myRootModel, myProjectRootManager);
+    final ModuleLibraryOrderEntryImpl orderEntry = new ModuleLibraryOrderEntryImpl(name, kind, myRootModel);
     myRootModel.addOrderEntry(orderEntry);
     return orderEntry.getLibrary();
   }

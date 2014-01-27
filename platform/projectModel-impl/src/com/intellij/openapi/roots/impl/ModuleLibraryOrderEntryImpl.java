@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
@@ -28,6 +27,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -36,8 +36,8 @@ import org.jetbrains.annotations.NotNull;
  * Library entry for module ("in-place") libraries
  *  @author dsl
  */
+@Logger
 public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry, WritableOrderEntry {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.LibraryOrderEntryImpl");
   private final Library myLibrary;
   @NonNls public static final String ENTRY_TYPE = "module-library";
   private boolean myExported;
@@ -45,22 +45,22 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
   //cloning
   private ModuleLibraryOrderEntryImpl(Library library, RootModelImpl rootModel, boolean isExported, DependencyScope scope) {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
+    super(rootModel);
     myLibrary = ((LibraryEx)library).cloneLibrary(getRootModel());
     doinit();
     myExported = isExported;
     myScope = scope;
   }
 
-  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) {
-    super(rootModel, projectRootManager);
+  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel) {
+    super(rootModel);
     myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, getRootModel());
     doinit();
   }
 
-  ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) throws InvalidDataException {
-    super(rootModel, projectRootManager);
-    LOG.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
+  ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
+    super(rootModel);
+    LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     myScope = DependencyScope.readExternal(element);
     myLibrary = LibraryTableImplUtil.loadLibrary(element, getRootModel());

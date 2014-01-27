@@ -37,10 +37,12 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,10 +66,8 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
 
   private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<LocalFileSystem.WatchRequest>();
 
-  public ProjectRootManagerComponent(Project project,
-                                     DirectoryIndex directoryIndex,
-                                     StartupManager startupManager) {
-    super(project, directoryIndex);
+  public ProjectRootManagerComponent(Project project, StartupManager startupManager) {
+    super(project);
 
     myConnection = project.getMessageBus().connect(project);
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
@@ -179,7 +179,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
     if (roots == null) return false;
 
     for (VirtualFilePointer pointer : pointers) {
-      final String path = url2path(pointer.getUrl());
+      final String path = PathUtil.toPresentablePath(pointer.getUrl());
       if (roots.first.contains(path) || roots.second.contains(path)) return true;
     }
 
@@ -212,14 +212,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
     }
   }
 
-  private static String url2path(String url) {
-    String path = VfsUtilCore.urlToPath(url);
-
-    int separatorIndex = path.indexOf(JarFileSystem.JAR_SEPARATOR);
-    if (separatorIndex < 0) return path;
-    return path.substring(0, separatorIndex);
-  }
-
   @Nullable
   private Pair<Set<String>, Set<String>> getAllRoots(boolean includeSourceRoots) {
     if (myProject.isDefault()) return null;
@@ -250,7 +242,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
 
       addRootsToTrack(moduleRootManager.getContentRootUrls(), recursive, flat);
       if (includeSourceRoots) {
-        addRootsToTrack(moduleRootManager.getSourceRootUrls(), recursive, flat);
+        addRootsToTrack(moduleRootManager.getContentFolderUrls(ContentFolderScopes.all(false)), recursive, flat);
       }
 
       final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
@@ -287,8 +279,11 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
         if (protocol == null || LocalFileSystem.PROTOCOL.equals(protocol)) {
           recursive.add(extractLocalPath(url));
         }
-        else if (JarFileSystem.PROTOCOL.equals(protocol)) {
-          flat.add(extractLocalPath(url));
+        else {
+          IVirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);
+          if(fileSystem instanceof ArchiveFileSystem) {
+            flat.add(extractLocalPath(url));
+          }
         }
       }
     }

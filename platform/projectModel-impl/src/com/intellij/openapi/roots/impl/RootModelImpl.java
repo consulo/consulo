@@ -272,7 +272,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@NotNull ModuleExtensionWithSdk<?> moduleExtension) {
     assertWritable();
     final ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry =
-      new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension, this, myProjectRootManager);
+      new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension.getId(), this);
     assert moduleSdkOrderEntry.isValid();
 
     // add module extension sdk entry after another SDK entry or before module source

@@ -16,33 +16,27 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.LibraryOrSdkOrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootProvider;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.NullableFunction;
-import com.intellij.util.containers.ContainerUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  *  @author dsl
  */
+@Logger
 abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements LibraryOrSdkOrderEntry {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.impl.LibraryOrderEntryBaseImpl");
-  protected final ProjectRootManagerImpl myProjectRootManagerImpl;
-  @NotNull protected DependencyScope myScope = DependencyScope.COMPILE;
+  @NotNull
+  protected DependencyScope myScope = DependencyScope.COMPILE;
 
-  LibraryOrderEntryBaseImpl(@NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
+  LibraryOrderEntryBaseImpl(@NotNull RootModelImpl rootModel) {
     super(rootModel);
-    myProjectRootManagerImpl = instanceImpl;
   }
 
   protected final void init() {
@@ -58,7 +52,7 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
   @Override
   @NotNull
   public String[] getUrls(@NotNull OrderRootType type) {
-    LOG.assertTrue(!getRootModel().getModule().isDisposed());
+    LOGGER.assertTrue(!getRootModel().getModule().isDisposed());
     return getRootUrls(type);
   }
 
@@ -66,18 +60,6 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
   public VirtualFile[] getRootFiles(@NotNull OrderRootType type) {
     RootProvider rootProvider = getRootProvider();
     return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;
-  }
-
-  /** @deprecated has no sense (to remove in IDEA 13) */
-  @SuppressWarnings({"MethodMayBeStatic", "UnusedDeclaration"})
-  protected VirtualFile[] filterDirectories(@NotNull VirtualFile[] files) {
-    List<VirtualFile> filtered = ContainerUtil.mapNotNull(files, new NullableFunction<VirtualFile, VirtualFile>() {
-      @Override
-      public VirtualFile fun(@NotNull VirtualFile file) {
-        return file.isDirectory() ? file : null;
-      }
-    });
-    return VfsUtilCore.toVirtualFileArray(filtered);
   }
 
   @Nullable

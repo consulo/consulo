@@ -23,26 +23,27 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEnumerator;
+import com.intellij.openapi.roots.ProjectExtension;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.StandardFileSystems;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,8 +64,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   private final OrderRootsCache myRootsCache;
 
   protected boolean myStartupActivityPerformed = false;
-
-  private final RootProviderChangeListener myRootProviderChangeListener = new RootProviderChangeListener();
 
   protected class BatchSession {
     private int myBatchLevel = 0;
@@ -123,8 +122,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     return (ProjectRootManagerImpl)getInstance(project);
   }
 
-  public ProjectRootManagerImpl(Project project,
-                                DirectoryIndex directoryIndex) {
+  public ProjectRootManagerImpl(Project project) {
     myProject = project;
     myRootsCache = new OrderRootsCache(project);
   }
@@ -134,8 +132,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   public ProjectFileIndex getFileIndex() {
     return ProjectFileIndex.SERVICE.getInstance(myProject);
   }
-
-  private final Map<ModuleRootListener, MessageBusConnection> myListenerAdapters = new HashMap<ModuleRootListener, MessageBusConnection>();
 
   @Override
   @NotNull
@@ -163,7 +159,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   public VirtualFile[] getContentSourceRoots() {
     final List<VirtualFile> result = new ArrayList<VirtualFile>();
     for (Module module : getModuleManager().getModules()) {
-      final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getSourceRoots();
+      final VirtualFile[] sourceRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.all(false));
       ContainerUtil.addAll(result, sourceRoots);
     }
     return VfsUtilCore.toVirtualFileArray(result);
@@ -192,23 +188,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     result.add(myProject.getBaseDir());
     return VfsUtilCore.toVirtualFileArray(result);
   }
-
-  @Override
-  public Sdk getProjectSdk() {
-    return null;
-  }
-
-  @Override
-  public String getProjectSdkName() {
-    return null;
-  }
-
-  @Override
-  public void setProjectSdk(Sdk sdk) {
-
-  }
-
-
 
   @Override
   public void projectOpened() {
@@ -377,7 +356,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   public static String extractLocalPath(final String url) {
     final String path = VfsUtilCore.urlToPath(url);
-    final int jarSeparatorIndex = path.indexOf(StandardFileSystems.JAR_SEPARATOR);
+    final int jarSeparatorIndex = path.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
     if (jarSeparatorIndex > 0) {
       return path.substring(0, jarSeparatorIndex);
     }
@@ -481,23 +460,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
           }
         }
       });
-    }
-  }
-
-
-  private class RootProviderChangeListener implements RootProvider.RootSetChangedListener {
-    private boolean myInsideRootsChange;
-
-    @Override
-    public void rootSetChanged(final RootProvider wrapper) {
-      if (myInsideRootsChange) return;
-      myInsideRootsChange = true;
-      try {
-        makeRootsChange(EmptyRunnable.INSTANCE, false, true);
-      }
-      finally {
-        myInsideRootsChange = false;
-      }
     }
   }
 

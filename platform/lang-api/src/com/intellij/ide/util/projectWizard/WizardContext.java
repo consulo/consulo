@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
@@ -41,7 +40,7 @@ public class WizardContext extends UserDataHolderBase {
   private String myProjectFileDirectory;
   private String myProjectName;
   private String myCompilerOutputDirectory;
-  private Sdk myProjectJdk;
+
   private ProjectBuilder myProjectBuilder;
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private StorageScheme myProjectStorageFormat = StorageScheme.DIRECTORY_BASED;
@@ -57,9 +56,6 @@ public class WizardContext extends UserDataHolderBase {
 
   public WizardContext(@Nullable Project project) {
     myProject = project;
-    if (myProject != null){
-      myProjectJdk = ProjectRootManager.getInstance(myProject).getProjectSdk();
-    }
   }
 
   @Nullable
@@ -135,11 +131,11 @@ public class WizardContext extends UserDataHolderBase {
   }
 
   public void setProjectJdk(Sdk jdk) {
-    myProjectJdk = jdk;
+
   }
 
   public Sdk getProjectJdk() {
-    return myProjectJdk;
+    return null;
   }
 
   @Nullable

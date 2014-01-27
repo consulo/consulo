@@ -18,10 +18,7 @@ package com.intellij.util;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileProvider;
-import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +32,7 @@ public class PathUtil {
     if (file == null || !file.isValid()) {
       return null;
     }
-    if (file.getFileSystem().getProtocol().equals(StandardFileSystems.JAR_PROTOCOL) && file.getParent() != null) {
+    if (file.getFileSystem().getProtocol().equals(ArchiveFileSystem.ARCHIVE_SEPARATOR) && file.getParent() != null) {
       return null;
     }
     return getLocalPath(file.getPath());
@@ -43,7 +40,7 @@ public class PathUtil {
 
   @NotNull
   public static String getLocalPath(@NotNull String path) {
-    return FileUtil.toSystemDependentName(StringUtil.trimEnd(path, StandardFileSystems.JAR_SEPARATOR));
+    return FileUtil.toSystemDependentName(StringUtil.trimEnd(path, ArchiveFileSystem.ARCHIVE_SEPARATOR));
   }
 
   @NotNull
@@ -68,8 +65,14 @@ public class PathUtil {
   }
 
   @NotNull
-  public static String toPresentableUrl(@NotNull String url) {
+  public static String toPresentablePath(@NotNull String url) {
     return getLocalPath(VirtualFileManager.extractPath(url));
+  }
+
+  @NotNull
+  @Deprecated // use toPresentablePath()
+  public static String toPresentableUrl(@NotNull String url) {
+    return toPresentablePath(url);
   }
 
   public static String getCanonicalPath(@NonNls String path) {

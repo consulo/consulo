@@ -18,11 +18,9 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -96,31 +94,4 @@ public abstract class ProjectRootManager implements ModificationTracker {
    * @return the list of content source roots.
    */
   public abstract VirtualFile[] getContentSourceRoots();
-
-  /**
-   * Returns the instance of the JDK selected for the project.
-   *
-   * @return the JDK instance, or null if the name of the selected JDK does not correspond
-   * to any existing JDK instance.
-   */
-  @Nullable
-  @Deprecated
-  public abstract Sdk getProjectSdk();
-
-  /**
-   * Returns the name of the SDK selected for the project.
-   *
-   * @return the SDK name.
-   */
-  @Deprecated
-  public abstract String getProjectSdkName();
-
-
-  /**
-   * Sets the SDK to be used for the project.
-   *
-   * @param sdk the SDK instance.
-   */
-  @Deprecated
-  public abstract void setProjectSdk(@Nullable Sdk sdk);
 }
