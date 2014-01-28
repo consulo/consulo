@@ -264,6 +264,27 @@ public class ModuleUtilCore {
     }
   }
 
+  @Nullable
+  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull PsiElement element,
+                                                                              @NotNull Class<E> extensionClass) {
+    Module moduleForPsiElement = findModuleForPsiElement(element);
+    if (moduleForPsiElement == null) {
+      return null;
+    }
+    return getSdk(moduleForPsiElement, extensionClass);
+  }
+
+  @Nullable
+  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Project project,
+                                                                              @NotNull VirtualFile virtualFile,
+                                                                              @NotNull Class<E> extensionClass) {
+    Module moduleForPsiElement = findModuleForFile(virtualFile, project);
+    if (moduleForPsiElement == null) {
+      return null;
+    }
+    return getSdk(moduleForPsiElement, extensionClass);
+  }
+
   @NotNull
   public static NamedPointer<Module> createPointer(@NotNull Module module) {
     ModulePointerManager manager = ServiceManager.getService(module.getProject(), ModulePointerManager.class);
