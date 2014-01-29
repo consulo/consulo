@@ -73,6 +73,12 @@ public class CompilerServerNewVirtualFileImpl extends NewVirtualFile {
     return myFileSystem instanceof ArchiveFileSystem || myVirtualFile.isDirectory();
   }
 
+  @NotNull
+  @Override
+  public byte[] contentsToByteArray() throws IOException {
+    return myVirtualFile.contentsToByteArray();
+  }
+
   @Override
   public NewVirtualFile getParent() {
     return null;
@@ -98,7 +104,7 @@ public class CompilerServerNewVirtualFileImpl extends NewVirtualFile {
   @NotNull
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
-    return null;
+    return myVirtualFile.getOutputStream(requestor, newModificationStamp, newTimeStamp);
   }
 
   @Override
