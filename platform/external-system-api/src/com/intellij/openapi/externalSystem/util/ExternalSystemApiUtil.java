@@ -16,7 +16,6 @@
 package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.execution.rmi.RemoteUtil;
-import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
@@ -27,6 +26,7 @@ import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ExternalSystemException;
 import com.intellij.openapi.externalSystem.model.Key;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
+import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.service.ParametersEnhancer;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
@@ -40,6 +40,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.PathUtil;
@@ -76,10 +77,10 @@ public class ExternalSystemApiUtil {
   @NotNull public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<Object>() {
 
     @Override
-    public int compare(Object o1, Object o2) {
+    public int compare(@NotNull Object o1, @NotNull Object o2) {
       int order1 = getOrder(o1);
       int order2 = getOrder(o2);
-      return order1 > order2 ? 1 : order1 < order2 ? -1 : 0;
+      return (order1 < order2) ? -1 : ((order1 == order2) ? 0 : 1);
     }
 
     private int getOrder(@NotNull Object o) {
@@ -96,9 +97,7 @@ public class ExternalSystemApiUtil {
           toCheck.add(c);
         }
         Class<?>[] interfaces = clazz.getInterfaces();
-        if (interfaces != null) {
-          Collections.addAll(toCheck, interfaces);
-        }
+        Collections.addAll(toCheck, interfaces);
       }
       return ExternalSystemConstants.UNORDERED;
     }
@@ -166,6 +165,14 @@ public class ExternalSystemApiUtil {
     return "unknown-lib";
   }
 
+  public static boolean isRelated(@NotNull Library library, @NotNull LibraryData libraryData) {
+    return getLibraryName(library).equals(libraryData.getInternalName());
+  }
+
+  public static boolean isExternalSystemLibrary(@NotNull Library library, @NotNull ProjectSystemId externalSystemId) {
+    return library.getName() != null && StringUtil.startsWith(library.getName(), externalSystemId.getReadableName() + ": ");
+  }
+
   @Nullable
   public static ArtifactInfo parseArtifactInfo(@NotNull String fileName) {
     Matcher matcher = ARTIFACT_PATTERN.matcher(fileName);
@@ -192,11 +199,9 @@ public class ExternalSystemApiUtil {
 
   @NotNull
   public static String getLocalFileSystemPath(@NotNull VirtualFile file) {
-    if (file.getFileType() instanceof ArchiveFileType) {
-      final VirtualFile jar = ((ArchiveFileType)file.getFileType()).getFileSystem().getVirtualFileForJar(file);
-      if (jar != null) {
-        return jar.getPath();
-      }
+    final VirtualFile jar = ArchiveVfsUtil.getVirtualFileForJar(file);
+    if (jar != null) {
+      return jar.getPath();
     }
     return toCanonicalPath(file.getPath());
   }
@@ -309,6 +314,24 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("unchecked")
+  @Nullable
+  public static <T> DataNode<T> findParent(@NotNull DataNode<?> node, @NotNull Key<T> key) {
+    return findParent(node, key, null);
+  }
+
+
+  @SuppressWarnings("unchecked")
+  @Nullable
+  public static <T> DataNode<T> findParent(@NotNull DataNode<?> node,
+                                           @NotNull Key<T> key,
+                                           @Nullable BooleanFunction<DataNode<T>> predicate) {
+    DataNode<?> parent = node.getParent();
+    if (parent == null) return null;
+    return key.equals(parent.getKey()) && (predicate == null || predicate.fun((DataNode<T>)parent))
+           ? (DataNode<T>)parent : findParent(parent, key, predicate);
+  }
+
+  @SuppressWarnings("unchecked")
   @NotNull
   public static <T> Collection<DataNode<T>> findAll(@NotNull DataNode<?> parent, @NotNull Key<T> key) {
     Collection<DataNode<T>> result = null;
@@ -324,11 +347,11 @@ public class ExternalSystemApiUtil {
     return result == null ? Collections.<DataNode<T>>emptyList() : result;
   }
 
-  public static void executeProjectChangeAction(@NotNull final Runnable task) {
+  public static void executeProjectChangeAction(@NotNull final DisposeAwareProjectChange task) {
     executeProjectChangeAction(false, task);
   }
 
-  public static void executeProjectChangeAction(boolean synchronous, @NotNull final Runnable task) {
+  public static void executeProjectChangeAction(boolean synchronous, @NotNull final DisposeAwareProjectChange task) {
     executeOnEdt(synchronous, new Runnable() {
       public void run() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {

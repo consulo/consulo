@@ -187,7 +187,16 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     myProjectResolver.setNotificationListener(listener);
     myTaskManager.setNotificationListener(listener);
   }
-  
+
+  @Override
+  public boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException {
+    if(id.getType() == ExternalSystemTaskType.RESOLVE_PROJECT) {
+      return myProjectResolver.cancelTask(id);
+    } else{
+      return myTaskManager.cancelTask(id);
+    }
+  }
+
   private static class SwallowingNotificationListener implements ExternalSystemTaskNotificationListener {
 
     @NotNull private final RemoteExternalSystemProgressNotificationManager myManager;
@@ -234,6 +243,26 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     public void onEnd(@NotNull ExternalSystemTaskId id) {
       try {
         myManager.onEnd(id);
+      }
+      catch (RemoteException e) {
+        // Ignore
+      }
+    }
+
+    @Override
+    public void onSuccess(@NotNull ExternalSystemTaskId id) {
+      try {
+        myManager.onSuccess(id);
+      }
+      catch (RemoteException e) {
+        // Ignore
+      }
+    }
+
+    @Override
+    public void onFailure(@NotNull ExternalSystemTaskId id, @NotNull Exception ex) {
+      try {
+        myManager.onFailure(id, ex);
       }
       catch (RemoteException e) {
         // Ignore

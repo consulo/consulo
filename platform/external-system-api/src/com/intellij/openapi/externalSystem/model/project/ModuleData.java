@@ -2,46 +2,57 @@ package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import com.intellij.util.containers.ContainerUtilRt;
-import org.consulo.module.extension.ModuleExtension;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Denis Zhdanov
  * @since 8/8/11 12:11 PM
  */
-public class ModuleData extends AbstractNamedData implements Named, ExternalConfigPathAware {
+public class ModuleData extends AbstractNamedData implements Named, ExternalConfigPathAware, Identifiable {
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull
-  private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = ContainerUtilRt.newHashMap();
+  @NotNull private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = ContainerUtil.newHashMap();
+  @NotNull private final String myId;
+  @NotNull private final String myExternalConfigPath;
+  @NotNull private String myModuleDirPath;
+  @Nullable private String group;
+  @Nullable private String version;
+  @NotNull private List<File> myArtifacts;
 
-  @NotNull
-  private Class<? extends ModuleExtension> myModuleExtensionClass;
-  @NotNull
-  private final String myExternalConfigPath;
-  @NotNull
-  private String myModuleDirPath;
   private boolean myInheritProjectCompileOutputPath = true;
 
+  @Deprecated
   public ModuleData(@NotNull ProjectSystemId owner,
                     @NotNull String name,
-                    @NotNull String moduleFileDirectoryPath,
-                    @NotNull Class<? extends ModuleExtension> moduleExtensionClass,
+                    @NotNull String moduleDir,
                     @NotNull String externalConfigPath) {
-    super(owner, name);
-    myModuleExtensionClass = moduleExtensionClass;
+    this("", owner, name, moduleDir, externalConfigPath);
+  }
+
+  public ModuleData(@NotNull String id,
+                    @NotNull ProjectSystemId owner,
+                    @NotNull String name,
+                    @NotNull String moduleFileDirectoryPath,
+                    @NotNull String externalConfigPath) {
+    super(owner, name, name.replaceAll("(/|\\\\)", "_"));
+    myId = id;
     myExternalConfigPath = externalConfigPath;
-    setModuleDirectoryPath(moduleFileDirectoryPath);
+    myArtifacts = Collections.emptyList();
+    setModuleDirPath(moduleFileDirectoryPath);
   }
 
   @NotNull
-  public Class<? extends ModuleExtension> getModuleExtensionClass() {
-    return myModuleExtensionClass;
+  @Override
+  public String getId() {
+    return myId;
   }
 
   @NotNull
@@ -51,17 +62,12 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
   }
 
   @NotNull
-  public String getExternalConfigPath() {
-    return myExternalConfigPath;
-  }
-
-  @NotNull
   public String getModuleDirPath() {
     return myModuleDirPath;
   }
 
-  public void setModuleDirectoryPath(@NotNull String path) {
-    myModuleDirPath = ExternalSystemApiUtil.toCanonicalPath(path);
+  public void setModuleDirPath(@NotNull String path) {
+    myModuleDirPath = path;
   }
 
   public boolean isInheritProjectCompileOutputPath() {
@@ -75,10 +81,10 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
   /**
    * Allows to get file system path of the compile output of the source of the target type.
    *
-   * @param type target source type
-   * @return file system path to use for compile output for the target source type;
-   *         {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
-   *         doesn't provide specific compile output path
+   * @param type  target source type
+   * @return      file system path to use for compile output for the target source type;
+   *              {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
+   *              doesn't provide specific compile output path
    */
   @Nullable
   public String getCompileOutputPath(@NotNull ExternalSystemSourceType type) {
@@ -93,21 +99,59 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     myCompileOutputPaths.put(type, ExternalSystemApiUtil.toCanonicalPath(path));
   }
 
-  @Override
-  public int hashCode() {
-    return 31 * super.hashCode() + myModuleExtensionClass.hashCode();
+  @Nullable
+  public String getGroup() {
+    return group;
+  }
+
+  public void setGroup(@Nullable String group) {
+    this.group = group;
+  }
+
+  @Nullable
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(@Nullable String version) {
+    this.version = version;
+  }
+
+  @NotNull
+  public List<File> getArtifacts() {
+    return myArtifacts;
+  }
+
+  public void setArtifacts(@NotNull List<File> artifacts) {
+    myArtifacts = artifacts;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (!super.equals(o)) {
-      return false;
-    }
-    return myModuleExtensionClass.equals(((ModuleData)o).myModuleExtensionClass);
+    if (!(o instanceof ModuleData)) return false;
+    if (!super.equals(o)) return false;
+
+    ModuleData that = (ModuleData)o;
+
+    if (group != null ? !group.equals(that.group) : that.group != null) return false;
+    if (version != null ? !version.equals(that.version) : that.version != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (group != null ? group.hashCode() : 0);
+    result = 31 * result + (version != null ? version.hashCode() : 0);
+    return result;
   }
 
   @Override
   public String toString() {
-    return String.format("module '%s'", getName());
+    return String.format("module '%s:%s:%s'",
+                         group == null ? "" : group,
+                         getExternalName(),
+                         version == null ? "" : version);
   }
 }

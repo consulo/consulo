@@ -35,7 +35,7 @@ public enum LocationSettingType {
     this(descriptionKey, "TextField.foreground");
   }
 
-  LocationSettingType(@NotNull @PropertyKey(resourceBundle = ExternalSystemBundle.BUNDLE) String descriptionKey,
+  LocationSettingType(@NotNull @PropertyKey(resourceBundle = ExternalSystemBundle.PATH_TO_BUNDLE) String descriptionKey,
                       @NotNull String ... colorKeys)
   {
     myDescriptionKey = descriptionKey;

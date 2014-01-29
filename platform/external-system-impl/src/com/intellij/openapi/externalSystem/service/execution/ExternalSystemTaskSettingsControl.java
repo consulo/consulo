@@ -23,6 +23,7 @@ import com.intellij.openapi.externalSystem.service.ui.ExternalProjectPathField;
 import com.intellij.openapi.externalSystem.util.*;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -44,17 +45,20 @@ import static com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil.nor
 public class ExternalSystemTaskSettingsControl implements ExternalSystemSettingsControl<ExternalSystemTaskExecutionSettings> {
 
   @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private final Project         myProject;
+  @NotNull private final Project myProject;
 
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private JBLabel                  myProjectPathLabel;
+  private JBLabel myProjectPathLabel;
   private ExternalProjectPathField myProjectPathField;
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private JBLabel                  myTasksLabel;
-  private JBTextField              myTasksTextField;
+  private JBLabel myTasksLabel;
+  private JBTextField myTasksTextField;
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
-  private JBLabel                  myVmOptionsLabel;
-  private RawCommandLineEditor     myVmOptionsEditor;
+  private JBLabel myVmOptionsLabel;
+  private RawCommandLineEditor myVmOptionsEditor;
+  @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
+  private JBLabel myScriptParametersLabel;
+  private RawCommandLineEditor myScriptParametersEditor;
 
   @Nullable private ExternalSystemTaskExecutionSettings myOriginalSettings;
 
@@ -99,9 +103,14 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
 
     myVmOptionsLabel = new JBLabel(ExternalSystemBundle.message("run.configuration.settings.label.vmoptions"));
     myVmOptionsEditor = new RawCommandLineEditor();
-    myVmOptionsEditor.setDialogCaption(ExternalSystemBundle.message("run.configuration.settings.caption.vmoptions"));
+    myVmOptionsEditor.setDialogCaption(ExternalSystemBundle.message("run.configuration.settings.label.vmoptions"));
     canvas.add(myVmOptionsLabel, ExternalSystemUiUtil.getLabelConstraints(0));
     canvas.add(myVmOptionsEditor, ExternalSystemUiUtil.getFillLineConstraints(0));
+    myScriptParametersLabel = new JBLabel(ExternalSystemBundle.message("run.configuration.settings.label.script.parameters"));
+    myScriptParametersEditor = new RawCommandLineEditor();
+    myScriptParametersEditor.setDialogCaption(ExternalSystemBundle.message("run.configuration.settings.label.script.parameters"));
+    canvas.add(myScriptParametersLabel, ExternalSystemUiUtil.getLabelConstraints(0));
+    canvas.add(myScriptParametersEditor, ExternalSystemUiUtil.getFillLineConstraints(0));
   }
 
   @Override
@@ -109,6 +118,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
     myProjectPathField.setText("");
     myTasksTextField.setText("");
     myVmOptionsEditor.setText("");
+    myScriptParametersEditor.setText("");
     showUi(true);
 
     if (myOriginalSettings == null) {
@@ -122,6 +132,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
     myProjectPathField.setText(path);
     myTasksTextField.setText(StringUtil.join(myOriginalSettings.getTaskNames(), " "));
     myVmOptionsEditor.setText(myOriginalSettings.getVmOptions());
+    myScriptParametersEditor.setText(myOriginalSettings.getScriptParameters());
   }
 
   @Override
@@ -135,26 +146,31 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
            || !Comparing.equal(normalizePath(myTasksTextField.getText()),
                                normalizePath(StringUtil.join(myOriginalSettings.getTaskNames(), " ")))
            || !Comparing.equal(normalizePath(myVmOptionsEditor.getText()),
-                               normalizePath(myOriginalSettings.getVmOptions()));
+                               normalizePath(myOriginalSettings.getVmOptions()))
+           || !Comparing.equal(normalizePath(myScriptParametersEditor.getText()),
+                               normalizePath(myOriginalSettings.getScriptParameters()));
   }
 
-  @Nullable
   @Override
-  public String apply(@NotNull ExternalSystemTaskExecutionSettings settings) {
+  public void apply(@NotNull ExternalSystemTaskExecutionSettings settings) {
     String projectPath = myProjectPathField.getText();
-    if (myOriginalSettings == null) {
-      return String.format(
-        "Can't store external task settings into run configuration. Reason: target run configuration is undefined. Tasks: '%s', " +
-        "external project: '%s', vm options: '%s'", myTasksTextField.getText(), projectPath, myVmOptionsEditor.getText()
-      );
-    }
     settings.setExternalProjectPath(projectPath);
-    if (!StringUtil.isEmpty(projectPath)) {
-      ExternalSystemApiUtil.storeLastUsedExternalProjectPath(projectPath, myExternalSystemId);
-    }
     settings.setTaskNames(StringUtil.split(myTasksTextField.getText(), " "));
     settings.setVmOptions(myVmOptionsEditor.getText());
-    return null;
+    settings.setScriptParameters(myScriptParametersEditor.getText());
+  }
+
+  @Override
+  public boolean validate(@NotNull ExternalSystemTaskExecutionSettings settings) throws ConfigurationException {
+    String projectPath = myProjectPathField.getText();
+    if (myOriginalSettings == null) {
+      throw new ConfigurationException(String.format(
+        "Can't store external task settings into run configuration. Reason: target run configuration is undefined. Tasks: '%s', " +
+        "external project: '%s', vm options: '%s', script parameters: '%s'",
+        myTasksTextField.getText(), projectPath, myVmOptionsEditor.getText(), myScriptParametersEditor.getText()
+      ));
+    }
+    return true;
   }
 
   @Override

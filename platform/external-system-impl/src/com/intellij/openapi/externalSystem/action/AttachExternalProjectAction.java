@@ -51,7 +51,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
       e.getPresentation().setText(ExternalSystemBundle.message("action.attach.external.project.text", name));
       e.getPresentation().setDescription(ExternalSystemBundle.message("action.attach.external.project.description", name));
     }
-
+    
     e.getPresentation().setIcon(SystemInfoRt.isMac ? AllIcons.ToolbarDecorator.Mac.Add : AllIcons.ToolbarDecorator.Add);
   }
 
@@ -71,7 +71,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     if (project == null) {
       return;
     }
-
+    
     ProjectImportProvider[] projectImportProviders = new ProjectImportProvider[1];
     for (ProjectImportProvider provider : ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions()) {
       if (provider instanceof AbstractExternalProjectImportProvider

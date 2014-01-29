@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.externalSystem.service.remote;
 
-import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
 import com.intellij.openapi.externalSystem.model.ExternalSystemException;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
+import com.intellij.openapi.externalSystem.task.AbstractExternalSystemTaskManager;
+import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
 import com.intellij.util.Producer;
+import com.intellij.util.execution.ParametersListUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,15 +47,28 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
                            @NotNull final List<String> taskNames,
                            @NotNull final String projectPath,
                            @Nullable final S settings,
-                           @Nullable final String vmOptions) throws RemoteException, ExternalSystemException
+                           @NotNull final List<String> vmOptions,
+                           @NotNull final List<String> scriptParameters,
+                           @Nullable final String debuggerSetup) throws RemoteException, ExternalSystemException
   {
     execute(id, new Producer<Object>() {
       @Nullable
       @Override
       public Object produce() {
-        myDelegate.executeTasks(id, taskNames, projectPath, settings, vmOptions, getNotificationListener());
+        if(myDelegate instanceof AbstractExternalSystemTaskManager) {
+          ((AbstractExternalSystemTaskManager<S>)myDelegate)
+            .executeTasks(id, taskNames, projectPath, settings, vmOptions, scriptParameters, debuggerSetup, getNotificationListener());
+        } else {
+          myDelegate.executeTasks(id, taskNames, projectPath, settings, ParametersListUtil.join(vmOptions), debuggerSetup, getNotificationListener());
+        }
         return null;
       }
     });
+  }
+
+  @Override
+  public boolean cancelTask(@NotNull final ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+  {
+    return myDelegate.cancelTask(id, getNotificationListener());
   }
 }

@@ -37,10 +37,12 @@ public class ExternalSystemTaskExecutionSettings implements Cloneable {
   @NotNull @NonNls public static final String TAG_NAME = "ExternalSystemSettings";
 
   private List<String> myTaskNames = ContainerUtilRt.newArrayList();
+  private List<String> myTaskDescriptions = ContainerUtilRt.newArrayList();
 
   private String myExternalSystemIdString;
   private String myExternalProjectPath;
   private String myVmOptions;
+  private String myScriptParameters;
 
   public String getExternalSystemIdString() {
     return myExternalSystemIdString;
@@ -70,6 +72,14 @@ public class ExternalSystemTaskExecutionSettings implements Cloneable {
     myVmOptions = vmOptions;
   }
 
+  public String getScriptParameters() {
+    return myScriptParameters;
+  }
+
+  public void setScriptParameters(String scriptParameters) {
+    myScriptParameters = scriptParameters;
+  }
+
   public List<String> getTaskNames() {
     return myTaskNames;
   }
@@ -78,13 +88,23 @@ public class ExternalSystemTaskExecutionSettings implements Cloneable {
     myTaskNames = taskNames;
   }
 
+  public List<String> getTaskDescriptions() {
+    return myTaskDescriptions;
+  }
+
+  public void setTaskDescriptions(List<String> taskDescriptions) {
+    myTaskDescriptions = taskDescriptions;
+  }
+
   @Override
   public ExternalSystemTaskExecutionSettings clone() {
     ExternalSystemTaskExecutionSettings result = new ExternalSystemTaskExecutionSettings();
     result.setExternalSystemIdString(getExternalSystemIdString());
     result.setExternalProjectPath(getExternalProjectPath());
     result.setVmOptions(getVmOptions());
+    result.setScriptParameters(getScriptParameters());
     result.setTaskNames(ContainerUtilRt.newArrayList(getTaskNames()));
+    result.setTaskDescriptions(ContainerUtilRt.newArrayList(getTaskDescriptions()));
     return result;
   }
 
@@ -94,6 +114,7 @@ public class ExternalSystemTaskExecutionSettings implements Cloneable {
     result = 31 * result + (myExternalSystemIdString != null ? myExternalSystemIdString.hashCode() : 0);
     result = 31 * result + (myExternalProjectPath != null ? myExternalProjectPath.hashCode() : 0);
     result = 31 * result + (myVmOptions != null ? myVmOptions.hashCode() : 0);
+    result = 31 * result + (myScriptParameters != null ? myScriptParameters.hashCode() : 0);
     return result;
   }
 
@@ -118,6 +139,7 @@ public class ExternalSystemTaskExecutionSettings implements Cloneable {
     }
     if (myTaskNames != null ? !myTaskNames.equals(settings.myTaskNames) : settings.myTaskNames != null) return false;
     if (StringUtil.isEmpty(myVmOptions) ^ StringUtil.isEmpty(settings.myVmOptions)) return false;
+    if (StringUtil.isEmpty(myScriptParameters) ^ StringUtil.isEmpty(settings.myScriptParameters)) return false;
 
     return true;
   }

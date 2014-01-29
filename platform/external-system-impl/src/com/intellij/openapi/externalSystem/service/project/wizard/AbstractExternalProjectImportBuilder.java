@@ -7,15 +7,18 @@ import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ExternalSystemDataKeys;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import com.intellij.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask;
 import com.intellij.openapi.externalSystem.service.project.ExternalProjectRefreshCallback;
 import com.intellij.openapi.externalSystem.service.project.manage.ProjectDataManager;
 import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
+import com.intellij.openapi.externalSystem.util.DisposeAwareProjectChange;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
@@ -35,6 +38,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -131,9 +135,9 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
 
         if (externalProjectNode != null) {
           ExternalSystemUtil.ensureToolWindowInitialized(project, myExternalSystemId);
-          ExternalSystemApiUtil.executeProjectChangeAction(new Runnable() {
+          ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
             @Override
-            public void run() {
+            public void execute() {
               ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {
                 @Override
                 public void run() {
@@ -152,9 +156,10 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
                 new Task.Backgroundable(project, progressText, false) {
                   @Override
                   public void run(@NotNull final ProgressIndicator indicator) {
+                    if(project.isDisposed()) return;
                     ExternalSystemResolveProjectTask task
-                      = new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), true);
-                    task.execute(indicator);
+                      = new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
+                    task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
                     DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
                     if (projectWithResolvedLibraries == null) {
                       return;
@@ -205,9 +210,9 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    *                                      dependencies information available at the given gradle project
    */
   private void setupLibraries(@NotNull final DataNode<ProjectData> projectWithResolvedLibraries, final Project project) {
-    ExternalSystemApiUtil.executeProjectChangeAction(new Runnable() {
+    ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
       @Override
-      public void run() {
+      public void execute() {
         ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {
           @Override
           public void run() {
@@ -233,9 +238,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
             }
 
             // Register libraries.
-            Set<DataNode<?>> toImport = ContainerUtilRt.newHashSet();
-            toImport.add(projectWithResolvedLibraries);
-            myProjectDataManager.importData(toImport, project, false);
+            myProjectDataManager.importData(Collections.<DataNode<?>>singletonList(projectWithResolvedLibraries), project, false);
           }
         });
       }
@@ -249,7 +252,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
   }
 
   /**
-   * Asks current builder to ensure that target gradle project is defined.
+   * Asks current builder to ensure that target external project is defined.
    *
    * @param wizardContext             current wizard context
    * @throws ConfigurationException   if gradle project is not defined and can't be constructed
@@ -292,8 +295,8 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
             myExternalSystemId,
             externalProjectPath,
             callback,
-            false,
-            true
+            true,
+            ProgressExecutionMode.MODAL_SYNC
           );
         }
         catch (IllegalArgumentException e) {
@@ -372,7 +375,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
       assert false;
       return;
     }
-    context.setProjectName(myExternalProjectNode.getData().getName());
+    context.setProjectName(myExternalProjectNode.getData().getInternalName());
     context.setProjectFileDirectory(myExternalProjectNode.getData().getIdeProjectFileDirectoryPath());
     applyExtraSettings(context);
   }

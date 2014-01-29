@@ -16,6 +16,7 @@
 package com.intellij.openapi.externalSystem.service.project.manage;
 
 import com.intellij.openapi.externalSystem.model.project.AbstractDependencyData;
+import com.intellij.openapi.externalSystem.util.DisposeAwareProjectChange;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.externalSystem.util.Order;
@@ -39,9 +40,9 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
 {
 
   public void setScope(@NotNull final DependencyScope scope, @NotNull final ExportableOrderEntry dependency, boolean synchronous) {
-    ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new Runnable() {
+    ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
       @Override
-      public void run() {
+      public void execute() {
         doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
           @Override
           public void consume(ExportableOrderEntry entry) {
@@ -53,9 +54,9 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
   }
 
   public void setExported(final boolean exported, @NotNull final ExportableOrderEntry dependency, boolean synchronous) {
-    ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new Runnable() {
+    ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
       @Override
-      public void run() {
+      public void execute() {
         doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
           @Override
           public void consume(ExportableOrderEntry entry) {
@@ -116,9 +117,9 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
       return;
     }
     for (final ExportableOrderEntry dependency : toRemove) {
-      ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new Runnable() {
+      ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
         @Override
-        public void run() {
+        public void execute() {
           ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
           final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
           try {
@@ -126,7 +127,15 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
             // that's why we can't use target dependency object as is but need to get a reference to the current
             // entry object from the model instead.
             for (OrderEntry entry : moduleRootModel.getOrderEntries()) {
-              if (entry.getPresentableName().equals(dependency.getPresentableName())) {
+              if (entry instanceof ExportableOrderEntry) {
+                ExportableOrderEntry orderEntry = (ExportableOrderEntry)entry;
+                if (orderEntry.getPresentableName().equals(dependency.getPresentableName()) &&
+                    orderEntry.getScope().equals(dependency.getScope())) {
+                  moduleRootModel.removeOrderEntry(entry);
+                  break;
+                }
+              }
+              else if (entry.getPresentableName().equals(dependency.getPresentableName())) {
                 moduleRootModel.removeOrderEntry(entry);
                 break;
               }
