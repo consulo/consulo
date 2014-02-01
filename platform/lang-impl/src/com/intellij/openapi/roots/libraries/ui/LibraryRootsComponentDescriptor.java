@@ -63,7 +63,7 @@ public abstract class LibraryRootsComponentDescriptor {
    */
   @NotNull
   public FileChooserDescriptor createAttachFilesChooserDescriptor(@Nullable String libraryName) {
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, true, true);
+    final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, false, true, true);
     descriptor.setTitle(StringUtil.isEmpty(libraryName) ? ProjectBundle.message("library.attach.files.action")
                                                         : ProjectBundle.message("library.attach.files.to.library.action", libraryName));
     descriptor.setDescription(ProjectBundle.message("library.attach.files.description"));
