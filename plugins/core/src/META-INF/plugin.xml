@@ -29,6 +29,7 @@
     <extensionPoint name="projectModelProcessor" interface="org.consulo.projectImport.ProjectModelProcessor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
+    <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
     <extensionPoint name="appStarter"
                     interface="com.intellij.openapi.application.ApplicationStarter"/>

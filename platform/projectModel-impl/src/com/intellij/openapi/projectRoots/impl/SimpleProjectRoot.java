@@ -20,7 +20,7 @@ import com.intellij.openapi.projectRoots.ex.ProjectRoot;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.StandardFileSystems;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jdom.Element;
@@ -59,8 +59,8 @@ public class SimpleProjectRoot implements ProjectRoot, JDOMExternalizable {
   @NotNull
   public String getPresentableString() {
     String path = VirtualFileManager.extractPath(myUrl);
-    if (path.endsWith(StandardFileSystems.JAR_SEPARATOR)) {
-      path = path.substring(0, path.length() - StandardFileSystems.JAR_SEPARATOR.length());
+    if (path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) {
+      path = path.substring(0, path.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
     }
     return path.replace('/', File.separatorChar);
   }
@@ -102,15 +102,8 @@ public class SimpleProjectRoot implements ProjectRoot, JDOMExternalizable {
     myInitialized = true;
 
     if (myFile == null || !myFile.isValid()) {
-      myFile = VirtualFileManager.getInstance().findFileByUrl(myUrl);
-      if (myFile != null && !canHaveChildren()) {
-        myFile = null;
-      }
+      myFile = null;
     }
-  }
-
-  private boolean canHaveChildren() {
-    return myFile.getFileSystem().getProtocol().equals(StandardFileSystems.HTTP_PROTOCOL) || myFile.isDirectory();
   }
 
   public String getUrl() {

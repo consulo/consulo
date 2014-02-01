@@ -13,7 +13,6 @@
 package com.intellij.openapi.roots.libraries.ui;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.impl.LibraryRootsDetectorImpl;
@@ -54,11 +53,7 @@ public abstract class LibraryRootsComponentDescriptor {
    */
   @NotNull
   public LibraryRootsDetector getRootsDetector() {
-    final List<? extends RootDetector> detectors = getRootDetectors();
-    if (detectors.isEmpty()) {
-      throw new IllegalStateException("Detectors list is empty for " + this);
-    }
-    return new LibraryRootsDetectorImpl(detectors);
+    return new LibraryRootsDetectorImpl(getRootDetectors());
   }
 
 
@@ -68,7 +63,7 @@ public abstract class LibraryRootsComponentDescriptor {
    */
   @NotNull
   public FileChooserDescriptor createAttachFilesChooserDescriptor(@Nullable String libraryName) {
-    final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createMultipleJavaPathDescriptor();
+    final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, true, true);
     descriptor.setTitle(StringUtil.isEmpty(libraryName) ? ProjectBundle.message("library.attach.files.action")
                                                         : ProjectBundle.message("library.attach.files.to.library.action", libraryName));
     descriptor.setDescription(ProjectBundle.message("library.attach.files.description"));

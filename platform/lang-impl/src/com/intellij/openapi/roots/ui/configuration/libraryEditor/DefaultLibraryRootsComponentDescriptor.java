@@ -15,30 +15,30 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.ui.Util;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.libraries.ui.*;
+import com.intellij.openapi.roots.libraries.ui.AttachRootButtonDescriptor;
+import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
+import com.intellij.openapi.roots.libraries.ui.OrderRootTypePresentation;
+import com.intellij.openapi.roots.libraries.ui.RootDetector;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * @author nik
  */
 public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponentDescriptor {
+  public static final ExtensionPointName<RootDetector> EP_NAME = ExtensionPointName.create("com.intellij.defaultLibraryRootDetector");
+
   @Override
   public OrderRootTypePresentation getRootTypePresentation(@NotNull OrderRootType type) {
     return getDefaultPresentation(type);
@@ -53,58 +53,13 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
   @NotNull
   @Override
   public List<? extends RootDetector> getRootDetectors() {
-    return Arrays.asList(new FileTypeBasedRootFilter(OrderRootType.CLASSES, false, StdFileTypes.CLASS, "classes"),
-                         new FileTypeBasedRootFilter(OrderRootType.CLASSES, true, StdFileTypes.CLASS, "jar directory"),
-                       /*  PathUIUtils.JAVA_SOURCE_ROOT_DETECTOR,  */
-                         new FileTypeBasedRootFilter(OrderRootType.SOURCES, true, StdFileTypes.JAVA, "source archive directory"),
-                         new JavadocRootDetector()//,
-                         /*new AnnotationsRootFilter()*/);
+    return Arrays.asList(EP_NAME.getExtensions());
   }
 
   public static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {
     final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.FACTORY.getByKey(type);
     return new OrderRootTypePresentation(factory.getNodeText(), factory.getIcon());
   }
-
-  private static class JavadocRootDetector extends RootDetector {
-    private JavadocRootDetector() {
-      super(OrderRootType.DOCUMENTATION, false, "JavaDocs");
-    }
-
-    @NotNull
-    @Override
-    public Collection<VirtualFile> detectRoots(@NotNull VirtualFile rootCandidate, @NotNull ProgressIndicator progressIndicator) {
-      List<VirtualFile> result = new ArrayList<VirtualFile>();
-      collectJavadocRoots(rootCandidate, result, progressIndicator);
-      return result;
-    }
-
-    private static void collectJavadocRoots(VirtualFile file, final List<VirtualFile> result, final ProgressIndicator progressIndicator) {
-      VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
-        @Override
-        public boolean visitFile(@NotNull VirtualFile file) {
-          progressIndicator.checkCanceled();
-          if (file.isDirectory() && file.findChild("allclasses-frame.html") != null && file.findChild("allclasses-noframe.html") != null) {
-            result.add(file);
-            return false;
-          }
-          return true;
-        }
-      });
-    }
-  }
-
-  /*private static class AnnotationsRootFilter extends FileTypeBasedRootFilter {
-    private AnnotationsRootFilter() {
-      super(AnnotationOrderRootType.getInstance(), false, StdFileTypes.XML, "external annotations");
-    }
-
-    @Override
-    protected boolean isFileAccepted(VirtualFile virtualFile) {
-      return super.isFileAccepted(virtualFile) && virtualFile.getName().equals(ExternalAnnotationsManager.ANNOTATIONS_XML);
-    }
-  }     */
-
   private static class AttachUrlJavadocDescriptor extends AttachRootButtonDescriptor {
     private AttachUrlJavadocDescriptor() {
       super(OrderRootType.DOCUMENTATION, ProjectBundle.message("module.libraries.javadoc.url.button"));
