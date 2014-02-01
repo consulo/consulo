@@ -62,7 +62,7 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
     }, true);
     mySdkComboBox.insertModuleItems(myExtensionWithSdk);
 
-    final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = myExtensionWithSdk.getInheritableSdk();
+    final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = getInheritableSdk();
     if (inheritableSdk.isNull()) {
       mySdkComboBox.setSelectedNoneSdk();
     }
@@ -90,5 +90,14 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
         }
       }
     });
+  }
+
+  /**
+   * This is need for override - when sdk available via profiling
+   * @return
+   */
+  @NotNull
+  public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
+    return myExtensionWithSdk.getInheritableSdk();
   }
 }
