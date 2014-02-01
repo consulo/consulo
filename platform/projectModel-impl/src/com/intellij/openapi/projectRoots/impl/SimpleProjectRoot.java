@@ -102,7 +102,10 @@ public class SimpleProjectRoot implements ProjectRoot, JDOMExternalizable {
     myInitialized = true;
 
     if (myFile == null || !myFile.isValid()) {
-      myFile = null;
+      myFile = VirtualFileManager.getInstance().findFileByUrl(myUrl);
+      if (myFile != null && !myFile.isValid()) {
+        myFile = null;
+      }
     }
   }
 
