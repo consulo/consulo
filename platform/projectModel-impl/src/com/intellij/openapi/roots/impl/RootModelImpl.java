@@ -434,15 +434,19 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
+    ModuleExtensionChangeListener moduleExtensionChangeListener =
+            getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC);
+
     for (ModuleExtension extension : myExtensions) {
       MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
 
       ModuleExtension originalExtension = getSourceModel().getExtensionWithoutCheck(extension.getId());
       if (mutableExtension.isModified(originalExtension)) {
-
-        getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC).extensionChanged(originalExtension, mutableExtension);
+        moduleExtensionChangeListener.beforeExtensionChanged(originalExtension, mutableExtension);
 
         originalExtension.commit(mutableExtension);
+
+        moduleExtensionChangeListener.afterExtensionChanged(originalExtension, mutableExtension);
       }
     }
 

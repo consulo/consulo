@@ -24,5 +24,19 @@ import java.util.EventListener;
  * @since 2:20/10.09.13
  */
 public interface ModuleExtensionChangeListener extends EventListener {
-  void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension);
+  public class Adapter implements ModuleExtensionChangeListener {
+    @Override
+    public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+
+    }
+
+    @Override
+    public void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+
+    }
+  }
+
+  void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension);
+
+  void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension);
 }

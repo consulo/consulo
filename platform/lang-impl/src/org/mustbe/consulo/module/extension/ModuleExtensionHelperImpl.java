@@ -39,9 +39,9 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
 
   public ModuleExtensionHelperImpl(Project project) {
     myProject = project;
-    project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
+    project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter() {
       @Override
-      public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+      public void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
         myExtensions = null;
       }
     });

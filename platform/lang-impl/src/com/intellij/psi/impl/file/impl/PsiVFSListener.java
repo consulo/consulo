@@ -616,11 +616,6 @@ public class PsiVFSListener extends VirtualFileAdapter {
     }
 
     @Override
-    public void extensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
-      rootsChanged(null);
-    }
-
-    @Override
     public void rootsChanged(final ModuleRootEvent event) {
       myFileManager.dispatchPendingEvents();
 
@@ -647,6 +642,16 @@ public class PsiVFSListener extends VirtualFileAdapter {
           }
         }
       );
+    }
+
+    @Override
+    public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+
+    }
+
+    @Override
+    public void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+      rootsChanged(null);
     }
   }
 
