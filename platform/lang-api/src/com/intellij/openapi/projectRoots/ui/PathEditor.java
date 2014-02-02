@@ -25,13 +25,16 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntArrayList;
@@ -316,10 +319,11 @@ public class PathEditor {
     setModified(true);
   }
 
-  private static boolean isJarFile(final VirtualFile file) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
+  @Nullable
+  private static FileType findFileType(final VirtualFile file) {
+    return ApplicationManager.getApplication().runReadAction(new Computable<FileType>() {
       @Override
-      public Boolean compute() {
+      public FileType compute() {
         VirtualFile tempFile = file;
         if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
           //[myakovlev] It was bug - directories with *.jar extensions was saved as files of JarFileSystem.
@@ -328,11 +332,11 @@ public class PathEditor {
           tempFile = LocalFileSystem.getInstance().findFileByPath(path);
         }
         if (tempFile != null && !tempFile.isDirectory()) {
-          return Boolean.valueOf(tempFile.getFileType() instanceof ArchiveFileType);
+          return tempFile.getFileType();
         }
-        return Boolean.FALSE;
+        return null;
       }
-    }).booleanValue();
+    });
   }
 
   /**
@@ -346,10 +350,14 @@ public class PathEditor {
         return AllIcons.Nodes.PpInvalid;
       }
       else if (isHttpRoot(file)) {
-        return PlatformIcons.WEB_ICON;
+        return AllIcons.Nodes.PpWeb;
       }
       else {
-        return isJarFile(file) ? PlatformIcons.JAR_ICON : PlatformIcons.FILE_ICON;
+        FileType fileType = findFileType(file);
+        if(fileType instanceof ArchiveFileType) {
+          return fileType.getIcon();
+        }
+        return file.getFileType().getIcon();
       }
     }
     return AllIcons.Nodes.EmptyNode;
