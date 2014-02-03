@@ -571,11 +571,13 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       myWhatsNewUrl = whatsnewElement.getAttributeValue(ATTRIBUTE_URL);
     }
 
+    myPluginManagerUrl = DEFAULT_PLUGINS_HOST;
     myPluginsListUrl = DEFAULT_PLUGINS_HOST + "list";
     myPluginsDownloadUrl = DEFAULT_PLUGINS_HOST + "download";
 
     final String pluginsHost = System.getProperty("idea.plugins.host");
     if (pluginsHost != null) {
+      myPluginManagerUrl = pluginsHost;
       myPluginsListUrl = myPluginsListUrl.replace(DEFAULT_PLUGINS_HOST, pluginsHost);
       myPluginsDownloadUrl = myPluginsDownloadUrl.replace(DEFAULT_PLUGINS_HOST, pluginsHost);
     }
