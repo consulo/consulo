@@ -57,6 +57,27 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
     }
   }
 
+  private static class ChooseProvidersDialog extends ChooseElementsDialog<ContentFolderPropertyProvider<?>> {
+
+    public ChooseProvidersDialog(Project project,
+                                 List<? extends ContentFolderPropertyProvider<?>> items,
+                                 String title,
+                                 String description) {
+      super(project, items, title, description);
+    }
+
+    @Override
+    protected String getItemText(ContentFolderPropertyProvider<?> item) {
+      return item.getKey().toString();
+    }
+
+    @Nullable
+    @Override
+    protected Icon getItemIcon(ContentFolderPropertyProvider<?> item) {
+      return null;
+    }
+  }
+
   private static final ColumnInfo[] ourColumns = new ColumnInfo[]{new ColumnInfo<Item, String>("Name") {
 
     @Nullable
@@ -141,7 +162,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
     decorator.setAddAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton anActionButton) {
-        List<ContentFolderPropertyProvider> list = new ArrayList<ContentFolderPropertyProvider>();
+        List<ContentFolderPropertyProvider<?>> list = new ArrayList<ContentFolderPropertyProvider<?>>();
         loop:
         for (ContentFolderPropertyProvider propertyProvider : ContentFolderPropertyProvider.EP_NAME.getExtensions()) {
           for (Item item : myItems) {
@@ -153,24 +174,11 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
           list.add(propertyProvider);
         }
 
-        ChooseElementsDialog<ContentFolderPropertyProvider> d =
-                new ChooseElementsDialog<ContentFolderPropertyProvider>(myProject, list,
-                                                                        ProjectBundle.message("module.paths.add.properties.title"),
-                                                                        ProjectBundle.message("module.paths.add.properties.desc")) {
-          @Override
-          protected String getItemText(ContentFolderPropertyProvider item) {
-            return item.getKey().toString();
-          }
+        ChooseProvidersDialog d = new ChooseProvidersDialog(myProject, list, ProjectBundle.message("module.paths.add.properties.title"),
+                                                            ProjectBundle.message("module.paths.add.properties.desc"));
 
-          @Nullable
-          @Override
-          protected Icon getItemIcon(ContentFolderPropertyProvider item) {
-            return null;
-          }
-        };
-
-        List<ContentFolderPropertyProvider> list1 = d.showAndGetResult();
-        for (ContentFolderPropertyProvider propertyProvider : list1) {
+        List<ContentFolderPropertyProvider<?>> list1 = d.showAndGetResult();
+        for (val propertyProvider : list1) {
 
           model.addRow(new Item(propertyProvider, propertyProvider.getKey(), propertyProvider.getValues()[0]));
         }
