@@ -21,6 +21,7 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -117,6 +118,15 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   public void deleteContentFolder(ContentEntry contentEntry, ContentFolder folder) {
     removeFolder(folder);
     update();
+  }
+
+  @Override
+  public void showChangeOptionsDialog(ContentEntry contentEntry, ContentFolder contentFolder) {
+    ContentFolderPropertiesDialog c = new ContentFolderPropertiesDialog(getModel().getProject(), contentFolder);
+    AsyncResult<Boolean> booleanAsyncResult = c.showAndGetOk();
+    if(booleanAsyncResult.getResult() == Boolean.TRUE) {
+      update();
+    }
   }
 
   @Override

@@ -664,6 +664,7 @@ public class AllIcons {
     public static final Icon AddContentEntry = IconLoader.getIcon("/modules/addContentEntry.png"); // 16x16
     public static final Icon Annotation = IconLoader.getIcon("/modules/annotation.png"); // 16x16
     public static final Icon DeleteContentFolder = IconLoader.getIcon("/modules/deleteContentFolder.png"); // 9x9
+    public static final Icon ContentFolderOptions = IconLoader.getIcon("/modules/contentFolderOptions.png"); // 9x9
     public static final Icon DeleteContentFolderRollover = IconLoader.getIcon("/modules/deleteContentFolderRollover.png"); // 9x9
     public static final Icon DeleteContentRoot = IconLoader.getIcon("/modules/deleteContentRoot.png"); // 9x9
     public static final Icon DeleteContentRootRollover = IconLoader.getIcon("/modules/deleteContentRootRollover.png"); // 9x9

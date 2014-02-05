@@ -70,6 +70,8 @@ public abstract class ContentRootPanel extends JPanel {
 
     void deleteContentFolder(ContentEntry contentEntry, ContentFolder contentFolder);
 
+    void showChangeOptionsDialog(ContentEntry contentEntry, ContentFolder contentFolder);
+
     void navigateFolder(ContentEntry contentEntry, ContentFolder contentFolder);
   }
 
@@ -169,12 +171,12 @@ public abstract class ContentRootPanel extends JPanel {
                 new GridConstraints(idx, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_HORIZONTAL,
                                     GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_CAN_SHRINK, verticalPolicy, null, null,
                                     null));
-      int column = 1;
-      int colspan = 2;
+
+      panel.add(createFolderChangeOptionsComponent(folder, editor),
+                new GridConstraints(idx, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, verticalPolicy, null, null, null));
 
       panel.add(createFolderDeleteComponent(folder, editor),
-                new GridConstraints(idx, column, 1, colspan, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
-                                    GridConstraints.SIZEPOLICY_FIXED, verticalPolicy, null, null, null));
+                new GridConstraints(idx, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, verticalPolicy, null, null, null));
     }
 
     final JLabel titleLabel = new JLabel(title);
@@ -223,6 +225,16 @@ public abstract class ContentRootPanel extends JPanel {
 
       return new UnderlinedPathLabel(pathLabel);
     }
+  }
+
+  private JComponent createFolderChangeOptionsComponent(final ContentFolder folder, @NotNull ContentFolderTypeProvider editor) {
+    return new IconActionComponent(AllIcons.Modules.ContentFolderOptions, AllIcons.Modules.ContentFolderOptions, ProjectBundle.message("module.paths.properties.tooltip"),
+                                   new Runnable() {
+                                     @Override
+                                     public void run() {
+                                       myCallback.showChangeOptionsDialog(getContentEntry(), folder);
+                                     }
+                                   });
   }
 
   private JComponent createFolderDeleteComponent(final ContentFolder folder, @NotNull ContentFolderTypeProvider editor) {
