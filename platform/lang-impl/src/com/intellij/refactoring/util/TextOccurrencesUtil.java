@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,13 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.*;
 import com.intellij.usageView.UsageInfo;
@@ -40,6 +43,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public class TextOccurrencesUtil {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.util.TextOccurrencesUtil");
+
   private TextOccurrencesUtil() {
   }
 
@@ -58,10 +63,10 @@ public class TextOccurrencesUtil {
   }
 
   public static boolean processTextOccurences(@NotNull final PsiElement element,
-                                           @NotNull String stringToSearch,
-                                           @NotNull GlobalSearchScope searchScope,
-                                           @NotNull final Processor<UsageInfo> processor,
-                                           @NotNull final UsageInfoFactory factory) {
+                                              @NotNull String stringToSearch,
+                                              @NotNull GlobalSearchScope searchScope,
+                                              @NotNull final Processor<UsageInfo> processor,
+                                              @NotNull final UsageInfoFactory factory) {
     PsiSearchHelper helper = ApplicationManager.getApplication().runReadAction(new Computable<PsiSearchHelper>() {
       @Override
       public PsiSearchHelper compute() {
@@ -71,31 +76,46 @@ public class TextOccurrencesUtil {
 
     return helper.processUsagesInNonJavaFiles(element, stringToSearch, new PsiNonJavaFileReferenceProcessor() {
       @Override
-      public boolean process(PsiFile psiFile, int startOffset, int endOffset) {
-        UsageInfo usageInfo = factory.createUsageInfo(psiFile, startOffset, endOffset);
-        return usageInfo == null || processor.process(usageInfo);
+      public boolean process(final PsiFile psiFile, final int startOffset, final int endOffset) {
+        try {
+          UsageInfo usageInfo = ApplicationManager.getApplication().runReadAction(new Computable<UsageInfo>() {
+            @Override
+            public UsageInfo compute() {
+              return factory.createUsageInfo(psiFile, startOffset, endOffset);
+            }
+          });
+          return usageInfo == null || processor.process(usageInfo);
+        }
+        catch (ProcessCanceledException e) {
+          throw e;
+        }
+        catch (Exception e) {
+          LOG.error(e);
+          return true;
+        }
       }
     }, searchScope);
   }
 
-  private static boolean processStringLiteralsContainingIdentifier(@NotNull String identifier, @NotNull SearchScope searchScope, PsiSearchHelper helper, final Processor<PsiElement> processor) {
+  private static boolean processStringLiteralsContainingIdentifier(@NotNull String identifier,
+                                                                   @NotNull SearchScope searchScope,
+                                                                   PsiSearchHelper helper,
+                                                                   final Processor<PsiElement> processor) {
     TextOccurenceProcessor occurenceProcessor = new TextOccurenceProcessor() {
       @Override
       public boolean execute(PsiElement element, int offsetInElement) {
         final ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(element.getLanguage());
         final ASTNode node = element.getNode();
-        if (definition != null && node != null && definition.getStringLiteralElements(element.getLanguageVersion()).contains(node.getElementType())) {
+        if (definition != null &&
+            node != null &&
+            definition.getStringLiteralElements(element.getLanguageVersion()).contains(node.getElementType())) {
           return processor.process(element);
         }
         return true;
       }
     };
 
-    return helper.processElementsWithWord(occurenceProcessor,
-                                   searchScope,
-                                   identifier,
-                                   UsageSearchContext.IN_STRINGS,
-                                   true);
+    return helper.processElementsWithWord(occurenceProcessor, searchScope, identifier, UsageSearchContext.IN_STRINGS, true);
   }
 
   public static boolean processUsagesInStringsAndComments(@NotNull final PsiElement element,
@@ -134,13 +154,21 @@ public class TextOccurrencesUtil {
     });
   }
 
-  private static boolean processTextIn(PsiElement scope, String stringToSearch, final boolean ignoreReferences, PairProcessor<PsiElement, TextRange> processor) {
+  private static boolean processTextIn(PsiElement scope,
+                                       String stringToSearch,
+                                       final boolean ignoreReferences,
+                                       PairProcessor<PsiElement, TextRange> processor) {
     String text = scope.getText();
     for (int offset = 0; offset < text.length(); offset++) {
       offset = text.indexOf(stringToSearch, offset);
       if (offset < 0) break;
       final PsiReference referenceAt = scope.findReferenceAt(offset);
-      if (!ignoreReferences && referenceAt != null && referenceAt.resolve() != null) continue;
+      if (!ignoreReferences &&
+          referenceAt != null &&
+          (referenceAt.resolve() != null ||
+           referenceAt instanceof PsiPolyVariantReference && ((PsiPolyVariantReference)referenceAt).multiResolve(true).length > 0)) {
+        continue;
+      }
 
       if (offset > 0) {
         char c = text.charAt(offset - 1);
@@ -172,8 +200,12 @@ public class TextOccurrencesUtil {
     return FindUsagesUtil.isSearchForTextOccurrencesAvailable(element, false, handler);
   }
 
-  public static void findNonCodeUsages(PsiElement element, String stringToSearch, boolean searchInStringsAndComments,
-                                       boolean searchInNonJavaFiles, String newQName, Collection<UsageInfo> results) {
+  public static void findNonCodeUsages(PsiElement element,
+                                       String stringToSearch,
+                                       boolean searchInStringsAndComments,
+                                       boolean searchInNonJavaFiles,
+                                       String newQName,
+                                       Collection<UsageInfo> results) {
     if (searchInStringsAndComments || searchInNonJavaFiles) {
       UsageInfoFactory factory = createUsageInfoFactory(element, newQName);
 
@@ -188,14 +220,12 @@ public class TextOccurrencesUtil {
     }
   }
 
-  private static UsageInfoFactory createUsageInfoFactory(final PsiElement element,
-                                                        final String newQName) {
+  private static UsageInfoFactory createUsageInfoFactory(final PsiElement element, final String newQName) {
     return new UsageInfoFactory() {
       @Override
       public UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset) {
         int start = usage.getTextRange().getStartOffset();
-        return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element,
-                                       newQName);
+        return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, newQName);
       }
     };
   }

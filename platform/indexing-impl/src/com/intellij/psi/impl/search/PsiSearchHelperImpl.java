@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
@@ -136,7 +137,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                          boolean caseSensitive,
                                          boolean processInjectedPsi) {
     final AsyncFuture<Boolean> result =
-      processElementsWithWordAsync(processor, searchScope, text, searchContext, caseSensitive, processInjectedPsi, null);
+            processElementsWithWordAsync(processor, searchScope, text, searchContext, caseSensitive, processInjectedPsi, null);
     return AsyncUtil.get(result);
   }
 
@@ -257,7 +258,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
             }
             else {
               AsyncFuture<Boolean> restResult =
-                processPsiFileRootsAsync(new ArrayList<VirtualFile>(fileSet), totalSize, intersectionWithContainerFiles.size(), progress, localProcessor);
+                      processPsiFileRootsAsync(new ArrayList<VirtualFile>(fileSet), totalSize, intersectionWithContainerFiles.size(), progress, localProcessor);
               result = bind(intersectionResult, restResult);
             }
           }
@@ -353,21 +354,22 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     final List<VirtualFile> failedFiles = Collections.synchronizedList(new SmartList<VirtualFile>());
     try {
       boolean completed =
-        JobLauncher.getInstance().invokeConcurrentlyUnderProgress(files, progress, false, false, new Processor<VirtualFile>() {
-          @Override
-          public boolean process(final VirtualFile vfile) {
-            try {
-              TooManyUsagesStatus.getFrom(progress).pauseProcessingIfTooManyUsages();
-              processVirtualFile(vfile, progress, localProcessor, canceled, counter, totalSize);
-            }
-            catch (CannotRunReadActionException action) {
-              failedFiles.add(vfile);
-            }
-            return !canceled.get();
-          }
-        });
+              JobLauncher.getInstance().invokeConcurrentlyUnderProgress(files, progress, false, false, new Processor<VirtualFile>() {
+                @Override
+                public boolean process(final VirtualFile vfile) {
+                  try {
+                    TooManyUsagesStatus.getFrom(progress).pauseProcessingIfTooManyUsages();
+                    processVirtualFile(vfile, progress, localProcessor, canceled, counter, totalSize);
+                  }
+                  catch (CannotRunReadActionException action) {
+                    failedFiles.add(vfile);
+                  }
+                  return !canceled.get();
+                }
+              });
       if (!failedFiles.isEmpty()) {
         for (final VirtualFile vfile : failedFiles) {
+          checkCanceled(progress);
           TooManyUsagesStatus.getFrom(progress).pauseProcessingIfTooManyUsages();
           // we failed to run read action in job launcher thread
           // run read action in our thread instead
@@ -414,14 +416,8 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
           Set<PsiElement> processed = new THashSet<PsiElement>(psiRoots.size() * 2, (float)0.5);
           for (final PsiFile psiRoot : psiRoots) {
             checkCanceled(progress);
-            assert psiRoot != null : "One of the roots of file " +
-                                     file +
-                                     " is null. All roots: " +
-                                     psiRoots +
-                                     "; ViewProvider: " +
-                                     file.getViewProvider() +
-                                     "; Virtual file: " +
-                                     file.getViewProvider().getVirtualFile();
+            assert psiRoot != null : "One of the roots of file " + file + " is null. All roots: " + psiRoots +
+                                     "; ViewProvider: " + file.getViewProvider() + "; Virtual file: " + file.getViewProvider().getVirtualFile();
             if (!processed.add(psiRoot)) continue;
             if (!psiRoot.isValid()) {
               continue;
@@ -443,7 +439,12 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
   }
 
   private static void checkCanceled(ProgressIndicator progress) {
-    if (progress != null) progress.checkCanceled();
+    if (progress != null) {
+      progress.checkCanceled();
+    }
+    else {
+      ProgressManager.checkCanceled();
+    }
   }
 
   private void getFilesWithText(@NotNull GlobalSearchScope scope,
@@ -462,7 +463,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
         }
       };
       boolean success = processFilesWithText(scope, searchContext, caseSensitively, text, processor);
-      LOG.assertTrue(success);
+      // success == false means exception in index
     }
     finally {
       myManager.finishBatchFilesProcessingMode();
@@ -697,22 +698,23 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                 }
               };
 
-              iterate.getResult().addConsumer(SameThreadExecutor.INSTANCE, new DefaultResultConsumer<Boolean>(result) {
-                @Override
-                public void onSuccess(Boolean value) {
-                  if (!value.booleanValue()) {
-                    result.set(false);
-                    return;
-                  }
-                  for (Computable<Boolean> custom : customs) {
-                    if (!custom.compute()) {
-                      result.set(false);
-                      return;
-                    }
-                  }
-                  result.set(true);
-                }
-              });
+              iterate.getResult()
+                      .addConsumer(SameThreadExecutor.INSTANCE, new DefaultResultConsumer<Boolean>(result) {
+                        @Override
+                        public void onSuccess(Boolean value) {
+                          if (!value.booleanValue()) {
+                            result.set(false);
+                            return;
+                          }
+                          for (Computable<Boolean> custom : customs) {
+                            if (!custom.compute()) {
+                              result.set(false);
+                              return;
+                            }
+                          }
+                          result.set(true);
+                        }
+                      });
             }
           }
         });
@@ -908,7 +910,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                     final PsiSearchRequest request = single.request;
                     if ((mask & request.searchContext) != 0 && ((GlobalSearchScope)request.searchScope).contains(file)) {
                       MultiMap<VirtualFile, RequestWithProcessor> result =
-                        intersectionWithContainerNameFiles == null || !intersectionWithContainerNameFiles.contains(file) ? restResult : intersectionResult;
+                              intersectionWithContainerNameFiles == null || !intersectionWithContainerNameFiles.contains(file) ? restResult : intersectionResult;
                       result.putValue(file, single);
                     }
                   }
@@ -1057,7 +1059,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     final AtomicInteger count = new AtomicInteger();
     final Processor<VirtualFile> processor = new Processor<VirtualFile>() {
       private final VirtualFile virtualFileToIgnoreOccurrencesIn =
-        fileToIgnoreOccurrencesIn == null ? null : fileToIgnoreOccurrencesIn.getVirtualFile();
+              fileToIgnoreOccurrencesIn == null ? null : fileToIgnoreOccurrencesIn.getVirtualFile();
 
       @Override
       public boolean process(VirtualFile file) {
