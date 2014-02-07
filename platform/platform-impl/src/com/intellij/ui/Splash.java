@@ -19,13 +19,10 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 
 /**
@@ -143,26 +140,6 @@ public class Splash extends JDialog implements StartupProgress {
     return myProgressY;
   }
 
-  public static boolean showLicenseeInfo(Graphics g, int x, int y, final int height, final Color textColor) {
-    if (ApplicationInfoImpl.getShadowInstance().showLicenseeInfo()) {
-      final LicensingFacade provider = LicensingFacade.getInstance();
-      if (provider != null) {
-        UIUtil.applyRenderingHints(g);
-        g.setFont(new Font(UIUtil.ARIAL_FONT_NAME, Font.BOLD, SystemInfo.isUnix ? 10 : 11));
-
-        g.setColor(textColor);
-        final String licensedToMessage = provider.getLicensedToMessage();
-        final List<String> licenseRestrictionsMessages = provider.getLicenseRestrictionsMessages();
-        g.drawString(licensedToMessage, x + 21, y + height - 49);
-        if (licenseRestrictionsMessages.size() > 0) {
-          g.drawString(licenseRestrictionsMessages.get(0), x + 21, y + height - 33);
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
   private static final class SplashImage implements Icon {
     private final Icon myIcon;
     private final Color myTextColor;
@@ -182,8 +159,6 @@ public class Splash extends JDialog implements StartupProgress {
       }
 
       myIcon.paintIcon(c, g, x, y);
-
-      showLicenseeInfo(g, x, y, getIconHeight(), myTextColor);
     }
 
     public int getIconWidth() {

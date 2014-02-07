@@ -194,19 +194,8 @@ public class IdeaApplication {
           mySplash.show();
           return mySplash;
         }
-        else {
-          updateSplashScreen(appInfo, splashScreen);
-        }
       }
       return null;
-    }
-
-    private void updateSplashScreen(ApplicationInfoEx appInfo, SplashScreen splashScreen) {
-      final Graphics2D graphics = splashScreen.createGraphics();
-      final Dimension size = splashScreen.getSize();
-      if (Splash.showLicenseeInfo(graphics, 0, 0, size.height, appInfo.getSplashTextColor())) {
-        splashScreen.update();
-      }
     }
 
     @Nullable

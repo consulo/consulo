@@ -43,6 +43,9 @@ import java.util.jar.JarFile;
 public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExternalizable, ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.impl.ApplicationInfoImpl");
 
+  @NonNls
+  private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/consulo/plugins/";
+
   private String myCodeName = null;
   private String myMajorVersion = null;
   private String myMinorVersion = null;
@@ -69,7 +72,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   private Calendar myBuildDate = null;
   private Calendar myMajorReleaseBuildDate = null;
   private String myPackageCode = null;
-  private boolean myShowLicensee = true;
   private UpdateUrls myUpdateUrls;
   private String myDocumentationUrl;
   private String mySupportUrl;
@@ -122,11 +124,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ATTRIBUTE_SIZE32OPAQUE = "size32opaque";
   @NonNls private static final String ELEMENT_PACKAGE = "package";
   @NonNls private static final String ATTRIBUTE_CODE = "code";
-  @NonNls private static final String ELEMENT_LICENSEE = "licensee";
-  @NonNls private static final String ATTRIBUTE_SHOW = "show";
   @NonNls private static final String WELCOME_SCREEN_ELEMENT_NAME = "welcome-screen";
   @NonNls private static final String LOGO_URL_ATTR = "logo-url";
-  @NonNls private static final String SLOGAN_URL_ATTR = "slogan-url";
   @NonNls private static final String ELEMENT_EDITOR = "editor";
   @NonNls private static final String BACKGROUND_URL_ATTR = "background-url";
   @NonNls private static final String UPDATE_URLS_ELEMENT_NAME = "update-urls";
@@ -141,7 +140,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ELEMENT_FEEDBACK = "feedback";
   @NonNls private static final String ATTRIBUTE_RELEASE_URL = "release-url";
   @NonNls private static final String ATTRIBUTE_EAP_URL = "eap-url";
-  @NonNls private static final String ELEMENT_PLUGINS = "plugins";
   @NonNls private static final String ATTRIBUTE_WEBHELP_URL = "webhelp-url";
   @NonNls private static final String ATTRIBUTE_HAS_HELP = "has-help";
   @NonNls private static final String ATTRIBUTE_HAS_CONTEXT_HELP = "has-context-help";
@@ -149,21 +147,24 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ELEMENT_KEYMAP = "keymap";
   @NonNls private static final String ATTRIBUTE_WINDOWS_URL = "win";
   @NonNls private static final String ATTRIBUTE_MAC_URL = "mac";
-  @NonNls private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/consulo/plugins/";
   @NonNls private static final String ESSENTIAL_PLUGIN = "essential-plugin";
 
   @NonNls private static final String ELEMENT_STATISTICS = "statistics";
   @NonNls private static final String ATTRIBUTE_STATISTICS_SETTINGS = "settings";
   @NonNls private static final String ATTRIBUTE_STATISTICS_SERVICE = "service";
 
+  @Override
   public void initComponent() { }
 
+  @Override
   public void disposeComponent() { }
 
+  @Override
   public Calendar getBuildDate() {
     return myBuildDate;
   }
 
+  @Override
   public Calendar getMajorReleaseBuildDate() {
     return myMajorReleaseBuildDate != null ? myMajorReleaseBuildDate : myBuildDate;
   }
@@ -173,14 +174,17 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return BuildNumber.fromString(myBuildNumber);
   }
 
+  @Override
   public String getMajorVersion() {
     return myMajorVersion;
   }
 
+  @Override
   public String getMinorVersion() {
     return myMinorVersion;
   }
 
+  @Override
   public String getVersionName() {
     final String fullName = ApplicationNamesInfo.getInstance().getFullProductName();
     if (myEAP && !StringUtil.isEmptyOrSpaces(myCodeName)) {
@@ -189,6 +193,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return fullName;
   }
 
+  @Override
   @NonNls
   public String getHelpURL() {
     return "jar:file:///" + getHelpJarPath() + "!/" + myHelpRootName;
@@ -209,14 +214,17 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return PathManager.getHomePath() + File.separator + "help" + File.separator + myHelpFileName;
   }
 
+  @Override
   public String getSplashImageUrl() {
     return mySplashImageUrl;
   }
 
+  @Override
   public Color getSplashTextColor() {
     return mySplashTextColor;
   }
 
+  @Override
   public String getAboutImageUrl() {
     return myAboutImageUrl;
   }
@@ -234,10 +242,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return myProgressTailIcon;
   }
 
+  @Override
   public String getIconUrl() {
     return myIconUrl;
   }
 
+  @Override
   public String getSmallIconUrl() {
     return mySmallIconUrl;
   }
@@ -248,10 +258,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return myBigIconUrl;
   }
 
+  @Override
   public String getOpaqueIconUrl() {
     return myOpaqueIconUrl;
   }
 
+  @Override
   public String getToolWindowIconUrl() {
     return myToolWindowIconUrl;
   }
@@ -266,30 +278,37 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return myEditorBackgroundImageUrl;
   }
 
+  @Override
   public String getPackageCode() {
     return myPackageCode;
   }
 
+  @Override
   public boolean isEAP() {
     return myEAP;
   }
 
+  @Override
   public UpdateUrls getUpdateUrls() {
     return myUpdateUrls;
   }
 
+  @Override
   public String getDocumentationUrl() {
     return myDocumentationUrl;
   }
 
+  @Override
   public String getSupportUrl() {
     return mySupportUrl;
   }
 
+  @Override
   public String getEAPFeedbackUrl() {
     return myEAPFeedbackUrl;
   }
 
+  @Override
   public String getReleaseFeedbackUrl() {
     return myReleaseFeedbackUrl;
   }
@@ -299,14 +318,17 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return myPluginManagerUrl;
   }
 
+  @Override
   public String getPluginsListUrl() {
     return myPluginsListUrl;
   }
 
+  @Override
   public String getPluginsDownloadUrl() {
     return myPluginsDownloadUrl;
   }
 
+  @Override
   public String getWebHelpUrl() {
     return myWebHelpUrl;
   }
@@ -321,14 +343,17 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return myHasContextHelp;
   }
 
+  @Override
   public String getWhatsNewUrl() {
     return myWhatsNewUrl;
   }
 
+  @Override
   public String getWinKeymapUrl() {
     return myWinKeymapUrl;
   }
 
+  @Override
   public String getMacKeymapUrl() {
     return myMacKeymapUrl;
   }
@@ -342,6 +367,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return myAboutLinkColor;
   }
 
+  @Override
   public String getFullApplicationName() {
     @NonNls StringBuilder buffer = new StringBuilder();
     buffer.append(getVersionName());
@@ -358,10 +384,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       buffer.append(getBuild().asString());
     }
     return buffer.toString();
-  }
-
-  public boolean showLicenseeInfo() {
-    return myShowLicensee;
   }
 
   public String getStatisticsSettingsUrl() {
@@ -406,6 +428,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return ourShadowInstance;
   }
 
+  @Override
   public void readExternal(Element parentNode) throws InvalidDataException {
     Element versionElement = parentNode.getChild(ELEMENT_VERSION);
     if (versionElement != null) {
@@ -514,11 +537,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     Element packageElement = parentNode.getChild(ELEMENT_PACKAGE);
     if (packageElement != null) {
       myPackageCode = packageElement.getAttributeValue(ATTRIBUTE_CODE);
-    }
-
-    Element showLicensee = parentNode.getChild(ELEMENT_LICENSEE);
-    if (showLicensee != null) {
-      myShowLicensee = Boolean.valueOf(showLicensee.getAttributeValue(ATTRIBUTE_SHOW)).booleanValue();
     }
 
     Element welcomeScreen = parentNode.getChild(WELCOME_SCREEN_ELEMENT_NAME);
@@ -637,10 +655,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return new Color((int)rgb, rgb > 0xffffff);
   }
 
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     throw new WriteExternalException();
   }
 
+  @Override
   public List<PluginChooserPage> getPluginChooserPages() {
     return myPluginChooserPages;
   }
@@ -650,6 +670,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     return ArrayUtil.contains(pluginId, myEssentialPluginsIds);
   }
 
+  @Override
   @NotNull
   public String getComponentName() {
     return ApplicationNamesInfo.COMPONENT_NAME;
@@ -666,10 +687,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       }
     }
 
+    @Override
     public String getCheckingUrl() {
       return myCheckingUrl;
     }
 
+    @Override
     public String getPatchesUrl() {
       return myPatchesUrl;
     }
@@ -686,14 +709,17 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       myDependentPlugin = e.getAttributeValue("depends");
     }
 
+    @Override
     public String getTitle() {
       return myTitle;
     }
 
+    @Override
     public String getCategory() {
       return myCategory;
     }
 
+    @Override
     public String getDependentPlugin() {
       return myDependentPlugin;
     }

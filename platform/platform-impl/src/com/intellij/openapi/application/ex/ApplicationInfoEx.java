@@ -66,11 +66,7 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getFullApplicationName();
 
-  public abstract boolean showLicenseeInfo();
-
-
   public abstract boolean isEAP();
-
 
   public abstract UpdateUrls getUpdateUrls();
 

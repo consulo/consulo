@@ -53,29 +53,21 @@ public class AboutDialog extends JDialog {
     init(owner);
   }
 
-
   private void init(Window window) {
     ApplicationInfoEx appInfo = (ApplicationInfoEx)ApplicationInfo.getInstance();
     JPanel mainPanel = new JPanel(new BorderLayout());
     final JComponent closeListenerOwner;
     Icon image = IconLoader.getIcon(appInfo.getAboutImageUrl());
-    final InfoSurface infoSurface;
-    if (appInfo.showLicenseeInfo()) {
-      infoSurface = new InfoSurface(image);
-      infoSurface.setPreferredSize(new Dimension(image.getIconWidth(), image.getIconHeight()));
-      mainPanel.add(infoSurface, BorderLayout.NORTH);
+    final InfoSurface infoSurface= new InfoSurface(image);
+    infoSurface.setPreferredSize(new Dimension(image.getIconWidth(), image.getIconHeight()));
+    mainPanel.add(infoSurface, BorderLayout.NORTH);
 
-      closeListenerOwner = infoSurface;
-    }
-    else {
-      infoSurface = null;
-      mainPanel.add(new JLabel(image), BorderLayout.NORTH);
-      closeListenerOwner = mainPanel;
-    }
+    closeListenerOwner = infoSurface;
     setUndecorated(true);
     setContentPane(mainPanel);
     final Ref<Long> showTime = Ref.create(System.currentTimeMillis());
     addKeyListener(new KeyAdapter() {
+      @Override
       public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_ESCAPE && e.getModifiers() == 0) {
@@ -100,9 +92,11 @@ public class AboutDialog extends JDialog {
     final long delta = 500; //reproducible on Windows too
 
     addWindowFocusListener(new WindowFocusListener() {
+      @Override
       public void windowGainedFocus(WindowEvent e) {
       }
 
+      @Override
       public void windowLostFocus(WindowEvent e) {
         long eventTime = System.currentTimeMillis();
         if (eventTime - showTime.get() > delta && e.getOppositeWindow() != e.getWindow()) {
@@ -208,6 +202,7 @@ public class AboutDialog extends JDialog {
       myLines.add(new AboutBoxLine("Must-Be.org", true, "http://must-be.org/consulo/"));
 
       addMouseListener(new MouseAdapter() {
+        @Override
         public void mousePressed(MouseEvent event) {
           if (myActiveLink != null) {
             event.consume();
@@ -216,6 +211,7 @@ public class AboutDialog extends JDialog {
         }
       });
       addMouseMotionListener(new MouseMotionAdapter() {
+        @Override
         public void mouseMoved(MouseEvent event) {
           boolean hadLink = (myActiveLink != null);
           myActiveLink = null;
