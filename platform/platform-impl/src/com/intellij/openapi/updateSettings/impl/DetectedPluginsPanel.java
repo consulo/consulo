@@ -49,6 +49,7 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
     final JTable entryTable = getEntryTable();
     entryTable.setTableHeader(null);
     entryTable.setDefaultRenderer(PluginDownloader.class, new ColoredTableCellRenderer() {
+      @Override
       protected void customizeCellRenderer(final JTable table,
                                            final Object value,
                                            final boolean selected,
@@ -78,6 +79,7 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
       }
     });
     entryTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
       public void valueChanged(ListSelectionEvent e) {
         final int selectedRow = entryTable.getSelectedRow();
         if (selectedRow != -1) {
@@ -102,18 +104,22 @@ public class DetectedPluginsPanel extends OrderPanel<PluginDownloader> {
     add(splitter, BorderLayout.CENTER);
   }
 
+  @Override
   public String getCheckboxColumnName() {
     return "";
   }
 
+  @Override
   public boolean isCheckable(final PluginDownloader downloader) {
     return true;
   }
 
+  @Override
   public boolean isChecked(final PluginDownloader downloader) {
     return !getSkippedPlugins().contains(downloader.getPluginId());
   }
 
+  @Override
   public void setChecked(final PluginDownloader downloader, final boolean checked) {
     if (checked) {
       getSkippedPlugins().remove(downloader.getPluginId());
