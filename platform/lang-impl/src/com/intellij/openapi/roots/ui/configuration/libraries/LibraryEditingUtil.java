@@ -34,7 +34,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureCo
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ParameterizedRunnable;
 import com.intellij.util.PlatformIcons;
@@ -114,7 +114,7 @@ public class LibraryEditingUtil {
         final String protocol = VirtualFileManager.extractProtocol(url);
         if (protocol == null) continue;
         final String fullPath = VirtualFileManager.extractPath(url);
-        final int sep = fullPath.indexOf(JarFileSystem.JAR_SEPARATOR);
+        final int sep = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
         String localPath;
         String pathInJar;
         if (sep != -1) {

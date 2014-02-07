@@ -318,7 +318,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
 
   @Override
   @Nullable
-  public VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile) {
+  public VirtualFile getVirtualFileForArchive(@Nullable VirtualFile entryVFile) {
     if (entryVFile == null) return null;
     final String path = entryVFile.getPath();
     final int separatorIndex = path.indexOf(ARCHIVE_SEPARATOR);
@@ -343,7 +343,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
   }
 
   @Override
-  public ArchiveFile getJarFile(@NotNull VirtualFile entryVFile) throws IOException {
+  public ArchiveFile getArchiveWrapperFile(@NotNull VirtualFile entryVFile) throws IOException {
     ArchiveHandler handler = getHandler(entryVFile);
 
     return handler.getArchiveFile();
@@ -354,7 +354,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
   @Nullable
   @Override
   public VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile) {
-    return getVirtualFileForJar(entryVFile);
+    return getVirtualFileForArchive(entryVFile);
   }
 
   @Nullable

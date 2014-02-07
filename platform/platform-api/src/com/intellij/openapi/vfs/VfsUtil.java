@@ -306,7 +306,7 @@ public class VfsUtil extends VfsUtilCore {
       }
     }
 
-    if (file == null && uri.contains(JarFileSystem.JAR_SEPARATOR)) {
+    if (file == null && uri.contains(ArchiveFileSystem.ARCHIVE_SEPARATOR)) {
       file = StandardFileSystems.jar().findFileByPath(uri);
       if (file == null && base == null) {
         file = VirtualFileManager.getInstance().findFileByUrl(uri);

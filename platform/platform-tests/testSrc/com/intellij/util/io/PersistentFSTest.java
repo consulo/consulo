@@ -86,7 +86,7 @@ public class PersistentFSTest extends PlatformTestCase {
 
     PersistentFS fs = PersistentFS.getInstance();
 
-    String path = vx.getPath() + "/../" + vx.getName() + JarFileSystem.JAR_SEPARATOR;
+    String path = vx.getPath() + "/../" + vx.getName() + ArchiveFileSystem.ARCHIVE_SEPARATOR;
     NewVirtualFile root1 = fs.findRoot(path, (NewVirtualFileSystem)jfs);
 
     assertSame(root1, root);

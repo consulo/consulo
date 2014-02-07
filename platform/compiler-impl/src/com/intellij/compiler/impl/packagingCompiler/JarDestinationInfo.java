@@ -18,7 +18,7 @@ package com.intellij.compiler.impl.packagingCompiler;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 
 /**
  * @author nik
@@ -38,7 +38,7 @@ public class JarDestinationInfo extends DestinationInfo {
   private static String appendPathInJar(String outputPath, String pathInJar) {
     LOG.assertTrue(outputPath.length() > 0 && outputPath.charAt(outputPath.length() - 1) != '/');
     LOG.assertTrue(pathInJar.length() > 0 && pathInJar.charAt(0) != '/');
-    return outputPath + JarFileSystem.JAR_SEPARATOR + pathInJar;
+    return outputPath + ArchiveFileSystem.ARCHIVE_SEPARATOR + pathInJar;
   }
 
   public String getPathInJar() {
@@ -49,6 +49,7 @@ public class JarDestinationInfo extends DestinationInfo {
     return myJarInfo;
   }
 
+  @Override
   public String toString() {
     return myPathInJar + "(" + getOutputPath() + ")";
   }

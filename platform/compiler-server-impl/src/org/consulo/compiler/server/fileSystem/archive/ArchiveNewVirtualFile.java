@@ -52,7 +52,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
     myFileSystem = fileSystem;
 
     try {
-      ArchiveFile jarFile = fileSystem.getJarFile(this);
+      ArchiveFile jarFile = fileSystem.getArchiveWrapperFile(this);
 
       Iterator<? extends ArchiveEntry> entries = jarFile.entries();
       while (entries.hasNext()) {

@@ -297,7 +297,7 @@ public class BrowserUtil {
       if (file == null || !(file.getFileSystem() instanceof ArchiveFileSystem)) return null;
 
       ArchiveFileSystem jarFileSystem = (ArchiveFileSystem)file.getFileSystem();
-      VirtualFile jarVirtualFile = jarFileSystem.getVirtualFileForJar(file);
+      VirtualFile jarVirtualFile = jarFileSystem.getVirtualFileForArchive(file);
       if (jarVirtualFile == null) return null;
 
       String targetFilePath = file.getPath();
@@ -344,7 +344,7 @@ public class BrowserUtil {
         if (!extract.get()) return null;
 
         @SuppressWarnings("ConstantConditions")
-        final ArchiveFile zipFile = jarFileSystem.getJarFile(file);
+        final ArchiveFile zipFile = jarFileSystem.getArchiveWrapperFile(file);
         if (zipFile == null) return null;
         ArchiveEntry entry = zipFile.getEntry(targetFileRelativePath);
         if (entry == null) return null;

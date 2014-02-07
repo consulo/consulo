@@ -85,7 +85,7 @@ public class JdkUtil {
     }
     ArchiveFile manifestArchiveFile;
     try {
-      manifestArchiveFile = ((JarFileSystem) StandardFileSystems.jar()).getJarFile(rtJarFileContent);
+      manifestArchiveFile = ((JarFileSystem) StandardFileSystems.jar()).getArchiveWrapperFile(rtJarFileContent);
     }
     catch (IOException e) {
       return null;

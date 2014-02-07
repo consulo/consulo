@@ -23,7 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
@@ -58,9 +58,9 @@ public class ArtifactCompilerUtil {
   @Nullable
   public static BufferedInputStream getJarEntryInputStream(VirtualFile sourceFile, final CompileContext context) throws IOException {
     final String fullPath = sourceFile.getPath();
-    final int jarEnd = fullPath.indexOf(JarFileSystem.JAR_SEPARATOR);
+    final int jarEnd = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
     LOG.assertTrue(jarEnd != -1, fullPath);
-    String pathInJar = fullPath.substring(jarEnd + JarFileSystem.JAR_SEPARATOR.length());
+    String pathInJar = fullPath.substring(jarEnd + ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
     String jarPath = fullPath.substring(0, jarEnd);
     final ZipFile jarFile = new ZipFile(new File(FileUtil.toSystemDependentName(jarPath)));
     final ZipEntry entry = jarFile.getEntry(pathInJar);
@@ -80,7 +80,7 @@ public class ArtifactCompilerUtil {
 
   public static File getJarFile(VirtualFile jarEntry) {
     String fullPath = jarEntry.getPath();
-    return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(JarFileSystem.JAR_SEPARATOR))));
+    return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR))));
   }
 
 

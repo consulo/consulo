@@ -87,7 +87,7 @@ public class ProjectUtil {
       }
 
       if (SystemInfo.isMac && file.getFileSystem() instanceof ArchiveFileSystem) {
-        final VirtualFile fileForJar = ((ArchiveFileSystem)file.getFileSystem()).getVirtualFileForJar(file);
+        final VirtualFile fileForJar = ((ArchiveFileSystem)file.getFileSystem()).getVirtualFileForArchive(file);
         if (fileForJar != null) {
           final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
           if (libraryEntry != null) {

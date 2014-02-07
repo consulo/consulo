@@ -60,10 +60,7 @@ import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
@@ -947,9 +944,9 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
           }
           final VirtualFile virtualFile = directory.getVirtualFile();
           final String path = virtualFile.getPath();
-          if (path.endsWith(JarFileSystem.JAR_SEPARATOR)) { // if is jar-file root
+          if (path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) { // if is jar-file root
             final VirtualFile vFile =
-              LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - JarFileSystem.JAR_SEPARATOR.length()));
+              LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length()));
             if (vFile != null) {
               final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(vFile);
               if (psiFile != null) {

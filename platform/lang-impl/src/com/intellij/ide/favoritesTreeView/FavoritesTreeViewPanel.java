@@ -45,7 +45,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -698,9 +698,9 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
           if (element instanceof PsiDirectory) {
             final VirtualFile virtualFile = ((PsiDirectory)element).getVirtualFile();
             final String path = virtualFile.getPath();
-            if (path.endsWith(JarFileSystem.JAR_SEPARATOR)) { // if is jar-file root
+            if (path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) { // if is jar-file root
               final VirtualFile vFile =
-                LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - JarFileSystem.JAR_SEPARATOR.length()));
+                LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length()));
               if (vFile != null) {
                 final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(vFile);
                 if (psiFile != null) {

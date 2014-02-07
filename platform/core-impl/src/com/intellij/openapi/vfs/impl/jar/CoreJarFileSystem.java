@@ -74,7 +74,7 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem implements Ar
 
   @Nullable
   @Override
-  public VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile) {
+  public VirtualFile getVirtualFileForArchive(@Nullable VirtualFile entryVFile) {
     return null;
   }
 
@@ -86,7 +86,7 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem implements Ar
 
   @Nullable
   @Override
-  public ArchiveFile getJarFile(@NotNull VirtualFile entryVFile) throws IOException {
+  public ArchiveFile getArchiveWrapperFile(@NotNull VirtualFile entryVFile) throws IOException {
     return null;
   }
 

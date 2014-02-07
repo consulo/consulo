@@ -18,10 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconUtilEx;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +45,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     final Icon icon;
     if (isValid) {
       VirtualFile presentableFile;
-      if (isJarFileRoot(url)) {
+      if (isArchiveFileRoot(url)) {
         presentableFile = LocalFileSystem.getInstance().findFileByPath(getPresentablePath(url));
       }
       else {
@@ -84,14 +81,14 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
 
   public static String getPresentablePath(final String url) {
     String presentablePath = VirtualFileManager.extractPath(url);
-    if (isJarFileRoot(url)) {
-      presentablePath = presentablePath.substring(0, presentablePath.length() - JarFileSystem.JAR_SEPARATOR.length());
+    if (isArchiveFileRoot(url)) {
+      presentablePath = presentablePath.substring(0, presentablePath.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
     }
     return presentablePath;
   }
 
-  private static boolean isJarFileRoot(final String url) {
-    return VirtualFileManager.extractPath(url).endsWith(JarFileSystem.JAR_SEPARATOR);
+  private static boolean isArchiveFileRoot(final String url) {
+    return VirtualFileManager.extractPath(url).endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR);
   }
 
   public OrderRootTypeElement getParent() {
@@ -103,6 +100,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return myRootType;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof ItemElement)) return false;
@@ -121,6 +119,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return myUrl;
   }
 
+  @Override
   public int hashCode() {
     int result;
     result = getParent().hashCode();

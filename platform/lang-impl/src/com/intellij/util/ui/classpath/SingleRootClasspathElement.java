@@ -1,7 +1,7 @@
 package com.intellij.util.ui.classpath;
 
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -24,8 +24,8 @@ public class SingleRootClasspathElement implements SimpleClasspathElement {
   @Override
   public String getPresentableName() {
     String url;
-    if (myUrl.endsWith(JarFileSystem.JAR_SEPARATOR)) {
-      url = myUrl.substring(0, myUrl.length() - JarFileSystem.JAR_SEPARATOR.length());
+    if (myUrl.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) {
+      url = myUrl.substring(0, myUrl.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
     }
     else {
       url = myUrl;

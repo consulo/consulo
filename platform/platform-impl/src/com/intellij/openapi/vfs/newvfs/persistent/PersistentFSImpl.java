@@ -754,7 +754,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
         ((VFileCreateEvent)event).resetCache();
       }
       else if (event instanceof VFileDeleteEvent) {
-        changedParent = ((VFileDeleteEvent)event).getFile().getParent();
+        changedParent = event.getFile().getParent();
       }
 
       if (changedParent != null) {
@@ -812,7 +812,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
         }
       }
       else if (event instanceof VFileDeleteEvent) {
-        VirtualFile file = ((VFileDeleteEvent)event).getFile();
+        VirtualFile file = event.getFile();
         if (!file.exists()) {
           LOG.error("Deleting a file, which does not exist: " + file.getPath());
           continue;
@@ -876,9 +876,9 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
         // fake super-root
         root = new FakeRoot(fs, rootId);
       }
-      else if (fs instanceof JarFileSystem) {
+      else if (fs instanceof ArchiveFileSystem) {
         // optimization: for jar roots do not store base path in the myName field, use local FS file's getPath()
-        String parentPath = basePath.substring(0, basePath.indexOf(JarFileSystem.JAR_SEPARATOR));
+        String parentPath = basePath.substring(0, basePath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR));
         VirtualFile parentLocalFile = LocalFileSystem.getInstance().findFileByPath(parentPath);
         if (parentLocalFile == null) return null;
 
@@ -888,7 +888,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
         root = myRootsById.get(rootId);
         if (root != null) return root;
 
-        root = new JarRoot(fs, rootId, parentLocalFile);
+        root = new ArchiveRoot(fs, rootId, parentLocalFile);
       }
       else {
         root = new FsRoot(fs, rootId, basePath);
@@ -1342,10 +1342,10 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     }
   }
 
-  private static class JarRoot extends AbstractRoot {
+  private static class ArchiveRoot extends AbstractRoot {
     private final VirtualFile myParentLocalFile;
 
-    private JarRoot(@NotNull NewVirtualFileSystem fs, int rootId, @NotNull VirtualFile parentLocalFile) {
+    private ArchiveRoot(@NotNull NewVirtualFileSystem fs, int rootId, @NotNull VirtualFile parentLocalFile) {
       super(fs, rootId);
       myParentLocalFile = parentLocalFile;
     }
@@ -1359,9 +1359,9 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     @Override
     protected char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef) {
       String parentPath = myParentLocalFile.getPath();
-      char[] chars = new char[parentPath.length() + JarFileSystem.JAR_SEPARATOR.length() + accumulatedPathLength];
+      char[] chars = new char[parentPath.length() + ArchiveFileSystem.ARCHIVE_SEPARATOR.length() + accumulatedPathLength];
       positionRef[0] = copyString(chars, positionRef[0], myParentLocalFile.getPath());
-      positionRef[0] = copyString(chars, positionRef[0], JarFileSystem.JAR_SEPARATOR);
+      positionRef[0] = copyString(chars, positionRef[0], ArchiveFileSystem.ARCHIVE_SEPARATOR);
       return chars;
     }
   }

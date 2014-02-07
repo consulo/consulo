@@ -33,7 +33,7 @@ public interface ArchiveFileSystem
   @NonNls String ARCHIVE_SEPARATOR = "!/";
 
   @Nullable
-  VirtualFile getVirtualFileForJar(@Nullable VirtualFile entryVFile);
+  VirtualFile getVirtualFileForArchive(@Nullable VirtualFile entryVFile);
 
   /**
    * FIXME [VISTALL] it looks like findLocalVirtualFileByPath
@@ -45,7 +45,7 @@ public interface ArchiveFileSystem
   VirtualFile findByPathWithSeparator(@Nullable VirtualFile entryVFile);
 
   @Nullable
-  ArchiveFile getJarFile(@NotNull VirtualFile entryVFile) throws IOException;
+  ArchiveFile getArchiveWrapperFile(@NotNull VirtualFile entryVFile) throws IOException;
 
   boolean isMakeCopyOfJar(File originalFile);
 }

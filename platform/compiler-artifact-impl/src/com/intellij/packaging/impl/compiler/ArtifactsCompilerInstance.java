@@ -33,7 +33,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -82,6 +82,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
   private List<ArtifactBuildTarget> getArtifactTargets(final boolean selectedOnly) {
     final List<ArtifactBuildTarget> targets = new ArrayList<ArtifactBuildTarget>();
     new ReadAction() {
+      @Override
       protected void run(final Result result) {
         final Set<Artifact> artifacts;
         if (selectedOnly) {
@@ -119,6 +120,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     final Artifact artifact = target.getArtifact();
 
     final Map<String, String> selfIncludingArtifacts = new ReadAction<Map<String, String>>() {
+      @Override
       protected void run(final Result<Map<String, String>> result) {
         result.setResult(ArtifactSortingUtil.getInstance(getProject()).getArtifactToSelfIncludingNameMap());
       }
@@ -139,6 +141,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
     DumbService.getInstance(getProject()).waitForSmartMode();
     new ReadAction() {
+      @Override
       protected void run(final Result result) {
         collectItems(artifact, outputPath);
       }
@@ -182,6 +185,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
         final Ref<IOException> exception = Ref.create(null);
         new ReadAction() {
+          @Override
           protected void run(final Result result) {
             final VirtualFile sourceFile = sourceItem.getFile();
             for (DestinationInfo destination : sourceItem.getDestinations()) {
@@ -308,6 +312,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     final Ref<Boolean> built = Ref.create(false);
     final Set<ArtifactCompilerCompileItem> processedItems = new HashSet<ArtifactCompilerCompileItem>();
     CompilerUtil.runInContext(myContext, "Copying files", new ThrowableRunnable<RuntimeException>() {
+      @Override
       public void run() throws RuntimeException {
         built.set(doBuild(target.getArtifact(), changedItems, processedItems, writtenPaths, deletedJars));
       }
@@ -363,7 +368,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     List<File> filesToRefresh = new ArrayList<File>();
 
     for (String fullPath : pathToDelete) {
-      int end = fullPath.indexOf(JarFileSystem.JAR_SEPARATOR);
+      int end = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
       boolean isJar = end != -1;
       String filePath = isJar ? fullPath.substring(0, end) : fullPath;
       boolean deleted = false;

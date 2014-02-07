@@ -157,7 +157,7 @@ public abstract class AbstractExternalFilter {
             referenceUnpackedImage = false;
             ArchiveFileSystem jarFileSystem = StandardFileSystems.jar();
             try {
-              ArchiveFile archiveFile = jarFileSystem.getJarFile(jarFileSystem.findLocalVirtualFileByPath(jarPath));
+              ArchiveFile archiveFile = jarFileSystem.getArchiveWrapperFile(jarFileSystem.findLocalVirtualFileByPath(jarPath));
               if (archiveFile != null) {
                 ArchiveEntry entry = archiveFile.getEntry(imgPath);
                 if (entry != null) {

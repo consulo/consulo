@@ -18,7 +18,7 @@ package com.intellij.compiler.ant;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NonNls;
@@ -39,7 +39,7 @@ public class GenerationUtils {
      * Get relative file
      *
      * @param file       a valid file (must be either belong to {@link com.intellij.openapi.vfs.LocalFileSystem}  or to point to the root entry on
-     *                   {@link com.intellij.openapi.vfs.JarFileSystem}.
+     *                   {@link ArchiveFileSystem}.
      * @param chunk      a module chunk.
      * @param genOptions generation options
      * @return a relative path
@@ -63,7 +63,7 @@ public class GenerationUtils {
      * Get relative file
      *
      * @param file                          a valid file (must be either belong to {@link com.intellij.openapi.vfs.LocalFileSystem}  or to point to the root entry on
-     *                                      {@link com.intellij.openapi.vfs.JarFileSystem}.
+     *                                      {@link ArchiveFileSystem}.
      * @param baseDir                       base director for relative path calculation
      * @param baseDirPropertyName           property name for the base directory
      * @param genOptions                    generation options
@@ -124,7 +124,7 @@ public class GenerationUtils {
     }
 
     public static String trimJarSeparator(final String path) {
-        return path.endsWith(JarFileSystem.JAR_SEPARATOR) ? path.substring(0, path.length() - JarFileSystem.JAR_SEPARATOR.length()) : path;
+        return path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR) ? path.substring(0, path.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length()) : path;
     }
 
 }

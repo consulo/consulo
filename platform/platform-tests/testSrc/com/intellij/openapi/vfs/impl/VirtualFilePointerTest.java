@@ -254,7 +254,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
       }
     };
     final VirtualFilePointer jarParentPointer = createPointerByFile(jarParent, listener);
-    final String pathInJar = jar.getPath().replace(File.separatorChar, '/') + JarFileSystem.JAR_SEPARATOR;
+    final String pathInJar = jar.getPath().replace(File.separatorChar, '/') + ArchiveFileSystem.ARCHIVE_SEPARATOR;
     final String jarUrl = VirtualFileManager.constructUrl(JarFileSystem.PROTOCOL, pathInJar);
     final VirtualFilePointer jarPointer = myVirtualFilePointerManager.create(jarUrl, disposable, listener);
     pointersToWatch[0] = jarParentPointer;
@@ -317,7 +317,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
         verifyPointersInCorrectState(pointersToWatch);
       }
     };
-    final String pathInJar = jar.getPath().replace(File.separatorChar, '/') + JarFileSystem.JAR_SEPARATOR;
+    final String pathInJar = jar.getPath().replace(File.separatorChar, '/') + ArchiveFileSystem.ARCHIVE_SEPARATOR;
     final String jarUrl = VirtualFileManager.constructUrl(JarFileSystem.PROTOCOL, pathInJar);
     final VirtualFilePointer jarPointer = myVirtualFilePointerManager.create(jarUrl, disposable, listener);
     pointersToWatch[0] = jarPointer;

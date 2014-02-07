@@ -342,7 +342,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
             break;
           }
           if (root.startsWith(JarFileSystem.PROTOCOL_PREFIX)) {
-            String rootLocalPath = FileUtil.toSystemIndependentName(PathUtil.toPresentableUrl(root));
+            String rootLocalPath = FileUtil.toSystemIndependentName(PathUtil.toPresentablePath(root));
             isUnder = FileUtil.startsWith(childPath, rootLocalPath);
             if (isUnder) break;
           }
@@ -385,7 +385,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         allowed.add(root.getPath());
       }
       for (VirtualFile root : getAllRoots(project)) {
-        allowed.add(StringUtil.trimEnd(root.getPath(), JarFileSystem.JAR_SEPARATOR));
+        allowed.add(StringUtil.trimEnd(root.getPath(), ArchiveFileSystem.ARCHIVE_SEPARATOR));
       }
       String location = project.getBasePath();
       assert location != null : project;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,43 +33,51 @@ import java.util.Iterator;
  * @since 19:39/13.07.13
  */
 public class ArchiveVfsUtil {
+
   /**
-   * TODO[VISTALL] rename!
-   * @param virtualFile
-   * @return
+   * Return mirror virtual file from archive file system if virtual file is archive
    */
   @Nullable
-  public static VirtualFile getJarRootForLocalFile(@Nullable VirtualFile virtualFile) {
-    if(virtualFile == null || !virtualFile.isValid()) {
+  public static VirtualFile getArchiveRootForLocalFile(@Nullable VirtualFile virtualFile) {
+    if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }
     final FileType fileType = virtualFile.getFileType();
-    if(fileType instanceof ArchiveFileType) {
+    if (fileType instanceof ArchiveFileType) {
       return ((ArchiveFileType)fileType).getFileSystem().findLocalVirtualFileByPath(virtualFile.getPath());
     }
     return null;
   }
 
   /**
-   * TODO[VISTALL] rename!
-   * @param virtualFile
-   * @return
+   * Return original file from local system, when file is mirror in archive file system
    */
   @Nullable
-  public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile virtualFile) {
-    if(virtualFile == null || !virtualFile.isValid()) {
+  public static VirtualFile getVirtualFileForArchive(@Nullable VirtualFile virtualFile) {
+    if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }
 
-    if(virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
-      return ((ArchiveFileSystem)virtualFile.getFileSystem()).getVirtualFileForJar(virtualFile);
+    if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
+      return ((ArchiveFileSystem)virtualFile.getFileSystem()).getVirtualFileForArchive(virtualFile);
     }
     return null;
   }
 
-  public static void extract(final @NotNull ArchiveFile zipFile,
-                             @NotNull File outputDir,
-                             @Nullable FilenameFilter filenameFilter) throws IOException {
+  @Deprecated
+  @Nullable
+  public static VirtualFile getJarRootForLocalFile(@Nullable VirtualFile virtualFile) {
+    return getArchiveRootForLocalFile(virtualFile);
+  }
+
+  @Deprecated
+  @Nullable
+  public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile virtualFile) {
+    return getVirtualFileForArchive(virtualFile);
+  }
+
+  public static void extract(final @NotNull ArchiveFile zipFile, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter)
+          throws IOException {
     extract(zipFile, outputDir, filenameFilter, true);
   }
 

@@ -256,7 +256,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
       if (existingRoots.length > 0) {
         VirtualFile existingRoot = existingRoots[0];
         if (existingRoot.getFileSystem() instanceof ArchiveFileSystem) {
-          existingRoot = ((ArchiveFileSystem)existingRoot.getFileSystem()).getVirtualFileForJar(existingRoot);
+          existingRoot = ((ArchiveFileSystem)existingRoot.getFileSystem()).getVirtualFileForArchive(existingRoot);
         }
         if (existingRoot != null) {
           if (existingRoot.isDirectory()) {
