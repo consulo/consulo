@@ -26,11 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Mar 27, 2003
- * Time: 10:07:29 PM
- * To change this template use Options | File Templates.
+ * @author stathik
  */
 public class PluginNode implements IdeaPluginDescriptor {
   public static final int STATUS_UNKNOWN = 0;
@@ -80,6 +76,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.category = category;
   }
 
+  @Override
   public String getName() {
     return name;
   }
@@ -95,6 +92,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.id = PluginId.getId(id);
   }
 
+  @Override
   public String getCategory() {
     return category;
   }
@@ -105,6 +103,7 @@ public class PluginNode implements IdeaPluginDescriptor {
    *
    * @return Return plugin version
    */
+  @Override
   public String getVersion() {
     return version;
   }
@@ -113,6 +112,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.version = version;
   }
 
+  @Override
   public String getVendor() {
     return vendor;
   }
@@ -121,6 +121,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.vendor = vendor;
   }
 
+  @Override
   public String getDescription() {
     return description;
   }
@@ -129,6 +130,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.description = description;
   }
 
+  @Override
   public String getChangeNotes() {
     return changeNotes;
   }
@@ -137,6 +139,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.changeNotes = changeNotes;
   }
 
+  @Override
   public String getSinceBuild() {
     return sinceBuild;
   }
@@ -158,6 +161,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.status = status;
   }
 
+  @Override
   public String toString() {
     return getName();
   }
@@ -170,6 +174,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.loaded = loaded;
   }
 
+  @Override
   public String getDownloads() {
     return downloads;
   }
@@ -186,6 +191,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.size = size;
   }
 
+  @Override
   public String getVendorEmail() {
     return vendorEmail;
   }
@@ -194,6 +200,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.vendorEmail = vendorEmail;
   }
 
+  @Override
   public String getVendorUrl() {
     return vendorUrl;
   }
@@ -202,6 +209,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.vendorUrl = vendorUrl;
   }
 
+  @Override
   public String getUrl() {
     return url;
   }
@@ -211,17 +219,19 @@ public class PluginNode implements IdeaPluginDescriptor {
   }
 
   public void setDate(String date) {
-    this.date = Long.valueOf(date).longValue();
+    this.date = Long.valueOf(date);
   }
 
   public long getDate() {
     return date;
   }
 
+  @Override
   public int hashCode() {
     return name.hashCode();
   }
 
+  @Override
   public boolean equals(Object object) {
     return object instanceof PluginNode && name.equals(((PluginNode)object).getName());
   }
@@ -247,69 +257,83 @@ public class PluginNode implements IdeaPluginDescriptor {
   /**
    * Methods below implement PluginDescriptor and IdeaPluginDescriptor interface
    */
+  @Override
   public PluginId getPluginId() {
     return id;
   }
 
+  @Override
   @Nullable
   public ClassLoader getPluginClassLoader() {
     return null;
   }
 
+  @Override
   @Nullable
   public File getPath() {
     return null;
   }
 
+  @Override
   @NotNull
   public PluginId[] getDependentPluginIds() {
     return PluginId.EMPTY_ARRAY;
   }
 
+  @Override
   @NotNull
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies != null ? myOptionalDependencies : PluginId.EMPTY_ARRAY;
   }
 
+  @Override
   @Nullable
   public String getResourceBundleBaseName() {
     return null;
   }
 
+  @Override
   @Nullable
   public List<Element> getActionsDescriptionElements() {
     return null;
   }
 
-  @Nullable
+  @NotNull
+  @Override
   public ComponentConfig[] getAppComponents() {
-    return null;
+    return ComponentConfig.EMPTY_ARRAY;
   }
 
-  @Nullable
+  @NotNull
+  @Override
   public ComponentConfig[] getProjectComponents() {
-    return null;
+    return ComponentConfig.EMPTY_ARRAY;
   }
 
-  @Nullable
+  @NotNull
+  @Override
   public ComponentConfig[] getModuleComponents() {
-    return null;
+    return ComponentConfig.EMPTY_ARRAY;
   }
 
-  @Nullable
+  @NotNull
+  @Override
   public HelpSetPath[] getHelpSets() {
-    return null;
+    return HelpSetPath.EMPTY;
   }
 
+  @Override
   @Nullable
   public String getVendorLogoPath() {
     return null;
   }
 
+  @Override
   public boolean getUseIdeaClassLoader() {
     return false;
   }
 
+  @Override
   public String getUntilBuild() {
     return untilBuild;
   }
@@ -318,6 +342,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     this.untilBuild = untilBuild;
   }
 
+  @Override
   public boolean isBundled() {
     return false;
   }
