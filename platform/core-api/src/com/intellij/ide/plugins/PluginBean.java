@@ -22,9 +22,6 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PluginBean extends ComponentManagerConfig {
   @Tag("name")
   public String name;
@@ -81,8 +78,4 @@ public class PluginBean extends ComponentManagerConfig {
 
   @Attribute("use-idea-classloader")
   public boolean useIdeaClassLoader;
-
-  @Property(surroundWithTag = false)
-  @AbstractCollection(surroundWithTag = false, elementTag = "module")
-  public List<String> modules = new ArrayList<String>();
 }

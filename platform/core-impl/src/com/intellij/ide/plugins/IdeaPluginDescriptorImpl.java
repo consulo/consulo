@@ -93,7 +93,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
   private Boolean mySkipped;
 
-  private List<String> myModules = null;
 
   public IdeaPluginDescriptorImpl(@NotNull File pluginPath) {
     myPath = pluginPath;
@@ -228,10 +227,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     myExtensions = copyElements(pluginBean.extensions);
     myExtensionsPoints = copyElements(pluginBean.extensionPoints);
     myActionsElements = copyElements(pluginBean.actions);
-
-    if (pluginBean.modules != null && !pluginBean.modules.isEmpty()) {
-      myModules = pluginBean.modules;
-    }
   }
 
   @Nullable
@@ -392,6 +387,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return url;
   }
 
+  @Override
   @NonNls
   public String toString() {
     return "PluginDescriptor[name='" + myName + "', classpath='" + myPath + "']";
@@ -414,6 +410,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof IdeaPluginDescriptorImpl)) return false;
@@ -423,6 +420,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myName == null ? pluginDescriptor.myName == null : myName.equals(pluginDescriptor.myName);
   }
 
+  @Override
   public int hashCode() {
     return myName != null ? myName.hashCode() : 0;
   }
@@ -624,11 +622,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
   @Override
   public boolean isBundled() {
-    return getPath().getAbsolutePath().startsWith(PathManager.getPreinstalledPluginsPath());
-  }
-
-  @Nullable
-  public List<String> getModules() {
-    return myModules;
+    return getPath().getAbsolutePath().startsWith(PathManager.getPreInstalledPluginsPath());
   }
 }
