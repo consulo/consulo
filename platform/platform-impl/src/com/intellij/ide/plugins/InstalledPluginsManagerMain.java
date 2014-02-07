@@ -206,6 +206,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     };
   }
 
+  @Override
   protected JScrollPane createTable() {
     pluginsModel = new InstalledPluginsTableModel();
     pluginTable = new PluginTable(pluginsModel);
@@ -213,6 +214,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
     JScrollPane installedScrollPane = ScrollPaneFactory.createScrollPane(pluginTable);
     pluginTable.registerKeyboardAction(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         final int column = InstalledPluginsTableModel.getCheckboxColumn();
         final int[] selectedRows = pluginTable.getSelectedRows();
@@ -319,6 +321,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       return "<html><body style=\"padding: 5px;\">Unable to apply changes: plugin" +
              (dependentToRequiredListMap.size() == 1 ? " " : "s ") +
              StringUtil.join(dependentToRequiredListMap.keySet(), new Function<PluginId, String>() {
+               @Override
                public String fun(final PluginId pluginId) {
                  final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
                  return "\"" + (ideaPluginDescriptor != null ? ideaPluginDescriptor.getName() : pluginId.getIdString()) + "\"";

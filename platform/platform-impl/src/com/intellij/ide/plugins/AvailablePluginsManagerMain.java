@@ -74,6 +74,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
     final JButton httpProxySettingsButton = new JButton(IdeBundle.message("button.http.proxy.settings"));
     httpProxySettingsButton.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         HTTPProxySettingsDialog settingsDialog = new HTTPProxySettingsDialog();
         settingsDialog.pack();
@@ -114,6 +115,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
     pluginTable.registerKeyboardAction(
       new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           installSelected(pluginTable);
         }

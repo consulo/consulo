@@ -121,6 +121,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     return 0;
   }
 
+  @Override
   public int getNameColumn() {
     return 1;
   }
@@ -133,6 +134,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     updatePluginDependencies();
 
     final Runnable runnable = new Runnable() {
+      @Override
       public void run() {
         ProgressManager.getInstance().run(new Task.Backgroundable(null, "Load custom plugin repositories data...") {
           @Override
@@ -192,11 +194,13 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       final Boolean enabled = myEnabled.get(pluginId);
       if (enabled == null || enabled.booleanValue()) {
         PluginManager.checkDependants(descriptor, new Function<PluginId, IdeaPluginDescriptor>() {
+                                        @Override
                                         @Nullable
                                         public IdeaPluginDescriptor fun(final PluginId pluginId) {
                                           return PluginManager.getPlugin(pluginId);
                                         }
                                       }, new Condition<PluginId>() {
+                                        @Override
                                         public boolean value(final PluginId dependantPluginId) {
                                           final Boolean enabled = myEnabled.get(dependantPluginId);
                                           if ((enabled == null && !updatedPlugins.contains(dependantPluginId)) ||
@@ -222,6 +226,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     }
   }
 
+  @Override
   public void updatePluginsList(List<IdeaPluginDescriptor> list) {
     //  For each downloadable plugin we need to know whether its counterpart
     //  is already installed, and if yes compare the difference in versions:
@@ -311,6 +316,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   private void hideNotApplicablePlugins(Boolean value, final IdeaPluginDescriptor... ideaPluginDescriptors) {
     if (!value && ENABLED.equals(myEnabledFilter) || (value && DISABLED.equals(myEnabledFilter))) {
       SwingUtilities.invokeLater(new Runnable() {
+        @Override
         public void run() {
           for (IdeaPluginDescriptor ideaPluginDescriptor : ideaPluginDescriptors) {
             view.remove(ideaPluginDescriptor);
@@ -372,22 +378,27 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       super(IdeBundle.message("plugin.manager.enable.column.title"));
     }
 
+    @Override
     public Boolean valueOf(IdeaPluginDescriptor ideaPluginDescriptor) {
       return myEnabled.get(ideaPluginDescriptor.getPluginId());
     }
 
+    @Override
     public boolean isCellEditable(final IdeaPluginDescriptor ideaPluginDescriptor) {
       return true;
     }
 
+    @Override
     public Class getColumnClass() {
       return Boolean.class;
     }
 
+    @Override
     public TableCellEditor getEditor(final IdeaPluginDescriptor o) {
       return new BooleanTableCellEditor();
     }
 
+    @Override
     public TableCellRenderer getRenderer(final IdeaPluginDescriptor ideaPluginDescriptor) {
       return new BooleanTableCellRenderer() {
         @Override
@@ -402,6 +413,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       };
     }
 
+    @Override
     public void setValue(final IdeaPluginDescriptor ideaPluginDescriptor, Boolean value) {
       final PluginId currentPluginId = ideaPluginDescriptor.getPluginId();
       final Boolean enabled = myEnabled.get(currentPluginId) == null ? Boolean.FALSE : value;
@@ -411,8 +423,10 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       hideNotApplicablePlugins(value, ideaPluginDescriptor);
     }
 
+    @Override
     public Comparator<IdeaPluginDescriptor> getComparator() {
       return new Comparator<IdeaPluginDescriptor>() {
+        @Override
         public int compare(final IdeaPluginDescriptor o1, final IdeaPluginDescriptor o2) {
           final Boolean enabled1 = myEnabled.get(o1.getPluginId());
           final Boolean enabled2 = myEnabled.get(o2.getPluginId());
@@ -455,11 +469,13 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
     for (final IdeaPluginDescriptor ideaPluginDescriptor : descriptorsToCheckDependencies) {
       PluginManager.checkDependants(ideaPluginDescriptor, new Function<PluginId, IdeaPluginDescriptor>() {
+                                      @Override
                                       @Nullable
                                       public IdeaPluginDescriptor fun(final PluginId pluginId) {
                                         return PluginManager.getPlugin(pluginId);
                                       }
                                     }, new Condition<PluginId>() {
+                                      @Override
                                       public boolean value(final PluginId pluginId) {
                                         Boolean enabled = myEnabled.get(pluginId);
                                         if (enabled == null) {
@@ -493,6 +509,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       }, ", ");
       final Set<IdeaPluginDescriptor> pluginDependencies = new HashSet<IdeaPluginDescriptor>();
       final String listOfDependencies = StringUtil.join(deps, new Function<PluginId, String>() {
+        @Override
         public String fun(final PluginId pluginId) {
           final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
           assert pluginDescriptor != null;

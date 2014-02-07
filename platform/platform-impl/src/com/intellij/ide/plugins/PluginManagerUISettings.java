@@ -65,6 +65,7 @@ public class PluginManagerUISettings implements PersistentStateComponent<Element
     return ServiceManager.getService(PluginManagerUISettings.class);
   }
 
+  @Override
   public Element getState() {
     Element element = new Element("state");
     XmlSerializer.serializeInto(this, element, FILTERS);
@@ -76,6 +77,7 @@ public class PluginManagerUISettings implements PersistentStateComponent<Element
     return element;
   }
 
+  @Override
   public void loadState(final Element element) {
     XmlSerializer.deserializeInto(this, element);
     XmlSerializer.deserializeInto(mySplitterProportionsData, element);

@@ -128,6 +128,7 @@ public abstract class PluginManagerMain implements Disposable {
 
   protected abstract JScrollPane createTable();
 
+  @Override
   public void dispose() {
     myDisposed = true;
   }
@@ -142,6 +143,7 @@ public abstract class PluginManagerMain implements Disposable {
 
   public void reset() {
     UiNotifyConnector.doWhenFirstShown(getPluginTable(), new Runnable() {
+      @Override
       public void run() {
         requireShutdown = false;
         TableUtil.ensureSelectionExists(getPluginTable());
@@ -160,6 +162,7 @@ public abstract class PluginManagerMain implements Disposable {
 
   protected void installTableActions(final PluginTable pluginTable) {
     pluginTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
       public void valueChanged(ListSelectionEvent e) {
         final IdeaPluginDescriptor[] descriptors = pluginTable.getSelectedObjects();
         pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null,
@@ -213,6 +216,7 @@ public abstract class PluginManagerMain implements Disposable {
       List<IdeaPluginDescriptor> list = null;
       List<String> errorMessages = new ArrayList<String>();
 
+      @Override
       public Object construct() {
         try {
           list = RepositoryHelper.loadPluginsFromRepository(null);
@@ -244,8 +248,10 @@ public abstract class PluginManagerMain implements Disposable {
         return list;
       }
 
+      @Override
       public void finished() {
         UIUtil.invokeLaterIfNeeded(new Runnable() {
+          @Override
           public void run() {
             setDownloadStatus(false);
             if (list != null) {
@@ -427,6 +433,7 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   public static class MyHyperlinkListener implements HyperlinkListener {
+    @Override
     public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         JEditorPane pane = (JEditorPane)e.getSource();
@@ -455,18 +462,22 @@ public abstract class PluginManagerMain implements Disposable {
       return getComponent().convertRowIndexToModel(viewIndex);
     }
 
+    @Override
     public int getSelectedIndex() {
       return myComponent.getSelectedRow();
     }
 
+    @Override
     public Object[] getAllElements() {
       return myComponent.getElements();
     }
 
+    @Override
     public String getElementText(Object element) {
       return ((IdeaPluginDescriptor)element).getName();
     }
 
+    @Override
     public void selectElement(Object element, String selectedText) {
       for (int i = 0; i < myComponent.getRowCount(); i++) {
         if (myComponent.getObjectAt(i).getName().equals(((IdeaPluginDescriptor)element).getName())) {
@@ -581,6 +592,7 @@ public abstract class PluginManagerMain implements Disposable {
       super("PLUGIN_FILTER", 5);
     }
 
+    @Override
     public void filter() {
       pluginsModel.filter(getFilter().toLowerCase());
       TableUtil.ensureSelectionExists(getPluginTable());
