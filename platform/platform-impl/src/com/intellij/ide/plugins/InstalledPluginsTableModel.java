@@ -18,7 +18,6 @@ package com.intellij.ide.plugins;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -53,11 +52,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Dec 26, 2003
- * Time: 3:51:58 PM
- * To change this template use Options | File Templates.
+ * @author stathik
  */
 public class InstalledPluginsTableModel extends PluginTableModel {
   public static Map<PluginId, Integer> NewVersions2Plugins = new HashMap<PluginId, Integer>();
@@ -81,10 +76,9 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     view.addAll(myInstalled);
     reset(view);
 
-    ApplicationInfoEx applicationInfo = ApplicationInfoEx.getInstanceEx();
     for (Iterator<IdeaPluginDescriptor> iterator = view.iterator(); iterator.hasNext(); ) {
       @NonNls final String s = iterator.next().getPluginId().getIdString();
-      if ("com.intellij".equals(s) || applicationInfo.isEssentialPlugin(s)) iterator.remove();
+      if (PluginManagerCore.CORE_PLUGIN_ID.equals(s)) iterator.remove();
     }
 
     setSortKey(new RowSorter.SortKey(getNameColumn(), SortOrder.ASCENDING));
@@ -619,22 +613,18 @@ public class InstalledPluginsTableModel extends PluginTableModel {
           if (myEnabled.get(pluginId) == null) {
             s.append("Plugin was not loaded.\n");
           }
-          if (required.contains(PluginId.getId("com.intellij.modules.ultimate"))) {
-            s.append("The plugin requires IntelliJ IDEA Ultimate");
-          }
-          else {
-            s.append("Required plugin").append(required.size() == 1 ? " \"" : "s \"");
-            s.append(StringUtil.join(required, new Function<PluginId, String>() {
-              @Override
-              public String fun(final PluginId id) {
-                final IdeaPluginDescriptor plugin = PluginManager.getPlugin(id);
-                return plugin == null ? id.getIdString() : plugin.getName();
-              }
-            }, ","));
 
-            s.append(required.size() == 1 ? "\" is not enabled." : "\" are not enabled.");
+          s.append("Required plugin").append(required.size() == 1 ? " \"" : "s \"");
+          s.append(StringUtil.join(required, new Function<PluginId, String>() {
+            @Override
+            public String fun(final PluginId id) {
+              final IdeaPluginDescriptor plugin = PluginManager.getPlugin(id);
+              return plugin == null ? id.getIdString() : plugin.getName();
+            }
+          }, ","));
 
-          }
+          s.append(required.size() == 1 ? "\" is not enabled." : "\" are not enabled.");
+
           myPanel.setToolTipText(s.toString());
         }
 

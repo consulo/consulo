@@ -47,6 +47,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
   public IdeMessagePanel(MessagePool messagePool) {
     super(new BorderLayout());
     myIdeFatal = new IdeFatalErrorsIcon(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         openFatals(null);
       }
@@ -64,21 +65,26 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
     setOpaque(false);
   }
 
+  @Override
   @NotNull
   public String ID() {
     return FATAL_ERROR;
   }
 
+  @Override
   public WidgetPresentation getPresentation(@NotNull PlatformType type) {
     return null;
   }
 
+  @Override
   public void dispose() {
   }
 
+  @Override
   public void install(@NotNull StatusBar statusBar) {
   }
 
+  @Override
   public JComponent getComponent() {
     return this;
   }
@@ -89,6 +95,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
     myOpeningInProgress = true;
 
     final Runnable task = new Runnable() {
+      @Override
       public void run() {
         if (isOtherModalWindowActive()) {
           if (myDialog == null) {
@@ -111,13 +118,16 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
 
   private void _openFatals(@Nullable final LogMessage message) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
+      @Override
       public void run() {
         myDialog = new IdeErrorsDialog(myMessagePool, message) {
+          @Override
           public void doOKAction() {
             super.doOKAction();
             disposeDialog(this);
           }
 
+          @Override
           public void doCancelAction() {
             super.doCancelAction();
             disposeDialog(this);
@@ -158,11 +168,13 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
     myDialog = null;
   }
 
+  @Override
   public void newEntryAdded() {
     updateFatalErrorsIcon();
 
   }
 
+  @Override
   public void poolCleared() {
     updateFatalErrorsIcon();
   }
@@ -216,6 +228,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
     }
     else if (state == IdeFatalErrorsIcon.State.UnreadErrors && !myNotificationPopupAlreadyShown) {
       SwingUtilities.invokeLater(new Runnable() {
+        @Override
         public void run() {
           String notificationText = tryGetFromMessages(myMessagePool.getFatalErrors(false, false));
           if (notificationText == null) {
@@ -224,6 +237,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
           final JLabel label = new JLabel(notificationText);
           label.setIcon(AllIcons.Ide.FatalError);
           new NotificationPopup(IdeMessagePanel.this, label, LightColors.RED, false, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
               _openFatals(null);
             }

@@ -29,7 +29,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.extensions.ExtensionException;
@@ -130,7 +129,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     if (myInternalMode) {
       if (ourDevelopersList.isEmpty()) {
         loadDevelopersAsynchronously();
-      } else {
+      }
+      else {
         myDetailsTabForm.setDevelopers(ourDevelopersList);
       }
     }
@@ -144,7 +144,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       public void run(@NotNull ProgressIndicator indicator) {
         try {
           myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
           //Notifications.Bus.register("Error reporter", NotificationDisplayType.BALLOON);
           //Notifications.Bus.notify(new Notification("Error reporter", "Communication error",
           //                                          "Unable to load developers list from server.", NotificationType.WARNING));
@@ -421,7 +422,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     Application app = ApplicationManager.getApplication();
     DisablePluginWarningDialog d =
-      new DisablePluginWarningDialog(getRootPane(), plugin.getName(), hasDependants.get(), app.isRestartCapable());
+            new DisablePluginWarningDialog(getRootPane(), plugin.getName(), hasDependants.get(), app.isRestartCapable());
     d.show();
     switch (d.getExitCode()) {
       case CANCEL_EXIT_CODE:
@@ -475,11 +476,11 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       myAttachmentWarningPanel.setVisible(true);
       if (includedAttachments.size() == 1) {
         myAttachmentWarningLabel.setHtmlText(
-          DiagnosticBundle.message("diagnostic.error.report.include.attachment.warning", includedAttachments.get(0).getName()));
+                DiagnosticBundle.message("diagnostic.error.report.include.attachment.warning", includedAttachments.get(0).getName()));
       }
       else {
-        myAttachmentWarningLabel.setHtmlText(
-          DiagnosticBundle.message("diagnostic.error.report.include.attachments.warning", includedAttachments.size()));
+        myAttachmentWarningLabel
+                .setHtmlText(DiagnosticBundle.message("diagnostic.error.report.include.attachments.warning", includedAttachments.size()));
       }
     }
     else {
@@ -496,10 +497,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     if (pluginId == null) {
       return false;
     }
-
-    if (ApplicationInfoEx.getInstanceEx().isEssentialPlugin(pluginId.getIdString())) {
-      return false;
-    }
     return true;
   }
 
@@ -509,7 +506,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
     else {
       myCountLabel
-        .setText(DiagnosticBundle.message("error.list.message.index.count", Integer.toString(myIndex + 1), myMergedMessages.size()));
+              .setText(DiagnosticBundle.message("error.list.message.index.count", Integer.toString(myIndex + 1), myMergedMessages.size()));
     }
   }
 
@@ -550,7 +547,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     StringBuilder text = new StringBuilder();
     PluginId pluginId = findPluginId(throwable);
-    if (pluginId == null || ApplicationInfoEx.getInstanceEx().isEssentialPlugin(pluginId.getIdString())) {
+    if (pluginId == null) {
       if (throwable instanceof AbstractMethodError) {
         text.append(DiagnosticBundle.message("error.list.message.blame.unknown.plugin"));
       }
@@ -561,8 +558,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     else {
       text.append(DiagnosticBundle.message("error.list.message.blame.plugin", PluginManager.getPlugin(pluginId).getName()));
     }
-    text.append(" ").append(DiagnosticBundle.message("error.list.message.info",
-                                                     DateFormatUtil.formatPrettyDateTime(message.getDate()),
+    text.append(" ").append(DiagnosticBundle.message("error.list.message.info", DateFormatUtil.formatPrettyDateTime(message.getDate()),
                                                      myMergedMessages.get(myIndex).size()));
 
     String url = null;
@@ -618,46 +614,43 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       ErrorReportSubmitter submitter = getSubmitter(throwable);
       if (submitter == null) {
         PluginId pluginId = findPluginId(throwable);
-        if (pluginId == null || !ApplicationInfoEx.getInstanceEx().isEssentialPlugin(pluginId.getIdString())) {
-          IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
-          if (plugin == null) {
-            // unknown plugin
-            myForeignPluginWarningPanel.setVisible(false);
-            return;
-          }
-          myForeignPluginWarningPanel.setVisible(true);
-          String vendor = plugin.getVendor();
-          String contactInfo = plugin.getVendorUrl();
-          if (StringUtil.isEmpty(contactInfo)) {
-            contactInfo = plugin.getVendorEmail();
-          }
-          if (StringUtil.isEmpty(vendor)) {
-            if (StringUtil.isEmpty(contactInfo)) {
-              myForeignPluginWarningLabel.setText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text"));
-            }
-            else {
-              myForeignPluginWarningLabel
-                .setHyperlinkText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") + " ",
-                                  contactInfo, ".");
-              myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
-            }
-          }
-          else {
-            if (StringUtil.isEmpty(contactInfo)) {
-              myForeignPluginWarningLabel.setText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") +
-                                                  " " + vendor + ".");
-            }
-            else {
-              myForeignPluginWarningLabel
-                .setHyperlinkText(
-                  DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") + " " + vendor + " (",
-                  contactInfo, ").");
-              myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
-            }
-          }
-          myForeignPluginWarningPanel.setVisible(true);
+        IdeaPluginDescriptor plugin = pluginId == null ? null : PluginManager.getPlugin(pluginId);
+        if (plugin == null ) {
+          // unknown plugin
+          myForeignPluginWarningPanel.setVisible(false);
           return;
         }
+
+        myForeignPluginWarningPanel.setVisible(true);
+        String vendor = plugin.getVendor();
+        String contactInfo = plugin.getVendorUrl();
+        if (StringUtil.isEmpty(contactInfo)) {
+          contactInfo = plugin.getVendorEmail();
+        }
+        if (StringUtil.isEmpty(vendor)) {
+          if (StringUtil.isEmpty(contactInfo)) {
+            myForeignPluginWarningLabel.setText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text"));
+          }
+          else {
+            myForeignPluginWarningLabel
+                    .setHyperlinkText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") + " ", contactInfo, ".");
+            myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
+          }
+        }
+        else {
+          if (StringUtil.isEmpty(contactInfo)) {
+            myForeignPluginWarningLabel.setText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") +
+                                                " " + vendor + ".");
+          }
+          else {
+            myForeignPluginWarningLabel
+                    .setHyperlinkText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") + " " + vendor + " (",
+                                      contactInfo, ").");
+            myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
+          }
+        }
+        myForeignPluginWarningPanel.setVisible(true);
+        return;
       }
     }
     myForeignPluginWarningPanel.setVisible(false);
@@ -715,7 +708,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       myDetailsTabForm.setAssigneeId(message == null ? null : message.getAssigneeId());
 
       List<Attachment> attachments =
-        message instanceof LogMessageEx ? ((LogMessageEx)message).getAttachments() : Collections.<Attachment>emptyList();
+              message instanceof LogMessageEx ? ((LogMessageEx)message).getAttachments() : Collections.<Attachment>emptyList();
       if (!attachments.isEmpty()) {
         if (myTabs.indexOfComponent(myAttachmentsTabForm.getContentPane()) == -1) {
           myTabs.addTab(DiagnosticBundle.message("error.attachments.tab.title"), myAttachmentsTabForm.getContentPane());
@@ -1012,8 +1005,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     ErrorReportSubmitter submitter = null;
     for (ErrorReportSubmitter reporter : reporters) {
       final PluginDescriptor descriptor = reporter.getPluginDescriptor();
-      if (pluginId == null && (descriptor == null || PluginId.getId(PluginManagerCore.CORE_PLUGIN_ID) == descriptor.getPluginId())
-          || descriptor != null && Comparing.equal(pluginId, descriptor.getPluginId())) {
+      if (pluginId == null && (descriptor == null || PluginId.getId(PluginManagerCore.CORE_PLUGIN_ID) == descriptor.getPluginId()) ||
+          descriptor != null && Comparing.equal(pluginId, descriptor.getPluginId())) {
         submitter = reporter;
       }
     }
@@ -1076,13 +1069,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     public void actionPerformed(ActionEvent e) {
       final DataContext dataContext = ((DataManagerImpl)DataManager.getInstance()).getDataContextTest((Component)e.getSource());
 
-      AnActionEvent event = new AnActionEvent(
-        null, dataContext,
-        ActionPlaces.UNKNOWN,
-        myAnalyze.getTemplatePresentation(),
-        ActionManager.getInstance(),
-        e.getModifiers()
-      );
+      AnActionEvent event =
+              new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, myAnalyze.getTemplatePresentation(), ActionManager.getInstance(),
+                                e.getModifiers());
 
       final Project project = CommonDataKeys.PROJECT.getData(dataContext);
       if (project != null) {
