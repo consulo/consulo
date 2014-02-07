@@ -259,10 +259,10 @@ public abstract class PluginManagerMain implements Disposable {
               propagateUpdates(list);
             }
             if (!errorMessages.isEmpty()) {
-              if (0 == Messages.showOkCancelDialog(
-                IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
-                IdeBundle.message("title.plugins"),
-                CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(), Messages.getErrorIcon())) {
+              if (Messages.showOkCancelDialog(
+                      IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
+                      IdeBundle.message("title.plugins"), CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(),
+                      Messages.getErrorIcon()) == Messages.OK) {
                 loadPluginsFromHostInBackground();
               }
             }

@@ -57,11 +57,13 @@ class RepositoryContentHandler extends DefaultHandler {
   private Stack<String> categoriesStack;
 
 
+  @Override
   public void startDocument() throws SAXException {
     plugins = new ArrayList<IdeaPluginDescriptor>();
     categoriesStack = new Stack<String>();
   }
 
+  @Override
   public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
     if (qName.equals(CATEGORY)) {
       categoriesStack.push(atts.getValue(NAME));
@@ -88,6 +90,7 @@ class RepositoryContentHandler extends DefaultHandler {
     currentValue = "";
   }
 
+  @Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
     if (qName.equals(ID)) {
       currentPlugin.setId(currentValue);
@@ -119,6 +122,7 @@ class RepositoryContentHandler extends DefaultHandler {
     currentValue = "";
   }
 
+  @Override
   public void characters(char[] ch, int start, int length) throws SAXException {
     currentValue += new String(ch, start, length);
   }
