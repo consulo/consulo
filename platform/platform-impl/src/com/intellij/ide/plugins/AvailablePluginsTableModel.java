@@ -45,7 +45,6 @@ public class AvailablePluginsTableModel extends PluginTableModel {
 
   protected static final String STATUS = "Status";
 
-  public static final String JETBRAINS_REPO = "JetBrains";
   private String myRepository = ALL;
   private String myVendor = null;
 
@@ -98,7 +97,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     if (repositoryName != null) {
       if (!ALL.equals(myRepository) && !repositoryName.equals(myRepository)) return false;
     } else {
-      return ALL.equals(myRepository) || JETBRAINS_REPO.equals(myRepository);
+      return ALL.equals(myRepository);
     }
     return true;
   }
