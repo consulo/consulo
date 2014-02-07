@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.diff;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.NotNull;
@@ -25,24 +25,24 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Konstantin Bulenkov
  */
-public class JarFileDiffElement extends VirtualFileDiffElement {
+public class ArchiveFileDiffElement extends VirtualFileDiffElement {
   @SuppressWarnings({"ConstantConditions"})
-  public JarFileDiffElement(@NotNull VirtualFile file) {
-    super(file.getFileSystem() instanceof ArchiveFileSystem
-          ? file : ArchiveVfsUtil.getJarRootForLocalFile(file));
+  public ArchiveFileDiffElement(@NotNull VirtualFile file) {
+    super(file.getFileSystem() instanceof ArchiveFileSystem ? file : ArchiveVfsUtil.getArchiveRootForLocalFile(file));
   }
 
+  @Override
   protected VirtualFileDiffElement createElement(VirtualFile file) {
-    final VirtualFile jar = ArchiveVfsUtil.getJarRootForLocalFile(file);
-    return jar == null ? null : new JarFileDiffElement(file);
+    final VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
+    return archiveRootForLocalFile == null ? null : new ArchiveFileDiffElement(file);
   }
 
+  @Override
   protected FileChooserDescriptor getChooserDescriptor() {
     return new FileChooserDescriptor(true, false, true, true, false, false) {
       @Override
       public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
-        return file.isDirectory()
-               || (!file.isDirectory() && JarFileSystem.PROTOCOL.equalsIgnoreCase(file.getExtension()));
+        return file.isDirectory() || (!file.isDirectory() && file.getFileType() instanceof ArchiveFileType);
       }
     };
   }

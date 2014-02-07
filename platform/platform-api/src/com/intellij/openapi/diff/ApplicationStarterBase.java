@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.diff;
 
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationStarterEx;
 import com.intellij.openapi.application.PathManager;
@@ -22,7 +23,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -147,8 +147,8 @@ public abstract class ApplicationStarterBase implements ApplicationStarterEx {
     return false;
   }
 
-  public static boolean areJars(VirtualFile file1, VirtualFile file2) {
-    return JarFileSystem.PROTOCOL.equalsIgnoreCase(file1.getExtension()) && JarFileSystem.PROTOCOL.equalsIgnoreCase(file2.getExtension());
+  public static boolean areArchives(VirtualFile file1, VirtualFile file2) {
+    return file1.getFileType() instanceof ArchiveFileType && file2.getFileType() instanceof ArchiveFileType;
   }
 
   public static boolean areDirs(VirtualFile file1, VirtualFile file2) {

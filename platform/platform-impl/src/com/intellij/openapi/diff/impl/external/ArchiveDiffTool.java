@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.diff.impl.external;
 
+import com.intellij.ide.diff.ArchiveFileDiffElement;
 import com.intellij.ide.diff.DirDiffSettings;
-import com.intellij.ide.diff.JarFileDiffElement;
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.*;
@@ -42,8 +42,8 @@ public class ArchiveDiffTool implements DiffTool {
     final VirtualFile file1 = contents[0].getFile();
     final VirtualFile file2 = contents[1].getFile();
     assert file1 != null && file2 != null;
-    final JarFileDiffElement element = new JarFileDiffElement(file1);
-    final JarFileDiffElement element1 = new JarFileDiffElement(file2);
+    final ArchiveFileDiffElement element = new ArchiveFileDiffElement(file1);
+    final ArchiveFileDiffElement element1 = new ArchiveFileDiffElement(file2);
     final DirDiffSettings settings = new DirDiffSettings();
     settings.showInFrame = false;
     settings.enableChoosers = false;

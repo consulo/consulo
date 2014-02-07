@@ -43,8 +43,8 @@ public class DiffApplication extends ApplicationStarterBase {
     final VirtualFile file1 = findFile(path1);
     final VirtualFile file2 = findFile(path2);
     final boolean areDirs = areDirs(file1, file2);
-    final boolean areJars = areJars(file1, file2);
-    if (areDirs || areJars) {
+    final boolean areArchives = areArchives(file1, file2);
+    if (areDirs || areArchives) {
       final DirDiffManager diffManager = DirDiffManager.getInstance(ProjectManager.getInstance().getDefaultProject());
       final DiffElement d1 = diffManager.createDiffElement(file1);
       final DiffElement d2 = diffManager.createDiffElement(file2);

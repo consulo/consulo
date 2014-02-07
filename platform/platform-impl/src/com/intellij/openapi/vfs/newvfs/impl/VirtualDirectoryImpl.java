@@ -332,7 +332,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
       if (!isUnder) {
         String childPath = child.getPath();
         if (delegate instanceof ArchiveFileSystem) {
-          VirtualFile local = ArchiveVfsUtil.getVirtualFileForJar(child);
+          VirtualFile local = ArchiveVfsUtil.getVirtualFileForArchive(child);
           assert local != null : child;
           childPath = local.getPath();
         }

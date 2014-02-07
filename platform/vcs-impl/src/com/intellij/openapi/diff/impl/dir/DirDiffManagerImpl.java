@@ -19,8 +19,8 @@ import com.intellij.ide.diff.*;
 import com.intellij.openapi.diff.DirDiffManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +49,8 @@ public class DirDiffManagerImpl extends DirDiffManager {
       DirDiffFrame frame = new DirDiffFrame(myProject, model);
       setWindowListener(onWindowClose, frame.getFrame());
       frame.show();
-    } else {
+    }
+    else {
       DirDiffDialog dirDiffDialog = new DirDiffDialog(myProject, model);
       if (myProject == null || myProject.isDefault()/* || isFromModalDialog(myProject)*/) {
         dirDiffDialog.setModal(true);
@@ -97,11 +98,11 @@ public class DirDiffManagerImpl extends DirDiffManager {
 
   @Override
   public DiffElement createDiffElement(Object obj) {
-    //TODO make EP
     if (obj instanceof VirtualFile) {
       final VirtualFile file = (VirtualFile)obj;
-      return JarFileSystem.PROTOCOL.equalsIgnoreCase(file.getExtension())
-             ? new JarFileDiffElement(file) : new VirtualFileDiffElement(file);
+
+      VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
+      return archiveRootForLocalFile != null ? new ArchiveFileDiffElement(archiveRootForLocalFile) : new VirtualFileDiffElement(file);
     }
     return null;
   }

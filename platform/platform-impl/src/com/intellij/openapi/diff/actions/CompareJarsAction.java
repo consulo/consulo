@@ -16,8 +16,8 @@
 package com.intellij.openapi.diff.actions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
+import com.intellij.ide.diff.ArchiveFileDiffElement;
 import com.intellij.ide.diff.DirDiffSettings;
-import com.intellij.ide.diff.JarFileDiffElement;
 import com.intellij.ide.diff.VirtualFileDiffElement;
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -42,11 +42,11 @@ public class CompareJarsAction extends AnAction {
       VirtualFileDiffElement src = null;
       VirtualFileDiffElement trg = null;
       if (files.length == 2 && isArchive(files[0]) && isArchive(files[1])) {
-        src = new JarFileDiffElement(files[0]);
-        trg = new JarFileDiffElement(files[1]);
+        src = new ArchiveFileDiffElement(files[0]);
+        trg = new ArchiveFileDiffElement(files[1]);
       }
       else if (files.length == 1 && isArchive(files[0])) {
-        src = new JarFileDiffElement(files[0]);
+        src = new ArchiveFileDiffElement(files[0]);
         final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, false) {
           @Override
           public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
@@ -56,7 +56,7 @@ public class CompareJarsAction extends AnAction {
         };
         final VirtualFile[] result = FileChooser.chooseFiles(descriptor, project, project.getBaseDir());
         if (result.length == 1 && result[0] != null && isArchive(result[0])) {
-          trg = new JarFileDiffElement(result[0]);
+          trg = new ArchiveFileDiffElement(result[0]);
         }
       }
       final DirDiffManager mgr = DirDiffManager.getInstance(project);
