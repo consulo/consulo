@@ -31,11 +31,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Dec 26, 2003
- * Time: 3:51:58 PM
- * To change this template use Options | File Templates.
+ * @author stathik
  */
 public class AvailablePluginsTableModel extends PluginTableModel {
 
@@ -121,6 +117,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     }
   }
 
+  @Override
   public void updatePluginsList(List<IdeaPluginDescriptor> list) {
     view.clear();
     myAvailableCategories.clear();
@@ -152,6 +149,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     super.filter(filtered);
   }
 
+  @Override
   public int getNameColumn() {
     return 0;
   }

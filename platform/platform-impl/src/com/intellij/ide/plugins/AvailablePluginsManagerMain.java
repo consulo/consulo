@@ -244,7 +244,6 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       final DefaultActionGroup gr = new DefaultActionGroup();
       gr.add(createFilterByRepositoryAction(AvailablePluginsTableModel.ALL));
-      gr.add(createFilterByRepositoryAction(AvailablePluginsTableModel.JETBRAINS_REPO));
       for (final String host : UpdateSettings.getInstance().myPluginHosts) {
         gr.add(createFilterByRepositoryAction(host));
       }
