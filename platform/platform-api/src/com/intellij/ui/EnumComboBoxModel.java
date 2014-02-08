@@ -33,19 +33,23 @@ public class EnumComboBoxModel<E extends Enum<E>> extends AbstractListModel impl
     mySelected = myList.get(0);
   }
 
+  @Override
   public int getSize() {
     return myList.size();
   }
 
+  @Override
   public E getElementAt(int index) {
     return myList.get(index);
   }
 
+  @Override
   public void setSelectedItem(Object item) {
     mySelected = (E)item;
     fireContentsChanged(this, 0, getSize());
   }
 
+  @Override
   public E getSelectedItem() {
     return mySelected;
   }

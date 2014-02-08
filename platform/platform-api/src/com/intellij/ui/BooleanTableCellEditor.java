@@ -34,6 +34,7 @@ public class BooleanTableCellEditor extends DefaultCellEditor {
     this(false);
   }
 
+  @Override
   public Object getCellEditorValue() {
     Object value = super.getCellEditorValue();
     if (myStringEditor && value instanceof Boolean) {

@@ -19,14 +19,15 @@ package com.intellij.ui;
 import com.intellij.openapi.editor.markup.TextAttributes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HighlightedText {
   private final StringBuffer myBuffer;
-  private final ArrayList myHighlightedRegions;
+  private final List<HighlightedRegion> myHighlightedRegions;
 
   public HighlightedText() {
     myBuffer = new StringBuffer();
-    myHighlightedRegions = new ArrayList(3);
+    myHighlightedRegions = new ArrayList<HighlightedRegion>(3);
   }
 
   public void appendText(String text, TextAttributes attributes) {
@@ -40,7 +41,7 @@ public class HighlightedText {
   public void insertTextAtStart(String text, TextAttributes attributes) {
     int textLength = text.length();
     for (int i=0; i < myHighlightedRegions.size(); i++) {
-      HighlightedRegion info = (HighlightedRegion)myHighlightedRegions.get(i);
+      HighlightedRegion info = myHighlightedRegions.get(i);
       info.startOffset += textLength;
       info.endOffset += textLength;
     }
@@ -50,6 +51,7 @@ public class HighlightedText {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof HighlightedText)) return false;
 
@@ -68,7 +70,7 @@ public class HighlightedText {
   public void applyToComponent(HighlightableComponent renderer) {
     renderer.setText(myBuffer.toString());
     for (int i=0; i < myHighlightedRegions.size(); i++) {
-      HighlightedRegion info = (HighlightedRegion)myHighlightedRegions.get(i);
+      HighlightedRegion info = myHighlightedRegions.get(i);
       renderer.addHighlighter(info.startOffset, info.endOffset, info.textAttributes);
     }
   }

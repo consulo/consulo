@@ -36,6 +36,7 @@ public class ListUtil {
     final MouseMotionAdapter listener = new MouseMotionAdapter() {
       boolean myIsEngaged = false;
 
+      @Override
       public void mouseMoved(MouseEvent e) {
         if (myIsEngaged && !UIUtil.isSelectionButtonDown(e)) {
           Point point = e.getPoint();

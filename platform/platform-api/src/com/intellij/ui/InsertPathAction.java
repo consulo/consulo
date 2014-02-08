@@ -51,7 +51,7 @@ public class InsertPathAction extends AnAction {
     myDescriptor = descriptor;
   }
 
-
+  @Override
   public void actionPerformed(AnActionEvent e) {
     String selectedText = myTextField.getSelectedText();
     VirtualFile virtualFile;

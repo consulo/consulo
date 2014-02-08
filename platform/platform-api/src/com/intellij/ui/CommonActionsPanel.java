@@ -78,10 +78,15 @@ public class CommonActionsPanel extends JPanel {
     void doEdit();
 
     class Adapter implements Listener {
+      @Override
       public void doAdd() {}
+      @Override
       public void doRemove() {}
+      @Override
       public void doUp() {}
+      @Override
       public void doDown() {}
+      @Override
       public void doEdit() {}
     }
   }

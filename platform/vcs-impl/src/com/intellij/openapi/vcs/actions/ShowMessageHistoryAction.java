@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.actions.ContentChooser;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -39,6 +42,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     setEnabledInModalContext(true);
   }
 
+  @Override
   public void update(AnActionEvent e) {
     super.update(e);
 
@@ -60,6 +64,7 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     }
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     CommitMessageI commitMessageI;
     final DataContext dc = e.getDataContext();
@@ -74,21 +79,24 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
       if (!configuration.getRecentMessages().isEmpty()) {
 
         final ContentChooser<String> contentChooser =
-          new ContentChooser<String>(project, VcsBundle.message("dialog.title.choose.commit.message.from.history"), false) {
-            protected void removeContentAt(final String content) {
-              configuration.removeMessage(content);
-            }
+                new ContentChooser<String>(project, VcsBundle.message("dialog.title.choose.commit.message.from.history"), false) {
+                  @Override
+                  protected void removeContentAt(final String content) {
+                    configuration.removeMessage(content);
+                  }
 
-            protected String getStringRepresentationFor(final String content) {
-              return content;
-            }
+                  @Override
+                  protected String getStringRepresentationFor(final String content) {
+                    return content;
+                  }
 
-            protected List<String> getContents() {
-              final List<String> recentMessages = configuration.getRecentMessages();
-              Collections.reverse(recentMessages);
-              return recentMessages;
-            }
-          };
+                  @Override
+                  protected List<String> getContents() {
+                    final List<String> recentMessages = configuration.getRecentMessages();
+                    Collections.reverse(recentMessages);
+                    return recentMessages;
+                  }
+                };
 
         contentChooser.show();
 

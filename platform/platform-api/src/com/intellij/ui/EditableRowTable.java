@@ -72,6 +72,7 @@ public class EditableRowTable{
 
     addButton.addActionListener(
       new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           TableUtil.stopEditing(table);
           tableModel.addRow();
@@ -92,6 +93,7 @@ public class EditableRowTable{
 
     removeButton.addActionListener(
       new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           TableUtil.stopEditing(table);
           int index = table.getSelectedRow();
@@ -116,6 +118,7 @@ public class EditableRowTable{
 
     upButton.addActionListener(
       new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           TableUtil.stopEditing(table);
           int index = table.getSelectedRow();
@@ -130,6 +133,7 @@ public class EditableRowTable{
 
     downButton.addActionListener(
       new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           TableUtil.stopEditing(table);
           int index = table.getSelectedRow();
@@ -144,6 +148,7 @@ public class EditableRowTable{
 
     table.getSelectionModel().addListSelectionListener(
       new ListSelectionListener() {
+        @Override
         public void valueChanged(ListSelectionEvent e) {
           updateButtons(table, tableModel, addButton, removeButton, upButton, downButton);
         }

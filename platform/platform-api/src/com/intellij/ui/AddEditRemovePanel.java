@@ -100,6 +100,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
     }
   }
 
+  @Override
   protected String getLabelText(){
     return myLabel;
   }
@@ -110,6 +111,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
     return myTable.getEmptyText();
   }
 
+  @Override
   protected JComponent createMainComponent(){
     initTable();
 
@@ -118,22 +120,27 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
 
   private void initTable() {
     myTableModel = new AbstractTableModel() {
+      @Override
       public int getColumnCount(){
         return myModel.getColumnCount();
       }
 
+      @Override
       public int getRowCount(){
         return myData != null ? myData.size() : 0;
       }
 
+      @Override
       public Class getColumnClass(int columnIndex){
         return myModel.getColumnClass(columnIndex);
       }
 
+      @Override
       public String getColumnName(int column){
         return myModel.getColumnName(column);
       }
 
+      @Override
       public Object getValueAt(int rowIndex, int columnIndex){
         return myModel.getField(myData.get(rowIndex), columnIndex);
       }
@@ -168,6 +175,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
     return new JBTable();
   }
 
+  @Override
   protected JButton[] createButtons(){
     return new JButton[0];
   }

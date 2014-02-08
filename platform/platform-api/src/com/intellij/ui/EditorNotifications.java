@@ -78,6 +78,7 @@ public class EditorNotifications extends AbstractProjectComponent {
       @Override
       public void run() {
         ApplicationManager.getApplication().runReadAction(new Runnable() {
+          @Override
           public void run() {
             if (myProject.isDisposed()) return;
             FileEditor[] editors = myFileEditorManager.getAllEditors(file);

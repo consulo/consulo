@@ -31,18 +31,22 @@ public abstract class AbstractCollectionComboBoxModel extends AbstractListModel 
     mySelection = selection;
   }
 
+  @Override
   public int getSize() {
     return getItems().size();
   }
 
+  @Override
   public Object getElementAt(final int index) {
     return getItems().get(index);
   }
 
+  @Override
   public void setSelectedItem(@Nullable final Object anItem) {
     mySelection = anItem;
   }
 
+  @Override
   @Nullable
   public Object getSelectedItem() {
     return mySelection;

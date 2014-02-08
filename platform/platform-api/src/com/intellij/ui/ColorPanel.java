@@ -39,6 +39,7 @@ public class ColorPanel extends JPanel {
     myFgSelectedColorBox = new ColorBox(null, (boxSize + 2) * 2, true);
     myFgSelectedColorBox.setSelectColorAction(
       new Runnable() {
+        @Override
         public void run() {
           fireActionEvent();
         }
@@ -54,6 +55,7 @@ public class ColorPanel extends JPanel {
     add(selectedColorPanel, BorderLayout.WEST);
   }
 
+  @Override
   public void setEnabled(boolean enabled) {
     myFgSelectedColorBox.setEnabled(enabled);
     super.setEnabled(enabled);
@@ -112,6 +114,7 @@ public class ColorPanel extends JPanel {
       updateToolTip();
       //TODO[anton,vova] investigate
       addMouseListener(new MouseAdapter(){
+        @Override
         public void mouseReleased(MouseEvent mouseevent) {
           if (!isEnabled()){
             return;
@@ -121,6 +124,7 @@ public class ColorPanel extends JPanel {
           }
         }
 
+        @Override
         public void mousePressed(MouseEvent mouseevent) {
           if (!isEnabled()){
             return;
@@ -159,18 +163,22 @@ public class ColorPanel extends JPanel {
       }
     }
 
+    @Override
     public Dimension getMinimumSize() {
       return mySize;
     }
 
+    @Override
     public Dimension getMaximumSize() {
       return mySize;
     }
 
+    @Override
     public Dimension getPreferredSize() {
       return mySize;
     }
 
+    @Override
     public void paintComponent(Graphics g) {
       if (isEnabled()){
         g.setColor(myColor);

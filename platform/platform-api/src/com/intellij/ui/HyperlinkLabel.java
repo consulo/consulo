@@ -71,6 +71,7 @@ public class HyperlinkLabel extends HighlightableComponent {
     enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
   }
 
+  @Override
   public void addNotify() {
     super.addNotify();
     adjustSize();
@@ -97,6 +98,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
 
+  @Override
   protected void processMouseEvent(MouseEvent e) {
     if (e.getID() == MouseEvent.MOUSE_EXITED) {
       setCursor(Cursor.getDefaultCursor());

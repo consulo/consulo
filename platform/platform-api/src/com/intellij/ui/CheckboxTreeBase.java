@@ -53,6 +53,7 @@ public class CheckboxTreeBase extends Tree {
     installRenderer(cellRenderer);
 
     addKeyListener(new KeyAdapter() {
+      @Override
       public void keyPressed(KeyEvent e) {
         if (isToggleEvent(e)) {
           TreePath treePath = getLeadSelectionPath();
@@ -178,6 +179,7 @@ public class CheckboxTreeBase extends Tree {
   }
 
 
+  @Override
   public int getToggleClickCount() {
     // to prevent node expanding/collapsing on checkbox toggling
     return -1;
@@ -311,6 +313,7 @@ public class CheckboxTreeBase extends Tree {
       myUsePartialStatusForParentNodes = usePartialStatusForParentNodes;
       myCheckbox = new JCheckBox();
       myTextRenderer = new ColoredTreeCellRenderer() {
+        @Override
         public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) { }
       };
       myTextRenderer.setOpaque(opaque);
@@ -322,6 +325,7 @@ public class CheckboxTreeBase extends Tree {
       this(true);
     }
 
+    @Override
     public final Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       invalidate();
       if (value instanceof CheckedTreeNode) {

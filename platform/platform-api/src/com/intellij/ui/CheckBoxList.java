@@ -171,6 +171,7 @@ public class CheckBoxList<T> extends JBList {
       myBorder = new EmptyBorder(borderInsets);
     }
 
+    @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
       JCheckBox checkbox = (JCheckBox)value;
       if (!UIUtil.isUnderNimbusLookAndFeel()) {

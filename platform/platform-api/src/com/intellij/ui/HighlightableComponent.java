@@ -70,6 +70,7 @@ public class HighlightableComponent extends JComponent {
     myIcon = icon;
   }
 
+  @Override
   public void setFont(Font font) {
     if (!font.equals(getFont())){
       super.setFont(font);
@@ -205,6 +206,7 @@ public class HighlightableComponent extends JComponent {
     myDoNotHighlight = b;
   }
 
+  @Override
   protected void paintComponent(Graphics g) {
 
     // determine color of background
@@ -375,6 +377,7 @@ public class HighlightableComponent extends JComponent {
     return null;
   }
 
+  @Override
   public Dimension getPreferredSize() {
     FontMetrics defFontMetrics = getFontMetrics(getFont());
 

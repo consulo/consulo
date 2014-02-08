@@ -63,6 +63,7 @@ public class EditorNotificationPanel extends JPanel {
 
   public HyperlinkLabel createActionLabel(final String text, @NonNls final String actionId) {
     return createActionLabel(text, new Runnable() {
+      @Override
       public void run() {
         executeAction(actionId);
       }
@@ -72,6 +73,7 @@ public class EditorNotificationPanel extends JPanel {
   public HyperlinkLabel createActionLabel(final String text, final Runnable action) {
     HyperlinkLabel label = new HyperlinkLabel(text, PlatformColors.BLUE, getBackground(), PlatformColors.BLUE);
     label.addHyperlinkListener(new HyperlinkListener() {
+      @Override
       public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           action.run();

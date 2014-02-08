@@ -259,31 +259,37 @@ public class ListScrollingUtil {
   public static void installActions(final JList list) {
     ActionMap actionMap = list.getActionMap();
     actionMap.put(SCROLLUP_ACTION_ID, new AbstractAction() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         movePageUp(list);
       }
     });
     actionMap.put(SCROLLDOWN_ACTION_ID, new AbstractAction() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         movePageDown(list);
       }
     });
     actionMap.put(SELECT_PREVIOUS_ROW_ACTION_ID, new AbstractAction() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         moveUp(list, e.getModifiers());
       }
     });
     actionMap.put(SELECT_NEXT_ROW_ACTION_ID, new AbstractAction() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         moveDown(list, e.getModifiers());
       }
     });
     actionMap.put(SELECT_LAST_ROW_ACTION_ID, new AbstractAction() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         moveEnd(list);
       }
     });
     actionMap.put(SELECT_FIRST_ROW_ACTION_ID, new AbstractAction() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         moveHome(list);
       }

@@ -37,6 +37,7 @@ public class CollectionComboBoxModel extends AbstractCollectionComboBoxModel {
     myItems = items;
   }
 
+  @Override
   @NotNull
   final protected List getItems() {
     return myItems;

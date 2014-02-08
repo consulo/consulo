@@ -63,6 +63,7 @@ public class InplaceButton extends JComponent implements ActiveComponent {
 
   public InplaceButton(IconButton source, final ActionListener listener, final Pass<MouseEvent> me, TimedDeadzone.Length mouseDeadzone) {
     myBehavior = new BaseButtonBehavior(this, mouseDeadzone) {
+      @Override
       protected void execute(final MouseEvent e) {
         listener.actionPerformed(new ActionEvent(e, ActionEvent.ACTION_PERFORMED, "execute", e.getModifiers()));
       }
@@ -128,6 +129,7 @@ public class InplaceButton extends JComponent implements ActiveComponent {
     repaint();
   }
 
+  @Override
   public void setActive(final boolean active) {
     myActive = active;
     repaint();
@@ -137,10 +139,12 @@ public class InplaceButton extends JComponent implements ActiveComponent {
     setIcons(icon, icon, icon);
   }
 
+  @Override
   public JComponent getComponent() {
     return this;
   }
 
+  @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 

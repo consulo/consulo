@@ -68,6 +68,7 @@ public abstract class AbstractFieldPanel extends JPanel {
 
   public abstract void setText(String text);
 
+  @Override
   public void setEnabled(boolean enabled) {
     getComponent().setEnabled(enabled);
     if (myLabel != null) {
@@ -78,6 +79,7 @@ public abstract class AbstractFieldPanel extends JPanel {
     }
   }
 
+  @Override
   public boolean isEnabled() {
     return myComponent != null && myComponent.isEnabled();
   }
@@ -134,6 +136,7 @@ public abstract class AbstractFieldPanel extends JPanel {
       showViewerButton.setFocusable(false);
       showViewerButton.setIcon(PlatformIcons.OPEN_EDIT_DIALOG_ICON);
       showViewerButton.addActionListener(new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           Viewer viewer = new Viewer();
           viewer.setTitle(myViewerDialogTitle);
@@ -173,26 +176,31 @@ public abstract class AbstractFieldPanel extends JPanel {
       init();
     }
 
+    @Override
     @NotNull
     protected Action[] createActions() {
       return new Action[]{getOKAction(), getCancelAction()};
     }
 
+    @Override
     public JComponent getPreferredFocusedComponent() {
       return myTextArea;
     }
 
+    @Override
     protected void doOKAction() {
       setText(myTextArea.getText());
       super.doOKAction();
     }
 
+    @Override
     protected JComponent createCenterPanel() {
       myTextArea = new JTextArea(10, 50);
       myTextArea.setText(getText());
       myTextArea.setWrapStyleWord(true);
       myTextArea.setLineWrap(true);
       myTextArea.getDocument().addDocumentListener(new DocumentAdapter() {
+        @Override
         public void textChanged(DocumentEvent event) {
           if (myChangeListener != null) {
             myChangeListener.run();
@@ -201,6 +209,7 @@ public abstract class AbstractFieldPanel extends JPanel {
       });
 
       new AnAction() {
+        @Override
         public void actionPerformed(AnActionEvent e) {
           doOKAction();
         }
