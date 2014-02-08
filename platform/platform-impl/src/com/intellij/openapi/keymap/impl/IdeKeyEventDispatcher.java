@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -306,7 +306,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         throw new IllegalStateException("not found method with name getCachedStrokeMethod");
       }
       Object[] getCachedStrokeMethodArgs=
-        {originalKeyStroke.getKeyChar(), originalKeyStroke.getKeyCode(), modifier, originalKeyStroke.isOnKeyRelease()};
+              {originalKeyStroke.getKeyChar(), originalKeyStroke.getKeyCode(), modifier, originalKeyStroke.isOnKeyRelease()};
       return (KeyStroke)getCachedStrokeMethod.invoke(originalKeyStroke, getCachedStrokeMethodArgs);
     }
     catch(Exception exc){
@@ -366,7 +366,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
   }
 
   @NonNls private static final Set<String> ALT_GR_LAYOUTS = new HashSet<String>(Arrays.asList(
-    "pl", "de", "fi", "fr", "no", "da", "se", "pt", "nl", "tr", "sl", "hu", "bs", "hr", "sr", "sk", "lv"
+          "pl", "de", "fi", "fr", "no", "da", "se", "pt", "nl", "tr", "sl", "hu", "bs", "hr", "sr", "sk", "lv"
   ));
 
   private boolean inInitState() {
@@ -403,7 +403,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     if (SystemInfo.isMac) {
       boolean keyTyped = e.getID() == KeyEvent.KEY_TYPED;
       boolean hasMnemonicsInWindow = e.getID() == KeyEvent.KEY_PRESSED && hasMnemonicInWindow(focusOwner, e.getKeyCode()) ||
-                  keyTyped && hasMnemonicInWindow(focusOwner, e.getKeyChar());
+                                     keyTyped && hasMnemonicInWindow(focusOwner, e.getKeyChar());
       boolean imEnabled = IdeEventQueue.getInstance().isInputMethodEnabled();
 
       if (e.getModifiersEx() == InputEvent.ALT_DOWN_MASK && (hasMnemonicsInWindow || !imEnabled && keyTyped))  {
@@ -579,12 +579,12 @@ public final class IdeKeyEventDispatcher implements Disposable {
     final boolean dumb = project != null && DumbService.getInstance(project).isDumb();
     List<AnActionEvent> nonDumbAwareAction = new ArrayList<AnActionEvent>();
     List<AnAction> actions = myContext.getActions();
-    for (final AnAction action : actions) {
+    for (final AnAction action : actions.toArray(new AnAction[actions.size()])) {
       Presentation presentation = myPresentationFactory.getPresentation(action);
 
       // Mouse modifiers are 0 because they have no any sense when action is invoked via keyboard
       final AnActionEvent actionEvent =
-        processor.createEvent(e, myContext.getDataContext(), ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance());
+              processor.createEvent(e, myContext.getDataContext(), ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance());
 
       ActionUtil.performDumbAwareUpdate(action, actionEvent, true);
 
@@ -622,15 +622,15 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
   private static void showDumbModeWarningLaterIfNobodyConsumesEvent(final InputEvent e, final AnActionEvent... actionEvents) {
     if (ModalityState.current() == ModalityState.NON_MODAL) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (e.isConsumed()) return;
+      ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          if (e.isConsumed()) return;
 
-            ActionUtil.showDumbModeWarning(actionEvents);
-          }
-        });
-      }
+          ActionUtil.showDumbModeWarning(actionEvents);
+        }
+      });
+    }
   }
 
   /**
@@ -695,7 +695,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
       if (secondKeyStroke != null && secondKeyStroke.getModifiers() != 0 && firstKeyStroke.getModifiers() != 0) {
         final KeyboardShortcut altShortCut = new KeyboardShortcut(firstKeyStroke, KeyStroke
-          .getKeyStroke(secondKeyStroke.getKeyCode(), 0));
+                .getKeyStroke(secondKeyStroke.getKeyCode(), 0));
         final String[] additionalActions = keymap.getActionIds(altShortCut);
 
         for (final String actionId : additionalActions) {
@@ -712,10 +712,17 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
 
     myContext.setHasSecondStroke(hasSecondStroke);
+    final List<AnAction> actions = myContext.getActions();
 
-    Comparator<? super AnAction> comparator = PlatformDataKeys.ACTIONS_SORTER.getData(myContext.getDataContext());
-    if (comparator != null) {
-      Collections.sort(myContext.getActions(), comparator);
+    if (actions.size() > 1) {
+      final List<AnAction> readOnlyActions = Collections.unmodifiableList(actions);
+      for (ActionPromoter promoter : ActionPromoter.EP_NAME.getExtensions()) {
+        final List<AnAction> promoted = promoter.promote(readOnlyActions, myContext.getDataContext());
+        if (promoted.isEmpty()) continue;
+
+        actions.removeAll(promoted);
+        actions.addAll(0, promoted);
+      }
     }
 
     return myContext;
@@ -737,7 +744,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     Shortcut[] shortcuts = action.getShortcutSet().getShortcuts();
     for (Shortcut each : shortcuts) {
       if (!each.isKeyboard()) continue;
-      
+
       if (each.startsWith(sc)) {
         if (!myContext.getActions().contains(action)) {
           myContext.getActions().add(action);
@@ -830,8 +837,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
         @Override
         public void run() {
           final AnActionEvent event =
-            new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(),
-                              ActionManager.getInstance(), 0);
+                  new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(),
+                                    ActionManager.getInstance(), 0);
           if (ActionUtil.lastUpdateAndCheckDumb(action, event, true)) {
             ActionUtil.performActionDumbAware(action, event);
           }
