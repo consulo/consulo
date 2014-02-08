@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * Defines the model for the data displayed in the standard structure view or file structure
  * popup component. The model of the standard structure view is represented as a tree of elements.
  *
- * @see com.intellij.ide.structureView.TreeBasedStructureViewBuilder#createStructureViewModel()
+ * @see com.intellij.ide.structureView.TreeBasedStructureViewBuilder#createStructureViewModel(com.intellij.openapi.editor.Editor)
  * @see TextEditorBasedStructureViewModel
  */
 public interface StructureViewModel extends TreeModel {
@@ -72,6 +72,7 @@ public interface StructureViewModel extends TreeModel {
    *
    * @return the structure view root.
    */
+  @Override
   @NotNull
   StructureViewTreeElement getRoot();
 

@@ -16,6 +16,7 @@
 
 package com.intellij.ide.bookmarks;
 
+import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;
@@ -114,7 +115,7 @@ public class Bookmark implements Navigatable {
     markup.processRangeHighlightersOverlappingWith(startOffset, endOffset, new Processor<RangeHighlighterEx>() {
       @Override
       public boolean process(RangeHighlighterEx highlighter) {
-        GutterIconRenderer renderer = highlighter.getGutterIconRenderer();
+        GutterMark renderer = highlighter.getGutterIconRenderer();
         if (renderer instanceof MyGutterIconRenderer && ((MyGutterIconRenderer)renderer).myBookmark == Bookmark.this) {
           found[0] = highlighter;
           return false;
@@ -211,7 +212,7 @@ public class Bookmark implements Navigatable {
 
     StructureViewBuilder builder = LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(psiFile);
     if (builder instanceof TreeBasedStructureViewBuilder) {
-      StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel();
+      StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(null);
       Object element;
       try {
         element = model.getCurrentEditorElement();
@@ -331,7 +332,7 @@ public class Bookmark implements Navigatable {
     }
 
     @Override
-     public int hashCode() {
+    public int hashCode() {
       return getIcon().hashCode();
     }
   }

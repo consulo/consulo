@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * The standard {@link StructureViewModel} implementation which is linked to a text editor.
  *
- * @see com.intellij.ide.structureView.TreeBasedStructureViewBuilder#createStructureViewModel()
+ * @see com.intellij.ide.structureView.TreeBasedStructureViewBuilder#createStructureViewModel(Editor editor)
  */
 
 public abstract class TextEditorBasedStructureViewModel implements StructureViewModel, ProvidingTreeModel {
@@ -66,7 +66,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
     this(editor, null);
   }
 
-  private TextEditorBasedStructureViewModel(Editor editor, PsiFile file) {
+  protected TextEditorBasedStructureViewModel(Editor editor, PsiFile file) {
     myEditor = editor;
     myPsiFile = file;
 
