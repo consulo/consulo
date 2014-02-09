@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.options.StreamProvider;
 import com.intellij.util.io.fs.IFile;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -50,7 +49,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   @Nullable
   Element getStateCopy() {
     final Element element = myProjectManager.getDefaultProjectRootElement();
-    return element != null ? (Element)element.clone() : null;
+    return element != null ? element.clone() : null;
   }
 
 
@@ -70,7 +69,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     final Document document = _d;
 
     final XmlElementStorage storage = new XmlElementStorage(pathMacroManager.createTrackingSubstitutor(), componentManager,
-                                                            ROOT_TAG_NAME, StreamProvider.DEFAULT, "", ComponentRoamingManager.getInstance(),
+                                                            ROOT_TAG_NAME, null, "", ComponentRoamingManager.getInstance(),
                                                             ComponentVersionProvider.EMPTY) {
       @Override
       @Nullable
@@ -133,7 +132,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
       @Override
       @Nullable
-      public StateStorage getFileStateStorage(String fileName) {
+      public StateStorage getFileStateStorage(@NotNull String fileSpec) {
         return storage;
       }
 
@@ -166,22 +165,18 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Override
       @Nullable
       public StateStorage getOldStorage(Object component, final String componentName, final StateStorageOperation operation)
-      throws StateStorageException {
+              throws StateStorageException {
         return storage;
       }
 
       @Override
-      public void registerStreamProvider(final StreamProvider streamProvider, final RoamingType type) {
-        throw new UnsupportedOperationException("Method registerStreamProvider not implemented in " + getClass());
+      public void setStreamProvider(@Nullable com.intellij.openapi.components.impl.stores.StreamProvider streamProvider) {
+        throw new UnsupportedOperationException("Method setStreamProvider not implemented in " + getClass());
       }
 
+      @Nullable
       @Override
-      public void unregisterStreamProvider(final StreamProvider streamProvider, final RoamingType roamingType) {
-        throw new UnsupportedOperationException("Method unregisterStreamProvider not implemented in " + getClass());
-      }
-      @NotNull
-      @Override
-      public StreamProvider[] getStreamProviders(final RoamingType roamingType) {
+      public com.intellij.openapi.components.impl.stores.StreamProvider getStreamProvider() {
         throw new UnsupportedOperationException("Method getStreamProviders not implemented in " + getClass());
       }
 
@@ -192,14 +187,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
       @Override
       public void reset() {
-
       }
     };
-  }
-
-  @Override
-  public String getLocation() {
-    throw new UnsupportedOperationException("Method getLocation not implemented in " + getClass());
   }
 
   @Override
@@ -217,7 +206,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
     @Override
     public void setState(@NotNull final Storage[] storageSpecs, @NotNull final Object component, final String componentName, @NotNull final Object state)
-    throws StateStorageException {
+            throws StateStorageException {
       externalizationSession.setState(component, componentName, state, null);
     }
 

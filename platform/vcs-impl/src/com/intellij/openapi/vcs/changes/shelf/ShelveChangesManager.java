@@ -31,7 +31,6 @@ import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import com.intellij.openapi.diff.impl.patch.formove.CustomBinaryPatchApplier;
 import com.intellij.openapi.diff.impl.patch.formove.PatchApplier;
-import com.intellij.openapi.options.StreamProvider;
 import com.intellij.openapi.progress.AsynchronousExecution;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
@@ -86,11 +85,11 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
   public ShelveChangesManager(final Project project, final MessageBus bus) {
     super(project);
     myBus = bus;
-    if (!project.isDefault()) {
-      myFileProcessor = new CompoundShelfFileProcessor("shelf");
+    if (project.isDefault()) {
+      myFileProcessor = new CompoundShelfFileProcessor(null, PathManager.getConfigPath() + File.separator + "shelf");
     }
     else {
-      myFileProcessor = new CompoundShelfFileProcessor(new StreamProvider[]{}, PathManager.getConfigPath() + File.separator + "shelf");
+      myFileProcessor = new CompoundShelfFileProcessor("shelf");
     }
   }
 
@@ -159,13 +158,13 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
       CommitContext commitContext = new CommitContext();
       baseRevisionsOfDvcsIntoContext(textChanges, commitContext);
       myFileProcessor.savePathFile(
-        new CompoundShelfFileProcessor.ContentProvider(){
-            @Override
-            public void writeContentTo(final Writer writer, CommitContext commitContext) throws IOException {
-              UnifiedDiffWriter.write(myProject, patches, writer, "\n", commitContext);
-            }
-          },
-          patchPath, commitContext);
+              new CompoundShelfFileProcessor.ContentProvider(){
+                @Override
+                public void writeContentTo(final Writer writer, CommitContext commitContext) throws IOException {
+                  UnifiedDiffWriter.write(myProject, patches, writer, "\n", commitContext);
+                }
+              },
+              patchPath, commitContext);
 
       changeList = new ShelvedChangeList(patchPath.toString(), commitMessage.replace('\n', ' '), binaryFiles);
       myShelvedChangeLists.add(changeList);
@@ -206,13 +205,13 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     try {
       final File patchPath = getPatchPath(fileName);
       myFileProcessor.savePathFile(
-        new CompoundShelfFileProcessor.ContentProvider(){
-            @Override
-            public void writeContentTo(final Writer writer, CommitContext commitContext) throws IOException {
-              UnifiedDiffWriter.write(myProject, patches, writer, "\n", patchTransitExtensions, commitContext);
-            }
-          },
-          patchPath, new CommitContext());
+              new CompoundShelfFileProcessor.ContentProvider(){
+                @Override
+                public void writeContentTo(final Writer writer, CommitContext commitContext) throws IOException {
+                  UnifiedDiffWriter.write(myProject, patches, writer, "\n", patchTransitExtensions, commitContext);
+                }
+              },
+              patchPath, new CommitContext());
 
       final ShelvedChangeList changeList = new ShelvedChangeList(patchPath.toString(), fileName.replace('\n', ' '), new SmartList<ShelvedBinaryFile>());
       myShelvedChangeLists.add(changeList);
@@ -301,11 +300,12 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
   private File getPatchPath(@NonNls final String commitMessage) {
     File file = myFileProcessor.getBaseIODir();
     if (!file.exists()) {
+      //noinspection ResultOfMethodCallIgnored
       file.mkdirs();
     }
 
     return suggestPatchName(myProject, commitMessage.length() > PatchNameChecker.MAX ? commitMessage.substring(0, PatchNameChecker.MAX) :
-                            commitMessage, file, VcsConfiguration.PATCH);
+                                       commitMessage, file, VcsConfiguration.PATCH);
   }
 
   public static File suggestPatchName(Project project, final String commitMessage, final File file, String extension) {
@@ -318,9 +318,9 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     }
     while (true) {
       final File nonexistentFile = FileUtil.findSequentNonexistentFile(file, defaultPath,
-                                                           extension == null
-                                                           ? VcsConfiguration.getInstance(project).getPatchFileExtension()
-                                                           : extension);
+                                                                       extension == null
+                                                                       ? VcsConfiguration.getInstance(project).getPatchFileExtension()
+                                                                       : extension);
       if (nonexistentFile.getName().length() >= PatchNameChecker.MAX) {
         defaultPath = defaultPath.substring(0, defaultPath.length() - 1);
         continue;
@@ -330,7 +330,7 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
   }
 
   public void unshelveChangeList(final ShelvedChangeList changeList, @Nullable final List<ShelvedChange> changes,
-                                           @Nullable final List<ShelvedBinaryFile> binaryFiles, final LocalChangeList targetChangeList) {
+                                 @Nullable final List<ShelvedBinaryFile> binaryFiles, final LocalChangeList targetChangeList) {
     unshelveChangeList(changeList, changes, binaryFiles, targetChangeList, true);
   }
 
@@ -390,7 +390,7 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
 
         final BinaryPatchApplier binaryPatchApplier = new BinaryPatchApplier();
         final PatchApplier<ShelvedBinaryFilePatch> patchApplier = new PatchApplier<ShelvedBinaryFilePatch>(myProject, myProject.getBaseDir(),
-            patches, targetChangeList, binaryPatchApplier, commitContext, reverse, leftConflictTitle, rightConflictTitle);
+                                                                                                           patches, targetChangeList, binaryPatchApplier, commitContext, reverse, leftConflictTitle, rightConflictTitle);
         patchApplier.setIsSystemOperation(systemOperation);
 
         // after patch applier part
@@ -414,7 +414,7 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
   }
 
   private static List<TextFilePatch> loadTextPatches(final Project project, final ShelvedChangeList changeList, final List<ShelvedChange> changes, final List<FilePatch> remainingPatches, final CommitContext commitContext)
-      throws IOException, PatchSyntaxException {
+          throws IOException, PatchSyntaxException {
     final List<TextFilePatch> textFilePatches = loadPatches(project, changeList.PATH, commitContext);
 
     if (changes != null) {
@@ -659,7 +659,7 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
     PatchReader reader = new PatchReader(new CharArrayCharSequence(text));
     final List<TextFilePatch> textFilePatches = reader.readAllPatches();
     final TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo = reader.getAdditionalInfo(
-      null);
+            null);
     ApplyPatchDefaultExecutor.applyAdditionalInfoBefore(project, additionalInfo, commitContext);
     return textFilePatches;
   }

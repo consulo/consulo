@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.StreamProvider;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
@@ -71,7 +70,7 @@ public class FileBasedStorage extends XmlElementStorage {
 
     if (!myConfigDirectoryRefreshed && (app.isUnitTestMode() || app.isDispatchThread())) {
       try {
-        syncRefreshPathRecursively(PathManager.getConfigPath(true), "componentVersions");
+        syncRefreshPathRecursively(PathManager.getConfigPath(), "componentVersions");
       }
       finally {
         //noinspection AssignmentToStaticFieldFromInstanceMethod
@@ -134,10 +133,11 @@ public class FileBasedStorage extends XmlElementStorage {
   }
 
   public void resetProviderCache() {
-    myProviderUpToDateHash = null;
-    myProviderVersions = null;
+    myProviderUpToDateHash = -1;
+    if (myRemoteVersionProvider != null) {
+      myRemoteVersionProvider.myProviderVersions = null;
+    }
   }
-
 
   private class FileSaveSession extends MySaveSession {
     protected FileSaveSession(MyExternalizationSession externalizationSession) {
@@ -153,11 +153,10 @@ public class FileBasedStorage extends XmlElementStorage {
     }
 
     @Override
-    protected Integer calcHash() {
+    protected int calcHash() {
       int hash = myStorageData.getHash();
-
       if (myPathMacroSubstitutor != null) {
-        hash = 31*hash + myPathMacroSubstitutor.hashCode();
+        hash = 31 * hash + myPathMacroSubstitutor.hashCode();
       }
       return hash;
     }
@@ -171,6 +170,7 @@ public class FileBasedStorage extends XmlElementStorage {
         throw new StateStorageException("It seems like some macros were not expanded for path: " + myFile.getPath());
       }
 
+      LOG.assertTrue(myFile != null);
       myCachedVirtualFile = StorageUtil.save(myFile, getDocumentToSave(), this);
     }
 
@@ -279,14 +279,14 @@ public class FileBasedStorage extends XmlElementStorage {
       final String message = "Cannot load settings from file '" + myFile.getPath() + "': " + (e == null ? "content truncated" : e.getLocalizedMessage()) + "\n" +
                              getInvalidContentMessage(contentTruncated);
       Notifications.Bus.notify(
-        new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Load Settings", message, NotificationType.WARNING));
+              new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Load Settings", message, NotificationType.WARNING));
     }
 
     return null;
   }
 
   private boolean isProjectOrModuleFile() {
-    return myIsProjectSettings || myFileSpec.equals("$MODULE_FILE$");
+    return StorageUtil.isProjectOrModuleFile(myFileSpec);
   }
 
   private String getInvalidContentMessage(boolean contentTruncated) {
@@ -324,7 +324,7 @@ public class FileBasedStorage extends XmlElementStorage {
 
   @Nullable
   public File updateFileExternallyFromStreamProviders() throws IOException {
-    StorageData loadedData = loadData(true, myListener);
+    StorageData loadedData = loadData(true);
     Document document = getDocument(loadedData);
     if (physicalContentNeedsSave(document)) {
       File file = new File(myFile.getAbsolutePath());

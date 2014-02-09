@@ -45,18 +45,22 @@ public abstract class AbstractVcsAction extends AsyncUpdateAction<VcsContext> im
     return DescindingFilesFilter.filterDescindingFiles(roots, project);
   }
 
+  @Override
   protected VcsContext prepareDataFromContext(final AnActionEvent e) {
     return forceSyncUpdate(e) ? VcsContextWrapper.createInstanceOn(e) : VcsContextWrapper.createCachedInstanceOn(e);
   }
 
+  @Override
   protected void performUpdate(final Presentation presentation, final VcsContext data) {
     ApplicationManager.getApplication().runReadAction(new Runnable() {
+      @Override
       public void run() {
         update(data, presentation);
       }
     });
   }
 
+  @Override
   public final void actionPerformed(AnActionEvent e) {
     actionPerformed(VcsContextWrapper.createCachedInstanceOn(e));
   }

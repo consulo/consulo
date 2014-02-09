@@ -16,7 +16,6 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.options.StreamProvider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.fs.IFile;
@@ -58,15 +57,12 @@ public interface StateStorageManager {
   @Nullable
   String expandMacros(String file);
 
-  void registerStreamProvider(StreamProvider streamProvider, final RoamingType type);
+  void setStreamProvider(@Nullable StreamProvider streamProvider);
 
-  void unregisterStreamProvider(StreamProvider streamProvider, final RoamingType roamingType);
-
-  @NotNull
-  StreamProvider[] getStreamProviders(final RoamingType roamingType);
+  @Nullable
+  StreamProvider getStreamProvider();
 
   void reset();
-
 
   interface ExternalizationSession {
     void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, String componentName, @NotNull Object state) throws StateStorageException;

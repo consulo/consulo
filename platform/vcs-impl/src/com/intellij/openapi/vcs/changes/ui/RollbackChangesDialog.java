@@ -99,12 +99,13 @@ public class RollbackChangesDialog extends DialogWrapper {
       @Override
       public void run() {
         if (myBrowser != null) {
-          myInfoCalculator.update(changes, new ArrayList<Change>(myBrowser.getChangesIncludedInAllLists()));
+          myInfoCalculator.update(new ArrayList<Change>(myBrowser.getAllChanges()),
+                                  new ArrayList<Change>(myBrowser.getChangesIncludedInAllLists()));
           myCommitLegendPanel.update();
         }
       }
     };
-    myBrowser = new MultipleChangeListBrowser(project, changeLists, changes, null, true, true, myListChangeListener, myListChangeListener);
+    myBrowser = new MultipleChangeListBrowser(project, changeLists, changes, getDisposable(), null, true, true, myListChangeListener, myListChangeListener);
 
     myOperationName = operationNameByChanges(project, changes);
     setOKButtonText(myOperationName);
@@ -156,16 +157,16 @@ public class RollbackChangesDialog extends DialogWrapper {
   protected void doOKAction() {
     super.doOKAction();
     new RollbackWorker(myProject, myOperationName).doRollback(myBrowser.getChangesIncludedInAllLists(),
-                                                                     myDeleteLocallyAddedFiles != null && myDeleteLocallyAddedFiles.isSelected(),
-                                                                     myAfterVcsRefreshInAwt, null);
+                                                              myDeleteLocallyAddedFiles != null && myDeleteLocallyAddedFiles.isSelected(),
+                                                              myAfterVcsRefreshInAwt, null);
   }
 
   @Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
     final GridBagConstraints gb =
-      new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-                             new Insets(1, 1, 1, 1), 0, 0);
+            new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                                   new Insets(1, 1, 1, 1), 0, 0);
 
     gb.fill = GridBagConstraints.HORIZONTAL;
     gb.weightx = 1;
