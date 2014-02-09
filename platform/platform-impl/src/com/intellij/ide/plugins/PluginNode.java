@@ -323,17 +323,6 @@ public class PluginNode implements IdeaPluginDescriptor {
   }
 
   @Override
-  @Nullable
-  public String getVendorLogoPath() {
-    return null;
-  }
-
-  @Override
-  public boolean getUseIdeaClassLoader() {
-    return false;
-  }
-
-  @Override
   public String getUntilBuild() {
     return untilBuild;
   }

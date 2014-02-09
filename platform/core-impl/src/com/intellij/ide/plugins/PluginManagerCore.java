@@ -266,33 +266,6 @@ public class PluginManagerCore {
                                              @NotNull ClassLoader[] parentLoaders,
                                              @NotNull IdeaPluginDescriptor pluginDescriptor) {
 
-    if (pluginDescriptor.getUseIdeaClassLoader()) {
-      try {
-        final ClassLoader loader = PluginManagerCore.class.getClassLoader();
-        final Method addUrlMethod = getAddUrlMethod(loader);
-
-
-        for (File aClassPath : classPath) {
-          final File file = aClassPath.getCanonicalFile();
-          addUrlMethod.invoke(loader, file.toURI().toURL());
-        }
-
-        return loader;
-      }
-      catch (NoSuchMethodException e) {
-        e.printStackTrace();
-      }
-      catch (IOException e) {
-        e.printStackTrace();
-      }
-      catch (IllegalAccessException e) {
-        e.printStackTrace();
-      }
-      catch (InvocationTargetException e) {
-        e.printStackTrace();
-      }
-    }
-
     PluginId pluginId = pluginDescriptor.getPluginId();
     File pluginRoot = pluginDescriptor.getPath();
 
@@ -999,19 +972,15 @@ public class PluginManagerCore {
 
     int i = 0;
     for (final IdeaPluginDescriptorImpl pluginDescriptor : result) {
-      if (pluginDescriptor.isUseCoreClassLoader()) {
-        pluginDescriptor.setLoader(parentLoader, true);
-      }
-      else {
-        final List<File> classPath = pluginDescriptor.getClassPath();
-        final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-        final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
+      final List<File> classPath = pluginDescriptor.getClassPath();
+      final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+      final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
 
-        final ClassLoader pluginClassLoader = createPluginClassLoader(classPath.toArray(new File[classPath.size()]),
-                                                                      parentLoaders.length > 0 ? parentLoaders : new ClassLoader[] {parentLoader},
-                                                                      pluginDescriptor);
-        pluginDescriptor.setLoader(pluginClassLoader, true);
-      }
+      final ClassLoader pluginClassLoader = createPluginClassLoader(classPath.toArray(new File[classPath.size()]),
+                                                                    parentLoaders.length > 0 ? parentLoaders : new ClassLoader[] {parentLoader},
+                                                                    pluginDescriptor);
+      pluginDescriptor.setLoader(pluginClassLoader, true);
+
 
       pluginDescriptor.registerExtensions();
       if (progress != null) {

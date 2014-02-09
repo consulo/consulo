@@ -73,10 +73,6 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
   @NotNull
   HelpSetPath[] getHelpSets();
 
-  String getVendorLogoPath();
-
-  boolean getUseIdeaClassLoader();
-
   String getDownloads();
 
   String getSinceBuild();
@@ -86,5 +82,6 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
   boolean isBundled();
 
   boolean isEnabled();
+
   void setEnabled(boolean enabled);
 }

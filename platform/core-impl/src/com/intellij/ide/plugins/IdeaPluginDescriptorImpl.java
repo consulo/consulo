@@ -64,7 +64,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private String myVendor;
   private String myVendorEmail;
   private String myVendorUrl;
-  private String myVendorLogoPath;
   private String myCategory;
   private String url;
   private File myPath;
@@ -84,8 +83,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private String myDescriptionChildText;
   private String myDownloadCounter;
   private long myDate;
-  private boolean myUseIdeaClassLoader;
-  private boolean myUseCoreClassLoader;
+
   private boolean myEnabled = true;
 
   private String mySinceBuild;
@@ -164,7 +162,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
         LOG.error(new PluginException("Invalid value in plugin.xml format version: '" + internalVersionString+"'", e, myId));
       }
     }
-    myUseIdeaClassLoader = pluginBean.useIdeaClassLoader;
+
     if (pluginBean.ideaVersion != null) {
       mySinceBuild = pluginBean.ideaVersion.sinceBuild;
       myUntilBuild = pluginBean.ideaVersion.untilBuild;
@@ -182,7 +180,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
       myVendor = pluginBean.vendor.name;
       myVendorEmail = pluginBean.vendor.email;
       myVendorUrl = pluginBean.vendor.url;
-      myVendorLogoPath = pluginBean.vendor.logo;
     }
 
     // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
@@ -494,28 +491,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @Override
   public ClassLoader getPluginClassLoader() {
     return myLoader != null ? myLoader : getClass().getClassLoader();
-  }
-
-  @Override
-  public String getVendorLogoPath() {
-    return myVendorLogoPath;
-  }
-
-  @Override
-  public boolean getUseIdeaClassLoader() {
-    return myUseIdeaClassLoader;
-  }
-
-  public boolean isUseCoreClassLoader() {
-    return myUseCoreClassLoader;
-  }
-
-  public void setUseCoreClassLoader(final boolean useCoreClassLoader) {
-    myUseCoreClassLoader = useCoreClassLoader;
-  }
-
-  public void setVendorLogoPath(final String vendorLogoPath) {
-    myVendorLogoPath = vendorLogoPath;
   }
 
   private String computeDescription() {

@@ -44,9 +44,6 @@ public class PluginBean extends ComponentManagerConfig {
   @Property(surroundWithTag = false)
   public IdeaVersionBean ideaVersion;
 
-  @Tag(value = "is-internal", textIfEmpty = "true")
-  public boolean isInternal;
-
   @Tag("extensions")
   public Element[] extensions;
 
@@ -75,7 +72,4 @@ public class PluginBean extends ComponentManagerConfig {
 
   @Attribute("url")
   public String url;
-
-  @Attribute("use-idea-classloader")
-  public boolean useIdeaClassLoader;
 }

@@ -27,9 +27,6 @@ public class PluginVendor {
   @Attribute("email")
   public String email;
 
-  @Attribute("logo")
-  public String logo;
-
   @Text
   public String name;
 }
