@@ -16,55 +16,19 @@
 package com.intellij.internal.statistic.connect;
 
 import com.intellij.internal.statistic.SettingsConnectionService;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 public class StatisticsConnectionService extends SettingsConnectionService {
-  private static final String PERMISSION_ATTR_NAME = "permitted";
-  private static final String DISABLED = "disabled";
-
-  public StatisticsConnectionService() {
-    this(((ApplicationInfoImpl)ApplicationInfoImpl.getShadowInstance()).getStatisticsSettingsUrl(),
-         ((ApplicationInfoImpl)ApplicationInfoImpl.getShadowInstance()).getStatisticsServiceUrl());
-  }
-
-  public StatisticsConnectionService(@NotNull String settingsUrl, @Nullable String defaultServiceUrl) {
-    super(settingsUrl, defaultServiceUrl);
-  }
-
-  @NotNull
-  @Override
-  public String[] getAttributeNames() {
-    return ArrayUtil.append(super.getAttributeNames(), PERMISSION_ATTR_NAME);
-  }
 
   public Boolean isTransmissionPermitted() {
-    final String permitted = getSettingValue(PERMISSION_ATTR_NAME);
-
-    return permitted == null ? true : Boolean.parseBoolean(permitted);
+    return true;
   }
 
   @NotNull
   public Set<String> getDisabledGroups() {
-    final String disabledGroupsString = getSettingValue(DISABLED);
-
-    if (disabledGroupsString == null) return Collections.<String>emptySet();
-
-    final List<String> disabledGroupsList = StringUtil.split(disabledGroupsString, ",");
-    return ContainerUtil.map2Set(disabledGroupsList, new Function<String, String>() {
-      @Override
-      public String fun(String s) {
-        return s.trim();
-      }
-    });
+    return Collections.emptySet();
   }
 }

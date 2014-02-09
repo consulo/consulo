@@ -42,6 +42,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
 
   @NonNls
   private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/consulo/plugins/";
+  @NonNls
+  private static final String DEFAULT_STATISTICS_HOST = "http://must-be.org/consulo/statistics/";
 
   private String myCodeName = null;
   private String myMajorVersion = null;
@@ -76,6 +78,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   private String myReleaseFeedbackUrl;
   private String myPluginManagerUrl;
   private String myPluginsListUrl;
+  private String myStatisticsUrl;
   private String myPluginsDownloadUrl;
   private String myWhatsNewUrl;
   private String myWinKeymapUrl;
@@ -87,8 +90,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private String myHelpRootName = "idea";
   @NonNls private String myWebHelpUrl = "http://www.jetbrains.com/idea/webhelp/";
   private List<PluginChooserPage> myPluginChooserPages = new ArrayList<PluginChooserPage>();
-  private String myStatisticsSettingsUrl;
-  private String myStatisticsServiceUrl;
 
   private Rectangle myAboutLogoRect;
 
@@ -143,9 +144,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ELEMENT_KEYMAP = "keymap";
   @NonNls private static final String ATTRIBUTE_WINDOWS_URL = "win";
   @NonNls private static final String ATTRIBUTE_MAC_URL = "mac";
-  @NonNls private static final String ELEMENT_STATISTICS = "statistics";
-  @NonNls private static final String ATTRIBUTE_STATISTICS_SETTINGS = "settings";
-  @NonNls private static final String ATTRIBUTE_STATISTICS_SERVICE = "service";
 
   @Override
   public void initComponent() { }
@@ -318,6 +316,11 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   }
 
   @Override
+  public String getStatisticsUrl() {
+    return myStatisticsUrl;
+  }
+
+  @Override
   public String getPluginsDownloadUrl() {
     return myPluginsDownloadUrl;
   }
@@ -378,14 +381,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       buffer.append(getBuild().asString());
     }
     return buffer.toString();
-  }
-
-  public String getStatisticsSettingsUrl() {
-    return myStatisticsSettingsUrl;
-  }
-
-  public String getStatisticsServiceUrl() {
-    return myStatisticsServiceUrl;
   }
 
   @Override
@@ -594,6 +589,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       myPluginsDownloadUrl = myPluginsDownloadUrl.replace(DEFAULT_PLUGINS_HOST, pluginsHost);
     }
 
+    myStatisticsUrl = DEFAULT_STATISTICS_HOST + "post";
+    final String statisticsHost = System.getProperty("consulo.statistics.host");
+    if (statisticsHost != null) {
+      myStatisticsUrl = myStatisticsUrl.replace(DEFAULT_STATISTICS_HOST, statisticsHost);
+    }
+
     Element keymapElement = parentNode.getChild(ELEMENT_KEYMAP);
     if (keymapElement != null) {
       myWinKeymapUrl = keymapElement.getAttributeValue(ATTRIBUTE_WINDOWS_URL);
@@ -604,16 +605,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     final List children = parentNode.getChildren(PLUGINS_PAGE_ELEMENT_NAME);
     for(Object child: children) {
       myPluginChooserPages.add(new PluginChooserPageImpl((Element) child));
-    }
-
-    Element statisticsElement = parentNode.getChild(ELEMENT_STATISTICS);
-    if (statisticsElement != null) {
-      myStatisticsSettingsUrl = statisticsElement.getAttributeValue(ATTRIBUTE_STATISTICS_SETTINGS);
-      myStatisticsServiceUrl = statisticsElement.getAttributeValue(ATTRIBUTE_STATISTICS_SERVICE);
-    }
-    else {
-      myStatisticsSettingsUrl = "http://jetbrains.com/idea/statistics/stat-assistant.xml";
-      myStatisticsServiceUrl = "http://jetbrains.com/idea/statistics/index.jsp";
     }
   }
 

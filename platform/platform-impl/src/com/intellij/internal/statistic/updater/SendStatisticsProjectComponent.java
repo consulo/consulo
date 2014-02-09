@@ -16,28 +16,19 @@
 package com.intellij.internal.statistic.updater;
 
 import com.intellij.internal.statistic.StatisticsUploadAssistant;
-import com.intellij.internal.statistic.connect.RemotelyConfigurableStatisticsService;
-import com.intellij.internal.statistic.connect.StatisticsConnectionService;
-import com.intellij.internal.statistic.connect.StatisticsHttpClientSender;
 import com.intellij.internal.statistic.connect.StatisticsService;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-
 public class SendStatisticsProjectComponent implements ProjectComponent {
-
-  private static final Logger LOG = Logger.getInstance("#" + SendStatisticsProjectComponent.class.getName());
-
   private static final int DELAY_IN_MIN = 10;
 
   private Project myProject;
@@ -49,9 +40,9 @@ public class SendStatisticsProjectComponent implements ProjectComponent {
 
     NotificationsConfigurationImpl.remove("SendUsagesStatistics");
     NotificationsConfiguration.getNotificationsConfiguration().register(
-      StatisticsNotificationManager.GROUP_DISPLAY_ID,
-      NotificationDisplayType.STICKY_BALLOON,
-      false);
+            StatisticsNotificationManager.GROUP_DISPLAY_ID,
+            NotificationDisplayType.STICKY_BALLOON,
+            false);
   }
 
   @Override
@@ -67,26 +58,13 @@ public class SendStatisticsProjectComponent implements ProjectComponent {
   }
 
   private void runStatisticsService() {
-    final RemotelyConfigurableStatisticsService statisticsService =
-      new RemotelyConfigurableStatisticsService(new StatisticsConnectionService(),
-                                                new StatisticsHttpClientSender(),
-                                                new StatisticsUploadAssistant());
+    StatisticsService statisticsService = StatisticsUploadAssistant.getStatisticsService();
+
     if (StatisticsUploadAssistant.showNotification()) {
       StatisticsNotificationManager.showNotification(statisticsService, myProject);
     }
     else if (StatisticsUploadAssistant.isSendAllowed() && StatisticsUploadAssistant.isTimeToSend()) {
-      StatisticsService serviceToUse = null;
-      StatisticsService[] extensions = StatisticsService.EP_NAME.getExtensions();
-      if (extensions.length > 1) {
-        LOG.warn(String.format("More than one stats service detected (%s). Falling back to the built-in one", Arrays.toString(extensions)));
-      }
-      else if (extensions.length == 1) {
-        serviceToUse = extensions[0];
-      }
-      if (serviceToUse == null) {
-        serviceToUse = statisticsService;
-      }
-      runWithDelay(serviceToUse);
+      runWithDelay(statisticsService);
     }
   }
 

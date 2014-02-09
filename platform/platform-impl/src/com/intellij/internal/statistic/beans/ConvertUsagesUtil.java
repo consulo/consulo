@@ -36,7 +36,7 @@ public class ConvertUsagesUtil {
     assert map != null;
     final Map<GroupDescriptor, Set<T>> sortedMap = sortDescriptorsByPriority(map);
 
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     for (Map.Entry<GroupDescriptor, Set<T>> entry : sortedMap.entrySet()) {
       buffer.append(entry.getKey().getId());
       buffer.append(GROUP_SEPARATOR);
@@ -50,7 +50,7 @@ public class ConvertUsagesUtil {
   //@NotNull
   public static String convertValueMap(Set<? extends UsageDescriptor> descriptors) {
     assert descriptors != null;
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder buffer = new StringBuilder();
     for (UsageDescriptor usageDescriptor : descriptors) {
       buffer.append(usageDescriptor.getKey());
       buffer.append("=");
@@ -139,6 +139,7 @@ public class ConvertUsagesUtil {
   public static <T extends UsageDescriptor> Map<GroupDescriptor, Set<T>> sortDescriptorsByPriority(Map<GroupDescriptor, Set<T>> descriptors) {
     assert descriptors != null;
     final SortedMap<GroupDescriptor, Set<T>> map = new TreeMap<GroupDescriptor, Set<T>>(new Comparator<GroupDescriptor>() {
+      @Override
       public int compare(GroupDescriptor g1, GroupDescriptor g2) {
         final int priority = (int)(g2.getPriority() - g1.getPriority());
         return priority == 0 ? g1.getId().compareTo(g2.getId()) : priority;

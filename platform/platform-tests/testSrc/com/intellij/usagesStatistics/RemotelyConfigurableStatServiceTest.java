@@ -20,18 +20,6 @@ public class RemotelyConfigurableStatServiceTest extends TestCase {
   @NonNls
   private static final String STAT_CONFIG_URL = "http://localhost:8080/config.jsp";
 
-  public void testStatisticsConnectionServiceDefaultSettings() {
-    final StatisticsConnectionService connectionService = new StatisticsConnectionService(STAT_CONFIG_URL, STAT_URL);
-
-    Assert.assertEquals(STAT_URL, connectionService.getServiceUrl());
-    Assert.assertTrue(connectionService.isTransmissionPermitted());
-    final String[] attributeNames = connectionService.getAttributeNames();
-
-    Assert.assertEquals(attributeNames.length, 2);
-    Assert.assertEquals(attributeNames[0], "url");
-    Assert.assertEquals(attributeNames[1], "permitted");
-  }
-
   public void testEmptyDataSending() {
     RemotelyConfigurableStatisticsService service = new RemotelyConfigurableStatisticsService(new StatisticsConnectionService(),
                                                                                               new StatisticsHttpClientSender(),
@@ -46,7 +34,7 @@ public class RemotelyConfigurableStatServiceTest extends TestCase {
   }
 
   public void testIncorrectUrlSending() {
-    RemotelyConfigurableStatisticsService service = new RemotelyConfigurableStatisticsService(new StatisticsConnectionService(STAT_CONFIG_URL, STAT_URL),
+    RemotelyConfigurableStatisticsService service = new RemotelyConfigurableStatisticsService(new StatisticsConnectionService(),
                                                                                               new StatisticsHttpClientSender(),
                                                                                               new StatisticsUploadAssistant() {
                                                                                                 @Override
@@ -73,7 +61,7 @@ public class RemotelyConfigurableStatServiceTest extends TestCase {
 
   public void testErrorInRemoteConfiguration() {
     RemotelyConfigurableStatisticsService service =
-      new RemotelyConfigurableStatisticsService(new StatisticsConnectionService(STAT_CONFIG_URL, null),
+      new RemotelyConfigurableStatisticsService(new StatisticsConnectionService(),
                                                 new StatisticsHttpClientSender(),
                                                 new StatisticsUploadAssistant());
     final StatisticsResult result = service.send();

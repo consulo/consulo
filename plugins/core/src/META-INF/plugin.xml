@@ -162,7 +162,6 @@
     </extensionPoint>
     <extensionPoint name="frameEditorComponentProvider" interface="com.intellij.openapi.wm.ex.FrameEditorComponentProvider"/>
 
-    <extensionPoint name="statisticsService" interface="com.intellij.internal.statistic.connect.StatisticsService"/>
     <extensionPoint name="productivityFeaturesProvider" interface="com.intellij.featureStatistics.ProductivityFeaturesProvider"/>
 
     <extensionPoint name="iconDescriptorUpdater" interface="com.intellij.ide.IconDescriptorUpdater"/>
@@ -1357,7 +1356,7 @@
     <statistics.usagesCollector implementation="com.intellij.featureStatistics.FeaturesUsageCollector"/>
     <statistics.usagesCollector implementation="com.intellij.openapi.vcs.statistics.VcsUsagesCollector"/>
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.UsageTrigger$MyCollector"/>
-    <!--<statistics.usagesCollector implementation="com.intellij.internal.statistic.ideSettings.IdeSettingsUsagesCollector"/>-->
+
     <statistics.usagesCollector implementation="com.intellij.internal.statistic.ideSettings.LaFUsagesCollector"/>
 
     <applicationConfigurable instance="com.intellij.internal.statistic.configurable.StatisticsConfigurable" id="usage.statistics"

@@ -16,10 +16,8 @@
 package com.intellij.internal.statistic.connect;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.updateSettings.impl.UpdateChecker;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.net.HttpConfigurable;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -29,19 +27,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class StatisticsHttpClientSender implements StatisticsDataSender {
 
+  @Override
   public void send(@NotNull String url, @NotNull String content) throws StatServiceException {
     PostMethod post = null;
 
     try {
-      HttpConfigurable.getInstance().prepareURL(url);
+      //HttpConfigurable.getInstance().prepareURL(url);
 
       HttpClient httpclient = new HttpClient();
       post = new PostMethod(url);
 
       post.setRequestBody(new NameValuePair[]{
         new NameValuePair("content", content),
-        new NameValuePair("uuid", UpdateChecker.getInstallationUID(PropertiesComponent.getInstance())),
-        new NameValuePair("ide", ApplicationNamesInfo.getInstance().getProductName()),
+        new NameValuePair("uuid", UpdateChecker.getInstallationUID(PropertiesComponent.getInstance()))
       });
 
       httpclient.executeMethod(post);
