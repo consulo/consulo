@@ -59,8 +59,6 @@ public class IntentionDescriptionPanel {
   private JPanel myPoweredByPanel;
   private final List<IntentionUsagePanel> myBeforeUsagePanels = new ArrayList<IntentionUsagePanel>();
   private final List<IntentionUsagePanel> myAfterUsagePanels = new ArrayList<IntentionUsagePanel>();
-  @NonNls private static final String BEFORE_TEMPLATE = "before.java.template";
-  @NonNls private static final String AFTER_TEMPLATE = "after.java.template";
 
   public void reset(IntentionActionMetaData actionMetaData, String filter)  {
     try {
@@ -126,9 +124,11 @@ public class IntentionDescriptionPanel {
       myDescriptionBrowser.setText(text);
       setupPoweredByPanel(null);
 
-      URL beforeURL = getClass().getClassLoader().getResource(getClass().getPackage().getName().replace('.','/') + "/" + BEFORE_TEMPLATE);
+      URL beforeURL = getClass().getClassLoader().getResource("intentionDescriptions/TemplateGroup/before.txt.template");
+      assert beforeURL != null : "no template file. resources are not copied?";
       showUsages(myBeforePanel, myBeforeSeparator, myBeforeUsagePanels, new ResourceTextDescriptor[]{new ResourceTextDescriptor(beforeURL)});
-      URL afterURL = getClass().getClassLoader().getResource(getClass().getPackage().getName().replace('.','/') + "/" + AFTER_TEMPLATE);
+      URL afterURL = getClass().getClassLoader().getResource("intentionDescriptions/TemplateGroup/after.txt.template");
+      assert afterURL != null : "no template file. resources are not copied?";
       showUsages(myAfterPanel, myAfterSeparator, myAfterUsagePanels, new ResourceTextDescriptor[]{new ResourceTextDescriptor(afterURL)});
 
       SwingUtilities.invokeLater(new Runnable() {
