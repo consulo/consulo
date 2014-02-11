@@ -18,7 +18,6 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx2;
-import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
@@ -49,7 +48,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
 
     if (baseDirPath != null) {
       StreamProvider
-              provider = ((ApplicationImpl)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
+              provider = ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
       SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<T, E>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
       myRegisteredManagers.add(manager);
       return manager;
