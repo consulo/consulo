@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.impl.stores.StorageUtil;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
@@ -720,7 +720,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
   @Nullable
   private static StreamProvider getProvider() {
-    StreamProvider provider = ((ApplicationImpl)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
+    StreamProvider provider = ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
     return provider == null || !provider.isEnabled() ? null : provider;
   }
 
