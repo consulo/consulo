@@ -1,4 +1,11 @@
-# Consulo
+# WARNING - VERY UNSTABLE
+
+Status:
+ * Windows - OK
+ * Linux - NOT TESTED
+ * Mac - FAIL
+
+## Information
 
 This is fork of IntelliJ IDEA Community Edition
 
