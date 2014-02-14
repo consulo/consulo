@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,6 +162,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
 
   private void dropCaches() {
     myTimeStampOfCachedThings = -1; // make it never equal to myVirtualFilePointerManager.getModificationCount()
+    myCachedThings = EMPTY;
   }
 
   @Override
@@ -250,6 +251,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
     return myList.size();
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof VirtualFilePointerContainerImpl)) return false;
@@ -259,6 +261,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
     return myList.equals(virtualFilePointerContainer.myList);
   }
 
+  @Override
   public int hashCode() {
     return myList.hashCode();
   }
