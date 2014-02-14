@@ -1,14 +1,14 @@
 @ECHO OFF
 
 ::----------------------------------------------------------------------
-:: IntelliJ IDEA startup script.
+:: Consulo startup script.
 ::----------------------------------------------------------------------
 
 :: ---------------------------------------------------------------------
 :: Locate a JDK installation directory which will be used to run the IDE.
-:: Try (in order): IDEA_JDK, ..\jre, JDK_HOME, JAVA_HOME.
+:: Try (in order): CONSULO_JDK, ..\jre, JDK_HOME, JAVA_HOME.
 :: ---------------------------------------------------------------------
-IF EXIST "%IDEA_JDK%" SET JDK=%IDEA_JDK%
+IF EXIST "%CONSULO_JDK%" SET JDK=%CONSULO_JDK%
 IF NOT "%JDK%" == "" GOTO jdk
 IF EXIST "%~dp0\..\jre" SET JDK=%~dp0\..\jre
 IF NOT "%JDK%" == "" GOTO jdk
@@ -41,7 +41,8 @@ IF NOT "%IDEA_PROPERTIES%" == "" SET IDE_PROPERTIES_PROPERTY="-Didea.properties.
 :: ---------------------------------------------------------------------
 :: Collect JVM options and properties.
 :: ---------------------------------------------------------------------
-SET VM_OPTIONS_FILE=%IDE_BIN_DIR%\consulo%BITS%.exe.vmoptions
+SET VM_OPTIONS_FILE=%IDEA_VM_OPTIONS%
+IF "%VM_OPTIONS_FILE%" == "" SET VM_OPTIONS_FILE=%IDE_BIN_DIR%\consulo%BITS%.exe.vmoptions
 SET ACC=
 FOR /F "usebackq delims=" %%i IN ("%VM_OPTIONS_FILE%") DO CALL "%IDE_BIN_DIR%\append.bat" "%%i"
 IF EXIST "%VM_OPTIONS_FILE%" SET ACC=%ACC% -Djb.vmOptionsFile="%VM_OPTIONS_FILE%"
@@ -72,8 +73,8 @@ SET PATH=%OLD_PATH%
 GOTO end
 
 :error
-ECHO ERROR: cannot start IntelliJ IDEA.
-ECHO No JDK found. Please validate either IDEA_JDK, JDK_HOME or JAVA_HOME points to valid JDK installation.
+ECHO ERROR: cannot start Consulo.
+ECHO No JDK found. Please validate either CONSULO_JDK, JDK_HOME or JAVA_HOME points to valid JDK installation.
 ECHO
 PAUSE
 
