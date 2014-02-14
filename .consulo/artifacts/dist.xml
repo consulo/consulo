@@ -11,9 +11,12 @@
         </element>
       </element>
       <element id="zip-archive" name="consulo-mac.zip">
-        <element id="artifact" artifact-name="distMain" />
-        <element id="directory" name="bin">
-          <element id="dir-copy" path="$PROJECT_DIR$/bin/mac" />
+        <element id="directory" name="Consulo.app">
+          <element id="directory" name="bin">
+            <element id="dir-copy" path="$PROJECT_DIR$/bin/mac" />
+          </element>
+          <element id="artifact" artifact-name="distMain" />
+          <element id="dir-copy" path="$PROJECT_DIR$/build/conf/mac" />
         </element>
       </element>
       <element id="zip-archive" name="consulo-linux.zip">

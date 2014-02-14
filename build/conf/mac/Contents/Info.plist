@@ -6,7 +6,6 @@
     <string>English</string>
     <key>CFBundleDocumentTypes</key>
     <array>
-      @@doc_types@@
       <dict>
         <key>CFBundleTypeExtensions</key>
         <array>
@@ -25,31 +24,31 @@
       </dict>
     </array>
     <key>CFBundleExecutable</key>
-    <string>@@executable@@</string>
+    <string>consulo</string>
     <key>CFBundleIconFile</key>
-    <string>@@icns@@</string>
+    <string>consulo.icns</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>@@bundle_name@@</string>
+    <string>Consulo</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleIdentifier</key>
-    <string>@@bundle_identifier@@</string>
+    <string>org.mustbe.consulo</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleGetInfoString</key>
-    <string>@@bundle_name@@ @@version@@, build @@build@@. Copyright JetBrains s.r.o., (c) 2000-@@year@@</string>
+    <string>Consulo 1. Copyright Must-Be.org, (c) 2013-2014</string>
     <key>CFBundleShortVersionString</key>
-    <string>@@version@@</string>
+    <string>1.0</string>
     <key>CFBundleVersion</key>
-    <string>@@build@@</string>
+    <string>1.0</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.developer-tools</string>
     <key>CFBundleHelpBookName</key>
-    <string>JetBrains.@@help_id@@.help</string>
+    <string>JetBrains.IJ.help</string>
     <key>CFBundleHelpBookFolder</key>
-    <string>@@help_id@@.help</string>
+    <string>IJ.help</string>
 
     <key>NSHighResolutionCapable</key>
     <true/>
@@ -61,11 +60,11 @@
     </array>
     <key>LSRequiresNativeExecution</key>
     <string>YES</string>
-    @@url_schemes@@
-    <key>Java</key>
+    
+    <key>JVMOptions</key>
     <dict>
       <key>ClassPath</key>
-      <string>@@class_path@@</string>
+      <string>$APP_PACKAGE/lib/bootstrap.jar:$APP_PACKAGE/lib/extensions.jar:$APP_PACKAGE/lib/util.jar:$APP_PACKAGE/lib/jdom.jar:$APP_PACKAGE/lib/log4j.jar:$APP_PACKAGE/lib/trove4j.jar:$APP_PACKAGE/lib/jna.jar</string>
 
       <key>JVMVersion</key>
       <string>1.6*</string>
@@ -74,11 +73,18 @@
       <string>com.intellij.idea.Main</string>
       <key>Properties</key>
       <dict>
-        @@idea_properties@@
+        
+        <key>idea.paths.selector</key>
+        <string>Consulo</string>
+
+
+        <key>idea.java.redist</key>
+        <string>NoJavaDistribution</string>
+
       </dict>
 
       <key>VMOptions</key>
-      <string>@@vmoptions@@ -Xbootclasspath/a:../lib/boot.jar</string>
+      <string>-Dfile.encoding=UTF-8 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+UseCodeCacheFlushing -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -XX:+HeapDumpOnOutOfMemoryError -Xverify:none -Xbootclasspath/a:../lib/boot.jar</string>
 
       <key>WorkingDirectory</key>
       <string>$APP_PACKAGE/bin</string>

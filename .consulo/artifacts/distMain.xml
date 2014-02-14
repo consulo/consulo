@@ -97,6 +97,11 @@
         <element id="file-copy" path="$PROJECT_DIR$/bin/log.xml" />
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/build.txt" />
+      <element id="file-copy" path="$PROJECT_DIR$/LICENSE.txt" />
+      <element id="file-copy" path="$PROJECT_DIR$/NOTICE.txt" />
+      <element id="directory" name="license">
+        <element id="dir-copy" path="$PROJECT_DIR$/license" />
+      </element>
     </root>
   </artifact>
 </component>
