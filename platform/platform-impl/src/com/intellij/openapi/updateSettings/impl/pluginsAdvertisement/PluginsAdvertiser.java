@@ -23,16 +23,10 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.notification.*;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
@@ -159,22 +153,22 @@ public class PluginsAdvertiser implements StartupActivity {
     final KnownExtensions extensions = loadExtensions();
     if (extensions != null && unknownFeatures.isEmpty()) return;
     final Runnable runnable = new Runnable() {
+      @Override
       public void run() {
         final Application application = ApplicationManager.getApplication();
         if (application.isUnitTestMode() || application.isHeadlessEnvironment()) return;
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Search for non-bundled plugins in plugin repository...") {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
           private final Set<PluginDownloader> myPlugins = new HashSet<PluginDownloader>();
           private List<IdeaPluginDescriptor> myAllPlugins;
 
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run() {
             if (extensions == null) {
               loadSupportedExtensions();
             }
-            int idx = 0;
+
             final Set<PluginId> ids = new HashSet<PluginId>();
             for (UnknownFeature feature : unknownFeatures) {
-              indicator.setText("Searching for plugin supporting \'" + feature.getImplementationName() + "\'");
               final List<PluginId> pluginId = retrieve(feature);
               if (pluginId != null) {
                 //do not suggest to download disabled plugins
@@ -185,23 +179,28 @@ public class PluginsAdvertiser implements StartupActivity {
                   }
                 }
               }
-              indicator.setFraction(((double) idx++) / unknownFeatures.size());
             }
 
             try {
-              myAllPlugins = RepositoryHelper.loadPluginsFromRepository(indicator);
+              myAllPlugins = RepositoryHelper.loadPluginsFromRepository(null);
               for (IdeaPluginDescriptor loadedPlugin : myAllPlugins) {
                 if (ids.contains(loadedPlugin.getPluginId())) {
                   myPlugins.add(PluginDownloader.createDownloader(loadedPlugin));
                 }
               }
+
+              ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                  onSuccess();
+                }
+              }, ModalityState.NON_MODAL);
             }
             catch (Exception ignore) {
               //no notification to show
             }
           }
 
-          @Override
           public void onSuccess() {
             if (!myPlugins.isEmpty()) {
               final String displayId = "Plugins Suggestion";
@@ -221,7 +220,7 @@ public class PluginsAdvertiser implements StartupActivity {
                       } else if ("configure".equals(description)) {
                         LOG.assertTrue(myAllPlugins != null);
                         notification.expire();
-                        new PluginsAdvertiserDialog(myProject, myPlugins.toArray(new PluginDownloader[myPlugins.size()]), myAllPlugins).show();
+                        new PluginsAdvertiserDialog(project, myPlugins.toArray(new PluginDownloader[myPlugins.size()]), myAllPlugins).show();
                       }
                     }
                   }
