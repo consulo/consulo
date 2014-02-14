@@ -1,13 +1,13 @@
 #!/bin/sh
 #
 # ---------------------------------------------------------------------
-# @@product_full@@ startup script.
+# Consulo startup script.
 # ---------------------------------------------------------------------
 #
 
 message()
 {
-  TITLE="Cannot start @@product_full@@"
+  TITLE="Cannot start Consulo"
   if [ -t 1 ]; then
     echo "ERROR: $TITLE\n$1"
   elif [ -n `which zenity` ]; then
@@ -42,10 +42,10 @@ OS_TYPE=`"$UNAME" -s`
 
 # ---------------------------------------------------------------------
 # Locate a JDK installation directory which will be used to run the IDE.
-# Try (in order): @@product_uc@@_JDK, JDK_HOME, JAVA_HOME, "java" in PATH.
+# Try (in order): CONSULO_JDK, JDK_HOME, JAVA_HOME, "java" in PATH.
 # ---------------------------------------------------------------------
-if [ -n "$@@product_uc@@_JDK" -a -x "$@@product_uc@@_JDK/bin/java" ]; then
-  JDK="$@@product_uc@@_JDK"
+if [ -n "$CONSULO_JDK" -a -x "$CONSULO_JDK/bin/java" ]; then
+  JDK="$CONSULO_JDK"
 elif [ -n "$JDK_HOME" -a -x "$JDK_HOME/bin/java" ]; then
   JDK="$JDK_HOME"
 elif [ -n "$JAVA_HOME" -a -x "$JAVA_HOME/bin/java" ]; then
@@ -53,7 +53,7 @@ elif [ -n "$JAVA_HOME" -a -x "$JAVA_HOME/bin/java" ]; then
 else
   JAVA_BIN_PATH=`which java`
   if [ -n "$JAVA_BIN_PATH" ]; then
-    if [ "$OS_TYPE" = "FreeBSD" ]; then
+    if [ "$OS_TYPE" = "FreeBSD" -o "$OS_TYPE" = "MidnightBSD" ]; then
       JAVA_LOCATION=`JAVAVM_DRYRUN=yes java | "$GREP" '^JAVA_HOME' | "$CUT" -c11-`
       if [ -x "$JAVA_LOCATION/bin/java" ]; then
         JDK="$JAVA_LOCATION"
@@ -86,33 +86,15 @@ else
 fi
 
 if [ -z "$JDK" ]; then
-  message "No JDK found. Please validate either @@product_uc@@_JDK, JDK_HOME or JAVA_HOME environment variable points to valid JDK installation."
+  message "No JDK found. Please validate either CONSULO_JDK, JDK_HOME or JAVA_HOME environment variable points to valid JDK installation."
   exit 1
 fi
 
 VERSION_LOG=`"$MKTEMP" -t java.version.log.XXXXXX`
 "$JDK/bin/java" -version 2> "$VERSION_LOG"
-"$GREP" 'OpenJDK' "$VERSION_LOG"
-OPEN_JDK=$?
-"$GREP" "64-Bit|x86_64" "$VERSION_LOG"
+"$GREP" "64-Bit|x86_64" "$VERSION_LOG" > /dev/null
 BITS=$?
 "$RM" -f "$VERSION_LOG"
-if [ $OPEN_JDK -eq 0 ]; then
-  echo "WARNING: You are launching the IDE using OpenJDK Java runtime."
-  echo
-  echo "         ITS KNOWN TO HAVE PERFORMANCE AND GRAPHICS ISSUES!"
-  echo "         SWITCH TO THE ORACLE(SUN) JDK BEFORE REPORTING PROBLEMS!"
-  echo
-  echo "NOTE:    If you have both Oracle (Sun) JDK and OpenJDK installed"
-  echo "         please validate either @@product_uc@@_JDK, JDK_HOME, or JAVA_HOME environment variable points to valid Oracle (Sun) JDK installation."
-  echo "         See http://ow.ly/6TuKQ for more info on switching default JDK."
-  echo
-  echo "Press Enter to continue."
-# ---------------------------------------------------------------------
-# COMMENT LINE BELOW TO REMOVE PAUSE AFTER OPEN JDK WARNING
-# ---------------------------------------------------------------------
-  read IGNORE
-fi
 if [ $BITS -eq 0 ]; then
   BITS="64"
 else
@@ -135,18 +117,18 @@ IDE_BIN_HOME=`dirname "$SCRIPT_LOCATION"`
 # ---------------------------------------------------------------------
 # Collect JVM options and properties.
 # ---------------------------------------------------------------------
-if [ -n "$@@product_uc@@_PROPERTIES" ]; then
-  IDE_PROPERTIES_PROPERTY="-Didea.properties.file=\"$@@product_uc@@_PROPERTIES\""
+if [ -n "$IDEA_PROPERTIES" ]; then
+  IDE_PROPERTIES_PROPERTY="-Didea.properties.file=\"$IDEA_PROPERTIES\""
 fi
 
-MAIN_CLASS_NAME="$@@product_uc@@_MAIN_CLASS_NAME"
+MAIN_CLASS_NAME="$IDEA_MAIN_CLASS_NAME"
 if [ -z "$MAIN_CLASS_NAME" ]; then
   MAIN_CLASS_NAME="com.intellij.idea.Main"
 fi
 
-VM_OPTIONS_FILE="$@@product_uc@@_VM_OPTIONS"
+VM_OPTIONS_FILE="$IDEA_VM_OPTIONS"
 if [ -z "$VM_OPTIONS_FILE" ]; then
-  VM_OPTIONS_FILE="$IDE_BIN_HOME/@@vm_options@@$BITS.vmoptions"
+  VM_OPTIONS_FILE="$IDE_BIN_HOME/consulo$BITS.vmoptions"
 fi
 
 if [ -r "$VM_OPTIONS_FILE" ]; then
@@ -154,22 +136,29 @@ if [ -r "$VM_OPTIONS_FILE" ]; then
   VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\""
 fi
 
-IS_EAP="@@isEap@@"
+IS_EAP="true"
 if [ "$IS_EAP" = "true" ]; then
   OS_NAME=`echo $OS_TYPE | "$TR" '[:upper:]' '[:lower:]'`
   AGENT_LIB="yjpagent-$OS_NAME$BITS"
   if [ -r "$IDE_BIN_HOME/lib$AGENT_LIB.so" ]; then
-    AGENT="-agentlib:$AGENT_LIB=disablej2ee,disablealloc,sessionname=@@system_selector@@"
+    AGENT="-agentlib:$AGENT_LIB=disablej2ee,disablealloc,delay=10000,sessionname=IdeaIC13"
   fi
 fi
 
-COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/boot.jar\" -Didea.paths.selector=@@system_selector@@ $IDE_PROPERTIES_PROPERTY"
-IDE_JVM_ARGS="@@ide_jvm_args@@"
+COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/boot.jar\" $IDE_PROPERTIES_PROPERTY"
+IDE_JVM_ARGS=""
 ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
 
-@@class_path@@
-if [ -n "$@@product_uc@@_CLASSPATH" ]; then
-  CLASSPATH="$CLASSPATH:$@@product_uc@@_CLASSPATH"
+CLASSPATH="$IDE_HOME/lib/bootstrap.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/extensions.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/util.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jdom.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/log4j.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/trove4j.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna.jar"
+CLASSPATH="$CLASSPATH:$JDK/lib/tools.jar"
+if [ -n "$IDEA_CLASSPATH" ]; then
+  CLASSPATH="$CLASSPATH:$IDEA_CLASSPATH"
 fi
 export CLASSPATH
 
@@ -180,6 +169,6 @@ export LD_LIBRARY_PATH
 # Run the IDE.
 # ---------------------------------------------------------------------
 while true ; do
-  eval "$JDK/bin/java" $ALL_JVM_ARGS -Djb.restart.code=88 $MAIN_CLASS_NAME $*
+  eval "$JDK/bin/java" $ALL_JVM_ARGS -Djb.restart.code=88 $MAIN_CLASS_NAME "$@"
   test $? -ne 88 && break
 done

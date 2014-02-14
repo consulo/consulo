@@ -15,9 +15,11 @@
         </element>
       </element>
       <element id="zip-archive" name="consulo-linux.zip">
-        <element id="artifact" artifact-name="distMain" />
-        <element id="directory" name="bin">
-          <element id="dir-copy" path="$PROJECT_DIR$/bin/linux" />
+        <element id="directory" name="Consulo">
+          <element id="directory" name="bin">
+            <element id="dir-copy" path="$PROJECT_DIR$/bin/linux" />
+          </element>
+          <element id="artifact" artifact-name="distMain" />
         </element>
       </element>
     </root>
