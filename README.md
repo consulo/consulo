@@ -2,8 +2,8 @@
 
 Status:
  * Windows - OK
- * Linux - NOT TESTED
- * Mac - FAIL
+ * Linux - OK
+ * Mac - ??
 
 ## Information
 
