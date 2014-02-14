@@ -17,7 +17,7 @@ public class Utils {
   @SuppressWarnings({"SSBasedInspection"})
   public static File createTempFile() throws IOException {
     if (myTempDir == null) {
-      myTempDir = File.createTempFile("consulo.updater", "tmp");
+      myTempDir = File.createTempFile("idea.updater", "tmp");
       delete(myTempDir);
       myTempDir.mkdirs();
     }
