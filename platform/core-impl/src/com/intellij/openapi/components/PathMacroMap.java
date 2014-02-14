@@ -16,60 +16,55 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
  * @since Dec 6, 2004
  */
+@Logger
 public abstract class PathMacroMap {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.PathMacroMap");
-
-
   public abstract String substitute(String text, boolean caseSensitive);
 
   public final void substitute(@NotNull Element e, boolean caseSensitive) {
     substitute(e, caseSensitive, false);
   }
 
-  public final void substitute(@NotNull Element e, boolean caseSensitive, final boolean recursively,
-                               @Nullable PathMacroFilter filter) {
-    List<Content> content = e.getContent();
-    //noinspection ForLoopReplaceableByForEach
-    for (int i = 0, contentSize = content.size(); i < contentSize; i++) {
-      Content child = content.get(i);
+  public final void substitute(@NotNull Element e, boolean caseSensitive, boolean recursively, @Nullable PathMacroFilter filter) {
+    for (Content child : e.getContent()) {
       if (child instanceof Element) {
-        Element element = (Element)child;
-        substitute(element, caseSensitive, recursively, filter);
+        substitute((Element)child, caseSensitive, recursively, filter);
       }
       else if (child instanceof Text) {
         Text t = (Text)child;
         if (filter == null || !filter.skipPathMacros(t)) {
-          t.setText((recursively || (filter != null && filter.recursePathMacros(t)))
-                    ? substituteRecursively(t.getText(), caseSensitive)
-                    : substitute(t.getText(), caseSensitive));
+          String oldText = t.getText();
+          String newText = (recursively || (filter != null && filter.recursePathMacros(t)))
+                           ? substituteRecursively(oldText, caseSensitive)
+                           : substitute(oldText, caseSensitive);
+          if (oldText != newText) {
+            t.setText(newText);
+          }
         }
       }
       else if (!(child instanceof Comment)) {
-        LOG.error("Wrong content: " + child.getClass());
+        LOGGER.error("Wrong content: " + child.getClass());
       }
     }
 
-    List<Attribute> attributes = e.getAttributes();
-    //noinspection ForLoopReplaceableByForEach
-    for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
-      Attribute attribute = attributes.get(i);
+    for (Attribute attribute : e.getAttributes()) {
       if (filter == null || !filter.skipPathMacros(attribute)) {
-        final String value = (recursively || (filter != null && filter.recursePathMacros(attribute)))
-                             ? substituteRecursively(attribute.getValue(), caseSensitive)
-                             : substitute(attribute.getValue(), caseSensitive);
-        attribute.setValue(value);
+        String oldValue = attribute.getValue();
+        String newValue = (recursively || (filter != null && filter.recursePathMacros(attribute)))
+                          ? substituteRecursively(oldValue, caseSensitive)
+                          : substitute(oldValue, caseSensitive);
+        if (oldValue != newValue) {
+          attribute.setValue(newValue);
+        }
       }
     }
   }
@@ -86,5 +81,6 @@ public abstract class PathMacroMap {
     return FileUtil.toSystemIndependentName(path);
   }
 
+  @Override
   public abstract int hashCode();
 }

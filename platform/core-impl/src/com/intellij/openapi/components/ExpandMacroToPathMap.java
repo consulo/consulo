@@ -43,12 +43,15 @@ public class ExpandMacroToPathMap extends PathMacroMap {
     myMacroExpands.putAll(another.myMacroExpands);
   }
 
+  @Override
   public String substitute(String text, boolean caseSensitive) {
     if (text == null) {
       //noinspection ConstantConditions
       return null;
     }
-
+    if (text.indexOf('$') < 0) {
+      return text;
+    }
     for (Map.Entry<String, String> entry : myPlainMap.entrySet()) {
       // when replacing macros with actual paths the replace utility may be used as always 'case-sensitive'
       // for case-insensitive file systems there will be no unnecessary toLowerCase() transforms.
