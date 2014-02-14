@@ -32,6 +32,8 @@ public interface DefaultLanguageHighlighterColors {
     TextAttributesKey.createTextAttributesKey("DEFAULT_NUMBER");
   TextAttributesKey KEYWORD =
     TextAttributesKey.createTextAttributesKey("DEFAULT_KEYWORD");
+  TextAttributesKey MACRO_KEYWORD =
+    TextAttributesKey.createTextAttributesKey("DEFAULT_MACRO_KEYWORD");
   TextAttributesKey STRING =
     TextAttributesKey.createTextAttributesKey("DEFAULT_STRING");
   TextAttributesKey BLOCK_COMMENT =

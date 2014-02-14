@@ -93,6 +93,12 @@
           <option name="FONT_TYPE" value="1"/>
         </value>
       </option>
+      <option name="DEFAULT_MACRO_KEYWORD">
+        <value>
+          <option name="FOREGROUND" value="6EA600"/>
+          <option name="FONT_TYPE" value="1"/>
+        </value>
+      </option>
       <option name="DEFAULT_NUMBER">
         <value>
           <option name="FOREGROUND" value="ff"/>
