@@ -136,15 +136,6 @@ if [ -r "$VM_OPTIONS_FILE" ]; then
   VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\""
 fi
 
-IS_EAP="true"
-if [ "$IS_EAP" = "true" ]; then
-  OS_NAME=`echo $OS_TYPE | "$TR" '[:upper:]' '[:lower:]'`
-  AGENT_LIB="yjpagent-$OS_NAME$BITS"
-  if [ -r "$IDE_BIN_HOME/lib$AGENT_LIB.so" ]; then
-    AGENT="-agentlib:$AGENT_LIB=disablej2ee,disablealloc,delay=10000,sessionname=IdeaIC13"
-  fi
-fi
-
 COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/boot.jar\" $IDE_PROPERTIES_PROPERTY"
 IDE_JVM_ARGS=""
 ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
