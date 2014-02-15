@@ -51,6 +51,10 @@ public class IndexingStamp {
     private TObjectLongHashMap<ID<?, ?>> myIndexStamps;
     private boolean myIsDirty = false;
 
+    private Timestamps() {
+      myIsDirty = true;
+    }
+
     private Timestamps(@Nullable DataInputStream stream) throws IOException {
       if (stream != null) {
         try {
@@ -61,12 +65,7 @@ public class IndexingStamp {
             if (id != null) {
               long stamp = IndexInfrastructure.getIndexCreationStamp(id);
               if (myIndexStamps == null) myIndexStamps = new TObjectLongHashMap<ID<?, ?>>(5, 0.98f);
-              if (stamp <= dominatingIndexStamp) {
-                myIndexStamps.put(id, stamp);
-              }
-              else {
-                myIndexStamps.put(id, INDEX_VERSION_CHANGED_STAMP);
-              }
+              if (stamp <= dominatingIndexStamp) myIndexStamps.put(id, stamp);
             }
           }
         }
@@ -76,30 +75,24 @@ public class IndexingStamp {
       }
     }
 
-    private Timestamps() {
-      myIsDirty = true;
-    }
-
     private void writeToStream(final DataOutputStream stream) throws IOException {
       if (myIndexStamps != null && !myIndexStamps.isEmpty()) {
         final long[] dominatingIndexStamp = new long[1];
         myIndexStamps.forEachEntry(
-          new TObjectLongProcedure<ID<?, ?>>() {
-            @Override
-            public boolean execute(ID<?, ?> a, long b) {
-              dominatingIndexStamp[0] = Math.max(dominatingIndexStamp[0], b);
-              return true;
-            }
-          }
+                new TObjectLongProcedure<ID<?, ?>>() {
+                  @Override
+                  public boolean execute(ID<?, ?> a, long b) {
+                    dominatingIndexStamp[0] = Math.max(dominatingIndexStamp[0], b);
+                    return true;
+                  }
+                }
         );
         DataInputOutputUtil.writeTIME(stream, dominatingIndexStamp[0]);
         myIndexStamps.forEachEntry(new TObjectLongProcedure<ID<?, ?>>() {
           @Override
           public boolean execute(final ID<?, ?> id, final long timestamp) {
             try {
-              if (timestamp != INDEX_VERSION_CHANGED_STAMP) {
-                DataInputOutputUtil.writeINT(stream, id.getUniqueId());
-              }
+              DataInputOutputUtil.writeINT(stream, id.getUniqueId());
               return true;
             }
             catch (IOException e) {
@@ -140,20 +133,10 @@ public class IndexingStamp {
   private static final ConcurrentHashMap<VirtualFile, Timestamps> myTimestampsCache = new ConcurrentHashMap<VirtualFile, Timestamps>();
   private static final int CAPACITY = 100;
   private static final ArrayBlockingQueue<VirtualFile> myFinishedFiles = new ArrayBlockingQueue<VirtualFile>(CAPACITY);
-  private static final long INDEX_VERSION_CHANGED_STAMP = 1l;
 
-  public enum State {
-    INDEXED, INDEX_VERSION_CHANGED, FILE_CONTENT_CHANGED
-  }
-
-  public static State getIndexingState(VirtualFile file, ID<?, ?> indexName) {
+  public static boolean isFileIndexed(VirtualFile file, ID<?, ?> indexName, final long indexCreationStamp) {
     try {
-      long stamp = getIndexStamp(file, indexName);
-      if (stamp == INDEX_VERSION_CHANGED_STAMP) {
-        return State.INDEX_VERSION_CHANGED;
-      }
-      long indexCreationStamp = IndexInfrastructure.getIndexCreationStamp(indexName);
-      return stamp == indexCreationStamp ? State.INDEXED : State.FILE_CONTENT_CHANGED;
+      return getIndexStamp(file, indexName) == indexCreationStamp;
     }
     catch (RuntimeException e) {
       final Throwable cause = e.getCause();
@@ -162,7 +145,7 @@ public class IndexingStamp {
       }
     }
 
-    return State.FILE_CONTENT_CHANGED;
+    return false;
   }
 
   public static long getIndexStamp(VirtualFile file, ID<?, ?> indexName) {
@@ -234,7 +217,6 @@ public class IndexingStamp {
 
   public static void flushCaches() {
     flushCache(null);
-    myTimestampsCache.clear();
   }
 
   public static void flushCache(@Nullable VirtualFile finishedFile) {

@@ -44,11 +44,13 @@ public class LanguageVersionUtil {
     }
   }
 
-  public static <T extends Language> LanguageVersion<T> findLanguageVersion(@NotNull Language language, @NotNull PsiFile psiFile) {
+  public static LanguageVersion<?> findLanguageVersion(@NotNull Language language, @NotNull PsiFile psiFile) {
     FileViewProvider viewProvider = psiFile.getViewProvider();
 
     PsiFile psi = viewProvider.getPsi(language);
-    assert psi != null;
+    if(psi == null) {
+      return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, psiFile);
+    }
     return psi.getLanguageVersion();
   }
 

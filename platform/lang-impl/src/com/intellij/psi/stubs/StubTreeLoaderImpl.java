@@ -101,19 +101,20 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
     Document document = FileDocumentManager.getInstance().getCachedDocument(vFile);
     boolean saved = document == null || !FileDocumentManager.getInstance().isDocumentUnsaved(document);
 
-    final List<SerializedStubTree> datas = FileBasedIndex.getInstance().getValues(StubUpdatingIndex.INDEX_ID, id, GlobalSearchScope
-      .fileScope(project, vFile));
+    final List<SerializedStubTree> datas =
+            FileBasedIndex.getInstance().getValues(StubUpdatingIndex.INDEX_ID, id, GlobalSearchScope.fileScope(project, vFile));
     final int size = datas.size();
 
     if (size == 1) {
       SerializedStubTree stubTree = datas.get(0);
 
       if (!stubTree.contentLengthMatches(vFile.getLength(), getCurrentTextContentLength(project, vFile, document))) {
-        return processError(vFile,
-                            "Outdated stub in index: " + StubUpdatingIndex.getIndexingStampInfo(vFile) +
-                            ", docSaved=" + saved +
-                            ", queried at " + vFile.getTimeStamp(),
-                            null);
+        //todo find another way of early stub-ast mismatch prevention
+        //return processError(vFile,
+        //                    "Outdated stub in index: " + StubUpdatingIndex.getIndexingStampInfo(vFile) +
+        //                    ", docSaved=" + saved +
+        //                    ", queried at " + vFile.getTimeStamp(),
+        //                    null);
       }
 
       Stub stub;
@@ -128,7 +129,8 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       return tree;
     }
     else if (size != 0) {
-      return processError(vFile, "Twin stubs: " + vFile.getPresentableUrl() + " has " + size + " stub versions. Should only have one. id=" + id,
+      return processError(vFile,
+                          "Twin stubs: " + vFile.getPresentableUrl() + " has " + size + " stub versions. Should only have one. id=" + id,
                           null);
     }
 
@@ -174,7 +176,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
   @Override
   public long getStubTreeTimestamp(VirtualFile vFile) {
-    return IndexingStamp.getIndexStamp(vFile, IndexInfrastructure.getStubId(StubUpdatingIndex.INDEX_ID, vFile.getFileType()));
+    return IndexingStamp.getIndexStamp(vFile, StubUpdatingIndex.INDEX_ID);
   }
 
   @Override
