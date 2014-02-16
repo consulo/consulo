@@ -658,8 +658,9 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
     assertIsDispatchThread();
 
     if (myExceptionalThreadWithReadAccessRunnable != null ||
-        ApplicationManager.getApplication().isUnitTestMode() ||
-        ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        isUnitTestMode() ||
+        isHeadlessEnvironment()
+            ) {
       try {
         ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
       }
@@ -671,16 +672,21 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
     }
 
     final ProgressWindow progress = new ProgressWindow(canBeCanceled, false, project, parentComponent, cancelText);
+    // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
+    // does not have a chance to run, and as a result the progress won't be disposed
+    Disposer.register(this, progress);
+
     progress.setTitle(progressTitle);
 
     try {
       myExceptionalThreadWithReadAccessRunnable = process;
-      final boolean[] threadStarted = {false};
+      final AtomicBoolean threadStarted = new AtomicBoolean();
+      //noinspection SSBasedInspection
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
           if (myExceptionalThreadWithReadAccessRunnable != process) {
-              LOG.error("myExceptionalThreadWithReadAccessRunnable != process, process = " + myExceptionalThreadWithReadAccessRunnable);
+            LOG.error("myExceptionalThreadWithReadAccessRunnable != process, process = " + myExceptionalThreadWithReadAccessRunnable);
           }
 
           executeOnPooledThread(new Runnable() {
@@ -709,13 +715,13 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
               }
             }
           });
-          threadStarted[0] = true;
+          threadStarted.set(true);
         }
       });
 
       progress.startBlocking();
 
-      LOG.assertTrue(threadStarted[0]);
+      LOG.assertTrue(threadStarted.get());
       LOG.assertTrue(!progress.isRunning());
     }
     finally {

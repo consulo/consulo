@@ -77,7 +77,9 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   /**
    * @param currentRevision - just a hint for optimization
    */
-  private FileAnnotation annotate(VirtualFile file, final VcsRevisionNumber revisionNumber, final boolean currentRevision,
+  private FileAnnotation annotate(VirtualFile file,
+                                  final VcsRevisionNumber revisionNumber,
+                                  final boolean currentRevision,
                                   final ThrowableComputable<FileAnnotation, VcsException> delegate) throws VcsException {
     final AnnotationProvider annotationProvider = myAnnotationProvider;
 
@@ -97,8 +99,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
       // question is whether we need "not moved" path here?
       final ContentRevision fileContent = myVcs.getDiffProvider().createFileContent(revisionNumber, file);
       final FileAnnotation restored = cacheableAnnotationProvider.
-        restore(vcsAnnotation, history, fileContent.getContent(), currentRevision,
-                                                                          revisionNumber);
+              restore(vcsAnnotation, history, fileContent.getContent(), currentRevision, revisionNumber);
       if (restored != null) {
         return restored;
       }
@@ -119,9 +120,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   }
 
   // todo will be removed - when annotation will be presented together with history
-  private void loadHistoryInBackgroundToCache(final VcsRevisionNumber revisionNumber,
-                                              final FilePath filePath,
-                                              final VcsAnnotation vcsAnnotation) {
+  private void loadHistoryInBackgroundToCache(final VcsRevisionNumber revisionNumber, final FilePath filePath, final VcsAnnotation vcsAnnotation) {
     ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override
       public void run() {
@@ -135,16 +134,18 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
     });
   }
 
-  private VcsAbstractHistorySession getHistory(VcsRevisionNumber revision, FilePath filePath, VcsHistoryProvider historyProvider,
+  private VcsAbstractHistorySession getHistory(VcsRevisionNumber revision,
+                                               FilePath filePath,
+                                               VcsHistoryProvider historyProvider,
                                                @Nullable final VcsRevisionNumber firstRevision) throws VcsException {
     final boolean historyCacheSupported = historyProvider instanceof VcsCacheableHistorySessionFactory;
     if (historyCacheSupported) {
       final VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory)historyProvider;
-      final VcsAbstractHistorySession cachedSession =
-        myCache.getMaybePartial(filePath, myVcs.getKeyInstanceMethod(), cacheableHistorySessionFactory);
-      if (cachedSession != null && ! cachedSession.getRevisionList().isEmpty()) {
+      final VcsAbstractHistorySession cachedSession = myCache.getMaybePartial(filePath, myVcs.getKeyInstanceMethod(), cacheableHistorySessionFactory);
+      if (cachedSession != null && !cachedSession.getRevisionList().isEmpty()) {
         final VcsFileRevision recentRevision = cachedSession.getRevisionList().get(0);
-        if (recentRevision.getRevisionNumber().compareTo(revision) >= 0 && (firstRevision == null || cachedSession.getHistoryAsMap().containsKey(firstRevision))) {
+        if (recentRevision.getRevisionNumber().compareTo(revision) >= 0 &&
+            (firstRevision == null || cachedSession.getHistoryAsMap().containsKey(firstRevision))) {
           return cachedSession;
         }
       }
@@ -153,8 +154,9 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
     final VcsAbstractHistorySession sessionFor;
     if (firstRevision != null) {
       sessionFor = limitedHistory(filePath, firstRevision);
-    } else {
-      sessionFor = (VcsAbstractHistorySession) historyProvider.createSessionFor(filePath);
+    }
+    else {
+      sessionFor = (VcsAbstractHistorySession)historyProvider.createSessionFor(filePath);
     }
     if (sessionFor != null && historyCacheSupported) {
       final VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory)historyProvider;
@@ -203,8 +205,9 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
         public void forceRefresh() {
         }
       });
-    } catch (ProcessCanceledException e) {
-     // ok
+    }
+    catch (ProcessCanceledException e) {
+      // ok
     }
     if (exc[0] != null) {
       throw exc[0];

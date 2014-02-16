@@ -63,6 +63,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.actions.AnnotateToggleAction");
   protected static final Key<Collection<ActiveAnnotationGutter>> KEY_IN_EDITOR = Key.create("Annotations");
 
+  @Override
   public void update(AnActionEvent e) {
     super.update(e);
     final boolean enabled = isEnabled(VcsContextFactory.SERVICE.getInstance().createContextOn(e));
@@ -71,16 +72,17 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
 
   private static boolean isEnabled(final VcsContext context) {
     VirtualFile[] selectedFiles = context.getSelectedFiles();
-    if (selectedFiles == null) return false;
-    if (selectedFiles.length != 1) return false;
+    if (selectedFiles.length != 1) {
+      return false;
+    }
     VirtualFile file = selectedFiles[0];
     if (file.isDirectory()) return false;
     Project project = context.getProject();
     if (project == null || project.isDisposed()) return false;
 
     final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
-    final BackgroundableActionEnabledHandler handler = ((ProjectLevelVcsManagerImpl)plVcsManager)
-      .getBackgroundableActionHandler(VcsBackgroundableActions.ANNOTATE);
+    final BackgroundableActionEnabledHandler handler =
+            ((ProjectLevelVcsManagerImpl)plVcsManager).getBackgroundableActionHandler(VcsBackgroundableActions.ANNOTATE);
     if (handler.isInProgress(file.getPath())) return false;
 
     final AbstractVcs vcs = plVcsManager.getVcsFor(file);
@@ -98,25 +100,49 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
     return !selectedFile.getFileType().isBinary();
   }
 
+  @Override
   public boolean isSelected(AnActionEvent e) {
     VcsContext context = VcsContextFactory.SERVICE.getInstance().createContextOn(e);
     Editor editor = context.getEditor();
-    if (editor == null) return false;
+    if (editor != null) {
+      return isAnnotated(editor);
+    }
+    VirtualFile selectedFile = context.getSelectedFile();
+    if (selectedFile == null) {
+      return false;
+    }
+
+    for (FileEditor fileEditor : FileEditorManager.getInstance(context.getProject()).getEditors(selectedFile)) {
+      if (fileEditor instanceof TextEditor) {
+        if (isAnnotated(((TextEditor)fileEditor).getEditor())) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private static boolean isAnnotated(@NotNull Editor editor) {
     Collection annotations = editor.getUserData(KEY_IN_EDITOR);
     return annotations != null && !annotations.isEmpty();
   }
 
+  @Override
   public void setSelected(AnActionEvent e, boolean selected) {
     final VcsContext context = VcsContextFactory.SERVICE.getInstance().createContextOn(e);
     Editor editor = context.getEditor();
+    VirtualFile selectedFile = context.getSelectedFile();
+    if (selectedFile == null) return;
+
     if (!selected) {
-      if (editor != null) {
-        editor.getGutter().closeAllAnnotations();
+      for (FileEditor fileEditor : FileEditorManager.getInstance(context.getProject()).getEditors(selectedFile)) {
+        if (fileEditor instanceof TextEditor) {
+          ((TextEditor)fileEditor).getEditor().getGutter().closeAllAnnotations();
+        }
       }
     }
     else {
       if (editor == null) {
-        VirtualFile selectedFile = context.getSelectedFile();
         FileEditor[] fileEditors = FileEditorManager.getInstance(context.getProject()).openFile(selectedFile, false);
         for (FileEditor fileEditor : fileEditors) {
           if (fileEditor instanceof TextEditor) {
@@ -131,7 +157,9 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
 
   private static void doAnnotate(final Editor editor, final Project project) {
     final VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
-    if (project == null) return;
+    if (project == null || file == null) {
+      return;
+    }
     final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
     final AbstractVcs vcs = plVcsManager.getVcsFor(file);
 
@@ -142,44 +170,44 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
     final Ref<FileAnnotation> fileAnnotationRef = new Ref<FileAnnotation>();
     final Ref<VcsException> exceptionRef = new Ref<VcsException>();
 
-    final BackgroundableActionEnabledHandler handler = ((ProjectLevelVcsManagerImpl)plVcsManager).getBackgroundableActionHandler(
-      VcsBackgroundableActions.ANNOTATE);
+    final BackgroundableActionEnabledHandler handler =
+            ((ProjectLevelVcsManagerImpl)plVcsManager).getBackgroundableActionHandler(VcsBackgroundableActions.ANNOTATE);
     handler.register(file.getPath());
 
-    final Task.Backgroundable annotateTask = new Task.Backgroundable(project,
-                                                                     VcsBundle.message("retrieving.annotations"),
-                                                                     true,
-                                                                     BackgroundFromStartOption.getInstance()) {
-      public void run(final @NotNull ProgressIndicator indicator) {
-        try {
-          fileAnnotationRef.set(annotationProvider.annotate(file));
-        }
-        catch (VcsException e) {
-          exceptionRef.set(e);
-        }
-        catch (Throwable t) {
-          handler.completed(file.getPath());
-        }
-      }
+    final Task.Backgroundable annotateTask =
+            new Task.Backgroundable(project, VcsBundle.message("retrieving.annotations"), true, BackgroundFromStartOption.getInstance()) {
+              @Override
+              public void run(final @NotNull ProgressIndicator indicator) {
+                try {
+                  fileAnnotationRef.set(annotationProvider.annotate(file));
+                }
+                catch (VcsException e) {
+                  exceptionRef.set(e);
+                }
+                catch (Throwable t) {
+                  handler.completed(file.getPath());
+                }
+              }
 
-      @Override
-      public void onCancel() {
-        onSuccess();
-      }
+              @Override
+              public void onCancel() {
+                onSuccess();
+              }
 
-      @Override
-      public void onSuccess() {
-        handler.completed(file.getPath());
+              @Override
+              public void onSuccess() {
+                handler.completed(file.getPath());
 
-        if (!exceptionRef.isNull()) {
-          AbstractVcsHelper.getInstance(project).showErrors(Arrays.asList(exceptionRef.get()), VcsBundle.message("message.title.annotate"));
-        }
+                if (!exceptionRef.isNull()) {
+                  AbstractVcsHelper.getInstance(project)
+                          .showErrors(Arrays.asList(exceptionRef.get()), VcsBundle.message("message.title.annotate"));
+                }
 
-        if (!fileAnnotationRef.isNull()) {
-          doAnnotate(editor, project, file, fileAnnotationRef.get(), vcs, true);
-        }
-      }
-    };
+                if (!fileAnnotationRef.isNull()) {
+                  doAnnotate(editor, project, file, fileAnnotationRef.get(), vcs, true);
+                }
+              }
+            };
     ProgressManager.getInstance().run(annotateTask);
   }
 
@@ -187,7 +215,8 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
                                 final Project project,
                                 final VirtualFile file,
                                 final FileAnnotation fileAnnotation,
-                                final AbstractVcs vcs, final boolean onCurrentRevision) {
+                                final AbstractVcs vcs,
+                                final boolean onCurrentRevision) {
     final UpToDateLineNumberProvider getUpToDateLineNumber = new UpToDateLineNumberProviderImpl(editor.getDocument(), project);
     editor.getGutter().closeAllAnnotations();
     final VcsAnnotationLocalChangesListener listener = ProjectLevelVcsManager.getInstance(project).getAnnotationLocalChangesListener();
@@ -225,9 +254,8 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
       additionalActions.add(new ShowDiffFromAnnotation(getUpToDateLineNumber, fileAnnotation, vcs, file));
     }
     additionalActions.add(new CopyRevisionNumberFromAnnotateAction(getUpToDateLineNumber, fileAnnotation));
-    final AnnotationPresentation presentation =
-      new AnnotationPresentation(highlighting, switcher, editorGutter, gutters,
-                                 additionalActions.toArray(new AnAction[additionalActions.size()]));
+    final AnnotationPresentation presentation = new AnnotationPresentation(highlighting, switcher, editorGutter, gutters, additionalActions
+            .toArray(new AnAction[additionalActions.size()]));
 
     final Map<String, Color> bgColorMap = Registry.is("vcs.show.colored.annotations") ? computeBgColors(fileAnnotation) : null;
     final Map<String, Integer> historyIds = Registry.is("vcs.show.history.numbers") ? computeLineNumbers(fileAnnotation) : null;
@@ -236,9 +264,9 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware, Ann
       switcher.switchTo(switcher.getDefaultSource());
       final LineAnnotationAspect revisionAspect = switcher.getRevisionAspect();
       final CurrentRevisionAnnotationFieldGutter currentRevisionGutter =
-        new CurrentRevisionAnnotationFieldGutter(fileAnnotation, editor, revisionAspect, presentation, bgColorMap);
+              new CurrentRevisionAnnotationFieldGutter(fileAnnotation, editor, revisionAspect, presentation, bgColorMap);
       final MergeSourceAvailableMarkerGutter mergeSourceGutter =
-        new MergeSourceAvailableMarkerGutter(fileAnnotation, editor, null, presentation, bgColorMap);
+              new MergeSourceAvailableMarkerGutter(fileAnnotation, editor, null, presentation, bgColorMap);
 
       presentation.addSourceSwitchListener(currentRevisionGutter);
       presentation.addSourceSwitchListener(mergeSourceGutter);
