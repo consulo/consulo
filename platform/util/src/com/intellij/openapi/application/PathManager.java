@@ -111,7 +111,6 @@ public class PathManager {
 
   private static boolean isIdeaHome(final File root) {
     return new File(root, FileUtil.toSystemDependentName("bin/idea.properties")).exists() ||
-           new File(root, FileUtil.toSystemDependentName("community/bin/idea.properties")).exists() ||
            new File(root, FileUtil.toSystemDependentName("Contents/Info.plist")).exists();  // MacOS bundle doesn't include idea.properties
   }
 
@@ -314,8 +313,7 @@ public class PathManager {
     File propFile = FileUtil.findFirstThatExist(
       System.getProperty(PROPERTIES_FILE),
       getUserHome() + "/idea.properties",
-      getHomePath() + "/bin/idea.properties",
-      getHomePath() + "/community/bin/idea.properties");
+      getHomePath() + "/bin/idea.properties");
 
     if (propFile != null) {
       try {
