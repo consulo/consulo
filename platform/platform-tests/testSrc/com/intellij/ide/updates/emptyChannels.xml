@@ -1,6 +1,2 @@
-<products>
-    <product name="IntelliJ IDEA">
-        <code>IU</code>
-        <code>IC</code>
-    </product>
-</products>
+<product name="IntelliJ IDEA">
+</product>

@@ -386,9 +386,9 @@ public final class UpdateChecker {
     BuildNumber currentBuild = appInfo.getBuild();
     int majorVersion = Integer.parseInt(appInfo.getMajorVersion());
     final UpdatesXmlLoader loader = new UpdatesXmlLoader(ApplicationInfoEx.getInstanceEx().getUpdatesInfoUrl());
-    final UpdatesInfo info;
+    final Product info;
     try {
-      info = loader.loadUpdatesInfo();
+      info = loader.loadProductInfo();
       if (info == null) {
         return new CheckForUpdateResult(UpdateStrategy.State.NOTHING_LOADED);
       }

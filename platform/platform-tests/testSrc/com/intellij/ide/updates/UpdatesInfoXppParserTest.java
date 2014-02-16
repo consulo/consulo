@@ -19,7 +19,6 @@ package com.intellij.ide.updates;
 import com.intellij.openapi.updateSettings.impl.BuildInfo;
 import com.intellij.openapi.updateSettings.impl.Product;
 import com.intellij.openapi.updateSettings.impl.UpdateChannel;
-import com.intellij.openapi.updateSettings.impl.UpdatesInfo;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.JDOMUtil;
 import junit.framework.TestCase;
@@ -34,11 +33,7 @@ import java.util.Calendar;
 public class UpdatesInfoXppParserTest extends TestCase {
 
   public void testValidXmlParsing() throws Exception {
-    final UpdatesInfo info = InfoReader.read("current.xml");
-    Assert.assertNotNull(info);
-    Assert.assertEquals(5, info.getProductsCount());
-
-    final Product iu = info.getProduct("IU");
+    final Product iu = InfoReader.read("current.xml");
 
     checkProduct(iu, "IntelliJ IDEA", new String[]{"maiaEAP", "IDEA10EAP", "idea90"});
 
@@ -55,19 +50,17 @@ public class UpdatesInfoXppParserTest extends TestCase {
   }
 
   public void testEmptyChannels() throws Exception {
-    final UpdatesInfo info = InfoReader.read("emptyChannels.xml");
+    final Product info = InfoReader.read("emptyChannels.xml");
     Assert.assertNotNull(info);
-    Assert.assertEquals(0,info.getProduct("IU").getChannels().size());
+    Assert.assertEquals(0, info.getChannels().size());
   }
 
   public void testOneProductOnly() throws Exception {
-    final UpdatesInfo info = InfoReader.read("oneProductOnly.xml");
-    Assert.assertNotNull(info);
-    final Product iu = info.getProduct("IU");
+    final Product info = InfoReader.read("oneProductOnly.xml");
 
-    checkProduct(iu, "IntelliJ IDEA", new String[]{"maiaEAP", "IDEA10EAP", "idea90"});
+    checkProduct(info, "IntelliJ IDEA", new String[]{"maiaEAP", "IDEA10EAP", "idea90"});
 
-    final UpdateChannel channel = iu.findUpdateChannelById("IDEA10EAP");
+    final UpdateChannel channel = info.findUpdateChannelById("IDEA10EAP");
     final BuildInfo build = channel.getLatestBuild();
 
     Assert.assertEquals(BuildNumber.fromString("98.520"), build.getNumber());
@@ -87,10 +80,10 @@ public class UpdatesInfoXppParserTest extends TestCase {
   }
 
   public static class InfoReader {
-    public static UpdatesInfo read(String fileName)  {
+    public static Product read(String fileName)  {
       final InputStream stream = UpdatesInfoXppParserTest.class.getResourceAsStream(fileName);
       try {
-        return new UpdatesInfo(JDOMUtil.loadDocument(stream).getRootElement());
+        return new Product(JDOMUtil.loadDocument(stream).getRootElement());
       }
       catch (Exception e) {
         throw new RuntimeException(e);

@@ -49,7 +49,7 @@ public class UpdatesXmlLoader {
 
 
   @Nullable
-  public UpdatesInfo loadUpdatesInfo() throws ConnectionException{
+  public Product loadProductInfo() throws ConnectionException{
     LOG.debug("load update xml (UPDATE_URL='" + updateUrl + "' )");
 
     if (StringUtil.isEmpty(updateUrl)) {
@@ -58,10 +58,10 @@ public class UpdatesXmlLoader {
     }
 
     final Ref<Exception> error = new Ref<Exception>();
-    FutureTask<UpdatesInfo> ft = new FutureTask<UpdatesInfo>(new Callable<UpdatesInfo>() {
+    FutureTask<Product> ft = new FutureTask<Product>(new Callable<Product>() {
       @Nullable
       @Override
-      public UpdatesInfo call() throws Exception {
+      public Product call() throws Exception {
         try {
           prepareUrl(updateUrl);
 
@@ -70,7 +70,7 @@ public class UpdatesXmlLoader {
           final InputStream inputStream = requestUrl.openStream();
           Reader reader = new InputStreamReader(inputStream);
           try {
-            return new UpdatesInfo(JDOMUtil.loadDocument(inputStream).getRootElement());
+            return new Product(JDOMUtil.loadDocument(inputStream).getRootElement());
           }
           catch (JDOMException e) {
             LOG.info(e); // Broken xml downloaded. Don't bother telling user.
@@ -88,7 +88,7 @@ public class UpdatesXmlLoader {
     });
     ApplicationManager.getApplication().executeOnPooledThread(ft);
     try {
-      UpdatesInfo result = ft.get(5, TimeUnit.SECONDS);
+      Product result = ft.get(5, TimeUnit.SECONDS);
       if (!error.isNull()) {
         //noinspection ThrowableResultOfMethodCallIgnored
         throw new ConnectionException(error.get());

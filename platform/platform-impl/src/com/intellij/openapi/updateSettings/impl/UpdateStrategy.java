@@ -30,28 +30,26 @@ public class UpdateStrategy {
   private BuildNumber myCurrentBuild;
 
   private ChannelStatus myChannelStatus;
-  private UpdatesInfo myUpdatesInfo;
+  private Product myProduct;
 
 
-  public UpdateStrategy(int majorVersion, @NotNull BuildNumber currentBuild, @NotNull UpdatesInfo updatesInfo,
+  public UpdateStrategy(int majorVersion, @NotNull BuildNumber currentBuild, @NotNull Product product,
                         @NotNull UserUpdateSettings updateSettings) {
     myMajorVersion = majorVersion;
-    myUpdatesInfo = updatesInfo;
+    myProduct = product;
     myUpdateSettings = updateSettings;
     myCurrentBuild = currentBuild;
     myChannelStatus = updateSettings.getSelectedChannelStatus();
   }
 
   public final CheckForUpdateResult checkForUpdates() {
-    final Product product = myUpdatesInfo.getProduct(myCurrentBuild.getProductCode());
-
-    if (product == null || product.getChannels().isEmpty()) {
+    if (myProduct.getChannels().isEmpty()) {
       return new CheckForUpdateResult(State.NOTHING_LOADED);
     }
 
     UpdateChannel updatedChannel = null;
     BuildInfo newBuild = null;
-    List<UpdateChannel> activeChannels = getActiveChannels(product);
+    List<UpdateChannel> activeChannels = getActiveChannels(myProduct);
     for (UpdateChannel channel : activeChannels) {
       if (hasNewVersion(channel)) {
         updatedChannel = channel;
@@ -60,10 +58,10 @@ public class UpdateStrategy {
       }
     }
 
-    CheckForUpdateResult result = new CheckForUpdateResult(updatedChannel, newBuild, product.getAllChannelIds());
+    CheckForUpdateResult result = new CheckForUpdateResult(updatedChannel, newBuild, myProduct.getAllChannelIds());
 
     UpdateChannel channelToPropose = null;
-    for (UpdateChannel channel : product.getChannels()) {
+    for (UpdateChannel channel : myProduct.getChannels()) {
       if (!myUpdateSettings.getKnownChannelsIds().contains(channel.getId()) &&
           channel.getMajorVersion() >= myMajorVersion &&
           channel.getStatus().compareTo(myChannelStatus) >= 0 &&
