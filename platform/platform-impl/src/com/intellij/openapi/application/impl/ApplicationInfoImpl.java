@@ -18,14 +18,12 @@ package com.intellij.openapi.application.impl;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -37,7 +35,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExternalizable, ApplicationComponent {
+public class ApplicationInfoImpl extends ApplicationInfoEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.impl.ApplicationInfoImpl");
 
   @NonNls
@@ -147,11 +145,9 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String ATTRIBUTE_WINDOWS_URL = "win";
   @NonNls private static final String ATTRIBUTE_MAC_URL = "mac";
 
-  @Override
-  public void initComponent() { }
-
-  @Override
-  public void disposeComponent() { }
+  public ApplicationInfoImpl() {
+    load();
+  }
 
   @Override
   public Calendar getBuildDate() {
@@ -410,22 +406,25 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   public static ApplicationInfoEx getShadowInstance() {
     if (ourShadowInstance == null) {
       ourShadowInstance = new ApplicationInfoImpl();
-      try {
-        Document doc = JDOMUtil.loadDocument(ApplicationInfoImpl.class, IDEA_PATH + ApplicationNamesInfo.COMPONENT_NAME + XML_EXTENSION);
-        ourShadowInstance.readExternal(doc.getRootElement());
-      }
-      catch (FileNotFoundException e) {
-        LOG.error("Resource is not in classpath or wrong platform prefix", e);
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
     }
     return ourShadowInstance;
   }
 
-  @Override
-  public void readExternal(Element parentNode) throws InvalidDataException {
+  private void load() {
+    try {
+      Document doc = JDOMUtil.loadDocument(ApplicationInfoImpl.class, ABSOLUTE_APPLICATION_INFO_XML);
+
+      readExternal(doc.getRootElement());
+    }
+    catch (FileNotFoundException e) {
+      LOG.error("Resource is not in classpath", e);
+    }
+    catch (Exception e) {
+      LOG.error(e);
+    }
+  }
+
+  private void readExternal(Element parentNode) throws InvalidDataException {
     Element versionElement = parentNode.getChild(ELEMENT_VERSION);
     if (versionElement != null) {
       myMajorVersion = versionElement.getAttributeValue(ATTRIBUTE_MAJOR);
@@ -643,19 +642,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   }
 
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    throw new WriteExternalException();
-  }
-
-  @Override
   public List<PluginChooserPage> getPluginChooserPages() {
     return myPluginChooserPages;
-  }
-
-  @Override
-  @NotNull
-  public String getComponentName() {
-    return ApplicationNamesInfo.COMPONENT_NAME;
   }
 
   private static class PluginChooserPageImpl implements PluginChooserPage {

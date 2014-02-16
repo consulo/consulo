@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NonNls;
  * @author nik
  */
 public class ApplicationNamesInfo {
-  @NonNls public static final String COMPONENT_NAME = "ConsuloApplicationInfo";
   @NonNls private static final String ELEMENT_NAMES = "names";
   @NonNls private static final String ATTRIBUTE_PRODUCT = "product";
   @NonNls private static final String ATTRIBUTE_FULL_NAME = "fullname";
@@ -48,7 +47,7 @@ public class ApplicationNamesInfo {
   private ApplicationNamesInfo() {
     try {
       //noinspection HardCodedStringLiteral
-      final Document doc = JDOMUtil.loadDocument(ApplicationNamesInfo.class.getResourceAsStream("/idea/" + COMPONENT_NAME + ".xml"));
+      final Document doc = JDOMUtil.loadDocument(ApplicationNamesInfo.class.getResourceAsStream(ApplicationInfo.ABSOLUTE_APPLICATION_INFO_XML));
       readInfo(doc.getRootElement());
     }
     catch (Exception e) {

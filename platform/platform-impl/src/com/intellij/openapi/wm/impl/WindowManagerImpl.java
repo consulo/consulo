@@ -24,9 +24,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -119,7 +117,6 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
   private Rectangle myFrameBounds;
   private int myFrameExtendedState;
   private final WindowAdapter myActivationListener;
-  private final ApplicationInfoEx myApplicationInfoEx;
   private final DataManager myDataManager;
   private final ActionManagerEx myActionManager;
   private final UISettings myUiSettings;
@@ -132,11 +129,9 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
    * @param uiSettings
    */
   public WindowManagerImpl(DataManager dataManager,
-                           ApplicationInfoEx applicationInfoEx,
                            ActionManagerEx actionManager,
                            UISettings uiSettings,
                            MessageBus bus) {
-    myApplicationInfoEx = applicationInfoEx;
     myDataManager = dataManager;
     myActionManager = actionManager;
     myUiSettings = uiSettings;
@@ -554,8 +549,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
   }
 
   public void showFrame() {
-    final IdeFrameImpl frame = new IdeFrameImpl(myApplicationInfoEx,
-                                                myActionManager, myUiSettings, myDataManager,
+    final IdeFrameImpl frame = new IdeFrameImpl(myActionManager, myUiSettings, myDataManager,
                                                 ApplicationManager.getApplication());
     myProject2Frame.put(null, frame);
 
@@ -614,7 +608,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements Applicat
       frame.setProject(project);
     }
     else {
-      frame = new IdeFrameImpl((ApplicationInfoEx)ApplicationInfo.getInstance(), ActionManagerEx.getInstanceEx(), UISettings.getInstance(),
+      frame = new IdeFrameImpl(ActionManagerEx.getInstanceEx(), UISettings.getInstance(),
                                DataManager.getInstance(), ApplicationManager.getApplication());
 
       final Rectangle bounds = ProjectFrameBounds.getInstance(project).getBounds();

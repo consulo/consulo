@@ -15,22 +15,15 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.util.io.FileUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author max
  */
 public class BuildNumber implements Comparable<BuildNumber> {
-  private static final String BUILD_NUMBER = "__BUILD_NUMBER__";
   private static final String SNAPSHOT = "SNAPSHOT";
   private static final String FALLBACK_VERSION = "999.SNAPSHOT";
-
-  private static final int TOP_BASELINE_VERSION = fromFile().getBaselineVersion();
 
   private final int myBaselineVersion;
   private final int myBuildNumber;
@@ -62,10 +55,6 @@ public class BuildNumber implements Comparable<BuildNumber> {
   public static BuildNumber fromString(String version, @Nullable String name) {
     if (version == null) return null;
 
-    if (BUILD_NUMBER.equals(version)) {
-      return new BuildNumber(TOP_BASELINE_VERSION, Integer.MAX_VALUE);
-    }
-
     String code = version;
 
     int baselineVersionSeparator = code.indexOf('.');
@@ -94,7 +83,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
   }
 
   private static int parseBuildNumber(String version, String code, String name) {
-    if (SNAPSHOT.equals(code) || BUILD_NUMBER.equals(code)) {
+    if (SNAPSHOT.equals(code)) {
       return Integer.MAX_VALUE;
     }
     try {
@@ -103,21 +92,6 @@ public class BuildNumber implements Comparable<BuildNumber> {
     catch (NumberFormatException e) {
       throw new RuntimeException("Invalid version number: " + version + "; plugin name: " + name);
     }
-  }
-
-  private static BuildNumber fromFile() {
-    try {
-      final String homePath = PathManager.getHomePath();
-      final File buildTxtFile = FileUtil.findFirstThatExist(homePath + "/build.txt", homePath + "/community/build.txt");
-      if (buildTxtFile != null) {
-        String text = FileUtil.loadFile(buildTxtFile).trim();
-        return fromString(text);
-      }
-    }
-    catch (IOException ignored) {
-    }
-
-    return fallback();
   }
 
   public static BuildNumber fallback() {
@@ -129,7 +103,8 @@ public class BuildNumber implements Comparable<BuildNumber> {
     return asString();
   }
 
-  public int compareTo(BuildNumber o) {
+  @Override
+  public int compareTo(@NotNull BuildNumber o) {
     if (myBaselineVersion == o.myBaselineVersion) return myBuildNumber - o.myBuildNumber;
     return myBaselineVersion - o.myBaselineVersion;
   }
@@ -164,7 +139,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
 
   private static int getBaseLineForHistoricBuilds(int bn) {
     if (bn == Integer.MAX_VALUE) {
-      return TOP_BASELINE_VERSION; // SNAPSHOTS
+      return Integer.MAX_VALUE; // SNAPSHOTS
     }
 
     return 1;

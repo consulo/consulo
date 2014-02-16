@@ -44,7 +44,6 @@ public class ConfigImportHelper {
    */
   @NonNls public static final String CONFIG_IMPORTED_IN_CURRENT_SESSION_KEY = "intellij.config.imported.in.current.session";
 
-  @NonNls private static final String BUILD_NUMBER_FILE = "build.txt";
   @NonNls private static final String PLUGINS_PATH = "plugins";
   @NonNls private static final String BIN_FOLDER = "bin";
   @NonNls private static final String CONFIG_RELATED_PATH = SystemInfo.isMac ? "" : "config/";
@@ -192,13 +191,6 @@ public class ConfigImportHelper {
     }
     if (new File(oldInstallHome, CONFIG_RELATED_PATH + OPTIONS_XML).exists()) {
       return new File(oldInstallHome, CONFIG_RELATED_PATH);
-    }
-
-    int oldBuildNumber = getBuildNumber(oldInstallHome);
-
-    if (oldBuildNumber != -1 && oldBuildNumber <= 600) { // Pandora
-      //noinspection HardCodedStringLiteral
-      return new File(oldInstallHome, "config");
     }
 
     final File[] launchFileCandidates = getLaunchFilesCandidates(oldInstallHome, settings);
@@ -412,33 +404,5 @@ public class ConfigImportHelper {
     }
 
     return false;
-  }
-
-  private static int getBuildNumber(File installDirectory) {
-    installDirectory = installDirectory.getAbsoluteFile();
-
-    File buildTxt = new File(installDirectory, BUILD_NUMBER_FILE);
-    if ((!buildTxt.exists()) || (buildTxt.isDirectory())) {
-      buildTxt = new File(new File(installDirectory, BIN_FOLDER), BUILD_NUMBER_FILE);
-    }
-
-    if (buildTxt.exists() && !buildTxt.isDirectory()) {
-      int buildNumber = -1;
-      String buildNumberText = getContent(buildTxt);
-      if (buildNumberText != null) {
-        try {
-          if (buildNumberText.length() > 1) {
-            buildNumberText = buildNumberText.trim();
-            buildNumber = Integer.parseInt(buildNumberText);
-          }
-        }
-        catch (Exception e) {
-          // OK
-        }
-      }
-      return buildNumber;
-    }
-
-    return -1;
   }
 }

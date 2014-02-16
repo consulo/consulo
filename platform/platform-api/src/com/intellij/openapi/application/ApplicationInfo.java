@@ -15,12 +15,19 @@
  */
 package com.intellij.openapi.application;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.BuildNumber;
+import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.util.Calendar;
 
 public abstract class ApplicationInfo {
+  @NonNls
+  public static final String APPLICATION_INFO_XML =  "idea/ConsuloApplicationInfo.xml";
+  @NonNls
+  public static final String ABSOLUTE_APPLICATION_INFO_XML =  "/" + APPLICATION_INFO_XML;
+
   public abstract Calendar getBuildDate();
 
   @Deprecated()
@@ -60,7 +67,7 @@ public abstract class ApplicationInfo {
   }
 
   public static ApplicationInfo getInstance() {
-    return ApplicationManager.getApplication().getComponent(ApplicationInfo.class);
+    return ServiceManager.getService(ApplicationInfo.class);
   }
 
 

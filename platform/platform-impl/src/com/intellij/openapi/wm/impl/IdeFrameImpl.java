@@ -87,12 +87,11 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
   private IdeFrameDecorator myFrameDecorator;
   private boolean myRestoreFullScreen;
 
-  public IdeFrameImpl(ApplicationInfoEx applicationInfoEx,
-                      ActionManagerEx actionManager,
+  public IdeFrameImpl(ActionManagerEx actionManager,
                       UISettings uiSettings,
                       DataManager dataManager,
                       Application application) {
-    super(applicationInfoEx.getFullApplicationName());
+    super(ApplicationInfoEx.getInstanceEx().getFullApplicationName());
     myRootPane = createRootPane(actionManager, uiSettings, dataManager, application);
     setRootPane(myRootPane);
     setBackground(UIUtil.getPanelBackground());
