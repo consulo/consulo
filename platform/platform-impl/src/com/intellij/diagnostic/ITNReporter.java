@@ -40,6 +40,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.SharedConstants;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -65,7 +66,7 @@ import static com.intellij.openapi.util.text.StringUtil.isEmpty;
 public class ITNReporter extends ErrorReportSubmitter {
   public static final String PROJECT = "CEP";
   @NonNls
-  private static final String SERVER_URL = "http://napile.myjetbrains.com/youtrack/";
+  private static final String SERVER_URL = SharedConstants.BUG_TRACKER_URL;
   private static final String SERVER_REST_URL = SERVER_URL + "rest/";
   private static final String SERVER_ISSUE_URL = SERVER_REST_URL + "issue";
   private static final String LOGIN_URL = SERVER_REST_URL + "user/login";

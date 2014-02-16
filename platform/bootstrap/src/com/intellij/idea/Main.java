@@ -22,6 +22,7 @@ import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Restarter;
+import org.mustbe.consulo.SharedConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +40,6 @@ public class Main {
   public static final int PLUGIN_ERROR = 5;
 
   private static final String AWT_HEADLESS = "java.awt.headless";
-  private static final String PLATFORM_PREFIX_PROPERTY = "idea.platform.prefix";
 
   private static boolean isHeadless;
   private static boolean isCommandLine;
@@ -116,10 +116,8 @@ public class Main {
   }
 
   private static void installPatch() throws IOException {
-    String platform = System.getProperty(PLATFORM_PREFIX_PROPERTY, "idea");
-    String patchFileName = ("jetbrains.patch.jar." + platform).toLowerCase();
-    File originalPatchFile = new File(System.getProperty("java.io.tmpdir"), patchFileName);
-    File copyPatchFile = new File(System.getProperty("java.io.tmpdir"), patchFileName + "_copy");
+    File originalPatchFile = new File(System.getProperty("java.io.tmpdir"), SharedConstants.PATCH_FILE_NAME);
+    File copyPatchFile = new File(System.getProperty("java.io.tmpdir"), SharedConstants.PATCH_FILE_NAME + "_copy");
 
     // always delete previous patch copy
     if (!FileUtilRt.delete(copyPatchFile)) {
@@ -164,9 +162,8 @@ public class Main {
 
   public static void showMessage(String title, Throwable t) {
     StringWriter message = new StringWriter();
-    message.append("Internal error. Please report to http://");
-    boolean studio = "AndroidStudio".equalsIgnoreCase(System.getProperty(PLATFORM_PREFIX_PROPERTY));
-    message.append(studio ? "code.google.com/p/android/issues" : "youtrack.jetbrains.com");
+    message.append("Internal error. Please report to ");
+    message.append(SharedConstants.BUG_TRACKER_URL);
     message.append("\n\n");
     t.printStackTrace(new PrintWriter(message));
     showMessage(title, message.toString(), true);

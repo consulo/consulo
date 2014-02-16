@@ -38,7 +38,8 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.StandardFileSystems;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UrlConnectionUtil;
@@ -51,10 +52,14 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.SharedConstants;
 
 import javax.swing.event.HyperlinkEvent;
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -776,8 +781,7 @@ public final class UpdateChecker {
       out.close();
     }
 
-    String patchFileName = ("jetbrains.patch.jar.consulo").toLowerCase();
-    File patchFile = new File(FileUtil.getTempDirectory(), patchFileName);
+    File patchFile = new File(FileUtil.getTempDirectory(), SharedConstants.PATCH_FILE_NAME);
     FileUtil.copy(tempFile, patchFile);
     FileUtil.delete(tempFile);
   }
