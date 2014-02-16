@@ -26,12 +26,11 @@ import static org.junit.Assert.assertTrue;
 public class BuildNumberTest {
   @Test
   public void historicBuild() {
-    assertEquals(new BuildNumber("", 75, 7512), BuildNumber.fromString("7512"));
+    assertEquals(new BuildNumber(75, 7512), BuildNumber.fromString("7512"));
   }
 
   @Test
   public void snapshotDomination() {
     assertTrue(BuildNumber.fromString("90.SNAPSHOT").compareTo(BuildNumber.fromString("90.12345")) > 0);
-    assertTrue(BuildNumber.fromString("IU-90.SNAPSHOT").compareTo(BuildNumber.fromString("RM-90.12345")) > 0);
   }
 }

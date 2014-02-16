@@ -79,7 +79,7 @@ public class NewWelcomeScreen2 extends JPanel implements WelcomeScreen {
                              " " +
                              ApplicationInfo.getInstance().getFullVersion() +
                              " Build " +
-                             ApplicationInfo.getInstance().getBuild().asStringWithoutProductCode());
+                             ApplicationInfo.getInstance().getBuild().asString());
     makeSmallFont(versionLabel);
     versionLabel.setForeground(WelcomeScreenColors.FOOTER_FOREGROUND);
 

@@ -19,7 +19,6 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.projectWizard.ProjectTemplateParameterFactory;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.ide.util.projectWizard.WizardInputField;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.ClearableLazyValue;
@@ -85,9 +84,8 @@ public class RemoteTemplatesFactory extends ProjectTemplatesFactory {
   private static MultiMap<String, ArchivedProjectTemplate> getTemplates() {
     InputStream stream = null;
     HttpURLConnection connection = null;
-    String code = ApplicationInfo.getInstance().getBuild().getProductCode();
     try {
-      connection = getConnection(code + "_templates.xml");
+      connection = getConnection("templates.xml");
       stream = connection.getInputStream();
       String text = StreamUtil.readText(stream, TemplateModuleBuilder.UTF_8);
       return createFromText(text);

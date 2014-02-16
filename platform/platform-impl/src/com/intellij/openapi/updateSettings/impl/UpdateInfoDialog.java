@@ -85,7 +85,7 @@ class UpdateInfoDialog extends AbstractUpdateDialog {
     actions.add(new AbstractAction("&Ignore This Update") {
           @Override
           public void actionPerformed(ActionEvent e) {
-            UpdateSettings.getInstance().getIgnoredBuildNumbers().add(myLatestBuild.getNumber().asStringWithoutProductCode());
+            UpdateSettings.getInstance().getIgnoredBuildNumbers().add(myLatestBuild.getNumber().asString());
             doCancelAction();
           }
         });
@@ -186,11 +186,11 @@ class UpdateInfoDialog extends AbstractUpdateDialog {
 
     public UpdateInfoPanel() {
       ApplicationInfo appInfo = ApplicationInfo.getInstance();
-      myBuildNumber.setText(appInfo.getBuild().asStringWithoutProductCode() + ")");
+      myBuildNumber.setText(appInfo.getBuild().asString() + ")");
       final String version = appInfo.getFullVersion();
 
       myVersionNumber.setText(version);
-      myNewBuildNumber.setText(myLatestBuild.getNumber().asStringWithoutProductCode() + ")");
+      myNewBuildNumber.setText(myLatestBuild.getNumber().asString() + ")");
       myNewVersionNumber.setText(myLatestBuild.getVersion());
       myUpdateMessageLabel.setBackground(UIUtil.getLabelBackground());
       myScrollPane.setBackground(UIUtil.getLabelBackground());

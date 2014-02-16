@@ -97,7 +97,7 @@ public class UpdateStrategy {
   private boolean hasNewVersion(@NotNull UpdateChannel channel) {
     BuildInfo latestBuild = channel.getLatestBuild();
     if (latestBuild == null || latestBuild.getNumber() == null ||
-        myUpdateSettings.getIgnoredBuildNumbers().contains(latestBuild.getNumber().asStringWithoutProductCode())) {
+        myUpdateSettings.getIgnoredBuildNumbers().contains(latestBuild.getNumber().asString())) {
       return false;
     }
     return myCurrentBuild.compareTo(latestBuild.getNumber()) < 0;

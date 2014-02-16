@@ -21,6 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.ParseException;
@@ -72,7 +73,8 @@ public class BuildInfo implements Comparable<BuildInfo> {
     myMessage = messageTag != null ? messageTag.getValue() : "";
   }
 
-  public int compareTo(BuildInfo o) {
+  @Override
+  public int compareTo(@NotNull BuildInfo o) {
     return myNumber.compareTo(o.myNumber);
   }
 
@@ -96,7 +98,7 @@ public class BuildInfo implements Comparable<BuildInfo> {
   public PatchInfo findPatchForCurrentBuild() {
     BuildNumber currentBuild = ApplicationInfo.getInstance().getBuild();
     for (PatchInfo each : myPatches) {
-      if (each.isAvailable() && each.getFromBuild().asStringWithoutProductCode().equals(currentBuild.asStringWithoutProductCode())) 
+      if (each.isAvailable() && each.getFromBuild().asString().equals(currentBuild.asString()))
         return each;
     }
     return null;

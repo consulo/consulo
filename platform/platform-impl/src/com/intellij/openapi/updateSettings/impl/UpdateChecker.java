@@ -709,8 +709,8 @@ public final class UpdateChecker {
     PatchInfo patch = newVersion.findPatchForCurrentBuild();
     if (patch == null) throw new IOException("No patch is available for current version");
 
-    String fromBuildNumber = patch.getFromBuild().asStringWithoutProductCode();
-    String toBuildNumber = newVersion.getNumber().asStringWithoutProductCode();
+    String fromBuildNumber = patch.getFromBuild().asString();
+    String toBuildNumber = newVersion.getNumber().asString();
 
     StringBuilder builder = new StringBuilder();
     builder.append(ApplicationInfoEx.getInstanceEx().getUpdatesDownloadUrl());

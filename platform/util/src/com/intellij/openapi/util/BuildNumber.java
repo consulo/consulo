@@ -17,7 +17,6 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -33,30 +32,16 @@ public class BuildNumber implements Comparable<BuildNumber> {
 
   private static final int TOP_BASELINE_VERSION = fromFile().getBaselineVersion();
 
-  private final String myProductCode;
   private final int myBaselineVersion;
   private final int myBuildNumber;
 
-  public BuildNumber(String productCode, int baselineVersion, int buildNumber) {
-    myProductCode = productCode;
+  public BuildNumber(int baselineVersion, int buildNumber) {
     myBaselineVersion = baselineVersion;
     myBuildNumber = buildNumber;
   }
 
   public String asString() {
-    return asString(true);
-  }
-
-  public String asStringWithoutProductCode() {
-    return asString(false);
-  }
-
-  private String asString(boolean includeProductCode) {
     StringBuilder builder = new StringBuilder();
-
-    if (includeProductCode && !StringUtil.isEmpty(myProductCode)) {
-      builder.append(myProductCode).append('-');
-    }
 
     builder.append(myBaselineVersion).append('.');
 
@@ -78,20 +63,10 @@ public class BuildNumber implements Comparable<BuildNumber> {
     if (version == null) return null;
 
     if (BUILD_NUMBER.equals(version)) {
-      final String productCode = name != null ? name : "";
-      return new BuildNumber(productCode, TOP_BASELINE_VERSION, Integer.MAX_VALUE);
+      return new BuildNumber(TOP_BASELINE_VERSION, Integer.MAX_VALUE);
     }
 
     String code = version;
-    int productSeparator = code.indexOf('-');
-    final String productCode;
-    if (productSeparator > 0) {
-      productCode = code.substring(0, productSeparator);
-      code = code.substring(productSeparator + 1);
-    }
-    else {
-      productCode = "";
-    }
 
     int baselineVersionSeparator = code.indexOf('.');
     int baselineVersion;
@@ -112,15 +87,10 @@ public class BuildNumber implements Comparable<BuildNumber> {
     else {
       buildNumber = parseBuildNumber(version, code, name);
 
-      if (buildNumber <= 2000) {
-        // it's probably a baseline, not a build number
-        return new BuildNumber(productCode, buildNumber, 0);
-      }
-
       baselineVersion = getBaseLineForHistoricBuilds(buildNumber);
     }
 
-    return new BuildNumber(productCode, baselineVersion, buildNumber);
+    return new BuildNumber(baselineVersion, buildNumber);
   }
 
   private static int parseBuildNumber(String version, String code, String name) {
@@ -164,10 +134,6 @@ public class BuildNumber implements Comparable<BuildNumber> {
     return myBaselineVersion - o.myBaselineVersion;
   }
 
-  public String getProductCode() {
-    return myProductCode;
-  }
-
   public int getBaselineVersion() {
     return myBaselineVersion;
   }
@@ -185,70 +151,23 @@ public class BuildNumber implements Comparable<BuildNumber> {
 
     if (myBaselineVersion != that.myBaselineVersion) return false;
     if (myBuildNumber != that.myBuildNumber) return false;
-    if (!myProductCode.equals(that.myProductCode)) return false;
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = myProductCode.hashCode();
+    int result = 0;
     result = 31 * result + myBaselineVersion;
     result = 31 * result + myBuildNumber;
     return result;
   }
 
-  // See http://www.jetbrains.net/confluence/display/IDEADEV/Build+Number+Ranges for historic build ranges
   private static int getBaseLineForHistoricBuilds(int bn) {
     if (bn == Integer.MAX_VALUE) {
       return TOP_BASELINE_VERSION; // SNAPSHOTS
     }
 
-    if (bn >= 10000) {
-      return 88; // Maia, 9x builds
-    }
-
-    if (bn >= 9500) {
-      return 85; // 8.1 builds
-    }
-
-    if (bn >= 9100) {
-      return 81; // 8.0.x builds
-    }
-
-    if (bn >= 8000) {
-      return 80; // 8.0, including pre-release builds
-    }
-
-    if (bn >= 7500) {
-      return 75; // 7.0.2+
-    }
-
-    if (bn >= 7200) {
-      return 72; // 7.0 final
-    }
-
-    if (bn >= 6900) {
-      return 69; // 7.0 pre-M2
-    }
-
-    if (bn >= 6500) {
-      return 65; // 7.0 pre-M1
-    }
-
-    if (bn >= 6000) {
-      return 60; // 6.0.2+
-    }
-
-    if (bn >= 5000) {
-      return 55; // 6.0 branch, including all 6.0 EAP builds
-    }
-
-    if (bn >= 4000) {
-      return 50; // 5.1 branch
-    }
-
-    return 40;
+    return 1;
   }
 
   public boolean isSnapshot() {
