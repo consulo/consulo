@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BrowserHyperlinkListener;
-import com.intellij.ui.LicensingFacade;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
@@ -35,7 +34,6 @@ import java.awt.event.ActionEvent;
 public class NewChannelDialog extends DialogWrapper {
   private final UpdateChannel myChannel;
   private String myInformationText;
-  private boolean myShowUpgradeButton = false;
 
   public NewChannelDialog(UpdateChannel channel) {
     super(true);
@@ -58,18 +56,6 @@ public class NewChannelDialog extends DialogWrapper {
         doCancelAction();
       }
     };
-    if (myShowUpgradeButton) {
-      Action upgrade = new AbstractAction("Buy Upgrade Online") {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          LicensingFacade facade = LicensingFacade.getInstance();
-          assert facade != null;
-          BrowserUtil.launchBrowser(facade.getUpgradeUrl());
-          doCancelAction();
-        }
-      };
-      return new Action[] { getOKAction(), upgrade, remindLater, getCancelAction() };
-    }
     return new Action[] { getOKAction(), remindLater, getCancelAction() };
   }
 
@@ -89,26 +75,6 @@ public class NewChannelDialog extends DialogWrapper {
     builder.append("<head>").append(UIUtil.getCssFontDeclaration(UIUtil.getLabelFont())).append("</head><body>");
     builder.append("<b>").append(myChannel.getName()).append("</b><br>");
     builder.append(StringUtil.formatLinks(myChannel.getLatestBuild().getMessage())).append("<br><br>");
-    LicensingFacade facade = LicensingFacade.getInstance();
-    if (facade != null) {
-      if (!myChannel.getLicensing().equals(UpdateChannel.LICENSING_EAP)) {
-        Boolean paidUpgrade = facade.isPaidUpgrade(myChannel.getMajorVersion(), myChannel.getLatestBuild().getReleaseDate());
-        if (paidUpgrade != null) {
-          if (paidUpgrade) {
-            builder.append("You can evaluate the new version for ")
-              .append(myChannel.getEvalDays())
-              .append(" days or buy a license key or an upgrade online.");
-            myShowUpgradeButton = true;
-          }
-          else {
-            builder.append("The new version can be used with your existing license key.");
-          }
-        }
-      }
-      else {
-        builder.append("The new version has an expiration date and does not require a license key.");
-      }
-    }
     myInformationText = XmlStringUtil.wrapInHtml(builder);
   }
 

@@ -60,13 +60,13 @@ public class BuildInfo implements Comparable<BuildInfo> {
     myReleaseDate = releaseDate;
 
     myPatches = new ArrayList<PatchInfo>();
-    for (Object patchNode : node.getChildren("patch")) {
-      myPatches.add(new PatchInfo((Element)patchNode));
+    for (Element patchNode : node.getChildren("patch")) {
+      myPatches.add(new PatchInfo(patchNode));
     }
     
     myButtons = new ArrayList<ButtonInfo>();
-    for (Object buttonNode : node.getChildren("button")) {
-      myButtons.add(new ButtonInfo((Element) buttonNode));
+    for (Element buttonNode : node.getChildren("button")) {
+      myButtons.add(new ButtonInfo(buttonNode));
     }
 
     Element messageTag = node.getChild("message");

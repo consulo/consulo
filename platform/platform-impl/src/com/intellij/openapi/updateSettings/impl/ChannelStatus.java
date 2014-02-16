@@ -21,6 +21,7 @@ package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -53,7 +54,8 @@ public class ChannelStatus implements Comparable<ChannelStatus> {
     return RELEASE;
   }
 
-  public int compareTo(ChannelStatus o) {
+  @Override
+  public int compareTo(@NotNull ChannelStatus o) {
     return myOrder - o.myOrder;
   }
 

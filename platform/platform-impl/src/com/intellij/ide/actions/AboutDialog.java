@@ -27,7 +27,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
-import com.intellij.ui.LicensingFacade;
 import com.intellij.ui.UI;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
@@ -176,14 +175,6 @@ public class AboutDialog extends JDialog {
       appendLast();
 
       myLines.add(new AboutBoxLine(""));
-
-      LicensingFacade provider = LicensingFacade.getInstance();
-      if (provider != null) {
-        myLines.add(new AboutBoxLine(provider.getLicensedToMessage(), true, null));
-        for (String message : provider.getLicenseRestrictionsMessages()) {
-          myLines.add(new AboutBoxLine(message));
-        }
-      }
       myLines.add(new AboutBoxLine(""));
 
       final Properties properties = System.getProperties();

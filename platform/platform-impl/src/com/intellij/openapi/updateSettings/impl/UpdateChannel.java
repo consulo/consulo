@@ -29,35 +29,26 @@ public class UpdateChannel {
   private final String myId;
   private final String myName;
   private final ChannelStatus myStatus;
-  private final String myLicensing;
+
   private final int myMajorVersion;
   private final String myHomePageUrl;
   private final String myFeedbackUrl;
   private final List<BuildInfo> myBuilds;
-  private final int myEvalDays;
-
-  public static final String LICENSING_EAP = "eap";
-  public static final String LICENSING_PRODUCTION = "production";
 
   public UpdateChannel(Element node) {
     myId = node.getAttributeValue("id");
     myName = node.getAttributeValue("name");
     myStatus = ChannelStatus.fromCode(node.getAttributeValue("status"));
-    String licensing = node.getAttributeValue("licensing");
-    myLicensing = licensing != null ? licensing : LICENSING_PRODUCTION;
 
     String majorVersion = node.getAttributeValue("majorVersion");
     myMajorVersion = majorVersion != null ? Integer.parseInt(majorVersion) : -1;
-
-    String evalDays = node.getAttributeValue("evalDays");
-    myEvalDays = evalDays != null ? Integer.parseInt(evalDays) : 30;
 
     myHomePageUrl = node.getAttributeValue("url");
     myFeedbackUrl = node.getAttributeValue("feedback");
 
     myBuilds = new ArrayList<BuildInfo>();
-    for (Object child : node.getChildren("build")) {
-      myBuilds.add(new BuildInfo((Element)child));
+    for (Element child : node.getChildren("build")) {
+      myBuilds.add(new BuildInfo(child));
     }
   }
 
@@ -69,7 +60,6 @@ public class UpdateChannel {
         build = info;
       }
     }
-
     return build;
   }
 
@@ -95,13 +85,5 @@ public class UpdateChannel {
 
   public ChannelStatus getStatus() {
     return myStatus;
-  }
-
-  public String getLicensing() {
-    return myLicensing;
-  }
-
-  public int getEvalDays() {
-    return myEvalDays;
   }
 }

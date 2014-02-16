@@ -62,6 +62,7 @@ class UpdateInfoDialog extends AbstractUpdateDialog {
     if (hasPatch()) {
       if (buttons.isEmpty()) {
         actions.add(new AbstractAction(IdeBundle.message("updates.more.info.button")) {
+          @Override
           public void actionPerformed(ActionEvent e) {
             openDownloadPage();
           }
@@ -97,6 +98,7 @@ class UpdateInfoDialog extends AbstractUpdateDialog {
     BrowserUtil.launchBrowser(myUpdatedChannel.getHomePageUrl());
   }
 
+  @Override
   protected String getOkButtonText() {
     if (hasPatch()) {
       return ApplicationManager.getApplication().isRestartCapable()
@@ -116,6 +118,7 @@ class UpdateInfoDialog extends AbstractUpdateDialog {
     return "&Remind Me Later";
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     UpdateInfoPanel updateInfoPanel = new UpdateInfoPanel();
     return updateInfoPanel.myPanel;
