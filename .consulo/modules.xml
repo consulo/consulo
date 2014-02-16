@@ -847,6 +847,14 @@
         <orderEntry type="module" module-name="testFramework" />
         <orderEntry type="module" module-name="platform-resources" />
       </module>
+      <module name="updater" dirurl="file://$PROJECT_DIR$/tools/updater">
+        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+        <content url="file://$MODULE_DIR$">
+          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+        </content>
+        <orderEntry type="module-extension-sdk" extension-id="java" />
+        <orderEntry type="sourceFolder" forTests="false" />
+      </module>
     </modules>
   </component>
 </project>

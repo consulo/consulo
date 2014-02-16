@@ -44,6 +44,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   private static final String DEFAULT_PLUGINS_HOST = "http://must-be.org/consulo/plugins/";
   @NonNls
   private static final String DEFAULT_STATISTICS_HOST = "http://must-be.org/consulo/statistics/";
+  @NonNls
+  private static final String DEFAULT_UPDATES_HOST = "http://must-be.org/consulo/updates/";
 
   private String myCodeName = null;
   private String myMajorVersion = null;
@@ -71,13 +73,14 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   private Calendar myBuildDate = null;
   private Calendar myMajorReleaseBuildDate = null;
   private String myPackageCode = null;
-  private UpdateUrls myUpdateUrls;
   private String myDocumentationUrl;
   private String mySupportUrl;
   private String myEAPFeedbackUrl;
   private String myReleaseFeedbackUrl;
   private String myPluginManagerUrl;
   private String myPluginsListUrl;
+  private String myUpdatesInfoUrl;
+  private String myUpdatesDownloadUrl;
   private String myStatisticsUrl;
   private String myPluginsDownloadUrl;
   private String myWhatsNewUrl;
@@ -125,7 +128,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NonNls private static final String LOGO_URL_ATTR = "logo-url";
   @NonNls private static final String ELEMENT_EDITOR = "editor";
   @NonNls private static final String BACKGROUND_URL_ATTR = "background-url";
-  @NonNls private static final String UPDATE_URLS_ELEMENT_NAME = "update-urls";
   @NonNls private static final String XML_EXTENSION = ".xml";
   @NonNls private static final String ATTRIBUTE_EAP = "eap";
   @NonNls private static final String HELP_ELEMENT_NAME = "help";
@@ -281,11 +283,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   }
 
   @Override
-  public UpdateUrls getUpdateUrls() {
-    return myUpdateUrls;
-  }
-
-  @Override
   public String getDocumentationUrl() {
     return myDocumentationUrl;
   }
@@ -323,6 +320,16 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @Override
   public String getPluginsDownloadUrl() {
     return myPluginsDownloadUrl;
+  }
+
+  @Override
+  public String getUpdatesInfoUrl() {
+    return myUpdatesInfoUrl;
+  }
+
+  @Override
+  public String getUpdatesDownloadUrl() {
+    return myUpdatesDownloadUrl;
   }
 
   @Override
@@ -554,9 +561,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
       myHasContextHelp = attValue == null || Boolean.parseBoolean(attValue); // Default is true
     }
 
-    Element updateUrls = parentNode.getChild(UPDATE_URLS_ELEMENT_NAME);
-    myUpdateUrls = new UpdateUrlsImpl(updateUrls);
-
     Element documentationElement = parentNode.getChild(ELEMENT_DOCUMENTATION);
     if (documentationElement != null) {
       myDocumentationUrl = documentationElement.getAttributeValue(ATTRIBUTE_URL);
@@ -593,6 +597,14 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
     final String statisticsHost = System.getProperty("consulo.statistics.host");
     if (statisticsHost != null) {
       myStatisticsUrl = myStatisticsUrl.replace(DEFAULT_STATISTICS_HOST, statisticsHost);
+    }
+
+    myUpdatesInfoUrl = DEFAULT_UPDATES_HOST + "list";
+    myUpdatesDownloadUrl = DEFAULT_UPDATES_HOST + "download";
+    final String updatesHost = System.getProperty("consulo.updates.host");
+    if (updatesHost != null) {
+      myUpdatesInfoUrl = myUpdatesInfoUrl.replace(DEFAULT_UPDATES_HOST, updatesHost);
+      myUpdatesDownloadUrl = myUpdatesDownloadUrl.replace(DEFAULT_UPDATES_HOST, updatesHost);
     }
 
     Element keymapElement = parentNode.getChild(ELEMENT_KEYMAP);
@@ -644,28 +656,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx implements JDOMExtern
   @NotNull
   public String getComponentName() {
     return ApplicationNamesInfo.COMPONENT_NAME;
-  }
-
-  private static class UpdateUrlsImpl implements UpdateUrls {
-    private String myCheckingUrl;
-    private String myPatchesUrl;
-
-    private UpdateUrlsImpl(Element element) {
-      if (element != null) {
-        myCheckingUrl = element.getAttributeValue("check");
-        myPatchesUrl = element.getAttributeValue("patches");
-      }
-    }
-
-    @Override
-    public String getCheckingUrl() {
-      return myCheckingUrl;
-    }
-
-    @Override
-    public String getPatchesUrl() {
-      return myPatchesUrl;
-    }
   }
 
   private static class PluginChooserPageImpl implements PluginChooserPage {

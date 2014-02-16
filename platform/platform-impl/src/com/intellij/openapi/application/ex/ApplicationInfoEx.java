@@ -68,8 +68,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract boolean isEAP();
 
-  public abstract UpdateUrls getUpdateUrls();
-
   public abstract String getDocumentationUrl();
 
   public abstract String getSupportUrl();
@@ -82,9 +80,13 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getPluginsListUrl();
 
-  public abstract String getStatisticsUrl();
-
   public abstract String getPluginsDownloadUrl();
+
+  public abstract String getUpdatesInfoUrl();
+
+  public abstract String getUpdatesDownloadUrl();
+
+  public abstract String getStatisticsUrl();
 
   public abstract String getWebHelpUrl();
 
@@ -95,11 +97,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   public abstract String getMacKeymapUrl();
 
   public abstract Color getAboutForeground();
-
-  public interface UpdateUrls {
-    String getCheckingUrl();
-    String getPatchesUrl();
-  }
 
   public interface PluginChooserPage {
     String getTitle();

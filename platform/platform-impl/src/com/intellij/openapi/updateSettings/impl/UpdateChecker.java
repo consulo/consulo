@@ -25,7 +25,6 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -46,6 +45,7 @@ import com.intellij.util.io.UrlConnectionUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -82,9 +82,8 @@ import java.util.concurrent.TimeoutException;
  * @author mike
  * Date: Oct 31, 2002
  */
+@Logger
 public final class UpdateChecker {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.updateSettings.impl.UpdateChecker");
-
   private static Map<String, String> ADDITIONAL_REQUEST_OPTIONS = new HashMap<String, String>();
 
   @NonNls private static final String INSTALLATION_UID = "installation.uid";
@@ -107,27 +106,6 @@ public final class UpdateChecker {
   private static final String DISABLED_UPDATE = "disabled_update.txt";
   private static TreeSet<String> ourDisabledToUpdatePlugins;
 
-  private static class StringHolder {
-    private static final String UPDATE_URL = ApplicationInfoEx.getInstanceEx().getUpdateUrls().getCheckingUrl();
-    private static final String PATCHES_URL = ApplicationInfoEx.getInstanceEx().getUpdateUrls().getPatchesUrl();
-    private StringHolder() { }
-  }
-
-  private static String getUpdateUrl() {
-    String url = System.getProperty("idea.updates.url");
-    if (url != null) {
-      return url;
-    }
-    return StringHolder.UPDATE_URL;
-  }
-
-  private static String getPatchesUrl() {
-    String url = System.getProperty("idea.patches.url");
-    if (url != null) {
-      return url;
-    }
-    return StringHolder.PATCHES_URL;
-  }
 
   public static boolean isMyVeryFirstOpening() {
     return myVeryFirstOpening;
@@ -139,7 +117,7 @@ public final class UpdateChecker {
 
   public static boolean checkNeeded() {
     final UpdateSettings settings = UpdateSettings.getInstance();
-    if (settings == null || getUpdateUrl() == null) return false;
+    if (settings == null) return false;
 
     final long timeDelta = System.currentTimeMillis() - settings.LAST_TIME_CHECKED;
     if (Math.abs(timeDelta) < DateFormatUtil.DAY) return false;
@@ -186,7 +164,7 @@ public final class UpdateChecker {
         return null;
       }
       catch (Exception e) {
-        LOG.info(e);
+        LOGGER.info(e);
         failed.add(host);
       }
     }
@@ -214,7 +192,7 @@ public final class UpdateChecker {
         }
       }
       catch (IOException e) {
-        LOG.error(e);
+        LOGGER.error(e);
       }
       installedTxt.deleteOnExit();
     }
@@ -270,7 +248,7 @@ public final class UpdateChecker {
       });
     }
     else {
-      LOG.info(failedMessage);
+      LOGGER.info(failedMessage);
     }
   }
 
@@ -340,13 +318,13 @@ public final class UpdateChecker {
       }
 
       if (pluginId == null) {
-        LOG.info("plugin id should not be null");
+        LOGGER.info("plugin id should not be null");
         success = false;
         continue;
       }
 
       if (pluginUrl == null) {
-        LOG.info("plugin url should not be null");
+        LOGGER.info("plugin url should not be null");
         success = false;
         continue;
       }
@@ -369,7 +347,7 @@ public final class UpdateChecker {
               }
             }
             catch (IOException e) {
-              LOG.info(e);
+              LOGGER.info(e);
             }
           }
         };
@@ -407,7 +385,7 @@ public final class UpdateChecker {
     ApplicationInfo appInfo = ApplicationInfo.getInstance();
     BuildNumber currentBuild = appInfo.getBuild();
     int majorVersion = Integer.parseInt(appInfo.getMajorVersion());
-    final UpdatesXmlLoader loader = new UpdatesXmlLoader(getUpdateUrl());
+    final UpdatesXmlLoader loader = new UpdatesXmlLoader(ApplicationInfoEx.getInstanceEx().getUpdatesInfoUrl());
     final UpdatesInfo info;
     try {
       info = loader.loadUpdatesInfo();
@@ -434,8 +412,8 @@ public final class UpdateChecker {
   @NotNull
   public static CheckForUpdateResult checkForUpdates(final UpdateSettings updateSettings,
                                                      final boolean disregardIgnoredBuilds) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: auto checkForUpdates()");
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("enter: auto checkForUpdates()");
     }
 
     UserUpdateSettings settings = updateSettings;
@@ -590,8 +568,8 @@ public final class UpdateChecker {
   }
 
   private static InputStream loadVersionInfo(final String url) throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: loadVersionInfo(UPDATE_URL='" + url + "' )");
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("enter: loadVersionInfo(UPDATE_URL='" + url + "' )");
     }
     final InputStream[] inputStreams = new InputStream[]{null};
     final Exception[] exception = new Exception[]{null};
@@ -697,7 +675,7 @@ public final class UpdateChecker {
           installed = true;
         }
         catch (IOException e) {
-          LOG.info(e);
+          LOGGER.info(e);
         }
       }
     }
@@ -715,7 +693,7 @@ public final class UpdateChecker {
           result[0] = DownloadPatchResult.SUCCESS;
         }
         catch (final IOException e) {
-          LOG.info(e);
+          LOGGER.info(e);
           result[0] = DownloadPatchResult.FAILED;
           Notifications.Bus.notify(new Notification("Updater", "Failed to download patch file", e.getMessage(), NotificationType.ERROR));
         }
@@ -731,19 +709,23 @@ public final class UpdateChecker {
     PatchInfo patch = newVersion.findPatchForCurrentBuild();
     if (patch == null) throw new IOException("No patch is available for current version");
 
-    String productCode = ApplicationInfo.getInstance().getBuild().getProductCode();
-
-    String osSuffix = "-" + patch.getOSSuffix();
-
     String fromBuildNumber = patch.getFromBuild().asStringWithoutProductCode();
     String toBuildNumber = newVersion.getNumber().asStringWithoutProductCode();
-    String fileName = productCode + "-" + fromBuildNumber + "-" + toBuildNumber + "-patch" + osSuffix + ".jar";
+
+    StringBuilder builder = new StringBuilder();
+    builder.append(ApplicationInfoEx.getInstanceEx().getUpdatesDownloadUrl());
+    builder.append("?fromBuild=");
+    builder.append(fromBuildNumber);
+    builder.append("&toBuild=");
+    builder.append(toBuildNumber);
+    builder.append("&os=");
+    builder.append(patch.getOSSuffix());
 
     File tempFile = FileUtil.createTempFile("consulo", "patch", true);
 
     OutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
     try {
-      URLConnection connection = new URL(new URL(getPatchesUrl()), fileName).openConnection();
+      URLConnection connection = new URL(builder.toString()).openConnection();
       try {
         InputStream in = UrlConnectionUtil.getConnectionInputStreamWithException(connection, i);
         try {
@@ -802,7 +784,7 @@ public final class UpdateChecker {
           }
         }
         catch (IOException e) {
-          LOG.error(e);
+          LOGGER.error(e);
         }
       }
     }
@@ -815,7 +797,7 @@ public final class UpdateChecker {
       PluginManagerCore.savePluginsList(getDisabledToUpdatePlugins(), false, plugins);
     }
     catch (IOException e) {
-      LOG.error(e);
+      LOGGER.error(e);
     }
   }
 }
