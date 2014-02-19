@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,6 @@
  */
 package org.consulo.compiler.server;
 
-import java.io.File;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
-import org.consulo.compiler.server.application.CompilerServerApplication;
-import org.consulo.compiler.server.rmi.CompilerClientInterface;
-import org.consulo.compiler.server.rmi.CompilerServerInterface;
-import org.consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
@@ -36,6 +26,16 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TestDialog;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
+import org.consulo.compiler.server.application.CompilerServerApplication;
+import org.consulo.compiler.server.rmi.CompilerClientInterface;
+import org.consulo.compiler.server.rmi.CompilerServerInterface;
+import org.consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 /**
  * @author VISTALL
