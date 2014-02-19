@@ -76,12 +76,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     return isResourceFile(virtualFile.getName(), virtualFile.getParent());
   }
 
-  public String[] getResourceFilePatterns() {
-    return getWildcardPatterns();
-  }
-
-  private String[] getWildcardPatterns() {
-    return ArrayUtil.toStringArray(myWildcardPatterns);
+  public List<String> getResourceFilePatterns() {
+    return new ArrayList<String>(myWildcardPatterns);
   }
 
   public void removeResourceFilePatterns() {
@@ -292,7 +288,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     return wildcardPattern.length() > 1 && wildcardPattern.charAt(0) == '!';
   }
 
-  private static CompiledPattern convertToRegexp(String wildcardPattern) {
+  public static CompiledPattern convertToRegexp(String wildcardPattern) throws MalformedPatternException{
     if (isPatternNegated(wildcardPattern)) {
       wildcardPattern = wildcardPattern.substring(1);
     }

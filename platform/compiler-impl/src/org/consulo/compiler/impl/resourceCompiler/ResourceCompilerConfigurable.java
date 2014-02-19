@@ -16,65 +16,36 @@
 package org.consulo.compiler.impl.resourceCompiler;
 
 import com.intellij.compiler.MalformedPatternException;
-import com.intellij.compiler.options.ComparingUtils;
-import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.RawCommandLineEditor;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtilRt;
+import com.intellij.openapi.ui.InputValidatorEx;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.ui.*;
+import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 20:47/12.06.13
  */
-public class ResourceCompilerConfigurable implements Configurable {
-  public static final Function<String, List<String>> LINE_PARSER = new Function<String, List<String>>() {
-    @Override
-    public List<String> fun(String text) {
-      final ArrayList<String> result = ContainerUtilRt.newArrayList();
-      final StringTokenizer tokenizer = new StringTokenizer(text, ";", false);
-      while (tokenizer.hasMoreTokens()) {
-        result.add(tokenizer.nextToken());
-      }
-      return result;
-    }
-  };
-  public static final Function<List<String>, String> LINE_JOINER = new Function<List<String>, String>() {
-    @Override
-    public String fun(List<String> strings) {
-      return StringUtil.join(strings, ";");
-    }
-  };
-
-  private RawCommandLineEditor myResourcePatternsField;
-  private JBLabel myPatternLegendLabel;
-  private JPanel myRootPanel;
-
+public class ResourceCompilerConfigurable implements Configurable, Configurable.NoScroll {
+  @NotNull private final Project myProject;
   private ResourceCompilerConfiguration myResourceCompilerConfiguration;
 
+  private CollectionListModel<String> myModel;
+
   public ResourceCompilerConfigurable(@NotNull Project project) {
-    myPatternLegendLabel.setText("<html><body>" +
-                                 "Use <b>;</b> to separate patterns and <b>!</b> to negate a pattern. " +
-                                 "Accepted wildcards: <b>?</b> &mdash; exactly one symbol; <b>*</b> &mdash; zero or more symbols; " +
-                                 "<b>/</b> &mdash; path separator; <b>/**/</b> &mdash; any number of directories; " +
-                                 "<i>&lt;dir_name&gt;</i>:<i>&lt;pattern&gt;</i> &mdash; restrict to source roots with the specified name" +
-                                 "</body></html>");
-    myPatternLegendLabel.setForeground(new JBColor(Gray._50, Gray._130));
+    myProject = project;
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
+
+    myModel = new CollectionListModel<String>(myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
   @Nls
@@ -92,49 +63,89 @@ public class ResourceCompilerConfigurable implements Configurable {
   @Nullable
   @Override
   public JComponent createComponent() {
-    return myRootPanel;
+    JBList list = new JBList(myModel);
+    ToolbarDecorator decorator = ToolbarDecorator.createDecorator(list);
+    decorator.disableUpDownActions();
+    decorator.setAddAction(new AnActionButtonRunnable() {
+      @Override
+      public void run(AnActionButton anActionButton) {
+        showAddOrChangeDialog(null);
+      }
+    });
+
+    decorator.setEditAction(new AnActionButtonRunnable() {
+      @Override
+      public void run(AnActionButton anActionButton) {
+        JBList contextComponent = (JBList)anActionButton.getContextComponent();
+        showAddOrChangeDialog((String)contextComponent.getSelectedValue());
+      }
+    });
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(decorator.createPanel(), BorderLayout.CENTER);
+
+    JTextPane textPane = new JTextPane();
+    textPane.setContentType("text/html");
+    textPane.setEditable(false);
+    textPane.setText("<html><body>" +
+                     "Use <b>!</b> to negate a pattern. " +
+                     "Accepted wildcards: <b>?</b> &mdash; exactly one symbol; <b>*</b> &mdash; zero or more symbols; " +
+                     "<b>/</b> &mdash; path separator; <b>/**/</b> &mdash; any number of directories; " +
+                     "<i>&lt;dir_name&gt;</i>:<i>&lt;pattern&gt;</i> &mdash; restrict to source roots with the specified name" +
+                     "</body></html>");
+    textPane.setForeground(new JBColor(Gray._50, Gray._130));
+    panel.add(textPane, BorderLayout.SOUTH);
+    return panel;
+  }
+
+  private void showAddOrChangeDialog(final String initialValue) {
+    String pattern = Messages.showInputDialog(myProject, "Pattern", "Enter Pattern", null, initialValue, new InputValidatorEx() {
+      @Override
+      public boolean checkInput(String inputString) {
+        return (initialValue == null && myModel.getElementIndex(inputString) == -1 || initialValue != null) && getErrorText(inputString) == null;
+      }
+
+      @Override
+      public boolean canClose(String inputString) {
+        return true;
+      }
+
+      @Nullable
+      @Override
+      public String getErrorText(String inputString) {
+        try {
+          ResourceCompilerConfiguration.convertToRegexp(inputString);
+          return null;
+        }
+        catch (Exception ex) {
+          return ex.getMessage();
+        }
+      }
+    });
+
+    if (pattern != null) {
+      if (initialValue != null) {
+        myModel.remove(initialValue);
+      }
+
+      myModel.add(pattern);
+    }
   }
 
   @Override
   public boolean isModified() {
-    return ComparingUtils.isModified(myResourcePatternsField, patternsToString(myResourceCompilerConfiguration.getResourceFilePatterns()));
+    return !Comparing.haveEqualElements(myModel.toList(), myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
   @Override
   public void apply() throws ConfigurationException {
     myResourceCompilerConfiguration.removeResourceFilePatterns();
-    String extensionString = myResourcePatternsField.getText().trim();
-    applyResourcePatterns(extensionString);
-  }
 
-  private void applyResourcePatterns(String extensionString)
-    throws ConfigurationException {
-    StringTokenizer tokenizer = new StringTokenizer(extensionString, ";", false);
-    List<String[]> errors = new ArrayList<String[]>();
-
-    while (tokenizer.hasMoreTokens()) {
-      String namePattern = tokenizer.nextToken();
+    for (String namePattern : myModel.toList()) {
       try {
         myResourceCompilerConfiguration.addResourceFilePattern(namePattern);
       }
       catch (MalformedPatternException e) {
-        errors.add(new String[]{namePattern, e.getLocalizedMessage()});
       }
-    }
-
-    if (errors.size() > 0) {
-      final StringBuilder pattersnsWithErrors = new StringBuilder();
-      for (final Object error : errors) {
-        String[] pair = (String[])error;
-        pattersnsWithErrors.append("\n");
-        pattersnsWithErrors.append(pair[0]);
-        pattersnsWithErrors.append(": ");
-        pattersnsWithErrors.append(pair[1]);
-      }
-
-      throw new ConfigurationException(
-        CompilerBundle.message("error.compiler.configurable.malformed.patterns", pattersnsWithErrors.toString()), CompilerBundle.message("bad.resource.patterns.dialog.title")
-      );
     }
   }
 
@@ -142,23 +153,7 @@ public class ResourceCompilerConfigurable implements Configurable {
   public void reset() {
     myResourceCompilerConfiguration.convertPatterns();
 
-    myResourcePatternsField.setText(patternsToString(myResourceCompilerConfiguration.getResourceFilePatterns()));
-  }
-
-  private void createUIComponents() {
-    myResourcePatternsField = new RawCommandLineEditor(LINE_PARSER, LINE_JOINER);
-    myResourcePatternsField.setDialogCaption("Resource patterns");
-  }
-
-  private static String patternsToString(final String[] patterns) {
-    final StringBuilder extensionsString = new StringBuilder();
-    for (int idx = 0; idx < patterns.length; idx++) {
-      if (idx > 0) {
-        extensionsString.append(";");
-      }
-      extensionsString.append(patterns[idx]);
-    }
-    return extensionsString.toString();
+    myModel.replaceAll(myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
   @Override
