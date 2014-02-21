@@ -21,6 +21,7 @@ import com.intellij.lang.LanguageVersionResolvers;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +32,10 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("unchecked")
 public class LanguageVersionUtil {
-  public static <T extends Language> LanguageVersion<T> findLanguageVersion(@NotNull T language,
-                                                    @Nullable Project project,
-                                                    @Nullable VirtualFile virtualFile) {
+  public static <T extends Language> LanguageVersion<T> findLanguageVersion(@NotNull T language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
 
     final LanguageVersion<? extends Language> languageVersion = LanguageVersion.KEY.get(virtualFile);
-    if(languageVersion != null) {
+    if (languageVersion != null) {
       return (LanguageVersion<T>)languageVersion;
     }
     else {
@@ -45,13 +44,28 @@ public class LanguageVersionUtil {
   }
 
   public static LanguageVersion<?> findLanguageVersion(@NotNull Language language, @NotNull PsiFile psiFile) {
+    if (psiFile.getLanguage() == language) {
+      return psiFile.getLanguageVersion();
+    }
+
     FileViewProvider viewProvider = psiFile.getViewProvider();
 
     PsiFile psi = viewProvider.getPsi(language);
-    if(psi == null) {
+    if (psi == null) {
       return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, psiFile);
     }
     return psi.getLanguageVersion();
+  }
+
+  public static LanguageVersion<?> findLanguageVersion(@NotNull Language language, @NotNull PsiElement element) {
+    if (element.getLanguage() == language) {
+      return element.getLanguageVersion();
+    }
+    PsiFile containingFile = element.getContainingFile();
+    if(containingFile == null) {
+      return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, element);
+    }
+    return findLanguageVersion(language, containingFile);
   }
 
   public static <T extends Language> LanguageVersion<T> findDefaultVersion(@NotNull T language) {

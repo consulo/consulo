@@ -20,6 +20,8 @@
 package com.intellij.lang;
 
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class LanguageWordCompletion extends LanguageExtension<WordCompletionElementFilter> {
@@ -31,9 +33,10 @@ public class LanguageWordCompletion extends LanguageExtension<WordCompletionElem
 
   public boolean isEnabledIn(@NotNull ASTNode astNode) {
     final PsiElement psi = astNode.getPsi();
-    if(psi == null) {
+    if (psi == null) {
       return false;
     }
-    return forLanguage(psi.getLanguage()).isWordCompletionEnabledIn(astNode.getElementType(), psi.getLanguageVersion());
+    IElementType elementType = astNode.getElementType();
+    return forLanguage(psi.getLanguage()).isWordCompletionEnabledIn(elementType, LanguageVersionUtil.findLanguageVersion(elementType.getLanguage(), psi));
   }
 }
