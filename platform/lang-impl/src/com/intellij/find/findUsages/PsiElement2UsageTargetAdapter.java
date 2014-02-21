@@ -199,8 +199,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
 
   private class MyItemPresentation implements ItemPresentation {
     private String myPresentableText;
-    private ComputableIcon myIconOpen;
-    private ComputableIcon myIconClosed;
+    private ComputableIcon myIcon;
 
     public MyItemPresentation() {
       update();
@@ -210,25 +209,22 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
       final PsiElement element = getElement();
       if (element != null && element.isValid()) {
         final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
-        myIconOpen = presentation != null ? ComputableIcon.create(presentation, true) : null;
-        myIconClosed = presentation != null ? ComputableIcon.create(presentation, false) : null;
+        myIcon = presentation != null ? ComputableIcon.create(presentation, true) : null;
         myPresentableText = presentation != null ? presentation.getPresentableText() : UsageViewUtil.createNodeText(element);
-        if (myIconOpen == null || myIconClosed == null) {
+        if (myIcon == null) {
           if (element instanceof PsiMetaOwner) {
             final PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
             final PsiMetaData metaData = psiMetaOwner.getMetaData();
             if (metaData instanceof PsiPresentableMetaData) {
               final PsiPresentableMetaData psiPresentableMetaData = (PsiPresentableMetaData)metaData;
-              if (myIconOpen == null) myIconOpen = ComputableIcon.create(psiPresentableMetaData);
-              if (myIconClosed == null) myIconClosed = ComputableIcon.create(psiPresentableMetaData);
+              if (myIcon == null) myIcon = ComputableIcon.create(psiPresentableMetaData);
             }
           }
           else if (element instanceof PsiFile) {
             final PsiFile psiFile = (PsiFile)element;
             final VirtualFile virtualFile = psiFile.getVirtualFile();
             if (virtualFile != null) {
-              myIconOpen = ComputableIcon.create(virtualFile);
-              myIconClosed = ComputableIcon.create(virtualFile);
+              myIcon = ComputableIcon.create(virtualFile);
             }
           }
         }
@@ -246,9 +242,8 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
-    public Icon getIcon(boolean open) {
-      final ComputableIcon computableIcon = open ? myIconOpen : myIconClosed;
-      return computableIcon == null? null : computableIcon.getIcon();
+    public Icon getIcon(boolean unused) {
+      return myIcon == null? null : myIcon.getIcon();
     }
   }
 }
