@@ -36,7 +36,7 @@
 #define LOG_ENV_ERROR "error"
 #define LOG_ENV_OFF "off"
 
-#define VERSION "20130415.2136"
+#define VERSION "20130715.1353"
 #define VERSION_MSG "fsnotifier " VERSION "\n"
 
 #define USAGE_MSG \
@@ -68,21 +68,22 @@ typedef struct {
 
 static array* roots = NULL;
 
+static int log_level = 0;
 static bool self_test = false;
 
 static void init_log();
 static void run_self_test();
-static void main_loop();
-static bool read_input();
+static bool main_loop();
+static int read_input();
 static bool update_roots(array* new_roots);
 static void unregister_roots();
 static bool register_roots(array* new_roots, array* unwatchable, array* mounts);
 static array* unwatchable_mounts();
-static void inotify_callback(char* path, int event);
-static void report_event(char* event, char* path);
+static void inotify_callback(const char* path, int event);
+static void report_event(const char* event, const char* path);
 static void output(const char* format, ...);
 static void check_missing_roots();
-static void check_root_removal(char*);
+static void check_root_removal(const char*);
 
 
 int main(int argc, char** argv) {
@@ -115,12 +116,15 @@ int main(int argc, char** argv) {
 
   setvbuf(stdin, NULL, _IONBF, 0);
 
+  int rv = 0;
   roots = array_create(20);
-  if (init_inotify() && roots != NULL) {
+  if (roots != NULL && init_inotify()) {
     set_inotify_callback(&inotify_callback);
 
     if (!self_test) {
-      main_loop();
+      if (!main_loop()) {
+        rv = 3;
+      }
     }
     else {
       run_self_test();
@@ -130,14 +134,15 @@ int main(int argc, char** argv) {
   }
   else {
     output("GIVEUP\n");
+    rv = 2;
   }
   close_inotify();
   array_delete(roots);
 
-  userlog(LOG_INFO, "finished");
+  userlog(LOG_INFO, "finished (%d)", rv);
   closelog();
 
-  return 0;
+  return rv;
 }
 
 
@@ -159,7 +164,7 @@ static void init_log() {
   char ident[32];
   snprintf(ident, sizeof(ident), "fsnotifier[%d]", getpid());
   openlog(ident, 0, LOG_USER);
-  setlogmask(LOG_UPTO(level));
+  log_level = level;
 }
 
 
@@ -177,8 +182,11 @@ void message(MSG id) {
 
 
 void userlog(int priority, const char* format, ...) {
-  va_list ap;
+  if (priority > log_level) {
+    return;
+  }
 
+  va_list ap;
   va_start(ap, format);
   vsyslog(priority, format, ap);
   va_end(ap);
@@ -212,28 +220,33 @@ static void run_self_test() {
 }
 
 
-static void main_loop() {
+static bool main_loop() {
   int input_fd = fileno(stdin), inotify_fd = get_inotify_fd();
   int nfds = (inotify_fd > input_fd ? inotify_fd : input_fd) + 1;
   fd_set rfds;
   struct timeval timeout;
-  bool go_on = true;
 
-  while (go_on) {
+  while (true) {
+    usleep(50000);
+
     FD_ZERO(&rfds);
     FD_SET(input_fd, &rfds);
     FD_SET(inotify_fd, &rfds);
     timeout = (struct timeval){MISSING_ROOT_TIMEOUT, 0};
 
     if (select(nfds, &rfds, NULL, NULL, &timeout) < 0) {
-      userlog(LOG_ERR, "select: %s", strerror(errno));
-      go_on = false;
+      if (errno != EINTR) {
+        userlog(LOG_ERR, "select: %s", strerror(errno));
+        return false;
+      }
     }
     else if (FD_ISSET(input_fd, &rfds)) {
-      go_on = read_input();
+      int result = read_input();
+      if (result == 0) return true;
+      else if (result != ERR_CONTINUE) return false;
     }
     else if (FD_ISSET(inotify_fd, &rfds)) {
-      go_on = process_inotify_input();
+      if (!process_inotify_input()) return false;
     }
     else {
       check_missing_roots();
@@ -242,24 +255,24 @@ static void main_loop() {
 }
 
 
-static bool read_input() {
+static int read_input() {
   char* line = read_line(stdin);
   userlog(LOG_DEBUG, "input: %s", (line ? line : "<null>"));
 
   if (line == NULL || strcmp(line, "EXIT") == 0) {
     userlog(LOG_INFO, "exiting: %s", line);
-    return false;
+    return 0;
   }
 
   if (strcmp(line, "ROOTS") == 0) {
     array* new_roots = array_create(20);
-    CHECK_NULL(new_roots, false);
+    CHECK_NULL(new_roots, ERR_ABORT);
 
     while (1) {
       line = read_line(stdin);
       userlog(LOG_DEBUG, "input: %s", (line ? line : "<null>"));
       if (line == NULL || strlen(line) == 0) {
-        return false;
+        return 0;
       }
       else if (strcmp(line, "#") == 0) {
         break;
@@ -267,15 +280,15 @@ static bool read_input() {
       else {
         int l = strlen(line);
         if (l > 1 && line[l-1] == '/')  line[l-1] = '\0';
-        CHECK_NULL(array_push(new_roots, strdup(line)), false);
+        CHECK_NULL(array_push(new_roots, strdup(line)), ERR_ABORT);
       }
     }
 
-    return update_roots(new_roots);
+    return update_roots(new_roots) ? ERR_CONTINUE : ERR_ABORT;
   }
 
-  userlog(LOG_INFO, "unrecognised command: %s", line);
-  return true;
+  userlog(LOG_WARNING, "unrecognised command: %s", line);
+  return ERR_CONTINUE;
 }
 
 
@@ -421,7 +434,7 @@ static array* unwatchable_mounts() {
 }
 
 
-static void inotify_callback(char* path, int event) {
+static void inotify_callback(const char* path, int event) {
   if (event & (IN_CREATE | IN_MOVED_TO)) {
     report_event("CREATE", path);
     report_event("CHANGE", path);
@@ -444,20 +457,31 @@ static void inotify_callback(char* path, int event) {
   }
 }
 
-static void report_event(char* event, char* path) {
+static void report_event(const char* event, const char* path) {
   userlog(LOG_DEBUG, "%s: %s", event, path);
 
-  int len = strlen(path);
-  for (char* p = path; *p != '\0'; p++) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+  char* copy = path, *p;
+  for (p = copy; *p != '\0'; ++p) {
     if (*p == '\n') {
+      if (copy == path) {
+        copy = strdup(path);
+        p = copy + (p - path);
+      }
       *p = '\0';
     }
   }
+#pragma clang diagnostic pop
 
   fputs(event, stdout);
   fputc('\n', stdout);
-  fwrite(path, len, 1, stdout);
+  fwrite(copy, (p - copy), 1, stdout);
   fputc('\n', stdout);
+
+  if (copy != path) {
+    free(copy);
+  }
 
   fflush(stdout);
 }
@@ -493,7 +517,7 @@ static void check_missing_roots() {
   }
 }
 
-static void check_root_removal(char* path) {
+static void check_root_removal(const char* path) {
   for (int i=0; i<array_size(roots); i++) {
     watch_root* root = array_get(roots, i);
     if (root->id >= 0 && strcmp(path, UNFLATTEN(root->path)) == 0) {

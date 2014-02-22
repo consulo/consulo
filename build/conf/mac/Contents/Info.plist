@@ -75,7 +75,7 @@
       <dict>
         
         <key>idea.paths.selector</key>
-        <string>Consulo</string>
+        <string>ConsuloData</string>
 
 
         <key>idea.java.redist</key>
