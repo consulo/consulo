@@ -3,7 +3,8 @@
 Status:
  * Windows - OK
  * Linux - OK
- * Mac - ??
+ * Mac - OK
+ * Haiku - ~
 
 ## Information
 
