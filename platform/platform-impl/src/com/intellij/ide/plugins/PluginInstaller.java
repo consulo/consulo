@@ -23,7 +23,6 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.updateSettings.impl.UpdateChecker;
@@ -103,16 +102,17 @@ public class PluginInstaller {
 
       if (depends.size() > 0) { // has something to install prior installing the plugin
         final boolean[] proceed = new boolean[1];
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         for (PluginNode depend : depends) {
           buf.append(depend.getName()).append(",");
         }
         try {
           GuiUtils.runOrInvokeAndWait(new Runnable() {
+            @Override
             public void run() {
               String title = IdeBundle.message("plugin.manager.dependencies.detected.title");
               String message = IdeBundle.message("plugin.manager.dependencies.detected.message", depends.size(), buf.substring(0, buf.length() - 1));
-              proceed[0] = Messages.showYesNoDialog(message, title, Messages.getWarningIcon()) == DialogWrapper.OK_EXIT_CODE;
+              proceed[0] = Messages.showYesNoDialog(message, title, Messages.getWarningIcon()) == Messages.YES;
             }
           });
         }
@@ -130,19 +130,20 @@ public class PluginInstaller {
       }
 
       if (optionalDeps.size() > 0) {
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         for (PluginNode depend : optionalDeps) {
           buf.append(depend.getName()).append(",");
         }
         final boolean[] proceed = new boolean[1];
         try {
           GuiUtils.runOrInvokeAndWait(new Runnable() {
+            @Override
             public void run() {
               proceed[0] =
                 Messages.showYesNoDialog(IdeBundle.message("plugin.manager.optional.dependencies.detected.message", optionalDeps.size(),
                                                            buf.substring(0, buf.length() - 1)),
                                          IdeBundle.message("plugin.manager.dependencies.detected.title"),
-                                         Messages.getWarningIcon()) == DialogWrapper.OK_EXIT_CODE;
+                                         Messages.getWarningIcon()) == Messages.YES;
             }
           });
         }

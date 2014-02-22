@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,15 @@ import com.intellij.ui.mac.foundation.ID;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.Callback;
+import com.sun.jna.Pointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,6 +72,7 @@ public class MacMessagesImpl extends MacMessages {
         resultsFromDocumentRoot.put(documentRoot, new MessageResult(returnCode.intValue(), suppressState.intValue() == 1));
         queuesFromDocumentRoot.get(windowFromId.get(contextInfo.longValue())).runFromQueue();
       }
+      JDK7WindowReorderingWorkaround.enableReordering();
       cfRelease(self);
     }
   };
@@ -118,6 +121,8 @@ public class MacMessagesImpl extends MacMessages {
       //         invoke(invoke(alert, "buttons"), "objectAtIndex:", count == 1 ? 0 : 1));
       //}
 
+      enableEscapeToCloseTheMessage(alert);
+
       String doNotAsk = toStringViaUTF8(doNotAskText);
       if (!"-1".equals(doNotAsk)) {
         invoke(alert, "setShowsSuppressionButton:", 1);
@@ -159,10 +164,10 @@ public class MacMessagesImpl extends MacMessages {
       //invoke(window, "makeFirstResponder:",
       //       invoke(invoke(alert, "buttons"), "objectAtIndex:", alternateExist ? 2 : otherExist ? 1 : 0));
       //
-      ////it is impossible to override ESCAPE key behavior -> key should be named "Cancel" to be bound to ESC
-      //if (!alternateExist) {
-      //  invoke(invoke(invoke(alert, "buttons"), "objectAtIndex:", 1), "setKeyEquivalent:", nsString("\\e"));
-      //}
+
+      if (!alternateExist) {
+        enableEscapeToCloseTheMessage(alert);
+      }
 
       String doNotAsk = toStringViaUTF8(doNotAskText);
       if (!"-1".equals(doNotAsk)) {
@@ -198,7 +203,28 @@ public class MacMessagesImpl extends MacMessages {
     }
   }
 
+  private static void enableEscapeToCloseTheMessage(ID alert) {
+    int buttonsNumber = invoke(invoke(alert, "buttons"), "count").intValue();
+    if (buttonsNumber < 2) return;
+    invoke(invoke(invoke(alert, "buttons"), "objectAtIndex:",
+                  buttonsNumber - 1), "setKeyEquivalent:",  nsString("\033"));
+  }
+
   private MacMessagesImpl() {}
+
+  private static final Callback windowDidBecomeMainCallback = new Callback() {
+    @SuppressWarnings("UnusedDeclaration") // this is a native up-call
+    public void callback(ID self,
+                         ID nsNotification)
+    {
+      synchronized (lock) {
+        if (!windowFromId.keySet().contains(self.longValue())) {
+          return;
+        }
+      }
+      invoke(self, "oldWindowDidBecomeMain:", nsNotification);
+    }
+  };
 
   static {
     if (SystemInfo.isMac) {
@@ -213,6 +239,19 @@ public class MacMessagesImpl extends MacMessages {
         throw new RuntimeException("Unable to add method to objective-c delegate class!");
       }
       registerObjcClassPair(delegateClass);
+
+      if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+
+        ID awtWindow = getObjcClass("AWTWindow");
+
+        Pointer windowWillEnterFullScreenMethod = createSelector("windowDidBecomeMain:");
+        ID originalWindowWillEnterFullScreen = class_replaceMethod(awtWindow, windowWillEnterFullScreenMethod,
+                                                                   windowDidBecomeMainCallback, "v@::@");
+
+        addMethodByID(awtWindow, createSelector("oldWindowDidBecomeMain:"),
+                      originalWindowWillEnterFullScreen, "v@::@");
+
+      }
     }
   }
 
@@ -293,6 +332,9 @@ public class MacMessagesImpl extends MacMessages {
           method.invoke(theQueue, event);
         }
       }
+      catch (MacMessageException mme) {
+        throw mme;
+      }
       catch (Throwable e) {
         LOG.error(e);
       }
@@ -327,8 +369,10 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   private static void startModal(final Window w, ID windowId) {
+    long windowPtr = windowId.longValue();
     synchronized (lock) {
-      windowFromId.put(windowId.longValue(), w);
+      JDK7WindowReorderingWorkaround.disableReordering();
+      windowFromId.put(windowPtr, w);
       if (blockedDocumentRoots.keySet().contains(w)) {
         blockedDocumentRoots.put(w, blockedDocumentRoots.get(w) + 1);
       } else {
@@ -337,6 +381,9 @@ public class MacMessagesImpl extends MacMessages {
     }
 
     pumpEventsDocumentExclusively(w);
+    synchronized (lock) {
+      windowFromId.remove(windowPtr);
+    }
   }
 
   private enum COMMON_DIALOG_PARAM_TYPE {
@@ -380,7 +427,9 @@ public class MacMessagesImpl extends MacMessages {
     }
 
     private ID getParamsAsID() {
-      LOG.assertTrue(window != null, "Native window must be set first.");
+      if (window == null) {
+        throw new MacMessageException("Window should be in the list.");
+      }
       params.put(COMMON_DIALOG_PARAM_TYPE.nativeFocusedWindow, window);
 
       ID paramsAsID = null;
@@ -456,7 +505,7 @@ public class MacMessagesImpl extends MacMessages {
       params.put(COMMON_DIALOG_PARAM_TYPE.doNotAskDialogOption2, nsString(doNotAskDialogOption != null
                                                                           && !doNotAskDialogOption.isToBeShown() ? "checked" : "-1"));
       MessageResult result = resultsFromDocumentRoot.remove(
-        showDialog(window, "showSheet:", new DialogParamsWrapper(DialogParamsWrapper.DialogType.alert, params)));
+              showDialog(window, "showSheet:", new DialogParamsWrapper(DialogParamsWrapper.DialogType.alert, params)));
 
       int convertedResult = convertReturnCodeFromNativeAlertDialog(result.myReturnCode, alternateText);
 
@@ -528,18 +577,31 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   //title, message, errorStyle, window, paramsArray, doNotAskDialogOption, "showVariableButtonsSheet:"
-  private static Window showDialog(@Nullable Window window, final String methodName, DialogParamsWrapper paramsWrapper) {
+  private static Window showDialog(@Nullable Window window, final String methodName, final DialogParamsWrapper paramsWrapper) {
 
     final Window foremostWindow = getForemostWindow(window);
 
     final Window documentRoot = getDocumentRootFromWindow(foremostWindow);
 
-    final ID nativeFocusedWindow = windowIdFromWindow(foremostWindow);
+    final ID nativeFocusedWindow = MacUtil.findWindowFromJavaWindow(foremostWindow);
 
     paramsWrapper.setNativeWindow(nativeFocusedWindow);
 
     final ID paramsArray = paramsWrapper.getParamsAsID();
 
+    foremostWindow.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosed(WindowEvent e) {
+        super.windowClosed(e);
+        //if (blockedDocumentRoots.get(documentRoot) != null) {
+        //   LOG.assertTrue(blockedDocumentRoots.get(documentRoot) < 2);
+        //}
+        queuesFromDocumentRoot.remove(documentRoot);
+        if (blockedDocumentRoots.remove(documentRoot) != null) {
+          throw new MacMessageException("Owner window has been removed");
+        }
+      }
+    });
 
     final ID delegate = invoke(invoke(getObjcClass("NSAlertDelegate_"), "alloc"), "init");
 
@@ -559,52 +621,8 @@ public class MacMessagesImpl extends MacMessages {
     return documentRoot;
   }
 
-  private static ID windowIdFromWindow (Window w) {
-
-    ID windowId = null;
-
-    if (SystemInfo.isJavaVersionAtLeast("1.7") && Registry.is("skip.untitled.windows.for.mac.messages")) {
-      try {
-        Class <?> cWindowPeerClass  = w.getPeer().getClass();
-        Method getPlatformWindowMethod = cWindowPeerClass.getDeclaredMethod("getPlatformWindow");
-        Object cPlatformWindow = getPlatformWindowMethod.invoke(w.getPeer());
-        Class <?> cPlatformWindowClass = cPlatformWindow.getClass();
-        Method getNSWindowPtrMethod = cPlatformWindowClass.getDeclaredMethod("getNSWindowPtr");
-        windowId = new ID((Long)getNSWindowPtrMethod.invoke(cPlatformWindow));
-      }
-      catch (NoSuchMethodException e) {
-        LOG.debug(e);
-      }
-      catch (InvocationTargetException e) {
-        LOG.debug(e);
-      }
-      catch (IllegalAccessException e) {
-        LOG.debug(e);
-      }
-
-    } else {
-      String foremostWindowTitle = getWindowTitle(w);
-      windowId = MacUtil.findWindowForTitle(foremostWindowTitle);
-    }
-
-    return windowId;
-
-  }
-
   private static int convertReturnCodeFromNativeMessageDialog(int result) {
     return result - 1000;
-  }
-
-  private static String getWindowTitle(Window documentRoot) {
-    String windowTitle;
-    if (documentRoot instanceof Frame) {
-      windowTitle = ((Frame)documentRoot).getTitle();
-    } else if (documentRoot instanceof Dialog) {
-      windowTitle = ((Dialog)documentRoot).getTitle();
-    } else {
-      throw new RuntimeException("The window is not a frame and not a dialog!");
-    }
-    return windowTitle;
   }
 
   @Messages.YesNoCancelResult
@@ -711,9 +729,12 @@ public class MacMessagesImpl extends MacMessages {
       }
     }
 
-    //Actually can, but not in this implementation. If you know a reasonable scenario, please ask Denis Fokin for the improvement.
-    LOG.assertTrue(getWindowTitle(_window) != null, "A window without a title should not be used for showing MacMessages");
-    while (_window != null && getWindowTitle(_window) == null) {
+    if (SystemInfo.isAppleJvm && MacUtil.getWindowTitle(_window) == null) {
+      // With Apple JDK we cannot find a window if it does not have a title
+      // Let's show a dialog instead of the message.
+      throw new MacMessageException("MacMessage parent does not have a title.");
+    }
+    while (_window != null && MacUtil.getWindowTitle(_window) == null) {
       _window = _window.getOwner();
       //At least our frame should have a title
     }
