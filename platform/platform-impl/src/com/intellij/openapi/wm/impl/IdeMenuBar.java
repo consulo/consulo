@@ -31,7 +31,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.status.ClockPanel;
 import com.intellij.ui.ColorUtil;
@@ -40,6 +39,8 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
+import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.java.ayatana.ApplicationMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,6 +66,25 @@ import java.util.List;
  * @author Vladimir Kondratyev
  */
 public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatcher {
+  public static class UbuntuNativeMenuEAPDescriptor implements EarlyAccessProgramDescriptor {
+    @NotNull
+    @Override
+    public String getName() {
+      return "Ubuntu Native Menu";
+    }
+
+    @Override
+    public boolean getDefaultState() {
+      return false;
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+      return "Enables native menu on Ubuntu";
+    }
+  }
+
   private static final int COLLAPSED_HEIGHT = 2;
 
   private enum State {
@@ -283,6 +303,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
     // Add updater for menus
     myActionManager.addTimerListener(1000, new WeakTimerListener(myActionManager, myTimerListener));
     UISettingsListener UISettingsListener = new UISettingsListener() {
+      @Override
       public void uiSettingsChanged(final UISettings source) {
         updateMnemonicsVisibility();
         myPresentationFactory.reset();
@@ -562,9 +583,11 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   }
 
   public static void installAppMenuIfNeeded(@NotNull final JFrame frame) {
-    if (SystemInfo.isLinux && Registry.is("linux.native.menu") && "Unity".equals(System.getenv("XDG_CURRENT_DESKTOP"))) {
+    if (SystemInfo.isLinux && EarlyAccessProgramManager.getInstance().getState(UbuntuNativeMenuEAPDescriptor.class) && "Unity".equals(System.getenv
+            ("XDG_CURRENT_DESKTOP"))) {
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(new Runnable() {
+        @Override
         public void run() {
           ApplicationMenu.tryInstall(frame);
         }
