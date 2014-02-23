@@ -119,9 +119,6 @@ public class FileWatcher {
         }
       });
     }
-    else if (!isUpToDate(myExecutable)) {
-      notifyOnFailure(ApplicationBundle.message("watcher.exe.outdated"), null);
-    }
     else {
       try {
         startupProcess(false);
@@ -207,13 +204,6 @@ public class FileWatcher {
     return null;
   }
 
-  private static boolean isUpToDate(File executable) {
-    long length = SystemInfo.isWindows ? 70216 :
-                  SystemInfo.isMac ? 13924 :
-                  SystemInfo.isLinux ? SystemInfo.isAMD64 ? 29269 : 22768 :
-                  -1;
-    return length < 0 || length == executable.length();
-  }
 
   private void notifyOnFailure(final String cause, @Nullable final NotificationListener listener) {
     LOG.warn(cause);
@@ -221,6 +211,7 @@ public class FileWatcher {
     if (!myFailureShownToTheUser) {
       myFailureShownToTheUser = true;
       ApplicationManager.getApplication().invokeLater(new Runnable() {
+        @Override
         public void run() {
           String title = ApplicationBundle.message("watcher.slow.sync");
           Notifications.Bus.notify(NOTIFICATION_GROUP.getValue().createNotification(title, cause, NotificationType.WARNING, listener));
