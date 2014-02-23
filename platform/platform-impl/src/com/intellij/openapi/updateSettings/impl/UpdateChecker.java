@@ -298,12 +298,11 @@ public final class UpdateChecker {
     }
 
     boolean success = true;
-    for (Object plugin : document.getRootElement().getChildren("plugin")) {
-      final Element pluginElement = (Element)plugin;
-      final String pluginId = pluginElement.getAttributeValue("id");
-      final String pluginUrl = pluginElement.getAttributeValue("url");
-      final String pluginVersion = pluginElement.getAttributeValue("version");
-      final Element descriptionElement = pluginElement.getChild("description");
+    for (Element plugin : document.getRootElement().getChildren("plugin")) {
+      final String pluginId = plugin.getAttributeValue("id");
+      final String pluginUrl = plugin.getAttributeValue("url");
+      final String pluginVersion = plugin.getAttributeValue("version");
+      final Element descriptionElement = plugin.getChild("description");
       final String description;
       if (descriptionElement != null) {
         description = descriptionElement.getText();
@@ -312,9 +311,9 @@ public final class UpdateChecker {
       }
 
       final List<PluginId> dependsPlugins = new ArrayList<PluginId>();
-      final List depends = pluginElement.getChildren("depends");
-      for (Object depend : depends) {
-        dependsPlugins.add(PluginId.getId(((Element)depend).getText()));
+      final List<Element> depends = plugin.getChildren("depends");
+      for (Element depend : depends) {
+        dependsPlugins.add(PluginId.getId(depend.getText()));
       }
 
       if (pluginId == null) {
@@ -335,6 +334,7 @@ public final class UpdateChecker {
       if (collectToUpdate) {
         final String finalPluginUrl = getPluginUrl(pluginFile);
         final Runnable updatePluginRunnable = new Runnable() {
+          @Override
           public void run() {
             try {
               final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
@@ -470,6 +470,7 @@ public final class UpdateChecker {
       final boolean showBalloonNotification = !alwaysShowResults && ProjectManager.getInstance().getOpenProjects().length > 0;
       if (checkForUpdateResult.hasNewBuildInSelectedChannel() && !ourUpdateInfoDialogShown) {
         final Runnable showUpdatesDialogRunnable = new Runnable() {
+          @Override
           public void run() {
             UpdateInfoDialog dialog = new UpdateInfoDialog(true, checkForUpdateResult.getUpdatedChannel(), updatedPlugins, enableLink) {
               @Override
@@ -493,6 +494,7 @@ public final class UpdateChecker {
       }
       else {
         final Runnable showPluginsUpdateDialogRunnable = new Runnable() {
+          @Override
           public void run() {
             final NoUpdatesDialog dialog = new NoUpdatesDialog(true, updatedPlugins, enableLink) {
               @Override
@@ -574,6 +576,7 @@ public final class UpdateChecker {
     final InputStream[] inputStreams = new InputStream[]{null};
     final Exception[] exception = new Exception[]{null};
     Future<?> downloadThreadFuture = ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+      @Override
       public void run() {
         try {
           URL requestUrl = new URL(url);
@@ -687,6 +690,7 @@ public final class UpdateChecker {
     final DownloadPatchResult[] result = new DownloadPatchResult[]{DownloadPatchResult.CANCELED};
 
     if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
+      @Override
       public void run() {
         try {
           doDownloadAndInstallPatch(newVersion, ProgressManager.getInstance().getProgressIndicator());

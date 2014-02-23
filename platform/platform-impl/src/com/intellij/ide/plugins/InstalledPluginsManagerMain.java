@@ -17,6 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
+import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
@@ -25,10 +26,8 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -73,8 +72,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, false){
           @Override
           public boolean isFileSelectable(VirtualFile file) {
-            final String extension = file.getExtension();
-            return Comparing.strEqual(extension, "jar") || Comparing.strEqual(extension, "zip");
+            return file.getFileType() instanceof ArchiveFileType;
           }
         };
         descriptor.setTitle("Choose Plugin File");
@@ -182,7 +180,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
                        }, ", ") +
                        ". Enable " + disabledPluginsMessage.trim() + "?";
       if (Messages.showOkCancelDialog(myActionsPanel, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) ==
-          DialogWrapper.OK_EXIT_CODE) {
+          Messages.OK) {
         ((InstalledPluginsTableModel)pluginsModel).enableRows(dependencies.toArray(new IdeaPluginDescriptor[dependencies.size()]), Boolean.TRUE);
       }
     }

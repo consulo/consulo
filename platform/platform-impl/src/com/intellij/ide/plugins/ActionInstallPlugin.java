@@ -37,8 +37,6 @@ import java.util.*;
  * @author lloix
  */
 public class ActionInstallPlugin extends AnAction implements DumbAware {
-  final private static String updateMessage = IdeBundle.message("action.update.plugin");
-
   private static final Set<IdeaPluginDescriptor> ourInstallingNodes = new HashSet<IdeaPluginDescriptor>();
 
   private final PluginManagerMain installed;
@@ -51,6 +49,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
     this.installed = installed;
   }
 
+  @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
@@ -64,14 +63,14 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
         if (descr instanceof PluginNode) {
           enabled &= !PluginManagerColumnInfo.isDownloaded((PluginNode)descr);
           if (((PluginNode)descr).getStatus() == PluginNode.STATUS_INSTALLED) {
-            presentation.setText(updateMessage);
-            presentation.setDescription(updateMessage);
+            presentation.setText(IdeBundle.message("action.update.plugin"));
+            presentation.setDescription(IdeBundle.message("action.update.plugin"));
             enabled &= InstalledPluginsTableModel.hasNewerVersion(descr.getPluginId());
           }
         }
         else if (descr instanceof IdeaPluginDescriptorImpl) {
-          presentation.setText(updateMessage);
-          presentation.setDescription(updateMessage);
+          presentation.setText(IdeBundle.message("action.update.plugin"));
+          presentation.setDescription(IdeBundle.message("action.update.plugin"));
           PluginId id = descr.getPluginId();
           enabled = enabled && InstalledPluginsTableModel.hasNewerVersion(id);
         }
@@ -81,6 +80,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
     presentation.setEnabled(enabled);
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     install();
   }

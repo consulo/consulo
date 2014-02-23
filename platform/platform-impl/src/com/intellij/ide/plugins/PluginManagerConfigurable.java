@@ -35,17 +35,14 @@ import javax.swing.table.TableModel;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Oct 26, 2003
- * Time: 9:30:44 PM
- * To change this template use Options | File Templates.
+ * @author stathik
+ * @since Oct 26, 2003
  */
 public class PluginManagerConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
 
-  @NonNls private static final String POSTPONE = "&Postpone";
-  public static final String ID = "preferences.pluginManager";
-  public static final String DISPLAY_NAME = IdeBundle.message("title.plugins");
+  @NonNls
+  private static final String POSTPONE = "&Postpone";
+
   public boolean EXPANDED = false;
   public String FIND = "";
   public boolean TREE_VIEW = false;
@@ -63,10 +60,12 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
     myAvailable = available;
   }
 
+  @Override
   public String getDisplayName() {
-    return DISPLAY_NAME;
+    return IdeBundle.message("title.plugins");
   }
 
+  @Override
   public void reset() {
     myPluginManagerMain.reset();
     if (myAvailable) {
@@ -87,10 +86,13 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
     getSplitterProportions().restoreSplitterProportions(myPluginManagerMain.getMainPanel());
   }
 
+  @Override
+  @NotNull
   public String getHelpTopic() {
-    return ID;
+    return "preferences.pluginManager";
   }
 
+  @Override
   public void disposeUIResources() {
     if (myPluginManagerMain != null) {
       getSplitterProportions().saveSplitterProportions(myPluginManagerMain.getMainPanel());
@@ -119,6 +121,7 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
     return myAvailable ? myUISettings.getAvailableSplitterProportionsData() : myUISettings.getSplitterProportionsData();
   }
 
+  @Override
   public JComponent createComponent() {
     return getOrCreatePanel().getMainPanel();
   }
@@ -127,6 +130,7 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
     return new InstalledPluginsManagerMain(myUISettings);
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     final String applyMessage = myPluginManagerMain.apply();
     if (applyMessage != null) {
@@ -177,18 +181,22 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
     if (response == 0) app.restart(true);
   }
 
+  @Override
   public boolean isModified() {
     return myPluginManagerMain != null && myPluginManagerMain.isModified();
   }
 
+  @Override
   @NotNull
   public String getId() {
     return getHelpTopic();
   }
 
+  @Override
   @Nullable
   public Runnable enableSearch(final String option) {
     return new Runnable(){
+      @Override
       public void run() {
         if (myPluginManagerMain == null) return;
         myPluginManagerMain.filter(option);
