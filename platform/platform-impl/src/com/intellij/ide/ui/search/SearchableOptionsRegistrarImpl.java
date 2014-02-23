@@ -17,9 +17,10 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.codeStyle.CodeStyleFacade;
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.PluginManagerConfigurable;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -175,7 +176,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         words.addAll(getProcessedWordsWithoutStemming(description));
       }
       for (String word : words) {
-        addOption(word, null, plugin.getName(), PluginManagerConfigurable.ID, PluginManagerConfigurable.DISPLAY_NAME);
+        addOption(word, null, plugin.getName(), PluginManagerConfigurable.ID, IdeBundle.message("title.plugins"));
       }
     }
   }

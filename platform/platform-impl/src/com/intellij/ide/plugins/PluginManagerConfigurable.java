@@ -39,7 +39,8 @@ import java.util.List;
  * @since Oct 26, 2003
  */
 public class PluginManagerConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
-
+  @NonNls
+  public static final String ID = "preferences.pluginManager";
   @NonNls
   private static final String POSTPONE = "&Postpone";
 
@@ -89,7 +90,7 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
   @Override
   @NotNull
   public String getHelpTopic() {
-    return "preferences.pluginManager";
+    return ID;
   }
 
   @Override
