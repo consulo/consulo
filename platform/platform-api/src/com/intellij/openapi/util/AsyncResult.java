@@ -19,11 +19,13 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
-import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AsyncResult<T> extends ActionCallback {
   private static final Logger LOG = Logger.getInstance(AsyncResult.class);
+
+  private static final AsyncResult REJECTED = new Rejected();
 
   protected T myResult;
 
@@ -61,6 +63,10 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @NotNull
+  @Deprecated
+  /**
+   * @deprecated Please use {@link #doWhenDone(com.intellij.util.Consumer)}
+   */
   public AsyncResult<T> doWhenDone(@NotNull final Handler<T> handler) {
     doWhenDone(new Runnable() {
       @Override
@@ -83,6 +89,10 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @NotNull
+  @Deprecated
+  /**
+   * @deprecated use {@link #doWhenRejected(com.intellij.util.Consumer)}
+   */
   public AsyncResult<T> doWhenRejected(@NotNull final Handler<T> handler) {
     doWhenRejected(new Runnable() {
       @Override
@@ -104,6 +114,7 @@ public class AsyncResult<T> extends ActionCallback {
     return this;
   }
 
+  @Override
   @NotNull
   public final AsyncResult<T> notify(@NotNull final ActionCallback child) {
     super.notify(child);
@@ -118,30 +129,9 @@ public class AsyncResult<T> extends ActionCallback {
     return getResultSync(-1);
   }
 
+  @Nullable
   public T getResultSync(long msTimeout) {
-    if (isProcessed()) {
-      return myResult;
-    }
-
-    final Semaphore semaphore = new Semaphore();
-    semaphore.down();
-    doWhenProcessed(new Runnable() {
-      @Override
-      public void run() {
-        semaphore.up();
-      }
-    });
-    try {
-      if (msTimeout == -1) {
-        semaphore.waitForUnsafe();
-      }
-      else if (!semaphore.waitForUnsafe(msTimeout)) {
-        reject("Time limit exceeded");
-      }
-    }
-    catch (InterruptedException e) {
-      reject(e.getMessage());
-    }
+    waitFor(msTimeout);
     return myResult;
   }
 
@@ -165,8 +155,17 @@ public class AsyncResult<T> extends ActionCallback {
     }
   }
 
+  public static <R> AsyncResult<R> rejected() {
+    //noinspection unchecked
+    return REJECTED;
+  }
+
+  public static <R> AsyncResult<R> done(@NotNull R result) {
+    return new AsyncResult<R>().setDone(result);
+  }
+
   // we don't use inner class, avoid memory leak, we don't want to hold this result while dependent is computing
-  private static class SubResultDoneCallback<Result, SubResult, AsyncSubResult extends AsyncResult<SubResult>> implements Handler<Result> {
+  private static class SubResultDoneCallback<Result, SubResult, AsyncSubResult extends AsyncResult<SubResult>> implements Consumer<Result> {
     private final AsyncSubResult subResult;
     private final Function<Result, SubResult> doneHandler;
 
@@ -176,7 +175,7 @@ public class AsyncResult<T> extends ActionCallback {
     }
 
     @Override
-    public void run(Result result) {
+    public void consume(Result result) {
       SubResult v;
       try {
         v = doneHandler.fun(result);
@@ -190,7 +189,7 @@ public class AsyncResult<T> extends ActionCallback {
     }
   }
 
-  private static class SubCallbackDoneCallback<Result> implements Handler<Result> {
+  private static class SubCallbackDoneCallback<Result> implements Consumer<Result> {
     private final ActionCallback subResult;
     private final Consumer<Result> doneHandler;
 
@@ -200,7 +199,7 @@ public class AsyncResult<T> extends ActionCallback {
     }
 
     @Override
-    public void run(Result result) {
+    public void consume(Result result) {
       try {
         doneHandler.consume(result);
       }

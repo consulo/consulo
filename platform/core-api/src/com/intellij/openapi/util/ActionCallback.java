@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.util.Consumer;
+import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +26,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ActionCallback implements Disposable {
+  public static final ActionCallback DONE = new Done();
+  public static final ActionCallback REJECTED = new Rejected();
+
   private final ExecutionCallback myDone;
   private final ExecutionCallback myRejected;
 
@@ -63,8 +66,10 @@ public class ActionCallback implements Disposable {
   }
 
   public void setDone() {
-    myDone.setExecuted();
-    Disposer.dispose(this);
+    if (myDone.setExecuted()) {
+      myRejected.clear();
+      Disposer.dispose(this);
+    }
   }
 
   public boolean isDone() {
@@ -80,8 +85,10 @@ public class ActionCallback implements Disposable {
   }
 
   public void setRejected() {
-    myRejected.setExecuted();
-    Disposer.dispose(this);
+    if (myRejected.setExecuted()) {
+      myDone.clear();
+      Disposer.dispose(this);
+    }
   }
 
   @NotNull
@@ -133,12 +140,17 @@ public class ActionCallback implements Disposable {
 
   @NotNull
   public final ActionCallback notifyWhenRejected(@NotNull final ActionCallback child) {
-    return doWhenRejected(child.createSetRejectedRunnable());
+    return doWhenRejected(new Runnable() {
+      @Override
+      public void run() {
+        child.reject(myError);
+      }
+    });
   }
 
   @NotNull
   public ActionCallback notify(@NotNull final ActionCallback child) {
-    return doWhenDone(child.createSetDoneRunnable()).doWhenRejected(child.createSetRejectedRunnable());
+    return doWhenDone(child.createSetDoneRunnable()).notifyWhenRejected(child);
   }
 
   @NotNull
@@ -177,6 +189,20 @@ public class ActionCallback implements Disposable {
     }
 
     @NotNull
+    public ActionCallback create() {
+      if (myCallbacks.isEmpty()) {
+        return new Done();
+      }
+
+      ActionCallback result = new ActionCallback(myCallbacks.size());
+      Runnable doneRunnable = result.createSetDoneRunnable();
+      for (ActionCallback each : myCallbacks) {
+        each.doWhenDone(doneRunnable).notifyWhenRejected(result);
+      }
+      return result;
+    }
+
+    @NotNull
     public ActionCallback getWhenProcessed() {
       final ActionCallback result = new ActionCallback(myCallbacks.size());
       Runnable setDoneRunnable = result.createSetDoneRunnable();
@@ -200,7 +226,13 @@ public class ActionCallback implements Disposable {
       }
     };
   }
+
+  @SuppressWarnings("UnusedDeclaration")
   @NotNull
+  @Deprecated
+  /**
+   * @deprecated use {@link #notifyWhenRejected(ActionCallback)}
+   */
   public Runnable createSetRejectedRunnable() {
     return new Runnable() {
       @Override
@@ -208,5 +240,35 @@ public class ActionCallback implements Disposable {
         setRejected();
       }
     };
+  }
+
+  public boolean waitFor(long msTimeout) {
+    if (isProcessed()) {
+      return true;
+    }
+
+    final Semaphore semaphore = new Semaphore();
+    semaphore.down();
+    doWhenProcessed(new Runnable() {
+      @Override
+      public void run() {
+        semaphore.up();
+      }
+    });
+
+    try {
+      if (msTimeout == -1) {
+        semaphore.waitForUnsafe();
+      }
+      else if (!semaphore.waitForUnsafe(msTimeout)) {
+        reject("Time limit exceeded");
+        return false;
+      }
+    }
+    catch (InterruptedException e) {
+      reject(e.getMessage());
+      return false;
+    }
+    return true;
   }
 }

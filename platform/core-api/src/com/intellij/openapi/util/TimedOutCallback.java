@@ -21,7 +21,7 @@ import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
-*/
+ */
 @SuppressWarnings({"UnusedDeclaration", "SSBasedInspection"})
 public class TimedOutCallback extends ActionCallback implements Runnable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.ActionCallback.TimedOutCallback");
