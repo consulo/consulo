@@ -22,6 +22,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLock;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.tree.IElementType;
@@ -38,7 +39,6 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
 
   private final IElementType myType;
   private volatile int myStartOffsetInParent = -1;
-  @NonNls protected static final String START_OFFSET_LOCK = new String("TreeElement.START_OFFSET_LOCK");
 
   public TreeElement(IElementType type) {
     myType = type;
@@ -109,7 +109,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
       result += current.getStartOffsetInParent();
       current = current.myParent;
     }
-    
+
     return result;
   }
 
@@ -117,34 +117,29 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     if (myParent == null) return -1;
     int offsetInParent = myStartOffsetInParent;
     if (offsetInParent != -1) return offsetInParent;
-    
-    synchronized (START_OFFSET_LOCK) {
-      TreeElement cur = this;
-      offsetInParent = myStartOffsetInParent;
-      if (offsetInParent != -1) return offsetInParent;
 
-      ApplicationManager.getApplication().assertReadAccessAllowed();
+    ApplicationManager.getApplication().assertReadAccessAllowed();
 
-      while (true) {
-        TreeElement prev = cur.getTreePrev();
-        if (prev == null) break;
-        cur = prev;
-        offsetInParent = cur.myStartOffsetInParent;
-        if (offsetInParent != -1) break;
-      }
-
-      if (offsetInParent == -1) {
-        cur.myStartOffsetInParent = offsetInParent = 0;
-      }
-
-      while (cur != this) {
-        TreeElement next = cur.getTreeNext();
-        offsetInParent += cur.getTextLength();
-        next.myStartOffsetInParent = offsetInParent;
-        cur = next;
-      }
-      return offsetInParent;
+    TreeElement cur = this;
+    while (true) {
+      TreeElement prev = cur.getTreePrev();
+      if (prev == null) break;
+      cur = prev;
+      offsetInParent = cur.myStartOffsetInParent;
+      if (offsetInParent != -1) break;
     }
+
+    if (offsetInParent == -1) {
+      cur.myStartOffsetInParent = offsetInParent = 0;
+    }
+
+    while (cur != this) {
+      TreeElement next = cur.getTreeNext();
+      offsetInParent += cur.getTextLength();
+      next.myStartOffsetInParent = offsetInParent;
+      cur = next;
+    }
+    return offsetInParent;
   }
 
   public int getTextOffset() {
@@ -165,6 +160,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
     return getTextLength() == element.getTextLength() && textMatches(element.getText());
   }
 
+  @Override
   @NonNls
   public String toString() {
     return "Element" + "(" + getElementType().toString() + ")";
@@ -182,6 +178,9 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
 
   final void setTreeParent(CompositeElement parent) {
     myParent = parent;
+    if (parent != null && parent.getElementType() != TokenType.DUMMY_HOLDER) {
+      DebugUtil.revalidateNode(this);
+    }
   }
 
   final void setTreePrev(TreeElement prev) {
@@ -210,6 +209,7 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
   public void clearCaches() {
   }
 
+  @Override
   @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
   public final boolean equals(Object obj) {
     return obj == this;
@@ -322,11 +322,10 @@ public abstract class TreeElement extends UserDataHolderBase implements ASTNode,
       parent.subtreeChanged();
     }
 
-    // invalidate replaced element
+    onInvalidated();
     setTreeNext(null);
     setTreePrev(null);
     setTreeParent(null);
-    onInvalidated();
   }
 
   public void rawRemoveUpToLast() {
