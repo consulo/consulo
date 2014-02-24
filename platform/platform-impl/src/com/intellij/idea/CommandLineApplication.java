@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,22 +28,11 @@ import java.awt.*;
 
 public class CommandLineApplication {
   private static final Logger LOG = Logger.getInstance("#com.intellij.idea.CommandLineApplication");
+
   protected static CommandLineApplication ourInstance = null;
 
   static {
     System.setProperty(FileWatcher.PROPERTY_WATCHER_DISABLED, Boolean.TRUE.toString());
-
-    /*
-    final Category category = Category.getRoot();
-    final Enumeration enumeration = category.getAllAppenders();
-    while (enumeration.hasMoreElements()) {
-      Object o = enumeration.nextElement();
-      if (o instanceof DialogAppender) {
-        category.removeAppender((Appender)o);
-        break;
-      }
-    }
-    */
   }
 
   protected CommandLineApplication() {}
@@ -54,6 +43,7 @@ public class CommandLineApplication {
 
   protected CommandLineApplication(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, @NotNull @NonNls String appName) {
     LOG.assertTrue(ourInstance == null, "Only one instance allowed.");
+    //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourInstance = this;
     ApplicationManagerEx.createApplication(isInternal, isUnitTestMode, isHeadless, true, appName, null);
   }

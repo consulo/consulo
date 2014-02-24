@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.util.SmartList;
 import com.intellij.util.TimeoutUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -44,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.intellij.util.containers.ContainerUtil.*;
@@ -52,8 +52,7 @@ import static com.intellij.util.containers.ContainerUtil.*;
  * @author max
  */
 public class FileWatcher {
-  @NonNls public static final String PROPERTY_WATCHER_DISABLED = "idea.filewatcher.disabled";
-  @NonNls public static final String PROPERTY_WATCHER_EXECUTABLE_PATH = "idea.filewatcher.executable.path";
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.local.FileWatcher");
 
   public static final NotNullLazyValue<NotificationGroup> NOTIFICATION_GROUP = new NotNullLazyValue<NotificationGroup>() {
     @NotNull @Override
@@ -66,13 +65,18 @@ public class FileWatcher {
     public final List<String> dirtyPaths = newArrayList();
     public final List<String> dirtyPathsRecursive = newArrayList();
     public final List<String> dirtyDirectories = newArrayList();
+
+    private static DirtyPaths EMPTY = new DirtyPaths();
+
+    private boolean isEmpty() {
+      return dirtyPaths.isEmpty() && dirtyPathsRecursive.isEmpty() && dirtyDirectories.isEmpty();
+    }
   }
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.local.FileWatcher");
-
-  @NonNls private static final String ROOTS_COMMAND = "ROOTS";
-  @NonNls private static final String EXIT_COMMAND = "EXIT";
-
+  public static final String PROPERTY_WATCHER_DISABLED = "idea.filewatcher.disabled";
+  private static final String PROPERTY_WATCHER_EXECUTABLE_PATH = "idea.filewatcher.executable.path";
+  private static final String ROOTS_COMMAND = "ROOTS";
+  private static final String EXIT_COMMAND = "EXIT";
   private static final int MAX_PROCESS_LAUNCH_ATTEMPT_COUNT = 10;
 
   private final ManagingFS myManagingFS;
@@ -80,7 +84,7 @@ public class FileWatcher {
   private volatile MyProcessHandler myProcessHandler;
   private volatile int myStartAttemptCount = 0;
   private volatile boolean myIsShuttingDown = false;
-  private volatile boolean myFailureShownToTheUser = false;
+  private final AtomicBoolean myFailureShownToTheUser = new AtomicBoolean(false);
   private final AtomicInteger mySettingRoots = new AtomicInteger(0);
 
   private volatile List<String> myRecursiveWatchRoots = emptyList();
@@ -90,11 +94,8 @@ public class FileWatcher {
 
   private final Object myLock = new Object();
   private DirtyPaths myDirtyPaths = new DirtyPaths();
-
-  /** @deprecated use {@linkplain com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl#getFileWatcher()} (to remove in IDEA 13) */
-  public static FileWatcher getInstance() {
-    return ((LocalFileSystemImpl)LocalFileSystem.getInstance()).getFileWatcher();
-  }
+  private final String[] myLastChangedPaths = new String[2];
+  private int myLastChangedPathIndex;
 
   FileWatcher(@NotNull ManagingFS managingFS) {
     myManagingFS = managingFS;
@@ -147,9 +148,16 @@ public class FileWatcher {
   @NotNull
   public DirtyPaths getDirtyPaths() {
     synchronized (myLock) {
-      DirtyPaths dirtyPaths = myDirtyPaths;
-      myDirtyPaths = new DirtyPaths();
-      return dirtyPaths;
+      if (!myDirtyPaths.isEmpty()) {
+        DirtyPaths dirtyPaths = myDirtyPaths;
+        myDirtyPaths = new DirtyPaths();
+        myLastChangedPathIndex = 0;
+        for (int i = 0; i < myLastChangedPaths.length; ++i) myLastChangedPaths[i] = null;
+        return dirtyPaths;
+      }
+      else {
+        return DirtyPaths.EMPTY;
+      }
     }
   }
 
@@ -204,14 +212,11 @@ public class FileWatcher {
     return null;
   }
 
-
-  private void notifyOnFailure(final String cause, @Nullable final NotificationListener listener) {
+  public void notifyOnFailure(final String cause, @Nullable final NotificationListener listener) {
     LOG.warn(cause);
 
-    if (!myFailureShownToTheUser) {
-      myFailureShownToTheUser = true;
+    if (myFailureShownToTheUser.compareAndSet(false, true)) {
       ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
         public void run() {
           String title = ApplicationBundle.message("watcher.slow.sync");
           Notifications.Bus.notify(NOTIFICATION_GROUP.getValue().createNotification(title, cause, NotificationType.WARNING, listener));
@@ -240,7 +245,6 @@ public class FileWatcher {
 
     LOG.info("Starting file watcher: " + myExecutable);
     ProcessBuilder processBuilder = new ProcessBuilder(myExecutable.getAbsolutePath());
-    processBuilder.redirectErrorStream(true);
     Process process = processBuilder.start();
     myProcessHandler = new MyProcessHandler(process);
     myProcessHandler.addProcessListener(new MyProcessAdapter());
@@ -338,11 +342,6 @@ public class FileWatcher {
     protected boolean useAdaptiveSleepingPolicyWhenReadingOutput() {
       return true;
     }
-
-    @Override
-    protected boolean processHasSeparateErrorStream() {
-      return false;
-    }
   }
 
   @NotNull
@@ -370,13 +369,13 @@ public class FileWatcher {
       if (fastPath && !changedPaths.isEmpty()) break;
 
       for (String root : flatWatchRoots) {
-        if (FileUtil.pathsEqual(path, root)) {
+        if (FileUtil.namesEqual(path, root)) {
           changedPaths.add(path);
           continue ext;
         }
         if (isExact) {
           String parentPath = new File(path).getParent();
-          if (parentPath != null && FileUtil.pathsEqual(parentPath, root)) {
+          if (parentPath != null && FileUtil.namesEqual(parentPath, root)) {
             changedPaths.add(path);
             continue ext;
           }
@@ -390,7 +389,7 @@ public class FileWatcher {
         }
         if (!isExact) {
           String parentPath = new File(root).getParent();
-          if (parentPath != null && FileUtil.pathsEqual(path, parentPath)) {
+          if (parentPath != null && FileUtil.namesEqual(path, parentPath)) {
             changedPaths.add(root);
             continue ext;
           }
@@ -412,7 +411,7 @@ public class FileWatcher {
 
     @Override
     public void processTerminated(ProcessEvent event) {
-      LOG.warn("Watcher terminated.");
+      LOG.warn("Watcher terminated with exit code " + event.getExitCode());
 
       myProcessHandler = null;
 
@@ -427,7 +426,12 @@ public class FileWatcher {
 
     @Override
     public void onTextAvailable(ProcessEvent event, Key outputType) {
-      if (outputType != ProcessOutputTypes.STDOUT) return;
+      if (outputType == ProcessOutputTypes.STDERR) {
+        LOG.warn(event.getText().trim());
+      }
+      if (outputType != ProcessOutputTypes.STDOUT) {
+        return;
+      }
 
       final String line = event.getText().trim();
       if (LOG.isDebugEnabled()) {
@@ -457,10 +461,7 @@ public class FileWatcher {
         }
       }
       else if (myLastOp == WatcherOp.MESSAGE) {
-        LOG.warn(line);
-        String title = ApplicationBundle.message("watcher.slow.sync");
-        NotificationListener listener = NotificationListener.URL_OPENING_LISTENER;
-        Notifications.Bus.notify(NOTIFICATION_GROUP.getValue().createNotification(title, line, NotificationType.WARNING, listener));
+        notifyOnFailure(line, NotificationListener.URL_OPENING_LISTENER);
         myLastOp = null;
       }
       else if (myLastOp == WatcherOp.REMAP || myLastOp == WatcherOp.UNWATCHEABLE) {
@@ -517,6 +518,8 @@ public class FileWatcher {
       notifyOnEvent();
     }
 
+    private int myChangeRequests, myFilteredRequests;
+
     private void processChange(String path, WatcherOp op) {
       if (SystemInfo.isWindows && op == WatcherOp.RECDIRTY && path.length() == 3 && Character.isLetter(path.charAt(0))) {
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(path);
@@ -529,6 +532,33 @@ public class FileWatcher {
         return;
       }
 
+      if (op == WatcherOp.CHANGE) {
+        // collapse subsequent change file change notifications that happen once we copy large file,
+        // this allows reduction of path checks at least 20% for Windows
+        synchronized (myLock) {
+          ++myChangeRequests;
+
+          // TODO: remove logging once finalized
+          if ((myChangeRequests & 0x3fff) == 0) {
+            LOG.info("Change requests:" + myChangeRequests + ", filtered:" + myFilteredRequests);
+          }
+
+          for(int i = 0; i < myLastChangedPaths.length; ++i) {
+            int last = myLastChangedPathIndex - i - 1;
+            if (last < 0) last += myLastChangedPaths.length;
+            String lastChangedPath = myLastChangedPaths[last];
+            if (lastChangedPath != null && lastChangedPath.equals(path)) {
+              ++myFilteredRequests;
+              return;
+            }
+          }
+          myLastChangedPaths[myLastChangedPathIndex ++] = path;
+          if (myLastChangedPathIndex == myLastChangedPaths.length) myLastChangedPathIndex = 0;
+        }
+      }
+
+      int length = path.length();
+      if (length > 1 && path.charAt(length - 1) == '/') path = path.substring(0, length - 1);
       boolean exactPath = op != WatcherOp.DIRTY && op != WatcherOp.RECDIRTY;
       Collection<String> paths = checkWatchable(path, exactPath, false);
 
