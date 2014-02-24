@@ -203,11 +203,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     for (final Module module : modules) {
       ModuleConfigurable configurable = new ModuleConfigurable(myContext.myModulesConfigurator, module, TREE_UPDATER);
       final MyNode moduleNode = new MyNode(configurable);
-      boolean nodesAdded = false;
-      nodesAdded |= addNodesFromExtensions(module, moduleNode);
-      if (nodesAdded) {
-        myTree.setShowsRootHandles(true);
-      }
       final String[] groupPath = myPlainMode ? null : myContext.myModulesConfigurator.getModuleModel().getModuleGroupPath(module);
       if (groupPath == null || groupPath.length == 0){
         addNode(moduleNode, myRoot);
@@ -235,7 +230,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       myRoot.removeAllChildren();
     }
 
-    addRootNodesFromExtensions(myRoot, myProject);
     //final LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTable(myProject);
     //final LibrariesModifiableModel projectLibrariesProvider = new LibrariesModifiableModel(table);
     //myLevel2Providers.put(LibraryTablesRegistrar.PROJECT_LEVEL, projectLibrariesProvider);
@@ -243,19 +237,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     //myProjectNode.add(myLevel2Nodes.get(LibraryTablesRegistrar.PROJECT_LEVEL));
   }
 
-  private void addRootNodesFromExtensions(final MyNode root, final Project project) {
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      extension.addRootNodes(root, project, TREE_UPDATER);
-    }
-  }
-
-  private boolean addNodesFromExtensions(final Module module, final MyNode moduleNode) {
-    boolean nodesAdded = false;
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      nodesAdded |= extension.addModuleNodeChildren(module, moduleNode, TREE_UPDATER);
-    }
-    return nodesAdded;
-  }
 
   public boolean updateProjectTree(final Module[] modules, final ModuleGroup group) {
     if (myRoot.getChildCount() == 0) return false; //isn't visible
@@ -295,8 +276,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
           });
         addNode(moduleNode, moduleGroupNode);
       }
-      Module module = (Module)moduleNode.getConfigurable().getEditableObject();
-      addNodesFromExtensions(module, moduleNode);
     }
     TreeUtil.sort(myRoot, getNodeComparator());
     ((DefaultTreeModel)myTree.getModel()).reload(myRoot);
@@ -305,16 +284,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
   @Override
   protected Comparator<MyNode> getNodeComparator() {
-    ModuleStructureExtension[] extensions = ModuleStructureExtension.EP_NAME.getExtensions();
-    List<Comparator<MyNode>> comparators = new ArrayList<Comparator<MyNode>>(extensions.length + 1) ;
-    for (ModuleStructureExtension extension : extensions) {
-      Comparator<MyNode> nodeComparator = extension.getNodeComparator();
-      if(nodeComparator != null) {
-        comparators.add(nodeComparator);
-      }
-    }
-    comparators.add(NODE_COMPARATOR);
-    return new MergingComparator<MyNode>(comparators);
+    return NODE_COMPARATOR;
   }
 
   @Override
@@ -343,13 +313,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     });
   }
 
-  @Override
-  public void reset() {
-    super.reset();
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      extension.reset(myProject);
-    }
-  }
 
   @Override
   public void apply() throws ConfigurationException {
@@ -357,35 +320,14 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     roots.add(myRoot);
     checkApply(roots, ProjectBundle.message("rename.message.prefix.module"), ProjectBundle.message("rename.module.title"));
 
-    // let's apply extensions first, since they can write to/commit modifiable models
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      if (extension.isModified()) {
-        extension.apply();
-      }
-    }
-
     if (myContext.myModulesConfigurator.isModified()) {
       myContext.myModulesConfigurator.apply();
-    }
-
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      extension.afterModelCommit();
     }
   }
 
   @Override
   public boolean isModified() {
-    if (myContext.myModulesConfigurator.isModified()) {
-      return true;
-    }
-
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      if (extension.isModified()) {
-        return true;
-      }
-    }
-
-    return false;
+    return myContext.myModulesConfigurator.isModified();
   }
 
   @Override
@@ -393,10 +335,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     super.disposeUIResources();
     myContext.myModulesConfigurator.disposeUIResources();
     ModuleStructureConfigurable.super.disposeUIResources();
-
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      extension.disposeUIResources();
-    }
   }
 
   @Override
@@ -435,13 +373,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   public ActionCallback selectOrderEntry(@NotNull final Module module, @Nullable final OrderEntry orderEntry) {
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      final ActionCallback callback = extension.selectOrderEntry(module, orderEntry);
-      if (callback != null) {
-        return callback;
-      }
-    }
-
     Place p = new Place();
     p.putPath(ProjectStructureConfigurable.CATEGORY, this);
     Runnable r = null;
@@ -559,8 +490,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
     if (parent == null) parent = myRoot;
     addNode(node, parent);
-
-    addNodesFromExtensions(module, node);
     ((DefaultTreeModel)myTree.getModel()).reload(parent);
     selectNodeInTree(node);
     final ProjectStructureDaemonAnalyzer daemonAnalyzer = myContext.getDaemonAnalyzer();
@@ -614,45 +543,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
                                              AllIcons.Nodes.ModuleGroup);
   }
 
-  @Override
-  protected boolean canBeRemoved(final Object[] editableObjects) {
-    if (super.canBeRemoved(editableObjects)) {
-      return true;
-    }
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      if (extension.canBeRemoved(editableObjects)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  @Override
-  protected boolean removeObject(final Object editableObject) {
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      if (extension.removeObject(editableObject)) {
-        return true;
-      }
-    }
-    return super.removeObject(editableObject);
-  }
-
-  private boolean canBeCopiedByExtension(final NamedConfigurable configurable) {
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      if (extension.canBeCopied(configurable)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void copyByExtension(final NamedConfigurable configurable) {
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      extension.copy(configurable, TREE_UPDATER);
-    }
-  }
-  
   private class MyDataProviderWrapper extends JPanel implements DataProvider {
     public MyDataProviderWrapper(final JComponent component) {
       super(new BorderLayout());
@@ -780,15 +670,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
           }
         };
 
-        Collection<AnAction> actionsFromExtensions = new ArrayList<AnAction>();
-        for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-          actionsFromExtensions.addAll(extension.createAddActions(selectedNodeRetriever, TREE_UPDATER, myProject, myRoot));
-        }
-
-        if (!actionsFromExtensions.isEmpty() && !result.isEmpty()) {
-          result.add(new AnSeparator());
-        }
-        result.addAll(actionsFromExtensions);
         return result.toArray(new AnAction[result.size()]);
       }
     };
@@ -803,10 +684,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       return false;
     }
     myContext.getDaemonAnalyzer().removeElement(new ModuleProjectStructureElement(myContext, module));
-
-    for (final ModuleStructureExtension extension : ModuleStructureExtension.EP_NAME.getExtensions()) {
-      extension.moduleRemoved(module);
-    }
     return true;
   }
 
@@ -903,9 +780,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
           LOG.error(e1);
         }
       }
-      else {
-        copyByExtension(namedConfigurable);
-      }
     }
 
     @Override
@@ -915,7 +789,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         e.getPresentation().setEnabled(false);
       } else {
         final NamedConfigurable selectedConfigurable = getSelectedConfigurable();
-        e.getPresentation().setEnabled(selectedConfigurable instanceof ModuleConfigurable || canBeCopiedByExtension(selectedConfigurable));
+        e.getPresentation().setEnabled(selectedConfigurable instanceof ModuleConfigurable);
       }
     }
   }
@@ -934,22 +808,4 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       addModule(myImport);
     }
   }
-
-  private static class MergingComparator<T> implements Comparator<T> {
-    private final List<Comparator<T>> myDelegates;
-
-    public MergingComparator(final List<Comparator<T>> delegates) {
-      myDelegates = delegates;
-    }
-
-    @Override
-    public int compare(final T o1, final T o2) {
-      for (Comparator<T> delegate : myDelegates) {
-        int value = delegate.compare(o1, o2);
-        if (value != 0) return value;
-      }
-      return 0;
-    }
-  }
-
 }

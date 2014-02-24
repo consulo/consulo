@@ -303,9 +303,6 @@
 
     <extensionPoint name="compiler" area="CONSULO_PROJECT" interface="com.intellij.openapi.compiler.Compiler"/>
 
-    <extensionPoint name="configuration.ModuleStructureExtension"
-                    interface="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureExtension"/>
-
     <extensionPoint name="projectStructureValidator"
                     interface="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator"/>
 
