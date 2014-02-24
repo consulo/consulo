@@ -43,13 +43,13 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   private final SdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public SdkConfigurable(final SdkImpl projectSdk,
+  public SdkConfigurable(final SdkImpl sdk,
                          final ProjectSdksModel sdksModel,
                          final Runnable updateTree,
                          @NotNull History history,
                          Project project) {
-    super(true, updateTree);
-    mySdk = projectSdk;
+    super(!sdk.isBundled(), updateTree);
+    mySdk = sdk;
     mySdkEditor = createSdkEditor(sdksModel, history, mySdk);
     final StructureConfigurableContext context = ModuleStructureConfigurable.getInstance(project).getContext();
     myProjectStructureElement = new SdkProjectStructureElement(context, mySdk);
