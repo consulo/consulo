@@ -27,6 +27,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.pico.AssignableToComponentAdapter;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.picocontainer.*;
@@ -35,6 +36,7 @@ import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 import java.util.Arrays;
 import java.util.List;
 
+@Logger
 public class ServiceManagerImpl implements BaseComponent {
   private static final ExtensionPointName<ServiceDescriptor> APP_SERVICES = new ExtensionPointName<ServiceDescriptor>("com.intellij.applicationService");
   private static final ExtensionPointName<ServiceDescriptor> PROJECT_SERVICES = new ExtensionPointName<ServiceDescriptor>("com.intellij.projectService");
@@ -67,6 +69,9 @@ public class ServiceManagerImpl implements BaseComponent {
             picoContainer.unregisterComponent(descriptor.getInterface());// Allow to re-define service implementations in plugins.
           if (oldAdapter == null) {
             throw new RuntimeException("Service: " + descriptor.getInterface() + " doesn't override anything");
+          }
+          else {
+            LOGGER.warn("`overrides` attribute ill later deleted. Require api change. Interface: " + descriptor.getInterface());
           }
         }
 

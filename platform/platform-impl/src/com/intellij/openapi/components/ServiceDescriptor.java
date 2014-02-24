@@ -41,6 +41,7 @@ public class ServiceDescriptor {
   public String serviceImplementationForCompilerServer;
 
   @Attribute("overrides")
+  @Deprecated
   public boolean overrides = false;
 
 
