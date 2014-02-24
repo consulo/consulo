@@ -47,6 +47,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
     myNamePanel.setVisible(myNameEditable);
     if (myNameEditable) {
       myNameField.getDocument().addDocumentListener(new DocumentAdapter() {
+        @Override
         protected void textChanged(DocumentEvent e) {
           setDisplayName(myNameField.getText());
           if (updateTree != null){
@@ -73,6 +74,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
   public abstract T getEditableObject();
   public abstract String getBannerSlogan();
 
+  @Override
   public final JComponent createComponent() {
     if (myOptionsComponent == null){
       myOptionsComponent = createOptionsPanel();
