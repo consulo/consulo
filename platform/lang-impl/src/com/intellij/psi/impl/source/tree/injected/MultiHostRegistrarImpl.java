@@ -37,6 +37,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.DocumentCommitThread;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
@@ -184,7 +185,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
       assert after >= before : "Escaper " + textEscaper + "(" + textEscaper.getClass() + ") must not mangle char buffer";
       if (!result) {
         // if there are invalid chars, adjust the range
-        int offsetInHost = textEscaper.getOffsetInHost(outChars.length() - startOffset, rangeInsideHost);
+        int offsetInHost = textEscaper.getOffsetInHost(outChars.length() - before, rangeInsideHost);
         relevantRange = relevantRange.intersection(new ProperTextRange(0, offsetInHost));
       }
     }
@@ -388,6 +389,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     result.add(Pair.create(place, psiFile));
   }
 
+
   private static void patchLeafs(ASTNode parsedNode, List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers, Place shreds) {
     LeafPatcher patcher = new LeafPatcher(shreds, escapers);
     ((TreeElement)parsedNode).acceptTree(patcher);
@@ -401,10 +403,16 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
                                                           "\nLanguage: " + parsedNode.getPsi().getLanguage() +
                                                           "\nHost file: " + shreds.get(0).getHost().getContainingFile().getVirtualFile()
             ;
-    for (Map.Entry<LeafElement, String> entry : patcher.newTexts.entrySet()) {
-      LeafElement leaf = entry.getKey();
-      String newText = entry.getValue();
-      leaf.rawReplaceWithText(newText);
+    DebugUtil.startPsiModification("injection leaf patching");
+    try {
+      for (Map.Entry<LeafElement, String> entry : patcher.newTexts.entrySet()) {
+        LeafElement leaf = entry.getKey();
+        String newText = entry.getValue();
+        leaf.rawReplaceWithText(newText);
+      }
+    }
+    finally {
+      DebugUtil.finishPsiModification();
     }
 
     TreeUtil.clearCaches((TreeElement)parsedNode);
@@ -553,7 +561,6 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     return myHostPsiFile;
   }
 
-  @Nullable
   public ReferenceInjector getReferenceInjector() {
     return myReferenceInjector;
   }
