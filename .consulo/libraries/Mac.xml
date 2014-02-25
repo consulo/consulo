@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Mac">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/eawtstub.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libProvided/eawtstub.jar!/" />
     </CLASSES>
     <DOCUMENTATION />
     <SOURCES>
