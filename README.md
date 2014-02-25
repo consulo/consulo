@@ -23,5 +23,5 @@ To run the code, use the provided shared run configuration "Consulo".
 
 ## Links
 
-* [Download Links] (https://github.com/consulo/consulo/wiki/Download-links)
+* [Download] (https://github.com/consulo/consulo/wiki/Download-links)
 * [Tracker](http://napile.myjetbrains.com/youtrack/issues/CO)
