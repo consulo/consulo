@@ -24,13 +24,15 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.notification.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.*;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
@@ -38,6 +40,7 @@ import com.intellij.openapi.updateSettings.impl.UpdateChecker;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
+import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
@@ -104,8 +107,7 @@ public abstract class PluginManagerMain implements Disposable {
   private boolean myDisposed = false;
   private boolean myBusy = false;
 
-  public PluginManagerMain(
-    PluginManagerUISettings uiSettings) {
+  public PluginManagerMain(PluginManagerUISettings uiSettings) {
     myUISettings = uiSettings;
   }
 
@@ -165,8 +167,7 @@ public abstract class PluginManagerMain implements Disposable {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         final IdeaPluginDescriptor[] descriptors = pluginTable.getSelectedObjects();
-        pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null,
-                         myFilter.getFilter(), myDescriptionTextArea);
+        pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea);
         myActionToolbar.updateActionsImmediately();
       }
     });
@@ -259,10 +260,9 @@ public abstract class PluginManagerMain implements Disposable {
               propagateUpdates(list);
             }
             if (!errorMessages.isEmpty()) {
-              if (Messages.showOkCancelDialog(
-                      IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
-                      IdeBundle.message("title.plugins"), CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(),
-                      Messages.getErrorIcon()) == Messages.OK) {
+              if (Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
+                                              IdeBundle.message("title.plugins"), CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(),
+                                              Messages.getErrorIcon()) == Messages.OK) {
                 loadPluginsFromHostInBackground();
               }
             }
@@ -302,26 +302,27 @@ public abstract class PluginManagerMain implements Disposable {
     loadPluginsFromHostInBackground();
   }
 
-  public static boolean downloadPlugins(final List<PluginNode> plugins,
-                                        final List<IdeaPluginDescriptor> allPlugins,
-                                        final Runnable onSuccess,
-                                        @Nullable final Runnable cleanup) throws IOException {
-    final boolean[] result = new boolean[1];
+  public static void downloadPlugins(@NotNull final List<PluginNode> plugins,
+                                     @NotNull final List<IdeaPluginDescriptor> allPlugins,
+                                     @NotNull final Consumer<Set<PluginNode>> onSuccess,
+                                     @Nullable final Consumer<Set<PluginNode>> cleanup) throws IOException {
     try {
-      ProgressManager.getInstance().run(new Task.Backgroundable(null, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance()) {
-        @Override
-        public void run(@NotNull ProgressIndicator indicator) {
-          try {
-            if (PluginInstaller.prepareToInstall(plugins, allPlugins)) {
-              ApplicationManager.getApplication().invokeLater(onSuccess);
-              result[0] = true;
-            }
-          }
-          finally {
-            if (cleanup != null) cleanup.run();
-          }
-        }
-      });
+      ProgressManager.getInstance()
+              .run(new Task.Backgroundable(null, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance()) {
+                @Override
+                public void run(@NotNull ProgressIndicator indicator) {
+                  Set<PluginNode> set = null;
+                  try {
+                    set = PluginInstaller.prepareToInstall(plugins, allPlugins);
+                    if(set != null) {
+                      onSuccess.consume(set);
+                    }
+                  }
+                  finally {
+                    if (cleanup != null) cleanup.consume(set);
+                  }
+                }
+              });
     }
     catch (RuntimeException e) {
       if (e.getCause() != null && e.getCause() instanceof IOException) {
@@ -331,7 +332,6 @@ public abstract class PluginManagerMain implements Disposable {
         throw e;
       }
     }
-    return result[0];
   }
 
   public boolean isRequireShutdown() {
@@ -493,9 +493,7 @@ public abstract class PluginManagerMain implements Disposable {
     pluginTable.select(descriptors);
   }
 
-  protected static boolean isAccepted(String filter,
-                                      Set<String> search,
-                                      IdeaPluginDescriptor descriptor) {
+  protected static boolean isAccepted(String filter, Set<String> search, IdeaPluginDescriptor descriptor) {
     if (StringUtil.isEmpty(filter)) return true;
     if (isAccepted(search, filter, descriptor.getName())) {
       return true;
@@ -517,9 +515,7 @@ public abstract class PluginManagerMain implements Disposable {
     return false;
   }
 
-  private static boolean isAccepted(final Set<String> search,
-                                    @NotNull final String filter,
-                                    @NotNull final String description) {
+  private static boolean isAccepted(final Set<String> search, @NotNull final String filter, @NotNull final String description) {
     if (StringUtil.containsIgnoreCase(description, filter)) return true;
     final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
     final HashSet<String> descriptionSet = new HashSet<String>(search);
@@ -531,37 +527,33 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
 
-  public static void notifyPluginsWereInstalled(@Nullable String pluginName) {
-    notifyPluginsWereUpdated(pluginName != null
-                             ? "Plugin \'" + pluginName + "\' was successfully installed"
-                             : "Plugins were installed");
+  public static void notifyPluginsWereInstalled(@NotNull Collection<? extends IdeaPluginDescriptor> installed) {
+    String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
+    notifyPluginsWereUpdated(pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed");
   }
 
   public static void notifyPluginsWereUpdated(final String title) {
     final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
     final boolean restartCapable = app.isRestartCapable();
-    String message =
-      restartCapable ? IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName())
+    String message = restartCapable
+                     ? IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName())
                      : IdeBundle.message("message.idea.shutdown.required", ApplicationNamesInfo.getInstance().getFullProductName());
     message += "<br><a href=";
     message += restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown";
     message += "</a>";
     new NotificationGroup("Plugins Lifecycle Group", NotificationDisplayType.STICKY_BALLOON, true)
-      .createNotification(title,
-                          XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION,
-                          new NotificationListener() {
-                            @Override
-                            public void hyperlinkUpdate(@NotNull Notification notification,
-                                                        @NotNull HyperlinkEvent event) {
-                              notification.expire();
-                              if (restartCapable) {
-                                app.restart(true);
-                              }
-                              else {
-                                app.exit(true);
-                              }
-                            }
-                          }).notify(null);
+            .createNotification(title, XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION, new NotificationListener() {
+              @Override
+              public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+                notification.expire();
+                if (restartCapable) {
+                  app.restart(true);
+                }
+                else {
+                  app.exit(true);
+                }
+              }
+            }).notify(null);
   }
 
   protected class SortByStatusAction extends ToggleAction {

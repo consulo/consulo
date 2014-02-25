@@ -24,6 +24,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.updateSettings.impl.DetectedPluginsPanel;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.TableUtil;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -80,10 +81,10 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
       }
     }
     try {
-      PluginManagerMain.downloadPlugins(nodes, myAllPlugins, new Runnable() {
+      PluginManagerMain.downloadPlugins(nodes, myAllPlugins, new Consumer<Set<PluginNode>>() {
         @Override
-        public void run() {
-          PluginManagerMain.notifyPluginsWereInstalled(null);
+        public void consume(Set<PluginNode> pluginNodes) {
+          PluginManagerMain.notifyPluginsWereInstalled(pluginNodes);
         }
       }, null);
     }

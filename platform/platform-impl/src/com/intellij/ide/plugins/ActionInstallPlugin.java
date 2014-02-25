@@ -26,6 +26,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.net.IOExceptionDialog;
 
@@ -89,7 +90,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
     IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
 
     if (userConfirm(selection)) {
-      final ArrayList<PluginNode> list = new ArrayList<PluginNode>();
+      ArrayList<PluginNode> list = new ArrayList<PluginNode>();
       for (IdeaPluginDescriptor descr : selection) {
         PluginNode pluginNode = null;
         if (descr instanceof PluginNode) {
@@ -134,17 +135,17 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
         }
       }
       try {
-        final Runnable onInstallRunnable = new Runnable() {
+        final Consumer<Set<PluginNode>> onInstallRunnable = new Consumer<Set<PluginNode>>() {
           @Override
-          public void run() {
-            installedPluginsToModel(list);
+          public void consume(Set<PluginNode> pluginNodes) {
+            installedPluginsToModel(pluginNodes);
             if (!installed.isDisposed()) {
               getPluginTable().updateUI();
               installed.setRequireShutdown(true);
             }
             else {
               boolean needToRestart = false;
-              for (PluginNode node : list) {
+              for (PluginNode node : pluginNodes) {
                 final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
                 if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
                   needToRestart = true;
@@ -153,15 +154,15 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
               }
 
               if (needToRestart) {
-                PluginManagerMain.notifyPluginsWereInstalled(list.size() == 1 ? list.get(0).getName() : null);
+                PluginManagerMain.notifyPluginsWereInstalled(pluginNodes);
               }
             }
           }
         };
-        PluginManagerMain.downloadPlugins(list, host.getPluginsModel().view, onInstallRunnable, new Runnable(){
+        PluginManagerMain.downloadPlugins(list, host.getPluginsModel().view, onInstallRunnable, new Consumer<Set<PluginNode>>(){
           @Override
-          public void run() {
-            ourInstallingNodes.removeAll(list);
+          public void consume(Set<PluginNode> pluginNodes) {
+            ourInstallingNodes.removeAll(pluginNodes);
           }
         });
       }
@@ -243,7 +244,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
     return false;
   }
 
-  private void installedPluginsToModel(ArrayList<PluginNode> list) {
+  private void installedPluginsToModel(Collection<PluginNode> list) {
     for (PluginNode pluginNode : list) {
       final String idString = pluginNode.getPluginId().getIdString();
       final PluginManagerUISettings pluginManagerUISettings = PluginManagerUISettings.getInstance();

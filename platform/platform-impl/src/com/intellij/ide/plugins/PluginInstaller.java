@@ -48,29 +48,38 @@ public class PluginInstaller {
   private PluginInstaller() {
   }
 
-  public static boolean prepareToInstall(List<PluginNode> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
+  @Nullable("Will return null is download failed")
+  public static Set<PluginNode> prepareToInstall(List<PluginNode> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
     final List<PluginId> pluginIds = new ArrayList<PluginId>();
     for (PluginNode pluginNode : pluginsToInstall) {
       pluginIds.add(pluginNode.getPluginId());
     }
 
-    boolean result = false;
+    val result = new ArrayListSet<PluginNode>();
 
     for (final PluginNode pluginNode : pluginsToInstall) {
       try {
-        result |= prepareToInstall(pluginNode, pluginIds, allPlugins);
+        Set<PluginNode> pluginNodes = prepareToInstall(pluginNode, pluginIds, allPlugins);
+        if(pluginNodes == null) {
+          return null;
+        }
+        else {
+          result.addAll(pluginNodes);
+        }
       }
       catch (IOException e) {
         String title = IdeBundle.message("title.plugin.error");
         Notifications.Bus.notify(new Notification(title, title, pluginNode.getName() + ": " + e.getMessage(), NotificationType.ERROR));
-        return false;
+        return null;
       }
     }
 
     return result;
   }
 
-  private static boolean prepareToInstall(@NotNull PluginNode toInstall, @NotNull List<PluginId> toInstallAll, @NotNull List<IdeaPluginDescriptor> allPlugins)
+  @Nullable("Will return null is download failed")
+  private static Set<PluginNode> prepareToInstall(@NotNull PluginNode toInstall, @NotNull List<PluginId> toInstallAll,
+                                            @NotNull List<IdeaPluginDescriptor> allPlugins)
           throws IOException {
     val depends = new ArrayListSet<PluginNode>();
     collectDepends(toInstall, toInstallAll, depends, allPlugins);
@@ -106,7 +115,7 @@ public class PluginInstaller {
         try {
           final List<PluginDownloader> downloaders = new ArrayList<PluginDownloader>();
           if (!UpdateChecker.checkPluginsHost(repositoryName, downloaders)) {
-            return false;
+            return null;
           }
           for (PluginDownloader pluginDownloader : downloaders) {
             if (Comparing.strEqual(pluginDownloader.getPluginId(), pluginNode.getPluginId().getIdString())) {
@@ -114,10 +123,10 @@ public class PluginInstaller {
               break;
             }
           }
-          if (downloader == null) return false;
+          if (downloader == null) return null;
         }
         catch (Exception e) {
-          return false;
+          return null;
         }
       }
       else {
@@ -128,10 +137,10 @@ public class PluginInstaller {
         pluginNode.setStatus(PluginNode.STATUS_DOWNLOADED);
       }
       else {
-        return false;
+        return null;
       }
     }
-    return true;
+    return toDownloadList;
   }
 
   private static void collectDepends(@NotNull IdeaPluginDescriptor toInstall,
