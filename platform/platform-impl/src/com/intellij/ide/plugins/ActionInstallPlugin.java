@@ -29,6 +29,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.net.IOExceptionDialog;
+import com.intellij.util.ui.UIUtil;
+import lombok.val;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -90,7 +92,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
     IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
 
     if (userConfirm(selection)) {
-      ArrayList<PluginNode> list = new ArrayList<PluginNode>();
+      val list = new ArrayList<PluginNode>();
       for (IdeaPluginDescriptor descr : selection) {
         PluginNode pluginNode = null;
         if (descr instanceof PluginNode) {
@@ -137,11 +139,22 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
       try {
         final Consumer<Set<PluginNode>> onInstallRunnable = new Consumer<Set<PluginNode>>() {
           @Override
-          public void consume(Set<PluginNode> pluginNodes) {
-            installedPluginsToModel(pluginNodes);
+          public void consume(final Set<PluginNode> pluginNodes) {
+            UIUtil.invokeLaterIfNeeded(new Runnable() {
+              @Override
+              public void run() {
+                installedPluginsToModel(pluginNodes);
+              }
+            });
+
             if (!installed.isDisposed()) {
-              getPluginTable().updateUI();
-              installed.setRequireShutdown(true);
+              UIUtil.invokeLaterIfNeeded(new Runnable() {
+                @Override
+                public void run() {
+                  getPluginTable().updateUI();
+                  installed.setRequireShutdown(true);
+                }
+              });
             }
             else {
               boolean needToRestart = false;
@@ -162,7 +175,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
         PluginManagerMain.downloadPlugins(list, host.getPluginsModel().view, onInstallRunnable, new Consumer<Set<PluginNode>>(){
           @Override
           public void consume(Set<PluginNode> pluginNodes) {
-            ourInstallingNodes.removeAll(pluginNodes);
+            ourInstallingNodes.removeAll(list);
           }
         });
       }

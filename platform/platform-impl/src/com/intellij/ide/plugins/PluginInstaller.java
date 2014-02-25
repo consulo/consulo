@@ -148,6 +148,7 @@ public class PluginInstaller {
                                      @NotNull Set<PluginNode> depends,
                                      @NotNull List<IdeaPluginDescriptor> repoPlugins) {
     PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
+    PluginManagerUISettings pluginManagerUISettings = PluginManagerUISettings.getInstance();
 
     for (PluginId dependentPluginId : dependentPluginIds) {
 
@@ -156,13 +157,14 @@ public class PluginInstaller {
         continue;
       }
 
-      PluginNode depPlugin = new PluginNode(dependentPluginId);
-      depPlugin.setSize("-1");
-      depPlugin.setName(dependentPluginId.getIdString()); //prevent from exceptions
+      if(pluginManagerUISettings.getInstalledPlugins().contains(dependentPluginId.getIdString())) {
+        // downloaded plugin
+        continue;
+      }
 
-      IdeaPluginDescriptor dependInRepo = findDescriptionInRepo(dependentPluginId, repoPlugins);
+      PluginNode dependInRepo = (PluginNode)findDescriptionInRepo(dependentPluginId, repoPlugins);
       if (dependInRepo != null) {
-        depends.add(depPlugin);
+        depends.add(dependInRepo);
 
         collectDepends(dependInRepo, toInstallOthers, depends, repoPlugins);
       }
