@@ -1,16 +1,8 @@
-# WARNING - VERY UNSTABLE
-
-Status:
- * Windows - OK
- * Linux - OK
- * Mac - OK
- * Haiku - ~
-
 ## Information
 
-This is fork of IntelliJ IDEA Community Edition
+This is IDE based on IntelliJ Platform. Targeting to create one IDE for all languages
 
-![Build Status](http://must-be.org:8080/vulcan_web/statusImage?name=consulo)
+# UNSTABLE
 
 ## Building
 
@@ -23,10 +15,14 @@ List of plugins:
 
 Configure JDK as "1.6". On Windows or Linux, add lib\tools.jar from the JDK installation directory to the classpath of jdk
 
-Use 'Build | Build Artifacts... | dist' to build the code
+Use 'Build | Build Artifacts... | distForRuntime' to build the code
 
 To run the code, use the provided shared run configuration "Consulo".
 
+![Build Status](http://must-be.org:8080/vulcan_web/statusImage?name=consulo)
+
 ## Links
+
+* [Download Links] (https://github.com/consulo/consulo/wiki/Download-links)
 
 * [Tracker](http://napile.myjetbrains.com/youtrack/issues/CO)
