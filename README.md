@@ -1,14 +1,14 @@
+# UNSTABLE
+
 ## Information
 
 This is IDE based on IntelliJ Platform. Targeting to create one IDE for all languages
-
-# UNSTABLE
 
 ## Building
 
 To develop Consulo, you need use Consulo. To build and run the code:
 
-List of plugins:
+List of plugins (with dependencies):
   * UI Designer
   * Java
   * Lombok (need for develop)
@@ -24,5 +24,4 @@ To run the code, use the provided shared run configuration "Consulo".
 ## Links
 
 * [Download Links] (https://github.com/consulo/consulo/wiki/Download-links)
-
 * [Tracker](http://napile.myjetbrains.com/youtrack/issues/CO)
