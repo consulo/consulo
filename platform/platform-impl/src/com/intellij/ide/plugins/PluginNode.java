@@ -277,7 +277,7 @@ public class PluginNode implements IdeaPluginDescriptor {
   @Override
   @NotNull
   public PluginId[] getDependentPluginIds() {
-    return PluginId.EMPTY_ARRAY;
+    return depends != null ? depends.toArray(new PluginId[depends.size()]) : PluginId.EMPTY_ARRAY;
   }
 
   @Override
