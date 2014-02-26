@@ -24,7 +24,6 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
@@ -34,6 +33,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
+import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -57,15 +57,6 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   @Override
   public String getTestPresentation() {
     return "Library: " + getValue().getName();
-  }
-
-  private static Icon getSdkIcon(SdkOrderEntry entry) {
-    final Sdk sdk = entry.getSdk();
-    if (sdk == null) {
-      return AllIcons.Toolbar.Unknown;
-    }
-    final SdkType sdkType = (SdkType)sdk.getSdkType();
-    return sdkType.getIcon();
   }
 
   @Override
@@ -101,7 +92,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   public void update(PresentationData presentation) {
     presentation.setPresentableText(getValue().getName());
     final OrderEntry orderEntry = getValue().getOrderEntry();
-    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? getSdkIcon((SdkOrderEntry)orderEntry) : getIconForLibrary(orderEntry);
+    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? SdkUtil.getIcon(((SdkOrderEntry)orderEntry).getSdk()) : getIconForLibrary(orderEntry);
     presentation.setIcon(closedIcon);
     if (orderEntry instanceof SdkOrderEntry) {
       final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;

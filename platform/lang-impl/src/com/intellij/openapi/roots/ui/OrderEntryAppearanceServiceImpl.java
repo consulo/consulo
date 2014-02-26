@@ -40,6 +40,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
+import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,7 +122,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     String name = jdk.getName();
     CompositeAppearance appearance = new CompositeAppearance();
     SdkType sdkType = (SdkType)jdk.getSdkType();
-    appearance.setIcon(sdkType.getIcon());
+    appearance.setIcon(SdkUtil.getIcon(jdk));
     SimpleTextAttributes attributes = getTextAttributes(sdkType.sdkHasValidPath(jdk), selected);
     CompositeAppearance.DequeEnd ending = appearance.getEnding();
     ending.addText(name, attributes);

@@ -26,11 +26,9 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
+import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -44,6 +42,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IconUtil;
+import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,8 +85,7 @@ public class NavBarPresentation {
       return null;
     }
     if (object instanceof SdkOrderEntry) {
-      final SdkTypeId sdkType = ((SdkOrderEntry)object).getSdk().getSdkType();
-      return ((SdkType) sdkType).getIcon();
+      return SdkUtil.getIcon(((SdkOrderEntry)object).getSdk());
     }
     if (object instanceof LibraryOrderEntry) return AllIcons.Nodes.PpLibFolder;
     if (object instanceof ModuleOrderEntry) return AllIcons.Nodes.Module;

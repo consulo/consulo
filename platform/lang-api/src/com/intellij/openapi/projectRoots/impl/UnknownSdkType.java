@@ -87,12 +87,12 @@ public class UnknownSdkType extends SdkType{
 
   @Override
   public Icon getIcon() {
-    return AllIcons.Nodes.UnknownJdk;
+    return AllIcons.Toolbar.Unknown;
   }
 
   @Nullable
   @Override
   public Icon getGroupIcon() {
-    return getIcon();
+    return AllIcons.Nodes.UnknownJdk;
   }
 }

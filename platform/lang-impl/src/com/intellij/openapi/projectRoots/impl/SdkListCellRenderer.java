@@ -17,11 +17,11 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
+import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -63,7 +63,7 @@ public class SdkListCellRenderer extends ColoredListCellRendererWrapper<Sdk> {
   @Override
   protected void doCustomize(final JList list, final Sdk sdk, final int index, final boolean selected, final boolean hasFocus) {
     if (sdk != null) {
-      setIcon(getSdkIcon(sdk));
+      setIcon(SdkUtil.getIcon(sdk));
       append(sdk.getName());
       if (myShowHomePath) {
         append(" (" + FileUtil.toSystemDependentName(StringUtil.notNullize(sdk.getHomePath())) + ")",
@@ -75,7 +75,4 @@ public class SdkListCellRenderer extends ColoredListCellRendererWrapper<Sdk> {
     }
   }
 
-  protected Icon getSdkIcon(Sdk sdk) {
-    return ((SdkType) sdk.getSdkType()).getIcon();
-  }
 }
