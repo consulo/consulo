@@ -33,13 +33,20 @@ import org.jetbrains.annotations.NotNull;
 public class StoragePathMacros {
 
   /** Points to the application-level settings root directory. */
-  @NonNls @NotNull public static final String APP_CONFIG = "$APP_CONFIG$";
+  @NonNls
+  @NotNull
+  public static final String APP_CONFIG = "$APP_CONFIG$";
   
   /** <code>'.ipr'</code> file path key. */
-  @NonNls @NotNull public static final String PROJECT_FILE = "$PROJECT_FILE$";
+  @Deprecated
+  @NonNls
+  @NotNull
+  public static final String PROJECT_FILE = "$PROJECT_FILE$";
   
   /** <code>'.idea'</code> directory path key. */
-  @NonNls @NotNull public static final String PROJECT_CONFIG_DIR = "$PROJECT_CONFIG_DIR$";
+  @NonNls
+  @NotNull
+  public static final String PROJECT_CONFIG_DIR = "$PROJECT_CONFIG_DIR$";
 
   /**
    * {@link Project#getWorkspaceFile() Workspace} file key.
@@ -47,7 +54,9 @@ public class StoragePathMacros {
    * <code>'Workspace file'</code> holds settings that are local to a particular environment and should not be shared with another
    * team members.
    */
-  @NonNls @NotNull public static final String WORKSPACE_FILE = "$WORKSPACE_FILE$";
+  @NonNls
+  @NotNull
+  public static final String WORKSPACE_FILE = "$WORKSPACE_FILE$";
 
   private StoragePathMacros() {
   }
