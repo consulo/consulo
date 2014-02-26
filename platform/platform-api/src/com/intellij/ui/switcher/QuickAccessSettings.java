@@ -70,7 +70,7 @@ public class QuickAccessSettings implements ApplicationComponent, KeymapManagerL
 
     applyModifiersFromRegistry();
   }
-      
+
   public void disposeComponent() {
     KeymapManager.getInstance().removeKeymapManagerListener(this);
     Disposer.dispose(this);
@@ -141,7 +141,7 @@ public class QuickAccessSettings implements ApplicationComponent, KeymapManagerL
     Shortcut[] shortcuts = myKeymap.getShortcuts(actionId);
     for (Shortcut each : shortcuts) {
       if (each instanceof KeyboardShortcut) {
-          myKeymap.removeShortcut(actionId, each);
+        myKeymap.removeShortcut(actionId, each);
       }
     }
   }

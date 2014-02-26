@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -421,14 +421,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     final DumbService.DumbModeListener dumbModeListener = new DumbService.DumbModeListener() {
       @Override
       public void enteredDumbMode() {
-        for (final String id : getToolWindowIds()) {
-          if (!myDumbAwareIds.contains(id)) {
-            if (isToolWindowVisible(id)) {
-              hideToolWindow(id, true);
-            }
-            getStripeButton(id).setEnabled(false);
-          }
-        }
+        disableStripeButtons();
       }
 
       @Override
@@ -445,7 +438,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       public void run() {
         registerToolWindowsFromBeans();
         if (DumbService.getInstance(myProject).isDumb()) {
-          dumbModeListener.enteredDumbMode();
+          disableStripeButtons();
         }
       }
     });
@@ -459,6 +452,20 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
         return false;
       }
     }, myProject);
+  }
+
+  private void disableStripeButtons() {
+    for (final String id : getToolWindowIds()) {
+      if (!myDumbAwareIds.contains(id)) {
+        if (isToolWindowVisible(id)) {
+          hideToolWindow(id, true);
+        }
+        StripeButton button = getStripeButton(id);
+        if (button != null) {
+          button.setEnabled(false);
+        }
+      }
+    }
   }
 
   private JComponent createEditorComponent(Project project) {
@@ -476,10 +483,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
 
     myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter() {
       @Override
-      public void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
-        if (oldExtension.isEnabled() == newExtension.isEnabled()) {
-          return;
-        }
+      public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
         ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
 
         boolean extensionVal = newExtension.isEnabled();
@@ -519,7 +523,8 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     label.setForeground(ColorUtil.toAlpha(treeFg, 180));
     final ToolWindowFactory factory = bean.getToolWindowFactory();
     final ToolWindowImpl toolWindow =
-            (ToolWindowImpl)registerToolWindow(bean.id, label, toolWindowAnchor, myProject, DumbService.isDumbAware(factory), bean.canCloseContents);
+            (ToolWindowImpl)registerToolWindow(bean.id, label, toolWindowAnchor, myProject, DumbService.isDumbAware(factory),
+                                               bean.canCloseContents);
     toolWindow.setContentFactory(factory);
     if (bean.icon != null && toolWindow.getIcon() == null) {
       Icon icon = IconLoader.findIcon(bean.icon, factory.getClass());
@@ -602,7 +607,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
    * This is helper method. It delegated its functionality to the WindowManager.
    * Before delegating it fires state changed.
    */
-  public void execute(final ArrayList<FinalizableCommand> commandList) {
+  public void execute(@NotNull List<FinalizableCommand> commandList) {
     for (FinalizableCommand each : commandList) {
       if (each.willChangeState()) {
         fireStateChanged();
@@ -666,7 +671,9 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     return FileEditorManagerEx.getInstanceEx(myProject).getSplitters();
   }
 
-  private void activateEditorComponentImpl(EditorsSplitters splitters, final ArrayList<FinalizableCommand> commandList, final boolean forced) {
+  private void activateEditorComponentImpl(EditorsSplitters splitters,
+                                           List<FinalizableCommand> commandList,
+                                           final boolean forced) {
     final String active = getActiveToolWindowId();
     // Now we have to request focus into most recent focused editor
     appendRequestFocusInEditorComponentCmd(splitters, commandList, forced).doWhenDone(new Runnable() {
@@ -743,7 +750,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
    */
   private void showAndActivate(final String id,
                                final boolean dirtyMode,
-                               final ArrayList<FinalizableCommand> commandsList,
+                               List<FinalizableCommand> commandsList,
                                boolean autoFocusContents,
                                boolean forcedFocusRequest) {
     if (!getToolWindow(id).isAvailable()) {
@@ -784,7 +791,10 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     execute(commandList);
   }
 
-  private void activateToolWindowImpl(final String id, final ArrayList<FinalizableCommand> commandList, boolean forced, boolean autoFocusContents) {
+  private void activateToolWindowImpl(final String id,
+                                      List<FinalizableCommand> commandList,
+                                      boolean forced,
+                                      boolean autoFocusContents) {
     if (!FocusManagerImpl.getInstance().isUnforcedRequestAllowed() && !forced) return;
 
     if (LOG.isDebugEnabled()) {
@@ -1102,12 +1112,17 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   }
 
   @Override
-  public ToolWindow registerToolWindow(@NotNull final String id, @NotNull final JComponent component, @NotNull final ToolWindowAnchor anchor) {
+  public ToolWindow registerToolWindow(@NotNull final String id,
+                                       @NotNull final JComponent component,
+                                       @NotNull final ToolWindowAnchor anchor) {
     return registerToolWindow(id, component, anchor, false);
   }
 
   @Override
-  public ToolWindow registerToolWindow(@NotNull final String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable) {
+  public ToolWindow registerToolWindow(@NotNull final String id,
+                                       @NotNull JComponent component,
+                                       @NotNull ToolWindowAnchor anchor,
+                                       @NotNull Disposable parentDisposable) {
     return registerToolWindow(id, component, anchor, parentDisposable, false, false);
   }
 
@@ -1115,7 +1130,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   public ToolWindow registerToolWindow(@NotNull String id,
                                        @NotNull JComponent component,
                                        @NotNull ToolWindowAnchor anchor,
-                                       Disposable parentDisposable,
+                                       @NotNull Disposable parentDisposable,
                                        boolean canWorkInDumbMode) {
     return registerToolWindow(id, component, anchor, parentDisposable, canWorkInDumbMode, false);
   }
@@ -1124,9 +1139,8 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   public ToolWindow registerToolWindow(@NotNull final String id,
                                        @NotNull JComponent component,
                                        @NotNull ToolWindowAnchor anchor,
-                                       Disposable parentDisposable,
-                                       boolean canWorkInDumbMode,
-                                       boolean canCloseContents) {
+                                       @NotNull Disposable parentDisposable,
+                                       boolean canWorkInDumbMode, boolean canCloseContents) {
     return registerDisposable(id, parentDisposable, registerToolWindow(id, component, anchor, false, canCloseContents, canWorkInDumbMode));
   }
 
@@ -1155,7 +1169,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   public ToolWindow registerToolWindow(@NotNull final String id,
                                        final boolean canCloseContent,
                                        @NotNull final ToolWindowAnchor anchor,
-                                       final Disposable parentDisposable,
+                                       @NotNull final Disposable parentDisposable,
                                        final boolean canWorkInDumbMode) {
     return registerDisposable(id, parentDisposable, registerToolWindow(id, null, anchor, false, canCloseContent, canWorkInDumbMode));
   }
@@ -1193,7 +1207,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
 
     final StripeButton button = new StripeButton(decorator, myToolWindowsPane);
     myId2StripeButton.put(id, button);
-    final ArrayList<FinalizableCommand> commandsList = new ArrayList<FinalizableCommand>();
+    List<FinalizableCommand> commandsList = new ArrayList<FinalizableCommand>();
     appendAddButtonCmd(button, info, commandsList);
 
     if (canWorkInDumbMode) {
@@ -1225,7 +1239,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     return toolWindow;
   }
 
-  private ToolWindow registerDisposable(final String id, final Disposable parentDisposable, final ToolWindow window) {
+  private ToolWindow registerDisposable(final String id, @NotNull final Disposable parentDisposable, final ToolWindow window) {
     Disposer.register(parentDisposable, new Disposable() {
       @Override
       public void dispose() {
@@ -1363,7 +1377,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
 
   @Override
   public void invokeLater(final Runnable runnable) {
-    final ArrayList<FinalizableCommand> commandList = new ArrayList<FinalizableCommand>();
+    List<FinalizableCommand> commandList = new ArrayList<FinalizableCommand>();
     commandList.add(new InvokeLaterCmd(runnable, myWindowManager.getCommandProcessor()));
     execute(commandList);
   }
@@ -1380,7 +1394,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     }
     final Stripe stripe = myToolWindowsPane.getStripeFor(toolWindowId);
     return stripe.getButtonFor(toolWindowId) != null;
-
   }
 
   @Override
@@ -1428,7 +1441,8 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
 
     final BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
     final Balloon balloon =
-            JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, type.getPopupBackground(), listenerWrapper)
+            JBPopupFactory.getInstance()
+                    .createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, type.getPopupBackground(), listenerWrapper)
                     .setHideOnClickOutside(false).setHideOnFrameResize(false).createBalloon();
     FrameStateManager.getInstance().getApplicationActive().doWhenDone(new Runnable() {
       @Override
@@ -1563,7 +1577,10 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     execute(commandList);
   }
 
-  private void setToolWindowAnchorImpl(final String id, final ToolWindowAnchor anchor, final int order, final ArrayList<FinalizableCommand> commandsList) {
+  private void setToolWindowAnchorImpl(final String id,
+                                       final ToolWindowAnchor anchor,
+                                       final int order,
+                                       final ArrayList<FinalizableCommand> commandsList) {
     checkId(id);
     final WindowInfoImpl info = getInfo(id);
     if (anchor == info.getAnchor() && order == info.getOrder()) {
@@ -1803,18 +1820,22 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     commandsList.add(command);
   }
 
-  private ActionCallback appendRequestFocusInEditorComponentCmd(EditorsSplitters splitters, final ArrayList<FinalizableCommand> commandList, boolean forced) {
+  private ActionCallback appendRequestFocusInEditorComponentCmd(EditorsSplitters splitters,
+                                                                List<FinalizableCommand> commandList,
+                                                                boolean forced) {
     if (myProject.isDisposed()) return new ActionCallback.Done();
     final CommandProcessor commandProcessor = myWindowManager.getCommandProcessor();
-    final RequestFocusInEditorComponentCmd command = new RequestFocusInEditorComponentCmd(splitters, getFocusManager(), commandProcessor, forced);
+    final RequestFocusInEditorComponentCmd command =
+            new RequestFocusInEditorComponentCmd(splitters, getFocusManager(), commandProcessor, forced);
     commandList.add(command);
     return command.getDoneCallback();
   }
 
-  private void appendRequestFocusInToolWindowCmd(final String id, final ArrayList<FinalizableCommand> commandList, boolean forced) {
+  private void appendRequestFocusInToolWindowCmd(final String id, List<FinalizableCommand> commandList, boolean forced) {
     final ToolWindowImpl toolWindow = (ToolWindowImpl)getToolWindow(id);
     final FocusWatcher focusWatcher = myId2FocusWatcher.get(id);
-    commandList.add(new RequestFocusInToolWindowCmd(getFocusManager(), toolWindow, focusWatcher, myWindowManager.getCommandProcessor(), forced));
+    commandList
+            .add(new RequestFocusInToolWindowCmd(getFocusManager(), toolWindow, focusWatcher, myWindowManager.getCommandProcessor(), forced));
   }
 
   /**
@@ -1834,8 +1855,8 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
 
   /**
    * @return <code>true</code> if tool window with the specified <code>id</code>
-   *         is floating and has modal showing child dialog. Such windows should not be closed
-   *         when auto-hide windows are gone.
+   * is floating and has modal showing child dialog. Such windows should not be closed
+   * when auto-hide windows are gone.
    */
   private boolean hasModalChild(final WindowInfoImpl info) {
     if (!info.isVisible() || !info.isFloating()) {
@@ -1965,7 +1986,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     if (type != null) {
       toolWindow.setType(type, null);
     }
-
   }
 
   public void setDefaultContentUiType(ToolWindowImpl toolWindow, ToolWindowContentUiType type) {
@@ -2195,9 +2215,12 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
      */
     @Override
     public void resized(final InternalDecorator source) {
-      if (!source.isShowing()) return; // do not recalculate the tool window size if it is not yet shown (and, therefore, has 0,0,0,0 bounds)
+      if (!source.isShowing()) {
+        return; // do not recalculate the tool window size if it is not yet shown (and, therefore, has 0,0,0,0 bounds)
+      }
 
       final WindowInfoImpl info = getInfo(source.getToolWindow().getId());
+      InternalDecorator another = null;
       if (info.isFloating()) {
         final Window owner = SwingUtilities.getWindowAncestor(source);
         if (owner != null) {
@@ -2205,29 +2228,34 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
         }
       }
       else { // docked and sliding windows
-        float size = ToolWindowAnchor.TOP == info.getAnchor() || ToolWindowAnchor.BOTTOM == info.getAnchor() ? source.getWidth() : source.getHeight();
+        ToolWindowAnchor anchor = info.getAnchor();
         if (source.getParent() instanceof Splitter) {
+          float sizeInSplit = anchor.isSplitVertically() ? source.getHeight() : source.getWidth();
           Splitter splitter = (Splitter)source.getParent();
           if (splitter.getSecondComponent() == source) {
-            size += splitter.getDividerWidth();
+            sizeInSplit += splitter.getDividerWidth();
+            another = (InternalDecorator)splitter.getFirstComponent();
+          }
+          else {
+            another = (InternalDecorator)splitter.getSecondComponent();
+          }
+          if (anchor.isSplitVertically()) {
+            info.setSideWeight(sizeInSplit / (float)splitter.getHeight());
+          }
+          else {
+            info.setSideWeight(sizeInSplit / (float)splitter.getWidth());
           }
         }
 
-        if (ToolWindowAnchor.TOP == info.getAnchor() || ToolWindowAnchor.BOTTOM == info.getAnchor()) {
-          info.setWeight((float)source.getHeight() / (float)myToolWindowsPane.getMyLayeredPane().getHeight());
-
-
-          float newSideWeight = size / (float)myToolWindowsPane.getMyLayeredPane().getWidth();
-          if (newSideWeight < 1.0f) {
-            info.setSideWeight(newSideWeight);
-          }
-        }
-        else {
-          info.setWeight((float)source.getWidth() / (float)myToolWindowsPane.getMyLayeredPane().getWidth());
-          float newSideWeight = size / (float)myToolWindowsPane.getMyLayeredPane().getHeight();
-          if (newSideWeight < 1.0f) {
-            info.setSideWeight(newSideWeight);
-          }
+        float paneWeight = anchor.isHorizontal()
+                           ? (float)source.getHeight() / (float)myToolWindowsPane.getMyLayeredPane().getHeight()
+                           : (float)source.getWidth() / (float)myToolWindowsPane.getMyLayeredPane().getWidth();
+        info.setWeight(paneWeight);
+        if (another != null && anchor.isSplitVertically()) {
+          paneWeight = anchor.isHorizontal()
+                       ? (float)another.getHeight() / (float)myToolWindowsPane.getMyLayeredPane().getHeight()
+                       : (float)another.getWidth() / (float)myToolWindowsPane.getMyLayeredPane().getWidth();
+          another.getWindowInfo().setWeight(paneWeight);
         }
       }
     }
@@ -2280,6 +2308,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     return "ToolWindowManager";
   }
 
+  @NotNull
   public ActionCallback requestDefaultFocus(final boolean forced) {
     return getFocusManagerImpl(myProject).requestFocus(new FocusCommand() {
       @NotNull
@@ -2371,7 +2400,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(runnable);
   }
 
-  public boolean dispatch(KeyEvent e) {
+  public boolean dispatch(@NotNull KeyEvent e) {
     return IdeFocusManager.getInstance(myProject).dispatch(e);
   }
 

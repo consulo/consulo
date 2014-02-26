@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,6 +102,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
     return getWindowInfo().getAnchor();
   }
 
+  @NotNull
   WindowInfoImpl getWindowInfo() {
     return myDecorator.getWindowInfo();
   }
@@ -131,23 +132,23 @@ public final class StripeButton extends AnchoredButton implements ActionListener
     KeymapManager.getInstance().addKeymapManagerListener(myKeymapListener);
   }
 
-  
+
   public boolean isFirst() {
     return is(true);
   }
-  
+
   public boolean isLast() {
     return is(false);
   }
-  
+
   public boolean isOppositeSide() {
     return getWindowInfo().isSplit();
   }
-  
+
   private boolean is(boolean first) {
     Container parent = getParent();
     if (parent == null) return false;
-    
+
     int max = first ? Integer.MAX_VALUE : 0;
     ToolWindowAnchor anchor = getAnchor();
     Component c = null;
@@ -168,8 +169,8 @@ public final class StripeButton extends AnchoredButton implements ActionListener
         }
       }
     }
-    
-    
+
+
     return c == this;
   }
 
@@ -241,7 +242,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
 
   private boolean isWithinDeadZone(final MouseEvent e) {
     return Math.abs(myPressedPoint.x - e.getPoint().x) < MouseDragHelper.DRAG_START_DEADZONE && Math.abs(myPressedPoint.y - e.getPoint().y) < MouseDragHelper
-      .DRAG_START_DEADZONE;
+            .DRAG_START_DEADZONE;
   }
 
   @Nullable
@@ -290,7 +291,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
     myPressedWhenSelected = false;
   }
 
-  public void apply(final WindowInfoImpl info) {
+  public void apply(@NotNull WindowInfoImpl info) {
     setSelected(info.isVisible() || info.isActive());
   }
 
@@ -374,7 +375,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
       }
     }
   }
-  
+
   private final class MyKeymapListener implements KeymapManagerListener {
     @Override
     public void activeKeymapChanged(Keymap keymap) {

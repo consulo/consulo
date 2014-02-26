@@ -535,7 +535,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
   private static JComponent wrap(@NotNull final StatusBarWidget widget) {
     if (widget instanceof CustomStatusBarWidget) return ((CustomStatusBarWidget)widget).getComponent();
     final StatusBarWidget.WidgetPresentation presentation =
-      widget.getPresentation(SystemInfo.isMac ? StatusBarWidget.PlatformType.MAC : StatusBarWidget.PlatformType.DEFAULT);
+            widget.getPresentation(SystemInfo.isMac ? StatusBarWidget.PlatformType.MAC : StatusBarWidget.PlatformType.DEFAULT);
     assert presentation != null : "Presentation should not be null!";
 
     JComponent wrapper;
@@ -699,7 +699,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
       setToolTipText(presentation.getTooltipText());
       new ClickListener() {
         @Override
-        public boolean onClick(MouseEvent e, int clickCount) {
+        public boolean onClick(@NotNull MouseEvent e, int clickCount) {
           final ListPopup popup = myPresentation.getPopupStep();
           if (popup == null) return false;
           final Dimension dimension = popup.getContent().getPreferredSize();

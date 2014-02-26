@@ -42,12 +42,10 @@ import java.util.Set;
  * Date: 28-Mar-2006
  */
 @State(
-  name = "ProjectRunConfigurationManager",
-  storages = {
-    @Storage(file = StoragePathMacros.PROJECT_FILE),
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/runConfigurations/", scheme = StorageScheme.DIRECTORY_BASED,
-             stateSplitter = ProjectRunConfigurationManager.RunConfigurationStateSplitter.class)
-  }
+        name = "ProjectRunConfigurationManager",
+        storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
+                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/runConfigurations/", scheme = StorageScheme.DIRECTORY_BASED,
+                         stateSplitter = ProjectRunConfigurationManager.RunConfigurationStateSplitter.class)}
 )
 public class ProjectRunConfigurationManager implements ProjectComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.impl.ProjectRunConfigurationManager");
@@ -111,9 +109,9 @@ public class ProjectRunConfigurationManager implements ProjectComponent, Persist
     myUnloadedElements = null;
     final Set<String> existing = new HashSet<String>();
 
-    final List children = element.getChildren();
-    for (final Object child : children) {
-      final RunnerAndConfigurationSettings configuration = myManager.loadConfiguration((Element)child, true);
+    final List<Element> children = element.getChildren();
+    for (final Element child : children) {
+      final RunnerAndConfigurationSettings configuration = myManager.loadConfiguration(child, true);
       if (configuration == null && Comparing.strEqual(element.getName(), RunManagerImpl.CONFIGURATION)) {
         if (myUnloadedElements == null) myUnloadedElements = new ArrayList<Element>(2);
         myUnloadedElements.add(element);
@@ -144,7 +142,7 @@ public class ProjectRunConfigurationManager implements ProjectComponent, Persist
   public void writeExternal(Element element) throws WriteExternalException {
     final Collection<RunnerAndConfigurationSettings> configurations = myManager.getStableConfigurations();
     for (RunnerAndConfigurationSettings configuration : configurations) {
-      if (myManager.isConfigurationShared(configuration)){
+      if (myManager.isConfigurationShared(configuration)) {
         myManager.addConfigurationElement(element, configuration);
       }
     }
@@ -162,11 +160,10 @@ public class ProjectRunConfigurationManager implements ProjectComponent, Persist
 
       List<Pair<Element, String>> result = new ArrayList<Pair<Element, String>>();
 
-      final List list = e.getChildren();
-      for (final Object o : list) {
-        Element library = (Element)o;
-        final String name = generator.generateUniqueName(FileUtil.sanitizeFileName(library.getAttributeValue(RunManagerImpl.NAME_ATTR))) + ".xml";
-        result.add(new Pair<Element, String>(library, name));
+      final List<Element> list = e.getChildren();
+      for (final Element o : list) {
+        final String name = generator.generateUniqueName(FileUtil.sanitizeFileName(o.getAttributeValue(RunManagerImpl.NAME_ATTR))) + ".xml";
+        result.add(new Pair<Element, String>(o, name));
       }
 
       return result;
