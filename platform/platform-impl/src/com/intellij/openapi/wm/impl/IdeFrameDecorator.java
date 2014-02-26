@@ -44,7 +44,7 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   @Nullable
   public static IdeFrameDecorator decorate(@NotNull IdeFrameImpl frame) {
-    if (SystemInfo.isMac) {
+    if (SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast("1.6.0_29")) {
       return new MacMainFrameDecorator(frame, false);
     }
     else if (SystemInfo.isWindows) {
