@@ -28,11 +28,13 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.components.impl.stores.*;
+import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
+import com.intellij.openapi.components.impl.stores.IApplicationStore;
+import com.intellij.openapi.components.impl.stores.IComponentStore;
+import com.intellij.openapi.components.impl.stores.StoreUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
@@ -547,8 +549,6 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
       myIsFiringLoadingEvent = false;
     }
 
-    loadComponentRoamingTypes();
-
     HeavyProcessLatch.INSTANCE.processStarted();
     try {
       getStateStore().load();
@@ -582,20 +582,6 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
       return null;
     }
     return super.getComponentFromContainer(interfaceClass);
-  }
-
-  private static void loadComponentRoamingTypes() {
-    for (RoamingTypeExtensionPointBean object : RoamingTypeExtensionPointBean.EP_NAME.getExtensions()) {
-
-      assert object.componentName != null;
-      assert object.roamingType != null;
-
-      final RoamingType type = RoamingType.valueOf(object.roamingType);
-
-      assert type != null;
-
-      ComponentRoamingManager.getInstance().setRoamingType(object.componentName, type);
-    }
   }
 
   private void fireBeforeApplicationLoaded() {

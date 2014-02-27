@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ReflectionCache;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.io.fs.IFile;
 import gnu.trove.THashMap;
@@ -52,13 +51,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   @Nullable
   private StateStorage getStateStorage(@NotNull final Storage storageSpec) throws StateStorageException {
     return getStateStorageManager().getStateStorage(storageSpec);
-  }
-
-  @Deprecated
-  @Nullable
-  private StateStorage getOldStorage(final Object component, final String componentName, final StateStorageOperation operation)
-      throws StateStorageException {
-    return getStateStorageManager().getOldStorage(component, componentName, operation);
   }
 
   protected StateStorage getDefaultsStorage() {
@@ -156,15 +148,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     T state = persistentStateComponent.getState();
     if (state != null) {
       session
-        .setState(storageSpecs, persistentStateComponent, getComponentName(persistentStateComponent), state);
+              .setState(storageSpecs, persistentStateComponent, getComponentName(persistentStateComponent), state);
     }
-  }
-
-  private static void commitJdomExternalizable(@NotNull final JDOMExternalizable component,
-                                               @NotNull StateStorageManager.ExternalizationSession session) {
-    final String componentName = ComponentManagerImpl.getComponentName(component);
-
-    session.setStateInOldStorage(component, componentName, component);
   }
 
   @Nullable
@@ -173,11 +158,13 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
     doAddComponent(componentName, component);
 
-    if (optimizeTestLoading()) return componentName;
+    if (optimizeTestLoading()) {
+      return componentName;
+    }
 
     loadJdomDefaults(component, componentName);
 
-    StateStorage stateStorage = getOldStorage(component, componentName, StateStorageOperation.READ);
+    StateStorage stateStorage = getStateStorageManager().getOldStorage(component, componentName, StateStorageOperation.READ);
 
     if (stateStorage == null) return null;
     Element element = getJdomState(component, componentName, stateStorage);
@@ -224,18 +211,10 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
   @Nullable
   private static Element getJdomState(final Object component, final String componentName, @NotNull final StateStorage defaultsStorage)
-      throws StateStorageException {
+          throws StateStorageException {
     ComponentRoamingManager roamingManager = ComponentRoamingManager.getInstance();
-    if (!roamingManager.typeSpecified(componentName)) {
-      if (component instanceof RoamingTypeDisabled) {
-         roamingManager.setRoamingType(componentName, RoamingType.DISABLED);
-      }
-      else if (component instanceof RoamingTypePerPlatform) {
-        roamingManager.setRoamingType(componentName, RoamingType.PER_PLATFORM);
-      }
-      /*else {
-        roamingManager.setRoamingType(componentName, RoamingType.PER_USER);
-      }*/
+    if (component instanceof RoamingTypeDisabled) {
+      roamingManager.setRoamingType(componentName, RoamingType.DISABLED);
     }
     return defaultsStorage.getState(component, componentName, Element.class, null);
   }
@@ -261,13 +240,9 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   private <T> String initPersistentComponent(@NotNull final PersistentStateComponent<T> component, final boolean reloadData) {
-    final String name = getComponentName(component);
-
-    RoamingType roamingTypeFromComponent = getRoamingType(component);
-    ComponentRoamingManager roamingManager = ComponentRoamingManager.getInstance();
-    if (!roamingManager.typeSpecified(name)) {
-      roamingManager.setRoamingType(name, roamingTypeFromComponent);
-    }
+    State spec = getStateSpec(component);
+    final String name = spec.name();
+    ComponentRoamingManager.getInstance().setRoamingType(name, spec.roamingType());
 
     doAddComponent(name, component);
     if (optimizeTestLoading()) return name;
@@ -283,7 +258,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
 
     Storage[] storageSpecs = getComponentStorageSpecs(component, StateStorageOperation.READ);
-
     for (Storage storageSpec : storageSpecs) {
       StateStorage stateStorage = getStateStorage(storageSpec);
       if (stateStorage == null || !stateStorage.hasState(component, name, stateClass, reloadData)) continue;
@@ -299,21 +273,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return name;
   }
 
-  private static RoamingType getRoamingType(final PersistentStateComponent component) {
-    if (component instanceof RoamingTypeDisabled) {
-       return RoamingType.DISABLED;
-    }
-    else if (component instanceof RoamingTypePerPlatform) {
-      return RoamingType.PER_PLATFORM;
-    }
-
-    final State stateSpec = getStateSpec(component);
-    assert stateSpec != null;
-
-    return stateSpec.roamingType();
-
-  }
-
   @NotNull
   private static <T> Class<T> getComponentStateClass(@NotNull final PersistentStateComponent<T> persistentStateComponent) {
     final Class persistentStateComponentClass = PersistentStateComponent.class;
@@ -321,7 +280,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
     nextSuperClass:
     while (true) {
-      final Class[] interfaces = ReflectionCache.getInterfaces(componentClass);
+      final Class[] interfaces = componentClass.getInterfaces();
 
       for (Class anInterface : interfaces) {
         if (anInterface.equals(persistentStateComponentClass)) {
@@ -339,13 +298,10 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   public static String getComponentName(@NotNull final PersistentStateComponent<?> persistentStateComponent) {
-    final State stateSpec = getStateSpec(persistentStateComponent);
-    if (stateSpec == null) {
-      LOG.error("Null state spec for " + persistentStateComponent);
-    }
-    return stateSpec.name();
+    return getStateSpec(persistentStateComponent).name();
   }
 
+  @NotNull
   private static <T> State getStateSpec(@NotNull final PersistentStateComponent<T> persistentStateComponent) {
     final Class<? extends PersistentStateComponent> aClass = persistentStateComponent.getClass();
     final State stateSpec = aClass.getAnnotation(State.class);
@@ -358,7 +314,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
     return stateSpec;
   }
-
 
   @NotNull
   protected <T> Storage[] getComponentStorageSpecs(@NotNull final PersistentStateComponent<T> persistentStateComponent,
@@ -373,10 +328,10 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
 
     final Class<StorageAnnotationsDefaultValues.NullStateStorageChooser> defaultClass =
-        StorageAnnotationsDefaultValues.NullStateStorageChooser.class;
+            StorageAnnotationsDefaultValues.NullStateStorageChooser.class;
 
     final Class<? extends StateStorageChooser> storageChooserClass = stateSpec.storageChooser();
-    final StateStorageChooser defaultStateStorageChooser = getDefaultStateStorageChooser();
+    final StateStorageChooser<PersistentStateComponent<?>> defaultStateStorageChooser = getDefaultStateStorageChooser();
     assert storageChooserClass != defaultClass || defaultStateStorageChooser != null : "State chooser not specified for: " +
                                                                                        persistentStateComponent.getClass();
 
@@ -403,7 +358,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Nullable
-  protected StateStorageChooser getDefaultStateStorageChooser() {
+  protected StateStorageChooser<PersistentStateComponent<?>> getDefaultStateStorageChooser() {
     return null;
   }
 
@@ -430,7 +385,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     public SaveSession save() throws IOException {
       try {
         final SettingsSavingComponent[] settingsComponents =
-            mySettingsSavingComponents.toArray(new SettingsSavingComponent[mySettingsSavingComponents.size()]);
+                mySettingsSavingComponents.toArray(new SettingsSavingComponent[mySettingsSavingComponents.size()]);
 
         for (SettingsSavingComponent settingsSavingComponent : settingsComponents) {
           try {
@@ -493,7 +448,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
           commitPersistentComponent((PersistentStateComponent<?>)component, session);
         }
         else if (component instanceof JDOMExternalizable) {
-          commitJdomExternalizable((JDOMExternalizable)component, session);
+          session.setStateInOldStorage(component, ComponentManagerImpl.getComponentName(component), component);
         }
       }
       myStorageManagerSaveSession = storageManager.startSave(session);
@@ -517,12 +472,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   public boolean isReloadPossible(@NotNull final Set<String> componentNames) {
     for (String componentName : componentNames) {
       final Object component = myComponents.get(componentName);
-
-      if (component != null) {
-        if (!(component instanceof PersistentStateComponent)) return false;
-
-        final State stateSpec = getStateSpec((PersistentStateComponent<? extends Object>)component);
-        if (stateSpec == null || !stateSpec.reloadable()) return false;
+      if (component != null && (!(component instanceof PersistentStateComponent) || !getStateSpec((PersistentStateComponent<?>)component).reloadable())) {
+        return false;
       }
     }
 
@@ -540,7 +491,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   protected void doReload(final Set<Pair<VirtualFile, StateStorage>> changedFiles, @NotNull final Set<String> componentNames)
-      throws StateStorageException {
+          throws StateStorageException {
     for (Pair<VirtualFile, StateStorage> pair : changedFiles) {
       assert pair != null;
       final StateStorage storage = pair.second;

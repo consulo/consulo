@@ -15,10 +15,7 @@
  */
 package org.consulo.ide.eap;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.components.*;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import org.consulo.lombok.annotations.ApplicationService;
@@ -35,6 +32,7 @@ import java.util.Map;
 @ApplicationService
 @State(
   name = "EarlyAccessProgramManager",
+  roamingType = RoamingType.GLOBAL,
   storages = {
     @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")
   }

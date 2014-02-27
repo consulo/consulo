@@ -25,7 +25,6 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.impl.stores.RoamingTypeExtensionPointBean;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.PsiTestExtensionUtil;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +36,6 @@ public class IdeaTestApplication extends CommandLineApplication implements Dispo
     super(true, true, true);
 
     PsiTestExtensionUtil.registerExtensionPointIfNeed(ApplicationLoadListener.EP_NAME, ApplicationLoadListener.class);
-    PsiTestExtensionUtil.registerExtensionPointIfNeed(RoamingTypeExtensionPointBean.EP_NAME, RoamingTypeExtensionPointBean.class);
   }
 
   public void setDataProvider(@Nullable DataProvider dataContext) {

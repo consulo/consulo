@@ -34,12 +34,12 @@ import java.util.Set;
 /**
  * User: ksafonov
  */
-@State(name = "UsageTrigger", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/statistics.application.usages.xml")})
+@State(name = "UsageTrigger", roamingType = RoamingType.DISABLED,
+       storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/statistics.application.usages.xml")})
 public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State> {
 
   public static class State {
-    @Tag("counts")
-    @MapAnnotation(surroundWithTag = false, keyAttributeName = "feature", valueAttributeName = "count")
+    @Tag("counts") @MapAnnotation(surroundWithTag = false, keyAttributeName = "feature", valueAttributeName = "count")
     public Map<String, Integer> myValues = new HashMap<String, Integer>();
   }
 
@@ -72,7 +72,7 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
     myState = state;
   }
 
-  
+
   public static class MyCollector extends UsagesCollector {
 
     private static final GroupDescriptor GROUP = GroupDescriptor.create("features counts", GroupDescriptor.HIGHER_PRIORITY);
@@ -92,5 +92,5 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
       return GROUP;
     }
   }
-  
+
 }

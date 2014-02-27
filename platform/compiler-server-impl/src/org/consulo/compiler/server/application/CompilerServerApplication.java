@@ -24,11 +24,12 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx2;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.components.impl.stores.*;
+import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
+import com.intellij.openapi.components.impl.stores.IApplicationStore;
+import com.intellij.openapi.components.impl.stores.IComponentStore;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -459,7 +460,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   public void load(String path) throws IOException, InvalidDataException {
     getStateStore().setOptionsPath(path);
     getStateStore().setConfigPath(PathManager.getConfigPath());
-    loadComponentRoamingTypes();
 
     HeavyProcessLatch.INSTANCE.processStarted();
     try {
@@ -473,19 +473,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     }
   }
 
-  private static void loadComponentRoamingTypes() {
-    for (RoamingTypeExtensionPointBean object : RoamingTypeExtensionPointBean.EP_NAME.getExtensions()) {
-
-      assert object.componentName != null;
-      assert object.roamingType != null;
-
-      final RoamingType type = RoamingType.valueOf(object.roamingType);
-
-      assert type != null;
-
-      ComponentRoamingManager.getInstance().setRoamingType(object.componentName, type);
-    }
-  }
 
   @Override
   public boolean isLoaded() {
