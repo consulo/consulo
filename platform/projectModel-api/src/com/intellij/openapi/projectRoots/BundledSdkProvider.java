@@ -25,9 +25,6 @@ import org.jetbrains.annotations.NotNull;
 public interface BundledSdkProvider {
   ExtensionPointName<BundledSdkProvider> EP_NAME = ExtensionPointName.create("com.intellij.bundledSdkProvider");
 
-  /**
-   * @return pair of bundled sdk info. A - is sdk path, B - is sdk type
-   */
   @NotNull
   Sdk[] createBundledSdks();
 }
