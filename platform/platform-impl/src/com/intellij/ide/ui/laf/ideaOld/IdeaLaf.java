@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf;
+package com.intellij.ide.ui.laf.ideaOld;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.ui.laf.LafManagerImpl;
 import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.plaf.beg.*;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;

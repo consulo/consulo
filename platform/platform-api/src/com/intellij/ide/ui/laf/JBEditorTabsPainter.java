@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.tabs.impl;
+package com.intellij.ide.ui.laf;
+
+import com.intellij.ui.tabs.impl.JBTabsImpl;
 
 import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
  */
-interface JBEditorTabsPainter {
+public interface JBEditorTabsPainter {
   void doPaintInactive(Graphics2D g2d,
                        Rectangle effectiveBounds,
                        int x,

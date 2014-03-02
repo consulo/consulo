@@ -22,6 +22,13 @@ import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLaf;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
+import com.intellij.ide.ui.laf.ideaOld.IdeaBlueMetalTheme;
+import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
+import com.intellij.ide.ui.laf.ideaOld.IdeaLookAndFeelInfo;
+import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
+import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
+import com.intellij.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
+import com.intellij.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -63,8 +70,6 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -126,22 +131,11 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       lafList.add(new IntelliJLookAndFeelInfo());
     }
 
+    lafList.add(new ModernWhiteLookAndFeelInfo());
+    lafList.add(new ModernDarkLookAndFeelInfo());
     lafList.add(new DarculaLookAndFeelInfo());
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
-
-    if (!SystemInfo.isMac) {
-      // do not sort LaFs on mac - the order is determined as Default, Darcula.
-      // when we leave only system LaFs on other OSes, the order also should be determined as Default, Darcula
-      
-      Arrays.sort(myLaFs, new Comparator<UIManager.LookAndFeelInfo>() {
-        public int compare(UIManager.LookAndFeelInfo obj1, UIManager.LookAndFeelInfo obj2) {
-          String name1 = obj1.getName();
-          String name2 = obj2.getName();
-          return name1.compareToIgnoreCase(name2);
-        }
-      });
-    }
 
     myCurrentLaf = getDefaultLaf();
   }
@@ -703,7 +697,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  static void initFontDefaults(UIDefaults defaults, String fontFace, int fontSize) {
+  public static void initFontDefaults(UIDefaults defaults, String fontFace, int fontSize) {
     defaults.put("Tree.ancestorInputMap", null);
     FontUIResource uiFont = new FontUIResource(fontFace, Font.PLAIN, fontSize);
     FontUIResource textFont = new FontUIResource("Serif", Font.PLAIN, fontSize);

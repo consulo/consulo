@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf;
+package com.intellij.ide.ui.laf.modernDark;
 
 import com.intellij.ide.IdeBundle;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 
 /**
-* @author Konstantin Bulenkov
-*/
-final class IdeaLookAndFeelInfo extends UIManager.LookAndFeelInfo {
-  @NonNls public static final String CLASS_NAME = "idea.laf.classname";
-  public IdeaLookAndFeelInfo(){
-    super(IdeBundle.message("idea.default.look.and.feel"), CLASS_NAME);
+ * @author VISTALL
+ * @since 02.03.14
+ */
+public class ModernDarkLookAndFeelInfo extends UIManager.LookAndFeelInfo {
+  public ModernDarkLookAndFeelInfo(){
+    super(IdeBundle.message("modern.dark.intellij.look.and.feel"), ModernDarkLaf.class.getName());
   }
 
+  @Override
   public boolean equals(Object obj){
-    return (obj instanceof IdeaLookAndFeelInfo);
+    return (obj instanceof ModernDarkLookAndFeelInfo);
   }
 
+  @Override
   public int hashCode(){
     return getName().hashCode();
   }

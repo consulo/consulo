@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf.darcula;
+package com.intellij.ide.ui.laf.modernDark;
 
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
 import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
@@ -23,7 +23,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.containers.hash.HashMap;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 
@@ -41,17 +40,18 @@ import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 02.03.14
  */
-public class DarculaLaf extends BasicLookAndFeel {
-  public static final String NAME = "Darcula";
+public class ModernDarkLaf extends BasicLookAndFeel {
   BasicLookAndFeel base;
 
-  public DarculaLaf() {
+  public ModernDarkLaf() {
     try {
       if (SystemInfo.isWindows || SystemInfo.isLinux) {
         base = new IdeaLaf();
@@ -159,7 +159,7 @@ public class DarculaLaf extends BasicLookAndFeel {
   }
 
   protected String getPrefix() {
-    return "darcula";
+    return "modernDark";
   }
 
   private void call(String method) {
@@ -181,54 +181,54 @@ public class DarculaLaf extends BasicLookAndFeel {
   protected void initIdeaDefaults(UIDefaults defaults) {
     loadDefaults(defaults);
     defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[] {
-      "ctrl C", "copy",
-      "ctrl V", "paste",
-      "ctrl X", "cut",
-      "COPY", "copy",
-      "PASTE", "paste",
-      "CUT", "cut",
-      "control INSERT", "copy",
-      "shift INSERT", "paste",
-      "shift DELETE", "cut",
-      "RIGHT", "selectNextColumn",
-      "KP_RIGHT", "selectNextColumn",
-      "LEFT", "selectPreviousColumn",
-      "KP_LEFT", "selectPreviousColumn",
-      "DOWN", "selectNextRow",
-      "KP_DOWN", "selectNextRow",
-      "UP", "selectPreviousRow",
-      "KP_UP", "selectPreviousRow",
-      "shift RIGHT", "selectNextColumnExtendSelection",
-      "shift KP_RIGHT", "selectNextColumnExtendSelection",
-      "shift LEFT", "selectPreviousColumnExtendSelection",
-      "shift KP_LEFT", "selectPreviousColumnExtendSelection",
-      "shift DOWN", "selectNextRowExtendSelection",
-      "shift KP_DOWN", "selectNextRowExtendSelection",
-      "shift UP", "selectPreviousRowExtendSelection",
-      "shift KP_UP", "selectPreviousRowExtendSelection",
-      "PAGE_UP", "scrollUpChangeSelection",
-      "PAGE_DOWN", "scrollDownChangeSelection",
-      "HOME", "selectFirstColumn",
-      "END", "selectLastColumn",
-      "shift PAGE_UP", "scrollUpExtendSelection",
-      "shift PAGE_DOWN", "scrollDownExtendSelection",
-      "shift HOME", "selectFirstColumnExtendSelection",
-      "shift END", "selectLastColumnExtendSelection",
-      "ctrl PAGE_UP", "scrollLeftChangeSelection",
-      "ctrl PAGE_DOWN", "scrollRightChangeSelection",
-      "ctrl HOME", "selectFirstRow",
-      "ctrl END", "selectLastRow",
-      "ctrl shift PAGE_UP", "scrollRightExtendSelection",
-      "ctrl shift PAGE_DOWN", "scrollLeftExtendSelection",
-      "ctrl shift HOME", "selectFirstRowExtendSelection",
-      "ctrl shift END", "selectLastRowExtendSelection",
-      "TAB", "selectNextColumnCell",
-      "shift TAB", "selectPreviousColumnCell",
-      //"ENTER", "selectNextRowCell",
-      "shift ENTER", "selectPreviousRowCell",
-      "ctrl A", "selectAll",
-      //"ESCAPE", "cancel",
-      "F2", "startEditing"
+            "ctrl C", "copy",
+            "ctrl V", "paste",
+            "ctrl X", "cut",
+            "COPY", "copy",
+            "PASTE", "paste",
+            "CUT", "cut",
+            "control INSERT", "copy",
+            "shift INSERT", "paste",
+            "shift DELETE", "cut",
+            "RIGHT", "selectNextColumn",
+            "KP_RIGHT", "selectNextColumn",
+            "LEFT", "selectPreviousColumn",
+            "KP_LEFT", "selectPreviousColumn",
+            "DOWN", "selectNextRow",
+            "KP_DOWN", "selectNextRow",
+            "UP", "selectPreviousRow",
+            "KP_UP", "selectPreviousRow",
+            "shift RIGHT", "selectNextColumnExtendSelection",
+            "shift KP_RIGHT", "selectNextColumnExtendSelection",
+            "shift LEFT", "selectPreviousColumnExtendSelection",
+            "shift KP_LEFT", "selectPreviousColumnExtendSelection",
+            "shift DOWN", "selectNextRowExtendSelection",
+            "shift KP_DOWN", "selectNextRowExtendSelection",
+            "shift UP", "selectPreviousRowExtendSelection",
+            "shift KP_UP", "selectPreviousRowExtendSelection",
+            "PAGE_UP", "scrollUpChangeSelection",
+            "PAGE_DOWN", "scrollDownChangeSelection",
+            "HOME", "selectFirstColumn",
+            "END", "selectLastColumn",
+            "shift PAGE_UP", "scrollUpExtendSelection",
+            "shift PAGE_DOWN", "scrollDownExtendSelection",
+            "shift HOME", "selectFirstColumnExtendSelection",
+            "shift END", "selectLastColumnExtendSelection",
+            "ctrl PAGE_UP", "scrollLeftChangeSelection",
+            "ctrl PAGE_DOWN", "scrollRightChangeSelection",
+            "ctrl HOME", "selectFirstRow",
+            "ctrl END", "selectLastRow",
+            "ctrl shift PAGE_UP", "scrollRightExtendSelection",
+            "ctrl shift PAGE_DOWN", "scrollLeftExtendSelection",
+            "ctrl shift HOME", "selectFirstRowExtendSelection",
+            "ctrl shift END", "selectLastRowExtendSelection",
+            "TAB", "selectNextColumnCell",
+            "shift TAB", "selectPreviousColumnCell",
+            //"ENTER", "selectNextRowCell",
+            "shift ENTER", "selectPreviousRowCell",
+            "ctrl A", "selectAll",
+            //"ESCAPE", "cancel",
+            "F2", "startEditing"
     }));
   }
 
@@ -329,7 +329,7 @@ public class DarculaLaf extends BasicLookAndFeel {
 
   @Override
   public String getName() {
-    return NAME;
+    return "Modern Dark";
   }
 
   @Override
@@ -339,7 +339,7 @@ public class DarculaLaf extends BasicLookAndFeel {
 
   @Override
   public String getDescription() {
-    return "IntelliJ Dark Look and Feel";
+    return "Modern Dark Look and Feel";
   }
 
   @Override

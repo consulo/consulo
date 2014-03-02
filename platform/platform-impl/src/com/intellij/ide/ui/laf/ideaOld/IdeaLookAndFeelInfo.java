@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf;
+package com.intellij.ide.ui.laf.ideaOld;
 
 import com.intellij.ide.IdeBundle;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 
 /**
- * @author Konstantin Bulenkov
- */
-public class IntelliJLookAndFeelInfo extends UIManager.LookAndFeelInfo {
-  public IntelliJLookAndFeelInfo(){
-    super(IdeBundle.message("idea.intellij.look.and.feel"), IntelliJLaf.class.getName());
+* @author Konstantin Bulenkov
+*/
+public final class IdeaLookAndFeelInfo extends UIManager.LookAndFeelInfo {
+  @NonNls public static final String CLASS_NAME = "idea.laf.classname";
+  public IdeaLookAndFeelInfo(){
+    super(IdeBundle.message("idea.default.look.and.feel"), CLASS_NAME);
   }
 
+  @Override
   public boolean equals(Object obj){
-    return (obj instanceof IntelliJLookAndFeelInfo);
+    return (obj instanceof IdeaLookAndFeelInfo);
   }
 
+  @Override
   public int hashCode(){
     return getName().hashCode();
   }

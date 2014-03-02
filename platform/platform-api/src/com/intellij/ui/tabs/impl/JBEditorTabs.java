@@ -15,7 +15,10 @@
  */
 package com.intellij.ui.tabs.impl;
 
+import com.intellij.ide.ui.LafManager;
+import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.laf.JBEditorTabsPainter;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
@@ -29,10 +32,12 @@ import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
 import com.intellij.ui.tabs.impl.table.TableLayout;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -40,10 +45,42 @@ import java.util.List;
  * @author pegov
  */
 public class JBEditorTabs extends JBTabsImpl {
-  private static final String TABS_ALPHABETICAL_KEY = "tabs.alphabetical";
-  private JBEditorTabsPainter myDarkPainter = new DarculaEditorTabsPainter();
-  private JBEditorTabsPainter myDefaultPainter = new DefaultEditorTabsPainter();
+  private static JBEditorTabsPainter ourTabsPainter;
 
+  static
+  {
+    LafManager.getInstance().addLafManagerListener(new LafManagerListener() {
+      @Override
+      public void lookAndFeelChanged(LafManager source) {
+        ourTabsPainter = null;
+      }
+    });
+  }
+
+  private static JBEditorTabsPainter createPainterFromLaf() {
+    String className = UIManager.getString("jbeditor.tabs.painter");
+    if(className == null) {
+      return null;
+    }
+    return createPainter(className);
+  }
+
+  private static JBEditorTabsPainter createDefaultPainter() {
+     return createPainter("com.intellij.ide.ui.laf.intellij.DefaultEditorTabsPainter");
+  }
+
+  private static JBEditorTabsPainter createPainter(String clazz) {
+    try {
+      Class<?> c = Class.forName(clazz);
+
+      return (JBEditorTabsPainter)ReflectionUtil.createInstance(c.getConstructors()[0]);
+    }
+    catch (ClassNotFoundException e) {
+      return null;
+    }
+  }
+
+  private static final String TABS_ALPHABETICAL_KEY = "tabs.alphabetical";
 
   public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @NotNull Disposable parent) {
     super(project, actionManager, focusManager, parent);
@@ -124,7 +161,14 @@ public class JBEditorTabs extends JBTabsImpl {
   }
 
   JBEditorTabsPainter getPainter() {
-    return UIUtil.isUnderDarcula() ? myDarkPainter : myDefaultPainter;
+    if(ourTabsPainter == null) {
+      ourTabsPainter = createPainterFromLaf();
+
+      if(ourTabsPainter == null) {
+        ourTabsPainter = createDefaultPainter();
+      }
+    }
+    return ourTabsPainter;
   }
 
   public static boolean isAlphabeticalMode() {

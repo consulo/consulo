@@ -1835,7 +1835,7 @@ public class JBTabsImpl extends JComponent
     return myInfo2Label.get(getSelectedInfo());
   }
 
-  protected static class ShapeInfo {
+  public static class ShapeInfo {
     public ShapeInfo() {}
     public ShapeTransform path;
     public ShapeTransform fillPath;

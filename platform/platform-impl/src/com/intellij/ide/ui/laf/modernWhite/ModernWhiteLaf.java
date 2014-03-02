@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf;
+package com.intellij.ide.ui.laf.modernWhite;
 
-import com.intellij.ide.ui.laf.darcula.DarculaLaf;
+import com.intellij.ide.ui.laf.ideaOld.IdeaBlueMetalTheme;
+import com.intellij.ide.ui.laf.modernDark.ModernDarkLaf;
 
 import javax.swing.plaf.metal.DefaultMetalTheme;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 02.03.14
  */
-public class IntelliJLaf extends DarculaLaf {
+public class ModernWhiteLaf extends ModernDarkLaf {
   @Override
   public String getName() {
-    return "IntelliJ";
+    return "Modern White";
   }
 
   @Override
   protected String getPrefix() {
-    return "intellijlaf";
+    return "modernWhite";
   }
 
   @Override
