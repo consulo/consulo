@@ -312,5 +312,10 @@
     <component>
       <implementation-class>com.intellij.openapi.projectRoots.impl.BundledSdkLoader</implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.editor.EditorLastActionTracker</interface-class>
+      <implementation-class>com.intellij.openapi.editor.impl.EditorLastActionTrackerImpl</implementation-class>
+    </component>
   </application-components>
 </idea-plugin>
