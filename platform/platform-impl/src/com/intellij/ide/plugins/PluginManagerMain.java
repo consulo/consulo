@@ -41,6 +41,7 @@ import com.intellij.openapi.updateSettings.impl.UpdateChecker;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.ui.UIUtil;
@@ -52,6 +53,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
@@ -102,6 +104,8 @@ public abstract class PluginManagerMain implements Disposable {
   private JPanel myHeader;
   private PluginHeaderPanel myPluginHeaderPanel;
   private JPanel myInfoPanel;
+  private JBScrollPane myScrollPane;
+  private JBScrollPane myPanel;
 
 
   protected PluginTableModel pluginsModel;
@@ -140,6 +144,7 @@ public abstract class PluginManagerMain implements Disposable {
 
     Border border = new BorderUIResource.LineBorderUIResource(new JBColor(Gray._220, Gray._55), 1);
     myInfoPanel.setBorder(border);
+    myScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0)); //bug?
   }
 
   protected abstract JScrollPane createTable();

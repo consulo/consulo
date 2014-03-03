@@ -59,7 +59,15 @@
                   <size top="2" left="4" bottom="2" right="4"/>
                 </border>
                 <children>
-                  <scrollpane id="8853a" class="com.intellij.ui.components.JBScrollPane">
+                  <grid id="a6a17" binding="myHeader" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints border-constraint="North"/>
+                    <properties/>
+                    <border type="empty">
+                      <size top="2" left="4" bottom="2" right="4"/>
+                    </border>
+                    <children/>
+                  </grid>
+                  <scrollpane id="a46c" class="com.intellij.ui.components.JBScrollPane" binding="myScrollPane">
                     <constraints border-constraint="Center"/>
                     <properties/>
                     <border type="empty"/>
@@ -77,14 +85,6 @@
                       </component>
                     </children>
                   </scrollpane>
-                  <grid id="a6a17" binding="myHeader" layout-manager="BorderLayout" hgap="0" vgap="0">
-                    <constraints border-constraint="North"/>
-                    <properties/>
-                    <border type="empty">
-                      <size top="2" left="4" bottom="2" right="4"/>
-                    </border>
-                    <children/>
-                  </grid>
                 </children>
               </grid>
               <grid id="83ed3" binding="myTablePanel" layout-manager="BorderLayout" hgap="0" vgap="0">

@@ -54,10 +54,10 @@ public class SideBorder extends LineBorder {
   @Override
   public Insets getBorderInsets(Component component) {
     return new Insets(
-      (mySideMask & TOP) != 0 ? getThickness() : 0,
-      (mySideMask & LEFT) != 0 ? getThickness() : 0,
-      (mySideMask & BOTTOM) != 0 ? getThickness() : 0,
-      (mySideMask & RIGHT) != 0 ? getThickness() : 0
+            (mySideMask & TOP) != 0 ? getThickness() : 0,
+            (mySideMask & LEFT) != 0 ? getThickness() : 0,
+            (mySideMask & BOTTOM) != 0 ? getThickness() : 0,
+            (mySideMask & RIGHT) != 0 ? getThickness() : 0
     );
   }
 
