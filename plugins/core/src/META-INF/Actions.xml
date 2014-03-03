@@ -473,6 +473,8 @@
       <reference ref="HelpTopics"/>
     </group>
 
+    <group id="NavBarVcsGroup"/>
+
     <group id="EditorPopupMenu" configurable="true">
       <reference ref="$Cut"/>
       <reference ref="$Copy"/>
@@ -894,6 +896,15 @@
               use-shortcut-of="CompareDirs" icon="AllIcons.Actions.Diff"/>
     </group>
 
+    <group id="VcsNavBarToobarActions">
+      <reference ref="Vcs.UpdateProject"/>
+      <reference ref="CheckinProject"/>
+      <reference ref="Vcs.ShowTabbedFileHistory"/>
+      <reference ref="ChangesView.Rollback"/>
+      <separator/>
+      <add-to-group group-id="NavBarVcsGroup" anchor="first"/>
+    </group>
+
     <group id="Vcs.MessageActionGroup">
       <action id="Vcs.CheckCommitMessageSpelling"
               class="com.intellij.openapi.vcs.actions.CheckCommitMessageSpellingAction"
@@ -1293,8 +1304,14 @@
       <add-to-group group-id="MainToolBar" relative-to-action="Forward" anchor="after"/>
     </group>
 
+    <group id="NavBarToolBarOthers"/>
     <group id="NavBarToolBar">
       <reference ref="ToolbarRunGroup"/>
+      <separator/>
+      <reference ref="NavBarVcsGroup"/>
+      <separator/>
+      <reference id="NavBarToolBarOthers"/>
+      <separator/>
     </group>
 
     <group id="Bookmarks">
@@ -2194,5 +2211,9 @@
     <action id="ShowModulesDependencies" class="com.intellij.moduleDependencies.ShowModuleDependenciesAction">
       <add-to-group group-id="AnalyzeActions" anchor="last"/>
     </action>
+
+    <reference id="ShowProjectStructureSettings">
+      <add-to-group group-id="NavBarToolBar" anchor="last"/>
+    </reference>
   </actions>
 </idea-plugin>

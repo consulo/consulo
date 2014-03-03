@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ui.StatusText;
 import org.jetbrains.annotations.NotNull;
@@ -69,7 +70,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     installPluginFromFileSystem.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, false){
+        final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, false, true, true, false, false) {
           @Override
           public boolean isFileSelectable(VirtualFile file) {
             return file.getFileType() instanceof ArchiveFileType;
@@ -77,49 +78,39 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         };
         descriptor.setTitle("Choose Plugin File");
         descriptor.setDescription("JAR and ZIP archives are accepted");
-        FileChooser.chooseFiles(descriptor, null, myActionsPanel, null, new FileChooser.FileChooserConsumer() {
+        FileChooser.chooseFile(descriptor, null, myActionsPanel, null, new Consumer<VirtualFile>() {
           @Override
-          public void cancelled() {
-          }
-
-          @Override
-          public void consume(List<VirtualFile> files) {
-            if (files != null && files.size() == 1) {
-              VirtualFile virtualFile = files.get(0);
-              if (virtualFile != null) {
-                final File file = VfsUtilCore.virtualToIoFile(virtualFile);
-                try {
-                  final IdeaPluginDescriptorImpl pluginDescriptor = PluginDownloader.loadDescriptionFromJar(file);
-                  if (pluginDescriptor == null) {
-                    Messages.showErrorDialog("Fail to load plugin descriptor from file " + file.getName(), CommonBundle.getErrorTitle());
-                    return;
-                  }
-                  if (PluginManagerCore.isIncompatible(pluginDescriptor)) {
-                    Messages.showErrorDialog("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation", CommonBundle.getErrorTitle());
-                    return;
-                  }
-                  final IdeaPluginDescriptor alreadyInstalledPlugin = PluginManager.getPlugin(pluginDescriptor.getPluginId());
-                  if (alreadyInstalledPlugin != null) {
-                    final File oldFile = alreadyInstalledPlugin.getPath();
-                    if (oldFile != null) {
-                      StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldFile));
-                    }
-                  }
-                  if (((InstalledPluginsTableModel)pluginsModel).appendOrUpdateDescriptor(pluginDescriptor)) {
-                    PluginDownloader.install(file, file.getName(), false);
-                    select(pluginDescriptor);
-                    checkInstalledPluginDependencies(pluginDescriptor);
-                    setRequireShutdown(true);
-                  }
-                  else {
-                    Messages.showInfoMessage(myActionsPanel, "Plugin " + pluginDescriptor.getName() + " was already installed",
-                                             CommonBundle.getWarningTitle());
-                  }
-                }
-                catch (IOException ex) {
-                  Messages.showErrorDialog(ex.getMessage(), CommonBundle.getErrorTitle());
+          public void consume(@NotNull VirtualFile virtualFile) {
+            final File file = VfsUtilCore.virtualToIoFile(virtualFile);
+            try {
+              final IdeaPluginDescriptorImpl pluginDescriptor = PluginDownloader.loadDescriptionFromJar(file);
+              if (pluginDescriptor == null) {
+                Messages.showErrorDialog("Fail to load plugin descriptor from file " + file.getName(), CommonBundle.getErrorTitle());
+                return;
+              }
+              if (PluginManagerCore.isIncompatible(pluginDescriptor)) {
+                Messages.showErrorDialog("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation", CommonBundle.getErrorTitle());
+                return;
+              }
+              final IdeaPluginDescriptor alreadyInstalledPlugin = PluginManager.getPlugin(pluginDescriptor.getPluginId());
+              if (alreadyInstalledPlugin != null) {
+                final File oldFile = alreadyInstalledPlugin.getPath();
+                if (oldFile != null) {
+                  StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldFile));
                 }
               }
+              if (((InstalledPluginsTableModel)pluginsModel).appendOrUpdateDescriptor(pluginDescriptor)) {
+                PluginDownloader.install(file, file.getName(), false);
+                select(pluginDescriptor);
+                checkInstalledPluginDependencies(pluginDescriptor);
+                setRequireShutdown(true);
+              }
+              else {
+                Messages.showInfoMessage(myActionsPanel, "Plugin " + pluginDescriptor.getName() + " was already installed", CommonBundle.getWarningTitle());
+              }
+            }
+            catch (IOException ex) {
+              Messages.showErrorDialog(ex.getMessage(), CommonBundle.getErrorTitle());
             }
           }
         });
@@ -144,7 +135,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       final boolean enabled = ((InstalledPluginsTableModel)pluginsModel).isEnabled(id);
       if (!enabled && !disabled) {
         notInstalled.add(id);
-      } else if (disabled) {
+      }
+      else if (disabled) {
         disabledIds.add(id);
       }
     }
@@ -162,7 +154,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     }
     if (!disabledIds.isEmpty()) {
       final Set<IdeaPluginDescriptor> dependencies = new HashSet<IdeaPluginDescriptor>();
-      for (IdeaPluginDescriptor ideaPluginDescriptor : pluginsModel.view) {
+      for (IdeaPluginDescriptor ideaPluginDescriptor : pluginsModel.getAllPlugins()) {
         if (disabledIds.contains(ideaPluginDescriptor.getPluginId())) {
           dependencies.add(ideaPluginDescriptor);
         }
@@ -179,8 +171,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
                          }
                        }, ", ") +
                        ". Enable " + disabledPluginsMessage.trim() + "?";
-      if (Messages.showOkCancelDialog(myActionsPanel, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) ==
-          Messages.OK) {
+      if (Messages.showOkCancelDialog(myActionsPanel, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.OK) {
         ((InstalledPluginsTableModel)pluginsModel).enableRows(dependencies.toArray(new IdeaPluginDescriptor[dependencies.size()]), Boolean.TRUE);
       }
     }
@@ -210,7 +201,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     pluginTable = new PluginTable(pluginsModel);
     pluginTable.setTableHeader(null);
 
-    JScrollPane installedScrollPane = ScrollPaneFactory.createScrollPane(pluginTable);
+    JScrollPane installedScrollPane = ScrollPaneFactory
+            .createScrollPane(pluginTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     pluginTable.registerKeyboardAction(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -232,20 +224,34 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         pluginTable.repaint();
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), JComponent.WHEN_FOCUSED);
+    pluginTable.setExpandableItemsEnabled(false);
     return installedScrollPane;
+  }
+
+  @Override
+  protected PluginManagerMain getAvailable() {
+    return this;
+  }
+
+  @Override
+  protected PluginManagerMain getInstalled() {
+    return this;
   }
 
   @Override
   protected ActionGroup getActionGroup(boolean inToolbar) {
     final DefaultActionGroup actionGroup = new DefaultActionGroup();
-    actionGroup.add(new RefreshAction());
-    actionGroup.add(AnSeparator.getInstance());
-    actionGroup.add(new ActionInstallPlugin(this, this));
-    actionGroup.add(new ActionUninstallPlugin(this, pluginTable));
     if (inToolbar) {
-      actionGroup.add(new SortByStatusAction("Sort by Status"));
+      //actionGroup.add(new SortByStatusAction("Sort by Status"));
       actionGroup.add(new MyFilterEnabledAction());
       //actionGroup.add(new MyFilterBundleAction());
+    }
+    else {
+      actionGroup.add(new RefreshAction());
+      actionGroup.addAction(new SortByStatusAction("Sort by Status"));
+      actionGroup.add(AnSeparator.getInstance());
+      actionGroup.add(new ActionInstallPlugin(getAvailable(), getInstalled()));
+      actionGroup.add(new UninstallPluginAction(this, pluginTable));
     }
     return actionGroup;
   }
@@ -261,8 +267,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       }
     }
     for (IdeaPluginDescriptor descriptor : pluginsModel.filtered) {
-      if (descriptor.isEnabled() !=
-          ((InstalledPluginsTableModel)pluginsModel).isEnabled(descriptor.getPluginId())) {
+      if (descriptor.isEnabled() != ((InstalledPluginsTableModel)pluginsModel).isEnabled(descriptor.getPluginId())) {
         return true;
       }
     }
@@ -287,8 +292,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       pluginDescriptor.setEnabled(enabled != null && enabled.booleanValue());
     }
     for (IdeaPluginDescriptor descriptor : pluginsModel.filtered) {
-      descriptor.setEnabled(
-        ((InstalledPluginsTableModel)pluginsModel).isEnabled(descriptor.getPluginId()));
+      descriptor.setEnabled(((InstalledPluginsTableModel)pluginsModel).isEnabled(descriptor.getPluginId()));
     }
     try {
       final ArrayList<String> ids = new ArrayList<String>();
@@ -310,7 +314,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   @Override
   protected String canApply() {
     final Map<PluginId, Set<PluginId>> dependentToRequiredListMap =
-      new HashMap<PluginId, Set<PluginId>>(((InstalledPluginsTableModel)pluginsModel).getDependentToRequiredListMap());
+            new HashMap<PluginId, Set<PluginId>>(((InstalledPluginsTableModel)pluginsModel).getDependentToRequiredListMap());
     for (Iterator<PluginId> iterator = dependentToRequiredListMap.keySet().iterator(); iterator.hasNext(); ) {
       final PluginId id = iterator.next();
       iterator.remove();
@@ -387,24 +391,24 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     public void actionPerformed(ActionEvent e) {
       final PluginManagerConfigurable configurable = createAvailableConfigurable(myVendor);
       final SingleConfigurableEditor configurableEditor =
-        new SingleConfigurableEditor(myActionsPanel, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable), false) {
-          {
-            setOKButtonText(CommonBundle.message("close.action.name"));
-            setOKButtonMnemonic('C');
-            final String filter = myFilter.getFilter();
-            if (!StringUtil.isEmptyOrSpaces(filter)) {
-              final Runnable searchRunnable = configurable.enableSearch(filter);
-              LOG.assertTrue(searchRunnable != null);
-              searchRunnable.run();
-            }
-          }
+              new SingleConfigurableEditor(myActionsPanel, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable), false) {
+                {
+                  setOKButtonText(CommonBundle.message("close.action.name"));
+                  setOKButtonMnemonic('C');
+                  final String filter = myFilter.getFilter();
+                  if (!StringUtil.isEmptyOrSpaces(filter)) {
+                    final Runnable searchRunnable = configurable.enableSearch(filter);
+                    LOG.assertTrue(searchRunnable != null);
+                    searchRunnable.run();
+                  }
+                }
 
-          @NotNull
-          @Override
-          protected Action[] createActions() {
-            return new Action[]{getOKAction()};
-          }
-        };
+                @NotNull
+                @Override
+                protected Action[] createActions() {
+                  return new Action[]{getOKAction()};
+                }
+              };
       configurableEditor.show();
     }
   }

@@ -20,18 +20,22 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
+import com.intellij.util.containers.Convertor;
 
 import javax.swing.*;
+import javax.swing.tree.TreePath;
 
 /**
  * @author yole
  */
 public class TreeUIHelperImpl extends TreeUIHelper {
+  @Override
   public void installToolTipHandler(final JTree tree) {
     if (tree instanceof Tree) return;
     new TreeExpandableItemsHandler(tree);
   }
 
+  @Override
   public void installToolTipHandler(final JTable table) {
     if (table instanceof JBTable) return;
     new TableExpandableItemsHandler(table);
@@ -43,26 +47,42 @@ public class TreeUIHelperImpl extends TreeUIHelper {
     new ListExpandableItemsHandler(list);
   }
 
+  @Override
   public void installEditSourceOnDoubleClick(final JTree tree) {
     EditSourceOnDoubleClickHandler.install(tree);
   }
 
+  @Override
   public void installTreeSpeedSearch(final JTree tree) {
     new TreeSpeedSearch(tree);
   }
 
-  public void installListSpeedSearch(final JList list) {
+  @Override
+  public void installTreeSpeedSearch(JTree tree, Convertor<TreePath, String> convertor, boolean canExpand) {
+    new TreeSpeedSearch(tree, convertor, canExpand);
+  }
+
+  @Override
+  public void installListSpeedSearch(JList list) {
     new ListSpeedSearch(list);
   }
 
+  @Override
+  public void installListSpeedSearch(JList list, Convertor<Object, String> convertor) {
+    new ListSpeedSearch(list, convertor);
+  }
+
+  @Override
   public void installEditSourceOnEnterKeyHandler(final JTree tree) {
     EditSourceOnEnterKeyHandler.install(tree);
   }
 
+  @Override
   public void installSmartExpander(final JTree tree) {
     SmartExpander.installOn(tree);
   }
 
+  @Override
   public void installSelectionSaver(final JTree tree) {
     SelectionSaver.installOn(tree);
   }

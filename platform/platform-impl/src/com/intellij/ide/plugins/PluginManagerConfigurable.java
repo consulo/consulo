@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,15 +35,17 @@ import javax.swing.table.TableModel;
 import java.util.List;
 
 /**
- * @author stathik
- * @since Oct 26, 2003
+ * Created by IntelliJ IDEA.
+ * User: stathik
+ * Date: Oct 26, 2003
+ * Time: 9:30:44 PM
+ * To change this template use Options | File Templates.
  */
 public class PluginManagerConfigurable extends BaseConfigurable implements SearchableConfigurable, Configurable.NoScroll {
-  @NonNls
-  public static final String ID = "preferences.pluginManager";
-  @NonNls
-  private static final String POSTPONE = "&Postpone";
 
+  @NonNls private static final String POSTPONE = "&Postpone";
+  public static final String ID = "preferences.pluginManager";
+  public static final String DISPLAY_NAME = IdeBundle.message("title.plugins");
   public boolean EXPANDED = false;
   public String FIND = "";
   public boolean TREE_VIEW = false;
@@ -55,15 +57,20 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
   public PluginManagerConfigurable(final PluginManagerUISettings UISettings) {
     myUISettings = UISettings;
   }
-  
+
   public PluginManagerConfigurable(final PluginManagerUISettings UISettings, boolean available) {
     myUISettings = UISettings;
     myAvailable = available;
   }
 
   @Override
+  public JComponent getPreferredFocusedComponent() {
+    return myPluginManagerMain.getPluginTable();
+  }
+
+  @Override
   public String getDisplayName() {
-    return IdeBundle.message("title.plugins");
+    return DISPLAY_NAME;
   }
 
   @Override
@@ -88,7 +95,6 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
   }
 
   @Override
-  @NotNull
   public String getHelpTopic() {
     return ID;
   }
@@ -142,7 +148,7 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
       final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
 
       int response = app.isRestartCapable() ? showRestartIDEADialog() : showShutDownIDEADialog();
-      if (response == 0) {
+      if (response == Messages.YES) {
         app.restart(true);
       }
       else {
@@ -158,20 +164,24 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
     return myPluginManagerMain;
   }
 
+  @Messages.YesNoResult
   public static int showShutDownIDEADialog() {
     return showShutDownIDEADialog(IdeBundle.message("title.plugins.changed"));
   }
 
-  public static int showShutDownIDEADialog(final String title) {
+  @Messages.YesNoResult
+  private static int showShutDownIDEADialog(final String title) {
     String message = IdeBundle.message("message.idea.shutdown.required", ApplicationNamesInfo.getInstance().getFullProductName());
     return Messages.showYesNoDialog(message, title, "Shut Down", POSTPONE, Messages.getQuestionIcon());
   }
 
+  @Messages.YesNoResult
   public static int showRestartIDEADialog() {
     return showRestartIDEADialog(IdeBundle.message("title.plugins.changed"));
   }
 
-  public static int showRestartIDEADialog(final String title) {
+  @Messages.YesNoResult
+  private static int showRestartIDEADialog(final String title) {
     String message = IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName());
     return Messages.showYesNoDialog(message, title, "Restart", POSTPONE, Messages.getQuestionIcon());
   }
@@ -179,7 +189,7 @@ public class PluginManagerConfigurable extends BaseConfigurable implements Searc
   public static void shutdownOrRestartApp(String title) {
     final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
     int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);
-    if (response == 0) app.restart(true);
+    if (response == Messages.YES) app.restart(true);
   }
 
   @Override

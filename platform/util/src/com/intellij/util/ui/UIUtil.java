@@ -939,12 +939,12 @@ public class UIUtil {
   }
 
   public static Icon getTreeSelectedCollapsedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderDarcula() || isUnderIntelliJLaF()
+    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF()
            ? AllIcons.Mac.Tree_white_right_arrow : getTreeCollapsedIcon();
   }
 
   public static Icon getTreeSelectedExpandedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderDarcula() || isUnderIntelliJLaF()
+    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF()
            ? AllIcons.Mac.Tree_white_down_arrow : getTreeExpandedIcon();
   }
 
@@ -1013,6 +1013,12 @@ public class UIUtil {
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderIntelliJLaF() {
     return UIManager.getLookAndFeel().getName().contains("IntelliJ");
+  }
+
+  @SuppressWarnings({"HardCodedStringLiteral"})
+  public static boolean isUnderBuildInLaF() {
+    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+    return lookAndFeel instanceof BuildInLookAndFeel;
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})

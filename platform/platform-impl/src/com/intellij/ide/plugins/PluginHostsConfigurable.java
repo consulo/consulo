@@ -47,19 +47,23 @@ import java.util.List;
 public class PluginHostsConfigurable extends BaseConfigurable {
   private CustomPluginRepositoriesPanel myUpdatesSettingsPanel;
 
+  @Override
   public JComponent createComponent() {
     myUpdatesSettingsPanel = new CustomPluginRepositoriesPanel();
     return myUpdatesSettingsPanel.myPanel;
   }
 
+  @Override
   public String getDisplayName() {
     return "Custom Plugin Repositories";
   }
 
+  @Override
   public String getHelpTopic() {
     return null;
   }
 
+  @Override
   public void apply() throws ConfigurationException {
     UpdateSettings settings = UpdateSettings.getInstance();
 
@@ -67,16 +71,19 @@ public class PluginHostsConfigurable extends BaseConfigurable {
     settings.myPluginHosts.addAll(myUpdatesSettingsPanel.getPluginsHosts());
   }
 
+  @Override
   public void reset() {
     myUpdatesSettingsPanel.setPluginHosts(UpdateSettings.getInstance().myPluginHosts);
   }
 
+  @Override
   public boolean isModified() {
     if (myUpdatesSettingsPanel == null) return false;
     UpdateSettings settings = UpdateSettings.getInstance();
     return !settings.myPluginHosts.equals(myUpdatesSettingsPanel.getPluginsHosts());
   }
 
+  @Override
   public void disposeUIResources() {
     myUpdatesSettingsPanel = null;
   }
@@ -120,10 +127,12 @@ public class PluginHostsConfigurable extends BaseConfigurable {
                                                Messages.getQuestionIcon(),
                                                (String)myUrlsList.getSelectedValue(),
                                                new InputValidator() {
+                                                 @Override
                                                  public boolean checkInput(final String inputString) {
                                                    return inputString.length() > 0;
                                                  }
 
+                                                 @Override
                                                  public boolean canClose(final String inputString) {
                                                    return checkInput(inputString);
                                                  }
@@ -175,10 +184,12 @@ public class PluginHostsConfigurable extends BaseConfigurable {
         super(parentComponent, message, title, icon, initialValue, validator);
       }
 
+      @Override
       @NotNull
       protected Action[] createActions() {
         final Action[] actions = super.createActions();
         final AbstractAction checkNowAction = new AbstractAction("Check Now") {
+          @Override
           public void actionPerformed(final ActionEvent e) {
             final boolean[] result = new boolean[1];
             final Exception[] ex = new Exception[1];

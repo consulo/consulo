@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -384,7 +385,7 @@ public abstract class ChooseByNameBase {
     myCheckBox = new JCheckBox(checkBoxName != null ? checkBoxName +
                                                       (myCheckBoxShortcut != null ? " (" +
                                                                                     KeymapUtil
-                                                                                      .getShortcutsText(myCheckBoxShortcut.getShortcuts()) +
+                                                                                            .getShortcutsText(myCheckBoxShortcut.getShortcuts()) +
                                                                                     ")" : "") : "");
     myCheckBox.setAlignmentX(SwingConstants.RIGHT);
 
@@ -436,7 +437,7 @@ public abstract class ChooseByNameBase {
           }
         }
         return new PsiElement[][]{PsiUtilCore.toPsiElementArray(prefixMatchElements),
-          PsiUtilCore.toPsiElementArray(nonPrefixMatchElements)};
+                PsiUtilCore.toPsiElementArray(nonPrefixMatchElements)};
       }
     });
     final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
@@ -630,7 +631,7 @@ public abstract class ChooseByNameBase {
                             ListSelectionModel.SINGLE_SELECTION);
     new ClickListener() {
       @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
+      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
         if (!myTextField.hasFocus()) {
           myTextField.requestFocus();
         }
@@ -850,7 +851,7 @@ public abstract class ChooseByNameBase {
     final int y = paneHeight / 3 - preferredTextFieldPanelSize.height / 2;
 
     VISIBLE_LIST_SIZE_LIMIT = Math.max
-      (10, (paneHeight - (y + preferredTextFieldPanelSize.height)) / (preferredTextFieldPanelSize.height / 2) - 1);
+            (10, (paneHeight - (y + preferredTextFieldPanelSize.height)) / (preferredTextFieldPanelSize.height / 2) - 1);
 
     ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(myTextFieldPanel, myTextField);
     builder.setCancelCallback(new Computable<Boolean>() {
@@ -1247,6 +1248,18 @@ public abstract class ChooseByNameBase {
       });
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+      Dimension size = super.getPreferredSize();
+      Border border = super.getBorder();
+      if (border != null && UIUtil.isUnderAquaLookAndFeel()) {
+        Insets insets = border.getBorderInsets(this);
+        size.height += insets.top + insets.bottom;
+        size.width += insets.left + insets.right;
+      }
+      return size;
+    }
+
     @Nullable
     private KeyStroke getShortcut(String actionCodeCompletion) {
       final Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionCodeCompletion);
@@ -1557,21 +1570,21 @@ public abstract class ChooseByNameBase {
                                      boolean everywhere) {
       long start = System.currentTimeMillis();
       myProvider.filterElements(
-        ChooseByNameBase.this, pattern, everywhere,
-        cancelled,
-        new Processor<Object>() {
-          @Override
-          public boolean process(Object o) {
-            if (cancelled.isCanceled()) return false;
-            elements.add(o);
+              ChooseByNameBase.this, pattern, everywhere,
+              cancelled,
+              new Processor<Object>() {
+                @Override
+                public boolean process(Object o) {
+                  if (cancelled.isCanceled()) return false;
+                  elements.add(o);
 
-            if (isOverflow(elements)) {
-              elements.add(EXTRA_ELEM);
-              return false;
-            }
-            return true;
-          }
-        }
+                  if (isOverflow(elements)) {
+                    elements.add(EXTRA_ELEM);
+                    return false;
+                  }
+                  return true;
+                }
+              }
       );
       if (ContributorsBasedGotoByModel.LOG.isDebugEnabled()) {
         long end = System.currentTimeMillis();
@@ -1685,7 +1698,7 @@ public abstract class ChooseByNameBase {
                   protected boolean isOverflow(@NotNull Set<Object> elementsArray) {
                     if (elementsArray.size() > UsageLimitUtil.USAGES_LIMIT - myMaximumListSizeLimit && !userAskedToAbort.getAndSet(true)) {
                       final UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(myProject, UsageViewBundle
-                        .message("find.excessive.usage.count.prompt", elementsArray.size() + myMaximumListSizeLimit));
+                              .message("find.excessive.usage.count.prompt", elementsArray.size() + myMaximumListSizeLimit, StringUtil.pluralize(presentation.getUsagesWord())), presentation);
                       if (ret == UsageLimitUtil.Result.ABORT) {
                         overFlow[0] = true;
                         return true;

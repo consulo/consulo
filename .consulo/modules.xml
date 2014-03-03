@@ -519,6 +519,7 @@
         <orderEntry type="library" name="jsr166" level="project" />
         <orderEntry type="library" name="gson" level="project" />
         <orderEntry type="library" name="jayatana" level="project" />
+        <orderEntry type="module" module-name="editor-ui-api" />
       </module>
       <module name="platform/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />

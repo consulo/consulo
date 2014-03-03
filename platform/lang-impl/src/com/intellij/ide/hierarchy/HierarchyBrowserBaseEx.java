@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.dnd.DnDSource;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
-import com.intellij.ide.projectView.impl.TransferableWrapper;
+import com.intellij.ide.dnd.TransferableWrapper;
 import com.intellij.ide.util.scopeChooser.EditScopesDialog;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.actionSystem.*;
@@ -366,6 +366,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         final HierarchyTreeBuilder builder = new HierarchyTreeBuilder(myProject, tree, model, structure, comparator);
 
         myBuilders.put(typeName, builder);
+        Disposer.register(this, builder);
 
         final HierarchyNodeDescriptor descriptor = structure.getBaseDescriptor();
         builder.select(descriptor, new Runnable() {
@@ -475,8 +476,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     return super.getData(dataId);
   }
 
-  @Override
-  public void dispose() {
+  private void disposeBuilders() {
     final Collection<HierarchyTreeBuilder> builders = myBuilders.values();
     for (final HierarchyTreeBuilder builder : builders) {
       Disposer.dispose(builder);
@@ -491,7 +491,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     if (getCurrentBuilder() == null) return; // seems like we are in the middle of refresh already
 
-    final Ref<Pair<ArrayList<Object>, ArrayList<Object>>> storedInfo = new Ref<Pair<ArrayList<Object>, ArrayList<Object>>>();
+    final Ref<Pair<List<Object>, List<Object>>> storedInfo = new Ref<Pair<List<Object>, List<Object>>>();
     if (myCurrentViewType != null) {
       final HierarchyTreeBuilder builder = getCurrentBuilder();
       storedInfo.set(builder.storeExpandedAndSelectedInfo());
@@ -508,7 +508,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       myBuilders.remove(myCurrentViewType);
     }
     else {
-      dispose();
+      disposeBuilders();
     }
     setHierarchyBase(element);
     validate();
@@ -577,7 +577,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       if (selectedElement == null || !browser.isApplicableElement(selectedElement)) return;
 
       final String currentViewType = browser.myCurrentViewType;
-      browser.dispose();
+      Disposer.dispose(browser);
       browser.setHierarchyBase(selectedElement);
       browser.validate();
       ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -671,7 +671,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       for(String name: getValidScopeNames()) {
         group.add(new MenuAction(name));
       }
-      
+
       group.add(new ConfigureScopesAction());
 
       return group;
@@ -730,7 +730,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         selectScope(myScopeType);
       }
     }
-    
+
     private final class ConfigureScopesAction extends AnAction {
       private ConfigureScopesAction() {
         super("Configure...");

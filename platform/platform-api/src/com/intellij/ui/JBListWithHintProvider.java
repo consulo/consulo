@@ -1,7 +1,21 @@
+/*
+ * Copyright 2000-2013 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.intellij.ui;
 
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.PopupUpdateProcessorBase;
@@ -36,12 +50,12 @@ public abstract class JBListWithHintProvider extends JBList {
     super(items);
     addSelectionListener();
   }
-  
+
   private void addSelectionListener() {
     addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(final ListSelectionEvent e) {
-        if (getClientProperty(PopupChooserBuilder.SELECTED_BY_MOUSE_EVENT) != Boolean.TRUE) {
+        if (getClientProperty(ListUtil.SELECTED_BY_MOUSE_EVENT) != Boolean.TRUE) {
           final Object[] selectedValues = ((JList)e.getSource()).getSelectedValues();
           if (selectedValues.length != 1) return;
 
@@ -61,7 +75,7 @@ public abstract class JBListWithHintProvider extends JBList {
     hideHint();
     myHint = hint;
   }
-  
+
   public void hideHint() {
     if (myHint != null && myHint.isVisible()) {
       myHint.cancel();
@@ -69,7 +83,7 @@ public abstract class JBListWithHintProvider extends JBList {
 
     myHint = null;
   }
-  
+
   public void updateHint(PsiElement element) {
     if (myHint == null || !myHint.isVisible()) return;
 
@@ -78,5 +92,5 @@ public abstract class JBListWithHintProvider extends JBList {
       updateProcessor.updatePopup(element);
     }
   }
-  
+
 }

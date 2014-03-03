@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.plugins;
+package com.intellij.util.containers;
 
-/**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Dec 26, 2003
- * Time: 4:31:57 PM
- * To change this template use Options | File Templates.
- */
-public interface SortableProvider {
-  int getSortOrder ();
-  void setSortOrder (int sortOrder);
-  int getSortColumn ();
-  void setSortColumn (int sortColumn);
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.List;
+
+public interface ConcurrentList<E> extends List<E> {
+  boolean addIfAbsent(E e);
+  int addAllAbsent(@NotNull Collection<? extends E> c);
 }

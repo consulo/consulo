@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,12 @@ import com.intellij.find.*;
 import com.intellij.find.actions.FindInPathAction;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.impl.FindInProjectUtil;
+import com.intellij.ide.DataManager;
 import com.intellij.notification.NotificationGroup;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ServiceManager;
@@ -44,8 +47,10 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.usageView.UsageInfo;
+import com.intellij.ui.content.Content;
+import com.intellij.usageView.*;
 import com.intellij.usages.*;
+import com.intellij.usages.UsageViewManager;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.AdapterProcessor;
@@ -154,6 +159,32 @@ public class ReplaceInProjectManager {
     searchAndShowUsages(manager, usageSearcherFactory, findModelCopy, presentation, processPresentation, findManager);
   }
 
+  private static class ReplaceInProjectTarget extends FindInProjectUtil.StringUsageTarget {
+    public ReplaceInProjectTarget(@NotNull Project project, @NotNull FindModel findModel) {
+      super(project, findModel);
+    }
+
+    @NotNull
+    @Override
+    public String getLongDescriptiveName() {
+      UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(false, myFindModel);
+      return "Replace "+presentation.getToolwindowTitle()+" with '"+ myFindModel.getStringToReplace()+"'";
+    }
+
+    @Override
+    public KeyboardShortcut getShortcut() {
+      return ActionManager.getInstance().getKeyboardShortcut("ReplaceInPath");
+    }
+
+    @Override
+    public void showSettings() {
+      Content selectedContent = com.intellij.usageView.UsageViewManager.getInstance(myProject).getSelectedContent(true);
+      JComponent component = selectedContent == null ? null : selectedContent.getComponent();
+      ReplaceInProjectManager findInProjectManager = getInstance(myProject);
+      findInProjectManager.replaceInProject(DataManager.getInstance().getDataContext(component));
+    }
+  }
+
   public void searchAndShowUsages(@NotNull UsageViewManager manager,
                                   @NotNull Factory<UsageSearcher> usageSearcherFactory,
                                   @NotNull final FindModel findModelCopy,
@@ -162,7 +193,7 @@ public class ReplaceInProjectManager {
                                   final FindManager findManager) {
     presentation.setMergeDupLinesAvailable(false);
     final ReplaceContext[] context = new ReplaceContext[1];
-    manager.searchAndShowUsages(new UsageTarget[]{new FindInProjectUtil.StringUsageTarget(myProject, findModelCopy.getStringToFind())},
+    manager.searchAndShowUsages(new UsageTarget[]{new ReplaceInProjectTarget(myProject, findModelCopy)},
                                 usageSearcherFactory, processPresentation, presentation, new UsageViewManager.UsageViewStateListener() {
       @Override
       public void usageViewCreated(@NotNull UsageView usageView) {
@@ -190,7 +221,7 @@ public class ReplaceInProjectManager {
 
     if (hasReadOnlyUsages(_usages)) {
       WindowManager.getInstance().getStatusBar(myProject)
-        .setInfo(FindBundle.message("find.replace.occurrences.found.in.read.only.files.status"));
+              .setInfo(FindBundle.message("find.replace.occurrences.found.in.read.only.files.status"));
       return;
     }
 
@@ -227,7 +258,7 @@ public class ReplaceInProjectManager {
       };
 
       CommandProcessor.getInstance()
-        .executeCommand(myProject, selectOnEditorRunnable, FindBundle.message("find.replace.select.on.editor.command"), null);
+              .executeCommand(myProject, selectOnEditorRunnable, FindBundle.message("find.replace.select.on.editor.command"), null);
       String title = FindBundle.message("find.replace.found.usage.title", i + 1, usages.length);
 
       int result;
@@ -379,7 +410,7 @@ public class ReplaceInProjectManager {
                               @NotNull final FindModel findModel,
                               @NotNull final Set<Usage> excludedSet,
                               final boolean justCheck)
-    throws FindManager.MalformedReplacementStringException {
+          throws FindManager.MalformedReplacementStringException {
     final Ref<FindManager.MalformedReplacementStringException> exceptionResult = Ref.create();
     final boolean result = ApplicationManager.getApplication().runWriteAction(new Computable<Boolean>() {
       @Override
@@ -424,7 +455,7 @@ public class ReplaceInProjectManager {
   private boolean getStringToReplace(int textOffset,
                                      int textEndOffset,
                                      Document document, FindModel findModel, Ref<String> stringToReplace)
-    throws FindManager.MalformedReplacementStringException {
+          throws FindManager.MalformedReplacementStringException {
     if (textOffset < 0 || textOffset >= document.getTextLength()) {
       return false;
     }
@@ -440,7 +471,7 @@ public class ReplaceInProjectManager {
     }
 
     stringToReplace.set(
-      FindManager.getInstance(myProject).getStringToReplace(foundString.toString(), findModel, textOffset, document.getText()));
+            FindManager.getInstance(myProject).getStringToReplace(foundString.toString(), findModel, textOffset, document.getText()));
 
     return true;
   }

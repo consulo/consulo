@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.updateSettings.impl.UpdateChecker;
@@ -52,7 +51,11 @@ import java.util.*;
 import java.util.List;
 
 /**
- * @author stathik
+ * Created by IntelliJ IDEA.
+ * User: stathik
+ * Date: Dec 26, 2003
+ * Time: 3:51:58 PM
+ * To change this template use Options | File Templates.
  */
 public class InstalledPluginsTableModel extends PluginTableModel {
   public static Map<PluginId, Integer> NewVersions2Plugins = new HashMap<PluginId, Integer>();
@@ -71,7 +74,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
 
   public InstalledPluginsTableModel() {
-    super.columns = new ColumnInfo[]{new EnabledPluginInfo(), new MyPluginManagerColumnInfo()};
+    super.columns = new ColumnInfo[]{new MyPluginManagerColumnInfo(), new EnabledPluginInfo()};
     view = new ArrayList<IdeaPluginDescriptor>(Arrays.asList(PluginManager.getPlugins()));
     view.addAll(myInstalled);
     reset(view);
@@ -112,12 +115,12 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   }
 
   public static int getCheckboxColumn() {
-    return 0;
+    return 1;
   }
 
   @Override
   public int getNameColumn() {
-    return 1;
+    return 0;
   }
 
   private void reset(final List<IdeaPluginDescriptor> list) {
@@ -369,7 +372,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   private class EnabledPluginInfo extends ColumnInfo<IdeaPluginDescriptor, Boolean> {
 
     public EnabledPluginInfo() {
-      super(IdeBundle.message("plugin.manager.enable.column.title"));
+      super(/*IdeBundle.message("plugin.manager.enable.column.title")*/"");
     }
 
     @Override
@@ -440,6 +443,11 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         }
       };
     }
+
+    @Override
+    public int getWidth(JTable table) {
+      return new JCheckBox().getPreferredSize().width;
+    }
   }
 
   private void warnAboutMissedDependencies(final Boolean newVal, final IdeaPluginDescriptor... ideaPluginDescriptors) {
@@ -448,8 +456,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     if (newVal) {
       Collections.addAll(descriptorsToCheckDependencies, ideaPluginDescriptors);
     } else {
-      descriptorsToCheckDependencies.addAll(view);
-      descriptorsToCheckDependencies.addAll(filtered);
+      descriptorsToCheckDependencies.addAll(getAllPlugins());
       descriptorsToCheckDependencies.removeAll(Arrays.asList(ideaPluginDescriptors));
 
       for (Iterator<IdeaPluginDescriptor> iterator = descriptorsToCheckDependencies.iterator(); iterator.hasNext(); ) {
@@ -515,7 +522,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
                                        "<br>Would you like to disable them too?</html>"
                                      : "<html>The following plugins on which " + listOfSelectedPlugins + " depend" + (ideaPluginDescriptors.length == 1 ? "s" : "") +
                                        " are disabled:<br>" + listOfDependencies + "<br>Would you like to enable them?</html>";
-      if (Messages.showOkCancelDialog(message, newVal ? "Enable Dependant Plugins" : "Disable Plugins with Dependency on this", Messages.getQuestionIcon()) == DialogWrapper.OK_EXIT_CODE) {
+      if (Messages.showOkCancelDialog(message, newVal ? "Enable Dependant Plugins" : "Disable Plugins with Dependency on this", Messages.getQuestionIcon()) == Messages.OK) {
         for (PluginId pluginId : deps) {
           myEnabled.put(pluginId, newVal);
         }
@@ -613,24 +620,28 @@ public class InstalledPluginsTableModel extends PluginTableModel {
           if (myEnabled.get(pluginId) == null) {
             s.append("Plugin was not loaded.\n");
           }
+          if (required.contains(PluginId.getId("com.intellij.modules.ultimate"))) {
+            s.append("The plugin requires IntelliJ IDEA Ultimate");
+          }
+          else {
+            s.append("Required plugin").append(required.size() == 1 ? " \"" : "s \"");
+            s.append(StringUtil.join(required, new Function<PluginId, String>() {
+              @Override
+              public String fun(final PluginId id) {
+                final IdeaPluginDescriptor plugin = PluginManager.getPlugin(id);
+                return plugin == null ? id.getIdString() : plugin.getName();
+              }
+            }, ","));
 
-          s.append("Required plugin").append(required.size() == 1 ? " \"" : "s \"");
-          s.append(StringUtil.join(required, new Function<PluginId, String>() {
-            @Override
-            public String fun(final PluginId id) {
-              final IdeaPluginDescriptor plugin = PluginManager.getPlugin(id);
-              return plugin == null ? id.getIdString() : plugin.getName();
-            }
-          }, ","));
+            s.append(required.size() == 1 ? "\" is not enabled." : "\" are not enabled.");
 
-          s.append(required.size() == 1 ? "\" is not enabled." : "\" are not enabled.");
-
+          }
           myPanel.setToolTipText(s.toString());
         }
 
         if (PluginManager.isIncompatible(myPluginDescriptor)) {
           myPanel.setToolTipText(
-            IdeBundle.message("plugin.manager.incompatible.tooltip.warning", ApplicationNamesInfo.getInstance().getFullProductName()));
+                  IdeBundle.message("plugin.manager.incompatible.tooltip.warning", ApplicationNamesInfo.getInstance().getFullProductName()));
           myNameLabel.setForeground(JBColor.RED);
         }
       }
@@ -646,7 +657,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
     @Override
     public TableCellRenderer getRenderer(final IdeaPluginDescriptor pluginDescriptor) {
-      return new InstalledPluginsTableRenderer(pluginDescriptor);
+      return new PluginsTableRenderer(pluginDescriptor, false);
     }
 
     @Override
@@ -710,6 +721,11 @@ public class InstalledPluginsTableModel extends PluginTableModel {
           return comparator.compare(o1, o2);
         }
       };
+    }
+
+    @Override
+    public int getWidth(JTable table) {
+      return super.getWidth(table);
     }
   }
 }

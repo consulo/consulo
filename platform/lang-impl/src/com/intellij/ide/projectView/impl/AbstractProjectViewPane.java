@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ import com.intellij.ide.projectView.impl.nodes.ModuleGroupNode;
 import com.intellij.ide.util.treeView.*;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
@@ -79,6 +79,7 @@ import java.util.Map;
 public abstract class AbstractProjectViewPane implements DataProvider, Disposable, BusyObject {
   public static ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPane");
 
+  @NotNull
   protected final Project myProject;
   private Runnable myTreeChangeListener;
   protected DnDAwareTree myTree;
@@ -102,7 +103,7 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
     }
   }
 
-  protected AbstractProjectViewPane(Project project) {
+  protected AbstractProjectViewPane(@NotNull Project project) {
     myProject = project;
     WolfTheProblemSolver.ProblemListener problemListener = new WolfTheProblemSolver.ProblemListener() {
       @Override
@@ -264,7 +265,7 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
 
   @Override
   public Object getData(String dataId) {
-    if (PlatformDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
+    if (CommonDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
       TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;
       final ArrayList<Navigatable> navigatables = new ArrayList<Navigatable>();
@@ -554,7 +555,7 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
     }
   }
 
-   @Nullable
+  @Nullable
   public static TreeNode[] getTransferedTreeNodes(Transferable transferable) {
     try {
       final Object transferData = transferable.getTransferData(DnDEventImpl.ourDataFlavor);
@@ -671,6 +672,7 @@ public abstract class AbstractProjectViewPane implements DataProvider, Disposabl
     return dragAction == DnDConstants.ACTION_MOVE && MoveHandler.canMove(dataContext);
   }
 
+  @NotNull
   @Override
   public ActionCallback getReady(@NotNull Object requestor) {
     if (myTreeBuilder == null || myTreeBuilder.isDisposed()) return new ActionCallback.Rejected();

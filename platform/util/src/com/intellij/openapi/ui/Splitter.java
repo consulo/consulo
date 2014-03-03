@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.UIBundle;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -154,6 +155,7 @@ public class Splitter extends JPanel {
    * @see #setSecondComponent(JComponent)
    * @deprecated
    */
+  @Override
   public Component add(Component comp) {
     final int childCount = getComponentCount();
     LOG.assertTrue(childCount >= 1);
@@ -178,11 +180,13 @@ public class Splitter extends JPanel {
     return new Divider();
   }
 
+  @Override
   public boolean isVisible() {
     return super.isVisible() &&
            (myFirstComponent != null && myFirstComponent.isVisible() || mySecondComponent != null && mySecondComponent.isVisible());
   }
 
+  @Override
   public Dimension getMinimumSize() {
     final int dividerWidth = getDividerWidth();
     if (myFirstComponent != null && myFirstComponent.isVisible() && mySecondComponent != null && mySecondComponent.isVisible()) {
@@ -231,6 +235,7 @@ public class Splitter extends JPanel {
     mySkipNextLayouting = true;
   }
 
+  @Override
   public void doLayout() {
     if (mySkipNextLayouting) {
       mySkipNextLayouting = false;
@@ -516,10 +521,10 @@ public class Splitter extends JPanel {
         JLabel splitDownlabel = new JLabel(isVerticalSplit ? AllIcons.General.SplitDown : AllIcons.General.SplitRight);
         splitDownlabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         splitDownlabel.setToolTipText(isVerticalSplit ? UIBundle.message("splitter.down.tooltip.text") : UIBundle
-          .message("splitter.right.tooltip.text"));
+                .message("splitter.right.tooltip.text"));
         new ClickListener() {
           @Override
-          public boolean onClick(MouseEvent e, int clickCount) {
+          public boolean onClick(@NotNull MouseEvent e, int clickCount) {
             setProportion(1.0f - getMinProportion(mySecondComponent));
             return true;
           }
@@ -532,12 +537,12 @@ public class Splitter extends JPanel {
             new GridBagConstraints(2 * xMask, 2 * yMask, 1, 1, 0, 0, GridBagConstraints.CENTER, glueFill,
                                    new Insets(0, leftInsetIcon, 0, 0), 0, 0));
         JLabel splitCenterlabel =
-          new JLabel(isVerticalSplit ? AllIcons.General.SplitCenterV : AllIcons.General.SplitCenterH);
+                new JLabel(isVerticalSplit ? AllIcons.General.SplitCenterV : AllIcons.General.SplitCenterH);
         splitCenterlabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         splitCenterlabel.setToolTipText(UIBundle.message("splitter.center.tooltip.text"));
         new ClickListener() {
           @Override
-          public boolean onClick(MouseEvent e, int clickCount) {
+          public boolean onClick(@NotNull MouseEvent e, int clickCount) {
             setProportion(.5f);
             return true;
           }
@@ -552,10 +557,10 @@ public class Splitter extends JPanel {
         JLabel splitUpLabel = new JLabel(isVerticalSplit ? AllIcons.General.SplitUp : AllIcons.General.SplitLeft);
         splitUpLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         splitUpLabel.setToolTipText(isVerticalSplit ? UIBundle.message("splitter.up.tooltip.text") : UIBundle
-          .message("splitter.left.tooltip.text"));
+                .message("splitter.left.tooltip.text"));
         new ClickListener() {
           @Override
-          public boolean onClick(MouseEvent e, int clickCount) {
+          public boolean onClick(@NotNull MouseEvent e, int clickCount) {
             setProportion(getMinProportion(myFirstComponent));
             return true;
           }
@@ -572,6 +577,7 @@ public class Splitter extends JPanel {
       repaint();
     }
 
+    @Override
     protected void processMouseMotionEvent(MouseEvent e) {
       super.processMouseMotionEvent(e);
       if (!myResizeEnabled) return;
@@ -581,16 +587,16 @@ public class Splitter extends JPanel {
         if (isVertical()) {
           if (getHeight() > 0) {
             proportion = Math.min(1.0f, Math.max(.0f, Math
-              .min(Math.max(getMinProportion(myFirstComponent), (float)myPoint.y / (float)Splitter.this.getHeight()),
-                   1 - getMinProportion(mySecondComponent))));
+                    .min(Math.max(getMinProportion(myFirstComponent), (float)myPoint.y / (float)Splitter.this.getHeight()),
+                         1 - getMinProportion(mySecondComponent))));
             setProportion(proportion);
           }
         }
         else {
           if (getWidth() > 0) {
             proportion = Math.min(1.0f, Math.max(.0f, Math
-              .min(Math.max(getMinProportion(myFirstComponent), (float)myPoint.x / (float)Splitter.this.getWidth()),
-                   1 - getMinProportion(mySecondComponent))));
+                    .min(Math.max(getMinProportion(myFirstComponent), (float)myPoint.x / (float)Splitter.this.getWidth()),
+                         1 - getMinProportion(mySecondComponent))));
             setProportion(proportion);
           }
         }
@@ -612,6 +618,7 @@ public class Splitter extends JPanel {
       return 0.0f;
     }
 
+    @Override
     protected void processMouseEvent(MouseEvent e) {
       super.processMouseEvent(e);
       if (e.getID() == MouseEvent.MOUSE_CLICKED) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,15 +41,17 @@ public class AvailablePluginsTableModel extends PluginTableModel {
 
   protected static final String STATUS = "Status";
 
+  public static final String JETBRAINS_REPO = "JetBrains";
   private String myRepository = ALL;
   private String myVendor = null;
 
   public AvailablePluginsTableModel() {
     super.columns = new ColumnInfo[] {
-      new AvailablePluginColumnInfo(this),
-      new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_DOWNLOADS, this),
-      new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_RATE, this),
-      new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_DATE, this)/*,
+            new AvailablePluginColumnInfo(this),
+            //new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_DOWNLOADS, this),
+            //new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_RATE, this),
+            //new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_DATE, this)
+      /*,
       new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_CATEGORY, this)*/};
 
     setSortKey(new RowSorter.SortKey(getNameColumn(), SortOrder.ASCENDING));
@@ -93,7 +95,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     if (repositoryName != null) {
       if (!ALL.equals(myRepository) && !repositoryName.equals(myRepository)) return false;
     } else {
-      return ALL.equals(myRepository);
+      return ALL.equals(myRepository) || JETBRAINS_REPO.equals(myRepository);
     }
     return true;
   }
@@ -117,7 +119,6 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     }
   }
 
-  @Override
   public void updatePluginsList(List<IdeaPluginDescriptor> list) {
     view.clear();
     myAvailableCategories.clear();
@@ -149,7 +150,6 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     super.filter(filtered);
   }
 
-  @Override
   public int getNameColumn() {
     return 0;
   }

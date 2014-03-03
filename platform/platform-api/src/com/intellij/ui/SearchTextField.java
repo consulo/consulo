@@ -111,7 +111,7 @@ public class SearchTextField extends JPanel {
       }
     });
 
-    if (isSearchControlUISupported() || UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
+    if (isSearchControlUISupported() || UIUtil.isUnderBuildInLaF()) {
       myTextField.putClientProperty("JTextField.variant", "search");
     }
     if (isSearchControlUISupported()) {
@@ -128,6 +128,7 @@ public class SearchTextField extends JPanel {
       myToggleHistoryLabel = new JLabel(AllIcons.Actions.Search);
       myToggleHistoryLabel.setOpaque(true);
       myToggleHistoryLabel.addMouseListener(new MouseAdapter() {
+        @Override
         public void mousePressed(MouseEvent e) {
           togglePopup();
         }
@@ -140,6 +141,7 @@ public class SearchTextField extends JPanel {
       myClearFieldLabel.setOpaque(true);
       add(myClearFieldLabel, BorderLayout.EAST);
       myClearFieldLabel.addMouseListener(new MouseAdapter() {
+        @Override
         public void mousePressed(MouseEvent e) {
           myTextField.setText("");
           onFieldCleared();
@@ -205,7 +207,7 @@ public class SearchTextField extends JPanel {
   }
 
   protected boolean isSearchControlUISupported() {
-    return (SystemInfo.isMacOSLeopard && UIUtil.isUnderAquaLookAndFeel()) || UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF();
+    return (SystemInfo.isMacOSLeopard && UIUtil.isUnderAquaLookAndFeel()) || UIUtil.isUnderBuildInLaF();
   }
 
   protected boolean hasIconsOutsideOfTextField() {
@@ -224,6 +226,7 @@ public class SearchTextField extends JPanel {
     getTextEditor().addKeyListener(listener);
   }
 
+  @Override
   public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
     if (myToggleHistoryLabel != null) {
@@ -233,8 +236,9 @@ public class SearchTextField extends JPanel {
     }
   }
 
-  public void setHistorySize(int aHistorySize) {
-    myHistorySize = aHistorySize;
+  public void setHistorySize(int historySize) {
+    if (historySize <= 0) throw new IllegalArgumentException("history size must be a positive number");
+    myHistorySize = historySize;
   }
 
   public void setHistory(List<String> aHistory) {
@@ -258,6 +262,7 @@ public class SearchTextField extends JPanel {
     return getTextEditor().getText();
   }
 
+  @Override
   public void removeNotify() {
     super.removeNotify();
     hidePopup();
@@ -277,6 +282,7 @@ public class SearchTextField extends JPanel {
       final JMenuItem menuItem = new JBMenuItem(item);
       myNativeSearchPopup.add(menuItem);
       menuItem.addActionListener(new ActionListener() {
+        @Override
         public void actionPerformed(final ActionEvent e) {
           myTextField.setText(item);
           addCurrentTextToHistory();
@@ -293,10 +299,12 @@ public class SearchTextField extends JPanel {
     return myTextField;
   }
 
+  @Override
   public boolean requestFocusInWindow() {
     return myTextField.requestFocusInWindow();
   }
 
+  @Override
   public void requestFocus() {
     getTextEditor().requestFocus();
   }
@@ -306,10 +314,12 @@ public class SearchTextField extends JPanel {
 
     private String mySelectedItem;
 
+    @Override
     public String getElementAt(int index) {
       return myFullList.get(index);
     }
 
+    @Override
     public int getSize() {
       return Math.min(myHistorySize, myFullList.size());
     }
@@ -336,7 +346,7 @@ public class SearchTextField extends JPanel {
         // move item to top of the list
         myFullList.remove(index);
       }
-      else if (myFullList.size() >= myHistorySize) {
+      else if (myFullList.size() >= myHistorySize && myFullList.size() > 0) {
         // trim list
         myFullList.remove(myFullList.size() - 1);
       }
@@ -374,8 +384,21 @@ public class SearchTextField extends JPanel {
     }
   }
 
+  @Override
+  public Dimension getPreferredSize() {
+    Dimension size = super.getPreferredSize();
+    Border border = super.getBorder();
+    if (border != null && UIUtil.isUnderAquaLookAndFeel()) {
+      Insets insets = border.getBorderInsets(this);
+      size.height += insets.top + insets.bottom;
+      size.width += insets.left + insets.right;
+    }
+    return size;
+  }
+
   protected Runnable createItemChosenCallback(final JList list) {
     return new Runnable() {
+      @Override
       public void run() {
         final String value = (String)list.getSelectedValue();
         getTextEditor().setText(value != null ? value : "");
@@ -393,9 +416,9 @@ public class SearchTextField extends JPanel {
       final JList list = new JBList(myModel);
       final Runnable chooseRunnable = createItemChosenCallback(list);
       myPopup = JBPopupFactory.getInstance().createListPopupBuilder(list)
-        .setMovable(false)
-        .setRequestFocus(true)
-        .setItemChoosenCallback(chooseRunnable).createPopup();
+              .setMovable(false)
+              .setRequestFocus(true)
+              .setItemChoosenCallback(chooseRunnable).createPopup();
       if (isShowing()) {
         myPopup.showUnderneathOf(getPopupLocationComponent());
       }
@@ -424,6 +447,7 @@ public class SearchTextField extends JPanel {
   }
 
   protected static class TextFieldWithProcessing extends JTextField {
+    @Override
     public void processKeyEvent(KeyEvent e) {
       super.processKeyEvent(e);
     }

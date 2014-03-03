@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,21 +29,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @author lloix
+ * @author Konstantin Bulenkov
  */
-public class ActionUninstallPlugin extends AnAction implements DumbAware {
-  final private static String promptTitle = IdeBundle.message("title.plugin.uninstall");
-
+public class UninstallPluginAction extends AnAction implements DumbAware {
   private final PluginTable pluginTable;
   private final PluginManagerMain host;
 
-  public ActionUninstallPlugin(PluginManagerMain mgr, PluginTable table) {
+  public UninstallPluginAction(PluginManagerMain mgr, PluginTable table) {
     super(IdeBundle.message("action.uninstall.plugin"), IdeBundle.message("action.uninstall.plugin"), AllIcons.Actions.Uninstall);
 
     pluginTable = table;
     host = mgr;
   }
 
+  @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     if (!pluginTable.isShowing()) {
@@ -71,9 +70,14 @@ public class ActionUninstallPlugin extends AnAction implements DumbAware {
     presentation.setEnabled(enabled);
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
+    uninstall(host, pluginTable.getSelectedObjects());
+    pluginTable.updateUI();
+  }
+
+  public static void uninstall(PluginManagerMain host, IdeaPluginDescriptor... selection) {
     String message;
-    IdeaPluginDescriptor[] selection = pluginTable.getSelectedObjects();
 
     if (selection.length == 1) {
       message = IdeBundle.message("prompt.uninstall.plugin", selection[0].getName());
@@ -81,7 +85,7 @@ public class ActionUninstallPlugin extends AnAction implements DumbAware {
     else {
       message = IdeBundle.message("prompt.uninstall.several.plugins", selection.length);
     }
-    if (Messages.showYesNoDialog(host.getMainPanel(), message, promptTitle, Messages.getQuestionIcon()) != 0) return;
+    if (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) != Messages.YES) return;
 
     for (IdeaPluginDescriptor descriptor : selection) {
       IdeaPluginDescriptorImpl pluginDescriptor = (IdeaPluginDescriptorImpl)descriptor;
@@ -93,14 +97,16 @@ public class ActionUninstallPlugin extends AnAction implements DumbAware {
       ArrayList<IdeaPluginDescriptorImpl> dependant = host.getDependentList(pluginDescriptor);
       if (dependant.size() > 0) {
         message = IdeBundle.message("several.plugins.depend.on.0.continue.to.remove", pluginDescriptor.getName());
-        actualDelete = (Messages.showYesNoDialog(host.getMainPanel(), message, promptTitle, Messages.getQuestionIcon()) == 0);
+        actualDelete = (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) == Messages.YES);
       }
 
-      if (actualDelete) uninstallPlugin(pluginDescriptor);
+      if (actualDelete) {
+        uninstallPlugin(pluginDescriptor, host);
+      }
     }
   }
 
-  private void uninstallPlugin(IdeaPluginDescriptorImpl descriptor) {
+  private static void uninstallPlugin(IdeaPluginDescriptorImpl descriptor, PluginManagerMain host) {
     PluginId pluginId = descriptor.getPluginId();
     descriptor.setDeleted(true);
 
@@ -112,7 +118,6 @@ public class ActionUninstallPlugin extends AnAction implements DumbAware {
         installedPlugins.remove(pluginIdString);
       }
       host.setRequireShutdown(descriptor.isEnabled());
-      pluginTable.updateUI();
     }
     catch (IOException e1) {
       PluginManagerMain.LOG.error(e1);

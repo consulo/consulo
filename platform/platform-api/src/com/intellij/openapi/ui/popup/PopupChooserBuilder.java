@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.ActiveComponent;
-import com.intellij.ui.ListScrollingUtil;
-import com.intellij.ui.ScreenUtil;
-import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBViewport;
@@ -51,7 +48,6 @@ import java.util.List;
  * @author max
  */
 public class PopupChooserBuilder {
-  public static final String SELECTED_BY_MOUSE_EVENT = "byMouseEvent";
 
   private JComponent myChooserComponent;
   private String myTitle;
@@ -147,7 +143,7 @@ public class PopupChooserBuilder {
     myCouldPin = callback;
     return this;
   }
-  
+
   @NotNull
   public PopupChooserBuilder setEastComponent(@NotNull JComponent cmp) {
     myEastComponent = cmp;
@@ -200,7 +196,7 @@ public class PopupChooserBuilder {
     myAutoselectOnMouseMove = doAutoSelect;
     return this;
   }
-  
+
   public PopupChooserBuilder setFilteringEnabled(Function<Object, String> namer) {
     myItemsNamer = namer;
     return this;
@@ -312,23 +308,23 @@ public class PopupChooserBuilder {
     }
 
     builder.setDimensionServiceKey(null, myDimensionServiceKey, myUseForXYLocation)
-      .setRequestFocus(myRequestFocus)
-      .setResizable(myForceResizable)
-      .setMovable(myForceMovable)
-      .setTitle(myForceMovable ? myTitle : null)
-      .setCancelCallback(myCancelCallback)
-      .setAlpha(myAlpha)
-      .setFocusOwners(myFocusOwners)
-      .setCancelKeyEnabled(myCancelKeyEnabled)
-      .setAdText(myAd, myAdAlignment)
-      .setKeyboardActions(myKeyboardActions)
-      .setMayBeParent(myMayBeParent)
-      .setLocateWithinScreenBounds(true)
-      .setCancelOnOtherWindowOpen(true)
-      .setModalContext(myModalContext)
-      .setCancelOnWindowDeactivation(myCancelOnWindowDeactivation)
-      .setCancelOnClickOutside(myCancelOnClickOutside)
-      .setCouldPin(myCouldPin);
+            .setRequestFocus(myRequestFocus)
+            .setResizable(myForceResizable)
+            .setMovable(myForceMovable)
+            .setTitle(myForceMovable ? myTitle : null)
+            .setCancelCallback(myCancelCallback)
+            .setAlpha(myAlpha)
+            .setFocusOwners(myFocusOwners)
+            .setCancelKeyEnabled(myCancelKeyEnabled)
+            .setAdText(myAd, myAdAlignment)
+            .setKeyboardActions(myKeyboardActions)
+            .setMayBeParent(myMayBeParent)
+            .setLocateWithinScreenBounds(true)
+            .setCancelOnOtherWindowOpen(true)
+            .setModalContext(myModalContext)
+            .setCancelOnWindowDeactivation(myCancelOnWindowDeactivation)
+            .setCancelOnClickOutside(myCancelOnClickOutside)
+            .setCouldPin(myCouldPin);
 
     if (keyEventHandler != null) {
       builder.setKeyEventHandler(keyEventHandler);
@@ -539,21 +535,7 @@ public class PopupChooserBuilder {
 
 
       if (myAutoselectOnMouseMove) {
-        list.addMouseMotionListener(new MouseMotionAdapter() {
-          boolean myIsEngaged = false;
-          public void mouseMoved(MouseEvent e) {
-            if (myIsEngaged && !UIUtil.isSelectionButtonDown(e)) {
-              Point point = e.getPoint();
-              int index = list.locationToIndex(point);
-              list.putClientProperty(SELECTED_BY_MOUSE_EVENT, Boolean.TRUE);
-              list.setSelectedIndex(index);
-              list.putClientProperty(SELECTED_BY_MOUSE_EVENT, Boolean.FALSE);
-            }
-            else {
-              myIsEngaged = true;
-            }
-          }
-        });
+        ListUtil.installAutoSelectOnMouseMove(list);
       }
 
       ListScrollingUtil.installActions(list);

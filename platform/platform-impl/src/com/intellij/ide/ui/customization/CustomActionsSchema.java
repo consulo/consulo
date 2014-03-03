@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ExportableComponent;
 import com.intellij.openapi.components.ServiceManager;
@@ -84,12 +85,12 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     myIdToNameList.add(new Pair("NavBarToolBar", "Navigation Bar Toolbar"));
 
     CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar =
-      new CustomizableActionGroupProvider.CustomizableActionGroupRegistrar() {
-        @Override
-        public void addCustomizableActionGroup(@NotNull String groupId, @NotNull String groupTitle) {
-          myIdToNameList.add(new Pair(groupId, groupTitle));
-        }
-      };
+            new CustomizableActionGroupProvider.CustomizableActionGroupRegistrar() {
+              @Override
+              public void addCustomizableActionGroup(@NotNull String groupId, @NotNull String groupTitle) {
+                myIdToNameList.add(new Pair(groupId, groupTitle));
+              }
+            };
     for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensions()) {
       provider.registerGroups(registrar);
     }
@@ -135,6 +136,10 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
 
   public boolean isModified(CustomActionsSchema schema) {
     final ArrayList<ActionUrl> storedActions = schema.getActions();
+    if (ApplicationManager.getApplication().isUnitTestMode() && !storedActions.isEmpty()) {
+      System.err.println("stored: " + storedActions.toString());
+      System.err.println("actual: " + getActions().toString());
+    }
     if (storedActions.size() != getActions().size()) {
       return true;
     }
@@ -150,6 +155,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     return false;
   }
 
+  @Override
   public void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
     Element schElement = element;
@@ -170,9 +176,13 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
       url.readExternal((Element)groupElement);
       myActions.add(url);
     }
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
+      System.err.println("read custom actions: " + myActions.toString());
+    }
     readIcons(element);
   }
 
+  @Override
   public void writeExternal(Element element) throws WriteExternalException {
     DefaultJDOMExternalizer.writeExternal(this, element);
     writeActions(element);
@@ -291,6 +301,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
       }
     }
     SwingUtilities.invokeLater(new Runnable() {
+      @Override
       public void run() {
         initActionIcons();
       }
@@ -342,16 +353,19 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
   }
 
 
+  @Override
   @NotNull
   public File[] getExportFiles() {
     return new File[]{PathManager.getOptionsFile(this)};
   }
 
+  @Override
   @NotNull
   public String getPresentableName() {
     return IdeBundle.message("title.custom.actions.schemas");
   }
 
+  @Override
   public String getExternalFileName() {
     return "customization";
   }
@@ -365,10 +379,12 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
       this.second = second;
     }
 
+    @Override
     public int hashCode() {
       return first.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
       return obj instanceof Pair && first.equals(((Pair)obj).first);
     }
@@ -378,6 +394,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     public static ActionUrlComparator INSTANCE = new ActionUrlComparator();
     private static final int DELETED = 1;
     private static final int ADDED = 2;
+    @Override
     public int compare(ActionUrl u1, ActionUrl u2) {
       final int w1 = getEquivalenceClass(u1);
       final int w2 = getEquivalenceClass(u2);

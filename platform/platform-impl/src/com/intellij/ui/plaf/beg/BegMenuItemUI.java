@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -60,7 +59,9 @@ public class BegMenuItemUI extends BasicMenuItemUI {
 
   private Border myAquaSelectedBackgroundPainter;
 
-  /** invoked by reflection */
+  /**
+   * invoked by reflection
+   */
   public static ComponentUI createUI(JComponent component) {
     return new BegMenuItemUI();
   }
@@ -69,19 +70,21 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     myMaxGutterIconWidth = 18;
 
     if (UIUtil.isUnderAquaBasedLookAndFeel() && myAquaSelectedBackgroundPainter == null) {
-      myAquaSelectedBackgroundPainter = (Border) UIManager.get("MenuItem.selectedBackgroundPainter");
+      myAquaSelectedBackgroundPainter = (Border)UIManager.get("MenuItem.selectedBackgroundPainter");
     }
   }
 
+  @Override
   protected void installDefaults() {
     super.installDefaults();
     final String propertyPrefix = getPropertyPrefix();
     Integer integer = UIUtil.getPropertyMaxGutterIconWidth(propertyPrefix);
-    if (integer != null){
+    if (integer != null) {
       myMaxGutterIconWidth = integer.intValue();
     }
   }
 
+  @Override
   public void paint(Graphics g, JComponent comp) {
     UIUtil.applyRenderingHints(g);
     JMenuItem jmenuitem = (JMenuItem)comp;
@@ -106,23 +109,27 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     String keyStrokeText;
     if (jmenuitem instanceof ActionMenuItem) {
       keyStrokeText = ((ActionMenuItem)jmenuitem).getFirstShortcutText();
-    }else{
+    }
+    else {
       keyStrokeText = getKeyStrokeText(jmenuitem.getAccelerator());
     }
-    String s1 = layoutMenuItem(fontmetrics, jmenuitem.getText(), fontmetrics1, keyStrokeText, icon1, icon2, arrowIcon, jmenuitem.getVerticalAlignment(), jmenuitem.getHorizontalAlignment(), jmenuitem.getVerticalTextPosition(), jmenuitem.getHorizontalTextPosition(), f, l, j, c, h, d, jmenuitem.getText() != null ? defaultTextIconGap : 0, defaultTextIconGap);
+    String s1 = layoutMenuItem(fontmetrics, jmenuitem.getText(), fontmetrics1, keyStrokeText, icon1, icon2, arrowIcon, jmenuitem.getVerticalAlignment(),
+                               jmenuitem.getHorizontalAlignment(), jmenuitem.getVerticalTextPosition(), jmenuitem.getHorizontalTextPosition(), f, l, j, c, h, d,
+                               jmenuitem.getText() != null ? defaultTextIconGap : 0, defaultTextIconGap);
     Color color2 = g.getColor();
-    if (comp.isOpaque()){
+    if (comp.isOpaque()) {
       g.setColor(jmenuitem.getBackground());
       g.fillRect(0, 0, j1, k1);
-      if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()){
+      if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()) {
         if (UIUtil.isUnderAquaLookAndFeel()) {
           myAquaSelectedBackgroundPainter.paintBorder(comp, g, 0, 0, j1, k1);
-        } else {
+        }
+        else {
           g.setColor(selectionBackground);
-          if (icon2 != null){
+          if (icon2 != null) {
             g.fillRect(k, 0, j1 - k, k1);
           }
-          else{
+          else {
             g.fillRect(0, 0, j1, k1);
             //graphics.setColor(BegResources.q);
             //graphics.drawLine(0, 0, 0, k1);
@@ -134,53 +141,52 @@ public class BegMenuItemUI extends BasicMenuItemUI {
       }
       g.setColor(color2);
     }
-    if (icon2 != null){
-      if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()){
+    if (icon2 != null) {
+      if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()) {
         g.setColor(selectionForeground);
       }
-      else{
+      else {
         g.setColor(jmenuitem.getForeground());
       }
-      if (useCheckAndArrow()){
+      if (useCheckAndArrow()) {
         icon2.paintIcon(comp, g, h.x, h.y);
       }
       g.setColor(color2);
-      if (menuItem.isArmed()){
+      if (menuItem.isArmed()) {
         drawIconBorder(g);
       }
     }
-    if (icon1 != null){
-      if (!buttonmodel.isEnabled()){
+    if (icon1 != null) {
+      if (!buttonmodel.isEnabled()) {
         icon1 = jmenuitem.getDisabledIcon();
       }
-      else
-        if (buttonmodel.isPressed() && buttonmodel.isArmed()){
-          icon1 = jmenuitem.getPressedIcon();
-          if (icon1 == null){
-            icon1 = jmenuitem.getIcon();
-          }
+      else if (buttonmodel.isPressed() && buttonmodel.isArmed()) {
+        icon1 = jmenuitem.getPressedIcon();
+        if (icon1 == null) {
+          icon1 = jmenuitem.getIcon();
         }
-      if (icon1 != null){
+      }
+      if (icon1 != null) {
         icon1.paintIcon(comp, g, l.x, l.y);
       }
     }
-    if (s1 != null && s1.length() > 0){
-      if (buttonmodel.isEnabled()){
-        if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()){
+    if (s1 != null && s1.length() > 0) {
+      if (buttonmodel.isEnabled()) {
+        if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()) {
           g.setColor(selectionForeground);
         }
-        else{
+        else {
           g.setColor(jmenuitem.getForeground());
         }
         BasicGraphicsUtils.drawStringUnderlineCharAt(g, s1, mnemonicIndex, j.x, j.y + fontmetrics.getAscent());
       }
       else {
         final Object disabledForeground = UIUtil.getMenuItemDisabledForegroundObject();
-        if (disabledForeground instanceof Color){
+        if (disabledForeground instanceof Color) {
           g.setColor((Color)disabledForeground);
           BasicGraphicsUtils.drawStringUnderlineCharAt(g, s1, mnemonicIndex, j.x, j.y + fontmetrics.getAscent());
         }
-        else{
+        else {
           g.setColor(jmenuitem.getBackground().brighter());
           BasicGraphicsUtils.drawStringUnderlineCharAt(g, s1, mnemonicIndex, j.x, j.y + fontmetrics.getAscent());
           g.setColor(jmenuitem.getBackground().darker());
@@ -188,9 +194,9 @@ public class BegMenuItemUI extends BasicMenuItemUI {
         }
       }
     }
-    if (keyStrokeText != null && !keyStrokeText.isEmpty()){
+    if (keyStrokeText != null && !keyStrokeText.isEmpty()) {
       g.setFont(acceleratorFont);
-      if (buttonmodel.isEnabled()){
+      if (buttonmodel.isEnabled()) {
         if (UIUtil.isUnderAquaBasedLookAndFeel() && (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected())) {
           g.setColor(selectionForeground);
         }
@@ -204,23 +210,22 @@ public class BegMenuItemUI extends BasicMenuItemUI {
         }
         BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x, c.y + fontmetrics.getAscent());
       }
-      else
-        if (disabledForeground != null){
-          g.setColor(disabledForeground);
-          BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x, c.y + fontmetrics.getAscent());
-        }
-        else{
-          g.setColor(jmenuitem.getBackground().brighter());
-          BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x, c.y + fontmetrics.getAscent());
-          g.setColor(jmenuitem.getBackground().darker());
-          BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x - 1, (c.y + fontmetrics.getAscent()) - 1);
-        }
+      else if (disabledForeground != null) {
+        g.setColor(disabledForeground);
+        BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x, c.y + fontmetrics.getAscent());
+      }
+      else {
+        g.setColor(jmenuitem.getBackground().brighter());
+        BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x, c.y + fontmetrics.getAscent());
+        g.setColor(jmenuitem.getBackground().darker());
+        BasicGraphicsUtils.drawString(g, keyStrokeText, 0, c.x - 1, (c.y + fontmetrics.getAscent()) - 1);
+      }
     }
-    if (arrowIcon != null){
-      if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()){
+    if (arrowIcon != null) {
+      if (buttonmodel.isArmed() || (comp instanceof JMenu) && buttonmodel.isSelected()) {
         g.setColor(selectionForeground);
       }
-      if (useCheckAndArrow()){
+      if (useCheckAndArrow()) {
         arrowIcon.paintIcon(comp, g, d.x, d.y);
       }
     }
@@ -230,14 +235,14 @@ public class BegMenuItemUI extends BasicMenuItemUI {
 
   private String getKeyStrokeText(KeyStroke keystroke) {
     String s1 = "";
-    if (keystroke != null){
+    if (keystroke != null) {
       int j1 = keystroke.getModifiers();
-      if (j1 > 0){
+      if (j1 > 0) {
         if (SystemInfo.isMac) {
           try {
             Class appleLaf = Class.forName(AQUA_LOOK_AND_FEEL_CLASS_NAME);
-            Method getModifiers = appleLaf.getMethod(GET_KEY_MODIFIERS_TEXT, new Class[] {int.class, boolean.class});
-            s1 = (String)getModifiers.invoke(appleLaf, new Object[] {new Integer(j1), Boolean.FALSE});
+            Method getModifiers = appleLaf.getMethod(GET_KEY_MODIFIERS_TEXT, new Class[]{int.class, boolean.class});
+            s1 = (String)getModifiers.invoke(appleLaf, new Object[]{new Integer(j1), Boolean.FALSE});
           }
           catch (Exception e) {
             if (SystemInfo.isMacOSLeopard) {
@@ -259,30 +264,31 @@ public class BegMenuItemUI extends BasicMenuItemUI {
   }
 
   private boolean useCheckAndArrow() {
-    if ((menuItem instanceof JMenu) && ((JMenu)menuItem).isTopLevelMenu()){
+    if ((menuItem instanceof JMenu) && ((JMenu)menuItem).isTopLevelMenu()) {
       return false;
     }
     return true;
   }
 
+  @Override
   public MenuElement[] getPath() {
     MenuSelectionManager menuselectionmanager = MenuSelectionManager.defaultManager();
     MenuElement amenuelement[] = menuselectionmanager.getSelectedPath();
     int i1 = amenuelement.length;
-    if (i1 == 0){
+    if (i1 == 0) {
       return new MenuElement[0];
     }
     java.awt.Container container = menuItem.getParent();
     MenuElement amenuelement1[];
-    if (amenuelement[i1 - 1].getComponent() == container){
+    if (amenuelement[i1 - 1].getComponent() == container) {
       amenuelement1 = new MenuElement[i1 + 1];
       System.arraycopy(amenuelement, 0, amenuelement1, 0, i1);
       amenuelement1[i1] = menuItem;
     }
-    else{
+    else {
       int j1;
-      for(j1 = amenuelement.length - 1; j1 >= 0; j1--){
-        if (amenuelement[j1].getComponent() == container){
+      for (j1 = amenuelement.length - 1; j1 >= 0; j1--) {
+        if (amenuelement[j1].getComponent() == container) {
           break;
         }
       }
@@ -293,56 +299,58 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     return amenuelement1;
   }
 
+  @Override
   public Dimension getMinimumSize(JComponent jcomponent) {
     return null;
   }
 
-  private String layoutMenuItem(
-    FontMetrics fontmetrics,
-    String text,
-    FontMetrics fontmetrics1,
-    String keyStrokeText,
-    Icon icon,
-    Icon checkIcon,
-    Icon arrowIcon,
-    int verticalAlignment,
-    int horizontalAlignment,
-    int verticalTextPosition,
-    int horizontalTextPosition,
-    Rectangle viewRect,
-    Rectangle iconRect,
-    Rectangle textRect,
-    Rectangle acceleratorRect,
-    Rectangle checkIconRect,
-    Rectangle arrowIconRect,
-    int textIconGap,
-    int menuItemGap
-  ) {
-    SwingUtilities.layoutCompoundLabel(menuItem, fontmetrics, text, icon, verticalAlignment, horizontalAlignment, verticalTextPosition, horizontalTextPosition, viewRect, iconRect, textRect, textIconGap);
-    if (keyStrokeText == null || "".equals(keyStrokeText)){
+  private String layoutMenuItem(FontMetrics fontmetrics,
+                                String text,
+                                FontMetrics fontmetrics1,
+                                String keyStrokeText,
+                                Icon icon,
+                                Icon checkIcon,
+                                Icon arrowIcon,
+                                int verticalAlignment,
+                                int horizontalAlignment,
+                                int verticalTextPosition,
+                                int horizontalTextPosition,
+                                Rectangle viewRect,
+                                Rectangle iconRect,
+                                Rectangle textRect,
+                                Rectangle acceleratorRect,
+                                Rectangle checkIconRect,
+                                Rectangle arrowIconRect,
+                                int textIconGap,
+                                int menuItemGap) {
+    SwingUtilities.layoutCompoundLabel(menuItem, fontmetrics, text, icon, verticalAlignment, horizontalAlignment, verticalTextPosition, horizontalTextPosition,
+                                       viewRect, iconRect, textRect, textIconGap);
+    if (keyStrokeText == null || "".equals(keyStrokeText)) {
       acceleratorRect.width = acceleratorRect.height = 0;
     }
-    else{
+    else {
       acceleratorRect.width = SwingUtilities.computeStringWidth(fontmetrics1, keyStrokeText);
       acceleratorRect.height = fontmetrics1.getHeight();
     }
 
     /* Initialize the checkIcon bounds rectangle's width & height.
      */
-    if (useCheckAndArrow()){
-      if (checkIcon != null){
+    if (useCheckAndArrow()) {
+      if (checkIcon != null) {
         checkIconRect.width = checkIcon.getIconWidth();
         checkIconRect.height = checkIcon.getIconHeight();
-      }else{
+      }
+      else {
         checkIconRect.width = checkIconRect.height = 0;
       }
 
       /* Initialize the arrowIcon bounds rectangle width & height.
        */
-      if (arrowIcon != null){
+      if (arrowIcon != null) {
         arrowIconRect.width = arrowIcon.getIconWidth();
         arrowIconRect.height = arrowIcon.getIconHeight();
-      }else{
+      }
+      else {
         arrowIconRect.width = arrowIconRect.height = 0;
       }
       textRect.x += myMaxGutterIconWidth;
@@ -359,17 +367,17 @@ public class BegMenuItemUI extends BasicMenuItemUI {
 
     // Position the Check and Arrow Icons
 
-    if (useCheckAndArrow()){
+    if (useCheckAndArrow()) {
       arrowIconRect.x += viewRect.width - arrowIconRect.width;
       arrowIconRect.y = (viewRect.y + labelRect.height / 2) - arrowIconRect.height / 2;
-      if (checkIcon != null){
+      if (checkIcon != null) {
         checkIconRect.y = (viewRect.y + labelRect.height / 2) - checkIconRect.height / 2;
         checkIconRect.x += (viewRect.x + myMaxGutterIconWidth / 2) - checkIcon.getIconWidth() / 2;
         a = viewRect.x;
         e = (viewRect.y + labelRect.height / 2) - myMaxGutterIconWidth / 2;
         k = viewRect.x + myMaxGutterIconWidth + 2;
       }
-      else{
+      else {
         checkIconRect.x = checkIconRect.y = 0;
       }
     }
@@ -378,12 +386,13 @@ public class BegMenuItemUI extends BasicMenuItemUI {
 
   private Icon getIcon() {
     Icon icon = menuItem.getIcon();
-    if (icon != null && getAllowedIcon() != null){
+    if (icon != null && getAllowedIcon() != null) {
       icon = null;
     }
     return icon;
   }
 
+  @Override
   public Dimension getPreferredSize(JComponent comp) {
     JMenuItem jmenuitem = (JMenuItem)comp;
     Icon icon1 = getIcon();
@@ -392,21 +401,24 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     String keyStrokeText;
     if (jmenuitem instanceof ActionMenuItem) {
       keyStrokeText = ((ActionMenuItem)jmenuitem).getFirstShortcutText();
-    }else{
+    }
+    else {
       keyStrokeText = getKeyStrokeText(jmenuitem.getAccelerator());
     }
     Font font = jmenuitem.getFont();
     FontMetrics fontmetrics = comp.getFontMetrics(font);
     FontMetrics fontmetrics1 = comp.getFontMetrics(acceleratorFont);
     initBounds();
-    layoutMenuItem(fontmetrics, text, fontmetrics1, keyStrokeText, icon1, icon2, arrowIcon, jmenuitem.getVerticalAlignment(), jmenuitem.getHorizontalAlignment(), jmenuitem.getVerticalTextPosition(), jmenuitem.getHorizontalTextPosition(), f, l, j, c, h, d, text != null ? defaultTextIconGap : 0, defaultTextIconGap);
+    layoutMenuItem(fontmetrics, text, fontmetrics1, keyStrokeText, icon1, icon2, arrowIcon, jmenuitem.getVerticalAlignment(),
+                   jmenuitem.getHorizontalAlignment(), jmenuitem.getVerticalTextPosition(), jmenuitem.getHorizontalTextPosition(), f, l, j, c, h, d,
+                   text != null ? defaultTextIconGap : 0, defaultTextIconGap);
     i.setBounds(j);
     i = SwingUtilities.computeUnion(l.x, l.y, l.width, l.height, i);
-    if (!(keyStrokeText == null || "".equals(keyStrokeText))){
+    if (!(keyStrokeText == null || "".equals(keyStrokeText))) {
       i.width += c.width;
       i.width += 7 * defaultTextIconGap;
     }
-    if (useCheckAndArrow()){
+    if (useCheckAndArrow()) {
       i.width += myMaxGutterIconWidth;
       i.width += defaultTextIconGap;
       i.width += defaultTextIconGap;
@@ -414,14 +426,14 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     }
     i.width += 2 * defaultTextIconGap;
     Insets insets = jmenuitem.getInsets();
-    if (insets != null){
+    if (insets != null) {
       i.width += insets.left + insets.right;
       i.height += insets.top + insets.bottom;
     }
-    if (i.width % 2 == 0){
+    if (i.width % 2 == 0) {
       i.width++;
     }
-    if (i.height % 2 == 0){
+    if (i.height % 2 == 0) {
       i.height++;
     }
     return i.getSize();
@@ -454,110 +466,120 @@ public class BegMenuItemUI extends BasicMenuItemUI {
 
   private Icon getAllowedIcon() {
     Icon icon = menuItem.isEnabled() ? menuItem.getIcon() : menuItem.getDisabledIcon();
-    if (icon != null && icon.getIconWidth() > myMaxGutterIconWidth){
+    if (icon != null && icon.getIconWidth() > myMaxGutterIconWidth) {
       icon = null;
     }
     return icon;
   }
 
+  @Override
   public Dimension getMaximumSize(JComponent comp) {
     return null;
   }
 
+  @Override
   public void update(Graphics g, JComponent comp) {
     paint(g, comp);
   }
 
-  /** Copied from BasicMenuItemUI */
+  /**
+   * Copied from BasicMenuItemUI
+   */
   @SuppressWarnings({"HardCodedStringLiteral"})
-  private boolean isInternalFrameSystemMenu(){
-    String actionCommand=menuItem.getActionCommand();
-    if(
-      ("Close".equals(actionCommand))||
-      ("Minimize".equals(actionCommand))||
-      ("Restore".equals(actionCommand))||
-      ("Maximize".equals(actionCommand))
-    ){
+  private boolean isInternalFrameSystemMenu() {
+    String actionCommand = menuItem.getActionCommand();
+    if (("Close".equals(actionCommand)) ||
+        ("Minimize".equals(actionCommand)) ||
+        ("Restore".equals(actionCommand)) ||
+        ("Maximize".equals(actionCommand))) {
       return true;
-    } else{
+    }
+    else {
       return false;
     }
   }
 
-  /** Copied from BasicMenuItemUI */
-  private void doClick(MenuSelectionManager msm,MouseEvent e) {
+  /**
+   * Copied from BasicMenuItemUI
+   */
+  private void doClick(MenuSelectionManager msm, MouseEvent e) {
     // Auditory cue
-    if(!isInternalFrameSystemMenu()){
-      @NonNls ActionMap map=menuItem.getActionMap();
-      if(map!=null){
-        Action audioAction=map.get(getPropertyPrefix()+".commandSound");
-        if(audioAction!=null){
+    if (!isInternalFrameSystemMenu()) {
+      @NonNls ActionMap map = menuItem.getActionMap();
+      if (map != null) {
+        Action audioAction = map.get(getPropertyPrefix() + ".commandSound");
+        if (audioAction != null) {
           // pass off firing the Action to a utility method
-          BasicLookAndFeel lf=(BasicLookAndFeel)UIManager.getLookAndFeel();
+          BasicLookAndFeel lf = (BasicLookAndFeel)UIManager.getLookAndFeel();
           // It's a hack. The method BasicLookAndFeel.playSound has protected access, so
           // it's imposible to mormally invoke it.
           try {
-            Method playSoundMethod=BasicLookAndFeel.class.getDeclaredMethod(PLAY_SOUND_METHOD,new Class[]{Action.class});
+            Method playSoundMethod = BasicLookAndFeel.class.getDeclaredMethod(PLAY_SOUND_METHOD, new Class[]{Action.class});
             playSoundMethod.setAccessible(true);
-            playSoundMethod.invoke(lf,new Object[]{audioAction});
-          } catch(Exception ignored) {}
+            playSoundMethod.invoke(lf, new Object[]{audioAction});
+          }
+          catch (Exception ignored) {
+          }
         }
       }
     }
     // Visual feedback
-    if(msm==null){
-      msm=MenuSelectionManager.defaultManager();
+    if (msm == null) {
+      msm = MenuSelectionManager.defaultManager();
     }
     msm.clearSelectedPath();
-    ((ActionMenuItem)menuItem).fireActionPerformed(
-      new ActionEvent(
-        menuItem,
-        ActionEvent.ACTION_PERFORMED,
-        null,
-        e.getWhen(),
-        e.getModifiers()
-      )
-    );
+    ((ActionMenuItem)menuItem).fireActionPerformed(new ActionEvent(menuItem, ActionEvent.ACTION_PERFORMED, null, e.getWhen(), e.getModifiers()));
   }
 
-  protected MouseInputListener createMouseInputListener(JComponent c){
+  @Override
+  protected MouseInputListener createMouseInputListener(JComponent c) {
     return new MyMouseInputHandler();
   }
 
-  private class MyMouseInputHandler extends MouseInputHandler{
-    public void mouseReleased(MouseEvent e){
-      MenuSelectionManager manager=MenuSelectionManager.defaultManager();
-      Point p=e.getPoint();
-      if(p.x>=0&&p.x<menuItem.getWidth()&&p.y>=0&&p.y<menuItem.getHeight()){
-        doClick(manager,e);
-      } else{
+  private class MyMouseInputHandler extends MouseInputHandler {
+    @Override
+    public void mouseReleased(MouseEvent e) {
+      MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+      Point p = e.getPoint();
+      if (p.x >= 0 && p.x < menuItem.getWidth() && p.y >= 0 && p.y < menuItem.getHeight()) {
+        doClick(manager, e);
+      }
+      else {
         manager.processMouseEvent(e);
       }
     }
   }
 
-  protected MenuDragMouseListener createMenuDragMouseListener(JComponent c){
+  @Override
+  protected MenuDragMouseListener createMenuDragMouseListener(JComponent c) {
     return new MyMenuDragMouseHandler();
   }
 
   private class MyMenuDragMouseHandler implements MenuDragMouseListener {
-    public void menuDragMouseEntered(MenuDragMouseEvent e){}
+    @Override
+    public void menuDragMouseEntered(MenuDragMouseEvent e) {
+    }
 
-    public void menuDragMouseDragged(MenuDragMouseEvent e){
-      MenuSelectionManager manager=e.getMenuSelectionManager();
-      MenuElement path[]=e.getPath();
+    @Override
+    public void menuDragMouseDragged(MenuDragMouseEvent e) {
+      MenuSelectionManager manager = e.getMenuSelectionManager();
+      MenuElement path[] = e.getPath();
       manager.setSelectedPath(path);
     }
 
-    public void menuDragMouseExited(MenuDragMouseEvent e){}
+    @Override
+    public void menuDragMouseExited(MenuDragMouseEvent e) {
+    }
 
-    public void menuDragMouseReleased(MenuDragMouseEvent e){
-      MenuSelectionManager manager=e.getMenuSelectionManager();
-      Point p=e.getPoint();
-      if(p.x>=0&&p.x<menuItem.getWidth()&&
-         p.y>=0&&p.y<menuItem.getHeight()){
-        doClick(manager,e);
-      } else{
+    @Override
+    public void menuDragMouseReleased(MenuDragMouseEvent e) {
+      MenuSelectionManager manager = e.getMenuSelectionManager();
+      Point p = e.getPoint();
+      if (p.x >= 0 && p.x < menuItem.getWidth() &&
+          p.y >= 0 && p.y < menuItem.getHeight()) {
+        doClick(manager, e);
+      }
+      else {
         manager.clearSelectedPath();
       }
     }

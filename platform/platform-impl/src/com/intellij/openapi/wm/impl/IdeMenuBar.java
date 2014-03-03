@@ -406,7 +406,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    if (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
+    if (UIUtil.isUnderBuildInLaF()) {
       g.setColor(UIManager.getColor("MenuItem.background"));
       g.fillRect(0, 0, getWidth(), getHeight());
     }

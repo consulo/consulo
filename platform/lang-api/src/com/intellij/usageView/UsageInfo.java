@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package com.intellij.usageView;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.Segment;
@@ -43,8 +41,6 @@ public class UsageInfo {
     PsiFile file = element.getContainingFile();
     PsiElement topElement = file == null ? element : file;
     LOG.assertTrue(topElement.isValid(), element);
-    Project project = topElement.getProject();
-    SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(project);
 
     TextRange elementRange = element.getTextRange();
     if (elementRange == null) {
@@ -63,8 +59,10 @@ public class UsageInfo {
       throw new IllegalArgumentException("element " + element + "; diff " + (endOffset-startOffset));
     }
 
+    Project project = topElement.getProject();
+    SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(project);
+    mySmartPointer = smartPointerManager.createSmartPsiElementPointer(element, file);
     if (startOffset != element.getTextOffset() - elementRange.getStartOffset() || endOffset != elementRange.getLength()) {
-      mySmartPointer = smartPointerManager.createSmartPsiElementPointer(element, file);
       TextRange rangeToStore;
       if (file != null && InjectedLanguageManager.getInstance(project).isInjectedFragment(file)) {
         rangeToStore = elementRange;
@@ -75,7 +73,6 @@ public class UsageInfo {
       myPsiFileRange = smartPointerManager.createSmartPsiFileRangePointer(file, rangeToStore);
     }
     else {
-      mySmartPointer = smartPointerManager.createSmartPsiElementPointer(element);
       myPsiFileRange = null;
     }
     this.isNonCodeUsage = isNonCodeUsage;
@@ -91,6 +88,7 @@ public class UsageInfo {
     mySmartPointer = smartPointer;
   }
 
+  @NotNull
   public SmartPsiElementPointer<?> getSmartPointer() {
     return mySmartPointer;
   }
@@ -172,15 +170,8 @@ public class UsageInfo {
   /**
    * Override this method if you want a tooltip to be displayed for this usage
    */
-  public String getTooltipText () {
+  public String getTooltipText() {
     return null;
-  }
-
-  public final void navigateTo(boolean requestFocus) {
-    int offset = getNavigationOffset();
-    VirtualFile file = getVirtualFile();
-    Project project = getProject();
-    FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, file, offset), requestFocus);
   }
 
   public int getNavigationOffset() {
@@ -209,7 +200,7 @@ public class UsageInfo {
     PsiElement element = getElement();
     if (element == null) return null;
     TextRange range = element.getTextRange();
-    ProperTextRange.assertProperRange(range, element);
+    TextRange.assertProperRange(range, element);
     if (element instanceof PsiFile) {
       // hack: it's actually a range inside file, use document for range checking since during the "find|replace all" operation, file range might have been changed
       Document document = PsiDocumentManager.getInstance(getProject()).getDocument((PsiFile)element);
@@ -233,6 +224,7 @@ public class UsageInfo {
     return element == null || element.isWritable();
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!getClass().equals(o.getClass())) return false;
@@ -246,6 +238,7 @@ public class UsageInfo {
            && (myPsiFileRange == null || usageInfo.myPsiFileRange != null && smartPointerManager.pointToTheSameElement(myPsiFileRange, usageInfo.myPsiFileRange));
   }
 
+  @Override
   public int hashCode() {
     int result = mySmartPointer != null ? mySmartPointer.hashCode() : 0;
     result = 29 * result + (myPsiFileRange == null ? 0 : myPsiFileRange.hashCode());
@@ -265,5 +258,18 @@ public class UsageInfo {
 
   public boolean isDynamicUsage() {
     return myDynamicUsage;
+  }
+
+  // creates new smart pointers
+  @Nullable("null means could not copy because info is no longer valid")
+  public UsageInfo copy() {
+    PsiElement element = mySmartPointer.getElement();
+    SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(getProject());
+    PsiFile containingFile = myPsiFileRange == null ? null : myPsiFileRange.getContainingFile();
+    Segment segment = containingFile == null ? null : myPsiFileRange.getRange();
+    TextRange range = segment == null ? null : TextRange.create(segment);
+    SmartPsiFileRange psiFileRange = range == null ? null : smartPointerManager.createSmartPsiFileRangePointer(containingFile, range);
+    SmartPsiElementPointer<PsiElement> pointer = element == null || !isValid() ? null : smartPointerManager.createSmartPsiElementPointer(element);
+    return pointer == null ? null : new UsageInfo(pointer, psiFileRange, isDynamicUsage(), isNonCodeUsage());
   }
 }

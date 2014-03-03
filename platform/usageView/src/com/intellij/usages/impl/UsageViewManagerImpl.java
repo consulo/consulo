@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,13 +116,13 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   private void addContent(@NotNull UsageViewImpl usageView, @NotNull UsageViewPresentation presentation) {
     Content content = com.intellij.usageView.UsageViewManager.getInstance(myProject).addContent(
-      presentation.getTabText(),
-      presentation.getTabName(),
-      presentation.getToolwindowTitle(),
-      true,
-      usageView.getComponent(),
-      presentation.isOpenInNewTab(),
-      true
+            presentation.getTabText(),
+            presentation.getTabName(),
+            presentation.getToolwindowTitle(),
+            true,
+            usageView.getComponent(),
+            presentation.isOpenInNewTab(),
+            true
     );
     usageView.setContent(content);
     content.putUserData(USAGE_VIEW_KEY, usageView);
@@ -137,7 +137,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                        @Nullable final UsageViewStateListener listener) {
     final AtomicReference<UsageViewImpl> usageViewRef = new AtomicReference<UsageViewImpl>();
 
-    final FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation();
+    final FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(showNotFoundMessage);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
 
@@ -211,10 +211,11 @@ public class UsageViewManagerImpl extends UsageViewManager {
   @NotNull
   public static String getProgressTitle(@NotNull UsageViewPresentation presentation) {
     final String scopeText = presentation.getScopeText();
-    if (scopeText == null) {
-      return UsageViewBundle.message("progress.searching.for", StringUtil.capitalize(presentation.getUsagesString()));
-    }
-    return UsageViewBundle.message("progress.searching.for.in", StringUtil.capitalize(presentation.getUsagesString()), scopeText);
+    String usagesString = StringUtil.capitalize(presentation.getUsagesString());
+    String result = scopeText == null
+                    ? UsageViewBundle.message("progress.searching.for", usagesString)
+                    : UsageViewBundle.message("progress.searching.for.in", usagesString, scopeText);
+    return StringUtil.escapeXml(result);
   }
 
   private void showToolWindow(boolean activateWindow) {
@@ -237,17 +238,18 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
 
-  public static void showTooManyUsagesWarning(@NotNull final Project project,
-                                              @NotNull final TooManyUsagesStatus tooManyUsagesStatus,
-                                              @NotNull final ProgressIndicator indicator,
-                                              final int usageCount,
-                                              final UsageViewImpl usageView) {
+  static void showTooManyUsagesWarning(@NotNull final Project project,
+                                       @NotNull final TooManyUsagesStatus tooManyUsagesStatus,
+                                       @NotNull final ProgressIndicator indicator,
+                                       @NotNull final UsageViewPresentation presentation,
+                                       final int usageCount,
+                                       final UsageViewImpl usageView) {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
         if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
-        String message = UsageViewBundle.message("find.excessive.usage.count.prompt", usageCount);
-        UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message);
+        String message = UsageViewBundle.message("find.excessive.usage.count.prompt", usageCount, StringUtil.pluralize(presentation.getUsagesWord()));
+        UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message, presentation);
         if (ret == UsageLimitUtil.Result.ABORT && usageView != null) {
           usageView.cancelCurrentSearch();
           indicator.cancel();
@@ -260,7 +262,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
   private class SearchForUsagesRunnable implements Runnable {
     private final AtomicInteger myUsageCountWithoutDefinition = new AtomicInteger(0);
     private final AtomicReference<Usage> myFirstUsage = new AtomicReference<Usage>();
-    @NotNull private final Project myProject;
+    @NotNull
+    private final Project myProject;
     private final AtomicReference<UsageViewImpl> myUsageViewRef;
     private final UsageViewPresentation myPresentation;
     private final UsageTarget[] mySearchFor;
@@ -316,6 +319,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
+          if (myProject.isDisposed()) return;
           addContent(usageView, myPresentation);
           if (myListener != null) {
             myListener.usageViewCreated(usageView);
@@ -339,7 +343,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
       findUsagesStartedBalloon.addRequest(new Runnable() {
         @Override
         public void run() {
-          String balloon = "Searching for " + myPresentation.getUsagesString()+"...";
+          String balloon = UsageViewBundle.message("progress.searching.for", StringUtil.escapeXml(myPresentation.getUsagesString()));
           notifyByFindBalloon(null, MessageType.WARNING, myProcessPresentation, UsageViewManagerImpl.this.myProject,
                               balloon);
           findStartedBalloonShown.set(true);
@@ -353,7 +357,6 @@ public class UsageViewManagerImpl extends UsageViewManager {
           ProgressIndicator indicator = ProgressWrapper.unwrap(ProgressManager.getInstance().getProgressIndicator());
           if (indicator != null && indicator.isCanceled()) return false;
           TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.getFrom(indicator);
-          tooManyUsagesStatus.pauseProcessingIfTooManyUsages();
           boolean incrementCounter = !isSelfUsage(usage, mySearchFor);
 
           if (incrementCounter) {
@@ -364,10 +367,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
             final UsageViewImpl usageView = getUsageView(indicator);
 
-            if (usageCount > UsageLimitUtil.USAGES_LIMIT) {
-              if (tooManyUsagesStatus.switchTooManyUsagesStatus()) {
-                showTooManyUsagesWarning(myProject, tooManyUsagesStatus, indicator, myUsageCountWithoutDefinition.get(), usageView);
-              }
+            if (usageCount > UsageLimitUtil.USAGES_LIMIT && tooManyUsagesStatus.switchTooManyUsagesStatus()) {
+              showTooManyUsagesWarning(myProject, tooManyUsagesStatus, indicator, myPresentation, usageCount, usageView);
             }
 
             if (usageView != null) {
@@ -417,7 +418,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                                            myPresentation.getScopeText());
 
             if (notFoundActions.isEmpty()) {
-              String[] lines = myProcessPresentation.isShowFindOptionsPrompt() ? new String[] {StringUtil.escapeXml(message), createOptionsHtml()} : new String[]{StringUtil.escapeXml(message)};
+              String[] lines = myProcessPresentation.isShowFindOptionsPrompt() ? new String[] {StringUtil.escapeXml(message), createOptionsHtml(mySearchFor)} : new String[]{StringUtil.escapeXml(message)};
               notifyByFindBalloon(createGotToOptionsListener(mySearchFor),
                                   MessageType.INFO, myProcessPresentation, UsageViewManagerImpl.this.myProject, lines);
               findStartedBalloonShown.set(false);
@@ -452,7 +453,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
               flashUsageScriptaculously(usage);
             }
             notifyByFindBalloon(createGotToOptionsListener(mySearchFor),
-                                MessageType.INFO, myProcessPresentation, UsageViewManagerImpl.this.myProject,"Only one usage found.", createOptionsHtml());
+                                MessageType.INFO, myProcessPresentation, UsageViewManagerImpl.this.myProject,"Only one usage found.", createOptionsHtml(
+                    mySearchFor));
           }
         }, ModalityState.NON_MODAL, myProject.getDisposed());
       }
@@ -592,9 +594,9 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @NotNull
-  private static String createOptionsHtml() {
+  private static String createOptionsHtml(@NonNls UsageTarget[] searchFor) {
+    KeyboardShortcut shortcut = UsageViewImpl.getShowUsagesWithSettingsShortcut(searchFor);
     String shortcutText = "";
-    KeyboardShortcut shortcut = UsageViewImpl.getShowUsagesWithSettingsShortcut();
     if (shortcut != null) {
       shortcutText = "&nbsp;(" + KeymapUtil.getShortcutText(shortcut) + ")";
     }

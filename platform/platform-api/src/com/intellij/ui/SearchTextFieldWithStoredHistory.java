@@ -33,6 +33,7 @@ public class SearchTextFieldWithStoredHistory extends SearchTextField {
     reset();
   }
 
+  @Override
   public void addCurrentTextToHistory() {
     super.addCurrentTextToHistory();
     PropertiesComponent.getInstance().setValue(myPropertyName, StringUtil.join(getHistory(), "\n"));

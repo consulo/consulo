@@ -31,15 +31,18 @@ import java.util.Set;
 public class NonBundledPluginsUsagesCollector extends UsagesCollector {
   private static final String GROUP_ID = "non-bundled-plugins";
 
+  @Override
   @NotNull
   public GroupDescriptor getGroupId() {
     return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
   }
 
+  @Override
   @NotNull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
     final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     final List<IdeaPluginDescriptor> nonBundledEnabledPlugins = ContainerUtil.filter(plugins, new Condition<IdeaPluginDescriptor>() {
+      @Override
       public boolean value(final IdeaPluginDescriptor d) {
         return d.isEnabled() && !d.isBundled() && d.getPluginId() != null;
       }

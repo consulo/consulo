@@ -16,13 +16,14 @@
 package com.intellij.ide.ui.laf.modernDark;
 
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
-import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
 import com.intellij.ide.ui.laf.LafManagerImpl;
+import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
+import com.intellij.util.ui.BuildInLookAndFeel;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 
@@ -48,7 +49,7 @@ import java.util.Properties;
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernDarkLaf extends BasicLookAndFeel {
+public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
   BasicLookAndFeel base;
 
   public ModernDarkLaf() {

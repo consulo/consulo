@@ -29,11 +29,13 @@ import java.util.Set;
 public class DisabledPluginsUsagesCollector extends UsagesCollector {
   private static final String GROUP_ID = "disabled-plugins";
 
+  @Override
   @NotNull
   public GroupDescriptor getGroupId() {
     return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
   }
 
+  @Override
   @NotNull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
     return ContainerUtil.map2Set(PluginManagerCore.getDisabledPlugins(), new Function<String, UsageDescriptor>() {

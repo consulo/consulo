@@ -16,14 +16,15 @@
 package com.intellij.ide.ui.laf.darcula;
 
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
-import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
 import com.intellij.ide.ui.laf.LafManagerImpl;
+import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.hash.HashMap;
+import com.intellij.util.ui.BuildInLookAndFeel;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
 
@@ -47,7 +48,7 @@ import java.util.Properties;
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaLaf extends BasicLookAndFeel {
+public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
   public static final String NAME = "Darcula";
   BasicLookAndFeel base;
 

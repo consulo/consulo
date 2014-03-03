@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.updateSettings.impl.UpdateChecker;
@@ -50,11 +51,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.BorderUIResource;
 import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -95,6 +99,9 @@ public abstract class PluginManagerMain implements Disposable {
 
   private JPanel myTablePanel;
   protected JPanel myActionsPanel;
+  private JPanel myHeader;
+  private PluginHeaderPanel myPluginHeaderPanel;
+  private JPanel myInfoPanel;
 
 
   protected PluginTableModel pluginsModel;
@@ -113,19 +120,26 @@ public abstract class PluginManagerMain implements Disposable {
 
   protected void init() {
     GuiUtils.replaceJSplitPaneWithIDEASplitter(main);
-
+    myDescriptionTextArea.setEditorKit(new HTMLEditorKit());
+    myDescriptionTextArea.setEditable(false);
     myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
 
     JScrollPane installedScrollPane = createTable();
-    installTableActions(pluginTable);
+    myPluginHeaderPanel = new PluginHeaderPanel(this, getPluginTable());
+    myHeader.setBackground(UIUtil.getTextFieldBackground());
+    myHeader.add(myPluginHeaderPanel.getPanel(), BorderLayout.CENTER);
+    installTableActions();
 
     myTablePanel.add(installedScrollPane, BorderLayout.CENTER);
 
     myToolbarPanel.setLayout(new BorderLayout());
-    myActionToolbar = ActionManager.getInstance().createActionToolbar("PluginManaer", getActionGroup(true), true);
+    myActionToolbar = ActionManager.getInstance().createActionToolbar("PluginManager", getActionGroup(true), true);
     final JComponent component = myActionToolbar.getComponent();
-    myToolbarPanel.add(component, BorderLayout.WEST);
-    myToolbarPanel.add(myFilter, BorderLayout.EAST);
+    myToolbarPanel.add(component, BorderLayout.CENTER);
+    myToolbarPanel.add(myFilter, BorderLayout.WEST);
+
+    Border border = new BorderUIResource.LineBorderUIResource(new JBColor(Gray._220, Gray._55), 1);
+    myInfoPanel.setBorder(border);
   }
 
   protected abstract JScrollPane createTable();
@@ -162,19 +176,27 @@ public abstract class PluginManagerMain implements Disposable {
     return pluginsModel;
   }
 
-  protected void installTableActions(final PluginTable pluginTable) {
+  protected void installTableActions() {
     pluginTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        final IdeaPluginDescriptor[] descriptors = pluginTable.getSelectedObjects();
-        pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea);
-        myActionToolbar.updateActionsImmediately();
+        refresh();
       }
     });
 
     PopupHandler.installUnknownPopupHandler(pluginTable, getActionGroup(false), ActionManager.getInstance());
 
     new MySpeedSearchBar(pluginTable);
+  }
+
+  public void refresh() {
+    final IdeaPluginDescriptor[] descriptors = pluginTable.getSelectedObjects();
+    pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel,
+                     this);
+    myActionToolbar.updateActionsImmediately();
+    final JComponent parent = (JComponent)myHeader.getParent();
+    parent.revalidate();
+    parent.repaint();
   }
 
   public void setRequireShutdown(boolean val) {
@@ -188,7 +210,10 @@ public abstract class PluginManagerMain implements Disposable {
   protected void modifyPluginsList(List<IdeaPluginDescriptor> list) {
     IdeaPluginDescriptor[] selected = pluginTable.getSelectedObjects();
     pluginsModel.updatePluginsList(list);
-    pluginTable.getRowSorter().setSortKeys(Collections.singletonList(pluginsModel.getDefaultSortKey()));
+    final RowSorter.SortKey key = pluginsModel.getDefaultSortKey();
+    if (key != null) {
+      pluginTable.getRowSorter().setSortKeys(Collections.singletonList(key));
+    }
     //pluginsModel.sort();
     pluginsModel.filter(myFilter.getFilter().toLowerCase());
     if (selected != null) {
@@ -197,6 +222,10 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   protected abstract ActionGroup getActionGroup(boolean inToolbar);
+
+  protected abstract PluginManagerMain getAvailable();
+
+  protected abstract PluginManagerMain getInstalled();
 
   public JPanel getMainPanel() {
     return main;
@@ -260,9 +289,10 @@ public abstract class PluginManagerMain implements Disposable {
               propagateUpdates(list);
             }
             if (!errorMessages.isEmpty()) {
-              if (Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
+              if (Messages.OK ==
+                  Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
                                               IdeBundle.message("title.plugins"), CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(),
-                                              Messages.getErrorIcon()) == Messages.OK) {
+                                              Messages.getErrorIcon())) {
                 loadPluginsFromHostInBackground();
               }
             }
@@ -314,7 +344,7 @@ public abstract class PluginManagerMain implements Disposable {
                   Set<PluginNode> set = null;
                   try {
                     set = PluginInstaller.prepareToInstall(plugins, allPlugins);
-                    if(set != null) {
+                    if (set != null) {
                       onSuccess.consume(set);
                     }
                   }
@@ -342,61 +372,60 @@ public abstract class PluginManagerMain implements Disposable {
     requireShutdown = false;
   }
 
-  public static void pluginInfoUpdate(Object plugin, @Nullable String filter, @NotNull JEditorPane descriptionTextArea) {
-    if (plugin instanceof IdeaPluginDescriptor) {
-      IdeaPluginDescriptor pluginDescriptor = (IdeaPluginDescriptor)plugin;
-      StringBuilder sb = new StringBuilder();
+  public static void pluginInfoUpdate(IdeaPluginDescriptor plugin,
+                                      @Nullable String filter,
+                                      @NotNull JEditorPane descriptionTextArea,
+                                      @NotNull PluginHeaderPanel header,
+                                      PluginManagerMain manager) {
 
-      String description = pluginDescriptor.getDescription();
-      if (!isEmptyOrSpaces(description)) {
-        sb.append(description);
-      }
-
-      String changeNotes = pluginDescriptor.getChangeNotes();
-      if (!isEmptyOrSpaces(changeNotes)) {
-        sb.append("<h4>Change Notes</h4>");
-        sb.append(changeNotes);
-      }
-
-      if (!pluginDescriptor.isBundled()) {
-        String vendor = pluginDescriptor.getVendor();
-        String vendorEmail = pluginDescriptor.getVendorEmail();
-        String vendorUrl = pluginDescriptor.getVendorUrl();
-        if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
-          sb.append("<h4>Vendor</h4>");
-
-          if (!isEmptyOrSpaces(vendor)) {
-            sb.append(vendor);
-          }
-          if (!isEmptyOrSpaces(vendorUrl)) {
-            sb.append("<br>").append(composeHref(vendorUrl));
-          }
-          if (!isEmptyOrSpaces(vendorEmail)) {
-            sb.append("<br>").append(composeHref("mailto:" + vendorEmail));
-          }
-        }
-
-        String pluginDescriptorUrl = pluginDescriptor.getUrl();
-        if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
-          sb.append("<h4>Plugin homepage</h4>").append(composeHref(pluginDescriptorUrl));
-        }
-
-        String version = pluginDescriptor.getVersion();
-        if (!isEmptyOrSpaces(version)) {
-          sb.append("<h4>Version</h4>").append(version);
-        }
-
-        String size = plugin instanceof PluginNode ? ((PluginNode)plugin).getSize() : null;
-        if (!isEmptyOrSpaces(size)) {
-          sb.append("<h4>Size</h4>").append(PluginManagerColumnInfo.getFormattedSize(size));
-        }
-      }
-
-      setTextValue(sb, filter, descriptionTextArea);
-    }
-    else {
+    if (plugin == null) {
       setTextValue(null, filter, descriptionTextArea);
+      header.getPanel().setVisible(false);
+      return;
     }
+    StringBuilder sb = new StringBuilder();
+    header.setPlugin(plugin);
+    String description = plugin.getDescription();
+    if (!isEmptyOrSpaces(description)) {
+      sb.append(description);
+    }
+
+    String changeNotes = plugin.getChangeNotes();
+    if (!isEmptyOrSpaces(changeNotes)) {
+      sb.append("<h4>Change Notes</h4>");
+      sb.append(changeNotes);
+    }
+
+    if (!plugin.isBundled()) {
+      String vendor = plugin.getVendor();
+      String vendorEmail = plugin.getVendorEmail();
+      String vendorUrl = plugin.getVendorUrl();
+      if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
+        sb.append("<h4>Vendor</h4>");
+
+        if (!isEmptyOrSpaces(vendor)) {
+          sb.append(vendor);
+        }
+        if (!isEmptyOrSpaces(vendorUrl)) {
+          sb.append("<br>").append(composeHref(vendorUrl));
+        }
+        if (!isEmptyOrSpaces(vendorEmail)) {
+          sb.append("<br>").append(HTML_PREFIX).append("mailto:").append(vendorEmail).append("\">").append(vendorEmail).append(HTML_SUFFIX);
+        }
+      }
+
+      String pluginDescriptorUrl = plugin.getUrl();
+      if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
+        sb.append("<h4>Plugin homepage</h4>").append(composeHref(pluginDescriptorUrl));
+      }
+
+      String size = plugin instanceof PluginNode ? ((PluginNode)plugin).getSize() : null;
+      if (!isEmptyOrSpaces(size)) {
+        sb.append("<h4>Size</h4>").append(PluginManagerColumnInfo.getFormattedSize(size));
+      }
+    }
+
+    setTextValue(sb, filter, descriptionTextArea);
   }
 
   private static void setTextValue(@Nullable StringBuilder text, @Nullable String filter, JEditorPane pane) {
@@ -527,12 +556,12 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
 
-  public static void notifyPluginsWereInstalled(@NotNull Collection<? extends IdeaPluginDescriptor> installed) {
+  public static void notifyPluginsWereInstalled(@NotNull Collection<? extends IdeaPluginDescriptor> installed, Project project) {
     String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
-    notifyPluginsWereUpdated(pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed");
+    notifyPluginsWereUpdated(pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed", project);
   }
 
-  public static void notifyPluginsWereUpdated(final String title) {
+  public static void notifyPluginsWereUpdated(final String title, final Project project) {
     final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
     final boolean restartCapable = app.isRestartCapable();
     String message = restartCapable
@@ -553,7 +582,7 @@ public abstract class PluginManagerMain implements Disposable {
                   app.exit(true);
                 }
               }
-            }).notify(null);
+            }).notify(project);
   }
 
   protected class SortByStatusAction extends ToggleAction {

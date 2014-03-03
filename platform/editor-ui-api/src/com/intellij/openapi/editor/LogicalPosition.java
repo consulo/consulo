@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,19 +95,19 @@ public class LogicalPosition implements Comparable<LogicalPosition> {
                          int softWrapColumnDiff, int foldedLines, int foldingColumnDiff) throws IllegalArgumentException
   {
     this(line, column, softWrapLinesBeforeCurrentLogicalLine, softWrapLinesOnCurrentLogicalLine, softWrapColumnDiff, foldedLines,
-      foldingColumnDiff, true);
+         foldingColumnDiff, true);
   }
 
   private LogicalPosition(int line, int column, int softWrapLinesBeforeCurrentLogicalLine, int softWrapLinesOnCurrentLogicalLine,
                           int softWrapColumnDiff, int foldedLines, int foldingColumnDiff, boolean visualPositionAware)
-    throws IllegalArgumentException {
+          throws IllegalArgumentException {
     if (column + softWrapColumnDiff + foldingColumnDiff < 0) {
       throw new IllegalArgumentException(String.format(
-        "Attempt to create %s with invalid arguments - resulting column is negative (%d). Given arguments: line=%d, column=%d, "
-        + "soft wrap lines before: %d, soft wrap lines current: %d, soft wrap column diff: %d, folded lines: %d, folding column "
-        + "diff: %d, visual position aware: %b",
-        getClass().getName(), column + softWrapColumnDiff + foldingColumnDiff, line, column, softWrapLinesBeforeCurrentLogicalLine,
-        softWrapLinesOnCurrentLogicalLine, softWrapColumnDiff, foldedLines, foldingColumnDiff, visualPositionAware
+              "Attempt to create %s with invalid arguments - resulting column is negative (%d). Given arguments: line=%d, column=%d, "
+              + "soft wrap lines before: %d, soft wrap lines current: %d, soft wrap column diff: %d, folded lines: %d, folding column "
+              + "diff: %d, visual position aware: %b",
+              getClass().getName(), column + softWrapColumnDiff + foldingColumnDiff, line, column, softWrapLinesBeforeCurrentLogicalLine,
+              softWrapLinesOnCurrentLogicalLine, softWrapColumnDiff, foldedLines, foldingColumnDiff, visualPositionAware
       ));
     }
     if (line < 0) throw new IllegalArgumentException("line must be non negative: "+line);
@@ -132,11 +132,20 @@ public class LogicalPosition implements Comparable<LogicalPosition> {
    */
   public VisualPosition toVisualPosition() {
     return new VisualPosition(
-      line + softWrapLinesBeforeCurrentLogicalLine + softWrapLinesOnCurrentLogicalLine - foldedLines,
-      column + softWrapColumnDiff + foldingColumnDiff
+            line + softWrapLinesBeforeCurrentLogicalLine + softWrapLinesOnCurrentLogicalLine - foldedLines,
+            column + softWrapColumnDiff + foldingColumnDiff
     );
   }
 
+  /**
+   * Returns a new instance of class corresponding to the same logical position in the document, but without any cached
+   * reference to its visual position.
+   */
+  public LogicalPosition withoutVisualPositionInfo() {
+    return new LogicalPosition(line, column);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof LogicalPosition)) return false;
     final LogicalPosition logicalPosition = (LogicalPosition) o;
@@ -144,10 +153,12 @@ public class LogicalPosition implements Comparable<LogicalPosition> {
     return column == logicalPosition.column && line == logicalPosition.line;
   }
 
+  @Override
   public int hashCode() {
     return 29 * line + column;
   }
 
+  @Override
   @NonNls
   public String toString() {
     return "LogicalPosition: (" + line + ", " + column + ")"
@@ -161,6 +172,7 @@ public class LogicalPosition implements Comparable<LogicalPosition> {
            + (foldingColumnDiff == 0 ? "" : "; columns diff=" + foldingColumnDiff);
   }
 
+  @Override
   public int compareTo(LogicalPosition position) {
     if (line != position.line) return line - position.line;
     if (column != position.column) return column - position.column;

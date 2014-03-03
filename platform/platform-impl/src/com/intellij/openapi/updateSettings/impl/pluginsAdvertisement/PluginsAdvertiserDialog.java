@@ -84,7 +84,7 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
       PluginManagerMain.downloadPlugins(nodes, myAllPlugins, new Consumer<Set<PluginNode>>() {
         @Override
         public void consume(Set<PluginNode> pluginNodes) {
-          PluginManagerMain.notifyPluginsWereInstalled(pluginNodes);
+          PluginManagerMain.notifyPluginsWereInstalled(pluginNodes, null);
         }
       }, null);
     }

@@ -91,7 +91,7 @@ public class PluginAdvertiserEditorNotificationProvider extends EditorNotificati
           myEnabledExtensions.add(extension);
           PluginManagerCore.enablePlugin(disabledPlugin.getPluginId().getIdString());
           myNotifications.updateAllNotifications();
-          PluginManagerMain.notifyPluginsWereUpdated("Plugin was successfully enabled");
+          PluginManagerMain.notifyPluginsWereUpdated("Plugin was successfully enabled", null);
         }
       });
     } else {

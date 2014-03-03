@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 
 package com.intellij.injected.editor;
 
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.VisualPosition;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.util.Segment;
+import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 /**
  * @author Alexey
@@ -32,6 +35,7 @@ public class CaretModelWindow implements CaretModel {
   private final CaretModel myDelegate;
   private final EditorEx myHostEditor;
   private final EditorWindow myEditorWindow;
+  private final Map<Caret, InjectedCaret> myInjectedCaretMap = new WeakHashMap<Caret, InjectedCaret>();
 
   public CaretModelWindow(CaretModel delegate, EditorWindow editorWindow) {
     myDelegate = delegate;
@@ -102,7 +106,8 @@ public class CaretModelWindow implements CaretModel {
       @Override
       public void caretPositionChanged(CaretEvent e) {
         if (!myEditorWindow.getDocument().isValid()) return; // injected document can be destroyed by now
-        CaretEvent event = new CaretEvent(myEditorWindow, myEditorWindow.hostToInjected(e.getOldPosition()),
+        CaretEvent event = new CaretEvent(myEditorWindow, createInjectedCaret(e.getCaret()),
+                                          myEditorWindow.hostToInjected(e.getOldPosition()),
                                           myEditorWindow.hostToInjected(e.getNewPosition()));
         listener.caretPositionChanged(event);
       }
@@ -139,5 +144,105 @@ public class CaretModelWindow implements CaretModel {
   @Override
   public TextAttributes getTextAttributes() {
     return myDelegate.getTextAttributes();
+  }
+
+  @Override
+  public boolean supportsMultipleCarets() {
+    return myDelegate.supportsMultipleCarets();
+  }
+
+  @NotNull
+  @Override
+  public Caret getCurrentCaret() {
+    return createInjectedCaret(myDelegate.getCurrentCaret());
+  }
+
+  @NotNull
+  @Override
+  public Caret getPrimaryCaret() {
+    return createInjectedCaret(myDelegate.getPrimaryCaret());
+  }
+
+  @NotNull
+  @Override
+  public List<Caret> getAllCarets() {
+    List<Caret> hostCarets = myDelegate.getAllCarets();
+    List<Caret> carets = new ArrayList<Caret>(hostCarets.size());
+    for (Caret hostCaret : hostCarets) {
+      carets.add(createInjectedCaret(hostCaret));
+    }
+    return carets;
+  }
+
+  @Nullable
+  @Override
+  public Caret getCaretAt(@NotNull VisualPosition pos) {
+    LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
+    Caret caret = myDelegate.getCaretAt(myHostEditor.logicalToVisualPosition(hostPos));
+    return createInjectedCaret(caret);
+  }
+
+  @Nullable
+  @Override
+  public Caret addCaret(@NotNull VisualPosition pos) {
+    LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
+    Caret caret = myDelegate.addCaret(myHostEditor.logicalToVisualPosition(hostPos));
+    return createInjectedCaret(caret);
+  }
+
+  @Override
+  public boolean removeCaret(@NotNull Caret caret) {
+    if (caret instanceof InjectedCaret) {
+      caret = ((InjectedCaret)caret).myDelegate;
+    }
+    return myDelegate.removeCaret(caret);
+  }
+
+  @Override
+  public void removeSecondaryCarets() {
+    myDelegate.removeSecondaryCarets();
+  }
+
+  @Override
+  public void setCaretsAndSelections(@NotNull List<LogicalPosition> caretPositions, @NotNull List<? extends Segment> selections) {
+    List<LogicalPosition> convertedPositions = new ArrayList<LogicalPosition>(caretPositions);
+    for (LogicalPosition position : caretPositions) {
+      convertedPositions.add(myEditorWindow.injectedToHost(position));
+    }
+    List<Segment> convertedSelections = new ArrayList<Segment>(selections.size());
+    for (Segment selection : selections) {
+      convertedSelections.add(new TextRange(myEditorWindow.getDocument().injectedToHost(selection.getStartOffset()),
+                                            myEditorWindow.getDocument().injectedToHost(selection.getEndOffset())));
+    }
+    myDelegate.setCaretsAndSelections(convertedPositions, convertedSelections);
+  }
+
+  private InjectedCaret createInjectedCaret(Caret caret) {
+    if (caret == null) {
+      return null;
+    }
+    synchronized (myInjectedCaretMap) {
+      InjectedCaret injectedCaret = myInjectedCaretMap.get(caret);
+      if (injectedCaret == null) {
+        injectedCaret = new InjectedCaret(myEditorWindow, caret);
+        myInjectedCaretMap.put(caret, injectedCaret);
+      }
+      return injectedCaret;
+    }
+  }
+
+  @Override
+  public void runForEachCaret(final @NotNull CaretAction action) {
+    myDelegate.runForEachCaret(new CaretAction() {
+      @Override
+      public void perform(Caret caret) {
+        action.perform(createInjectedCaret(caret));
+      }
+    });
+  }
+
+  @Override
+  public void runBatchCaretOperation(@NotNull Runnable runnable) {
+    myDelegate.runBatchCaretOperation(runnable);
   }
 }

@@ -47,8 +47,8 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
     }).getPresentation()
       .setPaintBorder(1, 1, 1, 1)
       .setTabSidePaintBorder(2)
-      .setPaintFocus(UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF())
-      .setAlwaysPaintSelectedTab(UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF())
+      .setPaintFocus(UIUtil.isUnderBuildInLaF())
+      .setAlwaysPaintSelectedTab(UIUtil.isUnderBuildInLaF())
       .setGhostsAlwaysVisible(true);
 
     setTabPlacement(tabPlacement);

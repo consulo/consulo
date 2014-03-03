@@ -1771,6 +1771,19 @@ public class FileBasedIndexImpl extends FileBasedIndex {
     return ids;
   }
 
+  public static FileType getFileType(VirtualFile file) {
+    FileType fileType = file.getFileType();
+    if (fileType == FileTypes.PLAIN_TEXT && FileTypeManagerImpl.isFileTypeDetectedFromContent(file)) {
+      fileType = FileTypes.UNKNOWN;
+    }
+    return fileType;
+  }
+
+
+  public boolean isIndexingCandidate(VirtualFile file, ID<?, ?> indexId) {
+    return !isTooLarge(file) && getAffectedIndexCandidates(file).contains(indexId);
+  }
+
   private static void cleanFileContent(FileContentImpl fc, PsiFile psiFile) {
     if (psiFile != null) psiFile.putUserData(PsiFileImpl.BUILDING_STUB, false);
     fc.putUserData(IndexingDataKeys.PSI_FILE, null);

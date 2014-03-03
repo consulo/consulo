@@ -25,10 +25,12 @@ public class RootPluginDescriptor implements PluginDescriptor {
   public final static RootPluginDescriptor INSTANCE = new RootPluginDescriptor();
   private RootPluginDescriptor() {}
 
+  @Override
   public PluginId getPluginId() {
     return PluginId.getId("com.intellij");
   }
 
+  @Override
   public ClassLoader getPluginClassLoader() {
     return getClass().getClassLoader();
   }

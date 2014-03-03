@@ -321,7 +321,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     }
 
     //noinspection ForLoopReplaceableByForEach
-    for (int i = 0, size = mySpecialFileTypes.size(); i < size; i++) {
+    for (int i = 0; i < mySpecialFileTypes.size(); i++) {
       FileTypeIdentifiableByVirtualFile type = mySpecialFileTypes.get(i);
       if (type.isMyFileType(file)) {
         return type;
@@ -331,10 +331,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     fileType = getFileTypeByFileName(file.getName());
     if (fileType != UnknownFileType.INSTANCE) return fileType;
 
-    fileType = file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY);
+    fileType = cachedDetectedFromContent(file);
     if (fileType != null) return fileType;
 
     return UnknownFileType.INSTANCE;
+  }
+
+  private static FileType cachedDetectedFromContent(@NotNull VirtualFile file) {
+    return file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY);
   }
 
   @NotNull
@@ -343,10 +347,13 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
     if (file.isDirectory() || !file.isValid() || file.is(VFileProperty.SPECIAL)) {
       return UnknownFileType.INSTANCE;
     }
-    FileType fileType = file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY);
+    FileType fileType = cachedDetectedFromContent(file);
     if (fileType == null) {
       fileType = detectFromContent(file);
-      file.putUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY, fileType);
+      // for empty file there is still hope its type will change
+      if (file.getLength() != 0) {
+        file.putUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY, fileType);
+      }
     }
     return fileType;
   }
@@ -368,6 +375,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
 
   private static final AtomicInteger DETECTED_COUNT = new AtomicInteger();
   private static final int DETECT_BUFFER_SIZE = 8192;
+
+  public static boolean isFileTypeDetectedFromContent(@NotNull VirtualFile file) {
+    return cachedDetectedFromContent(file) != null;
+  }
 
   @NotNull
   private static FileType detectFromContent(@NotNull final VirtualFile file) {

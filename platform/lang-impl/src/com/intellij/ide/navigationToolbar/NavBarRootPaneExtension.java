@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   private Project myProject;
   private NavBarPanel myNavigationBar;
   private JPanel myRunPanel;
-  private boolean myNavToolbarGroupExist;
+  private final boolean myNavToolbarGroupExist;
   private JScrollPane myScrollPane;
 
   public NavBarRootPaneExtension(Project project) {
@@ -204,12 +204,15 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
 
       @Override
       public void run() {
-        if (LafManager.getInstance().getCurrentLookAndFeel().getName().equals(laf)) return;
+        //if (LafManager.getInstance().getCurrentLookAndFeel().getName().equals(laf)) return;
         laf = LafManager.getInstance().getCurrentLookAndFeel().getName();
         panel.get().removeAll();
         myScrollPane = null;
         if (myNavigationBar != null && !Disposer.isDisposed(myNavigationBar)) {
           Disposer.dispose(myNavigationBar);
+        }
+        if (myProject == null) {
+          return;
         }
         myNavigationBar = new NavBarPanel(myProject, true);
         myWrapperPanel.putClientProperty("NavBarPanel", myNavigationBar);

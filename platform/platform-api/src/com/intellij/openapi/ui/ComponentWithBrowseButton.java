@@ -39,9 +39,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
@@ -51,15 +53,17 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
   private boolean myButtonEnabled = true;
 
   public ComponentWithBrowseButton(Comp component, @Nullable ActionListener browseActionListener) {
-    super(new BorderLayout(SystemInfo.isMac? 0 : 2, 0));
+    super(new BorderLayout(SystemInfo.isMac ? 0 : 2, 0));
+
     myComponent = component;
     // required! otherwise JPanel will occasionally gain focus instead of the component
     setFocusable(false);
     add(myComponent, BorderLayout.CENTER);
 
-    myBrowseButton=new FixedSizeButton(myComponent);
-    if (browseActionListener != null)
+    myBrowseButton = new FixedSizeButton(myComponent);
+    if (browseActionListener != null) {
       myBrowseButton.addActionListener(browseActionListener);
+    }
     add(myBrowseButton, BorderLayout.EAST);
 
     myBrowseButton.setToolTipText(UIBundle.message("component.with.browse.button.browse.button.tooltip.text"));
@@ -67,6 +71,9 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     // FixedSizeButton isn't focusable but it should be selectable via keyboard.
     if (ApplicationManager.getApplication() != null) {  // avoid crash at design time
       new MyDoClickAction(myBrowseButton).registerShortcut(myComponent);
+    }
+    if (UIUtil.isUnderBuildInLaF()) {
+      setBorder(new EmptyBorder(0, 1, 0, 1));
     }
   }
 
@@ -81,9 +88,10 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     size.width = fontMetrics.charWidth('a') * charCount;
     comp.setPreferredSize(size);
     final Dimension preferredSize = myBrowseButton.getPreferredSize();
-    setPreferredSize(new Dimension(size.width + preferredSize.width + 2, SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel() ? preferredSize.height : preferredSize.height + 2));
+    setPreferredSize(new Dimension(size.width + preferredSize.width + 2, UIUtil.isUnderAquaLookAndFeel() ? preferredSize.height : preferredSize.height + 2));
   }
 
+  @Override
   public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
     myBrowseButton.setEnabled(enabled && myButtonEnabled);
@@ -129,9 +137,11 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
   public void addBrowseFolderListener(@Nullable Project project, final BrowseFolderActionListener<Comp> actionListener, boolean autoRemoveOnHide) {
     if (autoRemoveOnHide) {
       new LazyUiDisposable<ComponentWithBrowseButton<Comp>>(null, this, this) {
+        @Override
         protected void initialize(@NotNull Disposable parent, @NotNull ComponentWithBrowseButton<Comp> child, @Nullable Project project) {
           addActionListener(actionListener);
           Disposer.register(child, new Disposable() {
+            @Override
             public void dispose() {
               removeActionListener(actionListener);
             }
@@ -143,6 +153,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     }
   }
 
+  @Override
   public void dispose() {
   }
 
@@ -159,12 +170,13 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
       myBrowseButton = browseButton;
     }
 
+    @Override
     public void actionPerformed(AnActionEvent e){
       myBrowseButton.doClick();
     }
 
     public void registerShortcut(JComponent textField) {
-      ShortcutSet shiftEnter = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK));
+      ShortcutSet shiftEnter = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK));
       registerCustomShortcutSet(shiftEnter, textField);
       myBrowseButton.setToolTipText(KeymapUtil.getShortcutsText(shiftEnter.getShortcuts()));
     }
@@ -177,10 +189,10 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
   public static class BrowseFolderActionListener<T extends JComponent> implements ActionListener {
     private final String myTitle;
     private final String myDescription;
-    private final ComponentWithBrowseButton<T> myTextComponent;
+    protected ComponentWithBrowseButton<T> myTextComponent;
     private final TextComponentAccessor<T> myAccessor;
     private final Project myProject;
-    private final FileChooserDescriptor myFileChooserDescriptor;
+    protected final FileChooserDescriptor myFileChooserDescriptor;
 
     public BrowseFolderActionListener(@Nullable String title, @Nullable String description, ComponentWithBrowseButton<T> textField, @Nullable Project project, FileChooserDescriptor fileChooserDescriptor, TextComponentAccessor<T> accessor) {
       myTitle = title;
@@ -191,6 +203,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
       myAccessor = accessor;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e){
       FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor)myFileChooserDescriptor.clone();
       if (myTitle != null) {
@@ -199,9 +212,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
       if (myDescription != null) {
         fileChooserDescriptor.setDescription(myDescription);
       }
-      VirtualFile initialFile = getInitialFile();
 
-      FileChooser.chooseFiles(fileChooserDescriptor, myProject, initialFile, new Consumer<List<VirtualFile>>() {
+      FileChooser.chooseFiles(fileChooserDescriptor, myProject, getInitialFile(), new Consumer<List<VirtualFile>>() {
         @Override
         public void consume(List<VirtualFile> files) {
           onFileChoosen(files.get(0));
@@ -212,7 +224,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     @Nullable
     protected VirtualFile getInitialFile() {
       String directoryName = getComponentText();
-      if (StringUtil.isEmptyOrSpaces(directoryName) || directoryName == null) {
+      if (StringUtil.isEmptyOrSpaces(directoryName)) {
         return null;
       }
 
@@ -231,21 +243,29 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
       return myAccessor.getText(myTextComponent.getChildComponent()).trim();
     }
 
-    protected void onFileChoosen(VirtualFile chosenFile) {
-      myAccessor.setText(myTextComponent.getChildComponent(), chosenFile.getPresentableUrl());
+    @NotNull
+    protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
+      return chosenFile.getPresentableUrl();
     }
 
+    protected void onFileChoosen(@NotNull VirtualFile chosenFile) {
+      myAccessor.setText(myTextComponent.getChildComponent(), chosenFileToResultingText(chosenFile));
+    }
   }
 
+  @Override
   public final void requestFocus() {
     myComponent.requestFocus();
   }
 
+  @Override
   public final void setNextFocusableComponent(Component aComponent) {
+    super.setNextFocusableComponent(aComponent);
     myComponent.setNextFocusableComponent(aComponent);
   }
 
   private KeyEvent myCurrentEvent = null;
+  @Override
   protected final boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
     if (condition == WHEN_FOCUSED && myCurrentEvent != e)
       try {

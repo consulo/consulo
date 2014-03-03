@@ -355,6 +355,7 @@ public class AllIcons {
     public static final Icon Debug = IconLoader.getIcon("/general/debug.png"); // 16x16
     public static final Icon DefaultKeymap = IconLoader.getIcon("/general/defaultKeymap.png"); // 32x32
     public static final Icon Divider = IconLoader.getIcon("/general/divider.png"); // 2x19
+    public static final Icon DownloadPlugin = IconLoader.getIcon("/general/downloadPlugin.png"); // 16x16
     public static final Icon Dropdown = IconLoader.getIcon("/general/dropdown.png"); // 16x16
     public static final Icon EditColors = IconLoader.getIcon("/general/editColors.png"); // 16x16
     public static final Icon EditItemInSection = IconLoader.getIcon("/general/editItemInSection.png"); // 16x16

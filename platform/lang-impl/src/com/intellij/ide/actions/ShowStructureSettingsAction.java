@@ -26,6 +26,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
+  @Override
   public void actionPerformed(AnActionEvent e) {
     Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     if (project == null) {

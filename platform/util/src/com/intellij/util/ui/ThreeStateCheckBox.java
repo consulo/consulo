@@ -118,7 +118,7 @@ public class ThreeStateCheckBox extends JCheckBox {
         if (icon == null) {
           icon = UIManager.getIcon("CheckBox.icon");
         }
-        if (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
+        if (UIUtil.isUnderBuildInLaF()) {
           icon = EmptyIcon.create(20, 18);
         }
         if (icon != null) {
