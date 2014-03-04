@@ -84,6 +84,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -203,6 +205,12 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
+        refresh();
+      }
+    });
+    myConnection.subscribe(BackgroundTaskByVfsChangeManager.TOPIC, new BackgroundTaskByVfsChangeManager.ListenerAdapter() {
+      @Override
+      public void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task) {
         refresh();
       }
     });

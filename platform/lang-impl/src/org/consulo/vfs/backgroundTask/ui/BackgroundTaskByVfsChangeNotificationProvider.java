@@ -25,10 +25,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.ui.JBColor;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider;
-import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParametersImpl;
+import org.consulo.vfs.backgroundTask.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,7 +87,7 @@ public class BackgroundTaskByVfsChangeNotificationProvider extends EditorNotific
     };
     panel.setText(IdeBundle.message("background.task.editor.header", changeProvider.getName()));
 
-    panel.createActionLabel(IdeBundle.message("button.configure"), new Runnable() {
+    panel.createActionLabel(IdeBundle.message("background.task.button.configure"), new Runnable() {
       @Override
       public void run() {
         if (task != null) {
@@ -98,9 +95,9 @@ public class BackgroundTaskByVfsChangeNotificationProvider extends EditorNotific
           parameters.set(task.getParameters());
 
           BackgroundTaskByVfsChangeDialog dialog = new BackgroundTaskByVfsChangeDialog(project, parameters);
-          boolean b = dialog.showAndGet();
-          if (b) {
+          if (dialog.showAndGet()) {
             task.getParameters().set(parameters);
+            ((BackgroundTaskByVfsChangeTaskImpl)task).parameterUpdated();
 
             updateNotify(task);
           }
@@ -121,7 +118,7 @@ public class BackgroundTaskByVfsChangeNotificationProvider extends EditorNotific
     });
 
     if (task != null) {
-      panel.createActionLabel(IdeBundle.message("button.cancel"), new Runnable() {
+      panel.createActionLabel(IdeBundle.message("background.task.button.cancel"), new Runnable() {
         @Override
         public void run() {
           backgroundTaskManager.cancelTask(task);

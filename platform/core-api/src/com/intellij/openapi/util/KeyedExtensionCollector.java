@@ -219,6 +219,22 @@ public class KeyedExtensionCollector<T, KeyT> {
     return myCache;
   }
 
+  @NotNull
+  public List<T> getExtensions() {
+    ExtensionPoint<KeyedLazyInstance<T>> point = getPoint();
+    if(point == null) {
+      return Collections.emptyList();
+    }
+    List<T> list = new ArrayList<T>();
+    for (KeyedLazyInstance<T> tKeyedLazyInstance : point.getExtensions()) {
+      T instance = tKeyedLazyInstance.getInstance();
+      if(instance != null) {
+        list.add(instance);
+      }
+    }
+    return list;
+  }
+
   public boolean hasAnyExtensions() {
     synchronized (lock) {
       if (!myExplicitExtensions.isEmpty()) return true;

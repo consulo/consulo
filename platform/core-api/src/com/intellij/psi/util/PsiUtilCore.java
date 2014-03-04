@@ -31,9 +31,11 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.TimeoutUtil;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -508,5 +510,16 @@ public class PsiUtilCore {
     }
 
     return elt.getLanguage();
+  }
+
+  @NotNull
+  public static PsiFile[] virtualToPsiFiles(final VirtualFile[] files,Project project) {
+    val manager = PsiManager.getInstance(project);
+    val result = new ArrayList<PsiFile>();
+    for (VirtualFile virtualFile : files) {
+      val psiFile = manager.findFile(virtualFile);
+      if (psiFile != null) result.add(psiFile);
+    }
+    return PsiUtilCore.toPsiFileArray(result);
   }
 }

@@ -22,6 +22,8 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <editorNotificationProvider implementation="org.consulo.vfs.backgroundTask.ui.BackgroundTaskByVfsChangeNotificationProvider" />
+    <treeStructureProvider implementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsProjectViewProvider" order="last" />
+    <generatedSourcesFilter implementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsGeneratedSourcesFilter" />
     <projectService serviceInterface="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager"
                     serviceImplementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManagerImpl"/>
   </extensions>

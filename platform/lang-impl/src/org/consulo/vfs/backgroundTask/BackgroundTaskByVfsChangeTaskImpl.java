@@ -28,16 +28,23 @@ import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import lombok.val;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -47,26 +54,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Logger
 public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsChangeTask {
   private final Project myProject;
-  private final String myProviderName;
   private final BackgroundTaskByVfsParameters myParameters;
   private final VirtualFilePointer myVirtualFilePointer;
   private final VirtualFileAdapter myListener;
   private final AtomicBoolean myProgress = new AtomicBoolean(false);
+  private final String myProviderName;
+  private final BackgroundTaskByVfsChangeProvider myProvider;
+  private final BackgroundTaskByVfsChangeManagerImpl myManager;
 
-  public BackgroundTaskByVfsChangeTaskImpl(Project project,
-                                           VirtualFile virtualFile,
-                                           BackgroundTaskByVfsChangeManagerImpl manager,
-                                           String provider,
-                                           BackgroundTaskByVfsParameters parameters) {
-    this(project, VirtualFilePointerManager.getInstance().create(virtualFile, manager, null), provider, parameters);
-  }
+  private String[] myGeneratedFilePaths;
 
-  public BackgroundTaskByVfsChangeTaskImpl(Project project,
-                                           VirtualFilePointer pointer,
-                                           String provider,
-                                           BackgroundTaskByVfsParameters parameters) {
+  public BackgroundTaskByVfsChangeTaskImpl(@NotNull Project project,
+                                           @NotNull VirtualFilePointer pointer,
+                                           @NotNull BackgroundTaskByVfsParameters parameters,
+                                           @NotNull String providerName,
+                                           @Nullable BackgroundTaskByVfsChangeProvider provider,
+                                           @NotNull BackgroundTaskByVfsChangeManagerImpl manager) {
     myProject = project;
-    myProviderName = provider;
     myParameters = parameters;
     myVirtualFilePointer = pointer;
 
@@ -88,6 +92,38 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       }
     };
     VirtualFileManager.getInstance().addVirtualFileListener(myListener);
+    myProviderName = providerName;
+    myProvider = provider;
+    myManager = manager;
+  }
+
+  public BackgroundTaskByVfsChangeTaskImpl(@NotNull Project project,
+                                           @NotNull VirtualFile virtualFile,
+                                           @NotNull BackgroundTaskByVfsChangeManagerImpl manager,
+                                           @NotNull BackgroundTaskByVfsChangeProvider provider,
+                                           @NotNull BackgroundTaskByVfsParameters parameters) {
+    this(project, VirtualFilePointerManager.getInstance().create(virtualFile, manager, null), parameters, provider.getName(), provider, manager);
+
+  }
+
+  public BackgroundTaskByVfsChangeTaskImpl(@NotNull Project project,
+                                           @NotNull VirtualFilePointer pointer,
+                                           @NotNull String provider,
+                                           @NotNull BackgroundTaskByVfsParameters parameters,
+                                           @NotNull BackgroundTaskByVfsChangeManagerImpl manager) {
+    this(project, pointer, parameters, provider, findProviderByName(provider), manager);
+  }
+
+  @Nullable
+  private static BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
+    BackgroundTaskByVfsChangeProvider temp = null;
+    for (val backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP.getExtensions()) {
+      if (Comparing.equal(name, backgroundTaskByVfsChangeProvider.getName())) {
+        temp = backgroundTaskByVfsChangeProvider;
+        break;
+      }
+    }
+    return temp;
   }
 
   public void start() {
@@ -133,7 +169,8 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
           });
 
           final RunContentExecutor contentExecutor =
-            new RunContentExecutor(myProject, processHandler).withTitle(myProviderName).withActivateToolWindow(false);
+                  new RunContentExecutor(BackgroundTaskByVfsChangeTaskImpl.this.myProject, processHandler).withTitle(myProviderName)
+                          .withActivateToolWindow(false);
           UIUtil.invokeLaterIfNeeded(new Runnable() {
             @Override
             public void run() {
@@ -160,6 +197,17 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return expandMacroToPathMap;
   }
 
+  private ExpandMacroToPathMap createExpandOutMacroToPathMap() {
+    final ExpandMacroToPathMap expandMacroToPathMap = new ExpandMacroToPathMap();
+    expandMacroToPathMap.addMacroExpand("FileName", myVirtualFilePointer.getFileName());
+    expandMacroToPathMap.addMacroExpand("FilePath", myVirtualFilePointer.getPresentableUrl());
+    expandMacroToPathMap.addMacroExpand("OutPath", myParameters.getOutPath());
+
+    File parentFile = FileUtilRt.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
+    expandMacroToPathMap.addMacroExpand("FileParentPath", parentFile.getAbsolutePath());
+    return expandMacroToPathMap;
+  }
+
   public ReplacePathToMacroMap createReplaceMacroToPathMap() {
     final ReplacePathToMacroMap replacePathToMacroMap = new ReplacePathToMacroMap();
     replacePathToMacroMap.put(myVirtualFilePointer.getFileName(), "$FileName$");
@@ -176,6 +224,12 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return myProviderName;
   }
 
+  @Nullable
+  @Override
+  public BackgroundTaskByVfsChangeProvider getProvider() {
+    return myProvider;
+  }
+
   @NotNull
   @Override
   public VirtualFilePointer getVirtualFilePointer() {
@@ -190,6 +244,57 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
 
   @NotNull
   @Override
+  public String[] getGeneratedFilePaths() {
+    if (myGeneratedFilePaths == null) {
+      myGeneratedFilePaths = generateFilePaths();
+    }
+    return myGeneratedFilePaths;
+  }
+
+  @NotNull
+  @Override
+  public VirtualFile[] getGeneratedFiles() {
+    String[] generatedFilePaths = getGeneratedFilePaths();
+    if (generatedFilePaths.length == 0) {
+      return VirtualFile.EMPTY_ARRAY;
+    }
+    List<VirtualFile> list = new ArrayList<VirtualFile>();
+    for (String generatedFilePath : generatedFilePaths) {
+      VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(generatedFilePath);
+      if (fileByPath != null) {
+        list.add(fileByPath);
+      }
+    }
+    return VfsUtilCore.toVirtualFileArray(list);
+  }
+
+  @NotNull
+  private String[] generateFilePaths() {
+    if (myProvider == null) {
+      return ArrayUtil.EMPTY_STRING_ARRAY;
+    }
+    VirtualFile file = myVirtualFilePointer.getFile();
+    if (file == null) {
+      return ArrayUtil.EMPTY_STRING_ARRAY;
+    }
+    String[] generatedFiles = myProvider.getGeneratedFiles(myProject, file);
+    if (generatedFiles.length == 0) {
+      return ArrayUtil.EMPTY_STRING_ARRAY;
+    }
+
+    ExpandMacroToPathMap expandOutMacroToPathMap = createExpandOutMacroToPathMap();
+
+    String[] allPaths = new String[generatedFiles.length];
+    for (int i = 0; i < generatedFiles.length; i++) {
+      String generatedFile = generatedFiles[i];
+      String expanded = expandOutMacroToPathMap.substitute(generatedFile, SystemInfo.isFileSystemCaseSensitive);
+      allPaths[i] = expanded;
+    }
+    return allPaths;
+  }
+
+  @NotNull
+  @Override
   public Project getProject() {
     return myProject;
   }
@@ -197,5 +302,10 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   @Override
   public void dispose() {
     VirtualFileManager.getInstance().removeVirtualFileListener(myListener);
+  }
+
+  public void parameterUpdated() {
+    myGeneratedFilePaths = null;
+    myManager.taskChanged(this);
   }
 }

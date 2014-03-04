@@ -16,10 +16,7 @@
 
 package com.maddyhome.idea.copyright.pattern;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 
 public class FileUtil {
   public static boolean areFiles(VirtualFile[] files) {
@@ -34,16 +31,6 @@ public class FileUtil {
     }
 
     return true;
-  }
-
-  public static PsiFile[] convertToPsiFiles(VirtualFile[] files, Project project) {
-    PsiFile[] res = new PsiFile[files.length];
-    PsiManager manager = PsiManager.getInstance(project);
-    for (int i = 0; i < files.length; i++) {
-      res[i] = manager.findFile(files[i]);
-    }
-
-    return res;
   }
 
   private FileUtil() {

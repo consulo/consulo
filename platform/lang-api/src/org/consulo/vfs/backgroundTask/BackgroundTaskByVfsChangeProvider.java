@@ -18,6 +18,9 @@ package org.consulo.vfs.backgroundTask;
 import com.intellij.openapi.fileTypes.FileTypeExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.util.ArrayUtil;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,11 +28,28 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 1:15/07.10.13
  */
-public interface BackgroundTaskByVfsChangeProvider extends Named {
-  FileTypeExtension<BackgroundTaskByVfsChangeProvider> EP =
-    new FileTypeExtension<BackgroundTaskByVfsChangeProvider>("com.intellij.taskByVfsChange");
+public abstract class BackgroundTaskByVfsChangeProvider implements Named {
+  public static final FileTypeExtension<BackgroundTaskByVfsChangeProvider> EP =
+          new FileTypeExtension<BackgroundTaskByVfsChangeProvider>("com.intellij.taskByVfsChange");
 
-  boolean validate(@NotNull Project project, @NotNull VirtualFile virtualFile);
+  public boolean validate(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+    return true;
+  }
 
-  void setDefaultParameters(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull BackgroundTaskByVfsParameters parameters);
+  public abstract void setDefaultParameters(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull BackgroundTaskByVfsParameters parameters);
+
+  @NotNull
+  public String[] getGeneratedFiles(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+    PsiManager psiManager = PsiManager.getInstance(project);
+    PsiFile file = psiManager.findFile(virtualFile);
+    if(file != null) {
+      return getGeneratedFiles(file);
+    }
+    return ArrayUtil.EMPTY_STRING_ARRAY;
+  }
+
+  @NotNull
+  public String[] getGeneratedFiles(@NotNull PsiFile psiFile) {
+    return ArrayUtil.EMPTY_STRING_ARRAY;
+  }
 }

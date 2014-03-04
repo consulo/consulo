@@ -31,6 +31,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -75,7 +77,16 @@ public class GeneratedSourceFileChangeTrackerImpl extends GeneratedSourceFileCha
         }
       }
     }, myProject);
+
     MessageBusConnection connection = myProject.getMessageBus().connect();
+    connection.subscribe(BackgroundTaskByVfsChangeManager.TOPIC, new BackgroundTaskByVfsChangeManager.ListenerAdapter() {
+      @Override
+      public void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task) {
+        Collections.addAll(myFilesToCheck, task.getGeneratedFiles());
+        myCheckingQueue.queue(check);
+      }
+    });
+
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
       public void fileContentReloaded(VirtualFile file, @NotNull Document document) {
@@ -83,12 +94,6 @@ public class GeneratedSourceFileChangeTrackerImpl extends GeneratedSourceFileCha
         if (myEditedGeneratedFiles.remove(file)) {
           myEditorNotifications.updateNotifications(file);
         }
-      }
-    });
-    connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
-      @Override
-      public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-        myEditedGeneratedFiles.remove(file);
       }
     });
     myCheckingQueue.activate();
@@ -107,6 +112,7 @@ public class GeneratedSourceFileChangeTrackerImpl extends GeneratedSourceFileCha
     }
     final List<VirtualFile> newEditedGeneratedFiles = new ArrayList<VirtualFile>();
     new ReadAction() {
+      @Override
       protected void run(final @NotNull Result result) {
         if (myProject.isDisposed()) return;
         for (VirtualFile file : files) {

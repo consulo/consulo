@@ -44,14 +44,13 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
-import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import java.util.ArrayList;
 import java.util.Collections;
 
 public class ReformatCodeAction extends AnAction implements DumbAware {
@@ -246,14 +245,10 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     }
   }
 
+  @NotNull
+  @Deprecated
   public static PsiFile[] convertToPsiFiles(final VirtualFile[] files,Project project) {
-    final PsiManager manager = PsiManager.getInstance(project);
-    final ArrayList<PsiFile> result = new ArrayList<PsiFile>();
-    for (VirtualFile virtualFile : files) {
-      final PsiFile psiFile = manager.findFile(virtualFile);
-      if (psiFile != null) result.add(psiFile);
-    }
-    return PsiUtilCore.toPsiFileArray(result);
+    return PsiUtilBase.virtualToPsiFiles(files, project);
   }
 
   @Override

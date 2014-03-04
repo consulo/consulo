@@ -16,6 +16,7 @@
 package org.consulo.vfs.backgroundTask;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.messages.Topic;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,14 +27,40 @@ import org.jetbrains.annotations.Nullable;
  */
 @ProjectService
 public abstract class BackgroundTaskByVfsChangeManager {
+  public interface Listener {
+    void taskAdded(@NotNull BackgroundTaskByVfsChangeTask task);
+
+    void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task);
+
+    void taskCanceled(@NotNull BackgroundTaskByVfsChangeTask task);
+  }
+
+  public abstract static class ListenerAdapter implements Listener {
+    @Override
+    public void taskAdded(@NotNull BackgroundTaskByVfsChangeTask task) {
+      taskChanged(task);
+    }
+
+    @Override
+    public void taskCanceled(@NotNull BackgroundTaskByVfsChangeTask task) {
+      taskChanged(task);
+    }
+  }
+
+  public static final Topic<Listener> TOPIC =
+          Topic.create("background.task.change.listener", Listener.class);
+
 
   @Nullable
   public abstract BackgroundTaskByVfsChangeTask getTask(@NotNull VirtualFile virtualFile);
+
+  @NotNull
+  public abstract BackgroundTaskByVfsChangeTask[] getTasks();
 
   public abstract boolean cancelTask(@NotNull BackgroundTaskByVfsChangeTask task);
 
   @NotNull
   public abstract BackgroundTaskByVfsChangeTask registerTask(@NotNull VirtualFile virtualFile,
-                                @NotNull BackgroundTaskByVfsChangeProvider changeProvider,
-                                @NotNull BackgroundTaskByVfsParameters parameters);
+                                                             @NotNull BackgroundTaskByVfsChangeProvider changeProvider,
+                                                             @NotNull BackgroundTaskByVfsParameters parameters);
 }

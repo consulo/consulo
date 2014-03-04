@@ -35,17 +35,19 @@ import java.util.List;
  * @since 22:50/06.10.13
  */
 @State(
-  name = "BackgroundTaskByVfsChangeManager",
-  storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsChangeManager
-  implements PersistentStateComponent<Element>, Disposable {
+        name = "BackgroundTaskByVfsChangeManager",
+        storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsChangeManager implements PersistentStateComponent<Element>, Disposable {
   @NotNull
   private final Project myProject;
 
   private List<BackgroundTaskByVfsChangeTaskImpl> myTasks = new ArrayList<BackgroundTaskByVfsChangeTaskImpl>();
 
+  private Listener myListener;
+
   public BackgroundTaskByVfsChangeManagerImpl(@NotNull Project project) {
     myProject = project;
+    myListener = project.getMessageBus().syncPublisher(TOPIC);
   }
 
   @Override
@@ -62,11 +64,19 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     return null;
   }
 
+  @NotNull
+  @Override
+  public BackgroundTaskByVfsChangeTask[] getTasks() {
+    return myTasks.toArray(new BackgroundTaskByVfsChangeTask[myTasks.size()]);
+  }
+
   @Override
   public boolean cancelTask(@NotNull BackgroundTaskByVfsChangeTask task) {
+    assert task instanceof BackgroundTaskByVfsChangeTaskImpl;
     boolean remove = myTasks.remove(task);
     if (remove) {
       task.dispose();
+      myListener.taskCanceled(task);
     }
     return remove;
   }
@@ -76,10 +86,10 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   public BackgroundTaskByVfsChangeTask registerTask(@NotNull VirtualFile virtualFile,
                                                     @NotNull BackgroundTaskByVfsChangeProvider changeProvider,
                                                     @NotNull BackgroundTaskByVfsParameters parameters) {
-    BackgroundTaskByVfsChangeTaskImpl task =
-      new BackgroundTaskByVfsChangeTaskImpl(myProject, virtualFile, this, changeProvider.getName(), parameters);
+    BackgroundTaskByVfsChangeTaskImpl task = new BackgroundTaskByVfsChangeTaskImpl(myProject, virtualFile, this, changeProvider, parameters);
 
     myTasks.add(task);
+    myListener.taskAdded(task);
     return task;
   }
 
@@ -115,11 +125,10 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
       BackgroundTaskByVfsParametersImpl parameters = new BackgroundTaskByVfsParametersImpl(myProject);
 
-      BackgroundTaskByVfsChangeTaskImpl task =
-        new BackgroundTaskByVfsChangeTaskImpl(myProject, virtualFilePointer, providerName, parameters);
+      BackgroundTaskByVfsChangeTaskImpl task = new BackgroundTaskByVfsChangeTaskImpl(myProject, virtualFilePointer, providerName, parameters, this);
 
       Element parametersElement = element.getChild("parameters");
-      if(parametersElement != null) {
+      if (parametersElement != null) {
         ReplacePathToMacroMap replaceMacroToPathMap = task.createReplaceMacroToPathMap();
 
         replaceMacroToPathMap.substitute(parametersElement, false, true);
@@ -127,6 +136,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
         XmlSerializer.deserializeInto(parameters, parametersElement);
       }
 
+      myListener.taskAdded(task);
       myTasks.add(task);
     }
   }
@@ -134,5 +144,9 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   @Override
   public void dispose() {
     myTasks.clear();
+  }
+
+  public void taskChanged(BackgroundTaskByVfsChangeTaskImpl backgroundTaskByVfsChangeTask) {
+    myListener.taskChanged(backgroundTaskByVfsChangeTask);
   }
 }

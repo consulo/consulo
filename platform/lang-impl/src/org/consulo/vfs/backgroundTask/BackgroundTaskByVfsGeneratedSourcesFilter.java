@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,26 @@
  */
 package org.consulo.vfs.backgroundTask;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 22:47/06.10.13
+ * @since 04.03.14
  */
-public interface BackgroundTaskByVfsChangeTask extends Disposable {
-  @NotNull
-  String getProviderName();
-
-  @Nullable
-  BackgroundTaskByVfsChangeProvider getProvider();
-
-  @NotNull
-  VirtualFilePointer getVirtualFilePointer();
-
-  @NotNull
-  BackgroundTaskByVfsParameters getParameters();
-
-  @NotNull
-  String[] getGeneratedFilePaths();
-
-  @NotNull
-  VirtualFile[] getGeneratedFiles();
-
-  @NotNull
-  Project getProject();
+public class BackgroundTaskByVfsGeneratedSourcesFilter extends GeneratedSourcesFilter {
+  @Override
+  public boolean isGeneratedSource(@NotNull VirtualFile file, @NotNull Project project) {
+    BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(project);
+    for (BackgroundTaskByVfsChangeTask o : vfsChangeManager.getTasks()) {
+      for (VirtualFile virtualFile : o.getGeneratedFiles()) {
+        if (virtualFile.equals(file)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }
