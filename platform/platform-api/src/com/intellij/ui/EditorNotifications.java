@@ -29,6 +29,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,6 +71,14 @@ public class EditorNotifications extends AbstractProjectComponent {
       @Override
       public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
         updateNotifications(file);
+      }
+    });
+    project.getMessageBus().connect(project).subscribe(BackgroundTaskByVfsChangeManager.TOPIC, new BackgroundTaskByVfsChangeManager.ListenerAdapter() {
+      @Override
+      public void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task) {
+        for (VirtualFile virtualFile : task.getGeneratedFiles()) {
+          updateNotifications(virtualFile);
+        }
       }
     });
   }

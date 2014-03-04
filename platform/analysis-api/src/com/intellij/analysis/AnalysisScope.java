@@ -346,19 +346,10 @@ public class AnalysisScope {
     if (fileOrDir.isDirectory()) return true;
     if (ProjectCoreUtil.isProjectOrWorkspaceFile(fileOrDir)) return true;
     if (projectFileIndex.isInContent(fileOrDir) && (myIncludeTestSource || !projectFileIndex.isInTestSourceContent(fileOrDir))
-        && !isInGeneratedSources(fileOrDir, psiManager.getProject())) {
+        && !GeneratedSourcesFilter.isGenerated(psiManager.getProject(), fileOrDir)) {
       return processFile(fileOrDir, visitor, psiManager, needReadAction);
     }
     return true;
-  }
-
-  private static boolean isInGeneratedSources(@NotNull VirtualFile file, @NotNull Project project) {
-    for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensions()) {
-      if (filter.isGeneratedSource(file, project)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private static boolean processFile(@NotNull final VirtualFile fileOrDir,

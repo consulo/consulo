@@ -15,8 +15,8 @@
  */
 package com.intellij.usages.impl.rules;
 
-import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewBundle;
@@ -34,12 +34,10 @@ import org.jetbrains.annotations.NotNull;
  * @author max
  */
 public class NonCodeUsageGroupingRule implements UsageGroupingRule {
-  private final GeneratedSourcesFilter[] myGeneratedSourcesFilters;
   private final Project myProject;
 
   public NonCodeUsageGroupingRule(Project project) {
     myProject = project;
-    myGeneratedSourcesFilters = GeneratedSourcesFilter.EP_NAME.getExtensions();
   }
 
   private static class CodeUsageGroup extends UsageGroupBase {
@@ -104,8 +102,11 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
       //noinspection HardCodedStringLiteral
       return "NonCodeUsages";
     }
+
     @Override
-    public int compareTo(@NotNull UsageGroup usageGroup) { return usageGroup == this ? 0 : -1; }
+    public int compareTo(@NotNull UsageGroup usageGroup) {
+      return usageGroup == this ? 0 : -1;
+    }
   }
 
   private static class DynamicUsageGroup extends UsageGroupBase {
@@ -129,8 +130,11 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
       //noinspection HardCodedStringLiteral
       return "DynamicUsages";
     }
+
     @Override
-    public int compareTo(@NotNull UsageGroup usageGroup) { return usageGroup == this ? 0 : 1; }
+    public int compareTo(@NotNull UsageGroup usageGroup) {
+      return usageGroup == this ? 0 : 1;
+    }
   }
 
   @Override
@@ -138,10 +142,8 @@ public class NonCodeUsageGroupingRule implements UsageGroupingRule {
     if (usage instanceof UsageInFile) {
       VirtualFile file = ((UsageInFile)usage).getFile();
       if (file != null) {
-        for (GeneratedSourcesFilter filter : myGeneratedSourcesFilters) {
-          if (filter.isGeneratedSource(file, myProject)) {
-            return UsageInGeneratedCodeGroup.INSTANCE;
-          }
+        if (GeneratedSourcesFilter.isGenerated(myProject, file)) {
+          return UsageInGeneratedCodeGroup.INSTANCE;
         }
       }
     }

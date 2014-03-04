@@ -70,14 +70,11 @@ public class UsageViewUtil {
   }
 
   public static boolean hasUsagesInGeneratedCode(UsageInfo[] usages, Project project) {
-    GeneratedSourcesFilter[] filters = GeneratedSourcesFilter.EP_NAME.getExtensions();
     for (UsageInfo usage : usages) {
       VirtualFile file = usage.getVirtualFile();
       if (file != null) {
-        for (GeneratedSourcesFilter filter : filters) {
-          if (filter.isGeneratedSource(file, project)) {
-            return true;
-          }
+        if(GeneratedSourcesFilter.isGenerated(project, file)) {
+          return true;
         }
       }
     }
