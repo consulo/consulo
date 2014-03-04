@@ -18,7 +18,6 @@ package org.mustbe.consulo.roots;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.intellij.openapi.util.NotNullFactory;
-import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.impl.*;
 
@@ -27,9 +26,6 @@ import org.mustbe.consulo.roots.impl.*;
  * @since 23:12/31.10.13
  */
 public class ContentFolderScopes {
-  private static TIntObjectHashMap<Predicate<ContentFolderTypeProvider>> ourScopesCache =
-    new TIntObjectHashMap<Predicate<ContentFolderTypeProvider>>();
-
   private static final int ALL = 1;
   private static final int ALL_WITHOUT_EXCLUDE = 2;
   private static final int PRODUCTION = 3;
@@ -123,12 +119,8 @@ public class ContentFolderScopes {
     });
   }
 
+  @NotNull
   private static Predicate<ContentFolderTypeProvider> cacheScope(int id, NotNullFactory<Predicate<ContentFolderTypeProvider>> lazyFactory) {
-    Predicate<ContentFolderTypeProvider> contentFolderTypeProviderPredicate = ourScopesCache.get(id);
-    if (contentFolderTypeProviderPredicate != null) {
-      return contentFolderTypeProviderPredicate;
-    }
-    ourScopesCache.put(id, contentFolderTypeProviderPredicate = lazyFactory.create());
-    return contentFolderTypeProviderPredicate;
+    return lazyFactory.create();
   }
 }
