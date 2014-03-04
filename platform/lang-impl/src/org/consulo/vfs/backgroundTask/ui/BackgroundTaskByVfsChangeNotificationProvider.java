@@ -15,6 +15,7 @@
  */
 package org.consulo.vfs.backgroundTask.ui;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -87,10 +88,9 @@ public class BackgroundTaskByVfsChangeNotificationProvider extends EditorNotific
         return JBColor.LIGHT_GRAY;
       }
     };
-    panel.setText(changeProvider.getName() + ": background task on vfs change is available for this file.");
+    panel.setText(IdeBundle.message("background.task.editor.header", changeProvider.getName()));
 
-
-    panel.createActionLabel("Configure", new Runnable() {
+    panel.createActionLabel(IdeBundle.message("button.configure"), new Runnable() {
       @Override
       public void run() {
         if (task != null) {
@@ -121,7 +121,7 @@ public class BackgroundTaskByVfsChangeNotificationProvider extends EditorNotific
     });
 
     if (task != null) {
-      panel.createActionLabel("Cancel", new Runnable() {
+      panel.createActionLabel(IdeBundle.message("button.cancel"), new Runnable() {
         @Override
         public void run() {
           backgroundTaskManager.cancelTask(task);

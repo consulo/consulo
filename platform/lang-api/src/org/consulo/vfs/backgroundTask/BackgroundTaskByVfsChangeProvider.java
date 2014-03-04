@@ -30,5 +30,6 @@ public interface BackgroundTaskByVfsChangeProvider extends Named {
     new FileTypeExtension<BackgroundTaskByVfsChangeProvider>("com.intellij.taskByVfsChange");
 
   boolean validate(@NotNull Project project, @NotNull VirtualFile virtualFile);
+
   void setDefaultParameters(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull BackgroundTaskByVfsParameters parameters);
 }
