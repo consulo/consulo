@@ -251,7 +251,7 @@ public abstract class CompletionPhase implements Disposable {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
         }
       };
-      final CaretListener caretListener = new CaretListener() {
+      final CaretListener caretListener = new CaretAdapter() {
         @Override
         public void caretPositionChanged(CaretEvent e) {
           CompletionServiceImpl.setCompletionPhase(NoCompletion);
@@ -339,7 +339,7 @@ public abstract class CompletionPhase implements Disposable {
         }
       };
 
-      caretListener = new CaretListener() {
+      caretListener = new CaretAdapter() {
         @Override
         public void caretPositionChanged(CaretEvent e) {
           if (!TypedAction.isTypedActionInProgress()) {

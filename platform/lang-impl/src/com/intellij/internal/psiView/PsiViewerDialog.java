@@ -1221,6 +1221,16 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     }
 
     @Override
+    public void caretAdded(CaretEvent e) {
+
+    }
+
+    @Override
+    public void caretRemoved(CaretEvent e) {
+
+    }
+
+    @Override
     public void selectionChanged(SelectionEvent e) {
       if (!available() || !myEditor.getSelectionModel().hasSelection()) return;
       ViewerTreeStructure treeStructure = (ViewerTreeStructure)myPsiTreeBuilder.getTreeStructure();

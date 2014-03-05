@@ -359,7 +359,7 @@ public class QuickDocOnMouseOverManager {
     }
   }
   
-  private class MyCaretListener implements CaretListener {
+  private class MyCaretListener extends CaretAdapter {
     @Override
     public void caretPositionChanged(CaretEvent e) {
       allowUpdateFromContext(true);

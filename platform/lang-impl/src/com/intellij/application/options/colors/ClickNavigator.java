@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.event.CaretAdapter;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -56,7 +57,7 @@ public class ClickNavigator {
       }
     });
 
-    CaretListener listener = new CaretListener() {
+    CaretListener listener = new CaretAdapter() {
       @Override
       public void caretPositionChanged(CaretEvent e) {
         setSelectedItem(HighlighterColors.TEXT.getExternalName(), true);
@@ -98,7 +99,7 @@ public class ClickNavigator {
                                 final boolean isBackgroundImportant) {
     addMouseMotionListener(view, highlighter, data, isBackgroundImportant);
 
-    CaretListener listener = new CaretListener() {
+    CaretListener listener = new CaretAdapter() {
       @Override
       public void caretPositionChanged(CaretEvent e) {
         navigate(view, true, e.getNewPosition(), highlighter, data, isBackgroundImportant);

@@ -598,7 +598,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
             myCurrentEditor = editor;
           }
           EmptyAction.registerActionShortcuts(editor.getComponent(), myConsoleEditor.getComponent());
-          editor.getCaretModel().addCaretListener(new CaretListener() {
+          editor.getCaretModel().addCaretListener(new CaretAdapter() {
             @Override
             public void caretPositionChanged(CaretEvent e) {
               queueUiUpdate(false);

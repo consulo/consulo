@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,6 +115,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     element1 = file.findElementAt(startOffset);
 
     final Language baseLanguage = file.getViewProvider().getBaseLanguage();
+    assert element1 != null;
     final Language l = element1.getParent().getLanguage();
     List<SurroundDescriptor> surroundDescriptors = new ArrayList<SurroundDescriptor>();
 
@@ -192,8 +193,10 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
       PsiDocumentManager.getInstance(project).commitAllDocuments();
       int col = editor.getCaretModel().getLogicalPosition().column;
       int line = editor.getCaretModel().getLogicalPosition().line;
-      LogicalPosition pos = new LogicalPosition(0, 0);
-      editor.getCaretModel().moveToLogicalPosition(pos);
+      if (!editor.getCaretModel().supportsMultipleCarets()) {
+        LogicalPosition pos = new LogicalPosition(0, 0);
+        editor.getCaretModel().moveToLogicalPosition(pos);
+      }
       TextRange range = surrounder.surroundElements(project, editor, elements);
       if (TemplateManager.getInstance(project).getActiveTemplate(editor) == null) {
         LogicalPosition pos1 = new LogicalPosition(line, col);
@@ -201,6 +204,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
       }
       if (range != null) {
         int offset = range.getStartOffset();
+        editor.getCaretModel().removeSecondaryCarets();
         editor.getCaretModel().moveToOffset(offset);
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
         editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
@@ -213,9 +217,9 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
   @Nullable
   private static List<AnAction> doBuildSurroundActions(Project project,
-                                                     Editor editor,
-                                                     PsiFile file,
-                                                     Map<Surrounder, PsiElement[]> surrounders) {
+                                                       Editor editor,
+                                                       PsiFile file,
+                                                       Map<Surrounder, PsiElement[]> surrounders) {
     final List<AnAction> applicable = new ArrayList<AnAction>();
     boolean hasEnabledSurrounders = false;
 
@@ -285,7 +289,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     public void actionPerformed(AnActionEvent e) {
       new WriteCommandAction(myProject) {
         @Override
-        protected void run(Result result) throws Exception {
+        protected void run(@NotNull Result result) throws Exception {
           doSurround(myProject, myEditor, mySurrounder, myElements);
         }
       }.execute();

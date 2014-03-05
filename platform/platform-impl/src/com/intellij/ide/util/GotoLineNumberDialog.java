@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public class GotoLineNumberDialog extends DialogWrapper {
     init();
   }
 
+  @Override
   protected void doOKAction(){
     final LogicalPosition currentPosition = myEditor.getCaretModel().getLogicalPosition();
     int lineNumber = getLineNumber(currentPosition.line + 1);
@@ -45,6 +46,7 @@ public class GotoLineNumberDialog extends DialogWrapper {
       try {
         final int offset = Integer.parseInt(myOffsetField.getText());
         if (offset < myEditor.getDocument().getTextLength()) {
+          myEditor.getCaretModel().removeSecondaryCarets();
           myEditor.getCaretModel().moveToOffset(offset);
           myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
           myEditor.getSelectionModel().removeSelection();
@@ -57,10 +59,11 @@ public class GotoLineNumberDialog extends DialogWrapper {
       }
     }
 
-    if (lineNumber <= 0) return;
+    if (lineNumber < 0) return;
 
     int columnNumber = getColumnNumber(currentPosition.column);
-    myEditor.getCaretModel().moveToLogicalPosition(new LogicalPosition(lineNumber - 1, Math.max(0, columnNumber - 1)));
+    myEditor.getCaretModel().removeSecondaryCarets();
+    myEditor.getCaretModel().moveToLogicalPosition(new LogicalPosition(Math.max(0, lineNumber - 1), Math.max(0, columnNumber - 1)));
     myEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
     myEditor.getSelectionModel().removeSelection();
     super.doOKAction();
@@ -98,10 +101,12 @@ public class GotoLineNumberDialog extends DialogWrapper {
     return ApplicationManagerEx.getApplicationEx().isInternal();
   }
 
+  @Override
   public JComponent getPreferredFocusedComponent() {
     return myField;
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     return null;
   }
@@ -110,12 +115,14 @@ public class GotoLineNumberDialog extends DialogWrapper {
     return myField.getText();
   }
 
+  @Override
   protected JComponent createNorthPanel() {
     class MyTextField extends JTextField {
       public MyTextField() {
         super("");
       }
 
+      @Override
       public Dimension getPreferredSize() {
         Dimension d = super.getPreferredSize();
         return new Dimension(200, d.height);

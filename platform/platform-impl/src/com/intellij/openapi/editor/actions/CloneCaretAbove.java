@@ -18,32 +18,28 @@ package com.intellij.openapi.editor.actions;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-public class UnselectLastOccurrenceAction extends EditorAction {
-  protected UnselectLastOccurrenceAction() {
+public class CloneCaretAbove extends EditorAction {
+  public CloneCaretAbove() {
     super(new Handler());
   }
 
   private static class Handler extends EditorActionHandler {
-    @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
-      return super.isEnabled(editor, dataContext) && editor.getCaretModel().supportsMultipleCarets();
+    public Handler() {
+      super(true);
     }
 
     @Override
-    public void execute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      if (editor.getCaretModel().getAllCarets().size() > 1) {
-        editor.getCaretModel().removeCaret(editor.getCaretModel().getPrimaryCaret());
-      }
-      else {
-        editor.getSelectionModel().removeSelection();
-      }
-      SelectNextOccurrenceAction.Handler.getAndResetNotFoundStatus(editor);
-      editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+    public void execute(Editor editor, @NotNull Caret caret, DataContext dataContext) {
+      caret.clone(true);
+    }
+
+    @Override
+    public boolean isEnabled(Editor editor, DataContext dataContext) {
+      return editor.getCaretModel().supportsMultipleCarets();
     }
   }
 }

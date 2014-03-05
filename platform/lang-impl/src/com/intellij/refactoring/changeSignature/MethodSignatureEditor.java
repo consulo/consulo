@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.event.CaretAdapter;
 import com.intellij.openapi.editor.event.CaretEvent;
-import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.CaretModelImpl;
@@ -163,7 +163,7 @@ public abstract class MethodSignatureEditor<M extends PsiElement> extends Editor
           CodeStyleManager.getInstance(getProject()).reformatText(myFile, range.getStartOffset(), range.getEndOffset());
         }
       });
-      editor.getCaretModel().addCaretListener(new CaretListener() {
+      editor.getCaretModel().addCaretListener(new CaretAdapter() {
         @Override
         public void caretPositionChanged(CaretEvent e) {
           createFromString();

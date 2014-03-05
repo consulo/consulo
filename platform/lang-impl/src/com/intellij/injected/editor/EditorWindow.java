@@ -38,7 +38,6 @@ import com.intellij.openapi.editor.highlighter.LightHighlighterClient;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
-import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -56,7 +55,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -237,7 +236,7 @@ public class EditorWindow extends UserDataHolderBase implements EditorEx {
 
   @Override
   @NotNull
-  public MarkupModel getMarkupModel() {
+  public MarkupModelEx getMarkupModel() {
     return myMarkupModelDelegate;
   }
 

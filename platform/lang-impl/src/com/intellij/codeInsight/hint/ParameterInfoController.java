@@ -178,7 +178,7 @@ public class ParameterInfoController {
     ArrayList<ParameterInfoController> allControllers = getAllControllers(myEditor);
     allControllers.add(this);
 
-    myEditorCaretListener = new CaretListener(){
+    myEditorCaretListener = new CaretAdapter(){
       @Override
       public void caretPositionChanged(CaretEvent e) {
         myAlarm.cancelAllRequests();

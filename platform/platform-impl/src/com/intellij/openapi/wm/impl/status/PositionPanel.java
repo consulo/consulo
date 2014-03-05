@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,15 +88,15 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
         if (editor == null) return;
         final CommandProcessor processor = CommandProcessor.getInstance();
         processor.executeCommand(
-          project, new Runnable() {
-            public void run() {
-              final GotoLineNumberDialog dialog = new GotoLineNumberDialog(project, editor);
-              dialog.show();
-              IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-            }
-          },
-          UIBundle.message("go.to.line.command.name"),
-          null
+                project, new Runnable() {
+          public void run() {
+            final GotoLineNumberDialog dialog = new GotoLineNumberDialog(project, editor);
+            dialog.show();
+            IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
+          }
+        },
+                UIBundle.message("go.to.line.command.name"),
+                null
         );
       }
     };
@@ -124,6 +124,14 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
     updatePosition(e.getEditor());
   }
 
+  @Override
+  public void caretAdded(CaretEvent e) {
+  }
+
+  @Override
+  public void caretRemoved(CaretEvent e) {
+  }
+
   private void updatePosition(final Editor editor) {
     if (editor == null) {
       myText = "";
@@ -145,15 +153,15 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
         LogicalPosition end = selectionModel.getBlockEnd();
         if (start == null || end == null) {
           throw new IllegalStateException(String.format(
-            "Invalid selection model state detected: 'blockSelection' property is 'true' but selection start position (%s) or "
-            + "selection end position (%s) is undefined", start, end
+                  "Invalid selection model state detected: 'blockSelection' property is 'true' but selection start position (%s) or "
+                  + "selection end position (%s) is undefined", start, end
           ));
         }
         appendLogicalPosition(start, message);
         message.append("-");
         appendLogicalPosition(
-          new LogicalPosition(Math.abs(end.line - start.line), Math.max(0, Math.abs(end.column - start.column) - 1)),
-          message
+                new LogicalPosition(Math.abs(end.line - start.line), Math.max(0, Math.abs(end.column - start.column) - 1)),
+                message
         );
       }
       else {

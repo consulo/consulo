@@ -77,7 +77,6 @@ public final class TextEditorState implements FileEditorState {
     myDelayedFoldInfoProducer = null;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (!(o instanceof TextEditorState)) {
       return false;
@@ -94,7 +93,6 @@ public final class TextEditorState implements FileEditorState {
     return true;
   }
 
-  @Override
   public int hashCode() {
     int result = 0;
     if (CARETS != null) {
@@ -117,7 +115,6 @@ public final class TextEditorState implements FileEditorState {
            && Math.abs(CARETS[0].LINE - other.CARETS[0].LINE) < MIN_CHANGE_DISTANCE;
   }
 
-  @Override
   public String toString() {
     return Arrays.toString(CARETS);
   }
@@ -125,10 +122,11 @@ public final class TextEditorState implements FileEditorState {
   public static class CaretState {
     public int   LINE;
     public int   COLUMN;
-    public int   SELECTION_START;
-    public int   SELECTION_END;
+    public int   SELECTION_START_LINE;
+    public int   SELECTION_START_COLUMN;
+    public int   SELECTION_END_LINE;
+    public int   SELECTION_END_COLUMN;
 
-    @Override
     public boolean equals(Object o) {
       if (!(o instanceof CaretState)) {
         return false;
@@ -138,8 +136,10 @@ public final class TextEditorState implements FileEditorState {
 
       if (COLUMN != caretState.COLUMN) return false;
       if (LINE != caretState.LINE) return false;
-      if (SELECTION_START != caretState.SELECTION_START) return false;
-      if (SELECTION_END != caretState.SELECTION_END) return false;
+      if (SELECTION_START_LINE != caretState.SELECTION_START_LINE) return false;
+      if (SELECTION_START_COLUMN != caretState.SELECTION_START_COLUMN) return false;
+      if (SELECTION_END_LINE != caretState.SELECTION_END_LINE) return false;
+      if (SELECTION_END_COLUMN != caretState.SELECTION_END_COLUMN) return false;
 
       return true;
     }
@@ -149,7 +149,6 @@ public final class TextEditorState implements FileEditorState {
       return LINE + COLUMN;
     }
 
-    @Override
     public String toString() {
       return "[" + LINE + "," + COLUMN + "]";
     }

@@ -42,7 +42,7 @@ public class BraceHighlighter implements StartupActivity {
   public void runActivity(final Project project) {
     final EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
-    CaretListener myCaretListener = new CaretListener() {
+    CaretListener myCaretListener = new CaretAdapter() {
       @Override
       public void caretPositionChanged(CaretEvent e) {
         myAlarm.cancelAllRequests();

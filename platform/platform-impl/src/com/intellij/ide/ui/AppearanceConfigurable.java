@@ -43,6 +43,7 @@ import java.util.Hashtable;
 public class AppearanceConfigurable extends BaseConfigurable implements SearchableConfigurable {
   private MyComponent myComponent;
 
+  @Override
   public String getDisplayName() {
     return IdeBundle.message("title.appearance");
   }
@@ -58,6 +59,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
 
   }
 
+  @Override
   public JComponent createComponent() {
     initComponent();
     DefaultComboBoxModel aModel = new DefaultComboBoxModel(UIUtil.getValidFontNames(false));
@@ -85,6 +87,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     myComponent.myInitialTooltipDelaySlider.setMinorTickSpacing(100);
 
     myComponent.myEnableAlphaModeCheckBox.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         boolean state = myComponent.myEnableAlphaModeCheckBox.isSelected();
         myComponent.myAlphaModeDelayTextField.setEnabled(state);
@@ -106,6 +109,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     myComponent.myAlphaModeRatioSlider.setMajorTickSpacing(50);
     myComponent.myAlphaModeRatioSlider.setMinorTickSpacing(10);
     myComponent.myAlphaModeRatioSlider.addChangeListener(new ChangeListener() {
+      @Override
       public void stateChanged(ChangeEvent e) {
         myComponent.myAlphaModeRatioSlider.setToolTipText(myComponent.myAlphaModeRatioSlider.getValue() + "%");
       }
@@ -116,6 +120,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     return myComponent.myPanel;
   }
 
+  @Override
   public void apply() {
     initComponent();
     UISettings settings = UISettings.getInstance();
@@ -170,6 +175,9 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     update |= settings.RIGHT_HORIZONTAL_SPLIT != myComponent.myRightLayoutCheckBox.isSelected();
     settings.RIGHT_HORIZONTAL_SPLIT = myComponent.myRightLayoutCheckBox.isSelected();
 
+    update |= settings.SHOW_EDITOR_TOOLTIP != myComponent.myEditorTooltipCheckBox.isSelected();
+    settings.SHOW_EDITOR_TOOLTIP = myComponent.myEditorTooltipCheckBox.isSelected();
+
     update |= settings.DISABLE_MNEMONICS_IN_CONTROLS != myComponent.myDisableMnemonicInControlsCheckBox.isSelected();
     settings.DISABLE_MNEMONICS_IN_CONTROLS = myComponent.myDisableMnemonicInControlsCheckBox.isSelected();
 
@@ -184,6 +192,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
         lafManager.setCurrentLookAndFeel(lafInfo);
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(new Runnable() {
+          @Override
           public void run() {
             if (UIUtil.isUnderDarcula()) {
               DarculaInstaller.install();
@@ -249,6 +258,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     return value;
   }
 
+  @Override
   public void reset() {
     initComponent();
     UISettings settings = UISettings.getInstance();
@@ -274,6 +284,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     myComponent.myWidescreenLayoutCheckBox.setSelected(settings.WIDESCREEN_SUPPORT);
     myComponent.myLeftLayoutCheckBox.setSelected(settings.LEFT_HORIZONTAL_SPLIT);
     myComponent.myRightLayoutCheckBox.setSelected(settings.RIGHT_HORIZONTAL_SPLIT);
+    myComponent.myEditorTooltipCheckBox.setSelected(settings.SHOW_EDITOR_TOOLTIP);
     myComponent.myDisableMnemonicInControlsCheckBox.setSelected(settings.DISABLE_MNEMONICS_IN_CONTROLS);
 
     boolean alphaModeEnabled = WindowManagerEx.getInstanceEx().isAlphaModeSupported();
@@ -294,6 +305,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     myComponent.updateCombo();
   }
 
+  @Override
   public boolean isModified() {
     initComponent();
     UISettings settings = UISettings.getInstance();
@@ -318,6 +330,7 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     isModified |= myComponent.myWidescreenLayoutCheckBox.isSelected() != settings.WIDESCREEN_SUPPORT;
     isModified |= myComponent.myLeftLayoutCheckBox.isSelected() != settings.LEFT_HORIZONTAL_SPLIT;
     isModified |= myComponent.myRightLayoutCheckBox.isSelected() != settings.RIGHT_HORIZONTAL_SPLIT;
+    isModified |= myComponent.myEditorTooltipCheckBox.isSelected() != settings.SHOW_EDITOR_TOOLTIP;
 
     isModified |= myComponent.myHideIconsInQuickNavigation.isSelected() != settings.SHOW_ICONS_IN_QUICK_NAVIGATION;
 
@@ -347,10 +360,12 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     return isModified;
   }
 
+  @Override
   public void disposeUIResources() {
     myComponent = null;
   }
 
+  @Override
   public String getHelpTopic() {
     return "preferences.lookFeel";
   }
@@ -387,12 +402,11 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     private JCheckBox myRightLayoutCheckBox;
     private JSlider myInitialTooltipDelaySlider;
     private ComboBox myPresentationModeFontSize;
-    private JCheckBox myAllowStatusBar;
-    private JCheckBox myAllowLineNumbers;
-    private JCheckBox myAllowAnnotations;
+    private JCheckBox myEditorTooltipCheckBox;
 
     public MyComponent() {
       myOverrideLAFFonts.addActionListener( new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
           updateCombo();
         }
@@ -414,12 +428,14 @@ public class AppearanceConfigurable extends BaseConfigurable implements Searchab
     }
   }
 
+  @Override
   @NotNull
   public String getId() {
     //noinspection ConstantConditions
     return getHelpTopic();
   }
 
+  @Override
   @Nullable
   public Runnable enableSearch(String option) {
     return null;

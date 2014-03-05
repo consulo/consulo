@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
+import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
   public static final ExtensionPointName<DequotingFilter> EP_NAME =
-    ExtensionPointName.create("com.intellij.selectionDequotingFilter");
+          ExtensionPointName.create("com.intellij.selectionDequotingFilter");
   private TextRange myReplacedTextRange;
   private boolean myRestoreStickySelection;
   private boolean myLtrSelection;
@@ -50,7 +51,7 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
       if (selectedText.length() < 1) {
         return super.checkAutoPopup(c, project, editor, psiFile);
       }
-      
+
       final int selectionStart = selectionModel.getSelectionStart();
       final int selectionEnd = selectionModel.getSelectionEnd();
       if (selectedText.length() > 1) {
@@ -84,20 +85,19 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
     return super.checkAutoPopup(c, project, editor, psiFile);
   }
 
-  private boolean shouldSkipReplacementOfQuotesOrBraces(PsiFile psiFile, Editor editor, String selectedText, char c) {
+  private static boolean shouldSkipReplacementOfQuotesOrBraces(PsiFile psiFile, Editor editor, String selectedText, char c) {
     for(DequotingFilter filter: Extensions.getExtensions(EP_NAME)) {
       if (filter.skipReplacementQuotesOrBraces(psiFile, editor, selectedText, c)) return true;
     }
     return false;
   }
 
-  private static char getMatchingDelimiter(final char c) {
-    char c2 = c;
-    if (c == '(') c2 = ')';
-    if (c == '[') c2 = ']';
-    if (c == '{') c2 = '}';
-    if (c == '<') c2 = '>';
-    return c2;
+  private static char getMatchingDelimiter(char c) {
+    if (c == '(') return ')';
+    if (c == '[') return ']';
+    if (c == '{') return '}';
+    if (c == '<') return '>';
+    return c;
   }
 
   private static boolean isDelimiter(final char c) {
@@ -109,7 +109,7 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
   }
 
   private static boolean isQuote(final char c) {
-    return c == '"' || c == '\'';
+    return c == '"' || c == '\'' || c == '`';
   }
 
   private static boolean isSimilarDelimiters(final char c1, final char c2) {
@@ -129,7 +129,7 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
           caretModel.moveToOffset(myLtrSelection ? myReplacedTextRange.getEndOffset() : myReplacedTextRange.getStartOffset());
         }
         else {
-          if (myLtrSelection) {
+          if (myLtrSelection || editor instanceof EditorWindow) {
             editor.getSelectionModel().setSelection(myReplacedTextRange.getStartOffset(), myReplacedTextRange.getEndOffset());
           }
           else {
@@ -145,7 +145,7 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
     }
     return Result.CONTINUE;
   }
-  
+
   public static abstract class DequotingFilter {
     public abstract boolean skipReplacementQuotesOrBraces(@NotNull PsiFile file,
                                                           @NotNull Editor editor,

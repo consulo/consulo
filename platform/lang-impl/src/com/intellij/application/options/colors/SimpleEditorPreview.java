@@ -19,10 +19,14 @@ package com.intellij.application.options.colors;
 import com.intellij.application.options.colors.highlighting.HighlightData;
 import com.intellij.application.options.colors.highlighting.HighlightsExtractor;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.event.CaretAdapter;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -41,10 +45,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 import java.util.List;
 
 public class SimpleEditorPreview implements PreviewPanel{
@@ -79,7 +80,7 @@ public class SimpleEditorPreview implements PreviewPanel{
     if (navigatable) {
       addMouseMotionListener(myEditor, page.getHighlighter(), myHighlightData, false);
 
-      CaretListener listener = new CaretListener() {
+      CaretListener listener = new CaretAdapter() {
         @Override
         public void caretPositionChanged(CaretEvent e) {
           navigate(myEditor, true, e.getNewPosition(), page.getHighlighter(), myHighlightData, false);

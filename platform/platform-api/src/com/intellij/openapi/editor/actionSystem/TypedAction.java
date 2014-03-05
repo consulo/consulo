@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,8 @@ public class TypedAction {
   }
 
   private static class Handler implements TypedActionHandler {
-    public void execute(@NotNull Editor editor, char charTyped, @NotNull DataContext dataContext) {
+    @Override
+    public void execute(@NotNull final Editor editor, char charTyped, @NotNull DataContext dataContext) {
       if (editor.isViewer()) return;
 
       Document doc = editor.getDocument();
@@ -63,7 +64,7 @@ public class TypedAction {
       try {
         final String str = String.valueOf(charTyped);
         CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.in.editor.command.name"));
-        EditorModificationUtil.typeInStringAtCaretHonorBlockSelection(editor, str, true);
+        EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true);
       }
       catch (ReadOnlyFragmentModificationException e) {
         EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
@@ -121,8 +122,10 @@ public class TypedAction {
       myDataContext = dataContext;
     }
 
+    @Override
     public void run() {
       ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(myEditor.getDocument(), myEditor.getProject()) {
+        @Override
         public void run() {
           Document doc = myEditor.getDocument();
           doc.startGuardedBlockChecking();
