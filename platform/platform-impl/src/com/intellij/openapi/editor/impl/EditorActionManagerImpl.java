@@ -59,7 +59,7 @@ public class EditorActionManagerImpl extends EditorActionManager {
   public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@NotNull final Document document) {
     final Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
     final ReadonlyFragmentModificationHandler docHandler =
-      doc instanceof DocumentImpl ? ((DocumentImpl)doc).getReadonlyFragmentModificationHandler() : null;
+            doc instanceof DocumentImpl ? ((DocumentImpl)doc).getReadonlyFragmentModificationHandler() : null;
     return docHandler == null ? myReadonlyFragmentsHandler : docHandler;
   }
 

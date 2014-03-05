@@ -603,14 +603,14 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   protected static void lineComment() {
     new CommentByLineCommentHandler().invoke(getProject(), getEditor(), getFile());
   }
-  
+
   protected static void executeAction(@NonNls @NotNull final String actionId) {
     CommandProcessor.getInstance().executeCommand(getProject(), new Runnable() {
       @Override
       public void run() {
         EditorActionManager actionManager = EditorActionManager.getInstance();
         EditorActionHandler actionHandler = actionManager.getActionHandler(actionId);
-        actionHandler.execute(getEditor(), DataManager.getInstance().getDataContext());
+        actionHandler.executeInCaretContext(getEditor(), null, DataManager.getInstance().getDataContext());
       }
     }, "", null);
   }

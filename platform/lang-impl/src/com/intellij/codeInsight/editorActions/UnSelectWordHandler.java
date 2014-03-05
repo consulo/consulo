@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
@@ -32,6 +33,7 @@ public class UnSelectWordHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;
 
   public UnSelectWordHandler(EditorActionHandler originalHandler) {
+    super(true);
     myOriginalHandler = originalHandler;
   }
 
@@ -53,7 +55,7 @@ public class UnSelectWordHandler extends EditorActionHandler {
   }
 
 
-  private static void doAction(Editor editor, PsiFile file) {
+  private static void doAction(final Editor editor, PsiFile file) {
     if (file instanceof PsiCompiledFile) {
       file = ((PsiCompiledFile)file).getDecompiledPsiFile();
       if (file == null) return;
@@ -68,8 +70,8 @@ public class UnSelectWordHandler extends EditorActionHandler {
     int cursorOffset = editor.getCaretModel().getOffset();
 
     if (cursorOffset > 0 && cursorOffset < text.length() &&
-       !Character.isJavaIdentifierPart(text.charAt(cursorOffset)) &&
-       Character.isJavaIdentifierPart(text.charAt(cursorOffset - 1))) {
+        !Character.isJavaIdentifierPart(text.charAt(cursorOffset)) &&
+        Character.isJavaIdentifierPart(text.charAt(cursorOffset - 1))) {
       cursorOffset--;
     }
 
@@ -83,12 +85,19 @@ public class UnSelectWordHandler extends EditorActionHandler {
       }
     }
 
-    while (element instanceof PsiWhiteSpace) {
-      if (element.getNextSibling() == null) {
+    if (element instanceof PsiWhiteSpace) {
+      PsiElement nextSibling = element.getNextSibling();
+      if (nextSibling == null) {
         element = element.getParent();
+        if (element == null || element instanceof PsiFile) {
+          return;
+        }
+        nextSibling = element.getNextSibling();
+        if (nextSibling == null) {
+          return;
+        }
       }
-
-      element = element.getNextSibling();
+      element = nextSibling;
       cursorOffset = element.getTextRange().getStartOffset();
     }
 
@@ -100,13 +109,20 @@ public class UnSelectWordHandler extends EditorActionHandler {
     SelectWordUtil.processRanges(element, text, cursorOffset, editor, new Processor<TextRange>() {
       @Override
       public boolean process(TextRange range) {
-        if (selectionRange.contains(range) && !range.equals(selectionRange) && (range.contains(finalCursorOffset) || finalCursorOffset == range.getEndOffset())) {
+        if (selectionRange.contains(range) && !range.equals(selectionRange) &&
+            (range.contains(finalCursorOffset) || finalCursorOffset == range.getEndOffset()) &&
+            !isOffsetCollapsed(range.getStartOffset()) && !isOffsetCollapsed(range.getEndOffset())) {
           if (maximumRange.get() == null || range.contains(maximumRange.get())) {
             maximumRange.set(range);
           }
         }
 
         return false;
+      }
+
+      private boolean isOffsetCollapsed(int offset) {
+        FoldRegion region = editor.getFoldingModel().getCollapsedRegionAtOffset(offset);
+        return region != null && region.getStartOffset() != offset && region.getEndOffset() != offset;
       }
     });
 

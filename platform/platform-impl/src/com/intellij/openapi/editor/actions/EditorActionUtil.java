@@ -65,7 +65,7 @@ public class EditorActionUtil {
    * expect the caret to be located at the near future.
    */
   public static final Key<Integer> EXPECTED_CARET_OFFSET = Key.create("expectedEditorOffset");
-
+  
   protected static final Object EDIT_COMMAND_GROUP = Key.create("EditGroup");
   public static final Object DELETE_COMMAND_GROUP = Key.create("DeleteGroup");
 
@@ -74,7 +74,7 @@ public class EditorActionUtil {
 
   /**
    * Tries to change given editor's viewport position in vertical dimension by the given number of visual lines.
-   *
+   * 
    * @param editor     target editor which viewport position should be changed
    * @param lineShift  defines viewport position's vertical change length
    * @param columnShift  defines viewport position's horizontal change length
@@ -83,19 +83,19 @@ public class EditorActionUtil {
   public static void scrollRelatively(@NotNull Editor editor, int lineShift, int columnShift, boolean moveCaret) {
     if (lineShift != 0) {
       editor.getScrollingModel().scrollVertically(
-              editor.getScrollingModel().getVerticalScrollOffset() + lineShift * editor.getLineHeight()
+        editor.getScrollingModel().getVerticalScrollOffset() + lineShift * editor.getLineHeight()
       );
     }
     if (columnShift != 0) {
       editor.getScrollingModel().scrollHorizontally(
-              editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * EditorUtil.getSpaceWidth(Font.PLAIN, editor)
+        editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * EditorUtil.getSpaceWidth(Font.PLAIN, editor)
       );
     }
 
     if (!moveCaret) {
       return;
     }
-
+    
     Rectangle viewRectangle = editor.getScrollingModel().getVisibleArea();
     int lineNumber = editor.getCaretModel().getVisualPosition().line;
     VisualPosition startPos = editor.xyToVisualPosition(new Point(0, viewRectangle.y));
@@ -157,7 +157,7 @@ public class EditorActionUtil {
       }
       if (inTabs) {
         tabsEnd = lineEnd;
-      }
+      } 
     }
     int oldLength = editor.offsetToLogicalPosition(spacesEnd).column;
     tabsEnd = editor.offsetToLogicalPosition(tabsEnd).column;
@@ -228,7 +228,7 @@ public class EditorActionUtil {
     return (Character.isWhitespace(prev) || firstIsIdentifierPart) &&
            !Character.isWhitespace(current) && !secondIsIdentifierPart;
   }
-
+  
   private static boolean isLowerCaseOrDigit(char c) {
     return Character.isLowerCase(c) || Character.isDigit(c);
   }
@@ -515,7 +515,7 @@ public class EditorActionUtil {
     }
     VisualPosition currentVisualCaret = editor.getCaretModel().getVisualPosition();
     VisualPosition visualEndOfLineWithCaret
-            = new VisualPosition(currentVisualCaret.line, EditorUtil.getLastVisualLineColumnNumber(editor, currentVisualCaret.line));
+      = new VisualPosition(currentVisualCaret.line, EditorUtil.getLastVisualLineColumnNumber(editor, currentVisualCaret.line));
 
     // There is a possible case that the caret is already located at the visual end of line and the line is soft wrapped.
     // We want to move the caret to the end of the next visual line then.
@@ -696,7 +696,7 @@ public class EditorActionUtil {
     int linesIncrement = visibleArea.height / lineHeight;
     int allowedBottom = ((EditorEx)editor).getContentSize().height - visibleArea.height;
     editor.getScrollingModel().scrollVertically(
-            Math.min(allowedBottom, visibleArea.y - visibleArea.y % lineHeight + linesIncrement * lineHeight));
+      Math.min(allowedBottom, visibleArea.y - visibleArea.y % lineHeight + linesIncrement * lineHeight));
     editor.getCaretModel().moveCaretRelatively(0, linesIncrement, isWithSelection, editor.isColumnMode(), true);
   }
 
@@ -768,11 +768,11 @@ public class EditorActionUtil {
     final char nextChar = offset + 1 < editorText.length() ? editorText.charAt(offset + 1) : 0; // 0x00 is not lowercase.
 
     return isLowerCaseOrDigit(prevChar) && Character.isUpperCase(curChar) ||
-           start && prevChar == '_' && curChar != '_' ||
-           !start && prevChar != '_' && curChar == '_' ||
-           start && prevChar == '$' && Character.isLetterOrDigit(curChar) ||
-           !start && Character.isLetterOrDigit(prevChar) && curChar == '$' ||
-           Character.isUpperCase(prevChar) && Character.isUpperCase(curChar) && Character.isLowerCase(nextChar);
+        start && prevChar == '_' && curChar != '_' ||
+        !start && prevChar != '_' && curChar == '_' ||
+        start && prevChar == '$' && Character.isLetterOrDigit(curChar) ||
+        !start && Character.isLetterOrDigit(prevChar) && curChar == '$' ||
+        Character.isUpperCase(prevChar) && Character.isUpperCase(curChar) && Character.isLowerCase(nextChar);
   }
 
   /**

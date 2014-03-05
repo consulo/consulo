@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
   protected final EditorActionHandler myOriginalHandler;
 
   public BackspaceHandler(EditorActionHandler originalHandler) {
+    super(true);
     myOriginalHandler = originalHandler;
   }
 
@@ -70,6 +71,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     char c = chars.charAt(offset);
 
     final Editor injectedEditor = TypedHandler.injectedEditorIfCharTypedIsSignificant(c, editor, file);
+    final Editor originalEditor = editor;
     if (injectedEditor != editor) {
       int injectedOffset = injectedEditor.getCaretModel().getOffset();
       if (isOffsetInsideInjected(injectedEditor, injectedOffset)) {
@@ -92,7 +94,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     HighlighterIterator hiterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
     boolean wasClosingQuote = quoteHandler != null && quoteHandler.isClosingQuote(hiterator, offset);
 
-    myOriginalHandler.execute(editor, dataContext);
+    myOriginalHandler.execute(originalEditor, dataContext);
 
     if (!toWordStart) {
       for(BackspaceHandlerDelegate delegate: delegates) {
@@ -115,7 +117,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
       BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
       if (!braceMatcher.isLBraceToken(iterator, chars, fileType) &&
           !braceMatcher.isRBraceToken(iterator, chars, fileType)
-          ) {
+              ) {
         return true;
       }
 
@@ -128,7 +130,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
 
       editor.getDocument().deleteString(offset, offset + 1);
     }
-    else if (c == '"' || c == '\''){
+    else if (c == '"' || c == '\'' || c == '`'){
       char c1 = chars.charAt(offset);
       if (c1 != c) return true;
       if (wasClosingQuote) return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.ScrollingModel;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
 public class TextEndWithSelectionAction extends TextComponentEditorAction {
@@ -37,6 +36,10 @@ public class TextEndWithSelectionAction extends TextComponentEditorAction {
   }
 
   private static class Handler extends EditorActionHandler {
+    protected Handler() {
+      super(true);
+    }
+
     @Override
     public void execute(Editor editor, DataContext dataContext) {
       int selectionStart = editor.getSelectionModel().getLeadSelectionOffset();

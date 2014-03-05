@@ -58,11 +58,11 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
       }
       else {
         blockStart = selStart == caretModel.getOffset()
-                     ? caretModel.getLogicalPosition()
-                     : editor.offsetToLogicalPosition(selStart);
+                                     ? caretModel.getLogicalPosition()
+                                     : editor.offsetToLogicalPosition(selStart);
         blockEnd = selEnd == caretModel.getOffset()
-                   ? caretModel.getLogicalPosition()
-                   : editor.offsetToLogicalPosition(selEnd);
+                                   ? caretModel.getLogicalPosition()
+                                   : editor.offsetToLogicalPosition(selEnd);
       }
       editor.setColumnMode(true);
       if (hasSelection) {

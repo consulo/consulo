@@ -37,10 +37,10 @@ import com.intellij.psi.PsiFile;
 import java.util.List;
 
 /**
-* @author peter
-*/
+ * @author peter
+ */
 class TemplateExpressionLookupElement extends LookupElementDecorator<LookupElement> {
-  private TemplateState myState;
+  private final TemplateState myState;
 
   public TemplateExpressionLookupElement(final TemplateState state, LookupElement element, int index) {
     super(PrioritizedLookupElement.withPriority(element, Integer.MAX_VALUE - 10 - index));
@@ -81,7 +81,7 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
 
     TextRange range = myState.getCurrentVariableRange();
     final TemplateLookupSelectionHandler handler =
-      item instanceof LookupItem ? ((LookupItem<?>)item).getAttribute(TemplateLookupSelectionHandler.KEY_IN_LOOKUP_ITEM) : null;
+            item instanceof LookupItem ? ((LookupItem<?>)item).getAttribute(TemplateLookupSelectionHandler.KEY_IN_LOOKUP_ITEM) : null;
     if (handler != null && range != null) {
       handler.itemSelected(item, context.getFile(), context.getDocument(), range.getStartOffset(), range.getEndOffset());
     }

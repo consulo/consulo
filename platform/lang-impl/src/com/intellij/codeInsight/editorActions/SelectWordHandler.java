@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public class SelectWordHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;
 
   public SelectWordHandler(EditorActionHandler originalHandler) {
+    super(true);
     myOriginalHandler = originalHandler;
   }
 
@@ -66,7 +67,7 @@ public class SelectWordHandler extends EditorActionHandler {
     TextRange range = selectWord(editor, project);
     if (editor instanceof EditorWindow) {
       if (range == null || !isInsideEditableInjection((EditorWindow)editor, range, project) || TextRange.from(0, editor.getDocument().getTextLength()).equals(
-        new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd()))) {
+              new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd()))) {
         editor = ((EditorWindow)editor).getDelegate();
         range = selectWord(editor, project);
       }

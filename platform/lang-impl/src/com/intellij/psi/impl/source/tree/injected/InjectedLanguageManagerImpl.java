@@ -22,6 +22,7 @@ import com.intellij.concurrency.Job;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.DocumentWindowImpl;
+import com.intellij.injected.editor.EditorWindowImpl;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -41,7 +42,10 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.util.Segment;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
@@ -50,6 +54,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ConcurrentHashMap;
+import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +63,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -119,6 +123,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
 
   @Override
   public void dispose() {
+    EditorWindowImpl.disposeInvalidEditors();
   }
 
   @NotNull
@@ -149,8 +154,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     final PsiFile hostPsiFile = documentManager.getCachedPsiFile(hostDocument);
     if (hostPsiFile == null) return;
 
-    final CopyOnWriteArrayList<DocumentWindow> injected =
-      (CopyOnWriteArrayList<DocumentWindow>)InjectedLanguageUtil.getCachedInjectedDocuments(hostPsiFile);
+    final ConcurrentList<DocumentWindow> injected = InjectedLanguageUtil.getCachedInjectedDocuments(hostPsiFile);
     if (injected.isEmpty()) return;
 
     if (myProgress.isCanceled()) {

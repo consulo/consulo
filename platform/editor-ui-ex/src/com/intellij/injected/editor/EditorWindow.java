@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.intellij.codeInsight.editorActions;
+package com.intellij.injected.editor;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
-import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
+import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.util.UserDataHolderEx;
+import com.intellij.psi.PsiFile;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseEnterHandler extends EditorWriteActionHandler {
-  private static final String GROUP_ID = "EnterHandler.GROUP_ID";
+public interface EditorWindow extends UserDataHolderEx, Editor {
+  boolean isValid();
 
-  protected BaseEnterHandler() {
-    super(true);
-  }
+  @NotNull
+  PsiFile getInjectedFile();
 
+  @NotNull
+  LogicalPosition hostToInjected(@NotNull LogicalPosition hPos);
+
+  @NotNull
+  LogicalPosition injectedToHost(@NotNull LogicalPosition pos);
+
+  @NotNull
+  Editor getDelegate();
+
+  @NotNull
   @Override
-  public DocCommandGroupId getCommandGroupId(Editor editor) {
-    return DocCommandGroupId.withGroupId(editor.getDocument(), GROUP_ID);
-  }
+  DocumentWindow getDocument();
 }

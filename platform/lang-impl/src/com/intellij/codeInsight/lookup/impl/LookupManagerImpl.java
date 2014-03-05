@@ -41,8 +41,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.ui.update.Activatable;
-import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -138,22 +136,14 @@ public class LookupManagerImpl extends LookupManager {
     final LookupImpl lookup = new LookupImpl(myProject, editor, arranger);
     DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(lookup);
 
-    final UiNotifyConnector connector = new UiNotifyConnector(editor.getContentComponent(), new Activatable() {
-      @Override
-      public void showNotify() {
-      }
-
-      @Override
-      public void hideNotify() {
-        hideActiveLookup();
-      }
-    });
-
     final Alarm alarm = new Alarm();
     final Runnable request = new Runnable() {
       @Override
       public void run() {
-        if (myActiveLookup == lookup && lookup.getCurrentItem() != null) {
+        if (myActiveLookup != lookup) return;
+
+        LookupElement currentItem = lookup.getCurrentItem();
+        if (currentItem != null && currentItem.isValid()) {
           final CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();
           if (completion != null && !completion.isAutopopupCompletion()) {
             try {
@@ -204,8 +194,6 @@ public class LookupManagerImpl extends LookupManager {
         myActiveLookupEditor = null;
         lookup.removeLookupListener(this);
         myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, lookup, null);
-
-        Disposer.dispose(connector);
       }
     });
 

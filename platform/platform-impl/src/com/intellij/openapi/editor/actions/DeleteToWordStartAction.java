@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,7 @@ public class DeleteToWordStartAction extends TextComponentEditorAction {
     private final boolean myNegateCamelMode;
 
     Handler(boolean negateCamelMode) {
+      super(true);
       myNegateCamelMode = negateCamelMode;
     }
 
@@ -92,15 +93,15 @@ public class DeleteToWordStartAction extends TextComponentEditorAction {
       CaretModel caretModel = editor.getCaretModel();
       int endOffset = caretModel.getOffset();
       int minOffset = editor.getDocument().getLineStartOffset(caretModel.getLogicalPosition().line);
-      
+
       myQuotesNumber.clear();
       for (int i : QUOTE_SYMBOLS_ARRAY) {
         myQuotesNumber.put(i, 0);
       }
       countQuotes(myQuotesNumber, text, minOffset, endOffset);
-      
+
       EditorActionUtil.moveCaretToPreviousWord(editor, false, camel);
-      
+
       for (int offset = caretModel.getOffset(); offset > minOffset; offset = caretModel.getOffset()) {
         char previous = text.charAt(offset - 1);
         char current = text.charAt(offset);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
@@ -300,7 +301,7 @@ public class IncrementalSearchHandler {
       if (matchLength > 0) {
         TextAttributes attributes = editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
         data.segmentHighlighter = editor.getMarkupModel()
-          .addRangeHighlighter(index, index + matchLength, HighlighterLayer.LAST + 1, attributes, HighlighterTargetArea.EXACT_RANGE);
+                .addRangeHighlighter(index, index + matchLength, HighlighterLayer.LAST + 1, attributes, HighlighterTargetArea.EXACT_RANGE);
       }
       data.ignoreCaretMove = true;
       editor.getCaretModel().moveToOffset(index);
@@ -387,10 +388,10 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void execute(Editor editor, DataContext dataContext) {
+    public void execute(Editor editor, Caret caret, DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
-        myOriginalHandler.execute(editor, dataContext);
+        myOriginalHandler.executeInCaretContext(editor, caret, dataContext);
       }
       else{
         LightweightHint hint = data.hint;
@@ -413,10 +414,10 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void execute(Editor editor, DataContext dataContext) {
+    public void execute(Editor editor, Caret caret, DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
-        myOriginalHandler.execute(editor, dataContext);
+        myOriginalHandler.executeInCaretContext(editor, caret, dataContext);
       }
       else{
         LightweightHint hint = data.hint;
@@ -446,10 +447,10 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void execute(Editor editor, DataContext dataContext) {
+    public void execute(Editor editor, Caret caret, DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
-        myOriginalHandler.execute(editor, dataContext);
+        myOriginalHandler.executeInCaretContext(editor, caret, dataContext);
       }
       else{
         LightweightHint hint = data.hint;

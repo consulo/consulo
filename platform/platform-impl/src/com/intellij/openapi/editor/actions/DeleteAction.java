@@ -66,8 +66,8 @@ public class DeleteAction extends EditorAction {
             }
           }
           selectionModel.setBlockSelection(
-                  new LogicalPosition(logicalBlockSelectionStart.line, column),
-                  new LogicalPosition(logicalBlockSelectionEnd.line, column)
+            new LogicalPosition(logicalBlockSelectionStart.line, column),
+            new LogicalPosition(logicalBlockSelectionEnd.line, column)
           );
           return;
         }

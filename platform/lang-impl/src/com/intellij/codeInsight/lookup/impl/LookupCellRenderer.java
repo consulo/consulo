@@ -114,11 +114,11 @@ public class LookupCellRenderer implements ListCellRenderer {
   private boolean myIsSelected = false;
   @Override
   public Component getListCellRendererComponent(
-    final JList list,
-    Object value,
-    int index,
-    boolean isSelected,
-    boolean hasFocus) {
+          final JList list,
+          Object value,
+          int index,
+          boolean isSelected,
+          boolean hasFocus) {
 
 
     boolean nonFocusedSelection = isSelected && myLookup.getFocusDegree() == LookupImpl.FocusDegree.SEMI_FOCUSED;
@@ -351,7 +351,7 @@ public class LookupCellRenderer implements ListCellRenderer {
       Iterable<TextRange> ranges = getMatchingFragments(prefix, name);
       if (ranges != null) {
         SimpleTextAttributes highlighted =
-          new SimpleTextAttributes(style, selected ? SELECTED_PREFIX_FOREGROUND_COLOR : PREFIX_FOREGROUND_COLOR);
+                new SimpleTextAttributes(style, selected ? SELECTED_PREFIX_FOREGROUND_COLOR : PREFIX_FOREGROUND_COLOR);
         SpeedSearchUtil.appendColoredFragments(nameComponent, name, ranges, base, highlighted);
         return;
       }
@@ -460,7 +460,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
 
     @Override
-    protected void applyAdditionalHints(Graphics g) {
+    protected void applyAdditionalHints(@NotNull Graphics g) {
       GraphicsUtil.setupAntialiasing(g);
     }
   }
