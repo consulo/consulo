@@ -71,11 +71,6 @@ public class MockProjectStore implements IProjectStore {
   }
 
   @Override
-  public String getLocation() {
-    throw new UnsupportedOperationException("Method getLocation not implemented in " + getClass());
-  }
-
-  @Override
   @NotNull
   public String getProjectName() {
     throw new UnsupportedOperationException("Method getProjectName not implemented in " + getClass());
@@ -107,12 +102,6 @@ public class MockProjectStore implements IProjectStore {
   @Override
   public void loadProjectFromTemplate(@NotNull ProjectImpl project) {
     throw new UnsupportedOperationException("Method loadProjectFromTemplate is not yet implemented in " + getClass().getName());
-  }
-
-  @Override
-  @NotNull
-  public String getProjectFileName() {
-    throw new UnsupportedOperationException("Method getProjectFileName is not yet implemented in " + getClass().getName());
   }
 
   @Override

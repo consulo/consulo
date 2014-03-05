@@ -356,14 +356,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @NotNull
   @Override
-  public String getProjectFileName() {
-    final FileBasedStorage storage = (FileBasedStorage)getStateStorageManager().getFileStateStorage(StoragePathMacros.PROJECT_FILE);
-    assert storage != null;
-    return storage.getFileName();
-  }
-
-  @NotNull
-  @Override
   public String getProjectFilePath() {
     if (myProject.isDefault()) return "";
     final FileBasedStorage storage = (FileBasedStorage)getStateStorageManager().getFileStateStorage(StoragePathMacros.PROJECT_FILE);

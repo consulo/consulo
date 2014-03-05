@@ -68,10 +68,6 @@ public interface IProjectStore extends IComponentStore {
 
   void loadProjectFromTemplate(@NotNull ProjectImpl project);
 
-  /** @deprecated please use {@linkplain #getProjectFile()} (to remove in IDEA 13) */
-  @NotNull
-  String getProjectFileName();
-
   @NotNull
   String getProjectFilePath();
 }
