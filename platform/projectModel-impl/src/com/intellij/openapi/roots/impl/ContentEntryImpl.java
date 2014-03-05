@@ -19,7 +19,6 @@ package com.intellij.openapi.roots.impl;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.util.Disposer;
@@ -45,15 +44,15 @@ import java.util.*;
  */
 @Logger
 public class ContentEntryImpl extends RootModelComponentBase implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
-  @NotNull
-  private final VirtualFilePointer myRoot;
   @NonNls
   public static final String ELEMENT_NAME = "content";
-
-  private final Set<ContentFolder> myContentFolders = new LinkedHashSet<ContentFolder>();
-
   @NonNls
   public static final String URL_ATTRIBUTE = "url";
+
+  @NotNull
+  private final VirtualFilePointer myRoot;
+
+  private final Set<ContentFolder> myContentFolders = new LinkedHashSet<ContentFolder>();
 
   ContentEntryImpl(@NotNull VirtualFile file, @NotNull RootModelImpl m) {
     this(file.getUrl(), m);
@@ -132,27 +131,24 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   }
 
   private List<ContentFolder> getFolders0(Predicate<ContentFolderTypeProvider> predicate) {
-    List<ContentFolder> list = new ArrayList<ContentFolder>();
+    List<ContentFolder> list = new ArrayList<ContentFolder>(myContentFolders.size());
     for (ContentFolder contentFolder : myContentFolders) {
       if (predicate.apply(contentFolder.getType())) {
         list.add(contentFolder);
       }
     }
 
-    if(predicate.apply(ExcludedContentFolderTypeProvider.getInstance())) {
-      for (DirectoryIndexExcludePolicy excludePolicy : Extensions
-        .getExtensions(DirectoryIndexExcludePolicy.EP_NAME, getRootModel().getProject())) {
+    if (predicate.apply(ExcludedContentFolderTypeProvider.getInstance())) {
+      for (DirectoryIndexExcludePolicy excludePolicy : DirectoryIndexExcludePolicy.EP_NAME.getExtensions(getRootModel().getProject())) {
         final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(getRootModel());
         for (VirtualFilePointer file : files) {
-          ContentFolderImpl contentFolder = new ContentFolderImpl(file, null, ExcludedContentFolderTypeProvider.getInstance(), this);
-          Disposer.register(this, contentFolder);
-          contentFolder.setSynthetic();
-          list.add(contentFolder);
+          list.add(new LightContentFolderImpl(file, ExcludedContentFolderTypeProvider.getInstance(), this));
         }
       }
     }
     return list;
   }
+
   @NotNull
   @Override
   public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType) {

@@ -57,7 +57,6 @@ public class ContentFolderImpl extends RootModelComponentBase
   @NonNls
   public static final String ELEMENT_NAME = "content-folder";
 
-  private boolean mySynthetic;
   private final VirtualFilePointer myFilePointer;
   protected final ContentEntryImpl myContentEntry;
   private final ContentFolderTypeProvider myContentFolderType;
@@ -232,7 +231,7 @@ public class ContentFolderImpl extends RootModelComponentBase
 
   @Override
   public boolean isSynthetic() {
-    return mySynthetic;
+    return false;
   }
 
   @NotNull
@@ -270,11 +269,6 @@ public class ContentFolderImpl extends RootModelComponentBase
   @Override
   public String toString() {
     return myFilePointer == null ? null : getUrl();
-  }
-
-  public void setSynthetic() {
-    assert !mySynthetic;
-    mySynthetic = true;
   }
 
   @Override
