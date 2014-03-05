@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -965,27 +966,36 @@ public class UIUtil {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
+  @DeprecationInfo("Look & Feel is not supported")
   public static boolean isUnderAlloyLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Alloy");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
+  @DeprecationInfo("Look & Feel is not supported")
   public static boolean isUnderAlloyIDEALookAndFeel() {
     return isUnderAlloyLookAndFeel() && UIManager.getLookAndFeel().getName().contains("IDEA");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
+  @DeprecationInfo("Look & Feel is not supported")
   public static boolean isUnderWindowsLookAndFeel() {
     return UIManager.getLookAndFeel().getName().equals("Windows");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
+  @DeprecationInfo("Look & Feel is not supported")
   public static boolean isUnderWindowsClassicLookAndFeel() {
     return UIManager.getLookAndFeel().getName().equals("Windows Classic");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
+  @DeprecationInfo("Look & Feel is not supported")
   public static boolean isUnderNimbusLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Nimbus");
   }
@@ -996,6 +1006,8 @@ public class UIUtil {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
+  @DeprecationInfo("Look & Feel is not supported")
   public static boolean isUnderJGoodiesLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("JGoodies");
   }
@@ -1022,6 +1034,8 @@ public class UIUtil {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
+  @Deprecated
+  @DeprecationInfo("Look & Feel is not supported")
   public static boolean isUnderGTKLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("GTK");
   }

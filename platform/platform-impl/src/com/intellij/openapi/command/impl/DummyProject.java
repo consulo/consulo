@@ -72,13 +72,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  @Nullable
-  @NonNls
-  public String getLocation() {
-    throw new UnsupportedOperationException("Method getLocation not implemented in " + getClass());
-  }
-
-  @Override
   @NotNull
   public String getProjectFilePath() {
     return "";

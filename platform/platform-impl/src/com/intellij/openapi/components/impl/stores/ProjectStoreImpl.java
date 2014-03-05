@@ -24,8 +24,6 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -67,7 +65,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   protected ProjectImpl myProject;
   private StorageScheme myScheme = StorageScheme.DEFAULT;
-  private String myCachedLocation;
   private String myPresentableUrl;
 
   ProjectStoreImpl(final ProjectImpl project) {
@@ -202,7 +199,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       }, ModalityState.defaultModalityState());
     }
 
-    myCachedLocation = null;
     myPresentableUrl = null;
   }
 
@@ -272,21 +268,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     return myScheme == StorageScheme.DEFAULT ? file.getParent() : file.getParentFile().getParent();
   }
 
-  @Override
-  public String getLocation() {
-    if (myCachedLocation == null) {
-      if (myScheme == StorageScheme.DEFAULT) {
-        myCachedLocation = getProjectFilePath();
-      }
-      else {
-        final VirtualFile baseDir = getProjectBaseDir();
-        myCachedLocation = baseDir == null ? null : baseDir.getPath();
-      }
-    }
-
-    return myCachedLocation;
-  }
-
   @NotNull
   @Override
   public String getProjectName() {
@@ -316,18 +297,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
       return baseDir.getName().replace(":", "");
     }
-    else {
-      String temp = getProjectFileName();
-      FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(temp);
-      if (fileType instanceof ProjectFileType) {
-        temp = temp.substring(0, temp.length() - fileType.getDefaultExtension().length() - 1);
-      }
-      final int i = temp.lastIndexOf(File.separatorChar);
-      if (i >= 0) {
-        temp = temp.substring(i + 1, temp.length() - i + 1);
-      }
-      return temp;
-    }
+    throw new IllegalArgumentException();
   }
 
   @NotNull

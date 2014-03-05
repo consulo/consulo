@@ -18,6 +18,7 @@ package com.intellij.openapi.components;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * We have a framework for persisting component states (see {@link State} {@link Storage}). It allows to specify which file
@@ -39,11 +40,12 @@ public class StoragePathMacros {
   
   /** <code>'.ipr'</code> file path key. */
   @Deprecated
+  @DeprecationInfo("Project file types is not supported anymore")
   @NonNls
   @NotNull
   public static final String PROJECT_FILE = "$PROJECT_FILE$";
   
-  /** <code>'.idea'</code> directory path key. */
+  /** <code>'.consulo'</code> directory path key. */
   @NonNls
   @NotNull
   public static final String PROJECT_CONFIG_DIR = "$PROJECT_CONFIG_DIR$";

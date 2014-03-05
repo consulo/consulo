@@ -19,6 +19,7 @@ import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.awt.*;
 import java.lang.ref.Reference;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Deprecated
+@DeprecationInfo("Use `org.consulo.ide.eap.EarlyAccessProgramDescriptor` or `com.intellij.ide.util.PropertiesComponent`")
 public class Registry  {
   private static Reference<ResourceBundle> ourBundle;
 

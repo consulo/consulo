@@ -553,11 +553,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
   }
 
-  @Override
-  public String getSdkName() {
-    return null;
-  }
-
   public void assertWritable() {
     LOG.assertTrue(myWritable);
   }

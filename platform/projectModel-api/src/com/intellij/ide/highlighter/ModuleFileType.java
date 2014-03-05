@@ -22,10 +22,12 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 
 @Deprecated
+@DeprecationInfo("Module file type is not supported anymore")
 public class ModuleFileType implements InternalFileType {
   @NonNls public static final String DEFAULT_EXTENSION = "cxmf";
   @NonNls public static final String DOT_DEFAULT_EXTENSION = "." + DEFAULT_EXTENSION;

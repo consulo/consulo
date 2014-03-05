@@ -22,6 +22,7 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -66,6 +67,7 @@ public abstract class ModuleManager {
    */
   @NotNull
   @Deprecated
+  @DeprecationInfo("Module can not be load, due .iml files are not supported anymore")
   public abstract Module loadModule(@NotNull String filePath) throws InvalidDataException, IOException, JDOMException, ModuleWithNameAlreadyExists;
 
   /**

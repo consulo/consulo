@@ -18,6 +18,7 @@ package com.intellij.packaging.artifacts;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author nik
@@ -26,10 +27,12 @@ public interface ArtifactPointer extends NamedPointer<Artifact> {
 
   @NotNull
   @Deprecated
+  @DeprecationInfo("Use #getName()")
   String getArtifactName();
 
   @Nullable
   @Deprecated
+  @DeprecationInfo("Use #get()")
   Artifact getArtifact();
 
   @NotNull

@@ -17,6 +17,7 @@ package com.intellij.packaging.artifacts;
 
 import org.consulo.util.pointers.NamedPointerManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author nik
@@ -33,15 +34,18 @@ public interface ArtifactPointerManager extends NamedPointerManager<Artifact> {
   @NotNull
   ArtifactPointer create(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
 
-  @Deprecated
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use #create(String)")
   ArtifactPointer createPointer(@NotNull String name);
 
-  @Deprecated
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use #create(Artifact)")
   ArtifactPointer createPointer(@NotNull Artifact artifact);
 
-  @Deprecated
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use #create(Artifact, ArtifactModel)")
   ArtifactPointer createPointer(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
 }

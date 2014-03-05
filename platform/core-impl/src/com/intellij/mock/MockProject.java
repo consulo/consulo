@@ -100,13 +100,6 @@ public class MockProject extends MockComponentManager implements Project {
   }
 
   @Override
-  @Nullable
-  @NonNls
-  public String getLocation() {
-    throw new UnsupportedOperationException("Method getLocation not implemented in " + getClass());
-  }
-
-  @Override
   @NotNull
   public String getProjectFilePath() {
     return "";

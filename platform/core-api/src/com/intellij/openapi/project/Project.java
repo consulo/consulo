@@ -108,11 +108,6 @@ public interface Project extends ComponentManager, AreaInstance {
   @NonNls
   String getLocationHash();
 
-  /** @deprecated please use {@linkplain #getPresentableUrl()} or {@linkplain #getBasePath()} (to remove in IDEA 13) */
-  @Nullable
-  @NonNls
-  String getLocation();
-
   /**
    * Should be invoked under WriteAction.
    */

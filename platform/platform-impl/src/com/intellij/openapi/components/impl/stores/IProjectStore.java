@@ -44,10 +44,6 @@ public interface IProjectStore extends IComponentStore {
   @Nullable
   String getProjectBasePath();
 
-  /** @deprecated please use {@linkplain #getPresentableUrl()} or {@linkplain #getProjectBaseDir()} (to remove in IDEA 13) */
-  @Nullable
-  String getLocation();
-
   @NotNull
   String getProjectName();
 
