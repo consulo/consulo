@@ -60,7 +60,10 @@ import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
@@ -78,7 +81,6 @@ import com.intellij.ui.content.*;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -152,7 +154,6 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
   private final Collection<AbstractProjectViewPane> myUninitializedPanes = new THashSet<AbstractProjectViewPane>();
 
   static final DataKey<ProjectViewImpl> DATA_KEY = DataKey.create("com.intellij.ide.projectView.impl.ProjectViewImpl");
-  @Deprecated static final String PROJECT_VIEW_DATA_CONSTANT = DATA_KEY.getName();
 
   private DefaultActionGroup myActionGroup;
   private String mySavedPaneId = ProjectViewPane.ID;
@@ -238,29 +239,29 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
       setAutoscrollToSource(state, myCurrentViewId);
     }
   };
-    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerAdapter(){
-      private boolean toolWindowVisible;
+  toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerAdapter(){
+    private boolean toolWindowVisible;
 
-      @Override
-      public void stateChanged() {
-        ToolWindow window = toolWindowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
-        if (window == null) return;
-        if (window.isVisible() && !toolWindowVisible) {
-          String id = getCurrentViewId();
-          if (isAutoscrollToSource(id)) {
-            AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
+    @Override
+    public void stateChanged() {
+      ToolWindow window = toolWindowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
+      if (window == null) return;
+      if (window.isVisible() && !toolWindowVisible) {
+        String id = getCurrentViewId();
+        if (isAutoscrollToSource(id)) {
+          AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
 
-            if (currentProjectViewPane != null) {
-              myAutoScrollToSourceHandler.onMouseClicked(currentProjectViewPane.getTree());
-            }
-          }
-          if (isAutoscrollFromSource(id)) {
-            myAutoScrollFromSourceHandler.setAutoScrollEnabled(true);
+          if (currentProjectViewPane != null) {
+            myAutoScrollToSourceHandler.onMouseClicked(currentProjectViewPane.getTree());
           }
         }
-        toolWindowVisible = window.isVisible();
+        if (isAutoscrollFromSource(id)) {
+          myAutoScrollFromSourceHandler.setAutoScrollEnabled(true);
+        }
       }
-    });
+      toolWindowVisible = window.isVisible();
+    }
+  });
   }
 
   private void constructUi() {
@@ -276,10 +277,9 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
 
   @Override
   public List<AnAction> getActions(boolean originalProvider) {
-    ArrayList<AnAction> result = new ArrayList<AnAction>();
+    List<AnAction> result = new ArrayList<AnAction>();
 
     DefaultActionGroup views = new DefaultActionGroup("Change View", true);
-    boolean lastWasHeader = false;
     boolean lastHeaderHadKids = false;
     for (int i = 0; i < myContentManager.getContentCount(); i++) {
       Content each = myContentManager.getContent(i);
@@ -287,13 +287,13 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
 
         if (each.getUserData(SUB_ID_KEY) == null) {
           if (lastHeaderHadKids) {
-            views.add(new AnSeparator());
+            views.add(AnSeparator.getInstance());
           } else {
             if (i + 1 < myContentManager.getContentCount()) {
               Content next = myContentManager.getContent(i + 1);
               if (next != null) {
                 if (next.getUserData(SUB_ID_KEY) != null) {
-                  views.add(new AnSeparator());
+                  views.add(AnSeparator.getInstance());
                 }
               }
             }
@@ -302,16 +302,13 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
           lastHeaderHadKids = true;
         }
 
-        lastWasHeader = each.getUserData(SUB_ID_KEY) == null;
-
         views.add(new ChangeViewAction(each.getUserData(ID_KEY), each.getUserData(SUB_ID_KEY)));
       }
     }
     result.add(views);
-    result.add(new AnSeparator());
+    result.add(AnSeparator.getInstance());
 
-
-    ArrayList<AnAction> secondary = new ArrayList<AnAction>();
+    List<AnAction> secondary = new ArrayList<AnAction>();
     if (myActionGroup != null) {
       AnAction[] kids = myActionGroup.getChildren(null);
       for (AnAction each : kids) {
@@ -322,7 +319,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
         }
       }
     }
-    result.add(new AnSeparator());
+    result.add(AnSeparator.getInstance());
     result.addAll(secondary);
 
     return result;
@@ -522,7 +519,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
   }
 
   private void updateTitleActions() {
-    final ToolWindow window = ToolWindowManager.getInstance(myProject).getToolWindow("Project");
+    final ToolWindow window = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.PROJECT_VIEW);
     if (!(window instanceof ToolWindowEx)) return;
     ScrollFromSourceAction scrollAction = null;
     CollapseAllToolbarAction collapseAction = null;
@@ -538,7 +535,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
         myActionGroup.remove(collapseAction);
       }
     }
-    ((ToolWindowEx)window).setTitleActions(new AnAction[] {scrollAction, collapseAction});
+    ((ToolWindowEx)window).setTitleActions(scrollAction, collapseAction);
   }
 
   // public for tests
@@ -628,7 +625,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
     myActionGroup.removeAll();
     if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
       myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"),
-                                             IdeBundle.message("action.flatten.packages"), PlatformIcons.FLATTEN_PACKAGES_ICON,
+                                             IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages,
                                              ourFlattenPackagesDefaults) {
         @Override
         public void setSelected(AnActionEvent event, boolean flag) {
@@ -1393,10 +1390,6 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
     }
     parentNode.addContent(navigatorElement);
 
-    // for compatibility with idea 5.1
-    @Deprecated @NonNls final String ATTRIBUTE_SPLITTER_PROPORTION = "splitterProportion";
-    navigatorElement.setAttribute(ATTRIBUTE_SPLITTER_PROPORTION, "0.5");
-
     Element panesElement = new Element(ELEMENT_PANES);
     writePaneState(panesElement);
     parentNode.addContent(panesElement);
@@ -1416,7 +1409,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
       panesElement.addContent(paneElement);
     }
     for (Element element : myUninitializedPaneState.values()) {
-      panesElement.addContent((Element) element.clone());
+      panesElement.addContent(element.clone());
     }
   }
 
