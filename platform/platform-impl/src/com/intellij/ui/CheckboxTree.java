@@ -57,10 +57,8 @@ public class CheckboxTree extends CheckboxTreeBase {
     new TreeSpeedSearch(this);
   }
 
-
+  @Override
   protected boolean isToggleEvent(KeyEvent e) {
     return super.isToggleEvent(e) &&  !SpeedSearchBase.hasActiveSpeedSearch(this);
   }
-
-
 }

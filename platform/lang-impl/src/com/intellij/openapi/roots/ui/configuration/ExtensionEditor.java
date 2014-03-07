@@ -21,11 +21,12 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.CheckboxTree;
-import com.intellij.ui.CheckboxTreeBase;
+import com.intellij.ui.CheckboxTreeNoPolicy;
+import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.tree.TreeUtil;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.consulo.psi.PsiPackageManager;
@@ -37,8 +38,11 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,8 +54,10 @@ public class ExtensionEditor extends ModuleElementsEditor {
   private final ClasspathEditor myClasspathEditor;
   private final ContentEntriesEditor myContentEntriesEditor;
   private JPanel myRootPane;
-  private CheckboxTree myTree;
+  private CheckboxTreeNoPolicy myTree;
   private JBSplitter mySplitter;
+
+  private ModuleExtension<?> myConfigurablePanelExtension;
 
   public ExtensionEditor(ModuleConfigurationState state, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
     super(state);
@@ -67,8 +73,38 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     mySplitter = new JBSplitter();
 
-    myTree = new CheckboxTree(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this),
-                              new CheckboxTreeBase.CheckPolicy(false, true, true, false));
+    myTree = new CheckboxTreeNoPolicy(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this)) {
+      @Override
+      protected void adjustParentsAndChildren(CheckedTreeNode node, boolean checked) {
+        if (!checked) {
+          changeNodeState(node, false);
+          checkOrUncheckChildren(node, false);
+        }
+        else {
+          // we need collect parents, and enable it in right order
+          // A
+          // - B
+          // -- C
+          // when we enable C, ill be calls like A -> B -> C
+          List<CheckedTreeNode> parents = new ArrayList<CheckedTreeNode>();
+          TreeNode parent = node.getParent();
+          while (parent != null) {
+            if (parent instanceof CheckedTreeNode) {
+              parents.add((CheckedTreeNode)parent);
+            }
+            parent = parent.getParent();
+          }
+
+          Collections.reverse(parents);
+          for (CheckedTreeNode checkedTreeNode : parents) {
+            checkNode(checkedTreeNode, true);
+          }
+          changeNodeState(node, true);
+        }
+        repaint();
+      }
+    };
+
     myTree.setRootVisible(false);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -98,6 +134,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   @Nullable
   private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension<?> extension) {
+    myConfigurablePanelExtension = extension;
     return extension.createConfigurablePanel(myState.getRootModel(), new Runnable() {
       @Override
       public void run() {
@@ -107,7 +144,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   }
 
   public void extensionChanged(MutableModuleExtension<?> extension) {
-    final JComponent secondComponent = mySplitter.getSecondComponent();
+    final JComponent secondComponent = myConfigurablePanelExtension != extension ? null : mySplitter.getSecondComponent();
     if (secondComponent == null && extension.isEnabled() || secondComponent != null && !extension.isEnabled()) {
       if (!extension.isEnabled()) {
         mySplitter.setSecondComponent(null);
