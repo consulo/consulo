@@ -25,6 +25,6 @@ public interface JarFileSystem extends ArchiveFileSystem {
   String PROTOCOL_PREFIX = "jar://";
   @NonNls
   @Deprecated
-  @DeprecationInfo("Use #ARCHIVE_SEPARATOR")
+  @DeprecationInfo(value = "Use #ARCHIVE_SEPARATOR", until = "3.0")
   String JAR_SEPARATOR = ARCHIVE_SEPARATOR;
 }

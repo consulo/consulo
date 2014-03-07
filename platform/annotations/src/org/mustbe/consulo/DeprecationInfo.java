@@ -25,4 +25,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DeprecationInfo {
   String value();
+
+  String until() default "0.0";
 }

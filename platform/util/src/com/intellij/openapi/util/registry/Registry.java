@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Deprecated
-@DeprecationInfo("Use `org.consulo.ide.eap.EarlyAccessProgramDescriptor` or `com.intellij.ide.util.PropertiesComponent`")
+@DeprecationInfo(value = "Use `org.consulo.ide.eap.EarlyAccessProgramDescriptor` or `com.intellij.ide.util.PropertiesComponent`", until = "4.0")
 public class Registry  {
   private static Reference<ResourceBundle> ourBundle;
 

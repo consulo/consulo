@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -61,7 +62,8 @@ public interface ModuleRootModel {
    * @return the array of content roots.
    * @see #getContentEntries()
    */
-  @NotNull VirtualFile[] getContentRoots();
+  @NotNull
+  VirtualFile[] getContentRoots();
 
   /**
    * Returns an array of content root urls from all content entries. A helper method.
@@ -69,7 +71,8 @@ public interface ModuleRootModel {
    * @return the array of content root URLs.
    * @see #getContentEntries()
    */
-  @NotNull String[] getContentRootUrls();
+  @NotNull
+  String[] getContentRootUrls();
 
   @NotNull
   String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate);
@@ -88,6 +91,7 @@ public interface ModuleRootModel {
    */
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.excluded())", until = "2.0")
   VirtualFile[] getExcludeRoots();
 
   /**
@@ -98,6 +102,7 @@ public interface ModuleRootModel {
    */
   @Deprecated
   @NotNull
+  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.excluded())", until = "2.0")
   String[] getExcludeRootUrls();
 
   /**
@@ -109,6 +114,7 @@ public interface ModuleRootModel {
    */
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.productionAndTest())", until = "2.0")
   VirtualFile[] getSourceRoots();
 
   /**
@@ -121,6 +127,8 @@ public interface ModuleRootModel {
    */
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()",
+                   until = "2.0")
   VirtualFile[] getSourceRoots(boolean includingTests);
 
   /**
@@ -132,6 +140,7 @@ public interface ModuleRootModel {
    */
   @Deprecated
   @NotNull
+  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.productionAndTest())", until = "2.0")
   String[] getSourceRootUrls();
 
   /**
@@ -144,6 +153,8 @@ public interface ModuleRootModel {
    */
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()",
+                   until = "2.0")
   String[] getSourceRootUrls(boolean includingTests);
 
   /**
@@ -171,7 +182,8 @@ public interface ModuleRootModel {
    *
    * @return the list of module names this module depends on.
    */
-  @NotNull String[] getDependencyModuleNames();
+  @NotNull
+  String[] getDependencyModuleNames();
 
   @Nullable
   <T extends ModuleExtension> T getExtension(Class<T> clazz);

@@ -967,35 +967,35 @@ public class UIUtil {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo("Look & Feel is not supported")
+  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderAlloyLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Alloy");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo("Look & Feel is not supported")
+  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderAlloyIDEALookAndFeel() {
     return isUnderAlloyLookAndFeel() && UIManager.getLookAndFeel().getName().contains("IDEA");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo("Look & Feel is not supported")
+  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderWindowsLookAndFeel() {
     return UIManager.getLookAndFeel().getName().equals("Windows");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo("Look & Feel is not supported")
+  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderWindowsClassicLookAndFeel() {
     return UIManager.getLookAndFeel().getName().equals("Windows Classic");
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo("Look & Feel is not supported")
+  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderNimbusLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("Nimbus");
   }
@@ -1007,7 +1007,7 @@ public class UIUtil {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo("Look & Feel is not supported")
+  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderJGoodiesLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("JGoodies");
   }
@@ -1035,7 +1035,7 @@ public class UIUtil {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Deprecated
-  @DeprecationInfo("Look & Feel is not supported")
+  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderGTKLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("GTK");
   }

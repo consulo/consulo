@@ -40,7 +40,7 @@ public class StoragePathMacros {
   
   /** <code>'.ipr'</code> file path key. */
   @Deprecated
-  @DeprecationInfo("Project file types is not supported anymore")
+  @DeprecationInfo(value = "Project file types is not supported anymore", until = "3.0")
   @NonNls
   @NotNull
   public static final String PROJECT_FILE = "$PROJECT_FILE$";

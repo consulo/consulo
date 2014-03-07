@@ -27,7 +27,7 @@ import org.mustbe.consulo.DeprecationInfo;
 import javax.swing.*;
 
 @Deprecated
-@DeprecationInfo("Module file type is not supported anymore")
+@DeprecationInfo(value = "Module file type is not supported anymore", until = "3.0")
 public class ModuleFileType implements InternalFileType {
   @NonNls public static final String DEFAULT_EXTENSION = "cxmf";
   @NonNls public static final String DOT_DEFAULT_EXTENSION = "." + DEFAULT_EXTENSION;

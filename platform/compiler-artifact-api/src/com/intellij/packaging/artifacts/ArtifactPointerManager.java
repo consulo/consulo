@@ -36,16 +36,16 @@ public interface ArtifactPointerManager extends NamedPointerManager<Artifact> {
 
   @NotNull
   @Deprecated
-  @DeprecationInfo("Use #create(String)")
+  @DeprecationInfo(value = "Use #create(String)", until = "2.0")
   ArtifactPointer createPointer(@NotNull String name);
 
   @NotNull
   @Deprecated
-  @DeprecationInfo("Use #create(Artifact)")
+  @DeprecationInfo(value = "Use #create(Artifact)", until = "2.0")
   ArtifactPointer createPointer(@NotNull Artifact artifact);
 
   @NotNull
   @Deprecated
-  @DeprecationInfo("Use #create(Artifact, ArtifactModel)")
+  @DeprecationInfo(value = "Use #create(Artifact, ArtifactModel)", until = "2.0")
   ArtifactPointer createPointer(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
 }

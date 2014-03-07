@@ -67,7 +67,7 @@ public abstract class ModuleManager {
    */
   @NotNull
   @Deprecated
-  @DeprecationInfo("Module can not be load, due .iml files are not supported anymore")
+  @DeprecationInfo(value = "Module can not be load, due .iml files are not supported anymore", until = "3.0")
   public abstract Module loadModule(@NotNull String filePath) throws InvalidDataException, IOException, JDOMException, ModuleWithNameAlreadyExists;
 
   /**

@@ -66,14 +66,14 @@ public class ArchiveVfsUtil {
   }
 
   @Deprecated
-  @DeprecationInfo("Use #getArchiveRootForLocalFile()")
+  @DeprecationInfo(value = "Use #getArchiveRootForLocalFile()", until = "2.0")
   @Nullable
   public static VirtualFile getJarRootForLocalFile(@Nullable VirtualFile virtualFile) {
     return getArchiveRootForLocalFile(virtualFile);
   }
 
   @Deprecated
-  @DeprecationInfo("Use #getVirtualFileForArchive()")
+  @DeprecationInfo(value = "Use #getVirtualFileForArchive()", until = "2.0")
   @Nullable
   public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile virtualFile) {
     return getVirtualFileForArchive(virtualFile);
