@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.io.*;
 import java.util.Iterator;
@@ -65,12 +66,14 @@ public class ArchiveVfsUtil {
   }
 
   @Deprecated
+  @DeprecationInfo("Use #getArchiveRootForLocalFile()")
   @Nullable
   public static VirtualFile getJarRootForLocalFile(@Nullable VirtualFile virtualFile) {
     return getArchiveRootForLocalFile(virtualFile);
   }
 
   @Deprecated
+  @DeprecationInfo("Use #getVirtualFileForArchive()")
   @Nullable
   public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile virtualFile) {
     return getVirtualFileForArchive(virtualFile);

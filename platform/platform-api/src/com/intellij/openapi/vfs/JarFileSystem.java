@@ -16,6 +16,7 @@
 package com.intellij.openapi.vfs;
 
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.DeprecationInfo;
 
 public interface JarFileSystem extends ArchiveFileSystem {
   @NonNls
@@ -24,5 +25,6 @@ public interface JarFileSystem extends ArchiveFileSystem {
   String PROTOCOL_PREFIX = "jar://";
   @NonNls
   @Deprecated
+  @DeprecationInfo("Use #ARCHIVE_SEPARATOR")
   String JAR_SEPARATOR = ARCHIVE_SEPARATOR;
 }
