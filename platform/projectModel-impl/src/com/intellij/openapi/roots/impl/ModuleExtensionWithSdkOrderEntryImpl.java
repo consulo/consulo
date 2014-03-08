@@ -107,7 +107,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
     ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension != null) {
-      builder.append(ModuleExtensionProviderEP.findProvider(moduleExtension.getId()).getName());
+      builder.append(ModuleExtensionProviderEP.findProviderEP(moduleExtension.getId()).getName());
 
       builder.append(" : ");
 

@@ -15,57 +15,155 @@
  */
 package org.consulo.module.extension;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.util.KeyedLazyInstanceEP;
+import com.intellij.openapi.util.NullableLazyValue;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.xmlb.annotations.Attribute;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
+import javax.swing.*;
+import java.lang.reflect.Constructor;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 11:45/19.05.13
  */
-public class ModuleExtensionProviderEP extends KeyedLazyInstanceEP<ModuleExtensionProvider> {
-  public static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME =
-    ExtensionPointName.create("com.intellij.moduleExtensionProvider");
+@Logger
+public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
+  public static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtensionProvider");
 
-  @Attribute("parent-key")
+  @Attribute("key")
+  public String key;
+
+  @Attribute("parentKey")
   public String parentKey;
 
-  @Attribute("allow-mixin")
+  @Attribute("allowMixin")
   public boolean allowMixin;
 
-  @Attribute("system-only")
+  @Attribute("systemOnly")
   public boolean systemOnly;
 
-  private static NotNullLazyValue<Map<String, ModuleExtensionProvider>> myLazyMap = new NotNullLazyValue<Map<String, ModuleExtensionProvider>>() {
+  @Attribute("name")
+  public String name;
+
+  @Attribute("mutableClass")
+  public String mutableClass;
+
+  @Attribute("immutableClass")
+  public String immutableClass;
+
+  @Attribute("icon")
+  @NotNull
+  public String icon;
+
+  private static NotNullLazyValue<Map<String, ModuleExtensionProviderEP>> ourAllValue = new NotNullLazyValue<Map<String, ModuleExtensionProviderEP>>() {
     @NotNull
     @Override
-    protected Map<String, ModuleExtensionProvider> compute() {
-      Map<String, ModuleExtensionProvider> map = new HashMap<String, ModuleExtensionProvider>();
+    protected Map<String, ModuleExtensionProviderEP> compute() {
+      Map<String, ModuleExtensionProviderEP> map = new HashMap<String, ModuleExtensionProviderEP>();
       for (ModuleExtensionProviderEP ep : EP_NAME.getExtensions()) {
-        ModuleExtensionProvider extensionProvider = ep.getInstance();
-        if(extensionProvider == null) {
-          continue;
-        }
-        map.put(ep.getKey(), extensionProvider);
+        map.put(ep.key, ep);
       }
       return map;
     }
   };
 
-  @NotNull
-  public static Collection<ModuleExtensionProvider> getProviders() {
-    return myLazyMap.getValue().values();
+  private NotNullLazyValue<Icon> myIconValue = new NotNullLazyValue<Icon>() {
+    @NotNull
+    @Override
+    protected Icon compute() {
+      if (StringUtil.isEmpty(icon)) {
+        return AllIcons.Toolbar.Unknown;
+      }
+      Icon icon1 = IconLoader.findIcon(icon, getLoaderForClass());
+      return icon1 == null ? AllIcons.Toolbar.Unknown : icon1;
+    }
+  };
+
+  private NullableLazyValue<Constructor<ModuleExtension>> myImmutableConstructorValue = new NullableLazyValue<Constructor<ModuleExtension>>() {
+    @Override
+    protected Constructor<ModuleExtension> compute() {
+      Class<ModuleExtension> value = findClassNoExceptions(immutableClass);
+      if(value == null) {
+        return null;
+      }
+      try {
+        return value.getConstructor(String.class, ModifiableRootModel.class);
+      }
+      catch (NoSuchMethodException e) {
+         LOGGER.error(e);
+      }
+      return null;
+    }
+  };
+
+  private NullableLazyValue<Constructor<MutableModuleExtension>> myMutableConstructorValue = new NullableLazyValue<Constructor<MutableModuleExtension>>() {
+    @Override
+    protected Constructor<MutableModuleExtension> compute() {
+      Class<MutableModuleExtension> value = findClassNoExceptions(mutableClass);
+      if(value == null) {
+        return null;
+      }
+      try {
+        return value.getConstructor(String.class, ModifiableRootModel.class);
+      }
+      catch (NoSuchMethodException e) {
+        LOGGER.error(e);
+      }
+      return null;
+    }
+  };
+
+  @Nullable
+  public ModuleExtension<?> createImmutable(@NotNull ModifiableRootModel modifiableRootModel) {
+    Constructor<ModuleExtension> value = myImmutableConstructorValue.getValue();
+    if(value != null) {
+      return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+    }
+    else {
+      return null;
+    }
   }
 
   @Nullable
-  public static ModuleExtensionProvider findProvider(@NotNull String id) {
-    return myLazyMap.getValue().get(id);
+  public MutableModuleExtension<?> createMutable(@NotNull ModifiableRootModel modifiableRootModel) {
+    Constructor<MutableModuleExtension> value = myMutableConstructorValue.getValue();
+    if(value != null) {
+      return ReflectionUtil.createInstance(value, key, modifiableRootModel);
+    }
+    else {
+      return null;
+    }
+  }
+
+  @NotNull
+  public Icon getIcon() {
+    return myIconValue.getValue();
+  }
+
+  @NotNull
+  public String getName() {
+    return name;
+  }
+
+  @NotNull
+  public String getKey() {
+    return key;
+  }
+
+  @Nullable
+  public static ModuleExtensionProviderEP findProviderEP(@NotNull String id) {
+    return ourAllValue.getValue().get(id);
   }
 }

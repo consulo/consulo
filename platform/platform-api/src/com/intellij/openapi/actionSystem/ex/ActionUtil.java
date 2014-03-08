@@ -25,8 +25,6 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.module.extension.ModuleExtensionProvider;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -183,10 +181,6 @@ public class ActionUtil {
       return false;
     }
     for (String moduleExtensionId : array) {
-      ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(moduleExtensionId);
-      if(provider == null) {
-        continue;
-      }
       if(ModuleUtilCore.getExtension(module, moduleExtensionId) != null) {
         return true;
       }

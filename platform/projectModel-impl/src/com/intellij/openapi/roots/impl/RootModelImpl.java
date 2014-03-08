@@ -79,9 +79,11 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myModuleLibraryTable = new ModuleLibraryTable(this, myProjectRootManager);
 
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
-      final ModuleExtensionProvider provider = providerEP.getInstance();
-
-      myExtensions.add(provider.createImmutable(providerEP.getKey(), moduleRootManager.getModule()));
+      ModuleExtension<?> immutable = providerEP.createImmutable(this);
+      if(immutable == null) {
+        continue;
+      }
+      myExtensions.add(immutable);
     }
     myConfigurationAccessor = new RootConfigurationAccessor();
   }
@@ -105,8 +107,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (Element child : moduleExtensionChild) {
       final String id = child.getAttributeValue("id");
 
-      ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
-      if (provider != null) {
+      ModuleExtensionProviderEP providerEP = ModuleExtensionProviderEP.findProviderEP(id);
+      if (providerEP != null) {
         ModuleExtension rootModuleExtension = originalRootModel.getExtensionWithoutCheck(id);
 
         //noinspection unchecked
@@ -185,11 +187,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @SuppressWarnings("unchecked")
   private void createMutableExtensions(RootModelImpl rootModel) {
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
-      final ModuleExtensionProvider provider = providerEP.getInstance();
-
       final ModuleExtension<?> originalExtension = rootModel.getExtensionWithoutCheck(providerEP.getKey());
 
-      MutableModuleExtension mutable = provider.createMutable(providerEP.getKey(), rootModel.getModule());
+      MutableModuleExtension mutable = providerEP.createMutable(this);
+      if(mutable == null) {
+        continue;
+      }
 
       mutable.commit(originalExtension);
 
@@ -766,7 +769,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
 
     @Override
-    public boolean removeAll(Collection<?> collection) {
+    public boolean removeAll(@NotNull Collection<?> collection) {
       boolean result = super.removeAll(collection);
       setIndicies(0);
       clearCachedEntries();
@@ -774,7 +777,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
 
     @Override
-    public boolean retainAll(Collection<?> collection) {
+    public boolean retainAll(@NotNull Collection<?> collection) {
       boolean result = super.retainAll(collection);
       setIndicies(0);
       clearCachedEntries();

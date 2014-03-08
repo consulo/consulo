@@ -135,7 +135,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   @Nullable
   private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension<?> extension) {
     myConfigurablePanelExtension = extension;
-    return extension.createConfigurablePanel(myState.getRootModel(), new Runnable() {
+    return extension.createConfigurablePanel(new Runnable() {
       @Override
       public void run() {
         extensionChanged(extension);

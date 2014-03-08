@@ -16,6 +16,8 @@
 package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -37,12 +39,12 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   }
 
   protected boolean myIsEnabled;
-  private final String myId;
-  private final Module myModule;
+  protected final String myId;
+  protected final ModifiableRootModel myRootModel;
 
-  public ModuleExtensionImpl(@NotNull String id, @NotNull Module module) {
+  public ModuleExtensionImpl(@NotNull String id, @NotNull ModifiableRootModel rootModel) {
     myId = id;
-    myModule = module;
+    myRootModel = rootModel;
   }
 
   @NotNull
@@ -59,7 +61,13 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   @NotNull
   @Override
   public Module getModule() {
-    return myModule;
+    return myRootModel.getModule();
+  }
+
+  @NotNull
+  @Override
+  public Project getProject() {
+    return getModule().getProject();
   }
 
   @Override
@@ -105,7 +113,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     ModuleExtensionImpl that = (ModuleExtensionImpl)o;
 
     if (!myId.equals(that.myId)) return false;
-    if (!myModule.equals(that.myModule)) return false;
+    if (!getModule().equals(that.getModule())) return false;
 
     return true;
   }
@@ -113,7 +121,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   @Override
   public int hashCode() {
     int result = myId.hashCode();
-    result = 31 * result + myModule.hashCode();
+    result = 31 * result + getModule().hashCode();
     return result;
   }
 }

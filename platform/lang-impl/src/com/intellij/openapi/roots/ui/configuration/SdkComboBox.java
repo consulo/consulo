@@ -24,8 +24,8 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
@@ -40,8 +40,6 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionProvider;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -215,11 +213,6 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   public void insertModuleItems(@NotNull ModuleExtension<?> moduleExtension) {
-    final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(moduleExtension.getId());
-    if(provider == null) {
-      return;
-    }
-
     for(Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
       // dont add self module
       if(module == moduleExtension.getModule()) {

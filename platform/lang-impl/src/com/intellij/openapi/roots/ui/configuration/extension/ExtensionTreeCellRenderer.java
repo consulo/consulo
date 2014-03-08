@@ -18,7 +18,6 @@ package com.intellij.openapi.roots.ui.configuration.extension;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.SimpleTextAttributes;
-import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 
 import javax.swing.*;
@@ -39,15 +38,12 @@ public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRend
       if (providerEP == null) {
         return;
       }
-      final ModuleExtensionProvider instance = providerEP.getInstance();
 
       final boolean enabled = ((ExtensionCheckedTreeNode)value).isEnabled();
-      final Icon icon = instance.getIcon();
-      if (icon != null) {
-        getTextRenderer().setIcon(enabled ? instance.getIcon() : IconLoader.getTransparentIcon(icon));
-      }
+
+      getTextRenderer().setIcon(enabled ? providerEP.getIcon() : IconLoader.getTransparentIcon(providerEP.getIcon()));
       getTextRenderer()
-        .append(instance.getName(), enabled ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.GRAY_ATTRIBUTES);
+        .append(providerEP.getName(), enabled ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.GRAY_ATTRIBUTES);
     }
   }
 }

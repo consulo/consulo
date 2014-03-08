@@ -22,8 +22,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionProvider;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.mustbe.consulo.util.ListOfElementsEP;
 
 /**
@@ -55,10 +53,6 @@ public class ProjectModuleExtensionCondition implements Condition<Project> {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
       for (String extensionId : myExtensionIds) {
-        ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(extensionId);
-        if(provider == null) {
-          continue;
-        }
         ModuleExtension<?> extension = moduleRootManager.getExtension(extensionId);
         if(extension != null) {
           return true;

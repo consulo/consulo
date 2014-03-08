@@ -22,7 +22,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckedTreeNode;
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
@@ -40,8 +39,8 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
     @Override
     public int compare(ExtensionCheckedTreeNode o1, ExtensionCheckedTreeNode o2) {
-      final ModuleExtensionProvider i1 = o1.myProviderEP.getInstance();
-      final ModuleExtensionProvider i2 = o2.myProviderEP.getInstance();
+      final ModuleExtensionProviderEP i1 = o1.myProviderEP;
+      final ModuleExtensionProviderEP i2 = o2.myProviderEP;
       return StringUtil.compare(i1.getName(), i2.getName(), true);
     }
   }

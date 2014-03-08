@@ -38,7 +38,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +58,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       Sdk sdk = sdkLibraryEntry.getSdk();
       if (!orderEntry.isValid() || sdk == null) {
         final String oldSdkName = sdkLibraryEntry.getSdkName();
-        final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(sdkLibraryEntry.getModuleExtensionId());
+        final ModuleExtensionProviderEP provider = ModuleExtensionProviderEP.findProviderEP(sdkLibraryEntry.getModuleExtensionId());
         return FileAppearanceService.getInstance().forInvalidUrl(oldSdkName != null ? oldSdkName : provider == null ? NO_SDK : provider.getName());
       }
       return forSdk(sdk, false, selected, true);
