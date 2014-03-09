@@ -82,8 +82,26 @@ public class PluginInstaller {
                                             @NotNull List<IdeaPluginDescriptor> allPlugins)
           throws IOException {
     val depends = new ArrayListSet<PluginNode>();
-    collectDepends(toInstall, toInstallAll, depends, allPlugins);
+    val unknownDepends = new ArrayListSet<String>();
+    collectDepends(toInstall, toInstallAll, depends, allPlugins, unknownDepends);
 
+    if(!unknownDepends.isEmpty()) {
+      val ref = new boolean[1];
+      UIUtil.invokeAndWaitIfNeeded(new Runnable() {
+        @Override
+        public void run() {
+          String mergedIds = StringUtil.join(unknownDepends, ", ");
+
+          String title = IdeBundle.message("plugin.manager.unknown.dependencies.detected.title");
+          String message = IdeBundle.message("plugin.manager.unknown.dependencies.detected.message", unknownDepends.size(), mergedIds);
+          ref[0] = Messages.showYesNoDialog(message, title, Messages.getWarningIcon()) == Messages.YES;
+        }
+      });
+
+      if(!ref[0]) {
+        return null;
+      }
+    }
     val toDownloadList = new ArrayListSet<PluginNode>();
     if(!depends.isEmpty()) {
 
@@ -146,7 +164,8 @@ public class PluginInstaller {
   private static void collectDepends(@NotNull IdeaPluginDescriptor toInstall,
                                      @NotNull List<PluginId> toInstallOthers,
                                      @NotNull Set<PluginNode> depends,
-                                     @NotNull List<IdeaPluginDescriptor> repoPlugins) {
+                                     @NotNull List<IdeaPluginDescriptor> repoPlugins,
+                                     @NotNull Set<String> unknownDepends) {
     PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
     PluginManagerUISettings pluginManagerUISettings = PluginManagerUISettings.getInstance();
 
@@ -166,7 +185,10 @@ public class PluginInstaller {
       if (dependInRepo != null) {
         depends.add(dependInRepo);
 
-        collectDepends(dependInRepo, toInstallOthers, depends, repoPlugins);
+        collectDepends(dependInRepo, toInstallOthers, depends, repoPlugins, unknownDepends);
+      }
+      else {
+        unknownDepends.add(dependentPluginId.getIdString());
       }
     }
   }

@@ -19,17 +19,15 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.SortableColumnModel;
+import lombok.val;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Dec 26, 2003
- * Time: 4:16:50 PM
- * To change this template use Options | File Templates.
+ * @author stathik
+ * @since Dec 26, 2003 4:16:50 PM
  */
 abstract public class PluginTableModel extends AbstractTableModel implements SortableColumnModel {
   protected static final String NAME = "Name";
@@ -179,7 +177,7 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
   }
 
   public List<IdeaPluginDescriptor> getAllPlugins() {
-    final ArrayList<IdeaPluginDescriptor> list = new ArrayList<IdeaPluginDescriptor>();
+    val list = new ArrayList<IdeaPluginDescriptor>(view.size() + filtered.size());
     list.addAll(view);
     list.addAll(filtered);
     return list;

@@ -174,7 +174,7 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
             }
           }
         };
-        PluginManagerMain.downloadPlugins(list, host.getPluginsModel().view, onInstallRunnable, new Consumer<Set<PluginNode>>(){
+        PluginManagerMain.downloadPlugins(list, host.getPluginsModel().getAllPlugins(), onInstallRunnable, new Consumer<Set<PluginNode>>(){
           @Override
           public void consume(Set<PluginNode> pluginNodes) {
             ourInstallingNodes.removeAll(list);
