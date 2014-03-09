@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
+import com.intellij.util.containers.EmptyIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,31 @@ import java.util.Iterator;
  * Encapsulates operations with archive file
  */
 public interface ArchiveFile {
+  ArchiveFile EMPTY = new ArchiveFile() {
+    @Nullable
+    @Override
+    public ArchiveEntry getEntry(String name) {
+      return null;
+    }
+
+    @Nullable
+    @Override
+    public InputStream getInputStream(ArchiveEntry entry) throws IOException {
+      return null;
+    }
+
+    @NotNull
+    @Override
+    public Iterator<? extends ArchiveEntry> entries() {
+      return EmptyIterator.getInstance();
+    }
+
+    @Override
+    public int getSize() {
+      return 0;
+    }
+  };
+
   @Nullable
   ArchiveEntry getEntry(String name);
 

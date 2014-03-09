@@ -15,31 +15,20 @@
  */
 package com.intellij.openapi.vfs.impl.jar;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.archive.ArchiveHandler;
 import com.intellij.openapi.vfs.impl.zip.ZipHandler;
-import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.messages.MessageBus;
 import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Set;
 
 public class JarFileSystemImpl extends ArchiveFileSystemBase implements JarFileSystem, ApplicationComponent {
-  private final Set<String> myNoCopyJarPaths =
-    SystemProperties.getBooleanProperty("idea.jars.nocopy", !SystemInfo.isWindows) ? null : new ConcurrentHashSet<String>(FileUtil.PATH_HASHING_STRATEGY);
-
-  private File myNoCopyJarDir;
-
   public JarFileSystemImpl(MessageBus bus) {
     super(bus);
   }
@@ -57,27 +46,10 @@ public class JarFileSystemImpl extends ArchiveFileSystemBase implements JarFileS
 
   @Override
   public void initComponent() {
-    // we want to prevent Platform from copying its own jars when running from dist to save system resources
-    final boolean isRunningFromDist = new File(PathManager.getLibPath() + File.separatorChar + "idea.jar").exists();
-    if (isRunningFromDist) {
-      myNoCopyJarDir = new File(new File(PathManager.getLibPath()).getParent());
-    }
   }
 
   @Override
   public void disposeComponent() {
-  }
-
-  @Override
-  public void setNoCopyJarForPath(String pathInJar) {
-    if (myNoCopyJarPaths == null || pathInJar == null) {
-      return;
-    }
-    int index = pathInJar.indexOf(ARCHIVE_SEPARATOR);
-    if (index < 0) return;
-    String path = pathInJar.substring(0, index);
-    path = path.replace('/', File.separatorChar);
-    myNoCopyJarPaths.add(path);
   }
 
   @Nullable
@@ -85,13 +57,6 @@ public class JarFileSystemImpl extends ArchiveFileSystemBase implements JarFileS
     VirtualFile jar = findByPathWithSeparator(vFile);
     final ArchiveHandler handler = jar != null ? getHandler(jar) : null;
     return handler != null ? handler.getMirrorFile(new File(vFile.getPath())) : null;
-  }
-
-  @Override
-  public boolean isMakeCopyOfJar(@NotNull File originalJar) {
-    if (myNoCopyJarPaths == null || myNoCopyJarPaths.contains(originalJar.getPath())) return false;
-    if (myNoCopyJarDir != null && FileUtil.isAncestor(myNoCopyJarDir, originalJar, false)) return false;
-    return true;
   }
 
   @Override

@@ -37,10 +37,6 @@ public class ZipFileSystemImpl extends ArchiveFileSystemBase implements Applicat
     return new ZipHandler(fileSystem, path);
   }
 
-  @Override
-  public void setNoCopyJarForPath(String pathInJar) {
-  }
-
   @NotNull
   @Override
   public String getProtocol() {

@@ -96,7 +96,17 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem implements Ar
   }
 
   @Override
+  public boolean isMakeCopyForArchive(@NotNull File originalFile) {
+    return false;
+  }
+
+  @Override
   public void setNoCopyJarForPath(String pathInJar) {
+  }
+
+  @Override
+  public void addNoCopyArchiveForPath(@NotNull String path) {
+
   }
 
   @Override

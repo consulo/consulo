@@ -17,7 +17,6 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.ProjectRootListener;
 import com.intellij.openapi.projectRoots.ex.ProjectRoot;
 import com.intellij.openapi.projectRoots.ex.ProjectRootContainer;
@@ -30,6 +29,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,8 +39,8 @@ import java.util.Map;
 /**
  * @author mike
  */
+@Logger
 public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRootContainer {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.projectRoots.impl.ProjectRootContainerImpl");
   private final Map<OrderRootType, CompositeProjectRoot> myRoots = new HashMap<OrderRootType, CompositeProjectRoot>();
 
   private Map<OrderRootType, VirtualFile[]> myFiles = new HashMap<OrderRootType, VirtualFile[]>();
@@ -48,10 +48,10 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
   private boolean myInsideChange = false;
   private final List<ProjectRootListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  private boolean myNoCopyJars = false;
+  private boolean myNoCopyArchive = false;
 
-  public ProjectRootContainerImpl(boolean noCopyJars) {
-    myNoCopyJars = noCopyJars;
+  public ProjectRootContainerImpl(boolean noCopyArchive) {
+    myNoCopyArchive = noCopyArchive;
 
     for (OrderRootType rootType : OrderRootType.getAllTypes()) {
       myRoots.put(rootType, new CompositeProjectRoot());
@@ -73,14 +73,14 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
   @Override
   public void startChange() {
-    LOG.assertTrue(!myInsideChange);
+    LOGGER.assertTrue(!myInsideChange);
 
     myInsideChange = true;
   }
 
   @Override
   public void finishChange() {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     HashMap<OrderRootType, VirtualFile[]> oldRoots = new HashMap<OrderRootType, VirtualFile[]>(myFiles);
 
     for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
@@ -121,38 +121,38 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
   @Override
   public void removeRoot(@NotNull ProjectRoot root, @NotNull OrderRootType type) {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).remove(root);
   }
 
   @Override
   @NotNull
   public ProjectRoot addRoot(@NotNull VirtualFile virtualFile, @NotNull OrderRootType type) {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     return myRoots.get(type).add(virtualFile);
   }
 
   @Override
   public void addRoot(@NotNull ProjectRoot root, @NotNull OrderRootType type) {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).add(root);
   }
 
   @Override
   public void removeAllRoots(@NotNull OrderRootType type) {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).clear();
   }
 
   @Override
   public void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType type) {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).remove(root);
   }
 
   @Override
   public void removeAllRoots() {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     for (CompositeProjectRoot myRoot : myRoots.values()) {
       myRoot.clear();
     }
@@ -160,7 +160,7 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
   @Override
   public void update() {
-    LOG.assertTrue(myInsideChange);
+    LOGGER.assertTrue(myInsideChange);
     for (CompositeProjectRoot myRoot : myRoots.values()) {
       myRoot.update();
     }
@@ -178,8 +178,8 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
         myFiles = new HashMap<OrderRootType, VirtualFile[]>();
         for (OrderRootType rootType : myRoots.keySet()) {
           CompositeProjectRoot root = myRoots.get(rootType);
-          if (myNoCopyJars) {
-            setNoCopyJars(root);
+          if (myNoCopyArchive) {
+            addNoCopyArchiveForPaths(root);
           }
           myFiles.put(rootType, root.getVirtualFiles());
         }
@@ -203,21 +203,21 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
     }
   }
 
-  private static void setNoCopyJars(ProjectRoot root) {
+  private static void addNoCopyArchiveForPaths(ProjectRoot root) {
     if (root instanceof SimpleProjectRoot) {
       String url = ((SimpleProjectRoot)root).getUrl();
-      if (StandardFileSystems.JAR_PROTOCOL.equals(VirtualFileManager.extractProtocol(url))) {
+      String protocolId = VirtualFileManager.extractProtocol(url);
+      IVirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocolId);
+      if (fileSystem instanceof ArchiveFileSystem) {
         String path = VirtualFileManager.extractPath(url);
-        final IVirtualFileSystem fileSystem = StandardFileSystems.jar();
-        if (fileSystem instanceof ArchiveCopyingFileSystem) {
-          ((ArchiveCopyingFileSystem)fileSystem).setNoCopyJarForPath(path);
-        }
+
+        ((ArchiveCopyingFileSystem)fileSystem).addNoCopyArchiveForPath(path);
       }
     }
     else if (root instanceof CompositeProjectRoot) {
       ProjectRoot[] roots = ((CompositeProjectRoot)root).getProjectRoots();
       for (ProjectRoot root1 : roots) {
-        setNoCopyJars(root1);
+        addNoCopyArchiveForPaths(root1);
       }
     }
   }
@@ -230,7 +230,7 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
     }
 
     List<Element> children = child.getChildren();
-    LOG.assertTrue(children.size() == 1);
+    LOGGER.assertTrue(children.size() == 1);
     CompositeProjectRoot root = (CompositeProjectRoot)ProjectRootUtil.read(children.get(0));
     myRoots.put(type, root);
   }

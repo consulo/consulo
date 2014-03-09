@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -46,6 +45,4 @@ public interface ArchiveFileSystem
 
   @Nullable
   ArchiveFile getArchiveWrapperFile(@NotNull VirtualFile entryVFile) throws IOException;
-
-  boolean isMakeCopyOfJar(File originalFile);
 }

@@ -82,7 +82,7 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
 
   @Override
   public File getMirrorFile(@NotNull File originalFile) {
-    if (!myFileSystem.isMakeCopyOfJar(originalFile)) return originalFile;
+    if (!myFileSystem.isMakeCopyForArchive(originalFile)) return originalFile;
 
     final FileAttributes originalAttributes = FileSystemUtil.getAttributes(originalFile);
     if (originalAttributes == null) return originalFile;
@@ -327,6 +327,6 @@ public abstract class ArchiveHandlerBase extends CoreArchiveHandler {
 
     ERROR_COPY_NOTIFICATION.getValue().createNotification(message, NotificationType.ERROR).notify(null);
 
-    myFileSystem.setNoCopyJarForPath(path);
+    myFileSystem.addNoCopyArchiveForPath(path);
   }
 }

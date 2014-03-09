@@ -18,6 +18,7 @@ package org.consulo.vfs;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,6 +27,8 @@ import com.intellij.openapi.vfs.impl.archive.ArchiveHandler;
 import com.intellij.openapi.vfs.newvfs.*;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.SystemProperties;
+import com.intellij.util.containers.ConcurrentHashSet;
 import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
@@ -39,6 +42,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -46,12 +50,13 @@ import java.util.Map;
  */
 public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem implements ArchiveFileSystem {
 
-
   protected final Object myLock = new Object() {
   };
 
   protected final Map<String, ArchiveHandler> myHandlers = new THashMap<String, ArchiveHandler>(FileUtil.PATH_HASHING_STRATEGY);
   protected String[] jarPathsCache;
+
+  private final Set<String> myNoCopyPaths;
 
   public ArchiveFileSystemBase(MessageBus bus) {
     bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
@@ -106,6 +111,41 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
         }
       }
     });
+    myNoCopyPaths = isCopyAvailable() ? new ConcurrentHashSet<String>(FileUtil.PATH_HASHING_STRATEGY) : null;
+  }
+
+  protected boolean isCopyAvailable() {
+    return SystemProperties.getBooleanProperty("idea.archive.copy", SystemInfo.isWindows);
+  }
+
+  @Override
+  public void addNoCopyArchiveForPath(@NotNull String pathInArchive) {
+    if (myNoCopyPaths == null) {
+      return;
+    }
+    int index = pathInArchive.indexOf(ARCHIVE_SEPARATOR);
+    if (index < 0) return;
+    String path = pathInArchive.substring(0, index);
+    path = path.replace('/', File.separatorChar);
+    myNoCopyPaths.add(path);
+  }
+
+  @Override
+  public void setNoCopyJarForPath(String pathInJar) {
+    if(pathInJar != null) {
+      addNoCopyArchiveForPath(pathInJar);
+    }
+  }
+
+  @Override
+  public boolean isMakeCopyForArchive(@NotNull File originalFile) {
+    if (myNoCopyPaths == null || myNoCopyPaths.contains(originalFile.getPath())) return false;
+    return true;
+  }
+
+  @Override
+  public boolean isMakeCopyOfJar(File originalJar) {
+    return originalJar != null && isMakeCopyForArchive(originalJar);
   }
 
   @Nullable
@@ -161,14 +201,8 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
 
   @Override
   @NotNull
-  public OutputStream getOutputStream(@NotNull final VirtualFile file, final Object requestor, final long modStamp, final long timeStamp)
-    throws IOException {
+  public OutputStream getOutputStream(@NotNull final VirtualFile file, final Object requestor, final long modStamp, final long timeStamp) throws IOException {
     throw new IOException("Read-only: " + file.getPresentableUrl());
-  }
-
-  @Override
-  public boolean isMakeCopyOfJar(File originalFile) {
-    return false;
   }
 
   @Override
@@ -223,8 +257,7 @@ public abstract class ArchiveFileSystemBase extends NewVirtualFileSystem impleme
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName)
-    throws IOException {
+  public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName) throws IOException {
     throw new IOException(VfsBundle.message("jar.modification.not.supported.error", vFile.getUrl()));
   }
 

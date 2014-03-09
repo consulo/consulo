@@ -15,9 +15,24 @@
  */
 package com.intellij.openapi.vfs;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
+
+import java.io.File;
+
 /**
  * @author yole
  */
 public interface ArchiveCopyingFileSystem {
+  @Deprecated
+  @DeprecationInfo(value = "Use #addNoCopyArchiveForPath(String)", until = "2.0")
   void setNoCopyJarForPath(String pathInJar);
+
+  void addNoCopyArchiveForPath(@NotNull String path);
+
+  @Deprecated
+  @DeprecationInfo(value = "Use #isMakeCopyForArchive(File)", until = "2.0")
+  boolean isMakeCopyOfJar(File originalFile);
+
+  boolean isMakeCopyForArchive(@NotNull File originalFile);
 }
