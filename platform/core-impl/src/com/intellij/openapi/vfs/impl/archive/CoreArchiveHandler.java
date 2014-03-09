@@ -89,10 +89,12 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
     return myBasePath;
   }
 
+  @Override
   public File getMirrorFile(@NotNull File originalFile) {
     return originalFile;
   }
 
+  @Override
   @Nullable
   public ArchiveFile getArchiveFile() {
     ArchiveFile jar = myArchiveFile.get();
@@ -181,6 +183,7 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
     return jar == null ? null : jar.getEntry(path);
   }
 
+  @Override
   public long getLength(@NotNull final VirtualFile file) {
     final ArchiveEntry entry = convertToEntry(file);
     synchronized (lock) {
@@ -188,11 +191,13 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
     }
   }
 
+  @Override
   @NotNull
   public InputStream getInputStream(@NotNull final VirtualFile file) throws IOException {
     return new BufferExposingByteArrayInputStream(contentsToByteArray(file));
   }
 
+  @Override
   @NotNull
   public byte[] contentsToByteArray(@NotNull final VirtualFile file) throws IOException {
     final ArchiveEntry entry = convertToEntry(file);
@@ -234,6 +239,7 @@ public abstract class CoreArchiveHandler implements ArchiveHandler {
     }
   }
 
+  @Override
   public boolean exists(@NotNull final VirtualFile fileOrDirectory) {
     if (fileOrDirectory.getParent() == null) {
       // Optimization. Do not build entries if asked for jar root existence.
