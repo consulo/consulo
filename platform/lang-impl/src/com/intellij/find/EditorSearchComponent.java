@@ -356,8 +356,8 @@ public class EditorSearchComponent extends EditorHeaderComponent implements Data
     Utils.setSmallerFontForChildren(myToolbarComponent);
   }
 
-  private void setupHistoryToSearchField(SearchTextField field, String[] strings) {
-    field.setHistorySize(strings.length);
+  private static void setupHistoryToSearchField(SearchTextField field, String[] strings) {
+    field.setHistorySize(20);
     field.setHistory(ContainerUtil.reverse(Arrays.asList(strings)));
   }
 
