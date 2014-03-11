@@ -144,7 +144,7 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
     }
   }
 
-  protected void appendQualifiedName(StringBuffer buf, RefEntity refEntity) {
+  public void appendQualifiedName(StringBuffer buf, RefEntity refEntity) {
     if (refEntity == null) return;
     String qName = "";
 
