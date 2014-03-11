@@ -25,6 +25,7 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ public class OutputEditor extends ModuleElementsEditor {
     myCompilerOutputEditor = new BuildElementsEditor(state);
   }
 
+  @NotNull
   @Override
   protected JComponent createComponentImpl() {
     final JPanel panel = new JPanel(new BorderLayout());
@@ -55,6 +57,11 @@ public class OutputEditor extends ModuleElementsEditor {
   @Override
   public String getDisplayName() {
     return ProjectBundle.message("project.roots.path.tab.title");
+  }
+
+  @Override
+  public boolean isModified() {
+    return myCompilerOutputEditor.isModified();
   }
 
   @Override

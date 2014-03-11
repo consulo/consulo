@@ -17,7 +17,6 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
@@ -51,11 +50,6 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   }
 
   @Override
-  public boolean isModified() {
-    return super.isModified();
-  }
-
-  @Override
   public String getHelpTopic() {
     return "projectStructure.modules.dependencies";
   }
@@ -69,17 +63,6 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   public void saveData() {
     myPanel.stopEditing();
     flushChangesToModel();
-  }
-
-  @Override
-  public void apply () throws ConfigurationException {
-
-  }
-
-  @Override
-  public void canApply() throws ConfigurationException {
-    super.canApply();
-
   }
 
   @NotNull

@@ -64,12 +64,16 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
   }
 
   public void canApply() throws ConfigurationException {}
+
   @Override
   public void apply() throws ConfigurationException {}
+
   @Override
   public void reset() {}
+
   @Override
   public void moduleStateChanged() {}
+
   public void moduleCompileOutputChanged(final String baseUrl, final String moduleName){}
 
   @Override

@@ -51,6 +51,7 @@ import java.util.List;
  */
 public class ExtensionEditor extends ModuleElementsEditor {
   private final ModuleConfigurationState myState;
+  private final OutputEditor myOutputEditor;
   private final ClasspathEditor myClasspathEditor;
   private final ContentEntriesEditor myContentEntriesEditor;
   private JPanel myRootPane;
@@ -59,9 +60,10 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   private ModuleExtension<?> myConfigurablePanelExtension;
 
-  public ExtensionEditor(ModuleConfigurationState state, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
+  public ExtensionEditor(ModuleConfigurationState state, OutputEditor outputEditor, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
     super(state);
     myState = state;
+    myOutputEditor = outputEditor;
     myClasspathEditor = classpathEditor;
     myContentEntriesEditor = contentEntriesEditor;
   }
@@ -188,6 +190,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     myClasspathEditor.moduleStateChanged();
     myContentEntriesEditor.moduleStateChanged();
+    myOutputEditor.moduleStateChanged();
   }
 
   @Override

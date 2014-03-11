@@ -27,7 +27,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.HashSet;
+import lombok.val;
 import org.consulo.compiler.ModuleCompilerPathsManager;
+import org.consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +46,6 @@ import java.util.Set;
 @State(
   name = "CompilerConfiguration",
   storages = {
-    @Storage(file = StoragePathMacros.PROJECT_FILE),
     @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
   }
 )
@@ -69,11 +70,13 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
   private static final String URL = "url";
 
   private final Project myProject;
+  private final ModuleManager myModuleManager;
   private VirtualFilePointer myOutputDirPointer;
   private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
 
-  public CompilerConfigurationImpl(Project project) {
+  public CompilerConfigurationImpl(Project project, ModuleManager moduleManager) {
     myProject = project;
+    myModuleManager = moduleManager;
   }
 
   @Nullable
@@ -143,6 +146,13 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     }
     Element element = new Element("state");
     element.setAttribute(URL, myOutputDirPointer.getUrl());
+    for (Module module : myModuleManager.getModules()) {
+      val moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
+      Element state = moduleCompilerPathsManager.getState();
+      if(state != null) {
+        element.addContent(state);
+      }
+    }
     return element;
   }
 
@@ -153,5 +163,16 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
       return;
     }
     setCompilerOutputUrl(url);
+    for (Element moduleElement : element.getChildren("module")) {
+      String name = moduleElement.getAttributeValue("name");
+      if(name == null) {
+        continue;
+      }
+      Module module = myModuleManager.findModuleByName(name);
+      if(module != null) {
+        val moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
+        moduleCompilerPathsManager.loadState(moduleElement);
+      }
+    }
   }
 }

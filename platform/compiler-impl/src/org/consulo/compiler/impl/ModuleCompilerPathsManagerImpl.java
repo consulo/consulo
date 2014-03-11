@@ -17,9 +17,8 @@ package org.consulo.compiler.impl;
 
 import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
@@ -40,9 +39,6 @@ import java.util.Map;
  * @since 18:28/20.10.13
  */
 @Logger
-@State(
-  name = "ModuleCompilerPathsManager",
-  storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements PersistentStateComponent<Element>, Disposable {
   @NonNls
   private static final String MODULE_OUTPUT_TAG = "module";
@@ -63,10 +59,12 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   private boolean myExcludeOutput = true;
 
   @NotNull
-  private Map<String, VirtualFilePointer> myVirtualFilePointers = new LinkedHashMap<String, VirtualFilePointer>();
+  private final Map<String, VirtualFilePointer> myVirtualFilePointers = new LinkedHashMap<String, VirtualFilePointer>();
+  private final CompilerConfiguration myCompilerConfiguration;
 
   public ModuleCompilerPathsManagerImpl(Module module) {
     myModule = module;
+    myCompilerConfiguration = CompilerConfiguration.getInstance(module.getProject());
   }
 
   @Override
@@ -94,6 +92,9 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     if (myInheritOutput) {
       throw new IllegalArgumentException();
     }
+    if (compilerOutputUrl == null) {
+      return;
+    }
 
     myVirtualFilePointers.put(contentFolderType.getId(), VirtualFilePointerManager.getInstance().create(compilerOutputUrl, this, null));
   }
@@ -101,47 +102,39 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   @Override
   @Nullable
   public String getCompilerOutputUrl(@NotNull ContentFolderTypeProvider contentFolderType) {
-    val compilerManager = CompilerConfiguration.getInstance(myModule.getProject());
-
-    val backUrl = compilerManager.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName();
-
-    if (myInheritOutput) {
-      val compilerOutput = compilerManager.getCompilerOutput();
-      if (compilerOutput == null) {
-        return backUrl;
-      }
-      val outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
-      return outDir != null ? outDir.getUrl() : backUrl;
-    }
-    else {
+    if (!myInheritOutput) {
       val virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
-      if (virtualFilePointer == null) {
-        return backUrl;
-      }
-      else {
+      if (virtualFilePointer != null) {
         return virtualFilePointer.getUrl();
       }
     }
+
+    val backUrl = myCompilerConfiguration.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName();
+
+    val compilerOutput = myCompilerConfiguration.getCompilerOutput();
+    if (compilerOutput == null) {
+      return backUrl;
+    }
+    val outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
+    return outDir != null ? outDir.getUrl() : backUrl;
   }
 
   @Nullable
   @Override
   public VirtualFile getCompilerOutput(@NotNull ContentFolderTypeProvider contentFolderType) {
-    if (myInheritOutput) {
-      CompilerConfiguration compilerManager = CompilerConfiguration.getInstance(myModule.getProject());
-
-      VirtualFile compilerOutput = compilerManager.getCompilerOutput();
-      if (compilerOutput == null) {
-        return null;
-      }
-      VirtualFile outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
-      return outDir != null ? outDir : null;
-    }
-    else {
+    if (!myInheritOutput) {
       VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
-      assert virtualFilePointer != null;
-      return virtualFilePointer.getFile();
+      if (virtualFilePointer != null) {
+        return virtualFilePointer.getFile();
+      }
     }
+
+    VirtualFile compilerOutput = myCompilerConfiguration.getCompilerOutput();
+    if (compilerOutput == null) {
+      return null;
+    }
+    VirtualFile outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
+    return outDir != null ? outDir : null;
   }
 
   @NotNull
@@ -152,7 +145,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
     else {
       VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
-      assert virtualFilePointer != null;
+      assert virtualFilePointer != null : contentFolderType.getId();
       return virtualFilePointer;
     }
   }
@@ -164,7 +157,6 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
       return null;
     }
 
-    Element element = new Element("state");
     Element moduleElement = new Element(MODULE_OUTPUT_TAG);
     moduleElement.setAttribute(NAME, myModule.getName());
     moduleElement.setAttribute(EXCLUDE, String.valueOf(isExcludeOutput()));
@@ -175,9 +167,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
       moduleElement.addContent(elementForOutput);
     }
 
-    element.addContent(moduleElement);
-
-    return element;
+    return moduleElement;
   }
 
   private static Element createElementForOutput(VirtualFilePointer virtualFilePointer) {
@@ -189,19 +179,13 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
 
   @Override
   public void loadState(Element element) {
-    for (Element child : element.getChildren(MODULE_OUTPUT_TAG)) {
-      final String name = child.getAttributeValue(NAME);
-      if (name == null || !Comparing.equal(myModule.getName(), name)) {
-        continue;
-      }
-      myInheritOutput = false;
-      myExcludeOutput = Boolean.valueOf(child.getAttributeValue(EXCLUDE));
-      for (Element child2 : child.getChildren()) {
-        final String moduleUrl = child2.getAttributeValue(URL);
-        final String type = child2.getAttributeValue(TYPE);
+    myInheritOutput = false;
+    myExcludeOutput = Boolean.valueOf(element.getAttributeValue(EXCLUDE));
+    for (Element child2 : element.getChildren()) {
+      final String moduleUrl = child2.getAttributeValue(URL);
+      final String type = child2.getAttributeValue(TYPE);
 
-        myVirtualFilePointers.put(type, VirtualFilePointerManager.getInstance().create(moduleUrl, this, null));
-      }
+      myVirtualFilePointers.put(type, VirtualFilePointerManager.getInstance().create(moduleUrl, this, null));
     }
   }
 
