@@ -27,7 +27,7 @@ import org.mustbe.consulo.DeprecationInfo;
 import javax.swing.*;
 
 @Deprecated
-@DeprecationInfo(value = "Project file type is not supported anymore", until = "3.0")
+@DeprecationInfo(value = "Project file type is not supported anymore", until = "2.0")
 public class ProjectFileType implements InternalFileType {
   @NonNls public static final String DEFAULT_EXTENSION = "ipr";
   @NonNls public static final String DOT_DEFAULT_EXTENSION = ".ipr";

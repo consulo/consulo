@@ -26,7 +26,8 @@ package com.intellij.codeInsight.template.actions;
 
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.impl.*;
-import com.intellij.lang.StdLanguages;
+import com.intellij.lang.Language;
+import com.intellij.lang.LanguagePointerUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.WriteAction;
@@ -43,6 +44,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.HashMap;
+import org.consulo.util.pointers.NamedPointer;
 
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +52,8 @@ import java.util.Set;
 public class SaveAsTemplateAction extends AnAction {
 
   private static final Logger LOG = Logger.getInstance("#" + SaveAsTemplateAction.class.getName());
+  //FIXME [VISTALL] how remove this depend?
+  private static final NamedPointer<Language> ourXmlLanguagePointer = LanguagePointerUtil.createPointer("XML");
 
   @Override
   public void actionPerformed(AnActionEvent e) {
@@ -82,7 +86,7 @@ public class SaveAsTemplateAction extends AnAction {
     final Document document = EditorFactory.getInstance().createDocument(editor.getDocument().getText().
                                                                          substring(startOffset,
                                                                                    selection.getEndOffset()));
-    final boolean isXml = file.getLanguage().is(StdLanguages.XML);
+    final boolean isXml = file.getLanguage().is(ourXmlLanguagePointer.get());
     final int offsetDelta = startOffset;
     new WriteCommandAction.Simple(project, (String)null) {
       @Override

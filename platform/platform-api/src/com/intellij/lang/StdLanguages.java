@@ -16,6 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.openapi.fileTypes.StdFileTypes;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * Defines the standard languages supported by IDEA.
@@ -23,12 +24,13 @@ import com.intellij.openapi.fileTypes.StdFileTypes;
  * @author max
  */
 @Deprecated
+@DeprecationInfo(value = "See field info", until = "1.0")
 public class StdLanguages {
   /**
    * The definition for the Java language.
-   *
-   * @deprecated use {@linkplain com.intellij.lang.java.JavaLanguage#INSTANCE} instead.
    */
+  @Deprecated
+  @DeprecationInfo(value = "Use JavaLanguage#INSTANCE", until = "1.0")
   public static Language JAVA = StdFileTypes.JAVA.getLanguage();
 
   /**
