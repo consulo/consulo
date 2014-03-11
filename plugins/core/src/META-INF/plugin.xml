@@ -2551,5 +2551,7 @@
     <actionPromoter implementation="com.intellij.ui.EditorTextFieldActionPromoter" />
     <actionPromoter implementation="com.intellij.ui.ToolbarDecoratorActionPromoter" />
     <actionPromoter implementation="com.intellij.openapi.vcs.actions.VcsActionPromoter" />
+
+    <projectOpenProcessor implementation="com.intellij.platform.PlatformProjectOpenProcessor" />
   </extensions>
 </idea-plugin>
