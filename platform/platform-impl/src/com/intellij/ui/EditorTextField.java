@@ -35,7 +35,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
@@ -93,7 +93,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   }
 
   public EditorTextField(@NotNull String text) {
-    this(EditorFactory.getInstance().createDocument(text), null, FileTypes.PLAIN_TEXT);
+    this(EditorFactory.getInstance().createDocument(text), null, PlainTextFileType.INSTANCE);
   }
 
   public EditorTextField(@NotNull String text, Project project, FileType fileType) {

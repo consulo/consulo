@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -493,7 +493,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     @Override
     protected FileType getFileType() {
       Language language = getDefaultLanguage();
-      return language != null ? language.getAssociatedFileType() : FileTypes.PLAIN_TEXT;
+      return language != null ? language.getAssociatedFileType() : PlainTextFileType.INSTANCE;
     }
 
     @Override
@@ -600,7 +600,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     @Override
     protected FileType getFileType() {
       Language language = TabbedLanguageCodeStylePanel.this.getDefaultLanguage();
-      return language != null ? language.getAssociatedFileType() : FileTypes.PLAIN_TEXT;
+      return language != null ? language.getAssociatedFileType() : PlainTextFileType.INSTANCE;
     }
 
     @Override

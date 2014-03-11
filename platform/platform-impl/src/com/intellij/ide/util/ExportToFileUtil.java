@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -131,6 +131,7 @@ public class ExportToFileUtil {
       init();
       try {
         myListener = new ChangeListener() {
+          @Override
           public void stateChanged(ChangeEvent e) {
             initText();
           }
@@ -143,6 +144,7 @@ public class ExportToFileUtil {
       initText();
     }
 
+    @Override
     public void dispose() {
       myExporter.removeSettingsChangedListener(myListener);
       EditorFactory.getInstance().releaseEditor(myTextArea);
@@ -153,11 +155,12 @@ public class ExportToFileUtil {
       myTextArea.getDocument().setText(myExporter.getReportText());
     }
 
+    @Override
     protected JComponent createCenterPanel() {
       final Document document = ((EditorFactoryImpl)EditorFactory.getInstance()).createDocument(true);
       ((DocumentImpl)document).setAcceptSlashR(true);
 
-      myTextArea = EditorFactory.getInstance().createEditor(document, myProject, StdFileTypes.PLAIN_TEXT, true);
+      myTextArea = EditorFactory.getInstance().createEditor(document, myProject, PlainTextFileType.INSTANCE, true);
       final EditorSettings settings = myTextArea.getSettings();
       settings.setLineNumbersShown(false);
       settings.setLineMarkerAreaShown(false);
@@ -170,6 +173,7 @@ public class ExportToFileUtil {
       return myTextArea.getComponent();
     }
 
+    @Override
     protected JComponent createNorthPanel() {
       JPanel filePanel = createFilePanel(myTfFile, myFileButton);
       JComponent settingsPanel = myExporter.getSettingsEditor();
@@ -207,6 +211,7 @@ public class ExportToFileUtil {
 
       button.addActionListener(
           new ActionListener() {
+          @Override
           public void actionPerformed(ActionEvent e) {
             browseFile();
           }
@@ -239,11 +244,13 @@ public class ExportToFileUtil {
       return myTfFile.getText();
     }
 
+    @Override
     @NotNull
     protected Action[] createActions() {
       return new Action[]{getOKAction(), new CopyToClipboardAction(), getCancelAction()};
     }
 
+    @Override
     protected String getDimensionServiceKey() {
       return "#com.intellij.ide.util.ExportDialog";
     }
@@ -254,6 +261,7 @@ public class ExportToFileUtil {
         putValue(AbstractAction.SHORT_DESCRIPTION, IdeBundle.message("description.copy.text.to.clipboard"));
       }
 
+      @Override
       public void actionPerformed(ActionEvent e) {
         String s = StringUtil.convertLineSeparators(getText());
         CopyPasteManager.getInstance().setContents(new StringSelection(s));

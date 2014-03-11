@@ -50,7 +50,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -88,6 +88,7 @@ public class MergePanel2 implements DiffViewer {
   public MergePanel2(DialogBuilder builder, @NotNull Disposable parent) {
     ArrayList<EditorPlace> editorPlaces = new ArrayList<EditorPlace>();
     EditorPlace.EditorListener placeListener = new EditorPlace.EditorListener() {
+      @Override
       public void onEditorCreated(EditorPlace place) {
         if (myDuringCreation) return;
         disposeMergeList();
@@ -100,6 +101,7 @@ public class MergePanel2 implements DiffViewer {
         }
       }
 
+      @Override
       public void onEditorReleased(Editor releasedEditor) {
         LOG.assertTrue(!myDuringCreation);
         disposeMergeList();
@@ -139,6 +141,7 @@ public class MergePanel2 implements DiffViewer {
   @NotNull
   private DiffRequest.ToolbarAddons createToolbar() {
     return new DiffRequest.ToolbarAddons() {
+      @Override
       public void customize(DiffToolbar toolbar) {
         ActionManager actionManager = ActionManager.getInstance();
         toolbar.addAction(actionManager.getAction(IdeActions.ACTION_COPY));
@@ -192,7 +195,7 @@ public class MergePanel2 implements DiffViewer {
   }
 
   public FileType getContentType() {
-    return myData == null ? FileTypes.PLAIN_TEXT : getContentType(myData);
+    return myData == null ? PlainTextFileType.INSTANCE : getContentType(myData);
   }
 
   /**
@@ -308,6 +311,7 @@ public class MergePanel2 implements DiffViewer {
     return MergeTool.canShowRequest(request);
   }
 
+  @Override
   public void setDiffRequest(DiffRequest data) {
     setTitle(data.getWindowTitle());
     disposeMergeList();
@@ -352,15 +356,18 @@ public class MergePanel2 implements DiffViewer {
     return null;
   }
 
+  @Override
   public JComponent getComponent() {
     return myPanel;
   }
 
+  @Override
   @Nullable
   public JComponent getPreferredFocusedComponent() {
     return getEditorPlace(1).getContentComponent();
   }
 
+  @Override
   public int getContentsNumber() {
     return 3;
   }
@@ -389,17 +396,20 @@ public class MergePanel2 implements DiffViewer {
       mySide = side;
     }
 
+    @Override
     @Nullable
     public Editor getEditor(FragmentSide side) {
       return MergePanel2.this.getEditor(mySide.getIndex() + side.getIndex());
     }
 
+    @Override
     public LineBlocks getLineBlocks() {
       return myMergeList.getChanges(mySide).getLineBlocks();
     }
   }
 
   private class MyScrollingPanel implements DiffPanelOuterComponent.ScrollingPanel {
+    @Override
     public void scrollEditors() {
       Editor centerEditor = getEditor(1);
       JComponent centerComponent = centerEditor.getContentComponent();
@@ -481,11 +491,12 @@ public class MergePanel2 implements DiffViewer {
 
   private static FileType getContentType(DiffRequest diffData) {
     FileType contentType = diffData.getContents()[1].getContentType();
-    if (contentType == null) contentType = FileTypes.PLAIN_TEXT;
+    if (contentType == null) contentType = PlainTextFileType.INSTANCE;
     return contentType;
   }
 
   private class MyDataProvider extends GenericDataProvider {
+    @Override
     public Object getData(String dataId) {
       if (FocusDiffSide.DATA_KEY.is(dataId)) {
         int index = getFocusedEditorIndex();
@@ -520,21 +531,25 @@ public class MergePanel2 implements DiffViewer {
       mySide = side;
     }
 
+    @Override
     @Nullable
     public Editor getEditor() {
       return MergePanel2.this.getEditor(mySide.getMergeIndex());
     }
 
+    @Override
     public int[] getFragmentStartingLines() {
       return myMergeList.getChanges(mySide).getLineBlocks().getBeginnings(MergeList.BRANCH_SIDE);
     }
   }
 
   private class MergeFocusedSide implements FocusDiffSide {
+    @Override
     public Editor getEditor() {
       return MergePanel2.this.getEditor(1);
     }
 
+    @Override
     public int[] getFragmentStartingLines() {
       TIntHashSet beginnings = new TIntHashSet();
       if (myMergeList != null) {
@@ -576,6 +591,7 @@ public class MergePanel2 implements DiffViewer {
       myDividers[side.getIndex()].repaint();
     }
 
+    @Override
     public void onChangeRemoved(ChangeList source) {
       FragmentSide side = myMergeList.getSideOf(source);
       myDividers[side.getIndex()].repaint();
@@ -589,6 +605,7 @@ public class MergePanel2 implements DiffViewer {
       myPanel = panel;
     }
 
+    @Override
     public void onCountersChanged(ChangeCounter counter) {
       int changes = counter.getChangeCounter();
       int conflicts = counter.getConflictCounter();

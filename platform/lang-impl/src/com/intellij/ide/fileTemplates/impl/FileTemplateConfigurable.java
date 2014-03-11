@@ -364,7 +364,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     if (myTemplate == null || myProject == null) return null;
 
     final FileType fileType = FileTypeManager.getInstance().getFileTypeByExtension("ft");
-    if (fileType == FileTypes.UNKNOWN) return null;
+    if (fileType == UnknownFileType.INSTANCE) return null;
 
     final PsiFile file = PsiFileFactory.getInstance(myProject).createFileFromText(name + ".txt.ft", fileType, text, 0, true);
     file.getViewProvider().putUserData(FileTemplateManager.DEFAULT_TEMPLATE_PROPERTIES, FileTemplateManager.getInstance().getDefaultProperties(myProject));
@@ -391,7 +391,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         fileType = FileTypeManager.getInstance().getFileTypeByExtension(myTemplate.getExtension());
       }
       if (fileType == null) {
-        fileType = FileTypes.PLAIN_TEXT;
+        fileType = PlainTextFileType.INSTANCE;
       }
       SyntaxHighlighter originalHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, null, null);
       if (originalHighlighter == null) originalHighlighter = new PlainSyntaxHighlighter();

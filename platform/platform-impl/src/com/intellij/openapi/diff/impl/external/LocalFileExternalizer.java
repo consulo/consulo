@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.external;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +32,7 @@ class LocalFileExternalizer implements ContentExternalizer {
     myFile = file;
   }
 
+  @Override
   public File getContentFile() {
     return myFile;
   }
@@ -46,7 +47,7 @@ class LocalFileExternalizer implements ContentExternalizer {
   static boolean canExternalizeAsFile(VirtualFile file) {
     if (file == null || file.isDirectory()) return false;
     FileType fileType = file.getFileType();
-    if (fileType.isBinary() && fileType != FileTypes.UNKNOWN) return false;
+    if (fileType.isBinary() && fileType != UnknownFileType.INSTANCE) return false;
     return true;
   }
 }

@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -108,7 +108,7 @@ public class DebuggerUIUtil {
   }
 
   public static void showValuePopup(@NotNull XFullValueEvaluator text, @NotNull MouseEvent event, @NotNull Project project) {
-    EditorTextField textArea = new EditorTextField(EditorFactory.getInstance().createDocument("Evaluating..."), project, FileTypes.PLAIN_TEXT, true);
+    EditorTextField textArea = new EditorTextField(EditorFactory.getInstance().createDocument("Evaluating..."), project, PlainTextFileType.INSTANCE, true);
     textArea.setBackground(HintUtil.INFORMATION_COLOR);
 
     final FullValueEvaluationCallbackImpl callback = new FullValueEvaluationCallbackImpl(textArea);

@@ -27,7 +27,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -648,7 +648,7 @@ public class PlatformTestUtil {
       FileDocumentManager manager = FileDocumentManager.getInstance();
 
       Document docBefore = manager.getDocument(fileBefore);
-      boolean canLoadBeforeText = !fileBefore.getFileType().isBinary() || fileBefore.getFileType() == FileTypes.UNKNOWN;
+      boolean canLoadBeforeText = !fileBefore.getFileType().isBinary() || fileBefore.getFileType() == UnknownFileType.INSTANCE;
       String textB = docBefore != null
                      ? docBefore.getText()
                      : !canLoadBeforeText
@@ -656,7 +656,7 @@ public class PlatformTestUtil {
                        : LoadTextUtil.getTextByBinaryPresentation(fileBefore.contentsToByteArray(false), fileBefore).toString();
 
       Document docAfter = manager.getDocument(fileAfter);
-      boolean canLoadAfterText = !fileBefore.getFileType().isBinary() || fileBefore.getFileType() == FileTypes.UNKNOWN;
+      boolean canLoadAfterText = !fileBefore.getFileType().isBinary() || fileBefore.getFileType() == UnknownFileType.INSTANCE;
       String textA = docAfter != null
                      ? docAfter.getText()
                      : !canLoadAfterText

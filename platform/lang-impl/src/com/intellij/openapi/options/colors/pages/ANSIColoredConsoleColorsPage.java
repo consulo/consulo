@@ -3,8 +3,8 @@ package com.intellij.openapi.options.colors.pages;
 import com.intellij.execution.process.ConsoleHighlighter;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
@@ -102,7 +102,7 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, DisplayP
   @Override
   @NotNull
   public Icon getIcon() {
-    return FileTypes.PLAIN_TEXT.getIcon();
+    return PlainTextFileType.INSTANCE.getIcon();
   }
 
   @Override

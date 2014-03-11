@@ -29,7 +29,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -64,8 +64,10 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -660,7 +662,7 @@ public class FindDialog extends DialogWrapper {
       @NonNls final String s = selected ? "*.regexp" : "*.txt";
       FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(s);
 
-      if (selected && fileType == FileTypes.UNKNOWN) {
+      if (selected && fileType == UnknownFileType.INSTANCE) {
         fileType = FileTypeManager.getInstance().getFileTypeByFileName("*.txt"); // RegExp plugin is not installed
       }
 

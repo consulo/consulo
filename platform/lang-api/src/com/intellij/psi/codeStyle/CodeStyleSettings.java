@@ -19,10 +19,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -598,7 +595,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
           if (fileTypeId != null && !fileTypeId.isEmpty()) {
             FileType target = FileTypeManager.getInstance().getFileTypeByExtension(fileTypeId);
-            if (FileTypes.UNKNOWN == target || FileTypes.PLAIN_TEXT == target || target.getDefaultExtension().isEmpty()) {
+            if (target == UnknownFileType.INSTANCE || FileTypes.PLAIN_TEXT == target || target.getDefaultExtension().isEmpty()) {
               target = new TempFileType(fileTypeId);
             }
 
@@ -623,7 +620,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
 
   private void copyOldIndentOptions(@NonNls final String extension, final IndentOptions options) {
     final FileType fileType = FileTypeManager.getInstance().getFileTypeByExtension(extension);
-    if (fileType != FileTypes.UNKNOWN && fileType != FileTypes.PLAIN_TEXT && !myAdditionalIndentOptions.containsKey(fileType) &&
+    if (fileType != UnknownFileType.INSTANCE && fileType != FileTypes.PLAIN_TEXT && !myAdditionalIndentOptions.containsKey(fileType) &&
         !fileType.getDefaultExtension().isEmpty()) {
       registerAdditionalIndentOptions(fileType, options);
       //

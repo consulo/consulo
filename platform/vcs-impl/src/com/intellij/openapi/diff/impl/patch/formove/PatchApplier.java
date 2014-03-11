@@ -25,7 +25,7 @@ import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.progress.AsynchronousExecution;
 import com.intellij.openapi.project.Project;
@@ -87,6 +87,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     myRightConflictPanelTitle = rightConflictPanelTitle;
     myRemainingPatches = new ArrayList<FilePatch>();
     myVerifier = new PathsVerifier<BinaryType>(myProject, myBaseDirectory, myPatches, new PathsVerifier.BaseMapper() {
+      @Override
       @Nullable
       public VirtualFile getFile(FilePatch patch, String path) {
         return PathMerger.getFile(myBaseDirectory, path);
@@ -174,11 +175,13 @@ public class PatchApplier<BinaryType extends FilePatch> {
       final ApplyPatchStatus applyStatus;
       try {
         applyStatus = ApplicationManager.getApplication().runReadAction(new Computable<ApplyPatchStatus>() {
+          @Override
           public ApplyPatchStatus compute() {
             final Ref<ApplyPatchStatus> refStatus = new Ref<ApplyPatchStatus>(ApplyPatchStatus.FAILURE);
             try {
               setConfirmationToDefault();
               CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+                @Override
                 public void run() {
                   if (! createFiles()) {
                     refStatus.set(ApplyPatchStatus.FAILURE);
@@ -258,6 +261,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     final Ref<ApplyPatchStatus> refStatus = new Ref<ApplyPatchStatus>(null);
     try {
       CommandProcessor.getInstance().executeCommand(project, new Runnable() {
+        @Override
         public void run() {
           for (PatchApplier applier : group) {
             if (! applier.createFiles()) {
@@ -368,6 +372,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     final Runnable scheduleProjectFilesReload = systemOperation ? EmptyRunnable.getInstance() : new Runnable() {
+      @Override
       public void run() {
         final Runnable projectFilesReload =
           MergeVersion.MergeDocumentVersion.prepareToReportChangedProjectFiles(project, ObjectsConvertor.fp2vf(directlyAffected));
@@ -393,6 +398,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
       lfs.refreshAndFindFileByIoFile(filePath.getIOFile());
     }
     RefreshQueue.getInstance().refresh(false, true, new Runnable() {
+      @Override
       public void run() {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
@@ -413,6 +419,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
                 }, InvokeAfterUpdateMode.BACKGROUND_CANCELLABLE,
               VcsBundle.message("change.lists.manager.move.changes.to.list"),
               new Consumer<VcsDirtyScopeManager>() {
+                @Override
                 public void consume(final VcsDirtyScopeManager vcsDirtyScopeManager) {
                   vcsDirtyScopeManager.filePathsDirty(directlyAffected, null);
                   vcsDirtyScopeManager.filesDirty(indirectlyAffected, null);
@@ -518,7 +525,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
       final VirtualFile file = textPatch.getFirst();
       if (! file.isDirectory()) {
         FileType fileType = file.getFileType();
-        if (fileType == FileTypes.UNKNOWN) {
+        if (fileType == UnknownFileType.INSTANCE) {
           fileType = FileTypeChooser.associateFileType(file.getPresentableName());
           if (fileType == null) {
             showError(myProject, "Cannot apply patch. File " + file.getPresentableName() + " type not defined.", true);
@@ -537,6 +544,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
     final String title = VcsBundle.message("patch.apply.dialog.title");
     final Runnable messageShower = new Runnable() {
+      @Override
       public void run() {
         if (error) {
           Messages.showErrorDialog(project, message, title);
@@ -547,6 +555,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
       }
     };
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
+        @Override
         public void run() {
           messageShower.run();
         }

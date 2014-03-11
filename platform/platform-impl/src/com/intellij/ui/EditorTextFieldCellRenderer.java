@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.impl.LineSet;
 import com.intellij.openapi.editor.impl.RangeMarkerTree;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -102,7 +102,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     }
 
     // reuse EditorTextField initialization logic
-    EditorTextField field = new EditorTextField(new MyDocument(), null, FileTypes.PLAIN_TEXT);
+    EditorTextField field = new EditorTextField(new MyDocument(), null, PlainTextFileType.INSTANCE);
     field.setSupplementary(true);
     field.addNotify(); // creates editor
 

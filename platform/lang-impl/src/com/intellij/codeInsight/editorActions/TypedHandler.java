@@ -40,10 +40,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
+import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
@@ -193,7 +190,7 @@ public class TypedHandler extends TypedActionHandlerBase {
 
     if (!editor.getSelectionModel().hasBlockSelection() && editor.getCaretModel().getAllCarets().size() == 1) {
       if (')' == charTyped || ']' == charTyped || '}' == charTyped) {
-        if (FileTypes.PLAIN_TEXT != fileType) {
+        if (PlainTextFileType.INSTANCE != fileType) {
           if (handleRParen(editor, fileType, charTyped)) return;
         }
       }
@@ -210,7 +207,7 @@ public class TypedHandler extends TypedActionHandlerBase {
 
     if (('(' == charTyped || '[' == charTyped || '{' == charTyped) &&
         CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET &&
-        !editor.getSelectionModel().hasBlockSelection() && editor.getCaretModel().getAllCarets().size() == 1 && fileType != FileTypes.PLAIN_TEXT) {
+        !editor.getSelectionModel().hasBlockSelection() && editor.getCaretModel().getAllCarets().size() == 1 && fileType != PlainTextFileType.INSTANCE) {
       handleAfterLParen(editor, fileType, charTyped);
     }
     else if ('}' == charTyped) {

@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.OptionGroup;
@@ -173,7 +173,7 @@ public class OtherTabsAndIndentsPanel extends CodeStyleAbstractPanel {
   @NotNull
   protected FileType getFileType() {
     FileTypeIndentOptionsProvider provider = getSelectedIndentProvider();
-    if (provider == null) return FileTypes.PLAIN_TEXT;
+    if (provider == null) return PlainTextFileType.INSTANCE;
     return provider.getFileType();
   }
 

@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import org.mustbe.consulo.DeprecationInfo;
+
 @Deprecated
+@DeprecationInfo(value = "See field info", until = "1.0")
 public class StdFileTypes extends FileTypes {
   private StdFileTypes() { }
 

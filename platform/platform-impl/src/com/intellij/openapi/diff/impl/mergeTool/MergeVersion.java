@@ -25,7 +25,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
@@ -66,6 +66,7 @@ public interface MergeVersion {
       myOriginalText = originalText;
     }
 
+    @Override
     public Document createWorkingDocument(final Project project) {
       //TODO[ik]: do we really need to create copy here?
       final Document workingDocument = myDocument; //DocumentUtil.createCopy(myDocument, project);
@@ -74,6 +75,7 @@ public interface MergeVersion {
       final DocumentReference ref = DocumentReferenceManager.getInstance().create(workingDocument);
       myTextBeforeMerge = myDocument.getText();
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           setDocumentText(workingDocument, myOriginalText, DiffBundle.message("merge.init.merge.content.command.name"), project);
           if (project != null) {
@@ -87,8 +89,10 @@ public interface MergeVersion {
       return workingDocument;
     }
 
+    @Override
     public void applyText(final String text, final Project project) {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           CommandProcessor.getInstance().executeCommand(project, new Runnable() {
             @Override
@@ -140,6 +144,7 @@ public interface MergeVersion {
     @Override
     public void restoreOriginalContent(final Project project) {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           doRestoreOriginalContent(project);
         }
@@ -155,24 +160,28 @@ public interface MergeVersion {
       setDocumentText(myDocument, myTextBeforeMerge, "", project);
     }
 
+    @Override
     public VirtualFile getFile() {
       return FileDocumentManager.getInstance().getFile(myDocument);
     }
 
+    @Override
     public byte[] getBytes() throws IOException {
       VirtualFile file = getFile();
       if (file != null) return file.contentsToByteArray();
       return myDocument.getText().getBytes();
     }
 
+    @Override
     public FileType getContentType() {
       VirtualFile file = getFile();
-      if (file == null) return FileTypes.PLAIN_TEXT;
+      if (file == null) return PlainTextFileType.INSTANCE;
       return file.getFileType();
     }
 
     private static void setDocumentText(final Document document, final String text, String name, Project project) {
       CommandProcessor.getInstance().executeCommand(project, new Runnable() {
+        @Override
         public void run() {
           document.replaceString(0, document.getTextLength(), StringUtil.convertLineSeparators(text));
         }

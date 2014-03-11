@@ -22,17 +22,17 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.StringComboboxEditor;
 
 import javax.swing.*;
 
 public class RevealingSpaceComboboxEditor extends StringComboboxEditor {
   public RevealingSpaceComboboxEditor(final Project project, ComboBox comboBox) {
-    super(project, FileTypes.PLAIN_TEXT, comboBox);
+    super(project, PlainTextFileType.INSTANCE, comboBox);
 
     SwingUtilities.invokeLater(new Runnable() {
       @Override

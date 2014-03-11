@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -113,7 +113,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   @Override
   @NotNull
   protected FileType getFileType() {
-    return FileTypes.PLAIN_TEXT;
+    return PlainTextFileType.INSTANCE;
   }
 
   @Override

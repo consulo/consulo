@@ -1056,7 +1056,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
   }
 
   private static boolean shouldSave(FileType fileType) {
-    return fileType != FileTypes.UNKNOWN && !fileType.isReadOnly();
+    return fileType != UnknownFileType.INSTANCE && !fileType.isReadOnly();
   }
 
   private static void writeHeader(Element root, FileType fileType) {

@@ -310,8 +310,8 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     for (FileType fileType : allFileTypes) {
       if (fileType != StdFileTypes.GUI_DESIGNER_FORM &&
           !(fileType instanceof ArchiveFileType) &
-          fileType != FileTypes.UNKNOWN &&
-          fileType != FileTypes.PLAIN_TEXT &&
+          fileType != UnknownFileType.INSTANCE &&
+          fileType != PlainTextFileType.INSTANCE &&
           !(fileType instanceof AbstractFileType) &&
           !fileType.isBinary() &&
           !fileType.isReadOnly()) {

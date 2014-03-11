@@ -21,7 +21,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
@@ -63,7 +63,7 @@ public class SelectionQuotingTypedHandlerTest extends LightPlatformCodeInsightFi
   }
 
   private void doTest(final char c, @NotNull String before, @NotNull String expected) {
-    myFixture.configureByText(FileTypes.PLAIN_TEXT, before);
+    myFixture.configureByText(PlainTextFileType.INSTANCE, before);
     final TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
     performAction(myFixture.getProject(), new Runnable() {
       @Override
@@ -120,7 +120,7 @@ public class SelectionQuotingTypedHandlerTest extends LightPlatformCodeInsightFi
     final boolean smarterSelection = Registry.is("editor.smarterSelectionQuoting");
     Registry.get("editor.smarterSelectionQuoting").setValue(true);
     try {
-      myFixture.configureByText(FileTypes.PLAIN_TEXT, before);
+      myFixture.configureByText(PlainTextFileType.INSTANCE, before);
       final TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
 
       performAction(myFixture.getProject(), new Runnable() {
@@ -139,7 +139,7 @@ public class SelectionQuotingTypedHandlerTest extends LightPlatformCodeInsightFi
   }
 
   public void testRuby7852ErrantEditor() {
-    myFixture.configureByText(FileTypes.PLAIN_TEXT, "\"aaa\"\nbbb\n\n");
+    myFixture.configureByText(PlainTextFileType.INSTANCE, "\"aaa\"\nbbb\n\n");
     myFixture.getEditor().getCaretModel().moveToOffset(0);
     myFixture.getEditor().getSelectionModel().setSelection(0, 5);
     final TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();

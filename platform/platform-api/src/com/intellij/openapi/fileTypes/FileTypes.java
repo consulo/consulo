@@ -15,13 +15,19 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import org.mustbe.consulo.DeprecationInfo;
+
 /**
  * @author max
  */
 @Deprecated
+@DeprecationInfo(value = "See field info", until = "1.0")
 public class FileTypes {
   protected FileTypes() { }
 
+  @Deprecated
+  @DeprecationInfo(value = "Use UnknownFileType.INSTANCE", until = "1.0")
   public static final FileType UNKNOWN = UnknownFileType.INSTANCE;
+  @DeprecationInfo(value = "Use PlainTextFileType.INSTANCE", until = "1.0")
   public static final LanguageFileType PLAIN_TEXT = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("PLAIN_TEXT");
 }

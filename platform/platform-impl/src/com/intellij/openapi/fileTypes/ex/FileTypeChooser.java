@@ -74,7 +74,7 @@ public class FileTypeChooser extends DialogWrapper {
 
     final DefaultListModel model = new DefaultListModel();
     for (FileType type : fileTypes) {
-      if (!type.isReadOnly() && type != FileTypes.UNKNOWN && !(type instanceof NativeFileType)) {
+      if (!type.isReadOnly() && type != UnknownFileType.INSTANCE && !(type instanceof NativeFileType)) {
         model.addElement(type);
       }
     }
@@ -109,7 +109,7 @@ public class FileTypeChooser extends DialogWrapper {
       }
     );
 
-    ListScrollingUtil.selectItem(myList, FileTypes.PLAIN_TEXT);
+    ListScrollingUtil.selectItem(myList, PlainTextFileType.INSTANCE);
 
     return myPanel;
   }
@@ -135,7 +135,7 @@ public class FileTypeChooser extends DialogWrapper {
   /**
    * If fileName is already associated any known file type returns it.
    * Otherwise asks user to select file type and associates it with fileName extension if any selected.
-   * @return Known file type or null. Never returns {@link com.intellij.openapi.fileTypes.FileTypes#UNKNOWN}.
+   * @return Known file type or null. Never returns {@link UnknownFileType#INSTANCE}.
    */
   @Nullable
   public static FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file, @Nullable Project project) {
@@ -143,7 +143,7 @@ public class FileTypeChooser extends DialogWrapper {
       ((PsiManagerEx)PsiManager.getInstance(project)).getFileManager().findFile(file); // autodetect text file if needed
     }
     FileType type = file.getFileType();
-    if (type == FileTypes.UNKNOWN) {
+    if (type == UnknownFileType.INSTANCE) {
         type = getKnownFileTypeOrAssociate(file.getName());
     }
     return type;
@@ -153,7 +153,7 @@ public class FileTypeChooser extends DialogWrapper {
   public static FileType getKnownFileTypeOrAssociate(@NotNull String fileName) {
     FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     FileType type = fileTypeManager.getFileTypeByFileName(fileName);
-    if (type == FileTypes.UNKNOWN) {
+    if (type == UnknownFileType.INSTANCE) {
       type = associateFileType(fileName);
     }
     return type;
@@ -165,7 +165,7 @@ public class FileTypeChooser extends DialogWrapper {
     chooser.show();
     if (!chooser.isOK()) return null;
     final FileType type = chooser.getSelectedType();
-    if (type == FileTypes.UNKNOWN) return null;
+    if (type == UnknownFileType.INSTANCE) return null;
 
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override

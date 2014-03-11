@@ -18,8 +18,8 @@ package com.intellij.openapi.options.colors.pages;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
@@ -181,7 +181,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, DisplayPrio
   @Nullable
   @Override
   public Icon getIcon() {
-    return FileTypes.PLAIN_TEXT.getIcon();
+    return PlainTextFileType.INSTANCE.getIcon();
   }
 
   @NotNull

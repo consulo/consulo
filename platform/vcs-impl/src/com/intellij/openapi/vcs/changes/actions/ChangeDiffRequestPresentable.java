@@ -23,7 +23,7 @@ import com.intellij.openapi.diff.FileContent;
 import com.intellij.openapi.diff.SimpleContent;
 import com.intellij.openapi.diff.SimpleDiffRequest;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -221,7 +221,7 @@ public class ChangeDiffRequestPresentable implements DiffRequestPresentable {
     }
     final FileType type = rev.getFile().getFileType();
     if (! type.isBinary()) return true;
-    if (FileTypes.UNKNOWN.equals(type)) {
+    if (UnknownFileType.INSTANCE.equals(type)) {
       final boolean associatedToText = checkAssociate(myProject, rev.getFile(), context);
     }
     return true;

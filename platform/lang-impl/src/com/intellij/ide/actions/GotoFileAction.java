@@ -28,7 +28,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -133,10 +133,10 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
       if (o1 == o2) {
         return 0;
       }
-      if (o1 == FileTypes.UNKNOWN) {
+      if (o1 == UnknownFileType.INSTANCE) {
         return 1;
       }
-      if (o2 == FileTypes.UNKNOWN) {
+      if (o2 == UnknownFileType.INSTANCE) {
         return -1;
       }
       if (o1.isBinary() && !o2.isBinary()) {

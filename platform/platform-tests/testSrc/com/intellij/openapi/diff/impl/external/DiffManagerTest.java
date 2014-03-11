@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.external;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.*;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.util.ArrayUtil;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NotNull;
@@ -98,7 +98,7 @@ public class DiffManagerTest extends TestCase {
     }
 
     public void addContent() {
-      addContent(new BinaryContent(ArrayUtil.EMPTY_BYTE_ARRAY, null, FileTypes.UNKNOWN), "");
+      addContent(new BinaryContent(ArrayUtil.EMPTY_BYTE_ARRAY, null, UnknownFileType.INSTANCE), "");
     }
   }
 }

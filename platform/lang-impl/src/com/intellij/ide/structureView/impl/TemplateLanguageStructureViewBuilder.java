@@ -28,8 +28,8 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -275,6 +275,6 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
         return fileType;
       }
     }
-    return FileTypes.UNKNOWN;
+    return UnknownFileType.INSTANCE;
   }
 }

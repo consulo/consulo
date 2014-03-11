@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.*;
@@ -134,7 +134,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     features.add(AdditionalPageAtBottomEditorCustomization.DISABLED);
 
     EditorTextFieldProvider service = ServiceManager.getService(project, EditorTextFieldProvider.class);
-    return service.getEditorField(FileTypes.PLAIN_TEXT.getLanguage(), project, features);
+    return service.getEditorField(PlainTextLanguage.INSTANCE, project, features);
   }
 
   @Nullable

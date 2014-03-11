@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.util.ArrayUtil;
@@ -32,7 +32,7 @@ public class EditorComboWithBrowseButton extends ComponentWithBrowseButton<Edito
                                      final String text,
                                      @NotNull final Project project,
                                      final String recentsKey) {
-    super(new EditorComboBox(text, project, StdFileTypes.PLAIN_TEXT), browseActionListener);
+    super(new EditorComboBox(text, project, PlainTextFileType.INSTANCE), browseActionListener);
     final List<String> recentEntries = RecentsManager.getInstance(project).getRecentEntries(recentsKey);
     if (recentEntries != null) {
       setHistory(ArrayUtil.toStringArray(recentEntries));

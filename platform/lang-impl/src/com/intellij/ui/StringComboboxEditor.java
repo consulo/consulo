@@ -23,7 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Key;
@@ -46,7 +46,7 @@ public class StringComboboxEditor extends EditorComboBoxEditor {
   public StringComboboxEditor(final Project project, final FileType fileType, ComboBox comboBox) {
     super(project, fileType);
     myProject = project;
-    final PsiFile file = PsiFileFactory.getInstance(project).createFileFromText("a.dummy", StdFileTypes.PLAIN_TEXT, "", 0, true);
+    final PsiFile file = PsiFileFactory.getInstance(project).createFileFromText("a.dummy", PlainTextFileType.INSTANCE, "", 0, true);
     final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
     assert document != null;
     document.putUserData(COMBO_BOX_KEY, comboBox);

@@ -32,7 +32,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.*;
@@ -291,6 +291,7 @@ public class EditorWindow {
   public void closeFile(final VirtualFile file, final boolean unsplit, final boolean transferFocus) {
     final FileEditorManagerImpl editorManager = getManager();
     editorManager.runChange(new FileEditorManagerChange() {
+      @Override
       public void run(EditorsSplitters splitters) {
         final List<EditorWithProviderComposite> editors = splitters.findEditorComposites(file);
         if (editors.isEmpty()) return;
@@ -309,6 +310,7 @@ public class EditorWindow {
               myRemovedTabs.push(Pair.create(file.getUrl(), componentIndex));
               final ActionCallback removeTab = myTabbedPane.removeTabAt(componentIndex, indexToSelect, transferFocus);
               final Runnable disposer = new Runnable() {
+                @Override
                 public void run() {
                   editorManager.disposeComposite(editor);
                 }
@@ -554,6 +556,7 @@ public class EditorWindow {
       return myWindow;
     }
 
+    @Override
     public Object getData(String dataId) {
       if (PlatformDataKeys.VIRTUAL_FILE.is(dataId)){
         final VirtualFile virtualFile = myEditor.getFile();
@@ -571,6 +574,7 @@ public class EditorWindow {
       super(window, editor);
     }
 
+    @Override
     public Object getData(String dataId) {
       // this is essential for ability to close opened file
       if (DATA_KEY.is(dataId)){
@@ -637,6 +641,7 @@ public class EditorWindow {
       final int index = findFileIndex(editor.getFile());
       if (index != -1) {
         UIUtil.invokeLaterIfNeeded(new Runnable() {
+          @Override
           public void run() {
             myTabbedPane.setSelectedIndex(index, focusEditor);
           }
@@ -810,6 +815,7 @@ public class EditorWindow {
         scrollingModel.scrollVertically(scrollOffset);
 
         SwingUtilities.invokeLater(new Runnable() {
+          @Override
           public void run() {
             if (!editor.isDisposed()) {
               scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
@@ -862,7 +868,7 @@ public class EditorWindow {
    */
   private Icon getFileIcon(@NotNull final VirtualFile file) {
     if (!file.isValid()) {
-      Icon fakeIcon = FileTypes.UNKNOWN.getIcon();
+      Icon fakeIcon = UnknownFileType.INSTANCE.getIcon();
       assert fakeIcon != null : "Can't find the icon for unknown file type";
       return fakeIcon;
     }

@@ -27,7 +27,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -255,6 +255,6 @@ class PrintManager {
   private static TextPainter doInitTextPainter(@NotNull final DocumentEx doc, Project project) {
      EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, "unknown");
      highlighter.setText(doc.getCharsSequence());
-     return new TextPainter(doc, highlighter, "unknown", project, FileTypes.PLAIN_TEXT, null);
+     return new TextPainter(doc, highlighter, "unknown", project, PlainTextFileType.INSTANCE, null);
    }
 }

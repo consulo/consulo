@@ -19,7 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
@@ -175,7 +175,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
     } else {
       editorFeatures.add(SoftWrapsEditorCustomization.ENABLED);
     }
-    editorField = service.getEditorField(FileTypes.PLAIN_TEXT.getLanguage(), project, editorFeatures);
+    editorField = service.getEditorField(PlainTextLanguage.INSTANCE, project, editorFeatures);
     final int height = editorField.getFontMetrics(editorField.getFont()).getHeight();
     editorField.getComponent().setMinimumSize(new Dimension(100, (int)(height * 1.3)));
     return editorField;

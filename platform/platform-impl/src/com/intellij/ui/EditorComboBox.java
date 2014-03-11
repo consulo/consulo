@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.util.ArrayUtil;
@@ -37,7 +37,7 @@ import com.intellij.util.ui.UIUtil;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,7 +66,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
   private final boolean myIsViewer;
 
   public EditorComboBox(String text) {
-    this(EditorFactory.getInstance().createDocument(text), null, FileTypes.PLAIN_TEXT);
+    this(EditorFactory.getInstance().createDocument(text), null, PlainTextFileType.INSTANCE);
   }
 
   public EditorComboBox(String text, Project project, FileType fileType) {

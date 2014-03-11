@@ -31,7 +31,8 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.util.ImageLoader;
@@ -64,7 +65,7 @@ public class DiffUtil {
   }
 
   public static FileType[] chooseContentTypes(DiffContent[] contents) {
-    FileType commonType = FileTypes.PLAIN_TEXT;
+    FileType commonType = PlainTextFileType.INSTANCE;
     for (DiffContent content : contents) {
       FileType contentType = content.getContentType();
       if (DiffContentUtil.isTextType(contentType)) commonType = contentType;
@@ -128,7 +129,7 @@ public class DiffUtil {
   }
 
   private static boolean isUnknownFileType(@NotNull DiffContent diffContent) {
-    return FileTypes.UNKNOWN.equals(diffContent.getContentType());
+    return UnknownFileType.INSTANCE.equals(diffContent.getContentType());
   }
 
   public static boolean oneIsUnknown(@Nullable DiffContent content1, @Nullable DiffContent content2) {

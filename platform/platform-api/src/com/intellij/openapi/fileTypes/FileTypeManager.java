@@ -134,7 +134,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * Otherwise asks user to select file type and associates it with fileName extension if any selected.
    *
    * @param file - a file to ask for file type association
-   * @return Known file type or null. Never returns {@link FileTypes#UNKNOWN}.
+   * @return Known file type or null. Never returns {@link UnknownFileType#INSTANCE}.
    */
   @Nullable
   @Deprecated() // use getKnownFileTypeOrAssociate(VirtualFile file, Project project) instead

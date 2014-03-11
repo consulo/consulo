@@ -23,8 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
@@ -397,7 +397,7 @@ public class FileTemplateUtil{
 
   public static boolean canCreateFromTemplate (PsiDirectory[] dirs, FileTemplate template) {
     FileType fileType = FileTypeManagerEx.getInstanceEx().getFileTypeByExtension(template.getExtension());
-    if (fileType.equals(FileTypes.UNKNOWN)) return false;
+    if (fileType.equals(UnknownFileType.INSTANCE)) return false;
     CreateFromTemplateHandler handler = findHandler(template);
     return handler.canCreate(dirs);
   }

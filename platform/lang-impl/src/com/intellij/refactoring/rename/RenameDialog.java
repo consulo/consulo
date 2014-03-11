@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -131,7 +131,7 @@ public class RenameDialog extends RefactoringDialog {
   private void createNewNameComponent() {
     String[] suggestedNames = getSuggestedNames();
     myOldName = suggestedNames.length > 0 ? suggestedNames[0] : null;
-    myNameSuggestionsField = new NameSuggestionsField(suggestedNames, myProject, FileTypes.PLAIN_TEXT, myEditor) {
+    myNameSuggestionsField = new NameSuggestionsField(suggestedNames, myProject, PlainTextFileType.INSTANCE, myEditor) {
       @Override
       protected boolean shouldSelectAll() {
         return myEditor == null || myEditor.getSettings().isPreselectRename();

@@ -17,17 +17,19 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
 public class AssociateFileType extends AnAction {
+  @Override
   public void actionPerformed(AnActionEvent e) {
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
     FileTypeChooser.associateFileType(file.getName());
   }
 
+  @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     DataContext dataContext = e.getDataContext();
@@ -39,7 +41,7 @@ public class AssociateFileType extends AnAction {
     }
     else {
       // the action should also be available for files which have been auto-detected as text or as a particular language (IDEA-79574)
-      haveSmthToDo = FileTypeManager.getInstance().getFileTypeByFileName(file.getName()) == FileTypes.UNKNOWN;
+      haveSmthToDo = FileTypeManager.getInstance().getFileTypeByFileName(file.getName()) == UnknownFileType.INSTANCE;
     }
     presentation.setVisible(haveSmthToDo || ActionPlaces.MAIN_MENU.equals(e.getPlace()));
     presentation.setEnabled(haveSmthToDo);
