@@ -22,6 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -29,6 +30,7 @@ import org.mustbe.consulo.roots.ContentFolderTypeProvider;
  * @since 17:03/26.05.13
  */
 @Deprecated
+@DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules", until = "3.0")
 public class CompilerPathsManager {
   @NotNull
   public static CompilerPathsManager getInstance(@NotNull final Project project) {
