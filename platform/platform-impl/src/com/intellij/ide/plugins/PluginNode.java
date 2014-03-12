@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,8 +53,8 @@ public class PluginNode implements IdeaPluginDescriptor {
   private String vendorUrl;
   private String url;
   private long date = Long.MAX_VALUE;
-  private List<PluginId> depends;
-  private PluginId[] myOptionalDependencies;
+  private List<PluginId> myDependencies = Collections.emptyList();
+  private List<PluginId> myOptionalDependencies = Collections.emptyList();
 
   private int status = STATUS_UNKNOWN;
   private boolean loaded = false;
@@ -236,24 +237,21 @@ public class PluginNode implements IdeaPluginDescriptor {
     return object instanceof PluginNode && name.equals(((PluginNode)object).getName());
   }
 
-  public List<PluginId> getDepends() {
-    return depends;
-  }
-
-  public void setDepends(List<PluginId> depends, @Nullable PluginId[] optionalDependencies) {
-    this.depends = depends;
-    myOptionalDependencies = optionalDependencies;
-  }
-
-
-  public void addDepends(PluginId depends) {
-    if (this.depends == null) {
-      this.depends = new ArrayList<PluginId>();
+  public void addDependency(PluginId... depends) {
+    if(myDependencies.isEmpty()) {
+      myDependencies = new ArrayList<PluginId>();
     }
 
-    this.depends.add(depends);
+    Collections.addAll(myDependencies, depends);
   }
 
+  public void addOptionalDependency(PluginId... depends) {
+    if (myOptionalDependencies.isEmpty()) {
+      myOptionalDependencies = new ArrayList<PluginId>();
+    }
+
+    Collections.addAll(myOptionalDependencies, depends);
+  }
   /**
    * Methods below implement PluginDescriptor and IdeaPluginDescriptor interface
    */
@@ -277,13 +275,13 @@ public class PluginNode implements IdeaPluginDescriptor {
   @Override
   @NotNull
   public PluginId[] getDependentPluginIds() {
-    return depends != null ? depends.toArray(new PluginId[depends.size()]) : PluginId.EMPTY_ARRAY;
+    return myDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myDependencies.toArray(new PluginId[myDependencies.size()]);
   }
 
   @Override
   @NotNull
   public PluginId[] getOptionalDependentPluginIds() {
-    return myOptionalDependencies != null ? myOptionalDependencies : PluginId.EMPTY_ARRAY;
+    return myOptionalDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myOptionalDependencies.toArray(new PluginId[myOptionalDependencies.size()]);
   }
 
   @Override

@@ -46,6 +46,7 @@ class RepositoryContentHandler extends DefaultHandler {
   @NonNls private static final String UNTIL_BUILD = "until-build";
   @NonNls public static final String CHNAGE_NOTES = "change-notes";
   @NonNls private static final String DEPENDS = "depends";
+  @NonNls private static final String OPTIONAL = "optional";
   @NonNls private static final String DOWNLOADS = "downloads";
   @NonNls private static final String SIZE = "size";
   @NonNls private static final String RATING = "rating";
@@ -53,9 +54,9 @@ class RepositoryContentHandler extends DefaultHandler {
   @NonNls private static final String DATE = "date";
   private PluginNode currentPlugin;
   private String currentValue;
+  private boolean currentOptional;
   private ArrayList<IdeaPluginDescriptor> plugins;
   private Stack<String> categoriesStack;
-
 
   @Override
   public void startDocument() throws SAXException {
@@ -87,6 +88,10 @@ class RepositoryContentHandler extends DefaultHandler {
       currentPlugin.setVendorEmail(atts.getValue(EMAIL));
       currentPlugin.setVendorUrl(atts.getValue(URL));
     }
+    else if (qName.equals(DEPENDS)) {
+      String optional = atts.getValue(OPTIONAL);
+      currentOptional = optional != null && Boolean.parseBoolean(optional);
+    }
     currentValue = "";
   }
 
@@ -108,7 +113,12 @@ class RepositoryContentHandler extends DefaultHandler {
       currentPlugin.setVendor(currentValue);
     }
     else if (qName.equals(DEPENDS)) {
-      currentPlugin.addDepends(PluginId.getId(currentValue));
+      if(currentOptional) {
+        currentPlugin.addOptionalDependency(PluginId.getId(currentValue));
+      }
+      else {
+        currentPlugin.addDependency(PluginId.getId(currentValue));
+      }
     }
     else if (qName.equals(CHNAGE_NOTES)) {
       currentPlugin.setChangeNotes(currentValue);

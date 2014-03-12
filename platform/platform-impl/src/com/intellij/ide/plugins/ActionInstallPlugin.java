@@ -105,7 +105,8 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
           final PluginId pluginId = descr.getPluginId();
           pluginNode = new PluginNode(pluginId);
           pluginNode.setName(descr.getName());
-          pluginNode.setDepends(Arrays.asList(descr.getDependentPluginIds()), descr.getOptionalDependentPluginIds());
+          pluginNode.addDependency(descr.getDependentPluginIds());
+          pluginNode.addOptionalDependency(descr.getOptionalDependentPluginIds());
           pluginNode.setSize("-1");
           pluginNode.setRepositoryName(((InstalledPluginsTableModel)pluginTableModel).getPluginHostUrl(pluginId.getIdString()));
         }
@@ -122,15 +123,10 @@ public class ActionInstallPlugin extends AnAction implements DumbAware {
           if (pluginsModel.isDisabled(pluginId)) {
             disabled.add(node);
           }
-          final List<PluginId> depends = node.getDepends();
-          if (depends != null) {
-            final Set<PluginId> optionalDeps = new HashSet<PluginId>(Arrays.asList(node.getOptionalDependentPluginIds()));
-            for (PluginId dependantId : depends) {
-              if (optionalDeps.contains(dependantId)) continue;
-              final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
-              if (pluginDescriptor != null && pluginsModel.isDisabled(dependantId)) {
-                disabledDependants.add(pluginDescriptor);
-              }
+          for (PluginId dependantId : node.getDependentPluginIds()) {
+            final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
+            if (pluginDescriptor != null && pluginsModel.isDisabled(dependantId)) {
+              disabledDependants.add(pluginDescriptor);
             }
           }
         }

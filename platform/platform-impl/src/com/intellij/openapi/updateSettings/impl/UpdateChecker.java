@@ -311,9 +311,15 @@ public final class UpdateChecker {
       }
 
       final List<PluginId> dependsPlugins = new ArrayList<PluginId>();
-      final List<Element> depends = plugin.getChildren("depends");
-      for (Element depend : depends) {
-        dependsPlugins.add(PluginId.getId(depend.getText()));
+      final List<PluginId> optionalDependsPlugins = new ArrayList<PluginId>();
+      for (Element depend : plugin.getChildren("depends")) {
+        String optional = depend.getAttributeValue("optional");
+        if(optional != null && Boolean.parseBoolean(optional)) {
+          optionalDependsPlugins.add(PluginId.getId(depend.getText()));
+        }
+        else {
+          dependsPlugins.add(PluginId.getId(depend.getText()));
+        }
       }
 
       if (pluginId == null) {
@@ -360,7 +366,7 @@ public final class UpdateChecker {
       } else {
         final PluginDownloader downloader = new PluginDownloader(pluginId, pluginUrl, pluginVersion);
         downloader.setDescription(description);
-        downloader.setDepends(dependsPlugins);
+        downloader.setDepends(dependsPlugins, optionalDependsPlugins);
         downloaded.add(downloader);
       }
     }

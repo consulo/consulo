@@ -66,7 +66,8 @@ public class PluginDownloader {
   private File myFile;
   private File myOldFile;
   private String myDescription;
-  private List<PluginId> myDepends;
+  private PluginId[] myDepends;
+  private PluginId[] myOptionalDepends;
   private IdeaPluginDescriptor myDescriptor;
 
   public PluginDownloader(String pluginId, String pluginUrl, String pluginVersion) {
@@ -347,12 +348,19 @@ public class PluginDownloader {
     return myDescription;
   }
 
-  public void setDepends(List<PluginId> depends) {
-    myDepends = depends;
+  public void setDepends(List<PluginId> depends, List<PluginId> optionalDependsPlugins) {
+    myDepends = depends.isEmpty() ? PluginId.EMPTY_ARRAY : depends.toArray(new PluginId[depends.size()]);
+    myDepends = optionalDependsPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependsPlugins.toArray(new PluginId[optionalDependsPlugins.size()]);
   }
 
-  public List<PluginId> getDepends() {
-    return myDepends;
+  @NotNull
+  public PluginId[] getDepends() {
+    return myDepends == null ? PluginId.EMPTY_ARRAY : myDepends;
+  }
+
+  @NotNull
+  public PluginId[] getOptionalDepends() {
+    return myOptionalDepends == null ? PluginId.EMPTY_ARRAY : myOptionalDepends;
   }
 
   public static PluginDownloader createDownloader(IdeaPluginDescriptor descriptor) throws UnsupportedEncodingException {
@@ -434,7 +442,8 @@ public class PluginDownloader {
       node.setVersion(downloader.getPluginVersion());
       node.setRepositoryName(host);
       node.setDownloadUrl(pluginFile.getUrl());
-      node.setDepends(downloader.getDepends(), null);
+      node.addDependency(downloader.getDepends());
+      node.addOptionalDependency(downloader.getOptionalDepends());
       node.setDescription(downloader.getDescription());
       return node;
     }
