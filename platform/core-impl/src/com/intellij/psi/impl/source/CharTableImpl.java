@@ -16,7 +16,6 @@
 
 package com.intellij.psi.impl.source;
 
-import com.intellij.psi.CommonClassNames;
 import com.intellij.util.CharTable;
 import com.intellij.util.containers.OpenTHashSet;
 import com.intellij.util.text.CharArrayUtil;
@@ -195,9 +194,6 @@ public class CharTableImpl implements CharTable {
     return r;
   }
 
-  static {
-    addStringsFromClassToStatics(CommonClassNames.class);
-  }
   public static void addStringsFromClassToStatics(@NotNull Class aClass) {
     for (Field field : aClass.getDeclaredFields()) {
       if ((field.getModifiers() & Modifier.STATIC) == 0) continue;
