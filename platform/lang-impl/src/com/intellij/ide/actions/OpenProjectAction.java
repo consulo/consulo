@@ -17,8 +17,10 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
@@ -38,15 +40,17 @@ import java.util.List;
 import java.util.Set;
 
 public class OpenProjectAction extends AnAction implements DumbAware {
+  @Override
   public void actionPerformed(AnActionEvent e) {
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true);
     descriptor.setTitle(IdeBundle.message("title.open.project"));
     final Set<String> extensions = new LinkedHashSet<String>();
-    final ProjectOpenProcessor[] openProcessors = Extensions.getExtensions(ProjectOpenProcessor.EXTENSION_POINT_NAME);
-    for (ProjectOpenProcessor openProcessor : openProcessors) {
-      final String[] supportedExtensions = ((ProjectOpenProcessorBase)openProcessor).getSupportedExtensions();
-      if (supportedExtensions != null) {
-        Collections.addAll(extensions, supportedExtensions);
+    for (ProjectOpenProcessor openProcessor : ProjectOpenProcessor.EXTENSION_POINT_NAME.getExtensions()) {
+      if(openProcessor instanceof ProjectOpenProcessorBase) {
+        final String[] supportedExtensions = ((ProjectOpenProcessorBase)openProcessor).getSupportedExtensions();
+        if (supportedExtensions != null) {
+          Collections.addAll(extensions, supportedExtensions);
+        }
       }
     }
     descriptor.setDescription(IdeBundle.message("filter.project.files", StringUtil.join(extensions, ", ")));
