@@ -32,6 +32,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PlainTextParserDefinition implements ParserDefinition {
   private static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {
@@ -44,13 +45,13 @@ public class PlainTextParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public Lexer createLexer(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+  public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion) {
     return new EmptyLexer();
   }
 
   @Override
   @NotNull
-  public PsiParser createParser(@NotNull Project project, @NotNull LanguageVersion languageVersion) {
+  public PsiParser createParser(@Nullable Project project, @NotNull LanguageVersion languageVersion) {
     throw new UnsupportedOperationException("Not supported");
   }
 
@@ -68,13 +69,13 @@ public class PlainTextParserDefinition implements ParserDefinition {
 
   @Override
   @NotNull
-  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
+  public TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @Override
   @NotNull
-  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
+  public TokenSet getStringLiteralElements(@NotNull LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 

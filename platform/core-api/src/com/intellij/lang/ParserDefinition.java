@@ -122,6 +122,7 @@ public interface ParserDefinition {
    * @return the spacing requirements.
    * @since 6.0
    */
+  @NotNull
   SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right);
 
   /**
