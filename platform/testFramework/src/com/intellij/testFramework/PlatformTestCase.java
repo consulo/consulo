@@ -66,7 +66,6 @@ import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.util.PatchedWeakReference;
 import com.intellij.util.indexing.IndexableSetContributor;
-import com.intellij.util.indexing.IndexedRootsProvider;
 import com.intellij.util.ui.UIUtil;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
@@ -325,8 +324,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
     Set<VirtualFile> survivors = new HashSet<VirtualFile>();
 
-    for (IndexedRootsProvider provider : IndexedRootsProvider.EP_NAME.getExtensions()) {
-      for (VirtualFile file : IndexableSetContributor.getRootsToIndex(provider)) {
+    for (IndexableSetContributor provider : IndexableSetContributor.EP_NAME.getExtensions()) {
+      for (VirtualFile file : provider.getAdditionalRootsToIndex()) {
         registerSurvivor(survivors, file);
       }
     }

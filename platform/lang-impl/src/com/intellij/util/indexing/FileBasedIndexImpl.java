@@ -2569,18 +2569,18 @@ public class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     Set<VirtualFile> visitedRoots = new THashSet<VirtualFile>();
-    for (IndexedRootsProvider provider : Extensions.getExtensions(IndexedRootsProvider.EP_NAME)) {
+    for (IndexableSetContributor provider : IndexableSetContributor.EP_NAME.getExtensions()) {
       //important not to depend on project here, to support per-project background reindex
       // each client gives a project to FileBasedIndex
       if (project.isDisposed()) {
         return;
       }
-      for (VirtualFile root : IndexableSetContributor.getRootsToIndex(provider)) {
+      for (VirtualFile root : provider.getAdditionalRootsToIndex()) {
         if (visitedRoots.add(root)) {
           iterateRecursively(root, processor, indicator);
         }
       }
-      for (VirtualFile root : IndexableSetContributor.getProjectRootsToIndex(provider, project)) {
+      for (VirtualFile root : provider.getAdditionalProjectRootsToIndex(project)) {
         if (visitedRoots.add(root)) {
           iterateRecursively(root, processor, indicator);
         }

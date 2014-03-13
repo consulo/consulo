@@ -31,9 +31,9 @@ import java.util.Set;
 public class AdditionalIndexableFileSet implements IndexableFileSet {
   private volatile Set<VirtualFile> cachedFiles;
   private volatile Set<VirtualFile> cachedDirectories;
-  private volatile IndexedRootsProvider[] myExtensions;
+  private volatile IndexableSetContributor[] myExtensions;
 
-  public AdditionalIndexableFileSet(IndexedRootsProvider... extensions) {
+  public AdditionalIndexableFileSet(IndexableSetContributor... extensions) {
     myExtensions = extensions;
   }
 
@@ -49,11 +49,11 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
     THashSet<VirtualFile> files = new THashSet<VirtualFile>();
     THashSet<VirtualFile> directories = new THashSet<VirtualFile>();
     if (myExtensions == null) {
-      myExtensions = Extensions.getExtensions(IndexedRootsProvider.EP_NAME);
+      myExtensions = Extensions.getExtensions(IndexableSetContributor.EP_NAME);
     }
-    for (IndexedRootsProvider provider : myExtensions) {
-      for(VirtualFile file:IndexableSetContributor.getRootsToIndex(provider)) {
-        (file.isDirectory() ? directories:files).add(file);
+    for (IndexableSetContributor provider : myExtensions) {
+      for (VirtualFile file : provider.getAdditionalRootsToIndex()) {
+        (file.isDirectory() ? directories : files).add(file);
       }
     }
     cachedFiles = files;
