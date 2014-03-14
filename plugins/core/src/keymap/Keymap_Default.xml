@@ -112,6 +112,18 @@
   <action id="FindWordAtCaret">
     <keyboard-shortcut first-keystroke="control F3"/>
   </action>
+  <action id="SelectNextOccurrence">
+    <keyboard-shortcut first-keystroke="alt J"/>
+  </action>
+  <action id="UnselectPreviousOccurrence">
+    <keyboard-shortcut first-keystroke="alt shift J"/>
+  </action>
+  <action id="SelectAllOccurrences">
+    <keyboard-shortcut first-keystroke="control alt shift J"/>
+  </action>
+  <action id="EditorAddOrRemoveCaret">
+    <mouse-shortcut keystroke="alt shift button1"/>
+  </action>
   <action id="GotoDeclaration">
     <keyboard-shortcut first-keystroke="control B"/>
     <mouse-shortcut keystroke="ctrl button1"/>
@@ -123,7 +135,7 @@
     <keyboard-shortcut first-keystroke="control shift B"/>
     <mouse-shortcut keystroke="ctrl shift button1"/>
   </action>
-  
+
   <action id="GotoBookmark0">
     <keyboard-shortcut first-keystroke="control 0"/>
   </action>
@@ -295,7 +307,7 @@
     <keyboard-shortcut first-keystroke="shift F11"/>
   </action>
   <action id="HighlightUsagesInFile">
-    <keyboard-shortcut first-keystroke="control shift F7"/> 
+    <keyboard-shortcut first-keystroke="control shift F7"/>
   </action>
   <action id="GotoFile">
     <keyboard-shortcut first-keystroke="control shift N"/>

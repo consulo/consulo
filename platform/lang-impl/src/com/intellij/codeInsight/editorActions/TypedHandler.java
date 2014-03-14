@@ -188,9 +188,9 @@ public class TypedHandler extends TypedActionHandlerBase {
       }
     }
 
-    if (!editor.getSelectionModel().hasBlockSelection() && editor.getCaretModel().getAllCarets().size() == 1) {
+    if (!editor.getSelectionModel().hasBlockSelection() && editor.getCaretModel().getCaretCount() == 1) {
       if (')' == charTyped || ']' == charTyped || '}' == charTyped) {
-        if (PlainTextFileType.INSTANCE != fileType) {
+        if (fileType != PlainTextFileType.INSTANCE) {
           if (handleRParen(editor, fileType, charTyped)) return;
         }
       }
@@ -207,7 +207,7 @@ public class TypedHandler extends TypedActionHandlerBase {
 
     if (('(' == charTyped || '[' == charTyped || '{' == charTyped) &&
         CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET &&
-        !editor.getSelectionModel().hasBlockSelection() && editor.getCaretModel().getAllCarets().size() == 1 && fileType != PlainTextFileType.INSTANCE) {
+        !editor.getSelectionModel().hasBlockSelection() && editor.getCaretModel().getCaretCount() == 1 && fileType != PlainTextFileType.INSTANCE) {
       handleAfterLParen(editor, fileType, charTyped);
     }
     else if ('}' == charTyped) {
@@ -542,7 +542,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     indentBrace(project, editor, '}');
   }
 
-  public static void indentOpenedBrace(@NotNull Project project, @NotNull Editor editor){
+  static void indentOpenedBrace(@NotNull Project project, @NotNull Editor editor){
     indentBrace(project, editor, '{');
   }
 

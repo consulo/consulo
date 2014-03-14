@@ -150,6 +150,11 @@ public class TextComponentCaretModel implements CaretModel {
     return myCaret;
   }
 
+  @Override
+  public int getCaretCount() {
+    return 1;
+  }
+
   @NotNull
   @Override
   public List<Caret> getAllCarets() {
@@ -179,6 +184,12 @@ public class TextComponentCaretModel implements CaretModel {
 
   @Override
   public void setCaretsAndSelections(@NotNull List<CaretState> caretStates) {
+    throw new UnsupportedOperationException("Multiple carets are not supported");
+  }
+
+  @NotNull
+  @Override
+  public List<CaretState> getCaretsAndSelections() {
     throw new UnsupportedOperationException("Multiple carets are not supported");
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.openapi.keymap.impl.ShortcutRestrictions;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
@@ -55,11 +56,12 @@ class MouseShortcutDialog extends DialogWrapper{
    * if dialog is used to create new mouse shortcut.
    */
   public MouseShortcutDialog(
-    JComponent parentComponent,
-    MouseShortcut shortcut,
-    @NotNull Keymap keymap,
-    @NotNull String actiondId,
-    @NotNull Group mainGroup
+          JComponent parentComponent,
+          MouseShortcut shortcut,
+          @NotNull Keymap keymap,
+          @NotNull String actiondId,
+          @NotNull Group mainGroup,
+          @NotNull ShortcutRestrictions restrictions
   ){
     super(parentComponent,true);
     setTitle(KeyMapBundle.message("mouse.shortcut.dialog.title"));
@@ -99,6 +101,8 @@ class MouseShortcutDialog extends DialogWrapper{
       myModifiers=-1;
     }
 
+    myRbDoubleClick.setEnabled(restrictions.allowMouseDoubleClick);
+
     updatePreviewAndConflicts();
 
     init();
@@ -131,18 +135,18 @@ class MouseShortcutDialog extends DialogWrapper{
 
     JPanel clickCountPanel=new JPanel(new GridBagLayout());
     clickCountPanel.setBorder(IdeBorderFactory.createTitledBorder(
-      KeyMapBundle.message("mouse.shortcut.dialog.click.count.border"), true));
+            KeyMapBundle.message("mouse.shortcut.dialog.click.count.border"), true));
     panel.add(
-      clickCountPanel,
-      new GridBagConstraints(0,0,1,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0)
+            clickCountPanel,
+            new GridBagConstraints(0,0,1,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0)
     );
     clickCountPanel.add(
-      myRbSingleClick,
-      new GridBagConstraints(0,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(0,0,0,10),0,0)
+            myRbSingleClick,
+            new GridBagConstraints(0,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(0,0,0,10),0,0)
     );
     clickCountPanel.add(
-      myRbDoubleClick,
-      new GridBagConstraints(1,0,1,1,1,0,GridBagConstraints.EAST,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0)
+            myRbDoubleClick,
+            new GridBagConstraints(1,0,1,1,1,0,GridBagConstraints.EAST,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0)
     );
 
     ActionListener listener=new ActionListener(){
@@ -157,11 +161,11 @@ class MouseShortcutDialog extends DialogWrapper{
 
     JPanel clickPadPanel=new JPanel(new BorderLayout());
     panel.add(
-      clickPadPanel,
-      new GridBagConstraints(0,1,1,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,4,0),0,0)
+            clickPadPanel,
+            new GridBagConstraints(0,1,1,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,4,0),0,0)
     );
     clickPadPanel.setBorder(IdeBorderFactory.createTitledBorder(
-      KeyMapBundle.message("mouse.shortcut.dialog.click.pad.border"), true));
+            KeyMapBundle.message("mouse.shortcut.dialog.click.pad.border"), true));
     myClickPad.setPreferredSize(new Dimension(260,60));
     clickPadPanel.add(myClickPad,BorderLayout.CENTER);
 
@@ -169,31 +173,31 @@ class MouseShortcutDialog extends DialogWrapper{
 
     JPanel previewPanel=new JPanel(new GridBagLayout());
     previewPanel.setBorder(IdeBorderFactory.createTitledBorder(
-      KeyMapBundle.message("mouse.shortcut.dialog.shortcut.preview.border"), true));
+            KeyMapBundle.message("mouse.shortcut.dialog.shortcut.preview.border"), true));
     panel.add(
-      previewPanel,
-      new GridBagConstraints(0,2,1,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,4,0),0,0)
+            previewPanel,
+            new GridBagConstraints(0,2,1,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,4,0),0,0)
     );
     previewPanel.add(
-      myLblPreview,
-      new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(2,2,2,2),0,0)
+            myLblPreview,
+            new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(2,2,2,2),0,0)
     );
 
     // Conflicts panel
 
     JPanel conflictsPanel=new JPanel(new GridBagLayout());
     conflictsPanel.setBorder(IdeBorderFactory.createTitledBorder(
-      KeyMapBundle.message("mouse.shortcut.dialog.conflicts.border"), true));
+            KeyMapBundle.message("mouse.shortcut.dialog.conflicts.border"), true));
     panel.add(
-      conflictsPanel,
-      new GridBagConstraints(0,3,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0)
+            conflictsPanel,
+            new GridBagConstraints(0,3,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0)
     );
     myTarConflicts.setPreferredSize(new Dimension(260,60));
     JScrollPane scrollPane= ScrollPaneFactory.createScrollPane(myTarConflicts);
     scrollPane.setBorder(null);
     conflictsPanel.add(
-      scrollPane,
-      new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0)
+            scrollPane,
+            new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0)
     );
 
     return panel;
@@ -275,8 +279,8 @@ class MouseShortcutDialog extends DialogWrapper{
   private class MyClickPad extends JLabel{
     public MyClickPad(){
       super(
-        KeyMapBundle.message("mouse.shortcut.label"),
-        AllIcons.General.Mouse, SwingConstants.CENTER
+              KeyMapBundle.message("mouse.shortcut.label"),
+              AllIcons.General.Mouse, SwingConstants.CENTER
       );
       // It's very imporatant that MouseListener is added to the Dialog. If you add
       // the same listener, for example, into the MyClickPad component you get fake

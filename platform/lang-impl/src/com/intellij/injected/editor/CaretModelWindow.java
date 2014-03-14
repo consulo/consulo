@@ -165,6 +165,11 @@ public class CaretModelWindow implements CaretModel {
     return createInjectedCaret(myDelegate.getPrimaryCaret());
   }
 
+  @Override
+  public int getCaretCount() {
+    return myDelegate.getCaretCount();
+  }
+
   @NotNull
   @Override
   public List<Caret> getAllCarets() {
@@ -214,6 +219,19 @@ public class CaretModelWindow implements CaretModel {
                                          state.getSelectionEnd() == null ? null : myEditorWindow.injectedToHost(state.getSelectionEnd())));
     }
     myDelegate.setCaretsAndSelections(convertedStates);
+  }
+
+  @NotNull
+  @Override
+  public List<CaretState> getCaretsAndSelections() {
+    List<CaretState> caretsAndSelections = myDelegate.getCaretsAndSelections();
+    List<CaretState> convertedStates = new ArrayList<CaretState>(caretsAndSelections.size());
+    for (CaretState state : caretsAndSelections) {
+      convertedStates.add(new CaretState(state.getCaretPosition() == null ? null : myEditorWindow.hostToInjected(state.getCaretPosition()),
+                                         state.getSelectionStart() == null ? null : myEditorWindow.hostToInjected(state.getSelectionStart()),
+                                         state.getSelectionEnd() == null ? null : myEditorWindow.hostToInjected(state.getSelectionEnd())));
+    }
+    return convertedStates;
   }
 
   private InjectedCaret createInjectedCaret(Caret caret) {
