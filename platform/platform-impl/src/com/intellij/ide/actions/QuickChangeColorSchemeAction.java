@@ -16,13 +16,10 @@
 package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl;
 import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;
-import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.options.SharedScheme;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +30,7 @@ import java.util.Collection;
  * @author max
  */
 public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
+  @Override
   protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
     final EditorColorsScheme[] schemes = EditorColorsManager.getInstance().getAllSchemes();
     EditorColorsScheme current = EditorColorsManager.getInstance().getGlobalScheme();
@@ -53,21 +51,22 @@ public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
 
   }
 
-  private void addScheme(final DefaultActionGroup group, final EditorColorsScheme current, final EditorColorsScheme scheme, final boolean addScheme) {
+  private static void addScheme(final DefaultActionGroup group,
+                                final EditorColorsScheme current,
+                                final EditorColorsScheme scheme,
+                                final boolean addScheme) {
     group.add(new AnAction(scheme.getName(), "", scheme == current ? ourCurrentAction : ourNotCurrentAction) {
+      @Override
       public void actionPerformed(AnActionEvent e) {
         if (addScheme) {
           EditorColorsManager.getInstance().addColorsScheme(scheme);
         }
         EditorColorsManager.getInstance().setGlobalScheme(scheme);
-        Editor[] editors = EditorFactory.getInstance().getAllEditors();
-        for (Editor editor : editors) {
-          ((EditorEx)editor).reinitSettings();
-        }
       }
     });
   }
 
+  @Override
   protected boolean isEnabled() {
     return EditorColorsManager.getInstance().getAllSchemes().length > 1 || ((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getSchemesManager().isImportAvailable();
   }

@@ -652,7 +652,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     if(!window.isDisplayable()){
       return;
     }
-    SwingUtilities.updateComponentTreeUI(window);
+    IJSwingUtilities.updateComponentTreeUI(window);
     Window[] children=window.getOwnedWindows();
     for (Window aChildren : children) {
       updateUI(aChildren);

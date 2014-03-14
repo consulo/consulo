@@ -385,17 +385,17 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
 
   @Override
   public void projectOpened() {
-    final MyUIManagerPropertyChangeListener myUIManagerPropertyChangeListener = new MyUIManagerPropertyChangeListener();
-    final MyLafManagerListener myLafManagerListener = new MyLafManagerListener();
+    final MyUIManagerPropertyChangeListener uiManagerPropertyListener = new MyUIManagerPropertyChangeListener();
+    final MyLafManagerListener lafManagerListener = new MyLafManagerListener();
 
-    UIManager.addPropertyChangeListener(myUIManagerPropertyChangeListener);
-    myLafManager.addLafManagerListener(myLafManagerListener);
+    UIManager.addPropertyChangeListener(uiManagerPropertyListener);
+    myLafManager.addLafManagerListener(lafManagerListener);
 
     Disposer.register(myProject, new Disposable() {
       @Override
       public void dispose() {
-        UIManager.removePropertyChangeListener(myUIManagerPropertyChangeListener);
-        myLafManager.removeLafManagerListener(myLafManagerListener);
+        UIManager.removePropertyChangeListener(uiManagerPropertyListener);
+        myLafManager.removeLafManagerListener(lafManagerListener);
       }
     });
     myFrame = myWindowManager.allocateFrame(myProject);
@@ -453,6 +453,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       }
     }, myProject);
   }
+
 
   private void disableStripeButtons() {
     for (final String id : getToolWindowIds()) {
