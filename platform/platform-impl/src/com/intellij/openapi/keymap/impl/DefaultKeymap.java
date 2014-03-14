@@ -50,7 +50,7 @@ public class DefaultKeymap {
   public DefaultKeymap() {
     for(BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensions()) {
         try {
-          InputStream inputStream = bundledKeymapEP.getLoaderForClass().getResourceAsStream(bundledKeymapEP.file);
+          InputStream inputStream = bundledKeymapEP.getLoaderForClass().getResourceAsStream(bundledKeymapEP.file + ".xml");
           if(inputStream == null) {
             LOG.warn("Keymap: " + bundledKeymapEP.file + " not found in " + bundledKeymapEP.getPluginDescriptor().getPluginId().getIdString());
             continue;
