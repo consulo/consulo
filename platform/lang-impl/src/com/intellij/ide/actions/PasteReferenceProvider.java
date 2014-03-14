@@ -26,9 +26,9 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actions.PasteAction;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -47,18 +47,9 @@ public class PasteReferenceProvider implements PasteProvider {
 
     final String fqn = getCopiedFqn(dataContext);
 
-    QualifiedNameProvider theProvider = null;
-    PsiElement element = null;
-    for(QualifiedNameProvider provider: Extensions.getExtensions(QualifiedNameProvider.EP_NAME)) {
-      element = provider.qualifiedNameToElement(fqn, project);
-      if (element != null) {
-        theProvider = provider;
-        break;
-      }
-    }
-
-    if (theProvider != null) {
-      insert(fqn, element, editor, theProvider);
+    Pair<PsiElement,QualifiedNameProvider> pair = QualifiedNameProviders.findElementByQualifiedName(fqn, project);
+    if (pair != null) {
+      insert(fqn, pair.getFirst(), editor, pair.getSecond());
     }
   }
 
@@ -76,12 +67,7 @@ public class PasteReferenceProvider implements PasteProvider {
     if (project == null || fqn == null) {
       return false;
     }
-    for(QualifiedNameProvider provider: Extensions.getExtensions(QualifiedNameProvider.EP_NAME)) {
-      if (provider.qualifiedNameToElement(fqn, project) != null) {
-        return true;
-      }
-    }
-    return false;
+    return QualifiedNameProviders.findElementByQualifiedName(fqn, project) != null;
   }
 
   private static void insert(final String fqn, final PsiElement element, final Editor editor, final QualifiedNameProvider provider) {

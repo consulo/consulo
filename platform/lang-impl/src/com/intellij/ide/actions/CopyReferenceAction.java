@@ -31,17 +31,11 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.psi.*;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.LogicalRoot;
-import com.intellij.util.LogicalRootsManager;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
@@ -88,7 +82,7 @@ public class CopyReferenceAction extends DumbAwareAction {
       Document document = editor.getDocument();
       PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
       if (file != null) {
-        String toCopy = getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
+        String toCopy = QualifiedNameProviders.getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
         CopyPasteManager.getInstance().setContents(new StringSelection(toCopy));
         setStatusBarText(project, toCopy + " has been copied");
       }
@@ -149,7 +143,7 @@ public class CopyReferenceAction extends DumbAwareAction {
   }
 
   private static boolean doCopy(final PsiElement element, @Nullable final Project project, @Nullable Editor editor) {
-    String fqn = elementToFqn(element, editor);
+    String fqn = QualifiedNameProviders.elementToFqn(element, editor);
     if (fqn == null) return false;
 
     CopyPasteManager.getInstance().setContents(new MyTransferable(fqn));
@@ -192,62 +186,5 @@ public class CopyReferenceAction extends DumbAwareAction {
       }
       return null;
     }
-  }
-
-  @Nullable
-  public static String elementToFqn(final PsiElement element) {
-    return elementToFqn(element, null);
-  }
-
-  @Nullable
-  public static String elementToFqn(final PsiElement element, @Nullable Editor editor) {
-    String result = getQualifiedNameFromProviders(element);
-    if (result != null) return result;
-
-    if (editor != null) { //IDEA-70346
-      PsiReference reference = TargetElementUtilBase.findReference(editor, editor.getCaretModel().getOffset());
-      if (reference != null) {
-        result = getQualifiedNameFromProviders(reference.resolve());
-        if (result != null) return result;
-      }
-    }
-
-    String fqn = null;
-    if (element instanceof PsiFile) {
-      final PsiFile file = (PsiFile)element;
-      fqn = FileUtil.toSystemIndependentName(getFileFqn(file));
-    }
-    return fqn;
-  }
-
-  @Nullable
-  private static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
-    if (element == null) return null;
-    for (QualifiedNameProvider provider : Extensions.getExtensions(QualifiedNameProvider.EP_NAME)) {
-      String result = provider.getQualifiedName(element);
-      if (result != null) return result;
-    }
-    return null;
-  }
-
-  @NotNull
-  private static String getFileFqn(final PsiFile file) {
-    final VirtualFile virtualFile = file.getVirtualFile();
-    if (virtualFile == null) {
-      return file.getName();
-    }
-    final Project project = file.getProject();
-    final LogicalRoot logicalRoot = LogicalRootsManager.getLogicalRootsManager(project).findLogicalRoot(virtualFile);
-    if (logicalRoot != null) {
-      String logical = FileUtil.toSystemIndependentName(VfsUtil.virtualToIoFile(logicalRoot.getVirtualFile()).getPath());
-      String path = FileUtil.toSystemIndependentName(VfsUtil.virtualToIoFile(virtualFile).getPath());
-      return "/" + FileUtil.getRelativePath(logical, path, '/');
-    }
-
-    final VirtualFile contentRoot = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(virtualFile);
-    if (contentRoot != null) {
-      return "/" + FileUtil.getRelativePath(VfsUtil.virtualToIoFile(contentRoot), VfsUtil.virtualToIoFile(virtualFile));
-    }
-    return virtualFile.getPath();
   }
 }

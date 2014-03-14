@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.ide.actions.CopyReferenceAction;
+import com.intellij.ide.actions.QualifiedNameProviders;
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
@@ -117,7 +117,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
   protected void performRefactoring(UsageInfo[] usages) {
     RefactoringTransaction transaction = getTransaction();
     final RefactoringElementListener elementListener = transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
-    final String fqn = CopyReferenceAction.elementToFqn(myChangeInfo.getMethod());
+    final String fqn = QualifiedNameProviders.elementToFqn(myChangeInfo.getMethod());
     if (fqn != null) {
       UndoableAction action = new BasicUndoableAction() {
         @Override

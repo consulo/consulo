@@ -76,12 +76,12 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
     final String relativePath = getRelativePath(virtualFile, element.getProject());
     if (relativePath == null) return "( " + File.separator + " )";
     String path =
-      FilePathSplittingPolicy.SPLIT_BY_SEPARATOR.getOptimalTextForComponent(name + "          ", new File(relativePath), this, myMaxWidth);
+            FilePathSplittingPolicy.SPLIT_BY_SEPARATOR.getOptimalTextForComponent(name + "          ", new File(relativePath), this, myMaxWidth);
     return "(" + path + ")";
   }
 
   @Nullable
-  private static String getRelativePath(final VirtualFile virtualFile, final Project project) {
+  static String getRelativePath(final VirtualFile virtualFile, final Project project) {
     String url = virtualFile.getPresentableUrl();
     if (project == null) {
       return url;

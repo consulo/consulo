@@ -17,7 +17,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.codeInsight.CodeInsightUtilBase;
-import com.intellij.ide.actions.CopyReferenceAction;
+import com.intellij.ide.actions.QualifiedNameProviders;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.openapi.application.ApplicationManager;
@@ -167,7 +167,7 @@ public class RenameUtil {
   public static void doRename(final PsiElement element, String newName, UsageInfo[] usages, final Project project,
                               @Nullable final RefactoringElementListener listener) throws IncorrectOperationException{
     final RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
-    final String fqn = element instanceof PsiFile ? ((PsiFile)element).getVirtualFile().getPath() : CopyReferenceAction.elementToFqn(element);
+    final String fqn = element instanceof PsiFile ? ((PsiFile)element).getVirtualFile().getPath() : QualifiedNameProviders.elementToFqn(element);
     if (fqn != null) {
       UndoableAction action = new BasicUndoableAction() {
         @Override

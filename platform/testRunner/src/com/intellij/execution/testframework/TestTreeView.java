@@ -22,7 +22,7 @@ package com.intellij.execution.testframework;
 
 import com.intellij.execution.testframework.actions.ViewAssertEqualsDiffAction;
 import com.intellij.ide.CopyProvider;
-import com.intellij.ide.actions.CopyReferenceAction;
+import com.intellij.ide.actions.QualifiedNameProviders;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -114,7 +114,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   @Override
   public void performCopy(@NotNull DataContext dataContext) {
     final PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
-    CopyPasteManager.getInstance().setContents(new StringSelection(CopyReferenceAction.elementToFqn(element)));
+    CopyPasteManager.getInstance().setContents(new StringSelection(QualifiedNameProviders.elementToFqn(element)));
   }
 
   @Override
