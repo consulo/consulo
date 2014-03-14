@@ -31,21 +31,18 @@ import java.util.Collections;
  * @since 12:14/14.08.13
  */
 public class CompilerServerStubIndexImpl extends StubIndex {
-
   @Override
-  public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey,
-                                                           @NotNull Key key,
-                                                           @NotNull Project project,
-                                                           GlobalSearchScope scope) {
-    return Collections.emptyList();
+  public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey, @NotNull Key key, @NotNull Project project, GlobalSearchScope scope) {
+    return null;
   }
 
   @Override
-  public <Key, Psi extends PsiElement> boolean process(@NotNull StubIndexKey<Key, Psi> indexKey,
-                                                       @NotNull Key key,
-                                                       @NotNull Project project,
-                                                       GlobalSearchScope scope,
-                                                       @NotNull Processor<? super Psi> processor) {
+  public <Key, Psi extends PsiElement> boolean processElements(@NotNull StubIndexKey<Key, Psi> indexKey,
+                                            @NotNull Key key,
+                                            @NotNull Project project,
+                                            GlobalSearchScope scope,
+                                            Class<Psi> requiredClass,
+                                            @NotNull Processor<? super Psi> processor) {
     return false;
   }
 

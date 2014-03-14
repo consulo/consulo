@@ -39,13 +39,13 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> {
 
   private static final FileBasedIndex.InputFilter INPUT_FILTER = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(Project project, VirtualFile file) {
+    public boolean acceptInput(Project project, @NotNull VirtualFile file) {
       return !file.getFileType().isBinary();
     }
   };
   private static final FileBasedIndex.InputFilter NO_FILES = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(Project project, VirtualFile file) {
+    public boolean acceptInput(Project project, @NotNull VirtualFile file) {
       return false;
     }
   };

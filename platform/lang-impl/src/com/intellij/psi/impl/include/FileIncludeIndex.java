@@ -163,7 +163,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
   public FileBasedIndex.InputFilter getInputFilter() {
     return new FileBasedIndex.InputFilter() {
       @Override
-      public boolean acceptInput(Project project, VirtualFile file) {
+      public boolean acceptInput(Project project, @NotNull VirtualFile file) {
         if (file.getFileSystem() instanceof ArchiveFileSystem) {
           return false;
         }

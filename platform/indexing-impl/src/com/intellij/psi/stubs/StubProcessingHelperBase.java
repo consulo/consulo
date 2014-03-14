@@ -32,22 +32,31 @@ public abstract class StubProcessingHelperBase {
     return stub.getStubType();
   }
 
-  public <Psi extends PsiElement> boolean processStubsInFile(final Project project, final VirtualFile file, StubIdList value, final Processor<? super Psi> processor) {
+  public <Psi extends PsiElement> boolean processStubsInFile(final Project project, final VirtualFile file, StubIdList value, final Processor<? super Psi> processor, Class<Psi> requiredClass) {
+    return processStubsInFile(project, file, value, processor, requiredClass, false);
+  }
+
+  public <Psi extends PsiElement> boolean processStubsInFile(final Project project, final VirtualFile file, StubIdList value, final Processor<? super Psi> processor, Class<Psi> requiredClass, final boolean skipOnErrors) {
     StubTree stubTree = null;
 
-    PsiFile _psifile = PsiManager.getInstance(project).findFile(file);
+    PsiFile candidatePsiFile = PsiManager.getInstance(project).findFile(file);
     PsiFileWithStubSupport psiFile = null;
     boolean customStubs = false;
 
-    if (_psifile != null && !(_psifile instanceof PsiPlainTextFile)) {
-      _psifile = _psifile.getViewProvider().getStubBindingRoot();
-      if (_psifile instanceof PsiFileWithStubSupport) {
-        psiFile = (PsiFileWithStubSupport)_psifile;
+    if (candidatePsiFile != null && !(candidatePsiFile instanceof PsiPlainTextFile)) {
+      candidatePsiFile = candidatePsiFile.getViewProvider().getStubBindingRoot();
+      if (candidatePsiFile instanceof PsiFileWithStubSupport) {
+        psiFile = (PsiFileWithStubSupport)candidatePsiFile;
         stubTree = psiFile.getStubTree();
         if (stubTree == null && psiFile instanceof PsiFileImpl) {
-          BinaryFileStubBuilder stubBuilder = BinaryFileStubBuilders.INSTANCE.forFileType(psiFile.getFileType());
-          if (stubBuilder == null) stubTree = ((PsiFileImpl)psiFile).calcStubTree();
-          else customStubs = true;
+          IElementType contentElementType = ((PsiFileImpl)psiFile).getContentElementType();
+          if (contentElementType instanceof IStubFileElementType) {
+            stubTree = ((PsiFileImpl)psiFile).calcStubTree();
+          }
+          else {
+            customStubs = true;
+            assert BinaryFileStubBuilders.INSTANCE.forFileType(psiFile.getFileType()) != null;
+          }
         }
       }
     }
@@ -66,7 +75,15 @@ public abstract class StubProcessingHelperBase {
       stubTree = (StubTree)objectStubTree;
       final List<StubElement<?>> plained = stubTree.getPlainList();
       for (int i = 0, size = value.size(); i < size; i++) {
-        final StubElement<?> stub = plained.get(value.get(i));
+        final int stubTreeIndex = value.get(i);
+        if (stubTreeIndex >= plained.size()) {
+          if (!skipOnErrors)
+            onInternalError(file);
+
+          break;
+        }
+
+        final StubElement<?> stub = plained.get(stubTreeIndex);
         PsiUtilCore.ensureValid(psiFile);
         final ASTNode tree = psiFile.findTreeForStub(stubTree, stub);
 
@@ -74,14 +91,18 @@ public abstract class StubProcessingHelperBase {
           if (tree.getElementType() == stubType(stub)) {
             Psi psi = (Psi)tree.getPsi();
             PsiUtilCore.ensureValid(psi);
+            if (!skipOnErrors && !requiredClass.isInstance(psi)) {
+              inconsistencyDetected(stubTree, psiFile);
+              break;
+            }
             if (!processor.process(psi)) return false;
           }
-          else {
+          else if (!skipOnErrors) {
             String persistedStubTree = ((PsiFileStubImpl)stubTree.getRoot()).printTree();
 
             String stubTreeJustBuilt =
-              ((PsiFileStubImpl)((IStubFileElementType)((PsiFileImpl)psiFile).getContentElementType()).getBuilder()
-                .buildStubTree(psiFile)).printTree();
+                    ((PsiFileStubImpl)((IStubFileElementType)((PsiFileImpl)psiFile).getContentElementType()).getBuilder()
+                            .buildStubTree(psiFile)).printTree();
 
             StringBuilder builder = new StringBuilder();
             builder.append("Oops\n");
@@ -103,30 +124,33 @@ public abstract class StubProcessingHelperBase {
       for (int i = 0, size = value.size(); i < size; i++) {
         final int stubTreeIndex = value.get(i);
         if (stubTreeIndex >= plained.size()) {
-          final VirtualFile virtualFile = psiFile.getVirtualFile();
-          StubTree stubTreeFromIndex = (StubTree)StubTreeLoader.getInstance().readFromVFile(project, file);
-          LOG.error(stubTreeAndIndexDoNotMatch(stubTree, psiFile, plained, virtualFile, stubTreeFromIndex));
-
-          onInternalError(file);
+          if (!skipOnErrors) {
+            inconsistencyDetected(stubTree, psiFile);
+          }
 
           break;
         }
         Psi psi = (Psi)plained.get(stubTreeIndex).getPsi();
         PsiUtilCore.ensureValid(psi);
+        if (!skipOnErrors && !requiredClass.isInstance(psi)) {
+          inconsistencyDetected(stubTree, psiFile);
+          break;
+        }
         if (!processor.process(psi)) return false;
       }
     }
     return true;
   }
 
+  private void inconsistencyDetected(StubTree stubTree, PsiFileWithStubSupport psiFile) {
+    LOG.error(stubTreeAndIndexDoNotMatch(stubTree, psiFile));
+    onInternalError(psiFile.getVirtualFile());
+  }
+
   /***
    * Returns a message to log when stub tree and index do not match
    */
-  protected abstract Object stubTreeAndIndexDoNotMatch(StubTree stubTree,
-                                                       PsiFileWithStubSupport psiFile,
-                                                       List<StubElement<?>> plained,
-                                                       VirtualFile virtualFile,
-                                                       StubTree stubTreeFromIndex);
+  protected abstract Object stubTreeAndIndexDoNotMatch(StubTree stubTree, PsiFileWithStubSupport psiFile);
 
   protected abstract void onInternalError(VirtualFile file);
 

@@ -33,10 +33,6 @@ public class CompilerServerRefreshQueueImpl extends RefreshQueue {
   }
 
   @Override
-  public void refreshLocalRoots(boolean async, @Nullable Runnable postAction, @NotNull ModalityState modalityState) {
-  }
-
-  @Override
   public void processSingleEvent(@NotNull VFileEvent event) {
   }
 

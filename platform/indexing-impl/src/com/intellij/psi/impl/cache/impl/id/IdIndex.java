@@ -45,7 +45,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
   
   private final FileBasedIndex.InputFilter myInputFilter = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(Project project, final VirtualFile file) {
+    public boolean acceptInput(Project project, @NotNull final VirtualFile file) {
       final FileType fileType = file.getFileType();
       return isIndexable(fileType) && !ProjectCoreUtil.isProjectOrWorkspaceFile(file, fileType);
     }

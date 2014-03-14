@@ -114,7 +114,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
   
   private final FileBasedIndex.InputFilter myInputFilter = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(Project project, final VirtualFile file) {
+    public boolean acceptInput(Project project, @NotNull final VirtualFile file) {
       if (!(file.getFileSystem() instanceof LocalFileSystem)) {
         return false; // do not index TODOs in library sources
       }

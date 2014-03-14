@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,10 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import com.intellij.openapi.progress.util.ReadTask;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -135,17 +138,20 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       BrowseMode browseMode = getBrowseMode(modifiers);
 
       if (browseMode != BrowseMode.None) {
-        if (myTooltipProvider != null) {
-          if (browseMode != myTooltipProvider.getBrowseMode()) {
+        TooltipProvider tooltipProvider = myTooltipProvider;
+        if (tooltipProvider != null) {
+          if (browseMode != tooltipProvider.getBrowseMode()) {
             disposeHighlighter();
           }
           myStoredModifiers = modifiers;
+          cancelPreviousTooltip();
+          myTooltipProvider = new TooltipProvider(tooltipProvider.myEditor, tooltipProvider.myPosition);
           myTooltipProvider.execute(browseMode);
         }
       }
       else {
         disposeHighlighter();
-        myTooltipProvider = null;
+        cancelPreviousTooltip();
       }
     }
   };
@@ -154,7 +160,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent e) {
       disposeHighlighter();
-      myTooltipProvider = null;
+      cancelPreviousTooltip();
     }
   };
 
@@ -162,7 +168,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     @Override
     public void visibleAreaChanged(VisibleAreaEvent e) {
       disposeHighlighter();
-      myTooltipProvider = null;
+      cancelPreviousTooltip();
     }
   };
 
@@ -170,7 +176,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     @Override
     public void mouseReleased(EditorMouseEvent e) {
       disposeHighlighter();
-      myTooltipProvider = null;
+      cancelPreviousTooltip();
     }
   };
 
@@ -208,13 +214,10 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       myStoredModifiers = mouseEvent.getModifiers();
       BrowseMode browseMode = getBrowseMode(myStoredModifiers);
 
-      if (myTooltipProvider != null) {
-        myTooltipProvider.dispose();
-      }
+      cancelPreviousTooltip();
 
       if (browseMode == BrowseMode.None || offset >= selStart && offset < selEnd) {
         disposeHighlighter();
-        myTooltipProvider = null;
         return;
       }
 
@@ -222,6 +225,13 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       myTooltipProvider.execute(browseMode);
     }
   };
+
+  private void cancelPreviousTooltip() {
+    if (myTooltipProvider != null) {
+      myTooltipProvider.dispose();
+      myTooltipProvider = null;
+    }
+  }
 
   @NotNull private final Alarm myDocAlarm;
 
@@ -728,21 +738,23 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     private final LogicalPosition myPosition;
     private BrowseMode myBrowseMode;
     private boolean myDisposed;
+    private final ProgressIndicator myProgress = new ProgressIndicatorBase();
 
-    public TooltipProvider(Editor editor, LogicalPosition pos) {
+    TooltipProvider(Editor editor, LogicalPosition pos) {
       myEditor = editor;
       myPosition = pos;
     }
 
-    public void dispose() {
+    void dispose() {
       myDisposed = true;
+      myProgress.cancel();
     }
 
     public BrowseMode getBrowseMode() {
       return myBrowseMode;
     }
 
-    public void execute(BrowseMode browseMode) {
+    void execute(BrowseMode browseMode) {
       myBrowseMode = browseMode;
 
       Document document = myEditor.getDocument();
@@ -760,15 +772,15 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       int selEnd = myEditor.getSelectionModel().getSelectionEnd();
 
       if (offset >= selStart && offset < selEnd) return;
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+
+      ProgressIndicatorUtils.scheduleWithWriteActionPriority(myProgress, new ReadTask() {
         @Override
-        public void run() {
-          ProgressIndicatorUtils.runWithWriteActionPriority(new Runnable() {
-            @Override
-            public void run() {
-              doExecute(file, offset);
-            }
-          });
+        public void computeInReadAction(@NotNull ProgressIndicator indicator) {
+          doExecute(file, offset);
+        }
+
+        @Override
+        public void onCanceled(@NotNull ProgressIndicator indicator) {
         }
       });
     }
@@ -784,7 +796,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       }
       if (info == null) return;
 
-      SwingUtilities.invokeLater(new Runnable() {
+      ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
         public void run() {
           if (myDisposed || myEditor.isDisposed() || !myEditor.getComponent().isShowing()) return;

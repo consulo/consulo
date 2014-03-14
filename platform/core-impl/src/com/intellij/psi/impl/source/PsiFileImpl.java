@@ -677,7 +677,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
       FileType fileType = getFileType();
       final String name = getName();
       PsiFile fileCopy =
-        PsiFileFactory.getInstance(getProject()).createFileFromText(name, fileType, text, getModificationStamp(), false, false);
+              PsiFileFactory.getInstance(getProject()).createFileFromText(name, fileType, text, getModificationStamp(), false, false);
       fileCopy.putUserData(CacheUtil.CACHE_COPY_KEY, Boolean.TRUE);
 
       ((PsiFileImpl)fileCopy).setOriginalFile(this);
@@ -871,13 +871,13 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @Override
   public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+          throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
 
   @Override
   public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+          throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
   }
 
@@ -959,6 +959,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @Override
   public void navigate(boolean requestFocus) {
+    assert canNavigate() : this;
+    //noinspection ConstantConditions
     PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
   }
 

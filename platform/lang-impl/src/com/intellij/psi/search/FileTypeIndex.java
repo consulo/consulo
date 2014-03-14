@@ -75,7 +75,7 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
   }
 
   @Override
-  public boolean acceptInput(Project project, VirtualFile file) {
+  public boolean acceptInput(Project project, @NotNull VirtualFile file) {
     return !file.isDirectory();
   }
 

@@ -34,7 +34,7 @@ public class DefaultFileTypeSpecificInputFilter implements FileBasedIndex.FileTy
   }
 
   @Override
-  public boolean acceptInput(Project project, VirtualFile file) {
+  public boolean acceptInput(Project project, @NotNull VirtualFile file) {
     return true;
   }
 }

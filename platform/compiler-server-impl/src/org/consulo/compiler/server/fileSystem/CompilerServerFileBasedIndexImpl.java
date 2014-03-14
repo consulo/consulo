@@ -122,7 +122,7 @@ public class CompilerServerFileBasedIndexImpl extends FileBasedIndex {
   }
 
   @Override
-  public <K> boolean processAllKeys(@NotNull ID<K, ?> indexId, Processor<K> processor, @Nullable Project project) {
+  public <K> boolean processAllKeys(@NotNull ID<K, ?> indexId, @NotNull Processor<K> processor, @Nullable Project project) {
     return false;
   }
 

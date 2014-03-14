@@ -155,7 +155,7 @@ public class FilenameIndex extends ScalarIndexExtension<String> {
 
   private static class MyInputFilter implements FileBasedIndex.InputFilter {
     @Override
-    public boolean acceptInput(Project project, final VirtualFile file) {
+    public boolean acceptInput(Project project, @NotNull final VirtualFile file) {
       return true;
     }
   }
