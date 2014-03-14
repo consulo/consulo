@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
   public ActionMenuItem(final AnAction action,
                         final Presentation presentation,
                         @NotNull final String place,
-                        final DataContext context,
+                        @NotNull DataContext context,
                         final boolean enableMnemonics,
                         final boolean prepareNow,
                         final boolean insideCheckedGroup) {
@@ -202,7 +202,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     return KeymapUtil.getFirstKeyboardShortcutText(myAction.getAction());
   }
 
-  public void updateContext(DataContext context) {
+  public void updateContext(@NotNull DataContext context) {
     myContext = context;
     myEvent = new AnActionEvent(null, context, myPlace, myPresentation, ActionManager.getInstance(), 0);
   }
@@ -223,6 +223,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       }
     }
 
+    @Override
     public void actionPerformed(final ActionEvent e) {
       final IdeFocusManager fm = IdeFocusManager.findInstanceByContext(myContext);
       final ActionCallback typeAhead = new ActionCallback();
@@ -231,8 +232,8 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
         @Override
         public void run() {
           final AnActionEvent event = new AnActionEvent(
-            new MouseEvent(ActionMenuItem.this, MouseEvent.MOUSE_PRESSED, 0, e.getModifiers(), getWidth() / 2, getHeight() / 2, 1, false),
-            myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers()
+                  new MouseEvent(ActionMenuItem.this, MouseEvent.MOUSE_PRESSED, 0, e.getModifiers(), getWidth() / 2, getHeight() / 2, 1, false),
+                  myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers()
           );
           final AnAction action = myAction.getAction();
           if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
@@ -272,7 +273,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     if (isToggleable() && (myPresentation.getIcon() == null || myInsideCheckedGroup)) {
       action.update(myEvent);
       myToggled = Boolean.TRUE.equals(myEvent.getPresentation().getClientProperty(Toggleable.SELECTED_PROPERTY));
-      if ((ActionPlaces.MAIN_MENU.equals(myPlace) && SystemInfo.isMacSystemMenu) ||
+      if (ActionPlaces.MAIN_MENU.equals(myPlace) && SystemInfo.isMacSystemMenu ||
           UIUtil.isUnderNimbusLookAndFeel() ||
           UIUtil.isUnderWindowsLookAndFeel() && SystemInfo.isWin7OrNewer) {
         setState(myToggled);
@@ -291,6 +292,9 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     else {
       if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
         Icon icon = myPresentation.getIcon();
+        if (action instanceof ToggleAction && ((ToggleAction)action).isSelected(myEvent)) {
+          icon = new PoppedIcon(icon, 16, 16);
+        }
         setIcon(icon);
         if (myPresentation.getDisabledIcon() != null) {
           setDisabledIcon(myPresentation.getDisabledIcon());
@@ -320,10 +324,12 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       myPresentation.addPropertyChangeListener(this);
     }
 
+    @Override
     public void dispose() {
       myPresentation.removePropertyChangeListener(this);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
       boolean queueForDispose = getParent() == null;
 
@@ -365,6 +371,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
           // later since we cannot remove property listeners inside event processing
           //noinspection SSBasedInspection
           SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
               if (getParent() == null) {
                 uninstallSynchronizer();
