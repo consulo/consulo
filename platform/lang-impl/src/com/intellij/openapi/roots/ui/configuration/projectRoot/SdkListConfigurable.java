@@ -26,12 +26,14 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.util.Consumer;
+import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +46,7 @@ import javax.swing.tree.TreePath;
 import java.util.*;
 
 public class SdkListConfigurable extends BaseStructureConfigurable {
+  private static final UnknownSdkType ourUnknownSdkType = UnknownSdkType.getInstance("UNKNOWN_BUNDLE");
   private final ProjectSdksModel mySdksTreeModel;
   private final SdkModel.Listener myListener = new SdkModel.Listener() {
     @Override
@@ -126,7 +129,10 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     final Map<SdkType, List<Sdk>> map = new HashMap<SdkType, List<Sdk>>();
 
     for(Sdk sdk : mySdksTreeModel.getProjectSdks().values()) {
-      final SdkType sdkType = (SdkType)sdk.getSdkType();
+      SdkType sdkType = (SdkType)sdk.getSdkType();
+      if(sdkType instanceof UnknownSdkType) {
+        sdkType = ourUnknownSdkType;
+      }
 
       List<Sdk> list = map.get(sdkType);
       if(list == null) {
@@ -151,6 +157,12 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
         addNode(new MyNode(configurable), groupNode);
       }
     }
+  }
+
+  @Override
+  protected void initSelection() {
+    super.initSelection();
+    TreeUtil.expandAll(getTree());
   }
 
   @NotNull
