@@ -30,50 +30,59 @@ import javax.swing.*;
  * @author spleaner
  */
 public class DefaultDebugExecutor extends Executor {
-  @NonNls public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
-  private final String myStartActionText = XDebuggerBundle.message("debugger.runner.start.action.text");
-  private final String myDescription = XDebuggerBundle.message("string.debugger.runner.description");
+  @NonNls
+  public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 
+  @Override
   public String getToolWindowId() {
     return ToolWindowId.DEBUG;
   }
 
+  @Override
   public Icon getToolWindowIcon() {
     return AllIcons.Toolwindows.ToolWindowDebugger;
   }
 
+  @Override
   @NotNull
   public Icon getIcon() {
     return AllIcons.Actions.StartDebugger;
   }
 
+  @Override
   public Icon getDisabledIcon() {
     return AllIcons.Process.DisabledDebug;
   }
 
+  @Override
   @NotNull
   public String getActionName() {
     return UIBundle.message("tool.window.name.debug");
   }
 
+  @Override
   @NotNull
   public String getId() {
     return EXECUTOR_ID;
   }
 
+  @Override
   public String getContextActionId() {
     return "DebugClass";
   }
 
+  @Override
   @NotNull
   public String getStartActionText() {
-    return myStartActionText;
+    return XDebuggerBundle.message("debugger.runner.start.action.text");
   }
 
+  @Override
   public String getDescription() {
-    return myDescription;
+    return XDebuggerBundle.message("string.debugger.runner.description");
   }
 
+  @Override
   public String getHelpId() {
     return "debugging.DebugWindow";
   }

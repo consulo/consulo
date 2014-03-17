@@ -38,7 +38,7 @@ public class ExtensionPointName<T> {
     return myName;
   }
 
-
+  @Override
   public String toString() {
     return myName;
   }

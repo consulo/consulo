@@ -17,6 +17,7 @@
 package com.intellij.execution;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ import javax.swing.*;
  * @author spleaner
  */
 public abstract class Executor {
-  public static final ExtensionPointName<Executor> EXECUTOR_EXTENSION_NAME = ExtensionPointName.create("com.intellij.executor");
+  public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create("com.intellij.executor");
 
   public abstract String getToolWindowId();
   public abstract Icon getToolWindowIcon();
@@ -53,6 +54,13 @@ public abstract class Executor {
 
   @NonNls
   public abstract String getHelpId();
+
+  /**
+   * Override this method and return {@code false} to hide executor from panel
+   */
+  public boolean isApplicable(@NotNull Project project) {
+    return true;
+  }
 
   public String getStartActionText(String configurationName) {
     return getStartActionText() + (StringUtil.isEmpty(configurationName) ? "" : " '" + StringUtil.first(configurationName, 30, true) + "'");

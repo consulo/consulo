@@ -23,7 +23,6 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.util.containers.HashMap;
@@ -41,9 +40,10 @@ import java.util.*;
 public class ExecutorRegistryImpl extends ExecutorRegistry {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.ExecutorRegistryImpl");
 
-
-  @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
-  @NonNls public static final String RUN_CONTEXT_GROUP = "RunContextGroup";
+  @NonNls
+  public static final String RUNNERS_GROUP = "RunnerActions";
+  @NonNls
+  public static final String RUN_CONTEXT_GROUP = "RunContextGroup";
 
   private List<Executor> myExecutors = new ArrayList<Executor>();
   private ActionManager myActionManager;
@@ -166,8 +166,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     });
 
 
-    final Executor[] executors = Extensions.getExtensions(Executor.EXECUTOR_EXTENSION_NAME);
-    for (Executor executor : executors) {
+    for (Executor executor : Executor.EP_NAME.getExtensions()) {
       initExecutor(executor);
     }
   }
@@ -210,6 +209,11 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
       if (project == null || !project.isInitialized() || project.isDisposed() || DumbService.getInstance(project).isDumb()) {
         presentation.setEnabled(false);
+        return;
+      }
+
+      if(!myExecutor.isApplicable(project)) {
+        presentation.setEnabledAndVisible(true);
         return;
       }
 

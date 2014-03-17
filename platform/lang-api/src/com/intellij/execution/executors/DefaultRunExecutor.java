@@ -31,7 +31,8 @@ import javax.swing.*;
  * @author spleaner
  */
 public class DefaultRunExecutor extends Executor {
-  @NonNls public static final String EXECUTOR_ID = ToolWindowId.RUN;
+  @NonNls
+  public static final String EXECUTOR_ID = ToolWindowId.RUN;
 
   @Override
   @NotNull
