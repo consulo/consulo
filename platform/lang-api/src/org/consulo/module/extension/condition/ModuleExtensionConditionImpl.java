@@ -19,8 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
+import com.intellij.util.ArrayUtil;
 import org.consulo.module.extension.ModuleExtension;
 import org.mustbe.consulo.util.ListOfElementsEP;
 
@@ -28,21 +27,31 @@ import org.mustbe.consulo.util.ListOfElementsEP;
  * @author VISTALL
  * @since 2:26/10.09.13
  */
-public class ProjectModuleExtensionCondition implements Condition<Project> {
+public class ModuleExtensionConditionImpl implements ModuleExtensionCondition{
 
-  public static Condition<Project> create(String ids) {
+  public static ModuleExtensionCondition create(String ids) {
     String[] valuesOfVariableIfFound = ListOfElementsEP.getValuesOfVariableIfFound(ids);
     if (valuesOfVariableIfFound.length == 0) {
-      return Conditions.alwaysTrue();
+      return new ModuleExtensionCondition() {
+        @Override
+        public boolean value(ModuleExtension<?> rootModel) {
+          return true;
+        }
+
+        @Override
+        public boolean value(Project project) {
+          return true;
+        }
+      };
     }
     else {
-      return new ProjectModuleExtensionCondition(valuesOfVariableIfFound);
+      return new ModuleExtensionConditionImpl(valuesOfVariableIfFound);
     }
   }
 
   private String[] myExtensionIds;
 
-  private ProjectModuleExtensionCondition(String[] ids) {
+  private ModuleExtensionConditionImpl(String[] ids) {
     myExtensionIds = ids;
   }
 
@@ -60,5 +69,10 @@ public class ProjectModuleExtensionCondition implements Condition<Project> {
       }
     }
     return false;
+  }
+
+  @Override
+  public boolean value(ModuleExtension<?> extension) {
+    return extension.isEnabled() && ArrayUtil.contains(extension.getId(), myExtensionIds);
   }
 }

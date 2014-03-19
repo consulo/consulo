@@ -64,6 +64,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
+import org.consulo.module.extension.condition.ModuleExtensionCondition;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -476,21 +477,19 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   private void registerToolWindowsFromBeans() {
     ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
     for (final ToolWindowEP bean : beans) {
-      Condition<Project> mergedCond = Conditions.and(bean.getCondition(), bean.getModuleExtensionCondition());
-      if (mergedCond.value(myProject)) {
+      if (checkCondition(myProject, bean)) {
         initToolWindow(bean);
       }
     }
 
     myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter() {
       @Override
-      public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+      public void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
         ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
 
         boolean extensionVal = newExtension.isEnabled();
         for (final ToolWindowEP bean : beans) {
-          Condition<Project> mergedCond = Conditions.and(bean.getCondition(), bean.getModuleExtensionCondition());
-          boolean value = mergedCond.value(myProject);
+          boolean value = checkCondition(newExtension, bean);
 
           if (extensionVal && value) {
             if (isToolWindowRegistered(bean.id)) {
@@ -504,6 +503,24 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
         }
       }
     });
+  }
+
+  private static boolean checkCondition(Project project, ToolWindowEP toolWindowEP) {
+    Condition<Project> condition = toolWindowEP.getCondition();
+    if(condition != null && !condition.value(project)) {
+      return false;
+    }
+    ModuleExtensionCondition moduleExtensionCondition = toolWindowEP.getModuleExtensionCondition();
+    return moduleExtensionCondition.value(project);
+  }
+
+  private static boolean checkCondition(ModuleExtension<?> extension, ToolWindowEP toolWindowEP) {
+    Condition<Project> condition = toolWindowEP.getCondition();
+    if(condition != null && !condition.value(extension.getProject())) {
+      return false;
+    }
+    ModuleExtensionCondition moduleExtensionCondition = toolWindowEP.getModuleExtensionCondition();
+    return moduleExtensionCondition.value(extension);
   }
 
   @Override

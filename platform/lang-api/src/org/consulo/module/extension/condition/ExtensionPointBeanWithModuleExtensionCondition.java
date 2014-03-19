@@ -16,8 +16,6 @@
 package org.consulo.module.extension.condition;
 
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NotNull;
@@ -30,17 +28,17 @@ public class ExtensionPointBeanWithModuleExtensionCondition extends AbstractExte
   @Attribute("requireModuleExtensions")
   public String requireModuleExtensions;
 
-  private NotNullLazyValue<Condition<Project>> myModuleExtensionCondition = new NotNullLazyValue<Condition<Project>>() {
+  private NotNullLazyValue<ModuleExtensionCondition> myModuleExtensionCondition = new NotNullLazyValue<ModuleExtensionCondition>() {
     @NotNull
     @Override
-    protected Condition<Project> compute() {
-      return ProjectModuleExtensionCondition.create(requireModuleExtensions);
+    protected ModuleExtensionCondition compute() {
+      return ModuleExtensionConditionImpl.create(requireModuleExtensions);
     }
   };
 
 
   @NotNull
-  public Condition<Project> getModuleExtensionCondition() {
+  public ModuleExtensionCondition getModuleExtensionCondition() {
     return myModuleExtensionCondition.getValue();
   }
 }
