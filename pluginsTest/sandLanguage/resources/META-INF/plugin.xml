@@ -9,5 +9,12 @@
 
     <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.SandLanguageVersion" />
     <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.Sand2LanguageVersion" />
+
+    <executor implementation="org.mustbe.consulo.sandLanguage.ide.run.SandExecutor" />
+    <moduleExtensionProvider key="sand"
+                             icon="/nodes/static.png"
+                             name="Sand"
+                             immutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandModuleExtension"
+                             mutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension" />
   </extensions>
 </idea-plugin>

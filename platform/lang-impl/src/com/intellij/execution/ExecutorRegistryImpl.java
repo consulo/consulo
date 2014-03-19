@@ -199,6 +199,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
     private ExecutorAction(@NotNull final Executor executor) {
       super(executor.getStartActionText(), executor.getDescription(), executor.getIcon());
+      getTemplatePresentation().setVisible(false);
       myExecutor = executor;
     }
 
@@ -212,8 +213,8 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
         return;
       }
 
-      if(!myExecutor.isApplicable(project)) {
-        presentation.setEnabledAndVisible(true);
+      presentation.setVisible(myExecutor.isApplicable(project));
+      if(!presentation.isVisible()) {
         return;
       }
 
