@@ -17,7 +17,6 @@ package com.intellij.dvcs.test;
 
 import com.intellij.mock.MockVirtualFileSystem;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;

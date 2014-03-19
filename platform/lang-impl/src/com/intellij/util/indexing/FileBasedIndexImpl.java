@@ -1773,8 +1773,8 @@ public class FileBasedIndexImpl extends FileBasedIndex {
   @NotNull
   public static FileType getFileType(@NotNull VirtualFile file) {
     FileType fileType = file.getFileType();
-    if (fileType == FileTypes.PLAIN_TEXT && FileTypeManagerImpl.isFileTypeDetectedFromContent(file)) {
-      fileType = FileTypes.UNKNOWN;
+    if (fileType == PlainTextFileType.INSTANCE && FileTypeManagerImpl.isFileTypeDetectedFromContent(file)) {
+      fileType = UnknownFileType.INSTANCE;
     }
     return fileType;
   }
