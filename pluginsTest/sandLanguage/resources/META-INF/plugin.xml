@@ -1,0 +1,13 @@
+<idea-plugin>
+  <name>Sand Language</name>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileTypeFactory implementation="org.mustbe.consulo.sandLanguage.lang.SandFileTypeFactory" />
+    <lang.parserDefinition language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.SandParsingDefinition" />
+
+    <lang.syntaxHighlighterFactory key="SAND" implementationClass="org.mustbe.consulo.sandLanguage.ide.highlight.SandHighlighterFactory" />
+
+    <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.SandLanguageVersion" />
+    <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.Sand2LanguageVersion" />
+  </extensions>
+</idea-plugin>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,42 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.fileTypes;
+package org.mustbe.consulo.sandLanguage.ide.highlight;
 
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
+import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.sandLanguage.lang.version.BaseSandLanguageVersion;
 
 /**
  * @author VISTALL
- * @since 21:11/24.06.13
+ * @since 19.03.14
  */
-public abstract class LanguageVersionableSyntaxHighlighter extends SyntaxHighlighterBase {
-  private final LanguageVersion myLanguageVersion;
+public class SandHighlighter extends LanguageVersionableSyntaxHighlighter {
+  public SandHighlighter(LanguageVersion languageVersion) {
+    super(languageVersion);
+  }
 
-  public LanguageVersionableSyntaxHighlighter(LanguageVersion languageVersion) {
-    myLanguageVersion = languageVersion;
+  @Override
+  public Lexer getHighlightingLexer(LanguageVersion languageVersion) {
+    BaseSandLanguageVersion sandLanguageVersion = (BaseSandLanguageVersion) languageVersion;
+    return sandLanguageVersion.createLexer(null);
   }
 
   @NotNull
   @Override
-  public Lexer getHighlightingLexer() {
-    return getHighlightingLexer(myLanguageVersion);
-  }
-
-  public abstract Lexer getHighlightingLexer(LanguageVersion languageVersion);
-
-  @NotNull
-  @Override
-  public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-    return getTokenHighlights(myLanguageVersion, tokenType);
-  }
-
-  @NotNull
   public TextAttributesKey[] getTokenHighlights(LanguageVersion languageVersion, IElementType tokenType) {
+    BaseSandLanguageVersion sandLanguageVersion = (BaseSandLanguageVersion) languageVersion;
+    if(sandLanguageVersion.getHighlightKeywords().contains(tokenType)) {
+      return pack(SandHighlighterKeys.KEYWORD);
+    }
+    else if(sandLanguageVersion.getCommentTokens().contains(tokenType)) {
+      return pack(SandHighlighterKeys.LINE_COMMENT);
+    }
     return EMPTY;
   }
 }

@@ -8,6 +8,16 @@
         <element id="dir-copy" path="$PROJECT_DIR$/bin/win" />
       </element>
       <element id="artifact" artifact-name="distMain" />
+      <element id="directory" name="plugins">
+        <element id="directory" name="sandLanguage">
+          <element id="directory" name="lib">
+            <element id="zip-archive" name="sandLanguage.jar">
+              <element id="module-output" name="sandLanguage" />
+              <element id="module-production-resource-output" name="sandLanguage" />
+            </element>
+          </element>
+        </element>
+      </element>
     </root>
   </artifact>
 </component>
