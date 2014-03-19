@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.artifacts;
+package org.mustbe.consulo.sandLanguage.ide.artifact;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.compiler.CompilerBundle;
+import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
+import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.sandLanguage.ide.module.extension.SandModuleExtension;
 
 import javax.swing.*;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 19.03.14
  */
-public class PlainArtifactType extends ArtifactType {
+public class SandArtifactType extends ArtifactType {
   @NonNls
-  public static final String ID = "plain";
+  public static final String ID = "sand";
 
   public static PlainArtifactType getInstance() {
     return EP_NAME.findExtension(PlainArtifactType.class);
   }
 
-  public PlainArtifactType() {
-    super(ID, CompilerBundle.message("artifact.type.plain"));
+  public SandArtifactType() {
+    super(ID, "Sand");
+  }
+
+  @Override
+  public boolean isAvailableForAdd(@NotNull ModulesProvider modulesProvider) {
+    return ModuleUtil.hasModuleExtension(modulesProvider, SandModuleExtension.class);
   }
 
   @NotNull

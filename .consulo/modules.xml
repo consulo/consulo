@@ -871,6 +871,8 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="lang-impl" />
+        <orderEntry type="module" module-name="compiler-impl" />
+        <orderEntry type="module" module-name="compiler-artifact-impl" />
       </module>
     </modules>
   </component>
