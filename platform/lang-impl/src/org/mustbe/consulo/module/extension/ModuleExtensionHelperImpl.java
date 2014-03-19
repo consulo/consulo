@@ -26,7 +26,6 @@ import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -53,12 +52,7 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
 
     assert myExtensions != null;
 
-    for (Class<? extends ModuleExtension> aClass : myExtensions.keySet()) {
-      if(clazz.isAssignableFrom(aClass)) {
-        return true;
-      }
-    }
-    return false;
+    return !getModuleExtensions(clazz).isEmpty();
   }
 
   @Override
@@ -70,13 +64,18 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
 
     assert myExtensions != null;
 
+    Collection<ModuleExtension> moduleExtensions = myExtensions.get(clazz);
+    if(moduleExtensions.isEmpty()) {
+      for (Map.Entry<Class<? extends ModuleExtension>, Collection<ModuleExtension>> entry : myExtensions.entrySet()) {
+        Class<? extends ModuleExtension> targetCheck = entry.getKey();
 
-    for (Map.Entry<Class<? extends ModuleExtension>, Collection<ModuleExtension>> entry : myExtensions.entrySet()) {
-      if(clazz.isAssignableFrom(entry.getKey())) {
-        return (Collection)entry.getValue();
+        if(clazz.isAssignableFrom(targetCheck)) {
+          myExtensions.put(clazz, moduleExtensions = entry.getValue());
+          break;
+        }
       }
     }
-    return Collections.emptyList();
+    return (Collection)moduleExtensions;
   }
 
   private void checkInit() {
