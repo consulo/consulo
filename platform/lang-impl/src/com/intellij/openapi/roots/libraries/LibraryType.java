@@ -16,8 +16,8 @@
 package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
@@ -69,7 +69,7 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
   /**
    * @return {@code true} if library of this type can be added as a dependency to {@code module}
    */
-  public boolean isSuitableModule(@NotNull Module module) {
+  public boolean isAvailable(@NotNull ModuleRootModel moduleRootModel) {
     return true;
   }
 

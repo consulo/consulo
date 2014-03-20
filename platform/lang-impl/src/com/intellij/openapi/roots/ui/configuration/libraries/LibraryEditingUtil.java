@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraries;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -37,7 +38,6 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ParameterizedRunnable;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.Predicate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -150,9 +150,8 @@ public class LibraryEditingUtil {
   public static List<LibraryType> getSuitableTypes(ClasspathPanel classpathPanel) {
     List<LibraryType> suitableTypes = new ArrayList<LibraryType>();
     suitableTypes.add(null);
-    final Module module = classpathPanel.getRootModel().getModule();
     for (LibraryType libraryType : LibraryType.EP_NAME.getExtensions()) {
-      if (libraryType.getCreateActionName() != null && libraryType.isSuitableModule(module)) {
+      if (libraryType.getCreateActionName() != null && libraryType.isAvailable(classpathPanel.getRootModel())) {
         suitableTypes.add(libraryType);
       }
     }
@@ -169,12 +168,13 @@ public class LibraryEditingUtil {
           @NotNull
           @Override
           public String getTextFor(LibraryType value) {
-            return value != null ? value.getCreateActionName() : IdeBundle.message("create.default.library.type.action.name");
+            String createActionName = value != null ? value.getCreateActionName() : null;
+            return createActionName != null ? createActionName : IdeBundle.message("create.default.library.type.action.name");
           }
 
           @Override
           public Icon getIconFor(LibraryType aValue) {
-            return aValue != null ? aValue.getIcon() : PlatformIcons.LIBRARY_ICON;
+            return aValue != null ? aValue.getIcon() : AllIcons.Nodes.PpLib;
           }
 
           @Override
@@ -194,12 +194,13 @@ public class LibraryEditingUtil {
     final List<Module> modules = new ArrayList<Module>();
     LibraryType type = kind == null ? null : LibraryType.findByKind(kind);
     for (Module module : rootConfigurable.getModules()) {
-      if (type != null && !type.isSuitableModule(module)) {
+      final ModuleRootModel rootModel = rootConfigurable.getContext().getModulesConfigurator().getRootModel(module);
+
+      if (type != null && !type.isAvailable(rootModel)) {
         continue;
       }
-
       if (library != null) {
-        final ModuleRootModel rootModel = rootConfigurable.getContext().getModulesConfigurator().getRootModel(module);
+
         if (!getNotAddedLibrariesCondition(rootModel).apply(library)) {
           continue;
         }

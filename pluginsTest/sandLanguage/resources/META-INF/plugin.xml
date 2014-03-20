@@ -10,6 +10,7 @@
     <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.SandLanguageVersion" />
     <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.Sand2LanguageVersion" />
 
+    <library.type implementation="org.mustbe.consulo.sandLanguage.ide.library.SandLibraryType" />
     <packaging.artifactType implementation="org.mustbe.consulo.sandLanguage.ide.artifact.SandArtifactType" />
     <executor implementation="org.mustbe.consulo.sandLanguage.ide.run.SandExecutor" />
     <moduleExtensionProvider key="sand"
