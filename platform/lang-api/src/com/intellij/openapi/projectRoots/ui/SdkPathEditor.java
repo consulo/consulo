@@ -16,19 +16,38 @@
 package com.intellij.openapi.projectRoots.ui;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 public class SdkPathEditor extends PathEditor {
   private final String myDisplayName;
   private final OrderRootType myOrderRootType;
+  private final boolean myImmutable;
 
+  @Deprecated
+  @DeprecationInfo(value = "Use SdkPathEditor(String, OrderRootType, FileChooserDescriptor, Sdk", until = "1.0")
   public SdkPathEditor(String displayName, OrderRootType orderRootType, FileChooserDescriptor descriptor) {
+    this(displayName, orderRootType, descriptor, false);
+  }
+
+  public SdkPathEditor(String displayName, OrderRootType orderRootType, FileChooserDescriptor descriptor, Sdk sdk) {
+    this(displayName, orderRootType, descriptor, sdk.isBundled());
+  }
+
+  protected SdkPathEditor(String displayName, OrderRootType orderRootType, FileChooserDescriptor descriptor, boolean immutable) {
     super(descriptor);
     myDisplayName = displayName;
     myOrderRootType = orderRootType;
+    myImmutable = immutable;
+  }
+
+  @Override
+  public boolean isImmutable() {
+    return myImmutable;
   }
 
   public String getDisplayName() {

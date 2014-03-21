@@ -56,7 +56,7 @@ public class PathEditor {
 
   public static final Color INVALID_COLOR = new JBColor(new Color(210, 0, 0), JBColor.RED);
 
-  protected JPanel myPanel;
+  protected JComponent myComponent;
   private JBList myList;
   private final DefaultListModel myModel;
   private final Set<VirtualFile> myAllFiles = new HashSet<VirtualFile>();
@@ -109,12 +109,19 @@ public class PathEditor {
     setModified(false);
   }
 
+  protected boolean isImmutable() {
+    return false;
+  }
+
   public JComponent createComponent() {
     myList = new JBList(getListModel());
     myList.setCellRenderer(createListCellRenderer(myList));
 
-    ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions()
-      .setAddAction(new AnActionButtonRunnable() {
+    if (isImmutable()) {
+      myComponent = myList;
+    }
+    else {
+      ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions().setAddAction(new AnActionButtonRunnable() {
         @Override
         public void run(AnActionButton button) {
           final VirtualFile[] added = doAdd();
@@ -143,12 +150,13 @@ public class PathEditor {
         }
       });
 
-    addToolbarButtons(toolbarDecorator);
+      addToolbarButtons(toolbarDecorator);
 
-    myPanel = toolbarDecorator.createPanel();
-    myPanel.setBorder(null);
+      myComponent = toolbarDecorator.createPanel();
+      myComponent.setBorder(null);
+    }
 
-    return myPanel;
+    return myComponent;
   }
 
   protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
@@ -177,12 +185,12 @@ public class PathEditor {
 
   private VirtualFile[] doAdd() {
     VirtualFile baseDir = myAddBaseDir;
-    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myPanel));
+    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myComponent));
     if (baseDir == null && project != null) {
       baseDir = project.getBaseDir();
     }
-    VirtualFile[] files = FileChooser.chooseFiles(myDescriptor, myPanel, project, baseDir);
-    files = adjustAddedFileSet(myPanel, files);
+    VirtualFile[] files = FileChooser.chooseFiles(myDescriptor, myComponent, project, baseDir);
+    files = adjustAddedFileSet(myComponent, files);
     List<VirtualFile> added = new ArrayList<VirtualFile>(files.length);
     for (VirtualFile vFile : files) {
       if (addElement(vFile)) {

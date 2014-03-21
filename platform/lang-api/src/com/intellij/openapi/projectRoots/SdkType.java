@@ -37,6 +37,10 @@ public abstract class SdkType implements SdkTypeId {
 
   private final String myName;
 
+  public SdkType(@NonNls String name) {
+    myName = name;
+  }
+
   /**
    * @return path to set up file chooser to or null if not applicable
    */
@@ -96,7 +100,7 @@ public abstract class SdkType implements SdkTypeId {
 
   @Nullable
   @Deprecated
-  @DeprecationInfo(value = "Override loadAdditionalData(Sdk, Element)", until = "2.0")
+  @DeprecationInfo(value = "Override loadAdditionalData(Sdk, Element)", until = "1.0")
   public SdkAdditionalData loadAdditionalData(Element additional) {
     return null;
   }
@@ -105,11 +109,6 @@ public abstract class SdkType implements SdkTypeId {
   @Nullable
   public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
     return loadAdditionalData(additional);
-  }
-
-
-  public SdkType(@NonNls String name) {
-    myName = name;
   }
 
   @Override
@@ -136,21 +135,22 @@ public abstract class SdkType implements SdkTypeId {
     return "preferences.bundles";
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof SdkType)) return false;
 
     final SdkType sdkType = (SdkType)o;
 
-    if (!myName.equals(sdkType.myName)) return false;
-
-    return true;
+    return myName.equals(sdkType.myName);
   }
 
+  @Override
   public int hashCode() {
     return myName.hashCode();
   }
 
+  @Override
   public String toString() {
     return getName();
   }

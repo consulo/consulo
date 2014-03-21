@@ -62,7 +62,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
     public DocumentationPathsEditor(Sdk sdk) {
       super(ProjectBundle.message("sdk.configure.javadoc.tab"), OrderRootType.DOCUMENTATION,
-            FileChooserDescriptorFactory.createMultipleJavaPathDescriptor());
+            FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(), sdk);
       mySdk = sdk;
     }
 
@@ -86,7 +86,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
     private void onSpecifyUrlButtonClicked() {
       final String defaultDocsUrl = mySdk == null ? "" : StringUtil.notNullize(((SdkType) mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
-      VirtualFile virtualFile  = Util.showSpecifyJavadocUrlDialog(myPanel, defaultDocsUrl);
+      VirtualFile virtualFile  = Util.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
       if(virtualFile != null){
         addElement(virtualFile);
         setModified(true);

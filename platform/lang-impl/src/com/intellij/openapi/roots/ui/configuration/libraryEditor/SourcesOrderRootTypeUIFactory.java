@@ -34,7 +34,8 @@ public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
   @Override
   public SdkPathEditor createPathEditor(final Sdk sdk) {
-    return new SdkPathEditor(ProjectBundle.message("sdk.configure.sourcepath.tab"), OrderRootType.SOURCES, new FileChooserDescriptor(true, true, true, false, true, true));
+    return new SdkPathEditor(ProjectBundle.message("sdk.configure.sourcepath.tab"), OrderRootType.SOURCES,
+                             new FileChooserDescriptor(true, true, true, false, true, true), sdk);
   }
 
   @Override
