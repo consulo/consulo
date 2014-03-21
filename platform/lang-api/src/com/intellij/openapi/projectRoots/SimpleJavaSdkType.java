@@ -18,7 +18,6 @@ package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,15 +48,6 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   @Override
   public String getPresentableName() {
     return ProjectBundle.message("sdk.java.name");
-  }
-
-  @Override
-  public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
-    return null;
-  }
-
-  @Override
-  public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
   }
 
   @Override
@@ -100,7 +90,6 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   public String suggestSdkName(String currentSdkName, String sdkHome) {
     return currentSdkName;
   }
-
 
   @Override
   public final String getVersionString(final String sdkHome) {

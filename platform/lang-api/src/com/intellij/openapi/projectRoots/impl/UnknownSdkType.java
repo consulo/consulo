@@ -17,8 +17,7 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.*;
-import org.jdom.Element;
+import com.intellij.openapi.projectRoots.SdkType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,16 +68,6 @@ public class UnknownSdkType extends SdkType{
   public String suggestSdkName(String currentSdkName, String sdkHome) {
     return currentSdkName;
   }
-
-  @Override
-  public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
-    return null;
-  }
-
-  @Override
-  public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
-  }
-
   @NotNull
   @Override
   public String getPresentableName() {

@@ -26,6 +26,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -82,13 +83,20 @@ public abstract class SdkType implements SdkTypeId {
 
   /**
    * @return Configurable object for the sdk's additional data or null if not applicable
-   * @param sdkModel
-   * @param sdkModificator
    */
   @Nullable
-  public abstract AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator);
+  public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
+    return null;
+  }
+
+  @Override
+  public void saveAdditionalData(SdkAdditionalData additionalData, Element additional) {
+
+  }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo(value = "Override loadAdditionalData(Sdk, Element)", until = "2.0")
   public SdkAdditionalData loadAdditionalData(Element additional) {
     return null;
   }
