@@ -178,11 +178,6 @@ public abstract class SdkType implements SdkTypeId {
     return descriptor;
   }
 
-
-  public String getHomeFieldLabel() {
-    return ProjectBundle.message("sdk.configure.type.home.path", getPresentableName());
-  }
-
   @Nullable
   public String getDefaultDocumentationUrl(final @NotNull Sdk sdk) {
     return null;

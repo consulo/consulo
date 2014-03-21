@@ -44,7 +44,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   private final SdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public SdkConfigurable(final SdkImpl sdk,
+  public SdkConfigurable(@NotNull final SdkImpl sdk,
                          final ProjectSdksModel sdksModel,
                          final Runnable updateTree,
                          @NotNull History history,
