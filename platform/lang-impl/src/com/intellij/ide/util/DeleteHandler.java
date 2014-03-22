@@ -25,7 +25,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
@@ -36,6 +35,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ex.MessagesEx;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.WritingAccessProvider;
 import com.intellij.psi.PsiDirectory;
@@ -77,14 +77,14 @@ public class DeleteHandler {
     private static PsiElement[] getPsiElements(DataContext dataContext) {
       PsiElement[] elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
       if (elements == null) {
-        final Object data = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+        final PsiElement data = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
         if (data != null) {
-          elements = new PsiElement[]{(PsiElement)data};
+          elements = new PsiElement[]{data};
         }
         else {
-          final Object data1 = LangDataKeys.PSI_FILE.getData(dataContext);
+          final PsiFile data1 = CommonDataKeys.PSI_FILE.getData(dataContext);
           if (data1 != null) {
-            elements = new PsiElement[]{(PsiFile)data1};
+            elements = new PsiElement[]{data1};
           }
         }
       }
@@ -125,9 +125,9 @@ public class DeleteHandler {
     final boolean dumb = DumbService.getInstance(project).isDumb();
     if (safeDeleteApplicable && !dumb) {
       final Ref<Boolean> exit = Ref.create(false);
-      SafeDeleteDialog dialog = new SafeDeleteDialog(project, elements, new SafeDeleteDialog .Callback() {
+      final SafeDeleteDialog dialog = new SafeDeleteDialog(project, elements, new SafeDeleteDialog.Callback() {
         @Override
-        public void run(final SafeDeleteDialog  dialog) {
+        public void run(final SafeDeleteDialog dialog) {
           if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, Arrays.asList(elements), true)) return;
           SafeDeleteProcessor.createInstance(project, new Runnable() {
             @Override
@@ -137,7 +137,12 @@ public class DeleteHandler {
             }
           }, elements, dialog.isSearchInComments(), dialog.isSearchForTextOccurences(), true).run();
         }
-      });
+      }) {
+        @Override
+        protected boolean isDelete() {
+          return true;
+        }
+      };
       if (needConfirmation) {
         dialog.show();
         if (!dialog.isOK() || exit.get()) return;
@@ -175,7 +180,7 @@ public class DeleteHandler {
         int result = Messages.showOkCancelDialog(project, warningMessage, IdeBundle.message("title.delete"),
                                                  ApplicationBundle.message("button.delete"), CommonBundle.getCancelButtonText(),
                                                  Messages.getQuestionIcon());
-        if (result != 0) return;
+        if (result != Messages.OK) return;
       }
     }
 
@@ -187,7 +192,7 @@ public class DeleteHandler {
         }
 
         // deleted from project view or something like that.
-        if (PlatformDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext()) == null) {
+        if (CommonDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext()) == null) {
           CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
         }
 
@@ -195,14 +200,14 @@ public class DeleteHandler {
           if (!elementToDelete.isValid()) continue; //was already deleted
           if (elementToDelete instanceof PsiDirectory) {
             VirtualFile virtualFile = ((PsiDirectory)elementToDelete).getVirtualFile();
-            if (virtualFile.isInLocalFileSystem() && !virtualFile.isSymLink()) {
+            if (virtualFile.isInLocalFileSystem() && !virtualFile.is(VFileProperty.SYMLINK)) {
               ArrayList<VirtualFile> readOnlyFiles = new ArrayList<VirtualFile>();
               CommonRefactoringUtil.collectReadOnlyFiles(virtualFile, readOnlyFiles);
 
               if (!readOnlyFiles.isEmpty()) {
                 String message = IdeBundle.message("prompt.directory.contains.read.only.files", virtualFile.getPresentableUrl());
                 int _result = Messages.showYesNoDialog(project, message, IdeBundle.message("title.delete"), Messages.getQuestionIcon());
-                if (_result != 0) continue;
+                if (_result != Messages.YES) continue;
 
                 boolean success = true;
                 for (VirtualFile file : readOnlyFiles) {
@@ -220,10 +225,10 @@ public class DeleteHandler {
               final VirtualFile virtualFile = file.getVirtualFile();
               if (virtualFile.isInLocalFileSystem()) {
                 int _result = MessagesEx.fileIsReadOnly(project, virtualFile)
-                  .setTitle(IdeBundle.message("title.delete"))
-                  .appendMessage(IdeBundle.message("prompt.delete.it.anyway"))
-                  .askYesNo();
-                if (_result != 0) continue;
+                        .setTitle(IdeBundle.message("title.delete"))
+                        .appendMessage(IdeBundle.message("prompt.delete.it.anyway"))
+                        .askYesNo();
+                if (_result != Messages.YES) continue;
 
                 boolean success = clearReadOnlyFlag(virtualFile, project);
                 if (!success) continue;
