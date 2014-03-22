@@ -22,6 +22,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.projectRoots.ui.SdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
@@ -41,7 +42,7 @@ import javax.swing.*;
  */
 public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> implements Place.Navigator {
   private final SdkImpl mySdk;
-  private final SdkEditor mySdkEditor;
+  private final BaseSdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
   public SdkConfigurable(@NotNull final SdkImpl sdk,
@@ -56,7 +57,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
     myProjectStructureElement = new SdkProjectStructureElement(context, mySdk);
   }
 
-  protected SdkEditor createSdkEditor(ProjectSdksModel sdksModel, History history, SdkImpl projectJdk) {
+  protected BaseSdkEditor createSdkEditor(ProjectSdksModel sdksModel, History history, SdkImpl projectJdk) {
     return new SdkEditor(sdksModel, history, projectJdk);
   }
 
@@ -77,7 +78,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
 
   @Override
   public String getBannerSlogan() {
-    return ProjectBundle.message("project.roots.jdk.banner.text", mySdk.getName());
+    return ProjectBundle.message("sdk.banner.text", ((SdkType)mySdk.getSdkType()).getPresentableName(), mySdk.getName());
   }
 
   @Override
