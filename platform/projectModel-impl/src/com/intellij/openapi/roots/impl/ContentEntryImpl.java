@@ -174,7 +174,9 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
     assert !isDisposed();
     assertCanRemoveFrom(contentFolder, myContentFolders);
     myContentFolders.remove(contentFolder);
-    Disposer.dispose((Disposable)contentFolder);
+    if(contentFolder instanceof Disposable) {
+      Disposer.dispose((Disposable)contentFolder);
+    }
   }
 
   private void assertCanAddFolder(@NotNull VirtualFile file) {

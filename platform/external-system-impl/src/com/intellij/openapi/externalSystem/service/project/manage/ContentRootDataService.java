@@ -112,6 +112,9 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
             final ContentEntry contentEntry = findOrCreateContentRoot(model, contentRoot.getRootPath());
 
             for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
+              if(contentFolder.isSynthetic()) {
+                continue;
+              }
               contentEntry.removeFolder(contentFolder);
             }
             LOG.info(String.format("Importing content root '%s' for module '%s'", contentRoot.getRootPath(), module.getName()));
