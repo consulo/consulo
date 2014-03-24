@@ -22,6 +22,8 @@
                     interface="com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationExtension"/>
     <extensionPoint name="externalSystemConfigLocator"
                     interface="com.intellij.openapi.externalSystem.service.settings.ExternalSystemConfigLocator"/>
+    <extensionPoint name="externalSystemTaskNotificationListener"
+                    interface="com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
