@@ -2,22 +2,23 @@
 
 ## Information
 
-This is IDE based on IntelliJ Platform. Targeting to create one IDE for all languages
+This is IDE based on IntelliJ Platform. The main goal of our project is creating one IDE for all programming languages.
+
 
 ## Building
 
-To develop Consulo, you need use Consulo. To build and run the code:
+You should use Consulo to develop Consulo. To build and run the project, 
+the next plugins must be installed (with dependencies):
 
-List of plugins (with dependencies):
   * UI Designer
   * Java
-  * Lombok (need for develop)
+  * Lombok (needed for develop)
 
-Configure JDK as "1.6". On Windows or Linux, add lib\tools.jar from the JDK installation directory to the classpath of jdk
+Configure JDK as "1.6". For Windows and Linux: add `libs\tools.jar` from the JDK installation directory to the classpath of JDK.
 
-Use 'Build | Build Artifacts... | distForRuntime' to build the code
+Use 'Build | Build Artifacts... | distForRuntime' to build the project
 
-To run the code, use the provided shared run configuration "Consulo".
+To run the project, use the "Consulo" shared run configuration.
 
 ![Build Status](http://must-be.org:8080/vulcan_web/statusImage?name=consulo)
 
