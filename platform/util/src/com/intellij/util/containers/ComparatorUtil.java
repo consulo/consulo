@@ -31,6 +31,16 @@ public class ComparatorUtil {
     };
   }
 
+  public static int compareInt(final int first, final int second) {
+    if (first < second) {
+      return -1;
+    } else if (first > second) {
+      return +1;
+    } else {
+      return 0;
+    }
+  }
+
   public static <T extends Comparable<T>> T max(T o1, T o2) {
     return o1.compareTo(o2) >= 0 ? o1 : o2;
   }

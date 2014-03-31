@@ -44,7 +44,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import lombok.val;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +56,9 @@ import org.mustbe.consulo.roots.ContentFoldersSupportUtil;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
@@ -97,8 +101,15 @@ public class ContentEntryTreeEditor {
   protected void updateMarkActions() {
     myEditingActionsGroup.removeAll();
 
-    for (final ContentFolderTypeProvider contentFolderTypeProvider : ContentFoldersSupportUtil
-      .getSupportedFolders(myState.getRootModel())) {
+    Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
+    ContentFolderTypeProvider[] supportedFolders = folders.toArray(new ContentFolderTypeProvider[folders.size()]);
+    Arrays.sort(supportedFolders, new Comparator<ContentFolderTypeProvider>() {
+      @Override
+      public int compare(ContentFolderTypeProvider o1, ContentFolderTypeProvider o2) {
+        return ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight());
+      }
+    });
+    for (val contentFolderTypeProvider : supportedFolders) {
       ToggleFolderStateAction action = new ToggleFolderStateAction(myTree, this, contentFolderTypeProvider);
      /* CustomShortcutSet shortcutSet = editor.getMarkRootShortcutSet();
       if (shortcutSet != null) {

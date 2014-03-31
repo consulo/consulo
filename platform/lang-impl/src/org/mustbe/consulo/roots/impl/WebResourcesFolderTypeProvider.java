@@ -37,6 +37,11 @@ public class WebResourcesFolderTypeProvider extends BaseContentFolderTypeProvide
     super("WEB_RESOURCES");
   }
 
+  @Override
+  public int getWeight() {
+    return 250;
+  }
+
   @NotNull
   @Override
   public Icon getIcon() {

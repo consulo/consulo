@@ -38,6 +38,11 @@ public class TestContentFolderTypeProvider extends BaseContentFolderTypeProvider
     super("TEST");
   }
 
+  @Override
+  public int getWeight() {
+    return 150;
+  }
+
   @NotNull
   @Override
   public Icon getIcon() {

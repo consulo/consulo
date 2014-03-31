@@ -56,6 +56,10 @@ public abstract class ContentFolderTypeProvider {
     return myId;
   }
 
+  public int getWeight() {
+    return Integer.MAX_VALUE;
+  }
+
   /**
    * Return child directory icon
    * If psiDirectory is null it require force package support if this provider is supported it

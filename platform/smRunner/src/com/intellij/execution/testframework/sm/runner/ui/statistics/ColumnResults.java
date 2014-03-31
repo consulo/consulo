@@ -17,6 +17,7 @@ package com.intellij.execution.testframework.sm.runner.ui.statistics;
 
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.execution.testframework.sm.runner.ProxyFilters;
+import com.intellij.util.containers.ComparatorUtil;
 import org.jetbrains.annotations.NonNls;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.TestsPresentationUtil;
@@ -76,7 +77,7 @@ public class ColumnResults extends BaseColumn implements Comparator<SMTestProxy>
     final int weight1 = test1.getMagnitudeInfo().getSortWeight();
     final int weight2 = test2.getMagnitudeInfo().getSortWeight();
 
-    return compareInt(weight1, weight2);
+    return ComparatorUtil.compareInt(weight1, weight2);
   }
 
   private int compareSuites(final SMTestProxy suite1,
@@ -84,7 +85,7 @@ public class ColumnResults extends BaseColumn implements Comparator<SMTestProxy>
     // Compare errors
     final int errors1 = suite1.getChildren(ProxyFilters.FILTER_ERRORS).size();
     final int errors2 = suite2.getChildren(ProxyFilters.FILTER_ERRORS).size();
-    final int errorsComparison = compareInt(errors1, errors2);
+    final int errorsComparison = ComparatorUtil.compareInt(errors1, errors2);
     // If not equal return it
     if (errorsComparison != 0) {
       return errorsComparison;
@@ -93,7 +94,7 @@ public class ColumnResults extends BaseColumn implements Comparator<SMTestProxy>
     // Compare failures
     final int failures1 = suite1.getChildren(ProxyFilters.FILTER_FAILURES).size();
     final int failures2 = suite2.getChildren(ProxyFilters.FILTER_FAILURES).size();
-    final int failuresComparison = compareInt(failures1, failures2);
+    final int failuresComparison = ComparatorUtil.compareInt(failures1, failures2);
     // If not equal return it
     if (failuresComparison != 0) {
       return failuresComparison;
@@ -103,17 +104,7 @@ public class ColumnResults extends BaseColumn implements Comparator<SMTestProxy>
     final int passed1 = suite1.getChildren(ProxyFilters.FILTER_PASSED).size();
     final int passed2 = suite2.getChildren(ProxyFilters.FILTER_PASSED).size();
 
-    return compareInt(passed1, passed2);
-  }
-
-  private int compareInt(final int first, final int second) {
-    if (first < second) {
-      return -1;
-    } else if (first > second) {
-      return +1;
-    } else {
-      return 0;
-    }
+    return ComparatorUtil.compareInt(passed1, passed2);
   }
 
   public String valueOf(final SMTestProxy testProxy) {

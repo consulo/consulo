@@ -35,6 +35,11 @@ public class ProductionResourceContentFolderTypeProvider extends BaseContentFold
     super("PRODUCTION_RESOURCE");
   }
 
+  @Override
+  public int getWeight() {
+    return 100;
+  }
+
   @NotNull
   @Override
   public Icon getIcon() {

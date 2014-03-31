@@ -20,6 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderSupportPatcher;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.SandModuleExtension;
 
 import java.util.Set;
@@ -34,6 +37,9 @@ public class SandContentFolderSupportPatcher implements ContentFolderSupportPatc
     SandModuleExtension extension = model.getExtension(SandModuleExtension.class);
     if(extension != null) {
       set.add(ProductionContentFolderTypeProvider.getInstance());
+      set.add(ProductionResourceContentFolderTypeProvider.getInstance());
+      set.add(TestContentFolderTypeProvider.getInstance());
+      set.add(TestResourceContentFolderTypeProvider.getInstance());
     }
   }
 }

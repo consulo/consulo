@@ -39,6 +39,11 @@ public class ProductionContentFolderTypeProvider extends BaseContentFolderTypePr
     super("PRODUCTION");
   }
 
+  @Override
+  public int getWeight() {
+    return 50;
+  }
+
   @NotNull
   @Override
   public Icon getIcon() {
