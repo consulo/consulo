@@ -1,7 +1,6 @@
 package org.mustbe.consulo.roots;
 
 import com.intellij.openapi.roots.ModifiableRootModel;
-import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
@@ -16,20 +15,8 @@ public class ContentFoldersSupportUtil {
   @NotNull
   public static Set<ContentFolderTypeProvider> getSupportedFolders(ModifiableRootModel moduleRootManager) {
     Set<ContentFolderTypeProvider> providers = new LinkedHashSet<ContentFolderTypeProvider>();
-    for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
-      ContentFoldersSupport annotation = moduleExtension.getClass().getAnnotation(ContentFoldersSupport.class);
-      if(annotation == null) {
-        // if extension is mutable go get super class
-        annotation = moduleExtension.getClass().getSuperclass().getAnnotation(ContentFoldersSupport.class);
-      }
-      if(annotation != null) {
-        for (Class<? extends ContentFolderTypeProvider> o : annotation.value()) {
-          ContentFolderTypeProvider folderTypeProvider = ContentFolderTypeProvider.EP_NAME.findExtension(o);
-          if(folderTypeProvider != null) {
-            providers.add(folderTypeProvider);
-          }
-        }
-      }
+    for (ContentFolderSupportPatcher patcher : ContentFolderSupportPatcher.EP_NAME.getExtensions()) {
+      patcher.patch(moduleRootManager, providers);
     }
     providers.add(ExcludedContentFolderTypeProvider.getInstance());
     return providers;

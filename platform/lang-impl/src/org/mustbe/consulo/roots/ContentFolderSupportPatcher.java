@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.sandLanguage.ide.module.extension;
+package org.mustbe.consulo.roots;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFoldersSupport;
-import org.mustbe.consulo.roots.impl.WebResourcesFolderTypeProvider;
+
+import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 31.03.14
  */
-@ContentFoldersSupport(value = {WebResourcesFolderTypeProvider.class})
-public class SandModuleExtension extends ModuleExtensionImpl<SandModuleExtension> {
-  public SandModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel) {
-    super(id, rootModel);
-  }
+public interface ContentFolderSupportPatcher {
+  ExtensionPointName<ContentFolderSupportPatcher> EP_NAME = ExtensionPointName.create("com.intellij.contentFolderSupportPatcher");
+
+  void patch(@NotNull ModifiableRootModel model, @NotNull Set<ContentFolderTypeProvider> set);
 }
