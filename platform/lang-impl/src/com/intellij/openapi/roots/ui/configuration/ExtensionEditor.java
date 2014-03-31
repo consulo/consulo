@@ -183,7 +183,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
       final Module module = extension.getModule();
-      if (supportProvider.getSupportedModuleExtensionClass().isAssignableFrom(extension.getClass())) {
+      if (supportProvider.isSupported(extension)) {
         PsiPackageManager.getInstance(module.getProject()).dropCache(extension.getClass());
       }
     }

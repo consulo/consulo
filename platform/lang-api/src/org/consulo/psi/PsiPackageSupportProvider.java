@@ -27,8 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public interface PsiPackageSupportProvider {
   ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create("com.intellij.psi.packageSupportProvider");
 
-  @NotNull
-  Class<? extends ModuleExtension> getSupportedModuleExtensionClass();
+  boolean isSupported(@NotNull ModuleExtension moduleExtension);
 
   @NotNull
   PsiPackage createPackage(@NotNull PsiManager psiManager,
