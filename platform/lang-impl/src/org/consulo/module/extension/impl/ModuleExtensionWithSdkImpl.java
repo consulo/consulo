@@ -16,7 +16,6 @@
 package org.consulo.module.extension.impl;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
@@ -70,14 +69,6 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
     }
     return !mySdkPointer.equals(originExtension.getInheritableSdk());
   }
-
-  @Nullable
-  @Override
-  public SdkType getSdkType() {
-    return SdkType.findInstance(getSdkTypeClass());
-  }
-
-  protected abstract Class<? extends SdkType> getSdkTypeClass();
 
   @Override
   protected void getStateImpl(@NotNull Element element) {

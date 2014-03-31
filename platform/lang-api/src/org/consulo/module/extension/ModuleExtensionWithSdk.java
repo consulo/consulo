@@ -34,6 +34,6 @@ public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> ext
   @Nullable
   String getSdkName();
 
-  @Nullable
-  SdkType getSdkType();
+  @NotNull
+  Class<? extends SdkType> getSdkTypeClass();
 }

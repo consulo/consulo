@@ -51,13 +51,13 @@ public class ModuleExtensionWithSdkPanel extends JPanel {
   private void createUIComponents() {
     myRoot = this;
 
-    final SdkType sdkType = myExtensionWithSdk.getSdkType();
+    final Class<? extends SdkType> sdkType = myExtensionWithSdk.getSdkTypeClass();
     final ProjectSdksModel projectSdksModel =
             ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject()).getProjectSdksModel();
     mySdkComboBox = new SdkComboBox(projectSdksModel, new Condition<SdkTypeId>() {
       @Override
       public boolean value(SdkTypeId sdkTypeId) {
-        return sdkType != null && sdkTypeId == sdkType;
+        return sdkType.isAssignableFrom(sdkTypeId.getClass());
       }
     }, true);
     mySdkComboBox.insertModuleItems(myExtensionWithSdk);
