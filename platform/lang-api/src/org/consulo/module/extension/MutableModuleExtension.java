@@ -26,7 +26,7 @@ import javax.swing.*;
  */
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
   @Nullable
-  JComponent createConfigurablePanel(@Nullable Runnable updateOnCheck);
+  JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck);
 
   void setEnabled(boolean val);
 

@@ -33,7 +33,7 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
 
   @Nullable
   @Override
-  public JComponent createConfigurablePanel(@Nullable Runnable updateOnCheck) {
+  public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
     return null;
   }
 
