@@ -24,7 +24,6 @@ import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.VolatileNullableLazyValue;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -107,10 +106,6 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
     ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension != null) {
-      builder.append(ModuleExtensionProviderEP.findProviderEP(moduleExtension.getId()).getName());
-
-      builder.append(" : ");
-
       final Sdk sdk = moduleExtension.getSdk();
       if (sdk == null) {
         builder.append(moduleExtension.getSdkName());
