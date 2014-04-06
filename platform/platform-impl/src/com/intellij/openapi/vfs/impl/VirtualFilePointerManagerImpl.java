@@ -162,7 +162,7 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
     IVirtualFileSystem fileSystem;
     if (file == null) {
       protocol = VirtualFileManager.extractProtocol(url);
-      fileSystem = myVirtualFileManager.getFileSystem(protocol);
+      fileSystem = protocol == null ? null : myVirtualFileManager.getFileSystem(protocol);
     }
     else {
       protocol = null;
@@ -183,7 +183,7 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
     String path;
     if (file == null) {
       path = VirtualFileManager.extractPath(url);
-      path = cleanupPath(path, protocol, fileSystem);
+      path = cleanupPath(path, fileSystem);
       url = VirtualFileManager.constructUrl(protocol, path);
     }
     else {
@@ -209,24 +209,15 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
     return pointer;
   }
 
-  private static String cleanupPath(String path, @NotNull String protocol, IVirtualFileSystem fileSystem) {
-    path = FileUtil.toSystemIndependentName(path);
-
-    path = stripTrailingPathSeparator(path, protocol, fileSystem);
-    path = removeDoubleSlashes(path);
+  private static String cleanupPath(@NotNull String path, IVirtualFileSystem fileSystem) {
+    path = FileUtil.normalize(path);
+    path = trimTrailingSeparators(path, fileSystem instanceof ArchiveFileSystem);
     return path;
   }
 
-  @NotNull
-  private static String removeDoubleSlashes(@NotNull String path) {
-    while(true) {
-      int i = path.lastIndexOf("//");
-      if (i != -1) {
-        path = path.substring(0, i) + path.substring(i + 1);
-      }
-      else {
-        break;
-      }
+  private static String trimTrailingSeparators(@NotNull String path, boolean isArchive) {
+    while (StringUtil.endsWithChar(path, '/') && !(isArchive && path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR))) {
+      path = StringUtil.trimEnd(path, "/");
     }
     return path;
   }
@@ -259,16 +250,6 @@ public class VirtualFilePointerManagerImpl extends VirtualFilePointerManager imp
 
     root.checkStructure();
     return pointer;
-  }
-
-  @NotNull
-  private static String stripTrailingPathSeparator(@NotNull String path, @NotNull String protocol, IVirtualFileSystem fileSystem) {
-    while (!path.isEmpty() &&
-           path.charAt(path.length() - 1) == '/' &&
-           !(fileSystem instanceof ArchiveFileSystem) && path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) {
-      path = StringUtil.trimEnd(path, "/");
-    }
-    return path;
   }
 
   @Override
