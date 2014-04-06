@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return psiFile;
   }
 
-  public static void cachePsi(@NotNull Document document, @NotNull PsiFile file) {
+  public static void cachePsi(@NotNull Document document, @Nullable PsiFile file) {
     document.putUserData(HARD_REF_TO_PSI, file);
   }
 
@@ -166,22 +166,26 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
     Document document = getCachedDocument(file);
     if (document != null) {
-      if (!file.getViewProvider().isPhysical() &&
-          document.getUserData(HARD_REF_TO_PSI) == null) {
+      if (!file.getViewProvider().isPhysical() && document.getUserData(HARD_REF_TO_PSI) == null) {
         cachePsi(document, file);
       }
       return document;
     }
 
-    if (!file.getViewProvider().isEventSystemEnabled()) return null;
-    document = FileDocumentManager.getInstance().getDocument(file.getViewProvider().getVirtualFile());
+    FileViewProvider viewProvider = file.getViewProvider();
+    if (!viewProvider.isEventSystemEnabled()) return null;
 
+    document = FileDocumentManager.getInstance().getDocument(viewProvider.getVirtualFile());
     if (document != null) {
       if (document.getTextLength() != file.getTextLength()) {
-        throw new AssertionError("Modified PSI with no document: " + file + "; physical=" + file.getViewProvider().isPhysical());
+        String message = "Modified PSI with no document: " + file + "; physical=" + viewProvider.isPhysical();
+        if (document.getTextLength() + file.getTextLength() < 8096) {
+          message += "\n=== document ===\n" + document.getText() + "\n=== PSI ===\n" + file.getText();
+        }
+        throw new AssertionError(message);
       }
 
-      if (!file.getViewProvider().isPhysical()) {
+      if (!viewProvider.isPhysical()) {
         cachePsi(document, file);
       }
     }
