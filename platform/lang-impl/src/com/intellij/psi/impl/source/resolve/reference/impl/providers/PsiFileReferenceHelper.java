@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,11 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.quickFix.FileReferenceQuickFixProvider;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
@@ -48,8 +45,8 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
 
   @NotNull
   @Override
-  public List<? extends LocalQuickFix> registerFixes(HighlightInfo info, FileReference reference) {
-    return FileReferenceQuickFixProvider.registerQuickFix(info, reference);
+  public List<? extends LocalQuickFix> registerFixes(FileReference reference) {
+    return FileReferenceQuickFixProvider.registerQuickFix(reference);
   }
 
   @Override
@@ -85,11 +82,9 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
           String path = VfsUtilCore.getRelativePath(parentFile, root, '.');
 
           if (path != null) {
-            final Module module = ModuleUtil.findModuleForFile(file, project);
+            final Module module = ModuleUtilCore.findModuleForFile(file, project);
 
             if (module != null) {
-              OrderEntry orderEntry = ModuleRootManager.getInstance(module).getFileIndex().getOrderEntryForFile(file);
-
               return getContextsForModule(module, path, module.getModuleWithDependenciesScope());
             }
           }

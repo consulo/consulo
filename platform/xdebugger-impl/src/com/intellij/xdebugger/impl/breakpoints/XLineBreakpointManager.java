@@ -95,7 +95,7 @@ public class XLineBreakpointManager {
         }
 
         @Override
-        public void fileDeleted(VirtualFileEvent event) {
+        public void fileDeleted(@NotNull VirtualFileEvent event) {
           List<XBreakpoint<?>> toRemove = new ArrayList<XBreakpoint<?>>();
           for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
             if (breakpoint.getFileUrl().equals(event.getFile().getUrl())) {

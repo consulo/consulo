@@ -137,7 +137,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
     VirtualFileListener fileListener = new VirtualFileAdapter() {
       @Override
-      public void fileDeleted(VirtualFileEvent event) {
+      public void fileDeleted(@NotNull VirtualFileEvent event) {
         onFileDeleted();
       }
     };

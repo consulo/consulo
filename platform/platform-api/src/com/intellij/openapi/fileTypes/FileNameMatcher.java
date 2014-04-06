@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * @author max
  */
 public interface FileNameMatcher {
-  boolean accept(@NonNls @NotNull String fileName);
+  boolean accept(@NonNls @NotNull CharSequence fileName);
 
   @NonNls @NotNull
   String getPresentableString();

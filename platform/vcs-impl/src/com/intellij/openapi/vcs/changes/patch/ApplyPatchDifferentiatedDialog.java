@@ -196,7 +196,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     if (myCanChangePatchFile) {
       myListener = new VirtualFileAdapter() {
         @Override
-        public void contentsChanged(VirtualFileEvent event) {
+        public void contentsChanged(@NotNull VirtualFileEvent event) {
           if (myRecentPathFileChange.get() != null && myRecentPathFileChange.get().getVf() != null &&
               myRecentPathFileChange.get().getVf().equals(event.getFile())) {
             queueRequest();

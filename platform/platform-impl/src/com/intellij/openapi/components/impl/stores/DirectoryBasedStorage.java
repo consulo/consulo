@@ -79,19 +79,19 @@ public class DirectoryBasedStorage implements StateStorage, Disposable {
       final Listener listener = messageBus.syncPublisher(STORAGE_TOPIC);
       virtualFileTracker.addTracker(fileUrl, new VirtualFileAdapter() {
         @Override
-        public void contentsChanged(final VirtualFileEvent event) {
+        public void contentsChanged(@NotNull final VirtualFileEvent event) {
           if (!StringUtil.endsWithIgnoreCase(event.getFile().getName(), ".xml")) return;
           listener.storageFileChanged(event, DirectoryBasedStorage.this);
         }
 
         @Override
-        public void fileDeleted(final VirtualFileEvent event) {
+        public void fileDeleted(@NotNull final VirtualFileEvent event) {
           if (!StringUtil.endsWithIgnoreCase(event.getFile().getName(), ".xml")) return;
           listener.storageFileChanged(event, DirectoryBasedStorage.this);
         }
 
         @Override
-        public void fileCreated(final VirtualFileEvent event) {
+        public void fileCreated(@NotNull final VirtualFileEvent event) {
           if (!StringUtil.endsWithIgnoreCase(event.getFile().getName(), ".xml")) return;
           listener.storageFileChanged(event, DirectoryBasedStorage.this);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.intellij.psi.impl.source.resolve.reference.impl.providers;
-
-import org.jetbrains.annotations.Nullable;
+package com.intellij.psi;
 
 /**
- * @author Dmitry Avdeev
+ * User: anna
+ * Date: 7/15/13
  */
-public interface FileReferenceOwner {
-
-  @Nullable
-  FileReference getLastFileReference();
+public interface PackagePrefixFileSystemItem extends PsiFileSystemItem {
+  PsiDirectory getDirectory();
 }

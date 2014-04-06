@@ -56,7 +56,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     // support external changes to sdk libraries (Endorsed Standards Override)
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
       @Override
-      public void fileCreated(VirtualFileEvent event) {
+      public void fileCreated(@NotNull VirtualFileEvent event) {
         updateSdks(event.getFile());
       }
 

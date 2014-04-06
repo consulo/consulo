@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,41 +17,30 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
-import com.intellij.codeInsight.daemon.QuickFixProvider;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.LocalQuickFixProvider;
-import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.LangBundle;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.IVirtualFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.impl.source.resolve.reference.impl.CachingReference;
-import com.intellij.psi.search.PsiElementProcessor;
+import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.search.PsiFileSystemItemProcessor;
-import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.rename.BindablePsiReference;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.FilteringProcessor;
 import com.intellij.util.IncorrectOperationException;
 import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,35 +49,13 @@ import java.util.List;
 /**
  * @author cdr
  */
-public class FileReference implements FileReferenceOwner, PsiPolyVariantReference,
-                                      QuickFixProvider<FileReference>, LocalQuickFixProvider,
+public class FileReference implements PsiFileReference, FileReferenceOwner, PsiPolyVariantReference,
+                                      LocalQuickFixProvider,
                                       EmptyResolveMessageProvider, BindablePsiReference {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference");
 
   public static final FileReference[] EMPTY = new FileReference[0];
-
-  private static final TObjectHashingStrategy<PsiElement> VARIANTS_HASHING_STRATEGY = new TObjectHashingStrategy<PsiElement>() {
-    @Override
-
-    public int computeHashCode(final PsiElement object) {
-      if (object instanceof PsiNamedElement) {
-        final String name = ((PsiNamedElement)object).getName();
-        if (name != null) {
-          return name.hashCode();
-        }
-      }
-      return object.hashCode();
-    }
-
-    @Override
-    public boolean equals(final PsiElement o1, final PsiElement o2) {
-      if (o1 instanceof PsiNamedElement && o2 instanceof PsiNamedElement) {
-        return Comparing.equal(((PsiNamedElement)o1).getName(), ((PsiNamedElement)o2).getName());
-      }
-      return o1.equals(o2);
-    }
-  };
 
   private final int myIndex;
   private TextRange myRange;
@@ -104,6 +71,26 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
 
   public FileReference(final FileReference original) {
     this(original.myFileReferenceSet, original.myRange, original.myIndex, original.myText);
+  }
+
+  @Nullable
+  public static FileReference findFileReference(@NotNull final PsiReference original) {
+    if (original instanceof PsiMultiReference) {
+      final PsiMultiReference multiReference = (PsiMultiReference)original;
+      for (PsiReference reference : multiReference.getReferences()) {
+        if (reference instanceof FileReference) {
+          return (FileReference)reference;
+        }
+      }
+    }
+    else if (original instanceof FileReferenceOwner) {
+      final PsiFileReference fileReference = ((FileReferenceOwner)original).getLastFileReference();
+      if (fileReference instanceof FileReference) {
+        return (FileReference)fileReference;
+      }
+    }
+
+    return null;
   }
 
   @NotNull
@@ -154,9 +141,7 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
     final Collection<PsiFileSystemItem> contexts = getContexts();
     final Collection<ResolveResult> result = new THashSet<ResolveResult>();
     for (final PsiFileSystemItem context : contexts) {
-      if (context != null) {
-        innerResolveInContext(referenceText, context, result, caseSensitive);
-      }
+      innerResolveInContext(referenceText, context, result, caseSensitive);
     }
     if (contexts.isEmpty() && isAllowedEmptyPath(referenceText)) {
       result.add(new PsiElementResolveResult(getElement().getContainingFile()));
@@ -166,7 +151,7 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
   }
 
   protected void innerResolveInContext(@NotNull final String text,
-                                       @NotNull final PsiFileSystemItem context,
+                                       @NotNull PsiFileSystemItem context,
                                        final Collection<ResolveResult> result,
                                        final boolean caseSensitive) {
     if (isAllowedEmptyPath(text) || ".".equals(text) || "/".equals(text)) {
@@ -198,48 +183,56 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
       }
       else {
         final String decoded = decode(text);
-        if (decoded != null) {
-          if (context instanceof PsiDirectory && caseSensitivityApplies((PsiDirectory)context, caseSensitive)) {
-            // optimization: do not load all children into VFS
-            PsiDirectory directory = (PsiDirectory)context;
-            PsiFileSystemItem child = directory.findFile(decoded);
-            if (child == null) child = directory.findSubdirectory(decoded);
-            if (child != null) {
-              result.add(new PsiElementResolveResult(getOriginalFile(child)));
-            }
-          }
-          else {
-            processVariants(context, new PsiFileSystemItemProcessor() {
-              @Override
-              public boolean acceptItem(String name, boolean isDirectory) {
-                return caseSensitive ? decoded.equals(name) : decoded.compareToIgnoreCase(name) == 0;
-              }
 
-              @Override
-              public boolean execute(@NotNull PsiFileSystemItem element) {
-                result.add(new PsiElementResolveResult(getOriginalFile(element)));
-                return true;
-              }
-            });
+        if (context instanceof PackagePrefixFileSystemItem) {
+          context = ((PackagePrefixFileSystemItem)context).getDirectory();
+        }
+
+        if (context.getParent() == null && FileUtil.namesEqual(decoded, context.getName())) {
+          // match filesystem roots
+          result.add(new PsiElementResolveResult(getOriginalFile(context)));
+        }
+        else if (context instanceof PsiDirectory && caseSensitivityApplies((PsiDirectory)context, caseSensitive)) {
+          // optimization: do not load all children into VFS
+          PsiDirectory directory = (PsiDirectory)context;
+          PsiFileSystemItem child = directory.findFile(decoded);
+          if (child == null) child = directory.findSubdirectory(decoded);
+          if (child != null) {
+            result.add(new PsiElementResolveResult(getOriginalFile(child)));
           }
+        }
+        else {
+          processVariants(context, new PsiFileSystemItemProcessor() {
+            @Override
+            public boolean acceptItem(String name, boolean isDirectory) {
+              return caseSensitive ? decoded.equals(name) : decoded.compareToIgnoreCase(name) == 0;
+            }
+
+            @Override
+            public boolean execute(@NotNull PsiFileSystemItem element) {
+              result.add(new PsiElementResolveResult(getOriginalFile(element)));
+              return true;
+            }
+          });
         }
       }
     }
   }
 
+  @NotNull
   public String getFileNameToCreate() {
-    return getCanonicalText();
+    return decode(getCanonicalText());
   }
 
-  public
   @Nullable
+  public
   String getNewFileTemplateName() {
     return null;
   }
 
   private static boolean caseSensitivityApplies(PsiDirectory context, boolean caseSensitive) {
-    IVirtualFileSystem fs = context.getVirtualFile().getFileSystem();
-    return fs instanceof NewVirtualFileSystem && ((NewVirtualFileSystem)fs).isCaseSensitive() == caseSensitive;
+    VirtualFileSystem fs = context.getVirtualFile().getFileSystem();
+    return fs.isCaseSensitive() == caseSensitive;
   }
 
   private boolean isAllowedEmptyPath(String text) {
@@ -248,8 +241,8 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
             !myFileReferenceSet.isEndingSlashNotAllowed() && myIndex > 0);
   }
 
-  @Nullable
-  public String decode(final String text) {
+  @NotNull
+  public String decode(@NotNull final String text) {
     // strip http get parameters
     String _text = text;
     if (text.indexOf('?') >= 0) {
@@ -258,7 +251,7 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
 
     if (myFileReferenceSet.isUrlEncoded()) {
       try {
-        return new URI(_text).getPath();
+        return StringUtil.notNullize(new URI(_text).getPath(), text);
       }
       catch (Exception e) {
         return text;
@@ -271,60 +264,22 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
   @Override
   @NotNull
   public Object[] getVariants() {
-    final String s = getText();
-    if (s != null && s.equals("/")) {
-      return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    FileReferenceCompletion completion = FileReferenceCompletion.getInstance();
+    if (completion != null) {
+      return completion.getFileReferenceCompletionVariants(this);
     }
-
-    final CommonProcessors.CollectUniquesProcessor<PsiFileSystemItem> collector =
-      new CommonProcessors.CollectUniquesProcessor<PsiFileSystemItem>();
-    final PsiElementProcessor<PsiFileSystemItem> processor = new PsiElementProcessor<PsiFileSystemItem>() {
-      @Override
-      public boolean execute(@NotNull PsiFileSystemItem fileSystemItem) {
-        return new FilteringProcessor<PsiFileSystemItem>(myFileReferenceSet.getReferenceCompletionFilter(), collector).process(
-          getOriginalFile(fileSystemItem));
-      }
-    };
-    for (PsiFileSystemItem context : getContexts()) {
-      for (final PsiElement child : context.getChildren()) {
-        if (child instanceof PsiFileSystemItem) {
-          processor.execute((PsiFileSystemItem)child);
-        }
-      }
-    }
-    final THashSet<PsiElement> set = new THashSet<PsiElement>(collector.getResults(), VARIANTS_HASHING_STRATEGY);
-    final PsiElement[] candidates = PsiUtilCore.toPsiElementArray(set);
-
-    final Object[] variants = new Object[candidates.length];
-    for (int i = 0; i < candidates.length; i++) {
-      variants[i] = createLookupItem(candidates[i]);
-    }
-    if (!myFileReferenceSet.isUrlEncoded()) {
-      return variants;
-    }
-    List<Object> encodedVariants = new ArrayList<Object>(variants.length);
-    for (int i = 0; i < candidates.length; i++) {
-      final PsiElement element = candidates[i];
-      if (element instanceof PsiNamedElement) {
-        final PsiNamedElement psiElement = (PsiNamedElement)element;
-        String name = psiElement.getName();
-        final String encoded = encode(name, psiElement);
-        if (encoded == null) continue;
-        if (!encoded.equals(name)) {
-          final Icon icon = IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
-          LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, icon);
-          encodedVariants.add(item.withTailText(" (" + name + ")"));
-        }
-        else {
-          encodedVariants.add(variants[i]);
-        }
-      }
-    }
-    return ArrayUtil.toObjectArray(encodedVariants);
+    return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
+  /**
+   * Generates a lookup item for the specified completion variant candidate.
+   *
+   * @param candidate the element to show in the completion list.
+   * @return the lookup item representation (PsiElement, LookupElement or String). If returns null,
+   * {@code FileInfoManager.getFileLookupItem(candidate)} will be used to create the lookup item.
+   */
   protected Object createLookupItem(PsiElement candidate) {
-    return FileInfoManager.getFileLookupItem(candidate);
+    return null;
   }
 
   /**
@@ -460,9 +415,9 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
         }
       }
       if (root == null) {
-        PsiFileSystemItem _dstItem = FileReferenceHelperRegistrar.NullFileReferenceHelper.INSTANCE.getPsiFileSystemItem(project, dstVFile);
+        PsiFileSystemItem _dstItem = NullFileReferenceHelper.INSTANCE.getPsiFileSystemItem(project, dstVFile);
         if (_dstItem != null) {
-          PsiFileSystemItem _root = FileReferenceHelperRegistrar.NullFileReferenceHelper.INSTANCE.findRoot(project, dstVFile);
+          PsiFileSystemItem _root = NullFileReferenceHelper.INSTANCE.findRoot(project, dstVFile);
           if (_root != null) {
             root = _root;
             dstItem = _dstItem;
@@ -554,15 +509,8 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
       return CachingReference.getManipulator(element).handleContentChange(element, range, newName);
     }
     catch (IncorrectOperationException e) {
-      LOG.error("Cannot rename " + getClass() + " from " + myFileReferenceSet.getClass() + " to " + newName);
+      LOG.error("Cannot rename " + getClass() + " from " + myFileReferenceSet.getClass() + " to " + newName, e);
       throw e;
-    }
-  }
-
-  @Override
-  public void registerQuickfix(HighlightInfo info, FileReference reference) {
-    for (final FileReferenceHelper helper : getHelpers()) {
-      helper.registerFixes(info, reference);
     }
   }
 
@@ -579,7 +527,7 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
   public String getUnresolvedMessagePattern() {
     return LangBundle.message("error.cannot.resolve")
            + " " + (isLast() ? LangBundle.message("terms.file") : LangBundle.message("terms.directory"))
-           + " '" + StringUtil.escapePattern(StringUtil.notNullize(decode(getCanonicalText()))) + "'";
+           + " '" + StringUtil.escapePattern(decode(getCanonicalText())) + "'";
   }
 
   public final boolean isLast() {
@@ -595,7 +543,7 @@ public class FileReference implements FileReferenceOwner, PsiPolyVariantReferenc
   public LocalQuickFix[] getQuickFixes() {
     final List<LocalQuickFix> result = new ArrayList<LocalQuickFix>();
     for (final FileReferenceHelper helper : getHelpers()) {
-      result.addAll(helper.registerFixes(null, this));
+      result.addAll(helper.registerFixes(this));
     }
     return result.toArray(new LocalQuickFix[result.size()]);
   }

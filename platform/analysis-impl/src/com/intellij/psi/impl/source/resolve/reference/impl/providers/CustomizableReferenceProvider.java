@@ -37,6 +37,7 @@ public interface CustomizableReferenceProvider {
       myOptionDescription = optionDescription;
     }
 
+    @Override
     public String toString() { return myOptionDescription; }
 
     public T getValue(@Nullable Map<CustomizationKey,Object> options) {

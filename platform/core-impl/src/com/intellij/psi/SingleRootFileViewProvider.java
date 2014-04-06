@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import com.intellij.openapi.command.undo.UndoConstants;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.file.exclude.ProjectFileExclusionManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.*;
@@ -71,26 +70,24 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   private volatile Content myContent;
   private volatile SoftReference<Document> myDocument;
   @NotNull private final Language myBaseLanguage;
-  private final ProjectFileExclusionManager myExclusionManager;
 
   public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile file) {
     this(manager, file, true);
   }
 
-  public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile virtualFile, final boolean physical) {
-    this(manager, virtualFile, physical, calcBaseLanguage(virtualFile, manager.getProject()));
+  public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile virtualFile, final boolean eventSystemEnabled) {
+    this(manager, virtualFile, eventSystemEnabled, calcBaseLanguage(virtualFile, manager.getProject()));
   }
 
-  protected SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile virtualFile, final boolean physical, @NotNull Language language) {
+  protected SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile virtualFile, final boolean eventSystemEnabled, @NotNull Language language) {
     myManager = manager;
     myVirtualFile = virtualFile;
-    myEventSystemEnabled = physical;
+    myEventSystemEnabled = eventSystemEnabled;
     myBaseLanguage = language;
     setContent(new VirtualFileContent());
     myPhysical = isEventSystemEnabled() &&
                  !(virtualFile instanceof LightVirtualFile) &&
                  !(virtualFile.getFileSystem() instanceof NonPhysicalFileSystem);
-    myExclusionManager = ProjectFileExclusionManager.SERVICE.getInstance(manager.getProject());
   }
 
   @Override
@@ -265,7 +262,6 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   protected boolean isIgnored() {
     final VirtualFile file = getVirtualFile();
     if (file instanceof LightVirtualFile) return false;
-    if (myExclusionManager != null && myExclusionManager.isExcluded(file)) return true;
     return FileTypeRegistry.getInstance().isFileIgnored(file);
   }
 
@@ -492,7 +488,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
       final VirtualFile virtualFile = getVirtualFile();
       if (virtualFile instanceof LightVirtualFile) {
         Document doc = getCachedDocument();
-        if (doc != null) return doc.getCharsSequence();
+        if (doc != null) return getLastCommittedText(doc);
         return ((LightVirtualFile)virtualFile).getContent();
       }
 
@@ -501,7 +497,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
         return LoadTextUtil.loadText(virtualFile);
       }
       else {
-        return document.getCharsSequence();
+        return getLastCommittedText(document);
       }
     }
 
@@ -517,6 +513,10 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     }
   }
 
+  private CharSequence getLastCommittedText(Document document) {
+    return PsiDocumentManager.getInstance(myManager.getProject()).getLastCommittedText(document);
+  }
+
   private class DocumentContent implements Content {
     @NonNls
     @Override
@@ -530,7 +530,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     public CharSequence getText() {
       final Document document = getDocument();
       assert document != null;
-      return document.getCharsSequence();
+      return getLastCommittedText(document);
     }
 
     @Override

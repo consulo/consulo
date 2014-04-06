@@ -1482,7 +1482,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private class MyVfsListener extends VirtualFileAdapter {
     @Override
-    public void propertyChanged(final VirtualFilePropertyEvent event) {
+    public void propertyChanged(@NotNull final VirtualFilePropertyEvent event) {
       if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
         final VirtualFile eventFile = event.getFile();
         final VirtualFile parent = event.getParent();
@@ -1529,27 +1529,27 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @Override
-    public void contentsChanged(final VirtualFileEvent event) {
+    public void contentsChanged(@NotNull final VirtualFileEvent event) {
       markDirtyIfSource(event.getFile(), false);
     }
 
     @Override
-    public void fileCreated(final VirtualFileEvent event) {
+    public void fileCreated(@NotNull final VirtualFileEvent event) {
       processNewFile(event.getFile(), true);
     }
 
     @Override
-    public void fileCopied(final VirtualFileCopyEvent event) {
+    public void fileCopied(@NotNull final VirtualFileCopyEvent event) {
       processNewFile(event.getFile(), true);
     }
 
     @Override
-    public void fileMoved(VirtualFileMoveEvent event) {
+    public void fileMoved(@NotNull VirtualFileMoveEvent event) {
       processNewFile(event.getFile(), true);
     }
 
     @Override
-    public void beforeFileDeletion(final VirtualFileEvent event) {
+    public void beforeFileDeletion(@NotNull final VirtualFileEvent event) {
       final VirtualFile eventFile = event.getFile();
       if ((LOG.isDebugEnabled() && eventFile.isDirectory()) || ourDebugMode) {
         final String message = "Processing file deletion: " + eventFile.getPresentableUrl();
@@ -1649,7 +1649,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @Override
-    public void beforeFileMovement(final VirtualFileMoveEvent event) {
+    public void beforeFileMovement(@NotNull final VirtualFileMoveEvent event) {
       markDirtyIfSource(event.getFile(), true);
     }
 

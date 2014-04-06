@@ -157,7 +157,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
     }, this);
     ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, new BulkVirtualFileListenerAdapter(new VirtualFileAdapter() {
       @Override
-      public void propertyChanged(VirtualFilePropertyEvent event) {
+      public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
         if (VirtualFile.PROP_ENCODING.equals(event.getPropertyName())) {
           updateForFile(event.getFile());
         }

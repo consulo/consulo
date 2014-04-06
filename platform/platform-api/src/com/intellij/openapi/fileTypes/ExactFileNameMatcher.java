@@ -37,10 +37,12 @@ public class ExactFileNameMatcher implements FileNameMatcher {
     myIgnoreCase = ignoreCase;
   }
 
-  public boolean accept(@NonNls @NotNull final String fileName) {
+  @Override
+  public boolean accept(@NonNls @NotNull final CharSequence fileName) {
     return Comparing.equal(fileName, myFileName, !myIgnoreCase);
   }
 
+  @Override
   @NonNls
   @NotNull
   public String getPresentableString() {

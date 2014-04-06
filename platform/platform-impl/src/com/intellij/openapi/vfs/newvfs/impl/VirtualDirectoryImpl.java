@@ -61,6 +61,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   public static boolean CHECK = ApplicationManager.getApplication().isUnitTestMode();
 
   static final VirtualDirectoryImpl NULL_VIRTUAL_FILE = new VirtualDirectoryImpl(FileNameCache.storeName("*?;%NULL"), null, LocalFileSystem.getInstance(), -42, 0) {
+    @Override
     public String toString() {
       return "NULL";
     }
@@ -159,7 +160,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     }
 
     @Override
-    public int compareNameTo(@NotNull String name, boolean ignoreCase) {
+    public int compareNameTo(@NotNull CharSequence name, boolean ignoreCase) {
       return compareNames(myName, name, ignoreCase);
     }
 
@@ -546,8 +547,8 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
       Arrays.sort(childrenIds, new java.util.Comparator<FSRecords.NameId>() {
         @Override
         public int compare(FSRecords.NameId o1, FSRecords.NameId o2) {
-          String name1 = o1.name;
-          String name2 = o2.name;
+          CharSequence name1 = o1.name;
+          CharSequence name2 = o2.name;
           int cmp = compareNames(name1, name2, ignoreCase);
           if (cmp == 0 && name1 != name2) {
             LOG.error(ourPersistence + " returned duplicate file names("+name1+","+name2+")" +

@@ -1559,7 +1559,7 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
    * Closes deleted files. Closes file which are in the deleted directories.
    */
   private final class MyVirtualFileListener extends VirtualFileAdapter {
-    public void beforeFileDeletion(VirtualFileEvent e) {
+    public void beforeFileDeletion(@NotNull VirtualFileEvent e) {
       assertDispatchThread();
 
       boolean moveFocus = moveFocusOnDelete();
@@ -1573,7 +1573,7 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
       }
     }
 
-    public void propertyChanged(VirtualFilePropertyEvent e) {
+    public void propertyChanged(@NotNull VirtualFilePropertyEvent e) {
       if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
         assertDispatchThread();
         final VirtualFile file = e.getFile();
@@ -1602,7 +1602,7 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Projec
       }
     }
 
-    public void fileMoved(VirtualFileMoveEvent e) {
+    public void fileMoved(@NotNull VirtualFileMoveEvent e) {
       final VirtualFile file = e.getFile();
       final VirtualFile[] openFiles = getOpenFiles();
       for (final VirtualFile openFile : openFiles) {

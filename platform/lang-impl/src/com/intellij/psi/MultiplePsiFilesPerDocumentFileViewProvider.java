@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.impl.PsiDocumentManagerImpl;
+import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.impl.SharedPsiElementImplUtil;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.tree.FileElement;
@@ -42,8 +42,8 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
   private final ConcurrentMap<Language, PsiFile> myRoots = new ConcurrentHashMap<Language, PsiFile>(1, ConcurrentHashMap.DEFAULT_LOAD_FACTOR, 1);
   private MultiplePsiFilesPerDocumentFileViewProvider myOriginal = null;
 
-  public MultiplePsiFilesPerDocumentFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean physical) {
-    super(manager, virtualFile, physical, Language.ANY);
+  public MultiplePsiFilesPerDocumentFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled) {
+    super(manager, virtualFile, eventSystemEnabled, Language.ANY);
   }
 
   @Override
@@ -121,7 +121,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
     documentManager.commitAllDocuments();
     for (PsiFile root : roots) {
       Document document = documentManager.getDocument(root);
-      PsiDocumentManagerImpl.checkConsistency(root, document);
+      PsiDocumentManagerBase.checkConsistency(root, document);
       assert root.getText().equals(document.getText());
     }
   }

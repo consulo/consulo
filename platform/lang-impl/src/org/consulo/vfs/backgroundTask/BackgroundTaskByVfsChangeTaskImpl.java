@@ -76,7 +76,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
 
     myListener = new VirtualFileAdapter() {
       @Override
-      public void contentsChanged(VirtualFileEvent event) {
+      public void contentsChanged(@NotNull VirtualFileEvent event) {
         if (!myVirtualFilePointer.isValid()) {
           return;
         }

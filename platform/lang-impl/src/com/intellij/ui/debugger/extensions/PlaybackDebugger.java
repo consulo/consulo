@@ -155,7 +155,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     myVfsListener = new VirtualFileAdapter() {
       @Override
-      public void contentsChanged(VirtualFileEvent event) {
+      public void contentsChanged(@NotNull VirtualFileEvent event) {
         final VirtualFile file = pathToFile();
         if (file != null && file.equals(event.getFile())) {
           loadFrom(event.getFile());

@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.fileTypes;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PatternUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
   private final MaskMatcher myMatcher;
 
   private interface MaskMatcher {
-    boolean matches(String filename);
+    boolean matches(CharSequence filename);
   }
 
   private static final class RegexpMatcher implements MaskMatcher {
@@ -40,7 +41,8 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
       myMatcher = PatternUtil.fromMask(pattern).matcher("");
     }
 
-    public boolean matches(final String filename) {
+    @Override
+    public boolean matches(final CharSequence filename) {
       synchronized (myMatcher) {
         myMatcher.reset(filename);
         return myMatcher.matches();
@@ -55,8 +57,9 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
       mySuffix = suffix;
     }
 
-    public boolean matches(final String filename) {
-      return filename.endsWith(mySuffix);
+    @Override
+    public boolean matches(final CharSequence filename) {
+      return StringUtil.endsWith(filename, mySuffix);
     }
   }
 
@@ -67,8 +70,9 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
       myPrefix = prefix;
     }
 
-    public boolean matches(final String filename) {
-      return filename.startsWith(myPrefix);
+    @Override
+    public boolean matches(final CharSequence filename) {
+      return StringUtil.startsWith(filename, myPrefix);
     }
   }
 
@@ -79,8 +83,9 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
       myInfix = infix;
     }
 
-    public boolean matches(final String filename) {
-      return filename.contains(myInfix);
+    @Override
+    public boolean matches(final CharSequence filename) {
+      return StringUtil.contains(filename, myInfix);
     }
   }
 
@@ -108,10 +113,12 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
     return new RegexpMatcher(pattern);
   }
 
-  public boolean accept(@NotNull String fileName) {
+  @Override
+  public boolean accept(@NotNull CharSequence fileName) {
     return myMatcher.matches(fileName);
   }
 
+  @Override
   @NonNls
   @NotNull
   public String getPresentableString() {
@@ -119,6 +126,7 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
   }
 
 
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -130,6 +138,7 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return myPattern.hashCode();
   }

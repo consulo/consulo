@@ -1206,6 +1206,8 @@
                         serviceImplementation="com.intellij.util.InstanceofCheckerGeneratorImpl"/>
     <applicationService serviceInterface="com.intellij.internal.psiView.PsiViewerSettings"
                         serviceImplementation="com.intellij.internal.psiView.PsiViewerSettings"/>
+    <applicationService serviceInterface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletion"
+                        serviceImplementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletionImpl"/>
 
     <applicationService serviceInterface="com.intellij.util.graph.GraphAlgorithms"
                         serviceImplementation="com.intellij.util.graph.impl.GraphAlgorithmsImpl"/>

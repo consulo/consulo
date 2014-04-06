@@ -157,12 +157,12 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
     system.addVirtualFileListener(new VirtualFileAdapter() {
       @Override
-      public void contentsChanged(final VirtualFileEvent event) {
+      public void contentsChanged(@NotNull final VirtualFileEvent event) {
         onFileContentChanged(event);
       }
 
       @Override
-      public void fileCreated(final VirtualFileEvent event) {
+      public void fileCreated(@NotNull final VirtualFileEvent event) {
         VirtualFile file = event.getFile();
 
         if (event.getRequestor() == null && isFileUnder(file, myVFSBaseDir) && !myInsideSave) {
@@ -178,7 +178,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
       }
 
       @Override
-      public void fileDeleted(final VirtualFileEvent event) {
+      public void fileDeleted(@NotNull final VirtualFileEvent event) {
         VirtualFile parent = event.getParent();
 
         if (event.getRequestor() == null && parent != null && parent.equals(myVFSBaseDir) && !myInsideSave) {

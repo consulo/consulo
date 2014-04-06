@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.util.LocalTimeCounter;
+import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -52,22 +53,27 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   private static final Key<String> SYMLINK_TARGET = Key.create("local.vfs.symlink.target");
 
+  private static final int IS_WRITABLE_FLAG = 0x01000000;
+  private static final int IS_HIDDEN_FLAG =   0x02000000;
+  private static final int INDEXED_FLAG =     0x04000000;
+  static final int CHILDREN_CACHED =  0x08000000; // makes sense for directory only
   private static final int DIRTY_FLAG =       0x10000000;
   private static final int IS_SYMLINK_FLAG =  0x20000000;
   private static final int HAS_SYMLINK_FLAG = 0x40000000;
   private static final int IS_SPECIAL_FLAG =  0x80000000;
-  private static final int IS_WRITABLE_FLAG = 0x01000000;
-  private static final int IS_HIDDEN_FLAG =   0x02000000;
-  private static final int INDEXED_FLAG =     0x04000000;
-  static final int CHILDREN_CACHED =  0x08000000;
+  static final int SYSTEM_LINE_SEPARATOR_DETECTED = CHILDREN_CACHED; // makes sense only for non-directory file
 
   private static final int ALL_FLAGS_MASK =
-    DIRTY_FLAG | IS_SYMLINK_FLAG | HAS_SYMLINK_FLAG | IS_SPECIAL_FLAG | IS_WRITABLE_FLAG | IS_HIDDEN_FLAG | INDEXED_FLAG | CHILDREN_CACHED;
+          DIRTY_FLAG | IS_SYMLINK_FLAG | HAS_SYMLINK_FLAG | IS_SPECIAL_FLAG | IS_WRITABLE_FLAG | IS_HIDDEN_FLAG | INDEXED_FLAG | CHILDREN_CACHED;
 
   private volatile int myNameId;
   private volatile VirtualDirectoryImpl myParent;
   private volatile int myFlags;
   private volatile int myId;
+
+  static {
+    assert (~ALL_FLAGS_MASK) == LocalTimeCounter.TIME_MASK;
+  }
 
   public VirtualFileSystemEntry(int nameId, VirtualDirectoryImpl parent, int id, @PersistentFS.Attributes int attributes) {
     myParent = parent;
@@ -98,18 +104,24 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   @Override
   @NotNull
   public String getName() {
+    return getNameSequence().toString();
+  }
+
+  @NotNull
+  @Override
+  public CharSequence getNameSequence() {
     return FileNameCache.getVFileName(myNameId);
   }
 
-  public int compareNameTo(@NotNull String name, boolean ignoreCase) {
+  public int compareNameTo(@NotNull CharSequence name, boolean ignoreCase) {
     return FileNameCache.compareNameTo(myNameId, name, ignoreCase);
   }
 
-  protected static int compareNames(@NotNull String name1, @NotNull String name2, boolean ignoreCase) {
+  protected static int compareNames(@NotNull CharSequence name1, @NotNull CharSequence name2, boolean ignoreCase) {
     return compareNames(name1, name2, ignoreCase, 0);
   }
 
-  static int compareNames(@NotNull String name1, @NotNull String name2, boolean ignoreCase, int offset2) {
+  static int compareNames(@NotNull CharSequence name1, @NotNull CharSequence name2, boolean ignoreCase, int offset2) {
     int d = name1.length() - name2.length() + offset2;
     if (d != 0) return d;
     for (int i=0; i<name1.length(); i++) {
@@ -192,9 +204,9 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     return FileNameCache.appendPathOnFileSystem(myNameId, myParent, accumulatedPathLength, positionRef);
   }
 
-  protected static int copyString(@NotNull char[] chars, int pos, @NotNull String s) {
+  protected static int copyString(@NotNull char[] chars, int pos, @NotNull CharSequence s) {
     int length = s.length();
-    s.getChars(0, length, chars, pos);
+    CharArrayUtil.getChars(s, chars, 0, pos, length);
     return pos + length;
   }
 

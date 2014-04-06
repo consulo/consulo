@@ -53,7 +53,7 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager imple
   public void initComponent() {
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
       @Override
-      public void fileCreated(VirtualFileEvent event) {
+      public void fileCreated(@NotNull VirtualFileEvent event) {
         VirtualFile f = event.getFile();
         DocumentReference ref = myDeletedFilePathToRef.remove(new FilePath(f.getUrl()));
         if (ref != null) {
@@ -63,13 +63,13 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager imple
       }
 
       @Override
-      public void beforeFileDeletion(VirtualFileEvent event) {
+      public void beforeFileDeletion(@NotNull VirtualFileEvent event) {
         VirtualFile f = event.getFile();
         f.putUserData(DELETED_FILES, collectDeletedFiles(f, new ArrayList<VirtualFile>()));
       }
 
       @Override
-      public void fileDeleted(VirtualFileEvent event) {
+      public void fileDeleted(@NotNull VirtualFileEvent event) {
         VirtualFile f = event.getFile();
         List<VirtualFile> files = f.getUserData(DELETED_FILES);
         f.putUserData(DELETED_FILES, null);

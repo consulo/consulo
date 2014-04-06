@@ -42,6 +42,7 @@ public class StringUtil extends StringUtilRt {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.text.StringUtil");
 
   @NonNls private static final String VOWELS = "aeiouy";
+  @NonNls private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");
   @NonNls private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
   @NonNls private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
   @NonNls private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
@@ -233,9 +234,7 @@ public class StringUtil extends StringUtilRt {
   }
 
   public static boolean endsWithIgnoreCase(@NonNls @NotNull String str, @NonNls @NotNull String suffix) {
-    final int stringLength = str.length();
-    final int suffixLength = suffix.length();
-    return stringLength >= suffixLength && str.regionMatches(true, stringLength - suffixLength, suffix, 0, suffixLength);
+    return StringUtilRt.endsWithIgnoreCase(str, suffix);
   }
 
   public static boolean startsWithIgnoreCase(@NonNls @NotNull String str, @NonNls @NotNull String prefix) {
@@ -437,7 +436,6 @@ public class StringUtil extends StringUtilRt {
           "a", "an", "and", "as", "at", "but", "by", "down", "for", "from", "if", "in", "into", "not", "of", "on", "onto", "or", "out", "over",
           "per", "nor", "the", "to", "up", "upon", "via", "with"
   };
-
 
   public static boolean isPreposition(@NotNull String s, int firstChar, int lastChar) {
     return isPreposition(s, firstChar, lastChar, ourPrepositions);
@@ -968,8 +966,14 @@ public class StringUtil extends StringUtilRt {
   }
 
   @Contract("null -> true")
-  public static boolean isEmptyOrSpaces(@Nullable final String s) {
-    if (s == null || s.isEmpty()) {
+  // we need to keep this method to preserve backward compatibility
+  public static boolean isEmptyOrSpaces(@Nullable String s) {
+    return isEmptyOrSpaces(((CharSequence)s));
+  }
+
+  @Contract("null -> true")
+  public static boolean isEmptyOrSpaces(@Nullable CharSequence s) {
+    if (isEmpty(s)) {
       return true;
     }
     for (int i = 0; i < s.length(); i++) {
@@ -1643,6 +1647,19 @@ public class StringUtil extends StringUtilRt {
     return -1;
   }
 
+  public static boolean contains(@NotNull CharSequence sequence, @NotNull CharSequence infix) {
+    return indexOf(sequence, infix) >= 0;
+  }
+
+  public static int indexOf(@NotNull CharSequence sequence, @NotNull CharSequence infix) {
+    for (int i = 0; i < sequence.length() - infix.length(); i++) {
+      if (startsWith(sequence, i, infix)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   public static int indexOf(@NotNull CharSequence s, char c, int start, int end, boolean caseSensitive) {
     for (int i = start; i < end; i++) {
       if (charsMatch(s.charAt(i), c, !caseSensitive)) return i;
@@ -1700,10 +1717,7 @@ public class StringUtil extends StringUtilRt {
    * <code>-1</code> otherwise
    */
   public static int lastIndexOf(@NotNull CharSequence s, char c, int start, int end) {
-    for (int i = end - 1; i >= start; i--) {
-      if (s.charAt(i) == c) return i;
-    }
-    return -1;
+    return StringUtilRt.lastIndexOf(s, c, start, end);
   }
 
   @NotNull
@@ -1722,7 +1736,7 @@ public class StringUtil extends StringUtilRt {
   }
 
   @NotNull
-  private static String escapeChar(@NotNull final String str, final char character) {
+  public static String escapeChar(@NotNull final String str, final char character) {
     final StringBuilder buf = new StringBuilder(str);
     escapeChar(buf, character);
     return buf.toString();
@@ -1914,12 +1928,17 @@ public class StringUtil extends StringUtilRt {
   }
 
   public static int countChars(@NotNull CharSequence text, char c) {
-    int count = 0;
+    return countChars(text, c, 0, false);
+  }
 
-    for (int i = 0; i < text.length(); ++i) {
-      final char ch = text.charAt(i);
-      if (ch == c) {
-        ++count;
+  public static int countChars(@NotNull CharSequence text, char c, int offset, boolean continuous) {
+    int count = 0;
+    for (int i = offset; i < text.length(); ++i) {
+      if (text.charAt(i) == c) {
+        count++;
+      }
+      else if (continuous) {
+        break;
       }
     }
     return count;
@@ -2222,6 +2241,25 @@ public class StringUtil extends StringUtilRt {
   @NotNull
   public static String[] splitByLinesDontTrim(@NotNull String string) {
     return EOL_SPLIT_DONT_TRIM_PATTERN.split(string);
+  }
+
+  /**
+   * Splits string by lines, keeping all line separators at the line ends and in the empty lines.
+   * <br> E.g. splitting text
+   * <blockquote>
+   *   foo\r\n<br>
+   *   \n<br>
+   *   bar\n<br>
+   *   \r\n<br>
+   *   baz\r<br>
+   *   \r<br>
+   * </blockquote>
+   * will return the following array: foo\r\n, \n, bar\n, \r\n, baz\r, \r
+   *
+   */
+  @NotNull
+  public static String[] splitByLinesKeepSeparators(@NotNull String string) {
+    return EOL_SPLIT_KEEP_SEPARATORS.split(string);
   }
 
   @NotNull
@@ -2605,7 +2643,7 @@ public class StringUtil extends StringUtilRt {
    * i.e. when java.util.regex.Pattern match goes out of control.
    */
   public abstract static class BombedCharSequence implements CharSequence {
-    private CharSequence delegate;
+    private final CharSequence delegate;
     private int i = 0;
 
     public BombedCharSequence(@NotNull CharSequence sequence) {

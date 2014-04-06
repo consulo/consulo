@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
@@ -27,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author peter
@@ -43,24 +42,36 @@ public abstract class FileReferenceHelper {
   }
 
   @NotNull
-  public List<? extends LocalQuickFix> registerFixes(HighlightInfo info, FileReference reference) {
+  public List<? extends LocalQuickFix> registerFixes(FileReference reference) {
     return Collections.emptyList();
   }
 
   @Nullable
   public PsiFileSystemItem getPsiFileSystemItem(final Project project, @NotNull final VirtualFile file) {
     final PsiManager psiManager = PsiManager.getInstance(project);
+    return getPsiFileSystemItem(psiManager, file);
+  }
+
+  public static PsiFileSystemItem getPsiFileSystemItem(PsiManager psiManager, VirtualFile file) {
     return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
   }
 
   @Nullable
-  public abstract PsiFileSystemItem findRoot(final Project project, @NotNull final VirtualFile file);
+  public PsiFileSystemItem findRoot(final Project project, @NotNull final VirtualFile file) {
+    return null;
+  }
 
   @NotNull
-  public abstract Collection<PsiFileSystemItem> getRoots(@NotNull Module module);
+  public Collection<PsiFileSystemItem> getRoots(@NotNull Module module) {
+    return Collections.emptyList();
+  }
 
   @NotNull
   public abstract Collection<PsiFileSystemItem> getContexts(final Project project, @NotNull final VirtualFile file);
 
   public abstract boolean isMine(final Project project, @NotNull final VirtualFile file);
+
+  public boolean isFallback() {
+    return false;
+  }
 }

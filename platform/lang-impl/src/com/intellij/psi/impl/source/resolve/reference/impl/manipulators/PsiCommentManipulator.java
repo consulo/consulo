@@ -24,6 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author peter
@@ -40,8 +41,9 @@ public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment
     return (PsiComment)psiComment.replace(newElement);
   }
 
+  @NotNull
   @Override
-  public TextRange getRangeInElement(final PsiComment element) {
+  public TextRange getRangeInElement(@NotNull final PsiComment element) {
     final String text = element.getText();
     if (text.startsWith("//")) return new TextRange(2, element.getTextLength());
     if (text.startsWith("/**") && text.endsWith("*/")) return new TextRange(3, element.getTextLength()-2);

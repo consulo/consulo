@@ -39,7 +39,7 @@ public class NewFileTracker {
     final VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
     virtualFileManager.addVirtualFileListener(new VirtualFileAdapter() {
       @Override
-      public void fileCreated(VirtualFileEvent event) {
+      public void fileCreated(@NotNull VirtualFileEvent event) {
         if (event.isFromRefresh()) return;
         newFiles.add(event.getFile());
       }

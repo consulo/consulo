@@ -181,7 +181,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     private static final int DIRECTORIES_CHANGED_THRESHOLD = 50;
 
     @Override
-    public void fileCreated(VirtualFileEvent event) {
+    public void fileCreated(@NotNull VirtualFileEvent event) {
       VirtualFile file = event.getFile();
 
       if (!file.isDirectory()) return;
@@ -275,7 +275,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     private final Key<int[]> FILES_TO_RELEASE_KEY = Key.create("DirectoryIndexImpl.MyVirtualFileListener.FILES_TO_RELEASE_KEY");
 
     @Override
-    public void beforeFileDeletion(VirtualFileEvent event) {
+    public void beforeFileDeletion(@NotNull VirtualFileEvent event) {
       VirtualFile file = event.getFile();
       if (!file.isDirectory()) return;
       if (myState.getInfo(((NewVirtualFile)file).getId()) == null) return;
@@ -300,7 +300,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     }
 
     @Override
-    public void fileDeleted(VirtualFileEvent event) {
+    public void fileDeleted(@NotNull VirtualFileEvent event) {
       VirtualFile file = event.getFile();
       final int[] list = file.getUserData(FILES_TO_RELEASE_KEY);
       if (list == null) return;
@@ -329,7 +329,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     }
 
     @Override
-    public void fileMoved(VirtualFileMoveEvent event) {
+    public void fileMoved(@NotNull VirtualFileMoveEvent event) {
       VirtualFile file = event.getFile();
       if (file.isDirectory()) {
         doInitialize();
@@ -338,7 +338,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     }
 
     @Override
-    public void propertyChanged(VirtualFilePropertyEvent event) {
+    public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
       if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
         VirtualFile file = event.getFile();
         if (file.isDirectory()) {

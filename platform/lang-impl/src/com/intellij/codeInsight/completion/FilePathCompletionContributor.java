@@ -99,7 +99,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
 
           final FileReferenceSet set = first.getFileReferenceSet();
           String prefix = set.getPathString()
-            .substring(0, parameters.getOffset() - set.getElement().getTextRange().getStartOffset() - set.getStartInElement());
+                  .substring(0, parameters.getOffset() - set.getElement().getTextRange().getStartOffset() - set.getStartInElement());
 
           List<String> pathPrefixParts = null;
           int lastSlashIndex;
@@ -125,7 +125,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
 
             final Module contextModule = index.getModuleForFile(contextFile);
             if (contextModule != null) {
-              final FileReferenceHelper contextHelper = FileReferenceHelperRegistrar.getNotNullHelper(originalFile);
+              final List<FileReferenceHelper> helpers = FileReferenceHelperRegistrar.getHelpers(originalFile);
 
               final GlobalSearchScope scope = ProjectScope.getProjectScope(project);
               for (final String name : resultNames) {
@@ -139,10 +139,14 @@ public class FilePathCompletionContributor extends CompletionContributor {
 
                     final VirtualFile virtualFile = file.getVirtualFile();
                     if (virtualFile != null && virtualFile.isValid() && !Comparing.equal(virtualFile, contextFile)) {
-                      if (contextHelper.isMine(project, virtualFile)) {
-                        if (pathPrefixParts == null ||
-                            fileMatchesPathPrefix(contextHelper.getPsiFileSystemItem(project, virtualFile), pathPrefixParts)) {
-                          __result.addElement(new FilePathLookupItem(file, contextHelper));
+                      for (FileReferenceHelper contextHelper : helpers) {
+                        ProgressManager.checkCanceled();
+
+                        if (contextHelper.isMine(project, virtualFile)) {
+                          if (pathPrefixParts == null ||
+                              fileMatchesPathPrefix(contextHelper.getPsiFileSystemItem(project, virtualFile), pathPrefixParts)) {
+                            __result.addElement(new FilePathLookupItem(file, contextHelper));
+                          }
                         }
                       }
                     }
@@ -175,8 +179,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
       if (extension.length() == 0) return false;
 
       for (final FileType fileType : suitableFileTypes) {
-        final List<FileNameMatcher> matchers = FileTypeManager.getInstance().getAssociations(fileType);
-        for (final FileNameMatcher matcher : matchers) {
+        for (final FileNameMatcher matcher : FileTypeManager.getInstance().getAssociations(fileType)) {
           if (matcher.accept(fileName)) return true;
         }
       }
@@ -239,9 +242,9 @@ public class FilePathCompletionContributor extends CompletionContributor {
       }
     }
     else if (original instanceof FileReferenceOwner) {
-      final FileReference fileReference = ((FileReferenceOwner)original).getLastFileReference();
-      if (fileReference != null) {
-        return Pair.create(fileReference, true);
+      final PsiFileReference fileReference = ((FileReferenceOwner)original).getLastFileReference();
+      if (fileReference instanceof FileReference) {
+        return Pair.create((FileReference) fileReference, true);
       }
     }
 
@@ -278,7 +281,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     @Override
     public Object getObject() {
       return myFile;
-    }                                                                   
+    }
 
     @Override
     @NotNull
@@ -292,11 +295,11 @@ public class FilePathCompletionContributor extends CompletionContributor {
       if (myFile.isValid()) {
         final PsiReference psiReference = context.getFile().findReferenceAt(context.getStartOffset());
         final Pair<FileReference, Boolean> fileReferencePair = getReference(psiReference);
-        LOG.assertTrue(fileReferencePair != null);
-
-        FileReference ref = fileReferencePair.getFirst();
-        context.setTailOffset(ref.getRangeInElement().getEndOffset() + ref.getElement().getTextRange().getStartOffset());
-        ref.bindToElement(myFile, true);
+        if (fileReferencePair != null) {
+          FileReference ref = fileReferencePair.getFirst();
+          context.setTailOffset(ref.getRangeInElement().getEndOffset() + ref.getElement().getTextRange().getStartOffset());
+          ref.bindToElement(myFile);
+        }
       }
     }
 

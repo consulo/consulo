@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.fileTypes;
 
+import com.intellij.openapi.util.text.StringUtilRt;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,10 +32,12 @@ public class ExtensionFileNameMatcher implements FileNameMatcher {
     myDotExtension = "." + myExtension;
   }
 
-  public boolean accept(@NotNull @NonNls String fileName) {
-    return fileName.regionMatches(true, fileName.length() - myDotExtension.length(), myDotExtension, 0, myDotExtension.length());
+  @Override
+  public boolean accept(@NotNull @NonNls CharSequence fileName) {
+    return StringUtilRt.endsWithIgnoreCase(fileName, myDotExtension);
   }
 
+  @Override
   @NonNls
   @NotNull
   public String getPresentableString() {
@@ -46,6 +49,7 @@ public class ExtensionFileNameMatcher implements FileNameMatcher {
   }
 
 
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -57,6 +61,7 @@ public class ExtensionFileNameMatcher implements FileNameMatcher {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return myExtension.hashCode();
   }

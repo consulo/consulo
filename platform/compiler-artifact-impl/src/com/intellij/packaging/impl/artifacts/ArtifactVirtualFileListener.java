@@ -71,7 +71,7 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
 
 
   @Override
-  public void fileMoved(VirtualFileMoveEvent event) {
+  public void fileMoved(@NotNull VirtualFileMoveEvent event) {
     final String oldPath = event.getOldParent().getPath() + "/" + event.getFileName();
     filePathChanged(oldPath, event.getNewParent().getPath() + "/" + event.getFileName());
   }
@@ -98,7 +98,7 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
   }
 
   @Override
-  public void propertyChanged(VirtualFilePropertyEvent event) {
+  public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
     if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
       final VirtualFile parent = event.getParent();
       if (parent != null) {

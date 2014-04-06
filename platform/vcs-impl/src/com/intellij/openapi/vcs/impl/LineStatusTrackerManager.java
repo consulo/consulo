@@ -425,7 +425,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   }
 
   private class MyVirtualFileListener extends VirtualFileAdapter {
-    public void beforeContentsChange(VirtualFileEvent event) {
+    public void beforeContentsChange(@NotNull VirtualFileEvent event) {
       if (event.isFromRefresh()) {
         resetTracker(event.getFile());
       }

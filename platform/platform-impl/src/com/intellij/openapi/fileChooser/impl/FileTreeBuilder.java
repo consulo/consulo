@@ -67,19 +67,19 @@ public class FileTreeBuilder extends AbstractTreeBuilder {
   private void installVirtualFileListener() {
 
     VirtualFileAdapter myVirtualFileListener = new VirtualFileAdapter() {
-      public void propertyChanged(VirtualFilePropertyEvent event) {
+      public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
         getUpdater().addSubtreeToUpdate(getRootNode());
       }
 
-      public void fileCreated(VirtualFileEvent event) {
+      public void fileCreated(@NotNull VirtualFileEvent event) {
         getUpdater().addSubtreeToUpdate(getRootNode());
       }
 
-      public void fileDeleted(VirtualFileEvent event) {
+      public void fileDeleted(@NotNull VirtualFileEvent event) {
         getUpdater().addSubtreeToUpdate(getRootNode());
       }
 
-      public void fileMoved(VirtualFileMoveEvent event) {
+      public void fileMoved(@NotNull VirtualFileMoveEvent event) {
         getUpdater().addSubtreeToUpdate(getRootNode());
       }
     };

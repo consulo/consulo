@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -59,17 +60,17 @@ public abstract class FileAndDocumentListenersForShortDiff {
 
   private class MyFileListener extends VirtualFileAdapter {
     @Override
-    public void contentsChanged(VirtualFileEvent event) {
+    public void contentsChanged(@NotNull VirtualFileEvent event) {
       impl(event.getFile());
     }
 
     @Override
-    public void fileCreated(VirtualFileEvent event) {
+    public void fileCreated(@NotNull VirtualFileEvent event) {
       impl(event.getFile());
     }
 
     @Override
-    public void fileDeleted(VirtualFileEvent event) {
+    public void fileDeleted(@NotNull VirtualFileEvent event) {
       impl(event.getFile());
     }
   }
