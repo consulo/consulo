@@ -22,7 +22,10 @@ package com.intellij.execution.testframework;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.testframework.actions.*;
+import com.intellij.execution.testframework.actions.ScrollToTestSourceAction;
+import com.intellij.execution.testframework.actions.ShowStatisticsAction;
+import com.intellij.execution.testframework.actions.TestFrameworkActions;
+import com.intellij.execution.testframework.actions.TestTreeExpander;
 import com.intellij.execution.testframework.autotest.AdjustAutotestDelayActionGroup;
 import com.intellij.execution.testframework.export.ExportTestResultsAction;
 import com.intellij.execution.testframework.ui.AbstractTestTreeBuilder;
@@ -49,26 +52,25 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
 
   private final ArrayList<ToggleModelAction> myActions = new ArrayList<ToggleModelAction>();
 
-  public ToolbarPanel(final TestConsoleProperties properties,
-                      ExecutionEnvironment environment, JComponent parent) {
+  public ToolbarPanel(final TestConsoleProperties properties, ExecutionEnvironment environment, JComponent parent) {
     super(new BorderLayout());
     final DefaultActionGroup actionGroup = new DefaultActionGroup(null, false);
     actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.run.hide.passed.action.name"),
-                                                    ExecutionBundle.message("junit.run.hide.passed.action.description"),
-                                                    AllIcons.RunConfigurations.HidePassed,
+                                                    ExecutionBundle.message("junit.run.hide.passed.action.description"), AllIcons.RunConfigurations.HidePassed,
                                                     properties, TestConsoleProperties.HIDE_PASSED_TESTS));
     actionGroup.addSeparator();
 
     actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.track.test.action.name"),
                                                     ExecutionBundle.message("junit.runing.info.track.test.action.description"),
-                                                    AllIcons.RunConfigurations.TrackTests,
-                                                    properties, TestConsoleProperties.TRACK_RUNNING_TEST)).setAsSecondary(true);
-    actionGroup.addAction(new ToggleBooleanProperty("Hide Ignored", null, null, properties, TestConsoleProperties.HIDE_IGNORED_TEST)).setAsSecondary(true);
+                                                    AllIcons.RunConfigurations.TrackTests, properties, TestConsoleProperties.TRACK_RUNNING_TEST))
+            .setAsSecondary(true);
+    actionGroup.addAction(
+            new ToggleBooleanProperty(ExecutionBundle.message("junit.run.hide.ignored.action.name"), null, AllIcons.RunConfigurations.HideIgnored, properties,
+                                      TestConsoleProperties.HIDE_IGNORED_TEST)).setAsSecondary(true);
 
     actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.name"),
                                                     ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.description"),
-                                                    AllIcons.ObjectBrowser.Sorted,
-                                                    properties, TestConsoleProperties.SORT_ALPHABETICALLY));
+                                                    AllIcons.ObjectBrowser.Sorted, properties, TestConsoleProperties.SORT_ALPHABETICALLY));
     actionGroup.addSeparator();
 
     AnAction action = CommonActionsManager.getInstance().createExpandAllAction(myTreeExpander, parent);
@@ -85,21 +87,19 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     actionGroup.add(actionsManager.createPrevOccurenceAction(myOccurenceNavigator));
     actionGroup.add(actionsManager.createNextOccurenceAction(myOccurenceNavigator));
 
-    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.select.first.failed.action.name"),
-                                                    null,
-                                                    AllIcons.RunConfigurations.SelectFirstDefect,
-                                                    properties, TestConsoleProperties.SELECT_FIRST_DEFECT)).setAsSecondary(true);
+    actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.select.first.failed.action.name"), null,
+                                                    AllIcons.RunConfigurations.SelectFirstDefect, properties, TestConsoleProperties.SELECT_FIRST_DEFECT))
+            .setAsSecondary(true);
     actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.name"),
                                                     ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.description"),
-                                                    AllIcons.RunConfigurations.ScrollToStackTrace,
-                                                    properties, TestConsoleProperties.SCROLL_TO_STACK_TRACE)).setAsSecondary(true);
+                                                    AllIcons.RunConfigurations.ScrollToStackTrace, properties, TestConsoleProperties.SCROLL_TO_STACK_TRACE))
+            .setAsSecondary(true);
     myScrollToSource = new ScrollToTestSourceAction(properties);
     actionGroup.addAction(myScrollToSource).setAsSecondary(true);
     actionGroup.addAction(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.name"),
-                                                    ExecutionBundle
-                                                      .message("junit.runing.info.open.source.at.exception.action.description"),
-                                                    AllIcons.RunConfigurations.SourceAtException,
-                                                    properties, TestConsoleProperties.OPEN_FAILURE_LINE)).setAsSecondary(true);
+                                                    ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.description"),
+                                                    AllIcons.RunConfigurations.SourceAtException, properties, TestConsoleProperties.OPEN_FAILURE_LINE))
+            .setAsSecondary(true);
 
     actionGroup.addAction(new ShowStatisticsAction(properties)).setAsSecondary(true);
     actionGroup.addAction(new AdjustAutotestDelayActionGroup(environment)).setAsSecondary(true);
@@ -116,12 +116,14 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     appendAdditionalActions(actionGroup, properties, environment, parent);
 
     add(ActionManager.getInstance().
-      createActionToolbar(ActionPlaces.TESTTREE_VIEW_TOOLBAR, actionGroup, true).
-      getComponent(), BorderLayout.CENTER);
+            createActionToolbar(ActionPlaces.TESTTREE_VIEW_TOOLBAR, actionGroup, true).
+            getComponent(), BorderLayout.CENTER);
   }
 
-  protected void appendAdditionalActions(DefaultActionGroup actionGroup, TestConsoleProperties properties,
-                                         ExecutionEnvironment environment, JComponent parent) {
+  protected void appendAdditionalActions(DefaultActionGroup actionGroup,
+                                         TestConsoleProperties properties,
+                                         ExecutionEnvironment environment,
+                                         JComponent parent) {
   }
 
   public void setModel(final TestFrameworkRunningModel model) {
