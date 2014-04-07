@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
@@ -31,7 +32,10 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.*;
+import com.intellij.xdebugger.breakpoints.SuspendPolicy;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
+import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.XDebuggerSupport;
@@ -48,7 +52,8 @@ import java.util.List;
 /**
  * @author nik
  */
-public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointProperties, S extends BreakpointState> extends UserDataHolderBase implements XBreakpoint<P>, Comparable<Self> {
+public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointProperties, S extends BreakpointState> extends UserDataHolderBase
+        implements XBreakpoint<P>, Comparable<Self> {
   private static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
   @NonNls private static final String BR_NBSP = "<br>&nbsp;";
   private final XBreakpointType<Self, P> myType;
@@ -75,7 +80,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
-  protected final Project getProject() {
+  public final Project getProject() {
     return myBreakpointManager.getProject();
   }
 
@@ -88,10 +93,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     myBreakpointManager.fireBreakpointChanged(this);
   }
 
+  @Override
   public XSourcePosition getSourcePosition() {
     return getType().getSourcePosition(this);
   }
 
+  @Override
   public Navigatable getNavigatable() {
     XSourcePosition position = getSourcePosition();
     if (position == null) {
@@ -100,10 +107,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     return position.createNavigatable(getProject());
   }
 
+  @Override
   public boolean isEnabled() {
     return myState.isEnabled();
   }
 
+  @Override
   public void setEnabled(final boolean enabled) {
     if (enabled != isEnabled()) {
       myState.setEnabled(enabled);
@@ -111,11 +120,13 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
+  @Override
   @NotNull
   public SuspendPolicy getSuspendPolicy() {
     return myState.getSuspendPolicy();
   }
 
+  @Override
   public void setSuspendPolicy(@NotNull SuspendPolicy policy) {
     if (myState.getSuspendPolicy() != policy) {
       myState.setSuspendPolicy(policy);
@@ -123,10 +134,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
+  @Override
   public boolean isLogMessage() {
     return myState.isLogMessage();
   }
 
+  @Override
   public void setLogMessage(final boolean logMessage) {
     if (logMessage != isLogMessage()) {
       myState.setLogMessage(logMessage);
@@ -134,10 +147,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
+  @Override
   public String getLogExpression() {
     return myState.getLogExpression();
   }
 
+  @Override
   public void setLogExpression(@Nullable final String expression) {
     if (!Comparing.equal(getLogExpression(), expression)) {
       myState.setLogExpression(expression);
@@ -145,10 +160,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
   }
 
+  @Override
   public String getCondition() {
     return myState.getCondition();
   }
 
+  @Override
   public void setCondition(@Nullable final String condition) {
     if (!Comparing.equal(condition, getCondition())) {
       myState.setCondition(condition);
@@ -165,13 +182,15 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     return true;
   }
 
+  @Override
   @Nullable
   public P getProperties() {
     return myProperties;
   }
 
+  @Override
   @NotNull
-  public XBreakpointType<Self,P> getType() {
+  public XBreakpointType<Self, P> getType() {
     return myType;
   }
 
@@ -187,6 +206,15 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
   public void setDependencyState(XBreakpointDependencyState state) {
     myState.setDependencyState(state);
+  }
+
+  public String getGroup() {
+    return myState.getGroup();
+  }
+
+  public void setGroup(String group) {
+    group = StringUtil.nullize(group);
+    myState.setGroup(group);
   }
 
   public void dispose() {
@@ -331,6 +359,10 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     return myCustomizedPresentation != null ? myCustomizedPresentation.getErrorMessage() : null;
   }
 
+  CustomizedBreakpointPresentation getCustomizedPresentation() {
+    return myCustomizedPresentation;
+  }
+
   public void setCustomizedPresentation(CustomizedBreakpointPresentation presentation) {
     myCustomizedPresentation = presentation;
   }
@@ -350,16 +382,19 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   protected class BreakpointGutterIconRenderer extends GutterIconRenderer {
+    @Override
     @NotNull
     public Icon getIcon() {
       return XBreakpointBase.this.getIcon();
     }
 
+    @Override
     @Nullable
     public AnAction getClickAction() {
       return new RemoveBreakpointGutterIconAction(XBreakpointBase.this);
     }
 
+    @Override
     @Nullable
     public AnAction getMiddleButtonClickAction() {
       return new ToggleBreakpointGutterIconAction(XBreakpointBase.this);
@@ -376,11 +411,13 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
       return Alignment.RIGHT;
     }
 
+    @Override
     @Nullable
     public ActionGroup getPopupMenuActions() {
       return null;
     }
 
+    @Override
     @Nullable
     public String getTooltipText() {
       return getDescription();
@@ -391,14 +428,15 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
       return createBreakpointDraggableObject();
     }
 
-    private XBreakpointBase<?,?,?> getBreakpoint() {
+    private XBreakpointBase<?, ?, ?> getBreakpoint() {
       return XBreakpointBase.this;
     }
+
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof XLineBreakpointImpl.BreakpointGutterIconRenderer
-             && getBreakpoint() == ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getBreakpoint()
-             && Comparing.equal(getIcon(), ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getIcon());
+      return obj instanceof XLineBreakpointImpl.BreakpointGutterIconRenderer &&
+             getBreakpoint() == ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getBreakpoint() &&
+             Comparing.equal(getIcon(), ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getIcon());
     }
 
     @Override

@@ -22,8 +22,8 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import org.jetbrains.annotations.NotNull;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 @Tag("line-breakpoint")
 public class LineBreakpointState<P extends XBreakpointProperties> extends BreakpointState<XLineBreakpoint<P>, P, XLineBreakpointType<P>> {
   private String myFileUrl;

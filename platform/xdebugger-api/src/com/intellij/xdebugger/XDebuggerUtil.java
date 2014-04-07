@@ -19,6 +19,7 @@ package com.intellij.xdebugger;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -108,4 +109,12 @@ public abstract class XDebuggerUtil {
    * @param processor processor
    */
   public abstract void iterateLine(@NotNull Project project, @NotNull Document document, int line, @NotNull Processor<PsiElement> processor);
+
+  /**
+   * Disable value lookup in specified editor
+   */
+  public abstract void disableValueLookup(@NotNull Editor editor);
+
+  @Nullable
+  public abstract PsiElement findContextElement(@NotNull VirtualFile virtualFile, int offset, @NotNull Project project, boolean checkXml);
 }

@@ -49,19 +49,22 @@ class XBreakpointItem extends BreakpointItem {
     setupGenericRenderer(renderer, false);
   }
 
+  @Override
   public void setupGenericRenderer(SimpleColoredComponent renderer, boolean plainView) {
     if (plainView) {
       renderer.setIcon(getIcon());
     }
     final SimpleTextAttributes attributes =
-      myBreakpoint.isEnabled() ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : SimpleTextAttributes.GRAYED_ATTRIBUTES;
+            myBreakpoint.isEnabled() ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : SimpleTextAttributes.GRAYED_ATTRIBUTES;
     renderer.append(getDisplayText(), attributes);
   }
 
+  @Override
   public String getDisplayText() {
     return XBreakpointUtil.getShortText(myBreakpoint);
   }
 
+  @Override
   public Icon getIcon() {
     return ((XBreakpointBase)myBreakpoint).getIcon();
   }
@@ -83,10 +86,14 @@ class XBreakpointItem extends BreakpointItem {
     }
   }
 
+  @Override
   public void doUpdateDetailView(DetailView panel, boolean editorOnly) {
     Project project = ((XBreakpointBase)myBreakpoint).getProject();
     //saveState();
-    myPropertiesPanel = null;
+    if (myPropertiesPanel != null) {
+      myPropertiesPanel.dispose();
+      myPropertiesPanel = null;
+    }
     if (!editorOnly) {
       myPropertiesPanel = new XLightBreakpointPropertiesPanel<XBreakpoint<?>>(project, getManager(), myBreakpoint, true);
 
@@ -143,6 +150,7 @@ class XBreakpointItem extends BreakpointItem {
   public void removed(Project project) {
     final XBreakpointManagerImpl breakpointManager = getManager();
     new WriteAction() {
+      @Override
       protected void run(final Result result) {
         breakpointManager.removeBreakpoint(myBreakpoint);
       }
@@ -176,6 +184,13 @@ class XBreakpointItem extends BreakpointItem {
     }
     else {
       return 0;
+    }
+  }
+
+  @Override
+  public void dispose() {
+    if (myPropertiesPanel != null) {
+      myPropertiesPanel.dispose();
     }
   }
 }

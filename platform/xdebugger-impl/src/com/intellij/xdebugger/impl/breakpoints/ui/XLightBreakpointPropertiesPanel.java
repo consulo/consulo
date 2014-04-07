@@ -16,7 +16,6 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.popup.util.DetailView;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -24,9 +23,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
-import com.intellij.xdebugger.impl.ui.XDebuggerExpressionComboBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,11 +75,10 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
   private JPanel myCustomPropertiesPanelWrapper;
   private JPanel myCustomConditionsPanelWrapper;
   private JCheckBox myEnabledCheckbox;
+  private JPanel myCustomRightPropertiesPanelWrapper;
   private final List<XBreakpointCustomPropertiesPanel<B>> myCustomPanels;
 
   private List<XBreakpointPropertiesSubPanel<B>> mySubPanels = new ArrayList<XBreakpointPropertiesSubPanel<B>>();
-
-  private XDebuggerExpressionComboBox myConditionComboBox;
 
   private B myBreakpoint;
 
@@ -105,10 +101,25 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
     myActionsPanel.init(project, breakpointManager, breakpoint, debuggerEditorsProvider);
     mySubPanels.add(myActionsPanel);
 
+    myCustomPanels = new ArrayList<XBreakpointCustomPropertiesPanel<B>>();
     if (debuggerEditorsProvider != null) {
-      myConditionComboBox = new XDebuggerExpressionComboBox(project, debuggerEditorsProvider, "breakpointCondition", myBreakpoint.getSourcePosition());
-      JComponent conditionComponent = myConditionComboBox.getComponent();
-      myConditionExpressionPanel.add(conditionComponent, BorderLayout.CENTER);
+      final XBreakpointCustomPropertiesPanel<B> conditionPanel;
+      if (debuggerEditorsProvider instanceof XDebuggerComboBoxProvider) {
+        conditionPanel = ((XDebuggerComboBoxProvider<B>)debuggerEditorsProvider).createConditionComboBoxPanel(
+                project, debuggerEditorsProvider, DefaultConditionComboBoxPanel.HISTORY_KEY, myBreakpoint.getSourcePosition());
+      }
+      else {
+        conditionPanel =
+                new DefaultConditionComboBoxPanel<B>(project, debuggerEditorsProvider, myBreakpoint.getSourcePosition());
+      }
+      myConditionExpressionPanel.add(conditionPanel.getComponent(), BorderLayout.CENTER);
+      myCustomPanels.add(conditionPanel);
+      myMainPanel.addFocusListener(new FocusAdapter() {
+        @Override
+        public void focusGained(FocusEvent event) {
+          IdeFocusManager.findInstance().requestFocus(conditionPanel.getComponent(), false);
+        }
+      });
     } else {
       myConditionPanel.setVisible(false);
     }
@@ -120,7 +131,6 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
       }
     }
 
-    myCustomPanels = new ArrayList<XBreakpointCustomPropertiesPanel<B>>();
     XBreakpointCustomPropertiesPanel<B> customPropertiesPanel = breakpointType.createCustomPropertiesPanel();
     if (customPropertiesPanel != null) {
       myCustomPropertiesPanelWrapper.add(customPropertiesPanel.getComponent(), BorderLayout.CENTER);
@@ -133,14 +143,12 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
       myCustomPanels.add(customConditionPanel);
     }
 
-    myMainPanel.addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusGained(FocusEvent event) {
-        if (myConditionComboBox != null) {
-          IdeFocusManager.findInstance().requestFocus(myConditionComboBox.getComponent(), false);
-        }
-      }
-    });
+    XBreakpointCustomPropertiesPanel<B> customRightConditionPanel = breakpointType.createCustomRightPropertiesPanel(project);
+    if (customRightConditionPanel != null && (showAllOptions || customRightConditionPanel.isVisibleOnPopup(breakpoint))) {
+      myCustomRightPropertiesPanelWrapper.add(customRightConditionPanel.getComponent(), BorderLayout.CENTER);
+      myCustomPanels.add(customRightConditionPanel);
+    }
+
     myEnabledCheckbox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
@@ -154,19 +162,8 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
       panel.saveProperties();
     }
 
-    if (myConditionComboBox != null) {
-      final String condition = StringUtil.nullize(myConditionComboBox.getText(), true);
-      myBreakpoint.setCondition(condition);
-      if (condition != null) {
-        myConditionComboBox.saveTextInHistory();
-      }
-    }
-
     for (XBreakpointCustomPropertiesPanel<B> customPanel : myCustomPanels) {
       customPanel.saveTo(myBreakpoint);
-    }
-    if (!myCustomPanels.isEmpty()) {
-      ((XBreakpointBase)myBreakpoint).fireBreakpointChanged();
     }
     myBreakpoint.setEnabled(myEnabledCheckbox.isSelected());
   }
@@ -174,10 +171,6 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
   public void loadProperties() {
     for (XBreakpointPropertiesSubPanel<B> panel : mySubPanels) {
       panel.loadProperties();
-    }
-    
-    if (myConditionComboBox != null) {
-      myConditionComboBox.setText(StringUtil.notNullize(myBreakpoint.getCondition()));
     }
 
     for (XBreakpointCustomPropertiesPanel<B> customPanel : myCustomPanels) {
@@ -189,5 +182,12 @@ public class XLightBreakpointPropertiesPanel<B extends XBreakpoint<?>> implement
 
   public JPanel getMainPanel() {
     return myMainPanel;
+  }
+
+  public void dispose() {
+    myActionsPanel.dispose();
+    for (XBreakpointCustomPropertiesPanel<B> panel : myCustomPanels) {
+      panel.dispose();
+    }
   }
 }

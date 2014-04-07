@@ -51,7 +51,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
 
   protected static void showInEditor(DetailView panel, VirtualFile virtualFile, int line) {
     TextAttributes attributes =
-      EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+            EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
 
     DetailView.PreviewEditorState state = DetailView.PreviewEditorState.create(virtualFile, line, attributes);
 
@@ -70,7 +70,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
     final Editor editor = panel.getEditor();
     final MarkupModel editorModel = editor.getMarkupModel();
     final MarkupModel documentModel =
-      DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
+            DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
 
     for (RangeHighlighter highlighter : documentModel.getAllHighlighters()) {
       if (highlighter.getUserData(DebuggerColors.BREAKPOINT_HIGHLIGHTER_KEY) == Boolean.TRUE) {
@@ -107,6 +107,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
 
   public abstract String getDisplayText();
 
+  protected void dispose() {}
 
   @Override
   public boolean equals(Object o) {

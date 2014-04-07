@@ -27,6 +27,7 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
+import com.intellij.util.ui.TextTransferable;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
@@ -45,6 +46,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -71,6 +73,54 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
       return StringUtil.notNullize(text);
     }
   };
+
+  private static final TransferHandler DEFAULT_TRANSFER_HANDLER = new TransferHandler() {
+    @Override
+    protected Transferable createTransferable(JComponent c) {
+      if (!(c instanceof XDebuggerTree)) {
+        return null;
+      }
+      XDebuggerTree tree = (XDebuggerTree)c;
+      //noinspection deprecation
+      TreePath[] selectedPaths = tree.getSelectionPaths();
+      if (selectedPaths == null || selectedPaths.length == 0) {
+        return null;
+      }
+
+      StringBuilder plainBuf = new StringBuilder();
+      StringBuilder htmlBuf = new StringBuilder();
+      htmlBuf.append("<html>\n<body>\n<ul>\n");
+      TextTransferable.ColoredStringBuilder coloredTextContainer = new TextTransferable.ColoredStringBuilder();
+      for (TreePath path : selectedPaths) {
+        htmlBuf.append("  <li>");
+        Object node = path.getLastPathComponent();
+        if (node != null) {
+          if (node instanceof XDebuggerTreeNode) {
+            ((XDebuggerTreeNode)node).appendToComponent(coloredTextContainer);
+            coloredTextContainer.appendTo(plainBuf, htmlBuf);
+          }
+          else {
+            String text = node.toString();
+            plainBuf.append(text);
+            htmlBuf.append(text);
+          }
+        }
+        plainBuf.append('\n');
+        htmlBuf.append("</li>\n");
+      }
+
+      // remove the last newline
+      plainBuf.setLength(plainBuf.length() - 1);
+      htmlBuf.append("</ul>\n</body>\n</html>");
+      return new TextTransferable(htmlBuf.toString(), plainBuf.toString());
+    }
+
+    @Override
+    public int getSourceActions(JComponent c) {
+      return COPY;
+    }
+  };
+
   private final DefaultTreeModel myTreeModel;
   private final Project myProject;
   private final XDebuggerEditorsProvider myEditorsProvider;
@@ -91,7 +141,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     setCellRenderer(new XDebuggerTreeRenderer());
     new TreeLinkMouseListener(new XDebuggerTreeRenderer()) {
       @Override
-      protected void handleTagClick(Object tag, MouseEvent event) {
+      protected void handleTagClick(@Nullable Object tag, @NotNull MouseEvent event) {
         if (tag instanceof XDebuggerTreeNodeHyperlink) {
           ((XDebuggerTreeNodeHyperlink)tag).onClick(event);
         }
@@ -134,6 +184,8 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
       }
     });
     registerShortcuts();
+
+    setTransferHandler(DEFAULT_TRANSFER_HANDLER);
   }
 
   private void expandIfEllipsis() {
@@ -246,13 +298,13 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
   private void registerShortcuts() {
     ActionManager actionManager = ActionManager.getInstance();
     actionManager.getAction(XDebuggerActions.SET_VALUE)
-      .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0)), this);
+            .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0)), this);
     actionManager.getAction(XDebuggerActions.COPY_VALUE).registerCustomShortcutSet(CommonShortcuts.getCopy(), this);
     actionManager.getAction(XDebuggerActions.JUMP_TO_SOURCE).registerCustomShortcutSet(CommonShortcuts.getEditSource(), this);
     Shortcut[] editTypeShortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(XDebuggerActions.EDIT_TYPE_SOURCE);
     actionManager.getAction(XDebuggerActions.JUMP_TO_TYPE_SOURCE).registerCustomShortcutSet(new CustomShortcutSet(editTypeShortcuts), this);
     actionManager.getAction(XDebuggerActions.MARK_OBJECT)
-      .registerCustomShortcutSet(new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts("ToggleBookmark")), this);
+            .registerCustomShortcutSet(new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts("ToggleBookmark")), this);
   }
 
   private static void markNodesObsolete(final XValueContainerNode<?> node) {

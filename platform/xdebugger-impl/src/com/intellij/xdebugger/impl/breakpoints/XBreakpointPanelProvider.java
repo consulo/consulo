@@ -32,12 +32,12 @@ import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
+import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointCustomGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointFileGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointGroupingByTypeRule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -52,12 +52,14 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
   public void createBreakpointsGroupingRules(Collection<XBreakpointGroupingRule> rules) {
     rules.add(new XBreakpointGroupingByTypeRule());
     rules.add(new XBreakpointFileGroupingRule());
+    rules.add(new XBreakpointCustomGroupingRule());
   }
 
   @Override
   public void addListener(final BreakpointsListener listener, Project project, Disposable disposable) {
-    final MyXBreakpointListener listener1 = new MyXBreakpointListener(listener);
-    XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(listener1);
+    XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+    final MyXBreakpointListener listener1 = new MyXBreakpointListener(listener, breakpointManager);
+    breakpointManager.addBreakpointListener(listener1);
     myListeners.add(listener1);
     Disposer.register(disposable, new Disposable() {
       @Override
@@ -71,16 +73,20 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
   protected void removeListener(BreakpointsListener listener) {
     for (MyXBreakpointListener breakpointListener : myListeners) {
       if (breakpointListener.myListener == listener) {
+        XBreakpointManager manager = breakpointListener.myBreakpointManager;
+        manager.removeBreakpointListener(breakpointListener);
         myListeners.remove(breakpointListener);
         break;
       }
     }
   }
 
+  @Override
   public int getPriority() {
     return 0;
   }
 
+  @Override
   @Nullable
   public XBreakpoint<?> findBreakpoint(@NotNull final Project project, @NotNull final Document document, final int offset) {
     XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
@@ -111,16 +117,6 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
   }
 
   @Override
-  public AnAction[] getAddBreakpointActions(@NotNull Project project) {
-    List<AnAction> result = new ArrayList<AnAction>();
-    for (XBreakpointType<?, ?> type : XBreakpointUtil.getBreakpointTypes()) {
-      if (type.isAddBreakpointButtonVisible()) {
-        result.add(new AddXBreakpointAction(type));
-      }
-    }
-    return result.toArray(new AnAction[result.size()]);
-  }
-
   public void onDialogClosed(final Project project) {
   }
 
@@ -139,9 +135,11 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
   private static class MyXBreakpointListener implements XBreakpointListener<XBreakpoint<?>> {
     public BreakpointsListener myListener;
+    public XBreakpointManager myBreakpointManager;
 
-    public MyXBreakpointListener(BreakpointsListener listener) {
+    public MyXBreakpointListener(BreakpointsListener listener, XBreakpointManager breakpointManager) {
       myListener = listener;
+      myBreakpointManager = breakpointManager;
     }
 
     @Override

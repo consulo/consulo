@@ -172,6 +172,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     repaint();
   }
 
+  @Override
   public void append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes, Object tag) {
     _append(fragment, attributes, tag);
     revalidateAndRepaint();

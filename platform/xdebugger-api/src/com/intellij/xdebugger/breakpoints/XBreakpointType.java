@@ -93,7 +93,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return myTitle;
   }
 
-  @NotNull 
+  @NotNull
   public Icon getEnabledIcon() {
     return AllIcons.Debugger.Db_set_breakpoint;
   }
@@ -121,13 +121,18 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
 
   public abstract String getDisplayText(B breakpoint);
 
-  @Nullable 
+  @Nullable
   public XBreakpointCustomPropertiesPanel<B> createCustomConditionsPanel() {
     return null;
   }
 
   @Nullable
   public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel() {
+    return null;
+  }
+
+  @Nullable
+  public XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(@NotNull Project project) {
     return null;
   }
 
@@ -148,7 +153,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return Collections.emptyList();
   }
 
-  @NotNull 
+  @NotNull
   public Comparator<B> getBreakpointComparator() {
     return new Comparator<B>() {
       @Override

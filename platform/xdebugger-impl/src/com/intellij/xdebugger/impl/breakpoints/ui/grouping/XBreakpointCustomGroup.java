@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.breakpoints.ui;
+package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.intellij.icons.AllIcons;
+import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 /**
- * @author nik
+ * @author Egor
  */
-public abstract class XBreakpointCustomPropertiesPanel<B extends XBreakpoint<?>> {
+public class XBreakpointCustomGroup extends XBreakpointGroup {
+  private final String myName;
 
-  @NotNull
-  public abstract JComponent getComponent();
-
-  public abstract void saveTo(@NotNull B breakpoint);
-
-  public abstract void loadFrom(@NotNull B breakpoint);
-
-  public void dispose() {
+  public XBreakpointCustomGroup(@NotNull String name) {
+    myName = name;
   }
 
-  public boolean isVisibleOnPopup(@NotNull B breakpoint) {
-    return true;
+  @Override
+  @Nullable
+  public Icon getIcon(final boolean isOpen) {
+    return AllIcons.Nodes.NewFolder;
+  }
+
+  @Override
+  @NotNull
+  public String getName() {
+    return myName;
   }
 }
