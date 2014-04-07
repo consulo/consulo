@@ -16,12 +16,10 @@
 
 package com.intellij.extapi.psi;
 
-import com.intellij.psi.impl.source.LightPsiFileImpl;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.FileViewProvider;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageDialect;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.impl.source.LightPsiFileImpl;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class LightPsiFileBase extends LightPsiFileImpl {
@@ -38,5 +36,4 @@ public abstract class LightPsiFileBase extends LightPsiFileImpl {
   public void accept(@NotNull PsiElementVisitor visitor) {
     visitor.visitFile(this);
   }
-
 }
