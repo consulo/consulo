@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeEditorHighlighterProviders;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.psi.PsiDocumentManager;
@@ -165,7 +165,7 @@ public abstract class MultilanguageCodeStyleAbstractPanel extends CodeStyleAbstr
       FileType type = langs[0].getAssociatedFileType();
       if (type != null) return type;
     }
-    return StdFileTypes.JAVA;
+    return PlainTextFileType.INSTANCE;
   }
 
   @Override

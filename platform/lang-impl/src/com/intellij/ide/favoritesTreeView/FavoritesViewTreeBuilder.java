@@ -25,7 +25,6 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeUpdater;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
@@ -246,9 +245,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
         element = psiManager.findFile(vFile);
       }
 
-      if (!getUpdater().addSubtreeToUpdateByElement(element) &&
-          element instanceof PsiFile &&
-          ((PsiFile)element).getFileType() == StdFileTypes.JAVA) {
+      if (!getUpdater().addSubtreeToUpdateByElement(element) && element instanceof PsiFile) {
         getUpdater().addSubtreeToUpdateByElement(((PsiFile)element).getContainingDirectory());
       }
     }

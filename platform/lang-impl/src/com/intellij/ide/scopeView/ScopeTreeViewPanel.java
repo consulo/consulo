@@ -43,7 +43,6 @@ import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -649,7 +648,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
       final PsiElement parent = event.getParent();
       final PsiFile file = parent.getContainingFile();
-      if (file != null && file.getFileType() == StdFileTypes.JAVA) {
+      if (file != null) {
         if (!file.getViewProvider().isPhysical() && !isInjected(file)) return;
         queueUpdate(new Runnable() {
           @Override

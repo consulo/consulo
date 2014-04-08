@@ -23,7 +23,6 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
@@ -193,8 +192,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
 
   @Override
   public boolean shouldDrillDownOnEmptyElement() {
-    final PsiFile file = getValue();
-    return file != null && file.getFileType() == StdFileTypes.JAVA;
+    return true;
   }
 
   @Override
