@@ -51,7 +51,7 @@ import java.util.*;
 
 public class PluginsAdvertiser implements StartupActivity {
   private static final Logger LOG = Logger.getInstance("#" + PluginsAdvertiser.class.getName());
-  private static final String FEATURE_IMPLEMENTATIONS_URL = "http://plugins.jetbrains.com/feature/getImplementations?";
+  private static final String FEATURE_IMPLEMENTATIONS_URL = "http://must-be.org/consulo/plugins/feature/getImplementations?";
   private static final String CASHED_EXTENSIONS = "extensions.xml";
 
   public static List<PluginId> retrieve(UnknownFeature unknownFeature) {
