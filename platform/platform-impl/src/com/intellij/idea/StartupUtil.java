@@ -82,7 +82,7 @@ public class StartupUtil {
       newConfigFolder = !new File(PathManager.getConfigPath()).exists();
     }
 
-    boolean canStart = checkJdkVersion() && checkSystemFolders() && lockSystemFolders(args);  // note: uses config folder!
+    boolean canStart = checkSystemFolders() && lockSystemFolders(args);  // note: uses config folder!
     if (!canStart) {
       System.exit(Main.STARTUP_IMPOSSIBLE);
     }
@@ -103,26 +103,6 @@ public class StartupUtil {
     }
 
     appStarter.start(newConfigFolder);
-  }
-
-  /**
-   * Checks if the program can run under the JDK it was started with.
-   */
-  private static boolean checkJdkVersion() {
-    if (!"true".equals(System.getProperty("idea.no.jre.check"))) {
-      try {
-        // try to find a class from tools.jar
-        Class.forName("com.sun.jdi.Field");
-      }
-      catch (ClassNotFoundException e) {
-        String message = "'tools.jar' seems to be not in " + ApplicationNamesInfo.getInstance().getProductName() + " classpath.\n" +
-                         "Please ensure JAVA_HOME points to JDK rather than JRE.";
-        Main.showMessage("JDK Required", message, true);
-        return false;
-      }
-    }
-
-    return true;
   }
 
   private synchronized static boolean checkSystemFolders() {
