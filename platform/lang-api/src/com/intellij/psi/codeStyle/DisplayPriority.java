@@ -34,10 +34,6 @@ public enum DisplayPriority {
    */
   CODE_SETTINGS,
   /**
-   * Key IDE language priority (depends on product), for exmaple, Java for IDEA, PHP for PhpStorm etc.
-   */
-  KEY_LANGUAGE_SETTINGS,
-  /**
    * Language-specific settings.
    */
   LANGUAGE_SETTINGS,
