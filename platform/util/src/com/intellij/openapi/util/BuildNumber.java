@@ -23,20 +23,15 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BuildNumber implements Comparable<BuildNumber> {
   private static final String SNAPSHOT = "SNAPSHOT";
-  private static final String FALLBACK_VERSION = "999.SNAPSHOT";
 
-  private final int myBaselineVersion;
   private final int myBuildNumber;
 
-  public BuildNumber(int baselineVersion, int buildNumber) {
-    myBaselineVersion = baselineVersion;
+  public BuildNumber(int buildNumber) {
     myBuildNumber = buildNumber;
   }
 
   public String asString() {
     StringBuilder builder = new StringBuilder();
-
-    builder.append(myBaselineVersion).append('.');
 
     if (myBuildNumber != Integer.MAX_VALUE) {
       builder.append(myBuildNumber);
@@ -55,39 +50,17 @@ public class BuildNumber implements Comparable<BuildNumber> {
   public static BuildNumber fromString(String version, @Nullable String name) {
     if (version == null) return null;
 
-    String code = version;
+    int buildNumber = parseBuildNumber(version,  name);
 
-    int baselineVersionSeparator = code.indexOf('.');
-    int baselineVersion;
-    int buildNumber;
-    if (baselineVersionSeparator > 0) {
-      try {
-        final String baselineVersionString = code.substring(0, baselineVersionSeparator);
-        if (baselineVersionString.trim().isEmpty()) return null;
-        baselineVersion = Integer.parseInt(baselineVersionString);
-        code = code.substring(baselineVersionSeparator + 1);
-      }
-      catch (NumberFormatException e) {
-        throw new RuntimeException("Invalid version number: " + version + "; plugin name: " + name);
-      }
-
-      buildNumber = parseBuildNumber(version, code, name);
-    }
-    else {
-      buildNumber = parseBuildNumber(version, code, name);
-
-      baselineVersion = getBaseLineForHistoricBuilds(buildNumber);
-    }
-
-    return new BuildNumber(baselineVersion, buildNumber);
+    return new BuildNumber(buildNumber);
   }
 
-  private static int parseBuildNumber(String version, String code, String name) {
-    if (SNAPSHOT.equals(code)) {
+  private static int parseBuildNumber(String version, String name) {
+    if (SNAPSHOT.equals(version)) {
       return Integer.MAX_VALUE;
     }
     try {
-      return Integer.parseInt(code);
+      return Integer.parseInt(version);
     }
     catch (NumberFormatException e) {
       throw new RuntimeException("Invalid version number: " + version + "; plugin name: " + name);
@@ -95,7 +68,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
   }
 
   public static BuildNumber fallback() {
-    return fromString(FALLBACK_VERSION);
+    return fromString(SNAPSHOT);
   }
 
   @Override
@@ -105,12 +78,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
 
   @Override
   public int compareTo(@NotNull BuildNumber o) {
-    if (myBaselineVersion == o.myBaselineVersion) return myBuildNumber - o.myBuildNumber;
-    return myBaselineVersion - o.myBaselineVersion;
-  }
-
-  public int getBaselineVersion() {
-    return myBaselineVersion;
+    return myBuildNumber - o.myBuildNumber;
   }
 
   public int getBuildNumber() {
@@ -123,8 +91,6 @@ public class BuildNumber implements Comparable<BuildNumber> {
     if (o == null || getClass() != o.getClass()) return false;
 
     BuildNumber that = (BuildNumber)o;
-
-    if (myBaselineVersion != that.myBaselineVersion) return false;
     if (myBuildNumber != that.myBuildNumber) return false;
     return true;
   }
@@ -132,17 +98,8 @@ public class BuildNumber implements Comparable<BuildNumber> {
   @Override
   public int hashCode() {
     int result = 0;
-    result = 31 * result + myBaselineVersion;
     result = 31 * result + myBuildNumber;
     return result;
-  }
-
-  private static int getBaseLineForHistoricBuilds(int bn) {
-    if (bn == Integer.MAX_VALUE) {
-      return Integer.MAX_VALUE; // SNAPSHOTS
-    }
-
-    return 1;
   }
 
   public boolean isSnapshot() {
