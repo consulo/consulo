@@ -32,6 +32,7 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.Semaphore;
@@ -45,6 +46,13 @@ import javax.swing.*;
  * @author spleaner
  */
 public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBeforeRun.MakeBeforeRunTask> {
+  /**
+   * Marked for disable adding CompileStepBeforeRun
+   */
+  public static interface Suppressor {
+
+  }
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.compiler.options.CompileStepBeforeRun");
   public static final Key<MakeBeforeRunTask> ID = Key.create("Make");
 
@@ -61,6 +69,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     myProject = project;
   }
 
+  @Override
   public Key<MakeBeforeRunTask> getId() {
     return ID;
   }
@@ -85,12 +94,14 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     return AllIcons.Actions.Compile;
   }
 
+  @Override
   public MakeBeforeRunTask createTask(RunConfiguration runConfiguration) {
-    return /*!(runConfiguration instanceof RemoteConfiguration) && */runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption
+    return !(runConfiguration instanceof Suppressor) && runConfiguration instanceof RunProfileWithCompileBeforeLaunchOption
            ? new MakeBeforeRunTask()
            : null;
   }
 
+  @Override
   public boolean configureTask(RunConfiguration runConfiguration, MakeBeforeRunTask task) {
     return false;
   }
@@ -100,6 +111,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     return true;
   }
 
+  @Override
   public boolean executeTask(DataContext context, final RunConfiguration configuration, final ExecutionEnvironment env, MakeBeforeRunTask task) {
     return doMake(myProject, configuration, env, false);
   }
@@ -120,6 +132,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
       final Semaphore done = new Semaphore();
       done.down();
       final CompileStatusNotification callback = new CompileStatusNotification() {
+        @Override
         public void finished(final boolean aborted, final int errors, final int warnings, CompileContext compileContext) {
           if ((errors == 0  || ignoreErrors) && !aborted) {
             result.set(Boolean.TRUE);
@@ -129,10 +142,11 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
       };
 
       SwingUtilities.invokeAndWait(new Runnable() {
+        @Override
         public void run() {
           CompileScope scope;
           final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
-          if (Boolean.valueOf(System.getProperty(MAKE_PROJECT_ON_RUN_KEY, Boolean.FALSE.toString())).booleanValue()) {
+          if (Comparing.equal(Boolean.TRUE.toString(), System.getProperty(MAKE_PROJECT_ON_RUN_KEY))) {
             // user explicitly requested whole-project make
             scope = compilerManager.createProjectCompileScope(myProject);
           }
@@ -173,6 +187,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
     return result.get();
   }
 
+  @Override
   public boolean isConfigurable() {
     return false;
   }
