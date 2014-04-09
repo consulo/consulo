@@ -58,7 +58,6 @@ SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\jdom.jar
 SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\log4j.jar
 SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\trove4j.jar
 SET CLASS_PATH=%CLASS_PATH%;%IDE_HOME%\lib\jna.jar
-SET CLASS_PATH=%CLASS_PATH%;%JDK%\lib\tools.jar
 IF NOT "%IDEA_CLASS_PATH%" == "" SET CLASS_PATH=%CLASS_PATH%;%IDEA_CLASS_PATH%
 
 :: ---------------------------------------------------------------------

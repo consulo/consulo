@@ -208,7 +208,7 @@ bool LocateJVM()
 		return result;
 	}
 
-	MessageBoxA(NULL, "No JVM installation found. Please reinstall the product or install a JDK.", "Consulo", MB_OK);
+	MessageBoxA(NULL, "No JVM installation found. Please reinstall the product or install a JRE.", "Consulo", MB_OK);
 	return false;
 }
 
@@ -249,21 +249,6 @@ bool LoadVMOptionsFile(const TCHAR* path, std::vector<std::string>& vmOptionLine
 	return true;
 }
 
-std::string FindToolsJar()
-{
-	std::string toolsJarPath = jvmPath;
-	size_t lastSlash = toolsJarPath.rfind('\\');
-	if (lastSlash != std::string::npos)
-	{
-		toolsJarPath = toolsJarPath.substr(0, lastSlash+1) + "lib\\tools.jar";
-		if (FileExists(toolsJarPath))
-		{
-			return toolsJarPath;
-		}
-	}
-	return "";
-}
-
 std::string CollectLibJars(const std::string& jarList)
 {
 	std::string libDir = GetAdjacentDir("lib");
@@ -296,13 +281,6 @@ std::string BuildClassPath()
 {
 	std::string classpathLibs = LoadStdString(IDS_CLASSPATH_LIBS);
 	std::string result = CollectLibJars(classpathLibs);
-
-	std::string toolsJar = FindToolsJar();
-	if (toolsJar.size() > 0)
-	{
-		result += ";";
-		result += toolsJar;
-	}
 
 	return result;
 }
