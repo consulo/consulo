@@ -7,14 +7,7 @@ This is IDE based on IntelliJ Platform. The main goal of our project is creating
 
 ## Building
 
-You should use Consulo to develop Consulo. To build and run the project, 
-the next plugins must be installed (with dependencies):
-
-  * UI Designer
-  * Java
-  * Lombok (needed for develop)
-
-Configure JDK as "1.6". For Windows and Linux: add `libs\tools.jar` from the JDK installation directory to the classpath of JDK.
+Need setup SDKs & plugins. See https://github.com/consulo/consulo/wiki/Before-developing
 
 Use 'Build | Build Artifacts... | distForRuntime' to build the project
 
