@@ -372,15 +372,16 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     @NonNls StringBuilder buffer = new StringBuilder();
     buffer.append(getVersionName());
     buffer.append(" ");
-    if (getMajorVersion() != null && !isEAP() && !isBetaOrRC()) {
-      buffer.append(getMajorVersion());
+    buffer.append(getMajorVersion());
 
-      if (getMinorVersion() != null && getMinorVersion().length() > 0){
-        buffer.append(".");
-        buffer.append(getMinorVersion());
-      }
+    String minorVersion = getMinorVersion();
+    if (!StringUtil.isEmpty(minorVersion)){
+      buffer.append(".");
+      buffer.append(getMinorVersion());
     }
-    else {
+
+    if (isEAP() || isBetaOrRC()) {
+      buffer.append(" #");
       buffer.append(getBuild().asString());
     }
     return buffer.toString();
