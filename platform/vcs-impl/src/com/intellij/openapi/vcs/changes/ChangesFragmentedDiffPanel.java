@@ -434,7 +434,7 @@ public class ChangesFragmentedDiffPanel implements Disposable {
 
     private MyScrollingHelper() {
       myLeftScroll = new JScrollBar(JScrollBar.HORIZONTAL);
-      myLeftScroll.setUI(ButtonlessScrollBarUI.createNormal());
+      ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(myLeftScroll);
 
       myLeftEditors = new ArrayList<Editor>();
       myRightEditors = new ArrayList<Editor>();

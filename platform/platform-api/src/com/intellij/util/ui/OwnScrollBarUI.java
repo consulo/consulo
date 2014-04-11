@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf.darcula.ui;
-
-import com.intellij.util.ui.ButtonlessScrollBarUI;
-
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
+package com.intellij.util.ui;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 11.04.14
+ *
+ * This is marker class
  */
-public class DarculaScrollBarUI extends ButtonlessScrollBarUI {
-
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
-  public static ComponentUI createUI(JComponent c) {
-    return new DarculaScrollBarUI();
-  }
+public interface OwnScrollBarUI {
 }

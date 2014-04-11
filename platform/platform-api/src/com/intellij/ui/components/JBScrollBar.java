@@ -41,6 +41,6 @@ public class JBScrollBar extends JScrollBar{
 
   @Override
   public void updateUI() {
-    setUI(ButtonlessScrollBarUI.createNormal());
+    ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(this);
   }
 }

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui;
+package com.intellij.ide.ui.laf;
 
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
+import com.intellij.util.ui.Animator;
+import com.intellij.util.ui.OwnScrollBarUI;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.plaf.ScrollBarUI;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -32,17 +35,10 @@ import java.awt.event.*;
  * @author max
  * @author Konstantin Bulenkov
  */
-@Deprecated
-@DeprecationInfo("User cant create ButtonlessScrollBarUI. Implementation of UI is stored in Laf")
-public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
-  public static void setOwnScrollBarImplementationUI(@NotNull JScrollBar scrollBar) {
-    ScrollBarUI ui = (ScrollBarUI)UIManager.getUI(scrollBar);
-    if(!(ui instanceof OwnScrollBarUI)) {
-      scrollBar.setUI(createNormal());
-    }
-    else {
-      scrollBar.setUI(ui);
-    }
+public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
+  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+  public static ComponentUI createUI(JComponent c) {
+    return new IntelliJButtonlessScrollBarUI();
   }
 
   public static JBColor getGradientLightColor() {
@@ -50,7 +46,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   }
 
   public static JBColor getGradientDarkColor() {
-    return new JBColor(Gray._251, Gray._80);
+    return new JBColor(Gray._215, Gray._80);
   }
 
   private static JBColor getGradientThumbBorderColor() {
@@ -68,20 +64,25 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   private static final BasicStroke BORDER_STROKE = new BasicStroke();
 
   private static int getAnimationColorShift() {
-    return 20;
+    return UIUtil.isUnderDarcula() ? 20 : 40;
   }
 
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
 
-  private boolean myMouseIsOverThumb = false;
+  private Animator myAnimator;
 
-  protected ButtonlessScrollBarUI() {
+  private int myAnimationColorShift = 0;
+  private boolean myMouseIsOverThumb = false;
+  public static final int DELAY_FRAMES = 4;
+  public static final int FRAMES_COUNT = 10 + DELAY_FRAMES;
+
+  protected IntelliJButtonlessScrollBarUI() {
     myAdjustmentListener = new AdjustmentListener() {
       @Override
       public void adjustmentValueChanged(AdjustmentEvent e) {
-        repaint();
+        resetAnimator();
       }
     };
 
@@ -91,7 +92,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
         boolean inside = isOverThumb(e.getPoint());
         if (inside != myMouseIsOverThumb) {
           myMouseIsOverThumb = inside;
-          repaint();
+          resetAnimator();
         }
       }
     };
@@ -101,7 +102,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
       public void mouseExited(MouseEvent e) {
         if (myMouseIsOverThumb) {
           myMouseIsOverThumb = false;
-          repaint();
+          resetAnimator();
         }
       }
     };
@@ -135,12 +136,19 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
     return incrButton.getHeight();
   }
 
-  private void repaint() {
-    scrollbar.repaint(((ButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
+  private void resetAnimator() {
+    myAnimator.reset();
+    if (scrollbar != null && scrollbar.getValueIsAdjusting() || myMouseIsOverThumb || Registry.is("ui.no.bangs.and.whistles")) {
+      myAnimator.suspend();
+      myAnimationColorShift = getAnimationColorShift();
+    }
+    else {
+      myAnimator.resume();
+    }
   }
 
   public static BasicScrollBarUI createNormal() {
-    return new ButtonlessScrollBarUI();
+    return new IntelliJButtonlessScrollBarUI();
   }
 
   @Override
@@ -166,10 +174,30 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
 
   @Override
   protected void installListeners() {
+    if (myAnimator == null || myAnimator.isDisposed()) {
+      myAnimator = createAnimator();
+    }
+
     super.installListeners();
     scrollbar.addAdjustmentListener(myAdjustmentListener);
     scrollbar.addMouseListener(myMouseListener);
     scrollbar.addMouseMotionListener(myMouseMotionListener);
+  }
+
+  private Animator createAnimator() {
+    return new Animator("Adjustment fadeout", FRAMES_COUNT, FRAMES_COUNT * 50, false) {
+      @Override
+      public void paintNow(int frame, int totalFrames, int cycle) {
+        myAnimationColorShift = getAnimationColorShift();
+        if (frame > DELAY_FRAMES) {
+          myAnimationColorShift *= 1 - ((double)(frame - DELAY_FRAMES)) / ((double)(totalFrames - DELAY_FRAMES));
+        }
+
+        if (scrollbar != null) {
+          scrollbar.repaint(((IntelliJButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
+        }
+      }
+    };
   }
 
   private boolean isOverThumb(Point p) {
@@ -189,7 +217,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
       super.uninstallListeners();
     }
     scrollbar.removeAdjustmentListener(myAdjustmentListener);
-  //  Disposer.dispose(myAnimator);
+    Disposer.dispose(myAnimator);
   }
 
   @Override
@@ -245,11 +273,19 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
 
   private void paintMaxiThumb(Graphics2D g, Rectangle thumbBounds) {
     final boolean vertical = isVertical();
-    int hGap = 0;
-    int vGap = 0;
+    int hGap = vertical ? 2 : 1;
+    int vGap = vertical ? 1 : 2;
 
     int w = adjustThumbWidth(thumbBounds.width - hGap * 2);
     int h = thumbBounds.height - vGap * 2;
+
+    // leave one pixel between thumb and right or bottom edge
+    if (vertical) {
+      h -= 1;
+    }
+    else {
+      w -= 1;
+    }
 
     final Paint paint;
     final Color start = adjustColor(getGradientLightColor());
@@ -268,7 +304,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
     final Stroke stroke = g.getStroke();
     g.setStroke(BORDER_STROKE);
     g.setColor(getGradientThumbBorderColor());
-    g.drawRoundRect(hGap, vGap, w, h, 0, 0);
+    g.drawRoundRect(hGap, vGap, w, h, 3, 3);
     g.setStroke(stroke);
   }
 
@@ -282,9 +318,9 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   }
 
   protected Color adjustColor(Color c) {
-    if (!myMouseIsOverThumb) return c;
+    if (myAnimationColorShift == 0) return c;
     final int sign = UIUtil.isUnderDarcula() ? -1 : 1;
-    return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * getAnimationColorShift())));
+    return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * myAnimationColorShift)));
   }
 
   private boolean isVertical() {

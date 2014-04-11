@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui;
+package com.intellij.ide.ui.laf;
 
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.DeprecationInfo;
+import com.intellij.util.ui.OwnScrollBarUI;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.plaf.ScrollBarUI;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -31,18 +31,12 @@ import java.awt.event.*;
 /**
  * @author max
  * @author Konstantin Bulenkov
+ * @author VISTALL
  */
-@Deprecated
-@DeprecationInfo("User cant create ButtonlessScrollBarUI. Implementation of UI is stored in Laf")
-public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
-  public static void setOwnScrollBarImplementationUI(@NotNull JScrollBar scrollBar) {
-    ScrollBarUI ui = (ScrollBarUI)UIManager.getUI(scrollBar);
-    if(!(ui instanceof OwnScrollBarUI)) {
-      scrollBar.setUI(createNormal());
-    }
-    else {
-      scrollBar.setUI(ui);
-    }
+public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
+  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+  public static ComponentUI createUI(JComponent c) {
+    return new ModernButtonlessScrollBarUI();
   }
 
   public static JBColor getGradientLightColor() {
@@ -77,7 +71,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
 
   private boolean myMouseIsOverThumb = false;
 
-  protected ButtonlessScrollBarUI() {
+  protected ModernButtonlessScrollBarUI() {
     myAdjustmentListener = new AdjustmentListener() {
       @Override
       public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -136,11 +130,11 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   }
 
   private void repaint() {
-    scrollbar.repaint(((ButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
+    scrollbar.repaint(((ModernButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
   }
 
-  public static BasicScrollBarUI createNormal() {
-    return new ButtonlessScrollBarUI();
+  public static ModernButtonlessScrollBarUI createNormal() {
+    return new ModernButtonlessScrollBarUI();
   }
 
   @Override
@@ -189,7 +183,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
       super.uninstallListeners();
     }
     scrollbar.removeAdjustmentListener(myAdjustmentListener);
-  //  Disposer.dispose(myAnimator);
+    //  Disposer.dispose(myAnimator);
   }
 
   @Override

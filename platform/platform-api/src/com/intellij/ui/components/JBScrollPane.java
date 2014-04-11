@@ -101,7 +101,7 @@ public class JBScrollPane extends JScrollPane {
 
     @Override
     public void updateUI() {
-      setUI(ButtonlessScrollBarUI.createNormal());
+      ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(this);
     }
 
     @Override
