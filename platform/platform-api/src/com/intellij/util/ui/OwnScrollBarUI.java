@@ -15,6 +15,11 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.openapi.util.Factory;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+
 /**
  * @author VISTALL
  * @since 11.04.14
@@ -22,4 +27,5 @@ package com.intellij.util.ui;
  * This is marker class
  */
 public interface OwnScrollBarUI {
+  void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory);
 }

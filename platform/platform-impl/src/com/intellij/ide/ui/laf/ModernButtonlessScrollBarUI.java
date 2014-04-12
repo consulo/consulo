@@ -15,11 +15,13 @@
  */
 package com.intellij.ide.ui.laf;
 
+import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.OwnScrollBarUI;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -65,9 +67,17 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     return 20;
   }
 
+  private static Factory<JButton> EMPTY_BUTTON_FACTORY = new Factory<JButton>() {
+    @Override
+    public JButton create() {
+      return new EmptyButton();
+    }
+  };
+
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
+  private Factory<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
 
   private boolean myMouseIsOverThumb = false;
 
@@ -287,12 +297,17 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return new EmptyButton();
+    return myIncreaseButtonFactory.create();
   }
 
   @Override
   protected JButton createDecreaseButton(int orientation) {
     return new EmptyButton();
+  }
+
+  @Override
+  public void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory) {
+    myIncreaseButtonFactory = buttonFactory;
   }
 
   private static class EmptyButton extends JButton {

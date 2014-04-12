@@ -15,6 +15,7 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
@@ -36,11 +37,18 @@ import java.awt.event.*;
 @DeprecationInfo("User cant create ButtonlessScrollBarUI. Implementation of UI is stored in Laf")
 public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
   public static void setOwnScrollBarImplementationUI(@NotNull JScrollBar scrollBar) {
+    setOwnScrollBarImplementationUI(scrollBar, EMPTY_BUTTON_FACTORY);
+  }
+
+  public static void setOwnScrollBarImplementationUI(@NotNull JScrollBar scrollBar, @NotNull Factory<JButton> incButtonFactory) {
     ScrollBarUI ui = (ScrollBarUI)UIManager.getUI(scrollBar);
     if(!(ui instanceof OwnScrollBarUI)) {
-      scrollBar.setUI(createNormal());
+      BasicScrollBarUI normal = createNormal();
+      ((OwnScrollBarUI)normal).setIncreaseButtonFactory(incButtonFactory);
+      scrollBar.setUI(normal);
     }
     else {
+      ((OwnScrollBarUI)ui).setIncreaseButtonFactory(incButtonFactory);
       scrollBar.setUI(ui);
     }
   }
@@ -71,9 +79,17 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
     return 20;
   }
 
+  private static Factory<JButton> EMPTY_BUTTON_FACTORY = new Factory<JButton>() {
+    @Override
+    public JButton create() {
+      return new EmptyButton();
+    }
+  };
+
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
+  private Factory<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
 
   private boolean myMouseIsOverThumb = false;
 
@@ -293,12 +309,17 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return new EmptyButton();
+    return myIncreaseButtonFactory.create();
   }
 
   @Override
   protected JButton createDecreaseButton(int orientation) {
     return new EmptyButton();
+  }
+
+  @Override
+  public void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory) {
+    myIncreaseButtonFactory = buttonFactory;
   }
 
   private static class EmptyButton extends JButton {

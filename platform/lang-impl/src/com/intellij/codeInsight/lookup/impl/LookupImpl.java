@@ -45,10 +45,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiDocumentManager;
@@ -189,9 +186,9 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     myScrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
     myScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     myScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(13, -1));
-    myScrollPane.getVerticalScrollBar().setUI(new ButtonlessScrollBarUI() {
+    ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(myScrollPane.getVerticalScrollBar(), new Factory<JButton>() {
       @Override
-      protected JButton createIncreaseButton(int orientation) {
+      public JButton create() {
         return myScrollBarIncreaseButton;
       }
     });
