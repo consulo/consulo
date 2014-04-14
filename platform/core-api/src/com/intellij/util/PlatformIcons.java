@@ -17,6 +17,7 @@ package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 
@@ -24,6 +25,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 @Deprecated
+@DeprecationInfo(value = "Use AllIcons", until = "2.0")
 public interface PlatformIcons {
   @NonNls String PUBLIC_ICON_PATH = "/nodes/c_public.png";
   Icon PUBLIC_ICON = AllIcons.Nodes.C_public;

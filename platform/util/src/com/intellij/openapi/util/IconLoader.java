@@ -28,6 +28,7 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,6 +56,8 @@ public final class IconLoader {
    * This cache contains mapping between icons and disabled icons.
    */
   private static final Map<Icon, Icon> ourIcon2DisabledIcon = new WeakHashMap<Icon, Icon>(200);
+  @Deprecated
+  @DeprecationInfo(value = "", until = "1.0")
   @NonNls private static final Map<String, String> ourDeprecatedIconsReplacements = new HashMap<String, String>();
 
   static {
@@ -64,7 +67,7 @@ public final class IconLoader {
     ourDeprecatedIconsReplacements.put("/actions/showSettings.png", "AllIcons.General.ProjectSettings");
     ourDeprecatedIconsReplacements.put("/general/ideOptions.png", "AllIcons.General.Settings");
     ourDeprecatedIconsReplacements.put("/general/applicationSettings.png", "AllIcons.General.Settings");
-    ourDeprecatedIconsReplacements.put("/toolbarDecorator/add.png", "AllIcons.General.Add");
+
     ourDeprecatedIconsReplacements.put("/vcs/customizeView.png", "AllIcons.General.Settings");
 
     ourDeprecatedIconsReplacements.put("/vcs/refresh.png", "AllIcons.Actions.Refresh");
@@ -199,8 +202,10 @@ public final class IconLoader {
   }
 
   @NotNull
+  @Deprecated
   private static String undeprecate(@NotNull String path) {
     String replacement = ourDeprecatedIconsReplacements.get(path);
+    LOG.assertTrue(replacement == null, "Icon by path: " + path + " is not exists, please use new: " + replacement);
     return replacement == null ? path : replacement;
   }
 
