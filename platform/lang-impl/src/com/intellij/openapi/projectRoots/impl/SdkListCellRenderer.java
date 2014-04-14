@@ -42,24 +42,6 @@ public class SdkListCellRenderer extends ColoredListCellRendererWrapper<Sdk> {
     myShowHomePath = showHomePath;
   }
 
-  /** @deprecated use {@linkplain #SdkListCellRenderer(String)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public SdkListCellRenderer(final ListCellRenderer listCellRenderer) {
-    this("");
-  }
-
-  /** @deprecated use {@linkplain #SdkListCellRenderer(String)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public SdkListCellRenderer(final String nullText, final ListCellRenderer listCellRenderer) {
-    this(nullText);
-  }
-
-  /** @deprecated use {@linkplain #SdkListCellRenderer(String, boolean)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public SdkListCellRenderer(final String nullText, final boolean showHomePath, final ListCellRenderer listCellRenderer) {
-    this(nullText, showHomePath);
-  }
-
   @Override
   protected void doCustomize(final JList list, final Sdk sdk, final int index, final boolean selected, final boolean hasFocus) {
     if (sdk != null) {

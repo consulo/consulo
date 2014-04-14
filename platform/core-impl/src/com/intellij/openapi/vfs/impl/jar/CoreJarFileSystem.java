@@ -158,11 +158,6 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem implements Ar
     return null;
   }
 
-  @Override
-  public boolean isSpecialFile(@NotNull VirtualFile file) {
-    return false;
-  }
-
   @NotNull
   @Override
   public byte[] contentsToByteArray(@NotNull VirtualFile file) throws IOException {

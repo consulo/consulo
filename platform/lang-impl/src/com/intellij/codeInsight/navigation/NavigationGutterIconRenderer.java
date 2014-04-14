@@ -108,7 +108,6 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
           final JComponent label = HintUtil.createErrorLabel(myEmptyText);
           label.setBorder(IdeBorderFactory.createEmptyBorder(2, 7, 2, 7));
           JBPopupFactory.getInstance().createBalloonBuilder(label)
-            .setPreferredPosition(Balloon.Position.above)
             .setFadeoutTime(3000)
             .setFillColor(HintUtil.ERROR_COLOR)
             .createBalloon()

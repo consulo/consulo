@@ -150,7 +150,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
       final GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
       final GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
-      final Collection<Component> buttons = ContainerUtil.newArrayListWithExpectedSize(5);
+      final Collection<Component> buttons = ContainerUtil.newArrayListWithCapacity(5);
       final boolean helpAvailable = ApplicationInfo.contextHelpAvailable();
 
       if (helpAvailable && UIUtil.isUnderGTKLookAndFeel()) {

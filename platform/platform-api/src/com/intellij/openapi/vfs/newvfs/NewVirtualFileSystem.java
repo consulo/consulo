@@ -63,11 +63,6 @@ public abstract class NewVirtualFileSystem extends VirtualFileSystem implements 
     return null;
   }
 
-  @Override
-  public boolean isSpecialFile(@NotNull final VirtualFile file) {
-    return false;
-  }
-
   @NotNull
   protected abstract String extractRootPath(@NotNull String path);
 

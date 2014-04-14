@@ -152,12 +152,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   }
 
   @Override
-  public boolean isSpecialFile(@NotNull final VirtualFile file) {
-    final FileAttributes attributes = getAttributes(file);
-    return attributes != null && attributes.isSpecial();
-  }
-
-  @Override
   @NotNull
   public String[] list(@NotNull final VirtualFile file) {
     if (file.getParent() == null) {

@@ -51,10 +51,6 @@ public abstract class SuggestedNameInfo {
    */
   public void nameChosen(String name) { }
 
-  /** @deprecated override {@linkplain #nameChosen(String)} instead (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public void nameChoosen(String name) { nameChosen(name); }
-
   public static class Delegate extends SuggestedNameInfo {
     SuggestedNameInfo myDelegate;
 

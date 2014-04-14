@@ -45,12 +45,7 @@ public abstract class ListCellRendererWrapper<T> implements ListCellRenderer {
     assert myDefaultRenderer != null : "LaF: " + UIManager.getLookAndFeel();
   }
 
-  /** @deprecated please use {@linkplain #ListCellRendererWrapper()} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration") public ListCellRendererWrapper(final JComboBox comboBox) { this(); }
-
-  /** @deprecated please use {@linkplain #ListCellRendererWrapper()} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration") public ListCellRendererWrapper(final ListCellRenderer listCellRenderer) { this(); }
-
+  @Override
   public final Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
     mySeparator = false;
     myIcon = null;

@@ -74,11 +74,6 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
     myContent = content;
   }
 
-  @Override
-  public boolean isHideOnAction() {
-    return myHideOnAction;
-  }
-
   @NotNull
   @Override
   public BalloonBuilder setHideOnAction(boolean hideOnAction) {
@@ -90,12 +85,6 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   @Override
   public BalloonBuilder setDialogMode(boolean dialogMode) {
     myDialogMode = dialogMode;
-    return this;
-  }
-
-  @NotNull
-  @Override
-  public BalloonBuilder setPreferredPosition(final Balloon.Position position) {
     return this;
   }
 

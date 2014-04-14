@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -55,18 +54,6 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
    */
   @Override
   public boolean isSymLink(@NotNull final VirtualFile file) {
-    return false;
-  }
-
-  /**
-   * Checks whether given file is a special file.
-   *
-   * @param file a file to check.
-   * @return <code>true</code> if the file exists and is a special one, <code>false</code> otherwise
-   * @since 11.0
-   */
-  @Override
-  public boolean isSpecialFile(@NotNull final VirtualFile file) {
     return false;
   }
 
@@ -102,18 +89,6 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
 
   public abstract void refreshFiles(@NotNull Iterable<VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish);
 
-  /** @deprecated use {@linkplain com.intellij.openapi.vfs.VirtualFile#contentsToByteArray()} (to remove in IDEA 13) */
-  @SuppressWarnings({"MethodMayBeStatic", "UnusedDeclaration"})
-  public byte[] physicalContentsToByteArray(@NotNull VirtualFile virtualFile) throws IOException{
-    return virtualFile.contentsToByteArray();
-  }
-
-  /** @deprecated use {@linkplain VirtualFile#getLength()} (to remove in IDEA 13) */
-  @SuppressWarnings({"MethodMayBeStatic", "UnusedDeclaration"})
-  public long physicalLength(@NotNull VirtualFile virtualFile) throws IOException{
-    return virtualFile.getLength();
-  }
-
   @NotNull
   public final VirtualFile getRoot() {
     final String rootPath = SystemInfo.isWindows ? "" : "/";
@@ -127,14 +102,6 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
     String getRootPath();
 
     boolean isToWatchRecursively();
-
-    /** @deprecated implementation details (to remove in IDEA 13) */
-    @SuppressWarnings({"UnusedDeclaration"})
-    String getFileSystemRootPath();
-
-    /** @deprecated implementation details (to remove in IDEA 13) */
-    @SuppressWarnings({"UnusedDeclaration"})
-    boolean dominates(@NotNull WatchRequest other);
   }
 
   @Nullable

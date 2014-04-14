@@ -26,13 +26,7 @@ public class Patches {
    */
   public static final boolean SUN_BUG_ID_4503845 = !SystemInfo.isJavaVersionAtLeast("1.4.1");
 
-  /**
-   * Debugger hangs on any attempt to attach/listen Connector when attach hanged once.
-   * @deprecated to remove in IDEA 13 (IDEA support JRE only >= 1.6)
-   */
-  public static final boolean SUN_JDI_CONNECTOR_HANGUP_BUG = !SystemInfo.isJavaVersionAtLeast("1.5");
-
-  /**
+   /**
    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6322854.
    * java.lang.NullPointerException: Failed to retrieve atom name.
    */

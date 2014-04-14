@@ -27,11 +27,6 @@ public class MockVirtualLink extends MockVirtualFile {
     myTarget = target;
   }
 
-  @Override
-  public boolean isSymLink() {
-    return true;
-  }
-
   @Nullable
   @Override
   public VirtualFile getCanonicalFile() {

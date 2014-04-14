@@ -130,9 +130,6 @@ public class SystemInfo extends SystemInfoRt {
     return ourHasXdgOpen.getValue();
   }
 
-  /** @deprecated useless (to remove in IDEA 14) */
-  public static final boolean isIntelMac = isMac && "i386".equals(OS_ARCH);
-
   public static final boolean isMacOSTiger = isMac && isOsVersionAtLeast("10.4");
   public static final boolean isMacOSLeopard = isMac && isOsVersionAtLeast("10.5");
   public static final boolean isMacOSSnowLeopard = isMac && isOsVersionAtLeast("10.6");

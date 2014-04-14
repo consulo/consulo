@@ -277,12 +277,6 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
     myListeners.add(l);
   }
 
-  /** @deprecated use {@linkplain #getPanelPreferredSize()} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  protected Dimension getPanelPrefferedSize() {
-    return getPanelPreferredSize();
-  }
-
   protected Dimension getPanelPreferredSize() {
     return new Dimension(800, 600);
   }
@@ -610,13 +604,6 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
       return configurable.getEditableObject();
     }
     return null;
-  }
-
-  /** @deprecated use {@linkplain #getSelectedConfigurable()} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  @Nullable
-  public NamedConfigurable getSelectedConfugurable() {
-    return getSelectedConfigurable();
   }
 
   @Nullable

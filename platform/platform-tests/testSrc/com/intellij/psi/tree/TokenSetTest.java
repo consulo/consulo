@@ -93,23 +93,6 @@ public class TokenSetTest {
     check(TokenSet.andSet(S12, S34));
   }
 
-  @SuppressWarnings("deprecation")
-  @Test
-  public void andNot() throws Exception {
-    final TokenSet S123 = TokenSet.orSet(S12, S3);
-    check(S123.minus(S12), T3);
-    check(S123.minus(S5), T1, T2, T3);
-    check(TokenSet.andNot(S123, S12), T3);
-    check(TokenSet.andNot(S123, S5), T1, T2, T3);
-  }
-
-  @SuppressWarnings("deprecation")
-  @Test
-  public void not() throws Exception {
-    checkNot(TokenSet.not(S12), T1, T2);
-    checkNot(TokenSet.not(S34), T3, T4);
-    checkNot(TokenSet.not(S5), T5);
-  }
 
   private static void fakeElements(int from, int to) {
     for (int i = from; i <= to; i++) {

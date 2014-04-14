@@ -226,18 +226,6 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    */
   public abstract boolean isDirectory();
 
-  /** @deprecated use {@link #is(VFileProperty)} (to remove in IDEA 14) */
-  @SuppressWarnings("UnusedDeclaration")
-  public boolean isSymLink() {
-    return is(VFileProperty.SYMLINK);
-  }
-
-  /** @deprecated use {@link #is(VFileProperty)} (to remove in IDEA 14) */
-  @SuppressWarnings("UnusedDeclaration")
-  public boolean isSpecialFile() {
-    return is(VFileProperty.SPECIAL);
-  }
-
   /**
    * Checks whether this file has a specific property.
    *

@@ -459,40 +459,4 @@ public class EditorModificationUtil {
       }
     });
   }
-
-  /** @deprecated use {@link #pasteTransferable(Editor, Producer)} (to remove in IDEA 14) */
-  @SuppressWarnings("UnusedDeclaration")
-  public static TextRange pasteFromClipboard(Editor editor) {
-    return pasteTransferable(editor, null);
-  }
-
-  /** @deprecated use {@link #pasteTransferable(Editor, Producer)} (to remove in IDEA 14) */
-  @SuppressWarnings("SpellCheckingInspection,UnusedDeclaration")
-  public static TextRange pasteFromTransferrable(final Transferable content, Editor editor) {
-    return pasteTransferable(editor, new Producer<Transferable>() {
-      @Nullable
-      @Override
-      public Transferable produce() {
-        return content;
-      }
-    });
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  /** @deprecated use {@link #pasteTransferableAsBlock(Editor, Producer)} (to remove in IDEA 14) */
-  public static void pasteFromClipboardAsBlock(Editor editor) {
-    pasteTransferableAsBlock(editor, (Producer<Transferable>)null);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  /** @deprecated use {@link #pasteTransferableAsBlock(Editor, Producer)} (to remove in IDEA 14) */
-  public static void pasteTransferableAsBlock(Editor editor, @Nullable final Transferable content) {
-    pasteTransferableAsBlock(editor, new Producer<Transferable>() {
-      @Nullable
-      @Override
-      public Transferable produce() {
-        return content;
-      }
-    });
-  }
 }

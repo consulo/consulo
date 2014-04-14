@@ -25,6 +25,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
@@ -136,7 +137,7 @@ public class IconUtil {
           }
         }
 
-        if (file.isSymLink()) {
+        if (file.is(VFileProperty.SYMLINK)) {
           iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
         }
 

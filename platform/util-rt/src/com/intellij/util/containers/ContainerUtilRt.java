@@ -140,11 +140,6 @@ public class ContainerUtilRt {
     return copy(ContainerUtilRt.<T>newArrayList(), elements);
   }
 
-  /** @deprecated Use {@link #newArrayListWithCapacity(int)} (to remove in IDEA 15) */
-  public static <T> ArrayList<T> newArrayListWithExpectedSize(int size) {
-    return newArrayListWithCapacity(size);
-  }
-
   @NotNull
   public static <T> ArrayList<T> newArrayListWithCapacity(int size) {
     return new ArrayList<T>(size);

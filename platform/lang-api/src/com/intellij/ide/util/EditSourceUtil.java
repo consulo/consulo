@@ -20,6 +20,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.util.UserDataHolder;
+import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -60,7 +61,7 @@ public class EditSourceUtil {
     }
 
     VirtualFile file = PsiUtilCore.getVirtualFile(element.getNavigationElement());
-    return file != null && file.isValid() && !file.isSpecialFile() && !VfsUtilCore.isBrokenLink(file);
+    return file != null && file.isValid() && !file.is(VFileProperty.SPECIAL) && !VfsUtilCore.isBrokenLink(file);
   }
 
   public static void navigate(NavigationItem item, boolean requestFocus, boolean useCurrentWindow) {

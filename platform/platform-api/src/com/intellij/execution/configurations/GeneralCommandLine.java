@@ -106,35 +106,8 @@ public class GeneralCommandLine implements UserDataHolder {
     return myEnvParams;
   }
 
-  /**
-   * @deprecated use {@link #getEnvironment()} (to remove in IDEA 14)
-   */
-  @SuppressWarnings("unused")
-  public Map<String, String> getEnvParams() {
-    return getEnvironment();
-  }
-
-  /**
-   * @deprecated use {@link #getEnvironment()} (to remove in IDEA 14)
-   */
-  @SuppressWarnings("unused")
-  public void setEnvParams(@Nullable Map<String, String> envParams) {
-    myEnvParams.clear();
-    if (envParams != null) {
-      myEnvParams.putAll(envParams);
-    }
-  }
-
   public void setPassParentEnvironment(boolean passParentEnvironment) {
     myPassParentEnvironment = passParentEnvironment;
-  }
-
-  /**
-   * @deprecated use {@link #setPassParentEnvironment(boolean)} (to remove in IDEA 14)
-   */
-  @SuppressWarnings({"unused", "SpellCheckingInspection"})
-  public void setPassParentEnvs(boolean passParentEnvironment) {
-    setPassParentEnvironment(passParentEnvironment);
   }
 
   public boolean isPassParentEnvironment() {

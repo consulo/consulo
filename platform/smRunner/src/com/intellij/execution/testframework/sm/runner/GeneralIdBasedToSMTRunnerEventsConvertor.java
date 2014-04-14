@@ -491,7 +491,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
 
   @NotNull
   private Node findActiveNode() {
-    List<Node> runningLeaves = ContainerUtil.newArrayListWithExpectedSize(1);
+    List<Node> runningLeaves = ContainerUtil.newArrayListWithCapacity(1);
     for (Node node : myRunningNodes) {
       if (!node.hasRunningChildren()) {
         runningLeaves.add(node);

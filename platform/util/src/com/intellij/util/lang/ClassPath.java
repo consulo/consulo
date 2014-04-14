@@ -95,16 +95,6 @@ public class ClassPath {
     }
   }
 
-  /** @deprecated use {@link #ClassPath(java.util.List, boolean, boolean, boolean, boolean)} (to remove in IDEA 14) */
-  public ClassPath(URL[] urls, boolean canLockJars, boolean canUseCache) {
-    this(Arrays.asList(urls), canLockJars, canUseCache, false, true);
-  }
-
-  /** @deprecated use {@link #ClassPath(java.util.List, boolean, boolean, boolean, boolean)} (to remove in IDEA 14) */
-  public ClassPath(URL[] urls, boolean canLockJars, boolean canUseCache, boolean acceptUnescapedUrls, boolean preloadJarContents) {
-    this(Arrays.asList(urls), canLockJars, canUseCache, acceptUnescapedUrls, preloadJarContents);
-  }
-
   public ClassPath(List<URL> urls, boolean canLockJars, boolean canUseCache, boolean acceptUnescapedUrls, boolean preloadJarContents) {
     myCanLockJars = canLockJars;
     myCanUseCache = canUseCache;

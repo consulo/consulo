@@ -241,7 +241,7 @@ public abstract class VcsVFSListener implements Disposable {
   }
 
   private void addFileToMove(final VirtualFile file, final String newParentPath, final String newName) {
-    if (file.isDirectory() && !file.isSymLink() && !isDirectoryVersioningSupported()) {
+    if (file.isDirectory() && !file.is(VFileProperty.SYMLINK) && !isDirectoryVersioningSupported()) {
       @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = file.getChildren();
       if (children != null) {
         for (VirtualFile child : children) {

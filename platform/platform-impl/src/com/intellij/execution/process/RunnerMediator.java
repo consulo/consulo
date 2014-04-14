@@ -107,16 +107,6 @@ public class RunnerMediator {
     }
   }
 
-  /** @deprecated use {@link SystemInfo#isUnix} (to remove in IDEA 13) */
-  public static boolean isUnix() {
-    return SystemInfo.isUnix;
-  }
-
-  /** @deprecated use {@link SystemInfo#isWindows} (to remove in IDEA 13) */
-  public static boolean isWindows() {
-    return SystemInfo.isWindows;
-  }
-
   /**
    * Destroys process tree: in case of windows via imitating ctrl+break, in case of unix via sending sig_kill to every process in tree.
    * @param process to kill with all sub-processes.

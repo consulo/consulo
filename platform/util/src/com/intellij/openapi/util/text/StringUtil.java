@@ -830,25 +830,6 @@ public class StringUtil extends StringUtilRt {
     return true;
   }
 
-  /**
-   * @deprecated use {@link #startsWithConcatenation(String, String...)} (to remove in IDEA 14).
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean startsWithConcatenationOf(@NotNull String string, @NotNull String firstPrefix, @NotNull String secondPrefix) {
-    return startsWithConcatenation(string, firstPrefix, secondPrefix);
-  }
-
-  /**
-   * @deprecated use {@link #startsWithConcatenation(String, String...)} (to remove in IDEA 14).
-   */
-  @SuppressWarnings("UnusedDeclaration")
-  public static boolean startsWithConcatenationOf(@NotNull String string,
-                                                  @NotNull String firstPrefix,
-                                                  @NotNull String secondPrefix,
-                                                  @NotNull String thirdPrefix) {
-    return startsWithConcatenation(string, firstPrefix, secondPrefix, thirdPrefix);
-  }
-
   @NotNull
   public static String trimEnd(@NotNull String s, @NonNls @NotNull String suffix) {
     if (s.endsWith(suffix)) {

@@ -92,17 +92,6 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   public long asyncRefresh(@Nullable Runnable postAction) {
     return doRefresh(true, postAction);
   }
-
-  @Override
-  public void refresh(boolean asynchronous) {
-    doRefresh(asynchronous, null);
-  }
-
-  @Override
-  public void refresh(boolean asynchronous, @Nullable final Runnable postAction) {
-    doRefresh(asynchronous, postAction);
-  }
-
   protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
     if (!asynchronous) {
       ApplicationManager.getApplication().assertIsDispatchThread();

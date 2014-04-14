@@ -80,7 +80,7 @@ public class VfsUtil extends VfsUtilCore {
                                    @Nullable VirtualFileFilter filter) throws IOException {
     @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = fromDir.getChildren();
     for (VirtualFile child : children) {
-      if (!child.isSymLink() && !child.isSpecialFile() && (filter == null || filter.accept(child))) {
+      if (!child.is(VFileProperty.SYMLINK) && !child.is(VFileProperty.SPECIAL) && (filter == null || filter.accept(child))) {
         if (!child.isDirectory()) {
           copyFile(requestor, child, toDir);
         }
@@ -407,7 +407,7 @@ public class VfsUtil extends VfsUtilCore {
     String protocol = url.getProtocol();
     String path = url.getPath();
     if (protocol.equals(StandardFileSystems.JAR_PROTOCOL)) {
-      if (StringUtil.startsWithConcatenationOf(path, StandardFileSystems.FILE_PROTOCOL, PROTOCOL_DELIMITER)) {
+      if (StringUtil.startsWithConcatenation(path, StandardFileSystems.FILE_PROTOCOL, PROTOCOL_DELIMITER)) {
         try {
           URL subURL = new URL(path);
           path = subURL.getPath();

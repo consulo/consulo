@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -68,38 +67,6 @@ public class UrlClassLoader extends ClassLoader {
 
   private final List<URL> myURLs;
   private final ClassPath myClassPath;
-
-  /** @deprecated use {@link #build()} (to remove in IDEA 14) */
-  public UrlClassLoader(@NotNull ClassLoader parent) {
-    this(build().urls(((URLClassLoader)parent).getURLs()).parent(parent.getParent()).allowLock().useCache());
-  }
-
-  /** @deprecated use {@link #build()} (to remove in IDEA 14) */
-  public UrlClassLoader(List<URL> urls, @Nullable ClassLoader parent) {
-    this(build().urls(urls).parent(parent));
-  }
-
-  /** @deprecated use {@link #build()} (to remove in IDEA 14) */
-  public UrlClassLoader(URL[] urls, @Nullable ClassLoader parent) {
-    this(build().urls(urls).parent(parent));
-  }
-
-  /** @deprecated use {@link #build()} (to remove in IDEA 14) */
-  public UrlClassLoader(List<URL> urls, @Nullable ClassLoader parent, boolean lockJars, boolean useCache) {
-    this(build().urls(urls).parent(parent).allowLock(lockJars).useCache(useCache));
-  }
-
-  /** @deprecated use {@link #build()} (to remove in IDEA 14) */
-  public UrlClassLoader(List<URL> urls, @Nullable ClassLoader parent, boolean lockJars, boolean useCache, boolean allowUnescaped, boolean preload) {
-    super(parent);
-    myURLs = ContainerUtil.map(urls, new Function<URL, URL>() {
-      @Override
-      public URL fun(URL url) {
-        return internProtocol(url);
-      }
-    });
-    myClassPath = new ClassPath(myURLs, lockJars, useCache, allowUnescaped, preload);
-  }
 
   protected UrlClassLoader(@NotNull Builder builder) {
     super(builder.myParent);

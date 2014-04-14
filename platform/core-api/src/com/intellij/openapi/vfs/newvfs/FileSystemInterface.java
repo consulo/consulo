@@ -49,9 +49,6 @@ public interface FileSystemInterface {
   @Nullable
   String resolveSymLink(@NotNull VirtualFile file);
 
-  /** @deprecated use PersistentFS interface if needed (to remove in IDEA 14) */
-  boolean isSpecialFile(@NotNull VirtualFile file);
-
   VirtualFile createChildDirectory(@Nullable Object requestor, @NotNull VirtualFile parent, @NotNull String dir) throws IOException;
   VirtualFile createChildFile(@Nullable Object requestor, @NotNull VirtualFile parent, @NotNull String file) throws IOException;
 

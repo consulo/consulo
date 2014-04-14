@@ -15,9 +15,6 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.ui.Messages;
-import org.jetbrains.annotations.Nullable;
-
 public class PasswordUtil {
   private PasswordUtil() { }
 
@@ -43,12 +40,5 @@ public class PasswordUtil {
       result += new Character((char)c).charValue();
     }
     return result;
-  }
-
-  /** @deprecated use {@linkplain Messages#showPasswordDialog(String, String)} (to remove in IDEA 13) */
-  @Nullable
-  @SuppressWarnings("UnusedDeclaration")
-  public static String requestPassword(String prompt, String title, final String defaultValue) {
-    return Messages.showPasswordDialog(prompt, title);
   }
 }

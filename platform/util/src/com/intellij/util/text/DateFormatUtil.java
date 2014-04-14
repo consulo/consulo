@@ -467,13 +467,6 @@ public class DateFormatUtil {
     }
     return b.toString();
   }
-
-  /** @deprecated use {@linkplain DateFormatUtilRt#formatBuildDate(Calendar)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  public static String formatBuildDate(@NotNull Calendar cal) {
-    return DateFormatUtilRt.formatBuildDate(cal);
-  }
-
   @NotNull
   public static String formatAboutDialogDate(@NotNull Date date) {
     return ABOUT_DATE_FORMAT.format(date);

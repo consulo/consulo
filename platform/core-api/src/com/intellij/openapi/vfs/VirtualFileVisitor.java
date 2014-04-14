@@ -168,7 +168,7 @@ public abstract class VirtualFileVisitor<T> {
   }
 
   final boolean allowVisitChildren(@NotNull VirtualFile file) {
-    return !file.isSymLink() || myFollowSymLinks && !VfsUtilCore.isInvalidLink(file);
+    return !file.is(VFileProperty.SYMLINK) || myFollowSymLinks && !VfsUtilCore.isInvalidLink(file);
   }
 
   final boolean depthLimitReached() {

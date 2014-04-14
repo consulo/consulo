@@ -82,21 +82,9 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
       return FileUtil.toSystemIndependentName(myFSRootPath);
     }
 
-    /** @deprecated implementation details (to remove in IDEA 13) */
-    @Override
-    public String getFileSystemRootPath() {
-      return myFSRootPath;
-    }
-
     @Override
     public boolean isToWatchRecursively() {
       return myToWatchRecursively;
-    }
-
-    /** @deprecated implementation details (to remove in IDEA 13) */
-    @Override
-    public boolean dominates(@NotNull WatchRequest other) {
-      return LocalFileSystemImpl.dominates(this, (WatchRequestImpl)other);
     }
 
     @Override

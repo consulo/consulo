@@ -41,7 +41,7 @@ public class CommandLineUtil {
 
   // please keep an implementation in sync with [junit-rt] ProcessBuilder.createProcess()
   public static @NotNull List<String> toCommandLine(@NotNull String command, @NotNull List<String> parameters, @NotNull Platform platform) {
-    List<String> commandLine = ContainerUtil.newArrayListWithExpectedSize(parameters.size() + 1);
+    List<String> commandLine = ContainerUtil.newArrayListWithCapacity(parameters.size() + 1);
 
     commandLine.add(FileUtilRt.toSystemDependentName(command, platform.fileSeparator));
 

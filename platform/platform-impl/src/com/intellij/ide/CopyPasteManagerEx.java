@@ -275,13 +275,6 @@ public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwn
       fireContentChanged(current, newContent);
     }
   }
-
-  /** @deprecated use {@link #moveContentToStackTop(Transferable)} (to remove in IDEA 14) */
-  @SuppressWarnings("UnusedDeclaration")
-  public void moveContentTopStackTop(Transferable t) {
-    moveContentToStackTop(t);
-  }
-
   public void moveContentToStackTop(Transferable t) {
     Transferable current = myData.isEmpty() ? null : myData.get(0);
     if (!Comparing.equal(t, current)) {

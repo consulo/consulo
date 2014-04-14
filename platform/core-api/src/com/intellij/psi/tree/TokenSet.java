@@ -193,24 +193,4 @@ public class TokenSet {
     }
     return newSet;
   }
-
-  /** @deprecated please use {@linkplain #andNot(TokenSet, TokenSet)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  @NotNull
-  public TokenSet minus(@NotNull TokenSet t) {
-    return andNot(this, t);
-  }
-
-  /** @deprecated please use {@linkplain IElementType#enumerate(com.intellij.psi.tree.IElementType.Predicate)} (to remove in IDEA 13) */
-  @SuppressWarnings("UnusedDeclaration")
-  @NotNull
-  public static TokenSet not(@NotNull TokenSet set) {
-    final TokenSet newSet = new TokenSet((short)0, set.myTop);
-    for (int i = 0; i < newSet.myWords.length; i++) {
-      int wordIndex = i - set.myShift;
-      long word = wordIndex >= 0 && wordIndex < set.myWords.length ? set.myWords[wordIndex] : 0;
-      newSet.myWords[i] = ~word;
-    }
-    return newSet;
-  }
 }

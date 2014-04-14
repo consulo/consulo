@@ -252,55 +252,6 @@ public class ExecUtil {
     return "'" + arg.replace("'", "'\"'\"'") + "'";
   }
 
-  /** @deprecated relies on platform-dependent escaping, use {@link #sudoAndGetOutput(List, String, String)} instead (to remove in IDEA 14) */
-  @SuppressWarnings({"UnusedDeclaration", "deprecation"})
-  public static ProcessOutput sudoAndGetOutput(@NotNull String scriptPath, @NotNull String prompt) throws IOException, ExecutionException {
-    return sudoAndGetOutput(scriptPath, prompt, null);
-  }
-
-  /** @deprecated relies on platform-dependent escaping, use {@link #sudoAndGetOutput(List, String, String)} instead (to remove in IDEA 14) */
-  @NotNull
-  public static ProcessOutput sudoAndGetOutput(@NotNull String scriptPath,
-                                               @NotNull String prompt,
-                                               @Nullable String workDir) throws IOException, ExecutionException {
-    if (SystemInfo.isMac) {
-      final String script = "do shell script \"" + scriptPath + "\" with administrator privileges";
-      return execAndGetOutput(Arrays.asList(getOsascriptPath(), "-e", script), workDir);
-    }
-    else if ("root".equals(System.getenv("USER"))) {
-      return execAndGetOutput(Collections.singletonList(scriptPath), workDir);
-    }
-    else if (hasKdeSudo.getValue()) {
-      return execAndGetOutput(Arrays.asList("kdesudo", "--comment", prompt, scriptPath), workDir);
-    }
-    else if (hasGkSudo.getValue()) {
-      return execAndGetOutput(Arrays.asList("gksudo", "--message", prompt, scriptPath), workDir);
-    }
-    else if (hasPkExec.getValue()) {
-      return execAndGetOutput(Arrays.asList("pkexec", scriptPath), workDir);
-    }
-    else if (SystemInfo.isUnix && hasTerminalApp()) {
-      final File sudo = createTempExecutableScript("sudo", ".sh",
-                                                   "#!/bin/sh\n" +
-                                                   "echo \"" + prompt + "\"\n" +
-                                                   "echo\n" +
-                                                   "sudo " + scriptPath + "\n" +
-                                                   "STATUS=$?\n" +
-                                                   "echo\n" +
-                                                   "read -p \"Press Enter to close this window...\" TEMP\n" +
-                                                   "exit $STATUS\n");
-      return execAndGetOutput(getTerminalCommand("Install", sudo.getAbsolutePath()), workDir);
-    }
-
-    throw new UnsupportedSystemException();
-  }
-
-  /** @deprecated relies on platform-dependent escaping, use {@link #sudoAndGetOutput(List, String, String)} instead (to remove in IDEA 14) */
-  @SuppressWarnings({"UnusedDeclaration", "deprecation"})
-  public static int sudoAndGetResult(@NotNull String scriptPath, @NotNull String prompt) throws IOException, ExecutionException {
-    return sudoAndGetOutput(scriptPath, prompt, null).getExitCode();
-  }
-
   public static boolean hasTerminalApp() {
     return SystemInfo.isWindows || SystemInfo.isMac || hasKdeTerminal.getValue() || hasGnomeTerminal.getValue() || hasXTerm.getValue();
   }

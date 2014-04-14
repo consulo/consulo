@@ -70,12 +70,6 @@ public abstract class VirtualFileManager implements ModificationTracker {
    */
   public abstract long asyncRefresh(@Nullable Runnable postAction);
 
-  /** @deprecated use {@linkplain #syncRefresh()} or {@linkplain #asyncRefresh(Runnable)} (to remove in IDEA 13) */
-  public abstract void refresh(boolean asynchronous);
-
-  /** @deprecated use {@linkplain #syncRefresh()} or {@linkplain #asyncRefresh(Runnable)} (to remove in IDEA 13) */
-  public abstract void refresh(boolean asynchronous, @Nullable Runnable postAction);
-
   public abstract void refreshWithoutFileWatcher(boolean asynchronous);
 
   /**

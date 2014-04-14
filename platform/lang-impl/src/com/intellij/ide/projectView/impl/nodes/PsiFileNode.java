@@ -30,6 +30,7 @@ import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.pom.NavigatableWithText;
@@ -74,7 +75,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     data.setIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_READ_STATUS));
 
     VirtualFile file = getVirtualFile();
-    if (file != null && file.isSymLink()) {
+    if (file != null && file.is(VFileProperty.SYMLINK)) {
       String target = file.getCanonicalPath();
       if (target == null) {
         data.setAttributesKey(CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES);

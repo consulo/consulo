@@ -74,12 +74,12 @@ public class StringUtilTest extends TestCase {
   }
 
   public void testStartsWithConcatenation() {
-    assertTrue(StringUtil.startsWithConcatenationOf("something.withdot", "something", "."));
-    assertTrue(StringUtil.startsWithConcatenationOf("something.withdot", "", "something."));
-    assertTrue(StringUtil.startsWithConcatenationOf("something.", "something", "."));
-    assertTrue(StringUtil.startsWithConcatenationOf("something", "something", ""));
-    assertFalse(StringUtil.startsWithConcatenationOf("something", "something", "."));
-    assertFalse(StringUtil.startsWithConcatenationOf("some", "something", ""));
+    assertTrue(StringUtil.startsWithConcatenation("something.withdot", "something", "."));
+    assertTrue(StringUtil.startsWithConcatenation("something.withdot", "", "something."));
+    assertTrue(StringUtil.startsWithConcatenation("something.", "something", "."));
+    assertTrue(StringUtil.startsWithConcatenation("something", "something", ""));
+    assertFalse(StringUtil.startsWithConcatenation("something", "something", "."));
+    assertFalse(StringUtil.startsWithConcatenation("some", "something", ""));
   }
 
   public void testNaturalCompare() {

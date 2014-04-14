@@ -169,7 +169,7 @@ public class MacFileChooserDialogImpl implements PathChooserDialog {
     if (paths == null || paths.size() == 0) return Collections.emptyList();
 
     final LocalFileSystem fs = LocalFileSystem.getInstance();
-    final List<VirtualFile> files = ContainerUtil.newArrayListWithExpectedSize(paths.size());
+    final List<VirtualFile> files = ContainerUtil.newArrayListWithCapacity(paths.size());
     for (String path : paths) {
       final String vfsPath = FileUtil.toSystemIndependentName(path);
       final VirtualFile file = fs.refreshAndFindFileByPath(vfsPath);
