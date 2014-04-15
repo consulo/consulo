@@ -631,14 +631,9 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                                                     final StructureConfigurableContext context,
                                                     final boolean selected) {
     final OrderEntryAppearanceService service = OrderEntryAppearanceService.getInstance();
-    if (item instanceof InvalidJdkItem) {
-      return service.forSdk(null, false, selected, true);
-    }
-    else {
-      final OrderEntry entry = item.getEntry();
-      assert entry != null : item;
-      return service.forOrderEntry(context.getProject(), entry, selected);
-    }
+    final OrderEntry entry = item.getEntry();
+    assert entry != null : item;
+    return service.forOrderEntry(context.getProject(), entry, selected);
   }
 
   private static class TableItemRenderer extends ColoredTableCellRenderer {

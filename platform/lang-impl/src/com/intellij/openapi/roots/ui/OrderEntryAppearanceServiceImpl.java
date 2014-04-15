@@ -38,7 +38,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +47,6 @@ import java.awt.*;
 import java.io.File;
 
 public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService {
-  private static final String NO_SDK = ProjectBundle.message("sdk.missing.item");
 
   @NotNull
   @Override
@@ -57,10 +55,9 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       ModuleExtensionWithSdkOrderEntry sdkLibraryEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
       Sdk sdk = sdkLibraryEntry.getSdk();
       if (!orderEntry.isValid() || sdk == null) {
-        final String oldSdkName = sdkLibraryEntry.getSdkName();
-        final ModuleExtensionProviderEP provider = ModuleExtensionProviderEP.findProviderEP(sdkLibraryEntry.getModuleExtensionId());
-        return FileAppearanceService.getInstance().forInvalidUrl(oldSdkName != null ? oldSdkName : provider == null ? NO_SDK : provider.getName());
+        sdk = null;
       }
+
       return forSdk(sdk, false, selected, true);
     }
     else if (!orderEntry.isValid()) {
@@ -115,7 +112,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @Override
   public CellAppearanceEx forSdk(@Nullable final Sdk jdk, final boolean isInComboBox, final boolean selected, final boolean showVersion) {
     if (jdk == null) {
-      return FileAppearanceService.getInstance().forInvalidUrl(NO_SDK);
+      return SimpleTextCellAppearance.invalid(ProjectBundle.message("unknown.sdk"), AllIcons.Toolbar.Unknown);
     }
 
     String name = jdk.getName();

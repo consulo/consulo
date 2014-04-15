@@ -25,7 +25,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -92,6 +91,6 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
   @Override
   @NotNull
   public CellAppearanceEx forInvalidUrl(@NotNull final String text) {
-    return SimpleTextCellAppearance.invalid(text, PlatformIcons.INVALID_ENTRY_ICON);
+    return SimpleTextCellAppearance.invalid(text, AllIcons.Nodes.PpInvalid);
   }
 }
