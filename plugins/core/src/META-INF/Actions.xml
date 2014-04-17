@@ -1676,6 +1676,7 @@
     <group id="XDebugger.Variables.Tree.Popup">
       <reference ref="XDebugger.ValueGroup"/>
       <reference ref="XDebugger.JumpToSource"/>
+      <reference ref="XDebugger.JumpToTypeSource"/>
       <reference ref="XDebugger.AddToWatches"/>
     </group>
 
