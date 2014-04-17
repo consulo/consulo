@@ -19,6 +19,7 @@ import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ui.LightFilePointer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
@@ -145,8 +146,10 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
     else {
       VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
-      assert virtualFilePointer != null : contentFolderType.getId();
-      return virtualFilePointer;
+      if(virtualFilePointer != null) {
+        return virtualFilePointer;
+      }
+      return new LightFilePointer(myCompilerConfiguration.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
     }
   }
 
