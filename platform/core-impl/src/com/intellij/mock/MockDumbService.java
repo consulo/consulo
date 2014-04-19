@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
+import com.intellij.openapi.project.DumbModeTask;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +40,7 @@ public class MockDumbService extends DumbService {
   }
 
   @Override
-  public void runWhenSmart(Runnable runnable) {
+  public void runWhenSmart(@NotNull Runnable runnable) {
     runnable.run();
   }
 
@@ -47,12 +49,17 @@ public class MockDumbService extends DumbService {
   }
 
   @Override
+  public void queueTask(DumbModeTask task) {
+    task.performInDumbMode(new EmptyProgressIndicator());
+  }
+
+  @Override
   public JComponent wrapGently(@NotNull JComponent dumbUnawareContent, @NotNull Disposable parentDisposable) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void showDumbModeNotification(String message) {
+  public void showDumbModeNotification(@NotNull String message) {
     throw new UnsupportedOperationException();
   }
 
