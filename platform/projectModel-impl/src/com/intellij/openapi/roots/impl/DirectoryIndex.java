@@ -40,6 +40,7 @@ public abstract class DirectoryIndex {
   public abstract ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info);
 
   public abstract boolean isProjectExcludeRoot(@NotNull VirtualFile dir);
+  public abstract boolean isModuleExcludeRoot(@NotNull VirtualFile dir);
 
   @NotNull
   public abstract
@@ -47,6 +48,4 @@ public abstract class DirectoryIndex {
 
   @Nullable
   public abstract String getPackageName(@NotNull VirtualFile dir);
-
-  public abstract boolean isInitialized();
 }

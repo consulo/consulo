@@ -218,12 +218,14 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   private class ContentFilter implements VirtualFileFilter {
     @Override
     public boolean accept(@NotNull VirtualFile file) {
+      DirectoryInfo info = getInfoForFileOrDirectory(file);
+      if (info == null || info.getModule() == null) return false;
+
       if (file.isDirectory()) {
-        DirectoryInfo info = getInfoForFileOrDirectory(file);
-        return info != null && info.getModule() != null;
+        return true;
       }
       else {
-        return (myExclusionManager == null || !myExclusionManager.isExcluded(file)) && !myFileTypeRegistry.isFileIgnored(file);
+        return !myFileTypeRegistry.isFileIgnored(file);
       }
     }
   }

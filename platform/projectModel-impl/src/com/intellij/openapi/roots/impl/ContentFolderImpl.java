@@ -155,8 +155,7 @@ public class ContentFolderImpl extends RootModelComponentBase
     if (!myFilePointer.isValid()) {
       return null;
     }
-    final VirtualFile file = myFilePointer.getFile();
-    return file == null || !file.isDirectory() ? null : file;
+    return myFilePointer.getFile();
   }
 
   @Override

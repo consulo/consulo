@@ -20,15 +20,12 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.impl.RootIndex;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.CollectionQuery;
 import com.intellij.util.Query;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-
-import java.util.Collection;
 
 /**
  * @see com.intellij.openapi.roots.impl.DirectoryIndexImpl
@@ -47,8 +44,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   @NotNull
   public Query<VirtualFile> getDirectoriesByPackageName(@NotNull String packageName, boolean includeLibrarySources) {
     RootIndex rootIndex = getRootIndex();
-    Collection<VirtualFile> riResult = rootIndex.getDirectoriesByPackageName(packageName, includeLibrarySources);
-    return new CollectionQuery<VirtualFile>(riResult);
+    return rootIndex.getDirectoriesByPackageName(packageName, includeLibrarySources);
   }
 
   @NotNull
@@ -68,11 +64,6 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   }
 
   @Override
-  public boolean isInitialized() {
-    return true;
-  }
-
-  @Override
   public DirectoryInfo getInfoForDirectory(@NotNull VirtualFile dir) {
     RootIndex rootIndex = getRootIndex();
     return rootIndex.getInfoForDirectory(dir);
@@ -83,7 +74,7 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   public ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info) {
     if (info.isInModuleSource()) {
       RootIndex rootIndex = getRootIndex();
-      return rootIndex.getSourceRootType(info);
+      return rootIndex.getContentFolderType(info);
     }
     return null;
   }
@@ -91,6 +82,11 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   @Override
   public boolean isProjectExcludeRoot(@NotNull VirtualFile dir) {
     return getRootIndex().isProjectExcludeRoot(dir);
+  }
+
+  @Override
+  public boolean isModuleExcludeRoot(@NotNull VirtualFile dir) {
+    return getRootIndex().isModuleExcludeRoot(dir);
   }
 
   @Override
