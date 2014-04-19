@@ -17,20 +17,17 @@ package com.intellij.ui.messages;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil;
+import org.jdesktop.swingx.graphics.GraphicsUtilities;
+import org.jdesktop.swingx.graphics.ShadowRenderer;
 
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.geom.Area;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -38,26 +35,51 @@ import java.awt.image.BufferedImage;
  */
 public class SheetController {
 
+  private static final int SHEET_MINIMUM_HEIGHT = 143;
   private static String fontName = "Lucida Grande";
-  private static Font regularFont = new Font(fontName, Font.PLAIN, 12);
-  private static Font boldFont = new Font(fontName, Font.BOLD, 14).deriveFont(Font.BOLD);
+  private static Font regularFont = new Font(fontName, Font.PLAIN, 10);
+  private static Font boldFont = new Font(fontName, Font.BOLD, 12).deriveFont(Font.BOLD);
   private final DialogWrapper.DoNotAskOption myDoNotAskOption;
   private JCheckBox doNotAskCheckBox;
   private boolean myDoNotAskResult;
 
+  private BufferedImage myShadowImage;
 
-  private JLabel myHeaderLabel = new JLabel();
-  private MultilineLabel myMessageLabel;
   private JButton[] buttons;
   private JButton myDefaultButton;
   private JButton myFocusedButton;
-  public static int SHEET_WIDTH = 400;
-  public int SHEET_HEIGHT = 150;
+
+  public static int SHADOW_BORDER = 5;
+
+  private static int RIGHT_OFFSET = 10 - SHADOW_BORDER;
+  private static int BOTTOM_SHEET_PADDING = 10;
+
+  private final static int TOP_SHEET_PADDING = 20;
+  private final static int GAP_BETWEEN_LINES = 10;
+
+  private final static int LEFT_SHEET_PADDING = 35;
+  private final static int LEFT_SHEET_OFFSET = 120;
+
+  private static int GAP_BETWEEN_BUTTONS = 5;
+
+  // SHEET
+  public int SHEET_WIDTH = 400;
+
+  public int SHEET_HEIGHT = 143;
+
+  // SHEET + shadow
+  int SHEET_NC_WIDTH = SHEET_WIDTH + SHADOW_BORDER * 2;
+  int SHEET_NC_HEIGHT = SHEET_HEIGHT + SHADOW_BORDER ;
+
+
+  private Icon myIcon = UIUtil.getInformationIcon();
 
   private String myResult;
   private JPanel mySheetPanel;
   private SheetMessage mySheetMessage;
-  private JTextArea myTextArea;
+
+  private JEditorPane messageTextPane = new JEditorPane();
+  private Dimension messageArea = new Dimension(250, Short.MAX_VALUE);
 
   SheetController(final SheetMessage sheetMessage,
                   final String title,
@@ -67,27 +89,87 @@ public class SheetController {
                   final String defaultButtonTitle,
                   final DialogWrapper.DoNotAskOption doNotAskOption,
                   final String focusedButton) {
+    if (icon != null) {
+      myIcon = icon;
+    }
+
     myDoNotAskOption = doNotAskOption;
+    myDoNotAskResult = (doNotAskOption != null) && !doNotAskOption.isToBeShown();
     mySheetMessage = sheetMessage;
     buttons = new JButton[buttonTitles.length];
-    for (int i = 0; i < buttonTitles.length; i++) {
-      buttons[i] = new JButton(buttonTitles[i]);
-      if (buttonTitles[i].equals(defaultButtonTitle)) {
+
+    myResult = null;
+
+    for (int i = 0; i < buttons.length; i++) {
+      String buttonTitle = buttonTitles[i];
+
+      buttons[i] = new JButton();
+      buttons[i].setOpaque(false);
+      handleMnemonics(i, buttonTitle);
+
+      if (buttonTitle.equals(defaultButtonTitle)) {
         myDefaultButton = buttons[i];
       }
-      if (buttonTitles[i].equals(focusedButton)) {
+      if (buttonTitle.equals(focusedButton)) {
         myFocusedButton = buttons[i];
       }
+      if (buttonTitle.equals("Cancel")) {
+        myResult = "Cancel";
+      }
     }
+
+    if (myFocusedButton == null) {
+      myFocusedButton = myDefaultButton;
+    }
+
+    if (myResult == null) {
+      myResult = buttonTitles[0];
+    }
+
     mySheetPanel = createSheetPanel(title, message, buttons);
 
+    initShadowImage();
+  }
 
+  private void initShadowImage() {
+
+    final BufferedImage mySheetStencil = GraphicsUtilities.createCompatibleTranslucentImage(SHEET_WIDTH, SHEET_HEIGHT);
+
+    Graphics2D g2 = mySheetStencil.createGraphics();
+    g2.setColor(new JBColor(Gray._255, Gray._0));
+    g2.fillRect(0, 0, SHEET_WIDTH, SHEET_HEIGHT);
+    g2.dispose();
+
+    ShadowRenderer renderer = new ShadowRenderer();
+    renderer.setSize(SHADOW_BORDER);
+    renderer.setOpacity(.80f);
+    renderer.setColor(new JBColor(JBColor.BLACK, Gray._10));
+    myShadowImage = renderer.createShadow(mySheetStencil);
+  }
+
+  private void handleMnemonics(int i, String buttonTitle) {
+    buttons[i].setName(buttonTitle);
+    buttons[i].setText(buttonTitle);
+    setMnemonicsFromChar('&', buttons[i]);
+    setMnemonicsFromChar('_', buttons[i]);
+  }
+
+  private static void setMnemonicsFromChar(char mnemonicChar, JButton button) {
+    String buttonTitle = button.getText();
+    if (buttonTitle.indexOf(mnemonicChar) != -1) {
+      button.setMnemonic(buttonTitle.charAt(buttonTitle.indexOf(mnemonicChar) + 1));
+      button.setText(buttonTitle.replace(Character.toString(mnemonicChar), ""));
+    }
   }
 
   void requestFocus() {
     final JComponent focusedComponent = (myDoNotAskOption == null) ? myFocusedButton : doNotAskCheckBox;
     if (focusedComponent == null) return; // it might be we have only one button. it is a default one in that case
-    focusedComponent.requestFocusInWindow();
+    if (SystemInfo.isAppleJvm) {
+      focusedComponent.requestFocus();
+    } else {
+      focusedComponent.requestFocusInWindow();
+    }
   }
 
   JPanel getPanel(final JDialog w) {
@@ -98,12 +180,15 @@ public class SheetController {
       @Override
       public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JButton) {
-          myResult = ((JButton)e.getSource()).getText();
+          myResult = ((JButton)e.getSource()).getName();
         }
-        mySheetMessage.startAnimation();
-
+        mySheetMessage.startAnimation(false);
       }
     };
+
+    mySheetPanel.registerKeyboardAction(actionListener,
+                                        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                                        JComponent.WHEN_IN_FOCUSED_WINDOW);
 
     for (JButton button: buttons) {
       button.addActionListener(actionListener);
@@ -111,20 +196,30 @@ public class SheetController {
     return mySheetPanel;
   }
 
+  private static float getSheetAlpha() {
+    return .95f;
+  }
 
   private JPanel createSheetPanel(String title, String message, JButton[] buttons) {
     JPanel sheetPanel = new JPanel() {
       @Override
-      protected void paintComponent(Graphics g) {
+      protected void paintComponent(Graphics g2d) {
+        final Graphics2D g = (Graphics2D) g2d.create();
         super.paintComponent(g);
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getSheetAlpha()));
 
-        final Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.95f));
+        g.setColor(new JBColor(Gray._230, UIUtil.getPanelBackground()));
+        Rectangle2D dialog  = new Rectangle2D.Double(SHADOW_BORDER, 0, SHEET_WIDTH, SHEET_HEIGHT);
 
-        g2d.setColor(Gray._225);
-        Rectangle2D dialog  = new Rectangle2D.Double(0,0,mySheetPanel.getBounds().width - 5, mySheetPanel.getBounds().height - 10);
-        g2d.fill(dialog);
-        paintShadow(g2d, dialog);
+        paintShadow(g);
+        // draw the sheet background
+        if (UIUtil.isUnderDarcula()) {
+          g.fillRoundRect((int)dialog.getX(), (int)dialog.getY() - 5, (int)dialog.getWidth(), (int)(5 + dialog.getHeight()), 5, 5);
+        } else {
+          //todo make bottom corners
+          g.fill(dialog);
+        }
+        paintShadowFromParent(g);
       }
 
     };
@@ -136,93 +231,166 @@ public class SheetController {
       @Override
       protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        AllIcons.Logo_welcomeScreen.paintIcon(this, g, 0, 0);
+        myIcon.paintIcon(this, g, 0, 0);
       }
     };
 
 
-    myHeaderLabel = new JLabel(title);
-
-    myHeaderLabel.setFont(boldFont);
-
-    myHeaderLabel.repaint();
-    myHeaderLabel.setSize(myHeaderLabel.getPreferredSize());
-
-    sheetPanel.add(myHeaderLabel);
-
-    myTextArea = new JTextArea(message);
-
-    myTextArea.setFont(regularFont);
-    myTextArea.setLineWrap(true);
-    myTextArea.setWrapStyleWord(true);
-
-    myTextArea.setSize(250, 10);
-    myTextArea.setOpaque(false);
+    JEditorPane headerLabel = new JEditorPane();
 
 
 
-    sheetPanel.add(myTextArea);
+    headerLabel.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+    headerLabel.setFont(boldFont);
+    headerLabel.setEditable(false);
 
-    myTextArea.repaint();
-    myTextArea.setSize(myTextArea.getPreferredSize());
+    headerLabel.setContentType("text/html");
+    headerLabel.setSize(250, Short.MAX_VALUE);
+    headerLabel.setText(title);
+    headerLabel.setSize(250, headerLabel.getPreferredSize().height);
 
-    SHEET_HEIGHT = myTextArea.getPreferredSize().height +  myHeaderLabel.getPreferredSize().height + 20 + 10 + 100;
+    headerLabel.setOpaque(false);
+    headerLabel.setFocusable(false);
 
-    sheetPanel.setSize(SHEET_WIDTH, SHEET_HEIGHT);
+    sheetPanel.add(headerLabel);
+
+    headerLabel.repaint();
+
+    messageTextPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+    messageTextPane.setFont(regularFont);
+    messageTextPane.setEditable(false);
+
+    messageTextPane.setContentType("text/html");
+
+    FontMetrics fontMetrics = mySheetMessage.getFontMetrics(regularFont);
+
+    int widestWordWidth = 250;
+
+    String [] words = message.split(" ");
+
+    for (String word : words) {
+      widestWordWidth = Math.max(fontMetrics.stringWidth(word), widestWordWidth);
+    }
+
+    messageTextPane.setSize(widestWordWidth, Short.MAX_VALUE);
+    messageTextPane.setText(handleBreaks(message));
+    messageArea.setSize(widestWordWidth, messageTextPane.getPreferredSize().height);
+
+    SHEET_WIDTH = Math.max(LEFT_SHEET_OFFSET + widestWordWidth + RIGHT_OFFSET, SHEET_WIDTH);
+    messageTextPane.setSize(messageArea);
+
+    messageTextPane.setOpaque(false);
+    messageTextPane.setFocusable(false);
+
+    sheetPanel.add(messageTextPane);
+
+    messageTextPane.repaint();
 
     ico.setOpaque(false);
     ico.setSize(new Dimension(AllIcons.Logo_welcomeScreen.getIconWidth(), AllIcons.Logo_welcomeScreen.getIconHeight()));
-    ico.setLocation(20, 20);
+    ico.setLocation(LEFT_SHEET_PADDING, TOP_SHEET_PADDING);
     sheetPanel.add(ico);
-    myHeaderLabel.setLocation(120, 20);
-    myTextArea.setLocation(120, 20 + myHeaderLabel.getPreferredSize().height + 10);
-    layoutWithAbsoluteLayout(title, message, buttons, sheetPanel);
+    headerLabel.setLocation(LEFT_SHEET_OFFSET, TOP_SHEET_PADDING);
+    messageTextPane.setLocation(LEFT_SHEET_OFFSET, TOP_SHEET_PADDING + headerLabel.getPreferredSize().height + GAP_BETWEEN_LINES);
+
+    SHEET_HEIGHT = TOP_SHEET_PADDING + headerLabel.getPreferredSize().height + GAP_BETWEEN_LINES + messageArea.height + GAP_BETWEEN_LINES;
+
+    if (myDoNotAskOption != null) {
+      layoutDoNotAskCheckbox(sheetPanel);
+    }
+
+    layoutWithAbsoluteLayout(buttons, sheetPanel);
+
+    SHEET_HEIGHT += BOTTOM_SHEET_PADDING;
+
+    if (SHEET_HEIGHT < SHEET_MINIMUM_HEIGHT) {
+      SHEET_HEIGHT = SHEET_MINIMUM_HEIGHT;
+      shiftButtonsToTheBottom(SHEET_MINIMUM_HEIGHT - SHEET_HEIGHT);
+    }
+
+    sheetPanel.setFocusCycleRoot(true);
+
+    recalculateShadow();
+
+    sheetPanel.setSize(SHEET_NC_WIDTH, SHEET_NC_HEIGHT);
 
     return sheetPanel;
   }
 
-  private void layoutWithAbsoluteLayout(String title, String message, JButton[] buttons, JPanel sheetPanel) {
-    layoutButtons(buttons, sheetPanel);
+  private static String handleBreaks(final String message) {
+    return message.replaceAll("(\r\n|\n)", "<br/>");
+  }
 
-    if (myDoNotAskOption != null) {
-      layoutDoNotAskCheckbox();
-      sheetPanel.add(doNotAskCheckBox);
+  private void shiftButtonsToTheBottom(int shiftDistance) {
+    for (JButton b : buttons) {
+      b.setLocation(b.getX(), b.getY() + shiftDistance);
     }
   }
 
+  private void recalculateShadow() {
+    SHEET_NC_WIDTH = SHEET_WIDTH + SHADOW_BORDER * 2;
+    SHEET_NC_HEIGHT = SHEET_HEIGHT + SHADOW_BORDER;
+  }
+
+  private void layoutWithAbsoluteLayout(JButton[] buttons, JPanel sheetPanel) {
+    layoutButtons(buttons, sheetPanel);
+  }
+
+  private void paintShadow(Graphics2D g2d) {
+    g2d.setBackground(new JBColor(new Color(255, 255, 255, 0), new Color(110, 110, 110, 0)));
+    g2d.clearRect(0, 0, SHEET_NC_WIDTH, SHEET_HEIGHT);
+    g2d.drawImage(myShadowImage, 0, -SHADOW_BORDER, null);
+    g2d.clearRect(SHADOW_BORDER, 0, SHEET_WIDTH, SHEET_HEIGHT);
+  }
 
 
+  private static float getShadowAlpha() {
+    return ((UIUtil.isUnderDarcula())) ? .85f : .35f;
+  }
 
-  private void paintShadow(Graphics2D g2d, Rectangle2D dialog) {
-    Area shadow = new Area(new RoundRectangle2D.Double(0, 0, mySheetPanel.getBounds().width, mySheetPanel.getBounds().height, 10, 10));
-
-    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.80f));
-
-    Color color1 = Gray._130;
-    Color color2 = new Color(130, 130, 130, 0);
-
-    GradientPaint gp = new GradientPaint(
-            0, mySheetPanel.getBounds().height - 10, color1,
-            0, mySheetPanel.getBounds().height, color2 );
-
-    g2d.setPaint(gp);
-    shadow.subtract(new Area(dialog));
-    g2d.fill(shadow);
+  private void paintShadowFromParent(Graphics2D g2d) {
+    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getShadowAlpha()));
+    g2d.drawImage(myShadowImage, 0, - SHEET_HEIGHT - SHADOW_BORDER, null);
   }
 
   private void layoutButtons(final JButton[] buttons, JPanel panel) {
-    for (int i = 0; i < buttons.length ; i ++) {
-      panel.add(buttons[i]);
-      buttons[i].repaint();
 
-      Dimension size = buttons[i].getPreferredSize();
-      buttons[i].setBounds(SHEET_WIDTH - (size.width + 10) * (buttons.length - i) -  15, SHEET_HEIGHT - 45,
-                           size.width, size.height);
+    //int widestButtonWidth = 0;
+    int buttonWidth = 0;
+    SHEET_HEIGHT += GAP_BETWEEN_LINES;
+
+    for (int i = 0; i < buttons.length; i ++) {
+      buttons[i].repaint();
+      buttons[i].setSize(buttons[i].getPreferredSize());
+      buttonWidth += buttons[i].getWidth();
+      if (i == buttons.length - 1) break;
+      buttonWidth += GAP_BETWEEN_BUTTONS;
     }
+
+    int buttonsRowWidth = LEFT_SHEET_OFFSET + buttonWidth + RIGHT_OFFSET;
+
+    // update the pane if the sheet is going to be wider
+    messageTextPane.setSize(Math.max(messageTextPane.getWidth(), buttonWidth), messageTextPane.getHeight());
+
+    SHEET_WIDTH = Math.max(buttonsRowWidth, SHEET_WIDTH);
+
+    int buttonShift = RIGHT_OFFSET;
+
+    for (JButton button : buttons) {
+      Dimension size = button.getSize();
+      buttonShift += size.width;
+      button.setBounds(SHEET_WIDTH - buttonShift,
+                       SHEET_HEIGHT,
+                       size.width, size.height);
+      panel.add(button);
+      buttonShift += GAP_BETWEEN_BUTTONS;
+    }
+
+    SHEET_HEIGHT += buttons[0].getHeight();
   }
 
-  private void layoutDoNotAskCheckbox() {
-    doNotAskCheckBox = new JCheckBox(myDoNotAskOption.getDoNotShowMessage());
+  private void layoutDoNotAskCheckbox(JPanel sheetPanel) {
+    doNotAskCheckBox = new JCheckBox(myDoNotAskOption.getDoNotShowMessage(), !myDoNotAskOption.isToBeShown());
     doNotAskCheckBox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
@@ -231,39 +399,33 @@ public class SheetController {
     });
     doNotAskCheckBox.repaint();
     doNotAskCheckBox.setSize(doNotAskCheckBox.getPreferredSize());
-    doNotAskCheckBox.setLocation(120, SHEET_HEIGHT - 70);
+
+    doNotAskCheckBox.setLocation(LEFT_SHEET_OFFSET, SHEET_HEIGHT);
+    sheetPanel.add(doNotAskCheckBox);
+
+    SHEET_HEIGHT += doNotAskCheckBox.getHeight();
   }
 
   /**
    * This method is used to show an image during message showing
    * @return image to show
    */
-  private Image getStaticImage() {
+  Image getStaticImage() {
     final JFrame myOffScreenFrame = new JFrame() ;
     myOffScreenFrame.add(mySheetPanel);
     myOffScreenFrame.getRootPane().setDefaultButton(myDefaultButton);
 
-    final BufferedImage image = new BufferedImage(SHEET_WIDTH, SHEET_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+    final BufferedImage image = (SystemInfo.isJavaVersionAtLeast("1.7")) ?
+                                UIUtil.createImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT, BufferedImage.TYPE_INT_ARGB) :
+                                GraphicsUtilities.createCompatibleTranslucentImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT);
 
-    mySheetPanel.paint(image.createGraphics());
+    Graphics g = image.createGraphics();
+    mySheetPanel.paint(g);
+
+    g.dispose();
+
     myOffScreenFrame.dispose();
     return image;
-  }
-
-  public JPanel getStaticPanel() {
-    final Image staticImage = getStaticImage();
-    JPanel jPanel = new JPanel() {
-      @Override
-      protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g.create();
-        int zeroOffset = getHeight() - SHEET_HEIGHT;
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.95f));
-        g2d.drawImage(staticImage, 0 , zeroOffset, null);
-      }
-    };
-    jPanel.setOpaque(false);
-    return jPanel;
   }
 
   public boolean getDoNotAskResult () {
@@ -272,23 +434,5 @@ public class SheetController {
 
   public String getResult() {
     return myResult;
-  }
-}
-
-class MultilineLabel extends JTextPane {
-  private static final long serialVersionUID = 1L;
-  public MultilineLabel(){
-    super();
-    setEditable(false);
-    setCursor(null);
-    setOpaque(false);
-    setFocusable(false);
-
-    setPreferredSize(new Dimension(200,50));
-
-    StyledDocument doc = getStyledDocument();
-    SimpleAttributeSet center = new SimpleAttributeSet();
-    StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
-    doc.setParagraphAttributes(0, doc.getLength(), center, false);
   }
 }

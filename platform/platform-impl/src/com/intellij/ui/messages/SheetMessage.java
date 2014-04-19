@@ -15,29 +15,42 @@
  */
 package com.intellij.ui.messages;
 
+import com.apple.eawt.FullScreenUtilities;
+import com.intellij.openapi.application.impl.LaterInvocator;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.mac.MacMainFrameDecorator;
+import com.intellij.util.ui.Animator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
  * Created by Denis Fokin
  */
-public class SheetMessage  implements ActionListener {
+public class SheetMessage {
+
+  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.messages.SheetMessage");
+
   private JDialog myWindow;
   private Window myParent;
   private SheetController myController;
-  private Timer myAnimator = new Timer(2, this);
 
-  private boolean myShouldEnlarge = true;
+  private final static int TIME_TO_SHOW_SHEET = 250;
 
-  private final static int SHEET_ANIMATION_STEP = 4;
+  private Image staticImage;
+  private int imageHeight;
+  private boolean restoreFullscreenButton;
 
   public SheetMessage(final Window owner,
                       final String title,
@@ -45,22 +58,80 @@ public class SheetMessage  implements ActionListener {
                       final Icon icon,
                       final String[] buttons,
                       final DialogWrapper.DoNotAskOption doNotAskOption,
-                      final String focusedButton,
-                      final String defaultButton)
+                      final String defaultButton,
+                      final String focusedButton)
   {
-    myWindow = new JDialog(owner, "This should not be shown", Dialog.ModalityType.APPLICATION_MODAL) ;
-    myParent = owner;
-    myWindow.setSize(SheetController.SHEET_WIDTH, 0);
-    myWindow.setUndecorated(true);
-    myWindow.setBackground(new JBColor(new Color(0, 0, 0, 0), new Color(0, 0, 0, 0)));
-    myController = new SheetController(this, title, message, icon, buttons, defaultButton, doNotAskOption, focusedButton);
-    myWindow.setContentPane(myController.getStaticPanel());
-    registerMoveResizeHandler();
-    myWindow.setFocusableWindowState(true);
-    myWindow.setFocusable(true);
+    myWindow = new JDialog(owner, "This should not be shown", Dialog.ModalityType.APPLICATION_MODAL);
+    myWindow.getRootPane().putClientProperty("apple.awt.draggableWindowBackground", Boolean.FALSE);
 
-    myAnimator.start();
+    myWindow.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowActivated(WindowEvent e) {
+        super.windowActivated(e);
+      }
+    });
+
+    myParent = owner;
+
+    myWindow.setUndecorated(true);
+    myWindow.setBackground(Gray.TRANSPARENT);
+    myController = new SheetController(this, title, message, icon, buttons, defaultButton, doNotAskOption, focusedButton);
+
+    imageHeight = 0;
+    registerMoveResizeHandler();
+    myWindow.setFocusable(true);
+    myWindow.setFocusableWindowState(true);
+    if (SystemInfo.isJavaVersionAtLeast("1.7")) {
+      myWindow.setSize(myController.SHEET_NC_WIDTH, 0);
+
+      setWindowOpacity(0.0f);
+
+      myWindow.addComponentListener(new ComponentAdapter() {
+        @Override
+        public void componentShown(ComponentEvent e) {
+          super.componentShown(e);
+          setWindowOpacity(1.0f);
+          myWindow.setSize(myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
+        }
+      });
+    } else {
+      myWindow.setModal(true);
+      myWindow.setSize(myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
+      setPositionRelativeToParent();
+    }
+    startAnimation(true);
+    restoreFullscreenButton = couldBeInFullScreen();
+    if (restoreFullscreenButton) {
+      FullScreenUtilities.setWindowCanFullScreen(myParent, false);
+    }
+
+    LaterInvocator.enterModal(myWindow);
     myWindow.setVisible(true);
+    LaterInvocator.leaveModal(myWindow);
+  }
+
+  private void setWindowOpacity(float opacity) {
+    try {
+      Method setOpacityMethod = myWindow.getClass().getMethod("setOpacity", Float.TYPE);
+      setOpacityMethod.invoke(myWindow, opacity);
+    }
+    catch (NoSuchMethodException e) {
+      LOG.error(e);
+    }
+    catch (InvocationTargetException e) {
+      LOG.error(e);
+    }
+    catch (IllegalAccessException e) {
+      LOG.error(e);
+    }
+  }
+
+  private boolean couldBeInFullScreen() {
+    if (myParent instanceof JFrame) {
+      JRootPane rootPane = ((JFrame)myParent).getRootPane();
+      return rootPane.getClientProperty(MacMainFrameDecorator.FULL_SCREEN) == null;
+    }
+    return false;
   }
 
   public boolean toBeShown() {
@@ -71,40 +142,76 @@ public class SheetMessage  implements ActionListener {
     return myController.getResult();
   }
 
-  void startAnimation () {
-    myWindow.setContentPane(myController.getStaticPanel());
-    myAnimator.start();
-  }
+  void startAnimation (final boolean enlarge) {
+    staticImage = myController.getStaticImage();
+    JPanel staticPanel = new JPanel() {
+      @Override
+      public void paint(Graphics g) {
+        super.paint(g);
+        if (staticImage != null) {
+          Graphics2D g2d = (Graphics2D) g.create();
 
 
+          g2d.setBackground(new JBColor(new Color(255, 255, 255, 0), new Color(110, 110, 110, 0)));
+          g2d.clearRect(0, 0, myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
 
-    int windowHeight = (myShouldEnlarge) ? myWindow.getHeight() + SHEET_ANIMATION_STEP
-                                         : myWindow.getHeight() - SHEET_ANIMATION_STEP;
+          g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.95f));
 
-    myWindow.setSize(myWindow.getWidth(), windowHeight);
-    setPositionRelativeToParent();
-    if (myWindow.getHeight() > myController.SHEET_HEIGHT) {
-      myAnimator.stop();
-      myWindow.setContentPane(
-              myController.getPanel(myWindow)
-      );
-      myController.requestFocus();
-      myShouldEnlarge = false;
-    }
+          int multiplyFactor = staticImage.getWidth(null)/myController.SHEET_NC_WIDTH;
 
-    if (myWindow.getHeight() < 0) {
-      myAnimator.stop();
-      myWindow.dispose();
-    }
+          g.drawImage(staticImage, 0, 0,
+                      myController.SHEET_NC_WIDTH, imageHeight,
+                      0, staticImage.getHeight(null) - imageHeight * multiplyFactor,
+                      staticImage.getWidth(null), staticImage.getHeight(null),
+                      null);
+        }
+      }
+    };
+    staticPanel.setOpaque(false);
+    staticPanel.setSize(myController.SHEET_NC_WIDTH,myController.SHEET_NC_HEIGHT);
+    myWindow.setContentPane(staticPanel);
+
+    Animator myAnimator = new Animator("Roll Down Sheet Animator", myController.SHEET_NC_HEIGHT ,
+                                       TIME_TO_SHOW_SHEET, false) {
+      @Override
+      public void paintNow(int frame, int totalFrames, int cycle) {
+        setPositionRelativeToParent();
+        float percentage = (float)frame/(float)totalFrames;
+        imageHeight = enlarge ? (int)(((float)myController.SHEET_NC_HEIGHT) * percentage):
+                      (int)(myController.SHEET_NC_HEIGHT - percentage * myController.SHEET_HEIGHT);
+        myWindow.repaint();
+      }
+
+      @Override
+      protected void paintCycleEnd() {
+        setPositionRelativeToParent();
+        if (enlarge) {
+          imageHeight = myController.SHEET_NC_HEIGHT;
+          staticImage = null;
+          myWindow.setContentPane(myController.getPanel(myWindow));
+
+          myController.requestFocus();
+        } else {
+          if (restoreFullscreenButton) {
+            FullScreenUtilities.setWindowCanFullScreen(myParent, true);
+          }
+          myWindow.dispose();
+        }
+      }
+    };
+
+    myAnimator.resume();
+
   }
 
   private void setPositionRelativeToParent () {
     int width = myParent.getWidth();
-    myWindow.setLocation(width / 2 - SheetController.SHEET_WIDTH / 2 + myParent.getLocation().x, myParent.getInsets().top
-                                                                                                 + myParent.getLocation().y);
+    myWindow.setBounds(width / 2 - myController.SHEET_NC_WIDTH / 2 + myParent.getLocation().x,
+                       myParent.getInsets().top + myParent.getLocation().y,
+                       myController.SHEET_NC_WIDTH,
+                       myController.SHEET_NC_HEIGHT);
+
   }
 
   private void registerMoveResizeHandler () {
@@ -122,6 +229,11 @@ public class SheetMessage  implements ActionListener {
       }
     });
   }
+
+  FontMetrics getFontMetrics(Font f) {
+    return myParent.getGraphics().getFontMetrics(f);
+  }
+
 }
 
 
