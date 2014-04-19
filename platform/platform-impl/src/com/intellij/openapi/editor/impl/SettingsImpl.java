@@ -82,7 +82,7 @@ public class SettingsImpl implements EditorSettings {
   public SettingsImpl(@Nullable EditorEx editor) {
     myEditor = editor;
   }
-  
+
   @Override
   public boolean isRightMarginShown() {
     return myIsRightMarginShown != null
@@ -185,9 +185,9 @@ public class SettingsImpl implements EditorSettings {
   }
 
   @Override
-  public void setAdditionalColumnsCount(int additinalColumnsCount) {
-    if (myAdditionalColumnsCount == additinalColumnsCount) return;
-    myAdditionalColumnsCount = additinalColumnsCount;
+  public void setAdditionalColumnsCount(int additionalColumnsCount) {
+    if (myAdditionalColumnsCount == additionalColumnsCount) return;
+    myAdditionalColumnsCount = additionalColumnsCount;
     fireEditorRefresh();
   }
 
@@ -483,7 +483,7 @@ public class SettingsImpl implements EditorSettings {
   @Override
   public boolean isAllSoftWrapsShown() {
     return myIsAllSoftWrapsShown != null ? myIsWhitespacesShown.booleanValue()
-                                      : EditorSettingsExternalizable.getInstance().isAllSoftWrapsShown();
+                                         : EditorSettingsExternalizable.getInstance().isAllSoftWrapsShown();
   }
 
   @Override
@@ -540,6 +540,6 @@ public class SettingsImpl implements EditorSettings {
 
   @Override
   public void setShowIntentionBulb(boolean show) {
-    myShowIntentionBulb = show; 
+    myShowIntentionBulb = show;
   }
 }
