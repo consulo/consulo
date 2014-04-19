@@ -317,5 +317,13 @@
       <interface-class>com.intellij.openapi.editor.EditorLastActionTracker</interface-class>
       <implementation-class>com.intellij.openapi.editor.impl.EditorLastActionTrackerImpl</implementation-class>
     </component>
+
+    <component>
+      <implementation-class>com.intellij.codeInsight.preview.ImageOrColorPreviewManager</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.editor.richcopy.settings.RichCopySettings</implementation-class>
+    </component>
   </application-components>
 </idea-plugin>

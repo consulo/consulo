@@ -286,11 +286,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.codeInsight.preview.ImageOrColorPreviewProjectComponent</interface-class>
-      <implementation-class>com.intellij.codeInsight.preview.ImageOrColorPreviewProjectComponent</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.refactoring.changeSignature.ChangeSignatureGestureDetector</implementation-class>
       <skipForDefaultProject/>
     </component>

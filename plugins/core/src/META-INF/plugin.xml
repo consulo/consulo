@@ -1017,6 +1017,7 @@
                     area="CONSULO_PROJECT"/>
 
     <extensionPoint name="previewHintProvider" interface="com.intellij.codeInsight.preview.PreviewHintProvider"/>
+    <extensionPoint name="elementPreviewProvider" interface="com.intellij.codeInsight.preview.ElementPreviewProvider" />
     <extensionPoint name="testActionProvider" interface="com.intellij.execution.testframework.ToggleModelActionProvider"/>
 
     <extensionPoint name="psiViewerExtension" interface="com.intellij.internal.psiView.PsiViewerExtension"/>
@@ -2557,5 +2558,7 @@
     <actionPromoter implementation="com.intellij.openapi.vcs.actions.VcsActionPromoter" />
 
     <projectOpenProcessor implementation="com.intellij.platform.PlatformProjectOpenProcessor" />
+
+    <elementPreviewProvider implementation="com.intellij.codeInsight.preview.ElementPreviewHintProvider" />
   </extensions>
 </idea-plugin>
