@@ -2560,5 +2560,9 @@
     <projectOpenProcessor implementation="com.intellij.platform.PlatformProjectOpenProcessor" />
 
     <elementPreviewProvider implementation="com.intellij.codeInsight.preview.ElementPreviewHintProvider" />
+
+    <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.TextWithMarkupProcessor"/>
+    <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.RtfCopyPasteProcessor"/>
+    <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.HtmlCopyPasteProcessor"/>
   </extensions>
 </idea-plugin>

@@ -28,8 +28,8 @@ import org.jetbrains.annotations.Nullable;
  * @since 3/26/13 6:40 PM
  */
 @State(
-        name = "EditorRichCopySettings",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")}
+  name = "EditorRichCopySettings",
+  storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")}
 )
 public class RichCopySettings implements PersistentStateComponent<RichCopySettings>, ApplicationComponent {
 
