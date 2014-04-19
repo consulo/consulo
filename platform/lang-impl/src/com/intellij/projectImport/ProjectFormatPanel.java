@@ -22,7 +22,6 @@ package com.intellij.projectImport;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.components.StorageScheme;
 
 import javax.swing.*;
 
@@ -50,9 +49,6 @@ public class ProjectFormatPanel {
   }
 
   public void updateData(WizardContext context) {
-    StorageScheme format =
-      FILE_BASED.equals(myStorageFormatCombo.getSelectedItem()) ? StorageScheme.DEFAULT : StorageScheme.DIRECTORY_BASED;
-    context.setProjectStorageFormat(format);
     setDefaultFormat(isDefault());
   }
 

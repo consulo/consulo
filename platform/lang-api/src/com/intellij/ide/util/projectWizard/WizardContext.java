@@ -18,9 +18,7 @@ package com.intellij.ide.util.projectWizard;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
@@ -43,11 +41,6 @@ public class WizardContext extends UserDataHolderBase {
 
   private ProjectBuilder myProjectBuilder;
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private StorageScheme myProjectStorageFormat = StorageScheme.DIRECTORY_BASED;
-
-  public void setProjectStorageFormat(StorageScheme format) {
-    myProjectStorageFormat = format;
-  }
 
   public interface Listener {
     void buttonsUpdateRequested();
@@ -130,14 +123,6 @@ public class WizardContext extends UserDataHolderBase {
     myListeners.remove(listener);
   }
 
-  public void setProjectJdk(Sdk jdk) {
-
-  }
-
-  public Sdk getProjectJdk() {
-    return null;
-  }
-
   @Nullable
   public ProjectBuilder getProjectBuilder() {
     return myProjectBuilder;
@@ -149,9 +134,5 @@ public class WizardContext extends UserDataHolderBase {
 
   public String getPresentationName() {
     return myProject == null ? IdeBundle.message("project.new.wizard.project.identification") : IdeBundle.message("project.new.wizard.module.identification");
-  }
-
-  public StorageScheme getProjectStorageFormat() {
-    return myProjectStorageFormat;
   }
 }

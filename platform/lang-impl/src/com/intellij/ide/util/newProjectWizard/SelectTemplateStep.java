@@ -19,7 +19,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.ide.util.DefaultModuleBuilder;
 import com.intellij.ide.util.projectWizard.*;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
@@ -283,9 +282,6 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
       myModuleBuilder.setModuleDirPath(
         FileUtil.toSystemIndependentName(myModuleFileLocation.getText()));
       myModuleBuilder.setContentEntryPath(FileUtil.toSystemIndependentName(getModuleContentRoot()));
-      if (myModuleBuilder instanceof TemplateModuleBuilder) {
-        myWizardContext.setProjectStorageFormat(StorageScheme.DIRECTORY_BASED);
-      }
     }
 
     if (mySettingsStep != null) {

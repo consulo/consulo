@@ -22,12 +22,10 @@ package com.intellij.projectImport;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -133,51 +131,31 @@ public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> e
       if (!doQuickImport(virtualFile, wizardContext)) return null;
 
       if (wizardContext.getProjectName() == null) {
-        if (wizardContext.getProjectStorageFormat() == StorageScheme.DEFAULT) {
-          wizardContext.setProjectName(IdeBundle.message("project.import.default.name", getName()) + ProjectFileType.DOT_DEFAULT_EXTENSION);
-        }
-        else {
-          wizardContext.setProjectName(IdeBundle.message("project.import.default.name.dotIdea", getName()));
-        }
+        wizardContext.setProjectName(IdeBundle.message("project.import.default.name.dotIdea", getName()));
       }
 
       final String dotIdeaFilePath = wizardContext.getProjectFileDirectory() + File.separator + Project.DIRECTORY_STORE_FOLDER;
-      final String projectFilePath = wizardContext.getProjectFileDirectory() + File.separator + wizardContext.getProjectName() +
-                                     ProjectFileType.DOT_DEFAULT_EXTENSION;
 
       File dotIdeaFile = new File(dotIdeaFilePath);
-      File projectFile = new File(projectFilePath);
 
-      String pathToOpen;
-      if (wizardContext.getProjectStorageFormat() == StorageScheme.DEFAULT) {
-        pathToOpen = projectFilePath;
-      } else {
-        pathToOpen = dotIdeaFile.getParent();
-      }
+      String pathToOpen = dotIdeaFile.getParent();
 
       boolean shouldOpenExisting = false;
-      if (!ApplicationManager.getApplication().isHeadlessEnvironment() && (projectFile.exists() || dotIdeaFile.exists())) {
-        String existingName;
-        if (dotIdeaFile.exists()) {
-          existingName = "an existing project";
-          pathToOpen = dotIdeaFile.getParent();
-        }
-        else {
-          existingName = "'" + projectFile.getName() + "'";
-          pathToOpen = projectFilePath;
-        }
+      if (!ApplicationManager.getApplication().isHeadlessEnvironment() && dotIdeaFile.exists()) {
+        String existingName = "an existing project";
+
         int result = Messages.showYesNoCancelDialog(projectToClose,
                                                     IdeBundle.message("project.import.open.existing",
                                                                       existingName,
-                                                                      projectFile.getParent(),
+                                                                      pathToOpen,
                                                                       virtualFile.getName()),
                                                     IdeBundle.message("title.open.project"),
                                                     IdeBundle.message("project.import.open.existing.openExisting"),
                                                     IdeBundle.message("project.import.open.existing.reimport"),
                                                     CommonBundle.message("button.cancel"),
                                                     Messages.getQuestionIcon());
-        if (result == 2) return null;
-        shouldOpenExisting = result == 0;
+        if (result == Messages.CANCEL) return null;
+        shouldOpenExisting = result == Messages.OK;
       }
 
       final Project projectToOpen;
