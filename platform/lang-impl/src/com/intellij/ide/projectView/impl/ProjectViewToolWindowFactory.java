@@ -16,11 +16,10 @@
 
 package com.intellij.ide.projectView.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactoryEx;
 
@@ -35,6 +34,6 @@ public class ProjectViewToolWindowFactory implements ToolWindowFactoryEx, DumbAw
 
   @Override
   public void init(ToolWindow window) {
-    window.setIcon(IconLoader.getIcon(ApplicationInfoEx.getInstanceEx().getToolWindowIconUrl()));
+    window.setIcon(AllIcons.Toolwindows.ToolWindowProject);
   }
 }

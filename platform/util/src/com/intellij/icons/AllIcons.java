@@ -721,7 +721,6 @@ public class AllIcons {
     public static final Icon EjbPrimaryKeyClass = IconLoader.getIcon("/nodes/ejbPrimaryKeyClass.png"); // 16x16
     public static final Icon EjbReference = IconLoader.getIcon("/nodes/ejbReference.png"); // 16x16
     public static final Icon EmptyNode = IconLoader.getIcon("/nodes/emptyNode.png"); // 18x18
-    public static final Icon EnterpriseProject = IconLoader.getIcon("/nodes/enterpriseProject.png"); // 16x16
     public static final Icon EntryPoints = IconLoader.getIcon("/nodes/entryPoints.png"); // 16x16
     public static final Icon Enum = IconLoader.getIcon("/nodes/enum.png"); // 16x16
     public static final Icon ErrorIntroduction = IconLoader.getIcon("/nodes/errorIntroduction.png"); // 16x16
@@ -788,7 +787,7 @@ public class AllIcons {
     public static final Icon PpLib = IconLoader.getIcon("/nodes/ppLib.png"); // 16x16
     public static final Icon PpLibFolder = IconLoader.getIcon("/nodes/ppLibFolder.png"); // 16x16
     public static final Icon PpWeb = IconLoader.getIcon("/nodes/ppWeb.png"); // 16x16
-    public static final Icon Project = IconLoader.getIcon("/nodes/project.png"); // 16x16
+    public static final Icon ProjectTab = IconLoader.getIcon("/nodes/projectTab.png"); // 16x16
     public static final Icon Property = IconLoader.getIcon("/nodes/property.png"); // 16x16
     public static final Icon PropertyRead = IconLoader.getIcon("/nodes/propertyRead.png"); // 16x16
     public static final Icon PropertyReadStatic = IconLoader.getIcon("/nodes/propertyReadStatic.png"); // 16x16

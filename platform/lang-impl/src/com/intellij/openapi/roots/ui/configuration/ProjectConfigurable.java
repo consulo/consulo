@@ -235,7 +235,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   @Override
   public Icon getIcon(boolean open) {
-    return AllIcons.Nodes.Project;
+    return AllIcons.Nodes.ProjectTab;
   }
 
   @Override

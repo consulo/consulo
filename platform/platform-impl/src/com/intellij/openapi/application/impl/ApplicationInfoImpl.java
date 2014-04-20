@@ -64,7 +64,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private String mySmallIconUrl = "/icon_small.png";
   @NonNls private String myBigIconUrl = null;
   @NonNls private String myOpaqueIconUrl = "/icon.png";
-  @NonNls private String myToolWindowIconUrl = "/toolwindows/toolWindowProject.png";
   private String myWelcomeScreenLogoUrl = null;
   private String myEditorBackgroundImageUrl = null;
 
@@ -118,7 +117,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ATTRIBUTE_SIZE32 = "size32";
   @NonNls private static final String ATTRIBUTE_SIZE128 = "size128";
   @NonNls private static final String ATTRIBUTE_SIZE16 = "size16";
-  @NonNls private static final String ATTRIBUTE_SIZE12 = "size12";
   @NonNls private static final String ATTRIBUTE_SIZE32OPAQUE = "size32opaque";
   @NonNls private static final String ELEMENT_PACKAGE = "package";
   @NonNls private static final String ATTRIBUTE_CODE = "code";
@@ -251,11 +249,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @Override
   public String getOpaqueIconUrl() {
     return myOpaqueIconUrl;
-  }
-
-  @Override
-  public String getToolWindowIconUrl() {
-    return myToolWindowIconUrl;
   }
 
   @Override
@@ -524,10 +517,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       mySmallIconUrl = iconElement.getAttributeValue(ATTRIBUTE_SIZE16);
       myOpaqueIconUrl = iconElement.getAttributeValue(ATTRIBUTE_SIZE32OPAQUE);
       myBigIconUrl = iconElement.getAttributeValue(ATTRIBUTE_SIZE128, (String)null);
-      final String toolWindowIcon = iconElement.getAttributeValue(ATTRIBUTE_SIZE12);
-      if (toolWindowIcon != null) {
-        myToolWindowIconUrl = toolWindowIcon;
-      }
     }
 
     Element packageElement = parentNode.getChild(ELEMENT_PACKAGE);

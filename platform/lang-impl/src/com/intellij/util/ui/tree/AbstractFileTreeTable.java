@@ -91,7 +91,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
         if (value instanceof ProjectRootNode) {
           setText(getProjectNodeText());
-          setIcon(AllIcons.Nodes.Project);
+          setIcon(AllIcons.Nodes.ProjectTab);
           return this;
         }
         FileNode fileNode = (FileNode)value;
