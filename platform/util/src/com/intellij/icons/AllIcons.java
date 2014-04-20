@@ -393,7 +393,6 @@ public class AllIcons {
     public static final Icon HideToolWindow = IconLoader.getIcon("/general/hideToolWindow.png"); // 14x14
     public static final Icon HideToolWindowInactive = IconLoader.getIcon("/general/hideToolWindowInactive.png"); // 14x14
     public static final Icon HideWarnings = IconLoader.getIcon("/general/hideWarnings.png"); // 16x16
-    public static final Icon IjLogo = IconLoader.getIcon("/general/ijLogo.png"); // 16x16
     public static final Icon ImplementingMethod = IconLoader.getIcon("/general/implementingMethod.png"); // 10x14
     public static final Icon ImportProject = IconLoader.getIcon("/general/importProject.png"); // 32x32
     public static final Icon ImportSettings = IconLoader.getIcon("/general/ImportSettings.png"); // 32x32
