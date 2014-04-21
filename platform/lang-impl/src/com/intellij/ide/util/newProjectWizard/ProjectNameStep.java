@@ -21,7 +21,6 @@ import com.intellij.ide.util.projectWizard.*;
 import com.intellij.ide.util.projectWizard.importSources.impl.ProjectFromSourcesBuilderImpl;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.projectImport.ProjectFormatPanel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -39,7 +38,6 @@ public class ProjectNameStep extends ModuleWizardStep {
   protected final WizardContext myWizardContext;
   @Nullable
   protected final WizardMode myMode;
-  private final ProjectFormatPanel myFormatPanel = new ProjectFormatPanel();
 
   public ProjectNameStep(WizardContext wizardContext, @Nullable final WizardMode mode) {
     myWizardContext = wizardContext;
@@ -90,7 +88,6 @@ public class ProjectNameStep extends ModuleWizardStep {
         ((ProjectFromSourcesBuilderImpl)moduleBuilder).setBaseProjectPath(projectFileDirectory);
       }
     }
-    myFormatPanel.updateData(myWizardContext);
   }
 
   public Icon getIcon() {
@@ -114,6 +111,6 @@ public class ProjectNameStep extends ModuleWizardStep {
   }
 
   public boolean validate() throws ConfigurationException {
-    return myNamePathComponent.validateNameAndPath(myWizardContext, myFormatPanel.isDefault());
+    return myNamePathComponent.validateNameAndPath(myWizardContext, true);
   }
 }

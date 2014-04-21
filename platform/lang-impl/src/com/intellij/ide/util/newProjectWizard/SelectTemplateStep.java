@@ -35,7 +35,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.ProjectTemplate;
 import com.intellij.platform.templates.TemplateModuleBuilder;
-import com.intellij.projectImport.ProjectFormatPanel;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.HideableDecorator;
 import com.intellij.ui.IdeBorderFactory;
@@ -69,7 +68,6 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
   private final HideableDecorator myExpertDecorator;
 
   private final NamePathComponent myNamePathComponent;
-  private final ProjectFormatPanel myFormatPanel;
 
   private JTextField myModuleName;
   private TextFieldWithBrowseButton myModuleContentRoot;
@@ -103,7 +101,6 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
     mySequence = sequence;
     Messages.installHyperlinkSupport(myDescriptionPane);
 
-    myFormatPanel = new ProjectFormatPanel();
     myNamePathComponent = initNamePathComponent(context);
     if (context.isCreatingNewProject()) {
       mySettingsPanel.add(myNamePathComponent, BorderLayout.NORTH);
@@ -133,18 +130,10 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
         myWizardContext.requestWizardButtonsUpdate();
       }
     });
-
-    if (myWizardContext.isCreatingNewProject()) {
-      addProjectFormat(myModulePanel);
-    }
   }
 
   private JTextField getNameComponent() {
     return myWizardContext.isCreatingNewProject() ? myNamePathComponent.getNameComponent() : myModuleName;
-  }
-
-  private void addProjectFormat(JPanel panel) {
-    addField("Project \u001bformat:", myFormatPanel.getStorageFormatComboBox(), panel);
   }
 
   @Override
@@ -235,7 +224,7 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
     myModuleBuilder = new DefaultModuleBuilder();
 
     if (myWizardContext.isCreatingNewProject()) {
-      if (!myNamePathComponent.validateNameAndPath(myWizardContext, myFormatPanel.isDefault())) return false;
+      if (!myNamePathComponent.validateNameAndPath(myWizardContext, true)) return false;
     }
 
     if (!validateModulePaths()) return false;
@@ -274,7 +263,6 @@ public class SelectTemplateStep extends ModuleWizardStep implements SettingsStep
     myWizardContext.setProjectBuilder(myModuleBuilder);
     myWizardContext.setProjectName(myNamePathComponent.getNameValue());
     myWizardContext.setProjectFileDirectory(myNamePathComponent.getPath());
-    myFormatPanel.updateData(myWizardContext);
 
     if (myModuleBuilder != null) {
       final String moduleName = getModuleName();
