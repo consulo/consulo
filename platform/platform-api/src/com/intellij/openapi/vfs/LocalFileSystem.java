@@ -17,13 +17,13 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.util.Processor;
 import com.intellij.util.io.fs.IFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.io.File;
 import java.util.Collection;
@@ -89,12 +89,12 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
 
   public abstract void refreshFiles(@NotNull Iterable<VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish);
 
-  @NotNull
+  @Deprecated
+  @DeprecationInfo(value = "fake root considered harmful", until = "2.0")
   public final VirtualFile getRoot() {
-    final String rootPath = SystemInfo.isWindows ? "" : "/";
-    final NewVirtualFile root = ManagingFS.getInstance().findRoot(rootPath, this);
-    assert root != null : SystemInfo.OS_NAME;
-    return root;
+    VirtualFile[] roots = ManagingFS.getInstance().getLocalRoots();
+    assert roots.length > 0 : SystemInfo.OS_NAME;
+    return roots[0];
   }
 
   public interface WatchRequest {
