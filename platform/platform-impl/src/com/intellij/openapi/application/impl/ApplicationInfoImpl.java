@@ -49,8 +49,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String myMajorVersion = null;
   private String myMinorVersion = null;
   private String myBuildNumber = null;
-  private String myCompanyName = "JetBrains s.r.o.";
-  private String myCompanyUrl = "http://www.jetbrains.com/";
+  private String myCompanyName = "Must-Be";
+  private String myCompanyUrl = "http://must-be.org/consulo";
   private Color myProgressColor = null;
   private Color myAboutForeground = Color.black;
   private Color myAboutLinkColor = null;
@@ -88,7 +88,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private boolean myHasContextHelp = true;
   @NonNls private String myHelpFileName = "ideahelp.jar";
   @NonNls private String myHelpRootName = "idea";
-  @NonNls private String myWebHelpUrl = "http://www.jetbrains.com/idea/webhelp/";
+  @NonNls private String myWebHelpUrl = "http://must-be.org/consulo/wiki/";
   private List<PluginChooserPage> myPluginChooserPages = new ArrayList<PluginChooserPage>();
 
   private Rectangle myAboutLogoRect;

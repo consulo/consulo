@@ -11,14 +11,13 @@
   <welcome-screen logo-url="/Logo_welcomeScreen.png" />
 
   <help file="ideahelp.jar" root="idea"/>
-  <documentation url="http://www.jetbrains.com/idea/documentation"/>
-  <support url="http://www.jetbrains.com/support/idea/index.html"/>
-  <feedback eap-url="http://youtrack.jetbrains.com"
-            release-url="http://www.jetbrains.com/feedback/feedback.jsp?product=IDEA&amp;build=$BUILD&amp;timezone=$TIMEZONE&amp;eval=$EVAL"/>
-  <plugins url="http://plugins.jetbrains.com"/>
-  <whatsnew url="http://www.jetbrains.com/idea/whatsnew/index.html"/>
-  <keymap win="http://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard.pdf"
-          mac="http://www.jetbrains.com/idea/docs/IntelliJIDEA_ReferenceCard_Mac.pdf"/>
+  <documentation url="http://must-be.org/consulo/wiki/"/>
+  <support url="http://must-be.org/consulo/support/"/>
+  <feedback eap-url="http://napile.myjetbrains.com/" release-url="http://napile.myjetbrains.com/"/>
+  <plugins url="http://must-be.org/consulo/"/>
+  <whatsnew url="http://must-be.org/consulo/"/>
+  <keymap win="http://must-be.org/consulo/IntelliJIDEA_ReferenceCard.pdf"
+          mac="hhttp://must-be.org/consulo/IntelliJIDEA_ReferenceCard_Mac.pdf"/>
 
   <plugins-page category="VCS Integration" title="Select VCS Integration Plugins"/>
   <plugins-page title="Select Other Plugins"/>
