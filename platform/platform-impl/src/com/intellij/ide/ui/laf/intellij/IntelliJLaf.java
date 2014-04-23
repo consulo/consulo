@@ -35,6 +35,11 @@ public class IntelliJLaf extends DarculaLaf {
   }
 
   @Override
+  public boolean isDark() {
+    return false;
+  }
+
+  @Override
   protected DefaultMetalTheme createMetalTheme() {
     return new IdeaBlueMetalTheme();
   }

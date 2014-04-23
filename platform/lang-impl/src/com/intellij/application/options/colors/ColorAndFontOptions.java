@@ -21,10 +21,6 @@ import com.intellij.application.options.editor.EditorOptionsProvider;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.todo.TodoConfiguration;
-import com.intellij.ide.ui.LafManager;
-import com.intellij.ide.ui.laf.darcula.DarculaInstaller;
-import com.intellij.ide.ui.laf.darcula.DarculaLaf;
-import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.diagnostic.Logger;
@@ -49,7 +45,6 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.colors.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
@@ -66,7 +61,6 @@ import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Nls;
@@ -248,16 +242,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
       EditorColorsScheme originalScheme = mySelectedScheme.getOriginalScheme();
       myColorsManager.setGlobalScheme(originalScheme);
-      if (originalScheme != null && DarculaLaf.NAME.equals(originalScheme.getName()) && !UIUtil.isUnderDarcula()) {
-        int ok = Messages.showYesNoDialog(
-          "Darcula color scheme has been set for editors. Would you like to set Darcula as default Look and Feel?",
-          "Darcula Look and Feel",
-          Messages.getQuestionIcon());
-        if (ok == Messages.YES) {
-          LafManager.getInstance().setCurrentLookAndFeel(new DarculaLookAndFeelInfo());
-          DarculaInstaller.install();
-        }
-      }
       applyChangesToEditors();
 
       reset();

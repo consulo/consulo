@@ -24,7 +24,7 @@ import javax.swing.*;
 * @author Konstantin Bulenkov
 */
 public final class IdeaLookAndFeelInfo extends UIManager.LookAndFeelInfo {
-  @NonNls public static final String CLASS_NAME = "idea.laf.classname";
+  @NonNls public static final String CLASS_NAME = IdeaLookAndFeelInfo.class.getName();
   public IdeaLookAndFeelInfo(){
     super(IdeBundle.message("idea.default.look.and.feel"), CLASS_NAME);
   }

@@ -392,4 +392,9 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
   public boolean getSupportsWindowDecorations() {
     return true;
   }
+
+  @Override
+  public boolean isDark() {
+    return true;
+  }
 }

@@ -108,7 +108,7 @@ public class ImageLoader implements Serializable {
   }
 
   public static List<Pair<String, Integer>> getFileNames(@NotNull String file) {
-    return getFileNames(file, UIUtil.isUnderDarcula(), UIUtil.isRetina());
+    return getFileNames(file, UIUtil.isUnderDarkBuildInLaf(), UIUtil.isRetina());
   }
 
   public static List<Pair<String, Integer>> getFileNames(@NotNull String file, boolean dark, boolean retina) {

@@ -16,13 +16,11 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.ui.LafManager;
-import com.intellij.ide.ui.laf.darcula.DarculaInstaller;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -31,28 +29,25 @@ import javax.swing.*;
  * @author max
  */
 public class QuickChangeLookAndFeel extends QuickSwitchSchemeAction {
+  @Override
   protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
     final LafManager manager = LafManager.getInstance();
     final UIManager.LookAndFeelInfo[] lfs = manager.getInstalledLookAndFeels();
     final UIManager.LookAndFeelInfo current = manager.getCurrentLookAndFeel();
     for (final UIManager.LookAndFeelInfo lf : lfs) {
       group.add(new DumbAwareAction(lf.getName(), "", lf == current ? ourCurrentAction : ourNotCurrentAction) {
+        @Override
         public void actionPerformed(AnActionEvent e) {
           final UIManager.LookAndFeelInfo cur = manager.getCurrentLookAndFeel();
           if (cur == lf) return;
-          boolean needUninstall = UIUtil.isUnderDarcula();
           manager.setCurrentLookAndFeel(lf);
           manager.updateUI();
-          if (UIUtil.isUnderDarcula()) {
-            DarculaInstaller.install();
-          } else if (needUninstall) {
-            DarculaInstaller.uninstall();
-          }
         }
       });
     }
   }
 
+  @Override
   protected boolean isEnabled() {
     return LafManager.getInstance().getInstalledLookAndFeels().length > 1;
   }

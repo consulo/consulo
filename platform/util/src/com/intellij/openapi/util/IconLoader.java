@@ -47,7 +47,7 @@ import java.util.concurrent.ConcurrentMap;
 public final class IconLoader {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.util.IconLoader");
   public static boolean STRICT = false;
-  private static boolean USE_DARK_ICONS = UIUtil.isUnderDarcula();
+  private static boolean USE_DARK_ICONS = UIUtil.isUnderDarkBuildInLaf();
 
   @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
   private static final ConcurrentMap<URL, CachedImageIcon> ourIconsCache = new ConcurrentHashMap<URL, CachedImageIcon>(100, 0.9f,2);

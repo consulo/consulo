@@ -1007,15 +1007,19 @@ public class UIUtil {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderDarcula() {
-    return UIManager.getLookAndFeel().getName().contains("Darcula");
+    return isUnderDarkBuildInLaf();
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderIntelliJLaF() {
-    return UIManager.getLookAndFeel().getName().contains("IntelliJ");
+    return !isUnderDarkBuildInLaf();
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
+  public static boolean isUnderDarkBuildInLaf() {
+    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+    return lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark();
+  }
+
   public static boolean isUnderBuildInLaF() {
     LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
     return lookAndFeel instanceof BuildInLookAndFeel;

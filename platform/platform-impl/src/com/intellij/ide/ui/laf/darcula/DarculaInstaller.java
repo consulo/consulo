@@ -18,39 +18,38 @@ package com.intellij.ide.ui.laf.darcula;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class DarculaInstaller {
 
-  public static void uninstall() {
-    JBColor.setDark(false);
-    IconLoader.setUseDarkIcons(false);
-    if (DarculaLaf.NAME.equals(EditorColorsManager.getInstance().getGlobalScheme().getName())) {
-      final EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(EditorColorsScheme.DEFAULT_SCHEME_NAME);
-      if (scheme != null) {
-        EditorColorsManager.getInstance().setGlobalScheme(scheme);
+  public static void update(boolean old) {
+    boolean underDarkBuildInLaf = UIUtil.isUnderDarkBuildInLaf();
+    JBColor.setDark(underDarkBuildInLaf);
+    IconLoader.setUseDarkIcons(underDarkBuildInLaf);
+    if(old != underDarkBuildInLaf) {
+      String name = underDarkBuildInLaf ? "Darcula" : EditorColorsScheme.DEFAULT_SCHEME_NAME;
+      if (name.equals(EditorColorsManager.getInstance().getGlobalScheme().getName())) {
+        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(EditorColorsScheme.DEFAULT_SCHEME_NAME);
+        if (scheme != null) {
+          EditorColorsManager.getInstance().setGlobalScheme(scheme);
+        }
       }
     }
 
-    update();
-  }
-
-  private static void update() {
     UISettings.getInstance().fireUISettingsChanged();
     EditorFactory.getInstance().refreshAllEditors();
 
@@ -69,25 +68,5 @@ public class DarculaInstaller {
     //  ((EditorEx)editor).reinitSettings();
     //}
     ActionToolbarImpl.updateAllToolbarsImmediately();
-
-    restart(); //todo[kb] remove when get fixed ToolbarDecorator and toolwindow tabs
-  }
-
-  private static void restart() {
-    if (Messages.showOkCancelDialog("You must restart the IDE to changes take effect. Restart now?", "Restart Is Required", "Restart", "Postpone", Messages.getQuestionIcon()) == Messages.OK) {
-      ApplicationManagerEx.getApplicationEx().restart(true);
-    }
-  }
-
-  public static void install() {
-    JBColor.setDark(true);
-    IconLoader.setUseDarkIcons(true);
-    if (!DarculaLaf.NAME.equals(EditorColorsManager.getInstance().getGlobalScheme().getName())) {
-      final EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(DarculaLaf.NAME);
-      if (scheme != null) {
-        EditorColorsManager.getInstance().setGlobalScheme(scheme);
-      }
-    }
-    update();
   }
 }

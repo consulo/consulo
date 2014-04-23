@@ -36,6 +36,11 @@ public class ModernWhiteLaf extends ModernDarkLaf {
   }
 
   @Override
+  public boolean isDark() {
+    return false;
+  }
+
+  @Override
   protected DefaultMetalTheme createMetalTheme() {
     return new IdeaBlueMetalTheme();
   }

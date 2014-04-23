@@ -20,4 +20,5 @@ package com.intellij.util.ui;
  * @since 03.03.14
  */
 public interface BuildInLookAndFeel {
+  boolean isDark();
 }

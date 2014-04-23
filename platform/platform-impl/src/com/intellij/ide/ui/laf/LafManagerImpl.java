@@ -16,15 +16,12 @@
 package com.intellij.ide.ui.laf;
 
 import com.intellij.CommonBundle;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.laf.darcula.DarculaLaf;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
-import com.intellij.ide.ui.laf.ideaOld.IdeaBlueMetalTheme;
-import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
-import com.intellij.ide.ui.laf.ideaOld.IdeaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
@@ -33,8 +30,12 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.JBPopupMenu;
@@ -43,14 +44,19 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.vcs.FileStatusManager;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.mac.MacPopupMenuUI;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.BuildInLookAndFeel;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -149,6 +155,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   /**
    * Adds specified listener
    */
+  @Override
   public void addLafManagerListener(@NotNull final LafManagerListener l) {
     myListenerList.add(LafManagerListener.class, l);
   }
@@ -156,6 +163,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   /**
    * Removes specified listener
    */
+  @Override
   public void removeLafManagerListener(@NotNull final LafManagerListener l) {
     myListenerList.remove(LafManagerListener.class, l);
   }
@@ -167,11 +175,13 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
   }
 
+  @Override
   @NotNull
   public String getComponentName() {
     return "LafManager";
   }
 
+  @Override
   public void initComponent() {
     if (myCurrentLaf != null) {
       final UIManager.LookAndFeelInfo laf = findLaf(myCurrentLaf.getClassName());
@@ -200,6 +210,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
   }
 
+  @Override
   public void disposeComponent() {
     if (myThemeChangeListener != null) {
       Toolkit.getDefaultToolkit().removePropertyChangeListener(GNOME_THEME_PROPERTY_NAME, myThemeChangeListener);
@@ -207,6 +218,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
   }
 
+  @Override
   public void loadState(final Element element) {
     String className = null;
     for (final Object o : element.getChildren()) {
@@ -231,6 +243,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     myCurrentLaf = laf;
   }
 
+  @Override
   public Element getState() {
     Element element = new Element("state");
     if (myCurrentLaf != null) {
@@ -244,10 +257,12 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     return element;
   }
 
+  @Override
   public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels(){
     return myLaFs.clone();
   }
 
+  @Override
   public UIManager.LookAndFeelInfo getCurrentLookAndFeel(){
     return myCurrentLaf;
   }
@@ -292,13 +307,15 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   /**
    * Sets current LAF. The method doesn't update component hierarchy.
    */
+  @Override
   public void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
     if (findLaf(lookAndFeelInfo.getClassName()) == null) {
       LOG.error("unknown LookAndFeel : " + lookAndFeelInfo);
       return;
     }
+    boolean old = UIUtil.isUnderDarkBuildInLaf();
     // Set L&F
-    if (IdeaLookAndFeelInfo.CLASS_NAME.equals(lookAndFeelInfo.getClassName())) { // that is IDEA default LAF
+  /*  if (IdeaLookAndFeelInfo.CLASS_NAME.equals(lookAndFeelInfo.getClassName())) { // that is IDEA default LAF
       IdeaLaf laf = new IdeaLaf();
       MetalLookAndFeel.setCurrentTheme(new IdeaBlueMetalTheme());
       try {
@@ -329,12 +346,17 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
         return;
       }
     }
-    else { // non default LAF
+    else*/ { // non default LAF
       try {
         LookAndFeel laf = ((LookAndFeel)Class.forName(lookAndFeelInfo.getClassName()).newInstance());
         if (laf instanceof MetalLookAndFeel) {
           MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
         }
+
+        boolean dark = laf instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)laf).isDark();
+        JBColor.setDark(dark);
+        IconLoader.setUseDarkIcons(dark);
+        update(old, dark);
         UIManager.setLookAndFeel(laf);
       }
       catch (Exception e) {
@@ -349,6 +371,31 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     myCurrentLaf = lookAndFeelInfo;
 
     checkLookAndFeel(lookAndFeelInfo, false);
+  }
+
+  private static void update(boolean oldDark, boolean newDark) {
+    if(oldDark != newDark) {
+      String name = newDark ? "Darcula" : EditorColorsScheme.DEFAULT_SCHEME_NAME;
+      final EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(name);
+      if (scheme != null) {
+        EditorColorsManager.getInstance().setGlobalScheme(scheme);
+      }
+    }
+
+    UISettings.getInstance().fireUISettingsChanged();
+    EditorFactory.getInstance().refreshAllEditors();
+
+    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+    for (Project openProject : openProjects) {
+      FileStatusManager.getInstance(openProject).fileStatusesChanged();
+      DaemonCodeAnalyzer.getInstance(openProject).restart();
+    }
+    for (IdeFrame frame : WindowManagerEx.getInstanceEx().getAllProjectFrames()) {
+      if (frame instanceof IdeFrameImpl) {
+        ((IdeFrameImpl)frame).updateView();
+      }
+    }
+    ActionToolbarImpl.updateAllToolbarsImmediately();
   }
 
   public void setLookAndFeelAfterRestart(UIManager.LookAndFeelInfo lookAndFeelInfo) {
@@ -428,6 +475,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
    * Updates LAF of all windows. The method also updates font of components
    * as it's configured in <code>UISettings</code>.
    */
+  @Override
   public void updateUI() {
     final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
 
@@ -662,6 +710,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   /**
    * Repaints all displayable window.
    */
+  @Override
   public void repaintUI(){
     Frame[] frames=Frame.getFrames();
     for (Frame frame : frames) {
@@ -752,6 +801,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       myDelegate = delegate;
     }
 
+    @Override
     public Popup getPopup(final Component owner, final Component contents, final int x, final int y) throws IllegalArgumentException {
       final Point point = fixPopupLocation(contents, x, y);
 

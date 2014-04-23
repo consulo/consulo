@@ -392,4 +392,9 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
   public boolean getSupportsWindowDecorations() {
     return true;
   }
+
+  @Override
+  public boolean isDark() {
+    return true;
+  }
 }
