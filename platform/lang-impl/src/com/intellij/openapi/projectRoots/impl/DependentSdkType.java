@@ -32,6 +32,7 @@ import java.util.Arrays;
  * @author Dmitry Avdeev
  *         Date: 12/5/12
  */
+@Deprecated
 public abstract class DependentSdkType extends SdkType {
 
   public DependentSdkType(@NonNls String name) {
