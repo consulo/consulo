@@ -18,9 +18,11 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconUtilEx;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -53,7 +55,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
       }
       if (presentableFile != null && presentableFile.isValid()) {
         if (presentableFile.getFileSystem() instanceof HttpFileSystem) {
-          icon = PlatformIcons.WEB_ICON;
+          icon = AllIcons.Nodes.PpWeb;
         }
         else {
           if (presentableFile.isDirectory()) {
@@ -61,7 +63,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
               icon = AllIcons.Nodes.JarDirectory;
             }
             else {
-              icon = PlatformIcons.DIRECTORY_CLOSED_ICON;
+              icon = AllIcons.Nodes.TreeClosed;
             }
           }
           else {

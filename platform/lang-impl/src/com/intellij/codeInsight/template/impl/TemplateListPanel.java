@@ -20,6 +20,7 @@ import com.intellij.application.options.ExportSchemeAction;
 import com.intellij.application.options.SchemesToImportPopup;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.TemplateContextType;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.Disposable;
@@ -38,7 +39,6 @@ import com.intellij.ui.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -705,7 +705,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
       })
       .disableDownAction()
       .disableUpAction()
-      .addExtraAction(new AnActionButton("Copy", PlatformIcons.COPY_ICON) {
+      .addExtraAction(new AnActionButton("Copy", AllIcons.Actions.Copy) {
         @Override
         public void actionPerformed(AnActionEvent e) {
           copyRow();
@@ -717,7 +717,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         }
       });
     if (getSchemesManager().isExportAvailable()) {
-      decorator.addExtraAction(new AnActionButton("Share...", PlatformIcons.EXPORT_ICON) {
+      decorator.addExtraAction(new AnActionButton("Share...", AllIcons.ToolbarDecorator.Export) {
         @Override
         public void actionPerformed(AnActionEvent e) {
           exportCurrentGroup();
@@ -731,7 +731,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
       });
     }
     if (getSchemesManager().isImportAvailable()) {
-      decorator.addExtraAction(new AnActionButton("Import Shared...", PlatformIcons.IMPORT_ICON) {
+      decorator.addExtraAction(new AnActionButton("Import Shared...", AllIcons.ToolbarDecorator.Import) {
         @Override
         public void actionPerformed(AnActionEvent e) {
           new SchemesToImportPopup<TemplateGroup, TemplateGroup>(TemplateListPanel.this){

@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vcs.history;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
-import com.intellij.util.PlatformIcons;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -31,7 +31,7 @@ public class CopyRevisionNumberAction extends DumbAwareAction {
 
   public CopyRevisionNumberAction() {
     super(VcsBundle.getString("history.copy.revision.number"), VcsBundle.getString("history.copy.revision.number"),
-          PlatformIcons.COPY_ICON);
+          AllIcons.Actions.Copy);
   }
 
   @Override

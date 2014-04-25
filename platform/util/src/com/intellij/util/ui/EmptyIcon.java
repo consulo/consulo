@@ -17,6 +17,7 @@
 package com.intellij.util.ui;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,9 +57,8 @@ public class EmptyIcon implements Icon {
     return create(base.getIconWidth(), base.getIconHeight());
   }
 
-  /**
-   * @deprecated use {@linkplain #create(int)} for caching.
-   */
+  @Deprecated
+  @DeprecationInfo(value = "use #create(int) for caching.", until = "2.0")
   public EmptyIcon(int size) {
     this(size, size);
   }
@@ -68,24 +68,27 @@ public class EmptyIcon implements Icon {
     this.height = height;
   }
 
-  /**
-   * @deprecated use {@linkplain #create(javax.swing.Icon)} for caching.
-   */
+  @Deprecated
+  @DeprecationInfo(value = "use #create(Icon) for caching.", until = "2.0")
   public EmptyIcon(@NotNull Icon base) {
     this(base.getIconWidth(), base.getIconHeight());
   }
 
+  @Override
   public int getIconWidth() {
     return width;
   }
 
+  @Override
   public int getIconHeight() {
     return height;
   }
 
+  @Override
   public void paintIcon(Component component, Graphics g, int i, int j) {
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof EmptyIcon)) return false;
@@ -98,6 +101,7 @@ public class EmptyIcon implements Icon {
     return true;
   }
 
+  @Override
   public int hashCode() {
     int sum = width + height;
     return sum * (sum + 1)/2 + width;

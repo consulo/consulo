@@ -20,7 +20,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import com.intellij.util.PlatformIcons;
+import com.intellij.util.IconUtil;
 
 /**
  * @author nik
@@ -28,8 +28,8 @@ import com.intellij.util.PlatformIcons;
 public class RemovePackagingElementAction extends LayoutTreeActionBase {
 
   public RemovePackagingElementAction(ArtifactEditorEx artifactEditor) {
-    super(ProjectBundle.message("action.name.remove.packaging.element"), ProjectBundle.message("action.description.remove.packaging.elements"), PlatformIcons.DELETE_ICON,
-          artifactEditor);
+    super(ProjectBundle.message("action.name.remove.packaging.element"), ProjectBundle.message("action.description.remove.packaging.elements"),
+          IconUtil.getRemoveIcon(), artifactEditor);
   }
 
   @Override

@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.diff.impl.dir.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.PlatformIcons;
 
 /**
  * @author Konstantin Bulenkov
@@ -29,7 +29,7 @@ public class RefreshDirDiffAction extends DirDiffAction {
   public static final CustomShortcutSet REFRESH_SHORTCUT = CustomShortcutSet.fromString(SystemInfo.isMac ? "meta R" : "F5");
 
   public RefreshDirDiffAction(DirDiffTableModel model) {
-    super(model, "Refresh", PlatformIcons.SYNCHRONIZE_ICON);
+    super(model, "Refresh", AllIcons.Actions.Refresh);
   }
 
   @Override

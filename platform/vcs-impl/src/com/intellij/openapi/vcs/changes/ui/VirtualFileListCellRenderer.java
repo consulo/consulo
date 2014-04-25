@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
@@ -23,7 +24,6 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 import java.io.File;
@@ -78,7 +78,7 @@ public class VirtualFileListCellRenderer extends ColoredListCellRenderer {
 
   protected void renderIcon(FilePath path) {
     if (path.isDirectory()) {
-      setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
+      setIcon(AllIcons.Nodes.TreeClosed);
     } else {
       setIcon(path.getFileType().getIcon());
     }

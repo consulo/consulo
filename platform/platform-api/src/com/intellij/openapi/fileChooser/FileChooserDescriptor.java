@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.fileChooser;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.highlighter.ArchiveFileType;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -24,7 +25,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.IconUtil;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -160,13 +160,13 @@ public class FileChooserDescriptor implements Cloneable {
 
   public Icon getIcon(final VirtualFile file) {
     if (file.isDirectory()) {
-      return dressIcon(file, PlatformIcons.DIRECTORY_CLOSED_ICON);
+      return dressIcon(file, AllIcons.Nodes.TreeClosed);
     }
     return IconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null);
   }
 
   protected static Icon dressIcon(final VirtualFile file, final Icon baseIcon) {
-    return file.isValid() && file.is(VFileProperty.SYMLINK) ? new LayeredIcon(baseIcon, PlatformIcons.SYMLINK_ICON) : baseIcon;
+    return file.isValid() && file.is(VFileProperty.SYMLINK) ? new LayeredIcon(baseIcon, AllIcons.Nodes.Symlink) : baseIcon;
   }
 
   public String getName(final VirtualFile file) {

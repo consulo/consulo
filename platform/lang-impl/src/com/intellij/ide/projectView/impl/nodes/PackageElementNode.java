@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
@@ -29,7 +30,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.util.PlatformIcons;
 import org.consulo.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -135,7 +135,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     String name = TreeViewUtil.getNodeName(getSettings(), aPackage, parentPackage, qName, showFQName(aPackage));
     presentation.setPresentableText(name);
 
-    presentation.setIcon(PlatformIcons.PACKAGE_ICON);
+    presentation.setIcon(AllIcons.Nodes.Package);
 
     for(ProjectViewNodeDecorator decorator: Extensions.getExtensions(ProjectViewNodeDecorator.EP_NAME, myProject)) {
       decorator.decorate(this, presentation);

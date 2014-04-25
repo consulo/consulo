@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries.ui.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
@@ -25,7 +26,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.treetable.TreeColumnInfo;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ComboBoxCellEditor;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -161,7 +161,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
             text = file.getPresentableUrl();
           }
           attributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
-          icon = PlatformIcons.DIRECTORY_CLOSED_ICON;
+          icon = AllIcons.Nodes.TreeClosed;
         }
         else {
           text = file.getPresentableUrl();
@@ -169,7 +169,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
             isValid = false;
           }
           attributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
-          icon = PlatformIcons.DIRECTORY_CLOSED_ICON;
+          icon = AllIcons.Nodes.TreeClosed;
         }
         final ColoredTreeCellRenderer textRenderer = getTextRenderer();
         textRenderer.setIcon(icon);

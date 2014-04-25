@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.components.editors;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -23,7 +24,6 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Function;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 
@@ -32,7 +32,6 @@ import javax.swing.event.TableModelEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
 
 /**
@@ -86,8 +85,8 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
     private Icon getIcon(boolean selected) {
       final boolean small = "small".equals(JBComboBoxTableCellEditorComponent.this.getClientProperty("JComponent.sizeVariant"));
       return small
-             ? selected ? PlatformIcons.CHECK_ICON_SMALL_SELECTED : PlatformIcons.CHECK_ICON_SMALL
-             : selected ? PlatformIcons.CHECK_ICON_SELECTED : PlatformIcons.CHECK_ICON;
+             ? selected ? AllIcons.Actions.Checked_small_selected :  AllIcons.Actions.Checked_small
+             : selected ? AllIcons.Actions.Checked_selected : AllIcons.Actions.Checked;
     }
   };
 

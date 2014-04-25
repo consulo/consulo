@@ -62,7 +62,7 @@ import com.intellij.usages.*;
 import com.intellij.usages.impl.*;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
 import com.intellij.util.Alarm;
-import com.intellij.util.PlatformIcons;
+import com.intellij.util.IconUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.AsyncProcessIcon;
@@ -567,7 +567,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                                    @NotNull final UsageViewPresentation presentation,
                                    @NotNull final AsyncProcessIcon processIcon,
                                    boolean hadMoreSeparator) {
-    table.setRowHeight(PlatformIcons.CLASS_ICON.getIconHeight()+2);
+    table.setRowHeight(IconUtil.NODE_ICON_SIZE + 2);
     table.setShowGrid(false);
     table.setShowVerticalLines(false);
     table.setShowHorizontalLines(false);

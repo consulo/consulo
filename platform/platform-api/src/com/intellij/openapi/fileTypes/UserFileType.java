@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -25,10 +25,11 @@ import javax.swing.*;
 public abstract class UserFileType <T extends UserFileType> implements FileType, Cloneable {
   @NotNull private String myName = "";
   private String myDescription = "";
-  private Icon myIcon = PlatformIcons.CUSTOM_FILE_ICON;
+  private Icon myIcon = AllIcons.FileTypes.Custom;
 
   public abstract SettingsEditor<T> getEditor();
 
+  @Override
   public UserFileType clone() {
     try {
       return (UserFileType)super.clone();
@@ -38,11 +39,13 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
     }
   }
 
+  @Override
   @NotNull
   public String getName() {
     return myName;
   }
 
+  @Override
   @NotNull
   public String getDescription() {
     return myDescription;
@@ -56,19 +59,23 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
     myDescription = description;
   }
 
+  @Override
   @NotNull
   public String getDefaultExtension() {
     return "";
   }
 
+  @Override
   public Icon getIcon() {
     return myIcon;
   }
 
+  @Override
   public boolean isReadOnly() {
     return false;
   }
 
+  @Override
   public String getCharset(@NotNull VirtualFile file, final byte[] content) {
     return null;
   }

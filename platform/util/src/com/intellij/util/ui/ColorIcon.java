@@ -27,7 +27,6 @@ public class ColorIcon extends EmptyIcon {
   private boolean myBorder;
   private int myColorSize;
 
-
   public ColorIcon(int size, int colorSize, @NotNull Color color, final boolean border) {
     super(size, size);
     myColor = color;

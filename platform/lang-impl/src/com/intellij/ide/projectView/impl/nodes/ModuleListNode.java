@@ -16,6 +16,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
@@ -24,7 +25,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class ModuleListNode extends ProjectViewNode<Module> {
   @Override
   public void update(PresentationData presentation) {
     presentation.setPresentableText("Module Dependencies");
-    presentation.setIcon(PlatformIcons.CLOSED_MODULE_GROUP_ICON);
+    presentation.setIcon(AllIcons.Nodes.ModuleGroup);
   }
 
   @Override

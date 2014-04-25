@@ -243,6 +243,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
       return mySelectedItem;
     }
 
+    @Override
     public int getSize() {
       int count = 0;
       Enumeration e = new PreorderEnumeration(myTreeModel);
@@ -254,6 +255,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
       return count - (myShowRootNode ? 0 : 1);
     }
 
+    @Override
     public Object getElementAt(int index) {
       Enumeration e = new PreorderEnumeration(myTreeModel);
       if (!myShowRootNode) index++;
@@ -275,10 +277,12 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
       myNode = node;
     }
 
+    @Override
     public boolean hasMoreElements() {
       return myIndex < myTreeModel.getChildCount(myNode) - 1;
     }
 
+    @Override
     public Object nextElement() {
       return myTreeModel.getChild(myNode, ++myIndex);
     }
@@ -294,11 +298,13 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
       myStack.push(Collections.enumeration(Collections.singleton(treeModel.getRoot())));
     }
 
+    @Override
     public boolean hasMoreElements() {
       return !myStack.empty() &&
               myStack.peek().hasMoreElements();
     }
 
+    @Override
     public Object nextElement() {
       Enumeration e = myStack.peek();
       Object node = e.nextElement();

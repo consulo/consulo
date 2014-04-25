@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ui;
 
-import com.intellij.util.PlatformIcons;
+import com.intellij.icons.AllIcons;
 
 import javax.swing.*;
 
@@ -35,6 +35,6 @@ public class InspectionPackageNode extends InspectionTreeNode {
 
   @Override
   public Icon getIcon(boolean expanded) {
-    return PlatformIcons.PACKAGE_ICON;
+    return AllIcons.Nodes.Package;
   }
 }

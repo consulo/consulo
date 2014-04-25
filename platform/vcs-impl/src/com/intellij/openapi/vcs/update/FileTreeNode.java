@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -23,7 +24,6 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -49,7 +49,7 @@ public class FileTreeNode extends FileOrDirectoryTreeNode {
   @Override
   public Icon getIcon(boolean expanded) {
     if (myFile.isDirectory()) {
-      return PlatformIcons.DIRECTORY_CLOSED_ICON;
+      return AllIcons.Nodes.TreeClosed;
     }
     return FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName()).getIcon();
   }

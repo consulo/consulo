@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.roots.ui.util;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,7 +143,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
 
   public static CompositeAppearance invalid(String absolutePath) {
     CompositeAppearance appearance = new CompositeAppearance();
-    appearance.setIcon(PlatformIcons.INVALID_ENTRY_ICON);
+    appearance.setIcon(AllIcons.Nodes.PpInvalid);
     appearance.getEnding().addText(absolutePath, SimpleTextAttributes.ERROR_ATTRIBUTES);
     return appearance;
   }

@@ -16,7 +16,6 @@
 package com.intellij.ui.components;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +24,7 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class JBComboBoxLabel extends JPanel {
-  private final JLabel myIcon = new JLabel(PlatformIcons.COMBOBOX_ARROW_ICON);
+  private final JLabel myIcon = new JLabel(AllIcons.General.ComboArrow);
   private final JLabel myText = new JLabel();
 
   public JBComboBoxLabel() {
@@ -51,7 +50,7 @@ public class JBComboBoxLabel extends JPanel {
   }
 
   public void setRegularIcon() {
-    myIcon.setIcon(PlatformIcons.COMBOBOX_ARROW_ICON);
+    myIcon.setIcon(AllIcons.General.ComboArrow);
   }
 
   public void setSelectionIcon() {

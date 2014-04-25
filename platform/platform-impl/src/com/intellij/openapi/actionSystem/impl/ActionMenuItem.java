@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -29,7 +30,6 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.SizedIcon;
 import com.intellij.ui.plaf.beg.BegMenuItemUI;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -48,7 +48,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ActionMenuItem extends JCheckBoxMenuItem {
-  private static final Icon ourCheckedIcon = new SizedIcon(PlatformIcons.CHECK_ICON, 18, 18);
+  private static final Icon ourCheckedIcon = new SizedIcon(AllIcons.Actions.Checked, 18, 18);
   private static final Icon ourUncheckedIcon = EmptyIcon.ICON_18;
 
   private final ActionRef<AnAction> myAction;

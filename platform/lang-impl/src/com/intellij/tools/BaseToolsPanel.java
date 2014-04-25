@@ -17,12 +17,12 @@
 package com.intellij.tools;
 
 import com.intellij.CommonBundle;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -164,7 +164,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         moveNode(Direction.DOWN);
         myIsModified = true;
       }
-    }).addExtraAction(myCopyButton = new AnActionButton(ToolsBundle.message("tools.copy.button"), PlatformIcons.COPY_ICON) {
+    }).addExtraAction(myCopyButton = new AnActionButton(ToolsBundle.message("tools.copy.button"), AllIcons.Actions.Copy) {
       @Override
       public void actionPerformed(AnActionEvent e) {
         Tool originalTool = getSelectedTool();

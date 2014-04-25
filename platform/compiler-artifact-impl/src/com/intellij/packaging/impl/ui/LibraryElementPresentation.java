@@ -15,6 +15,7 @@
  */
 package com.intellij.packaging.impl.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
@@ -29,7 +30,6 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,6 +51,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
     myContext = context;
   }
 
+  @Override
   public String getPresentableName() {
     return myLibraryName;
   }
@@ -65,9 +66,10 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
     myContext.selectLibrary(myLibrary);
   }
 
+  @Override
   public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     if (myLibrary != null) {
-      presentationData.setIcon(PlatformIcons.LIBRARY_ICON);
+      presentationData.setIcon(AllIcons.Nodes.PpLib);
       presentationData.addText(myLibraryName, mainAttributes);
       presentationData.addText(getLibraryTableComment(myLibrary), commentAttributes);
     }

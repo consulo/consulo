@@ -44,7 +44,6 @@ import com.intellij.ui.popup.NotLookupOrSearchCondition;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
@@ -351,7 +350,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
         final VirtualFile file = ((MyFileNode)value).getUserObject();
         final Module module = ModuleUtil.findModuleForFile(file, myProject);
         if (module != null) {
-          setIcon(PlatformIcons.CONTENT_ROOT_ICON_CLOSED);
+          setIcon(AllIcons.Nodes.Module);
           append("[" + module.getName() + "] ", new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, UIUtil.getTreeForeground()));
           append(getRelativePathToProject(myProject, file));
         }

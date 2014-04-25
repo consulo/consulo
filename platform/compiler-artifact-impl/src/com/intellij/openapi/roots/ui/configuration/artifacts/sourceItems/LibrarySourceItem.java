@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.roots.OrderRootType;
@@ -31,7 +32,6 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -51,10 +51,12 @@ public class LibrarySourceItem extends PackagingSourceItem {
     return new LibrarySourceItemPresentation(myLibrary, context);
   }
 
+  @Override
   public boolean equals(Object obj) {
     return obj instanceof LibrarySourceItem && myLibrary.equals(((LibrarySourceItem)obj).myLibrary);
   }
 
+  @Override
   public int hashCode() {
     return myLibrary.hashCode();
   }
@@ -110,7 +112,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
                        SimpleTextAttributes commentAttributes) {
       final String name = myLibrary.getName();
       if (name != null) {
-        presentationData.setIcon(PlatformIcons.LIBRARY_ICON);
+        presentationData.setIcon(AllIcons.Nodes.PpLib);
         presentationData.addText(name, mainAttributes);
         presentationData.addText(LibraryElementPresentation.getLibraryTableComment(myLibrary), commentAttributes);
       }

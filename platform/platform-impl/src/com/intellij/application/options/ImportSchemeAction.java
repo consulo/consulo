@@ -15,12 +15,12 @@
  */
 package com.intellij.application.options;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.options.SchemesManager;
-import com.intellij.util.PlatformIcons;
 import org.consulo.util.pointers.Named;
 
 import java.awt.*;
@@ -32,17 +32,20 @@ public abstract class ImportSchemeAction<T extends Named, E extends Externalizab
 
 
   public ImportSchemeAction(SchemesManager manager) {
-    super("Import", "Import", PlatformIcons.IMPORT_ICON);
+    super("Import", "Import", AllIcons.ToolbarDecorator.Import);
     mySchemesManager = manager;
   }
 
+  @Override
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(true);
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     SchemesToImportPopup<T,E> popup = new SchemesToImportPopup<T,E>(getPanel()){
+      @Override
       protected void onSchemeSelected(final E scheme) {
         if (scheme != null) {
           importScheme(scheme);

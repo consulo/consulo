@@ -17,6 +17,7 @@
 package com.intellij.ide.bookmarks;
 
 import com.intellij.codeInsight.daemon.GutterMark;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;
@@ -44,7 +45,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,8 +53,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Bookmark implements Navigatable {
-  public static final Icon DEFAULT_ICON = PlatformIcons.CHECK_ICON;
-
   private final VirtualFile myFile;
   @NotNull private final OpenFileDescriptor myTarget;
   private final Project myProject;
@@ -127,7 +125,7 @@ public class Bookmark implements Navigatable {
   }
 
   public Icon getIcon() {
-    return myMnemonic == 0 ? DEFAULT_ICON : MnemonicIcon.getIcon(myMnemonic);
+    return myMnemonic == 0 ? AllIcons.Actions.Checked : MnemonicIcon.getIcon(myMnemonic);
   }
 
   public String getDescription() {
@@ -282,12 +280,12 @@ public class Bookmark implements Navigatable {
 
     @Override
     public int getIconWidth() {
-      return DEFAULT_ICON.getIconWidth();
+      return AllIcons.Actions.Checked.getIconWidth();
     }
 
     @Override
     public int getIconHeight() {
-      return DEFAULT_ICON.getIconHeight();
+      return AllIcons.Actions.Checked.getIconHeight();
     }
 
     @Override

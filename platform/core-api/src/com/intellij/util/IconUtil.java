@@ -47,6 +47,7 @@ import java.awt.image.BufferedImage;
  */
 public class IconUtil {
   private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
+  public static final int NODE_ICON_SIZE = UIUtil.isRetina() ? 32 : 16;
 
   private static boolean wasEverInitialized(@NotNull Project project) {
     Boolean was = project.getUserData(PROJECT_WAS_EVER_INITIALIZED);
@@ -153,20 +154,11 @@ public class IconUtil {
   @NotNull
   public static Icon getEmptyIcon(boolean showVisibility) {
     RowIcon baseIcon = new RowIcon(2);
-    baseIcon.setIcon(createEmptyIconLike(PlatformIcons.CLASS_ICON_PATH), 0);
+    baseIcon.setIcon(EmptyIcon.create(NODE_ICON_SIZE), 0);
     if (showVisibility) {
-      baseIcon.setIcon(createEmptyIconLike(PlatformIcons.PUBLIC_ICON_PATH), 1);
+      baseIcon.setIcon(EmptyIcon.create(NODE_ICON_SIZE), 1);
     }
     return baseIcon;
-  }
-
-  @NotNull
-  private static Icon createEmptyIconLike(@NotNull String baseIconPath) {
-    Icon baseIcon = IconLoader.findIcon(baseIconPath);
-    if (baseIcon == null) {
-      return EmptyIcon.ICON_16;
-    }
-    return new EmptyIcon(baseIcon.getIconWidth(), baseIcon.getIconHeight());
   }
 
   public static Image toImage(@NotNull Icon icon) {

@@ -15,12 +15,12 @@
  */
 package com.intellij.ide.navigationToolbar;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.navigationToolbar.ui.NavBarUI;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.EmptyIcon;
 
 import javax.swing.*;
@@ -57,7 +57,7 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
       myAttributes = presentation.getTextAttributes(object, false);
     } else {
       myText = "Sample";
-      myIcon = PlatformIcons.DIRECTORY_CLOSED_ICON;
+      myIcon = AllIcons.Nodes.TreeClosed;
       myAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
     }
     Disposer.register(parent == null ? panel : parent, this);

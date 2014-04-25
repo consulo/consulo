@@ -505,7 +505,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     FlattenPackagesAction() {
       super(AnalysisScopeBundle.message("action.flatten.packages"),
             AnalysisScopeBundle.message("action.flatten.packages"),
-            PlatformIcons.FLATTEN_PACKAGES_ICON);
+            AllIcons.ObjectBrowser.FlattenPackages);
     }
 
     @Override

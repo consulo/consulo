@@ -17,11 +17,11 @@
 package com.intellij.packageDependencies.ui;
 
 import com.intellij.analysis.AnalysisScopeBundle;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 import java.util.Set;
@@ -50,9 +50,10 @@ public class ModuleGroupNode extends PackageDependenciesNode {
 
   @Override
   public Icon getIcon() {
-    return PlatformIcons.CLOSED_MODULE_GROUP_ICON;
+    return AllIcons.Nodes.ModuleGroup;
   }
 
+  @Override
   public String toString() {
     return myModuleGroup == null ? AnalysisScopeBundle.message("unknown.node.text") : myModuleGroup.toString();
   }
@@ -65,6 +66,7 @@ public class ModuleGroupNode extends PackageDependenciesNode {
     return myModuleGroup;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (isEquals()){
       return super.equals(o);
@@ -77,6 +79,7 @@ public class ModuleGroupNode extends PackageDependenciesNode {
     return Comparing.equal(myModuleGroup, moduleNode.myModuleGroup);
   }
 
+  @Override
   public int hashCode() {
     return myModuleGroup == null ? 0 : myModuleGroup.hashCode();
   }

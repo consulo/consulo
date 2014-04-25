@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraries.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
@@ -23,7 +24,6 @@ import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentation
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +57,7 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
   @Override
   public Icon getNamedLibraryIcon(@NotNull Library library, @Nullable StructureConfigurableContext context) {
     final Icon icon = getCustomIcon(library, context);
-    return icon != null ? icon : PlatformIcons.LIBRARY_ICON;
+    return icon != null ? icon : AllIcons.Nodes.PpLib;
   }
 
   @Override

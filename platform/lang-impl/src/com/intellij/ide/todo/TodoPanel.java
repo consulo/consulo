@@ -613,7 +613,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   private final class MyShowPackagesAction extends ToggleAction {
     MyShowPackagesAction() {
-      super(IdeBundle.message("action.group.by.packages"), null, PlatformIcons.GROUP_BY_PACKAGES);
+      super(IdeBundle.message("action.group.by.packages"), null, AllIcons.Toolbar.Folders);
     }
 
     @Override
@@ -647,7 +647,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   private final class MyFlattenPackagesAction extends ToggleAction {
     MyFlattenPackagesAction() {
-      super(IdeBundle.message("action.flatten.packages"), null, PlatformIcons.FLATTEN_PACKAGES_ICON);
+      super(IdeBundle.message("action.flatten.packages"), null, AllIcons.ObjectBrowser.FlattenPackages);
     }
 
     @Override

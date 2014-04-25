@@ -16,6 +16,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.projectView.PresentationData;
@@ -47,7 +48,6 @@ import com.intellij.ui.RowIcon;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IconUtil;
 import com.intellij.util.PathUtil;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -265,11 +265,11 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     }
 
     if (!file.isWritable()) {
-      icon = LayeredIcon.create(icon, PlatformIcons.LOCKED_ICON);
+      icon = LayeredIcon.create(icon, AllIcons.Nodes.Locked);
     }
 
     if (file.is(VFileProperty.SYMLINK)) {
-      icon = LayeredIcon.create(icon, PlatformIcons.SYMLINK_ICON);
+      icon = LayeredIcon.create(icon, AllIcons.Nodes.Symlink);
     }
 
     return icon;

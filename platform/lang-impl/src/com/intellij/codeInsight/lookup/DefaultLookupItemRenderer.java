@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.SizedIcon;
-import com.intellij.util.PlatformIcons;
+import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,6 @@ import javax.swing.*;
  */
 public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>{
   public static final DefaultLookupItemRenderer INSTANCE = new DefaultLookupItemRenderer();
-  private static final Icon SAMPLE_ICON = PlatformIcons.CLASS_ICON;
 
   @Override
   public void renderElement(final LookupItem item, final LookupElementPresentation presentation) {
@@ -48,8 +47,8 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
   @Nullable
   public static Icon getRawIcon(final LookupElement item, boolean real) {
     final Icon icon = _getRawIcon(item, real);
-    if (icon != null && icon.getIconHeight() > SAMPLE_ICON.getIconHeight()) {
-      return new SizedIcon(icon, icon.getIconWidth(), SAMPLE_ICON.getIconHeight());
+    if (icon != null && icon.getIconHeight() > IconUtil.NODE_ICON_SIZE) {
+      return new SizedIcon(icon, icon.getIconWidth(), IconUtil.NODE_ICON_SIZE);
     }
     return icon;
   }
@@ -68,7 +67,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
         return EmptyIcon.ICON_0;
       }
 
-      return new EmptyIcon(SAMPLE_ICON.getIconWidth() * 2, SAMPLE_ICON.getIconHeight());
+      return new EmptyIcon(IconUtil.NODE_ICON_SIZE * 2, IconUtil.NODE_ICON_SIZE);
     }
 
     if (o instanceof Iconable && !(o instanceof PsiElement)) {

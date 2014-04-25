@@ -21,7 +21,6 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,7 +35,7 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
 
   static {
     ENFORCED_PLAIN_TEXT_ICON.setIcon(AllIcons.FileTypes.Text, 0);
-    ENFORCED_PLAIN_TEXT_ICON.setIcon(PlatformIcons.EXCLUDED_FROM_COMPILE_ICON, 1);
+    ENFORCED_PLAIN_TEXT_ICON.setIcon(AllIcons.Nodes.ExcludedFromCompile, 1);
   }
 
   

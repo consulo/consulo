@@ -19,6 +19,7 @@ package com.intellij.openapi.fileTypes.impl;
 import com.intellij.CommonBundle;
 import com.intellij.application.options.ExportSchemeAction;
 import com.intellij.application.options.SchemesToImportPopup;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.highlighter.custom.impl.ReadFileType;
 import com.intellij.lang.Language;
@@ -37,7 +38,6 @@ import com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PairConvertor;
-import com.intellij.util.PlatformIcons;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -428,7 +428,7 @@ public class FileTypeConfigurable extends BaseConfigurable implements Searchable
         .disableUpDownActions();
 
       if (getSchemesManager().isImportAvailable()) {
-        toolbarDecorator.addExtraAction(new AnActionButton("Import Shared...", PlatformIcons.IMPORT_ICON) {
+        toolbarDecorator.addExtraAction(new AnActionButton("Import Shared...", AllIcons.ToolbarDecorator.Import) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             new SchemesToImportPopup<FileType, AbstractFileType>(myFileTypesList) {
@@ -442,7 +442,7 @@ public class FileTypeConfigurable extends BaseConfigurable implements Searchable
       }
 
       if (getSchemesManager().isExportAvailable()) {
-        toolbarDecorator.addExtraAction(new AnActionButton("Share...", PlatformIcons.EXPORT_ICON) {
+        toolbarDecorator.addExtraAction(new AnActionButton("Share...", AllIcons.ToolbarDecorator.Export) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             FileType selected = (FileType)myFileTypesList.getSelectedValue();

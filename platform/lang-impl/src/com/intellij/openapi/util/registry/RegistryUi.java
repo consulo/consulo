@@ -29,7 +29,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +57,7 @@ public class RegistryUi implements Disposable {
 
   private final JPanel myContent = new JPanel();
 
-  private static final Icon RESTART_ICON = PlatformIcons.CHECK_ICON;
+  private static final Icon RESTART_ICON = AllIcons.Actions.Checked;
   private final RestoreDefaultsAction myRestoreDefaultsAction;
   private final MyTableModel myModel;
 

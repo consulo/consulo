@@ -15,8 +15,8 @@
  */
 package com.intellij.usages;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,13 +32,13 @@ public class ReadWriteAccessUsageInfo2UsageAdapter extends UsageInfo2UsageAdapte
     myAccessedForReading = accessedForReading;
     myAccessedForWriting = accessedForWriting;
     if (myAccessedForReading && myAccessedForWriting) {
-      myIcon = PlatformIcons.VARIABLE_RW_ACCESS;
+      myIcon = AllIcons.Nodes.Rw_access;
     }
     else if (myAccessedForWriting) {
-      myIcon = PlatformIcons.VARIABLE_WRITE_ACCESS;           // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+      myIcon = AllIcons.Nodes.Write_access;           // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
     }
     else if (myAccessedForReading){
-      myIcon = PlatformIcons.VARIABLE_READ_ACCESS;            // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
+      myIcon = AllIcons.Nodes.Read_access;            // If icon is changed, don't forget to change UTCompositeUsageNode.getIcon();
     }
   }
 
@@ -51,7 +51,4 @@ public class ReadWriteAccessUsageInfo2UsageAdapter extends UsageInfo2UsageAdapte
   public boolean isAccessedForReading() {
     return myAccessedForReading;
   }
-
-
-
 }

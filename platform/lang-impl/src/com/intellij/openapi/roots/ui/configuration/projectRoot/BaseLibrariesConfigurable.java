@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.CommonBundle;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
@@ -332,7 +333,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
 
   private class CopyLibraryAction extends AnAction {
     private CopyLibraryAction() {
-      super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), COPY_ICON);
+      super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), AllIcons.Actions.Copy);
     }
 
     @Override

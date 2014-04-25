@@ -486,7 +486,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   private class MyCopyAction extends AnAction {
     public MyCopyAction() {
       super(ExecutionBundle.message("copy.configuration.action.name"), ExecutionBundle.message("copy.configuration.action.name"),
-            COPY_ICON);
+            AllIcons.Actions.Copy);
       registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK)), myTree);
     }
 

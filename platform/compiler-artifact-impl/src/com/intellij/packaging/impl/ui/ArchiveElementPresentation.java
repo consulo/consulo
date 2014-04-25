@@ -15,12 +15,12 @@
  */
 package com.intellij.packaging.impl.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,12 +33,14 @@ public class ArchiveElementPresentation extends PackagingElementPresentation {
     myElement = element;
   }
 
+  @Override
   public String getPresentableName() {
     return myElement.getArchiveFileName();
   }
 
+  @Override
   public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
-    presentationData.setIcon(PlatformIcons.JAR_ICON);
+    presentationData.setIcon(AllIcons.Nodes.PpJar);
     presentationData.addText(myElement.getArchiveFileName(), mainAttributes);
   }
 

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.options.colors.pages;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.highlighter.custom.CustomFileHighlighter;
 import com.intellij.ide.highlighter.custom.CustomHighlighterColors;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
@@ -26,7 +27,6 @@ import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.psi.codeStyle.DisplayPriority;
 import com.intellij.psi.codeStyle.DisplayPrioritySortable;
-import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,7 +74,7 @@ public class CustomColorsPage implements ColorSettingsPage, DisplayPrioritySorta
 
   @Override
   public Icon getIcon() {
-    return PlatformIcons.CUSTOM_FILE_ICON;
+    return AllIcons.FileTypes.Custom;
   }
 
   @Override

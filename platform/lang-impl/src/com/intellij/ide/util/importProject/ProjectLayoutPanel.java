@@ -30,7 +30,6 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.IconUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.FormBuilder;
@@ -58,6 +57,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
   private final ModuleInsight myInsight;
   
   private final Comparator<T> COMPARATOR = new Comparator<T>() {
+    @Override
     public int compare(final T o1, final T o2) {
       final int w1 = getWeight(o1);
       final int w2 = getWeight(o2);
@@ -74,6 +74,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
     myInsight = insight;
 
     myEntriesChooser = new ElementsChooser<T>(true) {
+      @Override
       public String getItemText(@NotNull T element) {
         return getElementText(element);
       }
@@ -103,6 +104,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
     add(groupPanel, BorderLayout.CENTER);
     
     myEntriesChooser.addListSelectionListener(new ListSelectionListener() {
+      @Override
       public void valueChanged(final ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
           return;
@@ -187,11 +189,11 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       return AllIcons.Nodes.Module;
     }
     if (element instanceof LibraryDescriptor) {
-      return PlatformIcons.LIBRARY_ICON;
+      return AllIcons.Nodes.PpLib;
     }
     if (element instanceof File) {
       final File file = (File)element;
-      return file.isDirectory()? PlatformIcons.DIRECTORY_CLOSED_ICON : PlatformIcons.JAR_ICON;
+      return file.isDirectory()? AllIcons.Nodes.TreeClosed : AllIcons.Nodes.PpJar;
     }
     return null;
   }
@@ -332,6 +334,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       super("Merge", "", AllIcons.Modules.Merge); // todo
     }
 
+    @Override
     public void actionPerformed(final AnActionEvent e) {
       final List<T> elements = myEntriesChooser.getSelectedElements();
       if (elements.size() > 1) {
@@ -340,10 +343,12 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
           "Enter new name for merge result:",
           "Merge",
           Messages.getQuestionIcon(), getElementName(elements.get(0)), new InputValidator() {
+          @Override
           public boolean checkInput(final String inputString) {
             return true;
           }
 
+          @Override
           public boolean canClose(final String inputString) {
             if (isNameAlreadyUsed(inputString.trim())) {
               Messages.showErrorDialog(getNameAlreadyUsedMessage(inputString), "");
@@ -365,6 +370,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       }
     }
 
+    @Override
     public void update(final AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(myEntriesChooser.getSelectedElements().size() > 1);
@@ -377,6 +383,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       super("Split", "", AllIcons.Modules.Split); // todo
     }
 
+    @Override
     public void actionPerformed(final AnActionEvent e) {
       final List<T> elements = myEntriesChooser.getSelectedElements();
 
@@ -403,6 +410,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
         }
       }
     }
+    @Override
     public void update(final AnActionEvent e) {
       final List<T> elements = myEntriesChooser.getSelectedElements();
       e.getPresentation().setEnabled(elements.size() == 1 && getContent(elements.get(0)).size() > 1);
@@ -414,6 +422,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       super("Rename", "", IconUtil.getEditIcon()); // todo
     }
 
+    @Override
     public void actionPerformed(final AnActionEvent e) {
       final List<T> elements = myEntriesChooser.getSelectedElements();
       if (elements.size() == 1) {
@@ -423,10 +432,12 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
           Messages.getQuestionIcon(),
           getElementName(element),
           new InputValidator() {
+            @Override
             public boolean checkInput(final String inputString) {
               return true;
             }
 
+            @Override
             public boolean canClose(final String inputString) {
               if (isNameAlreadyUsed(inputString.trim())) {
                 Messages.showErrorDialog(getNameAlreadyUsedMessage(inputString), "");
@@ -444,6 +455,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       }
     }
 
+    @Override
     public void update(final AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(myEntriesChooser.getSelectedElements().size() == 1);
@@ -451,6 +463,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
   }
 
   private class MyListCellRenderer extends DefaultListCellRenderer {
+    @Override
     public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
       final Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       setText(getElementText(value));
@@ -469,15 +482,18 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
 
       myNameField = new JTextField();
       myChooser = new ElementsChooser<File>(true) {
+        @Override
         protected String getItemText(@NotNull final File value) {
           return getElementText(value);
         }
       };
       for (final File file : files) {
         myChooser.addElement(file, false, new ElementsChooser.ElementProperties() {
+          @Override
           public Icon getIcon() {
             return getElementIcon(file);
           }
+          @Override
           public Color getColor() {
             return null;
           }
@@ -505,6 +521,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       setOKActionEnabled(!getName().isEmpty() && !getChosenFiles().isEmpty());
     }
 
+    @Override
     protected void doOKAction() {
       final String name = getName();
       if (isNameAlreadyUsed(name)) {
@@ -514,6 +531,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       super.doOKAction();
     }
 
+    @Override
     @Nullable
     protected JComponent createCenterPanel() {
       FormBuilder builder = FormBuilder.createFormBuilder().setVertical(true);
@@ -523,6 +541,7 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       return builder.getPanel();
     }
 
+    @Override
     public JComponent getPreferredFocusedComponent() {
       return myNameField;
     }
@@ -543,10 +562,12 @@ abstract class ProjectLayoutPanel<T> extends JPanel {
       myEntry = entry;
     }
 
+    @Override
     public Icon getIcon() {
       return getElementIcon(myEntry);
     }
 
+    @Override
     public Color getColor() {
       return null;
     }

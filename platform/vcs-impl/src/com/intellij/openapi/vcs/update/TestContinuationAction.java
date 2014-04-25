@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -24,7 +25,6 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.continuation.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TestContinuationAction extends AnAction {
   public TestContinuationAction() {
-    super("Test Continuation", "Test Continuation", PlatformIcons.ADVICE_ICON);
+    super("Test Continuation", "Test Continuation", AllIcons.Nodes.Advice);
   }
 
   @Override

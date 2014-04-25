@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
@@ -23,7 +24,6 @@ import com.intellij.openapi.vcs.changes.LocallyDeletedChange;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,10 +38,12 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode impleme
     myCount = 1;
   }
 
+  @Override
   public boolean canAcceptDrop(final ChangeListDragBean dragBean) {
     return false;
   }
 
+  @Override
   public void acceptDrop(final ChangeListOwner dragOwner, final ChangeListDragBean dragBean) {
   }
 
@@ -80,7 +82,7 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode impleme
       renderer.setIcon(addIcon);
     } else {
       if (filePath.isDirectory() || !isLeaf()) {
-        renderer.setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
+        renderer.setIcon(AllIcons.Nodes.TreeClosed);
       }
       else {
         renderer.setIcon(filePath.getFileType().getIcon());
@@ -88,6 +90,7 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode impleme
     }
   }
 
+  @Override
   public String getTooltip() {
     final LocallyDeletedChange change = (LocallyDeletedChange)getUserObject();
     return change.getDescription();

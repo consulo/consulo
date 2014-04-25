@@ -16,6 +16,7 @@
 
 package com.maddyhome.idea.copyright.ui;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -37,7 +38,6 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.IconUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.HashMap;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
@@ -168,7 +168,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
       }
     });
     result.add(new MyDeleteAction(forAll(Conditions.alwaysTrue())));
-    result.add(new AnAction("Copy", "Copy", PlatformIcons.COPY_ICON) {
+    result.add(new AnAction("Copy", "Copy", AllIcons.Actions.Copy) {
       {
         registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
       }
@@ -187,7 +187,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         event.getPresentation().setEnabled(getSelectedObject() != null);
       }
     });
-    result.add(new AnAction("Import", "Import", PlatformIcons.IMPORT_ICON) {
+    result.add(new AnAction("Import", "Import", AllIcons.ToolbarDecorator.Import) {
       public void actionPerformed(AnActionEvent event) {
         final OpenProjectFileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
           @Override

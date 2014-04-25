@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vcs.ex;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.util.PlatformIcons;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -27,13 +27,15 @@ import java.awt.datatransfer.StringSelection;
 */
 public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
   CopyLineStatusRangeAction(final LineStatusTracker lineStatusTracker, final Range range) {
-    super(VcsBundle.message("action.name.copy.old.text"), PlatformIcons.COPY_ICON, lineStatusTracker, range);
+    super(VcsBundle.message("action.name.copy.old.text"), AllIcons.Actions.Copy, lineStatusTracker, range);
   }
 
+  @Override
   public boolean isEnabled() {
     return Range.DELETED == myRange.getType() || Range.MODIFIED == myRange.getType();
   }
 
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     final String content = myLineStatusTracker.getUpToDateContent(myRange);
     CopyPasteManager.getInstance().setContents(new StringSelection(content));

@@ -17,6 +17,7 @@ public class SizedIcon implements Icon {
     myHeight = height;
   }
 
+  @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
     int dx = myWidth - myDelegate.getIconWidth();
     int dy = myWidth - myDelegate.getIconHeight();
@@ -28,10 +29,12 @@ public class SizedIcon implements Icon {
     }
   }
 
+  @Override
   public int getIconWidth() {
     return myWidth;
   }
 
+  @Override
   public int getIconHeight() {
     return myHeight;
   }

@@ -58,12 +58,12 @@ public class ColorIconCache {
     private Color[] myColours;
 
     public ColorIcon(final int size, final Color color) {
-      super(size);
+      super(size, size);
       myColor = color;
     }
 
     public ColorIcon(final int size, final Color[] colours) {
-      super(size);
+      super(size, size);
       myColours = colours;
     }
 

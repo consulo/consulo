@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
@@ -26,7 +27,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigur
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.util.ParameterizedRunnable;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.Predicate;
 import com.intellij.util.ui.classpath.ChooseLibrariesFromTablesDialog;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ class AddLibraryDependencyAction extends AddItemPopupAction<Library> {
 
   public AddLibraryDependencyAction(ClasspathPanel classpathPanel, final int index, final String title,
                                     final StructureConfigurableContext context) {
-    super(classpathPanel, index, title, PlatformIcons.LIBRARY_ICON);
+    super(classpathPanel, index, title, AllIcons.Nodes.PpLib);
     myContext = context;
   }
 

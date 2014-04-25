@@ -30,7 +30,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.profile.codeInspection.ui.InspectionConfigTreeNode;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.PlatformIcons;
+import com.intellij.util.IconUtil;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -40,7 +40,7 @@ public abstract class DeleteScopeAction extends AnAction {
   private final Tree myTree;
 
   public DeleteScopeAction(Tree tree) {
-    super("Delete Scope", "Delete Scope", PlatformIcons.DELETE_ICON);
+    super("Delete Scope", "Delete Scope", IconUtil.getRemoveIcon());
     myTree = tree;
     registerCustomShortcutSet(CommonShortcuts.DELETE, myTree);
   }
