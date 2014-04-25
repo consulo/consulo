@@ -110,7 +110,7 @@ public class XValuePresentationUtil {
     }
 
     @Override
-    public void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
+    public void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
       myBuilder.append(value);
     }
 

@@ -67,6 +67,11 @@ public abstract class XValuePresentation {
     void renderNumericValue(@NotNull String value);
 
     /**
+     * Appends {@code value} surrounded by single quotes to the node text colored as a string
+     */
+    void renderCharValue(@NotNull String value);
+
+    /**
      * Appends {@code value} highlighted as a keyword
      */
     void renderKeywordValue(@NotNull String value);
@@ -78,6 +83,14 @@ public abstract class XValuePresentation {
      * @param maxLength maximum number of characters to show
      */
     void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength);
+
+    /**
+     * Appends {@code value} surrounded by quotes to the node text colored as a string
+     * @param value value to be shown
+     * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
+     * @param maxLength maximum number of characters to show
+     */
+    void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength);
 
     /**
      * Appends gray colored {@code comment}

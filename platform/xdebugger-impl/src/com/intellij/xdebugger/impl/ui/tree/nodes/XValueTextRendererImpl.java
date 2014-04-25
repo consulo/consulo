@@ -47,12 +47,12 @@ class XValueTextRendererImpl extends XValueTextRendererBase {
   }
 
   @Override
-  public void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
+  public void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
     TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DefaultLanguageHighlighterColors.STRING);
     SimpleTextAttributes attributes = SimpleTextAttributes.fromTextAttributes(textAttributes);
-    myText.append("\"", attributes);
+    myText.append(String.valueOf(quoteChar), attributes);
     XValuePresentationUtil.renderValue(value, myText, attributes, maxLength, additionalSpecialCharsToHighlight);
-    myText.append("\"", attributes);
+    myText.append(String.valueOf(quoteChar), attributes);
   }
 
   @Override
