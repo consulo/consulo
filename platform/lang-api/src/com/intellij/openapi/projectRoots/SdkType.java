@@ -16,7 +16,6 @@
 package com.intellij.openapi.projectRoots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
@@ -184,14 +183,10 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo(value = "Use SdkType.EP_NAME.findExtension()", until = "1.")
   public static <T extends SdkType> T findInstance(final Class<T> sdkTypeClass) {
-    for (SdkType sdkType : Extensions.getExtensions(EP_NAME)) {
-      if (sdkTypeClass.isAssignableFrom(sdkType.getClass())) {
-        //noinspection unchecked
-        return (T)sdkType;
-      }
-    }
-    return null;
+    return EP_NAME.findExtension(sdkTypeClass);
   }
 
   public boolean isRootTypeApplicable(final OrderRootType type) {

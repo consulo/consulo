@@ -126,7 +126,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @Nullable
   @Override
   public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
-    SdkType sdkType = SdkType.findInstance(sdkTypeClass);
+    SdkType sdkType = SdkType.EP_NAME.findExtension(sdkTypeClass);
     if(sdkType == null) {
       return null;
     }

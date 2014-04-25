@@ -96,13 +96,8 @@ public class CoreSdkTable extends SdkTable {
   @Nullable
   @Override
   public Sdk findBundleSdkByType(@NotNull Class<? extends SdkType> sdkTypeClass) {
-    SdkType sdkType = SdkType.findInstance(sdkTypeClass);
-    if(sdkType == null) {
-      return null;
-    }
-
     for (Sdk sdk : mySdks) {
-      if(sdk.isBundled() && sdk.getSdkType() == sdkType) {
+      if(sdk.isBundled()) {
         return sdk;
       }
     }
