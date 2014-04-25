@@ -411,25 +411,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     // set mode in editor
     editor.setOneLineMode(isOneLineMode);
-
-    final EditorColorsManager mgr = EditorColorsManager.getInstance();
-    final EditorColorsScheme defaultScheme = UIUtil.isUnderDarcula()
-                                             ? mgr.getScheme(mgr.getGlobalScheme().getName())
-                                             : mgr.getScheme(EditorColorsManager.DEFAULT_SCHEME_NAME);
-    final EditorColorsScheme customGlobalScheme = isOneLineMode ? defaultScheme : null;
-
-    // Probably we need change scheme only for color schemas with white BG, but on the other hand
-    // FindUsages dialog always uses FindUsages color scheme based on a default one and should be also fixed
-    //
-    //final EditorColorsScheme customGlobalScheme;
-    //final EditorColorsScheme currentScheme = EditorColorsManager.getInstance().getGlobalScheme();
-    //if (currentScheme.getDefaultBackground() == Color.WHITE) {
-    //  customGlobalScheme = currentScheme;
-    //} else {
-    //  final EditorColorsScheme defaultScheme = EditorColorsManager.getInstance().getScheme(EditorColorsManager.DEFAULT_SCHEME_NAME);
-    //  customGlobalScheme = isOneLineMode ? defaultScheme : null;
-    //}
-    editor.setColorsScheme(editor.createBoundColorSchemeDelegate(customGlobalScheme));
+    editor.setColorsScheme(editor.createBoundColorSchemeDelegate(null));
 
     final EditorColorsScheme colorsScheme = editor.getColorsScheme();
     colorsScheme.setColor(EditorColors.CARET_ROW_COLOR, null);
