@@ -206,8 +206,8 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
 
     mySidePanel = new SidePanel(this, myHistory);
     mySidePanel.addSeparator(IdeBundle.message("project.settings.separator"));
-    addProjectConfig();
     if (!isDefaultProject) {
+      addProjectConfig();
       addModulesConfig();
     }
     addProjectLibrariesConfig();
