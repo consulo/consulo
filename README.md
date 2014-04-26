@@ -13,7 +13,7 @@ Use 'Build | Build Artifacts... | distForRuntime' to build the project
 
 To run the project, use the "Consulo" shared run configuration.
 
-![Build Status](http://must-be.org:8080/vulcan_web/statusImage?name=consulo)
+![Build Status](http://must-be.org/vulcan/statusImage?name=consulo)
 
 ## Links
 
