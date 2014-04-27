@@ -255,6 +255,14 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     int w = adjustThumbWidth(thumbBounds.width - hGap * 2);
     int h = thumbBounds.height - vGap * 2;
 
+    // leave one pixel between thumb and right or bottom edge
+    if (vertical) {
+      h -= 1;
+    }
+    else {
+      w -= 1;
+    }
+
     final Paint paint;
     final Color start = adjustColor(getGradientLightColor());
     final Color end = adjustColor(getGradientDarkColor());
@@ -272,7 +280,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     final Stroke stroke = g.getStroke();
     g.setStroke(BORDER_STROKE);
     g.setColor(getGradientThumbBorderColor());
-    g.drawRoundRect(hGap, vGap, w, h, 0, 0);
+    g.drawRect(hGap, vGap, w, h);
     g.setStroke(stroke);
   }
 
