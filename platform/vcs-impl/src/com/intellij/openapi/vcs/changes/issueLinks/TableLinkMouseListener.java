@@ -62,7 +62,7 @@ public class TableLinkMouseListener extends AbstractBaseTagMouseListener {
     final Rectangle rc = table.getCellRect(row, column, false);
     int index = renderer.findFragmentAt(e.getPoint().x - rc.x);
     if (index >= 0) {
-      return renderer.getFragmentTag(index);
+      return renderer.getFragmentTagAt(index);
     }
     return null;
   }

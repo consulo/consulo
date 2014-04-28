@@ -327,7 +327,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   @Nullable
-  public synchronized Object getFragmentTag(int index) {
+  public synchronized Object getFragmentTagAt(int index) {
     if (myFragmentTags != null && index < myFragmentTags.size()) {
       return myFragmentTags.get(index);
     }
@@ -468,7 +468,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       for (int i = 0; i < myFragments.size(); i++) {
         final String fragment = myFragments.get(i);
         final SimpleTextAttributes attributes = myAttributes.get(i);
-        final Object tag = getFragmentTag(i);
+        final Object tag = getFragmentTagAt(i);
         if (tag instanceof BrowserLauncherTag) {
           formatLink(text, fragment, attributes, ((BrowserLauncherTag)tag).myUrl);
         }

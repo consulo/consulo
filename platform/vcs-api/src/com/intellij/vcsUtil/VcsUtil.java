@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,12 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.UnknownFileType;
+import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -37,6 +38,7 @@ import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
+import com.intellij.openapi.vcs.roots.VcsRootDetector;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
@@ -138,7 +140,6 @@ public class VcsUtil {
     final AbstractVcs[] vcss = new AbstractVcs[ 1 ];
 
     ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
       public void run() {
         //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
         //  a future task after the component has been disposed.
@@ -157,7 +158,6 @@ public class VcsUtil {
     final AbstractVcs[] vcss = new AbstractVcs[1];
 
     ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
       public void run() {
         //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
         //  a future task after the component has been disposed.
@@ -176,7 +176,6 @@ public class VcsUtil {
     final VirtualFile[] roots = new VirtualFile[1];
 
     ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
       public void run() {
         //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
         //  a future task after the component has been disposed.
@@ -195,7 +194,6 @@ public class VcsUtil {
     final VirtualFile[] roots = new VirtualFile[1];
 
     ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
       public void run() {
         //  IDEADEV-17916, when e.g. ContentRevision.getContent is called in
         //  a future task after the component has been disposed.
@@ -259,7 +257,6 @@ public class VcsUtil {
   @Nullable
   public static VirtualFile getVirtualFile(final String path) {
     return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
-      @Override
       @Nullable
       public VirtualFile compute() {
         return LocalFileSystem.getInstance().findFileByPath(path.replace(File.separatorChar, '/'));
@@ -270,7 +267,6 @@ public class VcsUtil {
   @Nullable
   public static VirtualFile getVirtualFile(final File file) {
     return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
-      @Override
       @Nullable
       public VirtualFile compute() {
         return LocalFileSystem.getInstance().findFileByIoFile(file);
@@ -291,7 +287,6 @@ public class VcsUtil {
 
   public static String getFileContent(final String path) {
     return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
       public String compute() {
         VirtualFile vFile = VcsUtil.getVirtualFile(path);
         final Document doc = FileDocumentManager.getInstance().getDocument(vFile);
@@ -300,26 +295,23 @@ public class VcsUtil {
     });
   }
 
-  //  FileDocumentManager has difficulties in loading the content for files
-  //  which are outside the project structure?
-  public static byte[] getFileByteContent(final File file) throws IOException {
-    return ApplicationManager.getApplication().runReadAction(new Computable<byte[]>() {
-      @Override
-      public byte[] compute() {
-        byte[] content;
-        try {
-          content = FileUtil.loadFileBytes(file);
-        }
-        catch (IOException e) {
-          content = null;
-        }
-        return content;
-      }
-    });
+  @Nullable
+  public static byte[] getFileByteContent(@NotNull File file) throws IOException {
+    try {
+      return FileUtil.loadFileBytes(file);
+    }
+    catch (IOException e) {
+      LOG.info(e);
+      return null;
+    }
   }
 
   public static FilePath getFilePath(String path) {
     return getFilePath(new File(path));
+  }
+
+  public static FilePath getFilePath(@NotNull VirtualFile file) {
+    return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
   }
 
   public static FilePath getFilePath(File file) {
@@ -350,7 +342,6 @@ public class VcsUtil {
    */
   public static void showStatusMessage(final Project project, final String message) {
     SwingUtilities.invokeLater(new Runnable() {
-      @Override
       public void run() {
         if (project.isOpen()) {
           StatusBar.Info.set(message, project);
@@ -425,7 +416,6 @@ public class VcsUtil {
 
   private static FilePath[] sortPaths(FilePath[] files, final int sign) {
     Arrays.sort(files, new Comparator<FilePath>() {
-      @Override
       public int compare(FilePath o1, FilePath o2) {
         return sign * o1.getPath().compareTo(o2.getPath());
       }
@@ -479,7 +469,7 @@ public class VcsUtil {
             return false;
           }
         }
-        else if (fileTypeManager == null || file.getFileType() != UnknownFileType.INSTANCE) {
+        else if (fileTypeManager == null || file.getFileType() != FileTypes.UNKNOWN) {
           files.add(file);
         }
         return true;
@@ -491,7 +481,6 @@ public class VcsUtil {
           throws VcsException {
     final Ref<VcsException> ex = new Ref<VcsException>();
     boolean result = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
       public void run() {
         try {
           runnable.run();
@@ -511,10 +500,8 @@ public class VcsUtil {
     final VirtualFile[] file = new VirtualFile[1];
     final Application app = ApplicationManager.getApplication();
     Runnable action = new Runnable() {
-      @Override
       public void run() {
         app.runWriteAction(new Runnable() {
-          @Override
           public void run() {
             file[0] = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
           }
@@ -565,7 +552,7 @@ public class VcsUtil {
    *         Actually this method can be used to normalize file names to chop trailing separator chars.
    */
   public static String chopTrailingChars(String source, char[] chars) {
-    StringBuilder sb = new StringBuilder(source);
+    StringBuffer sb = new StringBuffer(source);
     while (true) {
       boolean atLeastOneCharWasChopped = false;
       for (int i = 0; i < chars.length && sb.length() > 0; i++) {
@@ -602,7 +589,7 @@ public class VcsUtil {
     return (! s1Trimmed.equals(s2Trimmed)) && s1Trimmed.equalsIgnoreCase(s2Trimmed);
   }
 
-  private static String ANNO_ASPECT = "show.vcs.annotation.aspect.";
+  private static final String ANNO_ASPECT = "show.vcs.annotation.aspect.";
   //public static boolean isAspectAvailableByDefault(LineAnnotationAspect aspect) {
   //  if (aspect.getId() == null) return aspect.isShowByDefault();
   //  return PropertiesComponent.getInstance().getBoolean(ANNO_ASPECT + aspect.getId(), aspect.isShowByDefault());
@@ -639,17 +626,21 @@ public class VcsUtil {
 
   @NotNull
   public static Collection<VcsDirectoryMapping> findRoots(@NotNull VirtualFile rootDir, @NotNull Project project)
-          throws IllegalArgumentException
-  {
+          throws IllegalArgumentException {
     if (!rootDir.isDirectory()) {
       throw new IllegalArgumentException(
               "Can't find VCS at the target file system path. Reason: expected to find a directory there but it's not. The path: "
               + rootDir.getParent()
       );
     }
+    Collection<VcsRoot> roots = ServiceManager.getService(project, VcsRootDetector.class).detect(rootDir);
     Collection<VcsDirectoryMapping> result = ContainerUtilRt.newArrayList();
-    for (VcsRootFinder finder : VcsRootFinder.EP_NAME.getExtensions(project)) {
-      result.addAll(finder.findRoots(rootDir));
+    for (VcsRoot vcsRoot : roots) {
+      VirtualFile vFile = vcsRoot.getPath();
+      AbstractVcs rootVcs = vcsRoot.getVcs();
+      if (rootVcs != null && vFile != null) {
+        result.add(new VcsDirectoryMapping(vFile.getPath(), rootVcs.getName()));
+      }
     }
     return result;
   }

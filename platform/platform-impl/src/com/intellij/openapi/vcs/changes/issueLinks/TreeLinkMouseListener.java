@@ -60,7 +60,7 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
       }
       int i = myRenderer.findFragmentAt(dx);
       if (i >= 0) {
-        tag = myRenderer.getFragmentTag(i);
+        tag = myRenderer.getFragmentTagAt(i);
         if (treeNode instanceof HaveTooltip) {
           haveTooltip = (HaveTooltip) treeNode;
         }
