@@ -52,7 +52,7 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
   VcsUpdateInfoScopeFilterConfigurable(Project project, VcsConfiguration vcsConfiguration) {
     myProject = project;
     myVcsConfiguration = vcsConfiguration;
-    myCheckbox = new JCheckBox(VcsBundle.getString("settings.filter.update.project.info.by.scope"));
+    myCheckbox = new JCheckBox(VcsBundle.message("settings.filter.update.project.info.by.scope"));
     myComboBox = new JComboBox();
     
     myComboBox.setEnabled(myCheckbox.isSelected());
@@ -77,7 +77,7 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
   @Nls
   @Override
   public String getDisplayName() {
-    return VcsBundle.getString("settings.filter.update.project.info.by.scope");
+    return VcsBundle.message("settings.filter.update.project.info.by.scope");
   }
 
   @Nullable

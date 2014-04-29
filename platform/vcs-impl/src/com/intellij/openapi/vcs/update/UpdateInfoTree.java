@@ -485,7 +485,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton implements Di
 
   private class FilterAction extends ToggleAction implements DumbAware {
     public FilterAction() {
-      super("Scope Filter", VcsBundle.getString("settings.filter.update.project.info.by.scope"), AllIcons.General.Filter);
+      super("Scope Filter", VcsBundle.message("settings.filter.update.project.info.by.scope"), AllIcons.General.Filter);
     }
 
     @Override

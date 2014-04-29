@@ -30,7 +30,7 @@ import java.awt.datatransfer.StringSelection;
 public class CopyRevisionNumberAction extends DumbAwareAction {
 
   public CopyRevisionNumberAction() {
-    super(VcsBundle.getString("history.copy.revision.number"), VcsBundle.getString("history.copy.revision.number"),
+    super(VcsBundle.message("history.copy.revision.number"), VcsBundle.message("history.copy.revision.number"),
           AllIcons.Actions.Copy);
   }
 

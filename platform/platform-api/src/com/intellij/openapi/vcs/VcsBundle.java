@@ -15,40 +15,18 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.CommonBundle;
-import org.jetbrains.annotations.NonNls;
+import org.consulo.lombok.annotations.Bundle;
 import org.jetbrains.annotations.PropertyKey;
-
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
-import java.util.ResourceBundle;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author lesya
  */
+@Bundle
 public class VcsBundle {
-  private static Reference<ResourceBundle> ourBundle;
-
-  @NonNls protected static final String PATH_TO_BUNDLE = "messages.VcsBundle";
-
-  private VcsBundle() {
-  }
-
-  public static String message(@PropertyKey(resourceBundle = PATH_TO_BUNDLE)String key, Object... params) {
-    return CommonBundle.message(getBundle(), key, params);
-  }
-
-  public static String getString(@PropertyKey(resourceBundle = PATH_TO_BUNDLE) final String key) {
-    return getBundle().getString(key);
-  }
-
-  private static ResourceBundle getBundle() {
-    ResourceBundle bundle = null;
-    if (ourBundle != null) bundle = ourBundle.get();
-    if (bundle == null) {
-      bundle = ResourceBundle.getBundle(PATH_TO_BUNDLE);
-      ourBundle = new SoftReference<ResourceBundle>(bundle);
-    }
-    return bundle;
+  @Deprecated
+  @DeprecationInfo(value = "Use #message()", until = "1.0")
+  public static String getString(@PropertyKey(resourceBundle = "messages.VcsBundle") final String key) {
+    return message(key);
   }
 }
