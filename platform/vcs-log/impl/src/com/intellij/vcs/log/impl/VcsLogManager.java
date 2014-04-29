@@ -1,6 +1,9 @@
 package com.intellij.vcs.log.impl;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.actionSystem.DataSink;
+import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
@@ -9,6 +12,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.impl.ToolWindowImpl;
@@ -17,17 +21,20 @@ import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
-import com.intellij.util.Consumer;
+import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsLogRefresher;
 import com.intellij.vcs.log.VcsLogSettings;
+import com.intellij.vcs.log.data.DataPack;
 import com.intellij.vcs.log.data.VcsLogDataHolder;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.ui.VcsLogColorManagerImpl;
-import com.intellij.vcs.log.ui.VcsLogUI;
+import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,8 +55,8 @@ public class VcsLogManager implements Disposable {
   @NotNull private final VcsLogUiProperties myUiProperties;
 
   private PostponeableLogRefresher myLogRefresher;
-  private VcsLogDataHolder myLogDataHolder;
-  private VcsLogUI myUi;
+  private volatile VcsLogDataHolder myLogDataHolder;
+  private volatile VcsLogUiImpl myUi;
 
   public VcsLogManager(@NotNull Project project, @NotNull ProjectLevelVcsManager vcsManager,
                        @NotNull VcsLogSettings settings,
@@ -66,16 +73,24 @@ public class VcsLogManager implements Disposable {
     final Map<VirtualFile, VcsLogProvider> logProviders = findLogProviders();
     final VcsLogContainer mainPanel = new VcsLogContainer(myProject);
 
-    myLogDataHolder = new VcsLogDataHolder(myProject, logProviders, mySettings);
-    myLogDataHolder.initialize(new Consumer<VcsLogDataHolder>() {
+    myLogDataHolder = new VcsLogDataHolder(myProject, this, logProviders, mySettings);
+    myLogDataHolder.initialize(new PairConsumer<VcsLogDataHolder, DataPack>() {
       @Override
-      public void consume(VcsLogDataHolder vcsLogDataHolder) {
-        Disposer.register(VcsLogManager.this, vcsLogDataHolder);
-        VcsLogUI logUI = new VcsLogUI(vcsLogDataHolder, myProject, mySettings,
-                                      new VcsLogColorManagerImpl(logProviders.keySet()), myUiProperties);
+      public void consume(VcsLogDataHolder vcsLogDataHolder, DataPack dataPack) {
+        VcsLogUiImpl logUI = new VcsLogUiImpl(vcsLogDataHolder, myProject, mySettings,
+                                      new VcsLogColorManagerImpl(logProviders.keySet()), myUiProperties, dataPack);
         myLogDataHolder = vcsLogDataHolder;
         myUi = logUI;
         mainPanel.init(logUI.getMainFrame().getMainComponent());
+        final VcsLogGraphTable graphTable = logUI.getTable();
+        if (graphTable.getRowCount() > 0) {
+          IdeFocusManager.getInstance(myProject).requestFocus(graphTable, true).doWhenProcessed(new Runnable() {
+            @Override
+            public void run() {
+              graphTable.setRowSelectionInterval(0, 0);
+            }
+          });
+        }
         myLogRefresher = new PostponeableLogRefresher(myProject, vcsLogDataHolder);
         refreshLogOnVcsEvents(logProviders);
       }
@@ -111,12 +126,19 @@ public class VcsLogManager implements Disposable {
     return logProviders;
   }
 
+  /**
+   * The instance of the {@link VcsLogDataHolder} or null if the log was not initialized yet.
+   */
+  @Nullable
   public VcsLogDataHolder getDataHolder() {
     return myLogDataHolder;
   }
 
-  @NotNull
-  public VcsLogUI getLogUi() {
+  /**
+   * The instance of the {@link com.intellij.vcs.log.ui.VcsLogUiImpl} or null if the log was not initialized yet.
+   */
+  @Nullable
+  public VcsLogUiImpl getLogUi() {
     return myUi;
   }
 
@@ -124,7 +146,7 @@ public class VcsLogManager implements Disposable {
   public void dispose() {
   }
 
-  private static class VcsLogContainer extends JPanel {
+  private class VcsLogContainer extends JPanel implements TypeSafeDataProvider {
 
     private final JBLoadingPanel myLoadingPanel;
 
@@ -139,12 +161,19 @@ public class VcsLogManager implements Disposable {
       myLoadingPanel.add(mainComponent);
       myLoadingPanel.stopLoading();
     }
+
+    @Override
+    public void calcData(DataKey key, DataSink sink) {
+      if (myUi != null) {
+        myUi.getMainFrame().calcData(key, sink);
+      }
+    }
+
   }
 
   private static class PostponeableLogRefresher implements VcsLogRefresher, Disposable {
 
     private  static final String TOOLWINDOW_ID = ChangesViewContentManager.TOOLWINDOW_ID;
-    private static final String TAB_NAME = "Log";
 
     @NotNull private final VcsLogDataHolder myDataHolder;
     @NotNull private final ToolWindowManagerImpl myToolWindowManager;
@@ -200,7 +229,7 @@ public class VcsLogManager implements Disposable {
     private boolean isOurContentPaneShowing() {
       if (myToolWindowManager.isToolWindowRegistered(TOOLWINDOW_ID) && myToolWindow.isVisible()) {
         Content content = myToolWindow.getContentManager().getSelectedContent();
-        return content != null && content.getTabName().equals(TAB_NAME);
+        return content != null && content.getTabName().equals(VcsLogContentProvider.TAB_NAME);
       }
       return false;
     }

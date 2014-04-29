@@ -15,16 +15,26 @@
  */
 package com.intellij.vcs.log;
 
+import java.util.List;
+
 /**
  * A {@link VcsCommit} with information about date & time when this commit was made.
- *
- * @author Kirill Likhodedov
+ * <p/>
+ * An instance of this object can be obtained via
+ * {@link VcsLogObjectsFactory#createTimedCommit(Hash, List, long) VcsLogObjectsFactory#createTimedCommit}.
+ * <p/>
+ * It is not recommended to create a custom implementation of this interface, but if you need it, <b>make sure to implement {@code equals()}
+ * and {@code hashcode()} so that they consider only the Hash</b>, i.e. two TimedVcsCommits are equal if and only if they have equal
+ * hash codes. The VCS Log framework heavily relies on this fact.
  */
 public interface TimedVcsCommit extends VcsCommit {
 
   /**
-   * Returns the timestamp indicating the date & time when this commit was made.
+   * <p>Returns the timestamp indicating the date & time when this commit was made.</p>
+   * <p>This time is displayed in the table by default;
+   *    is used for joining commits from different repositories;
+   *    is used for ordering commits in a single repository (keeping the preference of the topological ordering of course).</p>
    */
-  long getAuthorTime();
+  long getTime();
 
 }

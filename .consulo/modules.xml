@@ -229,6 +229,7 @@
         <orderEntry type="module" module-name="testFramework" />
         <orderEntry type="module" module-name="vcs-impl" />
         <orderEntry type="library" name="Guava" level="project" />
+        <orderEntry type="module" module-name="vcs-log-api" />
       </module>
       <module name="platform/editor-ui-api" dirurl="file://$PROJECT_DIR$/platform/editor-ui-api">
         <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />

@@ -4,12 +4,9 @@ import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.vcs.log.TimedVcsCommit;
-import com.intellij.vcs.log.VcsRef;
-import com.intellij.vcs.log.VcsRefType;
+import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.impl.VcsRefImpl;
-import com.intellij.vcs.log.parser.CommitParser;
-import com.intellij.vcs.log.parser.SimpleHash;
+import com.intellij.vcs.log.SimpleHash;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -26,8 +23,8 @@ import static org.junit.Assert.assertEquals;
 public class VcsLogJoinerTest {
 
   public void runTest(List<String> initial, List<String> updateBlock, List<String> oldRefs, List<String> newRefs, String expected) {
-    List<TimedVcsCommit> savedLog = CommitParser.log(ArrayUtil.toStringArray(initial));
-    List<? extends TimedVcsCommit> firstBlock = CommitParser.log(ArrayUtil.toStringArray(updateBlock));
+    List<TimedVcsCommit> savedLog = TimedCommitParser.log(ArrayUtil.toStringArray(initial));
+    List<? extends TimedVcsCommit> firstBlock = TimedCommitParser.log(ArrayUtil.toStringArray(updateBlock));
     Collection<VcsRef> vcsOldRefs = ContainerUtil.map(oldRefs, new Function<String, VcsRef>() {
       @Override
       public VcsRef fun(String s) {
@@ -53,6 +50,39 @@ public class VcsLogJoinerTest {
       asList("a2", "b1"),
       asList("f", "e"),
       "e, f, a2, b1, a1, a"
+    );
+  }
+
+  @Test
+  public void oneNodeTest() {
+    runTest(
+      asList("3|-a1|-"),
+      asList("3|-a1|-"),
+      asList("a1"),
+      asList("a1"),
+      "a1"
+    );
+  }
+
+  @Test
+  public void oneNodeResetTest() {
+    runTest(
+      asList("3|-a1|-a2", "2|-a2|-"),
+      asList("2|-a2|-"),
+      asList("a2", "a1"),
+      asList("a2"),
+      "a2"
+    );
+  }
+
+  @Test
+  public void oneNodeReset2Test() {
+    runTest(
+      asList("3|-a1|-a2", "2|-a2|-"),
+      asList("2|-a2|-"),
+      asList("a1"),
+      asList("a2"),
+      "a2"
     );
   }
 

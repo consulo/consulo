@@ -4,16 +4,16 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
-import com.intellij.util.concurrency.QueueProcessor;
+import com.intellij.util.Function;
+import com.intellij.util.ThrowableConsumer;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsShortCommitDetails;
-import com.intellij.vcs.log.graph.Graph;
-import com.intellij.vcs.log.graph.elements.Node;
-import com.intellij.vcs.log.graph.elements.NodeRow;
+import com.intellij.vcs.log.ui.tables.AbstractVcsLogTableModel;
+import com.intellij.vcs.log.util.SequentialLimitedLifoExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,13 +43,13 @@ public abstract class DataGetter<T extends VcsShortCommitDetails> implements Dis
   @NotNull protected final VcsLogDataHolder myDataHolder;
   @NotNull private final Map<VirtualFile, VcsLogProvider> myLogProviders;
   @NotNull private final VcsCommitCache<T> myCache;
+  @NotNull private final SequentialLimitedLifoExecutor<TaskDescriptor> myLoader;
 
   /**
    * The sequence number of the current "loading" task.
    */
   private long myCurrentTaskIndex = 0;
 
-  @NotNull private final QueueProcessor<TaskDescriptor> myLoader = new QueueProcessor<TaskDescriptor>(new DetailsLoadingTask());
   @NotNull private final Collection<Runnable> myLoadingFinishedListeners = new ArrayList<Runnable>();
 
   DataGetter(@NotNull VcsLogDataHolder dataHolder, @NotNull Map<VirtualFile, VcsLogProvider> logProviders,
@@ -58,41 +58,41 @@ public abstract class DataGetter<T extends VcsShortCommitDetails> implements Dis
     myLogProviders = logProviders;
     myCache = cache;
     Disposer.register(dataHolder, this);
+    myLoader = new SequentialLimitedLifoExecutor<TaskDescriptor>(this, MAX_LOADING_TASKS,
+                                                                 new ThrowableConsumer<TaskDescriptor, VcsException>() {
+      @Override
+      public void consume(TaskDescriptor task) throws VcsException {
+        preLoadCommitData(task.myCommits);
+        UIUtil.invokeAndWaitIfNeeded(new Runnable() {
+          @Override
+          public void run() {
+            for (Runnable loadingFinishedListener : myLoadingFinishedListeners) {
+              loadingFinishedListener.run();
+            }
+          }
+        });
+      }
+    });
   }
 
   @Override
   public void dispose() {
     myLoadingFinishedListeners.clear();
-    myLoader.clear();
   }
 
-  @NotNull
-  public T getCommitData(@NotNull final Node node) {
+  @Nullable
+  public T getCommitData(int row, @NotNull AbstractVcsLogTableModel<?> tableModel) {
     assert EventQueue.isDispatchThread();
-    Hash hash = node.getCommitHash();
+    Hash hash = tableModel.getHashAtRow(row);
+    if (hash == null) {
+      return null;
+    }
     T details = getFromCache(hash);
     if (details != null) {
       return details;
     }
-    return loadingDetails(node, hash);
-  }
-
-  @NotNull
-  private T loadingDetails(Node node, Hash hash) {
-    TaskDescriptor descriptor = runLoadAroundCommitData(node);
-    T loadingDetails = (T)new LoadingDetails(hash, descriptor.getTaskNum(), node.getBranch().getRepositoryRoot());
-    return loadingDetails;
-  }
-
-  @NotNull
-  public T getCommitData(@NotNull Hash hash) {
-    assert EventQueue.isDispatchThread();
-    T details = getFromCache(hash);
-    if (details != null) {
-      return details;
-    }
-    Node node = myDataHolder.getDataPack().getNodeByHash(hash); // TODO this may possibly be slow => need to add to the Task as well
-    return loadingDetails(node, hash);
+    runLoadAroundCommitData(row, tableModel);
+    return myCache.get(hash); // now it is in the cache as "Loading Details".
   }
 
   @Nullable
@@ -113,56 +113,58 @@ public abstract class DataGetter<T extends VcsShortCommitDetails> implements Dis
       }
       return details;
     }
-    return (T)myDataHolder.getTopCommitDetails(hash);
+    return getFromAdditionalCache(hash);
   }
 
+  /**
+   * Lookup somewhere else but the standard cache.
+   */
   @Nullable
-  private Node getCommitNodeInRow(int rowIndex) {
-    Graph graph = myDataHolder.getDataPack().getGraphModel().getGraph();
-    if (rowIndex < 0 || rowIndex >= graph.getNodeRows().size()) {
-      return null;
-    }
-    NodeRow row = graph.getNodeRows().get(rowIndex);
-    for (Node node : row.getNodes()) {
-      if (node.getType() == Node.NodeType.COMMIT_NODE) {
-        return node;
-      }
-    }
-    return null;
-  }
+  protected abstract T getFromAdditionalCache(@NotNull Hash hash);
 
-  @NotNull 
-  private TaskDescriptor runLoadAroundCommitData(@NotNull Node node) {
-    int rowIndex = node.getRowIndex();
-    List<Node> nodes = new ArrayList<Node>();
+  private void runLoadAroundCommitData(int row, @NotNull AbstractVcsLogTableModel<?> tableModel) {
     long taskNumber = myCurrentTaskIndex++;
-    for (int i = rowIndex - UP_PRELOAD_COUNT; i < rowIndex + DOWN_PRELOAD_COUNT; i++) {
-      Node commitNode = getCommitNodeInRow(i);
-      if (commitNode != null) {
-        nodes.add(commitNode);
-        Hash hash = commitNode.getCommitHash();
+    MultiMap<VirtualFile, Hash> commits = getCommitsAround(row, tableModel, UP_PRELOAD_COUNT, DOWN_PRELOAD_COUNT);
+    for (Map.Entry<VirtualFile, Collection<Hash>> hashesByRoots : commits.entrySet()) {
+      VirtualFile root = hashesByRoots.getKey();
+      Collection<Hash> hashes = hashesByRoots.getValue();
 
-        // fill the cache with temporary "Loading" values to avoid producing queries for each commit that has not been cached yet,
-        // even if it will be loaded within a previous query
+      // fill the cache with temporary "Loading" values to avoid producing queries for each commit that has not been cached yet,
+      // even if it will be loaded within a previous query
+      for (Hash hash : hashes) {
         if (!myCache.isKeyCached(hash)) {
-          myCache.put(hash, (T)new LoadingDetails(hash, taskNumber, commitNode.getBranch().getRepositoryRoot()));
+          myCache.put(hash, (T)new LoadingDetails(hash, taskNumber, root));
         }
       }
     }
-    TaskDescriptor task = new TaskDescriptor(nodes, taskNumber);
-    myLoader.addFirst(task);
-    return task;
+
+    TaskDescriptor task = new TaskDescriptor(commits);
+    myLoader.queue(task);
   }
 
-  private void preLoadCommitData(@NotNull List<Node> nodes) throws VcsException {
-    MultiMap<VirtualFile, String> hashesByRoots = new MultiMap<VirtualFile, String>();
-    for (Node node : nodes) {
-      VirtualFile root = node.getBranch().getRepositoryRoot();
-      hashesByRoots.putValue(root, node.getCommitHash().asString());
+  @NotNull
+  private static MultiMap<VirtualFile, Hash> getCommitsAround(int selectedRow, @NotNull AbstractVcsLogTableModel<?> model,
+                                                              int above, int below) {
+    MultiMap<VirtualFile, Hash> commits = MultiMap.create();
+    for (int row = Math.max(0, selectedRow - above); row < selectedRow + below && row < model.getRowCount(); row++) {
+      Hash hash = model.getHashAtRow(row);
+      if (hash != null) {
+        VirtualFile root = model.getRoot(row);
+        commits.putValue(root, hash);
+      }
     }
+    return commits;
+  }
 
-    for (Map.Entry<VirtualFile, Collection<String>> entry : hashesByRoots.entrySet()) {
-      List<? extends T> details = readDetails(myLogProviders.get(entry.getKey()), entry.getKey(), new ArrayList<String>(entry.getValue()));
+  private void preLoadCommitData(@NotNull MultiMap<VirtualFile, Hash> commits) throws VcsException {
+    for (Map.Entry<VirtualFile, Collection<Hash>> entry : commits.entrySet()) {
+      List<String> hashStrings = ContainerUtil.map(entry.getValue(), new Function<Hash, String>() {
+        @Override
+        public String fun(Hash hash) {
+          return hash.asString();
+        }
+      });
+      List<? extends T> details = readDetails(myLogProviders.get(entry.getKey()), entry.getKey(), hashStrings);
       saveInCache(details);
     }
   }
@@ -191,38 +193,11 @@ public abstract class DataGetter<T extends VcsShortCommitDetails> implements Dis
   }
 
   private static class TaskDescriptor {
-    private final List<Node> nodes;
-    private long myTaskNum;
+    private final MultiMap<VirtualFile, Hash> myCommits;
 
-    private TaskDescriptor(List<Node> nodes, long taskNum) {
-      this.nodes = nodes;
-      myTaskNum = taskNum;
-    }
-
-    public long getTaskNum() {
-      return myTaskNum;
+    private TaskDescriptor(MultiMap<VirtualFile, Hash> commits) {
+      myCommits = commits;
     }
   }
 
-  private class DetailsLoadingTask implements Consumer<TaskDescriptor> {
-
-    @Override
-    public void consume(final TaskDescriptor task) {
-      try {
-        myLoader.dismissLastTasks(MAX_LOADING_TASKS);
-        preLoadCommitData(task.nodes);
-        UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            for (Runnable loadingFinishedListener : myLoadingFinishedListeners) {
-              loadingFinishedListener.run();
-            }
-          }
-        });
-      }
-      catch (VcsException e) {
-        throw new RuntimeException(e); // todo
-      }
-    }
-  }
 }

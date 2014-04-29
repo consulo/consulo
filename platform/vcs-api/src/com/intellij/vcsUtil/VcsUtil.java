@@ -26,7 +26,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -469,7 +469,7 @@ public class VcsUtil {
             return false;
           }
         }
-        else if (fileTypeManager == null || file.getFileType() != FileTypes.UNKNOWN) {
+        else if (fileTypeManager == null || file.getFileType() != UnknownFileType.INSTANCE) {
           files.add(file);
         }
         return true;
