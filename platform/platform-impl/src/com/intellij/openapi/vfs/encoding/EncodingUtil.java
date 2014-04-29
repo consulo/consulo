@@ -24,8 +24,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.fileTypes.FileTypeWithPredefinedCharset;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.ui.Messages;
@@ -178,12 +177,8 @@ public class EncodingUtil {
   static Pair<Charset, String> checkHardcodedCharsetFileType(@NotNull VirtualFile virtualFile) {
     FileType fileType = virtualFile.getFileType();
     if (fileType.isBinary()) return Pair.create(null, "binary file");
-    // in lesser IDEs all special file types are plain text so check for that first
-    if (fileType == PlainTextFileType.INSTANCE) return Pair.create(null, null);
-    if (fileType == StdFileTypes.GUI_DESIGNER_FORM) return Pair.create(CharsetToolkit.UTF8_CHARSET, "Consulo GUI Designer form");
-    if (fileType == StdFileTypes.PROPERTIES) return Pair.create(virtualFile.getCharset(), ".properties file");
-    if (fileType == StdFileTypes.XML || fileType == StdFileTypes.JSPX) {
-      return Pair.create(virtualFile.getCharset(), "XML file");
+    if(fileType instanceof FileTypeWithPredefinedCharset) {
+      return ((FileTypeWithPredefinedCharset)fileType).getPredefinedCharset(virtualFile);
     }
     return Pair.create(null, null);
   }
