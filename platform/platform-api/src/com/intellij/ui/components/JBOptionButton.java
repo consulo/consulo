@@ -21,6 +21,7 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.ScreenUtil;
@@ -35,7 +36,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.Set;
 
-public class JBOptionButton extends JButton implements MouseMotionListener {
+public class JBOptionButton extends JButton implements MouseMotionListener, Weighted {
 
 
   private static final Insets myDownIconInsets = new Insets(0, 6, 0, 4);
@@ -86,6 +87,11 @@ public class JBOptionButton extends JButton implements MouseMotionListener {
   }
 
   @Override
+  public double getWeight() {
+    return 0.5;
+  }
+
+  @Override
   public void mouseDragged(MouseEvent e) {
   }
 
@@ -109,7 +115,7 @@ public class JBOptionButton extends JButton implements MouseMotionListener {
 
         final Point eventPoint = e.getPoint();
         SwingUtilities.convertPointToScreen(eventPoint, e.getComponent());
-        
+
         if (rec.contains(eventPoint)) {
           return;
         }
@@ -171,7 +177,7 @@ public class JBOptionButton extends JButton implements MouseMotionListener {
 
   public void showPopup(final Action actionToSelect, final boolean ensureSelection) {
     if (myPopupIsShowing) return;
-    
+
     myPopupIsShowing = true;
     final Point loc = getLocationOnScreen();
     final Rectangle screen = ScreenUtil.getScreenRectangle(loc);
@@ -212,14 +218,14 @@ public class JBOptionButton extends JButton implements MouseMotionListener {
       @Override
       public void run() {
         if (popup == null || !popup.isShowing() || !myPopupIsShowing) return;
-        
+
         Action selection = actionToSelect;
         if (selection == null && myOptions.length > 0 && ensureSelection) {
           selection = getAction();
         }
 
         if (selection == null) return;
-        
+
         final MenuElement[] elements = popup.getSubElements();
         for (MenuElement eachElement : elements) {
           if (eachElement instanceof JMenuItem) {
@@ -322,7 +328,7 @@ public class JBOptionButton extends JButton implements MouseMotionListener {
       return myAction;
     }
   }
-  
+
   private OptionInfo getMenuInfo(Action each) {
     final String text = (String)each.getValue(Action.NAME);
     int mnemonic = -1;
@@ -334,15 +340,15 @@ public class JBOptionButton extends JButton implements MouseMotionListener {
         if (i + 1 < text.length()) {
           final char mnemonicsChar = text.charAt(i + 1);
           mnemonic = Character.toUpperCase(mnemonicsChar);
-          mnemonicIndex = i;          
+          mnemonicIndex = i;
         }
         continue;
       }
       plainText.append(ch);
     }
-    
+
     return new OptionInfo(plainText.toString(), mnemonic, mnemonicIndex, this, each);
-    
+
   }
 
   public Set<OptionInfo> getOptionInfos() {
