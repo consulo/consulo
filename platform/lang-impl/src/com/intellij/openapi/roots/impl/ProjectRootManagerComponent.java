@@ -206,7 +206,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
     if (roots == null) return false;
 
     for (VirtualFilePointer pointer : pointers) {
-      final String path = PathUtil.toPresentablePath(pointer.getUrl());
+      final String path = PathUtil.toPresentableUrl(pointer.getUrl());
       if (roots.first.contains(path) || roots.second.contains(path)) return true;
     }
 

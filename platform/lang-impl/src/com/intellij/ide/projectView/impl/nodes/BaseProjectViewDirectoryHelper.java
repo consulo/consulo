@@ -74,7 +74,7 @@ public class BaseProjectViewDirectoryHelper {
     final VirtualFile contentRootForFile = ProjectRootManager.getInstance(myProject)
       .getFileIndex().getContentRootForFile(directory);
     if (Comparing.equal(contentRootForFile, psiDirectory)) {
-      return PathUtil.toPresentablePath(directory.getUrl());
+      return PathUtil.toPresentableUrl(directory.getUrl());
     }
     return null;
   }

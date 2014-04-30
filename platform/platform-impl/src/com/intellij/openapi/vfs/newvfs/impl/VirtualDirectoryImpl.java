@@ -343,7 +343,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
             break;
           }
           if (root.startsWith(JarFileSystem.PROTOCOL_PREFIX)) {
-            String rootLocalPath = FileUtil.toSystemIndependentName(PathUtil.toPresentablePath(root));
+            String rootLocalPath = FileUtil.toSystemIndependentName(PathUtil.toPresentableUrl(root));
             isUnder = FileUtil.startsWith(childPath, rootLocalPath);
             if (isUnder) break;
           }

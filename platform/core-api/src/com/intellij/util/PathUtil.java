@@ -65,14 +65,8 @@ public class PathUtil {
   }
 
   @NotNull
-  public static String toPresentablePath(@NotNull String url) {
-    return getLocalPath(VirtualFileManager.extractPath(url));
-  }
-
-  @NotNull
-  @Deprecated // use toPresentablePath()
   public static String toPresentableUrl(@NotNull String url) {
-    return toPresentablePath(url);
+    return getLocalPath(VirtualFileManager.extractPath(url));
   }
 
   public static String getCanonicalPath(@NonNls String path) {
