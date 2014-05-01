@@ -159,8 +159,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
         XmlSerializer.deserializeInto(parameters, parametersElement);
       }
 
-      myListener.taskAdded(task);
-      myTasks.add(task);
+      registerTask(task);
     }
   }
 
