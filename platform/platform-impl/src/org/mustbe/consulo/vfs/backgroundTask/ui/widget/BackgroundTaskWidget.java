@@ -16,6 +16,7 @@
 package org.mustbe.consulo.vfs.backgroundTask.ui.widget;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -64,6 +65,11 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
   @Override
   public void selectionChanged(@NotNull FileEditorManagerEvent e) {
     update(myVirtualFile = e.getNewFile());
+  }
+
+  @Override
+  public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+    update(myVirtualFile = file);
   }
 
   private void update(VirtualFile file) {

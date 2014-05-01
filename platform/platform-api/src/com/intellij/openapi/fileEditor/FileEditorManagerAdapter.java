@@ -19,9 +19,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class FileEditorManagerAdapter implements FileEditorManagerListener{
+  @Override
   public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {}
 
+  @Override
   public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {}
 
+  @Override
   public void selectionChanged(@NotNull FileEditorManagerEvent event) {}
 }
