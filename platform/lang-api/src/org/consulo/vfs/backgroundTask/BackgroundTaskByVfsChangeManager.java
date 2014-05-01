@@ -21,6 +21,8 @@ import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 22:46/06.10.13
@@ -52,15 +54,18 @@ public abstract class BackgroundTaskByVfsChangeManager {
 
 
   @Nullable
+  @Deprecated
   public abstract BackgroundTaskByVfsChangeTask getTask(@NotNull VirtualFile virtualFile);
+
+  public abstract void openManageDialog(@NotNull VirtualFile virtualFile);
+
+  @NotNull
+  public abstract List<BackgroundTaskByVfsChangeTask> findTasks(@NotNull VirtualFile virtualFile);
 
   @NotNull
   public abstract BackgroundTaskByVfsChangeTask[] getTasks();
 
   public abstract boolean cancelTask(@NotNull BackgroundTaskByVfsChangeTask task);
 
-  @NotNull
-  public abstract BackgroundTaskByVfsChangeTask registerTask(@NotNull VirtualFile virtualFile,
-                                                             @NotNull BackgroundTaskByVfsChangeProvider changeProvider,
-                                                             @NotNull BackgroundTaskByVfsParameters parameters);
+  public abstract void registerTask(@NotNull BackgroundTaskByVfsChangeTask task);
 }

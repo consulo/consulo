@@ -850,7 +850,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx {
 
     @Override
     public Dimension getMinimumSize() {
-      return new Dimension(24, MIN_ICON_HEIGHT);
+      return myIcon == null ? new Dimension() : new Dimension(24, MIN_ICON_HEIGHT);
     }
 
     @Override

@@ -30,13 +30,15 @@ import java.util.Map;
  */
 @Tag("parameters")
 public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsParameters {
+  public static BackgroundTaskByVfsParametersImpl EMPTY = new BackgroundTaskByVfsParametersImpl(null);
+
   @Transient
   private final Project myProject;
 
   private String myProgramParameters;
   private String myWorkDirectory;
-  private String myExePath;
-  private String myOutPath;
+  private String myExePath = "";
+  private String myOutPath = "";
   private Map<String, String> myEnvs = Collections.emptyMap();
   private boolean myPassParentEnvs;
 

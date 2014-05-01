@@ -54,6 +54,7 @@ import com.intellij.ui.*;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.vfs.backgroundTask.ui.widget.BackgroundTaskWidget;
 
 import javax.swing.*;
 import java.awt.*;
@@ -213,6 +214,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
   public void show() {
     super.show();
     SwingUtilities.invokeLater(new Runnable() {
+      @Override
       public void run() {
         setFocusableWindowState(true);
       }
@@ -223,6 +225,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
    * This is overridden to get rid of strange Alloy LaF customization of frames. For unknown reason it sets the maxBounds rectangle
    * and it does it plain wrong. Setting bounds to <code>null</code> means default value should be taken from the underlying OS.
    */
+  @Override
   public synchronized void setMaximizedBounds(Rectangle bounds) {
     super.setMaximizedBounds(null);
   }
@@ -231,11 +234,13 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     addWindowListener(
       new WindowAdapter() {
+        @Override
         public void windowClosing(final WindowEvent e) {
           if (isTemporaryDisposed())
             return;
           final Application app = ApplicationManager.getApplication();
           app.invokeLater(new DumbAwareRunnable() {
+            @Override
             public void run() {
               if (app.isDisposed()) {
                 ApplicationManagerEx.getApplicationEx().exit();
@@ -260,10 +265,12 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     );
   }
 
+  @Override
   public StatusBar getStatusBar() {
     return ((IdeRootPane)getRootPane()).getStatusBar();
   }
 
+  @Override
   public void setTitle(final String title) {
     if (myUpdatingTitle) {
       super.setTitle(title);
@@ -274,6 +281,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     updateTitle();
   }
 
+  @Override
   public void setFrameTitle(final String text) {
     super.setTitle(text);
   }
@@ -282,6 +290,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     setFileTitle(fileTitle, null);
   }
 
+  @Override
   public void setFileTitle(@Nullable final String fileTitle, @Nullable File file) {
     myFileTitle = fileTitle;
     myCurrentFile = file;
@@ -339,6 +348,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     }
   }
 
+  @Override
   public Object getData(final String dataId) {
     if (CommonDataKeys.PROJECT.is(dataId)) {
       if (myProject != null) {
@@ -433,13 +443,19 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
       statusBar.addWidget(readOnlyAttributePanel, "after Encoding");
     }
 
+    final BackgroundTaskWidget backgroundTaskWidget = new BackgroundTaskWidget(project);
+
+    statusBar.addWidget(backgroundTaskWidget, "after ReadOnlyAttribute");
+
     final InsertOverwritePanel finalInsertOverwritePanel = insertOverwritePanel;
     Disposer.register(project, new Disposable() {
+      @Override
       public void dispose() {
         statusBar.removeWidget(encodingPanel.ID());
         statusBar.removeWidget(lineSeparatorPanel.ID());
         statusBar.removeWidget(positionPanel.ID());
         statusBar.removeWidget(notificationArea.ID());
+        statusBar.removeWidget(backgroundTaskWidget.ID());
         statusBar.removeWidget(readOnlyAttributePanel.ID());
         if (finalInsertOverwritePanel != null) statusBar.removeWidget(finalInsertOverwritePanel.ID());
 
@@ -448,10 +464,12 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     });
   }
 
+  @Override
   public Project getProject() {
     return myProject;
   }
 
+  @Override
   public void dispose() {
     if (isTemporaryDisposed()) {
       super.dispose();
@@ -503,6 +521,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     super.paint(g);
   }
 
+  @Override
   public Rectangle suggestChildFrameBounds() {
 //todo [kirillk] a dummy implementation
     final Rectangle b = getBounds();
@@ -527,6 +546,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     return null;
   }
 
+  @Override
   public final BalloonLayout getBalloonLayout() {
     return myBalloonLayout;
   }

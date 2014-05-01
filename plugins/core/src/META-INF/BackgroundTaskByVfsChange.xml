@@ -15,13 +15,10 @@
   -->
 <idea-plugin>
   <extensionPoints>
-    <extensionPoint name="taskByVfsChange" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider"/>
-    </extensionPoint>
+    <extensionPoint name="taskByVfsChange" interface="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <editorNotificationProvider implementation="org.consulo.vfs.backgroundTask.ui.BackgroundTaskByVfsChangeNotificationProvider" />
     <treeStructureProvider implementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsProjectViewProvider" order="last" />
     <generatedSourcesFilter implementation="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsGeneratedSourcesFilter" />
     <projectService serviceInterface="org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager"

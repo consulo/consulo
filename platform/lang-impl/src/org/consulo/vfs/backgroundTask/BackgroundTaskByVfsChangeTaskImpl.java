@@ -59,6 +59,8 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   private final VirtualFileAdapter myListener;
   private final AtomicBoolean myProgress = new AtomicBoolean(false);
   private final String myProviderName;
+  private final String myName;
+  private boolean myEnabled;
   private final BackgroundTaskByVfsChangeProvider myProvider;
   private final BackgroundTaskByVfsChangeManagerImpl myManager;
 
@@ -68,6 +70,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
                                            @NotNull VirtualFilePointer pointer,
                                            @NotNull BackgroundTaskByVfsParameters parameters,
                                            @NotNull String providerName,
+                                           @NotNull String name,
                                            @Nullable BackgroundTaskByVfsChangeProvider provider,
                                            @NotNull BackgroundTaskByVfsChangeManagerImpl manager) {
     myProject = project;
@@ -77,7 +80,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     myListener = new VirtualFileAdapter() {
       @Override
       public void contentsChanged(@NotNull VirtualFileEvent event) {
-        if (!myVirtualFilePointer.isValid()) {
+        if (!myVirtualFilePointer.isValid() || !isEnabled()) {
           return;
         }
         VirtualFile file = myVirtualFilePointer.getFile();
@@ -91,34 +94,41 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         }
       }
     };
-    VirtualFileManager.getInstance().addVirtualFileListener(myListener);
+
     myProviderName = providerName;
+    myName = name;
     myProvider = provider;
     myManager = manager;
+  }
+
+  public void register() {
+    VirtualFileManager.getInstance().addVirtualFileListener(myListener);
   }
 
   public BackgroundTaskByVfsChangeTaskImpl(@NotNull Project project,
                                            @NotNull VirtualFile virtualFile,
                                            @NotNull BackgroundTaskByVfsChangeManagerImpl manager,
                                            @NotNull BackgroundTaskByVfsChangeProvider provider,
+                                           @NotNull String name,
                                            @NotNull BackgroundTaskByVfsParameters parameters) {
-    this(project, VirtualFilePointerManager.getInstance().create(virtualFile, manager, null), parameters, provider.getName(), provider, manager);
+    this(project, VirtualFilePointerManager.getInstance().create(virtualFile, manager, null), parameters, provider.getTemplateName(), name, provider, manager);
 
   }
 
   public BackgroundTaskByVfsChangeTaskImpl(@NotNull Project project,
                                            @NotNull VirtualFilePointer pointer,
                                            @NotNull String provider,
+                                           @NotNull String name,
                                            @NotNull BackgroundTaskByVfsParameters parameters,
                                            @NotNull BackgroundTaskByVfsChangeManagerImpl manager) {
-    this(project, pointer, parameters, provider, findProviderByName(provider), manager);
+    this(project, pointer, parameters, provider, name, findProviderByName(provider), manager);
   }
 
   @Nullable
   private static BackgroundTaskByVfsChangeProvider findProviderByName(String name) {
     BackgroundTaskByVfsChangeProvider temp = null;
-    for (val backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP.getExtensions()) {
-      if (Comparing.equal(name, backgroundTaskByVfsChangeProvider.getName())) {
+    for (val backgroundTaskByVfsChangeProvider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
+      if (Comparing.equal(name, backgroundTaskByVfsChangeProvider.getTemplateName())) {
         temp = backgroundTaskByVfsChangeProvider;
         break;
       }
@@ -218,10 +228,26 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return replacePathToMacroMap;
   }
 
+  @Override
+  public boolean isEnabled() {
+    return myEnabled;
+  }
+
+  @Override
+  public void setEnabled(boolean enabled) {
+    myEnabled = enabled;
+  }
+
   @NotNull
   @Override
   public String getProviderName() {
     return myProviderName;
+  }
+
+  @NotNull
+  @Override
+  public String getName() {
+    return myName;
   }
 
   @Nullable
@@ -297,6 +323,14 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   @Override
   public Project getProject() {
     return myProject;
+  }
+
+  @NotNull
+  @Override
+  public BackgroundTaskByVfsChangeTask clone() {
+    val task = new BackgroundTaskByVfsChangeTaskImpl(myProject, myVirtualFilePointer, myParameters, myProviderName, myName, myProvider, myManager);
+    task.setEnabled(isEnabled());
+    return task;
   }
 
   @Override

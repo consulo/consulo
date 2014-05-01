@@ -19,6 +19,7 @@
                              immutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandModuleExtension"
                              mutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension" />
     <contentFolderSupportPatcher implementation="org.mustbe.consulo.sandLanguage.ide.module.SandContentFolderSupportPatcher" />
+    <taskByVfsChange implementation="org.mustbe.consulo.sandLanguage.ide.vfs.backgroundTask.SandBackgroundTaskByVfsChangeProvider" />
     <toolWindow id="Sand"
                 anchor="right"
                 requireModuleExtensions="sand"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,44 +15,27 @@
  */
 package org.consulo.vfs.backgroundTask;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 22:47/06.10.13
+ * @since 01.05.14
  */
-public interface BackgroundTaskByVfsChangeTask extends Disposable, Named {
-  boolean isEnabled();
-
-  void setEnabled(boolean enabled);
-
+public class BackgroundTaskByVfsChangeProviders {
   @NotNull
-  String getProviderName();
-
-  @Nullable
-  BackgroundTaskByVfsChangeProvider getProvider();
-
-  @NotNull
-  VirtualFilePointer getVirtualFilePointer();
-
-  @NotNull
-  BackgroundTaskByVfsParameters getParameters();
-
-  @NotNull
-  String[] getGeneratedFilePaths();
-
-  @NotNull
-  VirtualFile[] getGeneratedFiles();
-
-  @NotNull
-  Project getProject();
-
-  @NotNull
-  BackgroundTaskByVfsChangeTask clone();
+  public static List<BackgroundTaskByVfsChangeProvider> getProviders(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+    List<BackgroundTaskByVfsChangeProvider> providers = new ArrayList<BackgroundTaskByVfsChangeProvider>();
+    for (BackgroundTaskByVfsChangeProvider provider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
+      if (provider.validate(project, virtualFile)) {
+        providers.add(provider);
+      }
+    }
+    return providers.isEmpty() ? Collections.<BackgroundTaskByVfsChangeProvider>emptyList() : providers;
+  }
 }

@@ -13,65 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.vfs.backgroundTask.ui;
+package org.mustbe.consulo.vfs.backgroundTask.ui;
 
 import com.intellij.execution.ui.CommonProgramParametersPanel;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ui.UIUtil;
 import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParameters;
-import org.jetbrains.annotations.Nullable;
+import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsParametersImpl;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class BackgroundTaskByVfsChangeDialog extends DialogWrapper {
-  private final BackgroundTaskByVfsParameters myParameters;
+public class BackgroundTaskByVfsChangePanel extends JPanel {
   private JPanel contentPane;
   private TextFieldWithBrowseButton myExePath;
   private CommonProgramParametersPanel myProgramParametersPanel;
   private TextFieldWithBrowseButton myOutPath;
 
-  public BackgroundTaskByVfsChangeDialog(Project project, BackgroundTaskByVfsParameters parameters) {
-    super(project);
-    myParameters = parameters;
-
-    myOutPath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getOutPath())));
+  public BackgroundTaskByVfsChangePanel(Project project) {
     myOutPath.addBrowseFolderListener("Select Output Path", null, project, new FileChooserDescriptor(false, true, false, false, false, false));
-    myExePath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getExePath())));
     myExePath.addBrowseFolderListener("Select Executable", null, project, new FileChooserDescriptor(true, false, false, false, false, false));
+  }
+
+  public void reset(@NotNull BackgroundTaskByVfsParameters parameters) {
     myProgramParametersPanel.reset(parameters);
-
-    setTitle("Configure Background Task");
-    init();
+    myExePath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getExePath())));
+    myOutPath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getOutPath())));
+    UIUtil.setEnabled(this, parameters != BackgroundTaskByVfsParametersImpl.EMPTY, true);
   }
 
-  @Override
-  protected void doOKAction() {
-    myParameters.setExePath(FileUtil.toSystemIndependentName(myExePath.getText()));
-    myParameters.setOutPath(FileUtil.toSystemIndependentName(myOutPath.getText()));
-    myProgramParametersPanel.applyTo(myParameters);
-
-    super.doOKAction();
+  protected void applyTo(@NotNull BackgroundTaskByVfsParameters parameters) {
+    parameters.setExePath(FileUtil.toSystemIndependentName(myExePath.getText()));
+    parameters.setOutPath(FileUtil.toSystemIndependentName(myOutPath.getText()));
+    myProgramParametersPanel.applyTo(parameters);
   }
 
-  @Override
-  public Dimension getPreferredSize() {
-    return new Dimension(450, 200);
-  }
-
-  @Nullable
-  @Override
-  protected String getDimensionServiceKey() {
-    return "#BackgroundTaskByVfsChangeDialog";
-  }
-
-  @Nullable
-  @Override
-  protected JComponent createCenterPanel() {
-    return contentPane;
+  private void createUIComponents() {
+    contentPane = this;
   }
 }

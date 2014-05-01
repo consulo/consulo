@@ -15,22 +15,34 @@
  */
 package org.consulo.vfs.backgroundTask;
 
-import com.intellij.openapi.fileTypes.FileTypeExtension;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ArrayUtil;
-import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 1:15/07.10.13
  */
-public abstract class BackgroundTaskByVfsChangeProvider implements Named {
-  public static final FileTypeExtension<BackgroundTaskByVfsChangeProvider> EP =
-          new FileTypeExtension<BackgroundTaskByVfsChangeProvider>("com.intellij.taskByVfsChange");
+public abstract class BackgroundTaskByVfsChangeProvider {
+  public static abstract class ByFileType extends BackgroundTaskByVfsChangeProvider {
+    private final FileType myFileType;
+
+    public ByFileType(FileType fileType) {
+      myFileType = fileType;
+    }
+
+    @Override
+    public boolean validate(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+      return virtualFile.getFileType() == myFileType;
+    }
+  }
+
+  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME = ExtensionPointName.create("com.intellij.taskByVfsChange");
 
   public boolean validate(@NotNull Project project, @NotNull VirtualFile virtualFile) {
     return true;
@@ -39,10 +51,13 @@ public abstract class BackgroundTaskByVfsChangeProvider implements Named {
   public abstract void setDefaultParameters(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull BackgroundTaskByVfsParameters parameters);
 
   @NotNull
+  public abstract String getTemplateName();
+
+  @NotNull
   public String[] getGeneratedFiles(@NotNull Project project, @NotNull VirtualFile virtualFile) {
     PsiManager psiManager = PsiManager.getInstance(project);
     PsiFile file = psiManager.findFile(virtualFile);
-    if(file != null) {
+    if (file != null) {
       return getGeneratedFiles(file);
     }
     return ArrayUtil.EMPTY_STRING_ARRAY;

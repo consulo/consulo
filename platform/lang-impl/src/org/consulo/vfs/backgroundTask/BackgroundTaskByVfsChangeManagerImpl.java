@@ -26,6 +26,7 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.vfs.backgroundTask.ui.BackgroundTaskByVfsChangeManageDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,27 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     return null;
   }
 
+  @Override
+  public void openManageDialog(@NotNull VirtualFile virtualFile) {
+    new BackgroundTaskByVfsChangeManageDialog(myProject, virtualFile).show();
+  }
+
+  @NotNull
+  @Override
+  public List<BackgroundTaskByVfsChangeTask> findTasks(@NotNull VirtualFile virtualFile) {
+    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<BackgroundTaskByVfsChangeTask>();
+    for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
+      VirtualFile file = task.getVirtualFilePointer().getFile();
+      if (file == null) {
+        continue;
+      }
+      if (file.equals(virtualFile)) {
+        list.add(task);
+      }
+    }
+    return list;
+  }
+
   @NotNull
   @Override
   public BackgroundTaskByVfsChangeTask[] getTasks() {
@@ -81,16 +103,12 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     return remove;
   }
 
-  @NotNull
   @Override
-  public BackgroundTaskByVfsChangeTask registerTask(@NotNull VirtualFile virtualFile,
-                                                    @NotNull BackgroundTaskByVfsChangeProvider changeProvider,
-                                                    @NotNull BackgroundTaskByVfsParameters parameters) {
-    BackgroundTaskByVfsChangeTaskImpl task = new BackgroundTaskByVfsChangeTaskImpl(myProject, virtualFile, this, changeProvider, parameters);
-
-    myTasks.add(task);
+  public void registerTask(@NotNull BackgroundTaskByVfsChangeTask task) {
+    BackgroundTaskByVfsChangeTaskImpl implTask = (BackgroundTaskByVfsChangeTaskImpl)task;
+    myTasks.add(implTask);
     myListener.taskAdded(task);
-    return task;
+    implTask.register();
   }
 
   @Nullable
@@ -103,6 +121,8 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
       taskElement.setAttribute("url", task.getVirtualFilePointer().getUrl());
       taskElement.setAttribute("provider-name", task.getProviderName());
+      taskElement.setAttribute("name", task.getName());
+      taskElement.setAttribute("enabled", String.valueOf(task.isEnabled()));
 
       Element serialize = XmlSerializer.serialize(task.getParameters());
 
@@ -119,13 +139,16 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   public void loadState(Element state) {
     for (Element element : state.getChildren("task")) {
       String url = element.getAttributeValue("url");
+      String name = element.getAttributeValue("name");
       String providerName = element.getAttributeValue("provider-name");
+      boolean enabled = Boolean.valueOf(element.getAttributeValue("enabled"));
 
       VirtualFilePointer virtualFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
 
       BackgroundTaskByVfsParametersImpl parameters = new BackgroundTaskByVfsParametersImpl(myProject);
 
-      BackgroundTaskByVfsChangeTaskImpl task = new BackgroundTaskByVfsChangeTaskImpl(myProject, virtualFilePointer, providerName, parameters, this);
+      BackgroundTaskByVfsChangeTaskImpl task = new BackgroundTaskByVfsChangeTaskImpl(myProject, virtualFilePointer, providerName, name, parameters, this);
+      task.setEnabled(enabled);
 
       Element parametersElement = element.getChild("parameters");
       if (parametersElement != null) {
