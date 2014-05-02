@@ -52,20 +52,6 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   }
 
   @Override
-  public BackgroundTaskByVfsChangeTask getTask(@NotNull VirtualFile virtualFile) {
-    for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
-      VirtualFile file = task.getVirtualFilePointer().getFile();
-      if (file == null) {
-        continue;
-      }
-      if (file.equals(virtualFile)) {
-        return task;
-      }
-    }
-    return null;
-  }
-
-  @Override
   public void openManageDialog(@NotNull VirtualFile virtualFile) {
     new BackgroundTaskByVfsChangeManageDialog(myProject, virtualFile).show();
   }

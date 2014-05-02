@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author yole
@@ -513,7 +514,18 @@ public class PsiUtilCore {
   }
 
   @NotNull
-  public static PsiFile[] virtualToPsiFiles(final VirtualFile[] files,Project project) {
+  public static PsiFile[] virtualToPsiFiles(@NotNull final VirtualFile[] files, @NotNull Project project) {
+    val manager = PsiManager.getInstance(project);
+    val result = new ArrayList<PsiFile>();
+    for (VirtualFile virtualFile : files) {
+      val psiFile = manager.findFile(virtualFile);
+      if (psiFile != null) result.add(psiFile);
+    }
+    return PsiUtilCore.toPsiFileArray(result);
+  }
+
+  @NotNull
+  public static PsiFile[] virtualToPsiFiles(@NotNull final List<VirtualFile> files, @NotNull Project project) {
     val manager = PsiManager.getInstance(project);
     val result = new ArrayList<PsiFile>();
     for (VirtualFile virtualFile : files) {

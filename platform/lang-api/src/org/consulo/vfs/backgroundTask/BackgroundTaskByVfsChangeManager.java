@@ -19,7 +19,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -52,10 +51,6 @@ public abstract class BackgroundTaskByVfsChangeManager {
   public static final Topic<Listener> TOPIC =
           Topic.create("background.task.change.listener", Listener.class);
 
-
-  @Nullable
-  @Deprecated
-  public abstract BackgroundTaskByVfsChangeTask getTask(@NotNull VirtualFile virtualFile);
 
   public abstract void openManageDialog(@NotNull VirtualFile virtualFile);
 

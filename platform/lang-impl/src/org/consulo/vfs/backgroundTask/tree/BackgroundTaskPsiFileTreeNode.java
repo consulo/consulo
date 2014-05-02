@@ -27,6 +27,7 @@ import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeTask;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,12 +51,15 @@ public class BackgroundTaskPsiFileTreeNode extends PsiFileNode {
       return super.getChildrenImpl();
     }
     BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(getProject());
-    BackgroundTaskByVfsChangeTask task = vfsChangeManager.getTask(ourVirtualFile);
-    if(task == null) {
+    List<BackgroundTaskByVfsChangeTask> tasks = vfsChangeManager.findTasks(ourVirtualFile);
+    if(tasks.isEmpty()) {
       return super.getChildrenImpl();
     }
-    VirtualFile[] generatedFiles = task.getGeneratedFiles();
-    if(generatedFiles.length == 0) {
+    List<VirtualFile> generatedFiles = new ArrayList<VirtualFile>();
+    for (BackgroundTaskByVfsChangeTask task : tasks) {
+      Collections.addAll(generatedFiles, task.getGeneratedFiles());
+    }
+    if(generatedFiles.isEmpty()) {
       return super.getChildrenImpl();
     }
     PsiFile[] psiFiles = PsiUtilBase.virtualToPsiFiles(generatedFiles, myProject);

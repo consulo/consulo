@@ -72,7 +72,7 @@ public class BackgroundTaskByVfsProjectViewProvider implements SelectableTreeStr
         if (allGeneratedFiles.contains(virtualFile)) {
           iterator.remove();
         }
-        else if (vfsChangeManager.getTask(virtualFile) != null) {
+        else if (!vfsChangeManager.findTasks(virtualFile).isEmpty()) {
           iterator.set(new BackgroundTaskPsiFileTreeNode(myProject, (PsiFile)value, settings));
         }
       }
