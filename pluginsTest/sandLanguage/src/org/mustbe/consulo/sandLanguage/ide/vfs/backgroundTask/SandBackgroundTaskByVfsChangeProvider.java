@@ -35,6 +35,7 @@ public class SandBackgroundTaskByVfsChangeProvider extends BackgroundTaskByVfsCh
   public void setDefaultParameters(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull BackgroundTaskByVfsParameters parameters) {
     parameters.setExePath("notepad.exe");
     parameters.setProgramParameters(virtualFile.getPresentableUrl());
+    parameters.setWorkingDirectory("$FileParentPath$");
   }
 
   @NotNull

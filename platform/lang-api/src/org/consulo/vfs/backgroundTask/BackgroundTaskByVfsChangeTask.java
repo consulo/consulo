@@ -15,7 +15,6 @@
  */
 package org.consulo.vfs.backgroundTask;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
@@ -27,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 22:47/06.10.13
  */
-public interface BackgroundTaskByVfsChangeTask extends Disposable, Named {
+public interface BackgroundTaskByVfsChangeTask extends Named {
   boolean isEnabled();
 
   void setEnabled(boolean enabled);

@@ -25,9 +25,8 @@ import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -45,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
@@ -56,8 +54,6 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   private final Project myProject;
   private final BackgroundTaskByVfsParameters myParameters;
   private final VirtualFilePointer myVirtualFilePointer;
-  private final VirtualFileAdapter myListener;
-  private final AtomicBoolean myProgress = new AtomicBoolean(false);
   private final String myProviderName;
   private final String myName;
   private boolean myEnabled;
@@ -77,32 +73,10 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     myParameters = parameters;
     myVirtualFilePointer = pointer;
 
-    myListener = new VirtualFileAdapter() {
-      @Override
-      public void contentsChanged(@NotNull VirtualFileEvent event) {
-        if (!myVirtualFilePointer.isValid() || !isEnabled()) {
-          return;
-        }
-        VirtualFile file = myVirtualFilePointer.getFile();
-        if (file == null) {
-          return;
-        }
-        if (file.equals(event.getFile())) {
-          if (!myProgress.getAndSet(true)) {
-            start();
-          }
-        }
-      }
-    };
-
     myProviderName = providerName;
     myName = name;
     myProvider = provider;
     myManager = manager;
-  }
-
-  public void register() {
-    VirtualFileManager.getInstance().addVirtualFileListener(myListener);
   }
 
   public BackgroundTaskByVfsChangeTaskImpl(@NotNull Project project,
@@ -136,65 +110,59 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return temp;
   }
 
-  public void start() {
-    Task.Backgroundable backgroundTask = new Task.Backgroundable(myProject, "Processing: " + myVirtualFilePointer.getFileName()) {
-      @Override
-      public void run(@NotNull ProgressIndicator indicator) {
-        try {
-          final ExpandMacroToPathMap expandMacroToPathMap = createExpandMacroToPathMap();
+  public void run(@NotNull final ActionCallback actionCallback) {
+      try {
+        final ExpandMacroToPathMap expandMacroToPathMap = createExpandMacroToPathMap();
 
-          GeneralCommandLine commandLine = new GeneralCommandLine();
-          commandLine.setExePath(myParameters.getExePath());
-          String programParameters = myParameters.getProgramParameters();
-          if (programParameters != null) {
-            commandLine.addParameters(StringUtil.split(expandMacroToPathMap.substitute(programParameters, false), " "));
+        GeneralCommandLine commandLine = new GeneralCommandLine();
+        commandLine.setExePath(myParameters.getExePath());
+        String programParameters = myParameters.getProgramParameters();
+        if (programParameters != null) {
+          commandLine.addParameters(StringUtil.split(expandMacroToPathMap.substitute(programParameters, false), " "));
+        }
+
+        commandLine.setWorkDirectory(expandMacroToPathMap.substitute(myParameters.getWorkingDirectory(), false));
+        commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
+        commandLine.getEnvironment().putAll(myParameters.getEnvs());
+
+        CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine.createProcess());
+        processHandler.addProcessListener(new ProcessAdapter() {
+          @Override
+          public void processTerminated(ProcessEvent event) {
+            actionCallback.setDone();
+
+            String outPath = myParameters.getOutPath();
+            if (outPath == null) {
+              return;
+            }
+            String substitute = expandMacroToPathMap.substitute(outPath, false);
+
+            final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
+            if (fileByPath != null) {
+              new WriteAction<Object>() {
+                @Override
+                protected void run(Result<Object> result) throws Throwable {
+                  fileByPath.refresh(false, true);
+                }
+              }.execute();
+            }
           }
+        });
 
-          commandLine.setWorkDirectory(expandMacroToPathMap.substitute(myParameters.getWorkingDirectory(), false));
-          commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
-          commandLine.getEnvironment().putAll(myParameters.getEnvs());
-
-          CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine.createProcess());
-          processHandler.addProcessListener(new ProcessAdapter() {
-            @Override
-            public void processTerminated(ProcessEvent event) {
-              myProgress.set(false);
-
-              String outPath = myParameters.getOutPath();
-              if (outPath == null) {
-                return;
-              }
-              String substitute = expandMacroToPathMap.substitute(outPath, false);
-
-              final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(substitute);
-              if (fileByPath != null) {
-                new WriteAction<Object>() {
-                  @Override
-                  protected void run(Result<Object> result) throws Throwable {
-                    fileByPath.refresh(false, true);
-                  }
-                }.execute();
-              }
-            }
-          });
-
-          final RunContentExecutor contentExecutor =
-                  new RunContentExecutor(BackgroundTaskByVfsChangeTaskImpl.this.myProject, processHandler).withTitle(myProviderName)
-                          .withActivateToolWindow(false);
-          UIUtil.invokeLaterIfNeeded(new Runnable() {
-            @Override
-            public void run() {
-              contentExecutor.run();
-            }
-          });
-        }
-        catch (ExecutionException e) {
-          LOGGER.error(e);
-        }
+        final RunContentExecutor contentExecutor =
+                new RunContentExecutor(BackgroundTaskByVfsChangeTaskImpl.this.myProject, processHandler).withTitle(myProviderName)
+                        .withActivateToolWindow(false);
+        UIUtil.invokeLaterIfNeeded(new Runnable() {
+          @Override
+          public void run() {
+            contentExecutor.run();
+          }
+        });
       }
-    };
-
-    backgroundTask.queue();
+      catch (ExecutionException e) {
+        actionCallback.setRejected();
+        LOGGER.error(e);
+      }
   }
 
   public ExpandMacroToPathMap createExpandMacroToPathMap() {
@@ -331,11 +299,6 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     val task = new BackgroundTaskByVfsChangeTaskImpl(myProject, myVirtualFilePointer, myParameters, myProviderName, myName, myProvider, myManager);
     task.setEnabled(isEnabled());
     return task;
-  }
-
-  @Override
-  public void dispose() {
-    VirtualFileManager.getInstance().removeVirtualFileListener(myListener);
   }
 
   public void parameterUpdated() {

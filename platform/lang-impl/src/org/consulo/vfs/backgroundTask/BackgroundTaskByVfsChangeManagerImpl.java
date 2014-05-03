@@ -18,8 +18,15 @@ package org.consulo.vfs.backgroundTask;
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileAdapter;
+import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -39,6 +46,8 @@ import java.util.List;
         name = "BackgroundTaskByVfsChangeManager",
         storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsChangeManager implements PersistentStateComponent<Element>, Disposable {
+  private static final Key<Boolean> PROCESSING_BACKGROUND_TASK = Key.create("processing.background.task");
+
   @NotNull
   private final Project myProject;
 
@@ -46,9 +55,18 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
   private Listener myListener;
 
+  private final VirtualFileAdapter myVirtualFileListener;
+
   public BackgroundTaskByVfsChangeManagerImpl(@NotNull Project project) {
     myProject = project;
     myListener = project.getMessageBus().syncPublisher(TOPIC);
+    myVirtualFileListener = new VirtualFileAdapter() {
+      @Override
+      public void contentsChanged(@NotNull VirtualFileEvent event) {
+        runTasks(event.getFile());
+      }
+    };
+    VirtualFileManager.getInstance().addVirtualFileListener(myVirtualFileListener);
   }
 
   @Override
@@ -83,7 +101,6 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     assert task instanceof BackgroundTaskByVfsChangeTaskImpl;
     boolean remove = myTasks.remove(task);
     if (remove) {
-      task.dispose();
       myListener.taskCanceled(task);
     }
     return remove;
@@ -94,7 +111,57 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     BackgroundTaskByVfsChangeTaskImpl implTask = (BackgroundTaskByVfsChangeTaskImpl)task;
     myTasks.add(implTask);
     myListener.taskAdded(task);
-    implTask.register();
+  }
+
+  @Override
+  public void runTasks(@NotNull final VirtualFile virtualFile) {
+    Boolean processed = virtualFile.getUserData(PROCESSING_BACKGROUND_TASK);
+    if(processed == Boolean.TRUE) {
+      return;
+    }
+
+    final List<BackgroundTaskByVfsChangeTask> tasks = findTasks(virtualFile);
+    if (tasks.isEmpty()) {
+      return;
+    }
+
+    final List<BackgroundTaskByVfsChangeTask> enabledTasks = new ArrayList<BackgroundTaskByVfsChangeTask>(tasks.size());
+    for (BackgroundTaskByVfsChangeTask task : tasks) {
+      if(task.isEnabled()) {
+        enabledTasks.add(task);
+      }
+    }
+    if(enabledTasks.isEmpty()) {
+      return;
+    }
+
+    Task.Backgroundable backgroundTask = new Task.Backgroundable(myProject, "Processing: " + virtualFile.getName()) {
+      @Override
+      public void run(@NotNull ProgressIndicator indicator) {
+        virtualFile.putUserData(PROCESSING_BACKGROUND_TASK, Boolean.TRUE);
+        call(indicator, virtualFile, enabledTasks, 0);
+      }
+    };
+    backgroundTask.queue();
+  }
+
+  public void call(final ProgressIndicator indicator, final VirtualFile file, final List<BackgroundTaskByVfsChangeTask> tasks, final int index) {
+    if(index == tasks.size()) {
+      file.putUserData(PROCESSING_BACKGROUND_TASK, null);
+      return;
+    }
+
+    BackgroundTaskByVfsChangeTaskImpl task = (BackgroundTaskByVfsChangeTaskImpl)tasks.get(index);
+
+    ActionCallback callback = new ActionCallback();
+    callback.doWhenProcessed(new Runnable() {
+      @Override
+      public void run() {
+        call(indicator, file, tasks, index + 1);
+      }
+    });
+    indicator.setText2("Task: " + task.getName());
+    task.run(callback);
   }
 
   @Nullable
@@ -151,6 +218,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
   @Override
   public void dispose() {
+    VirtualFileManager.getInstance().removeVirtualFileListener(myVirtualFileListener);
     myTasks.clear();
   }
 

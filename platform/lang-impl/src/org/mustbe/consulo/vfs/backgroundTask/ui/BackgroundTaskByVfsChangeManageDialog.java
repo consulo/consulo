@@ -130,20 +130,6 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
         }
       }
     });
-    decorator = decorator.setRemoveAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton anActionButton) {
-        int[] selectedIndices = myBoxlist.getSelectedIndices();
-        for (int i = 0; i < selectedIndices.length; i++) {
-          int index = selectedIndices[i];
-
-          BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(index);
-          task.dispose();
-        }
-        ListUtil.removeSelectedItems(myBoxlist);
-      }
-    });
-    decorator = decorator.disableUpDownActions();
 
     List<BackgroundTaskByVfsChangeTask> originalTasks = BackgroundTaskByVfsChangeManager.getInstance(project).findTasks(virtualFile);
 
