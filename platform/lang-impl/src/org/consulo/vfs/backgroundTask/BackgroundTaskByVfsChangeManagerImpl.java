@@ -92,6 +92,25 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
   @NotNull
   @Override
+  public List<BackgroundTaskByVfsChangeTask> findEnabledTasks(@NotNull VirtualFile virtualFile) {
+    List<BackgroundTaskByVfsChangeTask> list = new ArrayList<BackgroundTaskByVfsChangeTask>();
+    for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
+      if(!task.isEnabled()) {
+        continue;
+      }
+      VirtualFile file = task.getVirtualFilePointer().getFile();
+      if (file == null) {
+        continue;
+      }
+      if (file.equals(virtualFile)) {
+        list.add(task);
+      }
+    }
+    return list;
+  }
+
+  @NotNull
+  @Override
   public BackgroundTaskByVfsChangeTask[] getTasks() {
     return myTasks.toArray(new BackgroundTaskByVfsChangeTask[myTasks.size()]);
   }
@@ -120,18 +139,8 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
       return;
     }
 
-    final List<BackgroundTaskByVfsChangeTask> tasks = findTasks(virtualFile);
+    final List<BackgroundTaskByVfsChangeTask> tasks = findEnabledTasks(virtualFile);
     if (tasks.isEmpty()) {
-      return;
-    }
-
-    final List<BackgroundTaskByVfsChangeTask> enabledTasks = new ArrayList<BackgroundTaskByVfsChangeTask>(tasks.size());
-    for (BackgroundTaskByVfsChangeTask task : tasks) {
-      if(task.isEnabled()) {
-        enabledTasks.add(task);
-      }
-    }
-    if(enabledTasks.isEmpty()) {
       return;
     }
 
@@ -139,7 +148,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         virtualFile.putUserData(PROCESSING_BACKGROUND_TASK, Boolean.TRUE);
-        call(indicator, virtualFile, enabledTasks, 0);
+        call(indicator, virtualFile, tasks, 0);
       }
     };
     backgroundTask.queue();

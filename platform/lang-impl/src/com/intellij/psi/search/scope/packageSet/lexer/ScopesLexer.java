@@ -25,6 +25,6 @@ import com.intellij.lexer.FlexAdapter;
  */
 public class ScopesLexer extends FlexAdapter {
   public ScopesLexer() {
-    super(new _ScopesLexer());
+    super(new _ScopesLexer((java.io.Reader) null));
   }
 }

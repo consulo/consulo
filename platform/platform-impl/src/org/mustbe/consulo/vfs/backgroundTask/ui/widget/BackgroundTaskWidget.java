@@ -155,10 +155,16 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
           return;
         }
         DefaultActionGroup group = new DefaultActionGroup();
-        group.add(new AnAction("Force Run", null, AllIcons.Actions.Execute) {
+        group.add(new AnAction("Force Run", null, AllIcons.Actions.Resume) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(myVirtualFile);
+          }
+
+          @Override
+          public void update(AnActionEvent e) {
+
+            e.getPresentation().setEnabled(!BackgroundTaskByVfsChangeManager.getInstance(myProject).findEnabledTasks(myVirtualFile).isEmpty());
           }
         });
         group.add(new AnAction("Manage", null, AllIcons.General.Settings) {
@@ -168,7 +174,7 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
           }
         });
         ListPopup choose = JBPopupFactory.getInstance()
-                .createActionGroupPopup(getTooltipText(), group, DataManager.getInstance().getDataContext(mouseEvent.getComponent()), null, false);
+                .createActionGroupPopup(getTooltipText(), group, DataManager.getInstance().getDataContext(mouseEvent.getComponent()), null, true);
 
         Dimension dimension = choose.getContent().getPreferredSize();
         Point at = new Point(0, -dimension.height);

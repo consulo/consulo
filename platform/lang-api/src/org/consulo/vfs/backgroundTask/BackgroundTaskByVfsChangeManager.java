@@ -58,6 +58,9 @@ public abstract class BackgroundTaskByVfsChangeManager {
   public abstract List<BackgroundTaskByVfsChangeTask> findTasks(@NotNull VirtualFile virtualFile);
 
   @NotNull
+  public abstract List<BackgroundTaskByVfsChangeTask> findEnabledTasks(@NotNull VirtualFile virtualFile);
+
+  @NotNull
   public abstract BackgroundTaskByVfsChangeTask[] getTasks();
 
   public abstract void runTasks(@NotNull VirtualFile virtualFile);
