@@ -16,15 +16,22 @@
 package org.mustbe.consulo.vfs.backgroundTask.ui.widget;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
+import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import org.consulo.vfs.backgroundTask.BackgroundTaskByVfsChangeManager;
@@ -35,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -134,7 +142,7 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
   @Nullable
   @Override
   public String getTooltipText() {
-    return "Background Task Configuration";
+    return "Background Tasks";
   }
 
   @Nullable
@@ -146,7 +154,25 @@ public class BackgroundTaskWidget extends EditorBasedWidget implements StatusBar
         if(myVirtualFile == null) {
           return;
         }
-        BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(myVirtualFile);
+        DefaultActionGroup group = new DefaultActionGroup();
+        group.add(new AnAction("Force Run", null, AllIcons.Actions.Execute) {
+          @Override
+          public void actionPerformed(AnActionEvent e) {
+            BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(myVirtualFile);
+          }
+        });
+        group.add(new AnAction("Manage", null, AllIcons.General.Settings) {
+          @Override
+          public void actionPerformed(AnActionEvent e) {
+            BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(myVirtualFile);
+          }
+        });
+        ListPopup choose = JBPopupFactory.getInstance()
+                .createActionGroupPopup(getTooltipText(), group, DataManager.getInstance().getDataContext(mouseEvent.getComponent()), null, false);
+
+        Dimension dimension = choose.getContent().getPreferredSize();
+        Point at = new Point(0, -dimension.height);
+        choose.show(new RelativePoint(mouseEvent.getComponent(), at));
       }
     };
   }
