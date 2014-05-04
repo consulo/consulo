@@ -33,8 +33,11 @@ import javax.swing.*;
 public class IconDescriptorUpdaters {
   private static Function<AnyIconKey<PsiElement>, Icon> ourIconFunc = new Function<AnyIconKey<PsiElement>, Icon>() {
     @Override
-    public Icon fun(AnyIconKey<PsiElement> psiElementAnyIconKey) {
-      return getIconWithoutCache(psiElementAnyIconKey.getObject(), psiElementAnyIconKey.getFlags());
+    public Icon fun(AnyIconKey<PsiElement> key) {
+      if(!key.getObject().isValid()) {
+        return null;
+      }
+      return getIconWithoutCache(key.getObject(), key.getFlags());
     }
   };
 
