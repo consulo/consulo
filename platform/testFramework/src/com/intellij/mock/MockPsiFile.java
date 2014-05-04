@@ -368,10 +368,6 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  public void subtreeChanged() {
-  }
-
-  @Override
   public void navigate(boolean requestFocus) {
   }
 

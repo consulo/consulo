@@ -298,10 +298,6 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  public void subtreeChanged() {
-  }
-
-  @Override
   public PsiElement getContext() {
     return FileContextUtil.getFileContext(this);
   }

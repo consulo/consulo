@@ -17,8 +17,9 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.diagnostic.ThreadDumper;
-import com.intellij.extapi.psi.ASTDelegatePsiElement;
-import com.intellij.lang.*;
+import com.intellij.lang.ASTFactory;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.PsiElementFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -28,6 +29,7 @@ import com.intellij.pom.tree.events.TreeChangeEvent;
 import com.intellij.pom.tree.events.impl.ChangeInfoImpl;
 import com.intellij.pom.tree.events.impl.ReplaceChangeInfoImpl;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementWithSubtreeChangeNotifier;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLock;
 import com.intellij.psi.impl.DebugUtil;
@@ -93,11 +95,8 @@ public class CompositeElement extends TreeElement {
         compositeElement.clearCaches();
         if (!(compositeElement instanceof PsiElement)) {
           final PsiElement psi = compositeElement.myWrapper;
-          if (psi instanceof ASTDelegatePsiElement) {
-            ((ASTDelegatePsiElement)psi).subtreeChanged();
-          }
-          else if (psi instanceof PsiFile) {
-            ((PsiFile)psi).subtreeChanged();
+          if (psi instanceof PsiElementWithSubtreeChangeNotifier) {
+            ((PsiElementWithSubtreeChangeNotifier)psi).subtreeChanged();
           }
         }
 

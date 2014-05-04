@@ -48,6 +48,32 @@ import java.awt.image.BufferedImage;
 public class IconUtil {
   private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
   public static final int NODE_ICON_SIZE = UIUtil.isRetina() ? 32 : 16;
+  private static NullableFunction<AnyIconKey<VirtualFile>, Icon> ourVirtualFileIconFunc = new NullableFunction<AnyIconKey<VirtualFile>, Icon>() {
+    @Override
+    public Icon fun(final AnyIconKey<VirtualFile> key) {
+      final VirtualFile file = key.getObject();
+      final int flags = key.getFlags();
+      final Project project = key.getProject();
+
+      if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
+
+      final Icon nativeIcon = NativeFileIconUtil.INSTANCE.getIcon(file);
+      IconDescriptor iconDescriptor = new IconDescriptor(nativeIcon == null ? VirtualFilePresentation.getIcon(file) : nativeIcon);
+      if (project != null) {
+        PsiManager manager = PsiManager.getInstance(project);
+        final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
+        if (element != null) {
+          IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
+        }
+      }
+
+      if (file.is(VFileProperty.SYMLINK)) {
+        iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
+      }
+
+      return iconDescriptor.toIcon();
+    }
+  };
 
   private static boolean wasEverInitialized(@NotNull Project project) {
     Boolean was = project.getUserData(PROJECT_WAS_EVER_INITIALIZED);
@@ -73,11 +99,8 @@ public class IconUtil {
     final int w = Math.min(icon.getIconWidth(), maxWidth);
     final int h = Math.min(icon.getIconHeight(), maxHeight);
 
-    final BufferedImage image = GraphicsEnvironment
-      .getLocalGraphicsEnvironment()
-      .getDefaultScreenDevice()
-      .getDefaultConfiguration()
-      .createCompatibleImage(icon.getIconWidth(), icon.getIconHeight(), Transparency.TRANSLUCENT);
+    final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
+            .createCompatibleImage(icon.getIconWidth(), icon.getIconHeight(), Transparency.TRANSLUCENT);
     final Graphics2D g = image.createGraphics();
     icon.paintIcon(new JPanel(), g, 0, 0);
     g.dispose();
@@ -115,40 +138,10 @@ public class IconUtil {
     return new ImageIcon(second);
   }
 
+  @Nullable
   public static Icon getIcon(@NotNull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
-    Icon lastIcon = Iconable.LastComputedIcon.get(file, flags);
-
-    final Icon base = lastIcon != null ? lastIcon : VirtualFilePresentation.getIcon(file);
-    return IconDeferrer.getInstance().defer(base, new FileIconKey(file, project, flags), new NullableFunction<FileIconKey, Icon>() {
-      @Override
-      public Icon fun(final FileIconKey key) {
-        final VirtualFile file = key.getFile();
-        final int flags = key.getFlags();
-        final Project project = key.getProject();
-
-        if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
-
-        final Icon nativeIcon = NativeFileIconUtil.INSTANCE.getIcon(file);
-        IconDescriptor iconDescriptor = new IconDescriptor(nativeIcon == null ? base : nativeIcon);
-        if(project != null) {
-          PsiManager manager = PsiManager.getInstance(project);
-          final PsiElement element = file.isDirectory() ? manager.findDirectory(file) : manager.findFile(file);
-          if(element != null) {
-            IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, element, flags);
-          }
-        }
-
-        if (file.is(VFileProperty.SYMLINK)) {
-          iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
-        }
-
-        final Icon icon = iconDescriptor.toIcon();
-
-        Iconable.LastComputedIcon.put(file, icon, flags);
-
-        return icon;
-      }
-    });
+    return IconDeferrer.getInstance()
+            .deferAutoUpdatable(VirtualFilePresentation.getIcon(file), new AnyIconKey<VirtualFile>(file, project, flags), ourVirtualFileIconFunc);
   }
 
   @NotNull
@@ -168,8 +161,8 @@ public class IconUtil {
     else {
       final int w = icon.getIconWidth();
       final int h = icon.getIconHeight();
-      final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment()
-        .getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
+      final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
+              .createCompatibleImage(w, h, Transparency.TRANSLUCENT);
       final Graphics2D g = image.createGraphics();
       icon.paintIcon(null, g, 0, 0);
       g.dispose();
@@ -248,7 +241,7 @@ public class IconUtil {
   }
 
   /**
-   * Result icons look like original but have equal (maximum) size 
+   * Result icons look like original but have equal (maximum) size
    */
   @NotNull
   public static Icon[] getEqualSizedIcons(@NotNull Icon... icons) {

@@ -95,6 +95,4 @@ public interface PsiFile extends PsiFileSystemItem {
 
   @Override
   FileASTNode getNode();
-
-  void subtreeChanged();
 }

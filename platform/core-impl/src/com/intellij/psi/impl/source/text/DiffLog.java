@@ -52,11 +52,12 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
   private final List<LogEntry> myEntries = new ArrayList<LogEntry>();
 
   public TreeChangeEventImpl performActualPsiChange(PsiFile file) {
-    final ASTDiffBuilder astDiffBuilder = new ASTDiffBuilder((PsiFileImpl) file);
+    PsiFileImpl fileImpl = (PsiFileImpl)file;
+    final ASTDiffBuilder astDiffBuilder = new ASTDiffBuilder(fileImpl);
     for (LogEntry entry : myEntries) {
       entry.doActualPsiChange(file, astDiffBuilder);
     }
-    file.subtreeChanged();
+    fileImpl.subtreeChanged();
 
     return astDiffBuilder.getEvent();
   }

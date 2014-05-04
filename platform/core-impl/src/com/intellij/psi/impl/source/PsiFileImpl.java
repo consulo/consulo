@@ -68,7 +68,7 @@ import java.lang.ref.Reference;
 import java.lang.reflect.Array;
 import java.util.*;
 
-public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileEx, PsiFileWithStubSupport, Queryable {
+public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileEx, PsiFileWithStubSupport, PsiElementWithSubtreeChangeNotifier, Queryable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.PsiFileImpl");
 
   private IElementType myElementType;

@@ -16,20 +16,18 @@
 package com.intellij.util;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Konstantin Bulenkov
  */
-class FileIconKey {
-  private final VirtualFile myFile;
+public class AnyIconKey<T> {
+  private final T myObject;
   private final Project myProject;
-  @Iconable.IconFlags private final int myFlags;
+  private final int myFlags;
 
-  FileIconKey(@NotNull VirtualFile file, final Project project, @Iconable.IconFlags int flags) {
-    myFile = file;
+  public AnyIconKey(@NotNull T object, final Project project, int flags) {
+    myObject = object;
     myProject = project;
     myFlags = flags;
   }
@@ -37,12 +35,12 @@ class FileIconKey {
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
-    if (!(o instanceof FileIconKey)) return false;
+    if (!(o instanceof AnyIconKey)) return false;
 
-    final FileIconKey that = (FileIconKey)o;
+    final AnyIconKey that = (AnyIconKey)o;
 
     if (myFlags != that.myFlags) return false;
-    if (!myFile.equals(that.myFile)) return false;
+    if (!myObject.equals(that.myObject)) return false;
     if (myProject != null ? !myProject.equals(that.myProject) : that.myProject != null) return false;
 
     return true;
@@ -50,21 +48,20 @@ class FileIconKey {
 
   @Override
   public int hashCode() {
-    int result = myFile.hashCode();
+    int result = myObject.hashCode();
     result = 31 * result + (myProject != null ? myProject.hashCode() : 0);
     result = 31 * result + myFlags;
     return result;
   }
 
-  public VirtualFile getFile() {
-    return myFile;
+  public T getObject() {
+    return myObject;
   }
 
   public Project getProject() {
     return myProject;
   }
 
-  @Iconable.IconFlags
   public int getFlags() {
     return myFlags;
   }

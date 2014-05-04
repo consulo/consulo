@@ -82,7 +82,6 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     return getViewProvider().getModificationStamp();
   }
 
-  @Override
   public void subtreeChanged() {
     clearCaches();
     getViewProvider().rootChanged(this);

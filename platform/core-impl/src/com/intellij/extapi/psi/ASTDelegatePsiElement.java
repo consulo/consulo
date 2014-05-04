@@ -19,12 +19,13 @@
  */
 package com.intellij.extapi.psi;
 
-import com.intellij.lang.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementWithSubtreeChangeNotifier;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.impl.CheckUtil;
@@ -46,7 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ASTDelegatePsiElement extends PsiElementBase {
+public abstract class ASTDelegatePsiElement extends PsiElementBase implements PsiElementWithSubtreeChangeNotifier {
   private static final Logger LOG = Logger.getInstance("#com.intellij.extapi.psi.ASTDelegatePsiElement");
 
   private static final List EMPTY = Collections.emptyList();
@@ -158,8 +159,8 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase {
   @NotNull
   public abstract ASTNode getNode();
 
+  @Override
   public void subtreeChanged() {
-    putUserData(Iconable.LastComputedIcon.LAST_COMPUTED_ICON, null);
   }
 
   @Override

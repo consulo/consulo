@@ -15,8 +15,13 @@
  */
 package com.intellij.ide;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
+import com.intellij.ui.IconDeferrer;
+import com.intellij.util.AnyIconKey;
+import com.intellij.util.Function;
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -26,30 +31,36 @@ import javax.swing.*;
  * @since 0:25/19.07.13
  */
 public class IconDescriptorUpdaters {
-  private static final IconDescriptorUpdater[] ourCache = IconDescriptorUpdater.EP_NAME.getExtensions();
+  private static Function<AnyIconKey<PsiElement>, Icon> ourIconFunc = new Function<AnyIconKey<PsiElement>, Icon>() {
+    @Override
+    public Icon fun(AnyIconKey<PsiElement> psiElementAnyIconKey) {
+      return getIconWithoutCache(psiElementAnyIconKey.getObject(), psiElementAnyIconKey.getFlags());
+    }
+  };
+
+  @LazyInstance
+  @NotNull
+  private static IconDescriptorUpdater[] values() {
+    return IconDescriptorUpdater.EP_NAME.getExtensions();
+  }
 
   @NotNull
-  public static Icon getIcon(@NotNull final PsiElement element, @Iconable.IconFlags final int flags) {
-    Icon icon = Iconable.LastComputedIcon.get(element, flags);
-    if(icon == null) {
-      icon = getIconWithoutCache(element, flags);
-
-      Iconable.LastComputedIcon.put(element, icon, flags);
-    }
-    return icon;
+  public static Icon getIcon(@NotNull PsiElement element, @Iconable.IconFlags int flags) {
+    return IconDeferrer.getInstance()
+            .deferAutoUpdatable(AllIcons.Nodes.EmptyNode, new AnyIconKey<PsiElement>(element, element.getProject(), flags), ourIconFunc);
   }
 
   @NotNull
   public static Icon getIconWithoutCache(@NotNull PsiElement element, int flags) {
     IconDescriptor iconDescriptor = new IconDescriptor(null);
-    for (IconDescriptorUpdater iconDescriptorUpdater : ourCache) {
+    for (IconDescriptorUpdater iconDescriptorUpdater : values()) {
       iconDescriptorUpdater.updateIcon(iconDescriptor, element, flags);
     }
     return iconDescriptor.toIcon();
   }
 
   public static void processExistingDescriptor(@NotNull IconDescriptor descriptor, @NotNull PsiElement element, int flags) {
-    for (IconDescriptorUpdater iconDescriptorUpdater : ourCache) {
+    for (IconDescriptorUpdater iconDescriptorUpdater : values()) {
       iconDescriptorUpdater.updateIcon(descriptor, element, flags);
     }
   }
