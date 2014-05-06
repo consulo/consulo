@@ -49,16 +49,13 @@ public class IconDeferrerImpl extends IconDeferrer {
     }
   });
 
-  public IconDeferrerImpl(MessageBus bus, final PsiModificationTracker tracker) {
+  public IconDeferrerImpl(MessageBus bus) {
     final MessageBusConnection connection = bus.connect();
     connection.subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
       private long myLastOutOfCodeModificationCount;
       @Override
       public void modificationCountChanged() {
-        if(tracker.getOutOfCodeBlockModificationCount() != myLastOutOfCodeModificationCount) {
-          myLastOutOfCodeModificationCount = tracker.getOutOfCodeBlockModificationCount();
-          clear();
-        }
+        clear();
       }
     });
     connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener.Adapter() {
