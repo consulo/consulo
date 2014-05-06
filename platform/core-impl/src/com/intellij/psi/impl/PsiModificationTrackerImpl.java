@@ -34,10 +34,12 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   private final AtomicLong myOutOfCodeBlockModificationCount = new AtomicLong(0);
   private final AtomicLong myJavaStructureModificationCount = new AtomicLong(0);
   private final Listener myPublisher;
+  private final Listener myPublisher2;
 
   public PsiModificationTrackerImpl(Project project) {
     final MessageBus bus = project.getMessageBus();
     myPublisher = bus.syncPublisher(TOPIC);
+    myPublisher2 = bus.syncPublisher(OUT_OF_CODE_TOPIC);
     bus.connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
 
       @Override
@@ -66,6 +68,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   public void incOutOfCodeBlockModificationCounter() {
     myOutOfCodeBlockModificationCount.getAndIncrement();
     myPublisher.modificationCountChanged();
+    myPublisher2.modificationCountChanged();
   }
 
   @Override
@@ -73,6 +76,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     myModificationCount.getAndIncrement();
     if (event.getParent() instanceof PsiDirectory) {
       myOutOfCodeBlockModificationCount.getAndIncrement();
+      myPublisher2.modificationCountChanged();
     }
 
     myPublisher.modificationCountChanged();
