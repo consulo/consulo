@@ -35,7 +35,6 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
   private final String myText;
   private final SimpleTextAttributes myAttributes;
   private final int myIndex;
-  private final Icon myIcon;
   private final NavBarPanel myPanel;
   private Object myObject;
   private final boolean isPopupElement;
@@ -53,11 +52,9 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
       final NavBarPresentation presentation = myPanel.getPresentation();
       myText = presentation.getPresentableText(object);
       Icon icon = presentation.getIcon(object);
-      myIcon = icon != null ? icon : EmptyIcon.create(5);
       myAttributes = presentation.getTextAttributes(object, false);
     } else {
       myText = "Sample";
-      myIcon = AllIcons.Nodes.TreeClosed;
       myAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
     }
     Disposer.register(parent == null ? panel : parent, this);
@@ -98,7 +95,16 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
   void update() {
     clear();
 
-    setIcon(myIcon);
+    Icon setIcon = null;
+    if (myObject != null) {
+      final NavBarPresentation presentation = myPanel.getPresentation();
+      Icon icon = presentation.getIcon(myObject);
+      setIcon = icon != null ? icon : EmptyIcon.ICON_16;
+    }
+    else {
+      setIcon = AllIcons.Nodes.TreeClosed;
+    }
+    setIcon(setIcon);
 
     final boolean focused = isFocusedOrPopupElement();
     final boolean selected = isSelected();
