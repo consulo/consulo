@@ -155,11 +155,13 @@ public class JdkUtil {
            new File(homePath, "classes").isDirectory();  // custom build
   }
 
-  public static GeneralCommandLine setupJVMCommandLine(final String exePath,
+  public static GeneralCommandLine setupJVMCommandLine(final Sdk sdk,
                                                        final SimpleJavaParameters javaParameters,
                                                        final boolean forceDynamicClasspath) {
     final GeneralCommandLine commandLine = new GeneralCommandLine();
-    commandLine.setExePath(exePath);
+    SdkTypeId sdkType = sdk.getSdkType();
+    assert sdkType instanceof JavaSdkType;
+    ((JavaSdkType)sdkType).setupCommandLine(commandLine, sdk);
 
     final ParametersList vmParametersList = javaParameters.getVMParametersList();
     commandLine.getEnvironment().putAll(javaParameters.getEnv());

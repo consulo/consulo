@@ -19,7 +19,6 @@ package com.intellij.execution.configurations;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessTerminatedListener;
-import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -96,8 +95,7 @@ public class SimpleJavaParameters extends SimpleProgramParameters {
   public OSProcessHandler createOSProcessHandler() throws ExecutionException {
     final Sdk sdk = getJdk();
     assert sdk != null : "SDK should be defined";
-    final String exePath = ((JavaSdkType)sdk.getSdkType()).getVMExecutablePath(sdk);
-    final GeneralCommandLine commandLine = JdkUtil.setupJVMCommandLine(exePath, this, myUseDynamicClasspath);
+    final GeneralCommandLine commandLine = JdkUtil.setupJVMCommandLine(sdk, this, myUseDynamicClasspath);
     final OSProcessHandler processHandler = new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString()) {
       @Override
       public Charset getCharset() {

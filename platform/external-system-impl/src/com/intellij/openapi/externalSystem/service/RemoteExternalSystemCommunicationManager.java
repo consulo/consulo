@@ -43,7 +43,6 @@ import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemPr
 import com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.JavaSdkType;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SimpleJavaSdkType;
@@ -178,11 +177,7 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
           throw new ExecutionException("No sdk is defined. Params: " + params);
         }
 
-        final GeneralCommandLine commandLine = JdkUtil.setupJVMCommandLine(
-          ((JavaSdkType)sdk.getSdkType()).getVMExecutablePath(sdk),
-          params,
-          false
-        );
+        final GeneralCommandLine commandLine = JdkUtil.setupJVMCommandLine(sdk, params, false);
         final OSProcessHandler processHandler = new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString()) {
           @Override
           public Charset getCharset() {

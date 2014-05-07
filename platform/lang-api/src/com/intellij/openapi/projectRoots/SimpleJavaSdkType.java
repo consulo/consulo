@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.projectRoots;
 
+import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import org.jetbrains.annotations.NonNls;
@@ -64,8 +65,8 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   }
 
   @Override
-  public String getVMExecutablePath(Sdk sdk) {
-    return getBinPath(sdk) + File.separator + VM_EXE_NAME;
+  public void setupCommandLine(@NotNull GeneralCommandLine commandLine, @NotNull Sdk sdk) {
+    commandLine.setExePath(getBinPath(sdk) + File.separator + VM_EXE_NAME);
   }
 
   private static String getConvertedHomePath(Sdk sdk) {
