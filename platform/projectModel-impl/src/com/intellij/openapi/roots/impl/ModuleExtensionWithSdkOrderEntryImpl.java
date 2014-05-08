@@ -128,7 +128,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
   @Override
   public <R> R accept(@NotNull RootPolicy<R> policy, R initialValue) {
-    return policy.visitModuleJdkOrderEntry(this, initialValue);
+    return policy.visitModuleExtensionSdkOrderEntry(this, initialValue);
   }
 
   @Override

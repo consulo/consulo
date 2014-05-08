@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * @author dsl
@@ -36,11 +37,19 @@ public class RootPolicy<R> {
     return visitOrderEntry(moduleOrderEntry, value);
   }
 
+  @Deprecated
+  @DeprecationInfo(value = "Use #visitModuleExtensionSdkOrderEntry", until = "2.0")
   public R visitJdkOrderEntry(SdkOrderEntry sdkOrderEntry, R value) {
     return visitOrderEntry(sdkOrderEntry, value);
   }
 
+  @Deprecated
+  @DeprecationInfo(value = "Use #visitModuleExtensionSdkOrderEntry", until = "2.0")
   public R visitModuleJdkOrderEntry(ModuleExtensionWithSdkOrderEntry jdkOrderEntry, R value) {
     return visitJdkOrderEntry(jdkOrderEntry, value);
+  }
+
+  public R visitModuleExtensionSdkOrderEntry(ModuleExtensionWithSdkOrderEntry orderEntry, R value) {
+    return visitModuleJdkOrderEntry(orderEntry, value);
   }
 }
