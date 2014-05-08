@@ -57,8 +57,8 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class.getName());
 
   protected AbstractPsiBasedNode(final Project project,
-                                final Value value,
-                                final ViewSettings viewSettings) {
+                                 final Value value,
+                                 final ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 
@@ -160,6 +160,8 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
         for (ProjectViewNodeDecorator decorator : Extensions.getExtensions(ProjectViewNodeDecorator.EP_NAME, myProject)) {
           decorator.decorate(AbstractPsiBasedNode.this, data);
         }
+
+        Iconable.LastComputedIcon.put(value, data.getIcon(false), flags);
       }
     });
   }
