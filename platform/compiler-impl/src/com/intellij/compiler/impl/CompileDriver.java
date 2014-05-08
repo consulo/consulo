@@ -140,17 +140,17 @@ public class CompileDriver {
         return new PackagingCompilerAdapter(context, (PackagingCompiler)compiler);
       }
     };
-  private CompilerFilter myCompilerFilter = CompilerFilter.ALL;
-  private static final CompilerFilter SOURCE_PROCESSING_ONLY = new CompilerFilter() {
+  private Condition<Compiler> myCompilerFilter = Conditions.alwaysTrue();
+  private static final Condition<Compiler> SOURCE_PROCESSING_ONLY = new Condition<Compiler>() {
     @Override
-    public boolean acceptCompiler(Compiler compiler) {
+    public boolean value(Compiler compiler) {
       return compiler instanceof SourceProcessingCompiler;
     }
   };
-  private static final CompilerFilter ALL_EXCEPT_SOURCE_PROCESSING = new CompilerFilter() {
+  private static final Condition<Compiler> ALL_EXCEPT_SOURCE_PROCESSING = new Condition<Compiler>() {
     @Override
-    public boolean acceptCompiler(Compiler compiler) {
-      return !SOURCE_PROCESSING_ONLY.acceptCompiler(compiler);
+    public boolean value(Compiler compiler) {
+      return !SOURCE_PROCESSING_ONLY.value(compiler);
     }
   };
 
@@ -191,8 +191,8 @@ public class CompileDriver {
     }
   }
 
-  public void setCompilerFilter(CompilerFilter compilerFilter) {
-    myCompilerFilter = compilerFilter == null ? CompilerFilter.ALL : compilerFilter;
+  public void setCompilerFilter(Condition<Compiler> compilerFilter) {
+    myCompilerFilter = compilerFilter == null ? Conditions.<Compiler>alwaysTrue() : compilerFilter;
   }
 
   public void rebuild(CompileStatusNotification callback) {
@@ -386,7 +386,7 @@ public class CompileDriver {
     }
   }
 
-  private CompileScope addAdditionalRoots(CompileScope originalScope, final CompilerFilter filter) {
+  private CompileScope addAdditionalRoots(CompileScope originalScope, final Condition<Compiler>  filter) {
     CompileScope scope = attachIntermediateOutputDirectories(originalScope, filter);
 
     final AdditionalCompileScopeProvider[] scopeProviders = Extensions.getExtensions(AdditionalCompileScopeProvider.EXTENSION_POINT_NAME);
@@ -400,13 +400,13 @@ public class CompileDriver {
     return scope;
   }
 
-  private CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, CompilerFilter filter) {
+  private CompileScope attachIntermediateOutputDirectories(CompileScope originalScope, Condition<Compiler> filter) {
     CompileScope scope = originalScope;
     final Set<Module> affected = new HashSet<Module>(Arrays.asList(originalScope.getAffectedModules()));
     for (Map.Entry<Pair<IntermediateOutputCompiler, Module>, Pair<VirtualFile, VirtualFile>> entry : myGenerationCompilerModuleToOutputDirMap
       .entrySet()) {
       final Module module = entry.getKey().getSecond();
-      if (affected.contains(module) && filter.acceptCompiler(entry.getKey().getFirst())) {
+      if (affected.contains(module) && filter.value(entry.getKey().getFirst())) {
         final Pair<VirtualFile, VirtualFile> outputs = entry.getValue();
         scope =
           new CompositeScope(scope, new FileSetCompileScope(Arrays.asList(outputs.getFirst(), outputs.getSecond()), new Module[]{module}));

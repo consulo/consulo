@@ -26,6 +26,8 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -164,20 +166,20 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   @NotNull
   public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass) {
-    return getCompilers(compilerClass, CompilerFilter.ALL);
+    return getCompilers(compilerClass, Conditions.<Compiler>alwaysTrue());
   }
 
   @Override
   @NotNull
-  public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, CompilerFilter filter) {
+  public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, Condition<Compiler> filter) {
     final List<T> compilers = new ArrayList<T>(myCompilers.size());
     for (final Compiler item : myCompilers) {
-      if (compilerClass.isAssignableFrom(item.getClass()) && filter.acceptCompiler(item)) {
+      if (compilerClass.isAssignableFrom(item.getClass()) && filter.value(item)) {
         compilers.add((T)item);
       }
     }
     for (final Compiler item : myTranslatingCompilers) {
-      if (compilerClass.isAssignableFrom(item.getClass()) && filter.acceptCompiler(item)) {
+      if (compilerClass.isAssignableFrom(item.getClass()) && filter.value(item)) {
         compilers.add((T)item);
       }
     }
@@ -286,7 +288,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  public void make(@NotNull CompileScope scope, CompilerFilter filter, @Nullable CompileStatusNotification callback) {
+  public void make(@NotNull CompileScope scope, Condition<Compiler> filter, @Nullable CompileStatusNotification callback) {
     final CompileDriver compileDriver = new CompileDriver(myProject);
     compileDriver.setCompilerFilter(filter);
     compileDriver.make(scope, new ListenerNotificator(callback));

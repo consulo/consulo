@@ -19,8 +19,8 @@ import com.intellij.compiler.impl.AdditionalCompileScopeProvider;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerFilter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.packaging.artifacts.Artifact;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,16 +32,17 @@ import java.util.Set;
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
   @Override
   public CompileScope getAdditionalScope(@NotNull final CompileScope baseScope,
-                                         @NotNull CompilerFilter filter,
+                                         @NotNull Condition<com.intellij.openapi.compiler.Compiler> filter,
                                          @NotNull final Project project) {
     if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
       return null;
     }
     final ArtifactsCompiler compiler = ArtifactsCompiler.getInstance(project);
-    if (compiler == null || !filter.acceptCompiler(compiler)) {
+    if (compiler == null || !filter.value(compiler)) {
       return null;
     }
     return new ReadAction<CompileScope>() {
+      @Override
       protected void run(final Result<CompileScope> result) {
         final Set<Artifact> artifacts = ArtifactCompileScope.getArtifactsToBuild(project, baseScope, false);
         result.setResult(ArtifactCompileScope.createScopeForModulesInArtifacts(project, artifacts));

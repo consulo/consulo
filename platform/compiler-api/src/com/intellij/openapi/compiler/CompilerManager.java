@@ -21,6 +21,7 @@ import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.consulo.annotations.Immutable;
@@ -70,7 +71,7 @@ public abstract class CompilerManager {
    * @return all registered compilers of the specified class.
    */
   @NotNull
-  public abstract <T  extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, CompilerFilter filter);
+  public abstract <T  extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, Condition<Compiler> filter);
 
   /**
    * Registers the type as a compilable type so that Compile action will be enabled on files of this type.
@@ -196,11 +197,11 @@ public abstract class CompilerManager {
    * @param filter filter allowing choose what compilers should be executed
    * @param callback a notification callback, or null if no notifications needed
    */
-  public abstract void make(@NotNull CompileScope scope, CompilerFilter filter, @Nullable CompileStatusNotification callback);
+  public abstract void make(@NotNull CompileScope scope, Condition<Compiler> filter, @Nullable CompileStatusNotification callback);
 
   /**
    * Checks if compile scope given is up-to-date
-   * @param scope
+   * @param scope    a scope to check
    * @return true if make on the scope specified wouldn't do anything or false if something is to be compiled or deleted 
    */
   public abstract boolean isUpToDate(@NotNull CompileScope scope);

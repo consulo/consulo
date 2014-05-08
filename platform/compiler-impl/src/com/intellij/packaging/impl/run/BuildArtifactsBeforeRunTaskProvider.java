@@ -27,7 +27,9 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.*;
+import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.packaging.artifacts.Artifact;
@@ -106,9 +108,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         finished.up();
       }
     };
-    final CompilerFilter compilerFilter = new CompilerFilter() {
+    final Condition<Compiler> compilerFilter = new Condition<Compiler>() {
       @Override
-      public boolean acceptCompiler(com.intellij.openapi.compiler.Compiler compiler) {
+      public boolean value(com.intellij.openapi.compiler.Compiler compiler) {
         return compiler instanceof ArtifactsCompiler ||
                compiler instanceof ArtifactAwareCompiler && ((ArtifactAwareCompiler)compiler).shouldRun(artifacts);
       }
