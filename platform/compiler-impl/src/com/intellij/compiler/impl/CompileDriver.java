@@ -1078,8 +1078,7 @@ public class CompileDriver {
 
     boolean didSomething = false;
 
-    final TranslatingCompiler[] translators = compilerManager.getCompilers(TranslatingCompiler.class, myCompilerFilter);
-
+    final TranslatingCompiler[] original = compilerManager.getCompilers(TranslatingCompiler.class, myCompilerFilter);
 
     final List<Chunk<Module>> sortedChunks =
       Collections.unmodifiableList(ApplicationManager.getApplication().runReadAction(new Computable<List<Chunk<Module>>>() {
@@ -1098,6 +1097,10 @@ public class CompileDriver {
       int total = 0;
       int processed = 0;
       for (final Chunk<Module> currentChunk : sortedChunks) {
+        TranslatingCompiler[] translators = original.clone();
+        for (CompilerSorter compilerSorter : CompilerSorter.EP_NAME.getExtensions()) {
+          compilerSorter.sort(currentChunk, translators, TranslatingCompiler.class);
+        }
         final TranslatorsOutputSink sink = new TranslatorsOutputSink(context, translators);
         final Set<FileType> generatedTypes = new HashSet<FileType>();
         Collection<VirtualFile> chunkFiles = chunkMap.get(currentChunk);

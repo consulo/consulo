@@ -20,6 +20,7 @@
     </extensionPoint>
 
     <extensionPoint name="compiler.moduleScopeFactory" interface="org.consulo.compiler.impl.CompileModuleScopeFactory" />
+    <extensionPoint name="compiler.sorter" interface="com.intellij.openapi.compiler.CompilerSorter" />
   </extensionPoints>
   <extensions defaultExtensionNs="com.intellij">
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryElementType"/>
