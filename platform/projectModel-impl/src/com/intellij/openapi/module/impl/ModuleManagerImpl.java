@@ -16,18 +16,6 @@
 
 package com.intellij.openapi.module.impl;
 
-import gnu.trove.THashMap;
-import gnu.trove.TObjectHashingStrategy;
-
-import java.io.IOException;
-import java.util.*;
-
-import org.consulo.lombok.annotations.Logger;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -35,11 +23,7 @@ import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleWithNameAlreadyExists;
-import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
+import com.intellij.openapi.module.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
@@ -49,11 +33,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.ModificationTracker;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -67,6 +47,16 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.messages.MessageBus;
+import gnu.trove.THashMap;
+import gnu.trove.TObjectHashingStrategy;
+import org.consulo.lombok.annotations.Logger;
+import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author max
@@ -423,15 +413,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     final Module module = modifiableModel.newModule(name, dirPath);
     modifiableModel.commit();
     return module;
-  }
-
-  @Override
-  @NotNull
-  public Module loadModule(@NotNull String filePath) throws InvalidDataException,
-                                                   IOException,
-                                                   JDOMException,
-                                                   ModuleWithNameAlreadyExists {
-    throw new UnsupportedOperationException();
   }
 
   @Override

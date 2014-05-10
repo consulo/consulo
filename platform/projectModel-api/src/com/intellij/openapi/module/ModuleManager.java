@@ -16,15 +16,11 @@
 package com.intellij.openapi.module;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.graph.Graph;
-import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -54,21 +50,6 @@ public abstract class ModuleManager {
    */
   @NotNull
   public abstract Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
-
-  /**
-   * Loads a module from an .iml file with the specified path and adds it to the project.
-   *
-   * @param filePath the path to load the module from.
-   * @return the module instance.
-   * @throws InvalidDataException if the data in the .iml file is semantically incorrect.
-   * @throws IOException if an I/O error occurred when loading the module file.
-   * @throws JDOMException if the file contains invalid XML data.
-   * @throws ModuleWithNameAlreadyExists if a module with such a name already exists in the project.
-   */
-  @NotNull
-  @Deprecated
-  @DeprecationInfo(value = "Module can not be load, due .iml files are not supported anymore", until = "3.0")
-  public abstract Module loadModule(@NotNull String filePath) throws InvalidDataException, IOException, JDOMException, ModuleWithNameAlreadyExists;
 
   /**
    * Disposes of the specified module and removes it from the project.
