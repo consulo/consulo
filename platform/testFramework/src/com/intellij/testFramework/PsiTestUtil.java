@@ -43,6 +43,7 @@ import org.consulo.compiler.CompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
@@ -227,7 +228,7 @@ public class PsiTestUtil {
   public static void removeSourceRoot(Module module, VirtualFile root) {
     final ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
     ContentEntry entry = findContentEntryWithAssertion(rootModel, root);
-    for (ContentFolder sourceFolder : entry.getFolders()) {
+    for (ContentFolder sourceFolder : entry.getFolders(ContentFolderScopes.all())) {
       if (root.equals(sourceFolder.getFile())) {
         entry.removeFolder(sourceFolder);
         break;
@@ -239,7 +240,7 @@ public class PsiTestUtil {
   public static void removeExcludedRoot(Module module, VirtualFile root) {
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
     ContentEntry entry = findContentEntryWithAssertion(model, root);
-    final ContentFolder[] excludeFolders = entry.getFolders();
+    final ContentFolder[] excludeFolders = entry.getFolders(ContentFolderScopes.all());
     for (ContentFolder excludeFolder : excludeFolders) {
       if (root.equals(excludeFolder.getFile())) {
         entry.removeFolder(excludeFolder);

@@ -27,6 +27,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
@@ -55,7 +56,7 @@ public class MarkRootAction extends DumbAwareAction {
     for (VirtualFile vFile : vFiles) {
       ContentEntry entry = findContentEntry(model, vFile);
       if (entry != null) {
-        final ContentFolder[] sourceFolders = entry.getFolders();
+        final ContentFolder[] sourceFolders = entry.getFolders(ContentFolderScopes.all());
         for (ContentFolder sourceFolder : sourceFolders) {
           if (Comparing.equal(sourceFolder.getFile(), vFile)) {
             entry.removeFolder(sourceFolder);
@@ -109,7 +110,7 @@ public class MarkRootAction extends DumbAwareAction {
       }
 
       for (ContentEntry contentEntry : contentEntries) {
-        for (ContentFolder contentFolder : contentEntry.getFolders()) {
+        for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
           if (Comparing.equal(contentFolder.getFile(), vFile)) {
             if (contentFolder.getType() == myContentFolderType) {
               return false;

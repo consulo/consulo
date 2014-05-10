@@ -26,6 +26,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 /**
  * @author yole
@@ -55,7 +56,7 @@ public class UnmarkRootAction extends MarkRootAction {
       }
 
       for (ContentEntry contentEntry : contentEntries) {
-        for (ContentFolder contentFolder : contentEntry.getFolders()) {
+        for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
           if (Comparing.equal(contentFolder.getFile(), vFile)) {
             return true;
           }

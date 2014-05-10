@@ -61,7 +61,7 @@ public interface ContentEntry extends Synthetic {
 
   @NotNull
   @Deprecated
-  @DeprecationInfo(value = "Use ContentEntry#getFolders(ContentFolderScopes.all())", until = "3.0")
+  @DeprecationInfo(value = "Use ContentEntry#getFolders(ContentFolderScopes.all())", until = "1.0")
   ContentFolder[] getFolders();
 
   @NotNull

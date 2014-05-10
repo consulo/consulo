@@ -41,6 +41,7 @@ import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 public class PsiVFSListener extends VirtualFileAdapter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.impl.PsiVFSListener");
@@ -293,7 +294,7 @@ public class PsiVFSListener extends VirtualFileAdapter {
 
     Module module = myProjectRootManager.getFileIndex().getModuleForFile(parent);
     if (module == null) return false;
-    VirtualFile[] excludeRoots = ModuleRootManager.getInstance(module).getExcludeRoots();
+    VirtualFile[] excludeRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.excluded());
     for (VirtualFile root : excludeRoots) {
       if (root.equals(file)) return true;
     }

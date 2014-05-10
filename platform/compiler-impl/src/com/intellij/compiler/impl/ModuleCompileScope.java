@@ -34,6 +34,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -142,13 +143,13 @@ public class ModuleCompileScope extends FileIndexCompileScope {
 
     if (candidateModule != null && myScopeModules.contains(candidateModule)) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(candidateModule);
-      final String[] excludeRootUrls = moduleRootManager.getExcludeRootUrls();
+      final String[] excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderScopes.excluded());
       for (String excludeRootUrl : excludeRootUrls) {
         if (isUrlUnderRoot(url, excludeRootUrl)) {
           return false;
         }
       }
-      final String[] sourceRootUrls = moduleRootManager.getSourceRootUrls();
+      final String[] sourceRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderScopes.all(false));
       for (String sourceRootUrl : sourceRootUrls) {
         if (isUrlUnderRoot(url, sourceRootUrl)) {
           return true;

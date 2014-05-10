@@ -25,6 +25,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 
 /**
  * @author anna
@@ -81,7 +82,7 @@ public class ProjectRootsUtil {
     }
     final ContentEntry[] contentEntries = ModuleRootManager.getInstance(module).getContentEntries();
     for (ContentEntry contentEntry : contentEntries) {
-      for (ContentFolder sourceFolder : contentEntry.getFolders()) {
+      for (ContentFolder sourceFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
         if (Comparing.equal(virtualFile, sourceFolder.getFile())) {
           return sourceFolder;
         }

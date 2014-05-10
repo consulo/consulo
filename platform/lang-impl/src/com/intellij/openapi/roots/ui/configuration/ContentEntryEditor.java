@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
@@ -223,7 +224,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
     if (contentEntry == null) {
       return null;
     }
-    for (ContentFolder contentFolder : contentEntry.getFolders()) {
+    for (ContentFolder contentFolder : contentEntry.getFolders(ContentFolderScopes.all())) {
       final VirtualFile f = contentFolder.getFile();
       if (f != null && f.equals(file)) {
         return contentFolder;
