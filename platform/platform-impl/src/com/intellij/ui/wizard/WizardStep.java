@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.wizard;
 
-import com.intellij.openapi.util.IconLoader;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -27,8 +26,7 @@ public abstract class WizardStep<T extends WizardModel> {
 
   private String myTitle = "";
   private String myExplanation = "";
-//todo:
-  private Icon myIcon = IconLoader.getIcon("/newprojectwizard.png");
+
   private String myHelpId;
 
   protected WizardStep() {
@@ -46,13 +44,11 @@ public abstract class WizardStep<T extends WizardModel> {
   public WizardStep(String title, String explanation, Icon icon) {
     myTitle = title;
     myExplanation = explanation;
-    myIcon = icon;
   }
 
   public WizardStep(String title, String explanation, Icon icon, String helpId) {
     myTitle = title;
     myExplanation = explanation;
-    myIcon = icon;
     myHelpId = helpId;
   }
 
@@ -88,7 +84,7 @@ public abstract class WizardStep<T extends WizardModel> {
   }
 
   public Icon getIcon() {
-    return myIcon;
+    return null;
   }
 
   public String getHelpId() {
