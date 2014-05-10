@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl;
 
+import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.keymap.Keymap;
@@ -67,7 +68,7 @@ public class DefaultKeymap {
 
 
   private void loadKeymapsFromElement(final Element element) throws InvalidDataException {
-    @SuppressWarnings("unchecked") final List<Element> children = (List<Element>)element.getChildren();
+    final List<Element> children = element.getChildren();
     for (Element child : children) {
       if (KEY_MAP.equals(child.getName())) {
         String keymapName = child.getAttributeValue(NAME_ATTRIBUTE);
@@ -85,7 +86,7 @@ public class DefaultKeymap {
 
   public String getDefaultKeymapName() {
     if (SystemInfo.isMac) {
-      return KeymapManager.MAC_OS_X_KEYMAP;
+      return StartupUtil.getMyWizardMacKeymap() != null ? StartupUtil.getMyWizardMacKeymap() : KeymapManager.MAC_OS_X_KEYMAP;
     }
     else if (SystemInfo.isXWindow) {
       return KeymapManager.X_WINDOW_KEYMAP;

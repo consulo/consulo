@@ -33,6 +33,7 @@ import java.util.List;
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class StartupActionScriptManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.startup.StartupActionScriptManager");
+  @NonNls public static final String STARTUP_WIZARD_MODE = "StartupWizardMode";
 
   @NonNls private static final String ACTION_SCRIPT_FILE = "action.script";
 
@@ -53,6 +54,10 @@ public class StartupActionScriptManager {
   }
 
   public static synchronized void addActionCommand(ActionCommand command) throws IOException {
+    if (Boolean.getBoolean(STARTUP_WIZARD_MODE)) {
+      command.execute();
+      return;
+    }
     final List<ActionCommand> commands = loadActionScript();
     commands.add(command);
     saveActionScript(commands);
@@ -137,7 +142,7 @@ public class StartupActionScriptManager {
         if (! myDestination.getParentFile().mkdirs()) {
           JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
                                         MessageFormat.format("<html>Cannot create parent directory [{0}] of {1}<br>Please, check your access rights on folder <br>{2}",
-                                        parentFile.getAbsolutePath(), myDestination.getAbsolutePath(), parentFile.getParent()),
+                                                             parentFile.getAbsolutePath(), myDestination.getAbsolutePath(), parentFile.getParent()),
                                         "Installing Plugin",
                                         JOptionPane.ERROR_MESSAGE);
         }

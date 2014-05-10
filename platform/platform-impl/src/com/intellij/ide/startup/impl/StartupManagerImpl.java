@@ -190,8 +190,6 @@ public class StartupManagerImpl extends StartupManagerEx {
         }
       }
     });
-
-    Registry.get("ide.firstStartup").setValue(false);
   }
 
   public void scheduleInitialVfsRefresh() {

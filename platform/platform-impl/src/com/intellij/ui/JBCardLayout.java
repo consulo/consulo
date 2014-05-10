@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,10 +76,20 @@ public class JBCardLayout extends CardLayout {
   }
 
   public void swipe(@NotNull final Container parent, @NotNull final String name, @NotNull SwipeDirection direction) {
+    swipe(parent, name, direction, null);
+  }
+
+  public void swipe(@NotNull final Container parent, @NotNull final String name, @NotNull SwipeDirection direction,
+                    final @Nullable Runnable onDone) {
     stopSwipeIfNeed();
     mySwipeFrom = findVisible(parent);
     mySwipeTo = myMap.get(name);
-    if (mySwipeFrom == null || mySwipeTo == null || mySwipeFrom == mySwipeTo) {
+    if (mySwipeTo == null) return;
+    if (mySwipeFrom == null || mySwipeFrom == mySwipeTo) {
+      super.show(parent, name);
+      if (onDone != null) {
+        onDone.run();
+      }
       return;
     }
     final boolean isForward;
@@ -103,7 +114,12 @@ public class JBCardLayout extends CardLayout {
       public void actionPerformed(ActionEvent e) {
         long timePassed = System.currentTimeMillis() - startTime;
         if (timePassed >= mySwipeTime) {
+          Component currentFocusComponent = IdeFocusManager.getGlobalInstance().getFocusedDescendantFor(parent);
           show(parent, name);
+          if (currentFocusComponent != null) currentFocusComponent.requestFocusInWindow();
+          if (onDone != null) {
+            onDone.run();
+          }
           return;
         }
         linearProgress[0] = Math.min(1, Math.max(0, (float)timePassed / mySwipeTime));
@@ -231,5 +247,9 @@ public class JBCardLayout extends CardLayout {
     f.setLocationRelativeTo(null);
     f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     f.setVisible(true);
+  }
+
+  public Component findComponentById(String id) {
+    return myMap.get(id);
   }
 }

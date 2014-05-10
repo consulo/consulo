@@ -20,6 +20,7 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeRepaintManager;
+import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.*;
@@ -35,6 +36,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.SystemDock;
@@ -221,15 +223,7 @@ public class IdeaApplication {
       LOG.info("App initialization took " + (System.nanoTime() - PluginManager.startupStart) / 1000000 + " ms");
       PluginManagerCore.dumpPluginClassStatistics();
 
-      if (!willOpenProject.get()) {
-        WelcomeFrame.showNow();
-        lifecyclePublisher.welcomeScreenDisplayed();
-      }
-      else {
-        windowManager.showFrame();
-      }
-
-      app.invokeLater(new Runnable() {
+      app.invokeAndWait(new Runnable() {
         @Override
         public void run() {
           if (mySplash != null) {
@@ -238,6 +232,20 @@ public class IdeaApplication {
           }
         }
       }, ModalityState.NON_MODAL);
+
+      if(Registry.is("ide.firstStartup")) {
+        CustomizeIDEWizardDialog.initLaf();
+        new CustomizeIDEWizardDialog().show();
+      }
+
+      if (!willOpenProject.get()) {
+        WelcomeFrame.showNow();
+        lifecyclePublisher.welcomeScreenDisplayed();
+      }
+      else {
+        windowManager.showFrame();
+      }
+
 
       app.invokeLater(new Runnable() {
         @Override

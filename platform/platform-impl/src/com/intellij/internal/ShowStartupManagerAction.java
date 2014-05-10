@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.components.labels;
+package com.intellij.internal;
 
+import com.intellij.ide.customize.CustomizeIDEWizardDialog;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 
-
-public interface LinkListener<T> {
-
-  LinkListener NULL = new LinkListener() {
-    public void linkSelected(LinkLabel aSource, Object aLinkData) {
-    }
-  };
-
-  void linkSelected(LinkLabel aSource, T aLinkData);
-
+/**
+ * @author VISTALL
+ * @since 10.05.14
+ */
+public class ShowStartupManagerAction extends AnAction {
+  @Override
+  public void actionPerformed(AnActionEvent e) {
+    new CustomizeIDEWizardDialog().show();
+  }
 }
