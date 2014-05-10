@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.highlighter;
 
+import com.intellij.ide.IdeBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,6 +29,12 @@ public class ZipArchiveFileType extends ArchiveFileType {
   @Override
   public String getProtocol() {
     return PROTOCOL;
+  }
+
+  @NotNull
+  @Override
+  public String getDescription() {
+    return IdeBundle.message("filetype.description.zip.files");
   }
 
   @NotNull
