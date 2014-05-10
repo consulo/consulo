@@ -31,6 +31,7 @@
           <element id="module-production-resource-output" name="resources" />
           <element id="module-production-resource-output" name="platform-resources" />
           <element id="module-production-resource-output" name="icons" />
+          <element id="module-production-resource-output" name="vcs-log-impl" />
         </element>
         <element id="zip-archive" name="resources_en.jar">
           <element id="module-production-resource-output" name="resources-en" />
