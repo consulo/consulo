@@ -27,12 +27,12 @@ public interface ArtifactPointer extends NamedPointer<Artifact> {
 
   @NotNull
   @Deprecated
-  @DeprecationInfo(value = "Use #getName()", until = "2.0")
+  @DeprecationInfo(value = "Use #getName()", until = "1.0")
   String getArtifactName();
 
   @Nullable
   @Deprecated
-  @DeprecationInfo(value = "Use #get()", until = "2.0")
+  @DeprecationInfo(value = "Use #get()", until = "1.0")
   Artifact getArtifact();
 
   @NotNull

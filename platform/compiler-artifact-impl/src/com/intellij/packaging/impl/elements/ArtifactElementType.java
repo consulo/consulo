@@ -55,6 +55,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     return !getAvailableArtifacts(context, artifact, false).isEmpty();
   }
 
+  @Override
   @NotNull
   public List<? extends ArtifactPackagingElement> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
                                                                    @NotNull CompositePackagingElement<?> parent) {
@@ -62,7 +63,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     List<Artifact> artifacts = context.chooseArtifacts(getAvailableArtifacts(context, artifact, false), CompilerBundle.message("dialog.title.choose.artifacts"));
     final List<ArtifactPackagingElement> elements = new ArrayList<ArtifactPackagingElement>();
     for (Artifact selected : artifacts) {
-      elements.add(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).createPointer(selected, context.getArtifactModel())));
+      elements.add(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).create(selected, context.getArtifactModel())));
     }
     return elements;
   }
@@ -74,6 +75,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     final Set<Artifact> result = new HashSet<Artifact>(Arrays.asList(context.getArtifactModel().getArtifacts()));
     if (notIncludedOnly) {
       ArtifactUtil.processPackagingElements(artifact, getInstance(), new Processor<ArtifactPackagingElement>() {
+        @Override
         public boolean process(ArtifactPackagingElement artifactPackagingElement) {
           result.remove(artifactPackagingElement.findArtifact(context));
           return true;
@@ -86,6 +88,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
       Artifact another = iterator.next();
       final boolean notContainThis =
           ArtifactUtil.processPackagingElements(another, getInstance(), new Processor<ArtifactPackagingElement>() {
+            @Override
             public boolean process(ArtifactPackagingElement element) {
               return !artifact.getName().equals(element.getArtifactName());
             }
@@ -99,6 +102,7 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     return list;
   }
 
+  @Override
   @NotNull
   public ArtifactPackagingElement createEmpty(@NotNull Project project) {
     return new ArtifactPackagingElement(project);

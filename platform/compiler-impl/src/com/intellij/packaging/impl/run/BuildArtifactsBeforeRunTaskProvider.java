@@ -78,7 +78,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
       return CompilerBundle.message("build.artifacts.before.run.description.empty");
     }
     if (pointers.size() == 1) {
-      return CompilerBundle.message("build.artifacts.before.run.description.single", pointers.get(0).getArtifactName());
+      return CompilerBundle.message("build.artifacts.before.run.description.single", pointers.get(0).getName());
     }
     return CompilerBundle.message("build.artifacts.before.run.description.multiple", pointers.size());
   }
@@ -96,7 +96,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
       @Override
       protected void run(final Result result) {
         for (ArtifactPointer pointer : task.getArtifactPointers()) {
-          ContainerUtil.addIfNotNull(pointer.getArtifact(), artifacts);
+          ContainerUtil.addIfNotNull(pointer.get(), artifacts);
         }
       }
     }.execute();

@@ -82,7 +82,7 @@ public class ExtractArtifactAction extends LayoutTreeActionBase {
         for (PackagingElement element : selectedElements) {
           parent.removeChild(element);
         }
-        parent.addOrFindChild(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).createPointer(artifact, myArtifactEditor.getContext().getArtifactModel())));
+        parent.addOrFindChild(new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).create(artifact, myArtifactEditor.getContext().getArtifactModel())));
       }
     });
     treeComponent.rebuildTree();

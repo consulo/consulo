@@ -113,7 +113,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @NotNull
   @Override
   public PackagingElement<?> createArtifactElement(@NotNull Artifact artifact, @NotNull Project project) {
-    return new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).createPointer(artifact));
+    return new ArtifactPackagingElement(project, ArtifactPointerUtil.getPointerManager(project).create(artifact));
   }
 
   @Override

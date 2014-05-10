@@ -50,7 +50,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
     final List<Element> children = element.getChildren(ARTIFACT_ELEMENT);
     final ArtifactPointerManager pointerManager = ArtifactPointerUtil.getPointerManager(myProject);
     for (Element child : children) {
-      myArtifactPointers.add(pointerManager.createPointer(child.getAttributeValue(NAME_ATTRIBUTE)));
+      myArtifactPointers.add(pointerManager.create(child.getAttributeValue(NAME_ATTRIBUTE)));
     }
   }
 
@@ -58,7 +58,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   public void writeExternal(Element element) {
     super.writeExternal(element);
     for (ArtifactPointer pointer : myArtifactPointers) {
-      element.addContent(new Element(ARTIFACT_ELEMENT).setAttribute(NAME_ATTRIBUTE, pointer.getArtifactName()));
+      element.addContent(new Element(ARTIFACT_ELEMENT).setAttribute(NAME_ATTRIBUTE, pointer.getName()));
     }
   }
 
@@ -83,20 +83,21 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
   }
 
   public void addArtifact(Artifact artifact) {
-    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifact);
+    final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(myProject).create(artifact);
     if (!myArtifactPointers.contains(pointer)) {
       myArtifactPointers.add(pointer);
     }
   }
 
   public void removeArtifact(@NotNull Artifact artifact) {
-    removeArtifact(ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifact));
+    removeArtifact(ArtifactPointerUtil.getPointerManager(myProject).create(artifact));
   }
 
   public void removeArtifact(final @NotNull ArtifactPointer pointer) {
     myArtifactPointers.remove(pointer);
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -110,6 +111,7 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
     return true;
   }
 
+  @Override
   public int hashCode() {
     int result = super.hashCode();
     result = 31 * result + myArtifactPointers.hashCode();

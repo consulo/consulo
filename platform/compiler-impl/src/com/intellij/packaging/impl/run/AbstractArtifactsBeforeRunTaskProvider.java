@@ -48,14 +48,14 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
       @Override
       public void artifactRemoved(@NotNull Artifact artifact) {
         final RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
-        for (RunConfiguration configuration : runManager.getAllConfigurations()) {
+        for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
           final List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
           for (AbstractArtifactsBeforeRunTask task : tasks) {
             final String artifactName = artifact.getName();
             final List<ArtifactPointer> pointersList = task.getArtifactPointers();
             final ArtifactPointer[] pointers = pointersList.toArray(new ArtifactPointer[pointersList.size()]);
             for (ArtifactPointer pointer : pointers) {
-              if (pointer.getArtifactName().equals(artifactName) && ArtifactManager.getInstance(myProject).findArtifact(artifactName) == null) {
+              if (pointer.getName().equals(artifactName) && ArtifactManager.getInstance(myProject).findArtifact(artifactName) == null) {
                 task.removeArtifact(pointer);
               }
             }
@@ -80,7 +80,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     List<ArtifactPointer> pointers = task.getArtifactPointers();
     if (pointers == null || pointers.isEmpty())
       return getIcon();
-    Artifact artifact = pointers.get(0).getArtifact();
+    Artifact artifact = pointers.get(0).get();
     if (artifact == null)
       return getIcon();
     return artifact.getArtifactType().getIcon();
@@ -96,7 +96,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     final Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
     Set<ArtifactPointer> pointers = new THashSet<ArtifactPointer>();
     for (Artifact artifact : artifacts) {
-      pointers.add(ArtifactPointerUtil.getPointerManager(myProject).createPointer(artifact));
+      pointers.add(ArtifactPointerUtil.getPointerManager(myProject).create(artifact));
     }
     pointers.addAll(task.getArtifactPointers());
     ArtifactChooser chooser = new ArtifactChooser(new ArrayList<ArtifactPointer>(pointers));
@@ -120,7 +120,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   @Override
   public boolean canExecuteTask(RunConfiguration configuration, T task) {
     for (ArtifactPointer pointer:  task.getArtifactPointers()) {
-      if (pointer.getArtifact() != null)
+      if (pointer.get() != null)
         return true;
     }
     return false;
