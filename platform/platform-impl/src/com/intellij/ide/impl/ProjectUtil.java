@@ -18,7 +18,6 @@ package com.intellij.ide.impl;
 import com.intellij.CommonBundle;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
@@ -103,18 +102,8 @@ public class ProjectUtil {
       return strong.doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
     }
 
-    if (path.endsWith(ProjectFileType.DOT_DEFAULT_EXTENSION) ||
-        virtualFile.isDirectory() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null) {
+    if (virtualFile.isDirectory() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null) {
       return openProject(path, projectToClose, forceOpenInNewFrame);
-    }
-
-    if (virtualFile.isDirectory()) {
-      for (VirtualFile child : virtualFile.getChildren()) {
-        final String childPath = child.getPath();
-        if (childPath.endsWith(ProjectFileType.DOT_DEFAULT_EXTENSION)) {
-          return openProject(childPath, projectToClose, forceOpenInNewFrame);
-        }
-      }
     }
 
     ProjectOpenProcessor provider = ProjectOpenProcessor.getImportProvider(virtualFile);

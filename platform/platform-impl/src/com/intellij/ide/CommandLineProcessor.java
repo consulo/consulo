@@ -15,7 +15,6 @@
  */
 package com.intellij.ide;
 
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.ApplicationStarter;
@@ -74,9 +73,7 @@ public class CommandLineProcessor {
       // HACK: PlatformProjectOpenProcessor agrees to open anything
       provider = null;
     }
-    if (provider != null ||
-        name.endsWith(ProjectFileType.DOT_DEFAULT_EXTENSION) ||
-        new File(name, Project.DIRECTORY_STORE_FOLDER).exists()) {
+    if (provider != null || new File(name, Project.DIRECTORY_STORE_FOLDER).exists()) {
       final Project result = ProjectUtil.openOrImport(name, null, true);
       if (result == null) {
         Messages.showErrorDialog("Cannot open project '" + name + "'", "Cannot open project");

@@ -15,13 +15,11 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -117,10 +115,6 @@ public class CompilerPaths {
     final int lastSlash = projectName.lastIndexOf('/');
     if (lastSlash >= 0 && lastSlash + 1 < projectName.length()) {
       projectName = projectName.substring(lastSlash + 1);
-    }
-
-    if (StringUtil.endsWithIgnoreCase(projectName, ProjectFileType.DOT_DEFAULT_EXTENSION)) {
-      projectName = projectName.substring(0, projectName.length() - ProjectFileType.DOT_DEFAULT_EXTENSION.length());
     }
 
     projectName = projectName.toLowerCase(Locale.US).replace(':', '_'); // replace ':' from windows drive names

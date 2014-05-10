@@ -19,8 +19,6 @@ package com.intellij.conversion.impl;
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.application.options.ReplacePathToMacroMap;
 import com.intellij.conversion.*;
-import com.intellij.ide.highlighter.ProjectFileType;
-import com.intellij.ide.highlighter.WorkspaceFileType;
 import com.intellij.ide.impl.convert.JDomConvertingUtil;
 import com.intellij.ide.impl.convert.ProjectFileVersionImpl;
 import com.intellij.ide.impl.convert.ProjectFileVersionState;
@@ -89,10 +87,7 @@ public class ConversionContextImpl implements ConversionContext {
       myWorkspaceFile = new File(mySettingsBaseDir, "workspace.xml");
     }
     else {
-      myStorageScheme = StorageScheme.DEFAULT;
-      myProjectBaseDir = myProjectFile.getParentFile();
-      modulesFile = myProjectFile;
-      myWorkspaceFile = new File(StringUtil.trimEnd(projectPath, ProjectFileType.DOT_DEFAULT_EXTENSION) + WorkspaceFileType.DOT_DEFAULT_EXTENSION);
+      throw new CannotConvertException("Project files not supported");
     }
 
     myModuleFiles = modulesFile.exists() ? findModuleFiles(JDomConvertingUtil.loadDocument(modulesFile).getRootElement()) : new File[0];

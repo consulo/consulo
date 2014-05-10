@@ -16,7 +16,6 @@
 package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
@@ -68,16 +67,8 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   }
 
   public static boolean isProjectFile(final VirtualFile file) {
-    if (isIprFile(file)) return true;
     final ProjectOpenProcessor importProvider = ProjectOpenProcessor.getImportProvider(file);
     return importProvider != null;
-  }
-
-  private static boolean isIprFile(VirtualFile file) {
-    if ((!file.isDirectory() && file.getName().toLowerCase().endsWith(ProjectFileType.DOT_DEFAULT_EXTENSION))) {
-      return true;
-    }
-    return false;
   }
 
   private static boolean isProjectDirectory(final VirtualFile virtualFile) {
