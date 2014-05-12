@@ -149,7 +149,7 @@ public class SdkConfigurationUtil {
 
       sdk = new SdkImpl(sdkName, sdkType);
       if(bundled) {
-        sdk.setBundled();
+        sdk.setBundled(true);
       }
 
       if (additionalData != null) {
