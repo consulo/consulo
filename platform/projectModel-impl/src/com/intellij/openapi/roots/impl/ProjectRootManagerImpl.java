@@ -23,13 +23,11 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEnumerator;
-import com.intellij.openapi.roots.ProjectExtension;
-import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
@@ -45,10 +43,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author max
@@ -63,7 +58,9 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   private final OrderRootsCache myRootsCache;
 
+  private final Map<RootProvider, Set<OrderEntry>> myRegisteredRootProviders = new HashMap<RootProvider, Set<OrderEntry>>();
   protected boolean myStartupActivityPerformed = false;
+  private final RootProviderChangeListener myRootProviderChangeListener = new RootProviderChangeListener();
 
   protected class BatchSession {
     private int myBatchLevel = 0;
@@ -111,6 +108,22 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
         if (fireChange()) {
           myChanged = false;
         }
+      }
+    }
+  }
+
+  private class RootProviderChangeListener implements RootProvider.RootSetChangedListener {
+    private boolean myInsideRootsChange;
+
+    @Override
+    public void rootSetChanged(final RootProvider wrapper) {
+      if (myInsideRootsChange) return;
+      myInsideRootsChange = true;
+      try {
+        makeRootsChange(EmptyRunnable.INSTANCE, false, true);
+      }
+      finally {
+        myInsideRootsChange = false;
       }
     }
   }
@@ -365,6 +378,27 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   private ModuleManager getModuleManager() {
     return ModuleManager.getInstance(myProject);
+  }
+
+  void subscribeToRootProvider(OrderEntry owner, final RootProvider provider) {
+    Set<OrderEntry> owners = myRegisteredRootProviders.get(provider);
+    if (owners == null) {
+      owners = new HashSet<OrderEntry>();
+      myRegisteredRootProviders.put(provider, owners);
+      provider.addRootSetChangedListener(myRootProviderChangeListener);
+    }
+    owners.add(owner);
+  }
+
+  void unsubscribeFromRootProvider(OrderEntry owner, final RootProvider provider) {
+    Set<OrderEntry> owners = myRegisteredRootProviders.get(provider);
+    if (owners != null) {
+      owners.remove(owner);
+      if (owners.isEmpty()) {
+        provider.removeRootSetChangedListener(myRootProviderChangeListener);
+        myRegisteredRootProviders.remove(provider);
+      }
+    }
   }
 
   void addListenerForTable(LibraryTable.Listener libraryListener,

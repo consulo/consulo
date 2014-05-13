@@ -45,7 +45,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
   //cloning
   private ModuleLibraryOrderEntryImpl(Library library, RootModelImpl rootModel, boolean isExported, DependencyScope scope) {
-    super(rootModel);
+    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myLibrary = ((LibraryEx)library).cloneLibrary(getRootModel());
     doinit();
     myExported = isExported;
@@ -53,13 +53,13 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel) {
-    super(rootModel);
+    super(rootModel,  ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, getRootModel());
     doinit();
   }
 
   ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel);
+    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     myScope = DependencyScope.readExternal(element);
