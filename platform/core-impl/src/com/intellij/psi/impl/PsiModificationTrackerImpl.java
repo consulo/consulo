@@ -54,7 +54,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
       public void exitDumbMode() {
         enteredDumbMode();
       }
-    });                                          n
+    });
   }
 
   public void incCounter() {
