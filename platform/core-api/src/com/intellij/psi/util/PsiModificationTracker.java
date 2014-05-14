@@ -51,8 +51,6 @@ public interface PsiModificationTracker extends ModificationTracker {
 
   Topic<Listener> TOPIC = new Topic<Listener>("modification tracker", Listener.class, Topic.BroadcastDirection.TO_PARENT);
 
-  Topic<Listener> OUT_OF_CODE_TOPIC = new Topic<Listener>("out of code modification tracker", Listener.class, Topic.BroadcastDirection.TO_PARENT);
-
   /**
    * Tracks any PSI modification.
    * @return current counter value.
