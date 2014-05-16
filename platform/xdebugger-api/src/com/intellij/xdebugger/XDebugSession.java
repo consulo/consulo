@@ -32,6 +32,7 @@ import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -155,6 +156,8 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   void setPauseActionSupported(boolean isSupported);
 
+  @Deprecated
+  @DeprecationInfo(value = "Override com.intellij.xdebugger.XDebugProcess#checkCanInitBreakpoints()", until = "2.0")
   void setAutoInitBreakpoints(boolean value);
 
   void rebuildViews();
