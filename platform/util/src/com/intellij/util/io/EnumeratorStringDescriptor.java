@@ -26,21 +26,23 @@ import java.io.IOException;
 *         Date: Dec 18, 2007
 */
 public class EnumeratorStringDescriptor implements KeyDescriptor<String> {
-  private final byte[] buffer = IOUtil.allocReadWriteUTFBuffer();
-
+  @Override
   public int getHashCode(final String value) {
     return value.hashCode();
   }
 
+  @Override
   public boolean isEqual(final String val1, final String val2) {
     return val1.equals(val2);
   }
 
+  @Override
   public void save(final DataOutput storage, @NotNull final String value) throws IOException {
-    IOUtil.writeUTFFast(buffer, storage, value);
+    IOUtil.writeUTF(storage, value);
   }
 
+  @Override
   public String read(final DataInput storage) throws IOException {
-    return IOUtil.readUTFFast(buffer, storage);
+    return IOUtil.readUTF(storage);
   }
 }

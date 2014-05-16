@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,24 @@
  */
 package com.intellij.openapi.util;
 
-/**
- * @deprecated use com.intellij.util.Function
- */
-public interface Transform <S, T> {
-  T transform(S s);
+import java.lang.ref.SoftReference;
+
+public abstract class ThreadLocalCachedValue<T> {
+  private final ThreadLocal<SoftReference<T>> myThreadLocal = new ThreadLocal<SoftReference<T>>();
+
+  public T getValue() {
+    T value = com.intellij.reference.SoftReference.dereference(myThreadLocal.get());
+    if (value == null) {
+      value = create();
+      myThreadLocal.set(new SoftReference<T>(value));
+    } else {
+      init(value);
+    }
+    return value;
+  }
+
+  protected void init(T value) {
+  }
+
+  protected abstract T create();
 }
