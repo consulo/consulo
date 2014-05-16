@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.impl.ui.tree.nodes;
+package com.intellij.xdebugger;
 
-import com.intellij.xdebugger.XExpression;
+import com.intellij.lang.Language;
+import com.intellij.xdebugger.evaluation.EvaluationMode;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.tree.TreeNode;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * @author nik
+ * @author egor
  */
-public interface WatchNode extends TreeNode {
-  @NotNull
-  XExpression getExpression();
+public interface XExpression {
+  @NotNull String getExpression();
+  @Nullable Language getLanguage();
+  @Nullable String getCustomInfo();
+  EvaluationMode getMode();
 }

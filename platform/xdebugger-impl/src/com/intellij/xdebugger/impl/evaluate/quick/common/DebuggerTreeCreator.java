@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.impl.ui.tree.nodes;
+package com.intellij.xdebugger.impl.evaluate.quick.common;
 
-import com.intellij.xdebugger.XExpression;
+import com.intellij.concurrency.ResultConsumer;
+import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.tree.TreeNode;
 
 /**
  * @author nik
  */
-public interface WatchNode extends TreeNode {
+public interface DebuggerTreeCreator<D> {
   @NotNull
-  XExpression getExpression();
+  String getTitle(@NotNull D descriptor);
+
+  void createDescriptorByNode(Object node, ResultConsumer<D> resultConsumer);
+
+  @NotNull
+  Tree createTree(@NotNull D descriptor);
 }
