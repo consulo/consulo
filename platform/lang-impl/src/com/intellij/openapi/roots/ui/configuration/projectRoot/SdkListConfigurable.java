@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
+import com.intellij.CommonBundle;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -31,7 +33,9 @@ import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
+import com.intellij.openapi.ui.NonEmptyInputValidator;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
@@ -77,6 +81,48 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       }
     }
   };
+
+  private class CopySdkAction extends AnAction {
+    private CopySdkAction() {
+      super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), AllIcons.Actions.Copy);
+    }
+
+    @Override
+    public void actionPerformed(final AnActionEvent e) {
+      final Object o = getSelectedObject();
+      if (o instanceof SdkImpl) {
+        final SdkImpl selected = (SdkImpl)o;
+        final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, selected.getName() + "2", new NonEmptyInputValidator(){
+          @Override
+          public boolean checkInput(String inputString) {
+            return super.checkInput(inputString) && mySdksTreeModel.findSdk(inputString) == null;
+          }
+        });
+        if (newName == null) return;
+
+        SdkImpl sdk = (SdkImpl)selected.clone();
+        sdk.setName(newName);
+        sdk.setBundled(false);
+
+        mySdksTreeModel.doAdd(sdk, new Consumer<Sdk>() {
+          @Override
+          public void consume(Sdk sdk) {
+            addSdkNode(sdk, true);
+          }
+        });
+      }
+    }
+
+    @Override
+    public void update(final AnActionEvent e) {
+      if (myTree.getSelectionPaths() == null || myTree.getSelectionPaths().length != 1) {
+        e.getPresentation().setEnabled(false);
+      }
+      else {
+        e.getPresentation().setEnabled(getSelectedObject() instanceof SdkImpl);
+      }
+    }
+  }
 
   public SdkListConfigurable(final Project project, ProjectStructureConfigurable root) {
     super(project);
@@ -128,14 +174,14 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   protected void loadTree() {
     final Map<SdkType, List<Sdk>> map = new HashMap<SdkType, List<Sdk>>();
 
-    for(Sdk sdk : mySdksTreeModel.getProjectSdks().values()) {
+    for (Sdk sdk : mySdksTreeModel.getProjectSdks().values()) {
       SdkType sdkType = (SdkType)sdk.getSdkType();
-      if(sdkType instanceof UnknownSdkType) {
+      if (sdkType instanceof UnknownSdkType) {
         sdkType = ourUnknownSdkType;
       }
 
       List<Sdk> list = map.get(sdkType);
-      if(list == null) {
+      if (list == null) {
         map.put(sdkType, list = new ArrayList<Sdk>());
       }
 
@@ -150,9 +196,8 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       groupNode.setAllowsChildren(true);
       addNode(groupNode, myRoot);
 
-      for(Sdk sdk : value) {
-        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory,
-                                                                 myProject);
+      for (Sdk sdk : value) {
+        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory, myProject);
 
         addNode(new MyNode(configurable), groupNode);
       }
@@ -185,9 +230,9 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(myContext, sdk));
 
       MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, mySdksTreeModel, TREE_UPDATER, myHistory, myProject));
- 
+
       final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
-      if(groupNode != null) {
+      if (groupNode != null) {
         addNode(newSdkNode, groupNode);
       }
       else {
@@ -208,7 +253,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   @Override
   protected boolean canBeRemoved(Object[] editableObjects) {
     for (Object editableObject : editableObjects) {
-      if(editableObject instanceof Sdk && ((Sdk)editableObject).isBundled()) {
+      if (editableObject instanceof Sdk && ((Sdk)editableObject).isBundled()) {
         return false;
       }
     }
@@ -217,10 +262,10 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   protected void onItemDeleted(Object item) {
-    for(int i = 0; i < myRoot.getChildCount(); i++) {
+    for (int i = 0; i < myRoot.getChildCount(); i++) {
       final TreeNode childAt = myRoot.getChildAt(i);
-      if(childAt instanceof MyNode) {
-        if(childAt.getChildCount() == 0) {
+      if (childAt instanceof MyNode) {
+        if (childAt.getChildCount() == 0) {
           myRoot.remove((MutableTreeNode)childAt);
           ((DefaultTreeModel)myTree.getModel()).reload(myRoot);
         }
@@ -250,8 +295,8 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final TreeNode groupNode = myRoot.getChildAt(i);
 
-      for(int k = 0; k < groupNode.getChildCount(); k ++) {
-        final MyNode sdkNode = (MyNode) groupNode.getChildAt(k);
+      for (int k = 0; k < groupNode.getChildCount(); k++) {
+        final MyNode sdkNode = (MyNode)groupNode.getChildAt(k);
         final NamedConfigurable configurable = sdkNode.getConfigurable();
         if (configurable.isModified()) {
           configurable.apply();
@@ -270,6 +315,12 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   public static SdkListConfigurable getInstance(Project project) {
     return ServiceManager.getService(project, SdkListConfigurable.class);
+  }
+
+  @NotNull
+  @Override
+  protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
+    return Collections.singletonList(new CopySdkAction());
   }
 
   @Override

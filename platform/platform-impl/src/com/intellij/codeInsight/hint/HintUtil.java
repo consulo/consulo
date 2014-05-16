@@ -77,7 +77,7 @@ public class HintUtil {
         @Override
         public void consume(String s) {
           label.myPane.setText(s);
-          
+
           // Force preferred size recalculation.
           label.setPreferredSize(null);
           label.myPane.setPreferredSize(null);
@@ -90,28 +90,31 @@ public class HintUtil {
 
   @NotNull
   public static HintHint getInformationHint() {
+    //noinspection UseJBColor
     return new HintHint().setTextBg(INFORMATION_COLOR)
-      .setTextFg(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : Color.black)
-      .setFont(getBoldFont())
-      .setAwtTooltip(true);
+            .setTextFg(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : Color.black)
+            .setFont(getBoldFont())
+            .setAwtTooltip(true);
   }
 
   public static CompoundBorder createHintBorder() {
+    //noinspection UseJBColor
     return BorderFactory.createCompoundBorder(
-      new ColoredSideBorder(Color.white, Color.white, Color.gray, Color.gray, 1),
-      BorderFactory.createEmptyBorder(2, 2, 2, 2)
+            new ColoredSideBorder(Color.white, Color.white, Color.gray, Color.gray, 1),
+            BorderFactory.createEmptyBorder(2, 2, 2, 2)
     );
   }
 
+  @NotNull
   public static JComponent createInformationLabel(SimpleColoredText text) {
     return createInformationLabel(text, null);
   }
 
   public static JComponent createQuestionLabel(String text) {
     HintHint hintHint = new HintHint().setTextBg(QUESTION_COLOR)
-      .setTextFg(JBColor.foreground())
-      .setFont(getBoldFont())
-      .setAwtTooltip(true);
+            .setTextFg(JBColor.foreground())
+            .setFont(getBoldFont())
+            .setAwtTooltip(true);
 
     HintLabel label = new HintLabel();
     label.setText(text, hintHint);
@@ -127,26 +130,28 @@ public class HintUtil {
     return label;
   }
 
-  public static JComponent createInformationLabel(final SimpleColoredText text, final Icon icon) {
-    SimpleColoredComponent highlighted = new SimpleColoredComponent();
+  @NotNull
+  public static SimpleColoredComponent createInformationComponent() {
+    SimpleColoredComponent component = new SimpleColoredComponent();
+    component.setBackground(INFORMATION_COLOR);
+    component.setForeground(JBColor.foreground());
+    component.setFont(getBoldFont());
+    return component;
+  }
 
-    highlighted.setIcon(icon);
-    highlighted.setBackground(INFORMATION_COLOR);
-    highlighted.setForeground(JBColor.foreground());
-    highlighted.setFont(getBoldFont());
-    text.appendToComponent(highlighted);
-
-    HintLabel label = new HintLabel();
-    label.setText(highlighted);
-
-    return label;
+  @NotNull
+  public static JComponent createInformationLabel(@NotNull SimpleColoredText text, @Nullable Icon icon) {
+    SimpleColoredComponent component = createInformationComponent();
+    component.setIcon(icon);
+    text.appendToComponent(component);
+    return new HintLabel(component);
   }
 
   public static JComponent createErrorLabel(String text) {
     HintHint hintHint = new HintHint().setTextBg(ERROR_COLOR)
-      .setTextFg(JBColor.foreground())
-      .setFont(getBoldFont())
-      .setAwtTooltip(true);
+            .setTextFg(JBColor.foreground())
+            .setFont(getBoldFont())
+            .setAwtTooltip(true);
     HintLabel label = new HintLabel();
     label.setText(text, hintHint);
     label.setIcon(null);
@@ -177,23 +182,22 @@ public class HintUtil {
     }
     return label;
   }
-  
+
   @NotNull
   public static String prepareHintText(@NotNull String text, @NotNull HintHint hintHint) {
     return prepareHintText(new Html(text), hintHint);
   }
-  
+
   public static String prepareHintText(@NotNull Html text, @NotNull HintHint hintHint) {
     String htmlBody = UIUtil.getHtmlBody(text);
     return String.format(
-      "<html><head>%s</head><body>%s</body></html>",
-      UIUtil.getCssFontDeclaration(hintHint.getTextFont(), hintHint.getTextForeground(), hintHint.getLinkForeground(), hintHint.getUlImg()),
-      htmlBody
+            "<html><head>%s</head><body>%s</body></html>",
+            UIUtil.getCssFontDeclaration(hintHint.getTextFont(), hintHint.getTextForeground(), hintHint.getLinkForeground(), hintHint.getUlImg()),
+            htmlBody
     );
   }
 
   private static class HintLabel extends JPanel {
-
     private JEditorPane myPane;
     private SimpleColoredComponent myColored;
     private JLabel myIcon;
@@ -202,8 +206,12 @@ public class HintUtil {
       setLayout(new BorderLayout());
     }
 
+    private HintLabel(@NotNull SimpleColoredComponent component) {
+      this();
+      setText(component);
+    }
 
-    public void setText(SimpleColoredComponent colored) {
+    public void setText(@NotNull SimpleColoredComponent colored) {
       clearText();
 
       myColored = colored;

@@ -16,7 +16,6 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
@@ -34,7 +33,9 @@ public class DefaultConditionComboBoxPanel<B extends XBreakpoint<?>> extends XBr
 
   private XDebuggerExpressionComboBox myConditionComboBox;
 
-  public DefaultConditionComboBoxPanel(Project project, XDebuggerEditorsProvider debuggerEditorsProvider, XSourcePosition sourcePosition) {
+  public DefaultConditionComboBoxPanel(Project project,
+                                       XDebuggerEditorsProvider debuggerEditorsProvider,
+                                       XSourcePosition sourcePosition) {
     myConditionComboBox = new XDebuggerExpressionComboBox(project, debuggerEditorsProvider, HISTORY_KEY, sourcePosition);
   }
 
@@ -46,15 +47,12 @@ public class DefaultConditionComboBoxPanel<B extends XBreakpoint<?>> extends XBr
 
   @Override
   public void saveTo(@NotNull B breakpoint) {
-    final String condition = StringUtil.nullize(myConditionComboBox.getText(), true);
-    breakpoint.setCondition(condition);
-    if (condition != null) {
-      myConditionComboBox.saveTextInHistory();
-    }
+    breakpoint.setConditionExpression(myConditionComboBox.getExpression());
+    myConditionComboBox.saveTextInHistory();
   }
 
   @Override
   public void loadFrom(@NotNull B breakpoint) {
-    myConditionComboBox.setText(StringUtil.notNullize(breakpoint.getCondition()));
+    myConditionComboBox.setExpression(breakpoint.getConditionExpression());
   }
 }

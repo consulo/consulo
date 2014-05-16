@@ -22,8 +22,8 @@ import com.intellij.psi.codeStyle.NameUtil;
 import org.jetbrains.annotations.Nullable;
 
 /**
-* @author Konstantin Bulenkov
-*/
+ * @author Konstantin Bulenkov
+ */
 public class SpeedSearchComparator {
   private MinusculeMatcher myMinusculeMatcher;
   private String myRecentSearchText;
@@ -37,7 +37,7 @@ public class SpeedSearchComparator {
   public SpeedSearchComparator(boolean shouldMatchFromTheBeginning) {
     this(shouldMatchFromTheBeginning, false);
   }
-  
+
   public SpeedSearchComparator(boolean shouldMatchFromTheBeginning, boolean shouldMatchCamelCase) {
     myShouldMatchFromTheBeginning = shouldMatchFromTheBeginning;
     myShouldMatchCamelCase = shouldMatchCamelCase;

@@ -16,14 +16,15 @@
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author nik
+ * This action works only in the variables view, it is not generic action like {@see com.intellij.xdebugger.impl.actions.AddToWatchesAction}
  */
-public class XAddToWatchesAction extends XDebuggerTreeActionBase {
+class XAddToWatchesAction extends XDebuggerTreeActionBase {
   @Override
   protected boolean isEnabled(@NotNull final XValueNodeImpl node, @NotNull AnActionEvent e) {
     return super.isEnabled(node, e) && node.getValueContainer().getEvaluationExpression() != null && e.getData(XWatchesView.DATA_KEY) != null;
@@ -34,7 +35,7 @@ public class XAddToWatchesAction extends XDebuggerTreeActionBase {
     XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
     String expression = node.getValueContainer().getEvaluationExpression();
     if (watchesView != null && expression != null) {
-      watchesView.addWatchExpression(expression, -1, true);
+      watchesView.addWatchExpression(XExpressionImpl.fromText(expression), -1, true);
     }
   }
 }

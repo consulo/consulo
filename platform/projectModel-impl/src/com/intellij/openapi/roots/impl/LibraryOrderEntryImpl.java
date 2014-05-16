@@ -55,7 +55,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
   private final MyOrderEntryLibraryTableListener myLibraryListener = new MyOrderEntryLibraryTableListener();
 
   LibraryOrderEntryImpl(@NotNull Library library, @NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootModel);
+    super(rootModel, projectRootManager);
     LOGGER.assertTrue(library.getTable() != null);
     myLibrary = library;
     myProjectRootManagerImpl = projectRootManager;
@@ -65,7 +65,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
 
   LibraryOrderEntryImpl(@NotNull Element element, @NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl projectRootManager)
           throws InvalidDataException {
-    super(rootModel);
+    super(rootModel, projectRootManager);
     LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     myProjectRootManagerImpl = projectRootManager;
@@ -82,7 +82,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
   private LibraryOrderEntryImpl(@NotNull LibraryOrderEntryImpl that,
                                 @NotNull RootModelImpl rootModel,
                                 @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootModel);
+    super(rootModel, projectRootManager);
     if (that.myLibrary == null) {
       myLibraryName = that.myLibraryName;
       myLibraryLevel = that.myLibraryLevel;
@@ -101,7 +101,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
                                @NotNull String level,
                                @NotNull RootModelImpl rootModel,
                                @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootModel);
+    super(rootModel, projectRootManager);
     myProjectRootManagerImpl = projectRootManager;
     searchForLibrary(name, level);
     addListeners();
@@ -262,6 +262,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
         myLibrary = newLibrary;
         myLibraryName = null;
         myLibraryLevel = null;
+        updateFromRootProviderAndSubscribe();
       }
     }
   }
@@ -271,6 +272,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
       myLibraryName = myLibrary.getName();
       myLibraryLevel = myLibrary.getTable().getTableLevel();
       myLibrary = null;
+      updateFromRootProviderAndSubscribe();
     }
   }
 

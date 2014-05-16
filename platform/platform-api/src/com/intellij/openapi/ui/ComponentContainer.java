@@ -25,5 +25,5 @@ public interface ComponentContainer extends Disposable {
   JComponent getComponent();
   JComponent getPreferredFocusableComponent();
 
-  
+
 }

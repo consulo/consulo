@@ -51,7 +51,7 @@ public class IconDeferrerImpl extends IconDeferrer {
 
   public IconDeferrerImpl(MessageBus bus) {
     final MessageBusConnection connection = bus.connect();
-    connection.subscribe(PsiModificationTracker.OUT_OF_CODE_TOPIC, new PsiModificationTracker.Listener() {
+    connection.subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
       @Override
       public void modificationCountChanged() {
         clear();

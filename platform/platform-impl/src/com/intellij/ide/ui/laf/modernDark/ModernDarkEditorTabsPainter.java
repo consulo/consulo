@@ -96,7 +96,7 @@ public class ModernDarkEditorTabsPainter implements JBEditorTabsPainter {
     g2d.setColor(tabColor);
     g2d.fill(selectedShape.fillPath.getShape());
 
-    g2d.setColor(Gray._155.withAlpha(180));
+    g2d.setColor(Gray._100.withAlpha(100));
     g2d.draw(selectedShape.fillPath.getShape());
 
     // fix right side due to swing stupidity (fill & draw will occupy different shapes)

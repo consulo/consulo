@@ -40,7 +40,7 @@ public class BundledSdkLoader implements ApplicationComponent {
 
           for (Sdk bundledSdk : bundledSdks) {
             if(bundledSdk instanceof SdkImpl) {
-              ((SdkImpl)bundledSdk).setBundled();
+              ((SdkImpl)bundledSdk).setBundled(true);
             }
 
             SdkTable.getInstance().addSdk(bundledSdk);

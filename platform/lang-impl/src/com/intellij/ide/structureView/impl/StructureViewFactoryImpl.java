@@ -165,7 +165,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
 
   @Override
   public StructureView createStructureView(final FileEditor fileEditor, final StructureViewModel treeModel, final Project project) {
-    return new StructureViewComponent(fileEditor, treeModel, project);
+    return createStructureView(fileEditor, treeModel, project, true);
   }
 
   @Override

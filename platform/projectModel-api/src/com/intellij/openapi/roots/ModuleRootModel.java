@@ -191,10 +191,10 @@ public interface ModuleRootModel {
   @Nullable
   <T extends ModuleExtension> T getExtension(@NotNull String key);
 
-  @NotNull
+  @Nullable
   <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz);
 
-  @NotNull
+  @Nullable
   <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key);
 
   @NotNull

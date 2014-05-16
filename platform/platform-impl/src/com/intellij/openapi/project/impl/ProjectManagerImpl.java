@@ -39,12 +39,8 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.project.ProjectReloadState;
+import com.intellij.openapi.project.*;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
@@ -408,9 +404,19 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
       cacheOpenProjects();
     }
     fireProjectOpened(project);
+    DumbService.getInstance(project).queueTask(new DumbModeTask() {
+      @Override
+      public void performInDumbMode(@NotNull ProgressIndicator indicator) {
+        waitForFileWatcher(indicator);
+      }
+
+      @Override
+      public String toString() {
+        return "wait for file watcher";
+      }
+    });
 
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-    waitForFileWatcher(project);
     boolean ok = myProgressManager.runProcessWithProgressSynchronously(new Runnable() {
       @Override
       public void run() {
@@ -464,7 +470,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
     myOpenProjectsArrayCache = myOpenProjects.toArray(new Project[myOpenProjects.size()]);
   }
 
-  private void waitForFileWatcher(@NotNull Project project) {
+  private static void waitForFileWatcher(ProgressIndicator indicator) {
     LocalFileSystem fs = LocalFileSystem.getInstance();
     if (!(fs instanceof LocalFileSystemImpl)) return;
 
@@ -472,21 +478,15 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
     if (!watcher.isOperational() || !watcher.isSettingRoots()) return;
 
     LOG.info("FW/roots waiting started");
-    Task.Modal task = new Task.Modal(project, ProjectBundle.message("project.load.progress"), true) {
-      @Override
-      public void run(@NotNull ProgressIndicator indicator) {
-        indicator.setIndeterminate(true);
-        indicator.setText(ProjectBundle.message("project.load.waiting.watcher"));
-        if (indicator instanceof ProgressWindow) {
-          ((ProgressWindow)indicator).setCancelButtonText(CommonBundle.message("button.skip"));
-        }
-        while (watcher.isSettingRoots() && !indicator.isCanceled()) {
-          TimeoutUtil.sleep(10);
-        }
-        LOG.info("FW/roots waiting finished");
-      }
-    };
-    myProgressManager.run(task);
+    indicator.setIndeterminate(true);
+    indicator.setText(ProjectBundle.message("project.load.waiting.watcher"));
+    if (indicator instanceof ProgressWindow) {
+      ((ProgressWindow)indicator).setCancelButtonText(CommonBundle.message("button.skip"));
+    }
+    while (watcher.isSettingRoots() && !indicator.isCanceled()) {
+      TimeoutUtil.sleep(10);
+    }
+    LOG.info("FW/roots waiting finished");
   }
 
   @Override

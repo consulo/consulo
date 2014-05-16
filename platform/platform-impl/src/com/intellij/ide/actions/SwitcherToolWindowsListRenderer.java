@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindow;
@@ -23,26 +22,24 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.SpeedSearchBase;
 import com.intellij.util.IconUtil;
+import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
 /**
-* @author Konstantin Bulenkov
-*/
+ * @author Konstantin Bulenkov
+ */
 class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer {
   private final SpeedSearchBase mySpeedSearch;
-  private final Map<ToolWindow, String> ids;
   private final Map<ToolWindow, String> shortcuts;
   private final boolean myPinned;
   private boolean hide = false;
 
   SwitcherToolWindowsListRenderer(SpeedSearchBase speedSearch,
-                                  Map<ToolWindow, String> ids,
                                   Map<ToolWindow, String> shortcuts, boolean pinned) {
     mySpeedSearch = speedSearch;
-    this.ids = ids;
     this.shortcuts = shortcuts;
     myPinned = pinned;
   }
@@ -54,16 +51,18 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer {
       setIcon(getIcon(tw));
       final String name;
 
+      String stripeTitle = tw.getStripeTitle();
       if (myPinned) {
-        name = ids.get(tw);
-      } else {
+        name = stripeTitle;
+      }
+      else {
         append(shortcuts.get(tw), new SimpleTextAttributes(SimpleTextAttributes.STYLE_UNDERLINE, null));
-        name = ": " + ids.get(tw);
+        name = ": " + stripeTitle;
       }
 
       append(name);
       if (mySpeedSearch != null && mySpeedSearch.isPopupActive()) {
-        hide = mySpeedSearch.matchingFragments(ids.get(tw)) == null && !StringUtil.isEmpty(mySpeedSearch.getEnteredPrefix());
+        hide = mySpeedSearch.matchingFragments(stripeTitle) == null && !StringUtil.isEmpty(mySpeedSearch.getEnteredPrefix());
       }
     }
   }
@@ -81,7 +80,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer {
   private static Icon getIcon(ToolWindow toolWindow) {
     Icon icon = toolWindow.getIcon();
     if (icon == null) {
-      return AllIcons.FileTypes.UiForm;
+      return PlatformIcons.UI_FORM_ICON;
     }
 
     icon = IconUtil.toSize(icon, 16, 16);

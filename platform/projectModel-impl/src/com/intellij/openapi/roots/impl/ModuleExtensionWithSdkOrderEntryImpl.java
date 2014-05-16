@@ -22,7 +22,6 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.VolatileNullableLazyValue;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Element;
@@ -40,23 +39,16 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @NonNls public static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
 
   private String myModuleExtensionId;
-  private VolatileNullableLazyValue<ModuleExtensionWithSdk<?>> myModuleExtensionValue = new VolatileNullableLazyValue<ModuleExtensionWithSdk<?>>() {
-    @Nullable
-    @Override
-    protected ModuleExtensionWithSdk<?> compute() {
-      return getRootModel().getExtension(myModuleExtensionId);
-    }
-  };
 
   ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull RootModelImpl rootModel) {
-    super(rootModel);
+    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
 
     myModuleExtensionId = moduleExtensionId;
     init();
   }
 
   ModuleExtensionWithSdkOrderEntryImpl(@NotNull Element element, @NotNull RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel);
+    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myModuleExtensionId =  element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
     init();
   }
@@ -155,6 +147,6 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Nullable
   @Override
   public ModuleExtensionWithSdk<?> getModuleExtension() {
-    return myModuleExtensionValue.getValue();
+    return getRootModel().getExtensionWithoutCheck(myModuleExtensionId);
   }
 }

@@ -31,6 +31,7 @@ import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -52,8 +53,7 @@ import java.util.List;
 /**
  * @author nik
  */
-public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointProperties, S extends BreakpointState> extends UserDataHolderBase
-        implements XBreakpoint<P>, Comparable<Self> {
+public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointProperties, S extends BreakpointState> extends UserDataHolderBase implements XBreakpoint<P>, Comparable<Self> {
   private static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
   @NonNls private static final String BR_NBSP = "<br>&nbsp;";
   private final XBreakpointType<Self, P> myType;
@@ -62,12 +62,15 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   private final XBreakpointManagerImpl myBreakpointManager;
   private Icon myIcon;
   private CustomizedBreakpointPresentation myCustomizedPresentation;
+  private XExpression myCondition;
+  private XExpression myLogExpression;
 
   public XBreakpointBase(final XBreakpointType<Self, P> type, XBreakpointManagerImpl breakpointManager, final @Nullable P properties, final S state) {
     myState = state;
     myType = type;
     myProperties = properties;
     myBreakpointManager = breakpointManager;
+    initExpressions();
   }
 
   protected XBreakpointBase(final XBreakpointType<Self, P> type, XBreakpointManagerImpl breakpointManager, S breakpointState) {
@@ -78,6 +81,14 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     if (myProperties != null) {
       ComponentSerializationUtil.loadComponentState(myProperties, myState.getPropertiesElement());
     }
+    initExpressions();
+  }
+
+  private void initExpressions() {
+    BreakpointState.Condition condition = myState.getCondition();
+    myCondition = condition != null ? condition.toXExpression() : null;
+    BreakpointState.LogExpression expression = myState.getLogExpression();
+    myLogExpression = expression != null ? expression.toXExpression() : null;
   }
 
   public final Project getProject() {
@@ -149,26 +160,54 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
   @Override
   public String getLogExpression() {
-    return myState.getLogExpression();
+    return myLogExpression != null ? myLogExpression.getExpression() : null;
   }
 
   @Override
   public void setLogExpression(@Nullable final String expression) {
     if (!Comparing.equal(getLogExpression(), expression)) {
-      myState.setLogExpression(expression);
+      myLogExpression = XExpressionImpl.fromText(expression);
+      fireBreakpointChanged();
+    }
+  }
+
+  @Nullable
+  @Override
+  public XExpression getLogExpressionObject() {
+    return myLogExpression;
+  }
+
+  @Override
+  public void setLogExpressionObject(@Nullable XExpression expression) {
+    if (!Comparing.equal(getLogExpressionObject(), expression)) {
+      myLogExpression = expression;
       fireBreakpointChanged();
     }
   }
 
   @Override
   public String getCondition() {
-    return myState.getCondition();
+    return myCondition != null ? myCondition.getExpression() : null;
   }
 
   @Override
   public void setCondition(@Nullable final String condition) {
     if (!Comparing.equal(condition, getCondition())) {
-      myState.setCondition(condition);
+      myCondition = XExpressionImpl.fromText(condition);
+      fireBreakpointChanged();
+    }
+  }
+
+  @Nullable
+  @Override
+  public XExpression getConditionExpression() {
+    return myCondition;
+  }
+
+  @Override
+  public void setConditionExpression(@Nullable XExpression condition) {
+    if (!Comparing.equal(condition, getConditionExpression())) {
+      myCondition = condition;
       fireBreakpointChanged();
     }
   }
@@ -190,12 +229,14 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
   @Override
   @NotNull
-  public XBreakpointType<Self, P> getType() {
+  public XBreakpointType<Self,P> getType() {
     return myType;
   }
 
   public S getState() {
     Element propertiesElement = myProperties != null ? XmlSerializer.serialize(myProperties.getState(), SERIALIZATION_FILTERS) : null;
+    myState.setCondition(myCondition != null && !myCondition.getExpression().isEmpty() ? new BreakpointState.Condition(myCondition) : null);
+    myState.setLogExpression(myLogExpression != null && !myLogExpression.getExpression().isEmpty() ? new BreakpointState.LogExpression(myLogExpression) : null);
     myState.setPropertiesElement(propertiesElement);
     return myState;
   }
@@ -213,8 +254,15 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   public void setGroup(String group) {
-    group = StringUtil.nullize(group);
-    myState.setGroup(group);
+    myState.setGroup(StringUtil.nullize(group));
+  }
+
+  public String getUserDescription() {
+    return myState.getDescription();
+  }
+
+  public void setUserDescription(String description) {
+    myState.setDescription(StringUtil.nullize(description));
   }
 
   public void dispose() {
@@ -428,15 +476,14 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
       return createBreakpointDraggableObject();
     }
 
-    private XBreakpointBase<?, ?, ?> getBreakpoint() {
+    private XBreakpointBase<?,?,?> getBreakpoint() {
       return XBreakpointBase.this;
     }
-
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof XLineBreakpointImpl.BreakpointGutterIconRenderer &&
-             getBreakpoint() == ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getBreakpoint() &&
-             Comparing.equal(getIcon(), ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getIcon());
+      return obj instanceof XLineBreakpointImpl.BreakpointGutterIconRenderer
+             && getBreakpoint() == ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getBreakpoint()
+             && Comparing.equal(getIcon(), ((XLineBreakpointImpl.BreakpointGutterIconRenderer)obj).getIcon());
     }
 
     @Override

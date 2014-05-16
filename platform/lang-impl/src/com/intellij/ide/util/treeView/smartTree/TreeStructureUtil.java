@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@
 package com.intellij.ide.util.treeView.smartTree;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import com.intellij.ui.PlaceHolder;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 
@@ -24,6 +27,8 @@ import java.util.HashSet;
  * @author Maxim.Mossienko
  */
 public class TreeStructureUtil {
+  public static final String PLACE = "StructureViewPopup";
+
   private TreeStructureUtil() {}
 
   public static Object[] getChildElementsFromTreeStructure(AbstractTreeStructure treeStructure, Object element) {
@@ -36,5 +41,14 @@ public class TreeStructureUtil {
     }
 
     return items;
+  }
+
+  public static boolean isInStructureViewPopup(@NotNull PlaceHolder<String> model) {
+    return PLACE.equals(model.getPlace());
+  }
+
+  @NonNls
+  public static String getPropertyName(String propertyName) {
+    return propertyName + ".file.structure.state";
   }
 }

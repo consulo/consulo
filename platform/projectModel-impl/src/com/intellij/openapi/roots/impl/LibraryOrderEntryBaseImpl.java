@@ -32,15 +32,19 @@ import org.jetbrains.annotations.Nullable;
  */
 @Logger
 abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements LibraryOrSdkOrderEntry {
+  protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @NotNull
   protected DependencyScope myScope = DependencyScope.COMPILE;
+  @Nullable
+  private RootProvider myCurrentlySubscribedRootProvider = null;
 
-  LibraryOrderEntryBaseImpl(@NotNull RootModelImpl rootModel) {
+  LibraryOrderEntryBaseImpl(@NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
     super(rootModel);
+    myProjectRootManagerImpl = instanceImpl;
   }
 
   protected final void init() {
-
+    updateFromRootProviderAndSubscribe();
   }
 
   @Override
@@ -78,8 +82,38 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
     return getRootModel().getModule();
   }
 
+  protected void updateFromRootProviderAndSubscribe() {
+    getRootModel().makeExternalChange(new Runnable() {
+      @Override
+      public void run() {
+        resubscribe(getRootProvider());
+      }
+    });
+  }
+
+  private void resubscribe(RootProvider wrapper) {
+    unsubscribe();
+    subscribe(wrapper);
+  }
+
+  private void subscribe(@Nullable RootProvider wrapper) {
+    if (wrapper != null) {
+      myProjectRootManagerImpl.subscribeToRootProvider(this, wrapper);
+    }
+    myCurrentlySubscribedRootProvider = wrapper;
+  }
+
+
+  private void unsubscribe() {
+    if (myCurrentlySubscribedRootProvider != null) {
+      myProjectRootManagerImpl.unsubscribeFromRootProvider(this, myCurrentlySubscribedRootProvider);
+    }
+    myCurrentlySubscribedRootProvider = null;
+  }
+
   @Override
   public void dispose() {
+    unsubscribe();
     super.dispose();
   }
 }
