@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
   private final ToolWindowManagerListener myWindowManagerListener = new MyToolWindowManagerListener();
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
   private String myRecentEnteredPrefix;
-  private SpeedSearchComparator myComparator = new SpeedSearchComparator();
+  private SpeedSearchComparator myComparator = new SpeedSearchComparator(false);
   private boolean myClearSearchOnNavigateNoMatch = false;
 
   @NonNls protected static final String ENTERED_PREFIX_PROPERTY_NAME = "enteredPrefix";
@@ -160,11 +160,11 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     return new ViewIterator(this, startingIndex < 0 ? getElementCount() : startingIndex);
   }
 
-  public void addChangeListener(PropertyChangeListener listener) {
+  public void addChangeListener(@NotNull PropertyChangeListener listener) {
     myChangeSupport.addPropertyChangeListener(listener);
   }
 
-  public void removeChangeListener(PropertyChangeListener listener) {
+  public void removeChangeListener(@NotNull PropertyChangeListener listener) {
     myChangeSupport.removePropertyChangeListener(listener);
   }
 
@@ -464,13 +464,13 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
         return;
       }
       if (
-        i == KeyEvent.VK_ENTER ||
-        i == KeyEvent.VK_ESCAPE ||
-        i == KeyEvent.VK_PAGE_UP ||
-        i == KeyEvent.VK_PAGE_DOWN ||
-        i == KeyEvent.VK_LEFT ||
-        i == KeyEvent.VK_RIGHT
-        ) {
+              i == KeyEvent.VK_ENTER ||
+              i == KeyEvent.VK_ESCAPE ||
+              i == KeyEvent.VK_PAGE_UP ||
+              i == KeyEvent.VK_PAGE_DOWN ||
+              i == KeyEvent.VK_LEFT ||
+              i == KeyEvent.VK_RIGHT
+              ) {
         manageSearchPopup(null);
         if (i == KeyEvent.VK_ESCAPE) {
           e.consume();
@@ -496,14 +496,13 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
   }
 
   private void manageSearchPopup(@Nullable SearchPopup searchPopup) {
-    final Project project;
+    Project project = null;
     if (ApplicationManager.getApplication() != null && !ApplicationManager.getApplication().isDisposed()) {
       project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myComponent));
     }
-    else {
+    if (project != null && project.isDefault()) {
       project = null;
     }
-
     if (mySearchPopup != null) {
       myPopupLayeredPane.remove(mySearchPopup);
       myPopupLayeredPane.validate();
