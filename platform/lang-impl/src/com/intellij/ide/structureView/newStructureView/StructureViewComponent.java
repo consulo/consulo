@@ -428,6 +428,10 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
   protected DefaultActionGroup createActionGroup(boolean togglesOnly) {
     DefaultActionGroup result = new DefaultActionGroup();
+    if(addCustomActions(result)){
+      result.addSeparator();
+    }
+
     Sorter[] sorters = myTreeModel.getSorters();
     for (final Sorter sorter : sorters) {
       if (sorter.isVisible()) {
@@ -463,6 +467,10 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       result.add(myAutoScrollFromSourceHandler.createToggleAction());
     }
     return result;
+  }
+
+  protected boolean addCustomActions(@NotNull DefaultActionGroup actionGroup) {
+    return false;
   }
 
   protected void addGroupByActions(DefaultActionGroup result) {
