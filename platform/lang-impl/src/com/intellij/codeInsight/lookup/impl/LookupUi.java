@@ -105,7 +105,6 @@ class LookupUi {
     myScrollPane = new JBScrollPane(lookup.getList());
     myScrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
     myScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    myScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(13, -1));
     ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(myScrollPane.getVerticalScrollBar(), new Factory<JButton>() {
       @Override
       public JButton create() {
