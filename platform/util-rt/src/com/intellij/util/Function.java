@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package com.intellij.util;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -45,6 +47,23 @@ public interface Function<Param, Result> {
     @Override
     public R fun(P p) {
       return (R)p;
+    }
+  }
+
+  interface Mono<T> extends Function<T, T> {}
+
+  final class InstanceOf<P, R extends P> implements NullableFunction<P, R> {
+
+    private final Class<R> myResultClass;
+
+    public InstanceOf(Class<R> resultClass) {
+      myResultClass = resultClass;
+    }
+
+    @Override
+    @Nullable
+    public R fun(P p) {
+      return p.getClass().isAssignableFrom(myResultClass) ? (R)p : null;
     }
   }
 

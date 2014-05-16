@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandAdapter;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
@@ -116,9 +117,9 @@ public class TemplateState implements Disposable {
       public void commandStarted(CommandEvent event) {
         if (myEditor != null) {
           final int offset = myEditor.getCaretModel().getOffset();
-          myDocumentChangesTerminateTemplate = (myCurrentSegmentNumber >= 0 &&
-                                                (offset < mySegments.getSegmentStart(myCurrentSegmentNumber) ||
-                                                 offset > mySegments.getSegmentEnd(myCurrentSegmentNumber)));
+          myDocumentChangesTerminateTemplate = myCurrentSegmentNumber >= 0 &&
+                                               (offset < mySegments.getSegmentStart(myCurrentSegmentNumber) ||
+                                                offset > mySegments.getSegmentEnd(myCurrentSegmentNumber));
         }
         started = true;
       }
@@ -362,11 +363,11 @@ public class TemplateState implements Disposable {
           mySegments.addSegment(segmentOffset, segmentOffset);
         }
 
-        LOG.assertTrue(myTemplateRange.isValid(), myTemplateRange.toString());
+        LOG.assertTrue(myTemplateRange.isValid(), getRangesDebugInfo());
         calcResults(false);
-        LOG.assertTrue(myTemplateRange.isValid(), myTemplateRange.toString());
+        LOG.assertTrue(myTemplateRange.isValid(), getRangesDebugInfo());
         calcResults(false);  //Fixed SCR #[vk500] : all variables should be recalced twice on start.
-        LOG.assertTrue(myTemplateRange.isValid(), myTemplateRange.toString());
+        LOG.assertTrue(myTemplateRange.isValid(), getRangesDebugInfo());
         doReformat(null);
 
         int nextVariableNumber = getNextVariableNumber(-1);
@@ -390,6 +391,11 @@ public class TemplateState implements Disposable {
         }
       }
     });
+  }
+
+  private String getRangesDebugInfo() {
+    return myTemplateRange + "\ntemplateKey: " + myTemplate.getKey() + "\ntemplateText: " + myTemplate.getTemplateText() +
+           "\ntemplateString: " + myTemplate;
   }
 
   private void doReformat(final TextRange range) {
@@ -468,13 +474,9 @@ public class TemplateState implements Disposable {
       return "no template";
     }
 
-    String message = template.getKey();
-    if (message == null || message.length() == 0) {
-      message = template.getString();
-      if (message == null) {
-        message = template.getTemplateText();
-      }
-    }
+    String message = StringUtil.notNullize(template.getKey());
+    message += "\n\nTemplate#string: " + StringUtil.notNullize(template.getString());
+    message += "\n\nTemplate#text: " + StringUtil.notNullize(template.getTemplateText());
     return message;
   }
 
@@ -577,7 +579,7 @@ public class TemplateState implements Disposable {
     return myTemplate.getExpressionAt(myCurrentVariableNumber);
   }
 
-  private void runLookup(final List<TemplateExpressionLookupElement> lookupItems, String advertisingText) {
+  private void runLookup(final List<TemplateExpressionLookupElement> lookupItems, @Nullable String advertisingText) {
     if (myEditor == null) return;
 
     final LookupManager lookupManager = LookupManager.getInstance(myProject);
@@ -589,7 +591,9 @@ public class TemplateState implements Disposable {
       lookup.setStartCompletionWhenNothingMatches(true);
     }
 
-    lookup.setAdvertisementText(advertisingText);
+    if (advertisingText != null) {
+      lookup.addAdvertisement(advertisingText, null);
+    }
     lookup.refreshUi(true, true);
     ourLookupShown = true;
     lookup.addLookupListener(new LookupAdapter() {
@@ -623,7 +627,7 @@ public class TemplateState implements Disposable {
     if (myProcessor != null && myCurrentVariableNumber >= 0) {
       final String variableName = myTemplate.getVariableNameAt(myCurrentVariableNumber);
       final TextResult value = getVariableValue(variableName);
-      if (value != null && value.getText().length() > 0) {
+      if (value != null && !value.getText().isEmpty()) {
         if (!myProcessor.process(variableName, value.getText())) {
           finishTemplateEditing(false); // nextTab(); ?
           return;
@@ -633,7 +637,7 @@ public class TemplateState implements Disposable {
 
     fixOverlappedSegments(myCurrentSegmentNumber);
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    WriteCommandAction.runWriteCommandAction(myProject, new Runnable() {
       @Override
       public void run() {
         BitSet calcedSegments = new BitSet();
@@ -1136,7 +1140,7 @@ public class TemplateState implements Disposable {
             final int offset = mySegments.getSegmentStart(endSegmentNumber);
             final int lineStart = myDocument.getLineStartOffset(myDocument.getLineNumber(offset));
             // if $END$ is at line start, put it at correct indentation
-            if (myDocument.getCharsSequence().subSequence(lineStart, offset).toString().trim().length() == 0) {
+            if (StringUtil.isEmptyOrSpaces(myDocument.getCharsSequence().subSequence(lineStart, offset))) {
               final int adjustedOffset = style.adjustLineIndent(file, offset);
               mySegments.replaceSegmentAt(endSegmentNumber, adjustedOffset, adjustedOffset);
             }
