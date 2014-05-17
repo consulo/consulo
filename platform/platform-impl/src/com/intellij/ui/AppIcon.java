@@ -86,7 +86,7 @@ public abstract class AppIcon {
 
     @Override
     public final boolean setProgress(Project project, Object processId, AppIconScheme.Progress scheme, double value, boolean isOk) {
-      if (!isAppActive() && Registry.is("ide.appIcon.progress") && (myCurrentProcessId == null || myCurrentProcessId.equals(processId))) {
+      if (Registry.is("ide.appIcon.progress") && (myCurrentProcessId == null || myCurrentProcessId.equals(processId))) {
         return _setProgress(getIdeFrame(project), processId, scheme, value, isOk);
       }
       else {
