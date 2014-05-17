@@ -86,7 +86,7 @@ public abstract class AppIcon {
 
     @Override
     public final boolean setProgress(Project project, Object processId, AppIconScheme.Progress scheme, double value, boolean isOk) {
-      if (Registry.is("ide.appIcon.progress") && (myCurrentProcessId == null || myCurrentProcessId.equals(processId))) {
+      if (!isAppActive() && Registry.is("ide.appIcon.progress") && (myCurrentProcessId == null || myCurrentProcessId.equals(processId))) {
         return _setProgress(getIdeFrame(project), processId, scheme, value, isOk);
       }
       else {
@@ -298,7 +298,7 @@ public abstract class AppIcon {
         final int y = myAppImage.getHeight() - progressHeight - yInset;
         Shape rect = new RoundRectangle2D.Double(xInset, y, width, progressHeight, progressHeight, progressHeight);
         Shape border =
-          new RoundRectangle2D.Double(xInset - 1, y - 1, width + 2, progressHeight + 2, (progressHeight + 2), (progressHeight + 2));
+                new RoundRectangle2D.Double(xInset - 1, y - 1, width + 2, progressHeight + 2, (progressHeight + 2), (progressHeight + 2));
         Shape progress = new RoundRectangle2D.Double(xInset + 1, y + 1, (width - 2) * value, progressHeight - 1, (progressHeight - 2),
                                                      (progressHeight - 1));
         AppImage appImg = createAppImage();
@@ -309,7 +309,7 @@ public abstract class AppIcon {
         appImg.myG2d.fill(rect);
         final Color color = isOk ? scheme.getOkColor() : scheme.getErrorColor();
         final Paint paint = UIUtil.getGradientPaint(xInset + 1, y + 1, color.brighter(),
-                                                      xInset + 1, y + progressHeight - 1, color.darker().darker());
+                                                    xInset + 1, y + progressHeight - 1, color.darker().darker());
         appImg.myG2d.setPaint(paint);
         appImg.myG2d.fill(progress);
         appImg.myG2d.setColor(Color.GRAY.darker().darker());
