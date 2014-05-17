@@ -2746,4 +2746,10 @@ public class UIUtil {
       catch (IllegalAccessException e) { LOG.debug(e); }
     }
   }
+
+  @NotNull
+  public static String rightArrow() {
+    char rightArrow = '\u2192';
+    return getLabelFont().canDisplay(rightArrow) ? String.valueOf(rightArrow) : "->";
+  }
 }
