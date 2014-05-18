@@ -35,7 +35,7 @@ public class TestFinishedEvent extends TreeNodeEvent {
     myDuration = duration;
   }
 
-  public TestFinishedEvent(@NotNull String name, int duration) {
+  public TestFinishedEvent(@NotNull String name, long duration) {
     this(name, -1, duration);
   }
 

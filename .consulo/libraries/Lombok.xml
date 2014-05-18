@@ -3,7 +3,6 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/lombok-consulo-0.11.9.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/lombok-core-0.11.9.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/lombok-runtime-0.11.9.jar!/" />
     </CLASSES>
     <DOCUMENTATION />
     <SOURCES />
