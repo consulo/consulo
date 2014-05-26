@@ -703,11 +703,6 @@
     <extensionPoint name="executionTargetProvider"
                     interface="com.intellij.execution.ExecutionTargetProvider"/>
 
-    <extensionPoint name="runConfigurationExtension"
-                    interface="com.intellij.execution.RunConfigurationExtension"/>
-
-    <extensionPoint name="jreProvider"
-                    interface="com.intellij.execution.ui.JreProvider"/>
 
     <extensionPoint name="stepsBeforeRunProvider"
                     interface="com.intellij.execution.BeforeRunTaskProvider"
