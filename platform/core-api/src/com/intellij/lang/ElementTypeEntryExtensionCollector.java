@@ -17,9 +17,10 @@ package com.intellij.lang;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.containers.HashMap;
+import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.Predicate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -34,16 +35,12 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
 
   private final ExtensionPointName<E> myExtensionPointName;
 
-  private final Map<IElementType, E> myMap = new HashMap<IElementType, E>();
-
-  private ElementTypeEntryExtensionCollector(@NotNull String epName) {
-    myExtensionPointName = ExtensionPointName.create(epName);
-  }
-
-  @NotNull
-  public E getValue(@NotNull IElementType elementType) {
-    E factory = myMap.get(elementType);
-    if (factory == null) {
+  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+  private final Map<IElementType, E> myMap = new ConcurrentFactoryMap<IElementType, E>() {
+    @Nullable
+    @Override
+    protected E create(IElementType elementType) {
+      E factory = null;
       for (E e : myExtensionPointName.getExtensions()) {
         if (e.apply(elementType)) {
           factory = e;
@@ -53,12 +50,17 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
       if (factory == null) {
         throw new IllegalArgumentException("ElementType " + elementType + " is not handled in " + myExtensionPointName);
       }
-      myMap.put(elementType, factory);
       return factory;
     }
-    else {
-      return factory;
-    }
+  };
+
+  private ElementTypeEntryExtensionCollector(@NotNull String epName) {
+    myExtensionPointName = ExtensionPointName.create(epName);
+  }
+
+  @NotNull
+  public E getValue(@NotNull IElementType elementType) {
+    return myMap.get(elementType);
   }
 
   @NotNull
