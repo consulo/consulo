@@ -18,10 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleComponent;
-import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -48,7 +45,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   private final ProjectRootManagerImpl myProjectRootManager;
   private final VirtualFilePointerManager myFilePointerManager;
   private RootModelImpl myRootModel;
-  private final ModuleFileIndexImpl myFileIndex;
   private boolean myIsDisposed = false;
   private boolean isModuleAdded = false;
   private final OrderRootsCache myOrderRootsCache;
@@ -63,8 +59,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     myProjectRootManager = projectRootManager;
     myFilePointerManager = filePointerManager;
 
-    myFileIndex = new ModuleFileIndexImpl(myModule, directoryIndex);
-
     myRootModel = new RootModelImpl(this, myProjectRootManager, myFilePointerManager);
     myOrderRootsCache = new OrderRootsCache(module);
   }
@@ -78,7 +72,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @Override
   @NotNull
   public ModuleFileIndex getFileIndex() {
-    return myFileIndex;
+    return ModuleServiceManager.getService(myModule, ModuleFileIndex.class);
   }
 
   @Override
