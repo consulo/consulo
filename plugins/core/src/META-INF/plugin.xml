@@ -248,10 +248,6 @@
 
     <extensionPoint name="vcsRootChecker" interface="com.intellij.openapi.vcs.VcsRootChecker"/>
 
-    <!--<extensionPoint name="writingAccessProvider"-->
-    <!--interface="com.intellij.openapi.vfs.WritingAccessProvider"-->
-    <!--area="CONSULO_PROJECT"/>-->
-
     <extensionPoint name="vcs.fileStatusProvider"
                     interface="com.intellij.openapi.vcs.impl.FileStatusProvider"
                     area="CONSULO_PROJECT"/>
@@ -1571,7 +1567,6 @@
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
-    <!--TODO [VISTALL] <statistics.usagesCollector implementation="com.intellij.compiler.CompilerSettingsUsageCollector"/>    -->
 
     <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
 
