@@ -19,7 +19,6 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -226,17 +225,11 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    for (ProjectExtension extension : Extensions.getExtensions(ProjectExtension.EP_NAME, myProject)) {
-      extension.readExternal(element);
-    }
   }
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
     element.setAttribute(ATTRIBUTE_VERSION, "2");
-    for (ProjectExtension extension : Extensions.getExtensions(ProjectExtension.EP_NAME, myProject)) {
-      extension.writeExternal(element);
-    }
   }
 
   private boolean myMergedCallStarted = false;
