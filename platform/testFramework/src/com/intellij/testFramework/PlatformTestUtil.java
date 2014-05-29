@@ -719,12 +719,9 @@ public class PlatformTestUtil {
     return writer.getBuffer().toString();
   }
 
+  @Deprecated
   public static String getCommunityPath() {
-    final String homePath = PathManager.getHomePath();
-    if (new File(homePath, "community").exists()) {
-      return homePath + File.separatorChar + "community";
-    }
-    return homePath;
+    return PathManager.getHomePath();
   }
 
   public static Comparator<AbstractTreeNode> createComparator(final Queryable.PrintInfo printInfo) {
