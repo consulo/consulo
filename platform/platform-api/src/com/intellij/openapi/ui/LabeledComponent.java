@@ -105,11 +105,12 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
     myLabel.setEnabled(enabled);
   }
 
-  public void setLabelLocation(@NonNls String borderConstrains) {
+  public LabeledComponent<Comp> setLabelLocation(@NonNls String borderConstrains) {
     String constrains = findBorderConstrains(borderConstrains);
-    if (constrains == null || constrains.equals(myLabelConstraints)) return;
+    if (constrains == null || constrains.equals(myLabelConstraints)) return this;
     myLabelConstraints = borderConstrains;
     insertLabel();
+    return this;
   }
 
   public String getLabelLocation() {
