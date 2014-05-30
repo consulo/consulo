@@ -49,11 +49,13 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
     return this;
   }
 
+  @NotNull
   @Override
   public KeyDescriptor<FileType> getKeyDescriptor() {
     return this;
   }
 
+  @NotNull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return this;

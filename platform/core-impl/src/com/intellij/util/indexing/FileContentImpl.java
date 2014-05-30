@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
   private byte[] myContent;
   private CharSequence myContentAsText;
   private final long myStamp;
+  private final byte[] myHash;
 
   @Override
   public Project getProject() {
@@ -66,18 +67,21 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     }
 
     if (psi == null) {
-      Project project = getProject();
-      if (project == null) {
-        project = DefaultProjectFactory.getInstance().getDefaultProject();
-      }
-      final Language language = ((LanguageFileType)getFileTypeWithoutSubstitution()).getLanguage();
-      final Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, getFile(), project);
-      psi = PsiFileFactory.getInstance(project).createFileFromText(getFileName(), substitutedLanguage, getContentAsText(), false, false, true);
-
+      psi = createFileFromText(getContentAsText());
       psi.putUserData(IndexingDataKeys.VIRTUAL_FILE, getFile());
       putUserData(CACHED_PSI, psi);
     }
     return psi;
+  }
+
+  public PsiFile createFileFromText(@NotNull CharSequence text) {
+    Project project = getProject();
+    if (project == null) {
+      project = DefaultProjectFactory.getInstance().getDefaultProject();
+    }
+    final Language language = ((LanguageFileType)getFileTypeWithoutSubstitution()).getLanguage();
+    final Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, getFile(), project);
+    return PsiFileFactory.getInstance(project).createFileFromText(getFileName(), substitutedLanguage, text, false, false, true);
   }
 
   public static class IllegalDataException extends RuntimeException {
@@ -87,22 +91,32 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
   }
 
   public FileContentImpl(@NotNull final VirtualFile file, @NotNull final CharSequence contentAsText, final Charset charset) {
-    this(file, contentAsText, null, charset, -1);
+    this(file, contentAsText, null, charset, -1, null);
   }
 
   public FileContentImpl(@NotNull final VirtualFile file, @NotNull final CharSequence contentAsText, final Charset charset, long documentStamp) {
-    this(file, contentAsText, null, charset, documentStamp);
+    this(file, contentAsText, null, charset, documentStamp, null);
   }
 
   public FileContentImpl(@NotNull final VirtualFile file, @NotNull final byte[] content) {
-    this(file, null, content, LoadTextUtil.detectCharsetAndSetBOM(file, content), -1);
+    this(file, content, null);
+  }
+
+  public FileContentImpl(@NotNull final VirtualFile file, @NotNull final byte[] content, byte[] hash) {
+    this(file, null, content, LoadTextUtil.detectCharsetAndSetBOM(file, content), -1, hash);
   }
 
   public FileContentImpl(@NotNull final VirtualFile file) {
-    this(file, null, null, null, -1);
+    this(file, null, null, null, -1, null);
   }
 
-  private FileContentImpl(@NotNull VirtualFile file, CharSequence contentAsText, byte[] content, Charset charset, long stamp) {
+  private FileContentImpl(@NotNull VirtualFile file,
+                          CharSequence contentAsText,
+                          byte[] content,
+                          Charset charset,
+                          long stamp,
+                          byte[] hash
+  ) {
     myFile = file;
     myContentAsText = contentAsText;
     myContent = content;
@@ -111,6 +125,7 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
     // remember name explicitly because the file could be renamed afterwards
     myFileName = file.getName();
     myStamp = stamp;
+    myHash = hash;
   }
 
   @NotNull
@@ -201,5 +216,9 @@ public final class FileContentImpl extends UserDataHolderBase implements FileCon
   @Override
   public String toString() {
     return myFileName;
+  }
+
+  public byte[] getHash() {
+    return myHash;
   }
 }

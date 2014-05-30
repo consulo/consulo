@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,15 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 
+// Assigns / store unique integral id for Data instances.
+// Btree stores mapping between integer hash code into integer that interpreted in following way:
+// Positive value is address in myFile with unique key record.
+// When there is hash value collisions the value is negative and it is -address of collision list (keyAddress, nextCollisionAddress)+
+// It is possible to directly associate nonnegative int or long with Data instances when Data is integral value and represent it's own hash code
+// e.g. Data are integers and hash code for them are values themselves
 public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Data> {
   private static final int PAGE_SIZE;
-  private static final int DEFAULT_PAGE_SIZE = 4096;
+  private static final int DEFAULT_PAGE_SIZE = 32768;
 
   static {
     int pageSize;
@@ -75,12 +81,12 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
                                    @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
     super(file,
           new ResizeableMappedFile(
-            file,
-            initialSize,
-            lockContext,
-            VALUE_PAGE_SIZE,
-            true,
-            IOUtil.ourByteBuffersUseNativeByteOrder
+                  file,
+                  initialSize,
+                  lockContext,
+                  VALUE_PAGE_SIZE,
+                  true,
+                  IOUtil.ourByteBuffersUseNativeByteOrder
           ),
           dataDescriptor,
           initialSize,
@@ -180,9 +186,11 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     return pageStart;
   }
 
+  @Override
   public boolean processAllDataObject(@NotNull final Processor<Data> processor, @Nullable final DataFilter filter) throws IOException {
     if(myInlineKeysNoMapping) {
       return traverseAllRecords(new RecordsProcessor() {
+        @Override
         public boolean process(final int record) throws IOException {
           if (filter == null || filter.accept(record)) {
             Data data = ((InlineKeyDescriptor<Data>)myDataDescriptor).fromInt(getCurrentKey());
@@ -200,6 +208,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     try {
       lockStorage();
       return btree.processMappings(new IntToIntBtree.KeyValueProcessor() {
+        @Override
         public boolean process(int key, int value) throws IOException {
           p.setCurrentKey(key);
 
@@ -276,6 +285,68 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
 
   private final int[] myResultBuf = new int[1];
 
+  public long getNonnegativeValue(Data key) throws IOException {
+    assert myInlineKeysNoMapping;
+    try {
+      lockStorage();
+      final boolean hasMapping = btree.get(((InlineKeyDescriptor<Data>)myDataDescriptor).toInt(key), myResultBuf);
+      if (!hasMapping) {
+        return NULL_ID;
+      }
+
+      return keyIdToNonnegattiveOffset(myResultBuf[0]);
+    }
+    catch (IllegalStateException e) {
+      CorruptedException exception = new CorruptedException(myFile);
+      exception.initCause(e);
+      throw exception;
+    } finally {
+      unlockStorage();
+    }
+  }
+
+  public long keyIdToNonnegattiveOffset(int value) {
+    if (value >= 0) return value;
+    return myStorage.getLong(-value);
+  }
+
+  public void putNonnegativeValue(Data key, long value) throws IOException {
+    assert value >= 0;
+    assert myInlineKeysNoMapping;
+    try {
+      lockStorage();
+      markDirty(true);
+      int intKey = ((InlineKeyDescriptor<Data>)myDataDescriptor).toInt(key);
+      if (value < Integer.MAX_VALUE) {
+        btree.put(intKey, (int) value);
+      } else {
+        int pos = nextLongValueRecord();
+        myStorage.putLong(pos, value);
+        btree.put(intKey, -pos);
+      }
+    } catch (IllegalStateException e) {
+      CorruptedException exception = new CorruptedException(myFile);
+      exception.initCause(e);
+      throw exception;
+    } finally {
+      unlockStorage();
+    }
+
+  }
+
+  private int nextLongValueRecord() {
+    assert myInlineKeysNoMapping;
+    if (myDuplicatedValuesPageStart == -1 || myDuplicatedValuesPageOffset == btree.pageSize) {
+      myDuplicatedValuesPageStart = allocPage();
+      myDuplicatedValuesPageOffset = 0;
+    }
+
+    int duplicatedValueOff = myDuplicatedValuesPageOffset;
+    myDuplicatedValuesPageOffset += 8; // size of long
+    return myDuplicatedValuesPageStart + duplicatedValueOff;
+  }
+
+  @Override
   protected int enumerateImpl(final Data value, final boolean onlyCheckForExisting, boolean saveNewValue) throws IOException {
     try {
       lockStorage();
@@ -403,6 +474,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
   private int nextDuplicatedValueRecord() {
+    assert !myInlineKeysNoMapping;
     if (myDuplicatedValuesPageStart == -1 || myDuplicatedValuesPageOffset == btree.pageSize) {
       myDuplicatedValuesPageStart = allocPage();
       myDuplicatedValuesPageOffset = 0;

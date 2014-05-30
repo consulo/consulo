@@ -110,10 +110,6 @@ public class CompilerServerFileBasedIndexImpl extends FileBasedIndex {
   }
 
   @Override
-  public void requestReindexExcluded(@NotNull VirtualFile file) {
-  }
-
-  @Override
   public <K, V> boolean getFilesWithKey(@NotNull ID<K, V> indexId,
                                         @NotNull Set<K> dataKeys,
                                         @NotNull Processor<VirtualFile> processor,

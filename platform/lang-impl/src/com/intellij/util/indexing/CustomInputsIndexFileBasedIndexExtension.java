@@ -19,12 +19,12 @@
  */
 package com.intellij.util.indexing;
 
+import com.intellij.util.io.DataExternalizer;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.util.Collection;
 
-public abstract class CustomImplementationFileBasedIndexExtension<K, V, I> extends FileBasedIndexExtension<K, V> {
+public interface CustomInputsIndexFileBasedIndexExtension<K> {
   @NotNull
-  public abstract UpdatableIndex<K, V, I> createIndexImplementation(@NotNull ID<K, V> indexId, @NotNull FileBasedIndex owner, @NotNull IndexStorage<K, V> storage)
-          throws StorageException, IOException;
+  DataExternalizer<Collection<K>> createExternalizer();
 }

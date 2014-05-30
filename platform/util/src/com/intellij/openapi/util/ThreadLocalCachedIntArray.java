@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.openapi.util;
 
-/*
- * @author max
- */
-package com.intellij.util.indexing;
+import java.lang.ref.SoftReference;
 
-import org.jetbrains.annotations.NotNull;
+public final class ThreadLocalCachedIntArray {
+  private final ThreadLocal<SoftReference<int[]>> myThreadLocal = new ThreadLocal<SoftReference<int[]>>();
 
-import java.io.IOException;
+  public int[] getBuffer(int size) {
+    int[] value = com.intellij.reference.SoftReference.dereference(myThreadLocal.get());
+    if (value == null || value.length <= size) {
+      value = new int[size];
+      myThreadLocal.set(new SoftReference<int[]>(value));
+    }
 
-public abstract class CustomImplementationFileBasedIndexExtension<K, V, I> extends FileBasedIndexExtension<K, V> {
-  @NotNull
-  public abstract UpdatableIndex<K, V, I> createIndexImplementation(@NotNull ID<K, V> indexId, @NotNull FileBasedIndex owner, @NotNull IndexStorage<K, V> storage)
-          throws StorageException, IOException;
+    return value;
+  }
 }
