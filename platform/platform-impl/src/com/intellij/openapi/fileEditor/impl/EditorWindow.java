@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -42,6 +41,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.util.IconUtil;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
@@ -53,10 +53,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Author: msk
@@ -74,7 +72,7 @@ public class EditorWindow {
 
   private boolean myIsDisposed = false;
   public static final Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");
-  private Stack<Pair<String, Integer>> myRemovedTabs = new Stack<Pair<String, Integer>>(UISettings.getInstance().EDITOR_TAB_LIMIT) {
+  private final Stack<Pair<String, Integer>> myRemovedTabs = new Stack<Pair<String, Integer>>() {
     @Override
     public void push(Pair<String, Integer> pair) {
       if (size() >= UISettings.getInstance().EDITOR_TAB_LIMIT) {
@@ -162,7 +160,7 @@ public class EditorWindow {
         boolean editorToTheDown = false;
 
         Splitter splitter = (Splitter)parent;
-        
+
         boolean vertical = splitter.getOrientation();
         if (vertical && splitter.getFirstComponent() == c) {
           editorToTheDown = true;
@@ -173,7 +171,7 @@ public class EditorWindow {
           if (splitter.getSecondComponent() == c) editorToTheLeft = true;
         }
 
-        
+
         //Frame frame = (Frame) SwingUtilities.getAncestorOfClass(Frame.class, c);
         //if (frame instanceof IdeFrame) {
         //  Project project = ((IdeFrame)frame).getProject();
@@ -219,10 +217,10 @@ public class EditorWindow {
         int bottom = editorToTheDown ? 1 : 0;
         return new Insets(0, left, bottom, right);
       }
-      
+
       return new Insets(0, 0, 0, 0);
     }
-    
+
     @Nullable
     private static Splitter nextOuterSplitter(Component c) {
       Container parent = c.getParent();
@@ -299,7 +297,7 @@ public class EditorWindow {
           final EditorWithProviderComposite editor = findFileComposite(file);
 
           final FileEditorManagerListener.Before beforePublisher =
-            editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER);
+                  editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER);
 
           beforePublisher.beforeFileClosed(editorManager, file);
 
@@ -308,15 +306,8 @@ public class EditorWindow {
             if (componentIndex >= 0) { // editor could close itself on decomposition
               final int indexToSelect = calcIndexToSelect(file, componentIndex);
               myRemovedTabs.push(Pair.create(file.getUrl(), componentIndex));
-              final ActionCallback removeTab = myTabbedPane.removeTabAt(componentIndex, indexToSelect, transferFocus);
-              final Runnable disposer = new Runnable() {
-                @Override
-                public void run() {
-                  editorManager.disposeComposite(editor);
-                }
-              };
-              disposer.run();
-              //removeTab.doWhenDone(disposer);
+              myTabbedPane.removeTabAt(componentIndex, indexToSelect, transferFocus);
+              editorManager.disposeComposite(editor);
             }
           }
           else {
@@ -344,7 +335,7 @@ public class EditorWindow {
               final Project project = editorManager.getProject();
               if (!project.isDisposed()) {
                 final FileEditorManagerListener afterPublisher =
-                  project.getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+                        project.getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
                 afterPublisher.fileClosed(editorManager, file);
               }
             }
@@ -381,11 +372,11 @@ public class EditorWindow {
           return histFileIndex;
         }
       }
-    } else 
+    } else
     if (uiSettings.ACTIVATE_RIGHT_EDITOR_ON_CLOSE && (fileIndex + 1 < myTabbedPane.getTabCount())) {
       return fileIndex + 1;
     }
-    
+
     // by default select previous neighbour
     if (fileIndex > 0) {
       return fileIndex - 1;
@@ -558,7 +549,7 @@ public class EditorWindow {
 
     @Override
     public Object getData(String dataId) {
-      if (PlatformDataKeys.VIRTUAL_FILE.is(dataId)){
+      if (CommonDataKeys.VIRTUAL_FILE.is(dataId)){
         final VirtualFile virtualFile = myEditor.getFile();
         return virtualFile.isValid() ? virtualFile : null;
       }
@@ -643,7 +634,9 @@ public class EditorWindow {
         UIUtil.invokeLaterIfNeeded(new Runnable() {
           @Override
           public void run() {
-            myTabbedPane.setSelectedIndex(index, focusEditor);
+            if (myTabbedPane != null) {
+              myTabbedPane.setSelectedIndex(index, focusEditor);
+            }
           }
         });
       }
@@ -651,6 +644,10 @@ public class EditorWindow {
   }
 
   public void setEditor(@Nullable final EditorWithProviderComposite editor, final boolean focusEditor) {
+    setEditor(editor, true, focusEditor);
+  }
+
+  public void setEditor(@Nullable final EditorWithProviderComposite editor, final boolean selectEditor, final boolean focusEditor) {
     if (editor != null) {
       if (myTabbedPane == null) {
         myPanel.removeAll ();
@@ -661,7 +658,9 @@ public class EditorWindow {
 
       final int index = findEditorIndex(editor);
       if (index != -1) {
-        setSelectedEditor(editor, focusEditor);
+        if (selectEditor) {
+          setSelectedEditor(editor, focusEditor);
+        }
       }
       else {
         Integer initialIndex = editor.getFile().getUserData(INITIAL_INDEX_KEY);
@@ -669,17 +668,19 @@ public class EditorWindow {
         if (initialIndex == null) {
           int selectedIndex = myTabbedPane.getSelectedIndex();
           if (selectedIndex >= 0) {
-            indexToInsert = UISettings.getInstance().ACTIVATE_RIGHT_EDITOR_ON_CLOSE ? selectedIndex : selectedIndex + 1; 
+            indexToInsert = selectedIndex + 1;
           }
         } else {
           indexToInsert = initialIndex;
         }
-        
+
         final VirtualFile file = editor.getFile();
         final Icon template = AllIcons.FileTypes.Text;
         myTabbedPane.insertTab(file, new EmptyIcon(template.getIconWidth(), template.getIconHeight()), new TComp(this, editor), null, indexToInsert);
         trimToSize(UISettings.getInstance().EDITOR_TAB_LIMIT, file, false);
-        setSelectedEditor(editor, focusEditor);
+        if (selectEditor) {
+          setSelectedEditor(editor, focusEditor);
+        }
         myOwner.updateFileIcon(file);
         myOwner.updateFileColor(file);
       }
@@ -715,7 +716,7 @@ public class EditorWindow {
         myPanel.setOpaque(false);
         myPanel.setBorder(new AdaptiveBorder());
         myPanel.setOpaque(false);
-        
+
         final Splitter splitter = new Splitter(orientation == JSplitPane.VERTICAL_SPLIT, 0.5f, 0.1f, 0.9f);
         final EditorWindow res = new EditorWindow(myOwner);
         if (myTabbedPane != null) {
@@ -778,7 +779,7 @@ public class EditorWindow {
 
   /**
    * Tries to setup caret and viewport for the given editor from the selected one.
-   * 
+   *
    * @param toSync    editor to setup caret and viewport for
    */
   private void syncCaretIfPossible(@Nullable FileEditor[] toSync) {
@@ -859,7 +860,7 @@ public class EditorWindow {
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
       setTitleAt(index, EditorTabbedContainer.calcTabTitle(getManager().getProject(), file));
-      setToolTipTextAt(index, getManager().getFileTooltipText(file));
+      setToolTipTextAt(index, UISettings.getInstance().SHOW_TABS_TOOLTIPS ? getManager().getFileTooltipText(file) : null);
     }
   }
 
@@ -1083,130 +1084,77 @@ public class EditorWindow {
   }
 
   private void doTrimSize(int limit, @Nullable VirtualFile fileToIgnore, boolean closeNonModifiedFilesFirst, boolean transferFocus) {
-    while_label:
-    while (myTabbedPane.getTabCount() > limit && myTabbedPane.getTabCount() > 0) {
-      // If all tabs are pinned then do nothings. Othrwise we will get infinitive loop
-      boolean allTabsArePinned = true;
-      for (int i = myTabbedPane.getTabCount() - 1; i >= 0; i--) {
-        final VirtualFile file = getFileAt(i);
-        if (fileCanBeClosed(file, fileToIgnore)) {
-          allTabsArePinned = false;
-          break;
-        }
-      }
-      if (allTabsArePinned) {
+    LinkedHashSet<VirtualFile> closingOrder = getTabClosingOrder(closeNonModifiedFilesFirst);
+
+    for (VirtualFile file : closingOrder) {
+      if (myTabbedPane.getTabCount() <= limit || myTabbedPane.getTabCount() == 0 || areAllTabsPinned(fileToIgnore)) {
         return;
       }
+      if (fileCanBeClosed(file, fileToIgnore)) {
+        defaultCloseFile(file, transferFocus);
+      }
+    }
 
-      // Try to close non-modified files first (is specified in option)
-      if (closeNonModifiedFilesFirst) {
-        // Search in history
-        final VirtualFile[] allFiles = getFiles();
-        final VirtualFile[] histFiles = EditorHistoryManager.getInstance(getManager ().getProject()).getFiles();
+  }
 
-        // first, we search for files not in history
-        for (int i = 0; i != allFiles.length; ++ i) {
-          final VirtualFile file = allFiles[i];
-          if (fileCanBeClosed(file, fileToIgnore)) {
-            boolean found = false;
-            for (int j = 0; j != histFiles.length; j++) {
-              if (Comparing.equal(histFiles[j], file)) {
-                found = true;
-                break;
-              }
-            }
-            if (!found) {
-              defaultCloseFile(file, transferFocus);
-              continue while_label;
-            }
-          }
-        }
+  private LinkedHashSet<VirtualFile> getTabClosingOrder(boolean closeNonModifiedFilesFirst) {
+    final VirtualFile[] allFiles = getFiles();
+    final Set<VirtualFile> histFiles = EditorHistoryManager.getInstance(getManager().getProject()).getFileSet();
 
-        for (final VirtualFile file : histFiles) {
-          if (!fileCanBeClosed(file, fileToIgnore)) {
-            continue;
-          }
+    LinkedHashSet<VirtualFile> closingOrder = ContainerUtil.newLinkedHashSet();
 
-          final EditorComposite composite = findFileComposite(file);
-          //LOG.assertTrue(composite != null);
-          if (composite != null && composite.getInitialFileTimeStamp() == file.getTimeStamp()) {
-            // we found non modified file
-            defaultCloseFile(file, transferFocus);
-            continue while_label;
-          }
-        }
+    // first, we search for files not in history
+    for (final VirtualFile file : allFiles) {
+      if (!histFiles.contains(file)) {
+        closingOrder.add(file);
+      }
+    }
 
-        // Search in tabbed pane
-        final VirtualFile selectedFile = getSelectedFile();
-        for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
-          final VirtualFile file = getFileAt(i);
-          final EditorComposite composite = getEditorAt(i);
-          if (!fileCanBeClosed(file, fileToIgnore)) {
-            continue;
-          }
-          if (!selectedFile.equals(file)) {
-            if (composite.getInitialFileTimeStamp() == file.getTimeStamp()) {
-              // we found non modified file
-              defaultCloseFile(file, transferFocus);
-              continue while_label;
-            }
-          }
+    if (closeNonModifiedFilesFirst) {
+      // Search in history
+      for (final VirtualFile file : histFiles) {
+        if (isFileModified(findFileComposite(file), file)) {
+          // we found non modified file
+          closingOrder.add(file);
         }
       }
 
-      // It's non enough to close non-modified files only. Try all other files.
-      // Search in history from less frequently used.
-      {
-        final VirtualFile[]  allFiles = getFiles();
-        final VirtualFile[] histFiles = EditorHistoryManager.getInstance(getManager ().getProject()).getFiles();
-
-        // first, we search for files not in history
-        for (int i = 0; i != allFiles.length; ++ i) {
-          final VirtualFile file = allFiles[i];
-          if (fileCanBeClosed(file, fileToIgnore)) {
-            boolean found = false;
-            for (int j = 0; j != histFiles.length; j++) {
-              if (Comparing.equal(histFiles[j], file)) {
-                found = true;
-                break;
-              }
-            }
-            if (!found) {
-              defaultCloseFile(file, transferFocus);
-              continue while_label;
-            }
-          }
-        }
-
-
-        for (final VirtualFile file : histFiles) {
-          if (fileCanBeClosed(file, fileToIgnore)) {
-            defaultCloseFile(file, transferFocus);
-            continue while_label;
-          }
-        }
-      }
-
-      // Close first opened file in tabbed pane that isn't a selected one
-      {
-        final VirtualFile selectedFile = getSelectedFile();
-        for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
-          final VirtualFile file = getFileAt(i);
-          if (!fileCanBeClosed(file, fileToIgnore)) {
-            continue;
-          }
-          if (!selectedFile.equals(file)) {
-            defaultCloseFile(file, transferFocus);
-            continue while_label;
-          }
-          else if (i == myTabbedPane.getTabCount() - 1) {
-            // if file is selected one and it's last file that we have no choice as close it
-            defaultCloseFile(file, transferFocus);
-            continue while_label;
-          }
+      // Search in tabbed pane
+      for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
+        final VirtualFile file = getFileAt(i);
+        if (isFileModified(getEditorAt(i), file)) {
+          // we found non modified file
+          closingOrder.add(file);
         }
       }
     }
+
+    // If it's not enough to close non-modified files only, try all other files.
+    // Search in history from less frequently used.
+    closingOrder.addAll(histFiles);
+
+    // finally, close tabs by their order
+    for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
+      closingOrder.add(getFileAt(i));
+    }
+
+    final VirtualFile selectedFile = getSelectedFile();
+    closingOrder.remove(selectedFile);
+    closingOrder.add(selectedFile); // selected should be closed last
+    return closingOrder;
+  }
+
+  private static boolean isFileModified(EditorComposite composite, VirtualFile file) {
+    return composite != null && (composite.getInitialFileTimeStamp() == file.getTimeStamp() || composite.isModified());
+  }
+
+  private boolean areAllTabsPinned(VirtualFile fileToIgnore) {
+    for (int i = myTabbedPane.getTabCount() - 1; i >= 0; i--) {
+      if (fileCanBeClosed(getFileAt(i), fileToIgnore)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private void defaultCloseFile(VirtualFile file, boolean transferFocus) {

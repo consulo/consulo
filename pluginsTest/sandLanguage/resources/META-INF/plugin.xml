@@ -12,6 +12,7 @@
 
     <compiler implementation="org.mustbe.consulo.sandLanguage.ide.compiler.SandCompiler" />
 
+    <fileEditorProvider implementation="org.mustbe.consulo.sandLanguage.ide.fileEditor.SandFileEditorProvider" />
     <library.type implementation="org.mustbe.consulo.sandLanguage.ide.library.SandLibraryType" />
     <packaging.artifactType implementation="org.mustbe.consulo.sandLanguage.ide.artifact.SandArtifactType" />
     <executor implementation="org.mustbe.consulo.sandLanguage.ide.run.SandExecutor" />

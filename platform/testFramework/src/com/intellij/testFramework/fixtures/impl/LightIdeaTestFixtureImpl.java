@@ -19,7 +19,6 @@ package com.intellij.testFramework.fixtures.impl;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.idea.IdeaTestApplication;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
@@ -30,7 +29,6 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.TestDataProvider;
-import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.fixtures.LightIdeaTestFixture;
 import gnu.trove.THashMap;
 
@@ -40,7 +38,6 @@ import gnu.trove.THashMap;
 @SuppressWarnings("TestOnlyProblems")
 public class LightIdeaTestFixtureImpl extends BaseFixture implements LightIdeaTestFixture {
   private final LightProjectDescriptor myProjectDescriptor;
-  private CodeStyleSettings myOldCodeStyleSettings;
 
   public LightIdeaTestFixtureImpl(LightProjectDescriptor projectDescriptor) {
     myProjectDescriptor = projectDescriptor;
@@ -54,9 +51,6 @@ public class LightIdeaTestFixtureImpl extends BaseFixture implements LightIdeaTe
     LightPlatformTestCase.doSetup(myProjectDescriptor, LocalInspectionTool.EMPTY_ARRAY, new THashMap<String, InspectionToolWrapper>());
     InjectedLanguageManagerImpl.pushInjectors(getProject());
 
-    myOldCodeStyleSettings = getCurrentCodeStyleSettings().clone();
-    myOldCodeStyleSettings.getIndentOptions(StdFileTypes.JAVA);
-
     application.setDataProvider(new TestDataProvider(getProject()));
   }
 
@@ -64,9 +58,6 @@ public class LightIdeaTestFixtureImpl extends BaseFixture implements LightIdeaTe
   public void tearDown() throws Exception {
     Project project = getProject();
     CodeStyleSettingsManager.getInstance(project).dropTemporarySettings();
-    CodeStyleSettings oldCodeStyleSettings = myOldCodeStyleSettings;
-    myOldCodeStyleSettings = null;
-    UsefulTestCase.doCheckForSettingsDamage(oldCodeStyleSettings, getCurrentCodeStyleSettings());
 
     LightPlatformTestCase.doTearDown(project, LightPlatformTestCase.getApplication(), true);
     super.tearDown();

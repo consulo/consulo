@@ -110,7 +110,6 @@ import java.util.*;
 /**
  * @author yole
  */
-@Deprecated
 public abstract class LightPlatformTestCase extends UsefulTestCase implements DataProvider {
   public static final String PROFILE = "Configurable";
   private static IdeaTestApplication ourApplication;

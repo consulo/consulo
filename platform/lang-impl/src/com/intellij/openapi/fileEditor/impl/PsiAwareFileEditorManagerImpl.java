@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.docking.DockManager;
+import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -52,7 +53,11 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   private final MyPsiTreeChangeListener myPsiTreeChangeListener;
   private final WolfTheProblemSolver.ProblemListener myProblemListener;
 
-  public PsiAwareFileEditorManagerImpl(final Project project, final PsiManager psiManager, final WolfTheProblemSolver problemSolver, DockManager dockManager) {
+  public PsiAwareFileEditorManagerImpl(final Project project,
+                                       final PsiManager psiManager,
+                                       final WolfTheProblemSolver problemSolver,
+                                       DockManager dockManager,
+                                       MessageBus messageBus) {
     super(project, dockManager);
     myPsiManager = psiManager;
     myProblemSolver = problemSolver;
