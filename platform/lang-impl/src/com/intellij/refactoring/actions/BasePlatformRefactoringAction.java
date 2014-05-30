@@ -18,9 +18,9 @@ package com.intellij.refactoring.actions;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointListener;
 import com.intellij.openapi.extensions.PluginDescriptor;
@@ -64,8 +64,8 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   @Override
   protected final RefactoringActionHandler getHandler(@NotNull DataContext dataContext) {
     PsiElement element = null;
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
-    PsiFile file = LangDataKeys.PSI_FILE.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
     if (editor != null && file != null) {
       element = getElementAtCaret(editor, file);
       if (element != null) {
@@ -76,7 +76,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
       }
     }
 
-    PsiElement referenced = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement referenced = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
     if (referenced != null) {
       RefactoringActionHandler handler = getHandler(referenced.getLanguage(), referenced);
       if (handler != null) {
@@ -113,12 +113,10 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   protected RefactoringActionHandler getHandler(@NotNull Language language, PsiElement element) {
     List<RefactoringSupportProvider> providers = LanguageRefactoringSupport.INSTANCE.allForLanguage(language);
     if (providers.isEmpty()) return null;
-    if (element == null && !providers.isEmpty()) return getRefactoringHandler(providers.get(0));
-    if (element != null) {
-      for (RefactoringSupportProvider provider : providers) {
-        if (provider.isAvailable(element)) {
-          return getRefactoringHandler(provider);
-        }
+    if (element == null) return getRefactoringHandler(providers.get(0));
+    for (RefactoringSupportProvider provider : providers) {
+      if (provider.isAvailable(element)) {
+        return getRefactoringHandler(provider, element);
       }
     }
     return null;
@@ -147,6 +145,11 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
 
   @Nullable
   protected abstract RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider);
+
+  @Nullable
+  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider, PsiElement element) {
+    return getRefactoringHandler(provider);
+  }
 
   @Override
   protected boolean isHidden() {
