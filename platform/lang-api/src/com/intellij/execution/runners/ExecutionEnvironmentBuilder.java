@@ -23,6 +23,7 @@ import com.intellij.execution.configurations.ConfigurationPerRunnerSettings;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +45,8 @@ public final class ExecutionEnvironmentBuilder {
   @Nullable private RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
   @Nullable private String myRunnerId;
   private boolean myAssignNewId;
-  @NotNull private final Executor myExecutor;
+  @NotNull private Executor myExecutor;
+  @Nullable private DataContext myDataContext;
 
   public ExecutionEnvironmentBuilder(@NotNull Project project, @NotNull Executor executor) {
     myProject = project;
@@ -75,7 +77,6 @@ public final class ExecutionEnvironmentBuilder {
 
   public ExecutionEnvironmentBuilder setRunnerAndSettings(@NotNull ProgramRunner programRunner,
                                                           @NotNull RunnerAndConfigurationSettings settings) {
-    check(myRunnerAndConfigurationSettings, "RunnerAndConfigurationSettings");
     myRunnerAndConfigurationSettings = settings;
     setRunProfile(settings.getConfiguration());
     setRunnerSettings(settings.getRunnerSettings(programRunner));
@@ -85,30 +86,26 @@ public final class ExecutionEnvironmentBuilder {
   }
 
   public ExecutionEnvironmentBuilder setRunnerSettings(@Nullable RunnerSettings runnerSettings) {
-    check(myRunnerSettings, "RunnerSettings");
     myRunnerSettings = runnerSettings;
     return this;
   }
 
   public ExecutionEnvironmentBuilder setConfigurationSettings(@Nullable ConfigurationPerRunnerSettings configurationSettings) {
-    check(myConfigurationSettings, "ConfigurationPerRunnerSettings");
     myConfigurationSettings = configurationSettings;
     return this;
   }
 
   public ExecutionEnvironmentBuilder setContentToReuse(@Nullable RunContentDescriptor contentToReuse) {
-    check(myContentToReuse, "RunContentDescriptor");
     myContentToReuse = contentToReuse;
     return this;
   }
 
   public ExecutionEnvironmentBuilder setRunProfile(@NotNull RunProfile runProfile) {
-    check(myRunProfile, "RunProfile");
     myRunProfile = runProfile;
     return this;
   }
 
-  public ExecutionEnvironmentBuilder setRunnerId(String runnerId) {
+  public ExecutionEnvironmentBuilder setRunnerId(@Nullable String runnerId) {
     myRunnerId = runnerId;
     return this;
   }
@@ -118,19 +115,27 @@ public final class ExecutionEnvironmentBuilder {
     return this;
   }
 
+  public ExecutionEnvironmentBuilder setDataContext(@Nullable DataContext dataContext) {
+    myDataContext = dataContext;
+    return this;
+  }
+
+  public ExecutionEnvironmentBuilder setExecutor(@NotNull Executor executor) {
+    myExecutor = executor;
+    return this;
+  }
+
   @NotNull
   public ExecutionEnvironment build() {
     ExecutionEnvironment environment =
-      new ExecutionEnvironment(myRunProfile, myExecutor, myTarget, myProject, myRunnerSettings, myConfigurationSettings, myContentToReuse,
-                               myRunnerAndConfigurationSettings, myRunnerId);
+            new ExecutionEnvironment(myRunProfile, myExecutor, myTarget, myProject, myRunnerSettings, myConfigurationSettings, myContentToReuse,
+                                     myRunnerAndConfigurationSettings, myRunnerId);
     if (myAssignNewId) {
       environment.assignNewExecutionId();
     }
+    if (myDataContext != null) {
+      environment.setDataContext(myDataContext);
+    }
     return environment;
-  }
-
-  private static void check(Object obj, String key) {
-    if (obj != null) LOG.warn("Value of " + key + " has been already set");
-    //throw new IllegalStateException("Value of " + key + " has been already set");
   }
 }

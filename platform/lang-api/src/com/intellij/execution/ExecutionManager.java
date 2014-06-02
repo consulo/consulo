@@ -25,13 +25,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 /**
  * Manages the execution of run configurations and the relationship between running processes and Run/Debug toolwindow tabs.
  */
 public abstract class ExecutionManager {
   public static final Topic<ExecutionListener> EXECUTION_TOPIC
-    = new Topic<ExecutionListener>("configuration executed", ExecutionListener.class, Topic.BroadcastDirection.TO_PARENT);
+          = new Topic<ExecutionListener>("configuration executed", ExecutionListener.class, Topic.BroadcastDirection.TO_PARENT);
 
   public static ExecutionManager getInstance(final Project project) {
     return project.getComponent(ExecutionManager.class);
@@ -92,6 +93,9 @@ public abstract class ExecutionManager {
                                          @Nullable ProcessHandler processHandler);
 
   //currentDescriptor is null for toolbar/popup action and not null for actions in run/debug toolwindows
+  @Deprecated
+  @DeprecationInfo(value = "Use #restartRunProfile(com.intellij.execution.runners.ProgramRunner, com.intellij.execution.runners.ExecutionEnvironment, " +
+                           "com.intellij.execution.ui.RunContentDescriptor)", until = "2.0")
   public abstract void restartRunProfile(@NotNull Project project,
                                          @NotNull Executor executor,
                                          @NotNull ExecutionTarget target,
