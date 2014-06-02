@@ -16,7 +16,6 @@
 package com.intellij.compiler.options;
 
 import com.intellij.compiler.CompilationType;
-import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.Configurable;
@@ -27,7 +26,6 @@ import com.intellij.openapi.util.Comparing;
 import javax.swing.*;
 
 public class CompilerConfigurable implements Configurable {
-  private final CompilerConfiguration myCompilerConfiguration;
   private final CompilerWorkspaceConfiguration myCompilerWorkspaceConfiguration;
 
   private JComboBox myCompilerOptions;
@@ -36,7 +34,6 @@ public class CompilerConfigurable implements Configurable {
   private JCheckBox myCbAutoShowFirstError;
 
   public CompilerConfigurable(Project project) {
-    myCompilerConfiguration = CompilerConfiguration.getInstance(project);
     myCompilerWorkspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(project);
   }
 

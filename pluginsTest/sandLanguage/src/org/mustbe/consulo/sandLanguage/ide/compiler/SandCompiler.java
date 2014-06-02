@@ -15,10 +15,7 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.compiler;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerManager;
-import com.intellij.openapi.compiler.TranslatingCompiler;
+import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -39,11 +36,13 @@ public class SandCompiler implements TranslatingCompiler {
   @Override
   public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
     try {
-      Thread.sleep(10000L);
+      context.addMessage(CompilerMessageCategory.WARNING, "my warning", null, -1, -1);
+      Thread.sleep(5000L);
     }
     catch (InterruptedException e) {
       e.printStackTrace();
     }
+    context.addMessage(CompilerMessageCategory.ERROR, "my error", null, -1, -1);
   }
 
   @NotNull

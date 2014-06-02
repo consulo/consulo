@@ -455,7 +455,7 @@ public class CompileDriver {
                        final boolean checkCachesVersion) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    ProblemsViewImpl.SERVICE.getInstance(myProject).clearOldMessages(null);
+    ProblemsViewImpl.getInstance(myProject).clearOldMessages(null);
 
     final boolean useExtProcessBuild = false;
 
@@ -2140,14 +2140,6 @@ public class CompileDriver {
     finally {
       progressIndicator.popState();
       WindowManager.getInstance().getStatusBar(myProject).setInfo("");
-      if (progressIndicator instanceof CompilerTask) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            ((CompilerTask)progressIndicator).showCompilerContent();
-          }
-        });
-      }
     }
     return true;
   }

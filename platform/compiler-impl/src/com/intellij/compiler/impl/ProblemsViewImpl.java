@@ -16,7 +16,6 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.ProblemsView;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorViewStructure;
 import com.intellij.ide.errorTreeView.GroupingElement;
@@ -25,15 +24,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.ui.UIUtil;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,42 +40,25 @@ import java.util.concurrent.Executor;
  * @author Eugene Zhuravlev
  *         Date: 9/18/12
  */
-public class ProblemsViewImpl extends ProblemsView{
+public class ProblemsViewImpl extends ProblemsView {
 
   private final ProblemsViewPanel myPanel;
   private final SequentialTaskExecutor myViewUpdater = new SequentialTaskExecutor(new Executor() {
     @Override
-    public void execute(Runnable command) {
+    public void execute(@NotNull Runnable command) {
       ApplicationManager.getApplication().executeOnPooledThread(command);
     }
   });
+  private final ToolWindowManager myToolWindowManager;
 
   public ProblemsViewImpl(final Project project, final ToolWindowManager wm) {
     super(project);
+    myToolWindowManager = wm;
     myPanel = new ProblemsViewPanel(project);
     Disposer.register(project, new Disposable() {
       @Override
       public void dispose() {
         Disposer.dispose(myPanel);
-      }
-    });
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (project.isDisposed()) {
-          return;
-        }
-        final ToolWindow tw = wm.registerToolWindow(PROBLEMS_TOOLWINDOW_ID, false, ToolWindowAnchor.BOTTOM, project);
-        tw.setIcon(AllIcons.Toolwindows.Problems);
-        final Content content = ContentFactory.SERVICE.getInstance().createContent(myPanel, "", false);
-        // todo: setup content?
-        tw.getContentManager().addContent(content);
-        Disposer.register(project, new Disposable() {
-          @Override
-          public void dispose() {
-            tw.getContentManager().removeAllContents(true);
-          }
-        });
       }
     });
   }
@@ -101,7 +81,7 @@ public class ProblemsViewImpl extends ProblemsView{
         if (scope != null) {
           final VirtualFile file = ((GroupingElement)element).getFile();
           if (file != null && !scope.belongs(file.getUrl())) {
-            continue; 
+            continue;
           }
         }
         cleanupChildrenRecursively(element, scope);
@@ -117,7 +97,8 @@ public class ProblemsViewImpl extends ProblemsView{
                          @NotNull final String[] text,
                          @Nullable final String groupName,
                          @Nullable final Navigatable navigatable,
-                         @Nullable final String exportTextPrefix, @Nullable final String rendererTextPrefix) {
+                         @Nullable final String exportTextPrefix,
+                         @Nullable final String rendererTextPrefix) {
 
     myViewUpdater.execute(new Runnable() {
       @Override
@@ -138,6 +119,41 @@ public class ProblemsViewImpl extends ProblemsView{
   }
 
   @Override
+  public void showOrHide(final boolean hide) {
+
+    val toolWindow = myToolWindowManager.getToolWindow(PROBLEMS_TOOLWINDOW_ID);
+    if(toolWindow.isActive() == !hide) {
+      return;
+    }
+    UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        if (hide) {
+          toolWindow.hide(EmptyRunnable.INSTANCE);
+        }
+        else {
+          toolWindow.show(EmptyRunnable.INSTANCE);
+        }
+      }
+    });
+  }
+
+  @Override
+  public void selectFirstMessage() {
+    UIUtil.invokeLaterIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        myPanel.selectFirstMessage();
+      }
+    });
+  }
+
+  @Override
+  public boolean isHideWarnings() {
+    return myPanel.isHideWarnings();
+  }
+
+  @Override
   public void setProgress(String text, float fraction) {
     myPanel.setProgress(text, fraction);
   }
@@ -150,5 +166,10 @@ public class ProblemsViewImpl extends ProblemsView{
   @Override
   public void clearProgress() {
     myPanel.clearProgressData();
+  }
+
+  @NotNull
+  public ProblemsViewPanel getPanel() {
+    return myPanel;
   }
 }

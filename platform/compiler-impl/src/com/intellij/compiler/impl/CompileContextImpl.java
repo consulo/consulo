@@ -105,10 +105,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     myProjectCompileScope = new ProjectCompileScope(myProject);
 
-
-    if (compilerSession != null) {
-      compilerSession.setContentIdKey(compileScope.getUserData(CompilerManager.CONTENT_ID_KEY));
-    }
     recalculateOutputDirs();
     final CompilerWorkspaceConfiguration workspaceConfig = CompilerWorkspaceConfiguration.getInstance(myProject);
     myShouldUpdateProblemsView = workspaceConfig.useOutOfProcessBuild() && workspaceConfig.MAKE_PROJECT_ON_SAVE;
@@ -310,7 +306,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
                           msg.getColumn());
     }
     else {
-      ProblemsViewImpl.SERVICE.getInstance(myProject).addMessage(msg);
+      ProblemsViewImpl.getInstance(myProject).addMessage(msg);
     }
   }
 
@@ -356,6 +352,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return myRebuildReason;
   }
 
+  @NotNull
   @Override
   public ProgressIndicator getProgressIndicator() {
     //if (myProgressIndicatorProxy != null) {
