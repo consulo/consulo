@@ -15,18 +15,29 @@
  */
 package com.intellij.openapi.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
+
 /**
  * @author Konstantin Bulenkov
  */
 public class Couple<T> extends Pair<T, T> {
-  private static final Couple EMPTY_COUPLE = newOne(null, null);
+  private static final Couple EMPTY_COUPLE = of(null, null);
 
   public Couple(T first, T second) {
     super(first, second);
   }
 
-  public static <T> Couple<T> newOne(T first, T second) {
+  @NotNull
+  public static <T> Couple<T> of(T first, T second) {
     return new Couple<T>(first, second);
+  }
+
+  @NotNull
+  @Deprecated
+  @DeprecationInfo(value = "Use #of method", until = "1.0")
+  public static <T> Couple<T> newOne(T first, T second) {
+    return of(first, second);
   }
 
   @SuppressWarnings("unchecked")
