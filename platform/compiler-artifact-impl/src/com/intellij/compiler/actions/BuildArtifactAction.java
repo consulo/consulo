@@ -15,7 +15,6 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -123,7 +122,7 @@ public class BuildArtifactAction extends DumbAwareAction {
     final CompileScope scope = ArtifactCompileScope.createArtifactsScope(project, artifacts, rebuild);
 
     ArtifactsWorkspaceSettings.getInstance(project).setArtifactsToBuild(artifacts);
-    if (!rebuild || CompilerWorkspaceConfiguration.getInstance(project).useOutOfProcessBuild()) {
+    if (!rebuild) {
       //in external build we can set 'rebuild' flag per target type
       CompilerManager.getInstance(project).make(scope, null);
     }

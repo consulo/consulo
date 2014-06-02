@@ -22,7 +22,6 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerMessageImpl;
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.openapi.application.ApplicationManager;
@@ -68,7 +67,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private final CompilerTask myTask;
   private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages =
           new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
-  private final boolean myShouldUpdateProblemsView;
   private CompileScope myCompileScope;
   private final CompositeDependencyCache myDependencyCache;
   private final boolean myMake;
@@ -106,12 +104,6 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     myProjectCompileScope = new ProjectCompileScope(myProject);
 
     recalculateOutputDirs();
-    final CompilerWorkspaceConfiguration workspaceConfig = CompilerWorkspaceConfiguration.getInstance(myProject);
-    myShouldUpdateProblemsView = workspaceConfig.useOutOfProcessBuild() && workspaceConfig.MAKE_PROJECT_ON_SAVE;
-  }
-
-  public boolean shouldUpdateProblemsView() {
-    return myShouldUpdateProblemsView;
   }
 
   @Override

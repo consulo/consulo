@@ -17,7 +17,6 @@ package com.intellij.compiler.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
-import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.make.DependencyCache;
 import com.intellij.compiler.server.BuildManager;
 import com.intellij.openapi.Disposable;
@@ -1364,12 +1363,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       final ProjectRef projRef = new ProjectRef(project);
       final int projectId = getProjectId(project);
 
-      if (CompilerWorkspaceConfiguration.getInstance(project).useOutOfProcessBuild()) {
-        suspendProject(project);
-      }
-      else {
-        watchProject(project);
-      }
+      watchProject(project);
 
       conn.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter() {
         @Override
@@ -1866,10 +1860,6 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   @Override
   public boolean isMarkedForCompilation(Project project, VirtualFile file) {
-    if (CompilerWorkspaceConfiguration.getInstance(project).useOutOfProcessBuild()) {
-      final CompilerManager compilerManager = CompilerManager.getInstance(project);
-      return !compilerManager.isUpToDate(compilerManager.createFilesCompileScope(new VirtualFile[]{file}));
-    }
     return isMarkedForRecompilation(getProjectId(project), getFileId(file));
   }
 
