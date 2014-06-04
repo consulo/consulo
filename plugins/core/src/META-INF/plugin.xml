@@ -120,11 +120,6 @@
       <with attribute="handlerClass" implements="com.intellij.codeInsight.highlighting.TooltipLinkHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="directoryProjectGenerator"
-                    interface="com.intellij.platform.DirectoryProjectGenerator"/>
-
-    <extensionPoint name="projectTemplatesFactory"
-                    interface="com.intellij.platform.ProjectTemplatesFactory"/>
 
     <extensionPoint name="applicationLoadListener" interface="com.intellij.ide.ApplicationLoadListener"/>
 
@@ -1532,21 +1527,11 @@
     <codeStyleSettingsProvider implementation="com.intellij.application.options.CommonCodeStyleSettingsProvider"/>
 
     <!-- new project wizard -->
-    <wizardMode implementation="com.intellij.ide.util.newProjectWizard.modes.CreateFromTemplateMode" id="CreateFromTemplateMode"
-                order="after CreateFromScratchMode"/>
+
     <wizardMode implementation="com.intellij.ide.util.newProjectWizard.modes.ImportMode" order="before ImportImlMode"/>
     <wizardMode implementation="com.intellij.ide.util.newProjectWizard.modes.ImportImlMode" id="ImportImlMode"/>
 
     <projectImportProvider implementation="com.intellij.ide.util.projectWizard.ImportFromSourcesProvider"/>
-
-    <projectTemplatesFactory implementation="com.intellij.platform.templates.ArchivedTemplatesFactory"/>
-    <!--
-    <projectTemplatesFactory implementation="com.intellij.platform.templates.RemoteTemplatesFactory"/>
-    -->
-    <projectTemplatesFactory implementation="com.intellij.platform.templates.PlainModuleTemplatesFactory"/>
-    <!--
-    <projectTemplateFileProcessor implementation="com.intellij.platform.templates.SystemFileProcessor"/>
-    -->
 
     <applicationService serviceImplementation="com.intellij.ide.util.newProjectWizard.SelectTemplateSettings"/>
 
@@ -2485,8 +2470,6 @@
 
 
     <iconDescriptorUpdater implementation="com.intellij.execution.testframework.TestIconDescriptorUpdater" order="before default"/>
-
-    <directoryProjectGenerator implementation="com.intellij.platform.DefaultDirectoryProjectGenerator"/>
 
     <search.topHitProvider implementation="com.intellij.platform.DefaultPlatformTopHitProvider"/>
     <search.topHitProvider implementation="com.intellij.ide.ui.UISimpleSettingsProvider"/>

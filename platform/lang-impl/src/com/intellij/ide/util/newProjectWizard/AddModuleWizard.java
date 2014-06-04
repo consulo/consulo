@@ -22,7 +22,6 @@ package com.intellij.ide.util.newProjectWizard;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ModuleFileType;
-import com.intellij.ide.util.newProjectWizard.modes.CreateFromTemplateMode;
 import com.intellij.ide.util.newProjectWizard.modes.ImportMode;
 import com.intellij.ide.util.newProjectWizard.modes.WizardMode;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -55,8 +54,7 @@ import java.awt.*;
 import java.io.File;
 
 @Deprecated
-public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
-{
+public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
   private static final String ADD_MODULE_TITLE = IdeBundle.message("title.add.module");
   private static final String NEW_PROJECT_TITLE = IdeBundle.message("title.new.project");
   private final Project myCurrentProject;
@@ -85,7 +83,9 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
     initModuleWizard(project, null);
   }
 
-  /** Import mode */
+  /**
+   * Import mode
+   */
   public AddModuleWizard(Project project, String filePath, ProjectImportProvider... importProviders) {
     super(getImportWizardTitle(project, importProviders), project);
     myCurrentProject = project;
@@ -94,7 +94,9 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
     initModuleWizard(project, filePath);
   }
 
-  /** Import mode */
+  /**
+   * Import mode
+   */
   public AddModuleWizard(Project project, Component dialogParent, String filePath, ProjectImportProvider... importProviders) {
     super(getImportWizardTitle(project, importProviders), dialogParent);
     myCurrentProject = project;
@@ -129,8 +131,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
     });
 
     if (myImportProviders == null) {
-      myWizardMode = new CreateFromTemplateMode();
-      appendSteps(myWizardMode.getSteps(myWizardContext, myModulesProvider));
+      throw new IllegalArgumentException("CreateFromTemplateMode");
     }
     else {
       myWizardMode = new ImportMode(myImportProviders);
@@ -203,10 +204,12 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
         }
         if (!isLastStep(idx)) {
           idx = getNextStep(idx);
-        } else {
+        }
+        else {
           break;
         }
-      } while (true);
+      }
+      while (true);
     }
     finally {
       myCurrentStep = idx;
@@ -281,15 +284,15 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
   }
 
   protected final int getPreviousStep(final int step) {
-      ModuleWizardStep previousStep = null;
-      final StepSequence stepSequence = getSequence();
-      if (stepSequence != null) {
-        previousStep = stepSequence.getPreviousStep(mySteps.get(step));
-        while (previousStep != null && !previousStep.isStepVisible()) {
-          previousStep = stepSequence.getPreviousStep(previousStep);
-        }
+    ModuleWizardStep previousStep = null;
+    final StepSequence stepSequence = getSequence();
+    if (stepSequence != null) {
+      previousStep = stepSequence.getPreviousStep(mySteps.get(step));
+      while (previousStep != null && !previousStep.isStepVisible()) {
+        previousStep = stepSequence.getPreviousStep(previousStep);
       }
-      return previousStep == null ? 0 : mySteps.indexOf(previousStep);
+    }
+    return previousStep == null ? 0 : mySteps.indexOf(previousStep);
   }
 
   private WizardMode getMode() {
@@ -300,6 +303,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
   public String getNewProjectFilePath() {
     return myWizardContext.getProjectFileDirectory();
   }
+
   @Nullable
   public static Sdk getMostRecentSuitableSdk(final WizardContext context) {
     if (context.getProject() == null) {
@@ -349,9 +353,9 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep>
   /**
    * Allows to ask current wizard to move to the desired step.
    *
-   * @param filter  closure that allows to indicate target step - is called with each of registered steps and is expected
-   *                to return <code>true</code> for the step to go to
-   * @return        <code>true</code> if current wizard is navigated to the target step; <code>false</code> otherwise
+   * @param filter closure that allows to indicate target step - is called with each of registered steps and is expected
+   *               to return <code>true</code> for the step to go to
+   * @return <code>true</code> if current wizard is navigated to the target step; <code>false</code> otherwise
    */
   public boolean navigateToStep(@NotNull Function<Step, Boolean> filter) {
     for (int i = 0, myStepsSize = mySteps.size(); i < myStepsSize; i++) {

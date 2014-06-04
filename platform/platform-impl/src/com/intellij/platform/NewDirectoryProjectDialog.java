@@ -19,9 +19,6 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.ListCellRendererWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -32,15 +29,7 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
   private JTextField myProjectNameTextField;
   private TextFieldWithBrowseButton myLocationField;
   protected JPanel myRootPane;
-  protected JComboBox myProjectTypeComboBox;
-  private JPanel myProjectTypePanel;
   private JLabel myLocationLabel;
-
-  protected JPanel getPlaceHolder() {
-    return myPlaceHolder;
-  }
-
-  private JPanel myPlaceHolder;
 
   protected NewDirectoryProjectDialog(Project project) {
     super(project, true);
@@ -51,36 +40,6 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
 
     new LocationNameFieldsBinding(project, myLocationField, myProjectNameTextField, ProjectUtil.getBaseDir(),
                                   "Select Location for Project Directory");
-
-    final DirectoryProjectGenerator[] generators = DirectoryProjectGenerator.EP_NAME.getExtensions();
-    assert generators.length != 0;
-
-    DefaultComboBoxModel model = new DefaultComboBoxModel();
-
-    for (DirectoryProjectGenerator generator : generators) {
-      if (generator instanceof HideableProjectGenerator) {
-        if (((HideableProjectGenerator)generator).isHidden()) {
-          continue;
-        }
-      }
-      model.addElement(generator);
-    }
-
-    myProjectTypeComboBox.setModel(model);
-    myProjectTypeComboBox.setRenderer(createProjectTypeListCellRenderer(myProjectTypeComboBox.getRenderer()));
-
-  }
-
-  @NotNull
-  private ListCellRenderer createProjectTypeListCellRenderer(@NotNull final ListCellRenderer originalRenderer) {
-
-    return new ListCellRendererWrapper() {
-      @Override
-      public void customize(final JList list, final Object value, final int index, final boolean selected, final boolean cellHasFocus) {
-        if (value == null) return;
-        setText(((DirectoryProjectGenerator)value).getName());
-      }
-    };
   }
 
   protected void checkValid() {
@@ -95,21 +54,12 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
       setErrorText("Project directory name must not contain the $ character");
       return;
     }
-    DirectoryProjectGenerator generator = getProjectGenerator();
-    if (generator != null) {
-      String baseDirPath = myLocationField.getTextField().getText();
-      String validationResult = generator.validate(baseDirPath);
-      if (validationResult != null) {
-        setOKActionEnabled(false);
-        setErrorText(validationResult);
-        return;
-      }
-    }
+
     setOKActionEnabled(true);
     setErrorText(null);
   }
 
-
+  @Override
   protected JComponent createCenterPanel() {
     return myRootPane;
   }
@@ -122,12 +72,7 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
     return myProjectNameTextField.getText();
   }
 
-  @Nullable
-  public DirectoryProjectGenerator getProjectGenerator() {
-    final Object selItem = myProjectTypeComboBox.getSelectedItem();
-    return (DirectoryProjectGenerator)selItem;
-  }
-
+  @Override
   public JComponent getPreferredFocusedComponent() {
     return myProjectNameTextField;
   }
