@@ -36,9 +36,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -48,26 +45,6 @@ import java.util.List;
  *         Date: Jan 5, 2004
  */
 public class NewModuleAction extends AnAction implements DumbAware {
-  public static class NewModuleWizard implements EarlyAccessProgramDescriptor {
-
-    @NotNull
-    @Override
-    public String getName() {
-      return "New Style Module Wizard";
-    }
-
-    @Override
-    public boolean getDefaultState() {
-      return true;
-    }
-
-    @NotNull
-    @Override
-    public String getDescription() {
-      return "Due Consulo have new configuration style. IDEA Module wizard are broken and useless";
-    }
-  }
-
   public NewModuleAction() {
     super(ProjectBundle.message("module.new.action"), ProjectBundle.message("module.new.action.description"), null);
   }
@@ -80,20 +57,11 @@ public class NewModuleAction extends AnAction implements DumbAware {
     }
     Object dataFromContext = prepareDataFromContext(e);
 
-    String defaultPath = null;
     final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
-    if (virtualFile != null && virtualFile.isDirectory()) {
-      defaultPath = virtualFile.getPath();
-    }
 
-    if(!EarlyAccessProgramManager.getInstance().getState(NewModuleWizard.class)) {
-      showModuleWizard(project, dataFromContext, defaultPath);
-    }
-    else {
-      Module moduleBySimpleWay = createModuleBySimpleWay(project, virtualFile);
-      if(moduleBySimpleWay != null) {
-        processCreatedModule(moduleBySimpleWay, dataFromContext);
-      }
+    Module moduleBySimpleWay = createModuleBySimpleWay(project, virtualFile);
+    if(moduleBySimpleWay != null) {
+      processCreatedModule(moduleBySimpleWay, dataFromContext);
     }
   }
 
@@ -140,18 +108,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
       }
     }.execute();
     return newModule;
-  }
-
-  @Nullable
-  private Module showModuleWizard(Project project, Object dataFromContext, String defaultPath) {
-    final AddModuleWizard wizard = new AddModuleWizard(project, new DefaultModulesProvider(project), defaultPath);
-
-    wizard.show();
-
-    if (wizard.isOK()) {
-      return createModuleFromWizard(project, dataFromContext, wizard);
-    }
-    return null;
   }
 
   @Nullable

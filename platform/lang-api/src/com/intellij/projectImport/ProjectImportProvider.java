@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public abstract class ProjectImportProvider {
-  public static final ExtensionPointName<ProjectImportProvider> PROJECT_IMPORT_PROVIDER = ExtensionPointName.create("com.intellij.projectImportProvider");
+  public static final ExtensionPointName<ProjectImportProvider> EP_NAME = ExtensionPointName.create("com.intellij.projectImportProvider");
 
   protected ProjectImportBuilder myBuilder;
 

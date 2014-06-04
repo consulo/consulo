@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,12 +42,12 @@ public class PlainModuleTemplatesFactory extends ProjectTemplatesFactory {
   @Override
   public String[] getGroups() {
     List<ModuleBuilder> builders = ModuleBuilder.getAllBuilders();
-    Set<String> groups = ContainerUtil.map2Set(builders, new Function<ModuleBuilder, String>() {
+    Set<String> groups = new HashSet<String>(ContainerUtil.map2Set(builders, new Function<ModuleBuilder, String>() {
       @Override
       public String fun(ModuleBuilder builder) {
         return builder.getGroupName();
       }
-    });
+    }));
     groups.add(OTHER_GROUP);
     return ArrayUtil.toStringArray(groups);
   }

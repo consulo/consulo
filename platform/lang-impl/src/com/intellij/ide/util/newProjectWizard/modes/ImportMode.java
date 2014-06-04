@@ -42,7 +42,7 @@ public class ImportMode extends WizardMode {
   private final ProjectImportProvider[] myProviders;
 
   public ImportMode() {
-    this(Extensions.getExtensions(ProjectImportProvider.PROJECT_IMPORT_PROVIDER));
+    this(Extensions.getExtensions(ProjectImportProvider.EP_NAME));
   }
   public ImportMode(ProjectImportProvider[] providers) {
     myProviders = providers;
@@ -57,7 +57,7 @@ public class ImportMode extends WizardMode {
   public String getDescription(final WizardContext context) {
     final String productName = ApplicationNamesInfo.getInstance().getFullProductName();
     return ProjectBundle.message("project.new.wizard.import.description", productName, context.getPresentationName(), StringUtil.join(
-      Arrays.asList(Extensions.getExtensions(ProjectImportProvider.PROJECT_IMPORT_PROVIDER)),
+      Arrays.asList(Extensions.getExtensions(ProjectImportProvider.EP_NAME)),
       new Function<ProjectImportProvider, String>() {
         public String fun(final ProjectImportProvider provider) {
           return provider.getName();
@@ -81,7 +81,7 @@ public class ImportMode extends WizardMode {
   }
 
   public boolean isAvailable(WizardContext context) {
-    return Extensions.getExtensions(ProjectImportProvider.PROJECT_IMPORT_PROVIDER).length > 0;
+    return Extensions.getExtensions(ProjectImportProvider.EP_NAME).length > 0;
   }
 
   @Nullable

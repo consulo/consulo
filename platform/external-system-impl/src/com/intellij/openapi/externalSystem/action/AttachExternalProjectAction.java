@@ -73,7 +73,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     }
     
     ProjectImportProvider[] projectImportProviders = new ProjectImportProvider[1];
-    for (ProjectImportProvider provider : ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions()) {
+    for (ProjectImportProvider provider : ProjectImportProvider.EP_NAME.getExtensions()) {
       if (provider instanceof AbstractExternalProjectImportProvider
           && externalSystemId.equals(((AbstractExternalProjectImportProvider)provider).getExternalSystemId()))
       {

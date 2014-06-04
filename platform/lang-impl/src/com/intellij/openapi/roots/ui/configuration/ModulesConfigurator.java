@@ -41,7 +41,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
@@ -56,7 +55,6 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
-import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
@@ -343,8 +341,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   public List<Module> addModule(Component parent, boolean anImport) {
     if (myProject.isDefault()) return null;
 
-    if(anImport || !EarlyAccessProgramManager.getInstance().getState(NewModuleAction.NewModuleWizard.class)) {
-      final ProjectBuilder builder = runModuleWizard(parent, anImport);
+    if(anImport) {
+      final ProjectBuilder builder = runModuleWizard(parent, true);
       if (builder != null ) {
         final List<Module> modules = new ArrayList<Module>();
         final List<Module> commitedModules;

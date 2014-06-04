@@ -51,16 +51,18 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.NullableComputable;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -658,18 +660,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         importModuleAction.getTemplatePresentation().setIcon(AllIcons.ToolbarDecorator.Import);
         result.add(importModuleAction);
 
-        final NullableComputable<MyNode> selectedNodeRetriever = new NullableComputable<MyNode>() {
-          @Override
-          public MyNode compute() {
-            final TreePath selectionPath = myTree.getSelectionPath();
-            final Object lastPathComponent = selectionPath == null ? null : selectionPath.getLastPathComponent();
-            if (lastPathComponent instanceof MyNode) {
-              return (MyNode)lastPathComponent;
-            }
-            return null;
-          }
-        };
-
         return result.toArray(new AnAction[result.size()]);
       }
     };
@@ -806,6 +796,20 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     @Override
     public void actionPerformed(final AnActionEvent e) {
       addModule(myImport);
+    }
+
+    @Override
+    public void update(AnActionEvent e) {
+      super.update(e);
+      if(myImport) {
+        Presentation presentation = e.getPresentation();
+        presentation.setEnabledAndVisible(ContainerUtil.find(ProjectImportProvider.EP_NAME.getExtensions(), new Condition<ProjectImportProvider>() {
+          @Override
+          public boolean value(ProjectImportProvider projectImportProvider) {
+            return !projectImportProvider.canCreateNewProject();
+          }
+        }) != null);
+      }
     }
   }
 }

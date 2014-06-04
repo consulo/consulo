@@ -54,8 +54,7 @@ public class ImportModuleAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = getEventProject(e);
-    doImport(project);
+    doImport(canCreateNewProject() ? null : e.getProject());
   }
 
   public static List<Module> doImport(Project project) {
@@ -97,9 +96,9 @@ public class ImportModuleAction extends AnAction {
       FileChooserDescriptor myDelegate = new OpenProjectFileChooserDescriptor(true);
       @Override
       public Icon getIcon(VirtualFile file) {
-        for (ProjectImportProvider projectImportProvider : ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions()) {
+        for (ProjectImportProvider projectImportProvider : ProjectImportProvider.EP_NAME.getExtensions()) {
           final Icon iconForFile = projectImportProvider.getIconForFile(file);
-          if(iconForFile != null) {
+          if (iconForFile != null) {
             return iconForFile;
           }
         }
@@ -109,7 +108,7 @@ public class ImportModuleAction extends AnAction {
     };
     descriptor.setHideIgnored(false);
     descriptor.setTitle("Select File or Directory to Import");
-    ProjectImportProvider[] providers = ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions();
+    ProjectImportProvider[] providers = ProjectImportProvider.EP_NAME.getExtensions();
     String description = getFileChooserDescription(project);
     descriptor.setDescription(description);
 
@@ -120,8 +119,7 @@ public class ImportModuleAction extends AnAction {
   public static AddModuleWizard selectFileAndCreateWizard(final Project project,
                                                           @Nullable Component dialogParent,
                                                           @NotNull FileChooserDescriptor descriptor,
-                                                          ProjectImportProvider[] providers)
-  {
+                                                          ProjectImportProvider[] providers) {
     FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, dialogParent);
     VirtualFile toSelect = null;
     String lastLocation = PropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
@@ -139,7 +137,7 @@ public class ImportModuleAction extends AnAction {
   }
 
   public static String getFileChooserDescription(final Project project) {
-    ProjectImportProvider[] providers = ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions();
+    ProjectImportProvider[] providers = ProjectImportProvider.EP_NAME.getExtensions();
     List<ProjectImportProvider> list = ContainerUtil.filter(providers, new Condition<ProjectImportProvider>() {
       @Override
       public boolean value(ProjectImportProvider provider) {
@@ -199,7 +197,22 @@ public class ImportModuleAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    presentation.setEnabled(getEventProject(e) != null);
+
+    if(!canCreateNewProject() && e.getProject() == null) {
+      presentation.setEnabledAndVisible(false);
+      return;
+    }
+
+    presentation.setEnabledAndVisible(ContainerUtil.find(ProjectImportProvider.EP_NAME.getExtensions(), new Condition<ProjectImportProvider>() {
+      @Override
+      public boolean value(ProjectImportProvider projectImportProvider) {
+        return projectImportProvider.canCreateNewProject() == canCreateNewProject();
+      }
+    }) != null);
+  }
+
+  public boolean canCreateNewProject() {
+    return false;
   }
 
   @Override
