@@ -98,13 +98,7 @@ public class CodeCompletionPanel {
             }
     );
 
-    hideOption(myCbOnSmartTypeCompletion, OptionId.COMPLETION_SMART_TYPE);
-
     reset();
-  }
-
-  private static void hideOption(JComponent component, OptionId id) {
-    component.setVisible(OptionsApplicabilityFilter.isApplicable(id));
   }
 
   public void reset() {

@@ -16,6 +16,7 @@
 package com.intellij.util;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -30,16 +31,19 @@ import java.lang.reflect.TypeVariable;
  * @deprecated
  * @author peter
  */
-@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
+@Deprecated
+@DeprecationInfo(value = "See method infos", until = "2.0")
 public class ReflectionCache {
 
   @Deprecated
+  @DeprecationInfo(value = "Use Class#getSuperClass()")
   public static Class getSuperClass(@NotNull Class aClass) {
     return aClass.getSuperclass();
   }
 
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use Class#getInterfaces()")
   public static Class[] getInterfaces(@NotNull Class aClass) {
     return aClass.getInterfaces();
   }
@@ -50,38 +54,41 @@ public class ReflectionCache {
     return aClass.getMethods();
   }
 
-  /**
-   * @deprecated
-   * @see com.intellij.util.ReflectionUtil#isAssignable(Class, Class)
-   */
+  @Deprecated
+  @DeprecationInfo(value = "Use com.intellij.util.ReflectionUtil#isAssignable")
   public static boolean isAssignable(@NotNull Class ancestor, Class descendant) {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
   }
 
   @Deprecated
+  @DeprecationInfo(value = "Use Class#isInstance()")
   public static boolean isInstance(Object instance, @NotNull Class clazz) {
     return clazz.isInstance(instance);
   }
 
   @Deprecated
+  @DeprecationInfo(value = "Use Class#isInterface()")
   public static boolean isInterface(@NotNull Class aClass) {
     return aClass.isInterface();
   }
 
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use Class#getTypeParameters()")
   public static <T> TypeVariable<Class<T>>[] getTypeParameters(@NotNull Class<T> aClass) {
     return aClass.getTypeParameters();
   }
 
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use Class#getGenericInterfaces()")
   public static Type[] getGenericInterfaces(@NotNull Class aClass) {
     return aClass.getGenericInterfaces();
   }
 
   @NotNull
   @Deprecated
+  @DeprecationInfo(value = "Use Class#getActualTypeArguments()")
   public static Type[] getActualTypeArguments(@NotNull ParameterizedType type) {
     return type.getActualTypeArguments();
   }

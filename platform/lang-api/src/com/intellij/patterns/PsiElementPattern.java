@@ -27,7 +27,6 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
-import com.intellij.util.ReflectionCache;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -98,7 +97,7 @@ public abstract class PsiElementPattern<T extends PsiElement,Self extends PsiEle
       @Override
       public boolean accepts(@NotNull final T t, final ProcessingContext context) {
         for (final PsiReference reference : t.getReferences()) {
-          if (ReflectionCache.isInstance(reference, referenceClass)) {
+          if (referenceClass.isInstance(reference)) {
             return true;
           }
         }

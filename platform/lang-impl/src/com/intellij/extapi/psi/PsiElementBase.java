@@ -32,7 +32,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.ReflectionCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -255,7 +254,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   protected <T> T[] findChildrenByClass(Class<T> aClass) {
     List<T> result = new ArrayList<T>();
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
-      if (ReflectionCache.isInstance(cur, aClass)) result.add((T)cur);
+      if (aClass.isInstance(cur)) result.add((T)cur);
     }
     return result.toArray((T[]) Array.newInstance(aClass, result.size()));
   }
@@ -263,7 +262,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   @Nullable
   protected <T> T findChildByClass(Class<T> aClass) {
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
-      if (ReflectionCache.isInstance(cur, aClass)) return (T)cur;
+      if (aClass.isInstance(cur)) return (T)cur;
     }
     return null;
   }
