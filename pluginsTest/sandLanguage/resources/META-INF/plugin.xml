@@ -16,6 +16,7 @@
     <library.type implementation="org.mustbe.consulo.sandLanguage.ide.library.SandLibraryType" />
     <packaging.artifactType implementation="org.mustbe.consulo.sandLanguage.ide.artifact.SandArtifactType" />
     <executor implementation="org.mustbe.consulo.sandLanguage.ide.run.SandExecutor" />
+    <configurationType implementation="org.mustbe.consulo.sandLanguage.ide.run.SandConfigurationType" />
     <moduleExtensionProvider key="sand"
                              icon="/nodes/static.png"
                              name="Sand"
