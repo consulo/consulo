@@ -45,7 +45,7 @@ import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
@@ -135,7 +135,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider {
     myTitle = title;
     myVirtualFile = lightFile;
     EditorFactory editorFactory = EditorFactory.getInstance();
-    myHistoryFile = new LightVirtualFile(getTitle() + ".history.txt", FileTypes.PLAIN_TEXT, "");
+    myHistoryFile = new LightVirtualFile(getTitle() + ".history.txt", PlainTextFileType.INSTANCE, "");
     myEditorDocument = FileDocumentManager.getInstance().getDocument(lightFile);
     assert myEditorDocument != null;
     myFile = psiFileFactory == null ? createFile(myVirtualFile, myEditorDocument, myProject) : psiFileFactory.fun(myVirtualFile, myProject);
