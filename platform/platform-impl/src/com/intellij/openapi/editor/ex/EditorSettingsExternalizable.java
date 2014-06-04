@@ -25,8 +25,6 @@ import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.NamedJDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -35,8 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -73,10 +69,6 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
     public boolean IS_DND_ENABLED = true;
     public boolean IS_WHEEL_FONTCHANGE_ENABLED = false;
     public boolean IS_MOUSE_CLICK_SELECTION_HONORS_CAMEL_WORDS = true;
-    @Deprecated
-    public boolean IS_NATIVE2ASCII_FOR_PROPERTIES_FILES;
-    @Deprecated
-    public String DEFAULT_PROPERTIES_FILES_CHARSET_NAME;
 
     public boolean RENAME_VARIABLES_INPLACE = true;
     public boolean PRESELECT_RENAME = true;
@@ -147,12 +139,7 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(myOptions, element, new DefaultJDOMExternalizer.JDOMFilter() {
-      @Override
-      public boolean isAccept(@NotNull final Field field) {
-        return !field.getName().equals("IS_NATIVE2ASCII_FOR_PROPERTIES_FILES") && !field.getName().equals("DEFAULT_PROPERTIES_FILES_CHARSET_NAME");
-      }
-    });
+    DefaultJDOMExternalizer.writeExternal(myOptions, element);
   }
 
   private void parseRawSoftWraps() {
@@ -281,10 +268,7 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
     }
 
     // For now use soft wraps at vcs diff if they are enabled for the main editors.
-    if (place == SoftWrapAppliancePlaces.VCS_DIFF) {
-      return myPlacesToUseSoftWraps.contains(SoftWrapAppliancePlaces.MAIN_EDITOR);
-    }
-    return false;
+    return place == SoftWrapAppliancePlaces.VCS_DIFF && myPlacesToUseSoftWraps.contains(SoftWrapAppliancePlaces.MAIN_EDITOR);
   }
 
   public void setUseSoftWraps(boolean use) {
@@ -528,19 +512,5 @@ public class EditorSettingsExternalizable implements NamedJDOMExternalizable, Ex
 
   public void setPreselectRename(final boolean val) {
     myOptions.PRESELECT_RENAME = val;
-  }
-
-
-  // returns true if something has been migrated
-  public boolean migrateCharsetSettingsTo(EncodingManager encodingManager) {
-    if (myOptions.DEFAULT_PROPERTIES_FILES_CHARSET_NAME != null) {
-      Charset charset = CharsetToolkit.forName(myOptions.DEFAULT_PROPERTIES_FILES_CHARSET_NAME);
-      if (charset != null) {
-        encodingManager.setDefaultCharsetForPropertiesFiles(null, charset);
-        encodingManager.setNative2AsciiForPropertiesFiles(null, myOptions.IS_NATIVE2ASCII_FOR_PROPERTIES_FILES);
-      }
-      return true;
-    }
-    return false;
   }
 }
