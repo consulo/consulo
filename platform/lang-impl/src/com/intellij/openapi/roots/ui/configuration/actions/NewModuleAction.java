@@ -36,7 +36,9 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.ide.impl.ui.CreateProjectOrModuleDialog;
 
 import java.util.List;
 
@@ -59,23 +61,24 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
     final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-    Module moduleBySimpleWay = createModuleBySimpleWay(project, virtualFile);
-    if(moduleBySimpleWay != null) {
+    boolean eapState = EarlyAccessProgramManager.getInstance().getState(CreateProjectOrModuleDialog.EapDescriptor.class);
+    Module moduleBySimpleWay = eapState ? CreateProjectOrModuleDialog.showAndCreate(project) : createModuleBySimpleWay(project, virtualFile);
+    if (moduleBySimpleWay != null) {
       processCreatedModule(moduleBySimpleWay, dataFromContext);
     }
   }
 
   public static Module createModuleBySimpleWay(Project project, VirtualFile virtualFile) {
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
-    FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false){
+    FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
       public boolean isFileSelectable(VirtualFile file) {
-        if(!super.isFileSelectable(file)) {
+        if (!super.isFileSelectable(file)) {
           return false;
         }
         for (Module module : moduleManager.getModules()) {
           VirtualFile moduleDir = module.getModuleDir();
-          if(moduleDir != null && moduleDir.equals(file)) {
+          if (moduleDir != null && moduleDir.equals(file)) {
             return false;
           }
         }
@@ -84,10 +87,9 @@ public class NewModuleAction extends AnAction implements DumbAware {
     };
     fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
 
-    VirtualFile moduleDir =
-      FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
+    VirtualFile moduleDir = FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
 
-    if(moduleDir == null) {
+    if (moduleDir == null) {
       return null;
     }
 
@@ -127,7 +129,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     }
     Module module;
     if (builder instanceof ModuleBuilder) {
-      module = ((ModuleBuilder) builder).commitModule(project, null);
+      module = ((ModuleBuilder)builder).commitModule(project, null);
       if (module != null) {
         processCreatedModule(module, dataFromContext);
       }
