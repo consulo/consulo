@@ -41,7 +41,6 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
@@ -733,19 +732,14 @@ public class FindDialog extends DialogWrapper {
     gbConstraints.gridy = 0;
     gbConstraints.gridwidth = 3;
     gbConstraints.weightx = 1;
-    final boolean canAttach = ProjectAttachProcessor.canAttachToProject();
-    myRbProject = new JRadioButton(canAttach
-                                   ? FindBundle.message("find.scope.all.projects.radio")
-                                   : FindBundle.message("find.scope.whole.project.radio"), true);
+    myRbProject = new JRadioButton(FindBundle.message("find.scope.whole.project.radio"), true);
     scopePanel.add(myRbProject, gbConstraints);
 
     gbConstraints.gridx = 0;
     gbConstraints.gridy++;
     gbConstraints.weightx = 0;
     gbConstraints.gridwidth = 1;
-    myRbModule = new JRadioButton(canAttach
-                                  ? FindBundle.message("find.scope.project.radio")
-                                  : FindBundle.message("find.scope.module.radio"), false);
+    myRbModule = new JRadioButton(FindBundle.message("find.scope.module.radio"), false);
     scopePanel.add(myRbModule, gbConstraints);
 
     gbConstraints.gridx = 1;

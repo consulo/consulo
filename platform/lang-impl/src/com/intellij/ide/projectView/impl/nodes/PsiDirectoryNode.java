@@ -40,7 +40,6 @@ import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
-import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.ui.LayeredIcon;
@@ -273,19 +272,6 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     }
 
     return icon;
-  }
-
-  @Override
-  public Comparable getSortKey() {
-    if (ProjectAttachProcessor.canAttachToProject()) {
-      // primary module is always on top; attached modules are sorted alphabetically
-      final VirtualFile file = getVirtualFile();
-      if (Comparing.equal(file, myProject.getBaseDir())) {
-        return "";    // sorts before any other name
-      }
-      return getTitle();
-    }
-    return null;
   }
 
   @Override

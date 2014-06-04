@@ -219,7 +219,7 @@
 
     <component>
       <interface-class>com.intellij.ide.RecentProjectsManagerBase</interface-class>
-      <implementation-class>com.intellij.ide.RecentDirectoryProjectsManagerEx</implementation-class>
+      <implementation-class>com.intellij.ide.RecentDirectoryProjectsManager</implementation-class>
     </component>
 
     <component>

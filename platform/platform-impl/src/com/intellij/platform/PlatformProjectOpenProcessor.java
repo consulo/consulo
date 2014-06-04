@@ -28,7 +28,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,7 +36,6 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import org.consulo.lombok.annotations.Logger;
@@ -120,27 +118,12 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
         projectToClose = openProjects[openProjects.length - 1];
       }
 
-      if (ProjectAttachProcessor.canAttachToProject()) {
-        final OpenOrAttachDialog dialog = new OpenOrAttachDialog(projectToClose, isReopen, isReopen ? "Reopen Project" : "Open Project");
-        dialog.show();
-        if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
-          return null;
-        }
-        if (dialog.isReplace()) {
-          if (!ProjectUtil.closeAndDispose(projectToClose)) return null;
-        }
-        else if (dialog.isAttach()) {
-          if (attachToProject(projectToClose, projectDir, callback)) return null;
-        }
+      int exitCode = ProjectUtil.confirmOpenNewProject(false);
+      if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
+        if (!ProjectUtil.closeAndDispose(projectToClose)) return null;
       }
-      else {
-        int exitCode = ProjectUtil.confirmOpenNewProject(false);
-        if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
-          if (!ProjectUtil.closeAndDispose(projectToClose)) return null;
-        }
-        else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
-          return null;
-        }
+      else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
+        return null;
       }
     }
 
@@ -220,17 +203,6 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
         });
       }
     });
-  }
-
-
-  private static boolean attachToProject(Project project, File projectDir, Consumer<Project> callback) {
-    final ProjectAttachProcessor[] extensions = Extensions.getExtensions(ProjectAttachProcessor.EP_NAME);
-    for (ProjectAttachProcessor processor : extensions) {
-      if (processor.attachToProject(project, projectDir, callback)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private static void openFileFromCommandLine(final Project project, final VirtualFile virtualFile, final int line) {

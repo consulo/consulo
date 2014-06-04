@@ -39,7 +39,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.PlatformProjectOpenProcessor;
-import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
+  @Override
   public void actionPerformed(AnActionEvent e) {
     @Nullable final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     final boolean showFiles = project != null || PlatformProjectOpenProcessor.getInstanceIfItExists() != null;
@@ -107,13 +107,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
                                  @NotNull final List<VirtualFile> result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
-        Project openedProject;
-        if (ProjectAttachProcessor.canAttachToProject()) {
-          openedProject = PlatformProjectOpenProcessor.doOpenProject(file, project, false, -1, null, false);
-        }
-        else {
-          openedProject = ProjectUtil.openOrImport(file.getPath(), project, false);
-        }
+        Project openedProject = ProjectUtil.openOrImport(file.getPath(), project, false);
         FileChooserUtil.setLastOpenedFile(openedProject, file);
         return;
       }

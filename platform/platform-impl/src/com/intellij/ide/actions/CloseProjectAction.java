@@ -17,14 +17,16 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.RecentProjectsManagerBase;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import com.intellij.projectImport.ProjectAttachProcessor;
 
 public class CloseProjectAction extends AnAction implements DumbAware {
+  @Override
   public void actionPerformed(AnActionEvent e) {
     Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     assert project != null;
@@ -34,15 +36,10 @@ public class CloseProjectAction extends AnAction implements DumbAware {
     WelcomeFrame.showIfNoProjectOpened();
   }
 
+  @Override
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
     Project project = event.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(project != null);
-    if (ProjectAttachProcessor.canAttachToProject() && project != null && ModuleManager.getInstance(project).getModules().length > 1) {
-      presentation.setText("Close Proj_ects in Current Window");
-    }
-    else {
-      presentation.setText("Close Pro_ject");
-    }
   }
 }
