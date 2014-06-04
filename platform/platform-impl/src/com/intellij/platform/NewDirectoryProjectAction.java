@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -31,7 +30,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.projectImport.ProjectOpenedCallback;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -93,11 +92,11 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
     }
     GeneralSettings.getInstance().setLastProjectCreationLocation(location.getParent());
     final Object finalSettings = settings;
-    return PlatformProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, new ProjectOpenedCallback() {
+    return PlatformProjectOpenProcessor.doOpenProject(baseDir, null, false, -1, new Consumer<Project>() {
       @Override
-      public void projectOpened(Project project, Module module) {
+      public void consume(Project project) {
         if (generator != null) {
-          generator.generateProject(project, baseDir, finalSettings, module);
+          generator.generateProject(project, baseDir, finalSettings);
         }
       }
     }, false);

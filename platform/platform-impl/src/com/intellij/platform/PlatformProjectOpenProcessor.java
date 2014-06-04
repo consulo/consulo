@@ -15,16 +15,10 @@
  */
 package com.intellij.platform;
 
-import java.io.File;
-
-import javax.swing.Icon;
-
-import org.consulo.lombok.annotations.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
@@ -36,14 +30,22 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectAttachProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import com.intellij.projectImport.ProjectOpenedCallback;
+import com.intellij.util.Consumer;
+import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.io.File;
 
 /**
  * @author max
@@ -68,6 +70,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     return null;
   }
 
+  @Override
   public boolean canOpenProject(final VirtualFile file) {
     return file.isDirectory();
   }
@@ -82,6 +85,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     return false;
   }
 
+  @Override
   @Nullable
   public Project doOpenProject(@NotNull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {
     return doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame, -1, null, false);
@@ -92,7 +96,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
                                       Project projectToClose,
                                       final boolean forceOpenInNewFrame,
                                       final int line,
-                                      @Nullable ProjectOpenedCallback callback,
+                                      @Nullable Consumer<Project> callback,
                                       final boolean isReopen) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
@@ -173,8 +177,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
     if (project == null) return null;
     ProjectBaseDirectory.getInstance(project).setBaseDir(baseDir);
-    final Module module = runConfigurators ? runDirectoryProjectConfigurators(baseDir, project) : null;
-
+    openProjectToolWindow(project);
     openFileFromCommandLine(project, virtualFile, line);
     if (!projectManager.openProject(project)) {
       WelcomeFrame.showIfNoProjectOpened();
@@ -189,26 +192,38 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     if (callback != null && runConfigurators) {
-      callback.projectOpened(project, module);
+      callback.consume(project);
     }
 
     return project;
   }
 
-  public static Module runDirectoryProjectConfigurators(VirtualFile baseDir, Project project) {
-    final Ref<Module> moduleRef = new Ref<Module>();
-    for (DirectoryProjectConfigurator configurator: Extensions.getExtensions(DirectoryProjectConfigurator.EP_NAME)) {
-      try {
-        configurator.configureProject(project, baseDir, moduleRef);
+  public static void openProjectToolWindow(final Project project) {
+    StartupManager.getInstance(project).registerPostStartupActivity(new DumbAwareRunnable() {
+      @Override
+      public void run() {
+        // ensure the dialog is shown after all startup activities are done
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+              @Override
+              public void run() {
+                if (project.isDisposed()) return;
+                final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+                if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
+                  toolWindow.activate(null);
+                }
+              }
+            }, ModalityState.NON_MODAL);
+          }
+        });
       }
-      catch (Exception e) {
-        LOGGER.error(e);
-      }
-    }
-    return moduleRef.get();
+    });
   }
 
-  private static boolean attachToProject(Project project, File projectDir, ProjectOpenedCallback callback) {
+
+  private static boolean attachToProject(Project project, File projectDir, Consumer<Project> callback) {
     final ProjectAttachProcessor[] extensions = Extensions.getExtensions(ProjectAttachProcessor.EP_NAME);
     for (ProjectAttachProcessor processor : extensions) {
       if (processor.attachToProject(project, projectDir, callback)) {
@@ -220,13 +235,16 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
   private static void openFileFromCommandLine(final Project project, final VirtualFile virtualFile, final int line) {
     StartupManager.getInstance(project).registerPostStartupActivity(new DumbAwareRunnable() {
+      @Override
       public void run() {
         if(project.isDisposed()) {
           return;
         }
         ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
+          @Override
           public void run() {
             ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
+              @Override
               public void run() {
                 if (!virtualFile.isDirectory()) {
                   if (line > 0) {
@@ -244,11 +262,13 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     });
   }
 
+  @Override
   @Nullable
   public Icon getIcon() {
     return null;
   }
 
+  @Override
   public String getName() {
     return "text editor";
   }

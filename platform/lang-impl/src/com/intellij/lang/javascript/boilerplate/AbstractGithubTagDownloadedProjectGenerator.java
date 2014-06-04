@@ -4,7 +4,6 @@ import com.intellij.ide.util.projectWizard.WebProjectTemplate;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
@@ -50,8 +49,7 @@ public abstract class AbstractGithubTagDownloadedProjectGenerator extends WebPro
   }
 
   @Override
-  public void generateProject(@NotNull final Project project, @NotNull final VirtualFile baseDir,
-                              @NotNull GithubTagInfo tag, @Nullable Module module) {
+  public void generateProject(@NotNull final Project project, @NotNull final VirtualFile baseDir, @NotNull GithubTagInfo tag) {
     try {
       unpackToDir(project, new File(baseDir.getPath()), tag);
     }

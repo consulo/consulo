@@ -40,7 +40,7 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectAttachProcessor;
-import com.intellij.projectImport.ProjectOpenedCallback;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,15 +54,13 @@ public class ModuleAttachProcessor extends ProjectAttachProcessor {
   private static final Logger LOG = Logger.getInstance(ModuleAttachProcessor.class);
 
   @Override
-  public boolean attachToProject(Project project, File projectDir, @Nullable ProjectOpenedCallback callback) {
+  public boolean attachToProject(Project project, File projectDir, @Nullable Consumer<Project> callback) {
     if (!projectDir.exists()) {
       Project newProject = ((ProjectManagerEx)ProjectManager.getInstance())
         .newProject(projectDir.getParentFile().getName(), projectDir.getParent(), true, false);
       if (newProject == null) {
         return false;
       }
-      final VirtualFile baseDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(projectDir.getParent());
-      PlatformProjectOpenProcessor.runDirectoryProjectConfigurators(baseDir, newProject);
       newProject.save();
       AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(null);
       try {
@@ -92,7 +90,7 @@ public class ModuleAttachProcessor extends ProjectAttachProcessor {
     return rc != Messages.YES;
   }
 
-  private static void attachModule(Project project, VirtualFile imlFile, @Nullable ProjectOpenedCallback callback) {
+  private static void attachModule(Project project, VirtualFile imlFile, @Nullable Consumer<Project> callback) {
     try {
       final ModifiableModuleModel model = ModuleManager.getInstance(project).getModifiableModel();
       final Module module = model.loadModule(imlFile.getPath());
@@ -114,7 +112,7 @@ public class ModuleAttachProcessor extends ProjectAttachProcessor {
       }
 
       if (callback != null) {
-        callback.projectOpened(project, newModule);
+        callback.consume(project);
       }
     }
     catch (Exception ex) {

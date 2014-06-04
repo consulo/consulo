@@ -120,8 +120,6 @@
       <with attribute="handlerClass" implements="com.intellij.codeInsight.highlighting.TooltipLinkHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="directoryProjectConfigurator"
-                    interface="com.intellij.platform.DirectoryProjectConfigurator"/>
     <extensionPoint name="directoryProjectGenerator"
                     interface="com.intellij.platform.DirectoryProjectGenerator"/>
 
@@ -2143,8 +2141,6 @@
 
     <syntaxHighlighter factoryClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeHighlighterProvider"/>
     <fileTypeRegistrator implementation="com.intellij.ide.highlighter.custom.impl.StandardFileTypeRegistrator"/>
-
-    <directoryProjectConfigurator implementation="com.intellij.platform.PlatformProjectViewOpener"/>
 
     <statementUpDownMover implementation="com.intellij.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
 

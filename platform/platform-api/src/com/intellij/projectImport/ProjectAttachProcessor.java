@@ -18,6 +18,7 @@ package com.intellij.projectImport;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class ProjectAttachProcessor {
    * @param callback   the callback to call on successful attachment
    * @return true if the attach succeeded, false if the project should be opened in a new window.
    */
-  public boolean attachToProject(Project project, File projectDir, @Nullable ProjectOpenedCallback callback) {
+  public boolean attachToProject(Project project, File projectDir, @Nullable Consumer<Project> callback) {
     return false;
   }
   

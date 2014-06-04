@@ -16,7 +16,6 @@
 package com.intellij.platform;
 
 import com.intellij.ide.util.projectWizard.SettingsStep;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -63,7 +62,7 @@ public abstract class WebProjectGenerator<T> implements DirectoryProjectGenerato
   }
 
   @Override
-  public abstract void generateProject(@NotNull Project project, @NotNull VirtualFile baseDir, @NotNull T settings, @NotNull Module module);
+  public abstract void generateProject(@NotNull Project project, @NotNull VirtualFile baseDir, @NotNull T settings);
 
   /**
    * Always returns {@link ValidationResult#OK}.

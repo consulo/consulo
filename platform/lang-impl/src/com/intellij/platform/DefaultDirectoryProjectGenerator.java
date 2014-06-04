@@ -35,10 +35,7 @@ public class DefaultDirectoryProjectGenerator implements DirectoryProjectGenerat
   }
 
   @Override
-  public void generateProject(@NotNull final Project project,
-                              @NotNull final VirtualFile baseDir,
-                              @Nullable Object settings,
-                              @Nullable Module module) {
+  public void generateProject(@NotNull final Project project, @NotNull final VirtualFile baseDir, @Nullable Object settings) {
     new WriteAction<Object>() {
 
       @Override

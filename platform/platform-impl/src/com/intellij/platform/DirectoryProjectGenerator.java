@@ -16,7 +16,6 @@
 package com.intellij.platform;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,8 +36,7 @@ public interface DirectoryProjectGenerator<T> {
   @Nullable
   T showGenerationSettings(final VirtualFile baseDir) throws ProcessCanceledException;
 
-  void generateProject(@NotNull final Project project, @NotNull final VirtualFile baseDir,
-                       @Nullable final T settings, @Nullable final Module module);
+  void generateProject(@NotNull final Project project, @NotNull final VirtualFile baseDir, @Nullable final T settings);
 
   @Nullable
   String validate(@NotNull String baseDirPath);
