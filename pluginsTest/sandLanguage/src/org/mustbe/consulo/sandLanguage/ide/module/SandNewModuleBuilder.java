@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.ide.impl.NewModuleBuilder;
 import org.mustbe.consulo.ide.impl.NewModuleBuilderProcessor;
 import org.mustbe.consulo.ide.impl.NewModuleContext;
+import org.mustbe.consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension;
 
 import javax.swing.*;
@@ -35,12 +36,30 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
   public void setupContext(@NotNull NewModuleContext context) {
     context.addItem("#SandGroup", "Sand", AllIcons.Nodes.Advice);
     context.addItem("#SandExample", "Sand Example", AllIcons.Nodes.Static);
+    context.addItem("#SandHello", "Sand Hello", AllIcons.Nodes.ProjectTab);
+
+    context.setupItem(new String[]{"#SandGroup", "#SandHello"}, new UnzipNewModuleBuilderProcessor("/moduleTemplates/Hello.zip") {
+      @NotNull
+      @Override
+      public JComponent createConfigurationPanel() {
+        return new JBLabel("Hello World !!!");
+      }
+
+      @Override
+      public void setupModule(@NotNull JComponent panel, @NotNull ModifiableRootModel modifiableRootModel) {
+        SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
+        assert extension != null;
+        extension.setEnabled(true);
+
+        unzip(modifiableRootModel);
+      }
+    });
 
     context.setupItem(new String[]{"#SandGroup", "#SandExample"}, new NewModuleBuilderProcessor() {
       @NotNull
       @Override
       public JComponent createConfigurationPanel() {
-        return new JBLabel("Hello World !!!");
+        return new JBLabel("Sand Example!");
       }
 
       @Override
