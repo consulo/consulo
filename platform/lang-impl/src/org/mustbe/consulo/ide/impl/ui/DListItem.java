@@ -95,7 +95,7 @@ public class DListItem {
           if(empty1 == empty2 || !empty1 == !empty2) {
             return StringUtil.compare(o1.getName(), o2.getName(), true);
           }
-          return 1;
+          return !empty2 ? 1 : 0;
         }
       });
       return item;
