@@ -37,6 +37,8 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@NotNull NewModuleContext context) {
     context.addItem("#SandGroup", "Sand", AllIcons.Nodes.Advice);
+    // context.addItem("#JavaGroup", "Java", AllIcons.FileTypes.Java);
+    // context.addItem("#JavaExample", "Hello World", AllIcons.RunConfigurations.Application);
     context.addItem("#SandExample", "Sand Example", AllIcons.Nodes.Static);
     context.addItem("#SandHello", "Sand Hello", AllIcons.Nodes.ProjectTab);
 
@@ -73,5 +75,17 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
         extension.setEnabled(true);
       }
     });
+
+    /*context.setupItem(new String[]{"#JavaGroup", "#JavaExample"}, new NewModuleBuilderProcessor() {
+      @NotNull
+      @Override
+      public JComponent createConfigurationPanel() {
+        return new JBLabel("Java Example!");
+      }
+
+      @Override
+      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
+      }
+    }); */
   }
 }

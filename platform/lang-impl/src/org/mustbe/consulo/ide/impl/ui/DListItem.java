@@ -92,10 +92,15 @@ public class DListItem {
         public int compare(DListItem o1, DListItem o2) {
           boolean empty1 = o1.getItems().isEmpty();
           boolean empty2 = o2.getItems().isEmpty();
-          if(empty1 == empty2 || !empty1 == !empty2) {
+          if(empty1 && empty2 || !empty1 && !empty2) {
             return StringUtil.compare(o1.getName(), o2.getName(), true);
           }
-          return !empty2 ? 1 : 0;
+          if(empty1) {
+            return 1;
+          }
+          else {
+            return -1;
+          }
         }
       });
       return item;
