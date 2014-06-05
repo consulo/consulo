@@ -225,7 +225,7 @@ public class ModuleVcsDetector implements ProjectComponent {
         if (myProject.isDisposed()) return;
         final String msg = VcsBundle.message("vcs.root.remove.prompt", FileUtil.toSystemDependentName(mapping.getDirectory()), moduleName);
         int rc = Messages.showYesNoDialog(myProject, msg, VcsBundle.message("vcs.root.remove.title"), Messages.getQuestionIcon());
-        if (rc == 0) {
+        if (rc == Messages.YES) {
           myVcsManager.removeDirectoryMapping(mapping);
         }
       }

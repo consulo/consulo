@@ -503,7 +503,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     }
     int result =
       Messages.showYesNoDialog(myProject, question, ProjectBundle.message("module.remove.confirmation.title"), Messages.getQuestionIcon());
-    if (result != 0) {
+    if (result != Messages.YES) {
       return false;
     }
     // do remove

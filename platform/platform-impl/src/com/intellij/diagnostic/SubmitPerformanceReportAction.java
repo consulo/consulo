@@ -50,6 +50,7 @@ public class SubmitPerformanceReportAction extends AnAction implements DumbAware
 
   private static final String MESSAGE_TITLE = "Submit Performance Report";
 
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     String reportFileName = "perf_" + ApplicationInfo.getInstance().getBuild().asString() + "_" +
                             SystemProperties.getUserName() + "_" + myDateFormat.format(new Date()) + ".zip";
@@ -59,10 +60,12 @@ public class SubmitPerformanceReportAction extends AnAction implements DumbAware
 
     final boolean[] archiveCreated = new boolean[1];
     final boolean completed = ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
+      @Override
       public void run() {
         try {
           ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(reportPath));
           ZipUtil.addDirToZipRecursively(zip, reportPath, logDir, "", new FileFilter() {
+            @Override
             public boolean accept(final File pathname) {
               ProgressManager.checkCanceled();
 
@@ -77,6 +80,7 @@ public class SubmitPerformanceReportAction extends AnAction implements DumbAware
         }
         catch (final IOException ex) {
           ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
             public void run() {
               Messages.showErrorDialog(project, "Failed to create performance report archive: " + ex.getMessage(), MESSAGE_TITLE);
             }
@@ -93,12 +97,14 @@ public class SubmitPerformanceReportAction extends AnAction implements DumbAware
     int rc = Messages.showYesNoDialog(project, "The performance report has been saved to\n" + reportPath +
                                                "\n\nWould you like to submit it to JetBrains?", MESSAGE_TITLE,
                                       Messages.getQuestionIcon());
-    if (rc == 0) {
+    if (rc == Messages.YES) {
       ProgressManager.getInstance().run(new Task.Backgroundable(project, "Uploading Performance Report") {
+        @Override
         public void run(@NotNull final ProgressIndicator indicator) {
           final String error = uploadFileToFTP(reportPath, "ftp.intellij.net", ".uploads", indicator);
           if (error != null) {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
+              @Override
               public void run() {
                 Messages.showErrorDialog(error, MESSAGE_TITLE);
               }

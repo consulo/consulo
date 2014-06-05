@@ -300,7 +300,7 @@ public class VcsStructureChooser extends DialogWrapper {
           if (idx != null && idx.length > 0) {
             final int answer = Messages
               .showYesNoDialog(myProject, "Remove selected paths from filter?", "Remove from filter", Messages.getQuestionIcon());
-            if (Messages.YES == answer) {
+            if (answer == Messages.YES) {
               Arrays.sort(idx);
               for (int i = idx.length - 1; i >= 0; --i) {
                 int i1 = idx[i];

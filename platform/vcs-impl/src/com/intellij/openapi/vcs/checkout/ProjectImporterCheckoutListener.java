@@ -39,7 +39,7 @@ public class ProjectImporterCheckoutListener implements CheckoutListener {
             int rc = Messages.showYesNoDialog(project, VcsBundle
               .message("checkout.open.project.prompt", ProjectDirCheckoutListener.getProductNameWithArticle(), files[0].getPath()),
                                               VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
-            if (rc == 0) {
+            if (rc == Messages.YES) {
               openProcessor.doOpenProject(virtualFile, project, false);
             }
             return true;
