@@ -197,7 +197,7 @@ public class BuildArtifactAction extends DumbAwareAction {
                     info + "Do you want to continue and clear these directories?";
         }
         final int answer = Messages.showYesNoDialog(myProject, message, "Clean Artifacts", null);
-        if (answer != 0) {
+        if (answer != Messages.YES) {
           return;
         }
       }

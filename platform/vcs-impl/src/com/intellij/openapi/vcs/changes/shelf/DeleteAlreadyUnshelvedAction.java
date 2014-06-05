@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
 
@@ -41,6 +43,7 @@ public class DeleteAlreadyUnshelvedAction extends AnAction {
     presentation.setText(myText);
   }
 
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -49,7 +52,7 @@ public class DeleteAlreadyUnshelvedAction extends AnAction {
     final int result = Messages
       .showYesNoDialog(project, VcsBundle.message("delete.all.already.unshelved.confirmation"), myText,
                        Messages.getWarningIcon());
-    if (DialogWrapper.OK_EXIT_CODE == result) {
+    if (result == Messages.YES) {
       final ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
       manager.clearRecycled();
     }

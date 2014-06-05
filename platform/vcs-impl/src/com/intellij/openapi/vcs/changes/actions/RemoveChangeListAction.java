@@ -22,10 +22,12 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
@@ -37,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RemoveChangeListAction extends AnAction implements DumbAware {
+  @Override
   public void update(AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
@@ -58,6 +61,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     return true;
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     final ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
@@ -76,7 +80,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
 
     if (lists.length == 1) {
       final LocalChangeList list = (LocalChangeList)lists[0];
-      rc = list.getChanges().size() == 0 ? DialogWrapper.OK_EXIT_CODE :
+      rc = list.getChanges().size() == 0 ? Messages.YES :
                Messages.showYesNoDialog(project,
                                         VcsBundle.message("changes.removechangelist.warning.text", list.getName()),
                                         VcsBundle.message("changes.removechangelist.warning.title"),
@@ -87,13 +91,13 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
       for (ChangeList list : lists) {
         notEmpty |= (list.getChanges().size() > 0);
       }
-      rc = (! notEmpty) ? DialogWrapper.OK_EXIT_CODE : Messages.showYesNoDialog(project,
+      rc = (! notEmpty) ? Messages.YES : Messages.showYesNoDialog(project,
                                     VcsBundle.message("changes.removechangelist.multiple.warning.text", lists.length),
                                     VcsBundle.message("changes.removechangelist.warning.title"),
                                     Messages.getQuestionIcon());
     }
 
-    if (rc == DialogWrapper.OK_EXIT_CODE) {
+    if (rc == Messages.YES) {
       for(ChangeList list: lists) {
         ChangeListManager.getInstance(project).removeChangeList(list.getName());
       }

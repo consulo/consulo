@@ -87,7 +87,7 @@ public class PsiElementRenameHandler implements RenameHandler {
       final String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
       if (ApplicationManager.getApplication().isUnitTestMode()) throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
       if (Messages.showYesNoDialog(project, message,
-                                   RefactoringBundle.getCannotRefactorMessage(null), Messages.getWarningIcon()) != DialogWrapper.OK_EXIT_CODE) {
+                                   RefactoringBundle.getCannotRefactorMessage(null), Messages.getWarningIcon()) != Messages.YES) {
         return;
       }
     }
