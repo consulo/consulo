@@ -104,9 +104,9 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
           Pair<String, Icon> itemInfo = context.getItem(item);
 
           map.put(item, builder = DListItem.builder().withName(itemInfo.getFirst()).withIcon(itemInfo.getSecond()).withAttach(processor));
-        }
 
-        prev.withItems(builder);
+          prev.withItems(builder);
+        }
 
         prev = builder;
       }
@@ -151,18 +151,20 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
       public void consume(DListItem dListItem) {
         NewModuleBuilderProcessor processor = dListItem == null ? null : (NewModuleBuilderProcessor)dListItem.getAttach();
 
-        if (processor != null) {
-          myConfigurationPanel = processor.createConfigurationPanel();
-          etcPanel.add(myConfigurationPanel, BorderLayout.NORTH);
-        }
-        else {
-          myConfigurationPanel = nullPanel;
-          etcPanel.removeAll();
+        if(myConfigurationPanel != null) {
+          etcPanel.remove(myConfigurationPanel);
+          myConfigurationPanel = null;
         }
 
         myProcessor = processor;
 
         if (dListItem != null) {
+
+          if (processor != null) {
+            myConfigurationPanel = processor.createConfigurationPanel();
+            etcPanel.add(myConfigurationPanel, BorderLayout.NORTH);
+          }
+
           mySplitter.setSecondComponent(panel);
         }
         else {
