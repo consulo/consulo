@@ -53,12 +53,12 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
     @NotNull
     @Override
     public String getName() {
-      return "New dialog for creating project/module";
+      return "Module wizard dialogs";
     }
 
     @Override
     public boolean getDefaultState() {
-      return false;
+      return true;
     }
 
     @NotNull
