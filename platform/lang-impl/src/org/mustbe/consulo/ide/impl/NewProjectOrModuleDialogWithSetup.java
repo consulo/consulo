@@ -168,9 +168,12 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
         else {
           mySplitter.setSecondComponent(nullPanel);
         }
+
+        setOKActionEnabled(myProcessor != null);
       }
     });
 
+    setOKActionEnabled(false);
     init();
   }
 
