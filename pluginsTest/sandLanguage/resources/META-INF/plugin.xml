@@ -30,5 +30,6 @@
                 requireModuleExtensions="sand"
                 icon="/toolwindows/toolWindowCommander.png"
                 factoryClass="org.mustbe.consulo.sandLanguage.ide.toolwindow.SandToolWindowFactory" />
+    <newModuleBuilder implementation="org.mustbe.consulo.sandLanguage.ide.module.SandNewModuleBuilder" />
   </extensions>
 </idea-plugin>

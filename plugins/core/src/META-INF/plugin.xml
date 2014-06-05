@@ -120,7 +120,6 @@
       <with attribute="handlerClass" implements="com.intellij.codeInsight.highlighting.TooltipLinkHandler"/>
     </extensionPoint>
 
-
     <extensionPoint name="applicationLoadListener" interface="com.intellij.ide.ApplicationLoadListener"/>
 
     <extensionPoint name="editorTabTitleProvider" interface="com.intellij.openapi.fileEditor.impl.EditorTabTitleProvider"/>
@@ -899,6 +898,8 @@
                     beanClass="com.intellij.ide.util.projectWizard.ModuleBuilderFactory">
       <with attribute="builderClass" implements="com.intellij.ide.util.projectWizard.ModuleBuilder"/>
     </extensionPoint>
+
+    <extensionPoint name="newModuleBuilder" interface="org.mustbe.consulo.ide.impl.NewModuleBuilder" />
 
     <extensionPoint name="projectTemplateParameterFactory"
                     interface="com.intellij.ide.util.projectWizard.ProjectTemplateParameterFactory"/>
@@ -2524,5 +2525,7 @@
     <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.TextWithMarkupProcessor"/>
     <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.RtfCopyPasteProcessor"/>
     <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.HtmlCopyPasteProcessor"/>
+
+    <newModuleBuilder implementation="org.mustbe.consulo.ide.impl.EmptyNewModuleBuilder" />
   </extensions>
 </idea-plugin>

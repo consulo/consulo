@@ -120,7 +120,7 @@ public class DListWithChildren extends JBList {
       @Override
       public void valueChanged(ListSelectionEvent e) {
         DListItem selectedValue = (DListItem)getSelectedValue();
-        if(!selectedValue.getItems().isEmpty() || selectedValue == ourReturnItem) {
+        if (selectedValue == null || !selectedValue.getItems().isEmpty() || selectedValue == ourReturnItem) {
           selectedValue = null;
         }
         if (myConsumer != null) {
@@ -144,9 +144,8 @@ public class DListWithChildren extends JBList {
   public void select(@NotNull DListItem root) {
     mySelected = root;
 
+    removeSelectionInterval(0, getItemsCount());
     MyModel model = (MyModel)getModel();
     model.fireContentsChanged(this, -1, -1);
-
-    setSelectedValue(ourReturnItem, false);
   }
 }

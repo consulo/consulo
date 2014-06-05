@@ -15,16 +15,15 @@
  */
 package org.mustbe.consulo.ide.impl.ui;
 
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.containers.ContainerUtil;
 import lombok.val;
 import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -88,6 +87,17 @@ public class DListItem {
         builder.withParent(item);
         child.add(builder.create());
       }
+      ContainerUtil.sort(child, new Comparator<DListItem>() {
+        @Override
+        public int compare(DListItem o1, DListItem o2) {
+          boolean empty1 = o1.getItems().isEmpty();
+          boolean empty2 = o2.getItems().isEmpty();
+          if(empty1 == empty2 || !empty1 == !empty2) {
+            return StringUtil.compare(o1.getName(), o2.getName(), true);
+          }
+          return 1;
+        }
+      });
       return item;
     }
   }

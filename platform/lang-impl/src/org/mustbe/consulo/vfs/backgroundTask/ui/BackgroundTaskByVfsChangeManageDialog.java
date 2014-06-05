@@ -211,14 +211,10 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     super.doOKAction();
   }
 
-  @Override
-  public Dimension getPreferredSize() {
-    return new Dimension(600, 200);
-  }
-
   @Nullable
   @Override
   protected String getDimensionServiceKey() {
+    setSize(600, 200);
     return "#BackgroundTaskByVfsChangeManageDialog";
   }
 

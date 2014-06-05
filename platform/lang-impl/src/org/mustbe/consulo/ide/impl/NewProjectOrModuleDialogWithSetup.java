@@ -15,19 +15,21 @@
  */
 package org.mustbe.consulo.ide.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.LocationNameFieldsBinding;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
+import lombok.val;
 import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +38,8 @@ import org.mustbe.consulo.ide.impl.ui.DListWithChildren;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -66,6 +70,10 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
   private JBSplitter mySplitter;
   private JTextField myNameField;
   private TextFieldWithBrowseButton myLocationField;
+  private DListWithChildren myListWithChildren;
+
+  private JComponent myConfigurationPanel;
+  private NewModuleBuilderProcessor myProcessor;
 
   public NewProjectOrModuleDialogWithSetup(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     super(project, true);
@@ -73,20 +81,44 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
     setTitle(myModuleCreation ? IdeBundle.message("title.add.module") : IdeBundle.message("title.new.project"));
 
-    DListItem root = DListItem.builder().withItems(DListItem.builder().withName("Java").withIcon(AllIcons.Nodes.Static)
-                                                           .withItems(DListItem.builder().withName("Hello World").withIcon(AllIcons.Nodes.Class)),
-                                                   DListItem.builder().withName("C#").withIcon(AllIcons.Nodes.TypeAlias)
-                                                           .withItems(DListItem.builder().withName("ASP").withIcon(AllIcons.Nodes.Artifact)),
-                                                   DListItem.builder().withName("Empty").withIcon(AllIcons.FileTypes.Text)).create();
+    val context = new NewModuleContext();
 
+    for (NewModuleBuilder newModuleBuilder : NewModuleBuilder.EP_NAME.getExtensions()) {
+      newModuleBuilder.setupContext(context);
+    }
+
+    DListItem.Builder root = DListItem.builder();
+
+    Map<String, DListItem.Builder> map = new HashMap<String, DListItem.Builder>();
+
+    for (Pair<String[], NewModuleBuilderProcessor> pair : context.getSetup()) {
+      String[] path = pair.getFirst();
+      NewModuleBuilderProcessor processor = pair.getSecond();
+
+      DListItem.Builder prev = root;
+      for (int i = 0; i < path.length; i++) {
+        String item = path[i];
+
+        DListItem.Builder builder = map.get(item);
+        if (builder == null) {
+          Pair<String, Icon> itemInfo = context.getItem(item);
+
+          map.put(item, builder = DListItem.builder().withName(itemInfo.getFirst()).withIcon(itemInfo.getSecond()).withAttach(processor));
+        }
+
+        prev.withItems(builder);
+
+        prev = builder;
+      }
+    }
 
     mySplitter = new JBSplitter(0.3f);
-    mySplitter.setSplitterProportionKey("#CreateProjectOrModuleDialog.Splitter");
+    mySplitter.setSplitterProportionKey("#NewProjectOrModuleDialogWithSetup.Splitter");
 
-    DListWithChildren list = new DListWithChildren();
-    list.select(root);
+    myListWithChildren = new DListWithChildren();
+    myListWithChildren.select(root.create());
 
-    mySplitter.setFirstComponent(new JBScrollPane(list));
+    mySplitter.setFirstComponent(new JBScrollPane(myListWithChildren));
 
     final JPanel panel = new JPanel(new VerticalFlowLayout());
 
@@ -106,24 +138,39 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
     panel.add(new SeparatorComponent());
 
+    final JPanel etcPanel = new JPanel(new BorderLayout());
+
+    panel.add(etcPanel);
+
     final JPanel nullPanel = new JPanel(new BorderLayout());
 
     mySplitter.setSecondComponent(nullPanel);
 
-    list.setConsumer(new Consumer<DListItem>() {
+    myListWithChildren.setConsumer(new Consumer<DListItem>() {
       @Override
       public void consume(DListItem dListItem) {
+        NewModuleBuilderProcessor processor = dListItem == null ? null : (NewModuleBuilderProcessor)dListItem.getAttach();
+
+        if (processor != null) {
+          myConfigurationPanel = processor.createConfigurationPanel();
+          etcPanel.add(myConfigurationPanel, BorderLayout.NORTH);
+        }
+        else {
+          myConfigurationPanel = nullPanel;
+          etcPanel.removeAll();
+        }
+
+        myProcessor = processor;
+
         if (dListItem != null) {
           mySplitter.setSecondComponent(panel);
         }
         else {
           mySplitter.setSecondComponent(nullPanel);
         }
-        mySplitter.invalidate();
       }
     });
 
-    setSize(800, 600);
     init();
   }
 
@@ -139,6 +186,12 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
     return myNameField.getText();
   }
 
+  @Nullable
+  @Override
+  public JComponent getPreferredFocusedComponent() {
+    return myListWithChildren;
+  }
+
   @Override
   public boolean isModuleCreation() {
     return myModuleCreation;
@@ -146,12 +199,21 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
   @Override
   protected String getDimensionServiceKey() {
-    return "#CreateProjectOrModuleDialog";
+    setSize(600, 400);
+    return "#NewProjectOrModuleDialogWithSetup";
   }
 
   @Nullable
   @Override
   protected JComponent createCenterPanel() {
     return mySplitter;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  protected void postSetupModule(@NotNull ModifiableRootModel modifiableRootModel) {
+    if (myProcessor != null) {
+      myProcessor.setupModule(myConfigurationPanel, modifiableRootModel);
+    }
   }
 }
