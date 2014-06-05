@@ -101,7 +101,7 @@ public class EarlyAccessProgramConfigurable implements Configurable {
     myList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        Object itemAt = myList.getItemAt(e.getFirstIndex());
+        Object itemAt = myList.getItemAt(myList.getSelectedIndex());
         if (itemAt instanceof EarlyAccessProgramDescriptor) {
           textField.setText(((EarlyAccessProgramDescriptor)itemAt).getDescription());
         }
