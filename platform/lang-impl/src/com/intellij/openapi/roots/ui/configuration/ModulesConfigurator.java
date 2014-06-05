@@ -55,8 +55,10 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
+import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialogWithSetup;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 
 import java.awt.*;
@@ -393,30 +395,41 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         return null;
       }
 
-      final Module module = myModuleModel.newModule(moduleDir.getNameWithoutExtension(), moduleDir.getPath());
+      final Module newModule;
+      if(EarlyAccessProgramManager.getInstance().getState(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
+        NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
+        newModule = dialogWithSetup.showAndGet() ? dialogWithSetup.doCreate(myModuleModel, moduleDir) : null;
+      }
+      else {
+        newModule = myModuleModel.newModule(moduleDir.getNameWithoutExtension(), moduleDir.getPath());
 
-      final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+        final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(newModule).getModifiableModel();
 
-      modifiableModel.addContentEntry(moduleDir);
+        modifiableModel.addContentEntry(moduleDir);
 
-      new WriteAction<Object>() {
-        @Override
-        protected void run(Result<Object> result) throws Throwable {
-          modifiableModel.commit();
-        }
-      }.execute();
+        new WriteAction<Object>() {
+          @Override
+          protected void run(Result<Object> result) throws Throwable {
+            modifiableModel.commit();
+          }
+        }.execute();
+      }
+
+      if(newModule == null) {
+        return null;
+      }
 
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
-          getOrCreateModuleEditor(module);
+          getOrCreateModuleEditor(newModule);
 
           Collections.sort(myModuleEditors, myModuleEditorComparator);
         }
       });
       processModuleCountChanged();
 
-      return Collections.singletonList(module);
+      return Collections.singletonList(newModule);
     }
     return null;
   }

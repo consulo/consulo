@@ -17,15 +17,16 @@ package com.intellij.platform;
 
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.ide.impl.NewProjectOrModuleDialog;
 
 import javax.swing.*;
 
 /**
  * @author yole
  */
-public class NewDirectoryProjectDialog extends DialogWrapper {
+public class NewDirectoryProjectDialog extends NewProjectOrModuleDialog {
   private JTextField myProjectNameTextField;
   private TextFieldWithBrowseButton myLocationField;
   protected JPanel myRootPane;
@@ -64,11 +65,14 @@ public class NewDirectoryProjectDialog extends DialogWrapper {
     return myRootPane;
   }
 
-  public String getNewProjectLocation() {
+  @NotNull
+  @Override
+  public String getLocationText() {
     return myLocationField.getText();
   }
 
-  public String getNewProjectName() {
+  @Override
+  public String getNameText() {
     return myProjectNameTextField.getText();
   }
 

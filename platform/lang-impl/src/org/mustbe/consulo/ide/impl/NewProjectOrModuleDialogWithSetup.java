@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mustbe.consulo.ide.impl.ui;
+package org.mustbe.consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.LocationNameFieldsBinding;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
@@ -32,6 +31,8 @@ import com.intellij.util.Consumer;
 import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.ide.impl.ui.DListItem;
+import org.mustbe.consulo.ide.impl.ui.DListWithChildren;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +41,9 @@ import java.awt.*;
  * @author VISTALL
  * @since 04.06.14
  */
-public class CreateProjectOrModuleDialog extends DialogWrapper {
+public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog {
+  private final boolean myModuleCreation;
+
   public static class EapDescriptor implements EarlyAccessProgramDescriptor {
     @NotNull
     @Override
@@ -61,11 +64,14 @@ public class CreateProjectOrModuleDialog extends DialogWrapper {
   }
 
   private JBSplitter mySplitter;
+  private JTextField myNameField;
+  private TextFieldWithBrowseButton myLocationField;
 
-  public CreateProjectOrModuleDialog(@Nullable Project project) {
-    super(project);
+  public NewProjectOrModuleDialogWithSetup(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+    super(project, true);
+    myModuleCreation = virtualFile != null;
 
-    setTitle(project == null ? IdeBundle.message("title.new.project") : IdeBundle.message("title.add.module"));
+    setTitle(myModuleCreation ? IdeBundle.message("title.add.module") : IdeBundle.message("title.new.project"));
 
     DListItem root = DListItem.builder().withItems(DListItem.builder().withName("Java").withIcon(AllIcons.Nodes.Static)
                                                            .withItems(DListItem.builder().withName("Hello World").withIcon(AllIcons.Nodes.Class)),
@@ -84,15 +90,21 @@ public class CreateProjectOrModuleDialog extends DialogWrapper {
 
     final JPanel panel = new JPanel(new VerticalFlowLayout());
 
-    JTextField nameTextField = new JTextField();
-    TextFieldWithBrowseButton locationTextField = new TextFieldWithBrowseButton();
+    myNameField = new JTextField();
+    myLocationField = new TextFieldWithBrowseButton();
 
-    panel.add(LabeledComponent.create(nameTextField, "Name").setLabelLocation(BorderLayout.WEST));
-    panel.add(LabeledComponent.create(locationTextField, "Path").setLabelLocation(BorderLayout.WEST));
+    panel.add(LabeledComponent.create(myNameField, "Name").setLabelLocation(BorderLayout.WEST));
+
+    if (virtualFile != null) {
+      myNameField.setText(virtualFile.getName());
+    }
+    else {
+      panel.add(LabeledComponent.create(myLocationField, "Path").setLabelLocation(BorderLayout.WEST));
+
+      new LocationNameFieldsBinding(project, myLocationField, myNameField, ProjectUtil.getBaseDir(), "Select Directory");
+    }
+
     panel.add(new SeparatorComponent());
-
-    new LocationNameFieldsBinding(project, locationTextField, nameTextField, ProjectUtil.getBaseDir(),
-                                  "Select Directory");
 
     final JPanel nullPanel = new JPanel(new BorderLayout());
 
@@ -101,7 +113,7 @@ public class CreateProjectOrModuleDialog extends DialogWrapper {
     list.setConsumer(new Consumer<DListItem>() {
       @Override
       public void consume(DListItem dListItem) {
-        if(dListItem != null) {
+        if (dListItem != null) {
           mySplitter.setSecondComponent(panel);
         }
         else {
@@ -115,11 +127,21 @@ public class CreateProjectOrModuleDialog extends DialogWrapper {
     init();
   }
 
+  @NotNull
+  @Override
+  public String getLocationText() {
+    return myLocationField.getText();
+  }
+
   @Nullable
-  public static Module showAndCreate(Project project) {
-    CreateProjectOrModuleDialog dialog = new CreateProjectOrModuleDialog(project);
-    dialog.show();
-    return null; //TODO [VISTALL]
+  @Override
+  public String getNameText() {
+    return myNameField.getText();
+  }
+
+  @Override
+  public boolean isModuleCreation() {
+    return myModuleCreation;
   }
 
   @Override
