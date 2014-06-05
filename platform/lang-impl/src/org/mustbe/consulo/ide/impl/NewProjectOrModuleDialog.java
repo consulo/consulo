@@ -75,7 +75,7 @@ public abstract class NewProjectOrModuleDialog extends DialogWrapper {
       contentEntry.addFolder(contentEntry.getUrl() + "/" + Project.DIRECTORY_STORE_FOLDER, ExcludedContentFolderTypeProvider.getInstance());
     }
 
-    postSetupModule(modifiableModelForModule);
+    postSetupModule(contentEntry, modifiableModelForModule);
 
     modifiableModelForModule.commit();
 
@@ -89,7 +89,7 @@ public abstract class NewProjectOrModuleDialog extends DialogWrapper {
     return false;
   }
 
-  protected void postSetupModule(@NotNull ModifiableRootModel modifiableRootModel) {
+  protected void postSetupModule(@NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
 
   }
 }

@@ -18,6 +18,7 @@ package org.mustbe.consulo.ide.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
@@ -216,9 +217,9 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
   @Override
   @SuppressWarnings("unchecked")
-  protected void postSetupModule(@NotNull ModifiableRootModel modifiableRootModel) {
+  protected void postSetupModule(@NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
     if (myProcessor != null) {
-      myProcessor.setupModule(myConfigurationPanel, modifiableRootModel);
+      myProcessor.setupModule(myConfigurationPanel, contentEntry, modifiableRootModel);
     }
   }
 }

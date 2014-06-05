@@ -16,6 +16,7 @@
 package org.mustbe.consulo.sandLanguage.ide.module;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.ui.components.JBLabel;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,7 @@ import org.mustbe.consulo.ide.impl.NewModuleBuilder;
 import org.mustbe.consulo.ide.impl.NewModuleBuilderProcessor;
 import org.mustbe.consulo.ide.impl.NewModuleContext;
 import org.mustbe.consulo.ide.impl.UnzipNewModuleBuilderProcessor;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension;
 
 import javax.swing.*;
@@ -46,12 +48,14 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
 
       @Override
-      public void setupModule(@NotNull JComponent panel, @NotNull ModifiableRootModel modifiableRootModel) {
+      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
         assert extension != null;
         extension.setEnabled(true);
 
         unzip(modifiableRootModel);
+
+        contentEntry.addFolder(contentEntry.getUrl() + "/src", ProductionContentFolderTypeProvider.getInstance());
       }
     });
 
@@ -63,7 +67,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
 
       @Override
-      public void setupModule(@NotNull JComponent panel, @NotNull ModifiableRootModel modifiableRootModel) {
+      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
         assert extension != null;
         extension.setEnabled(true);

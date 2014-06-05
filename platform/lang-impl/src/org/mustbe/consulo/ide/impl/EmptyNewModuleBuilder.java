@@ -16,6 +16,7 @@
 package org.mustbe.consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ public class EmptyNewModuleBuilder implements NewModuleBuilder {
       }
 
       @Override
-      public void setupModule(@NotNull JComponent panel, @NotNull ModifiableRootModel modifiableRootModel) {
+      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
 
       }
     });

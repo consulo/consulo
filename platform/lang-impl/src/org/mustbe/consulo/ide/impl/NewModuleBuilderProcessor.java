@@ -15,6 +15,7 @@
  */
 package org.mustbe.consulo.ide.impl;
 
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,5 +29,5 @@ public interface NewModuleBuilderProcessor<T extends JComponent> {
   @NotNull
   T createConfigurationPanel();
 
-  void setupModule(@NotNull T panel, @NotNull ModifiableRootModel modifiableRootModel);
+  void setupModule(@NotNull T panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel);
 }
