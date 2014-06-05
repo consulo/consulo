@@ -149,28 +149,26 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
 
     myListWithChildren.setConsumer(new Consumer<DListItem>() {
       @Override
-      public void consume(DListItem dListItem) {
-        NewModuleBuilderProcessor processor = dListItem == null ? null : (NewModuleBuilderProcessor)dListItem.getAttach();
+      public void consume(final DListItem dListItem) {
+        myProcessor = dListItem == null ? null : (NewModuleBuilderProcessor)dListItem.getAttach();
 
-        if(myConfigurationPanel != null) {
-          etcPanel.remove(myConfigurationPanel);
-          myConfigurationPanel = null;
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            myConfigurationPanel = nullPanel;
+            etcPanel.removeAll();
 
-        myProcessor = processor;
+            mySplitter.setSecondComponent(nullPanel);
 
-        if (dListItem != null) {
-
-          if (processor != null) {
-            myConfigurationPanel = processor.createConfigurationPanel();
-            etcPanel.add(myConfigurationPanel, BorderLayout.NORTH);
+            if (dListItem != null) {
+              if (myProcessor != null) {
+                myConfigurationPanel = myProcessor.createConfigurationPanel();
+                etcPanel.add(myConfigurationPanel, BorderLayout.NORTH);
+              }
+              mySplitter.setSecondComponent(panel);
+            }
           }
-
-          mySplitter.setSecondComponent(panel);
-        }
-        else {
-          mySplitter.setSecondComponent(nullPanel);
-        }
+        });
 
         setOKActionEnabled(myProcessor != null);
       }
