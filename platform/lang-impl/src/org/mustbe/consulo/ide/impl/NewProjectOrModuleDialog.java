@@ -80,6 +80,8 @@ public abstract class NewProjectOrModuleDialog extends DialogWrapper {
     modifiableModelForModule.commit();
 
     modifiableModel.commit();
+
+    baseDir.refresh(true, true);
     return newModule;
   }
 
