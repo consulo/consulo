@@ -241,9 +241,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Project project,
-                                                              @NotNull VirtualFile virtualFile,
-                                                              @NotNull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull Class<E> extensionClass) {
     Module moduleForFile = findModuleForFile(virtualFile, project);
     if (moduleForFile == null) {
       return null;
@@ -252,10 +250,10 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <E extends ModuleExtensionWithSdk<E>> Sdk getSdk(@NotNull Module module, @NotNull Class<E> extensionClass) {
+  public static Sdk getSdk(@NotNull Module module, @NotNull Class<? extends ModuleExtensionWithSdk<?>> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
-    final E extension = moduleRootManager.getExtension(extensionClass);
+    final ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
     if (extension == null) {
       return null;
     }
@@ -265,8 +263,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <E extends ModuleExtensionWithSdk<E>> Sdk getSdk(@NotNull PsiElement element,
-                                                                              @NotNull Class<E> extensionClass) {
+  public static Sdk getSdk(@NotNull PsiElement element, @NotNull Class<? extends ModuleExtensionWithSdk<?>> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
       return null;
@@ -275,9 +272,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <E extends ModuleExtensionWithSdk<E>> Sdk getSdk(@NotNull Project project,
-                                                                              @NotNull VirtualFile virtualFile,
-                                                                              @NotNull Class<E> extensionClass) {
+  public static Sdk getSdk(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull Class<? extends ModuleExtensionWithSdk<?>> extensionClass) {
     Module moduleForPsiElement = findModuleForFile(virtualFile, project);
     if (moduleForPsiElement == null) {
       return null;
