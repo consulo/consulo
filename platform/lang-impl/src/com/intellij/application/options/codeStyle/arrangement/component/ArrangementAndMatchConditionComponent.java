@@ -37,18 +37,20 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link ArrangementUiComponent Component} for showing {@link ArrangementCompositeMatchCondition composite nodes}.
  * <p/>
  * Not thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 8/8/12 10:51 AM
  */
 public class ArrangementAndMatchConditionComponent extends JPanel implements ArrangementUiComponent {
 
-  @NotNull private final List<ArrangementUiComponent> myComponents = ContainerUtilRt.newArrayList();
+  @NotNull private final List<ArrangementUiComponent>  myComponents      = ContainerUtilRt.newArrayList();
+  @NotNull private final Set<ArrangementSettingsToken> myAvailableTokens = ContainerUtilRt.newHashSet();
 
   @NotNull private final ArrangementCompositeMatchCondition mySetting;
   @Nullable private      Rectangle                          myScreenBounds;
@@ -57,7 +59,8 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
   public ArrangementAndMatchConditionComponent(@NotNull StdArrangementMatchRule rule,
                                                @NotNull ArrangementCompositeMatchCondition setting,
                                                @NotNull ArrangementMatchNodeComponentFactory factory,
-                                               @NotNull ArrangementStandardSettingsManager manager)
+                                               @NotNull ArrangementStandardSettingsManager manager,
+                                               boolean allowModification)
   {
     mySetting = setting;
     setOpaque(false);
@@ -83,8 +86,9 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     for (ArrangementSettingsToken key : ordered) {
       ArrangementMatchCondition operand = operands.get(key);
       assert operand != null;
-      ArrangementUiComponent component = factory.getComponent(operand, rule, true);
+      ArrangementUiComponent component = factory.getComponent(operand, rule, allowModification);
       myComponents.add(component);
+      myAvailableTokens.addAll(component.getAvailableTokens());
       JComponent uiComponent = component.getUiComponent();
       add(uiComponent, constraints);
     }
@@ -226,6 +230,12 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     return myComponentUnderMouse == null ? null : myComponentUnderMouse.getToken();
   }
 
+  @NotNull
+  @Override
+  public Set<ArrangementSettingsToken> getAvailableTokens() {
+    return myAvailableTokens;
+  }
+
   @Override
   public void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -252,7 +262,7 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
   public void setListener(@NotNull Listener listener) {
     for (ArrangementUiComponent component : myComponents) {
       component.setListener(listener);
-    } 
+    }
   }
 
   @Override

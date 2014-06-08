@@ -25,25 +25,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Defines a contract for UI component used at standard arrangement settings managing code.
  * <p/>
  * It's assumed that there is a dedicated implementation of this interface for every {@link StdArrangementTokenUiRole}.
- * 
+ *
  * @author Denis Zhdanov
  * @since 3/11/13 10:22 AM
  */
 public interface ArrangementUiComponent {
-  
+
   @Nullable ArrangementSettingsToken getToken();
+
+  @NotNull Set<ArrangementSettingsToken> getAvailableTokens();
 
   void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException;
 
   @NotNull
   ArrangementMatchCondition getMatchCondition();
 
-  @NotNull JComponent getUiComponent();
+  @NotNull
+  JComponent getUiComponent();
 
   /**
    * We use 'enabled by user' property name here in order to avoid clash
@@ -56,13 +60,13 @@ public interface ArrangementUiComponent {
   void setEnabled(boolean enabled);
 
   /**
-   * @return    screen bounds for the {@link #getUiComponent() target UI component} (if known)
+   * @return screen bounds for the {@link #getUiComponent() target UI component} (if known)
    */
   @Nullable
   Rectangle getScreenBounds();
-  
+
   boolean isSelected();
-  
+
   /**
    * Instructs current component that it should {@link #getUiComponent() draw} itself according to the given 'selected' state.
    *
@@ -71,9 +75,9 @@ public interface ArrangementUiComponent {
   void setSelected(boolean selected);
 
   void setData(@NotNull Object data);
-  
+
   void reset();
-  
+
   /**
    * Notifies current component about mose move event.
    * <p/>
@@ -94,7 +98,7 @@ public interface ArrangementUiComponent {
 
   @Nullable
   Rectangle onMouseEntered(@NotNull MouseEvent e);
-  
+
   /**
    * @param width   the width to get baseline for
    * @param height  the height to get baseline for
@@ -103,7 +107,7 @@ public interface ArrangementUiComponent {
   int getBaselineToUse(int width, int height);
 
   void setListener(@NotNull Listener listener);
-  
+
   interface Factory {
     ExtensionPointName<Factory> EP_NAME = ExtensionPointName.create("com.intellij.rearranger.ui");
 

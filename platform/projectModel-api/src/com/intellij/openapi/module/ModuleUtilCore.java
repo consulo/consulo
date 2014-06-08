@@ -252,7 +252,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Module module, @NotNull Class<E> extensionClass) {
+  public static <E extends ModuleExtensionWithSdk<E>> Sdk getSdk(@NotNull Module module, @NotNull Class<E> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
     final E extension = moduleRootManager.getExtension(extensionClass);
@@ -260,12 +260,12 @@ public class ModuleUtilCore {
       return null;
     }
     else {
-      return (S)extension.getSdk();
+      return extension.getSdk();
     }
   }
 
   @Nullable
-  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull PsiElement element,
+  public static <E extends ModuleExtensionWithSdk<E>> Sdk getSdk(@NotNull PsiElement element,
                                                                               @NotNull Class<E> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
@@ -275,7 +275,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <S extends Sdk, E extends ModuleExtensionWithSdk<E>> S getSdk(@NotNull Project project,
+  public static <E extends ModuleExtensionWithSdk<E>> Sdk getSdk(@NotNull Project project,
                                                                               @NotNull VirtualFile virtualFile,
                                                                               @NotNull Class<E> extensionClass) {
     Module moduleForPsiElement = findModuleForFile(virtualFile, project);

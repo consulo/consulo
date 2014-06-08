@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.Toggleable;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
@@ -36,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Set;
 
 /**
  * @author Denis Zhdanov
@@ -83,10 +85,15 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     init();
   }
 
+  public void setError(@Nullable String message) {
+    myRowIndexControl.setError(StringUtil.isNotEmpty(message));
+    setToolTipText(message);
+  }
+
   private void init() {
     setLayout(new GridBagLayout());
     GridBag constraints = new GridBag().anchor(GridBagConstraints.CENTER)
-      .insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, ArrangementConstants.HORIZONTAL_GAP * 2);
+            .insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, ArrangementConstants.HORIZONTAL_GAP * 2);
     add(myRowIndexControl, constraints);
     add(new InsetsPanel(mySortLabel), new GridBag().anchor(GridBagConstraints.CENTER).insets(0, 0, 0, ArrangementConstants.HORIZONTAL_GAP));
     add(myDelegate.getUiComponent(), new GridBag().weightx(1).anchor(GridBagConstraints.WEST));
@@ -101,11 +108,11 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
       Rectangle bounds = getBounds();
       myScreenBounds = new Rectangle(point.x, point.y, bounds.width, bounds.height);
     }
-    
+
     FontMetrics metrics = g.getFontMetrics();
     int baseLine = SimpleColoredComponent.getTextBaseLine(metrics, metrics.getHeight());
     myRowIndexControl.setBaseLine(
-      baseLine + ArrangementConstants.VERTICAL_GAP + myDelegate.getUiComponent().getBounds().y - myRowIndexControl.getBounds().y
+            baseLine + ArrangementConstants.VERTICAL_GAP + myDelegate.getUiComponent().getBounds().y - myRowIndexControl.getBounds().y
     );
     super.paintComponent(g);
   }
@@ -158,7 +165,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
   @Override
   public void setSelected(boolean selected) {
-    myDelegate.setSelected(selected); 
+    myDelegate.setSelected(selected);
   }
 
   @Override
@@ -169,7 +176,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
   public void setShowSortIcon(boolean show) {
     mySortLabel.setVisible(show);
   }
-  
+
   @Override
   public Rectangle onMouseEntered(@NotNull MouseEvent e) {
     setBackground(UIUtil.getDecoratedRowColor());
@@ -213,7 +220,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
       event.consume();
       return;
     }
-    myDelegate.onMouseRelease(event); 
+    myDelegate.onMouseRelease(event);
   }
 
   @Nullable
@@ -223,16 +230,16 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     if (!myBeingEdited) {
       myEditButton.setVisible(false);
     }
-    return myDelegate.onMouseExited(); 
+    return myDelegate.onMouseExited();
   }
-  
+
   @Nullable
   private Rectangle getButtonScreenBounds() {
     if (myScreenBounds == null) {
       return null;
     }
     Rectangle bounds = myEditButton.getBounds();
-    return new Rectangle(bounds.x + myScreenBounds.x, bounds.y + myScreenBounds.y, bounds.width, bounds.height); 
+    return new Rectangle(bounds.x + myScreenBounds.x, bounds.y + myScreenBounds.y, bounds.width, bounds.height);
   }
 
   @Nullable
@@ -241,9 +248,15 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     return myDelegate.getToken();
   }
 
+  @NotNull
+  @Override
+  public Set<ArrangementSettingsToken> getAvailableTokens() {
+    return myDelegate.getAvailableTokens();
+  }
+
   @Override
   public void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
-    myDelegate.chooseToken(data); 
+    myDelegate.chooseToken(data);
   }
 
   @Override
@@ -253,7 +266,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
   @Override
   public void reset() {
-    myDelegate.reset(); 
+    myDelegate.reset();
   }
 
   @Override
@@ -263,14 +276,14 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
   @Override
   public void setListener(@NotNull Listener listener) {
-    myDelegate.setListener(listener); 
+    myDelegate.setListener(listener);
   }
 
   @Override
   public String toString() {
     return "list row decorator for " + myDelegate.toString();
   }
-  
+
   private static class MyActionButton extends ActionButton {
     MyActionButton(AnAction action, Presentation presentation, String place, @NotNull Dimension minimumSize) {
       super(action, presentation, place, minimumSize);

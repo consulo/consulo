@@ -16,7 +16,6 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
@@ -60,20 +59,28 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
 
   private int myRow = -1;
   private int        myLabelWidth;
-  
+
   @Nullable private JComponent myDefaultFocusRequestor;
   @Nullable private JComponent myFocusRequestor;
-  
+
   private boolean mySkipStateChange;
 
   public ArrangementMatchingRuleEditor(@NotNull ArrangementStandardSettingsManager settingsManager,
                                        @NotNull ArrangementColorsProvider colorsProvider,
                                        @NotNull ArrangementMatchingRulesControl control)
   {
+    this(settingsManager, settingsManager.getSupportedMatchingTokens(), colorsProvider, control);
+  }
+
+  public ArrangementMatchingRuleEditor(@NotNull ArrangementStandardSettingsManager settingsManager,
+                                       @Nullable List<CompositeArrangementSettingsToken> tokens,
+                                       @NotNull ArrangementColorsProvider colorsProvider,
+                                       @NotNull ArrangementMatchingRulesControl control)
+  {
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;
     myControl = control;
-    init(settingsManager);
+    init(tokens);
     addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -82,11 +89,10 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     });
   }
 
-  private void init(@NotNull ArrangementStandardSettingsManager settingsManager) {
+  private void init(@Nullable List<CompositeArrangementSettingsToken> tokens) {
     setLayout(new GridBagLayout());
     setBorder(IdeBorderFactory.createEmptyBorder(5));
 
-    List<CompositeArrangementSettingsToken> tokens = settingsManager.getSupportedMatchingTokens();
     if (tokens != null) {
       for (CompositeArrangementSettingsToken token : tokens) {
         addToken(token);
@@ -100,7 +106,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     List<CompositeArrangementSettingsToken> tokens = ArrangementUtil.flatten(rowToken);
     GridBag labelConstraints = new GridBag().anchor(GridBagConstraints.NORTHWEST).insets(ArrangementConstants.VERTICAL_PADDING, 0, 0, 0);
     MultiRowFlowPanel panel = new MultiRowFlowPanel(
-      FlowLayout.LEFT, ArrangementConstants.HORIZONTAL_GAP, ArrangementConstants.VERTICAL_GAP
+            FlowLayout.LEFT, ArrangementConstants.HORIZONTAL_GAP, ArrangementConstants.VERTICAL_GAP
     );
     List<ArrangementSettingsToken> prevTokens = ContainerUtilRt.newArrayList();
     StdArrangementTokenUiRole prevRole = null;
@@ -110,7 +116,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
       StdArrangementTokenUiRole role = token.getRole();
       if (role != prevRole && !prevTokens.isEmpty()) {
         component = ArrangementUtil.buildUiComponent(
-          role, prevTokens, myColorsProvider, mySettingsManager
+                role, prevTokens, myColorsProvider, mySettingsManager
         );
         component.setListener(this);
         for (ArrangementSettingsToken prevToken : prevTokens) {
@@ -122,7 +128,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
         prevTokens.clear();
       }
       component = ArrangementUtil.buildUiComponent(
-        role, Collections.singletonList(token.getToken()), myColorsProvider, mySettingsManager
+              role, Collections.singletonList(token.getToken()), myColorsProvider, mySettingsManager
       );
       component.setListener(this);
       uiComponent = component.getUiComponent();
@@ -135,9 +141,9 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
           break;
         case TEXT_FIELD:
           panel = addRowIfNecessary(panel);
-          
+
           ArrangementUiComponent textLabel = ArrangementUtil.buildUiComponent(
-            StdArrangementTokenUiRole.LABEL, Collections.singletonList(token.getToken()), myColorsProvider, mySettingsManager
+                  StdArrangementTokenUiRole.LABEL, Collections.singletonList(token.getToken()), myColorsProvider, mySettingsManager
           );
           JComponent textLabelComponent = textLabel.getUiComponent();
           add(textLabelComponent, labelConstraints);
@@ -148,7 +154,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
           prevRole = null;
 
           myComponents.put(token.getToken(), component);
-          
+
           if (myDefaultFocusRequestor == null) {
             myDefaultFocusRequestor = uiComponent;
           }
@@ -159,7 +165,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
             prevRole = role;
             break;
           }
-          
+
           panel.add(uiComponent);
           myComponents.put(token.getToken(), component);
       }
@@ -184,7 +190,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     add(panel, new GridBag().anchor(GridBagConstraints.WEST).weightx(1).fillCellHorizontally().coverLine());
     myRows.add(panel);
     return new MultiRowFlowPanel(
-      FlowLayout.LEFT, ArrangementConstants.HORIZONTAL_GAP, ArrangementConstants.VERTICAL_GAP
+            FlowLayout.LEFT, ArrangementConstants.HORIZONTAL_GAP, ArrangementConstants.VERTICAL_GAP
     );
   }
 
@@ -204,21 +210,24 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
         continue;
       }
       ArrangementSettingsToken token = component.getToken();
-      if (token != null && StdArrangementTokens.Order.is(token)) {
+      if (token != null && StdArrangementTokenType.ORDER.is(token)) {
         orderType = token;
       }
       else {
         conditions.add(component.getMatchCondition());
       }
     }
-    if (orderType != null && !conditions.isEmpty()) {
+    if (!conditions.isEmpty()) {
+      if (orderType == null) {
+        orderType = StdArrangementTokens.Order.KEEP;
+      }
       return Pair.create(ArrangementUtil.combine(conditions.toArray(new ArrangementMatchCondition[conditions.size()])), orderType);
     }
     else {
       return null;
     }
   }
-  
+
   @Override
   protected void paintComponent(Graphics g) {
     if (myFocusRequestor != null) {
@@ -262,7 +271,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     ArrangementSettingsToken orderType = element instanceof ArrangementMatchRule ? ((ArrangementMatchRule)element).getOrderType() : null;
     final ArrangementMatchCondition condition;
     final Map<ArrangementSettingsToken, Object> conditionTokens;
-    
+
     if (element instanceof EmptyArrangementRuleComponent) {
       // We need to disable conditions which are not applicable for empty rules (e.g. we don't want to enable 'volatile' condition
       // for java rearranger if no 'field' condition is selected.
@@ -281,9 +290,14 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     try {
       for (ArrangementUiComponent component : myComponents.values()) {
         ArrangementSettingsToken token = component.getToken();
-        if (token != null && (token.equals(orderType) || mySettingsManager.isEnabled(token, condition))) {
+        if (token != null && (component.getAvailableTokens().contains(orderType) || isEnabled(condition, token))) {
           component.setEnabled(true);
-          component.setSelected(conditionTokens.containsKey(token));
+          if (component.getAvailableTokens().contains(orderType)) {
+            component.chooseToken(orderType);
+          }
+          else {
+            component.setSelected(conditionTokens.containsKey(token));
+          }
           Object value = conditionTokens.get(token);
           if (value != null) {
             component.setData(value);
@@ -309,12 +323,16 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
       if (token == null) {
         continue;
       }
-      boolean enabled = mySettingsManager.isEnabled(token, condition);
+      boolean enabled = isEnabled(condition, token);
       component.setEnabled(enabled);
       if (!enabled) {
         component.setSelected(false);
       }
     }
+  }
+
+  private boolean isEnabled(@Nullable ArrangementMatchCondition condition, @NotNull ArrangementSettingsToken token) {
+    return ArrangementSectionRuleManager.isEnabled(token) || mySettingsManager.isEnabled(token, condition);
   }
 
   private void apply() {
@@ -357,7 +375,11 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
       }
       if (component.isEnabled()) {
         if (component.isSelected()) {
-          removeCondition(component);
+          // don't allow to remove start/end section indication
+          final Set<ArrangementSettingsToken> mutexes = ArrangementSectionRuleManager.getSectionMutexes();
+          if (!mutexes.contains(component.getToken())) {
+            removeCondition(component);
+          }
         }
         else {
           addCondition(component);
@@ -376,23 +398,28 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
 
       // Update 'mutex conditions', i.e. conditions which can't be active at the same time (e.g. type 'field' and type 'method').
       for (Set<ArrangementSettingsToken> mutex : mutexes) {
-        if (!mutex.contains(component.getToken())) {
-          continue;
-        }
-        for (ArrangementSettingsToken key : mutex) {
-          if (key.equals(component.getToken())) {
-            continue;
-          }
-          ArrangementUiComponent c = myComponents.get(key);
-          if (c != null && c.isEnabled()) {
-            removeCondition(c);
-          }
-        }
+        updateMutexConditions(component, mutex);
       }
+      updateMutexConditions(component, ArrangementSectionRuleManager.getSectionMutexes());
       refreshConditions();
     }
     finally {
       mySkipStateChange = false;
+    }
+  }
+
+  private void updateMutexConditions(@NotNull ArrangementUiComponent component, @NotNull Set<ArrangementSettingsToken> mutex) {
+    if (!mutex.contains(component.getToken())) {
+      return;
+    }
+    for (ArrangementSettingsToken key : mutex) {
+      if (key.equals(component.getToken())) {
+        continue;
+      }
+      ArrangementUiComponent c = myComponents.get(key);
+      if (c != null && c.isEnabled()) {
+        removeCondition(c);
+      }
     }
   }
 

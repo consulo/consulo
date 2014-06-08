@@ -47,12 +47,12 @@ public class ArrangementGroupingRulesPanel extends JPanel implements DataProvide
     myControl = new ArrangementGroupingRulesControl(settingsManager, colorsProvider);
 
     TitleWithToolbar top = new TitleWithToolbar(
-      ApplicationBundle.message("arrangement.settings.section.groups"),
-      ArrangementConstants.ACTION_GROUP_GROUPING_RULES_CONTROL_TOOLBAR,
-      ArrangementConstants.GROUPING_RULES_CONTROL_TOOLBAR_PLACE,
-      myControl
+            ApplicationBundle.message("arrangement.settings.section.groups"),
+            ArrangementConstants.ACTION_GROUP_GROUPING_RULES_CONTROL_TOOLBAR,
+            ArrangementConstants.GROUPING_RULES_CONTROL_TOOLBAR_PLACE,
+            myControl
     );
-    
+
     add(top, new GridBag().coverLine().fillCellHorizontally().weightx(1));
     add(myControl, new GridBag().fillCell().weightx(1).weighty(1).insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, 0));
   }
@@ -60,7 +60,7 @@ public class ArrangementGroupingRulesPanel extends JPanel implements DataProvide
   public void setRules(@Nullable List<ArrangementGroupingRule> rules) {
     myControl.setRules(rules);
   }
-  
+
   @NotNull
   public List<ArrangementGroupingRule> getRules() {
     return myControl.getRules();

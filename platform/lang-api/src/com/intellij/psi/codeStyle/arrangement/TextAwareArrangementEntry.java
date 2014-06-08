@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.application.options.codeStyle.arrangement.color;
+package com.intellij.psi.codeStyle.arrangement;
 
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * @author Denis Zhdanov
- * @since 10/23/12 11:46 PM
+ * Stands for the {@link ArrangementEntry} which provides information about its text.
+ * E.g. this entry can be used for section start/end element to match section comments by whole text.
+ * <p/>
+ * Implementations of this interface are not obliged to be thread-safe.
+ *
+ * @author Svetlana Zemlyanskaya
+ * @since 25/04/14 08:17 PM
  */
-public interface ArrangementColorsProvider {
-
-  @NotNull
-  Color getBorderColor(boolean selected);
-
-  @NotNull
-  TextAttributes getTextAttributes(@NotNull ArrangementSettingsToken token, boolean selected);
+public interface TextAwareArrangementEntry extends ArrangementEntry {
+  @Nullable
+  String getText();
 }

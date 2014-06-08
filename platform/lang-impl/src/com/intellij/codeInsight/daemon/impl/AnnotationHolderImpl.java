@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,81 +59,64 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
   @Override
   public Annotation createErrorAnnotation(@NotNull PsiElement elt, String message) {
     assertMyFile(elt);
-    return createAnnotation(elt.getTextRange(), HighlightSeverity.ERROR, message);
+    return createAnnotation(HighlightSeverity.ERROR, elt.getTextRange(), message);
   }
 
   @Override
   public Annotation createErrorAnnotation(@NotNull ASTNode node, String message) {
     assertMyFile(node.getPsi());
-    return createAnnotation(node.getTextRange(), HighlightSeverity.ERROR, message);
+    return createAnnotation(HighlightSeverity.ERROR, node.getTextRange(), message);
   }
 
   @Override
   public Annotation createErrorAnnotation(@NotNull TextRange range, String message) {
-    return createAnnotation(range, HighlightSeverity.ERROR, message);
+    return createAnnotation(HighlightSeverity.ERROR, range, message);
   }
 
   @Override
   public Annotation createWarningAnnotation(@NotNull PsiElement elt, String message) {
     assertMyFile(elt);
-    return createAnnotation(elt.getTextRange(), HighlightSeverity.WARNING, message);
+    return createAnnotation(HighlightSeverity.WARNING, elt.getTextRange(), message);
   }
 
   @Override
   public Annotation createWarningAnnotation(@NotNull ASTNode node, String message) {
     assertMyFile(node.getPsi());
-    return createAnnotation(node.getTextRange(), HighlightSeverity.WARNING, message);
+    return createAnnotation(HighlightSeverity.WARNING, node.getTextRange(), message);
   }
 
   @Override
   public Annotation createWarningAnnotation(@NotNull TextRange range, String message) {
-    return createAnnotation(range, HighlightSeverity.WARNING, message);
-  }
-
-  @Override
-  public Annotation createInformationAnnotation(@NotNull PsiElement elt, String message) {
-    assertMyFile(elt);
-    return createAnnotation(elt.getTextRange(), HighlightSeverity.INFO, message);
-  }
-
-  @Override
-  public Annotation createInformationAnnotation(@NotNull ASTNode node, String message) {
-    assertMyFile(node.getPsi());
-    return createAnnotation(node.getTextRange(), HighlightSeverity.INFO, message);
-  }
-
-  @Override
-  public Annotation createInformationAnnotation(@NotNull TextRange range, String message) {
-    return createAnnotation(range, HighlightSeverity.INFO, message);
+    return createAnnotation(HighlightSeverity.WARNING, range, message);
   }
 
   @Override
   public Annotation createWeakWarningAnnotation(@NotNull PsiElement elt, @Nullable String message) {
     assertMyFile(elt);
-    return createAnnotation(elt.getTextRange(), HighlightSeverity.WEAK_WARNING, message);
+    return createAnnotation(HighlightSeverity.WEAK_WARNING, elt.getTextRange(), message);
   }
 
   @Override
   public Annotation createWeakWarningAnnotation(@NotNull ASTNode node, @Nullable String message) {
     assertMyFile(node.getPsi());
-    return createAnnotation(node.getTextRange(), HighlightSeverity.WEAK_WARNING, message);
+    return createAnnotation(HighlightSeverity.WEAK_WARNING, node.getTextRange(), message);
   }
 
   @Override
   public Annotation createWeakWarningAnnotation(@NotNull TextRange range, String message) {
-    return createAnnotation(range, HighlightSeverity.WEAK_WARNING, message);
+    return createAnnotation(HighlightSeverity.WEAK_WARNING, range, message);
   }
 
   @Override
   public Annotation createInfoAnnotation(@NotNull PsiElement elt, String message) {
     assertMyFile(elt);
-    return createAnnotation(elt.getTextRange(), HighlightSeverity.INFORMATION, message);
+    return createAnnotation(HighlightSeverity.INFORMATION, elt.getTextRange(), message);
   }
 
   @Override
   public Annotation createInfoAnnotation(@NotNull ASTNode node, String message) {
     assertMyFile(node.getPsi());
-    return createAnnotation(node.getTextRange(), HighlightSeverity.INFORMATION, message);
+    return createAnnotation(HighlightSeverity.INFORMATION, node.getTextRange(), message);
   }
 
   private void assertMyFile(PsiElement node) {
@@ -145,21 +128,22 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     VirtualFile myVFile = myFile.getVirtualFile();
     if (!Comparing.equal(containingVFile, myVFile)) {
       LOG.error(
-        "Annotation must be registered for an element inside '" + myFile + "' which is in '" + myVFile + "'.\n" +
-        "Element passed: '" + node + "' is inside the '" + containingFile + "' which is in '" + containingVFile + "'");
+              "Annotation must be registered for an element inside '" + myFile + "' which is in '" + myVFile + "'.\n" +
+              "Element passed: '" + node + "' is inside the '" + containingFile + "' which is in '" + containingVFile + "'");
     }
   }
 
   @Override
   public Annotation createInfoAnnotation(@NotNull TextRange range, String message) {
-    return createAnnotation(range, HighlightSeverity.INFORMATION, message);
+    return createAnnotation(HighlightSeverity.INFORMATION, range, message);
   }
 
-  protected Annotation createAnnotation(TextRange range, HighlightSeverity severity, @Nullable String message) {
+  @Override
+  public Annotation createAnnotation(@NotNull HighlightSeverity severity, @NotNull TextRange range, @Nullable String message) {
     //noinspection HardCodedStringLiteral
     //TODO: FIXME
     @NonNls
-    String tooltip = message == null ? null : "<html><body>" + XmlStringUtil.escapeString(message) + "</body></html>";
+    String tooltip = message == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
     Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip);
     add(annotation);
     return annotation;

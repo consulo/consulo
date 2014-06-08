@@ -25,19 +25,19 @@ import java.util.List;
 
 /**
  * Used to group ordered collections of {@link StdArrangementTokens} along with their {@link StdArrangementTokenUiRole roles}.
- * 
+ *
  * @author Denis Zhdanov
  * @since 3/6/13 8:01 PM
  */
 public class CompositeArrangementSettingsToken {
 
   private static final Function<ArrangementSettingsToken, CompositeArrangementSettingsToken> WRAPPER =
-    new Function<ArrangementSettingsToken, CompositeArrangementSettingsToken>() {
-      @Override
-      public CompositeArrangementSettingsToken fun(ArrangementSettingsToken token) {
-        return new CompositeArrangementSettingsToken(token, deduceRole(token), Collections.<CompositeArrangementSettingsToken>emptyList());
-      }
-    };
+          new Function<ArrangementSettingsToken, CompositeArrangementSettingsToken>() {
+            @Override
+            public CompositeArrangementSettingsToken fun(ArrangementSettingsToken token) {
+              return new CompositeArrangementSettingsToken(token, deduceRole(token), Collections.<CompositeArrangementSettingsToken>emptyList());
+            }
+          };
 
   @NotNull private final List<CompositeArrangementSettingsToken> myChildren = ContainerUtilRt.newArrayList();
 
@@ -49,7 +49,7 @@ public class CompositeArrangementSettingsToken {
    * <p/>
    * <b>Note:</b> given token is expected to be one of {@link StdArrangementTokens standard tokens} because
    * {@link StdArrangementTokenUiRole its role} is deduced.
-   * 
+   *
    * @param token  token to wrap
    */
   public CompositeArrangementSettingsToken(@NotNull ArrangementSettingsToken token) {
@@ -62,7 +62,7 @@ public class CompositeArrangementSettingsToken {
    * <p/>
    * <b>Note:</b> given tokens are expected to be from {@link StdArrangementTokens standard tokens} because
    * {@link StdArrangementTokenUiRole their roles} are deduced.
-   * 
+   *
    * @param token     token to wrap
    * @param children  children to wrap
    */
@@ -89,7 +89,8 @@ public class CompositeArrangementSettingsToken {
 
   @NotNull
   private static StdArrangementTokenUiRole deduceRole(@NotNull ArrangementSettingsToken token) {
-    StdArrangementTokenUiRole role = StdArrangementTokens.role(token);
+    final StdArrangementTokenUiRole role = token instanceof StdArrangementSettingsToken ?
+                                           ((StdArrangementSettingsToken)token).getTokenType().getUiRole() : null;
     if (role == null) {
       throw new IllegalArgumentException("Can't deduce UI role for token " + token);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.application.options.codeStyle.arrangement.color;
-
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
+package com.intellij.psi.codeStyle.arrangement.std;
 
 /**
- * @author Denis Zhdanov
- * @since 10/23/12 11:46 PM
+ * Marker interface for settings that supports section rules
+ * <p/>
+ * i.e. it's allowed to create rules like:
+ * "put comment '//region Methods' before rearranged methods and '//endregion methods' after it"
+ *
+ * @author Svetlana.Zemlyanskaya
  */
-public interface ArrangementColorsProvider {
-
-  @NotNull
-  Color getBorderColor(boolean selected);
-
-  @NotNull
-  TextAttributes getTextAttributes(@NotNull ArrangementSettingsToken token, boolean selected);
+public interface ArrangementSectionRuleAwareSettings extends Cloneable {
 }

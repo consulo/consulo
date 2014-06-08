@@ -32,7 +32,7 @@ import java.util.List;
  * Encapsulates language-specific rearrangement logic.
  * <p/>
  * Implementations of this interface are expected to be thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 7/16/12 3:23 PM
  * @param <E>   entry type
@@ -46,7 +46,7 @@ public interface Rearranger<E extends ArrangementEntry> {
    * <p/>
    * This is useful in a situation when new element is generated and we're deciding where to insert it (e.g. new field is
    * generated and we want to insert it according to the arrangement rules like 'fields before methods').
-   * 
+   *
    * @param element   element to wrap into format eligible for further processing by arrangement engine
    * @param settings  arrangement settings to use. The primary idea is to make the rearranger aware about
    *                  {@link StdArrangementTokens.Grouping grouping rules} (if any). E.g. it's not worth to process java method bodies
@@ -60,8 +60,8 @@ public interface Rearranger<E extends ArrangementEntry> {
                                 @Nullable Document document,
                                 @NotNull Collection<TextRange> ranges,
                                 @NotNull PsiElement element,
-                                @Nullable ArrangementSettings settings);
-  
+                                @NotNull ArrangementSettings settings);
+
   /**
    * Allows to build rearranger-interested data for the given element.
    *
@@ -77,11 +77,11 @@ public interface Rearranger<E extends ArrangementEntry> {
   List<E> parse(@NotNull PsiElement root,
                 @Nullable Document document,
                 @NotNull Collection<TextRange> ranges,
-                @Nullable ArrangementSettings settings);
+                @NotNull ArrangementSettings settings);
 
   /**
    * Allows to answer how many blank lines should be inserted before the target arrangement entry which position is changed.
-   * 
+   *
    * @param settings  code style settings to use (it's assumed that returned result is derived from 'blank lines' code style settings)
    * @param parent    target entry's parent (if available)
    * @param previous  previous entry (if available)
@@ -90,4 +90,15 @@ public interface Rearranger<E extends ArrangementEntry> {
    *                  negative as an indication that no blank lines adjustment is necessary
    */
   int getBlankLines(@NotNull CodeStyleSettings settings, @Nullable E parent, @Nullable E previous, @NotNull E target);
+
+
+  /**
+   * @return serializer to save {@link com.intellij.psi.codeStyle.arrangement.ArrangementSettings arrangement settings}.
+   * Serializer is expected to be lazy and don't save
+   * {@link com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware.getDefaultSettings() default settings}.
+   * <p/>
+   * @see com.intellij.psi.codeStyle.arrangement.DefaultArrangementSettingsSerializer
+   */
+  @NotNull
+  ArrangementSettingsSerializer getSerializer();
 }

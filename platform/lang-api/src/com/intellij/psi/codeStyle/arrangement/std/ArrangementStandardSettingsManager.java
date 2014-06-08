@@ -19,10 +19,6 @@ import com.intellij.application.options.codeStyle.arrangement.color.ArrangementC
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementEntryMatcher;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementSettings;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -34,7 +30,7 @@ import java.util.*;
 
 /**
  * Wraps {@link ArrangementStandardSettingsAware} for the common arrangement UI managing code.
- * 
+ *
  * @author Denis Zhdanov
  * @since 3/7/13 3:11 PM
  */
@@ -121,6 +117,10 @@ public class ArrangementStandardSettingsManager {
     return myDefaultSettings;
   }
 
+  public boolean isSectionRulesSupported() {
+    return myDelegate instanceof ArrangementSectionRuleAwareSettings;
+  }
+
   /**
    * @see ArrangementStandardSettingsAware#getSupportedGroupingTokens()
    */
@@ -136,7 +136,7 @@ public class ArrangementStandardSettingsManager {
   public List<CompositeArrangementSettingsToken> getSupportedMatchingTokens() {
     return myMatchingTokens;
   }
-  
+
   public boolean isEnabled(@NotNull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current) {
     return myDelegate.isEnabled(token, current);
   }
@@ -173,7 +173,7 @@ public class ArrangementStandardSettingsManager {
                     SimpleTextAttributes.fromTextAttributes(myColorsProvider.getTextAttributes(token, false)));
     return Math.max(result, renderer.getPreferredSize().width);
   }
-  
+
   public List<ArrangementSettingsToken> sort(@NotNull Collection<ArrangementSettingsToken> tokens) {
     List<ArrangementSettingsToken> result = ContainerUtilRt.newArrayList(tokens);
     Collections.sort(result, myComparator);

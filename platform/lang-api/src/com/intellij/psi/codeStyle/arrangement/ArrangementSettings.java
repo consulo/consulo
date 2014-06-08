@@ -17,6 +17,7 @@ package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
+import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,15 +26,34 @@ import java.util.List;
  * Holds arrangement rules.
  * <p/>
  * Implementations of this interface are expected to provide correct {@link #equals(Object)} & {@link #hashCode()} implementations.
- * 
+ *
  * @author Denis Zhdanov
  * @since 9/17/12 11:51 AM
  */
-public interface ArrangementSettings {
+public interface ArrangementSettings extends Cloneable {
 
   @NotNull
   List<ArrangementGroupingRule> getGroupings();
-  
+
+  @NotNull
+  List<ArrangementSectionRule> getSections();
+
+  /**
+   * @deprecated collect match rules from {@link #getSections()}
+   * @return
+   */
   @NotNull
   List<? extends ArrangementMatchRule> getRules();
+
+  /**
+   * <b>Note:</b> It's expected that rules sort is stable
+   * <p/>
+   * Example: 'public static' rule would have higher priority then 'public'
+   * @return list of rules sorted in order of matching
+   */
+  @NotNull
+  List<? extends ArrangementMatchRule> getRulesSortedByPriority();
+
+  @NotNull
+  ArrangementSettings clone();
 }

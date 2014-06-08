@@ -23,6 +23,7 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementCompositeMatchCon
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
+import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokenType;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -79,8 +80,8 @@ public class DefaultArrangementEntryMatcherSerializer {
       return serialize(((StdArrangementEntryMatcher)matcher).getCondition());
     }
     LOG.warn(String.format(
-      "Can't serialize arrangement entry matcher of class '%s'. Reason: expected to find '%s' instance instead",
-      matcher.getClass(), StdArrangementEntryMatcher.class
+            "Can't serialize arrangement entry matcher of class '%s'. Reason: expected to find '%s' instance instead",
+            matcher.getClass(), StdArrangementEntryMatcher.class
     ));
     return null;
   }
@@ -135,7 +136,7 @@ public class DefaultArrangementEntryMatcherSerializer {
       token = StdArrangementTokens.byId(id);
       processInnerText = false;
     }
-    
+
     if (token == null) {
       token = myMixin.deserializeToken(id);
     }
@@ -156,15 +157,15 @@ public class DefaultArrangementEntryMatcherSerializer {
   }
 
   private static class MySerializationVisitor implements ArrangementMatchConditionVisitor {
-    
+
     Element result;
     Element parent;
-    
+
     @Override
     public void visit(@NotNull ArrangementAtomMatchCondition condition) {
       ArrangementSettingsToken type = condition.getType();
       final Element element = new Element(type.getId());
-      if (StdArrangementTokens.Regexp.is(type)) {
+      if (StdArrangementTokenType.REG_EXP.is(type)) {
         element.setText(StringUtil.escapeStringCharacters(condition.getValue().toString()));
       }
       register(element);

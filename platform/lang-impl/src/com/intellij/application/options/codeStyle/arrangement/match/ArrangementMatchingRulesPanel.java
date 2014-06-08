@@ -16,13 +16,14 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
+import com.intellij.lang.Language;
+import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.util.TitleWithToolbar;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;
@@ -39,13 +40,14 @@ import java.util.List;
  */
 public class ArrangementMatchingRulesPanel extends JPanel implements DataProvider {
 
-  @NotNull private final ArrangementMatchingRulesControl myControl;
+  @NotNull protected final ArrangementMatchingRulesControl myControl;
 
-  public ArrangementMatchingRulesPanel(@NotNull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementMatchingRulesPanel(@NotNull Language language,
+                                       @NotNull ArrangementStandardSettingsManager settingsManager,
                                        @NotNull ArrangementColorsProvider colorsProvider)
   {
     super(new GridBagLayout());
-    
+
     JBScrollPane scrollPane = new JBScrollPane();
     final JViewport viewport = scrollPane.getViewport();
     ArrangementMatchingRulesControl.RepresentationCallback callback = new ArrangementMatchingRulesControl.RepresentationCallback() {
@@ -67,29 +69,36 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
         }
       }
     };
-    myControl = new ArrangementMatchingRulesControl(settingsManager, colorsProvider, callback);
+    myControl = createRulesControl(language, settingsManager, colorsProvider, callback);
     scrollPane.setViewportView(myControl);
     CustomizationUtil.installPopupHandler(
-      myControl, ArrangementConstants.ACTION_GROUP_MATCHING_RULES_CONTEXT_MENU, ArrangementConstants.MATCHING_RULES_CONTROL_PLACE
+            myControl, ArrangementConstants.ACTION_GROUP_MATCHING_RULES_CONTEXT_MENU, ArrangementConstants.MATCHING_RULES_CONTROL_PLACE
     );
 
     TitleWithToolbar top = new TitleWithToolbar(
-      ApplicationBundle.message("arrangement.settings.section.match"),
-      ArrangementConstants.ACTION_GROUP_MATCHING_RULES_CONTROL_TOOLBAR,
-      ArrangementConstants.MATCHING_RULES_CONTROL_TOOLBAR_PLACE,
-      myControl
+            ApplicationBundle.message("arrangement.settings.section.match"),
+            ArrangementConstants.ACTION_GROUP_MATCHING_RULES_CONTROL_TOOLBAR,
+            ArrangementConstants.MATCHING_RULES_CONTROL_TOOLBAR_PLACE,
+            myControl
     );
     add(top, new GridBag().coverLine().fillCellHorizontally().weightx(1));
     add(scrollPane, new GridBag().fillCell().weightx(1).weighty(1).insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, 0));
   }
 
-  @NotNull
-  public List<StdArrangementMatchRule> getRules() {
-    return myControl.getRules();
+  protected ArrangementMatchingRulesControl createRulesControl(@NotNull Language language,
+                                                               @NotNull ArrangementStandardSettingsManager settingsManager,
+                                                               @NotNull ArrangementColorsProvider colorsProvider,
+                                                               @NotNull ArrangementMatchingRulesControl.RepresentationCallback callback) {
+    return new ArrangementMatchingRulesControl(language, settingsManager, colorsProvider, callback);
   }
-  
-  public void setRules(@Nullable List<StdArrangementMatchRule> rules) {
-    myControl.setRules(rules);
+
+  @NotNull
+  public List<ArrangementSectionRule> getSections() {
+    return myControl.getSections();
+  }
+
+  public void setSections(@Nullable List<ArrangementSectionRule> rules) {
+    myControl.setSections(rules);
   }
 
   @Nullable

@@ -110,6 +110,24 @@ public class JBScrollPane extends JScrollPane {
     }
   }
 
+  public static JScrollPane findScrollPane(Component c) {
+    if (c == null) return null;
+
+    if (!(c instanceof JViewport)) {
+      // if asked for a viewport child, take a viewport.
+      // If not (e.g asked for a scrollbar), go straight to JLayeredPane
+      Container vp = c.getParent();
+      if (vp instanceof JViewport) c = vp;
+    }
+
+    c = c.getParent();
+    if (c instanceof JLayeredPane) {
+      c = c.getParent();
+    }
+    if (!(c instanceof JBScrollPane)) return null;
+
+    return (JBScrollPane)c;
+  }
 
   public static boolean canBePreprocessed(MouseEvent e, JScrollBar bar) {
     if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_PRESSED) {
