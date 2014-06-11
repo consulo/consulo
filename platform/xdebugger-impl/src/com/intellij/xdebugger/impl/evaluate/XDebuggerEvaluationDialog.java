@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.xdebugger.impl.evaluate;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
@@ -29,11 +30,15 @@ import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeListener;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreePanel;
 import com.intellij.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
+import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
+import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +47,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 /**
  * @author nik
@@ -103,17 +109,18 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
       public void actionPerformed(AnActionEvent e) {
         IdeFocusManager.getInstance(mySession.getProject()).requestFocus(myTreePanel.getTree(), true);
       }
-    }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK)), getRootPane(), myDisposable);
+    }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK)), getRootPane(),
+                                myDisposable);
 
-    EvaluationMode mode = EvaluationMode.EXPRESSION;
+    myTreePanel.getTree().addTreeListener(new MyTreeListener());
+
+    EvaluationMode mode = XDebuggerSettingsManager.getInstance().getGeneralSettings().getEvaluationDialogMode();
     myIsCodeFragmentEvaluationSupported = evaluator.isCodeFragmentEvaluationSupported();
-    if (text.getExpression().indexOf('\n') != -1) {
-      if (myIsCodeFragmentEvaluationSupported) {
-        mode = EvaluationMode.CODE_FRAGMENT;
-      }
-      else {
-        text = new XExpressionImpl(StringUtil.replace(text.getExpression(), "\n", " "), text.getLanguage(), text.getCustomInfo());
-      }
+    if (mode == EvaluationMode.CODE_FRAGMENT && !myIsCodeFragmentEvaluationSupported) {
+      mode = EvaluationMode.EXPRESSION;
+    }
+    if (mode == EvaluationMode.EXPRESSION) {
+      text = new XExpressionImpl(StringUtil.replace(text.getExpression(), "\n", " "), text.getLanguage(), text.getCustomInfo());
     }
     switchToMode(mode, text);
     init();
@@ -131,6 +138,11 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
       return new Action[]{getOKAction(), mySwitchModeAction, getCancelAction()};
     }
     return super.createActions();
+  }
+
+  @Override
+  protected String getHelpId() {
+    return "debugging.debugMenu.evaluate";
   }
 
   @Override
@@ -158,6 +170,9 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
   private void switchToMode(EvaluationMode mode, XExpression text) {
     if (myMode == mode) return;
+
+    XDebuggerSettingsManager.getInstance().getGeneralSettings().setEvaluationDialogMode(mode);
+
     myMode = mode;
 
     myInputComponent = createInputComponent(mode, text);
@@ -184,16 +199,51 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
   }
 
   private void evaluate() {
+    final XDebuggerEditorBase inputEditor = myInputComponent.getInputEditor();
+    int offset = -1;
+
+    //try to save caret position
+    Editor editor = inputEditor.getEditor();
+    if (editor != null) {
+      offset = editor.getCaretModel().getOffset();
+    }
+
     final XDebuggerTree tree = myTreePanel.getTree();
-    XDebuggerTreeNode root = tree.getRoot();
-    if (root instanceof EvaluatingExpressionRootNode) {
-      root.clearChildren();
-    }
-    else {
-      tree.setRoot(new EvaluatingExpressionRootNode(this, tree), false);
-    }
+    tree.markNodesObsolete();
+    tree.setRoot(new EvaluatingExpressionRootNode(this, tree), false);
+
     myResultPanel.invalidate();
-    myInputComponent.getInputEditor().selectAll();
+
+    //editor is already changed
+    editor = inputEditor.getEditor();
+    //selectAll puts focus back
+    inputEditor.selectAll();
+
+    //try to restore caret position and clear selection
+    if (offset >= 0 && editor != null) {
+      offset = Math.min(editor.getDocument().getTextLength(), offset);
+      editor.getCaretModel().moveToOffset(offset);
+      editor.getSelectionModel().setSelection(offset, offset);
+    }
+  }
+
+  private class MyTreeListener implements XDebuggerTreeListener {
+    @Override
+    public void nodeLoaded(@NotNull RestorableStateNode node, String name) {
+      if (node.getParent() instanceof EvaluatingExpressionRootNode) {
+        if (!node.isLeaf()) {
+          // cause children computing
+          node.getChildCount();
+        }
+      }
+    }
+
+    @Override
+    public void childrenLoaded(@NotNull XDebuggerTreeNode node, @NotNull List<XValueContainerNode<?>> children, boolean last) {
+      if (node.getParent() instanceof EvaluatingExpressionRootNode) {
+        myTreePanel.getTree().expandPath(node.getPath());
+      }
+    }
   }
 
   @Override
