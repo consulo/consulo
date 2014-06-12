@@ -197,7 +197,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     }
   }
 
-  private static class XExpressionState {
+  public static class XExpressionState {
     @Attribute("expression")
     public String myExpression;
 
