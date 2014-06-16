@@ -44,7 +44,7 @@ public class TemplateContext {
     synchronized (myContextStates) {
       //noinspection NestedSynchronizedStatement
       synchronized (defaultContext == null ? myContextStates : defaultContext.myContextStates) {
-        for (TemplateContextType contextType : TemplateManagerImpl.getAllContextTypes()) {
+        for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensions()) {
           String context = contextType.getContextId();
           Boolean myStateInContext = myContextStates.get(context);
           if (myStateInContext != null && differsFromDefault(defaultContext, context, myStateInContext)) {

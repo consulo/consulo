@@ -28,7 +28,6 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -507,7 +506,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   private static LinkedList<TemplateContextType> buildOrderedContextTypes() {
-    final TemplateContextType[] typeCollection = getAllContextTypes();
+    final TemplateContextType[] typeCollection = TemplateContextType.EP_NAME.getExtensions();
     LinkedList<TemplateContextType> userDefinedExtensionsFirst = new LinkedList<TemplateContextType>();
     for (TemplateContextType contextType : typeCollection) {
       if (contextType.getClass().getName().startsWith(Template.class.getPackage().getName())) {
@@ -518,10 +517,6 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
       }
     }
     return userDefinedExtensionsFirst;
-  }
-
-  public static TemplateContextType[] getAllContextTypes() {
-    return Extensions.getExtensions(TemplateContextType.EP_NAME);
   }
 
   @Override

@@ -438,7 +438,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   public Map<TemplateContextType, Boolean> createContext(){
 
     Map<TemplateContextType, Boolean> context = new LinkedHashMap<TemplateContextType, Boolean>();
-    for (TemplateContextType processor : TemplateManagerImpl.getAllContextTypes()) {
+    for (TemplateContextType processor : TemplateContextType.EP_NAME.getExtensions()) {
       context.put(processor, getTemplateContext().isEnabled(processor));
     }
     return context;

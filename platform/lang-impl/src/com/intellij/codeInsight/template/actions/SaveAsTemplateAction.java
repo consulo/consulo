@@ -141,7 +141,7 @@ public class SaveAsTemplateAction extends AnAction {
     }
     Set<TemplateContextType> applicable = TemplateManagerImpl.getApplicableContextTypes(copy, startOffset);
 
-    for(TemplateContextType contextType: TemplateManagerImpl.getAllContextTypes()) {
+    for(TemplateContextType contextType: TemplateContextType.EP_NAME.getExtensions()) {
       template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));
     }
 
