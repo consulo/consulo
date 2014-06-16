@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.codeInsight.template.impl;
 
+import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
+import com.intellij.util.xmlb.annotations.Attribute;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 16.06.14
  */
-@Deprecated
-@DeprecationInfo(value = "Use ep 'com.intellij.bundleLiveTemplateSet' for register", until = "2.0")
-public interface DefaultLiveTemplatesProvider {
-  ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create("com.intellij.defaultLiveTemplatesProvider");
+public class BundleLiveTemplateSetEP extends AbstractExtensionPointBean {
+  public static final ExtensionPointName<BundleLiveTemplateSetEP> EP_NAME = ExtensionPointName.create("com.intellij.bundleLiveTemplateSet");
 
-  String[] getDefaultLiveTemplateFiles();
+  @Attribute("path")
+  public String path;
 
-  /**
-   * @return paths to resources, without .xml extension (e.g. /templates/foo)
-   */
-  @Nullable
-  String[] getHiddenLiveTemplateFiles();
+  @Attribute("register")
+  public boolean register = true;
 }

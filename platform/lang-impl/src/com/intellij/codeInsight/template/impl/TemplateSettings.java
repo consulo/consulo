@@ -128,6 +128,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
       return new TemplateKey(template.getGroupName(), template.getKey());
     }
 
+    @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
@@ -140,6 +141,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
       return true;
     }
 
+    @Override
     public int hashCode() {
       int result = groupName != null ? groupName.hashCode() : 0;
       result = 31 * result + (key != null ? key.hashCode() : 0);
@@ -405,7 +407,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
           mySchemesManager.removeScheme(group);
         }
       }
-      myTemplates.removeValue(template.getKey(), existing);
+      myTemplates.remove(template.getKey(), existing);
     }
   }
 
@@ -430,7 +432,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
   }
 
   public void removeTemplate(Template template) {
-    myTemplates.removeValue(template.getKey(), (TemplateImpl )template);
+    myTemplates.remove(template.getKey(), (TemplateImpl )template);
 
     TemplateImpl templateImpl = (TemplateImpl)template;
     String groupName = templateImpl.getGroupName();
@@ -493,9 +495,36 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
       }
     }
 
+    loadBundledLiveTemplateSets();
     loadDefaultLiveTemplates();
   }
 
+  private void loadBundledLiveTemplateSets() {
+    try {
+      for (BundleLiveTemplateSetEP it : BundleLiveTemplateSetEP.EP_NAME.getExtensions()) {
+        String templateName = getDefaultTemplateName(it.path);
+        ClassLoader loaderForClass = it.getLoaderForClass();
+        InputStream inputStream = loaderForClass.getResourceAsStream(it.path + ".xml");
+        if (inputStream != null) {
+          TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), templateName, true, it.register, loaderForClass);
+          if (group != null && group.getReplace() != null) {
+            Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
+            for (TemplateImpl template : templates) {
+              removeTemplate(template);
+            }
+          }
+        }
+        else {
+          LOG.warn("Cannot find path for '" + it.path + "'. Plugin: " + it.getPluginDescriptor().getPluginId());
+        }
+      }
+    }
+    catch (Exception e) {
+      LOG.error(e);
+    }
+  }
+
+  @Deprecated
   private void loadDefaultLiveTemplates() {
     try {
       for(DefaultLiveTemplatesProvider provider: Extensions.getExtensions(DefaultLiveTemplatesProvider.EP_NAME)) {
@@ -518,6 +547,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
     }
   }
 
+  @Deprecated
   private void readDefTemplate(DefaultLiveTemplatesProvider provider, String defTemplate, boolean registerTemplate)
     throws JDOMException, InvalidDataException, IOException {
     String templateName = getDefaultTemplateName(defTemplate);
@@ -555,9 +585,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
 
     Map<String, TemplateImpl> created = new LinkedHashMap<String,  TemplateImpl>();
 
-    for (final Object o1 : root.getChildren(TEMPLATE)) {
-      Element element = (Element)o1;
-
+    for (final Element element : root.getChildren(TEMPLATE)) {
       TemplateImpl template = readTemplateFromElement(isDefault, groupName, element, classLoader);
       TemplateImpl existing = getTemplate(template.getKey(), template.getGroupName());
       boolean defaultTemplateModified = isDefault && (myDeletedTemplates.contains(TemplateKey.keyOf(template)) ||
@@ -632,8 +660,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
       template.setValue(TemplateImpl.Property.USE_STATIC_IMPORT_IF_POSSIBLE, Boolean.parseBoolean(useStaticImport));
     }
 
-    for (final Object o : element.getChildren(VARIABLE)) {
-      Element e = (Element)o;
+    for (final Element e : element.getChildren(VARIABLE)) {
       String variableName = e.getAttributeValue(NAME);
       String expression = e.getAttributeValue(EXPRESSION);
       String defaultValue = e.getAttributeValue(DEFAULT_VALUE);
