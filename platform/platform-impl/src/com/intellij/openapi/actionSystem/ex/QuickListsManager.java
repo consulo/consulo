@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.ExportableApplicationComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.diagnostic.Logger;
@@ -189,7 +188,7 @@ public class QuickListsManager implements ExportableApplicationComponent, NamedJ
 
       for (final String path : paths) {
         try {
-          final InputStream inputStream = DecodeDefaultsUtil.getDefaultsInputStream(provider, path);
+          final InputStream inputStream = provider.getClass().getClassLoader().getResourceAsStream(path + ".xml");
           if (inputStream == null) {
             // Error shouldn't occur during this operation
             // thus we report error instead of info
