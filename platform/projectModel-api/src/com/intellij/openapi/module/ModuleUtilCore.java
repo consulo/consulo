@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
 import org.consulo.module.extension.ModuleExtension;
@@ -58,6 +59,7 @@ public class ModuleUtilCore {
 
   public static String getModuleNameInReadAction(@NotNull final Module module) {
     return new ReadAction<String>() {
+      @Override
       protected void run(final Result<String> result) throws Throwable {
         result.setResult(module.getName());
       }
@@ -194,13 +196,13 @@ public class ModuleUtilCore {
     return list;
   }
 
-  public static boolean visitMeAndDependentModules(@NotNull final Module module, final ModuleVisitor visitor) {
-    if (!visitor.visit(module)) {
+  public static boolean visitMeAndDependentModules(@NotNull final Module module, final Processor<Module> visitor) {
+    if (!visitor.process(module)) {
       return false;
     }
     final List<Module> list = getAllDependentModules(module);
     for (Module dependentModule : list) {
-      if (!visitor.visit(dependentModule)) {
+      if (!visitor.process(dependentModule)) {
         return false;
       }
     }
@@ -290,13 +292,5 @@ public class ModuleUtilCore {
   public static NamedPointer<Module> createPointer(@NotNull Project project, @NotNull String name) {
     ModulePointerManager manager = ServiceManager.getService(project, ModulePointerManager.class);
     return manager.create(name);
-  }
-
-  public interface ModuleVisitor {
-    /**
-     * @param module module to be visited.
-     * @return false to stop visiting.
-     */
-    boolean visit(final Module module);
   }
 }
