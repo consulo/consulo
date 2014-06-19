@@ -20,6 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
+@DeprecationInfo(value = "Please avoid using this class. Sometimes if u trying load from plugins, 'componentResourcePath' can be duplicated. But files are " +
+                         "different, and it provide bug", until = "3.0")
 public class DecodeDefaultsUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.ex.DecodeDefaultsUtil");
   private static final Map<String, URL> myResourceCache = Collections.synchronizedMap(new HashMap<String, URL>());

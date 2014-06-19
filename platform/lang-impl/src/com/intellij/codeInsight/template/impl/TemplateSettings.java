@@ -19,6 +19,7 @@ package com.intellij.codeInsight.template.impl;
 import com.intellij.AbstractBundle;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.Template;
+import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
@@ -31,6 +32,7 @@ import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.MultiMap;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -502,11 +504,10 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
   private void loadBundledLiveTemplateSets() {
     try {
       for (BundleLiveTemplateSetEP it : BundleLiveTemplateSetEP.EP_NAME.getExtensions()) {
-        String templateName = getDefaultTemplateName(it.path);
         ClassLoader loaderForClass = it.getLoaderForClass();
         InputStream inputStream = loaderForClass.getResourceAsStream(it.path + ".xml");
         if (inputStream != null) {
-          TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), templateName, true, it.register, loaderForClass);
+          TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), it.path, true, it.register, loaderForClass);
           if (group != null && group.getReplace() != null) {
             Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
             for (TemplateImpl template : templates) {
@@ -525,6 +526,7 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
   }
 
   @Deprecated
+  @SuppressWarnings("deprecation")
   private void loadDefaultLiveTemplates() {
     try {
       for(DefaultLiveTemplatesProvider provider: Extensions.getExtensions(DefaultLiveTemplatesProvider.EP_NAME)) {
@@ -548,13 +550,13 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
   }
 
   @Deprecated
+  @SuppressWarnings("deprecation")
   private void readDefTemplate(DefaultLiveTemplatesProvider provider, String defTemplate, boolean registerTemplate)
     throws JDOMException, InvalidDataException, IOException {
-    String templateName = getDefaultTemplateName(defTemplate);
     InputStream inputStream = DecodeDefaultsUtil.getDefaultsInputStream(provider, defTemplate);
     if (inputStream != null) {
       TemplateGroup group =
-        readTemplateFile(JDOMUtil.loadDocument(inputStream), templateName, true, registerTemplate, provider.getClass().getClassLoader());
+        readTemplateFile(JDOMUtil.loadDocument(inputStream), defTemplate, true, registerTemplate, provider.getClass().getClassLoader());
       if (group != null && group.getReplace() != null) {
         Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
         for (TemplateImpl template : templates) {
@@ -564,12 +566,9 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
     }
   }
 
-  private static String getDefaultTemplateName(String defTemplate) {
-    return defTemplate.substring(defTemplate.lastIndexOf("/") + 1);
-  }
-
   @Nullable
-  private TemplateGroup readTemplateFile(Document document, @NonNls String defGroupName, boolean isDefault, boolean registerTemplate, ClassLoader classLoader) throws InvalidDataException {
+  private TemplateGroup readTemplateFile(Document document, @NonNls String path, boolean isDefault, boolean registerTemplate,
+                                         ClassLoader classLoader) throws InvalidDataException {
     if (document == null) {
       throw new InvalidDataException();
     }
@@ -579,7 +578,10 @@ public class TemplateSettings implements PersistentStateComponent<Element>, Expo
     }
 
     String groupName = root.getAttributeValue(GROUP);
-    if (groupName == null || groupName.length() == 0) groupName = defGroupName;
+    if (StringUtil.isEmpty(groupName)) {
+      groupName = path.substring(path.lastIndexOf("/") + 1);
+      LOG.warn("Group attribute is empty. Path '" + path + "'. Plugin: " + ((PluginClassLoader)classLoader).getPluginId());
+    }
 
     TemplateGroup result = new TemplateGroup(groupName, root.getAttributeValue("REPLACE"));
 
