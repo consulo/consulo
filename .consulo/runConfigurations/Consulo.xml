@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Consulo" type="JavaApplication" factoryName="Java Application" singleton="true">
+    <log_file path="$PROJECT_DIR$/.consulo/sandbox/system/log/idea.log" checked="true" skipped="true" show_all="false" alias="idea.log" />
     <option name="MAIN_CLASS_NAME" value="com.intellij.idea.Main" />
     <option name="VM_PARAMETERS" value="-ea -Xbootclasspath/p:$MODULE_DIR$/out/artifacts/distForRuntime/lib/boot.jar -Xmx1024m -Didea.is.internal=true -Dconsulo.statistics.host=http://must-be.org:8080/consulo/statistics/ -Dconsulo.updates.host=http://localhost:9000/consulo/updates/ -Didea.home.path=$MODULE_DIR$/out/artifacts/distForRuntime -Didea.properties.file=$MODULE_DIR$/idea.properties -XX:MaxPermSize=512m -classpath $MODULE_DIR$/out/artifacts/distForRuntime/lib/*;" />
     <option name="PROGRAM_PARAMETERS" value="" />
@@ -16,7 +17,13 @@
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
     <method>

@@ -19,7 +19,6 @@ import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -59,18 +58,12 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
   @Nullable
   public static PlatformProjectOpenProcessor getInstanceIfItExists() {
-    ProjectOpenProcessor[] processors = Extensions.getExtensions(EXTENSION_POINT_NAME);
-    for(ProjectOpenProcessor processor: processors) {
-      if (processor instanceof PlatformProjectOpenProcessor) {
-        return (PlatformProjectOpenProcessor) processor;
-      }
-    }
-    return null;
+    return EXTENSION_POINT_NAME.findExtension(PlatformProjectOpenProcessor.class);
   }
 
   @Override
   public boolean canOpenProject(final VirtualFile file) {
-    return file.isDirectory();
+    return file.isDirectory() && file.findChild(Project.DIRECTORY_STORE_FOLDER) != null;
   }
 
   @Override
@@ -86,7 +79,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   @Override
   @Nullable
   public Project doOpenProject(@NotNull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {
-    return doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame, -1, null, false);
+    return doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame, -1, null);
   }
 
   @Nullable
@@ -94,8 +87,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
                                       Project projectToClose,
                                       final boolean forceOpenInNewFrame,
                                       final int line,
-                                      @Nullable Consumer<Project> callback,
-                                      final boolean isReopen) {
+                                      @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
       baseDir = virtualFile.getParent();

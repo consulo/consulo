@@ -49,7 +49,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
     @Nullable final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
-    final boolean showFiles = project != null || PlatformProjectOpenProcessor.getInstanceIfItExists() != null;
+    final boolean showFiles = project != null;
 
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
       @Override
@@ -130,10 +130,8 @@ public class OpenFileAction extends AnAction implements DumbAware {
         openFile(file, project);
       }
       else {
-        PlatformProjectOpenProcessor processor = PlatformProjectOpenProcessor.getInstanceIfItExists();
-        if (processor != null) {
-          processor.doOpenProject(file, null, false);
-        }
+        PlatformProjectOpenProcessor processor = PlatformProjectOpenProcessor.getInstance();
+        processor.doOpenProject(file, null, false);
       }
     }
   }

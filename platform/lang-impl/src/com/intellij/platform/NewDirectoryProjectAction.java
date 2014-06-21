@@ -87,6 +87,6 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
       public void consume(final Project project) {
         dialog.doCreate(project, baseDir);
       }
-    }, false);
+    });
   }
 }

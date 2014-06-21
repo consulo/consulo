@@ -909,7 +909,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
 
           project[0] = null; // Let it go.
 
-          ProjectUtil.openProject(location, null, true);
+          ProjectUtil.openOrImport(location, null, true);
         }
       }
     }, ModalityState.NON_MODAL);
