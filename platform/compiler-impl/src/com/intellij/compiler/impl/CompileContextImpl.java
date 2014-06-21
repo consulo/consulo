@@ -22,6 +22,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.compiler.CompilerMessageImpl;
+import com.intellij.compiler.ProblemsView;
 import com.intellij.compiler.make.impl.CompositeDependencyCache;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.openapi.application.ApplicationManager;
@@ -298,7 +299,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
                           msg.getColumn());
     }
     else {
-      ProblemsViewImpl.getInstance(myProject).addMessage(msg);
+      ProblemsView.getInstance(myProject).addMessage(msg);
     }
   }
 

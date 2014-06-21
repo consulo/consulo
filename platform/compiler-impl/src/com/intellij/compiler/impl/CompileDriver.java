@@ -444,7 +444,7 @@ public class CompileDriver {
                        final boolean checkCachesVersion) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    ProblemsViewImpl.getInstance(myProject).clearOldMessages(null);
+    ProblemsView.getInstance(myProject).clearOldMessages(null);
 
     final String contentName =
       forceCompile ? CompilerBundle.message("compiler.content.name.compile") : CompilerBundle.message("compiler.content.name.make");
