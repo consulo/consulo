@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package org.consulo.util.pointers;
 
 import org.jetbrains.annotations.Nullable;
 
-public interface Getter<A> {
+/**
+ * @author VISTALL
+ * @since 22.06.14
+ */
+public class NamedPointerUtil {
   @Nullable
-  A get();
+  public static <T extends Named> T get(@Nullable NamedPointer<T> pointer) {
+    return pointer == null ? null : pointer.get();
+  }
+
+  @Nullable
+  public static <T extends Named> String getName(@Nullable NamedPointer<T> getter) {
+    return getter == null ? null : getter.getName();
+  }
 }
