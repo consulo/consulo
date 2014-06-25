@@ -122,9 +122,7 @@ public class ITNReporter extends ErrorReportSubmitter {
 
     @NonNls StringBuilder descBuilder = new StringBuilder();
 
-    String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
-
-    descBuilder.append("Platform Version: ").append(platformBuild).append('\n');
+    descBuilder.append("Consulo Build: ").append(ApplicationInfo.getInstance().getBuild()).append('\n');
 
     String affectedVersion = null;
     Throwable t = ideaLoggingEvent.getThrowable();
