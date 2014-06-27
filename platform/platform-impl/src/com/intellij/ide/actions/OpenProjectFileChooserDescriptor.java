@@ -36,6 +36,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
 
   @Override
   public boolean isFileSelectable(final VirtualFile file) {
+    if (file == null) return false;
     return isProjectDirectory(file) || isProjectFile(file);
   }
 
