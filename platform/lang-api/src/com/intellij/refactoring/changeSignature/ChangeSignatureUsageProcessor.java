@@ -32,18 +32,20 @@ public interface ChangeSignatureUsageProcessor {
   ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME =
     new ExtensionPointName<ChangeSignatureUsageProcessor>("com.intellij.refactoring.changeSignatureUsageProcessor");
 
-  UsageInfo[] findUsages(ChangeInfo info);
+  @NotNull
+  UsageInfo[] findUsages(@NotNull ChangeInfo info);
 
-  MultiMap<PsiElement, String> findConflicts(ChangeInfo info, Ref<UsageInfo[]> refUsages);
+  @NotNull
+  MultiMap<PsiElement, String> findConflicts(@NotNull ChangeInfo info, Ref<UsageInfo[]> refUsages);
 
-  boolean processUsage(ChangeInfo changeInfo, UsageInfo usageInfo, boolean beforeMethodChange, UsageInfo[] usages);
+  boolean processUsage(@NotNull ChangeInfo changeInfo, @NotNull UsageInfo usageInfo, boolean beforeMethodChange, @NotNull UsageInfo[] usages);
 
-  boolean processPrimaryMethod(ChangeInfo changeInfo);
+  boolean processPrimaryMethod(@NotNull ChangeInfo changeInfo);
 
-  boolean shouldPreviewUsages(ChangeInfo changeInfo, UsageInfo[] usages);
+  boolean shouldPreviewUsages(@NotNull ChangeInfo changeInfo, @NotNull UsageInfo[] usages);
 
-  void registerConflictResolvers(List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
+  void registerConflictResolvers(@NotNull List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
                                  @NotNull ResolveSnapshotProvider resolveSnapshotProvider,
-                                 UsageInfo[] usages, 
-                                 ChangeInfo changeInfo);
+                                 @NotNull UsageInfo[] usages,
+                                 @NotNull ChangeInfo changeInfo);
 }
