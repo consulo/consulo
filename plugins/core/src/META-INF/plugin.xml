@@ -16,6 +16,7 @@
   <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)"/>
   <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)"/>
   <xi:include href="/META-INF/PostfixTemplates.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/Coverage.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
