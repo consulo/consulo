@@ -26,7 +26,6 @@ import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
@@ -118,15 +117,15 @@ public interface HighlightInfoType {
 
   boolean needUpdateOnTyping();
 
-  class HighlightInfoTypeImpl implements HighlightInfoType, JDOMExternalizable {
+  class HighlightInfoTypeImpl implements HighlightInfoType {
     private final HighlightSeverity mySeverity;
     private final TextAttributesKey myAttributesKey;
     private final boolean myNeedUpdateOnTyping;
 
     //read external only
-    public HighlightInfoTypeImpl() {
-      mySeverity = new HighlightSeverity();
-      myAttributesKey = new TextAttributesKey();
+    public HighlightInfoTypeImpl(Element element) throws InvalidDataException {
+      mySeverity = new HighlightSeverity(element);
+      myAttributesKey = new TextAttributesKey(element);
       myNeedUpdateOnTyping = true;
     }
 
@@ -156,24 +155,18 @@ public interface HighlightInfoType {
       return myNeedUpdateOnTyping;
     }
 
+    @Override
     @SuppressWarnings({"HardCodedStringLiteral"})
     public String toString() {
       return "HighlightInfoTypeImpl[severity=" + mySeverity + ", key=" + myAttributesKey + "]";
     }
 
-    @Override
-    public void readExternal(Element element) throws InvalidDataException {
-      mySeverity.readExternal(element);
-      myAttributesKey.readExternal(element);
-    }
-
-    @Override
     public void writeExternal(Element element) throws WriteExternalException {
       mySeverity.writeExternal(element);
       myAttributesKey.writeExternal(element);
     }
 
-
+    @Override
     public boolean equals(final Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
@@ -186,6 +179,7 @@ public interface HighlightInfoType {
       return true;
     }
 
+    @Override
     public int hashCode() {
       int result = mySeverity.hashCode();
       result = 29 * result + myAttributesKey.hashCode();
@@ -225,6 +219,7 @@ public interface HighlightInfoType {
       return false;
     }
 
+    @Override
     @SuppressWarnings({"HardCodedStringLiteral"})
     public String toString() {
       return "HighlightInfoTypeSeverityByKey[severity=" + myToolKey + ", key=" + myAttributesKey + "]";

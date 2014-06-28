@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,7 @@
  */
 package com.intellij.lang.annotation;
 
-import com.intellij.openapi.util.DefaultJDOMExternalizer;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
  * @see com.intellij.lang.annotation.Annotation
  */
 
-public class HighlightSeverity implements Comparable<HighlightSeverity>, JDOMExternalizable {
-  public String myName;
-  public int myVal;
+public class HighlightSeverity implements Comparable<HighlightSeverity> {
+  public final String myName;
+  public final int myVal;
 
   /**
    * The standard severity level for information annotations.
@@ -79,16 +76,18 @@ public class HighlightSeverity implements Comparable<HighlightSeverity>, JDOMExt
    *             if two annotations with different severity levels cover the same text range, only
    *             the annotation with a higher severity level is displayed.
    */
-  public HighlightSeverity(@NonNls String name, int val) {
+  public HighlightSeverity(@NonNls @NotNull String name, int val) {
     myName = name;
     myVal = val;
   }
 
 
   //read external only
-  public HighlightSeverity() {
+  public HighlightSeverity(@NotNull Element element) {
+    this(JDOMExternalizerUtil.readField(element, "myName"), Integer.valueOf(JDOMExternalizerUtil.readField(element, "myVal")));
   }
 
+  @Override
   public String toString() {
     return myName;
   }
@@ -98,17 +97,11 @@ public class HighlightSeverity implements Comparable<HighlightSeverity>, JDOMExt
     return myVal - highlightSeverity.myVal;
   }
 
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    DefaultJDOMExternalizer.readExternal(this, element);
-  }
-
-  @Override
   public void writeExternal(final Element element) throws WriteExternalException {
     DefaultJDOMExternalizer.writeExternal(this, element);
   }
 
-
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -118,7 +111,13 @@ public class HighlightSeverity implements Comparable<HighlightSeverity>, JDOMExt
     return myName.equals(that.myName);
   }
 
+  @Override
   public int hashCode() {
     return myName.hashCode();
+  }
+
+  @NotNull
+  public String getName() {
+    return myName;
   }
 }

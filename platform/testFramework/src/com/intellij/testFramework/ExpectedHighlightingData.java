@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * @author cdr
- */
 package com.intellij.testFramework;
 
 import com.intellij.codeHighlighting.Pass;
@@ -25,20 +21,18 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -50,10 +44,10 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import junit.framework.Assert;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.junit.Assert;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -62,6 +56,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author cdr
+ */
 public class ExpectedHighlightingData {
   private static final Logger LOG = Logger.getInstance("#com.intellij.testFramework.ExpectedHighlightingData");
 
@@ -96,13 +93,14 @@ public class ExpectedHighlightingData {
   private final Map<RangeMarker, LineMarkerInfo> lineMarkerInfos = new THashMap<RangeMarker, LineMarkerInfo>();
 
   public void init() {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      public void run() {
+    new WriteCommandAction(null){
+      @Override
+      protected void run(@NotNull Result result) throws Throwable {
         extractExpectedLineMarkerSet(myDocument);
         extractExpectedHighlightsSet(myDocument);
         refreshLineMarkers();
       }
-    });
+    }.execute();
   }
 
   public ExpectedHighlightingData(@NotNull Document document,boolean checkWarnings, boolean checkInfos) {
@@ -136,7 +134,7 @@ public class ExpectedHighlightingData {
         for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
           for (HighlightInfoType type : provider.getSeveritiesHighlightInfoTypes()) {
             final HighlightSeverity severity = type.getSeverity(null);
-            highlightingTypes.put(severity.toString(), new ExpectedHighlightingSet(severity, false, true));
+            highlightingTypes.put(severity.getName(), new ExpectedHighlightingSet(severity, false, true));
           }
         }
         highlightingTypes.put(END_LINE_HIGHLIGHT_MARKER, new ExpectedHighlightingSet(HighlightSeverity.ERROR, true, true));
@@ -331,7 +329,7 @@ public class ExpectedHighlightingData {
     if (expectedHighlightingSet.enabled) {
       TextAttributesKey forcedTextAttributesKey = attrKey == null ? null : TextAttributesKey.createTextAttributesKey(attrKey);
       HighlightInfo.Builder builder =
-        HighlightInfo.newHighlightInfo(type).range(rangeStart, textOffset.get()).severity(expectedHighlightingSet.severity);
+              HighlightInfo.newHighlightInfo(type).range(rangeStart, textOffset.get()).severity(expectedHighlightingSet.severity);
 
       if (forcedAttributes != null) builder.textAttributes(forcedAttributes);
       if (forcedTextAttributesKey != null) builder.textAttributes(forcedTextAttributesKey);
@@ -344,7 +342,8 @@ public class ExpectedHighlightingData {
     return toContinueFrom;
   }
 
-  private static final HighlightInfoType WHATEVER = new HighlightInfoType.HighlightInfoTypeImpl();
+  private static final HighlightInfoType WHATEVER = new HighlightInfoType.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION,
+                                                                                                HighlighterColors.TEXT);
 
   public void checkLineMarkers(Collection<LineMarkerInfo> markerInfos, String text) {
     String fileName = myFile == null ? "" : myFile.getName() + ": ";
@@ -363,10 +362,10 @@ public class ExpectedHighlightingData {
 
           if (!failMessage.isEmpty()) failMessage += '\n';
           failMessage += fileName + "Extra line marker highlighted " +
-                            "(" + (x1 + 1) + ", " + (y1 + 1) + ")" + "-" +
-                            "(" + (x2 + 1) + ", " + (y2 + 1) + ")"
-                            + ": '"+info.getLineMarkerTooltip()+"'"
-                            ;
+                         "(" + (x1 + 1) + ", " + (y1 + 1) + ")" + "-" +
+                         "(" + (x2 + 1) + ", " + (y2 + 1) + ")"
+                         + ": '"+info.getLineMarkerTooltip()+"'"
+          ;
         }
       }
     }
@@ -386,7 +385,7 @@ public class ExpectedHighlightingData {
                        "(" + (x1 + 1) + ", " + (y1 + 1) + ")" + "-" +
                        "(" + (x2 + 1) + ", " + (y2 + 1) + ")"
                        + ": '"+expectedLineMarker.getLineMarkerTooltip()+"'"
-          ;
+        ;
       }
     }
 
@@ -404,7 +403,7 @@ public class ExpectedHighlightingData {
             ANY_TEXT.equals(markerInfoTooltip) ||
             ANY_TEXT.equals(infoTooltip)
           )
-        ) {
+              ) {
         return true;
       }
     }
@@ -437,12 +436,12 @@ public class ExpectedHighlightingData {
 
         if (!failMessage.isEmpty()) failMessage += '\n';
         failMessage += fileName + "Extra text fragment highlighted " +
-                          "(" + (x1 + 1) + ", " + (y1 + 1) + ")" + "-" +
-                          "(" + (x2 + 1) + ", " + (y2 + 1) + ")" +
-                          " :'" +
-                          s +
-                          "'" + (desc == null ? "" : " (" + desc + ")")
-                          + " [" + info.type + "]";
+                       "(" + (x1 + 1) + ", " + (y1 + 1) + ")" + "-" +
+                       "(" + (x2 + 1) + ", " + (y2 + 1) + ")" +
+                       " :'" +
+                       s +
+                       "'" + (desc == null ? "" : " (" + desc + ")")
+                       + " [" + info.type + "]";
       }
     }
 
@@ -463,11 +462,11 @@ public class ExpectedHighlightingData {
 
           if (!failMessage.isEmpty()) failMessage += '\n';
           failMessage += fileName + "Text fragment was not highlighted " +
-                            "(" + (x1 + 1) + ", " + (y1 + 1) + ")" + "-" +
-                            "(" + (x2 + 1) + ", " + (y2 + 1) + ")" +
-                            " :'" +
-                            s +
-                            "'" + (desc == null ? "" : " (" + desc + ")");
+                         "(" + (x1 + 1) + ", " + (y1 + 1) + ")" + "-" +
+                         "(" + (x2 + 1) + ", " + (y2 + 1) + ")" +
+                         " :'" +
+                         s +
+                         "'" + (desc == null ? "" : " (" + desc + ")");
         }
       }
     }
@@ -536,14 +535,14 @@ public class ExpectedHighlightingData {
 
     // combine highlighting data with original text
     StringBuilder sb = new StringBuilder();
-    Pair<Integer, Integer> result = composeText(sb, list, 0, text, text.length(), 0);
+    Couple<Integer> result = composeText(sb, list, 0, text, text.length(), 0);
     sb.insert(0, text.substring(0, result.second));
     return sb.toString();
   }
 
-  private static Pair<Integer, Integer> composeText(StringBuilder sb,
-                                                    List<Pair<String, HighlightInfo>> list, int index,
-                                                    String text, int endPos, int startPos) {
+  private static Couple<Integer> composeText(StringBuilder sb,
+                                             List<Pair<String, HighlightInfo>> list, int index,
+                                             String text, int endPos, int startPos) {
     int i = index;
     while (i < list.size()) {
       Pair<String, HighlightInfo> pair = list.get(i);
@@ -559,7 +558,7 @@ public class ExpectedHighlightingData {
       sb.insert(0, "</" + severity + ">");
       endPos = info.endOffset;
       if (prev != null && prev.endOffset > info.startOffset) {
-        Pair<Integer, Integer> result = composeText(sb, list, i + 1, text, endPos, info.startOffset);
+        Couple<Integer> result = composeText(sb, list, i + 1, text, endPos, info.startOffset);
         i = result.first - 1;
         endPos = result.second;
       }
@@ -570,7 +569,7 @@ public class ExpectedHighlightingData {
       i++;
     }
 
-    return Pair.create(i, endPos);
+    return Couple.of(i, endPos);
   }
 
   private static boolean infosContainsExpectedInfo(Collection<HighlightInfo> infos, HighlightInfo expectedInfo) {
@@ -601,15 +600,15 @@ public class ExpectedHighlightingData {
   private static boolean infoEquals(HighlightInfo expectedInfo, HighlightInfo info) {
     if (expectedInfo == info) return true;
     return
-      info.getSeverity() == expectedInfo.getSeverity() &&
-      info.startOffset == expectedInfo.startOffset &&
-      info.endOffset == expectedInfo.endOffset &&
-      info.isAfterEndOfLine() == expectedInfo.isAfterEndOfLine() &&
-      (expectedInfo.type == WHATEVER || expectedInfo.type.equals(info.type)) &&
-      (Comparing.strEqual(ANY_TEXT, expectedInfo.getDescription()) || Comparing.strEqual(info.getDescription(),
-                                                                                         expectedInfo.getDescription())) &&
-      (expectedInfo.forcedTextAttributes == null || Comparing.equal(expectedInfo.getTextAttributes(null, null),
-                                                                    info.getTextAttributes(null, null))) &&
-      (expectedInfo.forcedTextAttributesKey == null || expectedInfo.forcedTextAttributesKey.equals(info.forcedTextAttributesKey));
+            info.getSeverity() == expectedInfo.getSeverity() &&
+            info.startOffset == expectedInfo.startOffset &&
+            info.endOffset == expectedInfo.endOffset &&
+            info.isAfterEndOfLine() == expectedInfo.isAfterEndOfLine() &&
+            (expectedInfo.type == WHATEVER || expectedInfo.type.equals(info.type)) &&
+            (Comparing.strEqual(ANY_TEXT, expectedInfo.getDescription()) || Comparing.strEqual(info.getDescription(),
+                                                                                               expectedInfo.getDescription())) &&
+            (expectedInfo.forcedTextAttributes == null || Comparing.equal(expectedInfo.getTextAttributes(null, null),
+                                                                          info.getTextAttributes(null, null))) &&
+            (expectedInfo.forcedTextAttributesKey == null || expectedInfo.forcedTextAttributesKey.equals(info.forcedTextAttributesKey));
   }
 }
