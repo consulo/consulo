@@ -35,6 +35,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
+import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
@@ -46,7 +47,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -173,7 +173,7 @@ public abstract class MultilanguageCodeStyleAbstractPanel extends CodeStyleAbstr
   protected EditorHighlighter createHighlighter(final EditorColorsScheme scheme) {
     FileType fileType = getFileType();
     return FileTypeEditorHighlighterProviders.INSTANCE.forFileType(fileType).getEditorHighlighter(
-      ProjectUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
+            ProjectUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
   }
 
 
@@ -183,23 +183,23 @@ public abstract class MultilanguageCodeStyleAbstractPanel extends CodeStyleAbstr
     final PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
     final Document doc = manager.getDocument(psiFile);
     CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                          doc.replaceString(0, doc.getTextLength(), text);
-                                                          manager.commitDocument(doc);
-                                                          try {
-                                                            CodeStyleManager.getInstance(project).reformat(psiFile);
-                                                          }
-                                                          catch (IncorrectOperationException e) {
-                                                            LOG.error(e);
-                                                          }
-                                                        }
-                                                      });
-                                                    }
-                                                  }, "", "");
+      @Override
+      public void run() {
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+            doc.replaceString(0, doc.getTextLength(), text);
+            manager.commitDocument(doc);
+            try {
+              CodeStyleManager.getInstance(project).reformat(psiFile);
+            }
+            catch (IncorrectOperationException e) {
+              LOG.error(e);
+            }
+          }
+        });
+      }
+    }, "", "");
     if (doc != null) {
       manager.commitDocument(doc);
     }
@@ -236,20 +236,10 @@ public abstract class MultilanguageCodeStyleAbstractPanel extends CodeStyleAbstr
         }
       });
       previewPanel.add(tabbedPane, BorderLayout.CENTER);
-      previewPanel.addAncestorListener(new AncestorListener() {
+      previewPanel.addAncestorListener(new AncestorListenerAdapter() {
         @Override
         public void ancestorAdded(AncestorEvent event) {
           selectCurrentLanguageTab();
-        }
-
-        @Override
-        public void ancestorRemoved(AncestorEvent event) {
-          // Do nothing
-        }
-
-        @Override
-        public void ancestorMoved(AncestorEvent event) {
-          // Do nothing
         }
       });
     }
@@ -297,6 +287,11 @@ public abstract class MultilanguageCodeStyleAbstractPanel extends CodeStyleAbstr
     return getSelectedLanguage();
   }
 
+  @Override
+  public void moveStandardOption(String fieldName, String newGroup) {
+    throw new UnsupportedOperationException();
+  }
+
   protected <T extends OrderedOption>List<T> sortOptions(Collection<T> options) {
     Set<String> names = new THashSet<String>(ContainerUtil.map(options, new Function<OrderedOption, String>() {
       @Override
@@ -310,17 +305,17 @@ public abstract class MultilanguageCodeStyleAbstractPanel extends CodeStyleAbstr
     MultiMap<String, T> befores = new MultiMap<String, T>();
 
     for (T each : options) {
-        String anchorOptionName = each.getAnchorOptionName();
-        if (anchorOptionName != null && names.contains(anchorOptionName)) {
-          if (each.getAnchor() == OptionAnchor.AFTER) {
-            afters.putValue(anchorOptionName, each);
-            continue;
-          }
-          else if (each.getAnchor() == OptionAnchor.BEFORE) {
-            befores.putValue(anchorOptionName, each);
-            continue;
-          }
+      String anchorOptionName = each.getAnchorOptionName();
+      if (anchorOptionName != null && names.contains(anchorOptionName)) {
+        if (each.getAnchor() == OptionAnchor.AFTER) {
+          afters.putValue(anchorOptionName, each);
+          continue;
         }
+        else if (each.getAnchor() == OptionAnchor.BEFORE) {
+          befores.putValue(anchorOptionName, each);
+          continue;
+        }
+      }
       order.add(each);
     }
 

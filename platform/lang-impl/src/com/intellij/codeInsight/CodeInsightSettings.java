@@ -101,6 +101,8 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
 
   public boolean SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO = false;
 
+  public boolean INDENTING_BACKSPACE = true;
+
   public boolean SMART_INDENT_ON_ENTER = true;
   public boolean INSERT_BRACE_ON_ENTER = true;
   public boolean INSERT_SCRIPTLET_END_ON_ENTER = true;

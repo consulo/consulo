@@ -2533,5 +2533,7 @@
     <copyPastePostProcessor implementation="com.intellij.openapi.editor.richcopy.HtmlCopyPasteProcessor"/>
 
     <newModuleBuilder implementation="org.mustbe.consulo.ide.impl.EmptyNewModuleBuilder" />
+
+    <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.IndentingBackspaceHandler" />
   </extensions>
 </idea-plugin>
