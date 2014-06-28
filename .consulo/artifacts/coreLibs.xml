@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact name="coreLibs">
+    <output-path>$PROJECT_DIR$/out/artifacts/coreLibs</output-path>
+    <root id="root">
+      <element id="zip-archive" name="consulo-core.jar">
+        <element id="module-output" name="core-api" />
+        <element id="module-output" name="core-impl" />
+        <element id="module-output" name="extensions" />
+        <element id="module-output" name="util" />
+        <element id="module-output" name="util-rt" />
+        <element id="module-output" name="boot" />
+        <element id="module-output" name="testFramework" />
+        <element id="module-production-resource-output" name="platform-resources-en" />
+      </element>
+      <element id="library" level="project" name="Trove4j" />
+      <element id="library" level="project" name="JDOM" />
+    </root>
+  </artifact>
+</component>
