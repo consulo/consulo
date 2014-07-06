@@ -197,7 +197,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
     return display;
   }
 
-  @Override
+  //@Override
   protected Dimension getSizeForComponent(Component comp) {
     currentValuePane.add(comp);
     comp.setFont(comboBox.getFont());
