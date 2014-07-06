@@ -43,10 +43,10 @@ public class GotItMessage {
     final String[] lines = message.split("\n");
 
     StringBuffer buf = new StringBuffer("<html><body><div align='center' style=\"font-family: ")
-      .append(UIUtil.getLabelFont().getFontName()).append("; ")
-      .append("font-size: 12pt;\">")
-      .append(lines.length > 1 ? message.replace("\n", "<br>") : message)
-      .append("</div></body></html>");
+            .append(UIUtil.getLabelFont().getFontName()).append("; ")
+            .append("font-size: 12pt;\">")
+            .append(lines.length > 1 ? message.replace("\n", "<br>") : message)
+            .append("</div></body></html>");
     myMessage = buf.toString();
   }
 
@@ -82,14 +82,14 @@ public class GotItMessage {
     }
 
     final Balloon balloon = builder
-      .setFillColor(UIUtil.getListBackground())
-      .setHideOnClickOutside(false)
-      .setHideOnAction(false)
-      .setHideOnFrameResize(false)
-      .setHideOnKeyOutside(false)
-      .setShowCallout(myShowCallout)
-      .setBlockClicksThroughBalloon(true)
-      .createBalloon();
+            .setFillColor(UIUtil.getListBackground())
+            .setHideOnClickOutside(false)
+            .setHideOnAction(false)
+            .setHideOnFrameResize(false)
+            .setHideOnKeyOutside(false)
+            .setShowCallout(myShowCallout)
+            .setBlockClicksThroughBalloon(true)
+            .createBalloon();
     panel.myButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {

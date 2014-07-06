@@ -26,6 +26,11 @@ import java.awt.event.ActionListener;
  * @see JBPopupFactory#createBalloonBuilder(javax.swing.JComponent)
  */
 public interface BalloonBuilder {
+  /** @deprecated use {@link Balloon#show(com.intellij.ui.awt.RelativePoint, Balloon.Position)} (to remove in IDEA 14) */
+  @SuppressWarnings("UnusedDeclaration")
+  @NotNull
+  BalloonBuilder setPreferredPosition(Balloon.Position position);
+
   @NotNull
   BalloonBuilder setBorderColor(@NotNull Color color);
 
@@ -70,6 +75,10 @@ public interface BalloonBuilder {
 
   @NotNull
   BalloonBuilder setPositionChangeYShift(int positionChangeYShift);
+
+  /** @deprecated to remove in IDEA 14 */
+  @SuppressWarnings("UnusedDeclaration")
+  boolean isHideOnAction();
 
   @NotNull
   BalloonBuilder setHideOnAction(boolean hideOnAction);

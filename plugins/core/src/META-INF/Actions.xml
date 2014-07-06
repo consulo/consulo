@@ -2220,5 +2220,7 @@
     <reference id="ShowProjectStructureSettings">
       <add-to-group group-id="NavBarToolBar" anchor="last"/>
     </reference>
+
+    <action id="SendEOF" class="com.intellij.execution.actions.EOFAction" text="Send EOF"/>
   </actions>
 </idea-plugin>
