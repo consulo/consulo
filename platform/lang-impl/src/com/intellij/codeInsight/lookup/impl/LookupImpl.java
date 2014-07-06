@@ -19,6 +19,7 @@ package com.intellij.codeInsight.lookup.impl;
 import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.lookup.*;
@@ -70,7 +71,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LookupImpl extends LightweightHint implements LookupEx, Disposable {
+public class LookupImpl extends LightweightHint implements LookupEx, Disposable, WeighingContext {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.lookup.impl.LookupImpl");
 
   private final LookupOffsets myOffsets;
@@ -78,7 +79,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   private final Editor myEditor;
   private final JBList myList = new JBList(new CollectionListModel<LookupElement>()) {
     @Override
-    protected void processKeyEvent(final KeyEvent e) {
+    protected void processKeyEvent(@NotNull final KeyEvent e) {
       final char keyChar = e.getKeyChar();
       if (keyChar == KeyEvent.VK_ENTER || keyChar == KeyEvent.VK_TAB) {
         IdeFocusManager.getInstance(myProject).requestFocus(myEditor.getContentComponent(), true).doWhenDone(new Runnable() {
@@ -326,7 +327,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       return;
     }
 
-    // selected item should be at the top of the visible list 
+    // selected item should be at the top of the visible list
     int top = myList.getSelectedIndex();
     if (top > 0) {
       top--; // show one element above the selected one to give the hint that there are more available via scrolling
@@ -590,7 +591,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
 
     final String prefix = itemPattern(item);
     final int length = prefix.length();
-    if (length == 0 || !StringUtil.startsWithIgnoreCase(lookupString, prefix)) return lookupString;
+    if (length == 0 || !itemMatcher(item).prefixMatches(prefix)) return lookupString;
     boolean isAllLower = true;
     boolean isAllUpper = true;
     boolean sameCase = true;
@@ -694,6 +695,8 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       return false;
     }
 
+    DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(this);
+
     LOG.assertTrue(myList.isShowing(), "!showing, disposed=" + myDisposed);
 
     return true;
@@ -771,7 +774,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       private LookupElement oldItem = null;
 
       @Override
-      public void valueChanged(ListSelectionEvent e){
+      public void valueChanged(@NotNull ListSelectionEvent e){
         final LookupElement item = getCurrentItem();
         if (oldItem != item && !myList.isEmpty()) { // do not update on temporary model wipe
           fireCurrentItemChanged(item);
