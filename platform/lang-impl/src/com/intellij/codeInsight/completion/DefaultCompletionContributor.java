@@ -30,16 +30,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DefaultCompletionContributor extends CompletionContributor {
 
-  static void addDefaultAdvertisements(@NotNull final CompletionParameters parameters, LookupImpl lookup) {
+  static void addDefaultAdvertisements(@NotNull final CompletionParameters parameters, LookupImpl lookup, boolean includePsiFeatures) {
     if (CompletionUtil.shouldShowFeature(parameters, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_DOT_ETC)) {
       lookup.addAdvertisement(LangBundle.message("completion.dot.etc.ad"), null);
     }
-    if (CompletionUtil.shouldShowFeature(parameters, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_SMART_ENTER)) {
-      final String shortcut = getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_COMPLETE_STATEMENT);
-      if (shortcut != null) {
-        lookup.addAdvertisement(LangBundle.message("completion.smart.enter.ad", shortcut), null);
-      }
-    }
+    if (!includePsiFeatures) return;
 
     if (CompletionUtil.shouldShowFeature(parameters, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_SMART_ENTER)) {
       final String shortcut = getActionShortcut(IdeActions.ACTION_CHOOSE_LOOKUP_ITEM_COMPLETE_STATEMENT);
@@ -71,7 +66,7 @@ public class DefaultCompletionContributor extends CompletionContributor {
   }
 
   @Override
-  public AutoCompletionDecision handleAutoCompletionPossibility(AutoCompletionContext context) {
+  public AutoCompletionDecision handleAutoCompletionPossibility(@NotNull AutoCompletionContext context) {
     final LookupElement[] items = context.getItems();
     if (items.length == 1) {
       final LookupElement item = items[0];
