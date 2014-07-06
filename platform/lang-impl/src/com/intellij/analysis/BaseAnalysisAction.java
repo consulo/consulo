@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.intellij.analysis;
 
 import com.intellij.ide.highlighter.ArchiveFileType;
-import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -28,9 +27,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -58,7 +55,7 @@ public abstract class BaseAnalysisAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = event.getProject();
     final boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
     presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
   }
@@ -80,8 +77,7 @@ public abstract class BaseAnalysisAction extends AnAction {
                                                                 AnalysisScopeBundle.message("analysis.scope.title", myAnalysisNoon),
                                                                 project,
                                                                 scope,
-                                                                module != null ? ModuleUtilCore
-                                                                  .getModuleNameInReadAction(module) : null,
+                                                                module != null ? ModuleUtilCore.getModuleNameInReadAction(module) : null,
                                                                 rememberScope, AnalysisUIOptions.getInstance(project), element){
       @Override
       @Nullable
@@ -153,7 +149,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     if (psiFile != null && psiFile.getManager().isInProject(psiFile)) {
       final VirtualFile file = psiFile.getVirtualFile();
       if (file != null && file.isValid() && file.getFileType() instanceof ArchiveFileType && acceptNonProjectDirectories()) {
-        final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(file);
+        final VirtualFile jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
         if (jarRoot != null) {
           PsiDirectory psiDirectory = psiFile.getManager().findDirectory(jarRoot);
           if (psiDirectory != null) {
@@ -177,11 +173,7 @@ public abstract class BaseAnalysisAction extends AnAction {
       Set<VirtualFile> files = new HashSet<VirtualFile>();
       for (VirtualFile vFile : virtualFiles) {
         if (fileIndex.isInContent(vFile)) {
-          if (vFile instanceof VirtualFileWindow) {
-            files.add(vFile);
-            vFile = ((VirtualFileWindow)vFile).getDelegate();
-          }
-          collectFilesUnder(vFile, files);
+          files.add(vFile);
         }
       }
       return new AnalysisScope(project, files);
@@ -208,15 +200,4 @@ public abstract class BaseAnalysisAction extends AnAction {
     return null;
   }
 
-  private static void collectFilesUnder(@NotNull VirtualFile vFile, @NotNull final Set<VirtualFile> files) {
-    VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
-      @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
-        if (!file.isDirectory()) {
-          files.add(file);
-        }
-        return true;
-      }
-    });
-  }
 }
