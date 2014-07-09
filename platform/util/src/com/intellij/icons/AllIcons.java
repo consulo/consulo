@@ -767,9 +767,7 @@ public class AllIcons {
     public static final Icon Method = IconLoader.getIcon("/nodes/method.png"); // 16x16
     public static final Icon Module = IconLoader.getIcon("/nodes/Module.png"); // 16x16
     public static final Icon ModuleGroup = IconLoader.getIcon("/nodes/moduleGroup.png"); // 16x16
-    public static final Icon NewException = IconLoader.getIcon("/nodes/newException.png"); // 14x14
     public static final Icon NewFolder = IconLoader.getIcon("/nodes/newFolder.png"); // 16x16
-    public static final Icon NewParameter = IconLoader.getIcon("/nodes/newParameter.png"); // 14x14
     public static final Icon NodePlaceholder = IconLoader.getIcon("/nodes/nodePlaceholder.png"); // 16x16
     public static final Icon Package = IconLoader.getIcon("/nodes/package.png"); // 16x16
     public static final Icon TestPackage = IconLoader.getIcon("/nodes/testPackage.png"); // 16x16
