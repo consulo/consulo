@@ -64,7 +64,6 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.DocumentCommitThread;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
-import com.intellij.util.PatchedWeakReference;
 import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.ui.UIUtil;
 import junit.framework.TestCase;
@@ -313,8 +312,6 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
 
     LocalHistoryImpl.getInstanceImpl().cleanupForNextTest();
-
-    PatchedWeakReference.clearAll();
   }
 
   private static Set<VirtualFile> eternallyLivingFiles() {
