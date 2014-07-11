@@ -14,13 +14,13 @@ import java.util.Comparator;
 * User: anna
 * Date: 1/9/12
 */
-class PercentageCoverageColumnInfo extends ColumnInfo<NodeDescriptor, String> {
+public class PercentageCoverageColumnInfo extends ColumnInfo<NodeDescriptor, String> {
   private final int myColumnIdx;
   private final Comparator<NodeDescriptor> myComparator;
   private final CoverageSuitesBundle mySuitesBundle;
   private final CoverageViewManager.StateBean myStateBean;
 
-  PercentageCoverageColumnInfo(int columnIdx,
+  public PercentageCoverageColumnInfo(int columnIdx,
                                String name,
                                final CoverageSuitesBundle suitesBundle,
                                CoverageViewManager.StateBean stateBean) {

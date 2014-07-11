@@ -17,11 +17,11 @@ import java.util.List;
 
 public abstract class CoverageViewExtension {
 
-  protected final Project myProject;
-  protected final CoverageSuitesBundle mySuitesBundle;
-  protected final CoverageViewManager.StateBean myStateBean;
-  protected final CoverageDataManager myCoverageDataManager;
-  protected final CoverageViewManager myCoverageViewManager;
+  private final Project myProject;
+  private final CoverageSuitesBundle mySuitesBundle;
+  private final CoverageViewManager.StateBean myStateBean;
+  private final CoverageDataManager myCoverageDataManager;
+  private final CoverageViewManager myCoverageViewManager;
 
   public CoverageViewExtension(Project project, CoverageSuitesBundle suitesBundle, CoverageViewManager.StateBean stateBean) {
     myProject = project;
@@ -29,6 +29,26 @@ public abstract class CoverageViewExtension {
     myStateBean = stateBean;
     myCoverageDataManager = CoverageDataManager.getInstance(myProject);
     myCoverageViewManager = CoverageViewManager.getInstance(myProject);
+  }
+
+  public Project getProject() {
+    return myProject;
+  }
+
+  public CoverageSuitesBundle getSuitesBundle() {
+    return mySuitesBundle;
+  }
+
+  public CoverageViewManager.StateBean getStateBean() {
+    return myStateBean;
+  }
+
+  public CoverageDataManager getCoverageDataManager() {
+    return myCoverageDataManager;
+  }
+
+  public CoverageViewManager getCoverageViewManager() {
+    return myCoverageViewManager;
   }
 
   @Nullable
