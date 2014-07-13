@@ -265,11 +265,7 @@ public abstract class JBListTable extends JPanel {
     return false;
   }
 
-  public static JComponent createEditorTextFieldPresentation(final Project project,
-                                                             final FileType type,
-                                                             final String text,
-                                                             boolean selected,
-                                                             boolean focused) {
+  public static JComponent createEditorTextFieldPresentation(final Project project, final FileType type, final String text, boolean selected, boolean focused) {
     final JPanel panel = new JPanel(new BorderLayout());
     final EditorTextField field = new EditorTextField(text, project, type) {
       @Override
@@ -286,7 +282,8 @@ public abstract class JBListTable extends JPanel {
     if (selected && focused) {
       panel.setBackground(UIUtil.getTableSelectionBackground());
       field.setAsRendererWithSelection(UIUtil.getTableSelectionBackground(), UIUtil.getTableSelectionForeground());
-    } else {
+    }
+    else {
       panel.setBackground(UIUtil.getTableBackground());
       if (selected) {
         panel.setBorder(new DottedBorder(UIUtil.getTableForeground()));
@@ -314,7 +311,7 @@ public abstract class JBListTable extends JPanel {
       myEditor = editor;
       myIndex = index;
       currentHeight = myTable.getRowHeight(myRow);
-      myScrollPane = (JScrollPane)myTable.getParent().getParent();
+      myScrollPane = UIUtil.getParentOfType(JScrollPane.class, myTable);
     }
 
     @Override
@@ -324,7 +321,13 @@ public abstract class JBListTable extends JPanel {
         sleep(50);
         final JScrollBar bar = myScrollPane.getVerticalScrollBar();
         if (bar == null || !bar.isVisible()) {
-          myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+            }
+          });
+          sleep(15);
         }
         while (currentHeight != neededHeight) {
           if (Math.abs(currentHeight - neededHeight) < step) {
@@ -334,6 +337,7 @@ public abstract class JBListTable extends JPanel {
             currentHeight += currentHeight < neededHeight ? step : -step;
           }
           SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
               myTable.setRowHeight(myRow, currentHeight);
             }
@@ -358,12 +362,13 @@ public abstract class JBListTable extends JPanel {
         }
       }
       catch (InterruptedException ignore) {
-      } finally {
-        TableUtil.scrollSelectionToVisible(myTable);
+      }
+      finally {
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {
+            TableUtil.scrollSelectionToVisible(myTable);
             if (exitEditing && !myTable.isEditing()) {
               myScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
             }
@@ -395,6 +400,7 @@ public abstract class JBListTable extends JPanel {
           }
         }
 
+        @Override
         public void removeNotify() {
           if (myCellEditor != null) myCellEditor.saveFocusIndex();
           super.removeNotify();
