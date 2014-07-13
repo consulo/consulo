@@ -50,18 +50,18 @@ public class FontEditorPreview implements PreviewPanel{
 
   public static String getIDEDemoText() {
     return
-      ApplicationNamesInfo.getInstance().getFullProductName() +
-      " is a full-featured IDE\n" +
-      "with a high level of usability and outstanding\n" +
-      "advanced code editing and refactoring support.\n" +
-      "\n" +
-      "abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]\n" +
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^\n" +
-      // Create empty lines in order to make the gutter wide enough to display two-digits line numbers (other previews use long text
-      // and we don't want different gutter widths on color pages switching).
-      "\n" +
-      "\n" +
-      "\n";
+            ApplicationNamesInfo.getInstance().getFullProductName() +
+            " is a full-featured IDE\n" +
+            "with a high level of usability and outstanding\n" +
+            "advanced code editing and refactoring support.\n" +
+            "\n" +
+            "abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]\n" +
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^\n" +
+            // Create empty lines in order to make the gutter wide enough to display two-digits line numbers (other previews use long text
+            // and we don't want different gutter widths on color pages switching).
+            "\n" +
+            "\n" +
+            "\n";
   }
 
   static void installTrafficLights(@NotNull EditorEx editor) {

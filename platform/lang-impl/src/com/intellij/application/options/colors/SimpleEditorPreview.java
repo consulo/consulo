@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,10 +70,11 @@ public class SimpleEditorPreview implements PreviewPanel{
     String text = page.getDemoText();
 
     HighlightsExtractor extractant2 = new HighlightsExtractor(page.getAdditionalHighlightingTagToDescriptorMap());
-    myHighlightData = extractant2.extractHighlights(text);
-
+    List<HighlightData> highlights = new ArrayList<HighlightData>();
+    String stripped = extractant2.extractHighlights(text, highlights);
+    myHighlightData = highlights.toArray(new HighlightData[highlights.size()]);
     int selectedLine = -1;
-    myEditor = (EditorEx)FontEditorPreview.createPreviewEditor(extractant2.cutDefinedTags(text), 10, 3, selectedLine, myOptions, false);
+    myEditor = (EditorEx)FontEditorPreview.createPreviewEditor(stripped, 10, 3, selectedLine, myOptions, false);
 
     FontEditorPreview.installTrafficLights(myEditor);
     myBlinkingAlarm = new Alarm().setActivationComponent(myEditor.getComponent());
@@ -88,6 +89,10 @@ public class SimpleEditorPreview implements PreviewPanel{
       };
       myEditor.getCaretModel().addCaretListener(listener);
     }
+  }
+
+  public EditorEx getEditor() {
+    return myEditor;
   }
 
   private void addMouseMotionListener(final Editor view,
@@ -132,12 +137,7 @@ public class SimpleEditorPreview implements PreviewPanel{
     if (highlighter != null) {
       HighlighterIterator itr = ((EditorEx)editor).getHighlighter().createIterator(offset);
       selectItem(itr, highlighter, select);
-      if (!select) {
-        ClickNavigator.setCursor(editor, Cursor.HAND_CURSOR);
-      }
-      else {
-        ClickNavigator.setCursor(editor, Cursor.TEXT_CURSOR);
-      }
+      ClickNavigator.setCursor(editor, select ? Cursor.TEXT_CURSOR : Cursor.HAND_CURSOR);
     }
   }
 
@@ -200,7 +200,7 @@ public class SimpleEditorPreview implements PreviewPanel{
       String type = ((EditorSchemeAttributeDescriptor)description).getType();
 
       List<HighlightData> highlights = startBlinkingHighlights(myEditor,
-                                                                         myHighlightData, type,
+                                                               myHighlightData, type,
                                                                myPage.getHighlighter(), true,
                                                                myBlinkingAlarm, BLINK_COUNT, myPage);
 
@@ -227,7 +227,7 @@ public class SimpleEditorPreview implements PreviewPanel{
   private static boolean isOffsetVisible(final Editor editor, final int startOffset) {
     Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
     Point point = editor.logicalPositionToXY(editor.offsetToLogicalPosition(startOffset));
-    return point.y >= visibleArea.y && point.y < visibleArea.x + visibleArea.height;
+    return point.y >= visibleArea.y && point.y < (visibleArea.y + visibleArea.height);
   }
 
   private void stopBlinking() {
@@ -253,8 +253,8 @@ public class SimpleEditorPreview implements PreviewPanel{
       highlights.add(highlightData);
       if (show && type.equals(attrKey)) {
         highlightData =
-        new HighlightData(highlightData.getStartOffset(), highlightData.getEndOffset(),
-                          CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES);
+                new HighlightData(highlightData.getStartOffset(), highlightData.getEndOffset(),
+                                  CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES);
         highlights.add(highlightData);
         matchingHighlights.add(highlightData);
         found = true;
