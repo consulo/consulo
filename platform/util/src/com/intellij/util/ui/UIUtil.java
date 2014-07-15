@@ -92,6 +92,9 @@ public class UIUtil {
   private static final String[] STANDARD_FONT_SIZES =
     {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72"};
 
+  @NonNls
+  public static final String BORDER_LINE = "<hr size=1 noshade>";
+
   public static void applyStyle(@NotNull ComponentStyle componentStyle, @NotNull Component comp) {
     if (!(comp instanceof JComponent)) return;
 

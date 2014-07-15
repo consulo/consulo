@@ -51,6 +51,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DefaultInspectionToolPresentation implements ProblemDescriptionsProcessor, InspectionToolPresentation {
   @NotNull private final InspectionToolWrapper myToolWrapper;
@@ -91,17 +93,33 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     return FileStatus.NOT_CHANGED;
   }
 
-  protected static HighlightSeverity getSeverity(@NotNull RefElement element,
-                                                 @NotNull GlobalInspectionContextImpl context,
-                                                 @NotNull InspectionToolWrapper thisToolWrapper) {
+  public static String stripUIRefsFromInspectionDescription(String description) {
+    final int descriptionEnd = description.indexOf("<!-- tooltip end -->");
+    if (descriptionEnd < 0) {
+      final Pattern pattern = Pattern.compile(".*Use.*(the (panel|checkbox|checkboxes|field|button|controls).*below).*", Pattern.DOTALL);
+      final Matcher matcher = pattern.matcher(description);
+      int startFindIdx = 0;
+      while (matcher.find(startFindIdx)) {
+        final int end = matcher.end(1);
+        startFindIdx = end;
+        description = description.substring(0, matcher.start(1)) + " inspection settings " + description.substring(end);
+      }
+    } else {
+      description = description.substring(0, descriptionEnd);
+    }
+    return description;
+  }
+
+  protected HighlightSeverity getSeverity(@NotNull RefElement element) {
     final PsiElement psiElement = element.getPointer().getContainingFile();
     if (psiElement != null) {
-      String shortName = thisToolWrapper.getShortName();
+      final GlobalInspectionContextImpl context = getContext();
+      final String shortName = getSeverityDelegateName();
       final Tools tools = context.getTools().get(shortName);
       if (tools != null) {
         for (ScopeToolState state : tools.getTools()) {
           InspectionToolWrapper toolWrapper = state.getTool();
-          if (toolWrapper == thisToolWrapper) {
+          if (toolWrapper == getToolWrapper()) {
             return context.getCurrentProfile().getErrorLevel(HighlightDisplayKey.find(shortName), psiElement).getSeverity();
           }
         }
@@ -112,6 +130,10 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       return level.getSeverity();
     }
     return null;
+  }
+
+  protected String getSeverityDelegateName() {
+    return getToolWrapper().getShortName();
   }
 
   protected static String getTextAttributeKey(@NotNull Project project,
@@ -203,7 +225,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       }
       InspectionNode toolNode = myToolNode;
       if (toolNode == null) {
-        final HighlightSeverity currentSeverity = getSeverity((RefElement)refElement, context, myToolWrapper);
+        final HighlightSeverity currentSeverity = getSeverity((RefElement)refElement);
         view.addTool(myToolWrapper, HighlightDisplayLevel.find(currentSeverity), context.getUIOptions().GROUP_BY_SEVERITY);
       }
       else if (toolNode.isTooBigForOnlineRefresh()) {
@@ -254,7 +276,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       final CharArrayWriter writer = new CharArrayWriter();
       if (!file.exists()) {
         writer.append("<").append(InspectionsBundle.message("inspection.problems")).append(" " + GlobalInspectionContextImpl.LOCAL_TOOL_ATTRIBUTE + "=\"")
-          .append(Boolean.toString(myToolWrapper instanceof LocalInspectionToolWrapper)).append("\">\n");
+                .append(Boolean.toString(myToolWrapper instanceof LocalInspectionToolWrapper)).append("\">\n");
       }
       for (Object o : list) {
         final Element element = (Element)o;
@@ -429,7 +451,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       int line = descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getLineNumber() : -1;
       final PsiElement psiElement = descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : null;
       @NonNls String problemText = StringUtil.replace(StringUtil.replace(template, "#ref", psiElement != null ? ProblemDescriptorUtil
-        .extractHighlightedText(descriptor, psiElement) : ""), " #loc ", " ");
+              .extractHighlightedText(descriptor, psiElement) : ""), " #loc ", " ");
 
       Element element = refEntity.getRefManager().export(refEntity, parentNode, line);
       if (element == null) return;
@@ -437,7 +459,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       problemClassElement.addContent(myToolWrapper.getDisplayName());
       if (refEntity instanceof RefElement){
         final RefElement refElement = (RefElement)refEntity;
-        final HighlightSeverity severity = getSeverity(refElement, getContext(), getToolWrapper());
+        final HighlightSeverity severity = getSeverity(refElement);
         ProblemHighlightType problemHighlightType = descriptor instanceof ProblemDescriptor
                                                     ? ((ProblemDescriptor)descriptor).getHighlightType()
                                                     : ProblemHighlightType.GENERIC_ERROR_OR_WARNING;
@@ -532,7 +554,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   public Map<String, Set<RefEntity>> getOldContent() {
     if (myOldProblemElements == null) return null;
     final com.intellij.util.containers.HashMap<String, Set<RefEntity>>
-      oldContents = new com.intellij.util.containers.HashMap<String, Set<RefEntity>>();
+            oldContents = new com.intellij.util.containers.HashMap<String, Set<RefEntity>>();
     final Set<RefEntity> elements = myOldProblemElements.keySet();
     for (RefEntity element : elements) {
       String groupName = element instanceof RefElement ? element.getRefManager().getGroupName((RefElement)element) : element.getName();

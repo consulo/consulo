@@ -376,8 +376,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     repaintVerticalScrollBar();
   }
 
-  private void assertIsDispatchThread() {
-    ApplicationManagerEx.getApplicationEx().assertIsDispatchThread(myEditor.getComponent());
+  private static void assertIsDispatchThread() {
+    ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
   }
 
   @Override
@@ -412,10 +412,10 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   private boolean isMirrored() {
-    return myEditor.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT;
+    return myEditor.isMirrored();
   }
 
-  private static final Dimension STRIPE_BUTTON_PREFERRED_SIZE = new Dimension(PREFERRED_WIDTH, ERROR_ICON_HEIGHT + 4);
+  private static final Dimension STRIPE_BUTTON_PREFERRED_SIZE = new Dimension(ERROR_ICON_WIDTH + 4, ERROR_ICON_HEIGHT + 4);
 
   private class ErrorStripeButton extends JButton {
     private ErrorStripeButton() {
@@ -427,13 +427,17 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       ((ApplicationImpl)ApplicationManager.getApplication()).editorPaintStart();
 
       final Rectangle bounds = getBounds();
+      final Rectangle errorIconBounds = new Rectangle(0, 0, ERROR_ICON_WIDTH, ERROR_ICON_HEIGHT);
+      errorIconBounds.x = bounds.width / 2 - errorIconBounds.width / 2 + 1;
+      errorIconBounds.y = bounds.height / 2 - errorIconBounds.height / 2;
+
       try {
         if (UISettings.getInstance().PRESENTATION_MODE) {
           g.setColor(getEditor().getColorsScheme().getDefaultBackground());
           g.fillRect(0, 0, bounds.width, bounds.height);
 
           if (myErrorStripeRenderer != null) {
-            myErrorStripeRenderer.paint(this, g, new Rectangle(2, 0, 10, 7));
+            myErrorStripeRenderer.paint(this, g, errorIconBounds);
           }
         } else {
 
@@ -441,10 +445,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
           g.fillRect(0, 0, bounds.width, bounds.height);
 
           g.setColor(ButtonlessScrollBarUI.getTrackBorderColor());
-          g.drawLine(0, 0, 0, bounds.height);
+          int borderX = !isMirrored() ? 0 : bounds.width - 1;
+          g.drawLine(borderX, 0, borderX, bounds.height);
 
           if (myErrorStripeRenderer != null) {
-            myErrorStripeRenderer.paint(this, g, new Rectangle(5, 2, ERROR_ICON_WIDTH, ERROR_ICON_HEIGHT));
+            myErrorStripeRenderer.paint(this, g, errorIconBounds);
           }
         }
       }
@@ -455,7 +460,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     @Override
     public Dimension getPreferredSize() {
-      return UISettings.getInstance().PRESENTATION_MODE ? new Dimension(10,7) : STRIPE_BUTTON_PREFERRED_SIZE;
+      return STRIPE_BUTTON_PREFERRED_SIZE;
     }
   }
 
@@ -1210,7 +1215,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
                 double cy = 0;
                 double rx = size.width / 10;
                 int ry = myEditor.getLineHeight() * 3 / 2;
-                g2.setPaint(new GradientPaint(0, 0, new Color(255, 255, 255, 75), 0, ry, new Color(255, 255, 255, 10)));
+                g2.setPaint(new GradientPaint(0, 0, Gray._255.withAlpha(75), 0, ry, Gray._255.withAlpha(10)));
                 double pseudoMajorAxis = size.width - rx * 9 / 5;
                 Shape topShape1 = new Ellipse2D.Double(cx - rx - pseudoMajorAxis / 2, cy - ry, 2 * rx, 2 * ry);
                 Shape topShape2 = new Ellipse2D.Double(cx - rx + pseudoMajorAxis / 2, cy - ry, 2 * rx, 2 * ry);
@@ -1220,7 +1225,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
                 g2.fill(topArea);
                 Area bottomArea = new Area(s);
                 bottomArea.subtract(topArea);
-                g2.setPaint(new GradientPaint(0, size.height - ry, new Color(0, 0, 0, 10), 0, size.height, new Color(255, 255, 255, 30)));
+                g2.setPaint(new GradientPaint(0, size.height - ry, Gray._0.withAlpha(10), 0, size.height, Gray._255.withAlpha(30)));
                 g2.fill(bottomArea);
               }
             }
