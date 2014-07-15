@@ -16,12 +16,14 @@
 
 package com.intellij.util;
 
+import com.intellij.Patches;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sun.reflect.ConstructorAccessor;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
@@ -158,11 +160,11 @@ public class ReflectionUtil {
   }
 
   @NotNull
-  public static Field findAssignableField(@NotNull Class<?> clazz, @NotNull final Class<?> fieldType, @NotNull final String fieldName) throws NoSuchFieldException {
+  public static Field findAssignableField(@NotNull Class<?> clazz, @Nullable("null means any type") final Class<?> fieldType, @NotNull final String fieldName) throws NoSuchFieldException {
     Field result = processFields(clazz, new Condition<Field>() {
       @Override
       public boolean value(Field field) {
-        return fieldName.equals(field.getName()) && fieldType.isAssignableFrom(field.getType());
+        return fieldName.equals(field.getName()) && (fieldType == null || fieldType.isAssignableFrom(field.getType()));
       }
     });
     if (result != null) return result;
@@ -184,7 +186,10 @@ public class ReflectionUtil {
 
   private static Field processFields(@NotNull Class clazz, @NotNull Condition<Field> checker) {
     for (Field field : clazz.getDeclaredFields()) {
-      if (checker.value(field)) return field;
+      if (checker.value(field)) {
+        field.setAccessible(true);
+        return field;
+      }
     }
     final Class superClass = clazz.getSuperclass();
     if (superClass != null) {
@@ -199,7 +204,7 @@ public class ReflectionUtil {
     return null;
   }
 
-  public static void resetField(@NotNull Class clazz, @NotNull Class type, @NotNull String name)  {
+  public static void resetField(@NotNull Class clazz, @Nullable("null means of any type") Class type, @NotNull String name)  {
     try {
       resetField(null, findField(clazz, type, name));
     }
@@ -207,7 +212,7 @@ public class ReflectionUtil {
       LOG.info(e);
     }
   }
-  public static void resetField(@NotNull Object object, @NotNull Class type, @NotNull String name)  {
+  public static void resetField(@NotNull Object object, @Nullable("null means any type") Class type, @NotNull String name)  {
     try {
       resetField(object, findField(object.getClass(), type, name));
     }
@@ -255,7 +260,10 @@ public class ReflectionUtil {
   @Nullable
   public static Method findMethod(@NotNull Collection<Method> methods, @NonNls @NotNull String name, @NotNull Class... parameters) {
     for (final Method method : methods) {
-      if (name.equals(method.getName()) && Arrays.equals(parameters, method.getParameterTypes())) return method;
+      if (name.equals(method.getName()) && Arrays.equals(parameters, method.getParameterTypes())) {
+        method.setAccessible(true);
+        return method;
+      }
     }
     return null;
   }
@@ -268,6 +276,16 @@ public class ReflectionUtil {
   @Nullable
   public static Method getDeclaredMethod(@NotNull Class aClass, @NonNls @NotNull String name, @NotNull Class... parameters) {
     return findMethod(getClassDeclaredMethods(aClass, false), name, parameters);
+  }
+
+  @Nullable
+  public static Field getDeclaredField(@NotNull Class aClass, @NonNls @NotNull final String name) {
+    return processFields(aClass, new Condition<Field>() {
+      @Override
+      public boolean value(Field field) {
+        return name.equals(field.getName());
+      }
+    });
   }
 
   public static List<Method> getClassPublicMethods(@NotNull Class aClass) {
@@ -283,9 +301,15 @@ public class ReflectionUtil {
     return getClassDeclaredMethods(aClass, false);
   }
 
+  @NotNull
   public static List<Method> getClassDeclaredMethods(@NotNull Class aClass, boolean includeSynthetic) {
     Method[] methods = aClass.getDeclaredMethods();
     return includeSynthetic ? Arrays.asList(methods) : filterRealMethods(methods);
+  }
+  @NotNull
+  public static List<Field> getClassDeclaredFields(@NotNull Class aClass) {
+    Field[] fields = aClass.getDeclaredFields();
+    return Arrays.asList(fields);
   }
 
   private static List<Method> filterRealMethods(Method[] methods) {
@@ -304,10 +328,9 @@ public class ReflectionUtil {
     return method == null ? null : method.getDeclaringClass();
   }
 
-  public static <T> T getField(@NotNull Class objectClass, Object object, @NotNull Class<T> fieldType, @NotNull @NonNls String fieldName) {
+  public static <T> T getField(@NotNull Class objectClass, Object object, @Nullable("null means any type") Class<T> fieldType, @NotNull @NonNls String fieldName) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
-      field.setAccessible(true);
       return (T)field.get(object);
     }
     catch (NoSuchFieldException e) {
@@ -318,6 +341,22 @@ public class ReflectionUtil {
       LOG.debug(e);
       return null;
     }
+  }
+
+  // returns true if value was set
+  public static <T> boolean setField(@NotNull Class objectClass, Object object, @Nullable("null means any type") Class<T> fieldType, @NotNull @NonNls String fieldName, T value) {
+    try {
+      final Field field = findAssignableField(objectClass, fieldType, fieldName);
+      field.set(object, value);
+      return true;
+    }
+    catch (NoSuchFieldException e) {
+      LOG.debug(e);
+    }
+    catch (IllegalAccessException e) {
+      LOG.debug(e);
+    }
+    return false;
   }
 
   public static Type resolveVariableInHierarchy(@NotNull TypeVariable variable, @NotNull Class aClass) {
@@ -347,6 +386,46 @@ public class ReflectionUtil {
     }
   }
 
+  static {
+    // method getConstructorAccessorMethod is not necessary since JDK7, use acquireConstructorAccessor return value instead
+    assert Patches.USE_REFLECTION_TO_ACCESS_JDK7;
+  }
+  private static final Method acquireConstructorAccessorMethod = getDeclaredMethod(Constructor.class, "acquireConstructorAccessor");
+  private static final Method getConstructorAccessorMethod = getDeclaredMethod(Constructor.class, "getConstructorAccessor");
+
+  @NotNull
+  public static ConstructorAccessor getConstructorAccessor(@NotNull Constructor constructor) {
+    constructor.setAccessible(true);
+    // it is faster to invoke constructor via sun.reflect.ConstructorAccessor; it avoids AccessibleObject.checkAccess()
+    try {
+      acquireConstructorAccessorMethod.invoke(constructor);
+      return (ConstructorAccessor)getConstructorAccessorMethod.invoke(constructor);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @NotNull
+  public static <T> T createInstanceViaConstructorAccessor(@NotNull ConstructorAccessor constructorAccessor,
+                                                           @NotNull Object... arguments) {
+    try {
+      return (T)constructorAccessor.newInstance(arguments);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  @NotNull
+  public static <T> T createInstanceViaConstructorAccessor(@NotNull ConstructorAccessor constructorAccessor) {
+    try {
+      return (T)constructorAccessor.newInstance(ArrayUtil.EMPTY_OBJECT_ARRAY);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   @NotNull
   public static <T> T createInstance(@NotNull Constructor<T> constructor, @NotNull Object... args) {
     try {
@@ -358,14 +437,20 @@ public class ReflectionUtil {
   }
 
   public static void resetThreadLocals() {
-    try {
-      Field field = Thread.class.getDeclaredField("threadLocals");
-      field.setAccessible(true);
-      field.set(Thread.currentThread(), null);
+    resetField(Thread.currentThread(), null, "threadLocals");
+  }
+
+  @Nullable
+  public static Class getGrandCallerClass() {
+    int stackFrameCount = 3;
+    Class callerClass = findCallerClass(stackFrameCount);
+    while (callerClass != null && callerClass.getClassLoader() == null) { // looks like a system class
+      callerClass = findCallerClass(++stackFrameCount);
     }
-    catch (Throwable e) {
-      LOG.info(e);
+    if (callerClass == null) {
+      callerClass = findCallerClass(2);
     }
+    return callerClass;
   }
 
 
