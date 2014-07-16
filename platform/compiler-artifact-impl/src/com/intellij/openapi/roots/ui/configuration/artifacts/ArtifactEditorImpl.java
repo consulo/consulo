@@ -39,15 +39,12 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.artifacts.ModifiableArtifact;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
-import com.intellij.packaging.impl.elements.ManifestFileUtil;
-import com.intellij.packaging.ui.ManifestFileConfiguration;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.border.CustomLineBorder;
@@ -67,7 +64,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author nik
@@ -336,7 +332,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     DefaultActionGroup popupActionGroup = new DefaultActionGroup();
     popupActionGroup.add(createAddGroup());
     final RemovePackagingElementAction removeAction = new RemovePackagingElementAction(this);
-    removeAction.registerCustomShortcutSet(CommonShortcuts.DELETE, tree);
+    removeAction.registerCustomShortcutSet(CommonShortcuts.getDelete(), tree);
     popupActionGroup.add(removeAction);
     popupActionGroup.add(new ExtractArtifactAction(this));
     popupActionGroup.add(new InlineArtifactAction(this));
@@ -482,26 +478,6 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   @Override
   public void putLibraryIntoDefaultLocation(@NotNull Library library) {
     myLayoutTreeComponent.putIntoDefaultLocations(Collections.singletonList(new LibrarySourceItem(library)));
-  }
-
-  @Override
-  public void addToClasspath(final CompositePackagingElement<?> element, List<String> classpath) {
-    myLayoutTreeComponent.saveElementProperties();
-    ManifestFileConfiguration manifest = myContext.getManifestFile(element, getArtifact().getArtifactType());
-    if (manifest == null) {
-      final VirtualFile file = ManifestFileUtil.showDialogAndCreateManifest(myContext, element);
-      if (file == null) {
-        return;
-      }
-
-      ManifestFileUtil.addManifestFileToLayout(file.getPath(), myContext, element);
-      manifest = myContext.getManifestFile(element, getArtifact().getArtifactType());
-    }
-
-    if (manifest != null) {
-      manifest.addToClasspath(classpath);
-    }
-    myLayoutTreeComponent.resetElementProperties();
   }
 
   public void setArtifactType(ArtifactType artifactType) {

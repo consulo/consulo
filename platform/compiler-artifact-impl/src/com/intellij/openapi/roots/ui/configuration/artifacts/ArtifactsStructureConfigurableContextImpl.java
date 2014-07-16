@@ -31,10 +31,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.util.Disposer;
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.ManifestFileProvider;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
-import com.intellij.packaging.ui.ManifestFileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +46,6 @@ import java.util.Map;
 */
 public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStructureConfigurableContext {
   private ModifiableArtifactModel myModifiableModel;
-  private final ManifestFilesInfo myManifestFilesInfo = new ManifestFilesInfo();
   private final ArtifactAdapter myModifiableModelListener;
   private final StructureConfigurableContext myContext;
   private final Project myProject;
@@ -57,7 +54,6 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   private final Map<ArtifactPointer, ArtifactEditorSettings> myEditorSettings = new HashMap<ArtifactPointer, ArtifactEditorSettings>();
   private final Map<Artifact, ArtifactProjectStructureElement> myArtifactElements = new HashMap<Artifact, ArtifactProjectStructureElement>();
   private final ArtifactEditorSettings myDefaultSettings;
-  private final ManifestFileProvider myManifestFileProvider = new ArtifactEditorManifestFileProvider(this);
 
   public ArtifactsStructureConfigurableContextImpl(StructureConfigurableContext context, Project project,
                                                    ArtifactEditorSettings defaultSettings, final ArtifactAdapter modifiableModelListener) {
@@ -204,26 +200,10 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     return library != null ? myContext.getLibraryModel(library) : myContext.getLibrary(libraryName, level);
   }
 
-  @NotNull
-  @Override
-  public ManifestFileProvider getManifestFileProvider() {
-    return myManifestFileProvider;
-  }
-
-  @Override
-  public ManifestFileConfiguration getManifestFile(CompositePackagingElement<?> element, ArtifactType artifactType) {
-    return myManifestFilesInfo.getManifestFile(element, artifactType, this);
-  }
-
-  public ManifestFilesInfo getManifestFilesInfo() {
-    return myManifestFilesInfo;
-  }
-
   public void resetModifiableModel() {
     disposeUIResources();
     myModifiableModel = null;
     myModifiableRoots.clear();
-    myManifestFilesInfo.clear();
   }
 
   public void disposeUIResources() {
