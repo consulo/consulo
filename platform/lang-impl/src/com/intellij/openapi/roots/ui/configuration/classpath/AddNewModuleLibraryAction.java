@@ -34,7 +34,7 @@ class AddNewModuleLibraryAction extends AddItemPopupAction<Library> {
   public AddNewModuleLibraryAction(final ClasspathPanel classpathPanel,
                                    int actionIndex,
                                    StructureConfigurableContext context) {
-    super(classpathPanel, actionIndex, ProjectBundle.message("classpath.add.simple.module.library.action"), AllIcons.Nodes.PpJar);
+    super(classpathPanel, actionIndex, ProjectBundle.message("classpath.add.simple.module.library.action"), AllIcons.FileTypes.Any_type);
     myContext = context;
   }
 
