@@ -365,6 +365,9 @@ public class PathEditor {
         if(fileType instanceof ArchiveFileType) {
           return fileType.getIcon();
         }
+        else if(file.isDirectory()) {
+          return AllIcons.Nodes.Folder;
+        }
         return file.getFileType().getIcon();
       }
     }
