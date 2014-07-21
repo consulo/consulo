@@ -30,11 +30,11 @@ import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 
 import javax.swing.*;
 
-public class ClassesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
+public class BinariesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
   @Override
   public SdkPathEditor createPathEditor(Sdk sdk) {
-    return new SdkPathEditor(ProjectBundle.message("sdk.configure.classpath.tab"), OrderRootType.CLASSES,
+    return new SdkPathEditor(ProjectBundle.message("library.binaries.node"), OrderRootType.BINARIES,
                              new FileChooserDescriptor(true, true, true, false, true, true), sdk);
   }
 
@@ -45,6 +45,6 @@ public class ClassesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
   @Override
   public String getNodeText() {
-    return ProjectBundle.message("library.classes.node");
+    return ProjectBundle.message("library.binaries.node");
   }
 }

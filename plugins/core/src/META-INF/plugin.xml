@@ -1548,7 +1548,7 @@
     <orderRootTypeEditor key="DOCUMENTATION"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
     <orderRootTypeEditor key="CLASSES"
-                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.ClassesOrderRootTypeUIFactory"/>
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.BinariesOrderRootTypeUIFactory"/>
     <orderRootTypeEditor key="SOURCES"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
 
