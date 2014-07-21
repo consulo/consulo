@@ -61,7 +61,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
     private final Sdk mySdk;
 
     public DocumentationPathsEditor(Sdk sdk) {
-      super(ProjectBundle.message("sdk.configure.javadoc.tab"), OrderRootType.DOCUMENTATION,
+      super(ProjectBundle.message("library.javadocs.node"), OrderRootType.DOCUMENTATION,
             FileChooserDescriptorFactory.createMultipleJavaPathDescriptor(), sdk);
       mySdk = sdk;
     }
