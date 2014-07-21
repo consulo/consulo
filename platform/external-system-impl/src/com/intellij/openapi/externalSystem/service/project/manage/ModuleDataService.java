@@ -51,12 +51,6 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SHARED_THREAD);
 
-  @NotNull private final ProjectStructureHelper myProjectStructureHelper;
-
-  public ModuleDataService(@NotNull ProjectStructureHelper helper) {
-    myProjectStructureHelper = helper;
-  }
-
   @NotNull
   @Override
   public Key<ModuleData> getTargetDataKey() {
@@ -81,7 +75,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
           createModules(toCreate, project);
         }
         for (DataNode<ModuleData> node : toImport) {
-          Module module = myProjectStructureHelper.findIdeModule(node.getData(), project);
+          Module module = ProjectStructureHelper.findIdeModule(node.getData(), project);
           if (module != null) {
             syncPaths(module, node.getData());
           }
@@ -145,7 +139,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     Collection<DataNode<ModuleData>> result = ContainerUtilRt.newArrayList();
     for (DataNode<ModuleData> node : modules) {
       ModuleData moduleData = node.getData();
-      Module module = myProjectStructureHelper.findIdeModule(moduleData, project);
+      Module module = ProjectStructureHelper.findIdeModule(moduleData, project);
       if (module == null) {
         result.add(node);
       }

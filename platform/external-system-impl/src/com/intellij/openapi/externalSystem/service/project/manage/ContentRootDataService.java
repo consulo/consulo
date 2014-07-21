@@ -47,12 +47,6 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
 
   private static final Logger LOG = Logger.getInstance("#" + ContentRootDataService.class.getName());
 
-  @NotNull private final ProjectStructureHelper myProjectStructureHelper;
-
-  public ContentRootDataService(@NotNull ProjectStructureHelper helper) {
-    myProjectStructureHelper = helper;
-  }
-
   @NotNull
   @Override
   public Key<ContentRootData> getTargetDataKey() {
@@ -69,7 +63,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
 
     Map<DataNode<ModuleData>, List<DataNode<ContentRootData>>> byModule = ExternalSystemApiUtil.groupBy(toImport, ProjectKeys.MODULE);
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ContentRootData>>> entry : byModule.entrySet()) {
-      final Module module = myProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
+      final Module module = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       if (module == null) {
         LOG.warn(String.format("Can't import content roots. Reason: target module (%s) is not found at the ide. Content roots: %s",
                                entry.getKey(), entry.getValue()));

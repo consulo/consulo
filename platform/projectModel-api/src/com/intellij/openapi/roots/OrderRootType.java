@@ -18,6 +18,7 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import org.jetbrains.annotations.NonNls;
+import org.mustbe.consulo.DeprecationInfo;
 
 import java.util.*;
 
@@ -44,7 +45,17 @@ public class OrderRootType {
    * <li>  classes roots for libraries and sdk
    * <li>  recursively for module dependencies: only exported items
    */
+  @Deprecated
+  @DeprecationInfo(value = "Use OrderRootType#BINARIES", until = "3.0")
   public static final OrderRootType CLASSES = new PersistentOrderRootType("CLASSES", "classPath");
+
+  /**
+   * Binaries without output directories for modules.
+   * Includes:
+   * <li>  binaries roots for libraries and sdk
+   * <li>  recursively for module dependencies: only exported items
+   */
+  public static final OrderRootType BINARIES = CLASSES;
 
   /**
    * Sources.

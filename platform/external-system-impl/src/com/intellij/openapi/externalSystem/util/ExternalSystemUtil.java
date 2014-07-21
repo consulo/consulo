@@ -43,7 +43,6 @@ import com.intellij.openapi.externalSystem.service.internal.ExternalSystemProces
 import com.intellij.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemIdeNotificationManager;
 import com.intellij.openapi.externalSystem.service.project.ExternalProjectRefreshCallback;
-import com.intellij.openapi.externalSystem.service.project.PlatformFacade;
 import com.intellij.openapi.externalSystem.service.project.ProjectStructureHelper;
 import com.intellij.openapi.externalSystem.service.project.manage.ModuleDataService;
 import com.intellij.openapi.externalSystem.service.project.manage.ProjectDataManager;
@@ -53,11 +52,13 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalS
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -242,11 +243,10 @@ public class ExternalSystemUtil {
             "Checking for orphan modules. External paths returned by external system: '%s'", myExternalModulePaths
           ));
         }
-        PlatformFacade platformFacade = ServiceManager.getService(PlatformFacade.class);
         List<Module> orphanIdeModules = ContainerUtilRt.newArrayList();
         String externalSystemIdAsString = externalSystemId.toString();
 
-        for (Module module : platformFacade.getModules(project)) {
+        for (Module module : ModuleManager.getInstance(project).getModules()) {
           String s = module.getOptionValue(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
           String p = module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
           if(ExternalSystemDebugEnvironment.DEBUG_ORPHAN_MODULES_PROCESSING) {
@@ -270,13 +270,12 @@ public class ExternalSystemUtil {
       }
 
       private void processOrphanProjectLibraries() {
-        PlatformFacade platformFacade = ServiceManager.getService(PlatformFacade.class);
         List<Library> orphanIdeLibraries = ContainerUtilRt.newArrayList();
 
-        LibraryTable projectLibraryTable = platformFacade.getProjectLibraryTable(project);
+        LibraryTable projectLibraryTable = ProjectLibraryTable.getInstance(project);
         for (Library library : projectLibraryTable.getLibraries()) {
           if (!ExternalSystemApiUtil.isExternalSystemLibrary(library, externalSystemId)) continue;
-          if (ProjectStructureHelper.isOrphanProjectLibrary(library, platformFacade.getModules(project))) {
+          if (ProjectStructureHelper.isOrphanProjectLibrary(library, ModuleManager.getInstance(project).getModules())) {
             orphanIdeLibraries.add(library);
           }
         }
@@ -692,8 +691,7 @@ public class ExternalSystemUtil {
     }
     externalModulePaths.remove(linkedExternalProjectPath);
     
-    PlatformFacade platformFacade = ServiceManager.getService(PlatformFacade.class);
-    for (Module module : platformFacade.getModules(ideProject)) {
+    for (Module module : ModuleManager.getInstance(ideProject).getModules()) {
       String path = module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
       if (!StringUtil.isEmpty(path) && !externalModulePaths.remove(path)) {
         return false;
