@@ -74,7 +74,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
   private VirtualFilePointer myOutputDirPointer;
   private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
 
-  public CompilerConfigurationImpl(Project project, ModuleManager moduleManager) {
+  public CompilerConfigurationImpl(@NotNull Project project, @NotNull ModuleManager moduleManager) {
     myProject = project;
     myModuleManager = moduleManager;
   }
@@ -84,7 +84,9 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
   public VirtualFile getCompilerOutput() {
     if(myOutputDirPointer == null) {
       VirtualFile baseDir = myProject.getBaseDir();
-      assert baseDir != null;
+      if(baseDir == null) {
+        return null;
+      }
       VirtualFile outDir = baseDir.findFileByRelativePath(DEFAULT_OUTPUT_URL);
 
       return outDir == null ? null : outDir;

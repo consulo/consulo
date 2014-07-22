@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.compiler.CompilerConfiguration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -24,7 +25,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.consulo.compiler.CompilerPathsManager;
+import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
@@ -45,15 +46,16 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
 
   @Override
   public boolean isExcludeRoot(final VirtualFile file) {
-    CompilerPathsManager manager = CompilerPathsManager.getInstance(myProject);
+    CompilerConfiguration manager = CompilerConfiguration.getInstance(myProject);
     if (isEqualWithFileOrUrl(file, manager.getCompilerOutput(), manager.getCompilerOutputUrl())) {
       return true;
     }
 
     for (Module m : ModuleManager.getInstance(myProject).getModules()) {
+      ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(m);
       for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
-        if (isEqualWithFileOrUrl(file, manager.getCompilerOutput(m, contentFolderType),
-                                 manager.getCompilerOutputUrl(m, contentFolderType))) {
+        if (isEqualWithFileOrUrl(file, moduleCompilerPathsManager.getCompilerOutput(contentFolderType),
+                                 moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderType))) {
           return true;
         }
       }
@@ -63,10 +65,10 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
 
   @Override
   public boolean isExcludeRootForModule(@NotNull final Module module, final VirtualFile excludeRoot) {
-    CompilerPathsManager manager = CompilerPathsManager.getInstance(myProject);
+    ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
 
     for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
-      if (Comparing.equal(manager.getCompilerOutputUrl(module, contentFolderType), excludeRoot)) {
+      if (Comparing.equal(manager.getCompilerOutputUrl(contentFolderType), excludeRoot)) {
         return true;
       }
     }
@@ -76,7 +78,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
   @NotNull
   @Override
   public VirtualFile[] getExcludeRootsForProject() {
-    VirtualFile outputPath = CompilerPathsManager.getInstance(myProject).getCompilerOutput();
+    VirtualFile outputPath = CompilerConfiguration.getInstance(myProject).getCompilerOutput();
     if (outputPath != null) {
       return new VirtualFile[]{outputPath};
     }
@@ -86,12 +88,11 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
   @NotNull
   @Override
   public VirtualFilePointer[] getExcludeRootsForModule(@NotNull final ModuleRootModel rootModel) {
-    CompilerPathsManager manager = CompilerPathsManager.getInstance(myProject);
+    ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(rootModel.getModule());
     List<VirtualFilePointer> result = new ArrayList<VirtualFilePointer>(3);
 
-    final Module module = rootModel.getModule();
-    if (manager.isInheritedCompilerOutput(module)) {
-      final VirtualFilePointer compilerOutputPointer = manager.getCompilerOutputPointer();
+    if (manager.isInheritedCompilerOutput()) {
+      final VirtualFilePointer compilerOutputPointer = CompilerConfiguration.getInstance(myProject).getCompilerOutputPointer();
       for(ContentEntry contentEntry : rootModel.getContentEntries()) {
         if(compilerOutputPointer.getUrl().contains(contentEntry.getUrl())) {
           result.add(compilerOutputPointer);
@@ -99,12 +100,12 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
       }
     }
     else {
-      if (!manager.isExcludeOutput(module)) {
+      if (!manager.isExcludeOutput()) {
         return VirtualFilePointer.EMPTY_ARRAY;
       }
 
       for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
-        result.add(manager.getCompilerOutputPointer(module, contentFolderType));
+        result.add(manager.getCompilerOutputPointer(contentFolderType));
       }
     }
     return result.isEmpty() ? VirtualFilePointer.EMPTY_ARRAY : result.toArray(new VirtualFilePointer[result.size()]);
