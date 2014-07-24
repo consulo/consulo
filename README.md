@@ -1,9 +1,6 @@
-# UNSTABLE
-
 ## Information
 
 This is IDE based on IntelliJ Platform. The main goal of our project is creating one IDE for all programming languages.
-
 
 ## Building
 
