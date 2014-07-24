@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide;
+package com.intellij.ui;
 
-import com.intellij.openapi.options.UnnamedConfigurable;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
-/**
- * @author spleaner
- */
-public abstract class BrowserSettingsProvider implements UnnamedConfigurable {
+public abstract class PopupMenuListenerAdapter implements PopupMenuListener {
   @Override
-  public void disposeUIResources() { }
+  public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+  }
+
+  @Override
+  public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+  }
+
+  @Override
+  public void popupMenuCanceled(PopupMenuEvent e) {
+  }
 }

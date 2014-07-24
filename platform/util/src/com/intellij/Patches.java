@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package com.intellij;
 
 import com.intellij.openapi.util.SystemInfo;
 
+import java.awt.*;
+
 @SuppressWarnings({"HardCodedStringLiteral", "UtilityClassWithoutPrivateConstructor"})
 public class Patches {
   /**
@@ -26,7 +28,12 @@ public class Patches {
    */
   public static final boolean SUN_BUG_ID_4503845 = !SystemInfo.isJavaVersionAtLeast("1.4.1");
 
-   /**
+  /**
+   * Debugger hangs on any attempt to attach/listen Connector when attach hanged once.
+   */
+  public static final boolean SUN_JDI_CONNECTOR_HANGUP_BUG = !SystemInfo.isJavaVersionAtLeast("1.5");
+
+  /**
    * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6322854.
    * java.lang.NullPointerException: Failed to retrieve atom name.
    */
@@ -108,26 +115,40 @@ public class Patches {
 
   /**
    * Java 7 incorrectly calculates screen insets on multi-monitor X Window configurations.
-   * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=9000030.
+   * See https://bugs.openjdk.java.net/browse/JDK-7172665.
    */
-  public static final boolean SUN_BUG_ID_9000030 = SystemInfo.isXWindow && SystemInfo.isJavaVersionAtLeast("1.7");
+  public static final boolean SUN_BUG_ID_7172665 =
+          SystemInfo.isXWindow && SystemInfo.isJavaVersionAtLeast("1.7") && !SystemInfo.isJavaVersionAtLeast("1.8");
+
+  /**
+   * XToolkit.getScreenInsets() may be very slow.
+   * See https://bugs.openjdk.java.net/browse/JDK-8004103.
+   */
+  public static final boolean JDK_BUG_ID_8004103 =
+          SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless() && SystemInfo.isJavaVersionAtLeast("1.7");
 
   /**
    * On some WMs modal dialogs may show behind full screen window.
    * See http://bugs.sun.com/view_bug.do?bug_id=8013359.
    */
   public static final boolean SUN_BUG_ID_8013359 =
-    SystemInfo.isXWindow && SystemInfo.isJavaVersionAtLeast("1.7") && !SystemInfo.isJavaVersionAtLeast("1.7.0.40");
+          SystemInfo.isXWindow && SystemInfo.isJavaVersionAtLeast("1.7") && !SystemInfo.isJavaVersionAtLeast("1.7.0.40");
 
   /**
    * No BindException when another program is using the port.
-   * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7179799
+   * See https://bugs.openjdk.java.net/browse/JDK-7179799.
    */
-  public static final boolean SUN_BUG_ID_7179799 = true;
+  public static final boolean SUN_BUG_ID_7179799 = SystemInfo.isWindows && !SystemInfo.isJavaVersionAtLeast("1.8");
 
   /**
    * Marker field to find all usages of the reflective access to JDK 7-specific methods
    * which need to be changed when migrated to JDK 7
    */
   public static final boolean USE_REFLECTION_TO_ACCESS_JDK7 = true;
+
+  /**
+   * AtomicIntegerFieldUpdater does not work when SecurityManager is installed
+   * fixed in JDK8
+   */
+  public static final boolean JDK_BUG_ID_7103570 = true;
 }

@@ -20,6 +20,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -74,6 +75,8 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
   private static final String CURRENT_IN_TAB = "current-in-tab";
 
   private static final Key<Object> DUMMY_KEY = Key.create("EditorsSplitters.dummy.key");
+
+  private final static EditorEmptyTextPainter ourPainter = ServiceManager.getService(EditorEmptyTextPainter.class);
 
   private EditorWindow myCurrentWindow;
   final Set<EditorWindow> myWindows = new CopyOnWriteArraySet<EditorWindow>();
@@ -159,7 +162,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     }
 
     if (showEmptyText()) {
-      EditorEmptyTextPainter.paintEmptyText(this, g);
+      ourPainter.paintEmptyText(this, g);
     }
   }
 
@@ -830,6 +833,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
       });
       final EditorWindow window = windowRef.get();
       LOG.assertTrue(window != null);
+      VirtualFile focusedFile = null;
 
       for (int i = 0; i < fileElements.size(); i++) {
         final Element file = fileElements.get(i);
@@ -840,16 +844,11 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
           Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
           final HistoryEntry entry = new HistoryEntry(fileEditorManager.getProject(), historyElement);
           final boolean isCurrentInTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB)).booleanValue();
-          final int index = i;
-          UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-            @Override
-            public void run() {
-              fileEditorManager.openFileImpl4(window, entry.myFile, isCurrentInTab, entry, isCurrentInTab, index);
-              if (fileEditorManager.isFileOpen(entry.myFile)) {
-                window.setFilePinned(entry.myFile, Boolean.valueOf(file.getAttributeValue(PINNED)).booleanValue());
-              }
-            }
-          });
+          Boolean pin = Boolean.valueOf(file.getAttributeValue(PINNED));
+          fileEditorManager.openFileImpl4(window, entry.myFile, entry, isCurrentInTab, isCurrentInTab, pin, i);
+          if (isCurrentInTab) {
+            focusedFile = entry.myFile;
+          }
           if (document != null) {
             // This is just to make sure document reference is kept on stack till this point
             // so that document is available for folding state deserialization in HistoryEntry constructor
@@ -863,6 +862,9 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
             LOG.error(e);
           }
         }
+      }
+      if (focusedFile != null) {
+        getManager().addSelectionRecord(focusedFile, window);
       }
       return window.myPanel;
     }

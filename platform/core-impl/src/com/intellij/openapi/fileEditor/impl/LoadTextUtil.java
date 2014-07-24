@@ -108,7 +108,7 @@ public final class LoadTextUtil {
     return Pair.create(result, detectedLineSeparator);
   }
 
-  private static Charset detectCharset(@NotNull VirtualFile virtualFile, @NotNull byte[] content) {
+  public static Charset detectCharset(@NotNull VirtualFile virtualFile, @NotNull byte[] content, @NotNull FileType fileType) {
     Charset charset = null;
 
     Trinity<Charset,CharsetToolkit.GuessedEncoding, byte[]> guessed = guessFromContent(virtualFile, content, content.length);
@@ -116,7 +116,6 @@ public final class LoadTextUtil {
       charset = guessed.first;
     }
     else {
-      FileType fileType = virtualFile.getFileType();
       String charsetName = fileType.getCharset(virtualFile, content);
 
       if (charsetName == null) {
@@ -145,7 +144,11 @@ public final class LoadTextUtil {
 
   @NotNull
   private static Pair<Charset, byte[]> doDetectCharsetAndSetBOM(@NotNull VirtualFile virtualFile, @NotNull byte[] content, boolean saveBOM) {
-    Charset charset = virtualFile.isCharsetSet() ? virtualFile.getCharset() : detectCharset(virtualFile, content);
+    return doDetectCharsetAndSetBOM(virtualFile, content, saveBOM, virtualFile.getFileType());
+  }
+  @NotNull
+  private static Pair<Charset, byte[]> doDetectCharsetAndSetBOM(@NotNull VirtualFile virtualFile, @NotNull byte[] content, boolean saveBOM, @NotNull FileType fileType) {
+    Charset charset = virtualFile.isCharsetSet() ? virtualFile.getCharset() : detectCharset(virtualFile, content,fileType);
     Pair<Charset,byte[]> bomAndCharset = getBOMAndCharset(content, charset);
     final byte[] bom = bomAndCharset.second;
     if (saveBOM && bom != null && bom.length != 0) {
@@ -155,14 +158,14 @@ public final class LoadTextUtil {
     return bomAndCharset;
   }
 
+  private static final boolean GUESS_UTF = Boolean.parseBoolean(System.getProperty("idea.guess.utf.encoding", "true"));
+
   @Nullable("null means no luck, otherwise it's tuple(guessed encoding, hint about content if was unable to guess, BOM)")
   public static Trinity<Charset, CharsetToolkit.GuessedEncoding, byte[]> guessFromContent(@NotNull VirtualFile virtualFile, @NotNull byte[] content, int length) {
-    EncodingRegistry settings = EncodingRegistry.getInstance();
-    boolean shouldGuess = settings != null && settings.isUseUTFGuessing(virtualFile);
-    CharsetToolkit toolkit = shouldGuess ? new CharsetToolkit(content, EncodingRegistry.getInstance().getDefaultCharset()) : null;
+    CharsetToolkit toolkit = GUESS_UTF ? new CharsetToolkit(content, EncodingRegistry.getInstance().getDefaultCharset()) : null;
     String detectedFromBytes = null;
     try {
-      if (shouldGuess) {
+      if (GUESS_UTF) {
         toolkit.setEnforce8Bit(true);
         Charset charset = toolkit.guessFromBOM();
         if (charset != null) {
@@ -176,7 +179,9 @@ public final class LoadTextUtil {
           detectedFromBytes = "auto-detected from bytes";
           return Trinity.create(CharsetToolkit.UTF8_CHARSET, guessed, null); //UTF detected, ignore all directives
         }
-        return Trinity.create(null, guessed,null);
+        if (guessed == CharsetToolkit.GuessedEncoding.SEVEN_BIT) {
+          return Trinity.create(null, guessed, null);
+        }
       }
       return null;
     }
@@ -383,7 +388,14 @@ public final class LoadTextUtil {
                                                          @NotNull VirtualFile virtualFile,
                                                          boolean saveDetectedSeparators,
                                                          boolean saveBOM) {
-    Pair<Charset, byte[]> pair = doDetectCharsetAndSetBOM(virtualFile, bytes, saveBOM);
+    return getTextByBinaryPresentation(bytes, virtualFile, saveDetectedSeparators, saveBOM, virtualFile.getFileType());
+  }
+  @NotNull
+  public static CharSequence getTextByBinaryPresentation(@NotNull byte[] bytes,
+                                                         @NotNull VirtualFile virtualFile,
+                                                         boolean saveDetectedSeparators,
+                                                         boolean saveBOM, @NotNull FileType fileType) {
+    Pair<Charset, byte[]> pair = doDetectCharsetAndSetBOM(virtualFile, bytes, saveBOM, fileType);
     Charset charset = pair.getFirst();
     byte[] bom = pair.getSecond();
     int offset = bom == null ? 0 : bom.length;

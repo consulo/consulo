@@ -229,27 +229,6 @@ public class VfsUtil extends VfsUtilCore {
     return ancestor;
   }
 
-  /**
-   * Gets an array of files representing paths from root to the passed file.
-   *
-   * @param file the file
-   * @return virtual files which represents paths from root to the passed file
-   */
-  @NotNull
-  private static VirtualFile[] getPathComponents(@NotNull VirtualFile file) {
-    ArrayList<VirtualFile> componentsList = new ArrayList<VirtualFile>();
-    while (file != null) {
-      componentsList.add(file);
-      file = file.getParent();
-    }
-    int size = componentsList.size();
-    VirtualFile[] components = new VirtualFile[size];
-    for (int i = 0; i < size; i++) {
-      components[i] = componentsList.get(size - i - 1);
-    }
-    return components;
-  }
-
   @Nullable
   public static VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
     VirtualFile file = base;

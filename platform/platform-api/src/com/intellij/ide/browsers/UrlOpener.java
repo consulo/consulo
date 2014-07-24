@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide;
+package com.intellij.ide.browsers;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.options.ConfigurableEP;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author nik
- */
-public class BrowserSettingsProviderEP extends ConfigurableEP<BrowserSettingsProvider> {
-  public static ExtensionPointName<BrowserSettingsProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.browserSettingsProvider");
+public abstract class UrlOpener {
+  public static final ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create("com.intellij.urlOpener");
+
+  public abstract boolean openUrl(@NotNull WebBrowser browser, @NotNull String url, @Nullable Project project);
 }
+
