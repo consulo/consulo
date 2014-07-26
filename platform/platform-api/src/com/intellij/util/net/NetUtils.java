@@ -29,9 +29,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 
-/**
- * @author yole
- */
 public class NetUtils {
   private static final Logger LOG = Logger.getInstance(NetUtils.class);
 
@@ -112,8 +109,10 @@ public class NetUtils {
       int port = serverSocket.getLocalPort();
       // workaround for linux : calling close() immediately after opening socket
       // may result that socket is not closed
+      //noinspection SynchronizationOnLocalVariableOrMethodParameter
       synchronized (serverSocket) {
         try {
+          //noinspection WaitNotInLoop
           serverSocket.wait(1);
         }
         catch (InterruptedException e) {
@@ -127,19 +126,35 @@ public class NetUtils {
     }
   }
 
+  public static int tryToFindAvailableSocketPort(int defaultPort) {
+    try {
+      return findAvailableSocketPort();
+    }
+    catch (IOException ignored) {
+      return defaultPort;
+    }
+  }
+
+  public static int tryToFindAvailableSocketPort() {
+    return tryToFindAvailableSocketPort(-1);
+  }
+
   public static int[] findAvailableSocketPorts(int capacity) throws IOException {
     final int[] ports = new int[capacity];
     final ServerSocket[] sockets = new ServerSocket[capacity];
 
     for (int i = 0; i < capacity; i++) {
+      //noinspection SocketOpenedButNotSafelyClosed
       final ServerSocket serverSocket = new ServerSocket(0);
       sockets[i] = serverSocket;
       ports[i] = serverSocket.getLocalPort();
     }
     //workaround for linux : calling close() immediately after opening socket
     //may result that socket is not closed
-    synchronized(sockets) {
+    //noinspection SynchronizationOnLocalVariableOrMethodParameter
+    synchronized (sockets) {
       try {
+        //noinspection WaitNotInLoop
         sockets.wait(1);
       }
       catch (InterruptedException e) {
@@ -158,7 +173,8 @@ public class NetUtils {
     String localHostString = "localhost";
     try {
       final InetAddress localHost = InetAddress.getByName(localHostString);
-      if (localHost.getAddress().length != 4 && SystemInfo.isWindows){
+      if ((localHost.getAddress().length != 4 && SystemInfo.isWindows) ||
+          (localHost.getAddress().length == 4 && SystemInfo.isMac)) {
         localHostString = "127.0.0.1";
       }
     }
@@ -168,12 +184,12 @@ public class NetUtils {
   }
 
   /**
-   * @param indicator Progress indicator.
-   * @param inputStream source stream
-   * @param outputStream destination stream
+   * @param indicator           Progress indicator.
+   * @param inputStream         source stream
+   * @param outputStream        destination stream
    * @param expectedContentSize expected content size, used in progress indicator. can be -1.
    * @return bytes copied
-   * @throws IOException if IO error occur
+   * @throws IOException                                            if IO error occur
    * @throws com.intellij.openapi.progress.ProcessCanceledException if process was canceled.
    */
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
@@ -207,5 +223,4 @@ public class NetUtils {
 
     return total;
   }
-
 }
