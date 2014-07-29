@@ -18,6 +18,8 @@ package com.intellij.openapi.roots;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 /**
  * Interface providing root information model for a given module.
  * It's implemented by {@link ModuleRootManager}.
@@ -26,7 +28,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ModuleRootModel extends ModuleRootLayer {
   @NotNull
-  ModuleRootLayer[] getLayers();
+  Map<String, ModuleRootLayer> getLayers();
+
+  @NotNull
+  String getCurrentLayerName();
 
   @NotNull
   ModuleRootLayer getCurrentLayer();

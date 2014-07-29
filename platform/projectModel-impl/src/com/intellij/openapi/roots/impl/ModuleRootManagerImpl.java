@@ -339,6 +339,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getCurrentLayer();
   }
 
+  @NotNull
+  @Override
+  public String getCurrentLayerName() {
+    return myRootModel.getCurrentLayerName();
+  }
+
   @Nullable
   @Override
   public ModuleRootLayer findLayerByName(@NotNull String name) {
@@ -348,7 +354,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   @NotNull
   @Override
-  public ModuleRootLayer[] getLayers() {
+  public Map<String, ModuleRootLayer> getLayers() {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getLayers();
   }

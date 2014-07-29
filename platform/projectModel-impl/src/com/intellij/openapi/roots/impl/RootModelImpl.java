@@ -32,9 +32,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author dsl
@@ -52,7 +50,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private final CompositeDisposable myDisposable = new CompositeDisposable();
 
   private String myCurrentLayerName;
-  private final Map<String, ModuleRootLayerImpl> myLayers = new TreeMap<String, ModuleRootLayerImpl>();
+  private final SortedMap<String, ModuleRootLayerImpl> myLayers = new TreeMap<String, ModuleRootLayerImpl>();
 
   RootModelImpl(@NotNull ModuleRootManagerImpl moduleRootManager, @NotNull ProjectRootManagerImpl projectRootManager) {
     myModuleRootManager = moduleRootManager;
@@ -353,7 +351,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public boolean isChanged() {
     if (!myWritable) return false;
 
-    for (ModuleRootLayer moduleRootLayer : getLayers()) {
+    for (ModuleRootLayer moduleRootLayer : myLayers.values()) {
       LOGGER.assertTrue(moduleRootLayer instanceof ModifiableModuleRootLayer);
       if (((ModifiableModuleRootLayer)moduleRootLayer).isChanged()) {
         return true;
@@ -391,14 +389,26 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   @NotNull
   @Override
-  public ModuleRootLayer[] getLayers() {
-    return myLayers.values().toArray(new ModuleRootLayer[myLayers.size()]);
+  public String getCurrentLayerName() {
+    LOGGER.assertTrue(myCurrentLayerName != null);
+    return myCurrentLayerName;
+  }
+
+  @NotNull
+  @Override
+  public Map<String, ModuleRootLayer> getLayers() {
+    return Collections.<String, ModuleRootLayer>unmodifiableSortedMap(myLayers);
   }
 
   @Nullable
   @Override
   public ModuleRootLayer findLayerByName(@NotNull String name) {
     return myLayers.get(name);
+  }
+
+  @NotNull
+  public Map<String, ModuleRootLayerImpl> getLayers0() {
+    return myLayers;
   }
 
   void registerOnDispose(@NotNull Disposable disposable) {
