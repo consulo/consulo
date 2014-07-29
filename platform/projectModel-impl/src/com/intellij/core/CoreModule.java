@@ -70,7 +70,6 @@ public class CoreModule extends MockComponentManager implements ModuleEx {
 
     final ModuleRootManagerImpl moduleRootManager =
       new ModuleRootManagerImpl(this,
-                                DirectoryIndex.getInstance(project),
                                 ProjectRootManagerImpl.getInstanceImpl(project),
                                 VirtualFilePointerManager.getInstance()) {
         @Override

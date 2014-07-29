@@ -23,7 +23,6 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -76,7 +75,6 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
     if (level == null) throw new InvalidDataException();
     searchForLibrary(name, level);
     addListeners();
-    init();
   }
 
   private LibraryOrderEntryImpl(@NotNull LibraryOrderEntryImpl that,
@@ -193,9 +191,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
 
   @Override
   @NotNull
-  public OrderEntry cloneEntry(@NotNull RootModelImpl rootModel,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
+  public OrderEntry cloneEntry(@NotNull RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) {
     ProjectRootManagerImpl rootManager = ProjectRootManagerImpl.getInstanceImpl(getRootModel().getModule().getProject());
     return new LibraryOrderEntryImpl(this, rootModel, rootManager);
   }

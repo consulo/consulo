@@ -41,7 +41,7 @@ import java.util.Iterator;
 public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.ModifiableModelEx {
   private static final ModuleLibraryOrderEntryCondition MODULE_LIBRARY_ORDER_ENTRY_FILTER = new ModuleLibraryOrderEntryCondition();
   private static final OrderEntryToLibraryConvertor ORDER_ENTRY_TO_LIBRARY_CONVERTOR = new OrderEntryToLibraryConvertor();
-  private final RootModelImpl myRootModel;
+  private final ModuleRootLayerImpl myRootLayer;
   private final ProjectRootManagerImpl myProjectRootManager;
   public static final LibraryTablePresentation MODULE_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
     @Override
@@ -60,8 +60,8 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
     }
   };
 
-  ModuleLibraryTable(RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) {
-    myRootModel = rootModel;
+  ModuleLibraryTable(ModuleRootLayerImpl rootLayer, ProjectRootManagerImpl projectRootManager) {
+    myRootLayer = rootLayer;
     myProjectRootManager = projectRootManager;
   }
 
@@ -86,21 +86,21 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
 
   @Override
   public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
-    final ModuleLibraryOrderEntryImpl orderEntry = new ModuleLibraryOrderEntryImpl(name, kind, myRootModel);
-    myRootModel.addOrderEntry(orderEntry);
+    final ModuleLibraryOrderEntryImpl orderEntry = new ModuleLibraryOrderEntryImpl(name, kind, myRootLayer.getRootModel());
+    myRootLayer.addOrderEntry(orderEntry);
     return orderEntry.getLibrary();
   }
 
   @Override
   public void removeLibrary(@NotNull Library library) {
-    final Iterator<OrderEntry> orderIterator = myRootModel.getOrderIterator();
+    final Iterator<OrderEntry> orderIterator = myRootLayer.getOrderIterator();
     while (orderIterator.hasNext()) {
       OrderEntry orderEntry = orderIterator.next();
       if (orderEntry instanceof LibraryOrderEntry) {
         final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry) orderEntry;
         if (libraryOrderEntry.isModuleLevel()) {
           if (library.equals(libraryOrderEntry.getLibrary())) {
-            myRootModel.removeOrderEntry(orderEntry);
+            myRootLayer.removeOrderEntry(orderEntry);
             //Disposer.dispose(library);
             return;
           }
@@ -113,7 +113,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   @NotNull
   public Iterator<Library> getLibraryIterator() {
     FilteringIterator<OrderEntry, LibraryOrderEntry> filteringIterator =
-      new FilteringIterator<OrderEntry, LibraryOrderEntry>(myRootModel.getOrderIterator(), MODULE_LIBRARY_ORDER_ENTRY_FILTER);
+      new FilteringIterator<OrderEntry, LibraryOrderEntry>(myRootLayer.getOrderIterator(), MODULE_LIBRARY_ORDER_ENTRY_FILTER);
     return new ConvertingIterator<LibraryOrderEntry, Library>(filteringIterator, ORDER_ENTRY_TO_LIBRARY_CONVERTOR);
   }
 
@@ -159,7 +159,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   }
 
   public Module getModule() {
-    return myRootModel.getModule();
+    return myRootLayer.getModule();
   }
 
 
@@ -183,7 +183,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
 
   @Override
   public boolean isChanged() {
-    return myRootModel.isChanged();
+    return myRootLayer.isChanged();
   }
 
   @Override

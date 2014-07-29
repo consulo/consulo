@@ -25,7 +25,6 @@ import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
@@ -47,15 +46,15 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   private ModuleLibraryOrderEntryImpl(Library library, RootModelImpl rootModel, boolean isExported, DependencyScope scope) {
     super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myLibrary = ((LibraryEx)library).cloneLibrary(getRootModel());
-    doinit();
     myExported = isExported;
     myScope = scope;
+    init2();
   }
 
   ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel) {
     super(rootModel,  ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, getRootModel());
-    doinit();
+    init2();
   }
 
   ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
@@ -64,10 +63,11 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     myScope = DependencyScope.readExternal(element);
     myLibrary = LibraryTableImplUtil.loadLibrary(element, getRootModel());
-    doinit();
+
+    Disposer.register(this, myLibrary);
   }
 
-  private void doinit() {
+  private void init2() {
     Disposer.register(this, myLibrary);
     init();
   }
@@ -136,9 +136,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   @Override
-  public OrderEntry cloneEntry(RootModelImpl rootModel,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
+  public OrderEntry cloneEntry(RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) {
     return new ModuleLibraryOrderEntryImpl(myLibrary, rootModel, myExported, myScope);
   }
 

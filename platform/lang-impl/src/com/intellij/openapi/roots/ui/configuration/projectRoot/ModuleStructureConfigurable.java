@@ -56,7 +56,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.ui.navigation.Place;
@@ -747,8 +746,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
                 if (entry instanceof ClonableOrderEntry) {
                   modifiableRootModel.addOrderEntry(((ClonableOrderEntry)entry).cloneEntry((RootModelImpl)modifiableRootModel,
                                                                                            (ProjectRootManagerImpl)ProjectRootManager
-                                                                                             .getInstance(myProject),
-                                                                                           VirtualFilePointerManager.getInstance()));
+                                                                                             .getInstance(myProject)));
                 }
               }
 

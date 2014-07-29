@@ -195,7 +195,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
     return flags;
   }
 
-  protected void processEntries(final ModuleRootModel rootModel,
+  protected void processEntries(final ModuleRootLayer rootModel,
                                 Processor<OrderEntry> processor,
                                 Set<Module> processed, boolean firstLevel) {
     if (processed != null && !processed.add(rootModel.getModule())) return;
