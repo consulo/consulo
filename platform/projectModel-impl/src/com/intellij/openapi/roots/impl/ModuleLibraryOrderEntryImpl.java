@@ -44,26 +44,28 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   @NonNls public static final String EXPORTED_ATTR = "exported";
 
   //cloning
-  private ModuleLibraryOrderEntryImpl(Library library, RootModelImpl rootModel, boolean isExported, DependencyScope scope) {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myLibrary = ((LibraryEx)library).cloneLibrary(getRootModel());
+  private ModuleLibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer, boolean isExported, DependencyScope scope) {
+    super(rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+    myLibrary = ((LibraryEx)library).cloneLibrary(rootLayer);
     myExported = isExported;
     myScope = scope;
     Disposer.register(this, myLibrary);
+    init();
   }
 
-  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel) {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, getRootModel());
+  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
+    super(moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
+    myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
     Disposer.register(this, myLibrary);
+    init();
   }
 
-  ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
+  ModuleLibraryOrderEntryImpl(Element element, ModuleRootLayerImpl moduleRootLayer) throws InvalidDataException {
+    super(moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
     LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     myScope = DependencyScope.readExternal(element);
-    myLibrary = LibraryTableImplUtil.loadLibrary(element, getRootModel());
+    myLibrary = LibraryTableImplUtil.loadLibrary(element, moduleRootLayer);
 
     Disposer.register(this, myLibrary);
   }
@@ -132,7 +134,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   @Override
-  public OrderEntry cloneEntry(RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) {
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
     return new ModuleLibraryOrderEntryImpl(myLibrary, rootModel, myExported, myScope);
   }
 

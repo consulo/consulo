@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
@@ -222,14 +223,14 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
     final List<Element> contentChildren = element.getChildren(ContentEntryImpl.ELEMENT_NAME);
     for (Element child : contentChildren) {
-      ContentEntryImpl contentEntry = new ContentEntryImpl(child, myRootModel);
+      ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
       myContent.add(contentEntry);
     }
 
     final List<Element> orderElements = element.getChildren(OrderEntryFactory.ORDER_ENTRY_ELEMENT_NAME);
     boolean moduleSourceAdded = false;
     for (Element child : orderElements) {
-      final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, myRootModel, myProjectRootManager);
+      final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this, myProjectRootManager);
       if (orderEntry == null) {
         continue;
       }
@@ -243,7 +244,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
 
     if (!moduleSourceAdded) {
-      myOrderEntries.add(new ModuleSourceOrderEntryImpl(myRootModel));
+      myOrderEntries.add(new ModuleSourceOrderEntryImpl(this));
     }
   }
 
@@ -350,7 +351,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     removeAllOrderEntries();
     for (OrderEntry orderEntry : layer.myOrderEntries) {
       if (orderEntry instanceof ClonableOrderEntry) {
-        myOrderEntries.add(((ClonableOrderEntry)orderEntry).cloneEntry(myRootModel, myProjectRootManager));
+        myOrderEntries.add(((ClonableOrderEntry)orderEntry).cloneEntry(this, myProjectRootManager));
       }
     }
   }
@@ -359,7 +360,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     removeAllContentEntries();
     for (ContentEntry contentEntry : layer.myContent) {
       if (contentEntry instanceof ClonableContentEntry) {
-        myContent.add(((ClonableContentEntry)contentEntry).cloneEntry(myRootModel));
+        myContent.add(((ClonableContentEntry)contentEntry).cloneEntry(this));
       }
     }
   }
@@ -374,7 +375,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   public void addSourceOrderEntries() {
-    myOrderEntries.add(new ModuleSourceOrderEntryImpl(myRootModel));
+    myOrderEntries.add(new ModuleSourceOrderEntryImpl(this));
   }
 
   @NotNull
@@ -494,6 +495,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   public Iterator<OrderEntry> getOrderIterator() {
     return Collections.unmodifiableList(myOrderEntries).iterator();
+  }
+
+  public Project getProject() {
+    return getModule().getProject();
   }
 
   @Override
@@ -756,13 +761,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ContentEntry addContentEntry(@NotNull VirtualFile file) {
-    return addContentEntry(new ContentEntryImpl(file, myRootModel));
+    return addContentEntry(new ContentEntryImpl(file, this));
   }
 
   @NotNull
   @Override
   public ContentEntry addContentEntry(@NotNull String url) {
-    return addContentEntry(new ContentEntryImpl(url, myRootModel));
+    return addContentEntry(new ContentEntryImpl(url, this));
   }
 
   @Override
@@ -783,7 +788,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public LibraryOrderEntry addLibraryEntry(@NotNull Library library) {
-    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(library, myRootModel, myProjectRootManager);
+    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(library, this, myProjectRootManager);
     assert libraryOrderEntry.isValid();
     myOrderEntries.add(libraryOrderEntry);
     return libraryOrderEntry;
@@ -792,7 +797,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@NotNull ModuleExtensionWithSdk<?> moduleExtension) {
-    final ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry = new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension.getId(), myRootModel);
+    final ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry = new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension.getId(), this);
     assert moduleSdkOrderEntry.isValid();
 
     // add module extension sdk entry after another SDK entry or before module source
@@ -822,7 +827,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public LibraryOrderEntry addInvalidLibrary(@NotNull @NonNls String name, @NotNull String level) {
-    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, myRootModel, myProjectRootManager);
+    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this, myProjectRootManager);
     myOrderEntries.add(libraryOrderEntry);
     return libraryOrderEntry;
   }
@@ -832,7 +837,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public ModuleOrderEntry addModuleOrderEntry(@NotNull Module module) {
     LOGGER.assertTrue(!module.equals(getModule()));
     LOGGER.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
-    final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, myRootModel);
+    final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
   }
@@ -841,7 +846,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Override
   public ModuleOrderEntry addInvalidModuleEntry(@NotNull String name) {
     LOGGER.assertTrue(!name.equals(getModule().getName()));
-    final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, myRootModel);
+    final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
   }

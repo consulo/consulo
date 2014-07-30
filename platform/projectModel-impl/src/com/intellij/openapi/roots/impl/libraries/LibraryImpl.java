@@ -20,11 +20,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ComponentSerializationUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.PersistentOrderRootType;
 import com.intellij.openapi.roots.RootProvider;
-import com.intellij.openapi.roots.impl.RootModelImpl;
+import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.util.*;
@@ -73,12 +72,12 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   private LibraryProperties myProperties;
 
   private final MyRootProviderImpl myRootProvider = new MyRootProviderImpl();
-  private final ModifiableRootModel myRootModel;
+  private final ModuleRootLayerImpl myModuleRootLayer;
   private boolean myDisposed;
   private final Disposable myPointersDisposable = Disposer.newDisposable();
   private final JarDirectoryWatcher myRootsWatcher = JarDirectoryWatcherFactory.getInstance().createWatcher(myJarDirectories, myRootProvider);
 
-  LibraryImpl(LibraryTable table, Element element, ModifiableRootModel rootModel) throws InvalidDataException {
+  LibraryImpl(LibraryTable table, Element element, ModuleRootLayerImpl rootModel) throws InvalidDataException {
     this(table, rootModel, null, element.getAttributeValue(LIBRARY_NAME_ATTR),
          (PersistentLibraryKind<?>)LibraryKind.findById(element.getAttributeValue(LIBRARY_TYPE_ATTR)));
     readProperties(element);
@@ -87,14 +86,14 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     myRootsWatcher.updateWatchedRoots();
   }
 
-  LibraryImpl(String name, @Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModifiableRootModel rootModel) {
+  LibraryImpl(String name, @Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModuleRootLayerImpl rootModel) {
     this(table, rootModel, null, name, kind);
     if (kind != null) {
       myProperties = kind.createDefaultProperties();
     }
   }
 
-  private LibraryImpl(@NotNull LibraryImpl from, LibraryImpl newSource, ModifiableRootModel rootModel) {
+  private LibraryImpl(@NotNull LibraryImpl from, LibraryImpl newSource, ModuleRootLayerImpl rootModel) {
     this(from.myLibraryTable, rootModel, newSource, from.myName, from.myKind);
     from.checkDisposed();
 
@@ -115,10 +114,10 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   // primary
-  private LibraryImpl(LibraryTable table, ModifiableRootModel rootModel, LibraryImpl newSource, String name, @Nullable final PersistentLibraryKind<?> kind) {
+  private LibraryImpl(LibraryTable table, ModuleRootLayerImpl moduleRootLayer, LibraryImpl newSource, String name, @Nullable final PersistentLibraryKind<?> kind) {
     super(new Throwable());
     myLibraryTable = table;
-    myRootModel = rootModel;
+    myModuleRootLayer = moduleRootLayer;
     mySource = newSource;
     myKind = kind;
     myName = name;
@@ -212,13 +211,13 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   @NotNull
   public ModifiableModelEx getModifiableModel() {
     checkDisposed();
-    return new LibraryImpl(this, this, myRootModel);
+    return new LibraryImpl(this, this, myModuleRootLayer);
   }
 
   @Override
-  public Library cloneLibrary(RootModelImpl rootModel) {
+  public Library cloneLibrary(ModuleRootLayerImpl moduleRootLayer) {
     LOG.assertTrue(myLibraryTable == null);
-    final LibraryImpl clone = new LibraryImpl(this, null, rootModel);
+    final LibraryImpl clone = new LibraryImpl(this, null, moduleRootLayer);
     clone.myRootsWatcher.updateWatchedRoots();
     return clone;
   }
@@ -685,6 +684,6 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
 
   @Nullable("will return non-null value only for module level libraries")
   public Module getModule() {
-    return myRootModel == null ? null : myRootModel.getModule();
+    return myModuleRootLayer == null ? null : myModuleRootLayer.getModule();
   }
 }

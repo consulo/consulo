@@ -53,17 +53,18 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
 
   private final MyOrderEntryLibraryTableListener myLibraryListener = new MyOrderEntryLibraryTableListener();
 
-  LibraryOrderEntryImpl(@NotNull Library library, @NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootModel, projectRootManager);
+  LibraryOrderEntryImpl(@NotNull Library library, @NotNull ModuleRootLayerImpl rootLayer, @NotNull ProjectRootManagerImpl projectRootManager) {
+    super(rootLayer, projectRootManager);
     LOGGER.assertTrue(library.getTable() != null);
     myLibrary = library;
     myProjectRootManagerImpl = projectRootManager;
     addListeners();
+    init();
   }
 
-  LibraryOrderEntryImpl(@NotNull Element element, @NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl projectRootManager)
+  LibraryOrderEntryImpl(@NotNull Element element, @NotNull ModuleRootLayerImpl rootLayer, @NotNull ProjectRootManagerImpl projectRootManager)
           throws InvalidDataException {
-    super(rootModel, projectRootManager);
+    super(rootLayer, projectRootManager);
     LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     myProjectRootManagerImpl = projectRootManager;
@@ -77,9 +78,9 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
   }
 
   private LibraryOrderEntryImpl(@NotNull LibraryOrderEntryImpl that,
-                                @NotNull RootModelImpl rootModel,
+                                @NotNull ModuleRootLayerImpl rootLayer,
                                 @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootModel, projectRootManager);
+    super(rootLayer, projectRootManager);
     if (that.myLibrary == null) {
       myLibraryName = that.myLibraryName;
       myLibraryLevel = that.myLibraryLevel;
@@ -91,16 +92,18 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
     myExported = that.myExported;
     myScope = that.myScope;
     addListeners();
+    init();
   }
 
   public LibraryOrderEntryImpl(@NotNull String name,
                                @NotNull String level,
-                               @NotNull RootModelImpl rootModel,
+                               @NotNull ModuleRootLayerImpl rootLayer,
                                @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootModel, projectRootManager);
+    super(rootLayer, projectRootManager);
     myProjectRootManagerImpl = projectRootManager;
     searchForLibrary(name, level);
     addListeners();
+    init();
   }
 
   private void searchForLibrary(@NotNull String name, @NotNull String level) {
@@ -189,9 +192,9 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
 
   @Override
   @NotNull
-  public OrderEntry cloneEntry(@NotNull RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) {
-    ProjectRootManagerImpl rootManager = ProjectRootManagerImpl.getInstanceImpl(getRootModel().getModule().getProject());
-    return new LibraryOrderEntryImpl(this, rootModel, rootManager);
+  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl moduleRootLayer, ProjectRootManagerImpl projectRootManager) {
+    ProjectRootManagerImpl rootManager = ProjectRootManagerImpl.getInstanceImpl(getRootModel().getProject());
+    return new LibraryOrderEntryImpl(this, moduleRootLayer, rootManager);
   }
 
   @Override
@@ -227,7 +230,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
   private void addListeners() {
     final String libraryLevel = getLibraryLevel();
     final LibraryTable libraryTable =
-            LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(libraryLevel, getRootModel().getModule().getProject());
+            LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(libraryLevel, getRootModel().getProject());
     if (libraryTable != null) {
       myProjectRootManagerImpl.addListenerForTable(myLibraryListener, libraryTable);
     }
@@ -243,7 +246,7 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
   public void dispose() {
     super.dispose();
     final LibraryTable libraryTable =
-            LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(getLibraryLevel(), getRootModel().getModule().getProject());
+            LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(getLibraryLevel(), getRootModel().getProject());
     if (libraryTable != null) {
       myProjectRootManagerImpl.removeListenerForTable(myLibraryListener, libraryTable);
     }

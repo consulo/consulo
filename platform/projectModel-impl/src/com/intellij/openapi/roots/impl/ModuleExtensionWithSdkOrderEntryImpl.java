@@ -39,13 +39,14 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
   private String myModuleExtensionId;
 
-  ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull RootModelImpl rootModel) {
+  ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel) {
     super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
 
     myModuleExtensionId = moduleExtensionId;
+    init();
   }
 
-  ModuleExtensionWithSdkOrderEntryImpl(@NotNull Element element, @NotNull RootModelImpl rootModel) throws InvalidDataException {
+  ModuleExtensionWithSdkOrderEntryImpl(@NotNull Element element, @NotNull ModuleRootLayerImpl rootModel) throws InvalidDataException {
     super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myModuleExtensionId =  element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
   }
@@ -129,7 +130,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
   @Override
   @NotNull
-  public OrderEntry cloneEntry(@NotNull RootModelImpl rootModel, ProjectRootManagerImpl projectRootManager) {
+  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
     return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel);
   }
 
@@ -142,6 +143,6 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Nullable
   @Override
   public ModuleExtensionWithSdk<?> getModuleExtension() {
-    return getRootModel().getExtensionWithoutCheck(myModuleExtensionId);
+    return myModuleRootLayer.getExtensionWithoutCheck(myModuleExtensionId);
   }
 }

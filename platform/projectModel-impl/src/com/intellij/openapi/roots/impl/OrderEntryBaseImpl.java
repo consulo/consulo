@@ -29,7 +29,7 @@ public abstract class OrderEntryBaseImpl extends RootModelComponentBase implemen
   @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
   private final int hc = _hc++;
 
-  protected OrderEntryBaseImpl(@NotNull RootModelImpl rootModel) {
+  protected OrderEntryBaseImpl(@NotNull ModuleRootLayerImpl rootModel) {
     super(rootModel);
   }
 
