@@ -48,8 +48,7 @@ public class ModuleLayerPanel extends JPanel {
 
     val moduleRootModel = moduleEditor.getModifiableRootModelProxy();
 
-    val model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()));
-    model.setSelectedItem(moduleRootModel.getCurrentLayerName());
+    val model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
     val comboBox = new ComboBox(model);
 
     moduleEditor.addChangeListener(new ModuleEditor.ChangeListener() {
