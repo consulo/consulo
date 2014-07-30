@@ -298,6 +298,8 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
                     "addInvalidLibrary",
                     "addModuleOrderEntry",
                     "addInvalidModuleEntry",
+                    "addContentEntry",
+                    "removeContentEntry",
                     "removeOrderEntry",
                     "addModuleExtensionSdkEntry",
                     "addLayer",
