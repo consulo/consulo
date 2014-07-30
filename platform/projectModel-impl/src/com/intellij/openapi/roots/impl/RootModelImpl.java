@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.ProjectTopics;
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
@@ -259,18 +260,33 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     RootModelImpl sourceModel = getSourceModel();
 
-    sourceModel.setCurrentLayerSafe(myCurrentLayerName);
+    ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ProjectTopics.MODULE_LAYERS);
+
+    if(!Comparing.equal(sourceModel.myCurrentLayerName, myCurrentLayerName)) {
+      sourceModel.setCurrentLayerSafe(myCurrentLayerName);
+
+      layerListener.currentLayerChanged(getModule(), sourceModel.myCurrentLayerName, myCurrentLayerName);
+    }
 
     // first we commit changed and new layers
     for (Map.Entry<String, ModuleRootLayerImpl> entry : myLayers.entrySet()) {
-      ModuleRootLayerImpl moduleRootLayer = sourceModel.myLayers.get(entry.getKey());
+      final ModuleRootLayerImpl sourceModuleLayer = sourceModel.myLayers.get(entry.getKey());
+
+      ModuleRootLayerImpl toCommit = sourceModuleLayer;
       // if layer exists
-      if (moduleRootLayer == null) {
-        moduleRootLayer = new ModuleRootLayerImpl(null, sourceModel, myProjectRootManager);
-        sourceModel.myLayers.put(entry.getKey(), moduleRootLayer);
+      if (toCommit == null) {
+        toCommit = new ModuleRootLayerImpl(null, sourceModel, myProjectRootManager);
+        sourceModel.myLayers.put(entry.getKey(), toCommit);
       }
 
-      entry.getValue().copy(moduleRootLayer, myCurrentLayerName.equals(entry.getKey()));
+      if(entry.getValue().copy(toCommit, myCurrentLayerName.equals(entry.getKey()))) {
+        if(sourceModuleLayer == null) {
+          layerListener.layerAdded(getModule(), toCommit);
+        }
+        else {
+          layerListener.layerChanged(getModule(), toCommit);
+        }
+      }
     }
 
     List<String> toRemove = new SmartList<String>();
@@ -285,6 +301,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (String layerName : toRemove) {
       ModuleRootLayerImpl removed = sourceModel.myLayers.remove(layerName);
       assert removed != null;
+      layerListener.layerRemove(getModule(), removed);
       removed.dispose();
     }
   }
@@ -354,6 +371,16 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     for (ModuleRootLayer moduleRootLayer : myLayers.values()) {
       LOGGER.assertTrue(moduleRootLayer instanceof ModifiableModuleRootLayer);
       if (((ModifiableModuleRootLayer)moduleRootLayer).isChanged()) {
+        return true;
+      }
+    }
+
+    RootModelImpl sourceModel = getSourceModel();
+
+    // check for deleted layers
+    for (String layerName : sourceModel.myLayers.keySet()) {
+      ModuleRootLayerImpl layer = myLayers.get(layerName);
+      if(layer == null) {
         return true;
       }
     }

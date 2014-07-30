@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
+import com.intellij.ProjectTopics;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
@@ -29,6 +30,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootLayer;
+import com.intellij.openapi.roots.ModuleRootLayerListener;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -91,7 +93,22 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
   public void install(@NotNull StatusBar statusBar) {
     super.install(statusBar);
 
-    //TODO [VISTALL] on layer change update
+    myProject.getMessageBus().connect().subscribe(ProjectTopics.MODULE_LAYERS, new ModuleRootLayerListener.Adapter() {
+      @Override
+      public void layerRemove(@NotNull Module module, @NotNull ModuleRootLayer removed) {
+        update();
+      }
+
+      @Override
+      public void layerAdded(@NotNull Module module, @NotNull ModuleRootLayer added) {
+        update();
+      }
+
+      @Override
+      public void currentLayerChanged(@NotNull Module module, @NotNull String oldName, @NotNull String newName) {
+        update();
+      }
+    });
   }
 
   private void showPopup(MouseEvent e) {
@@ -122,8 +139,8 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
           }
 
           val modifiableModel = ModuleRootManager.getInstance(moduleForFile).getModifiableModel();
-          modifiableModel.setCurrentLayer(profile) ;
-          new WriteAction<Object>(){
+          modifiableModel.setCurrentLayer(profile);
+          new WriteAction<Object>() {
 
             @Override
             protected void run(Result<Object> result) throws Throwable {

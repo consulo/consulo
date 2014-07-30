@@ -50,6 +50,7 @@ public class ModuleLayerPanel extends JPanel {
 
     val model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
     val comboBox = new ComboBox(model);
+    comboBox.setEnabled(model.getSize() > 1);
 
     moduleEditor.addChangeListener(new ModuleEditor.ChangeListener() {
       @Override
