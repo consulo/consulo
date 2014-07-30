@@ -368,14 +368,18 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public boolean isChanged() {
     if (!myWritable) return false;
 
+    RootModelImpl sourceModel = getSourceModel();
+
+    if(!Comparing.equal(myCurrentLayerName, sourceModel.myCurrentLayerName)) {
+      return true;
+    }
+
     for (ModuleRootLayer moduleRootLayer : myLayers.values()) {
       LOGGER.assertTrue(moduleRootLayer instanceof ModifiableModuleRootLayer);
       if (((ModifiableModuleRootLayer)moduleRootLayer).isChanged()) {
         return true;
       }
     }
-
-    RootModelImpl sourceModel = getSourceModel();
 
     // check for deleted layers
     for (String layerName : sourceModel.myLayers.keySet()) {
