@@ -374,9 +374,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       return true;
     }
 
-    for (ModuleRootLayer moduleRootLayer : myLayers.values()) {
-      LOGGER.assertTrue(moduleRootLayer instanceof ModifiableModuleRootLayer);
-      if (((ModifiableModuleRootLayer)moduleRootLayer).isChanged()) {
+    for (ModuleRootLayerImpl moduleRootLayer : myLayers.values()) {
+      if (moduleRootLayer.isChanged()) {
         return true;
       }
     }
