@@ -269,6 +269,10 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         }
         selectContentEntry(contentEntries[0]);
       }
+      else {
+        selectContentEntry(null);
+        myRootTreeEditor.setContentEntryEditor(null);
+      }
     }
 
     if(myRootTreeEditor != null) {
