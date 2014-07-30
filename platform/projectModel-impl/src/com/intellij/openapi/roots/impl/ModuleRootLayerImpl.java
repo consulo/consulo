@@ -195,10 +195,15 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
       setContentEntriesFrom(originalLayer);
       setOrderEntriesFrom(originalLayer);
     }
+    else {
+      init();
+    }
   }
 
   public void readExternal(@NotNull Element element) throws InvalidDataException {
-    createMutableExtensions(null);
+    removeAllContentEntries();
+    removeAllOrderEntries();
+
     List<Element> moduleExtensionChild = element.getChildren("extension");
 
     for (Element child : moduleExtensionChild) {

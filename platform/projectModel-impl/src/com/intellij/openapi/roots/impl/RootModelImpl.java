@@ -23,11 +23,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
-import org.consulo.module.extension.*;
+import com.intellij.util.containers.ContainerUtil;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +53,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private final CompositeDisposable myDisposable = new CompositeDisposable();
 
   private String myCurrentLayerName;
+  private ModuleRootLayerImpl myCachedCurrentLayer;
   private final SortedMap<String, ModuleRootLayerImpl> myLayers = new TreeMap<String, ModuleRootLayerImpl>();
 
   RootModelImpl(@NotNull ModuleRootManagerImpl moduleRootManager, @NotNull ProjectRootManagerImpl projectRootManager) {
@@ -97,11 +101,11 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(entry.getValue(), this, projectRootManager);
       myLayers.put(entry.getKey(), moduleRootLayer);
     }
-    myCurrentLayerName = rootModel.myCurrentLayerName;
+    setCurrentLayerSafe(rootModel.myCurrentLayerName);
   }
 
   private void initDefaultLayer(Element element, ProjectRootManagerImpl projectRootManager) throws InvalidDataException {
-    myCurrentLayerName = "Default";
+    setCurrentLayerSafe("Default");
 
     ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this, projectRootManager);
     myLayers.put(myCurrentLayerName, moduleRootLayer);
@@ -109,16 +113,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     if (element != null) {
       moduleRootLayer.readExternal(element);
     }
-    else {
-
-      moduleRootLayer.init();
-    }
   }
 
   public void loadState(Element element) throws InvalidDataException {
     String currentLayer = element.getAttributeValue("current-layer");
     if (currentLayer != null) {
-      myCurrentLayerName = currentLayer;
+      setCurrentLayerSafe(currentLayer);
 
       for (Element moduleLayerElement : element.getChildren("module-layer")) {
         String name = moduleLayerElement.getAttributeValue("name");
@@ -259,7 +259,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     RootModelImpl sourceModel = getSourceModel();
 
-    sourceModel.myCurrentLayerName = myCurrentLayerName;
+    sourceModel.setCurrentLayerSafe(myCurrentLayerName);
 
     // first we commit changed and new layers
     for (Map.Entry<String, ModuleRootLayerImpl> entry : myLayers.entrySet()) {
@@ -382,9 +382,72 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @NotNull
   @Override
   public ModuleRootLayerImpl getCurrentLayer() {
+    if(myCachedCurrentLayer != null) {
+      return myCachedCurrentLayer;
+    }
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(myCurrentLayerName);
     LOGGER.assertTrue(moduleRootLayer != null);
+    return myCachedCurrentLayer = moduleRootLayer;
+  }
+
+  @Override
+  public ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate) {
+    ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
+    if(moduleRootLayer != null) {
+      return moduleRootLayer;
+    }
+
+    ModuleRootLayerImpl layer = new ModuleRootLayerImpl(null, this, myProjectRootManager);
+
+    if(nameForCopy != null) {
+      ModuleRootLayerImpl original = myLayers.get(nameForCopy);
+      if(original != null) {
+        original.copy(layer, false);
+      }
+    }
+    myLayers.put(name, layer);
+    if(activate) {
+      setCurrentLayerSafe(name);
+    }
+    return layer;
+  }
+
+  public void setCurrentLayerSafe(@Nullable String name) {
+    myCurrentLayerName = name;
+    myCachedCurrentLayer = null;
+  }
+
+  @Nullable
+  @Override
+  public ModifiableModuleRootLayer setCurrentLayer(@NotNull String name) {
+    ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
+    if(moduleRootLayer == null) {
+      return null;
+    }
+    myCurrentLayerName = name;
+    myCachedCurrentLayer = moduleRootLayer;
     return moduleRootLayer;
+  }
+
+  @Nullable
+  @Override
+  public ModifiableModuleRootLayer removeLayer(@NotNull String name, boolean initDefault) {
+    ModuleRootLayerImpl remove = myLayers.remove(name);
+    if(remove != null) {
+      if(initDefault && myLayers.isEmpty()) {
+        try {
+          initDefaultLayer(null, myProjectRootManager);
+        }
+        catch (InvalidDataException e) {
+          //
+        }
+      }
+
+      if(Comparing.equal(myCurrentLayerName, name)) {
+        setCurrentLayerSafe(myLayers.isEmpty() ? null : ContainerUtil.getFirstItem(myLayers.keySet()));
+      }
+    }
+    return remove;
   }
 
   @NotNull
@@ -404,11 +467,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   public ModuleRootLayer findLayerByName(@NotNull String name) {
     return myLayers.get(name);
-  }
-
-  @NotNull
-  public Map<String, ModuleRootLayerImpl> getLayers0() {
-    return myLayers;
   }
 
   void registerOnDispose(@NotNull Disposable disposable) {

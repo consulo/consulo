@@ -33,7 +33,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Library entry for module ("in-place") libraries
- *  @author dsl
+ *
+ * @author dsl
  */
 @Logger
 public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry, WritableOrderEntry {
@@ -48,13 +49,13 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
     myLibrary = ((LibraryEx)library).cloneLibrary(getRootModel());
     myExported = isExported;
     myScope = scope;
-    init2();
+    Disposer.register(this, myLibrary);
   }
 
   ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel) {
-    super(rootModel,  ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
+    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, getRootModel());
-    init2();
+    Disposer.register(this, myLibrary);
   }
 
   ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
@@ -65,11 +66,6 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
     myLibrary = LibraryTableImplUtil.loadLibrary(element, getRootModel());
 
     Disposer.register(this, myLibrary);
-  }
-
-  private void init2() {
-    Disposer.register(this, myLibrary);
-    init();
   }
 
   @Override

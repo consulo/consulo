@@ -52,7 +52,7 @@ public class ContentEntryImpl extends RootModelComponentBase implements ContentE
   @NotNull
   private final VirtualFilePointer myRoot;
 
-  private final Set<ContentFolder> myContentFolders = new LinkedHashSet<ContentFolder>();
+  private final Set<ContentFolder> myContentFolders = new TreeSet<ContentFolder>(ContentFolderComparator.INSTANCE);
 
   ContentEntryImpl(@NotNull VirtualFile file, @NotNull RootModelImpl m) {
     this(file.getUrl(), m);

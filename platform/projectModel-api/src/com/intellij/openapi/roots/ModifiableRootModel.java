@@ -17,6 +17,7 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Model of roots that should be used by clients to modify module roots.
@@ -25,6 +26,14 @@ import org.jetbrains.annotations.NotNull;
  * @see ModuleRootManager#getModifiableModel()
  */
 public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRootLayer {
+  @Nullable
+  ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate);
+
+  @Nullable
+  ModifiableModuleRootLayer removeLayer(@NotNull String name, boolean initDefault);
+
+  @Nullable()
+  ModifiableModuleRootLayer setCurrentLayer(@NotNull String name);
 
   @NotNull
   Project getProject();

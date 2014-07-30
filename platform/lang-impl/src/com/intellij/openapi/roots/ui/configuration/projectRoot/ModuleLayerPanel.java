@@ -17,75 +17,70 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
-import com.intellij.openapi.roots.impl.RootModelImpl;
+import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.moduleLayerActions.AddLayerAction;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.moduleLayerActions.RemoveLayerAction;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.MutableCollectionComboBoxModel;
 import com.intellij.util.IconUtil;
 import lombok.val;
 import org.jdesktop.swingx.HorizontalLayout;
-import org.jdesktop.swingx.combobox.MapComboBoxModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
  * @since 29.07.14
  */
 public class ModuleLayerPanel extends JPanel {
-  public ModuleLayerPanel(@NotNull final ModifiableRootModel modifiableRootModel) {
+  private static final String ACTION_PLACE = "ModuleLayerPanel";
+
+  public ModuleLayerPanel(@NotNull final ModuleEditor moduleEditor) {
     super(new BorderLayout());
 
-    val model = new MapComboBoxModel<String, ModuleRootLayerImpl>(((RootModelImpl)modifiableRootModel).getLayers0());
-    model.setSelectedItem(modifiableRootModel.getCurrentLayerName());
+    val moduleRootModel = moduleEditor.getModifiableRootModelProxy();
+
+    val model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()));
+    model.setSelectedItem(moduleRootModel.getCurrentLayerName());
     val comboBox = new ComboBox(model);
+
+    moduleEditor.addChangeListener(new ModuleEditor.ChangeListener() {
+      @Override
+      public void moduleStateChanged(ModifiableRootModel moduleRootModel) {
+        model.update(new ArrayList<String>(moduleRootModel.getLayers().keySet()));
+        model.setSelectedItem(moduleRootModel.getCurrentLayerName());
+        model.update();
+
+        comboBox.setEnabled(comboBox.getItemCount() > 1);
+      }
+    });
 
     comboBox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
-
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+          moduleEditor.getModifiableRootModelProxy().setCurrentLayer((String)comboBox.getSelectedItem());
+        }
       }
     });
 
-    val removePresentation = presentation("Remove", IconUtil.getRemoveIcon());
-    val removeUpdater = new Runnable() {
-      @Override
-      public void run() {
-        removePresentation.setEnabled(comboBox.getItemCount() > 1);
-        comboBox.setEnabled(comboBox.getItemCount() > 1);
-      }
-    };
-    removeUpdater.run();
-
     JPanel panel = new JPanel(new HorizontalLayout());
-    panel.add(new ActionButton(new AnAction() {
-      @Override
-      public void actionPerformed(AnActionEvent anActionEvent) {
+    panel.add(new ActionButton(new AddLayerAction(moduleEditor, false), presentation("Add", IconUtil.getAddIcon()), ACTION_PLACE,
+                               ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
 
-      }
-    }, presentation("Add", IconUtil.getAddIcon()), "ConfigurationProfilePanel.ComboBox", ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    panel.add(new ActionButton(new RemoveLayerAction(moduleEditor), presentation("Remove", IconUtil.getRemoveIcon()), ACTION_PLACE,
+                               ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
 
-    panel.add(new ActionButton(new AnAction() {
-      @Override
-      public void actionPerformed(AnActionEvent anActionEvent) {
-
-      }
-    }, removePresentation, "ConfigurationProfilePanel.ComboBox", ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
-
-    panel.add(new ActionButton(new AnAction() {
-      @Override
-      public void actionPerformed(AnActionEvent anActionEvent) {
-      }
-
-    }, presentation("Copy", AllIcons.Actions.Copy), "ConfigurationProfilePanel.ComboBox", ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    panel.add(new ActionButton(new AddLayerAction(moduleEditor, true), presentation("Copy", AllIcons.Actions.Copy), ACTION_PLACE,
+                               ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
 
     JPanel newPanel = new JPanel(new BorderLayout());
     newPanel.add(comboBox, BorderLayout.CENTER);

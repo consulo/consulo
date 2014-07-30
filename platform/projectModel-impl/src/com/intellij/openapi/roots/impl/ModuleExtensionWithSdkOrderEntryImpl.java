@@ -43,7 +43,6 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
 
     myModuleExtensionId = moduleExtensionId;
-    init();
   }
 
   ModuleExtensionWithSdkOrderEntryImpl(@NotNull Element element, @NotNull RootModelImpl rootModel) throws InvalidDataException {

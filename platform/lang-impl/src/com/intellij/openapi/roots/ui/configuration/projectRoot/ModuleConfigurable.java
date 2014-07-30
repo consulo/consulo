@@ -80,7 +80,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
   @Nullable
   @Override
   protected JComponent createTopRightComponent() {
-    return new ModuleLayerPanel(getModuleEditor().getModifiableRootModel());
+    return new ModuleLayerPanel(getModuleEditor());
   }
 
   @Override

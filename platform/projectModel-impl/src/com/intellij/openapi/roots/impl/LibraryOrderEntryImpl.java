@@ -59,7 +59,6 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
     myLibrary = library;
     myProjectRootManagerImpl = projectRootManager;
     addListeners();
-    init();
   }
 
   LibraryOrderEntryImpl(@NotNull Element element, @NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl projectRootManager)
@@ -92,7 +91,6 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
     myExported = that.myExported;
     myScope = that.myScope;
     addListeners();
-    init();
   }
 
   public LibraryOrderEntryImpl(@NotNull String name,

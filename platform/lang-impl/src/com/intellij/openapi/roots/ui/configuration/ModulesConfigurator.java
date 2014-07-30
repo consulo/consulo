@@ -542,7 +542,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   private void processModuleCountChanged() {
     for (ModuleEditor moduleEditor : myModuleEditors) {
-      moduleEditor.moduleCountChanged();
+      moduleEditor.fireModuleStateChanged();
     }
   }
 
