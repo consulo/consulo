@@ -105,7 +105,11 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
       }
 
       @Override
-      public void currentLayerChanged(@NotNull Module module, @NotNull String oldName, @NotNull String newName) {
+      public void currentLayerChanged(@NotNull Module module,
+                                      @NotNull String oldName,
+                                      @NotNull ModuleRootLayer oldLayer,
+                                      @NotNull String newName,
+                                      @NotNull ModuleRootLayer newLayer) {
         update();
       }
     });

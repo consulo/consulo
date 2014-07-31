@@ -446,5 +446,9 @@
     <component>
       <implementation-class>org.consulo.compiler.CompilerPathsManager</implementation-class>
     </component>
+
+    <component>
+      <implementation-class>org.mustbe.consulo.roots.ExtensionListenerByLayerListenerInvoker</implementation-class>
+    </component>
   </project-components>
 </idea-plugin>

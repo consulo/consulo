@@ -40,7 +40,11 @@ public interface ModuleRootLayerListener {
     }
 
     @Override
-    public void currentLayerChanged(@NotNull Module module, @NotNull String oldName, @NotNull String newName) {
+    public void currentLayerChanged(@NotNull Module module,
+                                    @NotNull String oldName,
+                                    @NotNull ModuleRootLayer oldLayer,
+                                    @NotNull String newName,
+                                    @NotNull ModuleRootLayer newLayer) {
 
     }
   }
@@ -51,5 +55,6 @@ public interface ModuleRootLayerListener {
 
   void layerChanged(@NotNull Module module, @NotNull ModuleRootLayer added);
 
-  void currentLayerChanged(@NotNull Module module, @NotNull String oldName, @NotNull String newName);
+  void currentLayerChanged(@NotNull Module module, @NotNull String oldName, @NotNull ModuleRootLayer oldLayer,
+                           @NotNull String newName, @NotNull ModuleRootLayer newLayer);
 }

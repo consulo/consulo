@@ -263,9 +263,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ProjectTopics.MODULE_LAYERS);
 
     if(!Comparing.equal(sourceModel.myCurrentLayerName, myCurrentLayerName)) {
+      ModuleRootLayerImpl oldLayer = sourceModel.getCurrentLayer();
+      String oldName = sourceModel.getCurrentLayerName();
+
       sourceModel.setCurrentLayerSafe(myCurrentLayerName);
 
-      layerListener.currentLayerChanged(getModule(), sourceModel.myCurrentLayerName, myCurrentLayerName);
+      layerListener.currentLayerChanged(getModule(), oldName, oldLayer, myCurrentLayerName, getCurrentLayer());
     }
 
     // first we commit changed and new layers
