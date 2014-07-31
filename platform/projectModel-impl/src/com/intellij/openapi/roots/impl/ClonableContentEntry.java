@@ -22,5 +22,5 @@ import com.intellij.openapi.roots.ContentEntry;
  *  @author dsl
  */
 public interface ClonableContentEntry {
-  ContentEntry cloneEntry(RootModelImpl rootModel);
+  ContentEntry cloneEntry(ModuleRootLayerImpl layer);
 }

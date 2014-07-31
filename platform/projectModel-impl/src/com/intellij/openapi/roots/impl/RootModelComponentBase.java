@@ -24,17 +24,22 @@ import org.jetbrains.annotations.NotNull;
  *  @author dsl
  */
 public abstract class RootModelComponentBase implements Disposable {
-  private final RootModelImpl myRootModel;
+  protected final ModuleRootLayerImpl myModuleRootLayer;
   private boolean myDisposed;
 
-  RootModelComponentBase(@NotNull RootModelImpl rootModel) {
-    rootModel.registerOnDispose(this);
-    myRootModel = rootModel;
+  RootModelComponentBase(@NotNull ModuleRootLayerImpl moduleRootLayer) {
+    myModuleRootLayer = moduleRootLayer;
+    getRootModel().registerOnDispose(this);
   }
 
+  @NotNull
+  public ModuleRootLayerImpl getModuleRootLayer() {
+    return myModuleRootLayer;
+  }
 
+  @NotNull
   public RootModelImpl getRootModel() {
-    return myRootModel;
+    return myModuleRootLayer.getRootModel();
   }
 
   @Override

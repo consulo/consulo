@@ -25,7 +25,6 @@ import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jdom.Element;
@@ -34,7 +33,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Library entry for module ("in-place") libraries
- *  @author dsl
+ *
+ * @author dsl
  */
 @Logger
 public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry, WritableOrderEntry {
@@ -44,32 +44,30 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   @NonNls public static final String EXPORTED_ATTR = "exported";
 
   //cloning
-  private ModuleLibraryOrderEntryImpl(Library library, RootModelImpl rootModel, boolean isExported, DependencyScope scope) {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myLibrary = ((LibraryEx)library).cloneLibrary(getRootModel());
-    doinit();
+  private ModuleLibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer, boolean isExported, DependencyScope scope) {
+    super(rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+    myLibrary = ((LibraryEx)library).cloneLibrary(rootLayer);
     myExported = isExported;
     myScope = scope;
+    Disposer.register(this, myLibrary);
+    init();
   }
 
-  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, RootModelImpl rootModel) {
-    super(rootModel,  ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, getRootModel());
-    doinit();
+  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
+    super(moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
+    myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
+    Disposer.register(this, myLibrary);
+    init();
   }
 
-  ModuleLibraryOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
+  ModuleLibraryOrderEntryImpl(Element element, ModuleRootLayerImpl moduleRootLayer) throws InvalidDataException {
+    super(moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
     LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     myScope = DependencyScope.readExternal(element);
-    myLibrary = LibraryTableImplUtil.loadLibrary(element, getRootModel());
-    doinit();
-  }
+    myLibrary = LibraryTableImplUtil.loadLibrary(element, moduleRootLayer);
 
-  private void doinit() {
     Disposer.register(this, myLibrary);
-    init();
   }
 
   @Override
@@ -136,9 +134,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   @Override
-  public OrderEntry cloneEntry(RootModelImpl rootModel,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
     return new ModuleLibraryOrderEntryImpl(myLibrary, rootModel, myExported, myScope);
   }
 

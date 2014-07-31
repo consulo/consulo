@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.util.Processor;
@@ -26,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
  * @author nik
  */
 public class ModuleOrderEnumerator extends OrderEnumeratorBase {
-  private final ModuleRootModel myRootModel;
+  private final ModuleRootLayer myRootModel;
 
-  public ModuleOrderEnumerator(ModuleRootModel rootModel, final OrderRootsCache cache) {
+  public ModuleOrderEnumerator(ModuleRootLayer rootModel, final OrderRootsCache cache) {
     super(rootModel.getModule(), rootModel.getModule().getProject(), cache);
     myRootModel = rootModel;
   }

@@ -430,7 +430,10 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
     statusBar.addWidget(encodingPanel, "after Position");
 
     final LineSeparatorPanel lineSeparatorPanel = new LineSeparatorPanel(project);
-    statusBar.addWidget(lineSeparatorPanel, "before " + encodingPanel.ID());
+    statusBar.addWidget(lineSeparatorPanel, "before " + positionPanel.ID());
+
+    final ModuleLayerWidget moduleLayerWidget = new ModuleLayerWidget(project);
+    statusBar.addWidget(moduleLayerWidget, "after " + lineSeparatorPanel.ID());
 
     final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel();
 
@@ -452,6 +455,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
       @Override
       public void dispose() {
         statusBar.removeWidget(encodingPanel.ID());
+        statusBar.removeWidget(moduleLayerWidget.ID());
         statusBar.removeWidget(lineSeparatorPanel.ID());
         statusBar.removeWidget(positionPanel.ID());
         statusBar.removeWidget(notificationArea.ID());

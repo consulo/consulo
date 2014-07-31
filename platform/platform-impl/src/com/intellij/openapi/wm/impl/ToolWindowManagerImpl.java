@@ -483,9 +483,9 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       }
     }
 
-    myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter() {
+    myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
       @Override
-      public void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+      public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
         ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
 
         boolean extensionVal = newExtension.isEnabled();

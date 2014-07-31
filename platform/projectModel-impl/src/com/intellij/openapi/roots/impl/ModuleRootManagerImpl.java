@@ -52,14 +52,13 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
 
   public ModuleRootManagerImpl(Module module,
-                               DirectoryIndex directoryIndex,
                                ProjectRootManagerImpl projectRootManager,
                                VirtualFilePointerManager filePointerManager) {
     myModule = module;
     myProjectRootManager = projectRootManager;
     myFilePointerManager = filePointerManager;
 
-    myRootModel = new RootModelImpl(this, myProjectRootManager, myFilePointerManager);
+    myRootModel = new RootModelImpl(this, myProjectRootManager);
     myOrderRootsCache = new OrderRootsCache(module);
   }
 
@@ -113,7 +112,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @NotNull
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor, myFilePointerManager, myProjectRootManager) {
+    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor, myProjectRootManager) {
       @Override
       public void dispose() {
         super.dispose();
@@ -334,6 +333,32 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.getSourceRoots(includingTests);
   }
 
+  @NotNull
+  @Override
+  public ModuleRootLayer getCurrentLayer() {
+    return myRootModel.getCurrentLayer();
+  }
+
+  @NotNull
+  @Override
+  public String getCurrentLayerName() {
+    return myRootModel.getCurrentLayerName();
+  }
+
+  @Nullable
+  @Override
+  public ModuleRootLayer findLayerByName(@NotNull String name) {
+    LOGGER.assertTrue(!myIsDisposed);
+    return myRootModel.findLayerByName(name);
+  }
+
+  @NotNull
+  @Override
+  public Map<String, ModuleRootLayer> getLayers() {
+    LOGGER.assertTrue(!myIsDisposed);
+    return myRootModel.getLayers();
+  }
+
   @Override
   public void projectOpened() {
   }
@@ -347,13 +372,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     isModuleAdded = true;
   }
 
-
   public void dropCaches() {
     myOrderRootsCache.clearCache();
   }
 
   public void saveState(Element parent) {
-    myRootModel.writeExternal(parent);
+    myRootModel.putState(parent);
   }
 
   public void loadState(Element parent) {
@@ -362,7 +386,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   protected void loadState(Element element, boolean throwEvent) {
     try {
-      final RootModelImpl newModel = new RootModelImpl(element, this, myProjectRootManager, myFilePointerManager, throwEvent);
+      final RootModelImpl newModel = new RootModelImpl(element, this, myProjectRootManager, throwEvent);
 
       if (throwEvent) {
         makeRootsChange(new Runnable() {
@@ -375,8 +399,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
       else {
         myRootModel = newModel;
       }
-
-      assert !myRootModel.isOrderEntryDisposed();
     }
     catch (InvalidDataException e) {
       LOGGER.error(e);

@@ -22,7 +22,6 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import org.consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
@@ -44,35 +43,35 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   @NotNull private DependencyScope myScope;
   private boolean myProductionOnTestDependency;
 
-  ModuleOrderEntryImpl(@NotNull Module module, @NotNull RootModelImpl rootModel) {
-    super(rootModel);
+  ModuleOrderEntryImpl(@NotNull Module module, @NotNull ModuleRootLayerImpl rootLayer) {
+    super(rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(module);
     myScope = DependencyScope.COMPILE;
   }
 
-  ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull RootModelImpl rootModel) {
-    super(rootModel);
-    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), moduleName);
+  ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer) {
+    super(rootLayer);
+    myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), moduleName);
     myScope = DependencyScope.COMPILE;
   }
 
-  ModuleOrderEntryImpl(Element element, RootModelImpl rootModel) throws InvalidDataException {
-    super(rootModel);
+  ModuleOrderEntryImpl(Element element, ModuleRootLayerImpl rootLayer) throws InvalidDataException {
+    super(rootLayer);
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
     final String moduleName = element.getAttributeValue(MODULE_NAME_ATTR);
     if (moduleName == null) {
       throw new InvalidDataException();
     }
 
-    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), moduleName);
+    myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), moduleName);
     myScope = DependencyScope.readExternal(element);
     myProductionOnTestDependency = element.getAttributeValue(PRODUCTION_ON_TEST_ATTRIBUTE) != null;
   }
 
-  private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, RootModelImpl rootModel) {
-    super(rootModel);
+  private ModuleOrderEntryImpl(ModuleOrderEntryImpl that, ModuleRootLayerImpl rootLayer) {
+    super(rootLayer);
     final NamedPointer<Module> thatModule = that.myModulePointer;
-    myModulePointer = ModuleUtilCore.createPointer(rootModel.getProject(), thatModule.getName());
+    myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), thatModule.getName());
     myExported = that.myExported;
     myProductionOnTestDependency = that.myProductionOnTestDependency;
     myScope = that.myScope;
@@ -161,9 +160,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  public OrderEntry cloneEntry(RootModelImpl rootModel,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
     return new ModuleOrderEntryImpl(this, rootModel);
   }
 

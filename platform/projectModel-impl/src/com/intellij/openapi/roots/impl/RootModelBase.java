@@ -18,20 +18,11 @@ package com.intellij.openapi.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author nik
@@ -40,181 +31,136 @@ public abstract class RootModelBase implements ModuleRootModel {
   @Override
   @NotNull
   public VirtualFile[] getContentRoots() {
-    final ArrayList<VirtualFile> result = new ArrayList<VirtualFile>();
-
-    for (ContentEntry contentEntry : getContent()) {
-      final VirtualFile file = contentEntry.getFile();
-      if (file != null) {
-        result.add(file);
-      }
-    }
-    return VfsUtilCore.toVirtualFileArray(result);
+    return getCurrentLayer().getContentRoots();
   }
 
   @Override
   @NotNull
   public String[] getContentRootUrls() {
-    if (getContent().isEmpty()) return ArrayUtil.EMPTY_STRING_ARRAY;
-    final ArrayList<String> result = new ArrayList<String>(getContent().size());
-
-    for (ContentEntry contentEntry : getContent()) {
-      result.add(contentEntry.getUrl());
-    }
-
-    return ArrayUtil.toStringArray(result);
+    return getCurrentLayer().getContentRootUrls();
   }
 
   @Override
   @NotNull
   public String[] getExcludeRootUrls() {
-    final List<String> result = new SmartList<String>();
-    for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
-    }
-    return ArrayUtil.toStringArray(result);
+    return getCurrentLayer().getExcludeRootUrls();
   }
 
   @Override
   @NotNull
   public VirtualFile[] getExcludeRoots() {
-    final List<VirtualFile> result = new SmartList<VirtualFile>();
-    for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderFiles(ContentFolderScopes.of(ExcludedContentFolderTypeProvider.getInstance())));
-    }
-    return VfsUtilCore.toVirtualFileArray(result);
+    return getCurrentLayer().getExcludeRoots();
   }
 
   @NotNull
   @Override
   public String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<String> result = new SmartList<String>();
-    for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderUrls(predicate));
-    }
-    return ArrayUtil.toStringArray(result);
+    return getCurrentLayer().getContentFolderUrls(predicate);
   }
 
   @NotNull
   @Override
   public VirtualFile[] getContentFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<VirtualFile> result = new SmartList<VirtualFile>();
-    for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolderFiles(predicate));
-    }
-    return VfsUtilCore.toVirtualFileArray(result);
+    return getCurrentLayer().getContentFolderFiles(predicate);
   }
 
   @NotNull
   @Override
   public ContentFolder[] getContentFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<ContentFolder> result = new SmartList<ContentFolder>();
-    for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, contentEntry.getFolders(predicate));
-    }
-    return result.isEmpty() ? ContentFolder.EMPTY_ARRAY : result.toArray(new ContentFolder[result.size()]);
+    return getCurrentLayer().getContentFolders(predicate);
   }
 
   @Override
   @NotNull
   public String[] getSourceRootUrls() {
-    return getSourceRootUrls(true);
+    return getCurrentLayer().getSourceRootUrls();
   }
 
   @Override
   @NotNull
   public String[] getSourceRootUrls(boolean includingTests) {
-    List<String> result = new SmartList<String>();
-    for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests
-                                 ? contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest())
-                                 : contentEntry.getFolderUrls(ContentFolderScopes.production()));
-    }
-    return ArrayUtil.toStringArray(result);
+    return getCurrentLayer().getSourceRootUrls(includingTests);
   }
 
   @Override
   @NotNull
   public VirtualFile[] getSourceRoots() {
-    return getSourceRoots(true);
+    return getCurrentLayer().getSourceRoots();
   }
 
   @Override
   @NotNull
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
-    List<VirtualFile> result = new SmartList<VirtualFile>();
-    for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests
-                                 ? contentEntry.getFolderFiles(ContentFolderScopes.productionAndTest())
-                                 : contentEntry.getFolderFiles(ContentFolderScopes.production()));
-    }
-    return VfsUtilCore.toVirtualFileArray(result);
+    return getCurrentLayer().getSourceRoots(includingTests);
   }
 
   @Override
   public ContentEntry[] getContentEntries() {
-    final Collection<ContentEntry> content = getContent();
-    return content.toArray(new ContentEntry[content.size()]);
+    return getCurrentLayer().getContentEntries();
   }
-
-  protected abstract Collection<ContentEntry> getContent();
 
   @NotNull
   @Override
   public OrderEnumerator orderEntries() {
-    return new ModuleOrderEnumerator(this, null);
+    return getCurrentLayer().orderEntries();
   }
 
   @Override
   public <R> R processOrder(RootPolicy<R> policy, R initialValue) {
-    R result = initialValue;
-    for (OrderEntry orderEntry : getOrderEntries()) {
-      result = orderEntry.accept(policy, result);
-    }
-    return result;
+    return getCurrentLayer().processOrder(policy, initialValue);
   }
 
   @Override
   @NotNull
   public String[] getDependencyModuleNames() {
-    List<String> result = orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries()
-      .process(new CollectDependentModules(), new ArrayList<String>());
-    return ArrayUtil.toStringArray(result);
+    return getCurrentLayer().getDependencyModuleNames();
   }
 
   @Override
   @NotNull
   public Module[] getModuleDependencies() {
-    return getModuleDependencies(true);
+   return getCurrentLayer().getModuleDependencies();
   }
 
   @Override
   @NotNull
   public Module[] getModuleDependencies(boolean includeTests) {
-    final List<Module> result = new ArrayList<Module>();
-
-    for (OrderEntry entry : getOrderEntries()) {
-      if (entry instanceof ModuleOrderEntry) {
-        ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)entry;
-        final DependencyScope scope = moduleOrderEntry.getScope();
-        if (!includeTests && !scope.isForProductionCompile() && !scope.isForProductionRuntime()) {
-          continue;
-        }
-        final Module module1 = moduleOrderEntry.getModule();
-        if (module1 != null) {
-          result.add(module1);
-        }
-      }
-    }
-
-    return result.isEmpty() ? Module.EMPTY_ARRAY : ContainerUtil.toArray(result, new Module[result.size()]);
+    return getCurrentLayer().getModuleDependencies(includeTests);
   }
 
-  private static class CollectDependentModules extends RootPolicy<List<String>> {
-    @NotNull
-    @Override
-    public List<String> visitModuleOrderEntry(@NotNull ModuleOrderEntry moduleOrderEntry, @NotNull List<String> arrayList) {
-      arrayList.add(moduleOrderEntry.getModuleName());
-      return arrayList;
-    }
+  @Override
+  @NotNull
+  public OrderEntry[] getOrderEntries() {
+    return getCurrentLayer().getOrderEntries();
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+    return getCurrentLayer().getExtension(clazz);
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension> T getExtension(@NotNull String key) {
+    return getCurrentLayer().getExtension(key);
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+    return getCurrentLayer().getExtensionWithoutCheck(clazz);
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key) {
+    return getCurrentLayer().getExtensionWithoutCheck(key);
+  }
+
+  @NotNull
+  @Override
+  public ModuleExtension[] getExtensions() {
+    return getCurrentLayer().getExtensions();
   }
 }

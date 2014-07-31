@@ -38,7 +38,7 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
   @Nullable
   private RootProvider myCurrentlySubscribedRootProvider = null;
 
-  LibraryOrderEntryBaseImpl(@NotNull RootModelImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
+  LibraryOrderEntryBaseImpl(@NotNull ModuleRootLayerImpl rootModel, @NotNull ProjectRootManagerImpl instanceImpl) {
     super(rootModel);
     myProjectRootManagerImpl = instanceImpl;
   }

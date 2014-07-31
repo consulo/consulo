@@ -38,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
@@ -66,6 +67,12 @@ public class ExtensionEditor extends ModuleElementsEditor {
     myOutputEditor = outputEditor;
     myClasspathEditor = classpathEditor;
     myContentEntriesEditor = contentEntriesEditor;
+  }
+
+  @Override
+  public void moduleStateChanged() {
+    mySplitter.setSecondComponent(null);
+    myTree.setModel(new DefaultTreeModel(new ExtensionCheckedTreeNode(null, myState, this)));
   }
 
   @NotNull

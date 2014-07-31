@@ -257,7 +257,25 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
   @Override
   public void moduleStateChanged() {
-    if (myRootTreeEditor != null) { //in order to update exclude output root if it is under content root
+    myEntryToEditorMap.clear();
+    myEditorsPanel.removeAll();
+
+    final ModifiableRootModel model = getModel();
+    if (model != null) {
+      final ContentEntry[] contentEntries = model.getContentEntries();
+      if (contentEntries.length > 0) {
+        for (final ContentEntry contentEntry : contentEntries) {
+          addContentEntryPanel(contentEntry);
+        }
+        selectContentEntry(contentEntries[0]);
+      }
+      else {
+        selectContentEntry(null);
+        myRootTreeEditor.setContentEntryEditor(null);
+      }
+    }
+
+    if(myRootTreeEditor != null) {
       myRootTreeEditor.update();
     }
   }

@@ -221,11 +221,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
     return myGenericSettingsPanel;
   }
 
-  public void moduleCountChanged() {
-    updateOrderEntriesInEditors();
-  }
-
-  private void updateOrderEntriesInEditors() {
+  public void fireModuleStateChanged() {
     if (getModule() != null) { //module with attached module libraries was deleted
       getPanel();  //init editor if needed
       for (final ModuleConfigurationEditor myEditor : myEditors) {
@@ -297,8 +293,19 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
   private class ModifiableRootModelInvocationHandler implements InvocationHandler {
     private final ModifiableRootModel myDelegateModel;
     @NonNls private final Set<String> myCheckedNames = new HashSet<String>(
-      Arrays.asList("addOrderEntry", "addLibraryEntry", "addInvalidLibrary", "addModuleOrderEntry", "addInvalidModuleEntry",
-                    "removeOrderEntry", "setSdk", "inheritSdk", "inheritCompilerOutputPath", "setExcludeOutput", "replaceEntryOfType"));
+      Arrays.asList("addOrderEntry",
+                    "addLibraryEntry",
+                    "addInvalidLibrary",
+                    "addModuleOrderEntry",
+                    "addInvalidModuleEntry",
+                    "addContentEntry",
+                    "removeContentEntry",
+                    "removeOrderEntry",
+                    "addModuleExtensionSdkEntry",
+                    "addLayer",
+                    "removeLayer",
+                    "setCurrentLayer",
+                    "replaceEntryOfType"));
 
     ModifiableRootModelInvocationHandler(ModifiableRootModel model) {
       myDelegateModel = model;
@@ -320,7 +327,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
       }
       finally {
         if (needUpdate) {
-          updateOrderEntriesInEditors();
+          fireModuleStateChanged();
         }
       }
     }
@@ -363,7 +370,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
       }
       finally {
         if (needUpdate) {
-          updateOrderEntriesInEditors();
+          fireModuleStateChanged();
         }
       }
     }
@@ -420,7 +427,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
       }
       finally {
         if (needUpdate) {
-          updateOrderEntriesInEditors();
+          fireModuleStateChanged();
         }
       }
     }
@@ -464,7 +471,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
       }
       finally {
         if (needUpdate) {
-          updateOrderEntriesInEditors();
+          fireModuleStateChanged();
         }
       }
     }

@@ -17,7 +17,7 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.impl.RootModelImpl;
+import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
@@ -31,7 +31,7 @@ import java.util.List;
  *  @author dsl
  */
 public interface LibraryEx extends Library {
-  Library cloneLibrary(RootModelImpl rootModel);
+  Library cloneLibrary(ModuleRootLayerImpl rootModel);
 
   List<String> getInvalidRootUrls(OrderRootType type);
 
