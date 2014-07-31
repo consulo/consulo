@@ -1365,12 +1365,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
       watchProject(project);
 
-      conn.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter() {
+      conn.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
         @Override
-        public void afterExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+        public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
           for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME
                   .getExtensions()) {
-            if(helper.isModuleExtensionAffectToCompilation(oldExtension)) {
+            if(helper.isModuleExtensionAffectToCompilation(newExtension)) {
               myForceCompiling = true;
               break;
             }

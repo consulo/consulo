@@ -262,6 +262,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ProjectTopics.MODULE_LAYERS);
 
+    boolean extensionListenerAlreadyCalled = false;
     if(!Comparing.equal(sourceModel.myCurrentLayerName, myCurrentLayerName)) {
       ModuleRootLayerImpl oldLayer = sourceModel.getCurrentLayer();
       String oldName = sourceModel.getCurrentLayerName();
@@ -269,6 +270,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       sourceModel.setCurrentLayerSafe(myCurrentLayerName);
 
       layerListener.currentLayerChanged(getModule(), oldName, oldLayer, myCurrentLayerName, getCurrentLayer());
+      extensionListenerAlreadyCalled = true;
     }
 
     // first we commit changed and new layers
@@ -282,7 +284,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         sourceModel.myLayers.put(entry.getKey(), toCommit);
       }
 
-      if(entry.getValue().copy(toCommit, myCurrentLayerName.equals(entry.getKey()))) {
+      if(entry.getValue().copy(toCommit, !extensionListenerAlreadyCalled && myCurrentLayerName.equals(entry.getKey()))) {
         if(sourceModuleLayer == null) {
           layerListener.layerAdded(getModule(), toCommit);
         }

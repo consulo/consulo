@@ -311,15 +311,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
       ModuleExtension originalExtension = toSet.getExtensionWithoutCheck(extension.getId());
       assert originalExtension != null;
       if (mutableExtension.isModified(originalExtension)) {
+
         if (notifyExtensionListener) {
           moduleExtensionChangeListener.beforeExtensionChanged(originalExtension, mutableExtension);
         }
 
         originalExtension.commit(mutableExtension);
-
-        if (notifyExtensionListener) {
-          moduleExtensionChangeListener.afterExtensionChanged(originalExtension, mutableExtension);
-        }
 
         changed = true;
       }

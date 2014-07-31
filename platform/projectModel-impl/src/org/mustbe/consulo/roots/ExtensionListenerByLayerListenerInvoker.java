@@ -71,7 +71,6 @@ public class ExtensionListenerByLayerListenerInvoker extends AbstractProjectComp
 
             for (Couple<ModuleExtension> couple : list) {
               moduleExtensionChangeListener.beforeExtensionChanged(couple.getFirst(), couple.getSecond());
-              moduleExtensionChangeListener.afterExtensionChanged(couple.getFirst(), couple.getSecond());
             }
           }
         }, ModalityState.NON_MODAL);
