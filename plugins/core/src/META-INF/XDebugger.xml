@@ -1,0 +1,65 @@
+<!--
+  ~ Copyright 2013-2014 must-be.org
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<idea-plugin>
+  <project-components>
+    <component>
+      <interface-class>com.intellij.xdebugger.XDebuggerManager</interface-class>
+      <implementation-class>com.intellij.xdebugger.impl.XDebuggerManagerImpl</implementation-class>
+    </component>
+  </project-components>
+
+  <extensionPoints>
+    <extensionPoint name="xdebugger.settings" interface="com.intellij.xdebugger.settings.XDebuggerSettings"/>
+    <extensionPoint name="xdebugger.breakpointType" interface="com.intellij.xdebugger.breakpoints.XBreakpointType"/>
+    <extensionPoint name="xdebugger.debuggerSupport" interface="com.intellij.xdebugger.impl.DebuggerSupport"/>
+    <extensionPoint name="xdebugger.configurableProvider" interface="com.intellij.xdebugger.settings.DebuggerConfigurableProvider"/>
+  </extensionPoints>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
+    <favoritesListProvider implementation="com.intellij.xdebugger.impl.breakpoints.BreakpointsFavoriteListProvider"/>
+
+    <executor implementation="com.intellij.execution.executors.DefaultDebugExecutor" order="first,after run"/>
+
+    <applicationConfigurable dynamic="true" key="debugger.configurable.display.name" bundle="messages.XDebuggerBundle"
+                             instance="com.intellij.xdebugger.impl.settings.DebuggerConfigurable"/>
+
+    <colorSettingsPage implementation="com.intellij.xdebugger.impl.ui.DebuggerColorsPage"/>
+
+    <applicationService serviceInterface="com.intellij.xdebugger.settings.XDebuggerSettingsManager"
+                        serviceImplementation="com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager"/>
+
+    <applicationService serviceInterface="com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager"
+                        serviceImplementation="com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager"/>
+
+    <applicationService serviceInterface="com.intellij.xdebugger.XDebuggerUtil"
+                        serviceImplementation="com.intellij.xdebugger.impl.XDebuggerUtilImpl"/>
+
+    <projectService serviceImplementation="com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager"/>
+
+    <projectService serviceInterface="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"
+                    serviceImplementation="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"/>
+
+    <projectService serviceInterface="com.intellij.xdebugger.impl.XDebuggerHistoryManager"
+                    serviceImplementation="com.intellij.xdebugger.impl.XDebuggerHistoryManager"/>
+
+    <customizableActionGroupProvider implementation="com.intellij.xdebugger.impl.ui.XDebugTabCustomizableActionGroupProvider"/>
+
+    <xdebugger.debuggerSupport implementation="com.intellij.xdebugger.impl.XDebuggerSupport" order="first"/>
+
+    <xdebugger.configurableProvider implementation="com.intellij.xdebugger.impl.settings.XDebuggerConfigurableProvider" order="first"/>
+  </extensions>
+</idea-plugin>
