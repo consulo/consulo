@@ -73,6 +73,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   public void moduleStateChanged() {
     mySplitter.setSecondComponent(null);
     myTree.setModel(new DefaultTreeModel(new ExtensionCheckedTreeNode(null, myState, this)));
+    TreeUtil.expandAll(myTree);
   }
 
   @NotNull
