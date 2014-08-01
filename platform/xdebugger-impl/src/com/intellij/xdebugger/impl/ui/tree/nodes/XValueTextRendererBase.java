@@ -50,5 +50,10 @@ public abstract class XValueTextRendererBase implements XValuePresentation.XValu
     renderRawValue(value, DefaultLanguageHighlighterColors.KEYWORD);
   }
 
+  @Override
+  public final void renderValue(@NotNull String value, @NotNull TextAttributesKey key) {
+    renderRawValue(value, key);
+  }
+
   protected abstract void renderRawValue(@NotNull String value, @NotNull TextAttributesKey key);
 }

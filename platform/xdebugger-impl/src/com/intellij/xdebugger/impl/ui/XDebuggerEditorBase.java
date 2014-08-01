@@ -109,9 +109,7 @@ public abstract class XDebuggerEditorBase {
     }
 
     DataContext dataContext = DataManager.getInstance().getDataContext(getComponent());
-    return JBPopupFactory.getInstance().createActionGroupPopup("Choose language", actions, dataContext,
-                                                               JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                                               false);
+    return JBPopupFactory.getInstance().createActionGroupPopup("Choose language", actions, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
   }
 
   protected JPanel addChooseFactoryLabel(JComponent component, boolean top) {
@@ -222,7 +220,7 @@ public abstract class XDebuggerEditorBase {
   }
 
   public boolean canGoBackward() {
-    return myHistoryIndex < getRecentExpressions().size()-1;
+    return myHistoryIndex < getRecentExpressions().size() - 1;
   }
 
   public boolean canGoForward() {

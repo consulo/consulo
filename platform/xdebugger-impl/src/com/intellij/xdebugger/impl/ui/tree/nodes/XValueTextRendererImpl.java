@@ -56,6 +56,11 @@ class XValueTextRendererImpl extends XValueTextRendererBase {
   }
 
   @Override
+  public void renderError(@NotNull String error) {
+    myText.append(error, SimpleTextAttributes.ERROR_ATTRIBUTES);
+  }
+
+  @Override
   public void renderComment(@NotNull String comment) {
     myText.append(comment, SimpleTextAttributes.GRAY_ATTRIBUTES);
   }
