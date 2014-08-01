@@ -21,12 +21,15 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
-import com.intellij.ide.projectView.impl.nodes.PackageElement;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
+import com.intellij.ide.projectView.impl.nodes.PackageElement;
+import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiDirectory;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
@@ -65,6 +68,15 @@ public class DefaultProjectViewDirectoryHelper extends BaseProjectViewDirectoryH
   public String getNodeName(final ViewSettings settings, final Object parentValue, final PsiDirectory directory) {
     PsiPackage aPackage = PsiPackageManager.getInstance(getProject()).findAnyPackage(directory);
 
+    String name = directory.getName();
+    VirtualFile dirFile = directory.getVirtualFile();
+    if(dirFile.getFileSystem() instanceof ArchiveFileSystem && dirFile.getParent() == null) {
+      VirtualFile virtualFileForArchive = ArchiveVfsUtil.getVirtualFileForArchive(dirFile);
+      if(virtualFileForArchive != null) {
+        name = virtualFileForArchive.getName();
+      }
+    }
+
     PsiPackage parentPackage;
     if (!ProjectRootsUtil.isSourceRoot(directory) && aPackage != null && !aPackage.getQualifiedName().isEmpty() &&
                               parentValue instanceof PsiDirectory) {
@@ -79,7 +91,7 @@ public class DefaultProjectViewDirectoryHelper extends BaseProjectViewDirectoryH
       parentPackage = null;
     }
 
-    return TreeViewUtil.getNodeName(settings, aPackage, parentPackage, directory.getName(), isShowFQName(settings, parentValue, directory));
+    return TreeViewUtil.getNodeName(settings, aPackage, parentPackage, name, isShowFQName(settings, parentValue, directory));
   }
 
   @Override
