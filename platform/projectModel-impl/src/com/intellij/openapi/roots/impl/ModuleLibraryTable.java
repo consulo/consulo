@@ -183,7 +183,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
 
   @Override
   public boolean isChanged() {
-    return myRootLayer.isChanged();
+    return myRootLayer.getRootModel().isChanged();
   }
 
   @Override

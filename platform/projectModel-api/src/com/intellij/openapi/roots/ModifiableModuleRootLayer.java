@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
  * @since 29.07.14
  */
 public interface ModifiableModuleRootLayer extends ModuleRootLayer {
-  boolean isChanged();
 
   /**
    * Adds the specified directory as a content root.

@@ -175,8 +175,6 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   private OrderEntry[] myCachedOrderEntries;
   private final Set<ModuleExtension<?>> myExtensions = new LinkedHashSet<ModuleExtension<?>>();
   private final List<Element> myUnknownModuleExtensions = new SmartList<Element>();
-  @Nullable
-  private ModuleRootLayerImpl myOriginalLayer;
   private RootModelImpl myRootModel;
   private ProjectRootManagerImpl myProjectRootManager;
   @NotNull
@@ -186,7 +184,6 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer,
                              @NotNull RootModelImpl rootModel,
                              @NotNull ProjectRootManagerImpl projectRootManager) {
-    myOriginalLayer = originalLayer;
     myRootModel = rootModel;
     myProjectRootManager = projectRootManager;
     myModuleLibraryTable = new ModuleLibraryTable(this, projectRootManager);
@@ -293,12 +290,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @SuppressWarnings("unchecked")
   public boolean copy(@NotNull ModuleRootLayerImpl toSet, boolean notifyExtensionListener) {
     boolean changed = false;
-    if (areOrderEntriesChanged()) {
+    if (areOrderEntriesChanged(toSet)) {
       toSet.setOrderEntriesFrom(this);
       changed = true;
     }
 
-    if (areContentEntriesChanged()) {
+    if (areContentEntriesChanged(toSet)) {
       toSet.setContentEntriesFrom(this);
       changed = true;
     }
@@ -386,19 +383,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return e;
   }
 
-  public boolean areContentEntriesChanged() {
-    if (myOriginalLayer == null) {
-      return true;
-    }
-    return ArrayUtil.lexicographicCompare(getContentEntries(), myOriginalLayer.getContentEntries()) != 0;
+  public boolean areContentEntriesChanged(@NotNull ModuleRootLayerImpl original) {
+    return ArrayUtil.lexicographicCompare(getContentEntries(), original.getContentEntries()) != 0;
   }
 
-  public boolean areOrderEntriesChanged() {
-    if (myOriginalLayer == null) {
-      return true;
-    }
+  public boolean areOrderEntriesChanged(@NotNull ModuleRootLayerImpl original) {
     OrderEntry[] orderEntries = getOrderEntries();
-    OrderEntry[] sourceOrderEntries = myOriginalLayer.getOrderEntries();
+    OrderEntry[] sourceOrderEntries = original.getOrderEntries();
     if (orderEntries.length != sourceOrderEntries.length) return true;
     for (int i = 0; i < orderEntries.length; i++) {
       OrderEntry orderEntry = orderEntries[i];
@@ -414,13 +405,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return myRootModel;
   }
 
-  public boolean areExtensionsChanged() {
-    if (myOriginalLayer == null) {
-      return true;
-    }
+  public boolean areExtensionsChanged(@NotNull ModuleRootLayerImpl original) {
     for (ModuleExtension<?> extension : myExtensions) {
       MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
-      ModuleExtension<?> originalExtension = myOriginalLayer.getExtensionWithoutCheck(extension.getId());
+      ModuleExtension<?> originalExtension = original.getExtensionWithoutCheck(extension.getId());
       assert originalExtension != null;
       if (mutableExtension.isModified(originalExtension)) {
         return true;
@@ -498,12 +486,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return getModule().getProject();
   }
 
-  @Override
-  public boolean isChanged() {
-    if (myOriginalLayer == null) {
-      return true;
-    }
-    return areExtensionsChanged() || areOrderEntriesChanged() || areContentEntriesChanged();
+  public boolean isChanged(@NotNull ModuleRootLayerImpl original) {
+    return areExtensionsChanged(original) || areOrderEntriesChanged(original) || areContentEntriesChanged(original);
   }
 
   @NotNull

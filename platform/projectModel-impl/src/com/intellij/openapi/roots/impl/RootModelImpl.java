@@ -379,12 +379,17 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       return true;
     }
 
-    for (ModuleRootLayerImpl moduleRootLayer : myLayers.values()) {
-      if (moduleRootLayer.isChanged()) {
+    for (Map.Entry<String, ModuleRootLayerImpl> entry : myLayers.entrySet()) {
+      ModuleRootLayerImpl sourceLayer = sourceModel.myLayers.get(entry.getKey());
+      // new layer
+      if(sourceLayer == null) {
+        return true;
+      }
+
+      if(entry.getValue().isChanged(sourceLayer)) {
         return true;
       }
     }
-
     // check for deleted layers
     for (String layerName : sourceModel.myLayers.keySet()) {
       ModuleRootLayerImpl layer = myLayers.get(layerName);
