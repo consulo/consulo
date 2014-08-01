@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * Contains utility methods for core formatter processing.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/28/11 4:16 PM
  */
@@ -35,7 +35,7 @@ public class CoreFormatterUtil {
 
   private CoreFormatterUtil() {
   }
-  
+
   @NotNull
   public static FormattingModel buildModel(@NotNull FormattingModelBuilder builder,
                                            @NotNull PsiElement element,
@@ -48,11 +48,11 @@ public class CoreFormatterUtil {
       return builder.createModel(element, settings);
     }
   }
-  
+
   /**
    * Checks if there is an {@link AlignmentImpl} object that should be used during adjusting
    * {@link AbstractBlockWrapper#getWhiteSpace() white space} of the given block.
-   * 
+   *
    * @param block     target block
    * @return          alignment object to use during adjusting white space of the given block if any; <code>null</code> otherwise
    */
@@ -72,7 +72,7 @@ public class CoreFormatterUtil {
       }
     }
   }
-  
+
   /**
    * Calculates number of non-line feed symbols before the given wrapped block.
    * <p/>
@@ -90,7 +90,7 @@ public class CoreFormatterUtil {
    * @param block target wrapped block to be used at a boundary during counting non-line feed symbols to the left of it
    * @return non-line feed symbols to the left of the given wrapped block
    */
-  public static int getOffsetBefore(@Nullable LeafBlockWrapper block) {
+  public static int getStartColumn(@Nullable LeafBlockWrapper block) {
     if (block != null) {
       int result = 0;
       while (true) {
@@ -128,8 +128,8 @@ public class CoreFormatterUtil {
     }
     return null;
   }
-  
-    /**
+
+  /**
    * It's possible to configure alignment in a way to allow
    * {@link AlignmentFactory#createAlignment(boolean, Alignment.Anchor)}  backward shift}.
    * <p/>
@@ -197,9 +197,9 @@ public class CoreFormatterUtil {
   {
     Set<AbstractBlockWrapper> blocksBeforeCurrent = new HashSet<AbstractBlockWrapper>();
     for (
-      LeafBlockWrapper previousBlock = second.getPreviousBlock();
-      previousBlock != null;
-      previousBlock = previousBlock.getPreviousBlock())
+            LeafBlockWrapper previousBlock = second.getPreviousBlock();
+            previousBlock != null;
+            previousBlock = previousBlock.getPreviousBlock())
     {
       Set<AbstractBlockWrapper> blocks = alignmentMappings.get(previousBlock);
       if (blocks != null) {
@@ -212,9 +212,9 @@ public class CoreFormatterUtil {
     }
 
     for (
-      LeafBlockWrapper next = first.getNextBlock();
-      next != null && !next.getWhiteSpace().containsLineFeeds();
-      next = next.getNextBlock())
+            LeafBlockWrapper next = first.getNextBlock();
+            next != null && !next.getWhiteSpace().containsLineFeeds();
+            next = next.getNextBlock())
     {
       if (blocksBeforeCurrent.contains(next)) {
         return false;

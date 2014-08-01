@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ import java.io.File;
 
 
 @State(
-  name = "CodeInsightSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml"
-    )}
+        name = "CodeInsightSettings",
+        storages = {
+                @Storage(
+                        file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml"
+                )}
 )
 public class CodeInsightSettings implements PersistentStateComponent<Element>, Cloneable, ExportableComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.CodeInsightSettings");
@@ -78,7 +78,6 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public boolean AUTO_POPUP_JAVADOC_INFO = false;
   public int JAVADOC_INFO_DELAY = 1000;
   public boolean AUTO_POPUP_COMPLETION_LOOKUP = true;
-  public int AUTO_LOOKUP_DELAY = 0;
 
   @MagicConstant(intValues = {ALL, NONE, FIRST_LETTER})
   public int COMPLETION_CASE_SENSITIVE = FIRST_LETTER;
@@ -101,7 +100,10 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
 
   public boolean SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO = false;
 
-  public boolean INDENTING_BACKSPACE = true;
+  @MagicConstant(intValues = {OFF, AUTOINDENT})
+  public int SMART_BACKSPACE = AUTOINDENT;
+  public static final int OFF = 0;
+  public static final int AUTOINDENT = 1;
 
   public boolean SMART_INDENT_ON_ENTER = true;
   public boolean INSERT_BRACE_ON_ENTER = true;
@@ -116,6 +118,7 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public boolean AUTOINSERT_PAIR_QUOTE = true;
   public boolean REFORMAT_BLOCK_ON_RBRACE = true;
 
+  @MagicConstant(intValues = {NO_REFORMAT, INDENT_BLOCK, INDENT_EACH_LINE, REFORMAT_BLOCK})
   public int REFORMAT_ON_PASTE = INDENT_EACH_LINE;
   public static final int NO_REFORMAT = 1;
   public static final int INDENT_BLOCK = 2;
@@ -124,7 +127,8 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
 
   public boolean INDENT_TO_CARET_ON_PASTE = false;
 
-  public int ADD_IMPORTS_ON_PASTE = ASK; // YES, NO or ASK
+  @MagicConstant(intValues = {YES, NO, ASK})
+  public int ADD_IMPORTS_ON_PASTE = ASK;
   public static final int YES = 1;
   public static final int NO = 2;
   public static final int ASK = 3;
@@ -142,9 +146,9 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
 
   @Property(surroundWithTag = false)
   @AbstractCollection(
-    surroundWithTag = false,
-    elementTag = "EXCLUDED_PACKAGE",
-    elementValueAttribute = "NAME")
+          surroundWithTag = false,
+          elementTag = "EXCLUDED_PACKAGE",
+          elementValueAttribute = "NAME")
   public String[] EXCLUDED_PACKAGES = ArrayUtil.EMPTY_STRING_ARRAY;
 
   @Override

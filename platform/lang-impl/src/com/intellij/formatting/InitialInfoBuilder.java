@@ -17,9 +17,11 @@
 package com.intellij.formatting;
 
 import com.intellij.diagnostic.LogMessageEx;
+import com.intellij.lang.LanguageFormatting;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
 import com.intellij.psi.formatter.ReadOnlyBlockInformationProvider;
@@ -43,15 +45,16 @@ class InitialInfoBuilder {
 
   private final Map<AbstractBlockWrapper, Block> myResult = new THashMap<AbstractBlockWrapper, Block>();
 
-  private final FormattingDocumentModel         myModel;
-  private final FormatTextRanges                myAffectedRanges;
-  private final int                             myPositionOfInterest;
+  private final FormattingDocumentModel               myModel;
+  private final FormatTextRanges                      myAffectedRanges;
+  private final int                                   myPositionOfInterest;
   @NotNull
-  private final FormattingProgressCallback myProgressCallback;
+  private final FormattingProgressCallback            myProgressCallback;
+  private final FormatterTagHandler                   myFormatterTagHandler;
+
   private final CommonCodeStyleSettings.IndentOptions myOptions;
 
   private final Stack<State> myStates = new Stack<State>();
-  
   private WhiteSpace                       myCurrentWhiteSpace;
   private CompositeBlockWrapper            myRootBlockWrapper;
   private LeafBlockWrapper                 myPreviousBlock;
@@ -59,12 +62,13 @@ class InitialInfoBuilder {
   private LeafBlockWrapper                 myLastTokenBlock;
   private SpacingImpl                      myCurrentSpaceProperty;
   private ReadOnlyBlockInformationProvider myReadOnlyBlockInformationProvider;
-  
-  private final static boolean INLINE_TABS_ENABLED = "true".equalsIgnoreCase(System.getProperty("inline.tabs.enabled"));  
-  private final static boolean DEBUG_ENABLED = false;
+  private boolean                          myReadOnlyMode;
+
+  private static final boolean INLINE_TABS_ENABLED = "true".equalsIgnoreCase(System.getProperty("inline.tabs.enabled"));
 
   private InitialInfoBuilder(final FormattingDocumentModel model,
-                             final FormatTextRanges affectedRanges,
+                             @Nullable final FormatTextRanges affectedRanges,
+                             @NotNull CodeStyleSettings settings,
                              final CommonCodeStyleSettings.IndentOptions options,
                              final int positionOfInterest,
                              @NotNull FormattingProgressCallback progressCallback)
@@ -75,23 +79,26 @@ class InitialInfoBuilder {
     myCurrentWhiteSpace = new WhiteSpace(0, true);
     myOptions = options;
     myPositionOfInterest = positionOfInterest;
+    myReadOnlyMode = false;
+    myFormatterTagHandler = new FormatterTagHandler(settings);
   }
 
   public static InitialInfoBuilder prepareToBuildBlocksSequentially(Block root,
                                                                     FormattingDocumentModel model,
-                                                                    final FormatTextRanges affectedRanges,
+                                                                    @Nullable final FormatTextRanges affectedRanges,
+                                                                    @NotNull CodeStyleSettings settings,
                                                                     final CommonCodeStyleSettings.IndentOptions options,
                                                                     int interestingOffset,
                                                                     @NotNull FormattingProgressCallback progressCallback)
   {
-    InitialInfoBuilder builder = new InitialInfoBuilder(model, affectedRanges, options, interestingOffset, progressCallback);
+    InitialInfoBuilder builder = new InitialInfoBuilder(model, affectedRanges, settings, options, interestingOffset, progressCallback);
     builder.buildFrom(root, 0, null, null, null, true);
     return builder;
   }
 
   /**
    * Asks current builder to wrap one more remaining {@link Block code block} (if any).
-   * 
+   *
    * @return    <code>true</code> if all blocks are wrapped; <code>false</code> otherwise
    */
   public boolean iteration() {
@@ -103,7 +110,7 @@ class InitialInfoBuilder {
     doIteration(state);
     return myStates.isEmpty();
   }
-  
+
   /**
    * Wraps given root block and all of its descendants and returns root block wrapper.
    * <p/>
@@ -138,19 +145,19 @@ class InitialInfoBuilder {
     if (parent != null) {
       if (textRange.getStartOffset() < parent.getStartOffset()) {
         assertInvalidRanges(
-          textRange.getStartOffset(),
-          parent.getStartOffset(),
-          myModel,
-          "child block start is less than parent block start"
+                textRange.getStartOffset(),
+                parent.getStartOffset(),
+                myModel,
+                "child block start is less than parent block start"
         );
       }
 
       if (textRange.getEndOffset() > parent.getEndOffset()) {
         assertInvalidRanges(
-          textRange.getEndOffset(),
-          parent.getEndOffset(),
-          myModel,
-          "child block end is after parent block end"
+                textRange.getEndOffset(),
+                parent.getEndOffset(),
+                myModel,
+                "child block end is after parent block end"
         );
       }
     }
@@ -164,13 +171,13 @@ class InitialInfoBuilder {
         myReadOnlyBlockInformationProvider = (ReadOnlyBlockInformationProvider)rootBlock;
       }
       if (isReadOnly) {
-        return processSimpleBlock(rootBlock, parent, isReadOnly, index, parentBlock);
+        return processSimpleBlock(rootBlock, parent, true, index, parentBlock);
       }
 
       final List<Block> subBlocks = rootBlock.getSubBlocks();
       if (subBlocks.isEmpty() || myReadOnlyBlockInformationProvider != null
                                  && myReadOnlyBlockInformationProvider.isReadOnly(rootBlock)) {
-        final AbstractBlockWrapper wrapper = processSimpleBlock(rootBlock, parent, isReadOnly, index, parentBlock);
+        final AbstractBlockWrapper wrapper = processSimpleBlock(rootBlock, parent, false, index, parentBlock);
         if (!subBlocks.isEmpty()) {
           wrapper.setIndent((IndentImpl)subBlocks.get(0).getIndent());
         }
@@ -184,10 +191,10 @@ class InitialInfoBuilder {
   }
 
   private CompositeBlockWrapper buildCompositeBlock(final Block rootBlock,
-                                   final CompositeBlockWrapper parent,
-                                   final int index,
-                                   final WrapImpl currentWrapParent,
-                                   boolean rootBlockIsRightBlock)
+                                                    @Nullable final CompositeBlockWrapper parent,
+                                                    final int index,
+                                                    @Nullable final WrapImpl currentWrapParent,
+                                                    boolean rootBlockIsRightBlock)
   {
     final CompositeBlockWrapper wrappedRootBlock = new CompositeBlockWrapper(rootBlock, myCurrentWhiteSpace, parent);
     if (index == 0) {
@@ -205,7 +212,7 @@ class InitialInfoBuilder {
       blocksMayBeOfInterest = true;
     }
     final boolean blocksAreReadOnly = rootBlock instanceof ReadOnlyBlockContainer || blocksMayBeOfInterest;
-    
+
     State state = new State(rootBlock, wrappedRootBlock, currentWrapParent, blocksAreReadOnly, rootBlockIsRightBlock);
     myStates.push(state);
     return wrappedRootBlock;
@@ -227,7 +234,7 @@ class InitialInfoBuilder {
     }
 
     final AbstractBlockWrapper wrapper = buildFrom(
-      block, childBlockIndex, state.wrappedBlock, state.parentBlockWrap, state.parentBlock, childBlockIsRightBlock
+            block, childBlockIndex, state.wrappedBlock, state.parentBlockWrap, state.parentBlock, childBlockIsRightBlock
     );
 
     if (wrapper.getIndent() == null) {
@@ -236,16 +243,18 @@ class InitialInfoBuilder {
     if (!state.readOnly) {
       try {
         subBlocks.set(childBlockIndex, null); // to prevent extra strong refs during model building
-      } catch (Throwable ex) {} // read-only blocks
+      } catch (Throwable ex) {
+        // read-only blocks
+      }
     }
-    
+
     if (state.childBlockProcessed(block, wrapper)) {
       while (!myStates.isEmpty() && myStates.peek().isProcessed()) {
         myStates.pop();
       }
     }
   }
-  
+
   private void setDefaultIndents(final List<AbstractBlockWrapper> list) {
     if (!list.isEmpty()) {
       for (AbstractBlockWrapper wrapper : list) {
@@ -257,10 +266,10 @@ class InitialInfoBuilder {
   }
 
   private AbstractBlockWrapper processSimpleBlock(final Block rootBlock,
-                                                  final CompositeBlockWrapper parent,
+                                                  @Nullable final CompositeBlockWrapper parent,
                                                   final boolean readOnly,
                                                   final int index,
-                                                  Block parentBlock) 
+                                                  @Nullable Block parentBlock)
   {
     LeafBlockWrapper result = doProcessSimpleBlock(rootBlock, parent, readOnly, index, parentBlock);
     myProgressCallback.afterWrappingBlock(result);
@@ -268,27 +277,38 @@ class InitialInfoBuilder {
   }
 
   private LeafBlockWrapper doProcessSimpleBlock(final Block rootBlock,
-                                                final CompositeBlockWrapper parent,
+                                                @Nullable final CompositeBlockWrapper parent,
                                                 final boolean readOnly,
                                                 final int index,
-                                                Block parentBlock)
+                                                @Nullable Block parentBlock)
   {
     if (!INLINE_TABS_ENABLED && !myCurrentWhiteSpace.containsLineFeeds()) {
       myCurrentWhiteSpace.setForceSkipTabulationsUsage(true);
     }
     final LeafBlockWrapper info =
-      new LeafBlockWrapper(rootBlock, parent, myCurrentWhiteSpace, myModel, myOptions, myPreviousBlock, readOnly);
+            new LeafBlockWrapper(rootBlock, parent, myCurrentWhiteSpace, myModel, myOptions, myPreviousBlock, readOnly);
     if (index == 0) {
       info.arrangeParentTextRange();
+    }
+
+    switch (myFormatterTagHandler.getFormatterTag(rootBlock)) {
+      case ON:
+        myReadOnlyMode = false;
+        break;
+      case OFF:
+        myReadOnlyMode = true;
+        break;
+      case NONE:
+        break;
     }
 
     TextRange textRange = rootBlock.getTextRange();
     if (textRange.getLength() == 0) {
       assertInvalidRanges(
-        textRange.getStartOffset(),
-        textRange.getEndOffset(),
-        myModel,
-        "empty block"
+              textRange.getStartOffset(),
+              textRange.getEndOffset(),
+              myModel,
+              "empty block"
       );
     }
     if (myPreviousBlock != null) {
@@ -308,6 +328,7 @@ class InitialInfoBuilder {
 
     info.setSpaceProperty(myCurrentSpaceProperty);
     myCurrentWhiteSpace = new WhiteSpace(textRange.getEndOffset(), false);
+    if (myReadOnlyMode) myCurrentWhiteSpace.setReadOnly(true);
     myPreviousBlock = info;
 
     if (myPositionOfInterest != -1 && (textRange.contains(myPositionOfInterest) || textRange.getEndOffset() == myPositionOfInterest)) {
@@ -361,7 +382,7 @@ class InitialInfoBuilder {
     int maxOffset = Math.min(Math.max(startOffset, newEndOffset) + 20, model.getTextLength());
 
     buffer.append("Affected text fragment:[").append(minOffset).append(",").append(maxOffset).append("] - '")
-      .append(model.getText(new TextRange(minOffset, maxOffset))).append("'\n");
+            .append(model.getText(new TextRange(minOffset, maxOffset))).append("'\n");
 
     final StringBuilder messageBuffer =  new StringBuilder();
     messageBuffer.append("Invalid ranges during formatting");
@@ -374,6 +395,7 @@ class InitialInfoBuilder {
     buffer.append("'\n");
     buffer.append("model (").append(model.getClass()).append("): ").append(model);
 
+    Throwable currentThrowable = new Throwable();
     if (model instanceof FormattingDocumentModelImpl) {
       final FormattingDocumentModelImpl modelImpl = (FormattingDocumentModelImpl)model;
       buffer.append("Psi Tree:\n");
@@ -384,9 +406,26 @@ class InitialInfoBuilder {
         DebugUtil.treeToBuffer(buffer, root.getNode(), 0, false, true, true, true);
       }
       buffer.append('\n');
+      currentThrowable = makeLanguageStackTrace(currentThrowable, file);
     }
 
-    LogMessageEx.error(LOG, messageBuffer.toString(), buffer.toString());
+    LogMessageEx.error(LOG, messageBuffer.toString(), currentThrowable, buffer.toString());
+  }
+
+  private static Throwable makeLanguageStackTrace(@NotNull Throwable currentThrowable, @NotNull PsiFile file) {
+    Throwable langThrowable = new Throwable();
+    FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
+    if (builder == null) return currentThrowable;
+    Class builderClass = builder.getClass();
+    Class declaringClass = builderClass.getDeclaringClass();
+    String guessedFileName = (declaringClass == null ? builderClass.getSimpleName() : declaringClass.getSimpleName())  + ".java";
+    StackTraceElement ste = new StackTraceElement(builder.getClass().getName(), "createModel", guessedFileName, 1);
+    StackTraceElement[] originalStackTrace = currentThrowable.getStackTrace();
+    StackTraceElement[] modifiedStackTrace = new StackTraceElement[originalStackTrace.length + 1];
+    System.arraycopy(originalStackTrace, 0, modifiedStackTrace, 1, originalStackTrace.length);
+    modifiedStackTrace[0] = ste;
+    langThrowable.setStackTrace(modifiedStackTrace);
+    return langThrowable;
   }
 
   /**
@@ -402,9 +441,9 @@ class InitialInfoBuilder {
     public final CompositeBlockWrapper wrappedBlock;
     public final boolean               readOnly;
     public final boolean               parentBlockIsRightBlock;
-    
+
     public Block previousBlock;
-    
+
     private final List<AbstractBlockWrapper> myWrappedChildren = new ArrayList<AbstractBlockWrapper>();
 
     State(@NotNull Block parentBlock, @NotNull CompositeBlockWrapper wrappedBlock, @Nullable WrapImpl parentBlockWrap,
@@ -423,17 +462,17 @@ class InitialInfoBuilder {
     public int getIndexOfChildBlockToProcess() {
       return myWrappedChildren.size();
     }
-    
+
     /**
      * Notifies current state that child block is processed.
-     * 
+     *
      * @return    <code>true</code> if all child blocks of the block denoted by the current state are processed;
      *            <code>false</code> otherwise
      */
     public boolean childBlockProcessed(@NotNull Block child, @NotNull AbstractBlockWrapper wrappedChild) {
       myWrappedChildren.add(wrappedChild);
       previousBlock = child;
-      
+
       int subBlocksNumber = parentBlock.getSubBlocks().size();
       if (myWrappedChildren.size() > subBlocksNumber) {
         return true;
