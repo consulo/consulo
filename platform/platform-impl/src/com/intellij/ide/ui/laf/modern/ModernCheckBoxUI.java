@@ -17,7 +17,6 @@ package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import sun.swing.SwingUtilities2;
@@ -26,17 +25,17 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.IconUIResource;
 import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.plaf.metal.MetalCheckBoxUI;
+import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.text.View;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * @author VISTALL
  * @since 02.08.14
+ *
+ * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaCheckBoxUI}
  */
-public class ModernCheckBoxUI extends MetalCheckBoxUI {
+public class ModernCheckBoxUI extends BasicRadioButtonUI {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ComponentUI createUI(JComponent c) {
     if (UIUtil.getParentOfType(CellRendererPane.class, c) != null) {
@@ -45,22 +44,10 @@ public class ModernCheckBoxUI extends MetalCheckBoxUI {
     return new ModernCheckBoxUI(c);
   }
 
-  private boolean myMouseInside;
+  private MouseEnterHandler myMouseEnterHandler;
 
   public ModernCheckBoxUI(final JComponent c) {
-    c.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseEntered(MouseEvent e) {
-        myMouseInside = true;
-        c.repaint();
-      }
-
-      @Override
-      public void mouseExited(MouseEvent e) {
-        myMouseInside = false;
-        c.repaint();
-      }
-    });
+    myMouseEnterHandler = new MouseEnterHandler(c);
   }
 
   @Override
@@ -116,11 +103,11 @@ public class ModernCheckBoxUI extends MetalCheckBoxUI {
 
       final boolean armed = b.getModel().isArmed();
 
-      if (myMouseInside) {
+      if (myMouseEnterHandler.isMouseInside()) {
         g.setColor(getFocusedBackgroundColor1(armed));
         g.fillRect(0, 0, w, h);
 
-        g.setColor(new JBColor(new Color(35, 121, 212), JBColor.blue));
+        g.setColor(ModernUIUtil.getSelectionBackground());
         g.drawRect(0, 0, w, h - 1);
       }
       else {
@@ -149,7 +136,7 @@ public class ModernCheckBoxUI extends MetalCheckBoxUI {
       if (view != null) {
         view.paint(g, textRect);
       } else {
-        g.setColor(model.isEnabled() ? b.getForeground() : getDisabledTextColor());
+        g.setColor(model.isEnabled() ? b.getForeground() : UIManager.getColor("CheckBox.disabledText"));
         SwingUtilities2.drawStringUnderlineCharAt(c, g, text, b.getDisplayedMnemonicIndex(), textRect.x, textRect.y + fm.getAscent());
       }
     }
