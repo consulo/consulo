@@ -103,7 +103,7 @@ public class ModernCheckBoxUI extends BasicRadioButtonUI {
 
       final boolean armed = b.getModel().isArmed();
 
-      if (myMouseEnterHandler.isMouseInside()) {
+      if (myMouseEnterHandler.isMouseEntered()) {
         g.setColor(getFocusedBackgroundColor1(armed));
         g.fillRect(0, 0, w, h);
 
@@ -111,7 +111,7 @@ public class ModernCheckBoxUI extends BasicRadioButtonUI {
         g.drawRect(0, 0, w, h - 1);
       }
       else {
-        g.setPaint(getBorderColor1(b.isEnabled()));
+        g.setPaint(ModernUIUtil.getBorderColor(c));
         g.drawRect(0, 0, w, h - 1);
 
         g.setPaint(getInactiveFillColor());

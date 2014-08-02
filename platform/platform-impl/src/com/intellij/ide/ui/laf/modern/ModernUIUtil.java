@@ -27,6 +27,21 @@ import java.awt.*;
 public class ModernUIUtil {
   @NotNull
   public static Color getSelectionBackground() {
-    return UIManager.getColor("modernWhite.selectionBackground");
+    return UIManager.getColor("Color.SelectionBackground");
+  }
+
+  @NotNull
+  public static Color getBorderColor(@NotNull Component component) {
+    return component.isEnabled() ? getActiveBorderColor() : getDisabledBorderColor();
+  }
+
+  @NotNull
+  public static Color getActiveBorderColor() {
+    return UIManager.getColor("Color.ActiveBorder");
+  }
+
+  @NotNull
+  public static Color getDisabledBorderColor() {
+    return UIManager.getColor("Color.DisabledBorder");
   }
 }

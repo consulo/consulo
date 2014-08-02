@@ -15,6 +15,8 @@
  */
 package com.intellij.ide.ui.laf.modern;
 
+import com.intellij.util.BitUtil;
+
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,25 +26,44 @@ import java.awt.event.MouseEvent;
  * @since 02.08.14
  */
 public class MouseEnterHandler extends MouseAdapter {
-  private boolean myMouseInside;
+  private static final int ENTERED = 1 << 0;
+  private static final int PRESSED = 1 << 1;
+
+  private int myFlags;
 
   public MouseEnterHandler(final JComponent component) {
     component.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseEntered(MouseEvent e) {
-        myMouseInside = true;
+        myFlags = BitUtil.set(myFlags, ENTERED, true);
         component.repaint();
       }
 
       @Override
       public void mouseExited(MouseEvent e) {
-        myMouseInside = false;
+        myFlags = BitUtil.set(myFlags, ENTERED, false);
+        component.repaint();
+      }
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+        myFlags = BitUtil.set(myFlags, PRESSED, true);
+        component.repaint();
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        myFlags = BitUtil.set(myFlags, PRESSED, false);
         component.repaint();
       }
     });
   }
 
-  public boolean isMouseInside() {
-    return myMouseInside;
+  public boolean isMousePressed() {
+    return BitUtil.isSet(myFlags, PRESSED);
+  }
+
+  public boolean isMouseEntered() {
+    return BitUtil.isSet(myFlags, ENTERED);
   }
 }

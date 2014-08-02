@@ -16,7 +16,6 @@
 package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.ui.Gray;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import sun.swing.SwingUtilities2;
@@ -96,12 +95,12 @@ public class ModernRadioButtonUI extends BasicRadioButtonUI {
     g.setColor(c.getBackground());
     g.fillOval(0, 1, w - 1, h - 1);
 
-    if (myMouseEnterHandler.isMouseInside()) {
+    if (myMouseEnterHandler.isMouseEntered()) {
       g.setColor(ModernUIUtil.getSelectionBackground());
       g.drawOval(0, 1, w - 1, h - 1);
     }
     else {
-      g.setPaint(Gray._40.withAlpha(200));
+      g.setPaint(ModernUIUtil.getBorderColor(c));
       g.drawOval(0, 1, w - 1, h - 1);
     }
 
