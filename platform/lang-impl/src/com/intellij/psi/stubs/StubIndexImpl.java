@@ -211,6 +211,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     return get(indexKey, key, project, scope, null);
   }
 
+  @NotNull
   @Override
   public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey,
                                                            @NotNull Key key,
