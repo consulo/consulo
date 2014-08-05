@@ -20,10 +20,11 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
+import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
-import com.intellij.ui.JBSplitter;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.consulo.module.extension.ModuleExtension;
@@ -57,7 +58,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   private final ContentEntriesEditor myContentEntriesEditor;
   private JPanel myRootPane;
   private CheckboxTreeNoPolicy myTree;
-  private JBSplitter mySplitter;
+  private Splitter mySplitter;
 
   private ModuleExtension<?> myConfigurablePanelExtension;
 
@@ -81,7 +82,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   protected JComponent createComponentImpl() {
     myRootPane = new JPanel(new BorderLayout());
 
-    mySplitter = new JBSplitter();
+    mySplitter = new OnePixelSplitter();
 
     myTree = new CheckboxTreeNoPolicy(new ExtensionTreeCellRenderer(), new ExtensionCheckedTreeNode(null, myState, this)) {
       @Override
