@@ -284,7 +284,7 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
       return; //NPE on LaF change
     }
 
-    hasFocus = c.isEnabled() && myMouseEnterHandler.isMouseEntered();
+    hasFocus = myMouseEnterHandler.isMouseEntered();
 
     final Graphics2D g = (Graphics2D)g2;
     final Rectangle arrowButtonBounds = arrowButton.getBounds();

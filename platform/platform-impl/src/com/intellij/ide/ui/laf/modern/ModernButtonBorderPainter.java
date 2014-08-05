@@ -16,15 +16,12 @@
 package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI;
-import com.intellij.openapi.util.NotNullLazyValue;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
-import java.lang.reflect.Field;
 
 /**
  * @author VISTALL
@@ -33,21 +30,6 @@ import java.lang.reflect.Field;
  *        Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaButtonPainter}
  */
 public class ModernButtonBorderPainter implements Border, UIResource {
-   private static NotNullLazyValue<Field> ourUiField = new NotNullLazyValue<Field>() {
-     @NotNull
-     @Override
-     protected Field compute() {
-       try {
-         Field ui = JComponent.class.getDeclaredField("ui");
-         ui.setAccessible(true);
-         return ui;
-       }
-       catch (NoSuchFieldException e) {
-         throw new Error(e);
-       }
-     }
-   };
-
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
     if (isDefaultButton(c)) {
@@ -59,7 +41,7 @@ public class ModernButtonBorderPainter implements Border, UIResource {
     final boolean square = DarculaButtonUI.isSquare(c);
     int offset = square ? 1 : 4;
 
-    ModernButtonUI ui = getUI(c);
+    ModernButtonUI ui = ModernUIUtil.getUI(c);
     MouseEnterHandler mouseEnterHandler = ui.getMouseEnterHandler();
     if(mouseEnterHandler.isMousePressed()) {
       g.setColor(ModernUIUtil.getActiveBorderColor());
@@ -79,16 +61,6 @@ public class ModernButtonBorderPainter implements Border, UIResource {
     }
 
     g.drawRect(x + offset, y + yOff, width - 2 * offset, height - 2 * yOff);
-  }
-
-  public static ModernButtonUI getUI(Component component) {
-    Field value = ourUiField.getValue();
-    try {
-      return (ModernButtonUI)value.get(component);
-    }
-    catch (IllegalAccessException e) {
-      throw new Error(e);
-    }
   }
 
   public static boolean isDefaultButton(Object component) {

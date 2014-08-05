@@ -35,6 +35,9 @@ public class MouseEnterHandler extends MouseAdapter {
     component.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseEntered(MouseEvent e) {
+        if(!component.isEnabled()) {
+          return;
+        }
         myFlags = BitUtil.set(myFlags, ENTERED, true);
         component.repaint();
       }
@@ -47,6 +50,9 @@ public class MouseEnterHandler extends MouseAdapter {
 
       @Override
       public void mousePressed(MouseEvent e) {
+        if(!component.isEnabled()) {
+          return;
+        }
         myFlags = BitUtil.set(myFlags, PRESSED, true);
         component.repaint();
       }

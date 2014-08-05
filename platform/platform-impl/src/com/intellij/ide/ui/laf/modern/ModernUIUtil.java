@@ -15,16 +15,44 @@
  */
 package com.intellij.ide.ui.laf.modern;
 
+import com.intellij.openapi.util.NotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Field;
 
 /**
  * @author VISTALL
  * @since 02.08.14
  */
 public class ModernUIUtil {
+  private static NotNullLazyValue<Field> ourUiField = new NotNullLazyValue<Field>() {
+    @NotNull
+    @Override
+    protected Field compute() {
+      try {
+        Field ui = JComponent.class.getDeclaredField("ui");
+        ui.setAccessible(true);
+        return ui;
+      }
+      catch (NoSuchFieldException e) {
+        throw new Error(e);
+      }
+    }
+  };
+
+  @NotNull
+  public static <T> T getUI(Component component) {
+    Field value = ourUiField.getValue();
+    try {
+      return (T)value.get(component);
+    }
+    catch (IllegalAccessException e) {
+      throw new Error(e);
+    }
+  }
+
   @NotNull
   public static Color getSelectionBackground() {
     return UIManager.getColor("Color.SelectionBackground");

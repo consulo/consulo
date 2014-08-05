@@ -67,7 +67,7 @@ public class ModernButtonUI extends BasicButtonUI {
         }
         else {
           if (ModernButtonBorderPainter.isDefaultButton(c)) {
-            g.setColor(ModernUIUtil.getSelectionBackground());
+            g.setColor(myMouseEnterHandler.isMouseEntered() ? ModernUIUtil.getSelectionBackground().brighter() : ModernUIUtil.getSelectionBackground());
           }
           else {
             g.setColor(getButtonColor1());
