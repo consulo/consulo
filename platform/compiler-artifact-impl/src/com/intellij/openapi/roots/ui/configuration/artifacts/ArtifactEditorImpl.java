@@ -76,6 +76,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private JPanel myErrorPanelPlace;
   private ThreeStateCheckBox myShowContentCheckBox;
   private FixedSizeButton myShowSpecificContentOptionsButton;
+  private JPanel myTopPanel;
   private final ActionGroup myShowSpecificContentOptionsGroup;
   private final Project myProject;
   private final ComplexElementSubstitutionParameters mySubstitutionParameters = new ComplexElementSubstitutionParameters();
@@ -99,6 +100,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myPropertiesEditors = new ArtifactPropertiesEditors(myContext, myOriginalArtifact, myOriginalArtifact);
     Disposer.register(this, mySourceItemsTree);
     Disposer.register(this, myLayoutTreeComponent);
+    myTopPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
     myBuildOnMakeCheckBox.setSelected(artifact.isBuildOnMake());
     final String outputPath = artifact.getOutputPath();
     myOutputDirectoryField.addBrowseFolderListener(CompilerBundle.message("dialog.title.output.directory.for.artifact"),
@@ -195,7 +197,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
     myErrorPanelPlace.add(myValidationManager.getMainErrorPanel(), BorderLayout.CENTER);
 
-    Splitter splitter = new Splitter(false);
+    Splitter splitter = new OnePixelSplitter(false);
     final JPanel leftPanel = new JPanel(new BorderLayout());
     JPanel treePanel = myLayoutTreeComponent.getTreePanel();
     if (UIUtil.isUnderDarcula()) {
@@ -234,7 +236,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     labelPanel.add(link);
     rightTopPanel.add(labelPanel, BorderLayout.CENTER);
     rightPanel.add(rightTopPanel, BorderLayout.NORTH);
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(mySourceItemsTree, UIUtil.isUnderDarcula());
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(mySourceItemsTree, true);
     JPanel scrollPaneWrap = new JPanel(new BorderLayout());
     scrollPaneWrap.add(scrollPane, BorderLayout.CENTER);
     if (UIUtil.isUnderDarcula()) {
@@ -250,6 +252,10 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
       rightPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 3));
     }
     splitter.setSecondComponent(rightPanel);
+    treePanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+    rightPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+    scrollPaneWrap.setBorder(new EmptyBorder(0,0,0,0));
+    leftPanel.setBorder(new EmptyBorder(0,0,0,0));
 
 
     myShowContentCheckBox.addActionListener(new ActionListener() {

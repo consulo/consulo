@@ -59,7 +59,7 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
   protected static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.MasterDetailsComponent");
 
   protected NamedConfigurable myCurrentConfigurable;
-  private final Splitter mySplitter = new Splitter(false, .2f);
+  private final JBSplitter mySplitter;
 
   @NonNls public static final String TREE_OBJECT = "treeObject";
   @NonNls public static final String TREE_NAME = "treeName";
@@ -111,7 +111,7 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
   protected MyNode myRoot = new MyRootNode();
   protected Tree myTree = new Tree();
 
-  private final DetailsComponent myDetails = new DetailsComponent();
+  private final DetailsComponent myDetails = new DetailsComponent(false, false);
   protected JPanel myWholePanel;
   public JPanel myNorthPanel = new JPanel(new BorderLayout());
 
@@ -128,8 +128,14 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
     this(new MasterDetailsState());
   }
 
+
   protected MasterDetailsComponent(MasterDetailsState state) {
     myState = state;
+
+    mySplitter = new OnePixelSplitter(false, .2f);
+    mySplitter.setSplitterProportionKey("ProjectStructure.SecondLevelElements");
+    mySplitter.setHonorComponentsMinimumSize(true);
+
     installAutoScroll();
     reInitWholePanelIfNeeded();
   }

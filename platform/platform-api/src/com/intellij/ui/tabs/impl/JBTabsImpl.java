@@ -170,6 +170,7 @@ public class JBTabsImpl extends JComponent
 
   private Runnable myDeferredFocusRequest;
   private boolean myAlwaysPaintSelectedTab;
+  private int myFirstTabOffset;
 
   public JBTabsImpl(@NotNull Project project) {
     this(project, project);
@@ -477,6 +478,14 @@ public class JBTabsImpl extends JComponent
 
   protected void setDropInfoIndex(int dropInfoIndex) {
     myDropInfoIndex = dropInfoIndex;
+  }
+
+  public int getFirstTabOffset() {
+    return myFirstTabOffset;
+  }
+
+  public void setFirstTabOffset(int firstTabOffset) {
+    myFirstTabOffset = firstTabOffset;
   }
 
   class TabActionsAutoHideListener extends MouseMotionAdapter implements Weighted {
@@ -1227,6 +1236,10 @@ public class JBTabsImpl extends JComponent
     return result;
   }
 
+  public boolean isAlphabeticalMode() {
+    return false;
+  }
+
   @Nullable
   private TabInfo findEnabledForward(int from, boolean cycle) {
     if (from < 0) return null;
@@ -1583,7 +1596,7 @@ public class JBTabsImpl extends JComponent
     return 3;
   }
 
-  public static int getGhostTabLength() {
+  public int getGhostTabLength() {
     return 15;
   }
 
@@ -3336,7 +3349,7 @@ public class JBTabsImpl extends JComponent
     return myVisibleInfos.isEmpty();
   }
 
-  public static int getInterTabSpaceLength() {
+  public int getInterTabSpaceLength() {
     return 1;
   }
 

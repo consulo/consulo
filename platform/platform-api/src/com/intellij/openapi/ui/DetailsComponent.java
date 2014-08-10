@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,19 @@
 
 package com.intellij.openapi.ui;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 
@@ -47,23 +45,28 @@ public class DetailsComponent {
   private final NonOpaquePanel myBanner;
 
   private String[] myBannerText;
-  private boolean myDetailsEnabled = true;
+  private boolean myDetailsEnabled;
   private String[] myPrefix;
   private String[] myText;
 
   private final Wrapper myContentGutter = new Wrapper();
 
-  private boolean myPaintBorder = true;
+  private boolean myPaintBorder;
 
   public DetailsComponent() {
+    this(true, true);
+  }
+
+  public DetailsComponent(boolean detailsEnabled, boolean paintBorder) {
+    myDetailsEnabled = detailsEnabled;
+    myPaintBorder = paintBorder;
     myComponent = new JPanel(new BorderLayout()) {
+      @Override
       protected void paintComponent(final Graphics g) {
         if (NullableComponent.Check.isNull(myContent) || !myDetailsEnabled) return;
 
         GraphicsConfig c = new GraphicsConfig(g);
         c.setAntialiasing(true);
-
-        int arc = 8;
 
         Insets insets = getInsets();
         if (insets == null) {
@@ -81,6 +84,7 @@ public class DetailsComponent {
         final int rightY = banner.y + banner.height;
 
         header.moveTo(leftX, rightY);
+        int arc = 8;
         header.lineTo(leftX, leftY + arc);
         header.quadTo(leftX, leftY, leftX + arc, leftY);
         header.lineTo(rightX - arc, leftY);
@@ -112,9 +116,11 @@ public class DetailsComponent {
     myBanner = new NonOpaquePanel(new BorderLayout());
     myBannerLabel = new Banner();
 
-    myBanner.add(myBannerLabel, BorderLayout.CENTER);
+    if (myDetailsEnabled) {
+      myBanner.add(myBannerLabel, BorderLayout.CENTER);
+    }
 
-    myEmptyContentLabel = new JLabel("", JLabel.CENTER);
+    myEmptyContentLabel = new JLabel("", SwingConstants.CENTER);
 
     revalidateDetailsMode();
   }
@@ -174,6 +180,9 @@ public class DetailsComponent {
     }
   }
 
+  public void forProject(Project project) {
+    myBannerLabel.forProject(project);
+  }
 
   public void setPrefix(@Nullable String... prefix) {
     myPrefix = prefix;
@@ -203,12 +212,7 @@ public class DetailsComponent {
   }
 
   private void updateBanner() {
-    if (NullableComponent.Check.isNull(myContent)) {
-      myBannerLabel.setText(null);
-    }
-    else {
-      myBannerLabel.setText(myBannerText);
-    }
+    myBannerLabel.setText(NullableComponent.Check.isNull(myContent) || myBannerText == null ? ArrayUtil.EMPTY_STRING_ARRAY : myBannerText);
 
     myBannerLabel.revalidate();
     myBannerLabel.repaint();
@@ -219,7 +223,7 @@ public class DetailsComponent {
   }
 
   public DetailsComponent setEmptyContentText(@Nullable final String emptyContentText) {
-    @NonNls final String s = "<html><body><center>" + (emptyContentText != null ? emptyContentText : "") + "</center></body><html>";
+    @NonNls final String s = XmlStringUtil.wrapInHtml("<center>" + (emptyContentText != null ? emptyContentText : "") + "</center>");
     myEmptyContentLabel.setText(s);
     return this;
   }
@@ -253,17 +257,16 @@ public class DetailsComponent {
   }
 
 
-  public static interface Facade {
-
+  public interface Facade {
     DetailsComponent getDetailsComponent();
-
   }
 
   private class MyWrapper extends Wrapper implements NullableComponent {
     public MyWrapper(final JComponent c) {
-      super(c == null || NullableComponent.Check.isNull(c) ? DetailsComponent.this.myEmptyContentLabel : c);
+      super(c == null || NullableComponent.Check.isNull(c) ? myEmptyContentLabel : c);
     }
 
+    @Override
     public boolean isNull() {
       return getTargetComponent() == myEmptyContentLabel;
     }

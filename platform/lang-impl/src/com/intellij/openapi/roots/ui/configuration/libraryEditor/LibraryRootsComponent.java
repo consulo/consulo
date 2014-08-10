@@ -48,6 +48,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IconUtil;
@@ -157,6 +158,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myTree).disableUpDownActions()
             .setRemoveActionName(ProjectBundle.message("library.remove.action"))
             .disableRemoveAction();
+    toolbarDecorator.setPanelBorder(new CustomLineBorder(1, 0, 0, 0));
 
     final List<AttachRootButtonDescriptor> popupItems = new ArrayList<AttachRootButtonDescriptor>();
     for (AttachRootButtonDescriptor descriptor : myDescriptor.createAttachButtons()) {

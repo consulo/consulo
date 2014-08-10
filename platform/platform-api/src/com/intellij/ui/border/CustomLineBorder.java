@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.intellij.ui.border;
 
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -28,17 +29,17 @@ public class CustomLineBorder implements Border {
   private final Color myColor;
   private final Insets myInsets;
 
-  public CustomLineBorder(@NotNull Color color, @NotNull Insets insets) {
+  public CustomLineBorder(@Nullable Color color, @NotNull Insets insets) {
     myColor = color;
     myInsets = insets;
   }
 
-  public CustomLineBorder(@NotNull Color color, int top, int left, int bottom, int right) {
+  public CustomLineBorder(@Nullable Color color, int top, int left, int bottom, int right) {
     this(color, new Insets(top, left, bottom, right));
   }
 
   public CustomLineBorder(@NotNull Insets insets) {
-    this(UIUtil.getBorderColor(), insets);
+    this(null, insets);
   }
 
   public CustomLineBorder(int top, int left, int bottom, int right) {
@@ -48,7 +49,7 @@ public class CustomLineBorder implements Border {
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
     final Color oldColor = g.getColor();
-    g.setColor(myColor);
+    g.setColor(getColor());
 
     if (myInsets.left > 0) g.fillRect(x, y, x + myInsets.left, y + h);
     if (myInsets.bottom > 0) g.fillRect(x, y + h - myInsets.bottom, x + w, y + h);
@@ -56,6 +57,10 @@ public class CustomLineBorder implements Border {
     if (myInsets.top > 0) g.fillRect(x, y, x + w, y + myInsets.top);
 
     g.setColor(oldColor);
+  }
+
+  protected Color getColor() {
+    return myColor == null ? UIUtil.getBorderColor() : myColor;
   }
 
   @Override

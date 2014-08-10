@@ -33,12 +33,14 @@ import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.componentsList.components.ScrollablePanel;
 import com.intellij.openapi.roots.ui.componentsList.layout.VerticalStackLayout;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
-import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
+import com.intellij.ui.JBSplitter;
+import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.roots.ToolbarPanel;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
@@ -46,7 +48,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -138,7 +139,6 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     myContentEntryEditorListener = new MyContentEntryEditorListener();
 
     final JPanel mainPanel = new JPanel(new BorderLayout());
-    mainPanel.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
 
     final JPanel entriesPanel = new JPanel(new BorderLayout());
 
@@ -149,18 +149,21 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     myEditorsPanel = new ScrollablePanel(new VerticalStackLayout());
     myEditorsPanel.setBackground(BACKGROUND_COLOR);
-    JScrollPane myScrollPane = ScrollPaneFactory.createScrollPane(myEditorsPanel);
+    JScrollPane myScrollPane = ScrollPaneFactory.createScrollPane(myEditorsPanel, true);
     entriesPanel.add(new ToolbarPanel(myScrollPane, group), BorderLayout.CENTER);
 
-    final Splitter splitter = new Splitter(false);
+    final JBSplitter splitter = new OnePixelSplitter(false);
     splitter.setProportion(0.6f);
     splitter.setHonorComponentsMinimumSize(true);
 
     myRootTreeEditor = new ContentEntryTreeEditor(project, myState);
-    splitter.setFirstComponent(myRootTreeEditor.createComponent());
+    JComponent component = myRootTreeEditor.createComponent();
+    component.setBorder(new CustomLineBorder(1,0,0,0));
+
+    splitter.setFirstComponent(component);
     splitter.setSecondComponent(entriesPanel);
     JPanel contentPanel = new JPanel(new GridBagLayout());
-    contentPanel.setBorder(BorderFactory.createEtchedBorder());
+
     final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, myRootTreeEditor.getEditingActionsGroup(), true);
     contentPanel.add(new JLabel("Mark as:"),
                      new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, 0, new Insets(0, 5, 0, 5), 0, 0));
@@ -202,13 +205,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
       }
     });
     myEntryToEditorMap.put(contentEntry, contentEntryEditor);
-    Border border = BorderFactory.createEmptyBorder(2, 2, 0, 2);
     final JComponent component = contentEntryEditor.getComponent();
-    final Border componentBorder = component.getBorder();
-    if (componentBorder != null) {
-      border = BorderFactory.createCompoundBorder(border, componentBorder);
-    }
-    component.setBorder(border);
+
+    component.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     myEditorsPanel.add(component);
   }
 

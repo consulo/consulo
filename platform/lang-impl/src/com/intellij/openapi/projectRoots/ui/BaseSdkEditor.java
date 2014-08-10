@@ -148,9 +148,9 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
     myHomeFieldLabel = new JLabel(getHomeFieldLabelValue());
     myMainPanel.add(myHomeFieldLabel,
                     new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-                                           new Insets(2, 0, 2, 2), 0, 0));
+                                           new Insets(2, 10, 2, 2), 0, 0));
     myMainPanel.add(myHomeComponent, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
-                                                            GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 0), 0, 0));
+                                                            GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 10), 0, 0));
 
     myAdditionalDataPanel = new JPanel(new BorderLayout());
     myMainPanel.add(myAdditionalDataPanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER,
