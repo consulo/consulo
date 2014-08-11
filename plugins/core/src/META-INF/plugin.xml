@@ -904,11 +904,6 @@
 
     <extensionPoint name="newModuleBuilder" interface="org.mustbe.consulo.ide.impl.NewModuleBuilder" />
 
-    <extensionPoint name="projectTemplateParameterFactory"
-                    interface="com.intellij.ide.util.projectWizard.ProjectTemplateParameterFactory"/>
-    <extensionPoint name="projectTemplateFileProcessor"
-                    interface="com.intellij.ide.util.projectWizard.ProjectTemplateFileProcessor"/>
-
     <extensionPoint name="methodNavigationOffsetProvider"
                     interface="com.intellij.codeInsight.navigation.MethodNavigationOffsetProvider"/>
 
