@@ -26,8 +26,8 @@ import java.awt.*;
 /**
  * @author VISTALL
  * @since 02.08.14
- *        <p/>
- *        Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaButtonPainter}
+ * <p/>
+ * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaButtonPainter}
  */
 public class ModernButtonBorderPainter implements Border, UIResource {
   @Override
@@ -43,15 +43,15 @@ public class ModernButtonBorderPainter implements Border, UIResource {
 
     ModernButtonUI ui = ModernUIUtil.getUI(c);
     MouseEnterHandler mouseEnterHandler = ui.getMouseEnterHandler();
-    if(mouseEnterHandler.isMousePressed()) {
+    if (mouseEnterHandler.isMousePressed()) {
       g.setColor(ModernUIUtil.getActiveBorderColor());
     }
     else {
-      if(isDefaultButton(c)) {
+      if (isDefaultButton(c)) {
         g.setColor(c.isEnabled() ? ModernUIUtil.getSelectionBackground() : ModernUIUtil.getDisabledBorderColor());
       }
       else {
-        if(c.isEnabled()) {
+        if (c.isEnabled()) {
           g.setColor(mouseEnterHandler.isMouseEntered() ? ModernUIUtil.getSelectionBackground() : ModernUIUtil.getActiveBorderColor());
         }
         else {
@@ -74,7 +74,6 @@ public class ModernButtonBorderPainter implements Border, UIResource {
     }
     return new InsetsUIResource(8, 16, 8, 14);
   }
-
 
 
   @Override

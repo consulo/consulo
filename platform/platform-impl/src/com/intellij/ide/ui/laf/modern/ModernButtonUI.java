@@ -56,27 +56,37 @@ public class ModernButtonUI extends BasicButtonUI {
   @Override
   public void paint(Graphics g, JComponent c) {
     final Border border = c.getBorder();
-    final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-    final boolean square = isSquare(c);
-    if (c.isEnabled() && border != null) {
+    if(border != null) {
+      final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
+      final boolean square = isSquare(c);
+
       final Insets ins = border.getBorderInsets(c);
       final int yOff = (ins.top + ins.bottom) / 4;
-      if (!square) {
-        if(myMouseEnterHandler.isMousePressed()) {
-          g.setColor(ModernUIUtil.getActiveBorderColor());
-        }
-        else {
-          if (ModernButtonBorderPainter.isDefaultButton(c)) {
-            g.setColor(myMouseEnterHandler.isMouseEntered() ? ModernUIUtil.getSelectionBackground().brighter() : ModernUIUtil.getSelectionBackground());
+
+      if (c.isEnabled()) {
+        if (!square) {
+          if (myMouseEnterHandler.isMousePressed()) {
+            g.setColor(ModernUIUtil.getActiveBorderColor());
           }
           else {
-            g.setColor(getButtonColor1());
+            if (ModernButtonBorderPainter.isDefaultButton(c)) {
+              g.setColor(myMouseEnterHandler.isMouseEntered() ? ModernUIUtil.getSelectionBackground().brighter() : ModernUIUtil.getSelectionBackground());
+            }
+            else {
+              g.setColor(getButtonColor1());
+            }
           }
         }
       }
+      else {
+        if (ModernButtonBorderPainter.isDefaultButton(c)) {
+          g.setColor(ModernUIUtil.getActiveBorderColor());
+        }
+      }
+
       g.fillRect(square ? 2 : 4, yOff, c.getWidth() - 2 * 4, c.getHeight() - 2 * yOff);
+      config.restore();
     }
-    config.restore();
     super.paint(g, c);
   }
 
@@ -104,10 +114,11 @@ public class ModernButtonUI extends BasicButtonUI {
       g.setColor(UIManager.getColor("Button.darcula.disabledText.shadow"));
       SwingUtilities2
               .drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset() + 1, textRect.y + metrics.getAscent() + getTextShiftOffset() + 1);
-      g.setColor(UIManager.getColor("Button.disabledText"));
-      SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
 
-
+      if(!ModernButtonBorderPainter.isDefaultButton(button)) {
+        g.setColor(UIManager.getColor("Button.disabledText"));
+        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
+      }
     }
   }
 

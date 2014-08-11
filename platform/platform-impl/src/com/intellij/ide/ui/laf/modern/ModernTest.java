@@ -56,6 +56,7 @@ public class ModernTest {
   private JButton myProgressButton;
   private JProgressBar myProgressBar2;
   private JButton myStartButton;
+  private JButton myDisabledDefaultButton;
 
   public ModernTest() {
     myProgressButton.addActionListener(new ActionListener() {
@@ -64,7 +65,8 @@ public class ModernTest {
         if (myProgressButton.getText().equals("Start")) {
           myProgressBar1.setIndeterminate(true);
           myProgressButton.setText("Stop");
-        } else {
+        }
+        else {
           myProgressBar1.setIndeterminate(false);
           myProgressButton.setText("Start");
         }
@@ -74,7 +76,7 @@ public class ModernTest {
       @Override
       public void actionPerformed(ActionEvent e) {
         myStartButton.setEnabled(false);
-        new Thread(){
+        new Thread() {
           @Override
           public void run() {
             while (myProgressBar2.getValue() < 100) {
@@ -104,13 +106,13 @@ public class ModernTest {
     try {
       UIManager.setLookAndFeel(new ModernWhiteLaf());
     }
-    catch (UnsupportedLookAndFeelException ignored) {}
+    catch (UnsupportedLookAndFeelException ignored) {
+    }
     final JFrame frame = new JFrame("Modern White Demo");
     frame.setSize(900, 500);
     final ModernTest form = new ModernTest();
     final JPanel root = form.myRoot;
     frame.setContentPane(root);
-    frame.getRootPane().setDefaultButton(form.myDefaultButton);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
       @Override
@@ -126,5 +128,20 @@ public class ModernTest {
         frame.setVisible(true);
       }
     });
+  }
+
+  private void createUIComponents() {
+    myDisabledDefaultButton = new JButton(){
+      @Override
+      public boolean isDefaultButton() {
+        return true;
+      }
+    };
+    myDefaultButton = new JButton(){
+      @Override
+      public boolean isDefaultButton() {
+        return true;
+      }
+    };
   }
 }
