@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -64,15 +65,21 @@ public class ModernTextBorder implements Border, UIResource {
     final GraphicsConfig config = new GraphicsConfig(g);
     g.translate(x, y);
 
-    ModernTextUI textUI = ModernUIUtil.getUI(c);
-    if(textUI.isFocused()) {
-      g.setColor(ModernUIUtil.getSelectionBackground());
-    }
-    else if (textUI.getMouseEnterHandler().isMouseEntered()) {
-      g.setColor(ModernUIUtil.getActiveBorderColor());
+    ComponentUI componentUI = ModernUIUtil.getUI(c);
+    // TODO [VISTALL] find way for handle component of EditorTextField
+    if(componentUI instanceof ModernTextUI) {
+      if (((ModernTextUI)componentUI).isFocused()) {
+        g.setColor(ModernUIUtil.getSelectionBackground());
+      }
+      else if (((ModernTextUI)componentUI).getMouseEnterHandler().isMouseEntered()) {
+        g.setColor(ModernUIUtil.getActiveBorderColor());
+      }
+      else {
+        g.setColor(ModernUIUtil.getDisabledBorderColor());
+      }
     }
     else {
-      g.setColor(ModernUIUtil.getDisabledBorderColor());
+      g.setColor(ModernUIUtil.getActiveBorderColor());
     }
     g.drawRect(1, 1, width - 2, height - 2);
     g.translate(-x, -y);
