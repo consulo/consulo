@@ -130,7 +130,7 @@ public final class LoadTextUtil {
     }
 
     charset = charset == null ? EncodingRegistry.getInstance().getDefaultCharset() : charset;
-    if (EncodingRegistry.getInstance().isNative2Ascii(virtualFile)) {
+    if (fileType.getName().equals("Properties") && EncodingRegistry.getInstance().isNative2AsciiForPropertiesFiles()) {
       charset = Native2AsciiCharset.wrap(charset);
     }
     virtualFile.setCharset(charset);

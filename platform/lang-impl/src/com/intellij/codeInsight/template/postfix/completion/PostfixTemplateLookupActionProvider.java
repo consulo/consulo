@@ -19,7 +19,6 @@ import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupActionProvider;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
-import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;

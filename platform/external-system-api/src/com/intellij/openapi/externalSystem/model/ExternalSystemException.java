@@ -14,15 +14,18 @@ import java.io.StringWriter;
  * <p/>
  * This class allows to extract textual description of the target problem and deliver it for further processing without risking to 
  * get the problems mentioned above. I.e. it doesn't require anything specific can be safely delivered to ide process then.
- * 
+ *
  * @author Denis Zhdanov
  * @since 10/21/11 11:42 AM
  */
 public class ExternalSystemException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
-  
+
   private final String myOriginalReason;
+
+  @NotNull
+  private final String[] myQuickFixes;
 
   public ExternalSystemException() {
     this(null, null);
@@ -36,13 +39,14 @@ public class ExternalSystemException extends RuntimeException {
     this("", cause);
   }
 
-  public ExternalSystemException(@Nullable String message, @Nullable Throwable cause) {
+  public ExternalSystemException(@Nullable String message, @Nullable Throwable cause, @NotNull String... quickFixes) {
     super(extractMessage(message, cause));
+    myQuickFixes = quickFixes;
     if (cause == null) {
       myOriginalReason = "";
       return;
     }
-    
+
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     try {
@@ -53,13 +57,18 @@ public class ExternalSystemException extends RuntimeException {
     }
     myOriginalReason = stringWriter.toString();
   }
-  
+
   /**
    * @return    textual description of the wrapped exception (if any); empty string otherwise
    */
   @NotNull
   public String getOriginalReason() {
     return myOriginalReason;
+  }
+
+  @NotNull
+  public String[] getQuickFixes() {
+    return myQuickFixes;
   }
 
   @Override
@@ -80,7 +89,7 @@ public class ExternalSystemException extends RuntimeException {
     if (message != null) {
       buffer.append(message);
     }
-    
+
     boolean first = true;
     for (Throwable t = cause; t != null; t = t.getCause()) {
       final String m = t.getLocalizedMessage();
@@ -95,7 +104,7 @@ public class ExternalSystemException extends RuntimeException {
       }
       buffer.append(m);
     }
-    
-    return buffer.toString(); 
+
+    return buffer.toString();
   }
 }

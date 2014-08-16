@@ -2051,6 +2051,17 @@ public class UIUtil {
     }
   }
 
+  public static <T> T invokeAndWaitIfNeeded(@NotNull final Computable<T> computable) {
+    final Ref<T> result = Ref.create();
+    invokeAndWaitIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        result.set(computable.compute());
+      }
+    });
+    return result.get();
+  }
+
   public static void invokeAndWaitIfNeeded(@NotNull final ThrowableRunnable runnable) throws Throwable {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();

@@ -17,6 +17,7 @@ package com.intellij.util.containers.hash;
 
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -29,7 +30,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   private int size;
   private final float loadFactor;
   private final EqualityPolicy<K> hashingStrategy;
-
+  private final boolean accessOrder;
 
   public LinkedHashMap() {
     this(0);
@@ -38,19 +39,30 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   public LinkedHashMap(int capacity) {
     this(capacity, HashUtil.DEFAULT_LOAD_FACTOR);
   }
+  public LinkedHashMap(int capacity, boolean accessOrder) {
+    this(capacity, HashUtil.DEFAULT_LOAD_FACTOR, accessOrder);
+  }
 
   public LinkedHashMap(int capacity, float loadFactor) {
     this(capacity, loadFactor, (EqualityPolicy)EqualityPolicy.CANONICAL);
   }
 
-  public LinkedHashMap(EqualityPolicy hashingStrategy) {
+  public LinkedHashMap(int capacity, float loadFactor, boolean accessOrder) {
+    this(capacity, loadFactor, (EqualityPolicy)EqualityPolicy.CANONICAL, accessOrder);
+  }
+
+  public LinkedHashMap(EqualityPolicy<K> hashingStrategy) {
     this(0, HashUtil.DEFAULT_LOAD_FACTOR, hashingStrategy);
   }
 
   public LinkedHashMap(int capacity, float loadFactor, EqualityPolicy<K> hashingStrategy) {
+    this(capacity, loadFactor, hashingStrategy, false);
+  }
+  public LinkedHashMap(int capacity, float loadFactor, EqualityPolicy<K> hashingStrategy, boolean accessOrder) {
     this.loadFactor = loadFactor;
     this.hashingStrategy = hashingStrategy;
     clear(capacity);
+    this.accessOrder = accessOrder;
   }
 
   @Override
@@ -200,12 +212,18 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     size = 0;
   }
 
-  protected boolean shouldMoveEntryToTopWhenReading() {
-    return false;
+  @Nullable
+  public K getLastKey() {
+    return top != null ? top.key : null;
+  }
+
+  @Nullable
+  public V getLastValue() {
+    return top != null ? top.value : null;
   }
 
   private void moveToTop(final Entry<K, V> e) {
-    if (!shouldMoveEntryToTopWhenReading()) {
+    if (!accessOrder) {
       return;
     }
 
@@ -295,7 +313,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private abstract class LinkedHashIterator<T> implements Iterator<T> {
 
-    private LinkedHashMap.Entry<K, V> e = top;
+    private LinkedHashMap.Entry<K, V> e = back;
     private LinkedHashMap.Entry<K, V> last;
 
     @Override
@@ -314,7 +332,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
     protected LinkedHashMap.Entry<K, V> nextEntry() {
       final LinkedHashMap.Entry<K, V> result = last = e;
-      e = result.next;
+      e = result.previous;
       return result;
     }
   }

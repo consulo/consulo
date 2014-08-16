@@ -151,30 +151,21 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   private static void syncPaths(@NotNull Module module, @NotNull ModuleData data) {
-    // ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-    // CompilerModuleExtension extension = modifiableModel.getModuleExtension(CompilerModuleExtension.class);
     ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
     if (compilerPathsManager == null) {
-      /// modifiableModel.dispose();
       LOG.warn(String.format("Can't sync paths for module '%s'. Reason: no compiler extension is found for it", module.getName()));
       return;
     }
-    try {
+    compilerPathsManager.setInheritedCompilerOutput(data.isInheritProjectCompileOutputPath());
+    if(!data.isInheritProjectCompileOutputPath()) {
       String compileOutputPath = data.getCompileOutputPath(ExternalSystemSourceType.SOURCE);
       if (compileOutputPath != null) {
-        compilerPathsManager
-                .setCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance(), VfsUtilCore.pathToUrl(compileOutputPath));
+        compilerPathsManager.setCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance(), VfsUtilCore.pathToUrl(compileOutputPath));
       }
-
       String testCompileOutputPath = data.getCompileOutputPath(ExternalSystemSourceType.TEST);
       if (testCompileOutputPath != null) {
         compilerPathsManager.setCompilerOutputUrl(TestContentFolderTypeProvider.getInstance(), VfsUtilCore.pathToUrl(testCompileOutputPath));
       }
-
-      compilerPathsManager.setInheritedCompilerOutput(data.isInheritProjectCompileOutputPath());
-    }
-    finally {
-      // modifiableModel.commit();
     }
   }
 
@@ -232,6 +223,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
     module.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY, moduleData.getOwner().toString());
     module.setOption(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY, moduleData.getLinkedExternalProjectPath());
+    module.setOption(ExternalSystemConstants.LINKED_PROJECT_ID_KEY, moduleData.getId());
     final ProjectData projectData = moduleDataNode.getData(ProjectKeys.PROJECT);
     module.setOption(ExternalSystemConstants.ROOT_PROJECT_PATH_KEY, projectData != null ? projectData.getLinkedExternalProjectPath() : "");
 

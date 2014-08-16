@@ -43,7 +43,7 @@ public class RefreshQueueImpl extends RefreshQueue {
   private final ExecutorService myQueue = ConcurrencyUtil.newSingleThreadExecutor("FS Synchronizer");
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
   private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<RefreshSession>();
-  private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.INFO);
+  private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.ERROR);
 
   public void execute(@NotNull RefreshSessionImpl session) {
     if (session.isAsynchronous()) {
@@ -131,6 +131,7 @@ public class RefreshQueueImpl extends RefreshQueue {
     }
   }
 
+  @NotNull
   @Override
   public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @NotNull ModalityState state) {
     return new RefreshSessionImpl(async, recursively, finishRunnable, state);
@@ -139,5 +140,12 @@ public class RefreshQueueImpl extends RefreshQueue {
   @Override
   public void processSingleEvent(@NotNull VFileEvent event) {
     new RefreshSessionImpl(Collections.singletonList(event)).launch();
+  }
+
+  public static boolean isRefreshInProgress() {
+    RefreshQueueImpl refreshQueue = (RefreshQueueImpl)RefreshQueue.getInstance();
+    synchronized (refreshQueue.mySessions) {
+      return !refreshQueue.mySessions.isEmpty();
+    }
   }
 }
