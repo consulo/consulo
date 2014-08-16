@@ -821,6 +821,8 @@
       <with attribute="implementationClass" implements="com.intellij.lang.parameterInfo.ParameterInfoHandler"/>
     </extensionPoint>
 
+    <extensionPoint name="codeInsight.containerProvider" interface="com.intellij.codeInsight.ContainerProvider" />
+
     <extensionPoint name="codeInsight.fillParagraph" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.fillParagraph.ParagraphFillHandler"/>
     </extensionPoint>
