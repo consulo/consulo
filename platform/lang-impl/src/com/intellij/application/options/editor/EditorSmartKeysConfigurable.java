@@ -24,16 +24,12 @@ import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.options.*;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * To provide additional options in Editor | Smart Keys section register implementation of {@link com.intellij.openapi.options.UnnamedConfigurable} in the plugin.xml:
@@ -46,9 +42,8 @@ import java.util.List;
  *
  * @author yole
  */
-public class EditorSmartKeysConfigurable extends CompositeConfigurable<UnnamedConfigurable> implements EditorOptionsProvider {
+public class EditorSmartKeysConfigurable implements Configurable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.editor.EditorSmartKeysConfigurable");
-  private static final ExtensionPointName<EditorSmartKeysConfigurableEP> EP_NAME = ExtensionPointName.create("com.intellij.editorSmartKeysConfigurable");
 
   private JCheckBox myCbSmartHome;
   private JCheckBox myCbSmartEnd;
@@ -58,13 +53,11 @@ public class EditorSmartKeysConfigurable extends CompositeConfigurable<UnnamedCo
   private JCheckBox myCbSmartIndentOnEnter;
   private JComboBox myReformatOnPasteCombo;
   private JPanel myRootPanel;
-  private JPanel myAddonPanel;
   private JCheckBox myCbInsertPairCurlyBraceOnEnter;
   private JCheckBox myCbInsertJavadocStubOnEnter;
   private JCheckBox myCbSurroundSelectionOnTyping;
   private JCheckBox myCbReformatBlockOnTypingRBrace;
   private JCheckBox myCbIndentingBackspace;
-  private boolean myAddonsInitialized = false;
 
   private static final String NO_REFORMAT = ApplicationBundle.message("combobox.paste.reformat.none");
   private static final String INDENT_BLOCK = ApplicationBundle.message("combobox.paste.reformat.indent.block");
@@ -95,14 +88,9 @@ public class EditorSmartKeysConfigurable extends CompositeConfigurable<UnnamedCo
   }
 
   @Override
-  protected List<UnnamedConfigurable> createConfigurables() {
-    return ConfigurableWrapper.createConfigurables(EP_NAME);
-  }
-
-  @Override
   @Nls
   public String getDisplayName() {
-    return "Smart Keys";
+    return null;
   }
 
   @Override
@@ -112,14 +100,6 @@ public class EditorSmartKeysConfigurable extends CompositeConfigurable<UnnamedCo
 
   @Override
   public JComponent createComponent() {
-    if (!myAddonsInitialized) {
-      myAddonsInitialized = true;
-      for (UnnamedConfigurable provider : getConfigurables()) {
-        myAddonPanel
-                .add(provider.createComponent(), new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
-                                                                        GridBagConstraints.NONE, new Insets(0, 0, 15, 0), 0, 0));
-      }
-    }
     return myRootPanel;
   }
 
@@ -162,8 +142,11 @@ public class EditorSmartKeysConfigurable extends CompositeConfigurable<UnnamedCo
     myCbSurroundSelectionOnTyping.setSelected(codeInsightSettings.SURROUND_SELECTION_ON_QUOTE_TYPED);
 
     myCbIndentingBackspace.setSelected(codeInsightSettings.SMART_BACKSPACE == CodeInsightSettings.AUTOINDENT);
+  }
 
-    super.reset();
+  @Override
+  public void disposeUIResources() {
+
   }
 
   @Override
@@ -183,13 +166,10 @@ public class EditorSmartKeysConfigurable extends CompositeConfigurable<UnnamedCo
     editorSettings.setCamelWords(myCbCamelWords.isSelected());
     codeInsightSettings.REFORMAT_ON_PASTE = getReformatPastedBlockValue();
     codeInsightSettings.SMART_BACKSPACE = myCbIndentingBackspace.isSelected() ? CodeInsightSettings.AUTOINDENT : CodeInsightSettings.OFF;
-
-    super.apply();
   }
 
   @Override
   public boolean isModified() {
-    if (super.isModified()) return true;
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
@@ -236,16 +216,5 @@ public class EditorSmartKeysConfigurable extends CompositeConfigurable<UnnamedCo
       LOG.assertTrue(false);
       return -1;
     }
-  }
-
-  @Override
-  @NotNull
-  public String getId() {
-    return "editor.preferences.smartKeys";
-  }
-
-  @Override
-  public Runnable enableSearch(final String option) {
-    return null;
   }
 }

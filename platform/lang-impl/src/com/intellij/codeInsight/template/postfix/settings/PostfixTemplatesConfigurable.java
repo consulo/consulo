@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInsight.template.postfix.settings;
 
-import com.intellij.application.options.editor.EditorOptionsProvider;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
@@ -45,7 +44,7 @@ import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
 
-public class PostfixTemplatesConfigurable implements SearchableConfigurable, EditorOptionsProvider, Configurable.NoScroll {
+public class PostfixTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll {
 
   public static final Comparator<PostfixTemplate> TEMPLATE_COMPARATOR = new Comparator<PostfixTemplate>() {
     @Override
@@ -144,7 +143,7 @@ public class PostfixTemplatesConfigurable implements SearchableConfigurable, Edi
   @Nls
   @Override
   public String getDisplayName() {
-    return "Postfix Completion";
+    return null;
   }
 
   @Nullable

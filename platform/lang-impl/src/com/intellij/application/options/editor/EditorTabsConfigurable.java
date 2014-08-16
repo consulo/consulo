@@ -16,12 +16,12 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationBundle;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.ui.ListCellRendererWrapper;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -30,7 +30,7 @@ import java.awt.event.ItemListener;
 /**
  * @author yole
  */
-public class EditorTabsConfigurable implements EditorOptionsProvider {
+public class EditorTabsConfigurable implements Configurable {
   private JPanel myRootPanel;
   private JCheckBox myHideKnownExtensions;
   private JCheckBox myScrollTabLayoutInEditorCheckBox;
@@ -254,16 +254,5 @@ public class EditorTabsConfigurable implements EditorOptionsProvider {
       }
       setText(text);
     }
-  }
-
-  @Override
-  @NotNull
-  public String getId() {
-    return "editor.preferences.tabs";
-  }
-
-  @Override
-  public Runnable enableSearch(final String option) {
-    return null;
   }
 }

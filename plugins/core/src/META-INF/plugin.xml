@@ -2,22 +2,54 @@
   <id>com.intellij</id>
   <name>IDEA CORE</name>
 
-  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ModuleComponents.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/PostfixTemplates.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/Coverage.xml" xpointer="xpointer(/idea-plugin/*)"/>
-  <xi:include href="/META-INF/XDebugger.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/ProjectComponents.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/ApplicationComponents.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/ModuleComponents.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/ExternalSystems.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/RemoteServers.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/Bundled.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/BackgroundTaskByVfsChange.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/Compiler.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/EarlyAccessProgram.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/Graph.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/Copyright.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/VcsLog.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/PostfixTemplates.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/Coverage.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
+  <xi:include href="/META-INF/XDebugger.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback />
+  </xi:include>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="org.mustbe.consulo.util.ListOfElementsEP"/>
@@ -295,12 +327,7 @@
     <extensionPoint name="errorOptionsProvider" beanClass="com.intellij.profile.codeInspection.ui.ErrorOptionsProviderEP">
       <with attribute="instance" implements="com.intellij.profile.codeInspection.ui.ErrorOptionsProvider"/>
     </extensionPoint>
-    <extensionPoint name="codeFoldingOptionsProvider" beanClass="com.intellij.application.options.editor.CodeFoldingOptionsProviderEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.CodeFoldingOptionsProvider"/>
-    </extensionPoint>
-    <extensionPoint name="autoImportOptionsProvider" beanClass="com.intellij.application.options.editor.AutoImportOptionsProviderEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.AutoImportOptionsProvider"/>
-    </extensionPoint>
+
     <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
 
 
@@ -827,10 +854,6 @@
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.fillParagraph.ParagraphFillHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="editorOptionsProvider" beanClass="com.intellij.application.options.editor.EditorOptionsProviderEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.EditorOptionsProvider"/>
-    </extensionPoint>
-
     <extensionPoint name="fileTypeIndentOptionsProvider" interface="com.intellij.psi.codeStyle.FileTypeIndentOptionsProvider"/>
     <extensionPoint name="referenceImporter" interface="com.intellij.codeInsight.daemon.ReferenceImporter"/>
     <extensionPoint name="elementLookupRenderer" interface="com.intellij.codeInsight.lookup.impl.ElementLookupRenderer"/>
@@ -940,10 +963,6 @@
 
     <extensionPoint name="editorAppearanceConfigurable" beanClass="com.intellij.application.options.editor.EditorAppearanceConfigurableEP">
       <with attribute="instance" implements="com.intellij.application.options.editor.EditorAppearanceConfigurable"/>
-    </extensionPoint>
-
-    <extensionPoint name="editorSmartKeysConfigurable" beanClass="com.intellij.application.options.editor.EditorSmartKeysConfigurableEP">
-      <with attribute="instance" implements="com.intellij.application.options.editor.EditorSmartKeysConfigurable"/>
     </extensionPoint>
 
     <extensionPoint name="metaDataContributor" interface="com.intellij.psi.meta.MetaDataContributor"/>
@@ -1909,8 +1928,7 @@
 
     <!-- Editor -->
     <applicationConfigurable instance="com.intellij.application.options.editor.EditorOptions" id="editor" key="title.editor"
-                             bundle="messages.ApplicationBundle" order="after appearance"
-                             childrenEPName="com.intellij.editorOptionsProvider"/>
+                             bundle="messages.ApplicationBundle" order="after appearance"/>
 
     <projectService serviceInterface="com.intellij.semantic.SemService" serviceImplementation="com.intellij.semantic.SemServiceImpl"/>
 
@@ -2130,11 +2148,13 @@
     <codeInsight.linkHandler prefix="#inspection/" handlerClass="com.intellij.codeInsight.hint.InspectionDescriptionLinkHandler"/>
     <codeInsight.linkHandler prefix="#navigation/" handlerClass="com.intellij.codeInsight.hint.NavigationLinkHandler"/>
 
-    <codeFoldingOptionsProvider instance="com.intellij.application.options.editor.BaseCodeFoldingOptionsProvider" order="first"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable" id="editor.preferences.smartKeys"
-                           displayName="Smart Keys"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable"
+                             id="editor.preferences.smartKeys"
+                             parentId="editor"
+                             displayName="Smart Keys"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
                            id="editor.preferences.appearance"
+                           parentId="editor"
                            key="tab.editor.settings.appearance" bundle="messages.ApplicationBundle"/>
     <editorCustomization implementation="com.intellij.ui.SoftWrapsEditorCustomization"/>
     <editorCustomization implementation="com.intellij.ui.HorizontalScrollBarEditorCustomization"/>
@@ -2143,16 +2163,36 @@
     <editorCustomization implementation="com.intellij.ui.RightMarginEditorCustomization"/>
 
     <!-- Colors & Fonts-->
-    <editorOptionsProvider instance="com.intellij.application.options.colors.ColorAndFontOptions"
-                           id="reference.settingsdialog.IDE.editor.colors"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.EditorTabsConfigurable" id="editor.preferences.tabs"
-                           displayName="Editor Tabs"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.CodeFoldingConfigurable" id="editor.preferences.folding"
-                           key="group.code.folding" bundle="messages.ApplicationBundle"/>
-    <editorOptionsProvider instance="com.intellij.application.options.CodeCompletionOptions" id="editor.preferences.completion"
-                           key="title.code.completion" bundle="messages.ApplicationBundle"/>
-    <editorOptionsProvider instance="com.intellij.application.options.editor.AutoImportOptionsConfigurable" id="editor.preferences.import"
-                           key="auto.import" bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.colors.ColorAndFontOptions"
+                             parentId="editor"
+                             id="editor.preferences.colors.and.fonts"
+                             dynamic="true"
+                             key="title.colors.and.fonts"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.EditorTabsConfigurable"
+                             id="editor.preferences.tabs"
+                             parentId="editor"
+                             displayName="Editor Tabs"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.CodeFoldingConfigurable"
+                             id="editor.preferences.folding"
+                             parentId="editor"
+                             key="group.code.folding"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.CodeCompletionOptions"
+                             id="editor.preferences.completion"
+                             parentId="editor"
+                             key="title.code.completion"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable instance="com.intellij.application.options.editor.AutoImportOptionsConfigurable"
+                             id="editor.preferences.import"
+                             parentId="editor"
+                             key="auto.import"
+                             bundle="messages.ApplicationBundle"/>
+    <applicationConfigurable id="editor.preferences.folding.general"
+                             parentId="editor.preferences.folding"
+                             displayName="General"
+                             instance="com.intellij.application.options.editor.GeneralCodeFoldingConfigurable" />
+
 
     <editorTabColorProvider implementation="com.intellij.ui.tabs.EditorTabColorProviderImpl"/>
 

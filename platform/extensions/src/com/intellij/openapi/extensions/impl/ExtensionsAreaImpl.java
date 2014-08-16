@@ -169,7 +169,7 @@ public class ExtensionsAreaImpl implements ExtensionsArea {
     // has content
     if (!extensionElement.getContent().isEmpty()) return true;
     // has custom attributes
-    for (Attribute attribute : (List<Attribute>)extensionElement.getAttributes()) {
+    for (Attribute attribute : extensionElement.getAttributes()) {
       final String name = attribute.getName();
       if (!"implementation".equals(name) && !"id".equals(name) && !"order".equals(name)) {
         return true;

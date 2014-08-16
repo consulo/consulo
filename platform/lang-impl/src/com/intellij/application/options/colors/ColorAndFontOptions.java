@@ -17,7 +17,6 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.application.options.OptionsContainingConfigurable;
-import com.intellij.application.options.editor.EditorOptionsProvider;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.bookmarks.BookmarkManager;
@@ -74,7 +73,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract implements EditorOptionsProvider {
+public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract  {
   private HashMap<String,MyColorScheme> mySchemes;
   private MyColorScheme mySelectedScheme;
   public static final String DIFF_GROUP = ApplicationBundle.message("title.diff");
