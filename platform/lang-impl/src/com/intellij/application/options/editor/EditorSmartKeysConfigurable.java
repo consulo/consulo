@@ -58,6 +58,7 @@ public class EditorSmartKeysConfigurable implements Configurable {
   private JCheckBox myCbSurroundSelectionOnTyping;
   private JCheckBox myCbReformatBlockOnTypingRBrace;
   private JCheckBox myCbIndentingBackspace;
+  private JCheckBox mySmartIndentPastedLinesCheckBox;
 
   private static final String NO_REFORMAT = ApplicationBundle.message("combobox.paste.reformat.none");
   private static final String INDENT_BLOCK = ApplicationBundle.message("combobox.paste.reformat.indent.block");
@@ -135,6 +136,7 @@ public class EditorSmartKeysConfigurable implements Configurable {
     myCbInsertJavadocStubOnEnter.setSelected(codeInsightSettings.JAVADOC_STUB_ON_ENTER);
 
     myCbInsertPairBracket.setSelected(codeInsightSettings.AUTOINSERT_PAIR_BRACKET);
+    mySmartIndentPastedLinesCheckBox.setSelected(codeInsightSettings.INDENT_TO_CARET_ON_PASTE);
     myCbInsertPairQuote.setSelected(codeInsightSettings.AUTOINSERT_PAIR_QUOTE);
     myCbReformatBlockOnTypingRBrace.setSelected(codeInsightSettings.REFORMAT_BLOCK_ON_RBRACE);
     myCbCamelWords.setSelected(editorSettings.isCamelWords());
@@ -158,6 +160,7 @@ public class EditorSmartKeysConfigurable implements Configurable {
     codeInsightSettings.SMART_END_ACTION = myCbSmartEnd.isSelected();
     codeInsightSettings.SMART_INDENT_ON_ENTER = myCbSmartIndentOnEnter.isSelected();
     codeInsightSettings.INSERT_BRACE_ON_ENTER = myCbInsertPairCurlyBraceOnEnter.isSelected();
+    codeInsightSettings.INDENT_TO_CARET_ON_PASTE = mySmartIndentPastedLinesCheckBox.isSelected();
     codeInsightSettings.JAVADOC_STUB_ON_ENTER = myCbInsertJavadocStubOnEnter.isSelected();
     codeInsightSettings.AUTOINSERT_PAIR_BRACKET = myCbInsertPairBracket.isSelected();
     codeInsightSettings.AUTOINSERT_PAIR_QUOTE = myCbInsertPairQuote.isSelected();
@@ -182,6 +185,7 @@ public class EditorSmartKeysConfigurable implements Configurable {
     isModified |= isModified(myCbInsertJavadocStubOnEnter, codeInsightSettings.JAVADOC_STUB_ON_ENTER);
 
     isModified |= isModified(myCbInsertPairBracket, codeInsightSettings.AUTOINSERT_PAIR_BRACKET);
+    isModified |= isModified(mySmartIndentPastedLinesCheckBox, codeInsightSettings.INDENT_TO_CARET_ON_PASTE);
     isModified |= isModified(myCbInsertPairQuote, codeInsightSettings.AUTOINSERT_PAIR_QUOTE);
     isModified |= isModified(myCbReformatBlockOnTypingRBrace, codeInsightSettings.REFORMAT_BLOCK_ON_RBRACE);
     isModified |= isModified(myCbCamelWords, editorSettings.isCamelWords());
