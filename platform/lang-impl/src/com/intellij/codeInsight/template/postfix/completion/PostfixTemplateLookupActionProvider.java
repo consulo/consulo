@@ -19,17 +19,17 @@ import com.intellij.codeInsight.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupActionProvider;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
-import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesCheckboxTree;
+import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import com.intellij.codeInsight.template.postfix.templates.PostfixTemplatesUtils;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
 import com.intellij.util.IconUtil;
+import lombok.val;
 
 public class PostfixTemplateLookupActionProvider implements LookupActionProvider {
   @Override
@@ -48,15 +48,15 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
             public void run() {
               if (project.isDisposed()) return;
 
-              final PostfixTemplatesConfigurable configurable = new PostfixTemplatesConfigurable();
-              ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
+              val configurable = new PostfixTemplatesConfigurable();
+              val childConfigurable = configurable.findConfigurable(templateLookupElement.getProvider());
+              if(childConfigurable == null) {
+                return;
+              }
+              ShowSettingsUtil.getInstance().editConfigurable(project, childConfigurable, new Runnable() {
                 @Override
                 public void run() {
-                  PostfixTemplatesCheckboxTree templatesTree = configurable.getTemplatesTree();
-                  if (templatesTree != null) {
-                    templatesTree.selectTemplate(template, PostfixTemplatesUtils
-                      .getLangForProvider(templateLookupElement.getProvider()));
-                  }
+                  childConfigurable.focusTemplate(template);
                 }
               });
             }

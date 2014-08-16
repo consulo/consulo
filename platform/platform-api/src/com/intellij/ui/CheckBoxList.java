@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -92,11 +93,11 @@ public class CheckBoxList<T> extends JBList {
     }
   }
 
-  public void setItems(final List<T> items, @Nullable Function<T, String> converter) {
+  public void setItems(final Collection<T> items, @Nullable Function<T, String> converter) {
     setItems(items, converter, null);
   }
 
-  public void setItems(final List<T> items, @Nullable Function<T, String> textConverter, @Nullable Function<T, Boolean> stateConverter) {
+  public void setItems(final Collection<T> items, @Nullable Function<T, String> textConverter, @Nullable Function<T, Boolean> stateConverter) {
     clear();
     for (T item : items) {
       String text = textConverter != null ? textConverter.fun(item) : item.toString();
@@ -109,6 +110,14 @@ public class CheckBoxList<T> extends JBList {
     JCheckBox checkBox = new JCheckBox(text, selected);
     myItemMap.put(item, checkBox);
     ((DefaultListModel) getModel()).addElement(checkBox);
+  }
+
+  public int getItemIndex(Object item) {
+    JCheckBox checkBox = myItemMap.get(item);
+    if(checkBox == null) {
+      return -1;
+    }
+    return ((DefaultListModel) getModel()).indexOf(checkBox);
   }
 
   public Object getItemAt(int index) {

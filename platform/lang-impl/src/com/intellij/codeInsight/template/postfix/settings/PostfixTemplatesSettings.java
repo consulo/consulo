@@ -74,6 +74,16 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     state.add(template.getKey());
   }
 
+  public void enableTemplate(@NotNull PostfixTemplate template, @NotNull PostfixTemplateProvider provider) {
+    String langForProvider = PostfixTemplatesUtils.getLangForProvider(provider);
+    enableTemplate(template, langForProvider);
+  }
+
+  public void enableTemplate(PostfixTemplate template, String langForProvider) {
+    Set<String> state = ContainerUtil.getOrCreate(myLangToDisabledTemplates, langForProvider, SET_FACTORY);
+    state.remove(template.getKey());
+  }
+
   public boolean isPostfixTemplatesEnabled() {
     return postfixTemplatesEnabled;
   }
@@ -108,7 +118,7 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     myShortcut = shortcut;
   }
 
-  @Nullable
+  @NotNull
   public static PostfixTemplatesSettings getInstance() {
     return ServiceManager.getService(PostfixTemplatesSettings.class);
   }

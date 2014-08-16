@@ -2,34 +2,36 @@
   <name>Sand Language</name>
 
   <extensions defaultExtensionNs="com.intellij">
-    <fileTypeFactory implementation="org.mustbe.consulo.sandLanguage.lang.SandFileTypeFactory" />
-    <lang.parserDefinition language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.SandParsingDefinition" />
+    <fileTypeFactory implementation="org.mustbe.consulo.sandLanguage.lang.SandFileTypeFactory"/>
+    <lang.parserDefinition language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.SandParsingDefinition"/>
 
-    <lang.syntaxHighlighterFactory key="SAND" implementationClass="org.mustbe.consulo.sandLanguage.ide.highlight.SandHighlighterFactory" />
+    <lang.syntaxHighlighterFactory key="SAND" implementationClass="org.mustbe.consulo.sandLanguage.ide.highlight.SandHighlighterFactory"/>
 
-    <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.SandLanguageVersion" />
-    <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.Sand2LanguageVersion" />
+    <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.SandLanguageVersion"/>
+    <lang.defineVersion language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.version.Sand2LanguageVersion"/>
 
-    <compiler implementation="org.mustbe.consulo.sandLanguage.ide.compiler.SandCompiler" />
+    <compiler implementation="org.mustbe.consulo.sandLanguage.ide.compiler.SandCompiler"/>
 
-    <fileEditorProvider implementation="org.mustbe.consulo.sandLanguage.ide.fileEditor.SandFileEditorProvider" />
-    <library.type implementation="org.mustbe.consulo.sandLanguage.ide.library.SandLibraryType" />
-    <packaging.artifactType implementation="org.mustbe.consulo.sandLanguage.ide.artifact.SandArtifactType" />
-    <executor implementation="org.mustbe.consulo.sandLanguage.ide.run.SandExecutor" />
-    <configurationType implementation="org.mustbe.consulo.sandLanguage.ide.run.SandConfigurationType" />
+    <codeInsight.template.postfixTemplateProvider language="SAND"
+                                                  implementationClass="org.mustbe.consulo.sandLanguage.ide.codeInsight.template.postfix.templates.SandPostfixTemplateProvider"/>
+    <fileEditorProvider implementation="org.mustbe.consulo.sandLanguage.ide.fileEditor.SandFileEditorProvider"/>
+    <library.type implementation="org.mustbe.consulo.sandLanguage.ide.library.SandLibraryType"/>
+    <packaging.artifactType implementation="org.mustbe.consulo.sandLanguage.ide.artifact.SandArtifactType"/>
+    <executor implementation="org.mustbe.consulo.sandLanguage.ide.run.SandExecutor"/>
+    <configurationType implementation="org.mustbe.consulo.sandLanguage.ide.run.SandConfigurationType"/>
     <moduleExtensionProvider key="sand"
                              icon="/nodes/static.png"
                              name="Sand"
                              immutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandModuleExtension"
-                             mutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension" />
-    <contentFolderSupportPatcher implementation="org.mustbe.consulo.sandLanguage.ide.module.SandContentFolderSupportPatcher" />
-    <taskByVfsChange implementation="org.mustbe.consulo.sandLanguage.ide.vfs.backgroundTask.SandBackgroundTaskByVfsChangeProvider" />
-    <sdkType implementation="org.mustbe.consulo.sandLanguage.ide.bundle.SandBundleType" />
+                             mutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension"/>
+    <contentFolderSupportPatcher implementation="org.mustbe.consulo.sandLanguage.ide.module.SandContentFolderSupportPatcher"/>
+    <taskByVfsChange implementation="org.mustbe.consulo.sandLanguage.ide.vfs.backgroundTask.SandBackgroundTaskByVfsChangeProvider"/>
+    <sdkType implementation="org.mustbe.consulo.sandLanguage.ide.bundle.SandBundleType"/>
     <toolWindow id="Sand"
                 anchor="right"
                 requireModuleExtensions="sand"
                 icon="/toolwindows/toolWindowCommander.png"
-                factoryClass="org.mustbe.consulo.sandLanguage.ide.toolwindow.SandToolWindowFactory" />
-    <newModuleBuilder implementation="org.mustbe.consulo.sandLanguage.ide.module.SandNewModuleBuilder" />
+                factoryClass="org.mustbe.consulo.sandLanguage.ide.toolwindow.SandToolWindowFactory"/>
+    <newModuleBuilder implementation="org.mustbe.consulo.sandLanguage.ide.module.SandNewModuleBuilder"/>
   </extensions>
 </idea-plugin>
