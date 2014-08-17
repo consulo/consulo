@@ -242,8 +242,8 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
     }
     c.setFont(comboBox.getFont());
     if (hasFocus && !isPopupVisible(comboBox)) {
-      c.setForeground(DefaultLookup.getColor(comboBox, this, "ComboBox.selectionForeground", listBox.getSelectionForeground()));
-      c.setBackground(DefaultLookup.getColor(comboBox, this, "ComboBox.selectionBackground", listBox.getSelectionBackground()));
+      c.setForeground(comboBox.getForeground());
+      c.setBackground(comboBox.getBackground());
     }
     else {
       if (comboBox.isEnabled()) {

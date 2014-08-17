@@ -759,6 +759,10 @@ public class UIUtil {
   }
 
   public static Color getListUnfocusedSelectionBackground() {
+    Color color = UIManager.getColor("Color.SelectionBackground");
+    if(color != null) {
+      return color;
+    }
     return isUnderDarcula() ? Gray._52 : UNFOCUSED_SELECTION_COLOR;
   }
 
