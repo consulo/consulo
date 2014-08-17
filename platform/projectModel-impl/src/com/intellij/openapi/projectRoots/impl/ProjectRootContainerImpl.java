@@ -21,7 +21,7 @@ import com.intellij.openapi.projectRoots.ProjectRootListener;
 import com.intellij.openapi.projectRoots.ex.ProjectRoot;
 import com.intellij.openapi.projectRoots.ex.ProjectRootContainer;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.PersistentOrderRootType;
+import com.intellij.openapi.roots.OrderRootTypeWithConvert;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
@@ -168,7 +168,7 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    for (PersistentOrderRootType type : OrderRootType.getAllPersistentTypes()) {
+    for (OrderRootType type : OrderRootType.getAllTypes()) {
       read(element, type);
     }
 
@@ -197,8 +197,8 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
-    List<PersistentOrderRootType> allTypes = OrderRootType.getSortedRootTypes();
-    for (PersistentOrderRootType type : allTypes) {
+    OrderRootType[] allTypes = OrderRootType.getSortedRootTypes();
+    for (OrderRootType type : allTypes) {
       write(element, type);
     }
   }
@@ -222,8 +222,8 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
     }
   }
 
-  private void read(Element element, PersistentOrderRootType type) throws InvalidDataException {
-    Element child = element.getChild(type.getSdkRootName());
+  private void read(Element element, OrderRootType type) throws InvalidDataException {
+    Element child = OrderRootTypeWithConvert.findFirstElement(element, type);
     if (child == null) {
       myRoots.put(type, new CompositeProjectRoot());
       return;
@@ -235,8 +235,8 @@ public class ProjectRootContainerImpl implements JDOMExternalizable, ProjectRoot
     myRoots.put(type, root);
   }
 
-  private void write(Element roots, PersistentOrderRootType type) throws WriteExternalException {
-    Element e = new Element(type.getSdkRootName());
+  private void write(Element roots, OrderRootType type) throws WriteExternalException {
+    Element e = new Element(type.getName());
     roots.addContent(e);
     final Element root = ProjectRootUtil.write(myRoots.get(type));
     if (root != null) {

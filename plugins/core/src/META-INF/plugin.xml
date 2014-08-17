@@ -1554,12 +1554,17 @@
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.ProjectBaseDirNavigationContributor"/>
 
 
-    <orderRootTypeEditor key="DOCUMENTATION"
-                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
-    <orderRootTypeEditor key="CLASSES"
+    <orderRootType implementation="com.intellij.openapi.roots.types.BinariesOrderRootType" />
+    <orderRootTypeEditor key="binaries"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.BinariesOrderRootTypeUIFactory"/>
-    <orderRootTypeEditor key="SOURCES"
+
+    <orderRootType implementation="com.intellij.openapi.roots.types.SourcesOrderRootType" />
+    <orderRootTypeEditor key="sources"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
+
+    <orderRootType implementation="com.intellij.openapi.roots.types.DocumentationOrderRootType" />
+    <orderRootTypeEditor key="documentation"
+                         implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
 
     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
 

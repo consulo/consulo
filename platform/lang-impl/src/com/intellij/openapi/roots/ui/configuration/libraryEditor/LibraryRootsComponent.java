@@ -30,7 +30,6 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.PersistentOrderRootType;
 import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.LibraryType;
@@ -263,7 +262,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
   @Override
   @Nullable
   public VirtualFile getExistingRootDirectory() {
-    for (OrderRootType orderRootType : OrderRootType.getAllPersistentTypes()) {
+    for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
       final VirtualFile[] existingRoots = getLibraryEditor().getFiles(orderRootType);
       if (existingRoots.length > 0) {
         VirtualFile existingRoot = existingRoots[0];
@@ -510,7 +509,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     for (String url : excludedRootUrls) {
       ContainerUtil.addIfNotNull(excludedRoots, VirtualFileManager.getInstance().findFileByUrl(url));
     }
-    for (PersistentOrderRootType type : OrderRootType.getAllPersistentTypes()) {
+    for (OrderRootType type : OrderRootType.getAllTypes()) {
       VirtualFile[] files = getLibraryEditor().getFiles(type);
       for (VirtualFile file : files) {
         if (!VfsUtilCore.isUnder(file, excludedRoots)) {

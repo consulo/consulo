@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.roots.libraries;
+package com.intellij.openapi.roots.types;
 
-import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.roots.OrderRootTypeWithConvert;
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 17.08.14
  */
-public abstract class PersistentLibraryKind<P extends LibraryProperties> extends LibraryKind {
-  /**
-   * @param kindId must be unique among all {@link com.intellij.openapi.roots.libraries.LibraryType} and
-   *               {@link com.intellij.openapi.roots.libraries.LibraryPresentationProvider} implementations.
-   */
-  public PersistentLibraryKind(@NotNull @NonNls String kindId) {
-    super(kindId);
+public class SourcesOrderRootType extends OrderRootTypeWithConvert {
+  @NotNull
+  @LazyInstance
+  public static SourcesOrderRootType getInstance() {
+    return getOrderRootType(SourcesOrderRootType.class);
   }
 
-  @NotNull
-  public abstract P createDefaultProperties();
+  public SourcesOrderRootType() {
+    super("sources", "SOURCES", "sourcePath");
+  }
 }

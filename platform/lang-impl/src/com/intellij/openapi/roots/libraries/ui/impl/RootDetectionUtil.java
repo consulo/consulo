@@ -80,7 +80,9 @@ public class RootDetectionUtil {
                 final HashMap<LibraryRootType, String> names = new HashMap<LibraryRootType, String>();
                 for (LibraryRootType type : root.getTypes()) {
                   final String typeName = detector.getRootTypeName(type);
-                  LOG.assertTrue(typeName != null, "Unexpected root type " + type.getType().name() + (type.isJarDirectory() ? " (jar directory)" : "") + ", detectors: " + detector);
+                  LOG.assertTrue(typeName != null, "Unexpected root type " + type.getType().getName() + (type.isJarDirectory() ? " (jar directory)" : "") + ", " +
+                                                   "" +
+                                                   "detectors: " + detector);
                   names.put(type, typeName);
                 }
                 suggestedRoots.add(new SuggestedChildRootInfo(rootCandidate, root, names));
