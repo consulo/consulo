@@ -105,10 +105,9 @@ class CompositeProjectRoot implements ProjectRoot {
   }
 
   public void readExternal(Element element) throws InvalidDataException {
-    final List children = element.getChildren();
-    for (Object aChildren : children) {
-      Element e = (Element)aChildren;
-      myRoots.add(ProjectRootUtil.read(e));
+    final List<Element> children = element.getChildren();
+    for (Element aChildren : children) {
+      myRoots.add(ProjectRootUtil.read(aChildren));
     }
   }
 
