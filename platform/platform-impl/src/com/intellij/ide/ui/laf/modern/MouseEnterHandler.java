@@ -17,7 +17,7 @@ package com.intellij.ide.ui.laf.modern;
 
 import com.intellij.util.BitUtil;
 
-import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -30,12 +30,13 @@ public class MouseEnterHandler extends MouseAdapter {
   private static final int PRESSED = 1 << 1;
 
   private int myFlags;
+  private MouseAdapter myMouseAdapter;
 
-  public MouseEnterHandler(final JComponent component) {
-    component.addMouseListener(new MouseAdapter() {
+  public MouseEnterHandler(final Component component) {
+    myMouseAdapter = new MouseAdapter() {
       @Override
       public void mouseEntered(MouseEvent e) {
-        if(!component.isEnabled()) {
+        if (!component.isEnabled()) {
           return;
         }
         myFlags = BitUtil.set(myFlags, ENTERED, true);
@@ -50,7 +51,7 @@ public class MouseEnterHandler extends MouseAdapter {
 
       @Override
       public void mousePressed(MouseEvent e) {
-        if(!component.isEnabled()) {
+        if (!component.isEnabled()) {
           return;
         }
         myFlags = BitUtil.set(myFlags, PRESSED, true);
@@ -62,7 +63,18 @@ public class MouseEnterHandler extends MouseAdapter {
         myFlags = BitUtil.set(myFlags, PRESSED, false);
         component.repaint();
       }
-    });
+    };
+    replace(null, component);
+  }
+
+  public void replace(Component oldComponent, Component newComponent) {
+    if(oldComponent != null) {
+      oldComponent.removeMouseListener(myMouseAdapter);
+    }
+
+    if(newComponent != null) {
+      newComponent.addMouseListener(myMouseAdapter);
+    }
   }
 
   public boolean isMousePressed() {

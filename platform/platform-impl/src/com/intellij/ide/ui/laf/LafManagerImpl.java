@@ -24,7 +24,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
-import com.intellij.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import com.intellij.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
@@ -144,7 +143,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
 
     lafList.add(new ModernWhiteLookAndFeelInfo());
-    lafList.add(new ModernDarkLookAndFeelInfo());
+    //lafList.add(new ModernDarkLookAndFeelInfo());
     lafList.add(new DarculaLookAndFeelInfo());
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
