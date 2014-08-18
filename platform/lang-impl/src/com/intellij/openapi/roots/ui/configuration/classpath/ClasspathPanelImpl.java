@@ -63,13 +63,11 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
@@ -300,7 +298,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     //removeButton.setShortcut(CustomShortcutSet.fromString("alt DELETE"));
     //upButton.setShortcut(CustomShortcutSet.fromString("alt UP"));
     //downButton.setShortcut(CustomShortcutSet.fromString("alt DOWN"));
-    myEntryTable.setBorder(new LineBorder(UIUtil.getBorderColor()));
 
     // we need to register our listener before ToolbarDecorator registers its own. Otherwise
     myEntryTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -314,6 +311,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     });
 
     final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myEntryTable);
+    decorator.setPanelBorder(IdeBorderFactory.createBorder(SideBorder.RIGHT));
     decorator.setAddAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {

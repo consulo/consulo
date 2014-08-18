@@ -27,7 +27,6 @@ import com.intellij.ui.OrderPanelListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -77,11 +76,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
       }
     });
 
-    final JPanel panel = new JPanel(new BorderLayout());
-    panel.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
-    panel.add(myPanel, BorderLayout.CENTER);
-
-    return panel;
+    return myPanel;
   }
 
   public void flushChangesToModel() {

@@ -174,7 +174,7 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
     };
 
     left.add(myNorthPanel, BorderLayout.NORTH);
-    myMaster = ScrollPaneFactory.createScrollPane(myTree);
+    myMaster = ScrollPaneFactory.createScrollPane(myTree, true);
     left.add(myMaster, BorderLayout.CENTER);
     mySplitter.setFirstComponent(left);
 
