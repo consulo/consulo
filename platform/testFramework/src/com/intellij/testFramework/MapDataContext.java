@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapDataContext implements DataContext {
-  private final Map myMap = new HashMap();
+  private final Map<String, Object> myMap = new HashMap<String, Object>();
 
   @Override
   public Object getData(String dataId) {

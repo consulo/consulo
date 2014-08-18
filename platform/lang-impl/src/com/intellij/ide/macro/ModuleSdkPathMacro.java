@@ -16,44 +16,37 @@
 
 package com.intellij.ide.macro;
 
-import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.util.PathUtil;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-public final class JdkPathMacro extends Macro {
-  @Override
-  public String getName() {
-    return "JDKPath";
-  }
-
-  @Override
-  public String getDescription() {
-    return IdeBundle.message("macro.jdk.path");
-  }
+public abstract class ModuleSdkPathMacro extends Macro {
+  @NotNull
+  public abstract Class<? extends ModuleExtensionWithSdk<?>> getExtensionClass();
 
   @Override
   public String expand(DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    if (project == null) {
+    final Module module = LangDataKeys.MODULE.getData(dataContext);
+    if(module == null) {
       return null;
     }
-    //f/inal Sdk anyJdk = PathUtilEx.getAnyJdk(project);
-   // return sdkPath(anyJdk);
-    return null;
+    return sdkPath(ModuleUtilCore.getSdk(module, getExtensionClass()));
   }
 
   @Nullable
-  static String sdkPath(@Nullable Sdk anyJdk) {
-    if (anyJdk == null) {
+  static String sdkPath(@Nullable Sdk anySdk) {
+    if (anySdk == null) {
       return null;
     }
-    String jdkHomePath = PathUtil.getLocalPath(anyJdk.getHomeDirectory());
+    String jdkHomePath = PathUtil.getLocalPath(anySdk.getHomeDirectory());
     if (jdkHomePath != null) {
       jdkHomePath = jdkHomePath.replace('/', File.separatorChar);
     }

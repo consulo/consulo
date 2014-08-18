@@ -15,6 +15,8 @@
  */
 package com.intellij.application.options;
 
+import com.intellij.ide.macro.Macro;
+import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.CompositePathMacroFilter;
@@ -62,7 +64,10 @@ public class PathMacrosCollector extends PathMacroMap {
     final HashSet<String> result = new HashSet<String>(collector.myMacroMap.keySet());
     result.removeAll(pathMacros.getSystemMacroNames());
     result.removeAll(pathMacros.getLegacyMacroNames());
-    result.removeAll(PathMacrosImpl.getToolMacroNames());
+    for (Macro macro : MacroManager.getInstance().getMacros()) {
+      result.remove(macro.getName());
+    }
+    result.removeAll(MacroManager.getInstance().getMacros());
     result.removeAll(pathMacros.getIgnoredMacroNames());
     return result;
   }
