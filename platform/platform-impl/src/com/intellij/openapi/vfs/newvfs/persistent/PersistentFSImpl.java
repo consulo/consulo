@@ -874,7 +874,7 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     if (fs instanceof JarFileSystem) {
       // optimization: for jar roots do not store base path in the myName field, use local FS file's getPath()
-      String parentPath = basePath.substring(0, basePath.indexOf(JarFileSystem.JAR_SEPARATOR));
+      String parentPath = basePath.substring(0, basePath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR));
       VirtualFile parentFile = LocalFileSystem.getInstance().findFileByPath(parentPath);
       if (parentFile == null || !isValidJar(parentPath)) return null;
       newRoot = new JarRoot(fs, rootId, parentFile);
@@ -1328,9 +1328,9 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
 
     @Override
     protected char[] appendPathOnFileSystem(int accumulatedPathLength, int[] positionRef) {
-      char[] chars = new char[myParentPath.length() + JarFileSystem.JAR_SEPARATOR.length() + accumulatedPathLength];
+      char[] chars = new char[myParentPath.length() + ArchiveFileSystem.ARCHIVE_SEPARATOR.length() + accumulatedPathLength];
       positionRef[0] = copyString(chars, positionRef[0], myParentPath);
-      positionRef[0] = copyString(chars, positionRef[0], JarFileSystem.JAR_SEPARATOR);
+      positionRef[0] = copyString(chars, positionRef[0], ArchiveFileSystem.ARCHIVE_SEPARATOR);
       return chars;
     }
   }
