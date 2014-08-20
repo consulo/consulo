@@ -1,12 +1,11 @@
 <component name="libraryTable">
   <library name="CGLIB">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/cglib-2.2.2.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES>
+    </binaries>
+    <sources>
       <root url="jar://$PROJECT_DIR$/libSrc/cglib-src-2.2.2.jar!/src/proxy" />
       <root url="jar://$PROJECT_DIR$/libSrc/cglib-src-2.2.2.jar!/src/test" />
-    </SOURCES>
+    </sources>
   </library>
 </component>

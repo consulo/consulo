@@ -1,11 +1,10 @@
 <component name="libraryTable">
   <library name="Snappy-Java">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/snappy-in-java-0.3.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES>
+    </binaries>
+    <sources>
       <root url="jar://$PROJECT_DIR$/libSrc/snappy-in-java-0.3-src.jar!/snappy-snappy-0.3/src/main/java" />
-    </SOURCES>
+    </sources>
   </library>
 </component>

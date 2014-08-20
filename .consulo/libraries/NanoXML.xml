@@ -1,11 +1,10 @@
 <component name="libraryTable">
   <library name="NanoXML">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/nanoxml-2.2.3.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES>
+    </binaries>
+    <sources>
       <root url="jar://$PROJECT_DIR$/libSrc/nanoxml.zip!/" />
-    </SOURCES>
+    </sources>
   </library>
 </component>

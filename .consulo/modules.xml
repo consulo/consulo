@@ -529,11 +529,9 @@
           <orderEntry type="module" module-name="icons" />
           <orderEntry type="module-library">
             <library>
-              <CLASSES>
+              <binaries>
                 <root url="jar://$MODULE_DIR$/../../lib/automaton.jar!/" />
-              </CLASSES>
-              <DOCUMENTATION />
-              <SOURCES />
+              </binaries>
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="projectModel-api" exported="" />
@@ -1011,29 +1009,23 @@
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module-library">
             <library>
-              <CLASSES>
+              <binaries>
                 <root url="jar://$MODULE_DIR$/lib/coverage-agent.jar!/" />
-              </CLASSES>
-              <DOCUMENTATION />
-              <SOURCES />
+              </binaries>
             </library>
           </orderEntry>
           <orderEntry type="module-library">
             <library>
-              <CLASSES>
+              <binaries>
                 <root url="jar://$MODULE_DIR$/lib/instrumenter.jar!/" />
-              </CLASSES>
-              <DOCUMENTATION />
-              <SOURCES />
+              </binaries>
             </library>
           </orderEntry>
           <orderEntry type="module-library">
             <library>
-              <CLASSES>
+              <binaries>
                 <root url="jar://$MODULE_DIR$/lib/coverage-util.jar!/" />
-              </CLASSES>
-              <DOCUMENTATION />
-              <SOURCES />
+              </binaries>
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="testRunner" />

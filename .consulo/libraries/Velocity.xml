@@ -1,13 +1,12 @@
 <component name="libraryTable">
   <library name="Velocity">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/velocity.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES>
+    </binaries>
+    <sources>
       <root url="jar://$PROJECT_DIR$/libSrc/velocity-1.7-src.zip!/java" />
       <root url="jar://$PROJECT_DIR$/libSrc/commons-collections-3.2.1-src.zip!/commons-collections-3.2.1-src/src/java" />
       <root url="jar://$PROJECT_DIR$/libSrc/commons-lang-2.4-sources.jar!/" />
-    </SOURCES>
+    </sources>
   </library>
 </component>
