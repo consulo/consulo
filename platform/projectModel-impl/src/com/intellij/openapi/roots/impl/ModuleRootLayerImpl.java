@@ -26,7 +26,6 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
@@ -277,12 +276,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
     for (OrderEntry orderEntry : getOrderEntries()) {
       if (orderEntry instanceof WritableOrderEntry) {
-        try {
-          ((WritableOrderEntry)orderEntry).writeExternal(element);
-        }
-        catch (WriteExternalException e) {
-          LOGGER.error("Failed to write order entry: " + orderEntry, e);
-        }
+        ((WritableOrderEntry)orderEntry).writeExternal(element);
       }
     }
   }

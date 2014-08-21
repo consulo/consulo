@@ -20,7 +20,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.consulo.util.pointers.NamedPointer;
@@ -141,7 +140,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  public void writeExternal(Element rootElement) throws WriteExternalException {
+  public void writeExternal(Element rootElement) {
     final Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
     element.setAttribute(MODULE_NAME_ATTR, getModuleName());
     if (myExported) {

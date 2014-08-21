@@ -139,14 +139,19 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   @Override
-  public void writeExternal(Element rootElement) throws WriteExternalException {
+  public void writeExternal(Element rootElement)  {
     final Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
     if (myExported) {
       element.setAttribute(EXPORTED_ATTR, "");
     }
     myScope.writeExternal(element);
-    myLibrary.writeExternal(element);
-    rootElement.addContent(element);
+    try {
+      myLibrary.writeExternal(element);
+      rootElement.addContent(element);
+    }
+    catch (WriteExternalException e) {
+      LOGGER.error("Exception while writing module library: " + getLibraryName() + " in module: " + getOwnerModule().getName(), e);
+    }
   }
 
 
