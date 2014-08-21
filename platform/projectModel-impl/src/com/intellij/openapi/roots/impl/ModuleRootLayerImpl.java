@@ -179,7 +179,6 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   private final ModuleLibraryTable myModuleLibraryTable;
 
-
   public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer, @NotNull RootModelImpl rootModel) {
     myRootModel = rootModel;
     myModuleLibraryTable = new ModuleLibraryTable(this);
@@ -316,7 +315,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @SuppressWarnings("unchecked")
   public void createMutableExtensions(@Nullable ModuleRootLayerImpl layer) {
     for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviderEP.EP_NAME.getExtensions()) {
-      MutableModuleExtension mutable = providerEP.createMutable(myRootModel);
+      MutableModuleExtension mutable = providerEP.createMutable(this);
       if (mutable == null) {
         continue;
       }
@@ -472,6 +471,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return Collections.unmodifiableList(myOrderEntries).iterator();
   }
 
+  @Override
+  @NotNull
   public Project getProject() {
     return getModule().getProject();
   }
@@ -744,8 +745,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Override
   public void removeContentEntry(@NotNull ContentEntry entry) {
     LOGGER.assertTrue(myContent.contains(entry));
-    if (entry instanceof RootModelComponentBase) {
-      Disposer.dispose((RootModelComponentBase)entry);
+    if (entry instanceof Disposable) {
+      Disposer.dispose((Disposable)entry);
     }
     myContent.remove(entry);
   }
@@ -889,8 +890,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   public void removeAllContentEntries() {
     for (ContentEntry entry : myContent) {
-      if (entry instanceof RootModelComponentBase) {
-        Disposer.dispose((RootModelComponentBase)entry);
+      if (entry instanceof BaseModuleRootLayerChild) {
+        Disposer.dispose((BaseModuleRootLayerChild)entry);
       }
     }
     myContent.clear();

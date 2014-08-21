@@ -15,6 +15,7 @@
  */
 package org.consulo.module.extension;
 
+import com.intellij.openapi.roots.ModifiableModuleRootLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +28,10 @@ import javax.swing.*;
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
   @Nullable
   JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck);
+
+  @Override
+  @NotNull
+  ModifiableModuleRootLayer getModuleRootLayer();
 
   void setEnabled(boolean val);
 

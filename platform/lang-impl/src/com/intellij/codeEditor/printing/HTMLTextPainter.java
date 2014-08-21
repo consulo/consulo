@@ -34,7 +34,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NonNls;
@@ -215,8 +215,8 @@ class HTMLTextPainter {
     PsiElement refClass = ref.resolve();
 
     PsiFile refFile = refClass.getContainingFile();
-    String refPackageName = PsiDirectoryFactory.getInstance(myProject).getQualifiedName(refFile.getContainingDirectory(), false);
-    String psiPackageName = PsiDirectoryFactory.getInstance(myProject).getQualifiedName(myPsiFile.getContainingDirectory(), false);
+    String refPackageName = PsiPackageHelper.getInstance(myProject).getQualifiedName(refFile.getContainingDirectory(), false);
+    String psiPackageName = PsiPackageHelper.getInstance(myProject).getQualifiedName(myPsiFile.getContainingDirectory(), false);
 
     StringBuffer fileName = new StringBuffer();
     if (!psiPackageName.equals(refPackageName)) {

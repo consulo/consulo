@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -74,7 +74,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     if (FileTypeManager.getInstance().isFileIgnored(inputString)) {
       return "Trying to create a " + (myIsDirectory ? "directory" : "package") + " with ignored name, result will not be visible";
     }
-    if (!myIsDirectory && inputString.length() > 0 && !PsiDirectoryFactory.getInstance(myProject).isValidPackageName(inputString)) {
+    if (!myIsDirectory && inputString.length() > 0 && !PsiPackageHelper.getInstance(myProject).isValidPackageName(inputString)) {
       return "Not a valid package name, it would be impossible to create a class inside";
     }
     return null;

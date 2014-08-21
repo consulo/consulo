@@ -17,7 +17,6 @@
 package com.intellij.psi.impl.file;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.impl.PsiManagerImpl;
@@ -27,15 +26,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author yole
  */
-public class PsiDirectoryFactoryImpl extends PsiDirectoryFactory {
+public class PsiPackageHelperImpl extends PsiPackageHelper {
   private final PsiManagerImpl myManager;
 
-  public PsiDirectoryFactoryImpl(final PsiManagerImpl manager) {
+  public PsiPackageHelperImpl(final PsiManagerImpl manager) {
     myManager = manager;
-  }
-  @Override
-  public PsiDirectory createDirectory(@NotNull final VirtualFile file) {
-    return new PsiDirectoryImpl(myManager, file);
   }
 
   @Override

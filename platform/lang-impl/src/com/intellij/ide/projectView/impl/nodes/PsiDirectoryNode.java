@@ -41,7 +41,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.ui.SimpleTextAttributes;
@@ -247,7 +247,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   public String getTitle() {
     final PsiDirectory directory = getValue();
     if (directory != null) {
-      return PsiDirectoryFactory.getInstance(getProject()).getQualifiedName(directory, true);
+      return PsiPackageHelper.getInstance(getProject()).getQualifiedName(directory, true);
     }
     return super.getTitle();
   }
@@ -276,7 +276,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
 
   @Override
   public String getQualifiedNameSortKey() {
-    final PsiDirectoryFactory factory = PsiDirectoryFactory.getInstance(getProject());
+    final PsiPackageHelper factory = PsiPackageHelper.getInstance(getProject());
     return factory.getQualifiedName(getValue(), true);
   }
 

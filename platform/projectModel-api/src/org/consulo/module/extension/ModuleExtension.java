@@ -18,6 +18,7 @@ package org.consulo.module.extension;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.util.messages.Topic;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,9 @@ public interface ModuleExtension<T extends ModuleExtension> extends PersistentSt
 
   @NotNull
   Module getModule();
+
+  @NotNull
+  ModuleRootLayer getModuleRootLayer();
 
   @NotNull
   Project getProject();

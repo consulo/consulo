@@ -15,7 +15,7 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFoldersSupport;
@@ -27,7 +27,7 @@ import org.mustbe.consulo.roots.impl.WebResourcesFolderTypeProvider;
  */
 @ContentFoldersSupport(value = {WebResourcesFolderTypeProvider.class})
 public class SandModuleExtension extends ModuleExtensionImpl<SandModuleExtension> {
-  public SandModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel) {
+  public SandModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
     super(id, rootModel);
   }
 }

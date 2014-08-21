@@ -18,7 +18,7 @@ package org.consulo.module.extension;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.NullableLazyValue;
@@ -99,7 +99,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
         return null;
       }
       try {
-        return value.getConstructor(String.class, ModifiableRootModel.class);
+        return value.getConstructor(String.class, ModuleRootLayer.class);
       }
       catch (NoSuchMethodException e) {
          LOGGER.error(e);
@@ -116,7 +116,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
         return null;
       }
       try {
-        return value.getConstructor(String.class, ModifiableRootModel.class);
+        return value.getConstructor(String.class, ModuleRootLayer.class);
       }
       catch (NoSuchMethodException e) {
         LOGGER.error(e);
@@ -126,7 +126,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   };
 
   @Nullable
-  public ModuleExtension<?> createImmutable(@NotNull ModifiableRootModel modifiableRootModel) {
+  public ModuleExtension<?> createImmutable(@NotNull ModuleRootLayer modifiableRootModel) {
     Constructor<ModuleExtension> value = myImmutableConstructorValue.getValue();
     if(value != null) {
       return ReflectionUtil.createInstance(value, key, modifiableRootModel);
@@ -137,7 +137,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   }
 
   @Nullable
-  public MutableModuleExtension<?> createMutable(@NotNull ModifiableRootModel modifiableRootModel) {
+  public MutableModuleExtension<?> createMutable(@NotNull ModuleRootLayer modifiableRootModel) {
     Constructor<MutableModuleExtension> value = myMutableConstructorValue.getValue();
     if(value != null) {
       return ReflectionUtil.createInstance(value, key, modifiableRootModel);

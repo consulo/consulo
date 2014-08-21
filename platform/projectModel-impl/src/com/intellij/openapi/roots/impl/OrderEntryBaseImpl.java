@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
 @org.consulo.lombok.annotations.Logger
-public abstract class OrderEntryBaseImpl extends RootModelComponentBase implements OrderEntry {
+public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
   private static int _hc = 0;
 
   @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})

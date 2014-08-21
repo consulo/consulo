@@ -40,7 +40,7 @@ import java.util.Map;
 /**
  * @author dsl
  */
-public class ContentFolderImpl extends RootModelComponentBase
+public class ContentFolderImpl extends BaseModuleRootLayerChild
   implements ContentFolder, ClonableContentFolder, Comparable<ContentFolderImpl> {
   private static Map<Key, ContentFolderPropertyProvider> ourPropertiesToKeyCache = new HashMap<Key, ContentFolderPropertyProvider>();
 

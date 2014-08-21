@@ -54,6 +54,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     myOrderRootsCache = new OrderRootsCache(module);
   }
 
+  @NotNull
+  @Override
+  public Project getProject() {
+    return myModule.getProject();
+  }
+
   @Override
   @NotNull
   public Module getModule() {
@@ -113,7 +119,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
         }
 
         for (OrderEntry entry : ModuleRootManagerImpl.this.getOrderEntries()) {
-          assert !((RootModelComponentBase)entry).isDisposed();
+          assert !((BaseModuleRootLayerChild)entry).isDisposed();
         }
       }
     };

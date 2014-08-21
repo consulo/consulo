@@ -17,8 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.openapi.CompositeDisposable;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -48,9 +46,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private boolean myDisposed;
 
   private final RootConfigurationAccessor myConfigurationAccessor;
-
-  // have to register all child disposables using this fake object since all clients just call ModifiableModel.dispose()
-  private final CompositeDisposable myDisposable = new CompositeDisposable();
 
   private String myCurrentLayerName;
   private ModuleRootLayerImpl myCachedCurrentLayer;
@@ -234,7 +229,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   private void disposeLayers() {
     for (ModuleRootLayerImpl moduleRootLayer : myLayers.values()) {
-      moduleRootLayer.dispose();
+      Disposer.dispose(moduleRootLayer);
     }
     myLayers.clear();
   }
@@ -298,7 +293,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       ModuleRootLayerImpl removed = sourceModel.myLayers.remove(layerName);
       assert removed != null;
       layerListener.layerRemove(getModule(), removed);
-      removed.dispose();
+
+      Disposer.dispose(removed);
     }
   }
 
@@ -399,7 +395,6 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   public void dispose() {
     assert !myDisposed;
-    Disposer.dispose(myDisposable);
     disposeLayers();
     myWritable = false;
     myDisposed = true;
@@ -498,9 +493,5 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Override
   public ModuleRootLayer findLayerByName(@NotNull String name) {
     return myLayers.get(name);
-  }
-
-  void registerOnDispose(@NotNull Disposable disposable) {
-    myDisposable.add(disposable);
   }
 }

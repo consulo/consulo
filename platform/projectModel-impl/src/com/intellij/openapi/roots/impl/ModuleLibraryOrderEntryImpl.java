@@ -41,7 +41,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
   public ModuleLibraryOrderEntryImpl(Library library, ModuleRootLayerImpl rootLayer, boolean isExported, DependencyScope scope, boolean init) {
     super(ModuleLibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
-    myLibrary = ((LibraryEx)library).cloneLibrary(rootLayer);
+    myLibrary = library;
     myExported = isExported;
     myScope = scope;
     Disposer.register(this, myLibrary);
@@ -122,7 +122,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
   @Override
   public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
-    return new ModuleLibraryOrderEntryImpl(myLibrary, rootModel, myExported, myScope, true);
+    return new ModuleLibraryOrderEntryImpl(((LibraryEx)myLibrary).cloneLibrary(rootModel), rootModel, myExported, myScope, true);
   }
 
   @Override

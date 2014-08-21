@@ -15,7 +15,7 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +27,7 @@ import javax.swing.*;
  * @since 19.03.14
  */
 public class SandMutableModuleExtension extends SandModuleExtension implements MutableModuleExtension<SandModuleExtension> {
-  public SandMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel) {
+  public SandMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
     super(id, rootModel);
   }
 

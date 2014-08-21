@@ -43,7 +43,7 @@ import java.util.*;
  * @author dsl
  */
 @Logger
-public class ContentEntryImpl extends RootModelComponentBase implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
+public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
   @NonNls
   public static final String ELEMENT_NAME = "content";
   @NonNls

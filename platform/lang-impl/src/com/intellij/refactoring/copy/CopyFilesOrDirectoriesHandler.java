@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;
@@ -338,7 +338,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     final Boolean showDirsChooser = defaultTargetDirectory.getCopyableUserData(CopyPasteDelegator.SHOW_CHOOSER_KEY);
     if (showDirsChooser != null && showDirsChooser.booleanValue()) {
       final PsiDirectoryContainer directoryContainer =
-        PsiDirectoryFactory.getInstance(project).getDirectoryContainer(defaultTargetDirectory);
+        PsiPackageHelper.getInstance(project).getDirectoryContainer(defaultTargetDirectory);
       if (directoryContainer == null) {
         return defaultTargetDirectory;
       }

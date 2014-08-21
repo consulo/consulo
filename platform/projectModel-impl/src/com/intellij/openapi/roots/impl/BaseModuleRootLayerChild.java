@@ -17,19 +17,21 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 
 
 /**
  *  @author dsl
  */
-public abstract class RootModelComponentBase implements Disposable {
+public abstract class BaseModuleRootLayerChild implements Disposable {
   protected final ModuleRootLayerImpl myModuleRootLayer;
   private boolean myDisposed;
 
-  RootModelComponentBase(@NotNull ModuleRootLayerImpl moduleRootLayer) {
+  BaseModuleRootLayerChild(@NotNull ModuleRootLayerImpl moduleRootLayer) {
     myModuleRootLayer = moduleRootLayer;
-    getRootModel().registerOnDispose(this);
+
+    Disposer.register(moduleRootLayer, this);
   }
 
   @NotNull

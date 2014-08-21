@@ -2,6 +2,7 @@ package com.intellij.core;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,12 @@ public class CoreModuleExtension implements ModuleExtension<CoreModuleExtension>
   @NotNull
   @Override
   public Module getModule() {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public ModuleRootLayer getModuleRootLayer() {
     return null;
   }
 

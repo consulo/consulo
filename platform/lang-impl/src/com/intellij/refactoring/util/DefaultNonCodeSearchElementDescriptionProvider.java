@@ -18,7 +18,7 @@ package com.intellij.refactoring.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.meta.PsiMetaOwner;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ public class DefaultNonCodeSearchElementDescriptionProvider implements ElementDe
 
     if (element instanceof PsiDirectory) {
       if (ncdLocation.isNonJava()) {
-        final String qName = PsiDirectoryFactory.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, false);
+        final String qName = PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, false);
         if (qName.length() > 0) return qName;
         return null;
       }

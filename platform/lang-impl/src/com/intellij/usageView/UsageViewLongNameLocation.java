@@ -20,8 +20,7 @@ import com.intellij.psi.ElementDescriptionLocation;
 import com.intellij.psi.ElementDescriptionProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.impl.file.PsiPackageHelper;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -43,7 +42,7 @@ public class UsageViewLongNameLocation extends ElementDescriptionLocation {
     public String getElementDescription(@NotNull final PsiElement element, @NotNull final ElementDescriptionLocation location) {
       if (location instanceof UsageViewLongNameLocation) {
         if (element instanceof PsiDirectory) {
-          return PsiDirectoryFactory.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, true);
+          return PsiPackageHelper.getInstance(element.getProject()).getQualifiedName((PsiDirectory)element, true);
         }
         return "";
       }
