@@ -19,8 +19,13 @@ import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
+import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.ui.CellAppearanceEx;
+import com.intellij.openapi.roots.ui.FileAppearanceService;
+import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -82,5 +87,17 @@ public class ModuleLibraryOrderEntryTypeProvider implements OrderEntryTypeProvid
   @Override
   public ClasspathTableItem<ModuleLibraryOrderEntryImpl> createTableItem(@NotNull ModuleLibraryOrderEntryImpl orderEntry, @NotNull StructureConfigurableContext context) {
     return new LibraryClasspathTableItem<ModuleLibraryOrderEntryImpl>(orderEntry, context);
+  }
+
+  @NotNull
+  @Override
+  public CellAppearanceEx getCellAppearance(@NotNull ModuleLibraryOrderEntryImpl orderEntry) {
+    if (!orderEntry.isValid()) { //library can be removed
+      return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
+    }
+    Library library = orderEntry.getLibrary();
+    assert library != null : orderEntry;
+    return OrderEntryAppearanceService.getInstance().forLibrary(orderEntry.getModuleRootLayer().getProject(), library,
+                                                                !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
   }
 }

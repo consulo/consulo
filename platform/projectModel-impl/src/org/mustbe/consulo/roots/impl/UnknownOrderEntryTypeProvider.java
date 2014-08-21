@@ -15,8 +15,11 @@
  */
 package org.mustbe.consulo.roots.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.UnknownOrderEntryImpl;
+import com.intellij.openapi.roots.ui.CellAppearanceEx;
+import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -61,5 +64,11 @@ public class UnknownOrderEntryTypeProvider implements OrderEntryTypeProvider<Unk
     for (Element child : children) {
       element.addContent(child.clone());
     }
+  }
+
+  @NotNull
+  @Override
+  public CellAppearanceEx getCellAppearance(@NotNull UnknownOrderEntryImpl orderEntry) {
+    return SimpleTextCellAppearance.invalid(orderEntry.getPresentableName(), AllIcons.Toolbar.Unknown);
   }
 }

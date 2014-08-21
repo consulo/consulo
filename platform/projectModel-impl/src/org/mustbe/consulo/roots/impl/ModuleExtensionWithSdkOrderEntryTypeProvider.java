@@ -15,15 +15,20 @@
  */
 package org.mustbe.consulo.roots.impl;
 
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
+import com.intellij.openapi.roots.ui.CellAppearanceEx;
+import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.ui.SimpleTextAttributes;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import org.mustbe.consulo.sdk.SdkUtil;
 
 /**
  * @author VISTALL
@@ -49,7 +54,7 @@ public class ModuleExtensionWithSdkOrderEntryTypeProvider implements OrderEntryT
   @Override
   public ModuleExtensionWithSdkOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     String moduleExtensionId = element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
-    if(moduleExtensionId == null) {
+    if (moduleExtensionId == null) {
       throw new InvalidDataException();
     }
     return new ModuleExtensionWithSdkOrderEntryImpl(moduleExtensionId, (ModuleRootLayerImpl)moduleRootLayer, false);
@@ -58,5 +63,13 @@ public class ModuleExtensionWithSdkOrderEntryTypeProvider implements OrderEntryT
   @Override
   public void storeOrderEntry(@NotNull Element element, @NotNull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     element.setAttribute(EXTENSION_ID_ATTRIBUTE, orderEntry.getModuleExtensionId());
+  }
+
+  @NotNull
+  @Override
+  public CellAppearanceEx getCellAppearance(@NotNull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+    Sdk sdk = orderEntry.getSdk();
+    return new SimpleTextCellAppearance(orderEntry.getPresentableName(), SdkUtil.getIcon(sdk),
+                                        sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
   }
 }

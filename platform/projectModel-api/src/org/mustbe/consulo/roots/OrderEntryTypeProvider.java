@@ -18,6 +18,7 @@ package org.mustbe.consulo.roots;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -36,4 +37,7 @@ public interface OrderEntryTypeProvider<T extends OrderEntry> {
   T loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException;
 
   void storeOrderEntry(@NotNull Element element, @NotNull T orderEntry);
+
+  @NotNull
+  CellAppearanceEx getCellAppearance(@NotNull T orderEntry);
 }

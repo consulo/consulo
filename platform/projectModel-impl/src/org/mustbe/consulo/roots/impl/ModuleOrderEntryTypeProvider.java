@@ -15,10 +15,13 @@
  */
 package org.mustbe.consulo.roots.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleOrderEntryImpl;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
+import com.intellij.openapi.roots.ui.CellAppearanceEx;
+import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.InvalidDataException;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jdom.Element;
@@ -73,5 +76,11 @@ public class ModuleOrderEntryTypeProvider implements OrderEntryTypeProvider<Modu
     if (orderEntry.isProductionOnTestDependency()) {
       element.setAttribute(PRODUCTION_ON_TEST_ATTRIBUTE, "");
     }
+  }
+
+  @NotNull
+  @Override
+  public CellAppearanceEx getCellAppearance(@NotNull ModuleOrderEntryImpl orderEntry) {
+    return SimpleTextCellAppearance.regular(orderEntry.getPresentableName(), AllIcons.Nodes.Module);
   }
 }
