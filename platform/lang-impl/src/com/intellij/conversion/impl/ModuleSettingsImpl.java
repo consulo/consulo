@@ -29,6 +29,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.OrderEntryTypeProviders;
 
 import java.io.File;
 import java.util.*;
@@ -153,7 +154,7 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
   @Nullable
   private Element findModuleLibraryElement(String libraryName) {
     for (Element element : getOrderEntries()) {
-      if (ModuleLibraryOrderEntryImpl.ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR))) {
+      if ("module-library".equals(element.getAttributeValue(OrderEntryTypeProviders.ORDER_ENTRY_TYPE_ATTR))) {
         final Element library = element.getChild(LibraryImpl.ELEMENT);
         if (library != null && libraryName.equals(library.getAttributeValue(LibraryImpl.LIBRARY_NAME_ATTR))) {
           return library;
@@ -166,7 +167,7 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
   @Override
   public List<Element> getOrderEntries() {
     final Element component = getComponentElement(MODULE_ROOT_MANAGER_COMPONENT);
-    return JDOMUtil.getChildren(component, OrderEntryFactory.ORDER_ENTRY_ELEMENT_NAME);
+    return JDOMUtil.getChildren(component, OrderEntryTypeProviders.ORDER_ENTRY_ELEMENT_NAME);
   }
 
   @Override
@@ -183,8 +184,8 @@ public class ModuleSettingsImpl extends ComponentManagerSettingsImpl implements 
     }
 
     for (Element element : getOrderEntries()) {
-      if (ModuleOrderEntryImpl.ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR))) {
-        final String moduleName = element.getAttributeValue(ModuleOrderEntryImpl.MODULE_NAME_ATTR);
+      if ("module".equals(element.getAttributeValue(OrderEntryTypeProviders.ORDER_ENTRY_TYPE_ATTR))) {
+        final String moduleName = element.getAttributeValue("module-name");
         if (moduleName != null) {
           final ModuleSettings moduleSettings = myContext.getModuleSettings(moduleName);
           if (moduleSettings != null) {

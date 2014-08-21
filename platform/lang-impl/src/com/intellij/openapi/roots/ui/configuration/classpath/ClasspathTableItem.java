@@ -19,40 +19,28 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import org.mustbe.consulo.roots.impl.OrderEntryTypeProviderEx;
 
 /**
-* @author nik
-*/
-class ClasspathTableItem<T extends OrderEntry> {
-  @Nullable protected final T myEntry;
-  private final boolean myRemovable;
+ * @author nik
+ */
+public class ClasspathTableItem<T extends OrderEntry> {
+  @NotNull
+  @SuppressWarnings("unchecked")
+  public static ClasspathTableItem<?> createItem(OrderEntry orderEntry, StructureConfigurableContext context) {
+    OrderEntryTypeProvider<?> provider = orderEntry.getProvider();
+    if(provider instanceof OrderEntryTypeProviderEx) {
+      return ((OrderEntryTypeProviderEx)provider).createTableItem(orderEntry, context);
+    }
+    return new ClasspathTableItem<OrderEntry>(orderEntry);
+  }
 
   @NotNull
-  public static ClasspathTableItem<?> createItem(OrderEntry orderEntry, StructureConfigurableContext context) {
-    if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-      return new ClasspathTableItem<OrderEntry>(orderEntry, false);
-    }
-    else if (orderEntry instanceof LibraryOrderEntry) {
-      return createLibItem((LibraryOrderEntry)orderEntry, context);
-    }
-    else if (orderEntry instanceof ModuleOrderEntry) {
-      return new ClasspathTableItem<OrderEntry>(orderEntry, true);
-    }
-    else if (orderEntry instanceof ModuleSourceOrderEntry) {
-      return new ClasspathTableItem<OrderEntry>(orderEntry, false);
-    }
-    else {
-      throw new IllegalArgumentException("Unknown order entry: " + orderEntry.getClass());
-    }
-  }
+  protected final T myEntry;
 
-  public static ClasspathTableItem<LibraryOrderEntry> createLibItem(final LibraryOrderEntry orderEntry, final StructureConfigurableContext context) {
-    return new LibraryItem(orderEntry, context);
-  }
-
-  protected ClasspathTableItem(@Nullable T entry, boolean removable) {
+  protected ClasspathTableItem(@NotNull T entry) {
     myEntry = entry;
-    myRemovable = removable;
   }
 
   public final boolean isExportable() {
@@ -71,31 +59,34 @@ class ClasspathTableItem<T extends OrderEntry> {
 
   @Nullable
   public final DependencyScope getScope() {
-    return myEntry instanceof ExportableOrderEntry ? ((ExportableOrderEntry) myEntry).getScope() : null;
+    return myEntry instanceof ExportableOrderEntry ? ((ExportableOrderEntry)myEntry).getScope() : null;
   }
 
   public final void setScope(DependencyScope scope) {
     if (myEntry instanceof ExportableOrderEntry) {
-      ((ExportableOrderEntry) myEntry).setScope(scope);
+      ((ExportableOrderEntry)myEntry).setScope(scope);
     }
   }
 
-  @Nullable
+  @NotNull
   public final T getEntry() {
     return myEntry;
   }
 
   public boolean isRemovable() {
-    return myRemovable;
+    return !myEntry.isSynthetic();
   }
 
   public boolean isEditable() {
     return false;
   }
 
+  public void doEdit(ClasspathPanelImpl panel) {
+
+  }
+
   @Nullable
   public String getTooltipText() {
     return null;
   }
-
 }

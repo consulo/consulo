@@ -27,6 +27,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -156,6 +157,11 @@ public class DirectoryInfo {
   @NotNull
   private static OrderEntry createFakeOrderEntry(@NotNull final Module ownerModule) {
     return new OrderEntry() {
+      @Override
+      public OrderEntryTypeProvider<?> getProvider() {
+        throw new IncorrectOperationException();
+      }
+
       @NotNull
       @Override
       public VirtualFile[] getFiles(OrderRootType type) {

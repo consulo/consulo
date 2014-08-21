@@ -577,6 +577,7 @@
     </extensionPoint>
 
     <extensionPoint name="orderRootType" interface="com.intellij.openapi.roots.OrderRootType"/>
+    <extensionPoint name="orderEntryTypeProvider" interface="org.mustbe.consulo.roots.OrderEntryTypeProvider" />
     <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy"
                     area="CONSULO_PROJECT"/>
@@ -1565,6 +1566,12 @@
     <orderRootType implementation="com.intellij.openapi.roots.types.DocumentationOrderRootType" />
     <orderRootTypeEditor key="documentation"
                          implementationClass="com.intellij.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
+
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.LibraryOrderEntryTypeProvider" />
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleExtensionWithSdkOrderEntryTypeProvider" />
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleLibraryOrderEntryTypeProvider" />
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleOrderEntryTypeProvider" />
+    <orderEntryTypeProvider implementation="org.mustbe.consulo.roots.impl.ModuleSourceOrderEntryTypeProvider" />
 
     <statistics.usagesCollector implementation="com.intellij.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
 

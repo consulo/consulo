@@ -17,10 +17,16 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
+import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
+import com.intellij.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xml.util.XmlStringUtil;
@@ -28,31 +34,44 @@ import com.intellij.xml.util.XmlStringUtil;
 import java.util.List;
 
 /**
-* @author nik
-*/
-class LibraryItem extends ClasspathTableItem<LibraryOrderEntry> {
+ * @author nik
+ */
+public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends ClasspathTableItem<T> {
   private final StructureConfigurableContext myContext;
 
-  public LibraryItem(LibraryOrderEntry orderEntry, StructureConfigurableContext context) {
-    super(orderEntry, true);
+  public LibraryClasspathTableItem(T orderEntry, StructureConfigurableContext context) {
+    super(orderEntry);
     myContext = context;
   }
 
   @Override
   public boolean isEditable() {
-    return myEntry != null && myEntry.isValid();
+    return myEntry.isValid();
+  }
+
+  @Override
+  public void doEdit(ClasspathPanelImpl panel) {
+    final Library library = getEntry().getLibrary();
+    if (library == null) {
+      return;
+    }
+    final LibraryTable table = library.getTable();
+    final String tableLevel = table != null ? table.getTableLevel() : LibraryTableImplUtil.MODULE_LEVEL;
+    final LibraryTablePresentation presentation = LibraryEditingUtil.getLibraryTablePresentation(myContext.getProject(), tableLevel);
+    final LibraryTableModifiableModelProvider provider = panel.getModifiableModelProvider(tableLevel);
+    EditExistingLibraryDialog dialog = EditExistingLibraryDialog.createDialog(panel, provider, library, myContext.getProject(), presentation, myContext);
+    dialog.setContextModule(getEntry().getOwnerModule());
+    dialog.show();
   }
 
   @Override
   public String getTooltipText() {
-    if (myEntry == null) return null;
-
     final Library library = myEntry.getLibrary();
     if (library == null) return null;
 
     final String name = library.getName();
     if (name != null) {
-      final List<String> invalidUrls = ((LibraryEx)library).getInvalidRootUrls(OrderRootType.CLASSES);
+      final List<String> invalidUrls = ((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance());
       if (!invalidUrls.isEmpty()) {
         return ProjectBundle.message("project.roots.tooltip.library.has.broken.paths", name, invalidUrls.size());
       }

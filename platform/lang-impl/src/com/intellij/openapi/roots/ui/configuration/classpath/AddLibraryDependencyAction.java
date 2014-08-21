@@ -96,7 +96,7 @@ class AddLibraryDependencyAction extends AddItemPopupAction<Library> {
       if (orderEntry instanceof LibraryOrderEntry) {
         final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
         if (item.equals(libraryOrderEntry.getLibrary())) {
-          return ClasspathTableItem.createLibItem(libraryOrderEntry, myContext);
+          return ClasspathTableItem.createItem(libraryOrderEntry, myContext);
         }
         String name = item.getName();
         if (name != null && name.equals(libraryOrderEntry.getLibraryName())) {
@@ -116,7 +116,7 @@ class AddLibraryDependencyAction extends AddItemPopupAction<Library> {
     if (defaultScope != null) {
       orderEntry.setScope(defaultScope);
     }
-    return ClasspathTableItem.createLibItem(orderEntry, myContext);
+    return ClasspathTableItem.createItem(orderEntry, myContext);
   }
 
   @Nullable

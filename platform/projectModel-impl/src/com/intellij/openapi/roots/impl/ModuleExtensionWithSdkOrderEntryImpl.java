@@ -21,34 +21,27 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
-import com.intellij.openapi.util.InvalidDataException;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.impl.ModuleExtensionWithSdkOrderEntryTypeProvider;
 
 /**
  * @author dsl
  */
-public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl
-        implements WritableOrderEntry, ClonableOrderEntry, ModuleExtensionWithSdkOrderEntry {
-  @NonNls public static final String ENTRY_TYPE = "module-extension-sdk";
-
-  @NonNls public static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
-
+public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl implements ClonableOrderEntry, ModuleExtensionWithSdkOrderEntry {
   private String myModuleExtensionId;
 
-  ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel) {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-
-    myModuleExtensionId = moduleExtensionId;
-    init();
+  public ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel) {
+    this(moduleExtensionId, rootModel, true);
   }
 
-  ModuleExtensionWithSdkOrderEntryImpl(@NotNull Element element, @NotNull ModuleRootLayerImpl rootModel) throws InvalidDataException {
-    super(rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
-    myModuleExtensionId =  element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
+  public ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel, boolean init) {
+    super(ModuleExtensionWithSdkOrderEntryTypeProvider.getInstance(), rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
+    myModuleExtensionId = moduleExtensionId;
+    if (init) {
+      init();
+    }
   }
 
   @Override
@@ -122,16 +115,9 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  public void writeExternal(@NotNull Element rootElement) {
-    final Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
-    element.setAttribute(EXTENSION_ID_ATTRIBUTE, myModuleExtensionId);
-    rootElement.addContent(element);
-  }
-
-  @Override
   @NotNull
   public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel) {
-    return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel);
+    return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel, true);
   }
 
   @NotNull

@@ -50,11 +50,11 @@ class AddNewLibraryDependencyAction extends ChooseAndAddAction<Library> {
       if (entry instanceof LibraryOrderEntry) {
         final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)entry;
         if (item.equals(libraryOrderEntry.getLibrary())) {
-          return ClasspathTableItem.createLibItem(libraryOrderEntry, myContext);
+          return ClasspathTableItem.createItem(libraryOrderEntry, myContext);
         }
       }
     }
-    return ClasspathTableItem.createLibItem(myClasspathPanel.getRootModel().addLibraryEntry(item), myContext);
+    return ClasspathTableItem.createItem(myClasspathPanel.getRootModel().addLibraryEntry(item), myContext);
   }
 
   @Override

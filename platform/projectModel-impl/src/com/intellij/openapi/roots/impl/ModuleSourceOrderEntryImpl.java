@@ -19,40 +19,22 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderScopes;
+import org.mustbe.consulo.roots.impl.ModuleSourceOrderEntryTypeProvider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *  @author dsl
  */
-public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements ModuleSourceOrderEntry, WritableOrderEntry, ClonableOrderEntry {
-  @NonNls static final String ENTRY_TYPE = "sourceFolder";
-  @NonNls private static final String ATTRIBUTE_FOR_TESTS = "forTests";
-
-  ModuleSourceOrderEntryImpl(ModuleRootLayerImpl rootModel) {
-    super(rootModel);
-  }
-
-  ModuleSourceOrderEntryImpl(Element element, ModuleRootLayerImpl rootModel) throws InvalidDataException {
-    super(rootModel);
-    if (!element.getName().equals(OrderEntryFactory.ORDER_ENTRY_ELEMENT_NAME)) {
-      throw new InvalidDataException();
-    }
-  }
-
-  @Override
-  public void writeExternal(Element rootElement) {
-    Element element = OrderEntryFactory.createOrderEntryElement(ENTRY_TYPE);
-    element.setAttribute(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR, ENTRY_TYPE);
-    element.setAttribute(ATTRIBUTE_FOR_TESTS, Boolean.FALSE.toString()); // compatibility with prev builds
-    rootElement.addContent(element);
+public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements ModuleSourceOrderEntry, ClonableOrderEntry {
+  public ModuleSourceOrderEntryImpl(ModuleRootLayerImpl rootModel) {
+    super(ModuleSourceOrderEntryTypeProvider.getInstance(), rootModel);
   }
 
   @Override
@@ -77,11 +59,10 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
     return ProjectBundle.message("project.root.module.source");
   }
 
-
   @Override
   @NotNull
   public VirtualFile[] getFiles(OrderRootType type) {
-    if (OrderRootType.SOURCES.equals(type)) {
+    if (type == SourcesOrderRootType.getInstance()) {
       return myModuleRootLayer.getSourceRoots();
     }
     return VirtualFile.EMPTY_ARRAY;
@@ -91,12 +72,10 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   @NotNull
   public String[] getUrls(OrderRootType type) {
     final ArrayList<String> result = new ArrayList<String>();
-    if (OrderRootType.SOURCES.equals(type)) {
+    if (type == SourcesOrderRootType.getInstance()) {
       final ContentEntry[] content = myModuleRootLayer.getContentEntries();
       for (ContentEntry contentEntry : content) {
-        for (String url : contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest())) {
-          result.add(url);
-        }
+        Collections.addAll(result, contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest()));
       }
       return ArrayUtil.toStringArray(result);
     }

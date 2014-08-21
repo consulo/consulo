@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.ContentFolderScopes;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ExcludedContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.OrderEntryTypeProviders;
 
 import java.util.*;
 
@@ -219,10 +220,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
       myContent.add(contentEntry);
     }
 
-    final List<Element> orderElements = element.getChildren(OrderEntryFactory.ORDER_ENTRY_ELEMENT_NAME);
+    final List<Element> orderElements = element.getChildren(OrderEntryTypeProviders.ORDER_ENTRY_ELEMENT_NAME);
     boolean moduleSourceAdded = false;
     for (Element child : orderElements) {
-      final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this);
+      final OrderEntry orderEntry = OrderEntryTypeProviders.loadOrderEntry(child, this);
       if (orderEntry == null) {
         continue;
       }
@@ -271,9 +272,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
 
     for (OrderEntry orderEntry : getOrderEntries()) {
-      if (orderEntry instanceof WritableOrderEntry) {
-        ((WritableOrderEntry)orderEntry).writeExternal(element);
-      }
+      Element newElement = OrderEntryTypeProviders.storeOrderEntry(orderEntry);
+      element.addContent(newElement);
     }
   }
 
