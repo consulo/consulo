@@ -130,7 +130,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
 
   @Override
   @NotNull
-  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
+  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel) {
     return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel);
   }
 

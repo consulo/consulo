@@ -43,13 +43,12 @@ import java.util.*;
  */
 @org.consulo.lombok.annotations.Logger
 public class RootModelImpl extends RootModelBase implements ModifiableRootModel {
-  final ModuleRootManagerImpl myModuleRootManager;
+  protected final ModuleRootManagerImpl myModuleRootManager;
   private boolean myWritable;
-  private boolean myDisposed = false;
+  private boolean myDisposed;
 
   private final RootConfigurationAccessor myConfigurationAccessor;
 
-  private final ProjectRootManagerImpl myProjectRootManager;
   // have to register all child disposables using this fake object since all clients just call ModifiableModel.dispose()
   private final CompositeDisposable myDisposable = new CompositeDisposable();
 
@@ -57,14 +56,12 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private ModuleRootLayerImpl myCachedCurrentLayer;
   private final SortedMap<String, ModuleRootLayerImpl> myLayers = new TreeMap<String, ModuleRootLayerImpl>();
 
-  RootModelImpl(@NotNull ModuleRootManagerImpl moduleRootManager, @NotNull ProjectRootManagerImpl projectRootManager) {
+  RootModelImpl(@NotNull ModuleRootManagerImpl moduleRootManager) {
     myModuleRootManager = moduleRootManager;
-    myProjectRootManager = projectRootManager;
-
     myWritable = false;
 
     try {
-      initDefaultLayer(null, projectRootManager);
+      initDefaultLayer(null);
     }
     catch (InvalidDataException e) {
       //
@@ -73,11 +70,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myConfigurationAccessor = new RootConfigurationAccessor();
   }
 
-  RootModelImpl(@NotNull Element element,
-                @NotNull ModuleRootManagerImpl moduleRootManager,
-                @NotNull ProjectRootManagerImpl projectRootManager,
-                boolean writable) throws InvalidDataException {
-    myProjectRootManager = projectRootManager;
+  RootModelImpl(@NotNull Element element, @NotNull ModuleRootManagerImpl moduleRootManager, boolean writable) throws InvalidDataException {
     myModuleRootManager = moduleRootManager;
 
     loadState(element);
@@ -90,25 +83,23 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   //creates modifiable model
   RootModelImpl(@NotNull RootModelImpl rootModel,
                 @NotNull ModuleRootManagerImpl moduleRootManager,
-                @NotNull RootConfigurationAccessor rootConfigurationAccessor,
-                @NotNull ProjectRootManagerImpl projectRootManager) {
+                @NotNull RootConfigurationAccessor rootConfigurationAccessor) {
     myModuleRootManager = moduleRootManager;
-    myProjectRootManager = projectRootManager;
     myWritable = true;
     myConfigurationAccessor = rootConfigurationAccessor;
 
     myLayers.clear();
     for (Map.Entry<String, ModuleRootLayerImpl> entry : rootModel.myLayers.entrySet()) {
-      ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(entry.getValue(), this, projectRootManager);
+      ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(entry.getValue(), this);
       myLayers.put(entry.getKey(), moduleRootLayer);
     }
     setCurrentLayerSafe(rootModel.myCurrentLayerName);
   }
 
-  private void initDefaultLayer(Element element, ProjectRootManagerImpl projectRootManager) throws InvalidDataException {
+  private void initDefaultLayer(Element element) throws InvalidDataException {
     setCurrentLayerSafe("Default");
 
-    ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this, projectRootManager);
+    ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this);
     myLayers.put(myCurrentLayerName, moduleRootLayer);
 
     if (element != null) {
@@ -124,7 +115,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       for (Element moduleLayerElement : element.getChildren("module-layer")) {
         String name = moduleLayerElement.getAttributeValue("name");
 
-        ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this, myProjectRootManager);
+        ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this);
         moduleRootLayer.readExternal(moduleLayerElement);
 
         myLayers.put(name, moduleRootLayer);
@@ -133,7 +124,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     // old format - create default profile and load it
     if (myLayers.isEmpty()) {
-      initDefaultLayer(element, myProjectRootManager);
+      initDefaultLayer(element);
     }
   }
 
@@ -234,7 +225,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     disposeLayers();
 
     try {
-      initDefaultLayer(null, myProjectRootManager);
+      initDefaultLayer(null);
     }
     catch (InvalidDataException e) {
       //
@@ -280,7 +271,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       ModuleRootLayerImpl toCommit = sourceModuleLayer;
       // if layer exists
       if (toCommit == null) {
-        toCommit = new ModuleRootLayerImpl(null, sourceModel, myProjectRootManager);
+        toCommit = new ModuleRootLayerImpl(null, sourceModel);
         sourceModel.myLayers.put(entry.getKey(), toCommit);
       }
 
@@ -320,7 +311,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @NotNull
   @Override
   public Project getProject() {
-    return myProjectRootManager.getProject();
+    return myModuleRootManager.getModule().getProject();
   }
 
   @Override
@@ -437,7 +428,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       return moduleRootLayer;
     }
 
-    ModuleRootLayerImpl layer = new ModuleRootLayerImpl(null, this, myProjectRootManager);
+    ModuleRootLayerImpl layer = new ModuleRootLayerImpl(null, this);
 
     if(nameForCopy != null) {
       ModuleRootLayerImpl original = myLayers.get(nameForCopy);
@@ -476,7 +467,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     if(remove != null) {
       if(initDefault && myLayers.isEmpty()) {
         try {
-          initDefaultLayer(null, myProjectRootManager);
+          initDefaultLayer(null);
         }
         catch (InvalidDataException e) {
           //

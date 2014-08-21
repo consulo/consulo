@@ -22,5 +22,5 @@ import com.intellij.openapi.roots.OrderEntry;
  *  @author dsl
  */
 public interface ClonableOrderEntry {
-  OrderEntry cloneEntry(ModuleRootLayerImpl layer, ProjectRootManagerImpl projectRootManager);
+  OrderEntry cloneEntry(ModuleRootLayerImpl layer);
 }

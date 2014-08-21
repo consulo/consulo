@@ -25,7 +25,6 @@ import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import gnu.trove.THashMap;
 import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
@@ -42,23 +41,16 @@ import java.util.Set;
 @Logger
 public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleComponent {
   private final Module myModule;
-  private final ProjectRootManagerImpl myProjectRootManager;
-  private final VirtualFilePointerManager myFilePointerManager;
   private RootModelImpl myRootModel;
-  private boolean myIsDisposed = false;
-  private boolean isModuleAdded = false;
+  private boolean myIsDisposed;
+  private boolean isModuleAdded;
   private final OrderRootsCache myOrderRootsCache;
   private final Map<RootModelImpl, Throwable> myModelCreations = new THashMap<RootModelImpl, Throwable>();
 
 
-  public ModuleRootManagerImpl(Module module,
-                               ProjectRootManagerImpl projectRootManager,
-                               VirtualFilePointerManager filePointerManager) {
+  public ModuleRootManagerImpl(Module module) {
     myModule = module;
-    myProjectRootManager = projectRootManager;
-    myFilePointerManager = filePointerManager;
-
-    myRootModel = new RootModelImpl(this, myProjectRootManager);
+    myRootModel = new RootModelImpl(this);
     myOrderRootsCache = new OrderRootsCache(module);
   }
 
@@ -112,7 +104,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @NotNull
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor, myProjectRootManager) {
+    final RootModelImpl model = new RootModelImpl(myRootModel, this, accessor) {
       @Override
       public void dispose() {
         super.dispose();
@@ -386,7 +378,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   protected void loadState(Element element, boolean throwEvent) {
     try {
-      final RootModelImpl newModel = new RootModelImpl(element, this, myProjectRootManager, throwEvent);
+      final RootModelImpl newModel = new RootModelImpl(element, this, throwEvent);
 
       if (throwEvent) {
         makeRootsChange(new Runnable() {

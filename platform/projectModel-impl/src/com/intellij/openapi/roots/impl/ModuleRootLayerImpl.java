@@ -175,17 +175,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   private final Set<ModuleExtension<?>> myExtensions = new LinkedHashSet<ModuleExtension<?>>();
   private final List<Element> myUnknownModuleExtensions = new SmartList<Element>();
   private RootModelImpl myRootModel;
-  private ProjectRootManagerImpl myProjectRootManager;
   @NotNull
   private final ModuleLibraryTable myModuleLibraryTable;
 
 
-  public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer,
-                             @NotNull RootModelImpl rootModel,
-                             @NotNull ProjectRootManagerImpl projectRootManager) {
+  public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer, @NotNull RootModelImpl rootModel) {
     myRootModel = rootModel;
-    myProjectRootManager = projectRootManager;
-    myModuleLibraryTable = new ModuleLibraryTable(this, projectRootManager);
+    myModuleLibraryTable = new ModuleLibraryTable(this);
 
     if (originalLayer != null) {
       createMutableExtensions(originalLayer);
@@ -226,7 +222,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     final List<Element> orderElements = element.getChildren(OrderEntryFactory.ORDER_ENTRY_ELEMENT_NAME);
     boolean moduleSourceAdded = false;
     for (Element child : orderElements) {
-      final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this, myProjectRootManager);
+      final OrderEntry orderEntry = OrderEntryFactory.createOrderEntryByElement(child, this);
       if (orderEntry == null) {
         continue;
       }
@@ -339,7 +335,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     removeAllOrderEntries();
     for (OrderEntry orderEntry : layer.myOrderEntries) {
       if (orderEntry instanceof ClonableOrderEntry) {
-        myOrderEntries.add(((ClonableOrderEntry)orderEntry).cloneEntry(this, myProjectRootManager));
+        myOrderEntries.add(((ClonableOrderEntry)orderEntry).cloneEntry(this));
       }
     }
   }
@@ -763,7 +759,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public LibraryOrderEntry addLibraryEntry(@NotNull Library library) {
-    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(library, this, myProjectRootManager);
+    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(library, this);
     assert libraryOrderEntry.isValid();
     myOrderEntries.add(libraryOrderEntry);
     return libraryOrderEntry;
@@ -802,7 +798,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public LibraryOrderEntry addInvalidLibrary(@NotNull @NonNls String name, @NotNull String level) {
-    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this, myProjectRootManager);
+    final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this);
     myOrderEntries.add(libraryOrderEntry);
     return libraryOrderEntry;
   }

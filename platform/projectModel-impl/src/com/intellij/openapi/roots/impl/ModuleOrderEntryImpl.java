@@ -159,7 +159,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
     return new ModuleOrderEntryImpl(this, rootModel);
   }
 

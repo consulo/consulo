@@ -32,7 +32,7 @@ public class OrderEntryFactory {
   @NonNls public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
   @Nullable
-  static OrderEntry createOrderEntryByElement(Element element, ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager)
+  static OrderEntry createOrderEntryByElement(Element element, ModuleRootLayerImpl rootModel)
     throws InvalidDataException {
     LOG.assertTrue(ORDER_ENTRY_ELEMENT_NAME.equals(element.getName()));
     final String type = element.getAttributeValue(ORDER_ENTRY_TYPE_ATTR);
@@ -46,7 +46,7 @@ public class OrderEntryFactory {
       return new ModuleExtensionWithSdkOrderEntryImpl(element, rootModel);
     }
     else if (LibraryOrderEntryImpl.ENTRY_TYPE.equals(type)) {
-      return new LibraryOrderEntryImpl(element, rootModel, projectRootManager);
+      return new LibraryOrderEntryImpl(element, rootModel);
     }
     else if (ModuleLibraryOrderEntryImpl.ENTRY_TYPE.equals(type)) {
       return new ModuleLibraryOrderEntryImpl(element, rootModel);

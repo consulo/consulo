@@ -49,25 +49,20 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
   @NonNls
   private static final String EXPORTED_ATTR = "exploded";
 
-  protected final ProjectRootManagerImpl myProjectRootManagerImpl;
-
   private final MyOrderEntryLibraryTableListener myLibraryListener = new MyOrderEntryLibraryTableListener();
 
-  LibraryOrderEntryImpl(@NotNull Library library, @NotNull ModuleRootLayerImpl rootLayer, @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootLayer, projectRootManager);
+  LibraryOrderEntryImpl(@NotNull Library library, @NotNull ModuleRootLayerImpl rootLayer) {
+    super(rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     LOGGER.assertTrue(library.getTable() != null);
     myLibrary = library;
-    myProjectRootManagerImpl = projectRootManager;
     addListeners();
     init();
   }
 
-  LibraryOrderEntryImpl(@NotNull Element element, @NotNull ModuleRootLayerImpl rootLayer, @NotNull ProjectRootManagerImpl projectRootManager)
-          throws InvalidDataException {
-    super(rootLayer, projectRootManager);
+  LibraryOrderEntryImpl(@NotNull Element element, @NotNull ModuleRootLayerImpl rootLayer) throws InvalidDataException {
+    super(rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     LOGGER.assertTrue(ENTRY_TYPE.equals(element.getAttributeValue(OrderEntryFactory.ORDER_ENTRY_TYPE_ATTR)));
     myExported = element.getAttributeValue(EXPORTED_ATTR) != null;
-    myProjectRootManagerImpl = projectRootManager;
     myScope = DependencyScope.readExternal(element);
     String level = element.getAttributeValue(LEVEL_ATTR);
     String name = element.getAttributeValue(NAME_ATTR);
@@ -77,10 +72,8 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
     addListeners();
   }
 
-  private LibraryOrderEntryImpl(@NotNull LibraryOrderEntryImpl that,
-                                @NotNull ModuleRootLayerImpl rootLayer,
-                                @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootLayer, projectRootManager);
+  private LibraryOrderEntryImpl(@NotNull LibraryOrderEntryImpl that, @NotNull ModuleRootLayerImpl rootLayer) {
+    super(rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     if (that.myLibrary == null) {
       myLibraryName = that.myLibraryName;
       myLibraryLevel = that.myLibraryLevel;
@@ -88,19 +81,14 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
     else {
       myLibrary = that.myLibrary;
     }
-    myProjectRootManagerImpl = projectRootManager;
     myExported = that.myExported;
     myScope = that.myScope;
     addListeners();
     init();
   }
 
-  public LibraryOrderEntryImpl(@NotNull String name,
-                               @NotNull String level,
-                               @NotNull ModuleRootLayerImpl rootLayer,
-                               @NotNull ProjectRootManagerImpl projectRootManager) {
-    super(rootLayer, projectRootManager);
-    myProjectRootManagerImpl = projectRootManager;
+  public LibraryOrderEntryImpl(@NotNull String name, @NotNull String level, @NotNull ModuleRootLayerImpl rootLayer) {
+    super(rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     searchForLibrary(name, level);
     addListeners();
     init();
@@ -192,9 +180,9 @@ class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements Library
 
   @Override
   @NotNull
-  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl moduleRootLayer, ProjectRootManagerImpl projectRootManager) {
+  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl moduleRootLayer) {
     ProjectRootManagerImpl rootManager = ProjectRootManagerImpl.getInstanceImpl(getRootModel().getProject());
-    return new LibraryOrderEntryImpl(this, moduleRootLayer, rootManager);
+    return new LibraryOrderEntryImpl(this, moduleRootLayer);
   }
 
   @Override

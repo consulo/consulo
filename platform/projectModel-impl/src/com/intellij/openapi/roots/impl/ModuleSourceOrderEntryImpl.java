@@ -104,7 +104,7 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
     return new ModuleSourceOrderEntryImpl(rootModel);
   }
 

@@ -42,7 +42,6 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   private static final ModuleLibraryOrderEntryCondition MODULE_LIBRARY_ORDER_ENTRY_FILTER = new ModuleLibraryOrderEntryCondition();
   private static final OrderEntryToLibraryConvertor ORDER_ENTRY_TO_LIBRARY_CONVERTOR = new OrderEntryToLibraryConvertor();
   private final ModuleRootLayerImpl myRootLayer;
-  private final ProjectRootManagerImpl myProjectRootManager;
   public static final LibraryTablePresentation MODULE_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
     @Override
     public String getDisplayName(boolean plural) {
@@ -60,9 +59,8 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
     }
   };
 
-  ModuleLibraryTable(ModuleRootLayerImpl rootLayer, ProjectRootManagerImpl projectRootManager) {
+  ModuleLibraryTable(ModuleRootLayerImpl rootLayer) {
     myRootLayer = rootLayer;
-    myProjectRootManager = projectRootManager;
   }
 
   @Override

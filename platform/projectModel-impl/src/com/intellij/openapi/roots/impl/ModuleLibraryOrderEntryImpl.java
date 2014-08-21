@@ -134,7 +134,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   @Override
-  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel, ProjectRootManagerImpl projectRootManager) {
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
     return new ModuleLibraryOrderEntryImpl(myLibrary, rootModel, myExported, myScope);
   }
 
