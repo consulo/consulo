@@ -26,6 +26,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.ui.CellAppearanceEx;
+import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.util.io.FileUtil;
@@ -34,6 +36,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 import org.mustbe.consulo.sdk.SdkUtil;
 
 import javax.swing.*;
@@ -69,18 +72,16 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     return orderEntryContainsFile(getValue().getOrderEntry(), file);
   }
 
-  private static boolean orderEntryContainsFile(LibraryOrSdkOrderEntry orderEntry, VirtualFile file) {
+  private static boolean orderEntryContainsFile(OrderEntry orderEntry, VirtualFile file) {
     for (OrderRootType rootType : OrderRootType.getAllTypes()) {
       if (containsFileInOrderType(orderEntry, rootType, file)) return true;
     }
     return false;
   }
 
-  private static boolean containsFileInOrderType(final LibraryOrSdkOrderEntry orderEntry,
-                                                 final OrderRootType orderType,
-                                                 final VirtualFile file) {
+  private static boolean containsFileInOrderType(final OrderEntry orderEntry, final OrderRootType orderType, final VirtualFile file) {
     if (!orderEntry.isValid()) return false;
-    VirtualFile[] files = orderEntry.getRootFiles(orderType);
+    VirtualFile[] files = orderEntry.getFiles(orderType);
     for (VirtualFile virtualFile : files) {
       boolean ancestor = VfsUtilCore.isAncestor(virtualFile, file, false);
       if (ancestor) return true;
@@ -92,29 +93,40 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   public void update(PresentationData presentation) {
     presentation.setPresentableText(getValue().getName());
     final OrderEntry orderEntry = getValue().getOrderEntry();
-    Icon closedIcon = orderEntry instanceof SdkOrderEntry ? SdkUtil.getIcon(((SdkOrderEntry)orderEntry).getSdk()) : getIconForLibrary(orderEntry);
-    presentation.setIcon(closedIcon);
+
     if (orderEntry instanceof SdkOrderEntry) {
       final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
-      final Sdk projectJdk = sdkOrderEntry.getSdk();
-      if (projectJdk != null) { //jdk not specified
-        final String path = projectJdk.getHomePath();
+      final Sdk sdk = sdkOrderEntry.getSdk();
+      presentation.setIcon(SdkUtil.getIcon(((SdkOrderEntry)orderEntry).getSdk()));
+      if (sdk != null) { //jdk not specified
+        final String path = sdk.getHomePath();
         if (path != null) {
           presentation.setLocationString(FileUtil.toSystemDependentName(path));
         }
       }
       presentation.setTooltip(null);
     }
-    else {
-      presentation.setTooltip(
-        StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
+    else if (orderEntry instanceof LibraryOrderEntry) {
+      presentation.setIcon(getIconForLibrary(orderEntry));
+      presentation.setTooltip(StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
+    }
+    else if(orderEntry instanceof OrderEntryWithTracking) {
+      OrderEntryTypeProvider provider = orderEntry.getProvider();
+
+      Icon icon = null;
+      //noinspection unchecked
+      CellAppearanceEx cellAppearance = provider.getCellAppearance(orderEntry);
+      if(cellAppearance instanceof ModifiableCellAppearanceEx) {
+        icon = ((ModifiableCellAppearanceEx)cellAppearance).getIcon();
+      }
+      presentation.setIcon(icon == null ? AllIcons.Toolbar.Unknown : icon);
     }
   }
 
   private static Icon getIconForLibrary(OrderEntry orderEntry) {
-    if(orderEntry instanceof LibraryOrderEntry) {
+    if (orderEntry instanceof LibraryOrderEntry) {
       Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
-      if(library != null)  {
+      if (library != null) {
         return LibraryPresentationManager.getInstance().getNamedLibraryIcon(library, null);
       }
     }

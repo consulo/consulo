@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -66,7 +67,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   public LibraryRuntimeClasspathScope(Project project, LibraryOrderEntry entry) {
     super(project);
     myIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    Collections.addAll(myEntries, entry.getRootFiles(OrderRootType.CLASSES));
+    Collections.addAll(myEntries, entry.getFiles(BinariesOrderRootType.getInstance()));
   }
 
   @Override
@@ -99,7 +100,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       public LinkedHashSet<VirtualFile> visitLibraryOrderEntry(final LibraryOrderEntry libraryOrderEntry, final LinkedHashSet<VirtualFile> value) {
         final Library library = libraryOrderEntry.getLibrary();
         if (library != null && processedLibraries.add(library)) {
-          ContainerUtil.addAll(value, libraryOrderEntry.getRootFiles(OrderRootType.CLASSES));
+          ContainerUtil.addAll(value, libraryOrderEntry.getFiles(BinariesOrderRootType.getInstance()));
         }
         return value;
       }
@@ -126,7 +127,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
                                                                           final LinkedHashSet<VirtualFile> value) {
         final Sdk jdk = sdkOrderEntry.getSdk();
         if (jdk != null && processedSdk.add(jdk)) {
-          ContainerUtil.addAll(value, sdkOrderEntry.getRootFiles(OrderRootType.CLASSES));
+          ContainerUtil.addAll(value, sdkOrderEntry.getFiles(BinariesOrderRootType.getInstance()));
         }
         return value;
       }

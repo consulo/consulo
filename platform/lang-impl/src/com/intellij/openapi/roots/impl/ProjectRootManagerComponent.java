@@ -31,7 +31,6 @@ import com.intellij.openapi.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.*;
@@ -270,17 +269,9 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl {
 
       final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
       for (OrderEntry entry : orderEntries) {
-        if (entry instanceof LibraryOrderEntry) {
-          final Library library = ((LibraryOrderEntry)entry).getLibrary();
-          if (library != null) {
-            for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-              addRootsToTrack(library.getUrls(orderRootType), recursive, flat);
-            }
-          }
-        }
-        else if (entry instanceof SdkOrderEntry) {
+        if (entry instanceof OrderEntryWithTracking) {
           for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
-            addRootsToTrack(((SdkOrderEntry)entry).getRootUrls(orderRootType), recursive, flat);
+            addRootsToTrack(entry.getUrls(orderRootType), recursive, flat);
           }
         }
       }

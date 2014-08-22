@@ -18,7 +18,7 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.LibraryOrSdkOrderEntry;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.Comparing;
 
 /**
@@ -30,9 +30,9 @@ public final class NamedLibraryElement {
   public static final DataKey<NamedLibraryElement[]> ARRAY_DATA_KEY = DataKey.create("namedLibrary.array");
 
   private final Module myContextModule;
-  private final LibraryOrSdkOrderEntry myEntry;
+  private final OrderEntry myEntry;
 
-  public NamedLibraryElement(Module parent, LibraryOrSdkOrderEntry entry) {
+  public NamedLibraryElement(Module parent, OrderEntry entry) {
     myContextModule = parent;
     myEntry = entry;
   }
@@ -66,7 +66,7 @@ public final class NamedLibraryElement {
     return result;
   }
 
-  public LibraryOrSdkOrderEntry getOrderEntry() {
+  public OrderEntry getOrderEntry() {
     return myEntry;
   }
 }

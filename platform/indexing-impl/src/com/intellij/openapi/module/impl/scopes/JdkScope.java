@@ -18,7 +18,7 @@ package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.SdkOrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 
 /**
  * @author max
@@ -27,14 +27,16 @@ public class JdkScope extends LibraryScopeBase {
   private final String myJdkName;
 
   public JdkScope(Project project, SdkOrderEntry jdk) {
-    super(project, jdk.getRootFiles(OrderRootType.CLASSES), jdk.getRootFiles(OrderRootType.SOURCES));
+    super(project, jdk.getFiles(BinariesOrderRootType.getInstance()), jdk.getFiles(BinariesOrderRootType.getInstance()));
     myJdkName = jdk.getSdkName();
   }
 
+  @Override
   public int hashCode() {
     return myJdkName.hashCode();
   }
 
+  @Override
   public boolean equals(Object object) {
     if (object == this) return true;
     if (object == null) return false;

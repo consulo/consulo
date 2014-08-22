@@ -17,7 +17,7 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.projectRoots.Sdk;
 
-public interface SdkOrderEntry extends LibraryOrSdkOrderEntry {
+public interface SdkOrderEntry extends OrderEntry, OrderEntryWithTracking {
   Sdk getSdk();
   String getSdkName();
 }

@@ -17,10 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.DependencyScope;
-import com.intellij.openapi.roots.LibraryOrSdkOrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.RootProvider;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.consulo.lombok.annotations.Logger;
@@ -32,7 +29,7 @@ import org.mustbe.consulo.roots.OrderEntryTypeProvider;
  * @author dsl
  */
 @Logger
-abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements LibraryOrSdkOrderEntry {
+abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements OrderEntryWithTracking {
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @NotNull
   protected DependencyScope myScope = DependencyScope.COMPILE;
@@ -51,31 +48,20 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements L
   @Override
   @NotNull
   public VirtualFile[] getFiles(@NotNull OrderRootType type) {
-    return getRootFiles(type);
-  }
+    RootProvider rootProvider = getRootProvider();
+    return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;  }
 
   @Override
   @NotNull
   public String[] getUrls(@NotNull OrderRootType type) {
     LOGGER.assertTrue(!getRootModel().getModule().isDisposed());
-    return getRootUrls(type);
-  }
-
-  @Override
-  public VirtualFile[] getRootFiles(@NotNull OrderRootType type) {
     RootProvider rootProvider = getRootProvider();
-    return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;
+    return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
+
   }
 
   @Nullable
   protected abstract RootProvider getRootProvider();
-
-  @Override
-  @NotNull
-  public String[] getRootUrls(@NotNull OrderRootType type) {
-    RootProvider rootProvider = getRootProvider();
-    return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
-  }
 
   @Override
   @NotNull

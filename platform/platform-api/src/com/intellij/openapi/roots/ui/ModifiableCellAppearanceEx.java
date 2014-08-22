@@ -21,4 +21,7 @@ import javax.swing.*;
 
 public interface ModifiableCellAppearanceEx extends CellAppearanceEx {
   void setIcon(@Nullable Icon icon);
+
+  @Nullable
+  Icon getIcon();
 }

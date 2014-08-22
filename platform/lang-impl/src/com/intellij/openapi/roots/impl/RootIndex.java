@@ -24,6 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -111,10 +113,9 @@ public class RootIndex extends DirectoryIndex {
       }
 
       for (OrderEntry orderEntry : moduleRootManager.getOrderEntries()) {
-        if (orderEntry instanceof LibraryOrSdkOrderEntry) {
-          final LibraryOrSdkOrderEntry entry = (LibraryOrSdkOrderEntry)orderEntry;
-          final VirtualFile[] sourceRoots = entry.getRootFiles(OrderRootType.SOURCES);
-          final VirtualFile[] classRoots = entry.getRootFiles(OrderRootType.CLASSES);
+        if (orderEntry instanceof OrderEntryWithTracking) {
+          final VirtualFile[] sourceRoots = orderEntry.getFiles(SourcesOrderRootType.getInstance());
+          final VirtualFile[] classRoots = orderEntry.getFiles(BinariesOrderRootType.getInstance());
 
           // Init library sources
           for (final VirtualFile sourceRoot : sourceRoots) {
@@ -175,16 +176,15 @@ public class RootIndex extends DirectoryIndex {
               depEntries.putValue(importedClassRoot, orderEntry);
             }
           }
-          for (VirtualFile sourceRoot : orderEntry.getFiles(OrderRootType.SOURCES)) {
+          for (VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.getInstance())) {
             depEntries.putValue(sourceRoot, orderEntry);
           }
         }
-        else if (orderEntry instanceof LibraryOrSdkOrderEntry) {
-          final LibraryOrSdkOrderEntry entry = (LibraryOrSdkOrderEntry)orderEntry;
-          for (final VirtualFile sourceRoot : entry.getRootFiles(OrderRootType.SOURCES)) {
+        else if (orderEntry instanceof OrderEntryWithTracking) {
+          for (final VirtualFile sourceRoot : orderEntry.getFiles(SourcesOrderRootType.getInstance())) {
             libSourceRootEntries.putValue(sourceRoot, orderEntry);
           }
-          for (final VirtualFile classRoot : entry.getRootFiles(OrderRootType.CLASSES)) {
+          for (final VirtualFile classRoot : orderEntry.getFiles(BinariesOrderRootType.getInstance())) {
             libClassRootEntries.putValue(classRoot, orderEntry);
           }
         }

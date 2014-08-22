@@ -44,6 +44,8 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
@@ -2536,11 +2538,10 @@ public class FileBasedIndexImpl extends FileBasedIndex {
       }
       OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
       for (OrderEntry orderEntry : orderEntries) {
-        if (orderEntry instanceof LibraryOrSdkOrderEntry) {
+        if (orderEntry instanceof OrderEntryWithTracking) {
           if (orderEntry.isValid()) {
-            final LibraryOrSdkOrderEntry entry = (LibraryOrSdkOrderEntry)orderEntry;
-            final VirtualFile[] libSources = entry.getRootFiles(OrderRootType.SOURCES);
-            final VirtualFile[] libClasses = entry.getRootFiles(OrderRootType.CLASSES);
+            final VirtualFile[] libSources = orderEntry.getFiles(SourcesOrderRootType.getInstance());
+            final VirtualFile[] libClasses = orderEntry.getFiles(BinariesOrderRootType.getInstance());
             for (VirtualFile[] roots : new VirtualFile[][]{libSources, libClasses}) {
               for (VirtualFile root : roots) {
                 if (visitedRoots.add(root)) {

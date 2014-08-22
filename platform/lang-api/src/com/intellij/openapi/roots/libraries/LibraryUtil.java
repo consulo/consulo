@@ -23,6 +23,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -108,26 +110,26 @@ public class LibraryUtil {
     return getLibraryRoots(ModuleManager.getInstance(project).getModules(), includeSourceFiles, includeJdk);
   }
 
-  public static VirtualFile[] getLibraryRoots(final Module[] modules, final boolean includeSourceFiles, final boolean includeJdk) {
+  public static VirtualFile[] getLibraryRoots(final Module[] modules, final boolean includeSourceFiles, final boolean includeSdk) {
     Set<VirtualFile> roots = new HashSet<VirtualFile>();
     for (Module module : modules) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
       final OrderEntry[] orderEntries = moduleRootManager.getOrderEntries();
       for (OrderEntry entry : orderEntries) {
-        if (entry instanceof LibraryOrderEntry){
+        if (entry instanceof LibraryOrderEntry) {
           final Library library = ((LibraryOrderEntry)entry).getLibrary();
           if (library != null) {
-            VirtualFile[] files = includeSourceFiles ? library.getFiles(OrderRootType.SOURCES) : null;
+            VirtualFile[] files = includeSourceFiles ? library.getFiles(SourcesOrderRootType.getInstance()) : null;
             if (files == null || files.length == 0) {
-              files = library.getFiles(OrderRootType.CLASSES);
+              files = library.getFiles(BinariesOrderRootType.getInstance());
             }
             ContainerUtil.addAll(roots, files);
           }
-        } else if (includeJdk && entry instanceof SdkOrderEntry) {
-          SdkOrderEntry jdkEntry = (SdkOrderEntry)entry;
-          VirtualFile[] files = includeSourceFiles ? jdkEntry.getRootFiles(OrderRootType.SOURCES) : null;
+        }
+        else if (includeSdk && entry instanceof SdkOrderEntry) {
+          VirtualFile[] files = includeSourceFiles ? entry.getFiles(SourcesOrderRootType.getInstance()) : null;
           if (files == null || files.length == 0) {
-            files = jdkEntry.getRootFiles(OrderRootType.CLASSES);
+            files = entry.getFiles(BinariesOrderRootType.getInstance());
           }
           ContainerUtil.addAll(roots, files);
         }
@@ -152,7 +154,7 @@ public class LibraryUtil {
     return result.get();
   }
 
-   @Nullable
+  @Nullable
   public static OrderEntry findLibraryEntry(VirtualFile file, final Project project) {
     List<OrderEntry> entries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);
     for (OrderEntry entry : entries) {
