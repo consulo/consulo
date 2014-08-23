@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModifiableModuleRootLayer;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import com.intellij.openapi.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
@@ -165,27 +165,31 @@ public class ExtensionEditor extends ModuleElementsEditor {
       }
     }
 
-    final ModifiableRootModel rootModel = myState.getRootModel();
-    assert rootModel != null;
-
     if (extension instanceof ModuleExtensionWithSdk) {
-      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = rootModel.findModuleExtensionSdkEntry(extension);
+      // we using module layer, dont use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
+      // ill call this method again
+      ModifiableModuleRootLayer moduleRootLayer = extension.getModuleRootLayer();
+
+      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
       if (!extension.isEnabled() && sdkOrderEntry != null) {
-        rootModel.removeOrderEntry(sdkOrderEntry);
+        moduleRootLayer.removeOrderEntry(sdkOrderEntry);
       }
 
       if (extension.isEnabled()) {
         final ModuleExtensionWithSdk sdkExtension = (ModuleExtensionWithSdk)extension;
         if (!sdkExtension.getInheritableSdk().isNull()) {
           if (sdkOrderEntry == null) {
-            rootModel.addModuleExtensionSdkEntry(sdkExtension);
+            moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
           }
           else {
             final ModuleExtensionWithSdk<?> moduleExtension = sdkOrderEntry.getModuleExtension();
             if (moduleExtension != null && !Comparing.equal(sdkExtension.getInheritableSdk(), moduleExtension.getInheritableSdk())) {
-              rootModel.addModuleExtensionSdkEntry(sdkExtension);
+              moduleRootLayer.addModuleExtensionSdkEntry(sdkExtension);
             }
           }
+        }
+        else if(sdkOrderEntry != null) {
+          moduleRootLayer.removeOrderEntry(sdkOrderEntry);
         }
       }
     }

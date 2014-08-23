@@ -15,19 +15,27 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
+import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFoldersSupport;
 import org.mustbe.consulo.roots.impl.WebResourcesFolderTypeProvider;
+import org.mustbe.consulo.sandLanguage.ide.bundle.SandBundleType;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 @ContentFoldersSupport(value = {WebResourcesFolderTypeProvider.class})
-public class SandModuleExtension extends ModuleExtensionImpl<SandModuleExtension> {
+public class SandModuleExtension extends ModuleExtensionWithSdkImpl<SandModuleExtension> {
   public SandModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
     super(id, rootModel);
+  }
+
+  @NotNull
+  @Override
+  public Class<? extends SdkType> getSdkTypeClass() {
+    return SandBundleType.class;
   }
 }
