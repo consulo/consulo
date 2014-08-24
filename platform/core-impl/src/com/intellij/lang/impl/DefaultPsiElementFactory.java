@@ -15,7 +15,10 @@
  */
 package com.intellij.lang.impl;
 
-import com.intellij.lang.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.ParserDefinition;
+import com.intellij.lang.PsiElementFactory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IElementTypeAsPsiFactory;
