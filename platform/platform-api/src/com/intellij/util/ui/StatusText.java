@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 public abstract class StatusText {
   public static final SimpleTextAttributes DEFAULT_ATTRIBUTES = SimpleTextAttributes.GRAYED_ATTRIBUTES;
@@ -42,7 +43,8 @@ public abstract class StatusText {
 
   private String myText = "";
   protected final SimpleColoredComponent myComponent = new SimpleColoredComponent();
-  private final ArrayList<ActionListener> myClickListeners = new ArrayList<ActionListener>();
+  private final List<ActionListener> myClickListeners = new ArrayList<ActionListener>();
+  private boolean myHasActiveClickListeners; // calculated field for performance optimization
 
   protected StatusText(JComponent owner) {
     this();
@@ -52,7 +54,7 @@ public abstract class StatusText {
   public StatusText() {
     myClickListener = new ClickListener() {
       @Override
-      public boolean onClick(MouseEvent e, int clickCount) {
+      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
         if (e.getButton() == MouseEvent.BUTTON1 && clickCount == 1) {
           ActionListener actionListener = findActionListenerAt(e.getPoint());
           if (actionListener != null) {
@@ -65,13 +67,22 @@ public abstract class StatusText {
     };
 
     myMouseMotionListener = new MouseAdapter() {
+
+      private Cursor myOriginalCursor;
+
       @Override
       public void mouseMoved(final MouseEvent e) {
-        if (findActionListenerAt(e.getPoint()) != null) {
-          myMouseTarget.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        }
-        else {
-          myMouseTarget.setCursor(Cursor.getDefaultCursor());
+        if (isStatusVisible()) {
+          if (findActionListenerAt(e.getPoint()) != null) {
+            if (myOriginalCursor == null) {
+              myOriginalCursor = myMouseTarget.getCursor();
+              myMouseTarget.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+          }
+          else if (myOriginalCursor != null) {
+            myMouseTarget.setCursor(myOriginalCursor);
+            myOriginalCursor = null;
+          }
         }
       }
     };
@@ -105,7 +116,7 @@ public abstract class StatusText {
 
   @Nullable
   private ActionListener findActionListenerAt(Point point) {
-    if (!isStatusVisible()) return null;
+    if (!myHasActiveClickListeners || !isStatusVisible()) return null;
 
     point = SwingUtilities.convertPoint(myMouseTarget, point, myOwner);
 
@@ -145,6 +156,7 @@ public abstract class StatusText {
     myText = "";
     myComponent.clear();
     myClickListeners.clear();
+    myHasActiveClickListeners = false;
     if (myOwner != null) myOwner.repaint();
     return this;
   }
@@ -166,6 +178,9 @@ public abstract class StatusText {
     myText += text;
     myComponent.append(text, attrs);
     myClickListeners.add(listener);
+    if (listener != null) {
+      myHasActiveClickListeners = true;
+    }
     if (myOwner != null) myOwner.repaint();
     return this;
   }
