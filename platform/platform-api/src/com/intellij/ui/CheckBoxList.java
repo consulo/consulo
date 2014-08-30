@@ -148,6 +148,9 @@ public class CheckBoxList<T> extends JBList {
   }
 
   private void setSelected(JCheckBox checkbox, int index) {
+    if(!checkbox.isEnabled()) {
+      return;
+    }
     boolean value = !checkbox.isSelected();
     checkbox.setSelected(value);
     repaint();

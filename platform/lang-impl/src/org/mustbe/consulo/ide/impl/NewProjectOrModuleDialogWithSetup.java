@@ -49,11 +49,11 @@ import java.util.Map;
 public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog {
   private final boolean myModuleCreation;
 
-  public static class EapDescriptor implements EarlyAccessProgramDescriptor {
+  public static class EapDescriptor extends EarlyAccessProgramDescriptor {
     @NotNull
     @Override
     public String getName() {
-      return "Module wizard dialogs";
+      return "Support module templates";
     }
 
     @Override
@@ -64,7 +64,7 @@ public class NewProjectOrModuleDialogWithSetup extends NewProjectOrModuleDialog 
     @NotNull
     @Override
     public String getDescription() {
-      return getName();
+      return "Support module templates in project & module creation dialog";
     }
   }
 

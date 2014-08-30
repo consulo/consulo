@@ -43,7 +43,7 @@ public class NewDirectoryProjectAction extends AnAction implements DumbAware {
     NewProjectOrModuleDialog dialog;
     Project project = e.getProject();
 
-    if (EarlyAccessProgramManager.getInstance().getState(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
+    if (EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
       dialog = new NewProjectOrModuleDialogWithSetup(project, null);
     }
     else {

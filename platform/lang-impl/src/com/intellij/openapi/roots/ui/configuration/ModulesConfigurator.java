@@ -396,7 +396,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       }
 
       final Module newModule;
-      if(EarlyAccessProgramManager.getInstance().getState(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
+      if(EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class)) {
         NewProjectOrModuleDialogWithSetup dialogWithSetup = new NewProjectOrModuleDialogWithSetup(myProject, moduleDir);
         newModule = dialogWithSetup.showAndGet() ? dialogWithSetup.doCreate(myModuleModel, moduleDir) : null;
       }

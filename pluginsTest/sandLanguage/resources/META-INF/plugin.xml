@@ -2,6 +2,13 @@
   <name>Sand Language</name>
 
   <extensions defaultExtensionNs="com.intellij">
+    <eapDescriptor implementation="org.mustbe.consulo.sandLanguage.ide.eap.Sand1EapDescriptor" />
+    <eapDescriptor implementation="org.mustbe.consulo.sandLanguage.ide.eap.Sand2EapDescriptor" />
+    <eapDescriptor implementation="org.mustbe.consulo.sandLanguage.ide.eap.Sand3EapDescriptor" />
+    <eapDescriptor implementation="org.mustbe.consulo.sandLanguage.ide.eap.Sand4EapDescriptor" />
+    <eapDescriptor implementation="org.mustbe.consulo.sandLanguage.ide.eap.Sand5EapDescriptor" />
+    <eapDescriptor implementation="org.mustbe.consulo.sandLanguage.ide.eap.Sand6EapDescriptor" />
+
     <fileTypeFactory implementation="org.mustbe.consulo.sandLanguage.lang.SandFileTypeFactory"/>
     <lang.parserDefinition language="SAND" implementationClass="org.mustbe.consulo.sandLanguage.lang.SandParsingDefinition"/>
 

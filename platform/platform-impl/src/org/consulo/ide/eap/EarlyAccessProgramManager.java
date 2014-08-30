@@ -38,6 +38,10 @@ import java.util.Map;
   }
 )
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
+  public static boolean is(@NotNull Class<? extends EarlyAccessProgramDescriptor> key) {
+    return getInstance().getState(key);
+  }
+
   private Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates =
     new LinkedHashMap<Class<? extends EarlyAccessProgramDescriptor>, Boolean>();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.ide.eap;
+package org.mustbe.consulo.sandLanguage.ide.eap;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import org.consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 17:09/15.10.13
+ * @since 30.08.14
  */
-public abstract class EarlyAccessProgramDescriptor {
-  public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME = ExtensionPointName.create("com.intellij.eapDescriptor");
-
+public class Sand1EapDescriptor extends EarlyAccessProgramDescriptor {
   @NotNull
-  public abstract String getName();
+  @Override
+  public String getName() {
+    return "A";
+  }
 
-  public boolean getDefaultState() {
+  @Override
+  public boolean isAvailable() {
     return false;
   }
 
-  public boolean isAvailable() {
+  @Override
+  public boolean isRestartRequired() {
     return true;
   }
 
-  public boolean isRestartRequired() {
-    return false;
-  }
-
   @NotNull
-  public abstract String getDescription();
+  @Override
+  public String getDescription() {
+    return "test";
+  }
 }

@@ -62,7 +62,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
     Module newModule = null;
-    boolean eapState = EarlyAccessProgramManager.getInstance().getState(NewProjectOrModuleDialogWithSetup.EapDescriptor.class);
+    boolean eapState = EarlyAccessProgramManager.is(NewProjectOrModuleDialogWithSetup.EapDescriptor.class);
     if (eapState) {
       VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
       if(moduleDir == null) {
