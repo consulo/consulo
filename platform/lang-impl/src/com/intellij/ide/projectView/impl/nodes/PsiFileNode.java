@@ -56,7 +56,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     if (project != null && jarRoot != null) {
       PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(jarRoot);
       if (psiDirectory != null) {
-        return BaseProjectViewDirectoryHelper.getInstance(project).getDirectoryChildren(psiDirectory, getSettings(), true);
+        return BaseProjectViewDirectoryHelper.getDirectoryChildren(psiDirectory, getSettings(), true);
       }
     }
 

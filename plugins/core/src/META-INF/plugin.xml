@@ -1511,8 +1511,6 @@
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.GlobalLibrariesConfigurable"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
-    <projectService serviceInterface="com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper"
-                    serviceImplementation="com.intellij.ide.projectView.impl.DefaultProjectViewDirectoryHelper"/>
 
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"

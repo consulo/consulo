@@ -150,7 +150,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
         PsiDirectory dirToUpdateFrom = dir;
         if (!treeStructure.isFlattenPackages() && treeStructure.isHideEmptyMiddlePackages()) {
           // optimization: this check makes sense only if flattenPackages == false && HideEmptyMiddle == true
-          while (dirToUpdateFrom != null && BaseProjectViewDirectoryHelper.getInstance(myProject).isEmptyMiddleDirectory(dirToUpdateFrom, true)) {
+          while (dirToUpdateFrom != null && BaseProjectViewDirectoryHelper.isEmptyMiddleDirectory(dirToUpdateFrom, true)) {
             dirToUpdateFrom = dirToUpdateFrom.getParentDirectory();
           }
         }

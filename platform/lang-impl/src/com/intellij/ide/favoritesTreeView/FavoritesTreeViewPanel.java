@@ -25,7 +25,6 @@ import com.intellij.ide.favoritesTreeView.actions.*;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.ModuleGroup;
-import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import com.intellij.ide.ui.customization.CustomizationUtil;
@@ -593,17 +592,10 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     window.setTitleActions(collapseAction);
 
     final DefaultActionGroup group = new DefaultActionGroup();
-    final BaseProjectViewDirectoryHelper helper = BaseProjectViewDirectoryHelper.getInstance(myProject);
 
-    if (helper.supportsFlattenPackages()) {
-      group.add(new FavoritesFlattenPackagesAction(myProject, myBuilder));
-    }
-    if (helper.supportsHideEmptyMiddlePackages()) {
-      group.add(new FavoritesCompactEmptyMiddlePackagesAction(myProject, myBuilder));
-    }
-    if (helper.supportsFlattenPackages()) {
-      group.addAction(new FavoritesAbbreviatePackageNamesAction(myProject, myBuilder));
-    }
+    group.add(new FavoritesFlattenPackagesAction(myProject, myBuilder));
+    group.add(new FavoritesCompactEmptyMiddlePackagesAction(myProject, myBuilder));
+    group.addAction(new FavoritesAbbreviatePackageNamesAction(myProject, myBuilder));
 
     group.add(new FavoritesShowMembersAction(myProject, myBuilder));
 

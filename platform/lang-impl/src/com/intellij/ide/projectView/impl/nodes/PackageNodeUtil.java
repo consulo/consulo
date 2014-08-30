@@ -182,7 +182,7 @@ public class PackageNodeUtil {
           }
         }
         // add non-dir items
-        children.addAll(BaseProjectViewDirectoryHelper.getInstance(project).getDirectoryChildren(directory, settings, false));
+        children.addAll(BaseProjectViewDirectoryHelper.getDirectoryChildren(directory, settings, false));
       }
       else {
         topLevelPackages.add(directoryPackage);

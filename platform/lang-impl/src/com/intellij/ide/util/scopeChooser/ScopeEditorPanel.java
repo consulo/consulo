@@ -17,7 +17,6 @@ package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -413,9 +412,7 @@ public class ScopeEditorPanel {
         rebuild(true);
       }
     };
-    if (BaseProjectViewDirectoryHelper.getInstance(myProject).supportsFlattenPackages()) {
-      group.add(new FlattenPackagesAction(update));
-    }
+    group.add(new FlattenPackagesAction(update));
     final PatternDialectProvider[] dialectProviders = Extensions.getExtensions(PatternDialectProvider.EP_NAME);
     for (PatternDialectProvider provider : dialectProviders) {
       for (AnAction action : provider.createActions(myProject, update)) {
