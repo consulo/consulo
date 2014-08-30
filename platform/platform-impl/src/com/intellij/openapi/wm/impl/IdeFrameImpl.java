@@ -138,8 +138,6 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, DataProvider {
         updateBorder();
       }
     });
-
-    IdeMenuBar.installAppMenuIfNeeded(this);
   }
 
   private void updateBorder() {
