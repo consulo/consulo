@@ -15,24 +15,16 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
-import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.sandLanguage.ide.bundle.SandBundleType;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 30.08.14
  */
-public class SandModuleExtension extends ModuleExtensionWithSdkImpl<SandModuleExtension> {
-  public SandModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
-    super(id, rootModel);
-  }
-
-  @NotNull
-  @Override
-  public Class<? extends SdkType> getSdkTypeClass() {
-    return SandBundleType.class;
+public class Sand2ModuleExtension extends ModuleExtensionImpl<Sand2ModuleExtension> {
+  public Sand2ModuleExtension(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
+    super(id, moduleRootLayer);
   }
 }

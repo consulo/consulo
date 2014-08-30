@@ -24,7 +24,13 @@
                              name="Sand"
                              immutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandModuleExtension"
                              mutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.SandMutableModuleExtension"/>
+    <moduleExtensionProvider key="sand2"
+                             icon="/nodes/static.png"
+                             name="Sand 2"
+                             immutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.Sand2ModuleExtension"
+                             mutableClass="org.mustbe.consulo.sandLanguage.ide.module.extension.Sand2MutableModuleExtension"/>
     <contentFolderSupportPatcher implementation="org.mustbe.consulo.sandLanguage.ide.module.SandContentFolderSupportPatcher"/>
+    <psi.packageSupportProvider implementation="org.mustbe.consulo.sandLanguage.ide.module.Sand2PackageProvider" />
     <taskByVfsChange implementation="org.mustbe.consulo.sandLanguage.ide.vfs.backgroundTask.SandBackgroundTaskByVfsChangeProvider"/>
     <sdkType implementation="org.mustbe.consulo.sandLanguage.ide.bundle.SandBundleType"/>
     <toolWindow id="Sand"

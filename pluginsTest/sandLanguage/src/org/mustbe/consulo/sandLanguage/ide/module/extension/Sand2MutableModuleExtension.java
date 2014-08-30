@@ -15,24 +15,35 @@
  */
 package org.mustbe.consulo.sandLanguage.ide.module.extension;
 
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
-import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.sandLanguage.ide.bundle.SandBundleType;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 19.03.14
+ * @since 30.08.14
  */
-public class SandModuleExtension extends ModuleExtensionWithSdkImpl<SandModuleExtension> {
-  public SandModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
-    super(id, rootModel);
+public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements MutableModuleExtension<Sand2ModuleExtension> {
+  public Sand2MutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
+    super(id, moduleRootLayer);
   }
 
-  @NotNull
+  @Nullable
   @Override
-  public Class<? extends SdkType> getSdkTypeClass() {
-    return SandBundleType.class;
+  public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
+    return null;
+  }
+
+  @Override
+  public void setEnabled(boolean val) {
+    myIsEnabled = val;
+  }
+
+  @Override
+  public boolean isModified(@NotNull Sand2ModuleExtension originalExtension) {
+    return myIsEnabled != originalExtension.isEnabled();
   }
 }

@@ -21,13 +21,18 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import lombok.val;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 
@@ -150,10 +155,27 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
     val project = d.getProject();
     val projectFileIndex = ProjectFileIndex.SERVICE.getInstance(project);
 
-    val contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
-    if (contentFolderTypeForFile != null) {
-      val childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
-      return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? ChildType.Package : ChildType.Directory);
+    Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(d);
+    if(moduleForPsiElement != null) {
+      boolean isPackageSupported = false;
+      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForPsiElement);
+      PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
+      for (ModuleExtension moduleExtension : moduleRootManager.getExtensions()) {
+        for (PsiPackageSupportProvider supportProvider : extensions) {
+          if (supportProvider.isSupported(moduleExtension)) {
+            isPackageSupported = true;
+            break;
+          }
+        }
+      }
+
+      if(isPackageSupported) {
+        val contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
+        if (contentFolderTypeForFile != null) {
+          val childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
+          return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? ChildType.Package : ChildType.Directory);
+        }
+      }
     }
 
     return Trinity.create(null, d, ChildType.Directory);
