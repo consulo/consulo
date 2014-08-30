@@ -16,16 +16,19 @@
 package org.consulo.compiler.server.roots.impl;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.impl.RootIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
+import com.intellij.util.containers.ConcurrentHashMap;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+
+import java.util.Map;
 
 /**
  * @see com.intellij.openapi.roots.impl.DirectoryIndexImpl
@@ -51,22 +54,37 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   private RootIndex getRootIndex() {
     RootIndex rootIndex = myRootIndex;
     if (rootIndex == null) {
-      myRootIndex = rootIndex = new RootIndex(myProject);
+      myRootIndex = rootIndex = new RootIndex(myProject, createRootInfoCache());
     }
     return rootIndex;
   }
 
-  @Override
-  @TestOnly
-  public void checkConsistency() {
-    RootIndex rootIndex = getRootIndex();
-    rootIndex.checkConsistency();
+  protected RootIndex.InfoCache createRootInfoCache() {
+    return new RootIndex.InfoCache() {
+      // Upsource can't use int-mapping because different files may have the same id there
+      private final Map<VirtualFile, DirectoryInfo> myInfoCache = new ConcurrentHashMap<VirtualFile, DirectoryInfo>();
+      @Override
+      public void cacheInfo(@NotNull VirtualFile dir, @NotNull DirectoryInfo info) {
+        myInfoCache.put(dir, info);
+      }
+
+      @Override
+      public DirectoryInfo getCachedInfo(@NotNull VirtualFile dir) {
+        return myInfoCache.get(dir);
+      }
+    };
   }
 
   @Override
   public DirectoryInfo getInfoForDirectory(@NotNull VirtualFile dir) {
-    RootIndex rootIndex = getRootIndex();
-    return rootIndex.getInfoForDirectory(dir);
+    DirectoryInfo info = getInfoForFile(dir);
+    return info.isInProject() ? info : null;
+  }
+
+  @NotNull
+  @Override
+  public DirectoryInfo getInfoForFile(@NotNull VirtualFile file) {
+    return getRootIndex().getInfoForFile(file);
   }
 
   @Override
@@ -80,18 +98,14 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   }
 
   @Override
-  public boolean isProjectExcludeRoot(@NotNull VirtualFile dir) {
-    return getRootIndex().isProjectExcludeRoot(dir);
-  }
-
-  @Override
-  public boolean isModuleExcludeRoot(@NotNull VirtualFile dir) {
-    return getRootIndex().isModuleExcludeRoot(dir);
-  }
-
-  @Override
   public String getPackageName(@NotNull VirtualFile dir) {
     RootIndex rootIndex = getRootIndex();
     return rootIndex.getPackageName(dir);
+  }
+
+  @NotNull
+  @Override
+  public OrderEntry[] getOrderEntries(@NotNull DirectoryInfo info) {
+    return getRootIndex().getOrderEntries(info);
   }
 }

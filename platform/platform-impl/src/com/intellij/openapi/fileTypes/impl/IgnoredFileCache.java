@@ -113,7 +113,7 @@ class IgnoredFileCache {
       }
     }
 
-    boolean result = isFileIgnoredNoCache(file);;
+    boolean result = isFileIgnoredNoCache(file);
     synchronized (myCheckedIds) {
       myCheckedIds.set(id);
       if (result) {

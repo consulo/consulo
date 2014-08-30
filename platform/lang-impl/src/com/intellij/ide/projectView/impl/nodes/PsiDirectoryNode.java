@@ -25,6 +25,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.ProjectViewImpl;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -158,9 +159,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
       return false;
     }
 
-    final Project project = value.getProject();
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    return !fileIndex.isIgnored(file);
+    return !FileTypeRegistry.getInstance().isFileIgnored(file);
   }
 
   @Override

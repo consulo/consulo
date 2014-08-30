@@ -47,7 +47,9 @@ public abstract class FileIndexFacade {
   public abstract boolean isInLibraryClasses(@NotNull VirtualFile file);
 
   public abstract boolean isInLibrarySource(@NotNull VirtualFile file);
+
   public abstract boolean isExcludedFile(@NotNull VirtualFile file);
+  public abstract boolean isUnderIgnored(@NotNull VirtualFile file);
 
   @Nullable
   public abstract Module getModuleForFile(@NotNull VirtualFile file);

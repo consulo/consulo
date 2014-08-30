@@ -45,7 +45,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
 
   public void addDirectoryCopyInstructions(@NotNull VirtualFile directory, @Nullable PackagingFileFilter filter) {
     final ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
-    final boolean copyExcluded = index.isIgnored(directory);
+    final boolean copyExcluded = index.isExcluded(directory);
     collectInstructionsRecursively(directory, this, filter, index, copyExcluded);
   }
 
@@ -64,7 +64,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
           if (fileTypeManager.isFileIgnored(child)) return false;
         }
         else {
-          if (index.isIgnored(child)) return false;
+          if (index.isExcluded(child)) return false;
         }
 
         final IncrementalCompilerInstructionCreatorBase creator = getCurrentValue();

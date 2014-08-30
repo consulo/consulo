@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author nik
@@ -22,21 +21,9 @@ public abstract class FileIndexBase implements FileIndex {
     myExclusionManager = ProjectFileExclusionManager.SERVICE.getInstance(project);
   }
 
-  @Nullable
+  @NotNull
   protected DirectoryInfo getInfoForFileOrDirectory(@NotNull VirtualFile file) {
-    if (!file.isDirectory() && file.getParent() == null) return null; // e.g. LightVirtualFile in test
-    DirectoryInfo info = myDirectoryIndex.getInfoForDirectory(file);
-    if (info != null) {
-      return info;
-    }
-
-    if (!file.isDirectory() && !myDirectoryIndex.isModuleExcludeRoot(file)) {
-      VirtualFile dir = file.getParent();
-      if (dir != null) {
-        return myDirectoryIndex.getInfoForDirectory(dir);
-      }
-    }
-    return null;
+    return myDirectoryIndex.getInfoForFile(file);
   }
 
   @Override

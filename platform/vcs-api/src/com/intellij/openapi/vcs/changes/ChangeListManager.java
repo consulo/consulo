@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ public abstract class ChangeListManager implements ChangeListModification {
   public abstract void removeChangeListListener(ChangeListListener listener);
 
   public abstract void registerCommitExecutor(CommitExecutor executor);
-  
+
   public abstract void commitChanges(LocalChangeList changeList, List<Change> changes);
 
   public abstract void commitChangesSynchronously(LocalChangeList changeList, List<Change> changes);
@@ -134,6 +134,7 @@ public abstract class ChangeListManager implements ChangeListModification {
   public abstract List<CommitExecutor> getRegisteredExecutors();
 
   public abstract void addFilesToIgnore(final IgnoredFileBean... ignoredFiles);
+  public abstract void addDirectoryToIgnoreImplicitly(@NotNull String path);
   public abstract void setFilesToIgnore(final IgnoredFileBean... ignoredFiles);
   public abstract IgnoredFileBean[] getFilesToIgnore();
   public abstract boolean isIgnoredFile(@NotNull VirtualFile file);
@@ -145,7 +146,7 @@ public abstract class ChangeListManager implements ChangeListModification {
   public abstract void letGo();
   public abstract String isFreezed();
   public abstract boolean isFreezedWithNotification(@Nullable String modalTitle);
-  
+
   public static boolean isFileChanged(final Project project, final VirtualFile vf) {
     FileStatus status = getInstance(project).getStatus(vf);
     if (FileStatus.NOT_CHANGED.equals(status) || FileStatus.UNKNOWN.equals(status) || FileStatus.IGNORED.equals(status)) {
@@ -157,5 +158,6 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract List<VirtualFile> getModifiedWithoutEditing();
 
-  public abstract ThreeState haveChangesUnder(VirtualFile vf);
+  @NotNull
+  public abstract ThreeState haveChangesUnder(@NotNull VirtualFile vf);
 }

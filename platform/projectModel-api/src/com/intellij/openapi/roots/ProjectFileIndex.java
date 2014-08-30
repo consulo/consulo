@@ -50,6 +50,16 @@ public interface ProjectFileIndex extends FileIndex {
   Module getModuleForFile(@NotNull VirtualFile file);
 
   /**
+   * Returns module to which the specified file belongs.
+   *
+   * @param file the file for which the module is requested.
+   * @param honorExclusion if {@code false} the containing module will be returned even if the file is located under a folder marked as excluded
+   * @return the module instance or null if the file does not belong to content of any module.
+   */
+  @Nullable
+  Module getModuleForFile(@NotNull VirtualFile file, boolean honorExclusion);
+
+  /**
    * Returns the order entries which contain the specified file (either in CLASSES or SOURCES).
    *
    * @param file the file for which the order entries are requested.
@@ -87,6 +97,16 @@ public interface ProjectFileIndex extends FileIndex {
    */
   @Nullable
   VirtualFile getContentRootForFile(@NotNull VirtualFile file);
+
+  /**
+   * Returns the module content root to which the specified file or directory belongs.
+   *
+   * @param file the file or directory for which the information is requested.
+   * @param honorExclusion if {@code false} the containing content root will be returned even if the file is located under a folder marked as excluded
+   * @return the file for the content root, or null if the file does not belong to this project.
+   */
+  @Nullable
+  VirtualFile getContentRootForFile(@NotNull VirtualFile file, final boolean honorExclusion);
 
   @Nullable
   ContentFolderTypeProvider getContentFolderTypeForFile(@NotNull VirtualFile file);
@@ -149,11 +169,28 @@ public interface ProjectFileIndex extends FileIndex {
   boolean isInLibrarySource(@NotNull VirtualFile fileOrDir);
 
   /**
-   * Checks if the specified file or directory is ignored (either excluded by exclude roots
-   * or ignored by {@link com.intellij.openapi.fileTypes.FileTypeManager#isFileIgnored(String)}).
+   * @deprecated name of this method may be confusing. If you want to check if the file is excluded or ignored use {@link #isExcluded(com.intellij.openapi.vfs.VirtualFile)}.
+   * If you want to check if the file is ignored use {@link com.intellij.openapi.fileTypes.FileTypeRegistry#isFileIgnored(com.intellij.openapi.vfs.VirtualFile)}.
+   * If you want to check if the file or one of its parents is ignored use {@link #isUnderIgnored(com.intellij.openapi.vfs.VirtualFile)}.
+   */
+  @Deprecated
+  boolean isIgnored(@NotNull VirtualFile file);
+
+  /**
+   * Checks if the specified file or directory is located under project roots but the file itself or one of its parent directories is
+   * either excluded from the project or ignored by {@link com.intellij.openapi.fileTypes.FileTypeRegistry#isFileIgnored(com.intellij.openapi.vfs.VirtualFile)}).
+   *
+   * @param file the file to check.
+   * @return true if <code>file</code> is excluded or ignored, false otherwise.
+   */
+  boolean isExcluded(@NotNull VirtualFile file);
+
+  /**
+   * Checks if the specified file or directory is located under project roots but the file itself or one of its parent directories is ignored
+   * by {@link com.intellij.openapi.fileTypes.FileTypeRegistry#isFileIgnored(com.intellij.openapi.vfs.VirtualFile)}).
    *
    * @param file the file to check.
    * @return true if <code>file</code> is ignored, false otherwise.
    */
-  boolean isIgnored(@NotNull VirtualFile file);
+  boolean isUnderIgnored(@NotNull VirtualFile file);
 }

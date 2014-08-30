@@ -390,7 +390,7 @@ public class FileManagerImpl implements FileManager {
     PsiDirectory psiDir = myVFileToPsiDirMap.get(vFile);
     if (psiDir != null) return psiDir;
 
-    if (myFileIndex.isExcludedFile(vFile)) return null;
+    if (myFileIndex.isUnderIgnored(vFile)) return null;
 
     VirtualFile parent = vFile.getParent();
     if (parent != null) { //?

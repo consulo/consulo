@@ -21,10 +21,12 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ProjectViewNode;
+import com.intellij.ide.projectView.ProjectViewSettings;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleFileIndex;
@@ -32,13 +34,13 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
+import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.*;
+import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PathUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
@@ -128,7 +130,7 @@ public class BaseProjectViewDirectoryHelper {
     final Module module = fileIndex.getModuleForFile(psiDirectory.getVirtualFile());
     final ModuleFileIndex moduleFileIndex = module == null ? null : ModuleRootManager.getInstance(module).getFileIndex();
     if (!settings.isFlattenPackages() || skipDirectory(psiDirectory)) {
-      processPsiDirectoryChildren(psiDirectory, directoryChildrenInProject(psiDirectory),
+      processPsiDirectoryChildren(psiDirectory, directoryChildrenInProject(psiDirectory, settings),
                                   children, fileIndex, null, settings, withSubDirectories);
     }
     else { // source directory in "flatten packages" mode
@@ -142,7 +144,7 @@ public class BaseProjectViewDirectoryHelper {
           continue;
         }
         VirtualFile directoryFile = subdir.getVirtualFile();
-        if (fileIndex.isIgnored(directoryFile)) continue;
+        if (FileTypeRegistry.getInstance().isFileIgnored(directoryFile)) continue;
 
         if (withSubDirectories) {
           children.add(new PsiDirectoryNode(project, subdir, settings));
@@ -168,10 +170,20 @@ public class BaseProjectViewDirectoryHelper {
     return topLevelContentRoots;
   }
 
-  private PsiElement[] directoryChildrenInProject(PsiDirectory psiDirectory) {
+  private PsiElement[] directoryChildrenInProject(PsiDirectory psiDirectory, final ViewSettings settings) {
     VirtualFile dir = psiDirectory.getVirtualFile();
-    if (myIndex.getInfoForDirectory(dir) != null) {
-      return psiDirectory.getChildren();
+    if (shouldBeShown(dir, settings)) {
+      final List<PsiElement> children = new ArrayList<PsiElement>();
+      psiDirectory.processChildren(new PsiElementProcessor<PsiFileSystemItem>() {
+        @Override
+        public boolean execute(@NotNull PsiFileSystemItem element) {
+          if (shouldBeShown(element.getVirtualFile(), settings)) {
+            children.add(element);
+          }
+          return true;
+        }
+      });
+      return PsiUtilCore.toPsiElementArray(children);
     }
 
     PsiManager manager = psiDirectory.getManager();
@@ -192,6 +204,16 @@ public class BaseProjectViewDirectoryHelper {
     }
 
     return PsiUtilBase.toPsiElementArray(directoriesOnTheWayToContentRoots);
+  }
+
+  private boolean shouldBeShown(VirtualFile dir, ViewSettings settings) {
+    DirectoryInfo directoryInfo = myIndex.getInfoForFile(dir);
+    if (directoryInfo.isInProject()) return true;
+
+    if (settings instanceof ProjectViewSettings && ((ProjectViewSettings)settings).isShowExcludedFiles()) {
+      return directoryInfo.isExcluded();
+    }
+    return false;
   }
 
   // used only for non-flatten packages mode
@@ -216,7 +238,7 @@ public class BaseProjectViewDirectoryHelper {
           vFile = dir.getVirtualFile();
           if (!vFile.equals(projectFileIndex.getSourceRootForFile(vFile))) { // if is not a source root
             if (viewSettings.isHideEmptyMiddlePackages() && !skipDirectory(psiDir) && isEmptyMiddleDirectory(dir, true)) {
-              processPsiDirectoryChildren(dir, directoryChildrenInProject(dir),
+              processPsiDirectoryChildren(dir, directoryChildrenInProject(dir, viewSettings),
                                           container, projectFileIndex, moduleFileIndex, viewSettings, withSubDirectories); // expand it recursively
               continue;
             }

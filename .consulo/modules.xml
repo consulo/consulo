@@ -11,7 +11,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="library" name="JDOM" level="project" />
           <orderEntry type="module" module-name="extensions" />
@@ -27,7 +27,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="analysis-api" exported="" />
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="core-impl" />
@@ -44,7 +44,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="platform/boot" dirurl="file://$PROJECT_DIR$/platform/boot" current-layer="Default">
@@ -54,7 +54,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="platform/bootstrap" dirurl="file://$PROJECT_DIR$/platform/bootstrap" current-layer="Default">
@@ -64,7 +64,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
@@ -76,7 +76,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="module" module-name="projectModel-api" exported="" />
           <orderEntry type="module" module-name="platform-api" exported="" />
@@ -92,7 +92,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
@@ -103,7 +103,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="compiler-api" exported="" />
           <orderEntry type="module" module-name="compiler-impl" />
           <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
@@ -119,7 +119,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
@@ -132,7 +132,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="compiler-api" exported="" />
           <orderEntry type="module" module-name="resources-en" exported="" />
           <orderEntry type="module" module-name="platform-impl" />
@@ -152,7 +152,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="testFramework" />
           <orderEntry type="module" module-name="compiler-artifact-impl" />
@@ -167,7 +167,7 @@
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/.consulo/sandbox" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" />
           <orderEntry type="module" module-name="boot" />
           <orderEntry type="module" module-name="bootstrap" />
@@ -211,7 +211,7 @@
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
@@ -224,7 +224,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util" exported="" />
           <orderEntry type="module" module-name="extensions" exported="" />
           <orderEntry type="library" exploded="" name="picocontainer" level="project" />
@@ -241,7 +241,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="library" name="picocontainer" level="project" />
           <orderEntry type="module" module-name="boot" />
@@ -257,7 +257,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="testFramework" />
           <orderEntry type="module" module-name="vcs-impl" />
@@ -272,7 +272,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="module" module-name="annotations" />
@@ -287,7 +287,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="editor-ui-api" exported="" />
           <orderEntry type="module" module-name="util" exported="" />
           <orderEntry type="module" module-name="annotations" exported="" />
@@ -304,7 +304,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="library" exploded="" name="XStream" level="project" />
           <orderEntry type="library" exploded="" name="JDOM" level="project" />
           <orderEntry type="library" name="picocontainer" level="project" />
@@ -325,7 +325,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" exported="" />
           <orderEntry type="module" module-name="util" exported="" />
           <orderEntry type="module" module-name="projectModel-api" exported="" />
@@ -343,7 +343,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="external-system-api" exported="" />
           <orderEntry type="module" module-name="projectModel-impl" />
           <orderEntry type="module" module-name="platform-impl" />
@@ -360,7 +360,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="platform/graph-api" dirurl="file://$PROJECT_DIR$/platform/graph-api" current-layer="Default">
@@ -370,7 +370,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
@@ -381,7 +381,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="graph-api" />
         </module-layer>
@@ -393,7 +393,7 @@
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="platform/indexing-api" dirurl="file://$PROJECT_DIR$/platform/indexing-api" current-layer="Default">
@@ -403,7 +403,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="module" module-name="projectModel-api" />
         </module-layer>
@@ -415,7 +415,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-impl" />
           <orderEntry type="module" module-name="indexing-api" exported="" />
           <orderEntry type="module" module-name="projectModel-impl" />
@@ -429,7 +429,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="module" module-name="lvcs-api" exported="" />
           <orderEntry type="library" exploded="" name="NanoXML" level="project" />
@@ -451,7 +451,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="boot" />
           <orderEntry type="module" module-name="lang-api" exported="" />
           <orderEntry type="module" module-name="vcs-api" />
@@ -486,7 +486,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
@@ -497,7 +497,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="library" name="picocontainer" level="project" />
           <orderEntry type="module" module-name="vcs-api" />
           <orderEntry type="module" module-name="vcs-impl" />
@@ -515,7 +515,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util" exported="" />
           <orderEntry type="module" module-name="extensions" exported="" />
           <orderEntry type="module" module-name="core-api" exported="" />
@@ -551,7 +551,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="library" name="Mac" level="project" />
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="library" name="picocontainer" level="project" />
@@ -595,7 +595,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="bootstrap" />
         </module-layer>
@@ -607,7 +607,7 @@
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lvcs-impl" exported="" />
           <orderEntry type="module" module-name="util" />
         </module-layer>
@@ -619,7 +619,7 @@
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="platform/platform-tests" dirurl="file://$PROJECT_DIR$/platform/platform-tests" current-layer="Default">
@@ -629,7 +629,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="library" name="Mocks" level="project" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="library" name="JUnit4" level="project" />
@@ -648,7 +648,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" />
         </module-layer>
       </module>
@@ -660,7 +660,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="module" module-name="lang-api" exported="" />
           <orderEntry type="module" module-name="resources-en" exported="" />
@@ -675,7 +675,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="projectModel-api" exported="" />
           <orderEntry type="module" module-name="core-impl" />
           <orderEntry type="module" module-name="lang-impl" />
@@ -689,7 +689,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="platform/remote-servers-api" dirurl="file://$PROJECT_DIR$/platform/remote-servers-api" current-layer="Default">
@@ -699,7 +699,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="module" module-name="compiler-artifact-api" exported="" />
@@ -714,7 +714,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="remote-servers-api" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="xdebugger-api" />
@@ -728,7 +728,7 @@
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-resources" />
           <orderEntry type="module" module-name="util" />
         </module-layer>
@@ -740,7 +740,7 @@
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="platform/smRunner" dirurl="file://$PROJECT_DIR$/platform/smRunner" current-layer="Default">
@@ -751,7 +751,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="testRunner" exported="" />
           <orderEntry type="module" module-name="xdebugger-api" />
@@ -771,7 +771,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-api" exported="" />
           <orderEntry type="module" module-name="lang-impl" exported="" />
           <orderEntry type="library" exploded="" name="JUnit4" level="project" />
@@ -794,7 +794,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-api" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="platform-impl" />
@@ -808,7 +808,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="library" name="JUnit4" level="project" />
         </module-layer>
       </module>
@@ -819,7 +819,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-api" />
           <orderEntry type="module" module-name="platform-impl" />
         </module-layer>
@@ -833,7 +833,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="library" name="Mac" level="project" />
           <orderEntry type="library" name="JDOM" level="project" />
           <orderEntry type="library" name="Log4J" level="project" />
@@ -858,7 +858,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" />
         </module-layer>
       </module>
@@ -869,7 +869,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="library" name="microba" level="project" />
         </module-layer>
@@ -881,7 +881,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="vcs-api" exported="" />
           <orderEntry type="module" module-name="platform-api" />
           <orderEntry type="module" module-name="platform-impl" />
@@ -900,7 +900,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util-rt" />
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="vcs-api" />
@@ -915,7 +915,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="platform-api" />
@@ -933,7 +933,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="vcs-log-api" />
           <orderEntry type="module" module-name="vcs-api" />
@@ -953,7 +953,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-api" exported="" />
         </module-layer>
       </module>
@@ -965,7 +965,7 @@
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="xdebugger-api" exported="" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="testFramework" />
@@ -979,7 +979,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="plugins/sandLanguage" dirurl="file://$PROJECT_DIR$/pluginsTest/sandLanguage" current-layer="Default">
@@ -992,7 +992,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="compiler-impl" />
           <orderEntry type="module" module-name="compiler-artifact-impl" />
@@ -1005,7 +1005,7 @@
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module-library">
             <library>

@@ -22,11 +22,8 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -98,7 +95,7 @@ public class RecursionDlg extends DialogWrapper {
     VirtualFile[] children = check != null ? check.getChildren() : VirtualFile.EMPTY_ARRAY;
     boolean hasSubdirs = false;
     for (int i = 0; i < children.length && !hasSubdirs; i++) {
-      if (children[i].isDirectory() && !pfi.isIgnored(children[i])) {
+      if (children[i].isDirectory() && !pfi.isExcluded(children[i])) {
         hasSubdirs = true;
       }
     }
