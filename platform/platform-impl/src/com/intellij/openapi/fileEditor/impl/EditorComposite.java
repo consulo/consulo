@@ -44,7 +44,6 @@ import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -119,7 +118,6 @@ public abstract class EditorComposite implements Disposable {
           return new UiDecoration(null, new Insets(0, 8, 0, 8));
         }
       });
-      wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
 
       myTabbedPaneWrapper=wrapper;
       myComponent=new MyComponent(wrapper.getComponent()){
