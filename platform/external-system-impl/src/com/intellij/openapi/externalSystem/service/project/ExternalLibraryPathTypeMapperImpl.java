@@ -17,6 +17,9 @@ package com.intellij.openapi.externalSystem.service.project;
 
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -31,9 +34,9 @@ public class ExternalLibraryPathTypeMapperImpl implements ExternalLibraryPathTyp
   private static final Map<LibraryPathType, OrderRootType> MAPPINGS = new EnumMap<LibraryPathType, OrderRootType>(LibraryPathType.class);
 
   static {
-    MAPPINGS.put(LibraryPathType.BINARY, OrderRootType.CLASSES);
-    MAPPINGS.put(LibraryPathType.SOURCE, OrderRootType.SOURCES);
-    MAPPINGS.put(LibraryPathType.DOC, OrderRootType.DOCUMENTATION);
+    MAPPINGS.put(LibraryPathType.BINARY, BinariesOrderRootType.getInstance());
+    MAPPINGS.put(LibraryPathType.SOURCE, SourcesOrderRootType.getInstance());
+    MAPPINGS.put(LibraryPathType.DOC, DocumentationOrderRootType.getInstance());
     assert LibraryPathType.values().length == MAPPINGS.size();
   }
 

@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.util.containers.MultiMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -37,7 +38,7 @@ public class JarDirectories {
   @NonNls private static final String URL_ATTR = "url";
   @NonNls private static final String RECURSIVE_ATTR = "recursive";
   @NonNls private static final String ROOT_TYPE_ATTR = "type";
-  public static final OrderRootType DEFAULT_JAR_DIRECTORY_TYPE = OrderRootType.BINARIES;
+  public static final OrderRootType DEFAULT_JAR_DIRECTORY_TYPE = BinariesOrderRootType.getInstance();
 
   public void copyFrom(JarDirectories other) {
     myDirectories.clear();

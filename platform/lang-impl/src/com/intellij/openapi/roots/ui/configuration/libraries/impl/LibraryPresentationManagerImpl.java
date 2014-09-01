@@ -17,9 +17,9 @@ package com.intellij.openapi.roots.ui.configuration.libraries.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -108,7 +108,7 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
     final LibraryKind type = ((LibraryEx)library).getKind();
     if (type != null && acceptedKinds.contains(type)) return true;
 
-    final VirtualFile[] files = librariesContainer.getLibraryFiles(library, OrderRootType.CLASSES);
+    final VirtualFile[] files = librariesContainer.getLibraryFiles(library, BinariesOrderRootType.getInstance());
     return !LibraryDetectionManager.getInstance().processProperties(Arrays.asList(files), new LibraryDetectionManager.LibraryPropertiesProcessor() {
       @Override
       public <P extends LibraryProperties> boolean processProperties(@NotNull LibraryKind processedKind, @NotNull P properties) {
@@ -146,7 +146,7 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
     if (((LibraryEx)library).isDisposed()) {
       return VirtualFile.EMPTY_ARRAY;
     }
-    return context != null ? context.getLibraryFiles(library, OrderRootType.CLASSES) : library.getFiles(OrderRootType.CLASSES);
+    return context != null ? context.getLibraryFiles(library, BinariesOrderRootType.getInstance()) : library.getFiles(BinariesOrderRootType.getInstance());
   }
 
   @NotNull

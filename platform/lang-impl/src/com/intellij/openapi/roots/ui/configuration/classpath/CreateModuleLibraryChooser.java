@@ -20,13 +20,13 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.DefaultLibraryRootsComponentDescriptor;
 import com.intellij.openapi.util.Pair;
@@ -188,7 +188,7 @@ public class CreateModuleLibraryChooser implements ClasspathElementChooser<Libra
     final List<Library> addedLibraries = new ArrayList<Library>();
     boolean onlyClasses = true;
     for (OrderRoot root : roots) {
-      onlyClasses &= root.getType() == OrderRootType.CLASSES;
+      onlyClasses &= root.getType() == BinariesOrderRootType.getInstance();
     }
     if (onlyClasses) {
       for (OrderRoot root : roots) {

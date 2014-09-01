@@ -19,6 +19,8 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,10 +39,10 @@ public class ModuleRootModificationUtil {
     final Library library = model.getModuleLibraryTable().createLibrary(libName);
     final Library.ModifiableModel libraryModel = library.getModifiableModel();
     for (String root : classesRoots) {
-      libraryModel.addRoot(root, OrderRootType.CLASSES);
+      libraryModel.addRoot(root, BinariesOrderRootType.getInstance());
     }
     for (String root : sourceRoots) {
-      libraryModel.addRoot(root, OrderRootType.SOURCES);
+      libraryModel.addRoot(root, SourcesOrderRootType.getInstance());
     }
     model.findLibraryOrderEntry(library).setScope(scope);
     new WriteAction() {

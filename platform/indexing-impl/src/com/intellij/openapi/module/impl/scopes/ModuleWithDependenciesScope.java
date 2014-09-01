@@ -17,6 +17,8 @@ package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
@@ -105,8 +107,8 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
         @NotNull
         @Override
         public OrderRootType fun(OrderEntry entry) {
-          if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) return OrderRootType.SOURCES;
-          return OrderRootType.CLASSES;
+          if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) return SourcesOrderRootType.getInstance();
+          return BinariesOrderRootType.getInstance();
         }
       }).getRoots());
     }

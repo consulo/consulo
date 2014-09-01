@@ -23,6 +23,9 @@ import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
@@ -65,12 +68,12 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     final LibraryEx library = (LibraryEx)myContext.getLibraryModel(myLibrary);
     if (library == null || library.isDisposed()) return;
 
-    reportInvalidRoots(problemsHolder, library, OrderRootType.CLASSES, "classes", ProjectStructureProblemType.error("library-invalid-classes-path"));
+    reportInvalidRoots(problemsHolder, library, BinariesOrderRootType.getInstance(), "classes", ProjectStructureProblemType.error("library-invalid-classes-path"));
     final String libraryName = library.getName();
     if (libraryName == null || !libraryName.startsWith("Maven: ")) {
-      reportInvalidRoots(problemsHolder, library, OrderRootType.SOURCES, "sources",
+      reportInvalidRoots(problemsHolder, library, SourcesOrderRootType.getInstance(), "sources",
                          ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
-      reportInvalidRoots(problemsHolder, library, OrderRootType.DOCUMENTATION, "javadoc",
+      reportInvalidRoots(problemsHolder, library, DocumentationOrderRootType.getInstance(), "javadoc",
                          ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
     }
   }

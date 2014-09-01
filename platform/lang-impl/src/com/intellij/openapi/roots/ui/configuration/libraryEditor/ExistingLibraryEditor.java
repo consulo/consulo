@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.*;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -71,7 +72,8 @@ public class ExistingLibraryEditor extends LibraryEditorBase implements Disposab
 
   private LibraryType detectType() {
     if (!myDetectedTypeComputed) {
-      final Pair<LibraryType<?>,LibraryProperties<?>> pair = LibraryDetectionManager.getInstance().detectType(Arrays.asList(getFiles(OrderRootType.CLASSES)));
+      final Pair<LibraryType<?>,LibraryProperties<?>> pair = LibraryDetectionManager.getInstance().detectType(Arrays.asList(getFiles(
+              BinariesOrderRootType.getInstance())));
       if (pair != null) {
         myDetectedType = pair.getFirst();
         myDetectedLibraryProperties = pair.getSecond();

@@ -28,6 +28,7 @@ import com.intellij.openapi.roots.impl.ContentEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
@@ -294,7 +295,7 @@ public class PsiTestUtil {
         final Library library = libraryTable.createLibrary(libName);
         final Library.ModifiableModel libraryModel = library.getModifiableModel();
         for (VirtualFile root : classesRoots) {
-          libraryModel.addRoot(root, OrderRootType.CLASSES);
+          libraryModel.addRoot(root, BinariesOrderRootType.getInstance());
         }
         libraryModel.commit();
         model.addLibraryEntry(library);

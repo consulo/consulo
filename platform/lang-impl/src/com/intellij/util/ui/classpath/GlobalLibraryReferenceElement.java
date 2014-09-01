@@ -1,12 +1,12 @@
 package com.intellij.util.ui.classpath;
 
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
 import org.jdom.Element;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class GlobalLibraryReferenceElement implements SimpleClasspathElement {
     final Library library = getLibrary();
     if (library != null) {
       final List<String> list = new ArrayList<String>();
-      for (VirtualFile file : library.getFiles(OrderRootType.CLASSES)) {
+      for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
         list.add(file.getUrl());
       }
       return list;

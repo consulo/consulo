@@ -20,10 +20,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
@@ -230,7 +230,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
       final String libPath = System.getProperty(libraryPrefix + name);
       if (libPath != null) {
         final LibraryImpl library = new LibraryImpl(name, null, LibraryTableBase.this, null);
-        library.addRoot(libPath, OrderRootType.CLASSES);
+        library.addRoot(libPath, BinariesOrderRootType.getInstance());
         return library;
       }
       return null;

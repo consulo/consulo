@@ -17,6 +17,7 @@ package org.mustbe.consulo.sandLanguage.ide.bundle;
 
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +49,7 @@ public class SandBundleType extends SdkType {
 
   @Override
   public boolean isRootTypeApplicable(OrderRootType type) {
-    return type == OrderRootType.CLASSES;
+    return type == BinariesOrderRootType.getInstance();
   }
 
   @Override

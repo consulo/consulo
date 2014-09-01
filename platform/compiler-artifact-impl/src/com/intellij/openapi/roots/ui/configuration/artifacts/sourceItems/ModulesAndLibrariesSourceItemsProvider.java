@@ -19,6 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -165,7 +166,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
       }, context, true);
     final List<Library> result = new ArrayList<Library>();
     for (Library library : librariesList) {
-      if (!roots.containsAll(Arrays.asList(library.getFiles(OrderRootType.CLASSES)))) {
+      if (!roots.containsAll(Arrays.asList(library.getFiles(BinariesOrderRootType.getInstance())))) {
         result.add(library);
       }
     }

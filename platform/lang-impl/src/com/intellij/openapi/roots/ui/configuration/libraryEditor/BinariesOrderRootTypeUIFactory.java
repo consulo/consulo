@@ -25,7 +25,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
-import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ public class BinariesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
 
   @Override
   public SdkPathEditor createPathEditor(Sdk sdk) {
-    return new SdkPathEditor(ProjectBundle.message("library.binaries.node"), OrderRootType.BINARIES,
+    return new SdkPathEditor(ProjectBundle.message("library.binaries.node"), BinariesOrderRootType.getInstance(),
                              new FileChooserDescriptor(true, true, true, false, true, true), sdk);
   }
 

@@ -23,8 +23,8 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -69,7 +69,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       return normalOrRedWaved(name, (icon != null ? icon :  AllIcons.Nodes.PpLib), hasInvalidRoots);
     }
 
-    final String[] files = library.getUrls(OrderRootType.CLASSES);
+    final String[] files = library.getUrls(BinariesOrderRootType.getInstance());
     if (files.length == 0) {
       return SimpleTextCellAppearance.invalid(ProjectBundle.message("library.empty.library.item"),  AllIcons.Nodes.PpLib);
     }

@@ -22,6 +22,8 @@ import com.intellij.openapi.module.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -247,10 +249,10 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   @NotNull
   private static OrderRootsEnumerator getEnumeratorForType(OrderRootType type, Module module) {
     OrderEnumerator base = OrderEnumerator.orderEntries(module);
-    if (type == OrderRootType.CLASSES) {
+    if (type == BinariesOrderRootType.getInstance()) {
       return base.exportedOnly().withoutModuleSourceEntries().recursively().classes();
     }
-    if (type == OrderRootType.SOURCES) {
+    if (type == SourcesOrderRootType.getInstance()) {
       return base.exportedOnly().recursively().sources();
     }
     return base.roots(type);

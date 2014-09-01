@@ -35,6 +35,7 @@ import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.*;
 import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -135,7 +136,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     final LibraryType<?> type = getLibraryEditor().getType();
     final Set<LibraryKind> excluded =
       type != null ? Collections.<LibraryKind>singleton(type.getKind()) : Collections.<LibraryKind>emptySet();
-    for (String description : LibraryPresentationManager.getInstance().getDescriptions(getLibraryEditor().getFiles(OrderRootType.CLASSES),
+    for (String description : LibraryPresentationManager.getInstance().getDescriptions(getLibraryEditor().getFiles(BinariesOrderRootType.getInstance()),
                                                                                        excluded)) {
       if (text.length() > 0) {
         text.append("\n");

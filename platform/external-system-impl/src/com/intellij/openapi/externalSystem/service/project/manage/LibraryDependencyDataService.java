@@ -32,6 +32,7 @@ import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -215,7 +216,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
           continue;
         }
         moduleLibraryKey.clear();
-        for (VirtualFile file : library.getFiles(OrderRootType.CLASSES)) {
+        for (VirtualFile file : library.getFiles(BinariesOrderRootType.getInstance())) {
           moduleLibraryKey.add(ExternalSystemApiUtil.getLocalFileSystemPath(file) + moduleLibraryOrderEntry.getScope().name());
         }
         LibraryDependencyData existing = moduleLibrariesToImport.remove(moduleLibraryKey);

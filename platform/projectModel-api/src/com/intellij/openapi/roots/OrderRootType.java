@@ -65,7 +65,7 @@ public class OrderRootType {
    * <li>  recursively for module dependencies: only exported items
    */
   @Deprecated
-  @DeprecationInfo(value = "Use BinariesOrderRootType#getInstance()", until = "3.0")
+  @DeprecationInfo(value = "Use BinariesOrderRootType#getInstance()", until = "1.0")
   public static final OrderRootType BINARIES = BinariesOrderRootType.getInstance();
 
   /**
@@ -75,7 +75,7 @@ public class OrderRootType {
    * <li>  recursively for module dependencies: only exported items
    */
   @Deprecated
-  @DeprecationInfo(value = "Use BinariesOrderRootType#getInstance()", until = "3.0")
+  @DeprecationInfo(value = "Use BinariesOrderRootType#getInstance()", until = "1.0")
   public static final OrderRootType CLASSES = BinariesOrderRootType.getInstance();
 
   /**
@@ -86,7 +86,7 @@ public class OrderRootType {
    * <li>  recursively for module dependencies: only exported items
    */
   @Deprecated
-  @DeprecationInfo(value = "Use SourcesOrderRootType#getInstance()", until = "3.0")
+  @DeprecationInfo(value = "Use SourcesOrderRootType#getInstance()", until = "1.0")
   public static final OrderRootType SOURCES = SourcesOrderRootType.getInstance();
 
   /**
@@ -94,7 +94,7 @@ public class OrderRootType {
    * Generic documentation order root type
    */
   @Deprecated
-  @DeprecationInfo(value = "Use DocumentationOrderRootType#getInstance()", until = "3.0")
+  @DeprecationInfo(value = "Use DocumentationOrderRootType#getInstance()", until = "1.0")
   public static final OrderRootType DOCUMENTATION = DocumentationOrderRootType.getInstance();
 
   private final String myName;

@@ -16,8 +16,9 @@
 package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.PathUtil;
 
@@ -28,7 +29,7 @@ public class LibraryScope extends LibraryScopeBase {
   private final Library myLibrary;
 
   public LibraryScope(Project project, Library library) {
-    super(project, library.getFiles(OrderRootType.CLASSES), library.getFiles(OrderRootType.SOURCES));
+    super(project, library.getFiles(BinariesOrderRootType.getInstance()), library.getFiles(SourcesOrderRootType.getInstance()));
     myLibrary = library;
   }
 
@@ -36,7 +37,7 @@ public class LibraryScope extends LibraryScopeBase {
   public String getDisplayName() {
     String name = myLibrary.getName();
     if (name == null) {
-      String[] urls = myLibrary.getUrls(OrderRootType.CLASSES);
+      String[] urls = myLibrary.getUrls(BinariesOrderRootType.getInstance());
       if (urls.length > 0) {
         name = PathUtil.getFileName(VfsUtilCore.urlToPath(urls[0]));
       }

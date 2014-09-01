@@ -45,7 +45,7 @@ public class LibraryUtil {
   }
 
   public static boolean isClassAvailableInLibrary(final Library library, final String fqn) {
-    return isClassAvailableInLibrary(library.getFiles(OrderRootType.CLASSES), fqn);
+    return isClassAvailableInLibrary(library.getFiles(BinariesOrderRootType.getInstance()), fqn);
   }
 
   public static boolean isClassAvailableInLibrary(VirtualFile[] files, final String fqn) {

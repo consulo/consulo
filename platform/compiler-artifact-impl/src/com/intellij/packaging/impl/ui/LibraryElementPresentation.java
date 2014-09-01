@@ -19,12 +19,12 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.ModuleLibraryTable;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
@@ -106,7 +106,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
 
   public static String getLibraryItemText(final @NotNull Library library, final boolean includeTableName) {
     String name = library.getName();
-    VirtualFile[] files = library.getFiles(OrderRootType.CLASSES);
+    VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
     if (name != null) {
       return name + (includeTableName ? getLibraryTableComment(library) : "");
     }
