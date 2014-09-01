@@ -88,7 +88,6 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
   }
 
   /**
-   * @see #applyToDialects()
    * @see #isApplicable(com.intellij.lang.Language)
    */
   @Nullable
@@ -96,13 +95,9 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     return myEP == null ? null : myEP.language;
   }
 
-  public boolean applyToDialects() {
-    return myEP != null && myEP.applyToDialects;
-  }
-
   public boolean isApplicable(@NotNull Language language) {
     String langId = getLanguage();
-    return langId == null || language.getID().equals(langId) || applyToDialects() && language.isKindOf(langId);
+    return langId == null || language.getID().equals(langId);
   }
 
   public boolean isCleanupTool() {

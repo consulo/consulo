@@ -106,9 +106,6 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   @Attribute("enabledByDefault")
   public boolean enabledByDefault = false;
 
-  @Attribute("applyToDialects")
-  public boolean applyToDialects = true;
-
   @Attribute("cleanupTool")
   public boolean cleanupTool = false;
 
@@ -190,7 +187,6 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
            ", groupDisplayName='" + groupDisplayName + '\'' +
            ", groupPath='" + groupPath + '\'' +
            ", enabledByDefault=" + enabledByDefault +
-           ", applyToDialects=" + applyToDialects +
            ", level='" + level + '\'' +
            ", hasStaticDescription=" + hasStaticDescription +
            ", presentation='" + presentation + '\'' +
