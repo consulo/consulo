@@ -21,6 +21,7 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,6 +130,10 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Nullable
   @Override
   public ModuleExtensionWithSdk<?> getModuleExtension() {
-    return myModuleRootLayer.getExtensionWithoutCheck(myModuleExtensionId);
+    ModuleExtension<?> extensionWithoutCheck = myModuleRootLayer.getExtensionWithoutCheck(myModuleExtensionId);
+    if (!(extensionWithoutCheck instanceof ModuleExtensionWithSdk)) {
+      return null;
+    }
+    return (ModuleExtensionWithSdk) extensionWithoutCheck;
   }
 }
