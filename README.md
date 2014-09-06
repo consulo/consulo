@@ -15,4 +15,3 @@ To run the project, use the "Consulo" shared run configuration.
 ## Links
 
 * [Download] (https://github.com/consulo/consulo/wiki/Download-links)
-* [Tracker](http://napile.myjetbrains.com/youtrack/issues/CO)
