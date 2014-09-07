@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  */
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
-import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.impl.EditorImpl;
-import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,11 +36,8 @@ import java.util.List;
  * @param <T>     resulting document dimension type
  */
 abstract class AbstractMappingStrategy<T> implements MappingStrategy<T> {
-  
-  private static final Logger LOG = Logger.getInstance("#" + AbstractMappingStrategy.class.getName());
 
   protected final Editor myEditor;
-  protected final EditorTextRepresentationHelper myRepresentationHelper;
   protected final SoftWrapsStorage myStorage;
   protected final List<CacheEntry> myCache;
 
@@ -55,13 +48,11 @@ abstract class AbstractMappingStrategy<T> implements MappingStrategy<T> {
 
   AbstractMappingStrategy(@NotNull Editor editor,
                           @NotNull SoftWrapsStorage storage,
-                          @NotNull List<CacheEntry> cache,
-                          @NotNull EditorTextRepresentationHelper representationHelper)
+                          @NotNull List<CacheEntry> cache)
   {
     myEditor = editor;
     myStorage = storage;
     myCache = cache;
-    myRepresentationHelper = representationHelper;
   }
 
   @Nullable
@@ -75,7 +66,7 @@ abstract class AbstractMappingStrategy<T> implements MappingStrategy<T> {
   }
 
   protected void setFirstInitialPosition() {
-    myInitialPosition = new EditorPosition(new LogicalPosition(0, 0), 0, myEditor, myRepresentationHelper);
+    myInitialPosition = new EditorPosition(new LogicalPosition(0, 0), 0, myEditor);
   }
 
   @Nullable
@@ -101,7 +92,7 @@ abstract class AbstractMappingStrategy<T> implements MappingStrategy<T> {
       myLastEntryOffset = myCache.get(myCache.size() - 1).endOffset;
     }
   }
-  
+
   protected void setInitialPosition(@NotNull EditorPosition position) {
     myInitialPosition = position;
   }
@@ -129,7 +120,7 @@ abstract class AbstractMappingStrategy<T> implements MappingStrategy<T> {
     if (offset >= myLastEntryOffset || offset >= document.getTextLength()) {
       return build(position);
     }
-    
+
     T result = buildIfExceeds(position, offset);
     if (result != null) {
       return result;
@@ -166,34 +157,19 @@ abstract class AbstractMappingStrategy<T> implements MappingStrategy<T> {
 
     Document document = myEditor.getDocument();
     int endOffsetLogicalLine = document.getLineNumber(foldRegion.getEndOffset());
-    int collapsedSymbolsWidthInColumns = -1;
-    if (position.logicalLine == endOffsetLogicalLine) {
-      // Single-line fold region.
-      FoldingData foldingData = getFoldRegionData(foldRegion);
-      if (foldingData != null) {
-        collapsedSymbolsWidthInColumns = foldingData.getCollapsedSymbolsWidthInColumns();
-      }
-      else {
-        String details = "";
-        if (myEditor instanceof EditorImpl) {
-          details = ((EditorImpl)myEditor).dumpState();
-        }
-        LogMessageEx.error(LOG, "Unexpected fold region is found: " + foldRegion, details);
-      }
-    }
-    else {
+    if (position.logicalLine != endOffsetLogicalLine) {
       // Multi-line fold region.
       position.softWrapColumnDiff = 0;
       position.softWrapLinesBefore += position.softWrapLinesCurrent;
       position.softWrapLinesCurrent = 0;
     }
-    
-    if (collapsedSymbolsWidthInColumns < 0) {
-      collapsedSymbolsWidthInColumns = myRepresentationHelper.toVisualColumnSymbolsNumber(
-        document.getCharsSequence(), foldRegion.getStartOffset(), foldRegion.getEndOffset(), 0
-      );
+
+    int collapsedSymbolsWidthInColumns = -1;
+    FoldingData foldingData = getFoldRegionData(foldRegion);
+    if (foldingData != null) {
+      collapsedSymbolsWidthInColumns = foldingData.getCollapsedSymbolsWidthInColumns();
     }
-    
+
     position.advance(foldRegion, collapsedSymbolsWidthInColumns);
     return null;
   }

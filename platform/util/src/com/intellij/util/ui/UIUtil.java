@@ -76,6 +76,14 @@ import java.util.regex.Pattern;
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
 public class UIUtil {
 
+  public static int getMultiClickInterval() {
+    Object property = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+    if (property instanceof Integer) {
+      return (Integer)property;
+    }
+    return 500;
+  }
+
   private static final AtomicNotNullLazyValue<Boolean> X_RENDER_ACTIVE = new AtomicNotNullLazyValue<Boolean>() {
     @NotNull
     @Override

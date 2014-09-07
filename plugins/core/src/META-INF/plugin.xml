@@ -1086,6 +1086,8 @@
     <extensionPoint name="eventLogCategory" interface="com.intellij.notification.EventLogCategory"/>
 
     <extensionPoint name="urlOpener" interface="com.intellij.ide.browsers.UrlOpener" />
+
+    <extensionPoint name="editor.linePainter" interface="com.intellij.openapi.editor.EditorLinePainter" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">

@@ -174,7 +174,7 @@ public abstract class AbstractEditorProcessingOnDocumentModificationTest extends
       int endLogicalColumn = Integer.parseInt(generalMatch.group(7));
       int endVisualColumn = Integer.parseInt(generalMatch.group(8));
       
-      List<Trinity<Integer, Integer, FoldRegion>> foldRegions = new ArrayList<Trinity<Integer, Integer, FoldRegion>>();
+      List<Pair<Integer, FoldRegion>> foldRegions = new ArrayList<Pair<Integer, FoldRegion>>();
       Scanner foldScanner = new Scanner(generalMatch.group(9));
       while (foldScanner.findInLine(foldPattern) != null) {
         final MatchResult foldMatch = foldScanner.match();
@@ -189,7 +189,7 @@ public abstract class AbstractEditorProcessingOnDocumentModificationTest extends
             break;
           }
         }
-        foldRegions.add(new Trinity<Integer, Integer, FoldRegion>(widthInColumns, startX, region));
+        foldRegions.add(new Pair<Integer, FoldRegion>(widthInColumns, region));
       }
       
       List<Pair<Integer, Integer>> tabData = new ArrayList<Pair<Integer, Integer>>();

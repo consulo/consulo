@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
+import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import org.jetbrains.annotations.NotNull;
 
@@ -108,18 +108,6 @@ public interface SoftWrapModelEx extends SoftWrapModel {
   boolean addSoftWrapChangeListener(@NotNull SoftWrapChangeListener listener);
 
   /**
-   * Instructs current soft wrap model about the place where corresponding editor is used.
-   * <p/>
-   * {@link SoftWrapAppliancePlaces#MAIN_EDITOR} is used by default.
-   *
-   * @param place   place where corresponding editor is used
-   */
-  void setPlace(@NotNull SoftWrapAppliancePlaces place);
-
-  /** Asks the model to completely recalculate soft wraps. */
-  void recalculate();
-
-  /**
    * IJ editor defines a notion of {@link EditorSettings#getAdditionalColumnsCount() additional columns}. They define additional
    * amount of space to be used during editor component's width calculation (IJ editor perform 'preventive UI component expansion'
    * when user types near the right edge).
@@ -151,7 +139,7 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * </pre>
    * This method allows to answer if {@link EditorSettings#getAdditionalColumnsCount() additional columns} should be used
    * during editor component's width calculation.
-   * 
+   *
    * @return      <code>true</code> if {@link EditorSettings#getAdditionalColumnsCount() additional columns} should be used
    *              during editor component's width recalculation;
    *              <code>false</code> otherwise
@@ -162,4 +150,6 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * Allows to instruct current model to always return <code>'true'</code> from {@link #isRespectAdditionalColumns()}.
    */
   void forceAdditionalColumnsUsage();
+
+  EditorTextRepresentationHelper getEditorTextRepresentationHelper();
 }

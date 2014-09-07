@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
 import gnu.trove.TIntIntHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
  * Wraps soft-wraps specific document parsing to the {@link VisualSizeChangeListener} API.
  * <p/>
  * Not thread-safe.
- * 
+ *
  * @author Denis Zhdanov
  * @since 12/6/10 12:02 PM
  */
@@ -37,7 +38,7 @@ public class SoftWrapAwareVisualSizeManager extends SoftWrapAwareDocumentParsing
   private final List<VisualSizeChangeListener> myListeners  = new ArrayList<VisualSizeChangeListener>();
   private final TIntIntHashMap                 myLineWidths = new TIntIntHashMap();
 
-  private final SoftWrapPainter myPainter;
+  private SoftWrapPainter myPainter;
 
   /**
    * There is a possible case that particular recalculation finished abruptly
@@ -64,7 +65,7 @@ public class SoftWrapAwareVisualSizeManager extends SoftWrapAwareDocumentParsing
     if (myListeners.isEmpty()) {
       return;
     }
-    
+
     int startLine = event.getStartLogicalLine();
     int oldEndLine = event.getOldEndLogicalLine();
     for (VisualSizeChangeListener listener : myListeners) {
@@ -89,7 +90,7 @@ public class SoftWrapAwareVisualSizeManager extends SoftWrapAwareDocumentParsing
       myLineWidths.put(position.logicalLine, newWidth);
       return;
     }
-    
+
     updateLineWidthIfNecessary(position.logicalLine, newWidth);
   }
 
@@ -98,5 +99,10 @@ public class SoftWrapAwareVisualSizeManager extends SoftWrapAwareDocumentParsing
     if (width > storedWidth) {
       myLineWidths.put(line, width);
     }
+  }
+
+  @TestOnly
+  public void setSoftWrapPainter(SoftWrapPainter painter) {
+    myPainter = painter;
   }
 }

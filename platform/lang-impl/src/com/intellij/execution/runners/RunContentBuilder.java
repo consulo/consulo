@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,151 +15,109 @@
  */
 package com.intellij.execution.runners;
 
-import com.intellij.diagnostic.logging.LogConsoleManagerBase;
-import com.intellij.diagnostic.logging.LogFilesManager;
-import com.intellij.diagnostic.logging.OutputFileUtil;
-import com.intellij.execution.*;
-import com.intellij.execution.configurations.ModuleRunProfile;
+import com.intellij.execution.DefaultExecutionResult;
+import com.intellij.execution.ExecutionManager;
+import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.configurations.SearchScopeProvider;
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.*;
 import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.execution.ui.layout.PlaceInGrid;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.ContextHelpAction;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
+import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-/**
- * @author dyoma
- */
-public class RunContentBuilder extends LogConsoleManagerBase {
+public class RunContentBuilder extends RunTab {
   @NonNls private static final String JAVA_RUNNER = "JavaRunner";
 
-  private final ProgramRunner myRunner;
-  private final ArrayList<AnAction> myRunnerActions = new ArrayList<AnAction>();
-  private ExecutionResult myExecutionResult;
-
-  private final LogFilesManager myManager;
-
-  private RunnerLayoutUi myUi;
-  private final Executor myExecutor;
+  private final List<AnAction> myRunnerActions = new SmartList<AnAction>();
+  private final ExecutionResult myExecutionResult;
 
   /**
-   * @deprecated use {@link #RunContentBuilder(ProgramRunner, com.intellij.execution.ExecutionResult, ExecutionEnvironment)}
+   * @deprecated use {@link #RunContentBuilder(com.intellij.execution.ExecutionResult, ExecutionEnvironment)}
+   * to remove in IDEA 14
    */
+  @SuppressWarnings("UnusedParameters")
   public RunContentBuilder(@NotNull Project project,
                            ProgramRunner runner,
                            Executor executor,
                            ExecutionResult executionResult,
                            @NotNull ExecutionEnvironment environment) {
+    //noinspection deprecation
     this(runner, executionResult, environment);
   }
 
+  /**
+   * @deprecated use {@link #RunContentBuilder(com.intellij.execution.ExecutionResult, ExecutionEnvironment)}
+   * to remove in IDEA 15
+   */
   public RunContentBuilder(ProgramRunner runner,
                            ExecutionResult executionResult,
                            @NotNull ExecutionEnvironment environment) {
-    super(environment.getProject(), createSearchScope(environment.getProject(), environment.getRunProfile()));
-    myRunner = runner;
-    myExecutor = environment.getExecutor();
-    myManager = new LogFilesManager(environment.getProject(), this, this);
-    myExecutionResult = executionResult;
-    setEnvironment(environment);
+    this(executionResult, fix(environment, runner));
   }
 
-  /**
-   * @deprecated use {@link #RunContentBuilder(com.intellij.openapi.project.Project, ProgramRunner, com.intellij.execution.Executor, com.intellij.execution.ExecutionResult, ExecutionEnvironment)}
-   */
-  public RunContentBuilder(final Project project, final ProgramRunner runner, Executor executor) {
-    super(project);
-    myRunner = runner;
-    myExecutor = executor;
-    myManager = new LogFilesManager(project, this, this);
+  public RunContentBuilder(@NotNull ExecutionResult executionResult, @NotNull ExecutionEnvironment environment) {
+    super(environment, getRunnerType(executionResult.getExecutionConsole()));
+
+    myExecutionResult = executionResult;
+    myUi.getOptions().setMoveToGridActionEnabled(false).setMinimizeActionEnabled(false);
   }
 
   @NotNull
-  public static GlobalSearchScope createSearchScope(Project project, RunProfile runProfile) {
-    Module[] modules = null;
-    if (runProfile instanceof ModuleRunProfile) {
-      modules = ((ModuleRunProfile)runProfile).getModules();
-    }
-    if (modules == null || modules.length == 0) {
-      return GlobalSearchScope.allScope(project);
+  public static ExecutionEnvironment fix(@NotNull ExecutionEnvironment environment, @Nullable ProgramRunner runner) {
+    if (runner == null || runner.equals(environment.getRunner())) {
+      return environment;
     }
     else {
-      GlobalSearchScope scope = GlobalSearchScope.moduleRuntimeScope(modules[0], true);
-      for (int idx = 1; idx < modules.length; idx++) {
-        Module module = modules[idx];
-        scope = scope.uniteWith(GlobalSearchScope.moduleRuntimeScope(module, true));
-      }
-      return scope;
+      return new ExecutionEnvironmentBuilder(environment).runner(runner).build();
     }
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  @Deprecated
+  @NotNull
+  /**
+   * @deprecated to remove in IDEA 15
+   */
+  public static GlobalSearchScope createSearchScope(Project project, RunProfile runProfile) {
+    return SearchScopeProvider.createSearchScope(project, runProfile);
+  }
+
+  @NotNull
   public ExecutionResult getExecutionResult() {
     return myExecutionResult;
-  }
-
-  @Deprecated
-  public void setExecutionResult(final ExecutionResult executionResult) {
-    myExecutionResult = executionResult;
-  }
-
-  @Override
-  public void setEnvironment(@NotNull final ExecutionEnvironment env) {
-    super.setEnvironment(env);
-    final RunProfile profile = env.getRunProfile();
-    if (profile instanceof RunConfigurationBase) {
-      myManager.registerFileMatcher((RunConfigurationBase)profile);
-    }
   }
 
   public void addAction(@NotNull final AnAction action) {
     myRunnerActions.add(action);
   }
 
+  @NotNull
   private RunContentDescriptor createDescriptor() {
-    if (myExecutionResult == null) {
-      throw new IllegalStateException("Missing ExecutionResult");
+    final RunProfile profile = myEnvironment.getRunProfile();
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
+      return new RunContentDescriptor(profile, myExecutionResult, myUi);
     }
-
-    ExecutionEnvironment environment = getEnvironment();
-    if (environment == null) {
-      throw new IllegalStateException("Missing ExecutionEnvironment");
-    }
-
-    final RunProfile profile = environment.getRunProfile();
 
     final ExecutionConsole console = myExecutionResult.getExecutionConsole();
-    String runnerType = JAVA_RUNNER;
-    if (console instanceof ExecutionConsoleEx) {
-      final String id = ((ExecutionConsoleEx)console).getExecutionConsoleId();
-      if (id != null) {
-        runnerType = JAVA_RUNNER + "." + id;
-      }
-    }
-    myUi = RunnerLayoutUi.Factory.getInstance(getProject()).create(runnerType, myExecutor.getId(), profile.getName(), this);
-    myUi.getOptions().setMoveToGridActionEnabled(false).setMinimizeActionEnabled(false);
-
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return new MyRunContentDescriptor(profile, myExecutionResult, myUi.getComponent(), this);
-    }
-
+    RunContentDescriptor contentDescriptor = new RunContentDescriptor(profile, myExecutionResult, myUi);
     if (console != null) {
       if (console instanceof ExecutionConsoleEx) {
         ((ExecutionConsoleEx)console).buildUi(myUi);
@@ -167,19 +125,15 @@ public class RunContentBuilder extends LogConsoleManagerBase {
       else {
         buildConsoleUiDefault(myUi, console);
       }
-      if (profile instanceof RunConfigurationBase) {
-        myManager.initLogConsoles((RunConfigurationBase)profile, myExecutionResult.getProcessHandler());
-        OutputFileUtil.attachDumpListener((RunConfigurationBase)profile, myExecutionResult.getProcessHandler(), console);
-      }
+      initLogConsoles(profile, contentDescriptor, console);
     }
-    MyRunContentDescriptor contentDescriptor = new MyRunContentDescriptor(profile, myExecutionResult, myUi.getComponent(), this);
-    myUi.getOptions().setLeftToolbar(createActionToolbar(contentDescriptor, myUi.getComponent()), ActionPlaces.UNKNOWN);
+    myUi.getOptions().setLeftToolbar(createActionToolbar(contentDescriptor), ActionPlaces.UNKNOWN);
 
     if (profile instanceof RunConfigurationBase) {
       if (console instanceof ObservableConsoleView && !ApplicationManager.getApplication().isUnitTestMode()) {
         ((ObservableConsoleView)console).addChangeListener(new ConsoleToFrontListener((RunConfigurationBase)profile,
-                                                                                      getProject(),
-                                                                                      myExecutor,
+                                                                                      myProject,
+                                                                                      myEnvironment.getExecutor(),
                                                                                       contentDescriptor,
                                                                                       myUi),
                                                            this);
@@ -187,6 +141,18 @@ public class RunContentBuilder extends LogConsoleManagerBase {
     }
 
     return contentDescriptor;
+  }
+
+  @NotNull
+  private static String getRunnerType(@Nullable ExecutionConsole console) {
+    String runnerType = JAVA_RUNNER;
+    if (console instanceof ExecutionConsoleEx) {
+      String id = ((ExecutionConsoleEx)console).getExecutionConsoleId();
+      if (id != null) {
+        return JAVA_RUNNER + '.' + id;
+      }
+    }
+    return runnerType;
   }
 
   public static void buildConsoleUiDefault(RunnerLayoutUi ui, final ExecutionConsole console) {
@@ -202,28 +168,18 @@ public class RunContentBuilder extends LogConsoleManagerBase {
   public static void addAdditionalConsoleEditorActions(final ExecutionConsole console, final Content consoleContent) {
     final DefaultActionGroup consoleActions = new DefaultActionGroup();
     if (console instanceof ConsoleView) {
-      AnAction[] actions = ((ConsoleView)console).createConsoleActions();
-      for (AnAction goaction: actions) {
-        consoleActions.add(goaction);
+      for (AnAction action : ((ConsoleView)console).createConsoleActions()) {
+        consoleActions.add(action);
       }
     }
 
     consoleContent.setActions(consoleActions, ActionPlaces.UNKNOWN, console.getComponent());
   }
 
-  private ActionGroup createActionToolbar(final RunContentDescriptor contentDescriptor, final JComponent component) {
+  @NotNull
+  private ActionGroup createActionToolbar(@NotNull RunContentDescriptor contentDescriptor) {
     final DefaultActionGroup actionGroup = new DefaultActionGroup();
-
-    final RestartAction restartAction = new RestartAction(myExecutor, myRunner, contentDescriptor, getEnvironment());
-    restartAction.registerShortcut(component);
-    actionGroup.add(restartAction);
-    contentDescriptor.setRestarter(new Runnable() {
-      @Override
-      public void run() {
-        restartAction.restart();
-      }
-    });
-
+    actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_RERUN));
     if (myExecutionResult instanceof DefaultExecutionResult) {
       final AnAction[] actions = ((DefaultExecutionResult)myExecutionResult).getRestartActions();
       if (actions != null) {
@@ -234,15 +190,14 @@ public class RunContentBuilder extends LogConsoleManagerBase {
       }
     }
 
-    final AnAction stopAction = ActionManager.getInstance().getAction(IdeActions.ACTION_STOP_PROGRAM);
-    actionGroup.add(stopAction);
+    actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_STOP_PROGRAM));
     if (myExecutionResult instanceof DefaultExecutionResult) {
       actionGroup.addAll(((DefaultExecutionResult)myExecutionResult).getAdditionalStopActions());
     }
 
     actionGroup.addAll(myExecutionResult.getActions());
 
-    for (final AnAction anAction : myRunnerActions) {
+    for (AnAction anAction : myRunnerActions) {
       if (anAction != null) {
         actionGroup.add(anAction);
       }
@@ -255,49 +210,22 @@ public class RunContentBuilder extends LogConsoleManagerBase {
     actionGroup.add(myUi.getOptions().getLayoutActions());
     actionGroup.addSeparator();
     actionGroup.add(PinToolwindowTabAction.getPinAction());
-    actionGroup.add(new CloseAction(myExecutor, contentDescriptor, getProject()));
+    actionGroup.add(new CloseAction(myEnvironment.getExecutor(), contentDescriptor, myProject));
     final String helpId = contentDescriptor.getHelpId();
-    actionGroup.add(new ContextHelpAction(helpId != null ? helpId : myExecutor.getHelpId()));
+    actionGroup.add(new ContextHelpAction(helpId != null ? helpId : myEnvironment.getExecutor().getHelpId()));
     return actionGroup;
-  }
-
-  @Override
-  public ProcessHandler getProcessHandler() {
-    return myExecutionResult.getProcessHandler();
   }
 
   /**
    * @param reuseContent see {@link RunContentDescriptor#myContent}
    */
-  public RunContentDescriptor showRunContent(final RunContentDescriptor reuseContent) {
-    final RunContentDescriptor descriptor = createDescriptor();
-    if(reuseContent != null) descriptor.setAttachedContent(reuseContent.getAttachedContent());
+  public RunContentDescriptor showRunContent(@Nullable RunContentDescriptor reuseContent) {
+    RunContentDescriptor descriptor = createDescriptor();
+    Disposer.register(descriptor, this);
+    Disposer.register(myProject, descriptor);
+    RunContentManagerImpl.copyContentAndBehavior(descriptor, reuseContent);
+    myRunContentDescriptor = descriptor;
     return descriptor;
-  }
-
-  @Override
-  protected RunnerLayoutUi getUi() {
-    return myUi;
-  }
-
-  @Override
-  protected Icon getDefaultIcon() {
-    return AllIcons.Debugger.Console;
-  }
-
-  private static class MyRunContentDescriptor extends RunContentDescriptor {
-    private final Disposable myAdditionalDisposable;
-
-    public MyRunContentDescriptor(final RunProfile profile, final ExecutionResult executionResult, final JComponent component, @NotNull Disposable additionalDisposable) {
-      super(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), component, profile.getName(), profile.getIcon());
-      myAdditionalDisposable = additionalDisposable;
-    }
-
-    @Override
-    public void dispose() {
-      Disposer.dispose(myAdditionalDisposable);
-      super.dispose();
-    }
   }
 
   public static class ConsoleToFrontListener implements ConsoleViewImpl.ChangeListener {

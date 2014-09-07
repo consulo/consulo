@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,28 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.NotNullFunction;
+import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import com.intellij.xdebugger.impl.evaluate.XDebuggerInlineEapDescriptor;
+import com.intellij.xdebugger.impl.frame.XDebugView;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;
+import com.intellij.xdebugger.impl.frame.XVariablesView;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.ValueMarkup;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +45,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author nik
@@ -111,11 +124,46 @@ public class XValueNodeImpl extends XValueContainerNode<XValue> implements XValu
     setIcon(icon);
     myValuePresentation = valuePresentation;
     myRawValue = XValuePresentationUtil.computeValueText(valuePresentation);
-
+    if (EarlyAccessProgramManager.is(XDebuggerInlineEapDescriptor.class)) {
+      updateInlineDebuggerData();
+    }
     updateText();
     setLeaf(!hasChildren);
     fireNodeChanged();
     myTree.nodeLoaded(this, myName);
+  }
+
+  public void updateInlineDebuggerData() {
+    try {
+      final XDebugSession session = XDebugView.getSession(getTree());
+      if (session != null) {
+        final XSourcePosition position = session.getCurrentPosition();
+        if (position != null) {
+          getValueContainer().computeSourcePosition(new XNearestSourcePosition() {
+            @Override
+            public void setSourcePosition(@Nullable XSourcePosition sourcePosition) {
+              final Map<Pair<VirtualFile, Integer>, Set<XValueNodeImpl>> map = myTree.getProject().getUserData(XVariablesView.DEBUG_VARIABLES);
+              final Map<VirtualFile, Long> timestamps = myTree.getProject().getUserData(XVariablesView.DEBUG_VARIABLES_TIMESTAMPS);
+              if (map == null || timestamps == null || sourcePosition == null) return;
+              VirtualFile file = sourcePosition.getFile();
+              final Document doc = FileDocumentManager.getInstance().getDocument(file);
+              if (doc == null) return;
+              int line = sourcePosition.getLine();
+              Pair<VirtualFile, Integer> key = Pair.create(file, line);
+              Set<XValueNodeImpl> presentations = map.get(key);
+              if (presentations == null) {
+                presentations = new LinkedHashSet<XValueNodeImpl>();
+                map.put(key, presentations);
+                timestamps.put(file, doc.getModificationStamp());
+              }
+              presentations.add(XValueNodeImpl.this);
+            }
+          });
+        }
+      }
+    }
+    catch (Exception ignore) {
+    }
   }
 
   @Override
@@ -150,7 +198,13 @@ public class XValueNodeImpl extends XValueContainerNode<XValue> implements XValu
   }
 
   public static void buildText(@NotNull XValuePresentation valuePresenter, @NotNull ColoredTextContainer text) {
-    XValuePresentationUtil.appendSeparator(text, valuePresenter.getSeparator());
+    buildText(valuePresenter, text, true);
+  }
+
+  public static void buildText(@NotNull XValuePresentation valuePresenter, @NotNull ColoredTextContainer text, boolean appendSeparator) {
+    if (appendSeparator) {
+      XValuePresentationUtil.appendSeparator(text, valuePresenter.getSeparator());
+    }
     String type = valuePresenter.getType();
     if (type != null) {
       text.append("{" + type + "} ", XDebuggerUIConstants.TYPE_ATTRIBUTES);

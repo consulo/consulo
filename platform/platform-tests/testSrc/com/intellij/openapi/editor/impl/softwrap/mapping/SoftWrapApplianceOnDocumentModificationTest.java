@@ -1068,7 +1068,7 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     });
 
     if (symbolWidth > 0) {
-      applianceManager.setRepresentationHelper(new DefaultEditorTextRepresentationHelper(myEditor) {
+      model.setEditorTextRepresentationHelper(new DefaultEditorTextRepresentationHelper(myEditor) {
         @Override
         public int charWidth(char c, int fontType) {
           return symbolWidth;

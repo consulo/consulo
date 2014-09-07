@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
+import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,17 +24,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
-* @author Denis Zhdanov
-* @since Sep 9, 2010 9:20:55 AM
-*/
+ * @author Denis Zhdanov
+ * @since Sep 9, 2010 9:20:55 AM
+ */
 class OffsetToLogicalCalculationStrategy extends AbstractMappingStrategy<LogicalPosition> {
 
   private int myTargetOffset;
 
-  OffsetToLogicalCalculationStrategy(@NotNull Editor editor, @NotNull SoftWrapsStorage storage, @NotNull List<CacheEntry> cache,
-                                     @NotNull EditorTextRepresentationHelper representationHelper) 
+  OffsetToLogicalCalculationStrategy(@NotNull Editor editor, @NotNull SoftWrapsStorage storage, @NotNull List<CacheEntry> cache)
   {
-    super(editor, storage, cache, representationHelper);
+    super(editor, storage, cache);
   }
 
   public void init(final int targetOffset, final List<CacheEntry> cache) {
@@ -58,7 +57,7 @@ class OffsetToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
         //      1.1. Document ends by line feed;
         //      1.2. Document ends by the symbol that is not line feed;
         //   2. There is no cache entry for the target line;;
-        
+
         CacheEntry lastEntry = cache.get(cache.size() - 1);
         if (lastEntry.endOffset >= targetOffset - 1) {
           EditorPosition position = lastEntry.buildEndLinePosition();
@@ -101,7 +100,7 @@ class OffsetToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
         cacheEntry = myCache.get(i);
       }
     }
-    
+
     if (cacheEntry == null) {
       setFirstInitialPosition();
     }
@@ -135,7 +134,7 @@ class OffsetToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
     }
     position.logicalLine = logicalLine;
     position.offset = myTargetOffset;
-    
+
     // Process use-case when target offset points to 'after soft wrap' position.
     //SoftWrap softWrap = myStorage.getSoftWrap(offset);
     //if (softWrap != null && offset < getAnchorCacheEntry().endOffset) {
@@ -157,19 +156,14 @@ class OffsetToLogicalCalculationStrategy extends AbstractMappingStrategy<Logical
     int targetLogicalLine = document.getLineNumber(myTargetOffset);
     if (targetLogicalLine == position.logicalLine) {
       // Target offset is located on the same logical line as folding start.
-      FoldingData cachedData = getFoldRegionData(foldRegion);
-      int x = 0;
-      if (cachedData != null) {
-        x = cachedData.startX;
-      }
-      position.logicalColumn += myRepresentationHelper.toVisualColumnSymbolsNumber(
-        document.getCharsSequence(), foldRegion.getStartOffset(), myTargetOffset, x
+      position.logicalColumn += SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).toVisualColumnSymbolsNumber(
+              document.getCharsSequence(), foldRegion.getStartOffset(), myTargetOffset, position.x
       );
     }
     else {
       // Target offset is located on a different line with folding start.
-      position.logicalColumn = myRepresentationHelper.toVisualColumnSymbolsNumber(
-        document.getCharsSequence(), foldRegion.getStartOffset(), myTargetOffset, 0
+      position.logicalColumn = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).toVisualColumnSymbolsNumber(
+              document.getCharsSequence(), foldRegion.getStartOffset(), myTargetOffset, 0
       );
       position.softWrapColumnDiff = 0;
       int linesDiff = document.getLineNumber(myTargetOffset) - document.getLineNumber(foldRegion.getStartOffset());

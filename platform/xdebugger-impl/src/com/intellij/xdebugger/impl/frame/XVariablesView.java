@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,38 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
+import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.Set;
 
 import static com.intellij.xdebugger.impl.ui.tree.nodes.MessageTreeNode.createInfoMessage;
 
 /**
  * @author nik
  */
-public class XVariablesView extends XVariablesViewBase implements XDebugView {
-  @NotNull private final XDebugSession mySession;
+public class XVariablesView extends XVariablesViewBase {
+  public static final Key<Map<Pair<VirtualFile, Integer>, Set<XValueNodeImpl>>> DEBUG_VARIABLES = Key.create("debug.variables");
+  public static final Key<Map<VirtualFile, Long>> DEBUG_VARIABLES_TIMESTAMPS = Key.create("debug.variables.timestamps");
 
-  public XVariablesView(@NotNull XDebugSession session) {
-    super(session.getProject(), session.getDebugProcess().getEditorsProvider(), ((XDebugSessionImpl)session).getValueMarkers());
-    mySession = session;
+  public XVariablesView(@NotNull XDebugSessionImpl session) {
+    super(session.getProject(), session.getDebugProcess().getEditorsProvider(), session.getValueMarkers());
   }
 
   @Override
   public void processSessionEvent(@NotNull final SessionEvent event) {
-    XStackFrame stackFrame = mySession.getCurrentStackFrame();
+    XDebugSession session = getSession(getPanel());
+    XStackFrame stackFrame = session == null ? null : session.getCurrentStackFrame();
     XDebuggerTree tree = getTree();
 
     if (event == SessionEvent.BEFORE_RESUME || event == SessionEvent.SETTINGS_CHANGED) {
@@ -50,20 +58,30 @@ public class XVariablesView extends XVariablesViewBase implements XDebugView {
 
     tree.markNodesObsolete();
     if (stackFrame != null) {
+      cancelClear();
       buildTreeAndRestoreState(stackFrame);
     }
     else {
-      tree.setSourcePosition(null);
-
-      XDebuggerTreeNode node;
-      if (!mySession.isStopped() && mySession.isPaused()) {
-        node = createInfoMessage(tree, "Frame is not available");
-      }
-      else {
-        XDebugProcess debugProcess = mySession.getDebugProcess();
-        node = createInfoMessage(tree, debugProcess.getCurrentStateMessage(), debugProcess.getCurrentStateHyperlinkListener());
-      }
-      tree.setRoot(node, true);
+      requestClear();
     }
+  }
+
+  @Override
+  protected void clear() {
+    XDebuggerTree tree = getTree();
+    tree.getProject().putUserData(DEBUG_VARIABLES, null);
+    tree.getProject().putUserData(DEBUG_VARIABLES_TIMESTAMPS, null);
+    tree.setSourcePosition(null);
+
+    XDebuggerTreeNode node;
+    XDebugSession session = getSession(getPanel());
+    if (session == null || (!session.isStopped() && session.isPaused())) {
+      node = createInfoMessage(tree, "Frame is not available");
+    }
+    else {
+      XDebugProcess debugProcess = session.getDebugProcess();
+      node = createInfoMessage(tree, debugProcess.getCurrentStateMessage(), debugProcess.getCurrentStateHyperlinkListener());
+    }
+    tree.setRoot(node, true);
   }
 }

@@ -1624,7 +1624,10 @@
       <action id="XDebugger.Inspect" class="com.intellij.xdebugger.impl.ui.tree.actions.XInspectAction"/>
       <action id="XDebugger.JumpToSource" class="com.intellij.xdebugger.impl.ui.tree.actions.XJumpToSourceAction"/>
       <action id="XDebugger.JumpToTypeSource" class="com.intellij.xdebugger.impl.ui.tree.actions.XJumpToTypeSourceAction"/>
-      <action id="XDebugger.AddToWatches" class="com.intellij.xdebugger.impl.ui.tree.actions.XAddToWatchesAction" icon="AllIcons.Debugger.AddToWatch"/>
+
+      <action id="Debugger.Tree.AddToWatches" class="com.intellij.xdebugger.impl.ui.tree.actions.XAddToWatchesAction" icon="AllIcons.Debugger.AddToWatch"/>
+      <action id="Debugger.Tree.EvaluateInConsole" class="com.intellij.xdebugger.impl.ui.tree.actions.EvaluateInConsoleFromTreeAction"/>
+
       <action id="XDebugger.NewWatch" class="com.intellij.xdebugger.impl.frame.actions.XNewWatchAction" icon="AllIcons.Debugger.NewWatch"/>
       <action id="XDebugger.EditWatch" class="com.intellij.xdebugger.impl.frame.actions.XEditWatchAction"/>
       <action id="XDebugger.RemoveWatch" class="com.intellij.xdebugger.impl.frame.actions.XRemoveWatchAction" icon="AllIcons.Actions.Delete"/>
@@ -1634,6 +1637,8 @@
       <action id="XDebugger.AutoTooltip" class="com.intellij.xdebugger.impl.actions.ValueTooltipAutoShowAction"/>
       <action id="XDebugger.ToggleSortValues" class="com.intellij.xdebugger.impl.ui.tree.actions.SortValuesToggleAction" icon="AllIcons.ObjectBrowser.Sorted"/>
       <action id="Debugger.MarkObject" class="com.intellij.xdebugger.impl.actions.MarkObjectAction"/>
+      <action id="Debugger.FocusOnBreakpoint" class="com.intellij.xdebugger.impl.actions.FocusOnBreakpointAction"/>
+      <action id="Debugger.ShowReferring" class="com.intellij.xdebugger.impl.ui.tree.actions.ShowReferringObjectsAction"/>
     </group>
 
     <group id="XDebugger.ToolWindow.TopToolbar">
@@ -1645,7 +1650,7 @@
       <reference ref="StepOut"/>
       <reference ref="RunToCursor"/>
       <separator/>
-      <reference ref="EvaluateExpression"/>
+      <reference ref="EvaluateExpression" />
     </group>
 
     <group id="XDebugger.ToolWindow.LeftToolbar">
@@ -1659,22 +1664,34 @@
 
     <group id="XDebugger.ValueGroup" popup="false">
       <reference ref="XDebugger.Inspect"/>
+      <reference ref="Debugger.MarkObject"/>
       <reference ref="XDebugger.SetValue"/>
       <reference ref="XDebugger.CopyValue"/>
       <reference ref="XDebugger.CompareValueWithClipboard"/>
       <reference ref="XDebugger.CopyName"/>
-      <reference ref="Debugger.MarkObject"/>
+      <separator/>
+      <reference ref="EvaluateExpression"/>
+      <reference ref="Debugger.Tree.EvaluateInConsole"/>
+      <reference ref="Debugger.Tree.AddToWatches"/>
+      <reference ref="Debugger.ShowReferring"/>
+      <separator/>
+      <reference ref="XDebugger.JumpToSource"/>
+      <reference ref="XDebugger.JumpToTypeSource"/>
+      <separator/>
     </group>
 
     <group id="XDebugger.Evaluation.Dialog.Tree.Popup">
       <reference ref="XDebugger.ValueGroup"/>
     </group>
 
+    <group id="XDebugger.Frames.Tree.Popup">
+    </group>
+
+    <group id="XDebugger.Frames.TopToolbar">
+    </group>
+
     <group id="XDebugger.Variables.Tree.Popup">
       <reference ref="XDebugger.ValueGroup"/>
-      <reference ref="XDebugger.JumpToSource"/>
-      <reference ref="XDebugger.JumpToTypeSource"/>
-      <reference ref="XDebugger.AddToWatches"/>
     </group>
 
     <group id="XDebugger.Variables.Tree.Toolbar">
@@ -1699,7 +1716,6 @@
 
     <group id="XDebugger.Value.Hint.Tree.Popup">
       <reference ref="XDebugger.ValueGroup"/>
-      <reference ref="XDebugger.AddToWatches"/>
     </group>
 
     <group id="XDebugger.Settings" icon="AllIcons.General.SecondaryGroup" popup="true">

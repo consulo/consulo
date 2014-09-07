@@ -15,6 +15,8 @@
  */
 package com.intellij.execution;
 
+import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NotNull;
@@ -26,10 +28,9 @@ import java.util.List;
 public abstract class ExecutionTargetManager {
   public static final Topic<ExecutionTargetListener> TOPIC = Topic.create("ExecutionTarget topic", ExecutionTargetListener.class);
 
-
   @NotNull
   public static ExecutionTargetManager getInstance(@NotNull Project project) {
-    return project.getComponent(ExecutionTargetManager.class);
+    return ServiceManager.getService(project, ExecutionTargetManager.class);
   }
 
   @NotNull
@@ -55,6 +56,10 @@ public abstract class ExecutionTargetManager {
 
   public static boolean canRun(@Nullable RunnerAndConfigurationSettings settings, @Nullable ExecutionTarget target) {
     return settings != null && target != null && settings.canRunOn(target) && target.canRun(settings);
+  }
+
+  public static boolean canRun(@NotNull ExecutionEnvironment environment) {
+    return canRun(environment.getRunnerAndConfigurationSettings(), environment.getExecutionTarget());
   }
 
   public static void update(@NotNull Project project) {

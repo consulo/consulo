@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
 * @author nik
 */
-class XValueTextRendererImpl extends XValueTextRendererBase {
+public class XValueTextRendererImpl extends XValueTextRendererBase {
   private final ColoredTextContainer myText;
 
   public XValueTextRendererImpl(ColoredTextContainer text) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,11 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
 import com.intellij.xdebugger.frame.*;
-import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
-import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
+import com.intellij.xdebugger.impl.evaluate.XDebuggerInlineEapDescriptor;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import org.consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,7 +76,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
 
   @Override
   public void addChildren(@NotNull final XValueChildrenList children, final boolean last) {
-    DebuggerUIUtil.invokeLater(new Runnable() {
+    invokeNodeUpdate(new Runnable() {
       @Override
       public void run() {
         if (myValueChildren == null) {
@@ -91,6 +92,12 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
           XValueNodeImpl node = new XValueNodeImpl(myTree, XValueContainerNode.this, children.getName(i), children.getValue(i));
           myValueChildren.add(node);
           newChildren.add(node);
+
+          //todo[kb]: try to generify this dirty hack
+          if (EarlyAccessProgramManager.is(XDebuggerInlineEapDescriptor.class) && "this".equals(node.getName())) {
+            //initialize "this" fields to display in inline view
+            node.getChildren();
+          }
         }
         myTopGroups = createGroupNodes(children.getTopGroups(), myTopGroups, newChildren);
         myBottomGroups = createGroupNodes(children.getBottomGroups(), myBottomGroups, newChildren);
@@ -125,7 +132,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
 
   @Override
   public void tooManyChildren(final int remaining) {
-    DebuggerUIUtil.invokeLater(new Runnable() {
+    invokeNodeUpdate(new Runnable() {
       @Override
       public void run() {
         setTemporaryMessageNode(MessageTreeNode.createEllipsisNode(myTree, XValueContainerNode.this, remaining));
@@ -162,7 +169,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   @Override
   public void setMessage(@NotNull final String message,
                          final Icon icon, @NotNull final SimpleTextAttributes attributes, @Nullable final XDebuggerTreeNodeHyperlink link) {
-    DebuggerUIUtil.invokeLater(new Runnable() {
+    invokeNodeUpdate(new Runnable() {
       @Override
       public void run() {
         setMessageNodes(MessageTreeNode.createMessages(myTree, XValueContainerNode.this, message, link,
