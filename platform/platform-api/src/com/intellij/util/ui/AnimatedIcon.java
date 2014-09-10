@@ -152,7 +152,7 @@ public class AnimatedIcon extends JComponent implements Disposable {
       Color bg = opaque != null ? opaque.getBackground() : UIUtil.getPanelBackground();
       g.setColor(bg);
       g.fillRect(0, 0, getWidth(), getHeight());
-    } 
+    }
 
     Icon icon;
 

@@ -70,8 +70,8 @@ public class AsyncProcessIcon extends AnimatedIcon {
     }
     return icons;
   }
-  
-  public void updateLocation(JComponent container) {
+
+  public void updateLocation(final JComponent container) {
     final Rectangle rec = container.getVisibleRect();
 
     final Dimension iconSize = getPreferredSize();
@@ -79,7 +79,14 @@ public class AsyncProcessIcon extends AnimatedIcon {
     final Rectangle newBounds = new Rectangle(rec.x + rec.width - iconSize.width, rec.y, iconSize.width, iconSize.height);
     if (!newBounds.equals(getBounds())) {
       setBounds(newBounds);
-      container.repaint();
+      // painting problems with scrollpane
+      // repaint shouldn't be called from paint method
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          container.repaint();
+        }
+      });
     }
   }
 
@@ -91,18 +98,18 @@ public class AsyncProcessIcon extends AnimatedIcon {
 
   public static class Big extends AsyncProcessIcon {
     private static final Icon[] BIG_ICONS = {
-      AllIcons.Process.Big.Step_1,
-      AllIcons.Process.Big.Step_2,
-      AllIcons.Process.Big.Step_3,
-      AllIcons.Process.Big.Step_4,
-      AllIcons.Process.Big.Step_5,
-      AllIcons.Process.Big.Step_6,
-      AllIcons.Process.Big.Step_7,
-      AllIcons.Process.Big.Step_8,
-      AllIcons.Process.Big.Step_9,
-      AllIcons.Process.Big.Step_10,
-      AllIcons.Process.Big.Step_11,
-      AllIcons.Process.Big.Step_12
+            AllIcons.Process.Big.Step_1,
+            AllIcons.Process.Big.Step_2,
+            AllIcons.Process.Big.Step_3,
+            AllIcons.Process.Big.Step_4,
+            AllIcons.Process.Big.Step_5,
+            AllIcons.Process.Big.Step_6,
+            AllIcons.Process.Big.Step_7,
+            AllIcons.Process.Big.Step_8,
+            AllIcons.Process.Big.Step_9,
+            AllIcons.Process.Big.Step_10,
+            AllIcons.Process.Big.Step_11,
+            AllIcons.Process.Big.Step_12
     };
 
     public Big(@NonNls final String name) {
