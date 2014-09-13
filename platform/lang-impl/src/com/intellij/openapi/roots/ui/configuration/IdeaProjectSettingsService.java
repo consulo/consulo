@@ -21,14 +21,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.SdkOrderEntry;
-import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.packaging.artifacts.Artifact;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
 /**
  * @author yole
@@ -119,23 +118,11 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
   }
 
   @Override
-  public boolean canOpenLibraryOrSdkSettings(OrderEntry orderEntry) {
-    return true;
-  }
-
-  @Override
   public void openLibraryOrSdkSettings(@NotNull final OrderEntry orderEntry) {
-    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(myProject);
-    ShowSettingsUtil.getInstance().editConfigurable(myProject, config, new Runnable() {
-      @Override
-      public void run() {
-        if (orderEntry instanceof SdkOrderEntry) {
-          config.select(((SdkOrderEntry)orderEntry).getSdk(), true);
-        } else {
-          config.select((LibraryOrderEntry)orderEntry, true);
-        }
-      }
-    });
+    OrderEntryTypeProvider provider = orderEntry.getProvider();
+
+    //noinspection unchecked
+    provider.navigate(orderEntry);
   }
 
   @Override

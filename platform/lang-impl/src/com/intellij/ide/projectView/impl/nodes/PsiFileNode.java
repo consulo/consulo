@@ -52,7 +52,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
   @Override
   public Collection<AbstractTreeNode> getChildrenImpl() {
     Project project = getProject();
-    VirtualFile jarRoot = getJarRoot();
+    VirtualFile jarRoot = getArchiveRoot();
     if (project != null && jarRoot != null) {
       PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(jarRoot);
       if (psiDirectory != null) {
@@ -99,25 +99,25 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
   }
 
   private boolean isNavigatableLibraryRoot() {
-    VirtualFile jarRoot = getJarRoot();
+    VirtualFile jarRoot = getArchiveRoot();
     final Project project = getProject();
     if (jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
       final OrderEntry orderEntry = LibraryUtil.findLibraryEntry(jarRoot, project);
-      return orderEntry != null && ProjectSettingsService.getInstance(project).canOpenLibraryOrSdkSettings(orderEntry);
+      return orderEntry != null ;
     }
     return false;
   }
 
   @Nullable
-  private VirtualFile getJarRoot() {
+  private VirtualFile getArchiveRoot() {
     final VirtualFile file = getVirtualFile();
 
-    return ArchiveVfsUtil.getJarRootForLocalFile(file);
+    return ArchiveVfsUtil.getArchiveRootForLocalFile(file);
   }
 
   @Override
   public void navigate(boolean requestFocus) {
-    final VirtualFile jarRoot = getJarRoot();
+    final VirtualFile jarRoot = getArchiveRoot();
     final Project project = getProject();
     if (requestFocus && jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
       final OrderEntry orderEntry = LibraryUtil.findLibraryEntry(jarRoot, project);

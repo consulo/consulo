@@ -28,7 +28,6 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
-import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -135,12 +134,14 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
 
   @Override
   public void navigate(final boolean requestFocus) {
-    ProjectSettingsService.getInstance(myProject).openLibraryOrSdkSettings(getValue().getOrderEntry());
+    OrderEntryTypeProvider provider = getValue().getOrderEntry().getProvider();
+    //noinspection unchecked
+    provider.navigate(getValue().getOrderEntry());
   }
 
   @Override
   public boolean canNavigate() {
-    return ProjectSettingsService.getInstance(myProject).canOpenLibraryOrSdkSettings(getValue().getOrderEntry());
+    return true;
   }
 
   @Override

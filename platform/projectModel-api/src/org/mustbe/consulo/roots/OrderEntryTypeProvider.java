@@ -38,6 +38,8 @@ public interface OrderEntryTypeProvider<T extends OrderEntry> {
 
   void storeOrderEntry(@NotNull Element element, @NotNull T orderEntry);
 
+  void navigate(@NotNull T orderEntry);
+
   @NotNull
   CellAppearanceEx getCellAppearance(@NotNull T orderEntry);
 }

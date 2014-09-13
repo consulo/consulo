@@ -15,6 +15,8 @@
  */
 package org.mustbe.consulo.roots.impl;
 
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.LibraryOrderEntryImpl;
@@ -26,6 +28,7 @@ import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -39,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 21.08.14
  */
-public class LibraryOrderEntryTypeProvider implements OrderEntryTypeProviderEx<LibraryOrderEntryImpl> {
+public class LibraryOrderEntryTypeProvider extends OrderEntryTypeProviderEx<LibraryOrderEntryImpl> {
   @NotNull
   @LazyInstance
   public static LibraryOrderEntryTypeProvider getInstance() {
@@ -82,6 +85,18 @@ public class LibraryOrderEntryTypeProvider implements OrderEntryTypeProviderEx<L
     orderEntry.getScope().writeExternal(element);
     element.setAttribute(NAME_ATTR, orderEntry.getLibraryName());
     element.setAttribute(LEVEL_ATTR, libraryLevel);
+  }
+
+  @Override
+  public void navigate(@NotNull final LibraryOrderEntryImpl orderEntry) {
+    Project project = orderEntry.getModuleRootLayer().getProject();
+    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
+    ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
+      @Override
+      public void run() {
+        config.select(orderEntry, true);
+      }
+    });
   }
 
   @NotNull

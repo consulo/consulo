@@ -15,6 +15,8 @@
  */
 package org.mustbe.consulo.roots.impl;
 
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
@@ -26,6 +28,7 @@ import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
@@ -42,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 21.08.14
  */
 @Logger
-public class ModuleLibraryOrderEntryTypeProvider implements OrderEntryTypeProviderEx<ModuleLibraryOrderEntryImpl> {
+public class ModuleLibraryOrderEntryTypeProvider extends OrderEntryTypeProviderEx<ModuleLibraryOrderEntryImpl> {
   @NotNull
   @LazyInstance
   public static ModuleLibraryOrderEntryTypeProvider getInstance() {
@@ -81,6 +84,18 @@ public class ModuleLibraryOrderEntryTypeProvider implements OrderEntryTypeProvid
     catch (WriteExternalException e) {
       LOGGER.error("Exception while writing module library: " + orderEntry.getLibraryName() + " in module: " + orderEntry.getOwnerModule().getName(), e);
     }
+  }
+
+  @Override
+  public void navigate(@NotNull final ModuleLibraryOrderEntryImpl orderEntry) {
+    Project project = orderEntry.getModuleRootLayer().getProject();
+    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
+    ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
+      @Override
+      public void run() {
+        config.select(orderEntry, true);
+      }
+    });
   }
 
   @NotNull

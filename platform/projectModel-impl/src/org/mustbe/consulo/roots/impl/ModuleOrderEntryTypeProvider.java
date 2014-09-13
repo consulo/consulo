@@ -27,13 +27,12 @@ import org.consulo.lombok.annotations.LazyInstance;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
-public class ModuleOrderEntryTypeProvider implements OrderEntryTypeProvider<ModuleOrderEntryImpl> {
+public class ModuleOrderEntryTypeProvider extends OrderEntryTypeProviderEx<ModuleOrderEntryImpl> {
   @NotNull
   @LazyInstance
   public static ModuleOrderEntryTypeProvider getInstance() {

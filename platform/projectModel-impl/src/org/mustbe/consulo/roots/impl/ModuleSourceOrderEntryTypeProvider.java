@@ -25,13 +25,12 @@ import com.intellij.openapi.util.InvalidDataException;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
-public class ModuleSourceOrderEntryTypeProvider implements OrderEntryTypeProvider<ModuleSourceOrderEntryImpl> {
+public class ModuleSourceOrderEntryTypeProvider extends OrderEntryTypeProviderEx<ModuleSourceOrderEntryImpl> {
   @NotNull
   @LazyInstance
   public static ModuleSourceOrderEntryTypeProvider getInstance() {

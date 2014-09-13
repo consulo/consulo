@@ -15,11 +15,14 @@
  */
 package org.mustbe.consulo.roots.impl;
 
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleExtensionWithSdkOrderEntryImpl;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.ui.SimpleTextAttributes;
@@ -63,6 +66,22 @@ public class ModuleExtensionWithSdkOrderEntryTypeProvider implements OrderEntryT
   @Override
   public void storeOrderEntry(@NotNull Element element, @NotNull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     element.setAttribute(EXTENSION_ID_ATTRIBUTE, orderEntry.getModuleExtensionId());
+  }
+
+  @Override
+  public void navigate(@NotNull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+    final Sdk sdk = orderEntry.getSdk();
+    if (sdk == null) {
+      return;
+    }
+    Project project = orderEntry.getModuleRootLayer().getProject();
+    final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
+    ShowSettingsUtil.getInstance().editConfigurable(project, config, new Runnable() {
+      @Override
+      public void run() {
+        config.select(sdk, true);
+      }
+    });
   }
 
   @NotNull

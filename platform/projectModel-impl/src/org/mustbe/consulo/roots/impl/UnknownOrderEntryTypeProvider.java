@@ -24,7 +24,6 @@ import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 21.08.14
  */
-public class UnknownOrderEntryTypeProvider implements OrderEntryTypeProvider<UnknownOrderEntryImpl> {
+public class UnknownOrderEntryTypeProvider extends OrderEntryTypeProviderEx<UnknownOrderEntryImpl> {
   private String myId;
   private Element myElement;
 

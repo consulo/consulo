@@ -39,7 +39,7 @@ public class ClasspathTableItem<T extends OrderEntry> {
   @NotNull
   protected final T myEntry;
 
-  protected ClasspathTableItem(@NotNull T entry) {
+  public ClasspathTableItem(@NotNull T entry) {
     myEntry = entry;
   }
 
