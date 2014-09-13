@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,20 @@
  */
 package com.intellij.openapi.wm;
 
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Arrays;
 
 /**
@@ -38,6 +41,18 @@ public abstract class FocusCommand extends ActiveRunnable implements Expirable {
   private ActionCallback myCallback;
   private boolean myInvalidatesPendingFurtherRequestors = true;
   private Expirable myExpirable;
+
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.FocusCommand");
+
+  public boolean isForced() {
+    return myForced;
+  }
+
+  public void setForced(boolean forced) {
+    myForced = forced;
+  }
+
+  private boolean myForced;
 
   protected FocusCommand() {
     saveAllocation();
@@ -130,6 +145,10 @@ public abstract class FocusCommand extends ActiveRunnable implements Expirable {
     return myAllocation;
   }
 
+  public boolean canFocusChangeFrom(@Nullable Component component) {
+    return true;
+  }
+
   @Override
   public String toString() {
     final Object[] objects = getEqualityObjects();
@@ -138,41 +157,51 @@ public abstract class FocusCommand extends ActiveRunnable implements Expirable {
 
   public static class ByComponent extends FocusCommand {
     private Component myToFocus;
+    private Throwable myAllocation;
 
-    public ByComponent(@Nullable Component toFocus) {
-      this(toFocus, toFocus);
+    public ByComponent(@Nullable Component toFocus, @NotNull Throwable allocation) {
+      this(toFocus, toFocus, allocation);
     }
 
-    public ByComponent(@Nullable Component toFocus, @Nullable Component dominationComponent) {
+    public ByComponent(@Nullable Component toFocus, @Nullable Component dominationComponent, @NotNull Throwable allocation) {
       super(toFocus, dominationComponent);
+      myAllocation = allocation;
       myToFocus = toFocus;
     }
 
     @NotNull
     public final ActionCallback run() {
-      if (myToFocus != null) {
-        if (Registry.is("actionSystem.doNotStealFocus")) {
-          Window topWindow = SwingUtilities.windowForComponent(myToFocus);
-          UIUtil.setAutoRequestFocus(topWindow, topWindow.isActive());
-          while (topWindow.getOwner() != null) {
-            topWindow = SwingUtilities.windowForComponent(topWindow);
-            UIUtil.setAutoRequestFocus(topWindow, topWindow.isActive());
-          }
 
-          if (topWindow.isActive()) {
-            if (!myToFocus.requestFocusInWindow()) {
-              myToFocus.requestFocus();
-            }
-          } else {
-            myToFocus.requestFocusInWindow();
-          }
+      boolean shouldLogFocuses = Registry.is("ide.log.focuses");
 
-        } else {
-          if (!myToFocus.requestFocusInWindow()) {
-            myToFocus.requestFocus();
+      if (shouldLogFocuses) {
+        myToFocus.addFocusListener(new FocusAdapter() {
+          @Override
+          public void focusGained(FocusEvent e) {
+            if (isExpired()) return;
+            super.focusGained(e);
+            LOG.info("Focus gained on " + myToFocus.getClass().getName());
+            myToFocus.removeFocusListener(this);
+          }
+        });
+      }
+
+      if (!(myToFocus.requestFocusInWindow())) {
+        if (shouldLogFocuses) {
+          LOG.info("We could not request focus in window on " + myToFocus.getClass().getName());
+          LOG.info(myAllocation);
+        }
+        if (isForced()) {
+          myToFocus.requestFocus();
+          if (shouldLogFocuses) {
+            LOG.info("Force request focus on " + myToFocus.getClass().getName());
           }
         }
+      } else if (shouldLogFocuses) {
+        LOG.info("We have successfully requested focus in window on " + myToFocus.getClass().getName());
+        LOG.info(myAllocation);
       }
+
       clear();
       return new ActionCallback.Done();
     }
@@ -187,15 +216,17 @@ public abstract class FocusCommand extends ActiveRunnable implements Expirable {
       if (myToFocus == null) {
         return true;
       }
-      if (SwingUtilities.getWindowAncestor(myToFocus) == null) {
-        clear();
-        return true;
-      }
       return false;
     }
 
     public Component getComponent() {
       return myToFocus;
+    }
+
+    @Override
+    public boolean canFocusChangeFrom(@Nullable Component component) {
+      DialogWrapper dialog = DialogWrapper.findInstance(component);
+      return (dialog == null) || (dialog == DialogWrapper.findInstance(myToFocus));
     }
   }
 }

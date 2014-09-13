@@ -925,7 +925,7 @@ public class JBTabsImpl extends JComponent
 
 
     if (isShowing()) {
-      return myFocusManager.requestFocus(new FocusCommand.ByComponent(toFocus), true);
+      return myFocusManager.requestFocus(new FocusCommand.ByComponent(toFocus, new Exception()), true);
     }
     else {
       final ActionCallback result = new ActionCallback();
@@ -943,7 +943,7 @@ public class JBTabsImpl extends JComponent
         @Override
         public void run() {
           queued.set(true);
-          requestor.requestFocus(new FocusCommand.ByComponent(toFocus), true).notify(result);
+          requestor.requestFocus(new FocusCommand.ByComponent(toFocus, new Exception()), true).notify(result);
         }
       };
       return result;
