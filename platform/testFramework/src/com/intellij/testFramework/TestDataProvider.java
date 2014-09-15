@@ -56,7 +56,7 @@ public class TestDataProvider implements DataProvider {
       Editor editor = (Editor)getData(PlatformDataKeys.EDITOR.getName());
       if (editor != null) {
         FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(myProject);
-        Object managerData = manager.getData(dataId, editor, manager.getSelectedFiles()[0]);
+        Object managerData = manager.getData(dataId, editor, editor.getCaretModel().getCurrentCaret());
         if (managerData != null) {
           return managerData;
         }

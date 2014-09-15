@@ -51,7 +51,6 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   private TextAttributes myTextAttributes;
 
-  boolean myIgnoreWrongMoves = false;
   boolean myIsInUpdate;
   boolean isDocumentChanged;
 
@@ -120,10 +119,6 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     for (CaretImpl caret : myCarets) {
       Disposer.dispose(caret);
     }
-  }
-
-  public void setIgnoreWrongMoves(boolean ignoreWrongMoves) {
-    myIgnoreWrongMoves = ignoreWrongMoves;
   }
 
   public void updateVisualPosition() {
@@ -229,7 +224,8 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
   @Override
   @NotNull
   public CaretImpl getCurrentCaret() {
-    return ApplicationManager.getApplication().isDispatchThread() && myCurrentCaret != null ? myCurrentCaret : getPrimaryCaret();
+    CaretImpl currentCaret = myCurrentCaret;
+    return ApplicationManager.getApplication().isDispatchThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
   }
 
   @Override
@@ -286,11 +282,9 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     }
   }
 
-  boolean addCaret(CaretImpl caretToAdd) {
+  boolean addCaret(@NotNull CaretImpl caretToAdd) {
     for (CaretImpl caret : myCarets) {
-      VisualPosition newVisualPosition = caretToAdd.getVisualPosition();
-      int newOffset = myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(newVisualPosition));
-      if (caret.getVisualPosition().equals(newVisualPosition) || newOffset >= caret.getSelectionStart() && newOffset <= caret.getSelectionEnd()) {
+      if (caretsOverlap(caret, caretToAdd)) {
         return false;
       }
     }
@@ -336,6 +330,11 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
 
   @Override
   public void runForEachCaret(@NotNull final CaretAction action) {
+    runForEachCaret(action, false);
+  }
+
+  @Override
+  public void runForEachCaret(@NotNull final CaretAction action, final boolean reverseOrder) {
     myEditor.assertIsDispatchThread();
     if (!supportsMultipleCarets()) {
       action.perform(getPrimaryCaret());
@@ -347,7 +346,10 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     doWithCaretMerging(new Runnable() {
       public void run() {
         try {
-          Collection<Caret> sortedCarets = getAllCarets();
+          List<Caret> sortedCarets = getAllCarets();
+          if (reverseOrder) {
+            Collections.reverse(sortedCarets);
+          }
           for (Caret caret : sortedCarets) {
             myCurrentCaret = (CaretImpl)caret;
             action.perform(caret);
@@ -380,8 +382,7 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
         it.next();
       }
       CaretImpl currCaret = it.next();
-      if (prevCaret != null && (currCaret.getVisualPosition().equals(prevCaret.getVisualPosition())
-                                || selectionsIntersect(currCaret, prevCaret))) {
+      if (prevCaret != null && caretsOverlap(currCaret, prevCaret)) {
         int newSelectionStart = Math.min(currCaret.getSelectionStart(), prevCaret.getSelectionStart());
         int newSelectionEnd = Math.max(currCaret.getSelectionEnd(), prevCaret.getSelectionEnd());
         CaretImpl toRetain, toRemove;
@@ -406,7 +407,10 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
     }
   }
 
-  private static boolean selectionsIntersect(CaretImpl firstCaret, CaretImpl secondCaret) {
+  private static boolean caretsOverlap(@NotNull CaretImpl firstCaret, @NotNull CaretImpl secondCaret) {
+    if (firstCaret.getVisualPosition().equals(secondCaret.getVisualPosition())) {
+      return true;
+    }
     int firstStart = firstCaret.getSelectionStart();
     int secondStart = secondCaret.getSelectionStart();
     int firstEnd = firstCaret.getSelectionEnd();
@@ -429,16 +433,21 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
       myPerformCaretMergingAfterCurrentOperation = true;
       try {
         runnable.run();
+        mergeOverlappingCaretsAndSelections();
       }
       finally {
         myPerformCaretMergingAfterCurrentOperation = false;
       }
-      mergeOverlappingCaretsAndSelections();
     }
   }
 
   @Override
   public void setCaretsAndSelections(@NotNull final List<CaretState> caretStates) {
+    setCaretsAndSelections(caretStates, true);
+  }
+
+  @Override
+  public void setCaretsAndSelections(@NotNull final List<CaretState> caretStates, final boolean updateSystemSelection) {
     myEditor.assertIsDispatchThread();
     if (caretStates.isEmpty()) {
       throw new IllegalArgumentException("At least one caret should exist");
@@ -470,9 +479,11 @@ public class CaretModelImpl implements CaretModel, PrioritizedDocumentListener, 
             caret.moveToLogicalPosition(caretState.getCaretPosition());
           }
           if (caretState != null && caretState.getSelectionStart() != null && caretState.getSelectionEnd() != null) {
-            caret.setSelection(myEditor.logicalToVisualPosition(caretState.getSelectionStart()), myEditor.logicalPositionToOffset(caretState.getSelectionStart()),
-                               myEditor.logicalToVisualPosition(caretState.getSelectionEnd()), myEditor.logicalPositionToOffset(
-                    caretState.getSelectionEnd()));
+            caret.setSelection(myEditor.logicalToVisualPosition(caretState.getSelectionStart()),
+                               myEditor.logicalPositionToOffset(caretState.getSelectionStart()),
+                               myEditor.logicalToVisualPosition(caretState.getSelectionEnd()),
+                               myEditor.logicalPositionToOffset(caretState.getSelectionEnd()),
+                               updateSystemSelection);
           }
         }
         int caretsToRemove = myCarets.size() - caretStates.size();
