@@ -60,16 +60,10 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private String mySplashImageUrl = null;
   private String myAboutImageUrl = null;
   private Color mySplashTextColor = new Color(0, 35, 135);  // idea blue
-  @NonNls private String myIconUrl = "/icon.png";
-  @NonNls private String mySmallIconUrl = "/icon_small.png";
-  @NonNls private String myBigIconUrl = null;
-  @NonNls private String myOpaqueIconUrl = "/icon.png";
-  private String myWelcomeScreenLogoUrl = null;
   private String myEditorBackgroundImageUrl = null;
 
   private Calendar myBuildDate = null;
   private Calendar myMajorReleaseBuildDate = null;
-  private String myPackageCode = null;
   private String myDocumentationUrl;
   private String mySupportUrl;
   private String myEAPFeedbackUrl;
@@ -113,18 +107,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ATTRIBUTE_PROGRESS_Y = "progressY";
   @NonNls private static final String ATTRIBUTE_PROGRESS_TAIL_ICON = "progressTailIcon";
   @NonNls private static final String ELEMENT_ABOUT = "about";
-  @NonNls private static final String ELEMENT_ICON = "icon";
-  @NonNls private static final String ATTRIBUTE_SIZE32 = "size32";
-  @NonNls private static final String ATTRIBUTE_SIZE128 = "size128";
-  @NonNls private static final String ATTRIBUTE_SIZE16 = "size16";
-  @NonNls private static final String ATTRIBUTE_SIZE32OPAQUE = "size32opaque";
-  @NonNls private static final String ELEMENT_PACKAGE = "package";
-  @NonNls private static final String ATTRIBUTE_CODE = "code";
-  @NonNls private static final String WELCOME_SCREEN_ELEMENT_NAME = "welcome-screen";
-  @NonNls private static final String LOGO_URL_ATTR = "logo-url";
   @NonNls private static final String ELEMENT_EDITOR = "editor";
   @NonNls private static final String BACKGROUND_URL_ATTR = "background-url";
-  @NonNls private static final String XML_EXTENSION = ".xml";
   @NonNls private static final String ATTRIBUTE_EAP = "eap";
   @NonNls private static final String HELP_ELEMENT_NAME = "help";
   @NonNls private static final String ATTRIBUTE_HELP_FILE = "file";
@@ -231,39 +215,8 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   @Override
-  public String getIconUrl() {
-    return myIconUrl;
-  }
-
-  @Override
-  public String getSmallIconUrl() {
-    return mySmallIconUrl;
-  }
-
-  @Override
-  @Nullable
-  public String getBigIconUrl() {
-    return myBigIconUrl;
-  }
-
-  @Override
-  public String getOpaqueIconUrl() {
-    return myOpaqueIconUrl;
-  }
-
-  @Override
-  public String getWelcomeScreenLogoUrl() {
-    return myWelcomeScreenLogoUrl;
-  }
-
-  @Override
   public String getEditorBackgroundImageUrl() {
     return myEditorBackgroundImageUrl;
-  }
-
-  @Override
-  public String getPackageCode() {
-    return myPackageCode;
   }
 
   @Override
@@ -509,24 +462,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
           // ignore
         }
       }
-    }
-
-    Element iconElement = parentNode.getChild(ELEMENT_ICON);
-    if (iconElement != null) {
-      myIconUrl = iconElement.getAttributeValue(ATTRIBUTE_SIZE32);
-      mySmallIconUrl = iconElement.getAttributeValue(ATTRIBUTE_SIZE16);
-      myOpaqueIconUrl = iconElement.getAttributeValue(ATTRIBUTE_SIZE32OPAQUE);
-      myBigIconUrl = iconElement.getAttributeValue(ATTRIBUTE_SIZE128, (String)null);
-    }
-
-    Element packageElement = parentNode.getChild(ELEMENT_PACKAGE);
-    if (packageElement != null) {
-      myPackageCode = packageElement.getAttributeValue(ATTRIBUTE_CODE);
-    }
-
-    Element welcomeScreen = parentNode.getChild(WELCOME_SCREEN_ELEMENT_NAME);
-    if (welcomeScreen != null) {
-      myWelcomeScreenLogoUrl = welcomeScreen.getAttributeValue(LOGO_URL_ATTR);
     }
 
     Element editor = parentNode.getChild(ELEMENT_EDITOR);

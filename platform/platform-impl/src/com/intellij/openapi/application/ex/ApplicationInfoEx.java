@@ -25,8 +25,11 @@
 package com.intellij.openapi.application.ex;
 
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.util.IconLoader;
+import com.intellij.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Calendar;
 import java.util.List;
@@ -45,22 +48,32 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getAboutImageUrl();
 
-  public abstract String getIconUrl();
+  public String getIconUrl() {
+    return getUrl("/icon32");
+  }
 
-  public abstract String getSmallIconUrl();
+  public String getSmallIconUrl() {
+    return getUrl("/icon16");
+  }
 
   @Nullable
   public String getBigIconUrl() {
-    return null;
+    return getUrl("/icon128");
   }
 
-  public abstract String getOpaqueIconUrl();
+  public String getOpaqueIconUrl() {
+    return getUrl("/icon32");
+  }
 
-  public abstract String getWelcomeScreenLogoUrl();
+  public static Icon getWelcomeScreenLogo() {
+    return IconLoader.getIcon(getUrl("/Logo_welcomeScreen"));
+  }
+
+  private static String getUrl(String prefix) {
+    return (SandboxUtil.isInsideSandbox() ? prefix + "-sandbox" : prefix) + ".png";
+  }
 
   public abstract String getEditorBackgroundImageUrl();
-
-  public abstract String getPackageCode();
 
   public abstract String getFullApplicationName();
 

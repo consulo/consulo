@@ -53,7 +53,7 @@ public class Restarter {
   }
 
   public static boolean isSupported() {
-    return getRestartCode() != 0 || SystemInfo.isWindows || SystemInfo.isMac;
+    return (getRestartCode() != 0 || SystemInfo.isWindows || SystemInfo.isMac) && !SandboxUtil.isInsideSandbox();
   }
 
   public static int scheduleRestart(@NotNull String... beforeRestart) throws IOException {

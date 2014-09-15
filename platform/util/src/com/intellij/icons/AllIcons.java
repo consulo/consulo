@@ -611,9 +611,7 @@ public class AllIcons {
     public static final Icon Warning_notifications = IconLoader.getIcon("/ide/warning_notifications.png"); // 16x16
 
   }
-  public static final Icon Idea_logo_background = IconLoader.getIcon("/idea_logo_background.png"); // 500x500
-  public static final Icon Idea_logo_welcome = IconLoader.getIcon("/idea_logo_welcome.png"); // 100x100
-  
+
   public static class Javaee {
     public static final Icon Application_xml = IconLoader.getIcon("/javaee/application_xml.png"); // 16x16
     public static final Icon BuildOnFrameDeactivation = IconLoader.getIcon("/javaee/buildOnFrameDeactivation.png"); // 16x16
