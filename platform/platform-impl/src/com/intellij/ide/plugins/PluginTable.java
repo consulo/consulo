@@ -40,6 +40,7 @@ import java.awt.datatransfer.Transferable;
 public class PluginTable extends JBTable {
   public PluginTable(final PluginTableModel model) {
     super(model);
+    setTableHeader(null);
     getColumnModel().setColumnMargin(0);
     for (int i = 0; i < model.getColumnCount(); i++) {
       TableColumn column = getColumnModel().getColumn(i);

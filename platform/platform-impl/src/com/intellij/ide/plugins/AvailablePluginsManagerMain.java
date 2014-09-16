@@ -16,6 +16,9 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.plugins.sorters.SortByDownloadsAction;
+import com.intellij.ide.plugins.sorters.SortByRatingAction;
+import com.intellij.ide.plugins.sorters.SortByUpdatedAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.extensions.PluginId;
@@ -86,6 +89,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
       }
     });
     myActionsPanel.add(httpProxySettingsButton, BorderLayout.WEST);
+    myPanelDescription.setVisible(false);
   }
 
   @Override
@@ -94,12 +98,20 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     model.setVendor(myVendorFilter);
     pluginsModel = model;
     pluginTable = new PluginTable(pluginsModel);
-    pluginTable.getTableHeader().setReorderingAllowed(false);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_DOWNLOADS, 70);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_DATE, 80);
     //pluginTable.setColumnWidth(PluginManagerColumnInfo.COLUMN_RATE, 80);
 
     return ScrollPaneFactory.createScrollPane(pluginTable);
+  }
+
+  @Override
+  protected DefaultActionGroup createSortersGroup() {
+    final DefaultActionGroup group = super.createSortersGroup();
+    group.addAction(new SortByDownloadsAction(pluginTable, pluginsModel));
+    group.addAction(new SortByRatingAction(pluginTable, pluginsModel));
+    group.addAction(new SortByUpdatedAction(pluginTable, pluginsModel));
+    return group;
   }
 
   @Override
@@ -177,7 +189,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
       actionGroup.add(new MyFilterCategoryAction());
     }
     else {
-      actionGroup.add(new SortByStatusAction("Sort Installed First"));
+      actionGroup.add(createSortersGroup());
       actionGroup.add(AnSeparator.getInstance());
       actionGroup.add(new ActionInstallPlugin(getAvailable(), getInstalled()));
     }

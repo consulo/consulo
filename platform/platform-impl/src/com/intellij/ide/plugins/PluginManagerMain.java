@@ -18,7 +18,9 @@ package com.intellij.ide.plugins;
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.plugins.sorters.SortByStatusAction;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.notification.*;
@@ -36,11 +38,14 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.updateSettings.impl.UpdateChecker;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
+import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.SwingWorker;
@@ -54,10 +59,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -65,6 +67,7 @@ import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -105,6 +108,7 @@ public abstract class PluginManagerMain implements Disposable {
   private PluginHeaderPanel myPluginHeaderPanel;
   private JPanel myInfoPanel;
   private JBScrollPane myScrollPane;
+  protected JBLabel myPanelDescription;
   private JBScrollPane myPanel;
 
 
@@ -131,20 +135,71 @@ public abstract class PluginManagerMain implements Disposable {
     JScrollPane installedScrollPane = createTable();
     myPluginHeaderPanel = new PluginHeaderPanel(this, getPluginTable());
     myHeader.setBackground(UIUtil.getTextFieldBackground());
+    myPluginHeaderPanel.getPanel().setBackground(UIUtil.getTextFieldBackground());
+    myPluginHeaderPanel.getPanel().setOpaque(true);
+
     myHeader.add(myPluginHeaderPanel.getPanel(), BorderLayout.CENTER);
     installTableActions();
 
     myTablePanel.add(installedScrollPane, BorderLayout.CENTER);
+    UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myPanelDescription);
+    myPanelDescription.setBorder(new EmptyBorder(0, 7, 0, 0));
 
+    final JPanel header = new JPanel(new BorderLayout()) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        final Color bg = UIUtil.getTableBackground(false);
+        ((Graphics2D)g).setPaint(new GradientPaint(0, 0, ColorUtil.shift(bg, 1.4), 0, getHeight(), ColorUtil.shift(bg, 0.9)));
+        g.fillRect(0,0, getWidth(), getHeight());
+      }
+    };
+    header.setBorder(new CustomLineBorder(1, 1, 0, 1));
+    final JLabel mySortLabel = new JLabel();
+    mySortLabel.setForeground(UIUtil.getLabelDisabledForeground());
+    mySortLabel.setBorder(new EmptyBorder(1, 1, 1, 5));
+    mySortLabel.setIcon(AllIcons.General.SplitDown);
+    mySortLabel.setHorizontalTextPosition(SwingConstants.LEADING);
+    header.add(mySortLabel, BorderLayout.EAST);
+    myTablePanel.add(header, BorderLayout.NORTH);
     myToolbarPanel.setLayout(new BorderLayout());
     myActionToolbar = ActionManager.getInstance().createActionToolbar("PluginManager", getActionGroup(true), true);
     final JComponent component = myActionToolbar.getComponent();
     myToolbarPanel.add(component, BorderLayout.CENTER);
     myToolbarPanel.add(myFilter, BorderLayout.WEST);
+    new ClickListener() {
+      @Override
+      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+        JBPopupFactory.getInstance().createActionGroupPopup("Sort by:", createSortersGroup(), DataManager.getInstance().getDataContext(pluginTable),
+                                                            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true).showUnderneathOf(mySortLabel);
+        return true;
+      }
+    }.installOn(mySortLabel);
+    final TableModelListener modelListener = new TableModelListener() {
+      @Override
+      public void tableChanged(TableModelEvent e) {
+        String text = "Sort by:";
+        if (pluginsModel.isSortByStatus()) {
+          text += " status,";
+        }
+        if (pluginsModel.isSortByRating()) {
+          text += " rating,";
+        }
+        if (pluginsModel.isSortByDownloads()) {
+          text += " downloads,";
+        }
+        if (pluginsModel.isSortByUpdated()) {
+          text += " updated,";
+        }
+        text += " name";
+        mySortLabel.setText(text);
+      }
+    };
+    pluginTable.getModel().addTableModelListener(modelListener);
+    modelListener.tableChanged(null);
 
     Border border = new BorderUIResource.LineBorderUIResource(new JBColor(Gray._220, Gray._55), 1);
     myInfoPanel.setBorder(border);
-    myScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0)); //bug?
   }
 
   protected abstract JScrollPane createTable();
@@ -461,6 +516,12 @@ public abstract class PluginManagerMain implements Disposable {
     return null;
   }
 
+  protected DefaultActionGroup createSortersGroup() {
+    final DefaultActionGroup group = new DefaultActionGroup("Sort by", true);
+    group.addAction(new SortByStatusAction(pluginTable, pluginsModel));
+    return group;
+  }
+
   public static class MyHyperlinkListener implements HyperlinkListener {
     @Override
     public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -583,28 +644,6 @@ public abstract class PluginManagerMain implements Disposable {
                 }
               }
             }).notify(project);
-  }
-
-  protected class SortByStatusAction extends ToggleAction {
-
-    protected SortByStatusAction(final String title) {
-      super(title, title, AllIcons.ObjectBrowser.SortByType);
-    }
-
-    @Override
-    public boolean isSelected(AnActionEvent e) {
-      return pluginsModel.isSortByStatus();
-    }
-
-    @Override
-    public void setSelected(AnActionEvent e, boolean state) {
-      IdeaPluginDescriptor[] selected = pluginTable.getSelectedObjects();
-      pluginsModel.setSortByStatus(state);
-      pluginsModel.sort();
-      if (selected != null) {
-        select(selected);
-      }
-    }
   }
 
   public class MyPluginsFilter extends FilterComponent {

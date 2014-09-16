@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,17 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.SortableColumnModel;
-import lombok.val;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author stathik
- * @since Dec 26, 2003 4:16:50 PM
+ * @author Konstantin Bulenkov
  */
 abstract public class PluginTableModel extends AbstractTableModel implements SortableColumnModel {
   protected static final String NAME = "Name";
@@ -36,6 +38,9 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
   private RowSorter.SortKey myDefaultSortKey;
   protected final List<IdeaPluginDescriptor> filtered = new ArrayList<IdeaPluginDescriptor>();
   private boolean mySortByStatus;
+  private boolean mySortByRating;
+  private boolean mySortByDownloads;
+  private boolean mySortByUpdated;
 
   protected PluginTableModel() {
   }
@@ -48,27 +53,22 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
     myDefaultSortKey = sortKey;
   }
 
-  @Override
   public int getColumnCount() {
     return columns.length;
   }
 
-  @Override
   public ColumnInfo[] getColumnInfos() {
     return columns;
   }
 
-  @Override
   public boolean isSortable() {
     return true;
   }
 
-  @Override
   public void setSortable(boolean aBoolean) {
     // do nothing cause it's always sortable
   }
 
-  @Override
   public String getColumnName(int column) {
     return columns[column].getName();
   }
@@ -87,22 +87,18 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
     return myDefaultSortKey;
   }
 
-  @Override
   public int getRowCount() {
     return view.size();
   }
 
-  @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
     return columns[columnIndex].valueOf(getObjectAt(rowIndex));
   }
 
-  @Override
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     return columns[columnIndex].isCellEditable(getObjectAt(rowIndex));
   }
 
-  @Override
   public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
     columns[columnIndex].setValue(getObjectAt(rowIndex), aValue);
     fireTableCellUpdated(rowIndex, columnIndex);
@@ -163,7 +159,7 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
 
   public abstract boolean isPluginDescriptorAccepted(IdeaPluginDescriptor descriptor);
 
-  protected void sort() {
+  public void sort() {
     Collections.sort(view, columns[getNameColumn()].getComparator());
     fireTableDataChanged();
   }
@@ -176,8 +172,32 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
     mySortByStatus = sortByStatus;
   }
 
+  public boolean isSortByRating() {
+    return mySortByRating;
+  }
+
+  public void setSortByRating(boolean sortByRating) {
+    mySortByRating = sortByRating;
+  }
+
+  public boolean isSortByDownloads() {
+    return mySortByDownloads;
+  }
+
+  public void setSortByDownloads(boolean sortByDownloads) {
+    mySortByDownloads = sortByDownloads;
+  }
+
+  public boolean isSortByUpdated() {
+    return mySortByUpdated;
+  }
+
+  public void setSortByUpdated(boolean sortByUpdated) {
+    mySortByUpdated = sortByUpdated;
+  }
+
   public List<IdeaPluginDescriptor> getAllPlugins() {
-    val list = new ArrayList<IdeaPluginDescriptor>(view.size() + filtered.size());
+    final ArrayList<IdeaPluginDescriptor> list = new ArrayList<IdeaPluginDescriptor>();
     list.addAll(view);
     list.addAll(filtered);
     return list;
