@@ -307,7 +307,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       mySubPanelFactories.put(panelFactory, new InnerSearchableConfigurable(panelFactory));
     }
 
-    result.addAll(new ArrayList<SearchableConfigurable>(mySubPanelFactories.values()));
+    result.addAll(mySubPanelFactories.values());
     return result.toArray(new Configurable[result.size()]);
   }
 
