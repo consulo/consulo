@@ -856,7 +856,7 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
     }
 
     int exitCode = 0;
-    if (restart) {
+    if (restart && Restarter.isSupported()) {
       try {
         exitCode = Restarter.scheduleRestart();
       }
