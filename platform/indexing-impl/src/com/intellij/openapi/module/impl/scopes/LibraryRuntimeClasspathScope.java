@@ -135,7 +135,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(VirtualFile file) {
+  public boolean contains(@NotNull VirtualFile file) {
     return myEntries.contains(getFileRoot(file));
   }
 
@@ -154,7 +154,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(VirtualFile file1, VirtualFile file2) {
+  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
     final VirtualFile r1 = getFileRoot(file1);
     final VirtualFile r2 = getFileRoot(file2);
     for (VirtualFile root : myEntries) {

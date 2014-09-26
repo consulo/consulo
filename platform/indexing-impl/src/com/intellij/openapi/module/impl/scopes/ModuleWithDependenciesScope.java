@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
@@ -36,7 +34,6 @@ import org.jetbrains.annotations.TestOnly;
 import java.util.*;
 
 public class ModuleWithDependenciesScope extends GlobalSearchScope {
-
   public static final int COMPILE = 0x01;
   public static final int LIBRARIES = 0x02;
   public static final int MODULES = 0x04;
@@ -56,15 +53,15 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   private final Set<Module> myModules;
   private final TObjectIntHashMap<VirtualFile> myRoots = new TObjectIntHashMap<VirtualFile>();
 
-  public ModuleWithDependenciesScope(Module module, @ScopeConstant int options) {
+  public ModuleWithDependenciesScope(@NotNull Module module, @ScopeConstant int options) {
     super(module.getProject());
     myModule = module;
     myOptions = options;
 
-    myProjectFileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
+    myProjectFileIndex = ProjectRootManager.getInstance(module.getProject()).getFileIndex();
 
     OrderEnumerator en = ModuleRootManager.getInstance(module).orderEntries();
-    /*if (myIncludeOtherModules) */en.recursively();
+    en.recursively();
 
     if (hasOption(COMPILE)) {
       en.exportedOnly().compileOnly();
@@ -107,8 +104,8 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
         @NotNull
         @Override
         public OrderRootType fun(OrderEntry entry) {
-          if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) return SourcesOrderRootType.getInstance();
-          return BinariesOrderRootType.getInstance();
+          if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) return OrderRootType.SOURCES;
+          return OrderRootType.CLASSES;
         }
       }).getRoots());
     }
@@ -119,6 +116,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
     }
   }
 
+  @NotNull
   public Module getModule() {
     return myModule;
   }
@@ -127,6 +125,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
     return (myOptions & option) != 0;
   }
 
+  @NotNull
   @Override
   public String getDisplayName() {
     return hasOption(COMPILE) ? PsiBundle.message("search.scope.module", myModule.getName())
@@ -149,7 +148,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(VirtualFile file) {
+  public boolean contains(@NotNull VirtualFile file) {
     if (hasOption(CONTENT)) {
       return myRoots.contains(myProjectFileIndex.getContentRootForFile(file));
     }
@@ -160,7 +159,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(VirtualFile file1, VirtualFile file2) {
+  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
     VirtualFile r1 = getFileRoot(file1);
     VirtualFile r2 = getFileRoot(file2);
     if (Comparing.equal(r1, r2)) return 0;

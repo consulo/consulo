@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,13 +39,15 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
     mySearchOutsideRootModel = searchOutsideRootModel;
   }
 
-  public boolean contains(VirtualFile file) {
+  @Override
+  public boolean contains(@NotNull VirtualFile file) {
     return myProjectFileIndex.isInContent(file) ||
            myProjectFileIndex.isInLibraryClasses(file) ||
            myProjectFileIndex.isInLibrarySource(file);
   }
 
-  public int compare(VirtualFile file1, VirtualFile file2) {
+  @Override
+  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
     List<OrderEntry> entries1 = myProjectFileIndex.getOrderEntriesForFile(file1);
     List<OrderEntry> entries2 = myProjectFileIndex.getOrderEntriesForFile(file2);
     if (entries1.size() != entries2.size()) return 0;
@@ -78,18 +80,23 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
     return mySearchOutsideRootModel;
   }
 
+  @Override
   public boolean isSearchInModuleContent(@NotNull Module aModule) {
     return true;
   }
 
+  @Override
   public boolean isSearchInLibraries() {
     return true;
   }
 
+  @Override
+  @NotNull
   public String getDisplayName() {
     return PsiBundle.message("psi.search.scope.project.and.libraries");
   }
 
+  @Override
   @NotNull
   public GlobalSearchScope intersectWith(@NotNull final GlobalSearchScope scope) {
     if (scope.isSearchOutsideRootModel()) {
@@ -100,6 +107,7 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
     return scope;
   }
 
+  @Override
   @NotNull
   public GlobalSearchScope uniteWith(@NotNull final GlobalSearchScope scope) {
     if (scope.isSearchOutsideRootModel()) {
@@ -109,6 +117,7 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
     return this;
   }
 
+  @Override
   public String toString() {
     return getDisplayName();
   }

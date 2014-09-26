@@ -49,12 +49,12 @@ class FileFilterPanel {
     final Pattern pattern = FindInProjectUtil.createFileMaskRegExp(text);
     return new GlobalSearchScope() {
       @Override
-      public boolean contains(VirtualFile file) {
+      public boolean contains(@NotNull VirtualFile file) {
         return pattern == null || pattern.matcher(file.getName()).matches();
       }
 
       @Override
-      public int compare(VirtualFile file1, VirtualFile file2) {
+      public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
         return 0;
       }
 

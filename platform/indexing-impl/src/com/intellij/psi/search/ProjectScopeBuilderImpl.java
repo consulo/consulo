@@ -39,7 +39,7 @@ public class ProjectScopeBuilderImpl extends ProjectScopeBuilder {
   public GlobalSearchScope buildLibrariesScope() {
     return new ProjectAndLibrariesScope(myProject) {
       @Override
-      public boolean contains(VirtualFile file) {
+      public boolean contains(@NotNull VirtualFile file) {
         return myProjectFileIndex.isInLibrarySource(file) || myProjectFileIndex.isInLibraryClasses(file);
       }
 

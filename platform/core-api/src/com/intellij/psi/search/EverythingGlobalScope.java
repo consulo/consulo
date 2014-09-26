@@ -33,12 +33,12 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(final VirtualFile file1, final VirtualFile file2) {
+  public int compare(@NotNull final VirtualFile file1, @NotNull final VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean contains(final VirtualFile file) {
+  public boolean contains(@NotNull final VirtualFile file) {
     return true;
   }
 

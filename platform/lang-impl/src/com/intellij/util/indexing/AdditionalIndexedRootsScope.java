@@ -42,7 +42,7 @@ public class AdditionalIndexedRootsScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(VirtualFile file) {
+  public boolean contains(@NotNull VirtualFile file) {
     return myBaseScope.contains(file) || myFileSet.isInSet(file);
   }
 
@@ -52,7 +52,7 @@ public class AdditionalIndexedRootsScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(VirtualFile file1, VirtualFile file2) {
+  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
     return myBaseScope.compare(file1, file2);
   }
 
