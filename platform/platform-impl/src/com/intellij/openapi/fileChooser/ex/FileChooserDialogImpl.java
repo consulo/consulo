@@ -66,10 +66,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class FileChooserDialogImpl extends DialogWrapper implements FileChooserDialog, PathChooserDialog, FileLookup {
   @NonNls public static final String FILE_CHOOSER_SHOW_PATH_PROPERTY = "FileChooser.ShowPath";
@@ -382,7 +380,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
       }
     }
 
-    final List<VirtualFile> selectedFiles = Arrays.asList(getSelectedFilesInt());
+    final Collection<VirtualFile> selectedFiles = getSelectedFilesInt();
     final VirtualFile[] files = VfsUtilCore.toVirtualFileArray(FileChooserUtil.getChosenFiles(myChooserDescriptor, selectedFiles));
     if (files.length == 0) {
       myChosenFiles = VirtualFile.EMPTY_ARRAY;
@@ -456,18 +454,18 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     myFileSystemTree.registerMouseListener(group);
   }
 
-  private VirtualFile[] getSelectedFilesInt() {
+  private Collection<VirtualFile> getSelectedFilesInt() {
     if (myTreeIsUpdating || !myUiUpdater.isEmpty()) {
       if (isTextFieldActive() && !StringUtil.isEmpty(myPathTextField.getTextFieldText())) {
         LookupFile toFind = myPathTextField.getFile();
         if (toFind instanceof LocalFsFinder.VfsFile && toFind.exists()) {
           VirtualFile file = ((LocalFsFinder.VfsFile)toFind).getFile();
           if (file != null) {
-            return new VirtualFile[]{file};
+            return Arrays.asList(file);
           }
         }
       }
-      return VirtualFile.EMPTY_ARRAY;
+      return Collections.emptyList();
     }
 
     return myFileSystemTree.getSelectedFiles();
@@ -537,7 +535,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     public Object getData(String dataId) {
       if (CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId)) {
-        return myFileSystemTree.getSelectedFiles();
+        return VfsUtil.toVirtualFileArray(myFileSystemTree.getSelectedFiles());
       }
       else if (PATH_FIELD.is(dataId)) {
         return new PathField() {
@@ -638,10 +636,11 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   private void selectInTree(final VirtualFile[] array, final boolean requestFocus) {
     myTreeIsUpdating = true;
     final List<VirtualFile> fileList = Arrays.asList(array);
-    if (!Arrays.asList(myFileSystemTree.getSelectedFiles()).containsAll(fileList)) {
+    final Collection<VirtualFile> selectedFiles = myFileSystemTree.getSelectedFiles();
+    if (!selectedFiles.containsAll(fileList)) {
       myFileSystemTree.select(array, new Runnable() {
         public void run() {
-          if (!myFileSystemTree.areHiddensShown() && !Arrays.asList(myFileSystemTree.getSelectedFiles()).containsAll(fileList)) {
+          if (!myFileSystemTree.areHiddensShown() && !selectedFiles.containsAll(fileList)) {
             myFileSystemTree.showHiddens(true);
             selectInTree(array, requestFocus);
             return;
