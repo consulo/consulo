@@ -267,13 +267,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private JComponent createTableWithButtons() {
     final boolean isAnalyzeShown = false;
 
-    final ClasspathPanelAction removeAction = new ClasspathPanelAction(this) {
-      @Override
-      public void run() {
-        removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
-      }
-    };
-
     final AnActionButton analyzeButton = new AnActionButton(ProjectBundle.message("classpath.panel.analyze"), null, IconUtil.getAnalyzeIcon()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -307,7 +300,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }).setRemoveAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
-        removeAction.actionPerformed(null);
+        removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
       }
     }).setMoveUpAction(new AnActionButtonRunnable() {
       @Override
@@ -396,18 +389,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }
     else {
       return getStructureConfigurableContext().createModifiableModelProvider(tableLevel);
-    }
-  }
-
-  @Override
-  public void runClasspathPanelAction(Runnable action) {
-    try {
-      disableModelUpdate();
-      action.run();
-    }
-    finally {
-      enableModelUpdate();
-      myEntryTable.requestFocus();
     }
   }
 

@@ -46,12 +46,7 @@ public class AddModuleDependencyDialog extends DialogWrapper {
     myTabs = new JBEditorTabs(rootModel.getProject(), ActionManager.getInstance(), IdeFocusManager.getInstance(rootModel.getProject()), myDisposable);
     myTabs.setTabsPosition(JBTabsPosition.left);
 
-    AddModuleDependencyTabFactory[] tabs = new AddModuleDependencyTabFactory[]{
-            new FileOrDirectoryDependencyTabFactory(),
-            new ModuleDependencyTabFactory(),
-            new ProjectLibraryTabFactory()
-    };
-
+    AddModuleDependencyTabFactory[] tabs = AddModuleDependencyTabFactory.EP_NAME.getExtensions();
     for (int i = 0; i < tabs.length; i++) {
       AddModuleDependencyTabFactory tab = tabs[i];
 
