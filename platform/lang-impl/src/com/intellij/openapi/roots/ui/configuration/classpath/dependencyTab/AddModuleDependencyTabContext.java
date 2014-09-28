@@ -33,8 +33,8 @@ import java.util.List;
  * @since 27.09.14
  */
 public abstract class AddModuleDependencyTabContext {
-  protected ClasspathPanel myClasspathPanel;
-  private final StructureConfigurableContext myContext;
+  protected final ClasspathPanel myClasspathPanel;
+  protected final StructureConfigurableContext myContext;
 
   protected AddModuleDependencyTabContext(ClasspathPanel classpathPanel, StructureConfigurableContext context) {
     myClasspathPanel = classpathPanel;
@@ -48,7 +48,7 @@ public abstract class AddModuleDependencyTabContext {
     return false;
   }
 
-  public void processAddOrderEntries(DialogWrapper dialogWrapper) {
+  public final void processAddOrderEntries(DialogWrapper dialogWrapper) {
     ModifiableModuleRootLayer currentLayer = (ModifiableModuleRootLayer)myClasspathPanel.getRootModel().getCurrentLayer();
 
     List<OrderEntry> orderEntries = createOrderEntries(currentLayer, dialogWrapper);

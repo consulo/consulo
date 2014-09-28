@@ -20,8 +20,6 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 /**
  * @author VISTALL
  * @since 27.09.14
@@ -32,23 +30,6 @@ public class ProjectLibraryTabFactory implements AddModuleDependencyTabFactory {
   public AddModuleDependencyTabContext createTabContext(@NotNull Disposable parent,
                                                         @NotNull ClasspathPanel panel,
                                                         @NotNull StructureConfigurableContext context) {
-    return new AddModuleDependencyTabContext(panel, context) {
-      @NotNull
-      @Override
-      public String getTabName() {
-        return "Project Library";
-      }
-
-      @Override
-      public boolean isEmpty() {
-        return true;
-      }
-
-      @NotNull
-      @Override
-      public JComponent getComponent() {
-        return new JPanel();
-      }
-    };
+    return new ProjectLibraryTabContext(panel, context);
   }
 }

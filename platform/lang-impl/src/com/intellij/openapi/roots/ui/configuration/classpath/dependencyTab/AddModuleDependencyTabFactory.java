@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
  * @since 27.09.14
  */
 public interface AddModuleDependencyTabFactory {
+  ExtensionPointName<AddModuleDependencyTabFactory> EP_NAME = ExtensionPointName.create("com.intellij.addModuleDependencyTabFactory");
+
   @NotNull
   AddModuleDependencyTabContext createTabContext(@NotNull Disposable parent, @NotNull ClasspathPanel panel, @NotNull StructureConfigurableContext context);
 }

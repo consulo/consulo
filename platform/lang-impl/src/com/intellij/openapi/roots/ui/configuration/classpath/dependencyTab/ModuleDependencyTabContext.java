@@ -43,7 +43,6 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
 
   public ModuleDependencyTabContext(ClasspathPanel panel, StructureConfigurableContext context) {
     super(panel, context);
-    myClasspathPanel = panel;
     myNotAddedModules = getNotAddedModules();
     myModuleList = new JBList(myNotAddedModules);
     myModuleList.setCellRenderer(new ModuleListCellRenderer());
