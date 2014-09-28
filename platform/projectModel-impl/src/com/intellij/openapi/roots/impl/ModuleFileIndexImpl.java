@@ -80,6 +80,11 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
     }
 
     @Override
+    public boolean isEquivalentTo(@NotNull OrderEntry other) {
+      return false;
+    }
+
+    @Override
     public int compareTo(@NotNull OrderEntry o) {
       throw new IncorrectOperationException();
     }

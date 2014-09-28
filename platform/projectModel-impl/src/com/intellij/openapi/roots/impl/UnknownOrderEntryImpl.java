@@ -70,6 +70,11 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
   }
 
   @Override
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    return getProvider() == other.getProvider();
+  }
+
+  @Override
   public boolean isSynthetic() {
     return false;
   }

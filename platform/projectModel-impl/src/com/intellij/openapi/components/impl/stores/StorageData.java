@@ -16,6 +16,7 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosCollector;
+import com.intellij.ide.plugins.IdeaPluginDescriptorImpl;
 import com.intellij.openapi.components.PathMacroSubstitutor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.XmlConfigurationMerger;
@@ -23,78 +24,94 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.THashMap;
+import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class StorageData {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.impl.stores.StorageData");
+  private static final Logger LOG = Logger.getInstance(StorageData.class);
   @NonNls public static final String COMPONENT = "component";
   @NonNls public static final String NAME = "name";
 
   final Map<String, Element> myComponentStates;
   protected final String myRootElementName;
-  private Integer myHash;
+  private int myHash = -1;
 
-  public StorageData(final String rootElementName) {
+  public StorageData(@NotNull String rootElementName) {
     myComponentStates = new THashMap<String, Element>();
     myRootElementName = rootElementName;
   }
 
-  StorageData(StorageData storageData) {
+  StorageData(@NotNull StorageData storageData) {
     myRootElementName = storageData.myRootElementName;
     myComponentStates = new THashMap<String, Element>(storageData.myComponentStates);
   }
 
+  public void load(@NotNull Element rootElement, @Nullable PathMacroSubstitutor pathMacroSubstitutor, boolean intern) {
+    if (pathMacroSubstitutor != null) {
+      pathMacroSubstitutor.expandPaths(rootElement);
+    }
 
-  public void load(@NotNull Element rootElement) throws IOException {
-    final Element[] elements = JDOMUtil.getElements(rootElement);
-    for (Element element : elements) {
-      if (element.getName().equals(COMPONENT)) {
-        final String name = element.getAttributeValue(NAME);
+    for (Iterator<Element> iterator = rootElement.getChildren(COMPONENT).iterator(); iterator.hasNext(); ) {
+      Element element = iterator.next();
+      String name = element.getAttributeValue(NAME);
+      if (name == null) {
+        LOG.info("Broken content in file : " + this);
+        continue;
+      }
 
-        if (name == null) {
-          LOG.info("Broken content in file : " + this);
-          continue;
+      if (element.getAttributes().size() > 1 || !element.getChildren().isEmpty()) {
+        assert element.getAttributeValue(NAME) != null : "No name attribute for component: " + name + " in " + this;
+
+        iterator.remove();
+        if (intern) {
+          IdeaPluginDescriptorImpl.internJDOMElement(element);
         }
 
-        element.detach();
-
-        if (element.getAttributes().size() > 1 || !element.getChildren().isEmpty()) {
-          assert element.getAttributeValue(NAME) != null : "No name attribute for component: " + name + " in " + this;
-
-          Element existingElement = myComponentStates.get(name);
-
-          if (existingElement != null) {
-            element = mergeElements(name, element, existingElement);
-          }
-
-          myComponentStates.put(name, element);
+        Element serverElement = myComponentStates.get(name);
+        if (serverElement != null) {
+          element = mergeElements(name, element, serverElement);
         }
-      }
-    }
-  }
 
-  private static Element mergeElements(final String name, final Element element1, final Element element2) {
-    ExtensionPoint<XmlConfigurationMerger> point = Extensions.getRootArea().getExtensionPoint("com.intellij.componentConfigurationMerger");
-    XmlConfigurationMerger[] mergers = point.getExtensions();
-    for (XmlConfigurationMerger merger : mergers) {
-      if (merger.getComponentName().equals(name)) {
-        return merger.merge(element1, element2);
+        myComponentStates.put(name, element);
       }
     }
-    return element1;
+
+    if (pathMacroSubstitutor instanceof TrackingPathMacroSubstitutor) {
+      for (String componentName : myComponentStates.keySet()) {
+        ((TrackingPathMacroSubstitutor)pathMacroSubstitutor).addUnknownMacros(componentName, PathMacrosCollector.getMacroNames(myComponentStates.get(componentName)));
+      }
+    }
   }
 
   @NotNull
+  private static Element mergeElements(@NotNull String name, @NotNull Element localElement, @NotNull Element serverElement) {
+    ExtensionPoint<XmlConfigurationMerger> point = Extensions.getRootArea().getExtensionPoint("com.intellij.componentConfigurationMerger");
+    for (XmlConfigurationMerger merger : point.getExtensions()) {
+      if (merger.getComponentName().equals(name)) {
+        return merger.merge(serverElement, localElement);
+      }
+    }
+    return serverElement;
+  }
+
+  @Nullable
   protected Element save() {
+    if (myComponentStates.isEmpty()) {
+      return null;
+    }
+
     Element rootElement = new Element(myRootElementName);
     String[] componentNames = ArrayUtil.toStringArray(myComponentStates.keySet());
     Arrays.sort(componentNames);
@@ -104,22 +121,19 @@ public class StorageData {
 
       if (element.getAttribute(NAME) == null) element.setAttribute(NAME, componentName);
 
-      rootElement.addContent((Element)element.clone());
+      rootElement.addContent(element.clone());
     }
-
     return rootElement;
   }
 
   @Nullable
   public Element getState(final String name) {
-    final Element e = myComponentStates.get(name);
-
-    if (e != null) {
-      assert e.getAttributeValue(NAME) != null : "No name attribute for component: " + name + " in " + this;
-      e.removeAttribute(NAME);
+    final Element element = myComponentStates.get(name);
+    if (element != null) {
+      assert element.getAttributeValue(NAME) != null : "No name attribute for component: " + name + " in " + this;
+      element.removeAttribute(NAME);
     }
-
-    return e;
+    return element;
   }
 
   void removeState(final String componentName) {
@@ -130,18 +144,24 @@ public class StorageData {
   void setState(@NotNull final String componentName, final Element element) {
     element.setName(COMPONENT);
 
-    //componentName should be first!
-    final List attributes = new ArrayList(element.getAttributes());
-    for (Object attribute : attributes) {
-      Attribute attr = (Attribute)attribute;
-      element.removeAttribute(attr);
+    // componentName should be first
+    List<Attribute> elementAttributes = element.getAttributes();
+    if (elementAttributes.isEmpty()) {
+      element.setAttribute(NAME, componentName);
     }
-
-    element.setAttribute(NAME, componentName);
-
-    for (Object attribute : attributes) {
-      Attribute attr = (Attribute)attribute;
-      element.setAttribute(attr.getName(), attr.getValue());
+    else {
+      Attribute nameAttribute = element.getAttribute(NAME);
+      if (nameAttribute == null) {
+        nameAttribute = new Attribute(NAME, componentName);
+        elementAttributes.add(0, nameAttribute);
+      }
+      else {
+        nameAttribute.setValue(componentName);
+        if (elementAttributes.get(0) != nameAttribute) {
+          elementAttributes.remove(nameAttribute);
+          elementAttributes.add(0, nameAttribute);
+        }
+      }
     }
 
     myComponentStates.put(componentName, element);
@@ -154,32 +174,33 @@ public class StorageData {
   }
 
   public final int getHash() {
-    if (myHash == null) {
+    if (myHash == -1) {
       myHash = computeHash();
+      if (myHash == -1) {
+        myHash = 0;
+      }
     }
-    return myHash.intValue();
+    return myHash;
   }
 
   protected int computeHash() {
     int result = 0;
-
     for (String name : myComponentStates.keySet()) {
-      result = 31*result + name.hashCode();
-      result = 31*result + JDOMUtil.getTreeHash(myComponentStates.get(name));
+      result = 31 * result + name.hashCode();
+      result = 31 * result + JDOMUtil.getTreeHash(myComponentStates.get(name));
     }
-
     return result;
   }
 
   protected void clearHash() {
-    myHash = null;
+    myHash = -1;
   }
 
-  public Set<String> getDifference(final StorageData storageData, PathMacroSubstitutor substitutor) {
-    Set<String> bothStates = new HashSet<String>(myComponentStates.keySet());
+  public Set<String> getChangedComponentNames(@NotNull StorageData storageData, @Nullable PathMacroSubstitutor substitutor) {
+    Set<String> bothStates = new THashSet<String>(myComponentStates.keySet());
     bothStates.retainAll(storageData.myComponentStates.keySet());
 
-    Set<String> diffs = new HashSet<String>();
+    Set<String> diffs = new THashSet<String>();
     diffs.addAll(storageData.myComponentStates.keySet());
     diffs.addAll(myComponentStates.keySet());
     diffs.removeAll(bothStates);
@@ -198,7 +219,6 @@ public class StorageData {
       }
     }
 
-
     return diffs;
   }
 
@@ -206,18 +226,18 @@ public class StorageData {
     return myComponentStates.isEmpty();
   }
 
-  public boolean hasState(final String componentName) {
-      return myComponentStates.containsKey(componentName);
+  public boolean hasState(@NotNull String componentName) {
+    return myComponentStates.containsKey(componentName);
   }
 
-  public void checkUnknownMacros(TrackingPathMacroSubstitutor pathMacroSubstitutor) {
-    if (pathMacroSubstitutor == null) return;
-
-    for (String componentName : myComponentStates.keySet()) {
-      final Set<String> unknownMacros = PathMacrosCollector.getMacroNames(myComponentStates.get(componentName));
-      if (!unknownMacros.isEmpty()) {
-        pathMacroSubstitutor.addUnknownMacros(componentName, unknownMacros);
-      }
+  @NotNull
+  public static Element load(@NotNull VirtualFile file) throws IOException, JDOMException {
+    InputStream stream = file.getInputStream();
+    try {
+      return JDOMUtil.loadDocument(stream).getRootElement();
+    }
+    finally {
+      stream.close();
     }
   }
 }

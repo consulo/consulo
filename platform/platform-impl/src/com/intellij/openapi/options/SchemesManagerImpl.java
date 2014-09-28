@@ -43,6 +43,7 @@ import org.consulo.util.pointers.Named;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -849,9 +850,9 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     deleteServerFiles(fileName);
   }
 
-  private void deleteServerFiles(final String fileName) {
+  private void deleteServerFiles(@NotNull String path) {
     if (myProvider != null && myProvider.isEnabled()) {
-      StorageUtil.deleteContent(myProvider, getFileFullPath(fileName), myRoamingType);
+      StorageUtil.delete(myProvider, getFileFullPath(path), myRoamingType);
     }
   }
 
@@ -903,18 +904,18 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     return fileName + mySchemeExtension;
   }
 
-  private void saveIfNeeded(E schemeKey, String fileName, Document document, long newHash, Long oldHash) throws IOException {
+  private void saveIfNeeded(E schemeKey, String fileName, Parent element, long newHash, Long oldHash) throws IOException {
     if (oldHash == null || newHash != oldHash.longValue() || myVFSBaseDir.findChild(fileName) == null) {
-      ensureFileText(fileName, StorageUtil.documentToBytes(document, true).toByteArray());
+      ensureFileText(fileName, StorageUtil.elementToBytes(element, true).toByteArray());
       schemeKey.getExternalInfo().setHash(newHash);
       saveFileName(fileName, schemeKey);
-      saveOnServer(fileName, document);
+      saveOnServer(fileName, element);
     }
   }
 
-  private void saveOnServer(final String fileName, final Document document) {
+  private void saveOnServer(final String fileName, @NotNull Parent element) {
     if (myProvider != null && myProvider.isEnabled()) {
-      StorageUtil.sendContent(myProvider, getFileFullPath(fileName), document, myRoamingType, true);
+      StorageUtil.sendContent(myProvider, getFileFullPath(fileName), element, myRoamingType, true);
     }
   }
 

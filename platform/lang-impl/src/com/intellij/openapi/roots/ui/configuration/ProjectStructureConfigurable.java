@@ -210,7 +210,7 @@ public class ProjectStructureConfigurable extends BaseConfigurable implements Se
     }
     mySidePanel.addSeparator(IdeBundle.message("global.settings.separator"));
     addGlobalBundleListConfig();
-    addGlobalLibrariesConfig();
+    //addGlobalLibrariesConfig();
   }
 
   private void addArtifactsConfig() {

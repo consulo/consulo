@@ -45,10 +45,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProject
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.packageDependencies.DependenciesBuilder;
@@ -83,7 +79,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private final JBTable myEntryTable;
   private final ClasspathTableModel myModel;
   private final EventDispatcher<OrderPanelListener> myListeners = EventDispatcher.create(OrderPanelListener.class);
-  private List<AddItemPopupAction<?>> myPopupActions = null;
   private AnActionButton myEditButton;
   private final ModuleConfigurationState myState;
   private AnActionButton myRemoveButton;
@@ -272,13 +267,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private JComponent createTableWithButtons() {
     final boolean isAnalyzeShown = false;
 
-    final ClasspathPanelAction removeAction = new ClasspathPanelAction(this) {
-      @Override
-      public void run() {
-        removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
-      }
-    };
-
     final AnActionButton analyzeButton = new AnActionButton(ProjectBundle.message("classpath.panel.analyze"), null, IconUtil.getAnalyzeIcon()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -307,48 +295,12 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     decorator.setAddAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
-        initPopupActions();
-        final JBPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<AddItemPopupAction<?>>(null, myPopupActions) {
-          @Override
-          public Icon getIconFor(AddItemPopupAction<?> aValue) {
-            return aValue.getIcon();
-          }
-
-          @Override
-          public boolean hasSubstep(AddItemPopupAction<?> selectedValue) {
-            return selectedValue.hasSubStep();
-          }
-
-          @Override
-          public boolean isMnemonicsNavigationEnabled() {
-            return true;
-          }
-
-          @Override
-          public PopupStep onChosen(final AddItemPopupAction<?> selectedValue, final boolean finalChoice) {
-            if (selectedValue.hasSubStep()) {
-              return selectedValue.createSubStep();
-            }
-            return doFinalStep(new Runnable() {
-              @Override
-              public void run() {
-                selectedValue.execute();
-              }
-            });
-          }
-
-          @Override
-          @NotNull
-          public String getTextFor(AddItemPopupAction<?> value) {
-            return "&" + value.getIndex() + "  " + value.getTitle();
-          }
-        });
-        popup.show(button.getPreferredPopupPoint());
+        new AddModuleDependencyDialog(ClasspathPanelImpl.this, getStructureConfigurableContext()).show();
       }
     }).setRemoveAction(new AnActionButtonRunnable() {
       @Override
       public void run(AnActionButton button) {
-        removeAction.actionPerformed(null);
+        removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
       }
     }).setMoveUpAction(new AnActionButtonRunnable() {
       @Override
@@ -441,18 +393,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   }
 
   @Override
-  public void runClasspathPanelAction(Runnable action) {
-    try {
-      disableModelUpdate();
-      action.run();
-    }
-    finally {
-      enableModelUpdate();
-      myEntryTable.requestFocus();
-    }
-  }
-
-  @Override
   public void addItems(List<ClasspathTableItem<?>> toAdd) {
     for (ClasspathTableItem<?> item : toAdd) {
       myModel.addItem(item);
@@ -488,19 +428,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
   public void rootsChanged() {
     forceInitFromModel();
-  }
-
-  private void initPopupActions() {
-    if (myPopupActions == null) {
-      int actionIndex = 1;
-      final List<AddItemPopupAction<?>> actions = new ArrayList<AddItemPopupAction<?>>();
-      final StructureConfigurableContext context = getStructureConfigurableContext();
-      actions.add(new AddNewModuleLibraryAction(this, actionIndex++, context));
-      actions.add(new AddLibraryDependencyAction(this, actionIndex++, ProjectBundle.message("classpath.add.library.action"), context));
-      actions.add(new AddModuleDependencyAction(this, actionIndex, context));
-
-      myPopupActions = actions;
-    }
   }
 
   private StructureConfigurableContext getStructureConfigurableContext() {

@@ -29,6 +29,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 
 public final class FileChooserUtil {
@@ -89,7 +90,7 @@ public final class FileChooserUtil {
 
   @NotNull
   public static List<VirtualFile> getChosenFiles(@NotNull final FileChooserDescriptor descriptor,
-                                                 @NotNull final List<VirtualFile> selectedFiles) {
+                                                 @NotNull final Collection<VirtualFile> selectedFiles) {
     return ContainerUtil.mapNotNull(selectedFiles, new NullableFunction<VirtualFile, VirtualFile>() {
       @Override
       public VirtualFile fun(final VirtualFile file) {

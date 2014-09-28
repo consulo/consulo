@@ -16,25 +16,26 @@
 package com.intellij.openapi.components.impl;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.components.impl.stores.ComponentRoamingManager;
 import com.intellij.openapi.components.impl.stores.ComponentVersionProvider;
 import com.intellij.openapi.components.impl.stores.XmlElementStorage;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightPlatformLangTestCase;
-import com.intellij.util.io.fs.IFile;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static com.intellij.openapi.util.JDOMBuilder.*;
+import static com.intellij.openapi.util.JDOMBuilder.attr;
+import static com.intellij.openapi.util.JDOMBuilder.tag;
 
 /**
  * @author mike
@@ -56,7 +57,7 @@ public class XmlElementStorageTest extends LightPlatformLangTestCase {
 
   public void testGetStateSucceeded() throws Exception {
     MyXmlElementStorage storage =
-            new MyXmlElementStorage(document(tag("root", tag("component", attr("name", "test"), tag("foo")))), myParentDisposable);
+            new MyXmlElementStorage(tag("root", tag("component", attr("name", "test"), tag("foo"))), myParentDisposable);
     Element state = storage.getState(this, "test", Element.class, null);
     assertNotNull(state);
     assertEquals("component", state.getName());
@@ -64,36 +65,36 @@ public class XmlElementStorageTest extends LightPlatformLangTestCase {
   }
 
   public void testGetStateNotSucceeded() throws Exception {
-    MyXmlElementStorage storage = new MyXmlElementStorage(document(tag("root")), myParentDisposable);
+    MyXmlElementStorage storage = new MyXmlElementStorage(tag("root"), myParentDisposable);
     Element state = storage.getState(this, "test", Element.class, null);
     assertNull(state);
   }
 
   public void testSetStateOverridesOldState() throws Exception {
     MyXmlElementStorage storage =
-            new MyXmlElementStorage(document(tag("root", tag("component", attr("name", "test"), tag("foo")))), myParentDisposable);
+            new MyXmlElementStorage(tag("root", tag("component", attr("name", "test"), tag("foo"))), myParentDisposable);
     Element newState = tag("component", attr("name", "test"), tag("bar"));
     StateStorage.ExternalizationSession externalizationSession = storage.startExternalization();
     externalizationSession.setState(this, "test", newState, null);
     storage.startSave(externalizationSession).save();
-    assertNotNull(storage.mySavedDocument);
-    assertNotNull(storage.mySavedDocument.getRootElement().getChild("component").getChild("bar"));
-    assertNull(storage.mySavedDocument.getRootElement().getChild("component").getChild("foo"));
+    assertNotNull(storage.mySavedElement);
+    assertNotNull(storage.mySavedElement.getChild("component").getChild("bar"));
+    assertNull(storage.mySavedElement.getChild("component").getChild("foo"));
   }
 
 
   private class MyXmlElementStorage extends XmlElementStorage {
-    private final Document myDocument;
-    private Document mySavedDocument;
+    private final Element myElement;
+    private Element mySavedElement;
 
-    public MyXmlElementStorage(final Document document, final Disposable parentDisposable) throws StateStorageException {
-      super(new MyPathMacroManager(), parentDisposable, "root", null, "", ComponentRoamingManager.getInstance(), ComponentVersionProvider.EMPTY);
-      myDocument = document;
+    public MyXmlElementStorage(Element element, final Disposable parentDisposable) throws StateStorageException {
+      super("", RoamingType.PER_USER, new MyPathMacroManager(), parentDisposable, "root", null, ComponentVersionProvider.EMPTY);
+      myElement = element;
     }
 
     @Override
-    protected Document loadDocument() throws StateStorageException {
-      return myDocument;
+    protected Element loadLocalData() {
+      return myElement;
     }
 
     @Override
@@ -101,41 +102,34 @@ public class XmlElementStorageTest extends LightPlatformLangTestCase {
       return new MySaveSession(externalizationSession) {
         @Override
         protected void doSave() throws StateStorageException {
-          mySavedDocument = getDocumentToSave().clone();
+          Element elementToSave = getElementToSave();
+          mySavedElement = elementToSave == null ? null : elementToSave.clone();
         }
 
-        @NotNull
         @Override
-        public Collection<IFile> getStorageFilesToSave() throws StateStorageException {
-          return needsSave() ? getAllStorageFiles() : Collections.<IFile>emptyList();
+        public void collectAllStorageFiles(@NotNull List<VirtualFile> files) {
         }
-
-        @NotNull
-        @Override
-        public List<IFile> getAllStorageFiles() {
-          throw new UnsupportedOperationException("Method getAllStorageFiles not implemented in " + getClass());
-        }
-
       };
     }
   }
 
   private static class MyPathMacroManager implements TrackingPathMacroSubstitutor {
     @Override
-    public void expandPaths(final Element element) {
+    public void expandPaths(@NotNull final Element element) {
     }
 
     @Override
     public void reset() {
     }
 
+    @NotNull
     @Override
-    public Collection<String> getComponents(Collection<String> macros) {
+    public Collection<String> getComponents(@NotNull Collection<String> macros) {
       return Collections.emptyList();
     }
 
     @Override
-    public void collapsePaths(final Element element) {
+    public void collapsePaths(@NotNull final Element element) {
     }
 
     @Override
@@ -144,21 +138,22 @@ public class XmlElementStorageTest extends LightPlatformLangTestCase {
     }
 
     @Override
-    public String collapsePath(final String path) {
+    public String collapsePath(@Nullable String path) {
       throw new UnsupportedOperationException("Method collapsePath not implemented in " + getClass());
     }
 
+    @NotNull
     @Override
     public Collection<String> getUnknownMacros(final String componentName) {
       return Collections.emptySet();
     }
 
     @Override
-    public void invalidateUnknownMacros(Set<String> macros) {
+    public void invalidateUnknownMacros(@NotNull Set<String> macros) {
     }
 
     @Override
-    public void addUnknownMacros(String componentName, Collection<String> unknownMacros) {
+    public void addUnknownMacros(@NotNull String componentName, @NotNull Collection<String> unknownMacros) {
     }
   }
 }

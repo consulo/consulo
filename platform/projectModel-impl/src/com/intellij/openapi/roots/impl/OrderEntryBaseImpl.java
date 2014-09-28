@@ -50,10 +50,6 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
     return myIndex - ((OrderEntryBaseImpl)orderEntry).myIndex;
   }
 
-  boolean sameType(@NotNull OrderEntry that) {
-    return getClass().equals(that.getClass());
-  }
-
   @Override
   @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
   public final boolean equals(Object obj) {

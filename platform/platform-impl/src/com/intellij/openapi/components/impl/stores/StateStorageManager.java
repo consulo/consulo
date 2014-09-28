@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.io.fs.IFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,55 +30,70 @@ import java.util.Set;
  * @author mike
  */
 public interface StateStorageManager {
-  void addMacro(String macro, String expansion);
+  void addMacro(@NotNull String macro, @NotNull String expansion);
 
   @Nullable
   TrackingPathMacroSubstitutor getMacroSubstitutor();
 
   @Nullable
-  StateStorage getStateStorage(@NotNull Storage storageSpec) throws StateStorageException;
+  StateStorage getStateStorage(@NotNull Storage storageSpec);
 
   @Nullable
-  StateStorage getFileStateStorage(String fileName);
+  StateStorage getStateStorage(@NotNull String fileSpec, @NotNull RoamingType roamingType);
 
+  @SuppressWarnings("UnusedDeclaration")
+  @Deprecated
+  @Nullable
+  /**
+   * @deprecated Use {@link #getStateStorage(String, com.intellij.openapi.components.RoamingType)}
+   * to remove in IDEA 15
+   */
+  StateStorage getFileStateStorage(@NotNull String fileSpec);
+
+  @NotNull
+  Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@NotNull Collection<String> changed, @NotNull Collection<String> deleted);
+
+  @NotNull
   Collection<String> getStorageFileNames();
 
   void clearStateStorage(@NotNull String file);
 
   @NotNull
   ExternalizationSession startExternalization();
+
   @NotNull
-  SaveSession startSave(@NotNull ExternalizationSession externalizationSession) ;
+  SaveSession startSave(@NotNull ExternalizationSession externalizationSession);
+
   void finishSave(@NotNull SaveSession saveSession);
 
   @Nullable
-  StateStorage getOldStorage(Object component, String componentName, StateStorageOperation operation) throws StateStorageException;
+  StateStorage getOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation);
+
+  @NotNull
+  String expandMacros(@NotNull String file);
+
+  @NotNull
+  String collapseMacros(@NotNull String path);
+
+  void setStreamProvider(@Nullable com.intellij.openapi.components.impl.stores.StreamProvider streamProvider);
 
   @Nullable
-  String expandMacros(String file);
-
-  void setStreamProvider(@Nullable StreamProvider streamProvider);
-
-  @Nullable
-  StreamProvider getStreamProvider();
+  com.intellij.openapi.components.impl.stores.StreamProvider getStreamProvider();
 
   void reset();
 
   interface ExternalizationSession {
-    void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, String componentName, @NotNull Object state) throws StateStorageException;
-    void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state) throws StateStorageException;
+    void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state);
+
+    void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state);
   }
 
   interface SaveSession {
-    //returns set of component which were changed, null if changes are much more than just component state.
+    // returns set of component which were changed, null if changes are much more than just component state
     @Nullable
     Set<String> analyzeExternalChanges(@NotNull Set<Pair<VirtualFile, StateStorage>> files);
 
-    @NotNull
-    List<IFile> getAllStorageFilesToSave() throws StateStorageException;
-
-    @NotNull
-    List<IFile> getAllStorageFiles();
+    void collectAllStorageFiles(@NotNull List<VirtualFile> files);
 
     void save() throws StateStorageException;
   }

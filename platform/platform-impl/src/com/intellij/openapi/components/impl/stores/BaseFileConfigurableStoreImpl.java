@@ -16,35 +16,34 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
+import com.intellij.util.SmartList;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.components.impl.stores.BaseFileConfigurableStoreImpl");
-
   @NonNls protected static final String VERSION_OPTION = "version";
   @NonNls public static final String ATTRIBUTE_NAME = "name";
+
+  private static final List<String> ourConversionProblemsStorage = new SmartList<String>();
+
   private final ComponentManager myComponentManager;
-  private static final ArrayList<String> ourConversionProblemsStorage = new ArrayList<String>();
   private final DefaultsStateStorage myDefaultsStateStorage;
   private StateStorageManager myStateStorageManager;
 
-
-  protected BaseFileConfigurableStoreImpl(final ComponentManager componentManager) {
+  protected BaseFileConfigurableStoreImpl(@NotNull ComponentManager componentManager) {
     myComponentManager = componentManager;
-    final PathMacroManager pathMacroManager = PathMacroManager.getInstance(myComponentManager);
-    myDefaultsStateStorage = new DefaultsStateStorage(pathMacroManager);
+    myDefaultsStateStorage = new DefaultsStateStorage(PathMacroManager.getInstance(myComponentManager));
   }
 
-  public synchronized ComponentManager getComponentManager() {
+  @NotNull
+  public ComponentManager getComponentManager() {
     return myComponentManager;
   }
 
@@ -62,8 +61,8 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
     }
 
     @Override
-    public void load(@NotNull final Element rootElement) throws IOException {
-      super.load(rootElement);
+    public void load(@NotNull Element rootElement, @Nullable PathMacroSubstitutor pathMacroSubstitutor, boolean intern) {
+      super.load(rootElement, pathMacroSubstitutor, intern);
 
       final String v = rootElement.getAttributeValue(VERSION_OPTION);
       if (v != null) {
@@ -77,7 +76,11 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
     @Override
     @NotNull
     protected Element save() {
-      final Element root = super.save();
+      Element root = super.save();
+      if (root == null) {
+        root = new Element(myRootElementName);
+      }
+
       root.setAttribute(VERSION_OPTION, Integer.toString(myVersion));
       return root;
     }
@@ -90,23 +93,25 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
     @Override
     protected int computeHash() {
       int result = super.computeHash();
-      result = result*31 + myVersion;
+      result = result * 31 + myVersion;
       return result;
     }
 
-    @Override
     @Nullable
-    public Set<String> getDifference(final StorageData storageData, PathMacroSubstitutor substitutor) {
-      final BaseStorageData data = (BaseStorageData)storageData;
-      if (myVersion != data.myVersion) return null;
-      return super.getDifference(storageData, substitutor);
+    @Override
+    public Set<String> getChangedComponentNames(@NotNull StorageData storageData, @Nullable PathMacroSubstitutor substitutor) {
+      BaseStorageData data = (BaseStorageData)storageData;
+      if (myVersion != data.myVersion) {
+        return null;
+      }
+      return super.getChangedComponentNames(storageData, substitutor);
     }
   }
 
   protected abstract XmlElementStorage getMainStorage();
 
   @Nullable
-  static ArrayList<String> getConversionProblemsStorage() {
+  static List<String> getConversionProblemsStorage() {
     return ourConversionProblemsStorage;
   }
 
@@ -116,9 +121,10 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
   }
 
   public BaseStorageData getMainStorageData() throws StateStorageException {
-    return (BaseStorageData) getMainStorage().getStorageData(false);
+    return (BaseStorageData)getMainStorage().getStorageData();
   }
 
+  @Nullable
   @Override
   protected StateStorage getDefaultsStorage() {
     return myDefaultsStateStorage;
