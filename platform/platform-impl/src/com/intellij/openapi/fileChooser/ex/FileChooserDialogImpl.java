@@ -461,7 +461,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         if (toFind instanceof LocalFsFinder.VfsFile && toFind.exists()) {
           VirtualFile file = ((LocalFsFinder.VfsFile)toFind).getFile();
           if (file != null) {
-            return Arrays.asList(file);
+            return Collections.singletonList(file);
           }
         }
       }
