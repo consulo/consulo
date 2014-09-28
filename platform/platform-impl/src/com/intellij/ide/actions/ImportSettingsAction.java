@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,13 +36,17 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.UpdateSettings;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.Consumer;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -72,15 +76,15 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
       final ZipEntry magicEntry = new ZipFile(saveFile).getEntry(ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
       if (magicEntry == null) {
         Messages.showErrorDialog(
-          IdeBundle.message("error.file.contains.no.settings.to.import", presentableFileName(saveFile), promptLocationMessage()),
-          IdeBundle.message("title.invalid.file"));
+                IdeBundle.message("error.file.contains.no.settings.to.import", presentableFileName(saveFile), promptLocationMessage()),
+                IdeBundle.message("title.invalid.file"));
         return;
       }
 
-      final ArrayList<ExportableComponent> registeredComponents = new ArrayList<ExportableComponent>();
-      final Map<File, Set<ExportableComponent>> filesToComponents = ExportSettingsAction.getRegisteredComponentsAndFiles(registeredComponents);
-      List<ExportableComponent> components = getComponentsStored(saveFile, registeredComponents);
-      final ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(components, filesToComponents, false,
+      MultiMap<File, ExportableComponent> filesToComponents = ExportSettingsAction.getExportableComponentsMap(false);
+      List<ExportableComponent> components = getComponentsStored(saveFile, ContainerUtil.newArrayList(filesToComponents.values()));
+      filesToComponents.values().retainAll(components);
+      final ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(filesToComponents, false,
                                                                                        IdeBundle.message("title.select.components.to.import"),
                                                                                        IdeBundle.message("prompt.check.components.to.import"));
       dialog.show();
@@ -119,14 +123,14 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
                                                                     ApplicationNamesInfo.getInstance().getProductName(),
                                                                     ApplicationNamesInfo.getInstance().getFullProductName()),
                                                   IdeBundle.message("title.restart.needed"), Messages.getQuestionIcon());
-      if (ret == 0) {
+      if (ret == Messages.OK) {
         ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
       }
     }
     catch (ZipException e1) {
       Messages.showErrorDialog(
-        IdeBundle.message("error.reading.settings.file", presentableFileName(saveFile), e1.getMessage(), promptLocationMessage()),
-        IdeBundle.message("title.invalid.file"));
+              IdeBundle.message("error.reading.settings.file", presentableFileName(saveFile), e1.getMessage(), promptLocationMessage()),
+              IdeBundle.message("title.invalid.file"));
     }
     catch (IOException e1) {
       Messages.showErrorDialog(IdeBundle.message("error.reading.settings.file.2", presentableFileName(saveFile), e1.getMessage()),
@@ -144,7 +148,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
 
   private static List<ExportableComponent> getComponentsStored(File zipFile,
                                                                ArrayList<ExportableComponent> registeredComponents)
-    throws IOException {
+          throws IOException {
     final File configPath = new File(PathManager.getConfigPath());
 
     final ArrayList<ExportableComponent> components = new ArrayList<ExportableComponent>();

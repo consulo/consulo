@@ -15,10 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.io.FileUtil;
@@ -34,12 +31,12 @@ import org.jetbrains.annotations.Nullable;
  * @author yole
  */
 @State(
-  name = "RecentDirectoryProjectsManager",
-  roamingType = RoamingType.DISABLED,
+  name = "RecentProjectsManager",
   storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
+    @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", roamingType = RoamingType.DISABLED),
+    @Storage(file = StoragePathMacros.APP_CONFIG + "/recentProjects.xml", roamingType = RoamingType.DISABLED)
+  },
+  storageChooser = LastStorageChooserForWrite.class
 )
 public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   public RecentDirectoryProjectsManager(ProjectManager projectManager, MessageBus messageBus) {

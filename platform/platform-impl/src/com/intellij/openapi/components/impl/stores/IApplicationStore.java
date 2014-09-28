@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,29 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-import java.util.Collection;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Set;
 
 public interface IApplicationStore extends IComponentStore {
-  void setOptionsPath(String path);
+  void setOptionsPath(@NotNull String path);
+
+  @NotNull
+  String getConfigPath();
 
   void setConfigPath(@NotNull String configPath);
 
-  boolean reload(@NotNull Set<Pair<VirtualFile, StateStorage>> changedFiles, @NotNull Collection<String> notReloadableComponents)
-    throws StateStorageException, IOException;
+  /**
+   * null if reloaded
+   * empty list if nothing to reload
+   * list of not reloadable components (reload is not performed)
+   */
+  @Nullable
+  Collection<String> reload(@NotNull Set<Pair<VirtualFile, StateStorage>> changedFiles) throws IOException;
 }

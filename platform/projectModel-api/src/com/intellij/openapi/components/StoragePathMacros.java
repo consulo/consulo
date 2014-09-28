@@ -33,7 +33,14 @@ import org.mustbe.consulo.DeprecationInfo;
  */
 public class StoragePathMacros {
 
-  /** Points to the application-level settings root directory. */
+  /**
+   * Points to the application-level settings root directory.
+   */
+  @NonNls @NotNull public static final String ROOT_CONFIG = "$ROOT_CONFIG$";
+
+  /**
+   * Points to the application-level settings root directory.
+   */
   @NonNls
   @NotNull
   public static final String APP_CONFIG = "$APP_CONFIG$";

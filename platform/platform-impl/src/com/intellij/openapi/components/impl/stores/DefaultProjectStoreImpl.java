@@ -18,10 +18,9 @@ package com.intellij.openapi.components.impl.stores;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.io.fs.IFile;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -39,10 +38,10 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private final ProjectManagerImpl myProjectManager;
   @NonNls private static final String ROOT_TAG_NAME = "defaultProject";
 
-  public DefaultProjectStoreImpl(final ProjectImpl project, final ProjectManagerImpl projectManager) {
+  public DefaultProjectStoreImpl(@NotNull ProjectImpl project, final ProjectManagerImpl projectManager) {
     super(project);
-    myProjectManager = projectManager;
 
+    myProjectManager = projectManager;
     myElement = projectManager.getDefaultProjectRootElement();
   }
 
@@ -52,29 +51,28 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     return element != null ? element.clone() : null;
   }
 
-
   @NotNull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    Document _d = null;
+    Element _d = null;
 
     if (myElement != null) {
       myElement.detach();
-      _d = new Document(myElement);
+      _d = myElement;
     }
 
     final ComponentManager componentManager = getComponentManager();
     final PathMacroManager pathMacroManager = PathMacroManager.getInstance(componentManager);
 
-    final Document document = _d;
+    final Element element = _d;
 
-    final XmlElementStorage storage = new XmlElementStorage(pathMacroManager.createTrackingSubstitutor(), componentManager,
-                                                            ROOT_TAG_NAME, null, "", ComponentRoamingManager.getInstance(),
+    final XmlElementStorage storage = new XmlElementStorage("", RoamingType.DISABLED, pathMacroManager.createTrackingSubstitutor(), componentManager,
+                                                            ROOT_TAG_NAME, null,
                                                             ComponentVersionProvider.EMPTY) {
       @Override
       @Nullable
-      protected Document loadDocument() throws StateStorageException {
-        return document;
+      protected Element loadLocalData() {
+        return element;
       }
 
       @Override
@@ -95,26 +93,20 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
         @Override
         protected void doSave() throws StateStorageException {
-          myProjectManager.setDefaultProjectRootElement(getDocumentToSave().getRootElement());
+          Element element = getElementToSave();
+          myProjectManager.setDefaultProjectRootElement(element == null ? null : element);
         }
 
-        @NotNull
         @Override
-        public Collection<IFile> getStorageFilesToSave() throws StateStorageException {
-          return Collections.emptyList();
-        }
-
-        @NotNull
-        @Override
-        public List<IFile> getAllStorageFiles() {
-          return Collections.emptyList();
+        public void collectAllStorageFiles(@NotNull List<VirtualFile> files) {
         }
       }
     };
 
+    //noinspection deprecation
     return new StateStorageManager() {
       @Override
-      public void addMacro(String macro, String expansion) {
+      public void addMacro(@NotNull String macro, @NotNull String expansion) {
         throw new UnsupportedOperationException("Method addMacro not implemented in " + getClass());
       }
 
@@ -128,6 +120,18 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Nullable
       public StateStorage getStateStorage(@NotNull Storage storageSpec) throws StateStorageException {
         return storage;
+      }
+
+      @Nullable
+      @Override
+      public StateStorage getStateStorage(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+        return storage;
+      }
+
+      @NotNull
+      @Override
+      public Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@NotNull Collection<String> changed, @NotNull Collection<String> deleted) {
+        return new Couple<Collection<FileBasedStorage>>(Collections.<FileBasedStorage>emptyList(), Collections.<FileBasedStorage>emptyList());
       }
 
       @Override
@@ -148,7 +152,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
       @NotNull
       @Override
-      public SaveSession startSave(@NotNull final ExternalizationSession externalizationSession) {
+      public SaveSession startSave(@NotNull ExternalizationSession externalizationSession) {
         return new MySaveSession(storage, externalizationSession);
       }
 
@@ -157,15 +161,21 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         storage.finishSave(((MySaveSession)saveSession).saveSession);
       }
 
+      @NotNull
       @Override
-      public String expandMacros(final String file) {
-        throw new UnsupportedOperationException("Method expandMacroses not implemented in " + getClass());
+      public String expandMacros(@NotNull String file) {
+        throw new UnsupportedOperationException("Method expandMacros not implemented in " + getClass());
+      }
+
+      @NotNull
+      @Override
+      public String collapseMacros(@NotNull String path) {
+        throw new UnsupportedOperationException("Method collapseMacros not implemented in " + getClass());
       }
 
       @Override
       @Nullable
-      public StateStorage getOldStorage(Object component, final String componentName, final StateStorageOperation operation)
-              throws StateStorageException {
+      public StateStorage getOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
         return storage;
       }
 
@@ -180,6 +190,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         throw new UnsupportedOperationException("Method getStreamProviders not implemented in " + getClass());
       }
 
+      @NotNull
       @Override
       public Collection<String> getStorageFileNames() {
         throw new UnsupportedOperationException("Method getStorageFileNames not implemented in " + getClass());
@@ -205,13 +216,13 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     }
 
     @Override
-    public void setState(@NotNull final Storage[] storageSpecs, @NotNull final Object component, final String componentName, @NotNull final Object state)
+    public void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state)
             throws StateStorageException {
       externalizationSession.setState(component, componentName, state, null);
     }
 
     @Override
-    public void setStateInOldStorage(@NotNull final Object component, @NotNull final String componentName, @NotNull final Object state) throws StateStorageException {
+    public void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state) {
       externalizationSession.setState(component, componentName, state, null);
     }
   }
@@ -230,16 +241,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       throw new UnsupportedOperationException("Method analyzeExternalChanges not implemented in " + getClass());
     }
 
-    @NotNull
     @Override
-    public List<IFile> getAllStorageFilesToSave() throws StateStorageException {
-      return Collections.emptyList();
-    }
-
-    @NotNull
-    @Override
-    public List<IFile> getAllStorageFiles() {
-      return Collections.emptyList();
+    public void collectAllStorageFiles(@NotNull List<VirtualFile> files) {
     }
 
     @Override

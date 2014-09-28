@@ -30,10 +30,9 @@ import com.intellij.openapi.components.ExportableApplicationComponent;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.components.impl.stores.IComponentStore;
-import com.intellij.openapi.components.impl.stores.IProjectStore;
 import com.intellij.openapi.components.impl.stores.StorageUtil;
 import com.intellij.openapi.components.impl.stores.XmlElementStorage;
+import com.intellij.openapi.components.store.ComponentSaveSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -54,10 +53,10 @@ import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.io.fs.IFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
@@ -614,34 +613,35 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
   private boolean tryToReloadApplication() {
     try {
       final Application app = ApplicationManager.getApplication();
+      if (app.isDisposed()) {
+        return false;
+      }
+      final Set<Pair<VirtualFile, StateStorage>> causes = new THashSet<Pair<VirtualFile, StateStorage>>(myChangedApplicationFiles);
+      if (causes.isEmpty()) {
+        return true;
+      }
 
-      if (app.isDisposed()) return false;
-      final HashSet<Pair<VirtualFile, StateStorage>> causes = new HashSet<Pair<VirtualFile, StateStorage>>(myChangedApplicationFiles);
-      if (causes.isEmpty()) return true;
-
-      final boolean[] reloadOk = {false};
-      final LinkedHashSet<String> components = new LinkedHashSet<String>();
-
+      final Ref<Collection<String>> reloadResult = Ref.create();
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
           try {
-            reloadOk[0] = ((ApplicationImpl)app).getStateStore().reload(causes, components);
+            reloadResult.set(((ApplicationImpl)app).getStateStore().reload(causes));
           }
-          catch (StateStorageException e) {
-            Messages.showWarningDialog(ProjectBundle.message("project.reload.failed", e.getMessage()),
-                                       ProjectBundle.message("project.reload.failed.title"));
-          }
-          catch (IOException e) {
+          catch (Exception e) {
             Messages.showWarningDialog(ProjectBundle.message("project.reload.failed", e.getMessage()),
                                        ProjectBundle.message("project.reload.failed.title"));
           }
         }
       });
 
-      if (!reloadOk[0] && !components.isEmpty()) {
+      if (reloadResult.isNull()) {
+        return true;
+      }
+
+      if (!reloadResult.get().isEmpty()) {
         String message = "Application components were changed externally and cannot be reloaded:\n";
-        for (String component : components) {
+        for (String component : reloadResult.get()) {
           message += component + "\n";
         }
 
@@ -650,7 +650,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
         message += ApplicationNamesInfo.getInstance().getProductName() + "?";
 
         if (Messages.showYesNoDialog(message,
-                                     "Application Configuration Reload", Messages.getQuestionIcon()) == 0) {
+                                     "Application Configuration Reload", Messages.getQuestionIcon()) == Messages.YES) {
           for (Pair<VirtualFile, StateStorage> cause : causes) {
             StateStorage stateStorage = cause.getSecond();
             if (stateStorage instanceof XmlElementStorage) {
@@ -660,8 +660,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
           ApplicationManagerEx.getApplicationEx().restart(true);
         }
       }
-
-      return reloadOk[0];
+      return false;
     }
     finally {
       myChangedApplicationFiles.clear();
@@ -882,17 +881,17 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
       public void run() {
         LOG.debug("Reloading project.");
         ProjectImpl projectImpl = (ProjectImpl)project[0];
-        if (projectImpl.isDisposed()) return;
-        IProjectStore projectStore = projectImpl.getStateStore();
+        if (projectImpl.isDisposed()) {
+          return;
+        }
         final String location = projectImpl.getPresentableUrl();
-
-        final List<IFile> original;
+        final List<VirtualFile> original = new SmartList<VirtualFile>();
         try {
-          final IComponentStore.SaveSession saveSession = projectStore.startSave();
-          original = saveSession.getAllStorageFiles(true);
+          ComponentSaveSession saveSession = projectImpl.getStateStore().startSave();
+          saveSession.collectAllStorageFiles(true, original);
           saveSession.finishSave();
         }
-        catch (IOException e) {
+        catch (Exception e) {
           LOG.error(e);
           return;
         }
@@ -901,8 +900,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements NamedJDOMExt
           application.runWriteAction(new Runnable() {
             @Override
             public void run() {
-              for (final IFile originalFile : original) {
-                restoreCopy(LocalFileSystem.getInstance().refreshAndFindFileByIoFile(originalFile));
+              for (VirtualFile originalFile : original) {
+                restoreCopy(originalFile);
               }
             }
           });

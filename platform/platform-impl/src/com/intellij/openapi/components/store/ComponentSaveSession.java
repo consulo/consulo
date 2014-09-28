@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package com.intellij.openapi.components.store;
 
-import com.intellij.openapi.components.store.ComponentSaveSession;
+import com.intellij.openapi.components.StateStorage;
+import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
-/**
- * @author yole
- */
-public class StoreUtil {
-  private StoreUtil() {
-  }
+public interface ComponentSaveSession {
+  @NotNull
+  ComponentSaveSession save(@NotNull List<Pair<StateStorageManager.SaveSession, VirtualFile>> readonlyFiles);
 
-  public static void doSave(@NotNull IComponentStore stateStore) {
-    ComponentSaveSession session = null;
-    try {
-      session = stateStore.startSave();
-      List<Pair<StateStorageManager.SaveSession, VirtualFile>> readonlyFiles = new SmartList<Pair<StateStorageManager.SaveSession, VirtualFile>>();
-      session.save(readonlyFiles);
-    }
-    finally {
-      if (session != null) {
-        session.finishSave();
-      }
-    }
-  }
+  void finishSave();
+
+  void reset();
+
+  @Nullable
+  Set<String> analyzeExternalChanges(@NotNull Set<Pair<VirtualFile, StateStorage>> changedFiles);
+
+  void collectAllStorageFiles(boolean includingSubStructures, @NotNull List<VirtualFile> files);
 }
