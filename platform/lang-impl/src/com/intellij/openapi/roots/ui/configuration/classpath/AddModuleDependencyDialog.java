@@ -46,11 +46,12 @@ public class AddModuleDependencyDialog extends DialogWrapper {
     myTabs = new JBEditorTabs(rootModel.getProject(), ActionManager.getInstance(), IdeFocusManager.getInstance(rootModel.getProject()), myDisposable);
     myTabs.setTabsPosition(JBTabsPosition.left);
 
-    AddModuleDependencyTabFactory[] tabs = AddModuleDependencyTabFactory.EP_NAME.getExtensions();
-    for (int i = 0; i < tabs.length; i++) {
-      AddModuleDependencyTabFactory tab = tabs[i];
-
-      AddModuleDependencyTabContext tabContext = tab.createTabContext(myDisposable, panel, context);
+    int i = 0;
+    for (AddModuleDependencyTabFactory factory : AddModuleDependencyTabFactory.EP_NAME.getExtensions()) {
+      if(!factory.isAvailable(rootModel)) {
+        continue;
+      }
+      AddModuleDependencyTabContext tabContext = factory.createTabContext(myDisposable, panel, context);
 
       JComponent component = tabContext.getComponent();
       JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(component, true);
@@ -59,7 +60,7 @@ public class AddModuleDependencyDialog extends DialogWrapper {
       tabInfo.setText(tabContext.getTabName());
       tabInfo.setEnabled(!tabContext.isEmpty());
 
-      myTabs.addTab(tabInfo, i);
+      myTabs.addTab(tabInfo, i ++);
     }
     setTitle("Add Dependencies");
     init();
