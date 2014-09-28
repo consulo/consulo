@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
+import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModifiableModuleRootLayer;
@@ -53,6 +54,7 @@ import java.util.*;
  * @since 27.09.14
  */
 public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabContext {
+  private final FileChooserDescriptor myFileChooserDescriptor;
   private FileSystemTreeImpl myFileSystemTree;
 
   private final HashMap<LibraryRootsComponentDescriptor, LibraryType> myLibraryTypes;
@@ -79,7 +81,8 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
 
     Module module = myClasspathPanel.getRootModel().getModule();
 
-    myFileSystemTree = new FileSystemTreeImpl(module.getProject(), createFileChooserDescriptor());
+    myFileChooserDescriptor = createFileChooserDescriptor();
+    myFileSystemTree = new FileSystemTreeImpl(module.getProject(), myFileChooserDescriptor);
     Disposer.register(parent, myFileSystemTree);
     myFileSystemTree.showHiddens(true);
     final VirtualFile moduleDir = module.getModuleDir();
@@ -130,8 +133,8 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
 
   @Override
   public List<OrderEntry> createOrderEntries(@NotNull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
-    VirtualFile[] selectedFiles = myFileSystemTree.getSelectedFiles();
-    if (selectedFiles.length == 0) {
+    List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(myFileSystemTree.getSelectedFiles()));
+    if (chosenFiles.isEmpty()) {
       return Collections.emptyList();
     }
 
@@ -143,7 +146,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
 
     List<LibraryRootsComponentDescriptor> suitableDescriptors = new ArrayList<LibraryRootsComponentDescriptor>();
     for (Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor> pair : descriptors) {
-      if (acceptAll(pair.getSecond(), selectedFiles)) {
+      if (acceptAll(pair.getSecond(), chosenFiles)) {
         suitableDescriptors.add(pair.getFirst());
       }
     }
@@ -158,7 +161,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
       rootsComponentDescriptor = myDefaultDescriptor;
     }
     List<OrderRoot> chosenRoots =
-            RootDetectionUtil.detectRoots(Arrays.asList(selectedFiles), dialogWrapper.getRootPane(), layer.getProject(), rootsComponentDescriptor);
+            RootDetectionUtil.detectRoots(chosenFiles, dialogWrapper.getRootPane(), layer.getProject(), rootsComponentDescriptor);
 
     final List<OrderRoot> roots = filterAlreadyAdded(layer, chosenRoots);
     if (roots.isEmpty()) {
@@ -233,7 +236,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     return false;
   }
 
-  private static boolean acceptAll(FileChooserDescriptor descriptor, VirtualFile[] files) {
+  private static boolean acceptAll(FileChooserDescriptor descriptor, Collection<VirtualFile> files) {
     for (VirtualFile file : files) {
       if (!descriptor.isFileSelectable(file) || !descriptor.isFileVisible(file, true)) {
         return false;
