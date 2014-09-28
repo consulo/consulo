@@ -21,6 +21,7 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
+import com.intellij.openapi.util.Comparing;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
@@ -113,6 +114,16 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   @Override
   public <R> R accept(@NotNull RootPolicy<R> policy, R initialValue) {
     return policy.visitModuleExtensionSdkOrderEntry(this, initialValue);
+  }
+
+  @Override
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    if (other instanceof ModuleExtensionWithSdkOrderEntry) {
+      String name1 = this.getSdkName();
+      String name2 = ((ModuleExtensionWithSdkOrderEntry)other).getSdkName();
+      return Comparing.strEqual(name1, name2);
+    }
+    return false;
   }
 
   @Override

@@ -20,7 +20,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Comparing;
@@ -407,18 +406,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   private static boolean orderEntriesEquals(@NotNull OrderEntry orderEntry1, @NotNull OrderEntry orderEntry2) {
-    if (!((OrderEntryBaseImpl)orderEntry1).sameType(orderEntry2)) return false;
-    if (orderEntry1 instanceof SdkOrderEntry) {
-      if (!(orderEntry2 instanceof SdkOrderEntry)) return false;
-
-      if (orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
-        String name1 = ((ModuleExtensionWithSdkOrderEntry)orderEntry1).getSdkName();
-        String name2 = ((ModuleExtensionWithSdkOrderEntry)orderEntry2).getSdkName();
-        if (!Comparing.strEqual(name1, name2)) {
-          return false;
-        }
-      }
+    if (orderEntry1.getClass() != orderEntry2.getClass()) {
+      return false;
     }
+
     if (orderEntry1 instanceof ExportableOrderEntry) {
       if (!(((ExportableOrderEntry)orderEntry1).isExported() == ((ExportableOrderEntry)orderEntry2).isExported())) {
         return false;
@@ -427,39 +418,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
         return false;
       }
     }
-    if (orderEntry1 instanceof ModuleOrderEntry) {
-      LOGGER.assertTrue(orderEntry2 instanceof ModuleOrderEntry);
-      ModuleOrderEntryImpl entry1 = (ModuleOrderEntryImpl)orderEntry1;
-      ModuleOrderEntryImpl entry2 = (ModuleOrderEntryImpl)orderEntry2;
-      return entry1.isProductionOnTestDependency() == entry2.isProductionOnTestDependency() && Comparing.equal(entry1.getModuleName(), entry2.getModuleName());
-    }
 
-    if (orderEntry1 instanceof LibraryOrderEntry) {
-      LOGGER.assertTrue(orderEntry2 instanceof LibraryOrderEntry);
-      LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry)orderEntry1;
-      LibraryOrderEntry libraryOrderEntry2 = (LibraryOrderEntry)orderEntry2;
-      boolean equal = Comparing.equal(libraryOrderEntry1.getLibraryName(), libraryOrderEntry2.getLibraryName()) &&
-                      Comparing.equal(libraryOrderEntry1.getLibraryLevel(), libraryOrderEntry2.getLibraryLevel());
-      if (!equal) return false;
-
-      Library library1 = libraryOrderEntry1.getLibrary();
-      Library library2 = libraryOrderEntry2.getLibrary();
-      if (library1 != null && library2 != null) {
-        if (!Arrays.equals(((LibraryEx)library1).getExcludedRootUrls(), ((LibraryEx)library2).getExcludedRootUrls())) {
-          return false;
-        }
-      }
-    }
-
-    final OrderRootType[] allTypes = OrderRootType.getAllTypes();
-    for (OrderRootType type : allTypes) {
-      final String[] orderedRootUrls1 = orderEntry1.getUrls(type);
-      final String[] orderedRootUrls2 = orderEntry2.getUrls(type);
-      if (!Arrays.equals(orderedRootUrls1, orderedRootUrls2)) {
-        return false;
-      }
-    }
-    return true;
+    return orderEntry1.isEquivalentTo(orderEntry2);
   }
 
   @NotNull

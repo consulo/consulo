@@ -54,6 +54,11 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    return other instanceof ModuleSourceOrderEntry;
+  }
+
+  @Override
   @NotNull
   public String getPresentableName() {
     return ProjectBundle.message("project.root.module.source");

@@ -98,4 +98,6 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @return the value returned by the visitor.
    */
   <R> R accept(RootPolicy<R> policy, @Nullable R initialValue);
+
+  boolean isEquivalentTo(@NotNull OrderEntry other);
 }

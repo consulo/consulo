@@ -19,6 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.consulo.util.pointers.NamedPointer;
@@ -107,6 +108,11 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   @Override
   public <R> R accept(RootPolicy<R> policy, R initialValue) {
     return policy.visitModuleOrderEntry(this, initialValue);
+  }
+
+  @Override
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    return other instanceof ModuleOrderEntry && Comparing.equal(getModuleName(), ((ModuleOrderEntry)other).getModuleName());
   }
 
   @Override

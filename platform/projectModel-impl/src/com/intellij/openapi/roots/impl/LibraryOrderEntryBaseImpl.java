@@ -18,12 +18,17 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+
+import java.util.Arrays;
 
 /**
  * @author dsl
@@ -67,6 +72,35 @@ abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements O
   @NotNull
   public final Module getOwnerModule() {
     return getRootModel().getModule();
+  }
+
+  @Override
+  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+    // for ModuleExtensionWithSdkOrderEntry need override
+    LOGGER.assertTrue(this instanceof LibraryOrderEntry);
+
+    LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry)this;
+    LibraryOrderEntry libraryOrderEntry2 = (LibraryOrderEntry)other;
+    boolean equal = Comparing.equal(libraryOrderEntry1.getLibraryName(), libraryOrderEntry2.getLibraryName()) &&
+                    Comparing.equal(libraryOrderEntry1.getLibraryLevel(), libraryOrderEntry2.getLibraryLevel());
+    if (!equal) return false;
+
+    Library library1 = libraryOrderEntry1.getLibrary();
+    Library library2 = libraryOrderEntry2.getLibrary();
+    if (library1 != null && library2 != null) {
+      if (!Arrays.equals(((LibraryEx)library1).getExcludedRootUrls(), ((LibraryEx)library2).getExcludedRootUrls())) {
+        return false;
+      }
+    }
+    final OrderRootType[] allTypes = OrderRootType.getAllTypes();
+    for (OrderRootType type : allTypes) {
+      final String[] orderedRootUrls1 = getUrls(type);
+      final String[] orderedRootUrls2 = other.getUrls(type);
+      if (!Arrays.equals(orderedRootUrls1, orderedRootUrls2)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   protected void updateFromRootProviderAndSubscribe() {
