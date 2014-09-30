@@ -23,11 +23,9 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.ui.OrderPanelListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.List;
 
 /**
  * @author Eugene Zhuravlev
@@ -61,27 +59,13 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   @Override
   public void saveData() {
     myPanel.stopEditing();
-    flushChangesToModel();
   }
 
   @NotNull
   @Override
   public JComponent createComponentImpl() {
     myPanel = new ClasspathPanelImpl(getState());
-
-    myPanel.addListener(new OrderPanelListener() {
-      @Override
-      public void entryMoved() {
-        flushChangesToModel();
-      }
-    });
-
     return myPanel;
-  }
-
-  public void flushChangesToModel() {
-    List<OrderEntry> entries = myPanel.getEntries();
-    getModel().rearrangeOrderEntries(entries.toArray(new OrderEntry[entries.size()]));
   }
 
   public void selectOrderEntry(@NotNull final OrderEntry entry) {
