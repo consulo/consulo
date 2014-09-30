@@ -64,8 +64,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   @NotNull
   @Override
   public JComponent createComponentImpl() {
-    myPanel = new ClasspathPanelImpl(getState());
-    return myPanel;
+    return myPanel = new ClasspathPanelImpl(getState());
   }
 
   public void selectOrderEntry(@NotNull final OrderEntry entry) {
