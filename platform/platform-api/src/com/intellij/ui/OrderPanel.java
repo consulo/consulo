@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.containers.ContainerUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -34,6 +35,8 @@ public abstract class OrderPanel<T> extends JPanel{
 
   private final Class<T> myEntryClass;
   private final JTable myEntryTable;
+
+  private final List<OrderPanelListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private boolean myEntryEditable = false;
 
@@ -117,6 +120,9 @@ public abstract class OrderPanel<T> extends JPanel{
     finally {
       myInsideMove--;
     }
+    for (OrderPanelListener orderPanelListener : myListeners) {
+      orderPanelListener.entryMoved();
+    }
   }
 
   public void moveSelectedItemsDown() {
@@ -128,12 +134,23 @@ public abstract class OrderPanel<T> extends JPanel{
     finally {
       myInsideMove--;
     }
+    for (OrderPanelListener orderPanelListener : myListeners) {
+      orderPanelListener.entryMoved();
+    }
   }
 
   private int myInsideMove = 0;
 
   private boolean isInsideMove() {
     return myInsideMove != 0;
+  }
+
+  public void addListener(OrderPanelListener listener) {
+    myListeners.add(listener);
+  }
+
+  public void removeListener(OrderPanelListener listener) {
+    myListeners.remove(listener);
   }
 
   public JTable getEntryTable() {
