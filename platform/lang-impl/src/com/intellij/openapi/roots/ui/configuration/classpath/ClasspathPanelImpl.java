@@ -54,7 +54,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.EventDispatcher;
 import com.intellij.util.IconUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -78,7 +77,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl");
   private final JBTable myEntryTable;
   private final ClasspathTableModel myModel;
-  private final EventDispatcher<OrderPanelListener> myListeners = EventDispatcher.create(OrderPanelListener.class);
   private AnActionButton myEditButton;
   private final ModuleConfigurationState myState;
   private AnActionButton myRemoveButton;
@@ -443,14 +441,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     myInsideChange++;
   }
 
-  public void addListener(OrderPanelListener listener) {
-    myListeners.addListener(listener);
-  }
-
-  public void removeListener(OrderPanelListener listener) {
-    myListeners.removeListener(listener);
-  }
-
   private void moveSelectedRows(int increment) {
     if (increment == 0) {
       return;
@@ -466,13 +456,14 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         selectionModel.addSelectionInterval(newRow, newRow);
       }
     }
+
+    List<OrderEntry> entries = getEntries();
+    myState.getRootModel().rearrangeOrderEntries(entries.toArray(new OrderEntry[entries.size()]));
+
     myModel.fireTableRowsUpdated(0, myModel.getRowCount() - 1);
     Rectangle cellRect = myEntryTable.getCellRect(selectionModel.getMinSelectionIndex(), 0, true);
-    if (cellRect != null) {
-      myEntryTable.scrollRectToVisible(cellRect);
-    }
+    myEntryTable.scrollRectToVisible(cellRect);
     myEntryTable.repaint();
-    myListeners.getMulticaster().entryMoved();
   }
 
   public void selectOrderEntry(@NotNull OrderEntry entry) {
