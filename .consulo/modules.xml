@@ -974,7 +974,7 @@
       </module>
       <module name="updater" dirurl="file://$PROJECT_DIR$/tools/updater" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" sdk-name="1.6" language-level-module-name="consulo" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <extension id="java" sdk-module-name="consulo" sdk-name="" language-level-module-name="consulo" language-level-name="" special-dir-location="SOURCE_DIR" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>

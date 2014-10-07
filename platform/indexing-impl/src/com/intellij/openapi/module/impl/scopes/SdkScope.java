@@ -23,26 +23,26 @@ import com.intellij.openapi.roots.types.BinariesOrderRootType;
 /**
  * @author max
  */
-public class JdkScope extends LibraryScopeBase {
-  private final String myJdkName;
+public class SdkScope extends LibraryScopeBase {
+  private final String mySdkName;
 
-  public JdkScope(Project project, SdkOrderEntry jdk) {
+  public SdkScope(Project project, SdkOrderEntry jdk) {
     super(project, jdk.getFiles(BinariesOrderRootType.getInstance()), jdk.getFiles(BinariesOrderRootType.getInstance()));
-    myJdkName = jdk.getSdkName();
+    mySdkName = jdk.getSdkName();
   }
 
   @Override
   public int hashCode() {
-    return myJdkName.hashCode();
+    return mySdkName.hashCode();
   }
 
   @Override
   public boolean equals(Object object) {
     if (object == this) return true;
     if (object == null) return false;
-    if (object.getClass() != JdkScope.class) return false;
+    if (object.getClass() != SdkScope.class) return false;
 
-    final JdkScope that = (JdkScope)object;
-    return that.myJdkName.equals(myJdkName);
+    final SdkScope that = (SdkScope)object;
+    return that.mySdkName.equals(mySdkName);
   }
 }

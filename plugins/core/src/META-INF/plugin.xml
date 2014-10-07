@@ -57,7 +57,6 @@
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
-    <extensionPoint name="sdkResolveScopeProvider" interface="com.intellij.psi.SdkResolveScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="org.mustbe.consulo.roots.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="org.mustbe.consulo.roots.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="org.mustbe.consulo.roots.ContentFolderSupportPatcher"/>
