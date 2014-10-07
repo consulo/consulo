@@ -19,6 +19,7 @@ package com.intellij.openapi.module.impl.scopes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 
 /**
  * @author max
@@ -26,9 +27,9 @@ import com.intellij.openapi.roots.types.BinariesOrderRootType;
 public class SdkScope extends LibraryScopeBase {
   private final String mySdkName;
 
-  public SdkScope(Project project, SdkOrderEntry jdk) {
-    super(project, jdk.getFiles(BinariesOrderRootType.getInstance()), jdk.getFiles(BinariesOrderRootType.getInstance()));
-    mySdkName = jdk.getSdkName();
+  public SdkScope(Project project, SdkOrderEntry sdkOrderEntry) {
+    super(project, sdkOrderEntry.getFiles(BinariesOrderRootType.getInstance()), sdkOrderEntry.getFiles(SourcesOrderRootType.getInstance()));
+    mySdkName = sdkOrderEntry.getSdkName();
   }
 
   @Override
