@@ -19,17 +19,15 @@ package com.intellij.util;
 import com.intellij.Patches;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.openapi.util.DifferenceFilter;
+import com.intellij.util.containers.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sun.reflect.ConstructorAccessor;
 
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class ReflectionUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.ReflectionUtil");
@@ -95,6 +93,7 @@ public class ReflectionUtil {
            + " loaded by " + ((Class)anInterface).getClassLoader();
   }
 
+  @NotNull
   public static Class<?> getRawType(@NotNull Type type) {
     if (type instanceof Class) {
       return (Class)type;
@@ -288,15 +287,18 @@ public class ReflectionUtil {
     });
   }
 
+  @NotNull
   public static List<Method> getClassPublicMethods(@NotNull Class aClass) {
     return getClassPublicMethods(aClass, false);
   }
 
+  @NotNull
   public static List<Method> getClassPublicMethods(@NotNull Class aClass, boolean includeSynthetic) {
     Method[] methods = aClass.getMethods();
     return includeSynthetic ? Arrays.asList(methods) : filterRealMethods(methods);
   }
 
+  @NotNull
   public static List<Method> getClassDeclaredMethods(@NotNull Class aClass) {
     return getClassDeclaredMethods(aClass, false);
   }
@@ -306,13 +308,15 @@ public class ReflectionUtil {
     Method[] methods = aClass.getDeclaredMethods();
     return includeSynthetic ? Arrays.asList(methods) : filterRealMethods(methods);
   }
+
   @NotNull
   public static List<Field> getClassDeclaredFields(@NotNull Class aClass) {
     Field[] fields = aClass.getDeclaredFields();
     return Arrays.asList(fields);
   }
 
-  private static List<Method> filterRealMethods(Method[] methods) {
+  @NotNull
+  private static List<Method> filterRealMethods(@NotNull Method[] methods) {
     List<Method> result = ContainerUtil.newArrayList();
     for (Method method : methods) {
       if (!method.isSynthetic()) {
@@ -323,8 +327,8 @@ public class ReflectionUtil {
   }
 
   @Nullable
-  public static Class getMethodDeclaringClass(@NotNull Class<?> instanceClass, @NonNls @NotNull String name, @NotNull Class... parameters) {
-    Method method = getMethod(instanceClass, name, parameters);
+  public static Class getMethodDeclaringClass(@NotNull Class<?> instanceClass, @NonNls @NotNull String methodName, @NotNull Class... parameters) {
+    Method method = getMethod(instanceClass, methodName, parameters);
     return method == null ? null : method.getDeclaringClass();
   }
 
@@ -352,11 +356,14 @@ public class ReflectionUtil {
     }
     catch (NoSuchFieldException e) {
       LOG.debug(e);
+      // this 'return' was moved into 'catch' block because otherwise reference to common super-class of these exceptions (ReflectiveOperationException)
+      // which doesn't exist in JDK 1.6 will be added to class-file during instrumentation
+      return false;
     }
     catch (IllegalAccessException e) {
       LOG.debug(e);
+      return false;
     }
-    return false;
   }
 
   public static Type resolveVariableInHierarchy(@NotNull TypeVariable variable, @NotNull Class aClass) {
@@ -471,6 +478,50 @@ public class ReflectionUtil {
       callerClass = findCallerClass(2);
     }
     return callerClass;
+  }
+
+  public static void copyFields(@NotNull Field[] fields, @NotNull Object from, @NotNull Object to) {
+    copyFields(fields, from, to, null);
+  }
+
+  public static boolean copyFields(@NotNull Field[] fields, @NotNull Object from, @NotNull Object to, @Nullable DifferenceFilter diffFilter) {
+    Set<Field> sourceFields = new com.intellij.util.containers.HashSet<Field>(Arrays.asList(from.getClass().getFields()));
+    boolean valuesChanged = false;
+    for (Field field : fields) {
+      if (sourceFields.contains(field)) {
+        if (isPublic(field) && !isFinal(field)) {
+          try {
+            if (diffFilter == null || diffFilter.isAccept(field)) {
+              copyFieldValue(from, to, field);
+              valuesChanged = true;
+            }
+          }
+          catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        }
+      }
+    }
+    return valuesChanged;
+  }
+
+  public static void copyFieldValue(@NotNull Object from, @NotNull Object to, @NotNull Field field)
+          throws IllegalAccessException {
+    Class<?> fieldType = field.getType();
+    if (fieldType.isPrimitive() || fieldType.equals(String.class)) {
+      field.set(to, field.get(from));
+    }
+    else {
+      throw new RuntimeException("Field '" + field.getName()+"' not copied: unsupported type: "+field.getType());
+    }
+  }
+
+  private static boolean isPublic(final Field field) {
+    return (field.getModifiers() & Modifier.PUBLIC) != 0;
+  }
+
+  private static boolean isFinal(final Field field) {
+    return (field.getModifiers() & Modifier.FINAL) != 0;
   }
 
 

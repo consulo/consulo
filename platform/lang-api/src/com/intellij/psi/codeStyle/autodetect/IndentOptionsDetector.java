@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options;
+package com.intellij.psi.codeStyle.autodetect;
 
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author yole
- */
-public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implements SchemeProcessor<T> {
-  public void initScheme(@NotNull T scheme) {
-  }
+public interface IndentOptionsDetector {
 
-  public void onSchemeAdded(@NotNull final T scheme) {
-  }
+  @NotNull
+  CommonCodeStyleSettings.IndentOptions getIndentOptions();
 
-  public void onSchemeDeleted(@NotNull final T scheme) {
-  }
-
-  public void onCurrentSchemeChanged(final T newCurrentScheme) {
-  }
 }

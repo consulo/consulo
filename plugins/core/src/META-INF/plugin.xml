@@ -855,6 +855,7 @@
     </extensionPoint>
 
     <extensionPoint name="fileTypeIndentOptionsProvider" interface="com.intellij.psi.codeStyle.FileTypeIndentOptionsProvider"/>
+    <extensionPoint name="fileIndentOptionsProvider" interface="com.intellij.psi.codeStyle.FileIndentOptionsProvider"/>
     <extensionPoint name="referenceImporter" interface="com.intellij.codeInsight.daemon.ReferenceImporter"/>
     <extensionPoint name="elementLookupRenderer" interface="com.intellij.codeInsight.lookup.impl.ElementLookupRenderer"/>
 
@@ -2558,5 +2559,7 @@
     <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
     <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
     <addModuleDependencyTabFactory implementation="com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
+
+    <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
   </extensions>
 </idea-plugin>

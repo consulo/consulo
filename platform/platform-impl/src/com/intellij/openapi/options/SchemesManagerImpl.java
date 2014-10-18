@@ -570,12 +570,12 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     schemeKey.getExternalInfo().setCurrentFileName(fileName);
   }
 
-  private static long computeHashValue(final Document document) throws IOException {
-    return JDOMUtil.getTreeHash(document);
+  private static long computeHashValue(Parent element) {
+    return JDOMUtil.getTreeHash(element instanceof Element ? (Element)element : ((Document)element).getRootElement());
   }
 
   @Nullable
-  private Document writeSchemeToDocument(final E scheme) throws WriteExternalException {
+  private org.jdom.Parent writeSchemeToDocument(@NotNull E scheme) throws WriteExternalException {
     if (isShared(scheme)) {
       String originalPath = scheme.getExternalInfo().getOriginalPath();
       if (originalPath != null) {
@@ -584,11 +584,10 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
         root.setAttribute(ORIGINAL_SCHEME_PATH, originalPath);
 
         Element localCopy = new Element(SCHEME_LOCAL_COPY);
-        localCopy.addContent(myProcessor.writeScheme(scheme).getRootElement().clone());
+        localCopy.addContent(getClone(myProcessor.writeScheme(scheme)));
 
         root.addContent(localCopy);
-
-        return new Document(root);
+        return root;
       }
       else {
         return null;
@@ -597,6 +596,11 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     else {
       return myProcessor.writeScheme(scheme);
     }
+  }
+
+  @NotNull
+  private static Element getClone(@NotNull Parent result) {
+    return (result instanceof Element ? (Element)result : ((Document)result).getRootElement()).clone();
   }
 
   public void updateConfigFilesFromStreamProviders() {
@@ -685,6 +689,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     return myFileSpec + "/" + subpath;
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void exportScheme(@NotNull final E scheme, final String name, final String description) throws WriteExternalException, IOException {
     StreamProvider provider = getProvider();
@@ -692,31 +697,39 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
       return;
     }
 
-    Document document = myProcessor.writeScheme(scheme);
+    Parent document = myProcessor.writeScheme(scheme);
     if (document != null) {
       String fileSpec = getFileFullPath(UniqueFileNamesProvider.convertName(scheme.getName())) + mySchemeExtension;
-      if (!provider.isApplicable(fileSpec, RoamingType.GLOBAL)) {
+      if (!provider.isApplicable(fileSpec, getRoamingType(provider))) {
         return;
       }
 
-      Document wrapped = wrap(document, name, description);
+      Element wrapped = wrap(document, name, description);
       if (provider instanceof CurrentUserHolder) {
         wrapped = wrapped.clone();
         String userName = ((CurrentUserHolder)provider).getCurrentUserName();
         if (userName != null) {
-          wrapped.getRootElement().setAttribute(USER, userName);
+          wrapped.setAttribute(USER, userName);
         }
       }
-      StorageUtil.doSendContent(provider, fileSpec, wrapped, RoamingType.GLOBAL, false);
+      StorageUtil.doSendContent(provider, fileSpec, wrapped, getRoamingType(provider), false);
     }
   }
 
-  private static Document wrap(final Document original, final String name, final String description) {
+  @SuppressWarnings("deprecation")
+  @NotNull
+  private static RoamingType getRoamingType(@NotNull StreamProvider provider) {
+    // for deprecated old stream we use GLOBAL as before to preserve backward compatibility
+    return provider instanceof CurrentUserHolder ? RoamingType.GLOBAL : RoamingType.PER_USER;
+  }
+
+  @NotNull
+  private static Element wrap(@NotNull Parent original, @NotNull String name, @NotNull String description) {
     Element sharedElement = new Element(SHARED_SCHEME_ORIGINAL);
     sharedElement.setAttribute(NAME, name);
     sharedElement.setAttribute(DESCRIPTION, description);
-    sharedElement.addContent(original.getRootElement().clone());
-    return new Document(sharedElement);
+    sharedElement.addContent(getClone(original));
+    return sharedElement;
   }
 
   @Nullable
@@ -865,11 +878,11 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
           final String fileName = getFileNameForScheme(fileNameProvider, eScheme);
           try {
 
-            final Document document = writeSchemeToDocument(eScheme);
-            if (document != null) {
-              long newHash = computeHashValue(document);
+            final Parent element = writeSchemeToDocument(eScheme);
+            if (element != null) {
+              long newHash = computeHashValue(element);
               Long oldHash = eScheme.getExternalInfo().getHash();
-              saveIfNeeded(eScheme, fileName, document, newHash, oldHash);
+              saveIfNeeded(eScheme, fileName, element, newHash, oldHash);
             }
           }
           catch (final IOException e) {

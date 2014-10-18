@@ -208,7 +208,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
       }
 
       @Override
-      public Document writeScheme(@NotNull final AbstractFileType fileType) throws WriteExternalException {
+      public org.jdom.Parent writeScheme(@NotNull final AbstractFileType fileType) throws WriteExternalException {
         Element root = new Element(ELEMENT_FILETYPE);
 
         writeHeader(root, fileType);
@@ -225,7 +225,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements NamedJDOME
           writeExtensionsMap(map, fileType, false);
         }
 
-        return new Document(root);
+        return root;
       }
 
       @Override

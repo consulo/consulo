@@ -43,7 +43,6 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
@@ -722,13 +721,13 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     return InspectionProfileImplHolder.DEFAULT_PROFILE;
   }
 
-  public Document saveToDocument() throws WriteExternalException {
+  public Element saveToDocument() throws WriteExternalException {
     if (isLocal()) {
       Element root = new Element(ROOT_ELEMENT_TAG);
       root.setAttribute(PROFILE_NAME_TAG, myName);
       writeExternal(root);
       //myVisibleTreeState.writeExternal(root);
-      return new Document(root);
+      return root;
     }
     else {
       return null;
@@ -743,9 +742,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     if (scopes == null) {
       return;
     }
-    final List children = scopes.getChildren(SCOPE);
-    for (Object s : children) {
-      Element scopeElement = (Element)s;
+    final List<Element> children = scopes.getChildren(SCOPE);
+    for (Element scopeElement : children) {
       final String profile = scopeElement.getAttributeValue(DefaultProjectProfileManager.PROFILE);
       if (profile != null) {
         final InspectionProfileImpl inspectionProfile = (InspectionProfileImpl)getProfileManager().getProfile(profile);

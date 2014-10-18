@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options;
+package com.intellij.psi.codeStyle.autodetect;
 
-import org.jetbrains.annotations.NotNull;
+public class IndentUsageInfo {
+  private final int indentSize;
+  private final int timesUsed;
 
-/**
- * @author yole
- */
-public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implements SchemeProcessor<T> {
-  public void initScheme(@NotNull T scheme) {
+  public IndentUsageInfo(int indentSize, int timesUsed) {
+    this.indentSize = indentSize;
+    this.timesUsed = timesUsed;
   }
 
-  public void onSchemeAdded(@NotNull final T scheme) {
+  public int getIndentSize() {
+    return indentSize;
   }
 
-  public void onSchemeDeleted(@NotNull final T scheme) {
+  public int getTimesUsed() {
+    return timesUsed;
   }
 
-  public void onCurrentSchemeChanged(final T newCurrentScheme) {
+  @Override
+  public String toString() {
+    return "indent: " + indentSize + ", used " + timesUsed;
   }
 }

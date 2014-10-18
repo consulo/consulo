@@ -31,6 +31,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,17 +68,17 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
       "$ROOT_CONFIG$/keymaps",
       new BaseSchemeProcessor<KeymapImpl>() {
         @Override
-        public KeymapImpl readScheme(final Document schemeContent) throws InvalidDataException, IOException, JDOMException {
+        public KeymapImpl readScheme(@NotNull final Document schemeContent) throws InvalidDataException, IOException, JDOMException {
           return readKeymap(schemeContent);
         }
 
         @Override
-        public Document writeScheme(final KeymapImpl scheme) throws WriteExternalException {
-          return new Document(scheme.writeExternal());
+        public Parent writeScheme(@NotNull final KeymapImpl scheme) throws WriteExternalException {
+          return scheme.writeExternal();
         }
 
         @Override
-        public boolean shouldBeSaved(final KeymapImpl scheme) {
+        public boolean shouldBeSaved(@NotNull final KeymapImpl scheme) {
           return scheme.canModify();
         }
       },
