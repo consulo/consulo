@@ -86,6 +86,10 @@
       <with attribute="instanceClass" implements="com.intellij.openapi.options.Configurable"/>
     </extensionPoint>
 
+    <extensionPoint name="generalCodeStyleOptionsProvider" beanClass="com.intellij.application.options.GeneralCodeStyleOptionsProviderEP">
+      <with attribute="instance" implements="com.intellij.application.options.GeneralCodeStyleOptionsProvider"/>
+    </extensionPoint>
+
     <extensionPoint name="selectInTarget"
                     interface="com.intellij.ide.SelectInTarget"
                     area="CONSULO_PROJECT"/>

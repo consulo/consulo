@@ -24,8 +24,10 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -45,6 +47,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -56,6 +59,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   private static final String UNIX_STRING = ApplicationBundle.message("combobox.crlf.unix");
   private static final String WINDOWS_STRING = ApplicationBundle.message("combobox.crlf.windows");
   private static final String MACINTOSH_STRING = ApplicationBundle.message("combobox.crlf.mac");
+  private final List<GeneralCodeStyleOptionsProvider> myAdditionalOptions;
 
   private JSpinner myRightMarginSpinner;
   private JComboBox myLineSeparatorCombo;
@@ -70,6 +74,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   private JBLabel myFormatterOffLabel;
   private JBLabel myFormatterOnLabel;
   private JPanel myMarkerOptionsPanel;
+  private JPanel myAdditionalSettingsPanel;
   private JCheckBox myAutodetectIndentsBox;
   private final SmartIndentOptionsEditor myIndentOptionsEditor;
   private final JScrollPane myScrollPane;
@@ -102,6 +107,13 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     myMarkerOptionsPanel.setBorder(
             IdeBorderFactory.createTitledBorder(ApplicationBundle.message("settings.code.style.general.formatter.marker.options.title"), true));
     myScrollPane = ScrollPaneFactory.createScrollPane(myPanel, true);
+
+    myAdditionalSettingsPanel.setLayout(new VerticalFlowLayout(true, true));
+    myAdditionalSettingsPanel.removeAll();
+    myAdditionalOptions = ConfigurableWrapper.createConfigurables(GeneralCodeStyleOptionsProviderEP.EP_NAME);
+    for (GeneralCodeStyleOptionsProvider provider : myAdditionalOptions) {
+      myAdditionalSettingsPanel.add(provider.createComponent());
+    }
   }
 
   @Override
@@ -146,6 +158,10 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     settings.setFormatterOnPattern(compilePattern(settings, myFormatterOnTagField, settings.FORMATTER_ON_TAG));
 
     settings.AUTODETECT_INDENTS = myAutodetectIndentsBox.isSelected();
+
+    for (GeneralCodeStyleOptionsProvider option : myAdditionalOptions) {
+      option.apply(settings);
+    }
   }
 
   @Nullable
@@ -208,6 +224,10 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
       if (settings.FORMATTER_TAGS_ENABLED) return true;
     }
 
+    for (GeneralCodeStyleOptionsProvider option : myAdditionalOptions) {
+      if (option.isModified(settings)) return true;
+    }
+
     if (settings.AUTODETECT_INDENTS != myAutodetectIndentsBox.isSelected()) return true;
 
     return myIndentOptionsEditor.isModified(settings, settings.OTHER_INDENT_OPTIONS);
@@ -249,6 +269,10 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     setFormatterTagControlsEnabled(settings.FORMATTER_TAGS_ENABLED);
 
     myAutodetectIndentsBox.setSelected(settings.AUTODETECT_INDENTS);
+
+    for (GeneralCodeStyleOptionsProvider option : myAdditionalOptions) {
+      option.reset(settings);
+    }
   }
 
   private void setFormatterTagControlsEnabled(boolean isEnabled) {
