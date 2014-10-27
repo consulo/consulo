@@ -488,6 +488,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Panel.opaque", Boolean.TRUE);
+      uiDefaults.put("ScrollBarUI", "com.intellij.ide.ui.laf.IntelliJButtonlessScrollBarUI");
     }
     else if (UIUtil.isWinLafOnVista()) {
       uiDefaults.put("ComboBox.border", null);
