@@ -207,7 +207,7 @@ public class ConfigurationContext {
   @Nullable
   private static PsiElement getSelectedPsiElement(final DataContext dataContext, final Project project) {
     PsiElement element = null;
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     if (editor != null){
       final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (psiFile != null) {
@@ -219,12 +219,13 @@ public class ConfigurationContext {
       }
     }
     if (element == null) {
-      element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+      final PsiElement[] elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+      element = elements != null && elements.length > 0 ? elements[0] : null;
     }
     if (element == null) {
-      final VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
-      if (file != null) {
-        element = PsiManager.getInstance(project).findFile(file);
+      final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+      if (files != null && files.length > 0) {
+        element = PsiManager.getInstance(project).findFile(files[0]);
       }
     }
     return element;

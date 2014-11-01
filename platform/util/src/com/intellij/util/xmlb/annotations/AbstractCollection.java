@@ -31,7 +31,6 @@ public @interface AbstractCollection {
    */
   boolean surroundWithTag() default true;
 
-  
   String elementTag() default Constants.OPTION;
   String elementValueAttribute() default Constants.VALUE;
 

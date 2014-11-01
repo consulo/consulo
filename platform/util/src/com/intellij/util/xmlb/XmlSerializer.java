@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.Set;
 
 public class XmlSerializer {
   private static final SerializationFilter TRUE_FILTER = new SerializationFilter() {
@@ -38,13 +39,21 @@ public class XmlSerializer {
   private XmlSerializer() {
   }
 
-  public static Element serialize(Object object) throws XmlSerializationException {
+  /**
+   * Consider to use {@link SkipDefaultValuesSerializationFilters}
+   */
+  public static Element serialize(@NotNull Object object) throws XmlSerializationException {
     return serialize(object, TRUE_FILTER);
   }
 
-  public static Element serialize(Object object, SerializationFilter filter) throws XmlSerializationException {
-    if (filter == null) filter = TRUE_FILTER;
-    return new XmlSerializerImpl(filter).serialize(object);
+  @NotNull
+  public static Element serialize(@NotNull Object object, @Nullable SerializationFilter filter) throws XmlSerializationException {
+    return XmlSerializerImpl.serialize(object, filter == null ? TRUE_FILTER : filter);
+  }
+
+  @Nullable
+  public static Element serializeIfNotDefault(@NotNull Object object, @Nullable SerializationFilter filter) {
+    return XmlSerializerImpl.serializeIfNotDefault(object, filter == null ? TRUE_FILTER : filter);
   }
 
   @Nullable
@@ -62,7 +71,7 @@ public class XmlSerializer {
       throw e;
     }
     catch (Exception e) {
-      throw new XmlSerializationException(e);
+      throw new XmlSerializationException("Cannot deserialize class " + aClass.getName(), e);
     }
   }
 
@@ -93,11 +102,12 @@ public class XmlSerializer {
   }
 
   public static void deserializeInto(@NotNull Object bean, @NotNull Element element) {
-    try {
-      final Binding binding = XmlSerializerImpl.getBinding(bean.getClass());
-      assert binding instanceof BeanBinding;
+    deserializeInto(bean, element, null);
+  }
 
-      ((BeanBinding)binding).deserializeInto(bean, element);
+  public static void deserializeInto(@NotNull Object bean, @NotNull Element element, @Nullable Set<String> accessorNameTracker) {
+    try {
+      ((BeanBinding)XmlSerializerImpl.getBinding(bean.getClass())).deserializeInto(bean, element, accessorNameTracker);
     }
     catch (XmlSerializationException e) {
       throw e;
@@ -111,14 +121,13 @@ public class XmlSerializer {
     serializeInto(bean, element, null);
   }
 
-  public static void serializeInto(final Object bean, final Element element, @Nullable SerializationFilter filter) {
+  public static void serializeInto(@NotNull Object bean, @NotNull Element element, @Nullable SerializationFilter filter) {
     if (filter == null) {
       filter = TRUE_FILTER;
     }
     try {
-      final Binding binding = XmlSerializerImpl.getBinding(bean.getClass());
+      Binding binding = XmlSerializerImpl.getBinding(bean.getClass());
       assert binding instanceof BeanBinding;
-
       ((BeanBinding)binding).serializeInto(bean, element, filter);
     }
     catch (XmlSerializationException e) {

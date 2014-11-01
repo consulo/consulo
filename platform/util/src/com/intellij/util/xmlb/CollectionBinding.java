@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.util.xmlb;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -33,10 +34,12 @@ class CollectionBinding extends AbstractCollectionBinding  {
     return (Class)arg;
   }
 
-
+  @Override
   Object processResult(Collection result, Object target) {
-    if (myAccessor == null) return result;
-    
+    if (myAccessor == null) {
+      return result;
+    }
+
     assert target != null: "Null target in " + myAccessor;
     assert target instanceof Collection : "Wrong target: " + target.getClass() + " in " + myAccessor;
     Collection c = (Collection)target;
@@ -47,13 +50,14 @@ class CollectionBinding extends AbstractCollectionBinding  {
     return target;
   }
 
-  Iterable getIterable(Object o) {
-    if (o instanceof Set) {
-      return new TreeSet((Set)o);
-    }
-    return (Collection)o;
+  @NotNull
+  @Override
+  Collection<Object> getIterable(@NotNull Object o) {
+    //noinspection unchecked
+    return o instanceof Set ? new TreeSet((Set)o) : (Collection<Object>)o;
   }
 
+  @Override
   protected String getCollectionTagName(final Object target) {
     if (target instanceof Set) {
       return Constants.SET;
@@ -64,9 +68,8 @@ class CollectionBinding extends AbstractCollectionBinding  {
     return super.getCollectionTagName(target);
   }
 
-  protected Collection createCollection(final String tagName) {
-    if (tagName.equals(Constants.SET)) return new HashSet();
-    if (tagName.equals(Constants.LIST)) return new ArrayList();
-    return super.createCollection(tagName);
+  @Override
+  protected Collection createCollection(@NotNull String tagName) {
+    return tagName.equals(Constants.SET) ? new HashSet() : super.createCollection(tagName);
   }
 }

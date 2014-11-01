@@ -112,13 +112,17 @@ public class ExecutionUtil {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
+        if (project.isDisposed()) {
+          return;
+        }
+
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         if (toolWindowManager.canShowNotification(toolWindowId)) {
           //noinspection SSBasedInspection
           toolWindowManager.notifyByBalloon(toolWindowId, MessageType.ERROR, fullMessage, null, finalListener);
         }
         else {
-          Messages.showErrorDialog(project, fullMessage, "");
+          Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");
         }
         NotificationListener notificationListener = ObjectUtils.tryCast(finalListener, NotificationListener.class);
         ourNotificationGroup.createNotification(title, finalDescription, NotificationType.ERROR, notificationListener).notify(project);

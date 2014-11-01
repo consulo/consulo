@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 package com.intellij.util.xmlb;
 
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ReflectionUtil;
 import org.jdom.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
@@ -30,16 +33,21 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author mike
  */
 class XmlSerializerImpl {
-  private final SerializationFilter filter;
   private static SoftReference<Map<Pair<Type, Accessor>, Binding>> ourBindings;
 
-  public XmlSerializerImpl(SerializationFilter filter) {
-    this.filter = filter;
-  }
-
-  Element serialize(Object object) throws XmlSerializationException {
+  @NotNull
+  static Element serialize(@NotNull Object object, @NotNull SerializationFilter filter) throws XmlSerializationException {
     try {
-      return (Element)getBinding(object.getClass()).serialize(object, null, filter);
+      Class<?> aClass = object.getClass();
+      Binding binding = _getClassBinding(aClass, aClass, null);
+      if (binding instanceof BeanBinding) {
+        // top level expects not null (null indicates error, empty element will be omitted)
+        return ((BeanBinding)binding).serialize(object, true, filter);
+      }
+      else {
+        //noinspection ConstantConditions
+        return (Element)binding.serialize(object, null, filter);
+      }
     }
     catch (XmlSerializationException e) {
       throw e;
@@ -49,46 +57,39 @@ class XmlSerializerImpl {
     }
   }
 
-  static Binding getBinding(Type type) {
+  @Nullable
+  static Element serializeIfNotDefault(@NotNull Object object, @NotNull SerializationFilter filter) {
+    Class<?> aClass = object.getClass();
+    return (Element)_getClassBinding(aClass, aClass, null).serialize(object, null, filter);
+  }
+
+  static Binding getBinding(@NotNull Type type) {
     return getTypeBinding(type, null);
   }
 
-  static Binding getBinding(Accessor accessor) {
+  static Binding getBinding(@NotNull Accessor accessor) {
     return getTypeBinding(accessor.getGenericType(), accessor);
   }
 
-  static Binding getTypeBinding(Type type, @Nullable Accessor accessor) {
-    if (type instanceof Class) {
-      return _getClassBinding((Class<?>)type, type, accessor);
-    }
-    if (type instanceof ParameterizedType) {
-      ParameterizedType parameterizedType = (ParameterizedType)type;
-      Type rawType = parameterizedType.getRawType();
-      assert rawType instanceof Class;
-      return _getClassBinding((Class<?>)rawType, type, accessor);
-    }
-
-    throw new UnsupportedOperationException("Can't get binding for: " + type);
+  static Binding getTypeBinding(@NotNull Type type, @Nullable Accessor accessor) {
+    return _getClassBinding(type instanceof Class ? (Class<?>)type : (Class<?>)((ParameterizedType)type).getRawType(), type, accessor);
   }
 
-  private static synchronized Binding _getClassBinding(Class<?> aClass, Type originalType, final Accessor accessor) {
-    final Pair<Type, Accessor> p = new Pair<Type, Accessor>(originalType, accessor);
-
+  private static synchronized Binding _getClassBinding(@NotNull Class<?> aClass, @NotNull Type originalType, @Nullable Accessor accessor) {
+    Pair<Type, Accessor> key = Pair.create(originalType, accessor);
     Map<Pair<Type, Accessor>, Binding> map = getBindingCacheMap();
-
-    Binding binding = map.get(p);
+    Binding binding = map.get(key);
     if (binding == null) {
       binding = _getNonCachedClassBinding(aClass, accessor, originalType);
-      map.put(p, binding);
+      map.put(key, binding);
       binding.init();
     }
-
     return binding;
   }
 
+  @NotNull
   private static Map<Pair<Type, Accessor>, Binding> getBindingCacheMap() {
-    SoftReference<Map<Pair<Type, Accessor>, Binding>> ref = ourBindings;
-    Map<Pair<Type, Accessor>, Binding> map = ref == null ? null : ref.get();
+    Map<Pair<Type, Accessor>, Binding> map = com.intellij.reference.SoftReference.dereference(ourBindings);
     if (map == null) {
       map = new ConcurrentHashMap<Pair<Type, Accessor>, Binding>();
       ourBindings = new SoftReference<Map<Pair<Type, Accessor>, Binding>>(map);
@@ -96,7 +97,7 @@ class XmlSerializerImpl {
     return map;
   }
 
-  private static Binding _getNonCachedClassBinding(final Class<?> aClass, final Accessor accessor, final Type originalType) {
+  private static Binding _getNonCachedClassBinding(@NotNull Class<?> aClass, @Nullable Accessor accessor, @NotNull Type originalType) {
     if (aClass.isPrimitive()) return new PrimitiveValueBinding(aClass);
     if (aClass.isArray()) {
       return Element.class.isAssignableFrom(aClass.getComponentType())
@@ -115,11 +116,15 @@ class XmlSerializerImpl {
     if (Date.class.isAssignableFrom(aClass)) return new DateBinding();
     if (aClass.isEnum()) return new PrimitiveValueBinding(aClass);
 
-    return new BeanBinding(aClass, accessor);
+    return new BeanBinding(aClass);
   }
 
   @Nullable
-  @SuppressWarnings({"unchecked"})
+  @Deprecated
+  @SuppressWarnings({"unchecked", "unused"})
+  /**
+   * @deprecated to remove in IDEA 15
+   */
   static <T> T findAnnotation(Annotation[] annotations, Class<T> aClass) {
     if (annotations == null) return null;
 
@@ -132,21 +137,38 @@ class XmlSerializerImpl {
   @Nullable
   @SuppressWarnings({"unchecked"})
   static <T> T convert(Object value, Class<T> type) {
-    if (value == null) return null;
-    if (type.isInstance(value)) return (T)value;
-    if (String.class.isAssignableFrom(type)) return (T)String.valueOf(value);
-    if (int.class.isAssignableFrom(type) || Integer.class.isAssignableFrom(type)) return (T)Integer.valueOf(String.valueOf(value));
-    if (double.class.isAssignableFrom(type) || Double.class.isAssignableFrom(type)) return (T)Double.valueOf(String.valueOf(value));
-    if (float.class.isAssignableFrom(type) || Float.class.isAssignableFrom(type)) return (T)Float.valueOf(String.valueOf(value));
-    if (long.class.isAssignableFrom(type) || Long.class.isAssignableFrom(type)) return (T)Long.valueOf(String.valueOf(value));
-    if (boolean.class.isAssignableFrom(type) || Boolean.class.isAssignableFrom(type)) return (T)Boolean.valueOf(String.valueOf(value));
-
+    if (value == null) {
+      return null;
+    }
+    if (type.isInstance(value)) {
+      return (T)value;
+    }
+    if (String.class.isAssignableFrom(type)) {
+      return (T)String.valueOf(value);
+    }
+    if (int.class.isAssignableFrom(type) || Integer.class.isAssignableFrom(type)) {
+      return (T)Integer.valueOf(String.valueOf(value));
+    }
+    if (double.class.isAssignableFrom(type) || Double.class.isAssignableFrom(type)) {
+      return (T)Double.valueOf(String.valueOf(value));
+    }
+    if (float.class.isAssignableFrom(type) || Float.class.isAssignableFrom(type)) {
+      return (T)Float.valueOf(String.valueOf(value));
+    }
+    if (long.class.isAssignableFrom(type) || Long.class.isAssignableFrom(type)) {
+      return (T)Long.valueOf(String.valueOf(value));
+    }
+    if (boolean.class.isAssignableFrom(type) || Boolean.class.isAssignableFrom(type)) {
+      return (T)Boolean.valueOf(String.valueOf(value));
+    }
+    if (char.class.isAssignableFrom(type) || Character.class.isAssignableFrom(type)) {
+      return (T)value;
+    }
     if (type.isEnum()) {
       final T[] enumConstants = type.getEnumConstants();
       for (T enumConstant : enumConstants) {
         if (enumConstant.toString().equals(value.toString())) return enumConstant;
       }
-
       return null;
     }
 
@@ -154,18 +176,17 @@ class XmlSerializerImpl {
   }
 
   public static boolean isIgnoredNode(final Object child) {
-    if (child instanceof Text && ((Text)child).getValue().trim().isEmpty()) {
+    if (child instanceof Text && StringUtil.isEmptyOrSpaces(((Text)child).getValue())) {
       return true;
     }
     if (child instanceof Comment) {
       return true;
     }
     if (child instanceof Attribute) {
-      Attribute attr = (Attribute)child;
-      final String namespaceURI = attr.getNamespaceURI();
-      if (namespaceURI != null && !namespaceURI.isEmpty()) return true;
+      if (!StringUtil.isEmpty(((Attribute)child).getNamespaceURI())) {
+        return true;
+      }
     }
-
     return false;
   }
 
@@ -178,5 +199,17 @@ class XmlSerializerImpl {
     }
 
     return result.toArray(new Content[result.size()]);
+  }
+
+  /**
+   * {@link Class#newInstance()} cannot instantiate private classes
+   */
+  static <T> T newInstance(@NotNull Class<T> aClass) {
+    try {
+      return ReflectionUtil.newInstance(aClass);
+    }
+    catch (Exception e) {
+      throw new XmlSerializationException(e);
+    }
   }
 }

@@ -126,36 +126,39 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
       final List<ConfigurationFromContext> producers = getConfigurationsFromContext(context);
       if (producers.isEmpty()) return;
       if (producers.size() > 1) {
-        final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+        final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
         Collections.sort(producers, ConfigurationFromContext.NAME_COMPARATOR);
-        final ListPopup popup =
-          JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationFromContext>(ExecutionBundle.message("configuration.action.chooser.title"), producers) {
-            @Override
-            @NotNull
-            public String getTextFor(final ConfigurationFromContext producer) {
-              return producer.getConfigurationType().getDisplayName();
-            }
+        final ListPopup popup = JBPopupFactory.getInstance()
+                .createListPopup(new BaseListPopupStep<ConfigurationFromContext>(ExecutionBundle.message("configuration.action.chooser.title"), producers) {
+                  @Override
+                  @NotNull
+                  public String getTextFor(final ConfigurationFromContext producer) {
+                    return producer.getConfigurationType().getDisplayName();
+                  }
 
-            @Override
-            public Icon getIconFor(final ConfigurationFromContext producer) {
-              return producer.getConfigurationType().getIcon();
-            }
+                  @Override
+                  public Icon getIconFor(final ConfigurationFromContext producer) {
+                    return producer.getConfigurationType().getIcon();
+                  }
 
-            @Override
-            public PopupStep onChosen(final ConfigurationFromContext producer, final boolean finalChoice) {
-              perform(producer, context);
-              return FINAL_CHOICE;
-            }
-          });
+                  @Override
+                  public PopupStep onChosen(final ConfigurationFromContext producer, final boolean finalChoice) {
+                    perform(producer, context);
+                    return FINAL_CHOICE;
+                  }
+                });
         final InputEvent event = e.getInputEvent();
         if (event instanceof MouseEvent) {
           popup.show(new RelativePoint((MouseEvent)event));
-        } else if (editor != null) {
+        }
+        else if (editor != null) {
           popup.showInBestPositionFor(editor);
-        } else {
+        }
+        else {
           popup.showInBestPositionFor(dataContext);
         }
-      } else {
+      }
+      else {
         perform(producers.get(0), context);
       }
       return;
@@ -178,7 +181,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
   protected abstract void perform(ConfigurationContext context);
 
   @Override
-  public void update(final AnActionEvent event){
+  public void update(final AnActionEvent event) {
     final ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
     final Presentation presentation = event.getPresentation();
     final RunnerAndConfigurationSettings existing = context.findExisting();
@@ -186,11 +189,11 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     if (configuration == null) {
       configuration = context.getConfiguration();
     }
-    if (configuration == null){
+    if (configuration == null) {
       presentation.setEnabled(false);
       presentation.setVisible(false);
     }
-    else{
+    else {
       presentation.setEnabled(true);
       presentation.setVisible(true);
       final List<ConfigurationFromContext> fromContext = getConfigurationsFromContext(context);

@@ -16,27 +16,12 @@
 package com.intellij.util.xmlb;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+public abstract class Converter<T> {
+  @Nullable
+  public abstract T fromString(@NotNull String value);
 
-public interface Accessor {
-  Object read(Object o);
-
-  void write(Object o, Object value);
-
-  @Deprecated
   @NotNull
-  /**
-   * @deprecated to remove in IDEA 15
-   */
-  Annotation[] getAnnotations();
-
-  <T extends Annotation> T getAnnotation(@NotNull Class<T> annotationClass);
-
-  String getName();
-
-  Class<?> getValueClass();
-
-  Type getGenericType();
+  public abstract String toString(@NotNull T t);
 }

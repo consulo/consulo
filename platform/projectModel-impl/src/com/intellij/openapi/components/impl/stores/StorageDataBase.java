@@ -13,30 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.xmlb;
+package com.intellij.openapi.components.impl.stores;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import java.util.Set;
 
-public interface Accessor {
-  Object read(Object o);
-
-  void write(Object o, Object value);
-
-  @Deprecated
+public abstract class StorageDataBase {
   @NotNull
-  /**
-   * @deprecated to remove in IDEA 15
-   */
-  Annotation[] getAnnotations();
+  public abstract Set<String> getComponentNames();
 
-  <T extends Annotation> T getAnnotation(@NotNull Class<T> annotationClass);
-
-  String getName();
-
-  Class<?> getValueClass();
-
-  Type getGenericType();
+  public abstract boolean hasState(@NotNull String componentName);
 }

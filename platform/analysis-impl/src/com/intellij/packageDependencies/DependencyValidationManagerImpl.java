@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.packageDependencies;
 
 import com.intellij.icons.AllIcons;
@@ -21,28 +20,30 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.UIUtil;
-import org.jdom.Attribute;
+import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @State(
-  name="DependencyValidationManager",
-  storages= {
-    @Storage(file = StoragePathMacros.PROJECT_FILE),
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", scheme = StorageScheme.DIRECTORY_BASED,
-             stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)}
+        name = "DependencyValidationManager",
+        storages = {
+                @Storage(file = StoragePathMacros.PROJECT_FILE),
+                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", scheme = StorageScheme.DIRECTORY_BASED,
+                         stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)}
 )
 public class DependencyValidationManagerImpl extends DependencyValidationManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packageDependencies.DependencyValidationManagerImpl");
@@ -50,7 +51,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   private final List<DependencyRule> myRules = new ArrayList<DependencyRule>();
   private final NamedScopeManager myNamedScopeManager;
 
-  public boolean SKIP_IMPORT_STATEMENTS = false;
+  private boolean mySkipImportStatements;
+  private boolean mySkipImportStatementsWasSpecified;
 
   @NonNls private static final String DENY_RULE_KEY = "deny_rule";
   @NonNls private static final String FROM_SCOPE_KEY = "from_scope";
@@ -59,8 +61,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @NonNls private static final String UNNAMED_SCOPE = "unnamed_scope";
   @NonNls private static final String VALUE = "value";
 
-
-  private final Map<String, PackageSet> myUnnamedScopes = new HashMap<String, PackageSet>();
+  private final Map<String, PackageSet> myUnnamedScopes = new THashMap<String, PackageSet>();
 
   public DependencyValidationManagerImpl(final Project project, NamedScopeManager namedScopeManager) {
     super(project);
@@ -85,7 +86,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  public NamedScope getPredefinedScope(String name) {
+  public NamedScope getPredefinedScope(@NotNull String name) {
     final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
       final NamedScope scope = scopesProvider instanceof CustomScopesProviderEx
@@ -139,12 +140,12 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   @Override
   public boolean skipImportStatements() {
-    return SKIP_IMPORT_STATEMENTS;
+    return mySkipImportStatements;
   }
 
   @Override
   public void setSkipImportStatements(final boolean skip) {
-    SKIP_IMPORT_STATEMENTS = skip;
+    mySkipImportStatements = skip;
   }
 
   @NotNull
@@ -198,12 +199,11 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  public void loadState(final Element element) {
-    try {
-      DefaultJDOMExternalizer.readExternal(this, element);
-    }
-    catch (InvalidDataException e) {
-      LOG.info(e);
+  public void loadState(Element element) {
+    Element option = element.getChild("option");
+    if (option != null && "SKIP_IMPORT_STATEMENTS".equals(option.getAttributeValue("name"))) {
+      mySkipImportStatementsWasSpecified = !myProject.isDefault();
+      mySkipImportStatements = Boolean.parseBoolean(option.getAttributeValue("value"));
     }
 
     super.loadState(element);
@@ -215,7 +215,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
         final String packageSet = ((Element)unnamedScope).getAttributeValue(VALUE);
         myUnnamedScopes.put(packageSet, packageSetFactory.compile(packageSet));
       }
-      catch (ParsingException e) {
+      catch (ParsingException ignored) {
         //skip pattern
       }
     }
@@ -226,9 +226,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   private void readRules(Element element) {
     removeAllRules();
 
-    List rules = element.getChildren(DENY_RULE_KEY);
-    for (Object rule1 : rules) {
-      DependencyRule rule = readRule((Element)rule1);
+    for (Element rule1 : element.getChildren(DENY_RULE_KEY)) {
+      DependencyRule rule = readRule(rule1);
       if (rule != null) {
         addRule(rule);
       }
@@ -238,18 +237,17 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @Override
   public Element getState() {
     Element element = super.getState();
-    try {
-      DefaultJDOMExternalizer.writeExternal(this, element);
+    assert element != null;
+    if (mySkipImportStatements || mySkipImportStatementsWasSpecified) {
+      element.addContent(new Element("option").setAttribute("name", "SKIP_IMPORT_STATEMENTS").setAttribute("value", Boolean.toString(mySkipImportStatements)));
     }
-    catch (WriteExternalException e) {
-      LOG.info(e);
-    }
-    final List<String> unnamedScopes = new ArrayList<String>(myUnnamedScopes.keySet());
-    Collections.sort(unnamedScopes);
-    for (final String unnamedScope : unnamedScopes) {
-      Element unnamedElement = new Element(UNNAMED_SCOPE);
-      unnamedElement.setAttribute(VALUE, unnamedScope);
-      element.addContent(unnamedElement);
+
+    if (!myUnnamedScopes.isEmpty()) {
+      String[] unnamedScopes = myUnnamedScopes.keySet().toArray(new String[myUnnamedScopes.size()]);
+      Arrays.sort(unnamedScopes);
+      for (String unnamedScope : unnamedScopes) {
+        element.addContent(new Element(UNNAMED_SCOPE).setAttribute(VALUE, unnamedScope));
+      }
     }
 
     writeRules(element);
@@ -306,49 +304,25 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     return new DependencyRule(fromNamedScope, toNamedScope, Boolean.valueOf(denyRule).booleanValue());
   }
 
-  public static class ScopesStateSplitter implements StateSplitter {
+  static final class ScopesStateSplitter extends MainConfigurationStateSplitter {
+    @NotNull
     @Override
-    public List<Pair<Element, String>> splitState(Element e) {
-      final UniqueNameGenerator generator = new UniqueNameGenerator();
-      final List<Pair<Element, String>> result = new ArrayList<Pair<Element, String>>();
-
-      final Element[] elements = JDOMUtil.getElements(e);
-      for (Element element : elements) {
-        if (element.getName().equals("scope")) {
-          element.detach();
-          String scopeName = element.getAttributeValue("name");
-          assert scopeName != null;
-          final String name = generator.generateUniqueName(FileUtil.sanitizeFileName(scopeName)) + ".xml";
-          result.add(new Pair<Element, String>(element, name));
-        }
-      }
-      if (!e.getChildren().isEmpty()) {
-        result.add(new Pair<Element, String>(e, generator.generateUniqueName("scope_settings") + ".xml"));
-      }
-      return result;
+    protected String getSubStateFileName(@NotNull Element element) {
+      return element.getAttributeValue("name");
     }
 
+    @NotNull
     @Override
-    public void mergeStatesInto(Element target, Element[] elements) {
-      for (Element element : elements) {
-        if (element.getName().equals("scope")) {
-          element.detach();
-          target.addContent(element);
-        }
-        else {
-          final Element[] states = JDOMUtil.getElements(element);
-          for (Element state : states) {
-            state.detach();
-            target.addContent(state);
-          }
-          for (Object attr : element.getAttributes()) {
-            target.setAttribute(((Attribute)attr).clone());
-          }
-        }
-      }
+    protected String getComponentStateFileName() {
+      return "scope_settings";
+    }
+
+    @NotNull
+    @Override
+    protected String getSubStateTagName() {
+      return "scope";
     }
   }
-
 
   private final List<Pair<NamedScope, NamedScopesHolder>> myScopes = ContainerUtil.createLockFreeCopyOnWriteList();
 
@@ -369,8 +343,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   private static void addScopesToList(@NotNull final List<Pair<NamedScope, NamedScopesHolder>> scopeList,
                                       @NotNull final NamedScopesHolder holder) {
-    NamedScope[] scopes = holder.getScopes();
-    for (NamedScope scope : scopes) {
+    for (NamedScope scope : holder.getScopes()) {
       scopeList.add(Pair.create(scope, holder));
     }
   }

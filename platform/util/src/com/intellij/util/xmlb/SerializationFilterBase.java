@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.util.xmlb;
 
-public class DefaultSerializationFilter implements SerializationFilter {
-  public boolean accepts(Accessor accessor, Object bean) {
-    return true;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public abstract class SerializationFilterBase implements SerializationFilter {
+  @Override
+  public final boolean accepts(Accessor accessor, Object bean) {
+    if (bean == null) {
+      return true;
+    }
+    return accepts(accessor, bean, accessor.read(bean));
   }
+
+  protected abstract boolean accepts(@NotNull Accessor accessor, @NotNull Object bean, @Nullable Object beanValue);
 }

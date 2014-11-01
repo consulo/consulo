@@ -38,10 +38,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.project.DumbAwareRunnable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.project.ProjectManagerAdapter;
+import com.intellij.openapi.project.*;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
@@ -75,7 +72,7 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
   private static final String PLUGIN_SETTINGS_ERROR = "Plugin Settings Error";
   public static final String NAME_FILE = ".name";
 
-  private ProjectManagerImpl myManager;
+  private ProjectManager myManager;
 
   private volatile IProjectStore myComponentStore;
 
@@ -91,7 +88,7 @@ public class ProjectImpl extends ComponentManagerImpl implements ProjectEx {
 
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
 
-  protected ProjectImpl(@NotNull ProjectManagerImpl manager, @NotNull String filePath, boolean isOptimiseTestLoadSpeed, String projectName) {
+  protected ProjectImpl(@NotNull ProjectManager manager, @NotNull String filePath, boolean isOptimiseTestLoadSpeed, String projectName) {
     super(ApplicationManager.getApplication(), "Project "+(projectName == null ? filePath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
 

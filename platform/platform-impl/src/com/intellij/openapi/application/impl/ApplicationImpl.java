@@ -1507,17 +1507,6 @@ public class ApplicationImpl extends ComponentManagerImpl implements Application
     return Restarter.isSupported();
   }
 
-  public boolean isSaving() {
-    if (getStateStore().isSaving()) return true;
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    for (Project openProject : openProjects) {
-      ProjectEx project = (ProjectEx)openProject;
-      if (project.getStateStore().isSaving()) return true;
-    }
-
-    return false;
-  }
-
   @Override
   protected boolean logSlowComponents() {
     return super.logSlowComponents() || ApplicationInfoImpl.getShadowInstance().isEAP();

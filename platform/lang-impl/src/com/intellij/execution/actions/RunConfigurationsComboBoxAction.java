@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.intellij.execution.actions;
 
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
@@ -38,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +65,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    if (ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
+    if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
       presentation.setDescription(ExecutionBundle.message("choose.run.configuration.action.description"));
       presentation.setEnabled(findFrame(e.getData(PlatformDataKeys.CONTEXT_COMPONENT)) != null);
       return;
@@ -197,25 +197,6 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
           }
         }
 
-        //final RunnerAndConfigurationSettings[] configurations = runManager.getConfigurationSettings(type);
-        //ArrayList<RunnerAndConfigurationSettings> configurationSettingsList = new ArrayList<RunnerAndConfigurationSettings>();
-        //int i = 0;
-        //for (RunnerAndConfigurationSettings configuration : configurations) {
-        //  if (configuration.isTemporary()) {
-        //    configurationSettingsList.add(configuration);
-        //  }
-        //  else {
-        //    configurationSettingsList.add(i++, configuration);
-        //  }
-        //}
-        //for (final RunnerAndConfigurationSettings configuration : configurationSettingsList) {
-        //  //if (runManager.canRunConfiguration(configuration)) {
-        //  final SelectConfigAction action = new SelectConfigAction(configuration, project);
-        //
-        //  actionGroup.add(action);
-        //  //}
-        //}
-
         allActionsGroup.add(actionGroup);
         allActionsGroup.addSeparator();
       }
@@ -234,10 +215,10 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     public void actionPerformed(final AnActionEvent e) {
       final Project project = e.getData(CommonDataKeys.PROJECT);
       if (project != null) {
-        RunConfiguration configuration = chooseTempConfiguration(project);
-        if (configuration != null) {
+        RunnerAndConfigurationSettings settings = chooseTempSettings(project);
+        if (settings != null) {
           final RunManager runManager = RunManager.getInstance(project);
-          runManager.makeStable(configuration);
+          runManager.makeStable(settings);
         }
       }
     }
@@ -250,12 +231,12 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
         disable(presentation);
         return;
       }
-      RunConfiguration configuration = chooseTempConfiguration(project);
-      if (configuration == null) {
+      RunnerAndConfigurationSettings settings = chooseTempSettings(project);
+      if (settings == null) {
         disable(presentation);
       }
       else {
-        presentation.setText(ExecutionBundle.message("save.temporary.run.configuration.action.name", configuration.getName()));
+        presentation.setText(ExecutionBundle.message("save.temporary.run.configuration.action.name", settings.getName()));
         presentation.setDescription(presentation.getText());
         presentation.setVisible(true);
         presentation.setEnabled(true);
@@ -268,16 +249,13 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     }
 
     @Nullable
-    private static RunConfiguration chooseTempConfiguration(@NotNull Project project) {
-      final RunConfiguration[] tempConfigurations = RunManager.getInstance(project).getTempConfigurations();
-      if (tempConfigurations.length > 0) {
-        RunnerAndConfigurationSettings selectedConfiguration = RunManager.getInstance(project).getSelectedConfiguration();
-        if (selectedConfiguration == null || !selectedConfiguration.isTemporary()) {
-          return tempConfigurations[0];
-        }
-        return selectedConfiguration.getConfiguration();
+    private static RunnerAndConfigurationSettings chooseTempSettings(@NotNull Project project) {
+      RunnerAndConfigurationSettings selectedConfiguration = RunManager.getInstance(project).getSelectedConfiguration();
+      if (selectedConfiguration != null && selectedConfiguration.isTemporary()) {
+        return selectedConfiguration;
       }
-      return null;
+      Iterator<RunnerAndConfigurationSettings> iterator = RunManager.getInstance(project).getTempConfigurationsList().iterator();
+      return iterator.hasNext() ? iterator.next() : null;
     }
   }
 
@@ -321,7 +299,10 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       }
       final Presentation presentation = getTemplatePresentation();
       presentation.setText(name, false);
-      presentation.setDescription("Select " + configuration.getType().getConfigurationTypeDescription() + " '" + name + "'");
+      final ConfigurationType type = configuration.getType();
+      if (type != null) {
+        presentation.setDescription("Select " + type.getConfigurationTypeDescription() + " '" + name + "'");
+      }
       updateIcon(presentation);
     }
 
@@ -331,7 +312,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
     @Override
     public void actionPerformed(final AnActionEvent e) {
-      RunManagerEx.getInstanceEx(myProject).setActiveConfiguration(myConfiguration);
+      RunManager.getInstance(myProject).setSelectedConfiguration(myConfiguration);
       updateButton(ExecutionTargetManager.getActiveTarget(myProject), myConfiguration, myProject, e.getPresentation());
     }
 
