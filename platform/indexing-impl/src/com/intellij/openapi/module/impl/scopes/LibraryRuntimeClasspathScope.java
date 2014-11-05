@@ -125,9 +125,17 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
       @Override
       public LinkedHashSet<VirtualFile> visitModuleExtensionSdkOrderEntry(final ModuleExtensionWithSdkOrderEntry sdkOrderEntry,
                                                                           final LinkedHashSet<VirtualFile> value) {
-        final Sdk jdk = sdkOrderEntry.getSdk();
-        if (jdk != null && processedSdk.add(jdk)) {
+        final Sdk sdk = sdkOrderEntry.getSdk();
+        if (sdk != null && processedSdk.add(sdk)) {
           ContainerUtil.addAll(value, sdkOrderEntry.getFiles(BinariesOrderRootType.getInstance()));
+        }
+        return value;
+      }
+
+      @Override
+      public LinkedHashSet<VirtualFile> visitOrderEntry(OrderEntry orderEntry, LinkedHashSet<VirtualFile> value) {
+        if(orderEntry instanceof OrderEntryWithTracking) {
+          ContainerUtil.addAll(value, orderEntry.getFiles(BinariesOrderRootType.getInstance()));
         }
         return value;
       }
