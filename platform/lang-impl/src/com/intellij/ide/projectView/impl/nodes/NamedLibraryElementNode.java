@@ -93,10 +93,10 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     presentation.setPresentableText(getValue().getName());
     final OrderEntry orderEntry = getValue().getOrderEntry();
 
-    if (orderEntry instanceof SdkOrderEntry) {
-      final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
+    if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
       final Sdk sdk = sdkOrderEntry.getSdk();
-      presentation.setIcon(SdkUtil.getIcon(((SdkOrderEntry)orderEntry).getSdk()));
+      presentation.setIcon(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk()));
       if (sdk != null) { //jdk not specified
         final String path = sdk.getHomePath();
         if (path != null) {

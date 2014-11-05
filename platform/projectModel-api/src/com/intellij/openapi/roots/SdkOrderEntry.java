@@ -16,7 +16,10 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.projectRoots.Sdk;
+import org.mustbe.consulo.DeprecationInfo;
 
+@Deprecated
+@DeprecationInfo(value = "Use ModuleExtensionWithSdkOrderEntry", until = "2.0")
 public interface SdkOrderEntry extends OrderEntry, OrderEntryWithTracking {
   Sdk getSdk();
   String getSdkName();

@@ -87,8 +87,8 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
             children.add(new NamedLibraryElementNode(getProject(), new NamedLibraryElement(null, libraryOrderEntry), getSettings()));
           }
         }
-        else if (orderEntry instanceof SdkOrderEntry) {
-          final SdkOrderEntry sdkOrderEntry = (SdkOrderEntry)orderEntry;
+        else if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
+          final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
           final Sdk jdk = sdkOrderEntry.getSdk();
           if (jdk != null) {
             if (processedSdk.contains(jdk)) continue;
