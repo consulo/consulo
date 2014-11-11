@@ -2234,6 +2234,7 @@
     </action>
 
     <reference id="ShowProjectStructureSettings">
+      <add-to-group group-id="MainToolBarSettings" anchor="after" relative-to-action="ShowSettings"/>
       <add-to-group group-id="NavBarToolBar" anchor="last"/>
     </reference>
 
