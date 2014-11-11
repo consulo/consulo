@@ -416,6 +416,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return myCachedCurrentLayer = moduleRootLayer;
   }
 
+  @NotNull
   @Override
   public ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate) {
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);

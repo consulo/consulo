@@ -55,6 +55,7 @@ public class AddLayerAction extends AnAction {
 
     if (newName != null) {
       modifiableRootModel.addLayer(newName, copyName, true);
+      modifiableRootModel.addContentEntry(modifiableRootModel.getModule().getModuleDirUrl());
     }
   }
 }

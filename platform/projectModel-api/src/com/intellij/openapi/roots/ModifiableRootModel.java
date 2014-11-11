@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @see ModuleRootManager#getModifiableModel()
  */
 public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRootLayer {
-  @Nullable
+  @NotNull
   ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate);
 
   @Nullable
@@ -34,9 +33,6 @@ public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRo
 
   @Nullable()
   ModifiableModuleRootLayer setCurrentLayer(@NotNull String name);
-
-  @NotNull
-  Project getProject();
 
   void clear();
 
